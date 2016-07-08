@@ -36,6 +36,7 @@ import org.openstreetmap.josm.tools.AlphanumComparator;
 import org.openstreetmap.josm.tools.CheckParameterUtil;
 import org.openstreetmap.josm.tools.HttpClient;
 import org.openstreetmap.josm.tools.Predicate;
+import org.openstreetmap.josm.tools.Predicates;
 import org.openstreetmap.josm.tools.Utils;
 import org.openstreetmap.josm.tools.Utils.Function;
 import org.w3c.dom.Document;
@@ -59,10 +60,18 @@ public final class WikipediaApp {
         }
     }
 
+    static String getSiteUrl(String wikipediaLang) {
+        if ("wikidata".equals(wikipediaLang)) {
+            return "https://www.wikidata.org";
+        } else {
+            return "https://" + wikipediaLang + ".wikipedia.org";
+        }
+    }
+
     static List<WikipediaEntry> getEntriesFromCoordinates(String wikipediaLang, LatLon min, LatLon max) {
         try {
             // construct url
-            final String url = "https://" + wikipediaLang + ".wikipedia.org/w/api.php"
+            final String url = getSiteUrl(wikipediaLang) + "/w/api.php"
                     + "?action=query"
                     + "&list=geosearch"
                     + "&format=xml"
@@ -81,10 +90,15 @@ public final class WikipediaApp {
                 for (int i = 0; i < nodes.getLength(); i++) {
                     final Node node = nodes.item(i);
                     final String name = xpathName.evaluate(node);
-                    entries.add(new WikipediaEntry(name, wikipediaLang, name, new LatLon((
+                    final LatLon latLon = new LatLon((
                             (double) xpathLat.evaluate(node, XPathConstants.NUMBER)),
-                            (double) xpathLon.evaluate(node, XPathConstants.NUMBER))
-                    ));
+                            (double) xpathLon.evaluate(node, XPathConstants.NUMBER));
+                    if ("wikidata".equals(wikipediaLang)) {
+                        entries.add(new WikidataEntry(name, latLon, getLabelForWikidata(name, Locale.getDefault())));
+                    } else {
+                        entries.add(new WikipediaEntry(name, wikipediaLang, name, latLon
+                        ));
+                    }
                 }
                 return entries;
             }
@@ -165,6 +179,9 @@ public final class WikipediaApp {
     }
 
     static Collection<String> getWikipediaArticles(final String wikipediaLang, OsmPrimitive p) {
+        if ("wikidata".equals(wikipediaLang)) {
+            return Utils.filter(Collections.singleton(p.get("wikidata")), Predicates.not(Predicates.isNull()));
+        }
         final Map<String, String> tags = p.getKeys();
         return Utils.transform(Utils.filter(
                 Arrays.asList(
@@ -265,7 +282,7 @@ public final class WikipediaApp {
     static Collection<WikipediaLangArticle> getInterwikiArticles(String wikipediaLang, String article) {
         try {
             Collection<WikipediaLangArticle> r = new ArrayList<>();
-            final String url = "https://" + wikipediaLang + ".wikipedia.org/w/api.php" +
+            final String url = getSiteUrl(wikipediaLang) + "/w/api.php" +
                     "?action=query" +
                     "&prop=langlinks" +
                     "&titles=" + Utils.encodeUrl(article) +
@@ -288,7 +305,7 @@ public final class WikipediaApp {
 
     static LatLon getCoordinateForArticle(String wikipediaLang, String article) {
         try {
-            final String url = "https://" + wikipediaLang + ".wikipedia.org/w/api.php" +
+            final String url = getSiteUrl(wikipediaLang) + "/w/api.php" +
                     "?action=query" +
                     "&prop=coordinates" +
                     "&titles=" + Utils.encodeUrl(article) +
@@ -394,7 +411,7 @@ public final class WikipediaApp {
             this.coordinate = coordinate;
         }
 
-        protected final Tag createWikipediaTag() {
+        protected Tag createWikipediaTag() {
             return new Tag("wikipedia", wikipediaLang + ":" + wikipediaArticle);
         }
 
@@ -407,8 +424,11 @@ public final class WikipediaApp {
         }
 
         public String getBrowserUrl() {
-            return "https://" + wikipediaLang + ".wikipedia.org/wiki/"
-                    + Utils.encodeUrl(wikipediaArticle.replace(" ", "_"));
+            return getSiteUrl(wikipediaLang) + "/wiki/" + Utils.encodeUrl(wikipediaArticle.replace(" ", "_"));
+        }
+
+        public String getLabelText() {
+            return name;
         }
 
         @Override
@@ -419,6 +439,28 @@ public final class WikipediaApp {
         @Override
         public int compareTo(WikipediaEntry o) {
             return AlphanumComparator.getInstance().compare(name, o.name);
+        }
+    }
+
+    static class WikidataEntry extends WikipediaEntry {
+
+        WikidataEntry(String id, LatLon coordinate, String label) {
+            super(label, "wikidata", id, coordinate);
+            ensureValidWikidataId(id);
+        }
+
+        @Override
+        protected Tag createWikipediaTag() {
+            return new Tag("wikidata", wikipediaArticle);
+        }
+
+        @Override
+        public String getLabelText() {
+            return getLabelText(name, wikipediaArticle);
+        }
+
+        static String getLabelText(String bold, String gray) {
+            return Utils.escapeReservedCharactersHTML(bold) + " <span color='gray'>" + Utils.escapeReservedCharactersHTML(gray) + "</span>";
         }
     }
 

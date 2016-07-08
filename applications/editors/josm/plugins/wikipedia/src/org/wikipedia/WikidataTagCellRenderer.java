@@ -91,8 +91,7 @@ public class WikidataTagCellRenderer extends DefaultTableCellRenderer {
             if (label == null) {
                 return null;
             }
-            texts.add(Utils.escapeReservedCharactersHTML(id)
-                    + " <span color='gray'>" + Utils.escapeReservedCharactersHTML(label) + "</span>");
+            texts.add(WikipediaApp.WikidataEntry.getLabelText(id, label));
         }
         component.setText("<html>" + Utils.join("; ", texts));
         component.setToolTipText("<html>" + Utils.joinAsHtmlUnorderedList(texts));

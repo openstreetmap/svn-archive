@@ -35,12 +35,10 @@ import org.openstreetmap.josm.data.osm.event.DatasetEventManager.FireMode;
 import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
 import org.openstreetmap.josm.data.preferences.IntegerProperty;
 import org.openstreetmap.josm.data.preferences.StringProperty;
-import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.SideButton;
 import org.openstreetmap.josm.gui.dialogs.ToggleDialog;
 import org.openstreetmap.josm.gui.layer.MainLayerManager.ActiveLayerChangeEvent;
 import org.openstreetmap.josm.gui.layer.MainLayerManager.ActiveLayerChangeListener;
-import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import org.openstreetmap.josm.tools.ImageProvider;
 import org.openstreetmap.josm.tools.LanguageInfo;
 import org.openstreetmap.josm.tools.OpenBrowser;
@@ -51,7 +49,8 @@ public class WikipediaToggleDialog extends ToggleDialog implements ActiveLayerCh
     public WikipediaToggleDialog() {
         super(tr("Wikipedia"), "wikipedia", tr("Fetch Wikipedia articles with coordinates"), null, 150);
         createLayout(list, true, Arrays.asList(
-                new SideButton(new WikipediaLoadCoordinatesAction()),
+                new SideButton(new WikipediaLoadCoordinatesAction(false)),
+                new SideButton(new WikipediaLoadCoordinatesAction(true)),
                 new SideButton(new WikipediaLoadCategoryAction()),
                 new SideButton(new PasteWikipediaArticlesAction()),
                 new SideButton(new AddWikipediaTagAction()),
@@ -87,8 +86,9 @@ public class WikipediaToggleDialog extends ToggleDialog implements ActiveLayerCh
 
                 @Override
                 public JLabel getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-                    JLabel label = (JLabel) super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
                     final WikipediaEntry entry = (WikipediaEntry) value;
+                    final String labelText = "<html>" + entry.getLabelText();
+                    final JLabel label = (JLabel) super.getListCellRendererComponent(list, labelText, index, isSelected, cellHasFocus);
                     if (entry.getWiwosmStatus() != null && entry.getWiwosmStatus()) {
                         label.setIcon(ImageProvider.getIfAvailable("misc", "grey_check"));
                         label.setToolTipText(/* I18n: WIWOSM server already links Wikipedia article to object/s */ tr("Available via WIWOSM server"));
@@ -110,19 +110,34 @@ public class WikipediaToggleDialog extends ToggleDialog implements ActiveLayerCh
     };
 
     private void updateTitle() {
+        final String lang = getLanguageOfFirstItem();
+        final String host = WikipediaApp.getSiteUrl(lang).split("/+")[1];
         if (titleContext == null) {
-            setTitle(/* I18n: [language].Wikipedia.org */ tr("{0}.Wikipedia.org", wikipediaLang.get()));
+            setTitle(host);
         } else {
-            setTitle(/* I18n: [language].Wikipedia.org: [context] */ tr("{0}.Wikipedia.org: {1}", wikipediaLang.get(), titleContext));
+            setTitle(tr("{0}: {1}", host, titleContext));
+        }
+    }
+
+    private String getLanguageOfFirstItem() {
+        try {
+            return list.getModel().getElementAt(0).wikipediaLang;
+        } catch (ArrayIndexOutOfBoundsException ignore) {
+            return wikipediaLang.get();
         }
     }
 
     class WikipediaLoadCoordinatesAction extends AbstractAction {
 
-        public WikipediaLoadCoordinatesAction() {
-            super(tr("Coordinates"));
-            new ImageProvider("dialogs", "wikipedia").getResource().attachImageIcon(this, true);
-            putValue(SHORT_DESCRIPTION, tr("Fetches all coordinates from Wikipedia in the current view"));
+        private final boolean wikidata;
+
+        public WikipediaLoadCoordinatesAction(boolean wikidata) {
+            super(wikidata ? tr("Wikidata") : tr("Coordinates"));
+            this.wikidata = wikidata;
+            new ImageProvider("dialogs", wikidata ? "wikidata" : "wikipedia").getResource().attachImageIcon(this, true);
+            putValue(SHORT_DESCRIPTION, wikidata
+                    ? tr("Fetches all coordinates from Wikidata in the current view")
+                    : tr("Fetches all coordinates from Wikipedia in the current view"));
         }
 
         @Override
@@ -139,7 +154,7 @@ public class WikipediaToggleDialog extends ToggleDialog implements ActiveLayerCh
                     @Override
                     List<WikipediaEntry> getEntries() {
                         return WikipediaApp.getEntriesFromCoordinates(
-                                wikipediaLang.get(), min, max);
+                                wikidata ? "wikidata" : wikipediaLang.get(), min, max);
                     }
                 }.execute();
             } catch (Exception ex) {
@@ -160,7 +175,7 @@ public class WikipediaToggleDialog extends ToggleDialog implements ActiveLayerCh
             Collections.sort(entries);
             publish(entries.toArray(new WikipediaEntry[entries.size()]));
             for (List<WikipediaEntry> chunk : WikipediaApp.partitionList(entries, wikipediaStatusUpdateChunkSize.get())) {
-                WikipediaApp.updateWIWOSMStatus(wikipediaLang.get(), chunk);
+                WikipediaApp.updateWIWOSMStatus(chunk.get(0).wikipediaLang, chunk);
             }
             return null;
         }
@@ -171,6 +186,8 @@ public class WikipediaToggleDialog extends ToggleDialog implements ActiveLayerCh
             for (WikipediaEntry i : chunks) {
                 model.addElement(i);
             }
+            updateTitle();
+            updateWikipediaArticles();
         }
 
     }
@@ -308,7 +325,9 @@ public class WikipediaToggleDialog extends ToggleDialog implements ActiveLayerCh
             if (entry == null) {
                 return;
             }
-            final LatLon latLon = WikipediaApp.getCoordinateForArticle(entry.wikipediaLang, entry.wikipediaArticle);
+            final LatLon latLon = entry.coordinate != null
+                    ? entry.coordinate
+                    : WikipediaApp.getCoordinateForArticle(entry.wikipediaLang, entry.wikipediaArticle);
             if (latLon == null) {
                 return;
             }
@@ -317,10 +336,11 @@ public class WikipediaToggleDialog extends ToggleDialog implements ActiveLayerCh
     }
 
     protected void updateWikipediaArticles() {
+        final String language = getLanguageOfFirstItem();
         articles.clear();
         if (Main.main != null && Main.getLayerManager().getEditDataSet() != null) {
             for (final OsmPrimitive p : Main.getLayerManager().getEditDataSet().allPrimitives()) {
-                articles.addAll(WikipediaApp.getWikipediaArticles(wikipediaLang.get(), p));
+                articles.addAll(WikipediaApp.getWikipediaArticles(language, p));
             }
         }
     }

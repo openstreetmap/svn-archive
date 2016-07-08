@@ -121,7 +121,7 @@ public class WikipediaToggleDialog extends ToggleDialog implements ActiveLayerCh
 
         public WikipediaLoadCoordinatesAction() {
             super(tr("Coordinates"));
-            new ImageProvider("dialogs", "refresh").getResource().attachImageIcon(this, true);
+            new ImageProvider("dialogs", "wikipedia").getResource().attachImageIcon(this, true);
             putValue(SHORT_DESCRIPTION, tr("Fetches all coordinates from Wikipedia in the current view"));
         }
 
@@ -179,7 +179,7 @@ public class WikipediaToggleDialog extends ToggleDialog implements ActiveLayerCh
 
         public WikipediaLoadCategoryAction() {
             super(tr("Category"));
-            new ImageProvider("dialogs", "refresh").getResource().attachImageIcon(this, true);
+            new ImageProvider("data", "sequence").getResource().attachImageIcon(this, true);
             putValue(SHORT_DESCRIPTION, tr("Fetches a list of all Wikipedia articles of a category"));
         }
 

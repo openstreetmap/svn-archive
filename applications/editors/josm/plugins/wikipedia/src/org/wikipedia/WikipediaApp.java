@@ -102,7 +102,10 @@ public final class WikipediaApp {
                     }
                 }
                 if ("wikidata".equals(wikipediaLang)) {
-                    final Map<String, String> labels = getLabelForWikidata(names, Locale.getDefault());
+                    final Map<String, String> labels = new HashMap<>();
+                    for (final List<String> chunk : partitionList(names, 50)) {
+                        labels.putAll(getLabelForWikidata(chunk, Locale.getDefault()));
+                    }
                     final List<WikipediaEntry> entriesWithLabel = new ArrayList<>(nodes.getLength());
                     for (WikipediaEntry entry : entries) {
                         entriesWithLabel.add(new WikidataEntry(entry.wikipediaArticle, entry.coordinate, labels.get(entry.wikipediaArticle)));

@@ -149,6 +149,18 @@ public class WikipediaAppTest {
     }
 
     @Test
+    public void testFromCoordinatesWikidata() throws Exception {
+        final List<WikipediaEntry> entries = WikipediaApp.getEntriesFromCoordinates("wikidata",
+                new LatLon(47.20, 11.30), new LatLon(47.22, 11.32));
+        assertTrue(Utils.exists(entries, new Predicate<WikipediaEntry>() {
+            @Override
+            public boolean evaluate(WikipediaEntry entry) {
+                return "Q865406".equals(entry.wikipediaArticle) && "wikidata".equals(entry.wikipediaLang) && "Birgitzer Alm".equals(entry.name);
+            }
+        }));
+    }
+
+    @Test
     public void testGetWikidataForArticles() throws Exception {
         final Map<String, String> map = WikipediaApp.getWikidataForArticles("en",
                 Arrays.asList("London", "Vienna", "Völs, Tyrol", "a-non-existing-article"));

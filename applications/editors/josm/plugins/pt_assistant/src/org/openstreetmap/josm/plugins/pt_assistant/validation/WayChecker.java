@@ -61,53 +61,56 @@ public class WayChecker extends Checker {
 
 				boolean isCorrectRoadType = true;
 				boolean isUnderConstruction = false;
+				if (way.hasKey("construction")) {
+					isUnderConstruction = true;
+				}
 				if (relation.hasTag("route", "bus") || relation.hasTag("route", "share_taxi")) {
-					if (!isWaySuitableForBuses(way)) {
+					if (!RouteUtils.isWaySuitableForBuses(way)) {
 						isCorrectRoadType = false;
 					}
-					if (way.hasTag("highway", "construction") && way.hasKey("construction")) {
+					if (way.hasTag("highway", "construction")) {
 						isUnderConstruction = true;
 					}
 				} else if (relation.hasTag("route", "trolleybus")) {
-					if (!(isWaySuitableForBuses(way) && way.hasTag("trolley_wire", "yes"))) {
+					if (!(RouteUtils.isWaySuitableForBuses(way) && way.hasTag("trolley_wire", "yes"))) {
 						isCorrectRoadType = false;
 					}
-					if (way.hasTag("highway", "construction") && way.hasKey("construction")) {
+					if (way.hasTag("highway", "construction")) {
 						isUnderConstruction = true;
 					}
 				} else if (relation.hasTag("route", "tram")) {
 					if (!way.hasTag("railway", "tram")) {
 						isCorrectRoadType = false;
 					}
-					if (way.hasTag("railway", "construction") && way.hasKey("construction")) {
+					if (way.hasTag("railway", "construction")) {
 						isUnderConstruction = true;
 					}
 				} else if (relation.hasTag("route", "subway")) {
 					if (!relation.hasTag("railway", "subway")) {
 						isCorrectRoadType = false;
 					}
-					if (way.hasTag("railway", "construction") && way.hasKey("construction")) {
+					if (way.hasTag("railway", "construction")) {
 						isUnderConstruction = true;
 					}
 				} else if (relation.hasTag("route", "light_rail")) {
 					if (!relation.hasTag("raiilway", "subway")) {
 						isCorrectRoadType = false;
 					}
-					if (way.hasTag("railway", "construction") && way.hasKey("construction")) {
+					if (way.hasTag("railway", "construction")) {
 						isUnderConstruction = true;
 					}
 				} else if (relation.hasTag("route", "light_rail")) {
 					if (!relation.hasTag("railway", "light_rail")) {
 						isCorrectRoadType = false;
 					}
-					if (way.hasTag("railway", "construction") && way.hasKey("construction")) {
+					if (way.hasTag("railway", "construction")) {
 						isUnderConstruction = true;
 					}
 				} else if (relation.hasTag("route", "train")) {
 					if (!relation.hasTag("railway", "train")) {
 						isCorrectRoadType = false;
 					}
-					if (way.hasTag("railway", "construction") && way.hasKey("construction")) {
+					if (way.hasTag("railway", "construction")) {
 						isUnderConstruction = true;
 					}
 				}
@@ -197,6 +200,8 @@ public class WayChecker extends Checker {
 			List<Way> highlighted = new ArrayList<>(1);
 			// highlighted.add(problematicWay);
 			Set<Way> adjacentWays = checkAdjacentWays(problematicWay, new HashSet<Way>());
+			adjacentWays.removeAll(problematicWays);	
+			highlighted.add(problematicWay);
 			highlighted.addAll(adjacentWays);
 			TestError e = new TestError(this.test, Severity.WARNING,
 					tr("PT: Route passes a oneway road in the wrong direction"),
@@ -368,35 +373,6 @@ public class WayChecker extends Checker {
 
 		return false;
 
-	}
-
-	/**
-	 * Checks if the type of the way is suitable for buses to go on it. The
-	 * direction of the way (i.e. one-way roads) is irrelevant for this test.
-	 * 
-	 * @param way
-	 *            to be checked
-	 * @return true if the way is suitable for buses, false otherwise.
-	 */
-	private boolean isWaySuitableForBuses(Way way) {
-		if (way.hasTag("highway", "motorway") || way.hasTag("highway", "trunk") || way.hasTag("highway", "primary")
-				|| way.hasTag("highway", "secondary") || way.hasTag("highway", "tertiary")
-				|| way.hasTag("highway", "unclassified") || way.hasTag("highway", "road")
-				|| way.hasTag("highway", "residential") || way.hasTag("highway", "service")
-				|| way.hasTag("highway", "motorway_link") || way.hasTag("highway", "trunk_link")
-				|| way.hasTag("highway", "primary_link") || way.hasTag("highway", "secondary_link")
-				|| way.hasTag("highway", "tertiary_link") || way.hasTag("highway", "living_street")
-				|| way.hasTag("highway", "bus_guideway") || way.hasTag("highway", "road")
-				|| way.hasTag("cycleway", "share_busway") || way.hasTag("cycleway", "shared_lane")) {
-			return true;
-		}
-
-		if (way.hasTag("highway", "pedestrian") && (way.hasTag("bus", "yes") || way.hasTag("psv", "yes")
-				|| way.hasTag("bus", "designated") || way.hasTag("psv", "designated"))) {
-			return true;
-		}
-
-		return false;
 	}
 
 	protected static Command fixErrorByRemovingWay(TestError testError) {

@@ -3,6 +3,7 @@ package org.openstreetmap.josm.plugins.pt_assistant.validation;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.data.validation.Test;
@@ -19,18 +20,24 @@ public abstract class Checker {
 
 	// test which created this WayChecker:
 	protected final Test test;
+	
+	// node that is checked:
+	protected Node node;
 
 	// relation that is checked:
 	protected Relation relation;
 
 	// stores all found errors:
 	protected ArrayList<TestError> errors = new ArrayList<>();
+	
+	protected Checker(Node node, Test test) {
+		this.node = node;
+		this.test = test;
+	}
 
 	protected Checker(Relation relation, Test test) {
-
 		this.relation = relation;
 		this.test = test;
-
 	}
 
 	/**

@@ -12,12 +12,15 @@ import javax.swing.SwingUtilities;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.SequenceCommand;
 import org.openstreetmap.josm.data.osm.DataSet;
+import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.validation.Severity;
 import org.openstreetmap.josm.data.validation.Test;
 import org.openstreetmap.josm.data.validation.TestError;
+import org.openstreetmap.josm.plugins.pt_assistant.actions.DownloadReferrersThread;
 import org.openstreetmap.josm.plugins.pt_assistant.actions.FixTask;
 import org.openstreetmap.josm.plugins.pt_assistant.actions.IncompleteMembersDownloadThread;
+import org.openstreetmap.josm.plugins.pt_assistant.gui.DownloadReferrersDialog;
 import org.openstreetmap.josm.plugins.pt_assistant.gui.IncompleteMembersDownloadDialog;
 import org.openstreetmap.josm.plugins.pt_assistant.gui.PTAssistantLayer;
 import org.openstreetmap.josm.plugins.pt_assistant.gui.ProceedDialog;
@@ -29,11 +32,17 @@ public class PTAssistantValidatorTest extends Test {
 	public static final int ERROR_CODE_ROAD_TYPE = 3721;
 	public static final int ERROR_CODE_CONSTRUCTION = 3722;
 	public static final int ERROR_CODE_DIRECTION = 3731;
-	public static final int ERROR_CODE_END_STOP = 3141;
-	public static final int ERROR_CODE_SPLIT_WAY = 3142;
-	public static final int ERROR_CODE_RELAITON_MEMBER_ROLES = 3143;
+	public static final int ERROR_CODE_END_STOP = 3741;
+	public static final int ERROR_CODE_SPLIT_WAY = 3742;
+	public static final int ERROR_CODE_RELAITON_MEMBER_ROLES = 3743;
+	public static final int ERROR_CODE_SOLITARY_STOP_POSITION = 3751;
+	public static final int ERROR_CODE_PLATFORM_PART_OF_HIGHWAY = 3752;
 
 	private PTAssistantLayer layer;
+	private static boolean nodeReferrersDownloaded;
+	@SuppressWarnings("unused")
+	private static boolean incompleteRelationsDowloaded;
+
 
 	public PTAssistantValidatorTest() {
 		super(tr("Public Transport Assistant tests"),
@@ -41,6 +50,105 @@ public class PTAssistantValidatorTest extends Test {
 
 		layer = new PTAssistantLayer();
 		DataSet.addSelectionListener(layer);
+		nodeReferrersDownloaded = false;
+		incompleteRelationsDowloaded = false;
+
+	}
+
+	@Override
+	public void visit(Node n) {
+
+		if (n.isIncomplete()) {
+			return;
+		}
+
+		if (!nodeReferrersDownloaded) {
+			this.downloadReferrers(n);
+			nodeReferrersDownloaded = true;
+		}
+
+		NodeChecker nodeChecker = new NodeChecker(n, this);
+
+		// check for solitary stop positions:
+		if (n.hasTag("public_transport", "stop_position")) {
+			nodeChecker.performSolitaryStopPositionTest();
+		}
+
+		// check that platforms are not part of any way:
+		if (n.hasTag("highway", "bus_stop") || n.hasTag("public_transport", "platform")
+				|| n.hasTag("highway", "platform") || n.hasTag("railway", "platform")) {
+			nodeChecker.performPlatformPartOfWayTest();
+		}
+		
+		this.errors.addAll(nodeChecker.getErrors());
+
+	}
+	
+
+	/**
+	 * Downloads incomplete relation members in an extra thread (user input
+	 * required)
+	 * 
+	 * @return true if successful, false if not successful
+	 */
+	private boolean downloadReferrers(Node n) {
+
+		final int[] userSelection = { 0 };
+
+		try {
+
+			if (SwingUtilities.isEventDispatchThread()) {
+
+				userSelection[0] = showDownloadReferrersDialog();
+
+			} else {
+
+				SwingUtilities.invokeAndWait(new Runnable() {
+					@Override
+					public void run() {
+						try {
+							userSelection[0] = showDownloadReferrersDialog();
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						}
+
+					}
+				});
+
+			}
+
+		} catch (InterruptedException | InvocationTargetException e) {
+			return false;
+		}
+
+		if (userSelection[0] == JOptionPane.YES_OPTION) {
+
+			Thread t = new DownloadReferrersThread(n);
+			t.start();
+			synchronized (t) {
+				try {
+					t.wait();
+				} catch (InterruptedException e) {
+					return false;
+				}
+			}
+
+		}
+
+		return true;
+
+	}
+
+	/**
+	 * Shows the dialog asking the user about an incomplete member download
+	 * 
+	 * @return user's selection
+	 * @throws InterruptedException
+	 */
+	private int showDownloadReferrersDialog() throws InterruptedException {
+
+		DownloadReferrersDialog downloadReferrersDialog = new DownloadReferrersDialog();
+		return downloadReferrersDialog.getUserSelection();
 
 	}
 
@@ -54,11 +162,12 @@ public class PTAssistantValidatorTest extends Test {
 		// Download incomplete members. If the download does not work, return
 		// and do not do any testing.
 		if (r.hasIncompleteMembers()) {
-
+			
 			boolean downloadSuccessful = this.downloadIncompleteMembers();
 			if (!downloadSuccessful) {
 				return;
 			}
+			incompleteRelationsDowloaded = true;
 
 		}
 
@@ -312,6 +421,10 @@ public class PTAssistantValidatorTest extends Test {
 			commands.add(RouteChecker.fixSortingError(testError));
 		}
 
+		if (testError.getCode() == ERROR_CODE_SOLITARY_STOP_POSITION) {
+			// TODO
+		}
+
 		if (commands.isEmpty()) {
 			return null;
 		}
@@ -356,5 +469,11 @@ public class PTAssistantValidatorTest extends Test {
 		errors.add(
 				new TestError(this, Severity.WARNING, tr("PT: dummy test warning"), ERROR_CODE_DIRECTION, primitives));
 	}
+	
+    public void endTest() {
+    	super.endTest();
+    	nodeReferrersDownloaded = false;
+    	incompleteRelationsDowloaded = false;
+    }
 
 }

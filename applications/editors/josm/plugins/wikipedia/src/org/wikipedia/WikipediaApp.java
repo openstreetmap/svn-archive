@@ -9,6 +9,7 @@ import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -217,12 +218,18 @@ public final class WikipediaApp {
     }
 
     static String getLabelForWikidata(String wikidataId, Locale locale, String ... preferredLanguage) {
+        return getLabelForWikidata(Collections.singleton(wikidataId), locale, preferredLanguage).get(wikidataId);
+    }
+
+    static Map<String, String> getLabelForWikidata(Collection<String> wikidataIds, Locale locale, String ... preferredLanguage) {
         try {
-            CheckParameterUtil.ensureThat(WIKIDATA_PATTERN.matcher(wikidataId).matches(), "Invalid Wikidata ID given");
+            for (final String wikidataId : wikidataIds) {
+                ensureValidWikidataId(wikidataId);
+            }
             final String url = "https://www.wikidata.org/w/api.php" +
                     "?action=wbgetentities" +
                     "&props=labels" +
-                    "&ids=" + wikidataId +
+                    "&ids=" + Utils.join("|", wikidataIds) +
                     "&format=xml";
             final Collection<String> languages = new ArrayList<>();
             if (locale != null) {
@@ -231,18 +238,25 @@ public final class WikipediaApp {
             }
             languages.addAll(Arrays.asList(preferredLanguage));
             languages.add("en");
+            languages.add(null);
+            final Map<String, String> r = new HashMap<>();
             try (final InputStream in = HttpClient.create(new URL(url)).setReasonForRequest("Wikipedia").connect().getContent()) {
                 final Document xml = DOCUMENT_BUILDER.parse(in);
-                for (String language : languages) {
-                    final String label = (String) X_PATH.compile("//label[@language='" + language + "']/@value")
-                            .evaluate(xml, XPathConstants.STRING);
-                    if (label != null && !label.isEmpty()) {
-                         return label;
+                for (final String wikidataId : wikidataIds) {
+                    final Node entity = (Node) X_PATH.compile("//entity[@id='" + wikidataId + "']").evaluate(xml, XPathConstants.NODE);
+                    for (String language : languages) {
+                        final String label = (String) X_PATH.compile(language != null
+                                ? "./labels/label[@language='" + language + "']/@value"
+                                : "./labels/label/@value"
+                        ).evaluate(entity, XPathConstants.STRING);
+                        if (label != null && !label.isEmpty()) {
+                            r.put(wikidataId, label);
+                            break;
+                        }
                     }
                 }
-                final String fallBackLabel = (String) X_PATH.compile("//label/@value").evaluate(xml, XPathConstants.STRING);
-                return fallBackLabel == null || fallBackLabel.isEmpty() ? null : fallBackLabel;
             }
+            return r;
         } catch (Exception ex) {
             throw new RuntimeException(ex);
         }
@@ -406,6 +420,10 @@ public final class WikipediaApp {
         public int compareTo(WikipediaEntry o) {
             return AlphanumComparator.getInstance().compare(name, o.name);
         }
+    }
+
+    static void ensureValidWikidataId(String id) {
+        CheckParameterUtil.ensureThat(WIKIDATA_PATTERN.matcher(id).matches(), "Invalid Wikidata ID given: " + id);
     }
 
     public static <T> List<List<T>> partitionList(final List<T> list, final int size) {

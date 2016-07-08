@@ -167,6 +167,9 @@ public class WikipediaAppTest {
         assertThat(WikipediaApp.getLabelForWikidata("Q21849466", new Locale("aa")), is("Leoben - Straßennamen mit Geschichte"));
         // not found -> null
         assertThat(WikipediaApp.getLabelForWikidata("Q" + Long.MAX_VALUE, Locale.ENGLISH), nullValue());
+        final Map<String, String> twoLabels = WikipediaApp.getLabelForWikidata(Arrays.asList("Q84", "Q1741"), Locale.GERMAN);
+        assertThat(twoLabels.get("Q84"), is("London"));
+        assertThat(twoLabels.get("Q1741"), is("Wien"));
     }
 
     @Test(expected = RuntimeException.class)

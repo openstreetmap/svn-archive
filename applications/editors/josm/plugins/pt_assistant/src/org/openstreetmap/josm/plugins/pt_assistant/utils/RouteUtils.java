@@ -148,6 +148,12 @@ public class RouteUtils {
 		return 0;
 	}
 
+	/**
+	 * Checks if the ways have a common node
+	 * @param w1
+	 * @param w2
+	 * @return
+	 */
 	public static boolean waysTouch(Way w1, Way w2) {
 
 		if (w1 == null || w2 == null) {

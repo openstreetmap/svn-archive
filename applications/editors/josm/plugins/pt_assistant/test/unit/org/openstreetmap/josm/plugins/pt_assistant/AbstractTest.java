@@ -39,7 +39,11 @@ public abstract class AbstractTest {
  
  public static final String PATH_TO_ROAD_TYPE_ERROR = "test/data/road-type.osm";
  
+ public static final String PATH_TO_ONEWAY_BAD_MEMBER_SORTING = "test/data/oneway-bad-member-sorting.osm";
  
+ public static final String PATH_TO_ONEWAY_WRONG_DIRECTION = "test/data/oneway-wrong-direction.osm";
+ public static final String PATH_TO_ONEWAY_WRONG_DIRECTION2 = "test/data/oneway-wrong-direction2.osm";
+
   /**
    * Initiates the basic parts of JOSM.
    */

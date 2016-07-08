@@ -4,7 +4,9 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.swing.SwingUtilities;
 
@@ -193,12 +195,178 @@ public class WayChecker extends Checker {
 			List<Relation> primitives = new ArrayList<>(1);
 			primitives.add(relation);
 			List<Way> highlighted = new ArrayList<>(1);
-			highlighted.add(problematicWay);
+			// highlighted.add(problematicWay);
+			Set<Way> adjacentWays = checkAdjacentWays(problematicWay, new HashSet<Way>());
+			highlighted.addAll(adjacentWays);
 			TestError e = new TestError(this.test, Severity.WARNING,
 					tr("PT: Route passes a oneway road in the wrong direction"),
 					PTAssistantValidatorTest.ERROR_CODE_DIRECTION, primitives, highlighted);
 			this.errors.add(e);
 		}
+
+	}
+
+	/**
+	 * Checks if the current way touches its neighbouring was correctly
+	 * 
+	 * @param prev
+	 *            can be null
+	 * @param curr
+	 *            cannot be null
+	 * @param next
+	 *            can be null
+	 * @return
+	 */
+	private boolean touchCorrectly(Way prev, Way curr, Way next) {
+
+		if (RouteUtils.isOnewayForPublicTransport(curr) == 0) {
+			return true;
+		}
+
+		if (prev != null) {
+
+			if (RouteUtils.waysTouch(curr, prev)) {
+				Node nodeInQuestion;
+				if (RouteUtils.isOnewayForPublicTransport(curr) == 1) {
+					nodeInQuestion = curr.firstNode();
+				} else {
+					nodeInQuestion = curr.lastNode();
+				}
+
+				List<Way> nb = findNeighborWays(curr, nodeInQuestion);
+
+				if (nb.size() < 2 && nodeInQuestion != prev.firstNode() && nodeInQuestion != prev.lastNode()) {
+					return false;
+				}
+			}
+		}
+
+		if (next != null) {
+
+			if (RouteUtils.waysTouch(curr, next)) {
+				Node nodeInQuestion;
+				if (RouteUtils.isOnewayForPublicTransport(curr) == 1) {
+					nodeInQuestion = curr.lastNode();
+				} else {
+					nodeInQuestion = curr.firstNode();
+				}
+
+				List<Way> nb = findNeighborWays(curr, nodeInQuestion);
+
+				if (nb.size() < 2 && nodeInQuestion != next.firstNode() && nodeInQuestion != next.lastNode()) {
+					return false;
+				}
+			}
+		}
+
+		return true;
+
+	}
+
+	protected Set<Way> checkAdjacentWays(Way curr, Set<Way> flags) {
+		// curr is supposed to be a wrong oneway way!!
+
+		Set<Way> resultSet = new HashSet<>();
+		resultSet.addAll(flags);
+		resultSet.add(curr);
+
+		if (RouteUtils.isOnewayForPublicTransport(curr) == 0) {
+			return null;
+		}
+
+		Node firstNodeInRouteDirection;
+		Node lastNodeInRouteDirection;
+		if (RouteUtils.isOnewayForPublicTransport(curr) == 1) {
+			firstNodeInRouteDirection = curr.lastNode();
+			lastNodeInRouteDirection = curr.firstNode();
+		} else {
+			firstNodeInRouteDirection = curr.firstNode();
+			lastNodeInRouteDirection = curr.lastNode();
+		}
+
+		List<Way> firstNodeInRouteDirectionNeighbors = findNeighborWays(curr, firstNodeInRouteDirection);
+		List<Way> lastNodeInRouteDirectionNeighbors = findNeighborWays(curr, lastNodeInRouteDirection);
+
+		for (Way nb : firstNodeInRouteDirectionNeighbors) {
+
+			if (resultSet.contains(nb)) {
+				continue;
+			}
+
+			if (RouteUtils.isOnewayForPublicTransport(nb) == 1 && nb.firstNode() == firstNodeInRouteDirection) {
+				Set<Way> newSet = this.checkAdjacentWays(nb, resultSet);
+				resultSet.addAll(newSet);
+
+			} else if (RouteUtils.isOnewayForPublicTransport(nb) == -1 && nb.lastNode() == firstNodeInRouteDirection) {
+				Set<Way> newSet = this.checkAdjacentWays(nb, resultSet);
+				resultSet.addAll(newSet);
+
+			}
+		}
+
+		for (Way nb : lastNodeInRouteDirectionNeighbors) {
+
+			if (resultSet.contains(nb)) {
+				continue;
+			}
+
+			if (RouteUtils.isOnewayForPublicTransport(nb) == 1 && nb.lastNode() == lastNodeInRouteDirection) {
+				Set<Way> newSet = this.checkAdjacentWays(nb, resultSet);
+				resultSet.addAll(newSet);
+			} else if (RouteUtils.isOnewayForPublicTransport(nb) == -1 && nb.firstNode() == lastNodeInRouteDirection) {
+				Set<Way> newSet = this.checkAdjacentWays(nb, resultSet);
+				resultSet.addAll(newSet);
+			}
+
+		}
+
+		return resultSet;
+
+	}
+
+	/**
+	 * Finds all ways that touch the given way at the given node AND belong to
+	 * the relation of this WayChecker
+	 * 
+	 * @param way
+	 * @param node
+	 * @return
+	 */
+	private List<Way> findNeighborWays(Way way, Node node) {
+
+		List<Way> resultList = new ArrayList<>();
+
+		List<OsmPrimitive> nodeReferrers = node.getReferrers();
+
+		for (OsmPrimitive referrer : nodeReferrers) {
+			if (referrer.getType().equals(OsmPrimitiveType.WAY)) {
+				Way neighborWay = (Way) referrer;
+				if (neighborWay != way && containsWay(neighborWay)) {
+					resultList.add(neighborWay);
+				}
+			}
+		}
+
+		return resultList;
+	}
+
+	/**
+	 * Checks if the relation of this WayChecker contains the given way
+	 * 
+	 * @param way
+	 * @return
+	 */
+	private boolean containsWay(Way way) {
+
+		List<RelationMember> members = relation.getMembers();
+
+		for (RelationMember rm : members) {
+			if (rm.isWay() && rm.getWay() == way) {
+				return true;
+			}
+		}
+
+		return false;
 
 	}
 
@@ -361,59 +529,6 @@ public class WayChecker extends Checker {
 
 		// open editor:
 		editor.setVisible(true);
-
-	}
-
-	/**
-	 * Checks if the current way touches its neighbouring was correctly
-	 * 
-	 * @param prev
-	 *            can be null
-	 * @param curr
-	 *            cannot be null
-	 * @param next
-	 *            can be null
-	 * @return
-	 */
-	private boolean touchCorrectly(Way prev, Way curr, Way next) {
-
-		if (RouteUtils.isOnewayForPublicTransport(curr) == 0) {
-			return true;
-		}
-
-		if (prev != null) {
-
-			if (RouteUtils.waysTouch(curr, prev)) {
-				Node nodeInQuestion;
-				if (RouteUtils.isOnewayForPublicTransport(curr) == 1) {
-					nodeInQuestion = curr.firstNode();
-				} else {
-					nodeInQuestion = curr.lastNode();
-				}
-
-				if (nodeInQuestion != prev.firstNode() && nodeInQuestion != prev.lastNode()) {
-					return false;
-				}
-			}
-		}
-
-		if (next != null) {
-
-			if (RouteUtils.waysTouch(curr, next)) {
-				Node nodeInQuestion;
-				if (RouteUtils.isOnewayForPublicTransport(curr) == 1) {
-					nodeInQuestion = curr.lastNode();
-				} else {
-					nodeInQuestion = curr.firstNode();
-				}
-
-				if (nodeInQuestion != next.firstNode() && nodeInQuestion != next.lastNode()) {
-					return false;
-				}
-			}
-		}
-
-		return true;
 
 	}
 

@@ -18,9 +18,9 @@ import org.openstreetmap.josm.plugins.pt_assistant.ImportUtils;
 public class DirecionTestTest extends AbstractTest {
     
     @Test
-    public void test() {
+    public void testOnewayTrue() {
         
-        File file = new File(AbstractTest.PATH_TO_ROUNDABOUT_ONEWAY);
+        File file = new File(AbstractTest.PATH_TO_ONEWAY_WRONG_DIRECTION);
         DataSet ds = ImportUtils.importOsmFile(file, "testLayer");
         
         PTAssistantValidatorTest test = new PTAssistantValidatorTest();
@@ -32,8 +32,7 @@ public class DirecionTestTest extends AbstractTest {
             }
         }
         
-        assertEquals(route.getMembersCount(), 213);
-                
+             
         List<TestError> errors = new ArrayList<>();
         
         for (Relation r: ds.getRelations()) {
@@ -42,7 +41,7 @@ public class DirecionTestTest extends AbstractTest {
         	errors.addAll(wayChecker.getErrors());
         }
         
-        assertEquals(errors.size(), 1);
+        assertEquals(errors.size(), 2);
         int onewayErrorCaught = 0;
         for (TestError e: errors ) {
             if (e.getCode() == PTAssistantValidatorTest.ERROR_CODE_DIRECTION) {
@@ -50,7 +49,7 @@ public class DirecionTestTest extends AbstractTest {
             }
         }
         
-        assertEquals(onewayErrorCaught, 1);
+        assertEquals(onewayErrorCaught, 2);
         
         // fix the direction errors:
         
@@ -59,7 +58,7 @@ public class DirecionTestTest extends AbstractTest {
             if (e.getCode() == PTAssistantValidatorTest.ERROR_CODE_DIRECTION) {
                 @SuppressWarnings("unchecked")
                 List<OsmPrimitive> highlighted = (List<OsmPrimitive>) e.getHighlighted();
-                if (highlighted.get(0).getId() != 26130630 && highlighted.get(0).getId() != 151278290)  {
+                if (highlighted.get(0).getId() != 225732678 && highlighted.get(0).getId() != 24215210)  {
                     detectedErrorsAreCorrect = false;
                 }
             }

@@ -83,24 +83,34 @@ public final class WikipediaApp {
             final XPathExpression xpathLat = X_PATH.compile("@lat");
             final XPathExpression xpathLon = X_PATH.compile("@lon");
             try (final InputStream in = HttpClient.create(new URL(url)).setReasonForRequest("Wikipedia").connect().getContent()) {
-                Document doc = DOCUMENT_BUILDER.parse(in);
-                NodeList nodes = (NodeList) xpathPlacemark.evaluate(doc, XPathConstants.NODESET);
-                // construct WikipediaEntry for each XML element
-                List<WikipediaEntry> entries = new ArrayList<>(nodes.getLength());
+                final Document doc = DOCUMENT_BUILDER.parse(in);
+                final NodeList nodes = (NodeList) xpathPlacemark.evaluate(doc, XPathConstants.NODESET);
+                final List<String> names = new ArrayList<>(nodes.getLength());
+                final List<WikipediaEntry> entries = new ArrayList<>(nodes.getLength());
                 for (int i = 0; i < nodes.getLength(); i++) {
                     final Node node = nodes.item(i);
                     final String name = xpathName.evaluate(node);
+                    names.add(name);
                     final LatLon latLon = new LatLon((
                             (double) xpathLat.evaluate(node, XPathConstants.NUMBER)),
                             (double) xpathLon.evaluate(node, XPathConstants.NUMBER));
                     if ("wikidata".equals(wikipediaLang)) {
-                        entries.add(new WikidataEntry(name, latLon, getLabelForWikidata(name, Locale.getDefault())));
+                        entries.add(new WikidataEntry(name, latLon, null));
                     } else {
                         entries.add(new WikipediaEntry(name, wikipediaLang, name, latLon
                         ));
                     }
                 }
-                return entries;
+                if ("wikidata".equals(wikipediaLang)) {
+                    final Map<String, String> labels = getLabelForWikidata(names, Locale.getDefault());
+                    final List<WikipediaEntry> entriesWithLabel = new ArrayList<>(nodes.getLength());
+                    for (WikipediaEntry entry : entries) {
+                        entriesWithLabel.add(new WikidataEntry(entry.wikipediaArticle, entry.coordinate, labels.get(entry.wikipediaArticle)));
+                    }
+                    return entriesWithLabel;
+                } else {
+                    return entries;
+                }
             }
         } catch (Exception ex) {
             throw new RuntimeException(ex);

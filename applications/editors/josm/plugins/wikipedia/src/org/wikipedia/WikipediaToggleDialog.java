@@ -54,13 +54,13 @@ public class WikipediaToggleDialog extends ToggleDialog implements ActiveLayerCh
                 new SideButton(new WikipediaLoadCoordinatesAction(true)),
                 new SideButton(new WikipediaLoadCategoryAction()),
                 new SideButton(new PasteWikipediaArticlesAction()),
-                new SideButton(new AddWikipediaTagAction()),
+                new SideButton(new AddWikipediaTagAction(list)),
                 new SideButton(new WikipediaSettingsAction(), false)));
         updateTitle();
     }
     /** A string describing the context (use-case) for determining the dialog title */
     String titleContext = null;
-    final StringProperty wikipediaLang = new StringProperty("wikipedia.lang", LanguageInfo.getJOSMLocaleCode().substring(0, 2));
+    static final StringProperty wikipediaLang = new StringProperty("wikipedia.lang", LanguageInfo.getJOSMLocaleCode().substring(0, 2));
     final Set<String> articles = new HashSet<>();
     final DefaultListModel<WikipediaEntry> model = new DefaultListModel<>();
     final JList<WikipediaEntry> list = new JList<WikipediaEntry>(model) {
@@ -286,30 +286,42 @@ public class WikipediaToggleDialog extends ToggleDialog implements ActiveLayerCh
         }
     }
 
-    class AddWikipediaTagAction extends AbstractAction {
+    static class AddWikipediaTagAction extends AbstractAction {
 
-        public AddWikipediaTagAction() {
+        private final JList<WikipediaEntry> list;
+
+        public AddWikipediaTagAction(JList<WikipediaEntry> list) {
             super(tr("Add Tag"));
+            this.list = list;
             new ImageProvider("pastetags").getResource().attachImageIcon(this, true);
             putValue(SHORT_DESCRIPTION, tr("Adds a ''wikipedia'' tag corresponding to this article to the selected objects"));
         }
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            if (list.getSelectedValue() != null) {
-                Tag tag = ((WikipediaEntry) list.getSelectedValue()).createWikipediaTag();
-                if (tag != null) {
-                    final Collection<OsmPrimitive> selected = Main.getLayerManager().getEditDataSet().getSelected();
-                    if (!GuiUtils.confirmOverwrite(tag.getKey(), tag.getValue(), selected)) {
-                        return;
-                    }
-                    ChangePropertyCommand cmd = new ChangePropertyCommand(
-                            selected,
-                            tag.getKey(), tag.getValue());
-                    Main.main.undoRedo.add(cmd);
-                    Main.worker.submit(new FetchWikidataAction.Fetcher(selected));
-                }
+            addTag(list.getSelectedValue());
+        }
+
+        static void addTag(WikipediaEntry entry) {
+            if (entry == null) {
+                return;
             }
+            addTag(entry.createWikipediaTag());
+        }
+
+        static void addTag(Tag tag) {
+            if (tag == null) {
+                return;
+            }
+            final Collection<OsmPrimitive> selected = Main.getLayerManager().getEditDataSet().getSelected();
+            if (!GuiUtils.confirmOverwrite(tag.getKey(), tag.getValue(), selected)) {
+                return;
+            }
+            ChangePropertyCommand cmd = new ChangePropertyCommand(
+                    selected,
+                    tag.getKey(), tag.getValue());
+            Main.main.undoRedo.add(cmd);
+            Main.worker.submit(new FetchWikidataAction.Fetcher(selected));
         }
     }
 

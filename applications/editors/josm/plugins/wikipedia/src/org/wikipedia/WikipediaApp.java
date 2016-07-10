@@ -120,6 +120,34 @@ public final class WikipediaApp {
         }
     }
 
+    static List<WikidataEntry> getWikidataEntriesForQuery(final String language, final String query) {
+        try {
+            final String url = "https://www.wikidata.org/w/api.php" +
+                    "?action=wbsearchentities" +
+                    "&language=" + language +
+                    "&strictlanguage=false" +
+                    "&search=" + Utils.encodeUrl(query) +
+                    "&limit=50" +
+                    "&format=xml";
+            final List<WikidataEntry> r = new ArrayList<>();
+            try (final InputStream in = HttpClient.create(new URL(url)).setReasonForRequest("Wikipedia").connect().getContent()) {
+                final Document xml = DOCUMENT_BUILDER.parse(in);
+                final NodeList nodes = (NodeList) X_PATH.compile("//entity").evaluate(xml, XPathConstants.NODESET);
+                final XPathExpression xpathId = X_PATH.compile("@id");
+                final XPathExpression xpathLabel = X_PATH.compile("@label");
+                for (int i = 0; i < nodes.getLength(); i++) {
+                    final Node node = nodes.item(i);
+                    final String id = (String) xpathId.evaluate(node, XPathConstants.STRING);
+                    final String label = (String) xpathLabel.evaluate(node, XPathConstants.STRING);
+                    r.add(new WikidataEntry(id, label, null));
+                }
+            }
+            return r;
+        } catch (Exception ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
     static List<WikipediaEntry> getEntriesFromCategory(String wikipediaLang, String category, int depth) {
         try {
             final String url = "https://tools.wmflabs.org/cats-php/"

@@ -14,6 +14,7 @@ public class WikipediaPlugin extends Plugin {
         new WikipediaCopyTemplate();
         MainMenu.add(Main.main.menu.dataMenu, new WikipediaAddNamesAction());
         MainMenu.add(Main.main.menu.dataMenu, new FetchWikidataAction());
+        MainMenu.add(Main.main.menu.dataMenu, new WikidataItemSearchDialog.Action());
     }
 
     @Override

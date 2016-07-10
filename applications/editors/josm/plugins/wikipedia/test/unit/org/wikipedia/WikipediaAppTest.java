@@ -149,6 +149,14 @@ public class WikipediaAppTest {
     }
 
     @Test
+    public void testForQuery() throws Exception {
+        final List<WikipediaApp.WikidataEntry> entries = WikipediaApp.getWikidataEntriesForQuery("de", "Österreich");
+        assertThat(entries.get(0).wikipediaArticle, is("Q40"));
+        assertThat(entries.get(0).wikipediaLang, is("wikidata"));
+        // assertThat(entries.get(0).label, is("Österreich"));
+    }
+
+    @Test
     public void testFromCoordinatesWikidata() throws Exception {
         final List<WikipediaEntry> entries = WikipediaApp.getEntriesFromCoordinates("wikidata",
                 new LatLon(47.20, 11.30), new LatLon(47.22, 11.32));

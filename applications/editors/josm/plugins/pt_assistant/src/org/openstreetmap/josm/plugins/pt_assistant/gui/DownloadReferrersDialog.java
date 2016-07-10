@@ -27,7 +27,7 @@ public class DownloadReferrersDialog extends JPanel {
 	public DownloadReferrersDialog() {
 		
 		selectedOption = Integer.MIN_VALUE;
-		message = tr("Do you want to download referres of platforms and stop positions?");
+		message = tr("Do you want to download referrers of platforms and stop positions?");
 		checkbox = new JCheckBox(tr("Remember my choice and do not ask me again in this session"));
 		options = new String[2];
 		options[0] = tr("Yes");

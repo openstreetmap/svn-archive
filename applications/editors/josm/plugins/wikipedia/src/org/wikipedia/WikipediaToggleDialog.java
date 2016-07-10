@@ -42,6 +42,7 @@ import org.openstreetmap.josm.gui.layer.MainLayerManager.ActiveLayerChangeListen
 import org.openstreetmap.josm.tools.ImageProvider;
 import org.openstreetmap.josm.tools.LanguageInfo;
 import org.openstreetmap.josm.tools.OpenBrowser;
+import org.openstreetmap.josm.tools.Utils;
 import org.wikipedia.WikipediaApp.WikipediaEntry;
 
 public class WikipediaToggleDialog extends ToggleDialog implements ActiveLayerChangeListener, DataSetListenerAdapter.Listener {
@@ -77,7 +78,8 @@ public class WikipediaToggleDialog extends ToggleDialog implements ActiveLayerCh
                             bbox.visit(entry.coordinate);
                             Main.map.mapView.zoomTo(bbox);
                         }
-                        SearchAction.search(entry.name.replaceAll("\\(.*\\)", ""), SearchAction.SearchMode.replace);
+                        final String search = Utils.firstNonNull(entry.label, entry.wikipediaArticle).replaceAll("\\(.*\\)", "");
+                        SearchAction.search(search, SearchAction.SearchMode.replace);
                     }
                 }
             });

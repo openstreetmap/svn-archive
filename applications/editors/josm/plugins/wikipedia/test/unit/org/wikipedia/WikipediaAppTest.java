@@ -132,7 +132,7 @@ public class WikipediaAppTest {
 
     @Test
     public void testGetBrowserUrl() {
-        final WikipediaEntry entry = new WikipediaEntry("Sternheim & Emanuel", "de", "Sternheim & Emanuel");
+        final WikipediaEntry entry = new WikipediaEntry("de", "Sternheim & Emanuel");
         assertThat(entry.getBrowserUrl(), is("https://de.wikipedia.org/wiki/Sternheim_%26_Emanuel"));
     }
 
@@ -155,7 +155,7 @@ public class WikipediaAppTest {
         assertTrue(Utils.exists(entries, new Predicate<WikipediaEntry>() {
             @Override
             public boolean evaluate(WikipediaEntry entry) {
-                return "Q865406".equals(entry.wikipediaArticle) && "wikidata".equals(entry.wikipediaLang) && "Birgitzer Alm".equals(entry.name);
+                return "Q865406".equals(entry.wikipediaArticle) && "wikidata".equals(entry.wikipediaLang) && "Birgitzer Alm".equals(entry.label);
             }
         }));
     }
@@ -191,9 +191,9 @@ public class WikipediaAppTest {
 
     @Test
     public void testWIWOSMStatus() throws Exception {
-        final WikipediaEntry entry1 = new WikipediaEntry(null, "en", "Vienna");
-        final WikipediaEntry entry2 = new WikipediaEntry(null, "en", "London");
-        final WikipediaEntry entry3 = new WikipediaEntry(null, "en", "a-non-existing-article");
+        final WikipediaEntry entry1 = new WikipediaEntry("en", "Vienna");
+        final WikipediaEntry entry2 = new WikipediaEntry("en", "London");
+        final WikipediaEntry entry3 = new WikipediaEntry("en", "a-non-existing-article");
         WikipediaApp.updateWIWOSMStatus("en", Arrays.asList(entry1, entry2, entry3));
         assertThat(entry1.getWiwosmStatus(), is(true));
         assertThat(entry2.getWiwosmStatus(), is(true));

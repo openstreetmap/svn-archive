@@ -95,9 +95,9 @@ public final class WikipediaApp {
                             (double) xpathLat.evaluate(node, XPathConstants.NUMBER)),
                             (double) xpathLon.evaluate(node, XPathConstants.NUMBER));
                     if ("wikidata".equals(wikipediaLang)) {
-                        entries.add(new WikidataEntry(name, latLon, null));
+                        entries.add(new WikidataEntry(name, null, latLon));
                     } else {
-                        entries.add(new WikipediaEntry(name, wikipediaLang, name, latLon
+                        entries.add(new WikipediaEntry(wikipediaLang, name, name, latLon
                         ));
                     }
                 }
@@ -108,7 +108,7 @@ public final class WikipediaApp {
                     }
                     final List<WikipediaEntry> entriesWithLabel = new ArrayList<>(nodes.getLength());
                     for (WikipediaEntry entry : entries) {
-                        entriesWithLabel.add(new WikidataEntry(entry.wikipediaArticle, entry.coordinate, labels.get(entry.wikipediaArticle)));
+                        entriesWithLabel.add(new WikidataEntry(entry.wikipediaArticle, labels.get(entry.wikipediaArticle), entry.coordinate));
                     }
                     return entriesWithLabel;
                 } else {
@@ -133,7 +133,7 @@ public final class WikipediaApp {
                 final List<WikipediaEntry> entries = new ArrayList<>();
                 while (scanner.hasNext()) {
                     final String article = scanner.next().trim().replace("_", " ");
-                    entries.add(new WikipediaEntry(article, wikipediaLang, article));
+                    entries.add(new WikipediaEntry(wikipediaLang, article));
                 }
                 return entries;
             }
@@ -148,7 +148,7 @@ public final class WikipediaApp {
 
             @Override
             public WikipediaEntry apply(String x) {
-                return new WikipediaEntry(x, wikipediaLang, x);
+                return new WikipediaEntry(wikipediaLang, x);
             }
         }));
     }
@@ -408,17 +408,17 @@ public final class WikipediaApp {
 
     static class WikipediaEntry implements Comparable<WikipediaEntry> {
 
-        final String name;
+        final String label;
         final String wikipediaLang, wikipediaArticle;
         final LatLon coordinate;
         private Boolean wiwosmStatus;
 
-        public WikipediaEntry(String name, String wikipediaLang, String wikipediaArticle) {
-            this(name, wikipediaLang, wikipediaArticle, null);
+        WikipediaEntry(String wikipediaLang, String wikipediaArticle) {
+            this(wikipediaLang, wikipediaArticle, null, null);
         }
 
-        public WikipediaEntry(String name, String wikipediaLang, String wikipediaArticle, LatLon coordinate) {
-            this.name = name;
+        WikipediaEntry(String wikipediaLang, String wikipediaArticle, String label, LatLon coordinate) {
+            this.label = label;
             this.wikipediaLang = wikipediaLang;
             this.wikipediaArticle = wikipediaArticle;
             this.coordinate = coordinate;
@@ -441,24 +441,24 @@ public final class WikipediaApp {
         }
 
         public String getLabelText() {
-            return name;
+            return wikipediaArticle;
         }
 
         @Override
         public String toString() {
-            return name;
+            return wikipediaArticle;
         }
 
         @Override
         public int compareTo(WikipediaEntry o) {
-            return AlphanumComparator.getInstance().compare(name, o.name);
+            return AlphanumComparator.getInstance().compare(label, o.label);
         }
     }
 
     static class WikidataEntry extends WikipediaEntry {
 
-        WikidataEntry(String id, LatLon coordinate, String label) {
-            super(label, "wikidata", id, coordinate);
+        WikidataEntry(String id, String label, LatLon coordinate) {
+            super("wikidata", id, label, coordinate);
             ensureValidWikidataId(id);
         }
 
@@ -469,7 +469,7 @@ public final class WikipediaApp {
 
         @Override
         public String getLabelText() {
-            return getLabelText(name, wikipediaArticle);
+            return getLabelText(label, wikipediaArticle);
         }
 
         static String getLabelText(String bold, String gray) {

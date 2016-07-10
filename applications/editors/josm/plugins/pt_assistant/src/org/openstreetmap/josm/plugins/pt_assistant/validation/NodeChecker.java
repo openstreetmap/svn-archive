@@ -33,10 +33,7 @@ public class NodeChecker extends Checker {
 		for (OsmPrimitive referrer : referrers) {
 			if (referrer.getType().equals(OsmPrimitiveType.WAY)) {
 				Way referrerWay = (Way) referrer;
-				if (RouteUtils.isWaySuitableForBuses(referrerWay) || referrerWay.hasTag("railway", "tram")
-						|| referrerWay.hasTag("railway", "subway") || referrerWay.hasTag("raiilway", "subway")
-						|| referrerWay.hasTag("railway", "light_rail")
-						|| referrerWay.hasTag("railway", "construction")) {
+				if (RouteUtils.isWaySuitableForPublicTransport(referrerWay)) {
 					return;
 				}
 
@@ -64,11 +61,14 @@ public class NodeChecker extends Checker {
 			List<Node> primitives = new ArrayList<>(1);
 			primitives.add(node);
 			if (referrer.getType().equals(OsmPrimitiveType.WAY)) {
-				TestError e = new TestError(this.test, Severity.WARNING,
-						tr("PT: Platform should not be part of a way"),
-						PTAssistantValidatorTest.ERROR_CODE_PLATFORM_PART_OF_HIGHWAY, primitives);
-				errors.add(e);
-				return;
+				Way referringWay = (Way) referrer;
+				if (RouteUtils.isWaySuitableForPublicTransport(referringWay)) {
+					TestError e = new TestError(this.test, Severity.WARNING,
+							tr("PT: Platform should not be part of a way"),
+							PTAssistantValidatorTest.ERROR_CODE_PLATFORM_PART_OF_HIGHWAY, primitives);
+					errors.add(e);
+					return;
+				}
 			}
 		}
 	}

@@ -200,7 +200,7 @@ public class WayChecker extends Checker {
 			List<Way> highlighted = new ArrayList<>(1);
 			// highlighted.add(problematicWay);
 			Set<Way> adjacentWays = checkAdjacentWays(problematicWay, new HashSet<Way>());
-			adjacentWays.removeAll(problematicWays);	
+			adjacentWays.removeAll(problematicWays);
 			highlighted.add(problematicWay);
 			highlighted.addAll(adjacentWays);
 			TestError e = new TestError(this.test, Severity.WARNING,
@@ -208,6 +208,20 @@ public class WayChecker extends Checker {
 					PTAssistantValidatorTest.ERROR_CODE_DIRECTION, primitives, highlighted);
 			this.errors.add(e);
 		}
+
+//		Set<Way> primitivesToReport = new HashSet<>();
+//		primitivesToReport.addAll(problematicWays);
+//		for (Way problematicWay : problematicWays) {
+//			Set<Way> adjacentWays = checkAdjacentWays(problematicWay, new HashSet<Way>());
+//			primitivesToReport.addAll(adjacentWays);
+//		}
+//
+//		List<Relation> primitives = new ArrayList<>(1);
+//		primitives.add(relation);
+//		TestError e = new TestError(this.test, Severity.WARNING,
+//				tr("PT: Route passes a oneway road in the wrong direction"),
+//				PTAssistantValidatorTest.ERROR_CODE_DIRECTION, primitives, primitivesToReport);
+//		this.errors.add(e);
 
 	}
 

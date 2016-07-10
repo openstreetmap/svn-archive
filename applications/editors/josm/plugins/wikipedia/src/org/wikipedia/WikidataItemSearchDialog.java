@@ -5,6 +5,7 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Collections;
@@ -14,22 +15,29 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 import javax.swing.DefaultListCellRenderer;
+import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JPanel;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
+import org.openstreetmap.josm.data.osm.Tag;
 import org.openstreetmap.josm.gui.ExtendedDialog;
+import org.openstreetmap.josm.gui.tagging.ac.AutoCompletingComboBox;
+import org.openstreetmap.josm.gui.tagging.ac.AutoCompletionListItem;
 import org.openstreetmap.josm.gui.util.GuiHelper;
 import org.openstreetmap.josm.gui.widgets.SearchTextResultListPanel;
+import org.openstreetmap.josm.tools.GBC;
 import org.openstreetmap.josm.tools.Utils;
 
 public final class WikidataItemSearchDialog extends ExtendedDialog {
 
     private final Selector selector;
+    private final AutoCompletingComboBox targetKey;
     private static final WikidataItemSearchDialog INSTANCE = new WikidataItemSearchDialog();
 
     private WikidataItemSearchDialog() {
-        super(Main.parent, tr("Search Wikidata items"), new String[]{tr("Add ''wikipedia'' tag"), tr("Cancel")});
+        super(Main.parent, tr("Search Wikidata items"), new String[]{tr("Add Tag"), tr("Cancel")});
         this.selector = new Selector();
         this.selector.setDblClickListener(new ActionListener() {
             @Override
@@ -37,7 +45,14 @@ public final class WikidataItemSearchDialog extends ExtendedDialog {
                 buttonAction(0, null);
             }
         });
-        setContent(selector, false);
+        this.targetKey = new AutoCompletingComboBox();
+        this.targetKey.setSelectedItem(new AutoCompletionListItem("wikidata"));
+
+        final JPanel panel = new JPanel(new GridBagLayout());
+        panel.add(selector, GBC.eop().fill(GBC.BOTH));
+        panel.add(new JLabel(tr("Target key: ")));
+        panel.add(targetKey, GBC.eol().fill(GBC.HORIZONTAL));
+        setContent(panel, false);
         setPreferredSize(new Dimension(600, 300));
     }
 
@@ -52,10 +67,18 @@ public final class WikidataItemSearchDialog extends ExtendedDialog {
 
     @Override
     public ExtendedDialog showDialog() {
+        initTargetKeys();
         selector.init();
         super.showDialog();
         selector.clearSelection();
+        selector.requestFocus();
         return this;
+    }
+
+    private void initTargetKeys() {
+        final List<AutoCompletionListItem> keys = Main.getLayerManager().getEditLayer().data.getAutoCompletionManager().getKeys();
+        targetKey.setPossibleACItems(keys);
+        targetKey.setEditable(true);
     }
 
     @Override
@@ -64,7 +87,13 @@ public final class WikidataItemSearchDialog extends ExtendedDialog {
         if (buttonIndex != 0) {
             return;
         }
-        WikipediaToggleDialog.AddWikipediaTagAction.addTag(selector.getSelectedItem());
+        final WikipediaApp.WikidataEntry selected = selector.getSelectedItem();
+        if (selected == null) {
+            return;
+        }
+        final String key = Tag.removeWhiteSpaces(targetKey.getEditor().getItem().toString());
+        final String value = selected.createWikipediaTag().getValue();
+        WikipediaToggleDialog.AddWikipediaTagAction.addTag(new Tag(key, value));
     }
 
     private static class Selector extends SearchTextResultListPanel<WikipediaApp.WikidataEntry> {

@@ -19,78 +19,78 @@ import org.openstreetmap.josm.plugins.videomapping.VideoPositionLayer;
 
 //extends video playback, major control has the video player
 public class GPSVideoPlayer extends VideoPlayer {
-	private List<GPSVideo> videos;
-	private VideoPositionLayer videoPositionLayer;
+    private List<GPSVideo> videos;
+    private VideoPositionLayer videoPositionLayer;
 
-	public GPSVideoPlayer(DateFormat videoTimeFormat,VideoPositionLayer videoPositionLayer) throws HeadlessException {
-		super(videoTimeFormat);
-		videos = new LinkedList<>();
-		this.videoPositionLayer=videoPositionLayer;
-		videoPositionLayer.setGPSVideoPlayer(this);
-	}
+    public GPSVideoPlayer(DateFormat videoTimeFormat, VideoPositionLayer videoPositionLayer) throws HeadlessException {
+        super(videoTimeFormat);
+        videos = new LinkedList<>();
+        this.videoPositionLayer = videoPositionLayer;
+        videoPositionLayer.setGPSVideoPlayer(this);
+    }
 
-	public GPSVideo addVideo(File videofile) {		
-		GPSVideo video = new GPSVideo(super.addVideo(videofile,Integer.toString(videos.size())));
-		enableSingleVideoMode(true);
-		videos.add(video);
-		addSyncButton(video);
-		return video;
-	}
+    public GPSVideo addVideo(File videofile) {
+        GPSVideo video = new GPSVideo(super.addVideo(videofile, Integer.toString(videos.size())));
+        enableSingleVideoMode(true);
+        videos.add(video);
+        addSyncButton(video);
+        return video;
+    }
 
-	private void addSyncButton(GPSVideo video) {
-		JButton syncButton= new JButton(tr("Sync"));
-		syncButton.setBackground(Color.RED);		
-		syncButton.addActionListener(new ActionListener() {
+    private void addSyncButton(GPSVideo video) {
+        JButton syncButton = new JButton(tr("Sync"));
+        syncButton.setBackground(Color.RED);
+        syncButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-            	resync(e);
-            }			
-		});
-		video.SyncComponent=syncButton;
-		//video.panel.add(syncButton,BorderLayout.SOUTH);
-		controlsPanel.add(syncButton);
-	}	
+                resync(e);
+            }
+        });
+        video.SyncComponent = syncButton;
+        //video.panel.add(syncButton,BorderLayout.SOUTH);
+        controlsPanel.add(syncButton);
+    }
 
-	//do a (re)sync
-	private void resync(ActionEvent e) {
-		JButton btn =(JButton)e.getSource();
-    	GPSVideo v=findVideo(btn);
-    	v.doSync(videoPositionLayer);
-    	btn.setBackground(Color.GREEN);
-    	enableSingleVideoMode(false);
-	}
-	
-	protected GPSVideo findVideo(JButton source) {
-		for (GPSVideo v : videos) {
-			if (v.SyncComponent==source) return v;
-		}
-		return null;
-	}
-	
-	//jump in all videos this date, if possible
-	public void jumpTo(Date date) {
-		for (GPSVideo video : videos) {
-			video.jumpTo(date);
-		}
-	}
-	
-	public boolean areAllVideosSynced() {
-		for (GPSVideo video : videos) {
-			if (!video.isSynced()) return false;
-		}
-		return true;		
-	}
+    //do a (re)sync
+    private void resync(ActionEvent e) {
+        JButton btn = (JButton) e.getSource();
+        GPSVideo v = findVideo(btn);
+        v.doSync(videoPositionLayer);
+        btn.setBackground(Color.GREEN);
+        enableSingleVideoMode(false);
+    }
 
-	@Override
-	public void update_plays() {		
-		super.update_plays();
-		if (areAllVideosSynced())
-			videoPositionLayer.setIconPosition( videos.get(0).getCurrentWayPoint());
-	}
-	
-	@Override
-	public void windowClosing(WindowEvent arg0) {
-		videoPositionLayer.unload();
-		super.windowClosing(arg0);
-	}
+    protected GPSVideo findVideo(JButton source) {
+        for (GPSVideo v : videos) {
+            if (v.SyncComponent == source) return v;
+        }
+        return null;
+    }
+
+    //jump in all videos this date, if possible
+    public void jumpTo(Date date) {
+        for (GPSVideo video : videos) {
+            video.jumpTo(date);
+        }
+    }
+
+    public boolean areAllVideosSynced() {
+        for (GPSVideo video : videos) {
+            if (!video.isSynced()) return false;
+        }
+        return true;
+    }
+
+    @Override
+    public void update_plays() {
+        super.update_plays();
+        if (areAllVideosSynced())
+            videoPositionLayer.setIconPosition(videos.get(0).getCurrentWayPoint());
+    }
+
+    @Override
+    public void windowClosing(WindowEvent arg0) {
+        videoPositionLayer.unload();
+        super.windowClosing(arg0);
+    }
 }

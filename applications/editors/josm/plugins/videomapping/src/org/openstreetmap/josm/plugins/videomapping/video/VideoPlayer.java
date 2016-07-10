@@ -36,10 +36,10 @@ import uk.co.caprica.vlcj.player.DeinterlaceMode;
  */
 public class VideoPlayer extends JFrame implements WindowListener, VideosObserver, VideoPlayerObserver {
     private static final int notificationIntervall = 500;
-    protected JPanel screenPanel,controlsPanel,canvasPanel;
+    protected JPanel screenPanel, controlsPanel, canvasPanel;
     private JSlider timeline;
-    private JButton play,back,forward;
-    private JToggleButton loop,mute;
+    private JButton play, back, forward;
+    private JToggleButton loop, mute;
     private JSlider speed;
 //    private DateFormat videoTimeFormat;
     private VideoEngine videoengine;
@@ -49,28 +49,28 @@ public class VideoPlayer extends JFrame implements WindowListener, VideosObserve
     private boolean isManualJump;
     private Timer notificationTimer;
     private List<VideoPlayerObserver> observers;
-    
+
     public VideoPlayer(DateFormat videoTimeFormat) throws HeadlessException {
-        super();        
+        super();
 //        this.videoTimeFormat=videoTimeFormat;
         //setup playback notifications
-        videoengine=new VideoEngine(this);
+        videoengine = new VideoEngine(this);
         videoengine.addObserver(this);
-        observers=new LinkedList<>();        
+        observers = new LinkedList<>();
         addObserver(this);
         //setup GUI
         setSize(400, 300); //later we apply movie size
         setAlwaysOnTop(true);
         createUI();
         addUI();
-        addUIListeners();    
+        addUIListeners();
         setVisible(true);
-        setAlwaysOnTop(true);        
+        setAlwaysOnTop(true);
         this.addWindowListener(this);
     }
-    
+
     public Video addVideo(File videofile, String id) {
-        Video video = new Video(videofile,id,videoengine.mediaPlayerFactory);
+        Video video = new Video(videofile, id, videoengine.mediaPlayerFactory);
         canvasPanel.add(video.panel);
         video.canvas.setSize(new Dimension(300, 300)); // will be updated by the video engine itself
         videoengine.add(video);
@@ -78,11 +78,11 @@ public class VideoPlayer extends JFrame implements WindowListener, VideosObserve
         startNotificationTimer();
         return video;
     }
-    
-    public List <Video> getVideos() {
+
+    public List<Video> getVideos() {
         return videoengine.getVideos();
     }
-    
+
     public void pause() {
         videoengine.pause();
         if (videoengine.isNoVideoPlaying())
@@ -90,32 +90,32 @@ public class VideoPlayer extends JFrame implements WindowListener, VideosObserve
         else
             startNotificationTimer();
     }
-    
+
     public void pauseAll() {
         stopNotificationTimer();
         videoengine.pauseAll();
     }
 
     public void backward() {
-        videoengine.jumpFor(-jumpLength);    
+        videoengine.jumpFor(-jumpLength);
     }
 
     public void forward() {
-        videoengine.jumpFor(jumpLength);    
+        videoengine.jumpFor(jumpLength);
     }
 
     public void setSpeed(Integer percent) {
-        speed.setValue(percent);        
+        speed.setValue(percent);
     }
-    
+
     public Integer getSpeed() {
         return speed.getValue();
     }
-    
+
     public void setDeinterlacer(DeinterlaceMode deinterlacer) {
         videoengine.setDeinterlacer(deinterlacer);
     }
-    
+
     public void setSubtitles(boolean enabled) {
         videoengine.setSubtitles(enabled);
     }
@@ -126,63 +126,63 @@ public class VideoPlayer extends JFrame implements WindowListener, VideosObserve
 
     //TODO auf mehrere Videos umstellen
     public void toggleLooping() {
-        if (loopingTimer==null) {
+        if (loopingTimer == null) {
             //do reset after loop time experienced
-            final long videoResetTime = (long) videoengine.getVideoTime()-loopLength/2;
-            TimerTask reset = new TimerTask() {                
+            final long videoResetTime = videoengine.getVideoTime()-loopLength/2;
+            TimerTask reset = new TimerTask() {
                 @Override
                 public void run() {
                     videoengine.jumpTo(videoResetTime);
                 }
             };
-            loopingTimer= new Timer();
-            loopingTimer.schedule(reset,loopLength/2,loopLength);
+            loopingTimer = new Timer();
+            loopingTimer.schedule(reset, loopLength/2, loopLength);
         } else {
             loopingTimer.cancel();
-            loopingTimer=null;
+            loopingTimer = null;
         }
     }
 
     //create all normal player controls
     private void createUI() {
         //setIconImage();
-        timeline = new JSlider(0,100,0);
+        timeline = new JSlider(0, 100, 0);
         timeline.setMajorTickSpacing(5);
         timeline.setMinorTickSpacing(1);
         timeline.setPaintTicks(true);
-        play= new JButton(tr("play"));
-        back= new JButton("<");
-        forward= new JButton(">");
-        loop= new JToggleButton(tr("loop"));
-        mute= new JToggleButton(tr("mute"));
-        speed = new JSlider(0,200,100);
+        play = new JButton(tr("play"));
+        back = new JButton("<");
+        forward = new JButton(">");
+        loop = new JToggleButton(tr("loop"));
+        mute = new JToggleButton(tr("mute"));
+        speed = new JSlider(0, 200, 100);
         speed.setMajorTickSpacing(50);
-        speed.setPaintTicks(true);          
+        speed.setPaintTicks(true);
         speed.setOrientation(Adjustable.VERTICAL);
         Hashtable<Integer, JLabel> labelTable = new Hashtable<>();
-        labelTable.put( new Integer( 100 ), new JLabel("1x") );
-        labelTable.put( new Integer( 50 ), new JLabel("-2x") );
-        labelTable.put( new Integer( 200 ), new JLabel("2x") );
-        speed.setLabelTable( labelTable );
+        labelTable.put(new Integer(100), new JLabel("1x"));
+        labelTable.put(new Integer(50), new JLabel("-2x"));
+        labelTable.put(new Integer(200), new JLabel("2x"));
+        speed.setLabelTable(labelTable);
         speed.setPaintLabels(true);
     }
-    
+
     //puts all player controls to screen
     private void addUI() {
         //create layouts
         this.setLayout(new BorderLayout());
-        screenPanel=new JPanel();
+        screenPanel = new JPanel();
         screenPanel.setLayout(new BorderLayout());
-        controlsPanel=new JPanel();
+        controlsPanel = new JPanel();
         controlsPanel.setLayout(new FlowLayout());
-        canvasPanel=new JPanel();
+        canvasPanel = new JPanel();
         canvasPanel.setLayout(new FlowLayout());
-        add(screenPanel,BorderLayout.CENTER);
-        add(controlsPanel,BorderLayout.SOUTH);
+        add(screenPanel, BorderLayout.CENTER);
+        add(controlsPanel, BorderLayout.SOUTH);
         //fill screen panel
-        screenPanel.add(canvasPanel,BorderLayout.CENTER);
-        screenPanel.add(timeline,BorderLayout.SOUTH);
-        screenPanel.add(speed,BorderLayout.EAST);
+        screenPanel.add(canvasPanel, BorderLayout.CENTER);
+        screenPanel.add(timeline, BorderLayout.SOUTH);
+        screenPanel.add(speed, BorderLayout.EAST);
         controlsPanel.add(play);
         controlsPanel.add(back);
         controlsPanel.add(forward);
@@ -191,83 +191,83 @@ public class VideoPlayer extends JFrame implements WindowListener, VideosObserve
         loop.setSelected(false);
         mute.setSelected(false);
     }
-    
+
     //add UI functionality
-    private void addUIListeners() {        
-        
-        play.addActionListener(new ActionListener() {            
+    private void addUIListeners() {
+
+        play.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent arg0) {
-                pause();                
+                pause();
             }
         });
-        
+
         back.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent arg0) {
                 backward();
             }
         });
-        
+
         forward.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent arg0) {
                 forward();
             }
         });
-        
+
         loop.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent arg0) {
                 toggleLooping();
             }
         });
-        
+
         mute.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent arg0) {
                 mute();
             }
         });
-        
+
         timeline.addChangeListener(new ChangeListener() {
             @Override
             public void stateChanged(ChangeEvent e) {
-                //skip events, fired by this sliede, one cycle ago                
+                //skip events, fired by this sliede, one cycle ago
                 if (!isManualJump) {
                     isManualJump = true;
                     videoengine.jumpToPosition((timeline.getValue()));
                 }
             }
         });
-        
-        speed.addChangeListener(new ChangeListener() {            
+
+        speed.addChangeListener(new ChangeListener() {
             @Override
-            public void stateChanged(ChangeEvent arg0) {                            
-                if(!speed.getValueIsAdjusting()) {
+            public void stateChanged(ChangeEvent arg0) {
+                if (!speed.getValueIsAdjusting()) {
                     videoengine.setSpeed(speed.getValue());
                 }
             }
         });
     }
-    
+
     public void setJumpLength(long ms) {
         jumpLength = ms;
     }
-    
+
     public void setLoopLength(long ms) {
         loopLength = ms;
     }
-    
+
     public void enableSingleVideoMode(boolean enabled) {
         pauseAll();
         videoengine.enableSingleVideoMode(enabled);
     }
-    
+
     public void addObserver(VideoPlayerObserver observer) {
         observers.add(observer);
     }
-    
+
     private void stopNotificationTimer() {
         /*
         if(notificationTimer!=null)
@@ -279,19 +279,19 @@ public class VideoPlayer extends JFrame implements WindowListener, VideosObserve
     }
 
     private void startNotificationTimer() {
-        notificationTimer= new Timer();
-        notificationTimer.schedule(new TimerTask() {                
+        notificationTimer = new Timer();
+        notificationTimer.schedule(new TimerTask() {
             @Override
             public void run() {
                 notifyObservers();
-                
+
             }
-        },notificationIntervall,notificationIntervall);
+        }, notificationIntervall, notificationIntervall);
     }
-    
-    private void  notifyObservers() {
+
+    private void notifyObservers() {
         for (VideoPlayerObserver observer : observers) {
-            observer.update_plays();//TODO hier müssten gleich die Zeiten übergeben werden
+            observer.update_plays(); // TODO hier müssten gleich die Zeiten übergeben werden
         }
     }
 
@@ -302,7 +302,7 @@ public class VideoPlayer extends JFrame implements WindowListener, VideosObserve
     public void windowClosed(WindowEvent arg0) { }
 
     @Override
-    public void windowClosing(WindowEvent arg0) {    
+    public void windowClosing(WindowEvent arg0) {
         videoengine.unload();
     }
 
@@ -320,8 +320,7 @@ public class VideoPlayer extends JFrame implements WindowListener, VideosObserve
 
     @Override
     public void update(VideoObserversEvents event) {
-        switch (event)
-        {        
+        switch (event) {
             case resizing:
             {
                 pack();
@@ -333,10 +332,10 @@ public class VideoPlayer extends JFrame implements WindowListener, VideosObserve
                 break;
             }
             case jumping:
-            {            
+            {
                 break;
             }
-        }        
+        }
     }
 
     //keep internal controls up to date during playback
@@ -351,7 +350,7 @@ public class VideoPlayer extends JFrame implements WindowListener, VideosObserve
         });
         isManualJump = false;
     }
-    
+
     public boolean isCorrectlyInitiliazed() {
         return videoengine != null && videoengine.mediaPlayerFactory != null;
     }

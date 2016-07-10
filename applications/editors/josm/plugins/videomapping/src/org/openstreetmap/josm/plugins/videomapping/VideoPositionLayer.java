@@ -40,17 +40,17 @@ public class VideoPositionLayer extends Layer {
     private ImageIcon layerIcon;
     private DateFormat gpsTimeFormat;
     private WayPoint iconPosition;
-    private final int GPS_INTERVALL=1000;
+    private final int GPS_INTERVALL = 1000;
     private GPSVideoPlayer gpsVideoPlayer;
     private boolean autoCenter;
 
     public VideoPositionLayer(GpxLayer gpsLayer) {
         super("videolayer");
         layerIcon = new ImageIcon("images/videomapping.png");
-        gpsTrack=importGPSLayer(gpsLayer.data);
-        gpsTimeFormat= new SimpleDateFormat("HH:mm:ss");
-        iconPosition=gpsTrack.get(0);
-        Main.getLayerManager().addLayer(this);        
+        gpsTrack = importGPSLayer(gpsLayer.data);
+        gpsTimeFormat = new SimpleDateFormat("HH:mm:ss");
+        iconPosition = gpsTrack.get(0);
+        Main.getLayerManager().addLayer(this);
     }
 
     //make a flat copy
@@ -75,30 +75,30 @@ public class VideoPositionLayer extends Layer {
 
     private void paintGpsTrack(Graphics2D g, MapView map) {
         g.setColor(Color.YELLOW);
-        for(WayPoint n: gpsTrack) {
+        for (WayPoint n: gpsTrack) {
             Point p = map.getPoint(n.getEastNorth());
             g.drawOval(p.x - 2, p.y - 2, 4, 4);
         }
     }
-    
+
     private void paintSyncedTrack(Graphics2D g, MapView map) {
         g.setColor(Color.GREEN);
         for (WayPoint n : gpsTrack) {
             if (n.attr.containsKey("synced")) {
                 Point p = map.getPoint(n.getEastNorth());
                 g.drawOval(p.x - 2, p.y - 2, 4, 4);
-            }                
-        } 
+            }
+        }
     }
 
     private void paintPositionIcon(Graphics2D g, MapView map) {
         if (iconPosition != null) {
             Point p = map.getPoint(iconPosition.getEastNorth());
             layerIcon.paintIcon(null, g, p.x-layerIcon.getIconWidth()/2, p.y-layerIcon.getIconHeight()/2);
-            g.drawString(gpsTimeFormat.format(iconPosition.getTime()),p.x-15,p.y-15);
+            g.drawString(gpsTimeFormat.format(iconPosition.getTime()), p.x-15, p.y-15);
         }
     }
-/*    
+/*
     private void paintInterpolatedSegment(Graphics2D g) {
         g.setColor(Color.CYAN);
         List<WayPoint>ls=getInterpolatedSegment(iconPosition,5,5);
@@ -106,7 +106,7 @@ public class VideoPositionLayer extends Layer {
             Point p = Main.map.mapView.getPoint(n.getEastNorth());
             g.drawOval(p.x - 2, p.y - 2, 4, 4);
         }
-        
+
     }
 
     //just a Demo to show up IPO on a whole segment
@@ -128,12 +128,12 @@ public class VideoPositionLayer extends Layer {
         Date test=getFirstWayPoint().getTime();
         test.setHours(14);
         test.setMinutes(50);
-        test.setSeconds(33);        
+        test.setSeconds(33);
         ls.add(getWayPointBefore(new Date(test.getTime()+500)));
         ls.add(interpolate(new Date(test.getTime()+500)));
         return ls;
     }
-*/    
+*/
     //creates a waypoint for the corresponding time
     public WayPoint interpolate(Date GPSTime) {
         WayPoint before = getWayPointBefore(GPSTime);
@@ -141,66 +141,66 @@ public class VideoPositionLayer extends Layer {
             return null;
         }
         long diff = GPSTime.getTime() - before.getTime().getTime();
-        assert diff>=0;
-        assert diff<GPS_INTERVALL;
-        float perc=((float)diff/(float)GPS_INTERVALL)*100;        
-        return interpolate(before,perc);
+        assert diff >= 0;
+        assert diff < GPS_INTERVALL;
+        float perc = ((float) diff/(float) GPS_INTERVALL)*100;
+        return interpolate(before, perc);
     }
-    
+
     public WayPoint getWayPointBefore(Date GPSTime) {
-        assert GPSTime.after(getFirstWayPoint().getTime())==true;
-        assert GPSTime.before(getLastWayPoint().getTime())==true;
-        
-        Date first=getFirstWayPoint().getTime();
-        long diff=GPSTime.getTime()-first.getTime();
+        assert GPSTime.after(getFirstWayPoint().getTime()) == true;
+        assert GPSTime.before(getLastWayPoint().getTime()) == true;
+
+        Date first = getFirstWayPoint().getTime();
+        long diff = GPSTime.getTime()-first.getTime();
         //assumes that GPS intervall is constant
-        int id = (int) (diff/GPS_INTERVALL);        
+        int id = (int) (diff/GPS_INTERVALL);
         return 0 <= id && id < gpsTrack.size() ? gpsTrack.get(id) : null;
     }
-    
+
     public WayPoint getFirstWayPoint() {
         return gpsTrack.isEmpty() ? null : gpsTrack.get(0);
     }
-    
+
     public WayPoint getLastWayPoint() {
         return gpsTrack.isEmpty() ? null : gpsTrack.get(gpsTrack.size()-1);
     }
 
     //interpolates a waypoint between this and the following waypoint at percent
     private WayPoint interpolate(WayPoint first, float percent) {
-        assert (percent>0);
-        assert (percent<100);
-        double dX,dY;
-        WayPoint leftP,rightP;
-        
-        WayPoint next=gpsTrack.get(gpsTrack.indexOf(first)+1);       
+        assert (percent > 0);
+        assert (percent < 100);
+        double dX, dY;
+        WayPoint leftP, rightP;
+
+        WayPoint next = gpsTrack.get(gpsTrack.indexOf(first)+1);
         //determine which point is what
-        leftP=getLeftPoint(first, next);
-        rightP=getRightPoint(first,next);
+        leftP = getLeftPoint(first, next);
+        rightP = getRightPoint(first, next);
         //calc increment
-        percent=percent/100;
-        dX=(rightP.getCoor().lon()-leftP.getCoor().lon())*percent;
-        dY=(rightP.getCoor().lat()-leftP.getCoor().lat())*percent;
+        percent = percent/100;
+        dX = (rightP.getCoor().lon()-leftP.getCoor().lon())*percent;
+        dY = (rightP.getCoor().lat()-leftP.getCoor().lat())*percent;
         //move in the right direction
-        if (first==leftP) {
-            return new WayPoint(new LatLon(leftP.getCoor().lat()+dY,leftP.getCoor().lon()+dX));
+        if (first == leftP) {
+            return new WayPoint(new LatLon(leftP.getCoor().lat()+dY, leftP.getCoor().lon()+dX));
         } else {
-            return new WayPoint(new LatLon(rightP.getCoor().lat()-dY,rightP.getCoor().lon()-dX));
+            return new WayPoint(new LatLon(rightP.getCoor().lat()-dY, rightP.getCoor().lon()-dX));
         }
     }
-    
-    private WayPoint getLeftPoint(WayPoint p1,WayPoint p2) {
-        if(p1.getCoor().lon()<p2.getCoor().lon()) return p1; else return p2;
+
+    private WayPoint getLeftPoint(WayPoint p1, WayPoint p2) {
+        if (p1.getCoor().lon() < p2.getCoor().lon()) return p1; else return p2;
     }
-    
+
     private WayPoint getRightPoint(WayPoint p1, WayPoint p2) {
-        if(p1.getCoor().lon()>p2.getCoor().lon()) return p1; else return p2;
+        if (p1.getCoor().lon() > p2.getCoor().lon()) return p1; else return p2;
     }
-    
+
     public Date getGPSDate() {
         return iconPosition.getTime();
     }
-    
+
     public WayPoint getCurrentWayPoint() {
         return iconPosition;
     }
@@ -208,7 +208,7 @@ public class VideoPositionLayer extends Layer {
     public List<WayPoint> getTrack() {
         return gpsTrack;
     }
-    
+
     public void jump(Date GPSTime) {
         setIconPosition(getWayPointBefore(GPSTime));
     }
@@ -224,25 +224,25 @@ public class VideoPositionLayer extends Layer {
 
     public void mouseReleased(MouseEvent e) {
         //only leftclicks on our layer
-        if(e.getButton() == MouseEvent.BUTTON1) {
-            WayPoint wp = getNearestWayPoint(e.getPoint());                
+        if (e.getButton() == MouseEvent.BUTTON1) {
+            WayPoint wp = getNearestWayPoint(e.getPoint());
             if (wp != null) {
                 if (gpsVideoPlayer.areAllVideosSynced()) {
                     //we set the video to corresponding position
                     gpsVideoPlayer.jumpTo(wp.getTime());
                 }
                 setIconPosition(wp);
-            }            
+            }
         }
     }
 
     //finds the first waypoint that is nearby the given point
     private WayPoint getNearestWayPoint(Point mouse) {
-        final int MAX=10;
+        final int MAX = 10;
         Point p;
-        Rectangle rect = new Rectangle(mouse.x-MAX/2,mouse.y-MAX/2,MAX,MAX);
+        Rectangle rect = new Rectangle(mouse.x-MAX/2, mouse.y-MAX/2, MAX, MAX);
         //iterate through all possible notes
-        for(WayPoint n : gpsTrack) {
+        for (WayPoint n : gpsTrack) {
             p = Main.map.mapView.getPoint(n.getEastNorth());
             if (rect.contains(p)) {
                 return n;
@@ -278,7 +278,7 @@ public class VideoPositionLayer extends Layer {
     }
 
     @Override
-    public boolean isMergable(Layer arg0) {        
+    public boolean isMergable(Layer arg0) {
         return false;
     }
 
@@ -289,7 +289,7 @@ public class VideoPositionLayer extends Layer {
     @Override
     public void visitBoundingBox(BoundingXYVisitor arg0) {
     }
-    
+
     public void setGPSVideoPlayer(GPSVideoPlayer player) {
         gpsVideoPlayer = player;
     }

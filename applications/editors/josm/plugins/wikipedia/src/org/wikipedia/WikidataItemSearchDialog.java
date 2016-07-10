@@ -9,6 +9,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
@@ -102,7 +103,7 @@ public final class WikidataItemSearchDialog extends ExtendedDialog {
                 public void run() {
                     final List<WikipediaApp.WikidataEntry> entries = query == null || query.isEmpty()
                             ? Collections.<WikipediaApp.WikidataEntry>emptyList()
-                            : WikipediaApp.getWikidataEntriesForQuery(WikipediaToggleDialog.wikipediaLang.get(), query);
+                            : WikipediaApp.getWikidataEntriesForQuery(WikipediaToggleDialog.wikipediaLang.get(), query, Locale.getDefault());
                     GuiHelper.runInEDT(new Runnable() {
                         @Override
                         public void run() {

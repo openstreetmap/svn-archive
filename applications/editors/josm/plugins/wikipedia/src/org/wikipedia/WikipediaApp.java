@@ -26,6 +26,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpression;
+import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
 import org.openstreetmap.josm.Main;
@@ -85,30 +86,24 @@ public final class WikipediaApp {
             try (final InputStream in = HttpClient.create(new URL(url)).setReasonForRequest("Wikipedia").connect().getContent()) {
                 final Document doc = DOCUMENT_BUILDER.parse(in);
                 final NodeList nodes = (NodeList) xpathPlacemark.evaluate(doc, XPathConstants.NODESET);
-                final List<String> names = new ArrayList<>(nodes.getLength());
                 final List<WikipediaEntry> entries = new ArrayList<>(nodes.getLength());
                 for (int i = 0; i < nodes.getLength(); i++) {
                     final Node node = nodes.item(i);
                     final String name = xpathName.evaluate(node);
-                    names.add(name);
                     final LatLon latLon = new LatLon((
                             (double) xpathLat.evaluate(node, XPathConstants.NUMBER)),
                             (double) xpathLon.evaluate(node, XPathConstants.NUMBER));
                     if ("wikidata".equals(wikipediaLang)) {
-                        entries.add(new WikidataEntry(name, null, latLon));
+                        entries.add(new WikidataEntry(name, null, latLon, null));
                     } else {
                         entries.add(new WikipediaEntry(wikipediaLang, name, name, latLon
                         ));
                     }
                 }
                 if ("wikidata".equals(wikipediaLang)) {
-                    final Map<String, String> labels = new HashMap<>();
-                    for (final List<String> chunk : partitionList(names, 50)) {
-                        labels.putAll(getLabelForWikidata(chunk, Locale.getDefault()));
-                    }
                     final List<WikipediaEntry> entriesWithLabel = new ArrayList<>(nodes.getLength());
-                    for (WikipediaEntry entry : entries) {
-                        entriesWithLabel.add(new WikidataEntry(entry.wikipediaArticle, labels.get(entry.wikipediaArticle), entry.coordinate));
+                    for (final List<WikipediaEntry> chunk : partitionList(entries, 50)) {
+                        entriesWithLabel.addAll(getLabelForWikidata(chunk, Locale.getDefault()));
                     }
                     return entriesWithLabel;
                 } else {
@@ -120,11 +115,11 @@ public final class WikipediaApp {
         }
     }
 
-    static List<WikidataEntry> getWikidataEntriesForQuery(final String language, final String query) {
+    static List<WikidataEntry> getWikidataEntriesForQuery(final String languageForQuery, final String query, final Locale localeForLabels) {
         try {
             final String url = "https://www.wikidata.org/w/api.php" +
                     "?action=wbsearchentities" +
-                    "&language=" + language +
+                    "&language=" + languageForQuery +
                     "&strictlanguage=false" +
                     "&search=" + Utils.encodeUrl(query) +
                     "&limit=50" +
@@ -134,15 +129,13 @@ public final class WikipediaApp {
                 final Document xml = DOCUMENT_BUILDER.parse(in);
                 final NodeList nodes = (NodeList) X_PATH.compile("//entity").evaluate(xml, XPathConstants.NODESET);
                 final XPathExpression xpathId = X_PATH.compile("@id");
-                final XPathExpression xpathLabel = X_PATH.compile("@label");
                 for (int i = 0; i < nodes.getLength(); i++) {
                     final Node node = nodes.item(i);
                     final String id = (String) xpathId.evaluate(node, XPathConstants.STRING);
-                    final String label = (String) xpathLabel.evaluate(node, XPathConstants.STRING);
-                    r.add(new WikidataEntry(id, label, null));
+                    r.add(new WikidataEntry(id, null, null, null));
                 }
             }
-            return r;
+            return getLabelForWikidata(r, localeForLabels);
         } catch (Exception ex) {
             throw new RuntimeException(ex);
         }
@@ -276,17 +269,24 @@ public final class WikipediaApp {
     }
 
     static String getLabelForWikidata(String wikidataId, Locale locale, String ... preferredLanguage) {
-        return getLabelForWikidata(Collections.singleton(wikidataId), locale, preferredLanguage).get(wikidataId);
+        try {
+            return getLabelForWikidata(Collections.singleton(new WikidataEntry(wikidataId, null, null, null)), locale, preferredLanguage).get(0).label;
+        } catch (IndexOutOfBoundsException ignore) {
+            return null;
+        }
     }
 
-    static Map<String, String> getLabelForWikidata(Collection<String> wikidataIds, Locale locale, String ... preferredLanguage) {
-        try {
-            for (final String wikidataId : wikidataIds) {
-                ensureValidWikidataId(wikidataId);
+    static List<WikidataEntry> getLabelForWikidata(Collection<? extends WikipediaEntry> entries, Locale locale, String ... preferredLanguage) {
+        final Collection<String> wikidataIds = Utils.transform(entries, new Function<WikipediaEntry, String>() {
+            @Override
+            public String apply(WikipediaEntry x) {
+                return x.wikipediaArticle;
             }
+        });
+        try {
             final String url = "https://www.wikidata.org/w/api.php" +
                     "?action=wbgetentities" +
-                    "&props=labels" +
+                    "&props=labels|descriptions" +
                     "&ids=" + Utils.join("|", wikidataIds) +
                     "&format=xml";
             final Collection<String> languages = new ArrayList<>();
@@ -297,27 +297,36 @@ public final class WikipediaApp {
             languages.addAll(Arrays.asList(preferredLanguage));
             languages.add("en");
             languages.add(null);
-            final Map<String, String> r = new HashMap<>();
+            final List<WikidataEntry> r = new ArrayList<>(entries.size());
             try (final InputStream in = HttpClient.create(new URL(url)).setReasonForRequest("Wikipedia").connect().getContent()) {
                 final Document xml = DOCUMENT_BUILDER.parse(in);
-                for (final String wikidataId : wikidataIds) {
-                    final Node entity = (Node) X_PATH.compile("//entity[@id='" + wikidataId + "']").evaluate(xml, XPathConstants.NODE);
-                    for (String language : languages) {
-                        final String label = (String) X_PATH.compile(language != null
-                                ? "./labels/label[@language='" + language + "']/@value"
-                                : "./labels/label/@value"
-                        ).evaluate(entity, XPathConstants.STRING);
-                        if (label != null && !label.isEmpty()) {
-                            r.put(wikidataId, label);
-                            break;
-                        }
-                    }
+                for (final WikipediaEntry entry : entries) {
+                    final Node entity = (Node) X_PATH.compile("//entity[@id='" + entry.wikipediaArticle + "']").evaluate(xml, XPathConstants.NODE);
+                    r.add(new WikidataEntry(
+                            entry.wikipediaArticle,
+                            getFirstField(languages, "label", entity),
+                            entry.coordinate,
+                            getFirstField(languages, "description", entity)
+                    ));
                 }
             }
             return r;
         } catch (Exception ex) {
             throw new RuntimeException(ex);
         }
+    }
+
+    private static String getFirstField(Iterable<String> languages, String field, Node entity) throws XPathExpressionException {
+        for (String language : languages) {
+            final String label = (String) X_PATH.compile(language != null
+                    ? ".//" + field + "[@language='" + language + "']/@value"
+                    : ".//" + field + "/@value"
+            ).evaluate(entity, XPathConstants.STRING);
+            if (label != null && !label.isEmpty()) {
+                return label;
+            }
+        }
+        return null;
     }
 
     static Collection<WikipediaLangArticle> getInterwikiArticles(String wikipediaLang, String article) {
@@ -485,8 +494,11 @@ public final class WikipediaApp {
 
     static class WikidataEntry extends WikipediaEntry {
 
-        WikidataEntry(String id, String label, LatLon coordinate) {
+        final String description;
+
+        WikidataEntry(String id, String label, LatLon coordinate, String description) {
             super("wikidata", id, label, coordinate);
+            this.description = description;
             ensureValidWikidataId(id);
         }
 
@@ -497,7 +509,8 @@ public final class WikipediaApp {
 
         @Override
         public String getLabelText() {
-            return getLabelText(label, wikipediaArticle);
+            final String descriptionInParen = description == null ? "" : (" (" + description + ")");
+            return getLabelText(label, wikipediaArticle + descriptionInParen);
         }
 
         static String getLabelText(String bold, String gray) {

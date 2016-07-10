@@ -150,10 +150,14 @@ public class WikipediaAppTest {
 
     @Test
     public void testForQuery() throws Exception {
-        final List<WikipediaApp.WikidataEntry> entries = WikipediaApp.getWikidataEntriesForQuery("de", "Österreich");
-        assertThat(entries.get(0).wikipediaArticle, is("Q40"));
-        assertThat(entries.get(0).wikipediaLang, is("wikidata"));
-        // assertThat(entries.get(0).label, is("Österreich"));
+        final List<WikipediaApp.WikidataEntry> de = WikipediaApp.getWikidataEntriesForQuery("de", "Österreich", Locale.GERMAN);
+        final List<WikipediaApp.WikidataEntry> en = WikipediaApp.getWikidataEntriesForQuery("de", "Österreich", Locale.ENGLISH);
+        assertThat(de.get(0).wikipediaArticle, is("Q40"));
+        assertThat(de.get(0).wikipediaLang, is("wikidata"));
+        assertThat(de.get(0).label, is("Österreich"));
+        assertThat(de.get(0).description, is("Staat in Mitteleuropa"));
+        assertThat(en.get(0).label, is("Austria"));
+        assertThat(en.get(0).description, is("country in Central Europe"));
     }
 
     @Test
@@ -187,9 +191,11 @@ public class WikipediaAppTest {
         assertThat(WikipediaApp.getLabelForWikidata("Q21849466", new Locale("aa")), is("Leoben - Straßennamen mit Geschichte"));
         // not found -> null
         assertThat(WikipediaApp.getLabelForWikidata("Q" + Long.MAX_VALUE, Locale.ENGLISH), nullValue());
-        final Map<String, String> twoLabels = WikipediaApp.getLabelForWikidata(Arrays.asList("Q84", "Q1741"), Locale.GERMAN);
-        assertThat(twoLabels.get("Q84"), is("London"));
-        assertThat(twoLabels.get("Q1741"), is("Wien"));
+        final WikipediaApp.WikidataEntry q84 = new WikipediaApp.WikidataEntry("Q84", null, null, null);
+        final WikipediaApp.WikidataEntry q1741 = new WikipediaApp.WikidataEntry("Q1741", null, null, null);
+        final List<WikipediaApp.WikidataEntry> twoLabels = WikipediaApp.getLabelForWikidata(Arrays.asList(q84, q1741), Locale.GERMAN);
+        assertThat(twoLabels.get(0).label, is("London"));
+        assertThat(twoLabels.get(1).label, is("Wien"));
     }
 
     @Test(expected = RuntimeException.class)

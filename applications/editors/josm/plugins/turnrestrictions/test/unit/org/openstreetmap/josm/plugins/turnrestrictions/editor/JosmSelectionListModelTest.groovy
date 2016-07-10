@@ -134,6 +134,7 @@ class JosmSelectionListModelTest {
         Main.getLayerManager().addLayer(layer2)
 
         JosmSelectionListModel model = new JosmSelectionListModel(layer1);
+        Main.getLayerManager().addActiveLayerChangeListener(model)
         DefaultListSelectionModel selectionModel = model.getListSelectionModel()
         // switch from edit layer1 to edit layer2. content of the JOSM selection
         // should be empty thereafter
@@ -153,5 +154,7 @@ class JosmSelectionListModelTest {
         Main.getLayerManager().removeLayer(layer2)
         Main.getLayerManager().removeLayer(layer1)
         assert model.getSize() == 0
+
+        Main.getLayerManager().removeActiveLayerChangeListener(model)
     }
 }

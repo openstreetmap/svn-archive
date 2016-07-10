@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.graphview.plugin.data;
 
 import java.util.HashMap;
@@ -25,42 +26,52 @@ import org.openstreetmap.josm.plugins.graphview.core.data.TagGroup;
 
 public class JOSMDataSource implements DataSource<Node, Way, Relation, RelationMember> {
 
+    @Override
     public double getLat(Node node) {
         return node.getCoor().lat();
     }
 
+    @Override
     public double getLon(Node node) {
         return node.getCoor().lon();
     }
 
+    @Override
     public Iterable<RelationMember> getMembers(Relation relation) {
         return relation.getMembers();
     }
 
+    @Override
     public Iterable<Node> getNodes(Way way) {
         return new FilteredOsmPrimitiveIterable<>(way.getNodes());
     }
 
+    @Override
     public Iterable<Node> getNodes() {
         return new FilteredOsmPrimitiveIterable<>(Main.getLayerManager().getEditDataSet().getNodes());
     }
 
+    @Override
     public Iterable<Relation> getRelations() {
         return new FilteredRelationIterable(Main.getLayerManager().getEditDataSet().getRelations());
     }
 
+    @Override
     public Iterable<Way> getWays() {
         return new FilteredOsmPrimitiveIterable<>(Main.getLayerManager().getEditDataSet().getWays());
     }
 
+    @Override
     public TagGroup getTagsN(Node node) {
         return getTags(node);
     }
 
+    @Override
     public TagGroup getTagsW(Way way) {
         return getTags(way);
     }
 
+    @Override
     public TagGroup getTagsR(Relation relation) {
         return getTags(relation);
     }
@@ -73,22 +84,27 @@ public class JOSMDataSource implements DataSource<Node, Way, Relation, RelationM
         }
     }
 
+    @Override
     public Object getMember(RelationMember member) {
         return member.getMember();
     }
 
+    @Override
     public String getRole(RelationMember member) {
         return member.getRole();
     }
 
+    @Override
     public boolean isNMember(RelationMember member) {
         return member.getMember() instanceof Node;
     }
 
+    @Override
     public boolean isWMember(RelationMember member) {
         return member.getMember() instanceof Way;
     }
 
+    @Override
     public boolean isRMember(RelationMember member) {
         return member.getMember() instanceof Relation;
     }
@@ -115,6 +131,7 @@ public class JOSMDataSource implements DataSource<Node, Way, Relation, RelationM
         }
 
         /** returns an iterator. The iterator does not support {@link Iterator#remove()}. */
+        @Override
         public Iterator<P> iterator() {
             return new FilteredIterator(originalIterable.iterator());
         }
@@ -125,15 +142,17 @@ public class JOSMDataSource implements DataSource<Node, Way, Relation, RelationM
 
             private P next;
 
-            public FilteredIterator(Iterator<P> originalIterator) {
+            FilteredIterator(Iterator<P> originalIterator) {
                 this.originalIterator = originalIterator;
                 updateNext();
             }
 
+            @Override
             public boolean hasNext() {
                 return next != null;
             }
 
+            @Override
             public P next() {
                 if (next != null) {
                     P result = next;
@@ -144,6 +163,7 @@ public class JOSMDataSource implements DataSource<Node, Way, Relation, RelationM
                 }
             }
 
+            @Override
             public void remove() {
                 throw new UnsupportedOperationException();
             }
@@ -191,13 +211,16 @@ public class JOSMDataSource implements DataSource<Node, Way, Relation, RelationM
     static class RelationMemberImpl {
         private final String role;
         private final Object member;
-        public RelationMemberImpl(org.openstreetmap.josm.data.osm.RelationMember originalMember) {
+
+        RelationMemberImpl(org.openstreetmap.josm.data.osm.RelationMember originalMember) {
             this.role = originalMember.getRole();
             this.member = originalMember.getMember();
         }
+
         public String getRole() {
             return role;
         }
+
         public Object getMember() {
             return member;
         }
@@ -205,10 +228,12 @@ public class JOSMDataSource implements DataSource<Node, Way, Relation, RelationM
 
     private final Set<DataSourceObserver> observers = new HashSet<>();
 
+    @Override
     public void addObserver(DataSourceObserver observer) {
         observers.add(observer);
     }
 
+    @Override
     public void deleteObserver(DataSourceObserver observer) {
         observers.remove(observer);
     }

@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.graphview.plugin;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -174,9 +175,6 @@ public class GraphViewPlugin extends Plugin implements LayerChangeListener, Obse
     /**
      * @return ruleset read from a source as specified by preferences, null if the preferences
      *         don't specify a ruleset source
-     * @throws AccessRulesetSyntaxException
-     * @throws IOException
-     * @throws FileNotFoundException
      */
     private AccessRuleset getAccessRuleset()
     throws AccessRulesetSyntaxException, IOException, FileNotFoundException {

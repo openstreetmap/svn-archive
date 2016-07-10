@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.graphview.plugin.dialogs;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -26,6 +27,7 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.SideButton;
 import org.openstreetmap.josm.gui.dialogs.ToggleDialog;
 import org.openstreetmap.josm.plugins.graphview.core.access.AccessRulesetReader;
@@ -67,7 +69,7 @@ public class GraphViewDialog extends ToggleDialog implements Observer {
     public GraphViewDialog(final GraphViewPlugin plugin) {
 
         super(tr("Graph View Dialog"), "graphview",
-                tr("Open the dialog for graph view configuration."), (Shortcut)null, HEIGHT);
+                tr("Open the dialog for graph view configuration."), (Shortcut) null, HEIGHT);
 
         this.preferences = GraphViewPreferences.getInstance();
         this.plugin = plugin;
@@ -153,6 +155,7 @@ public class GraphViewDialog extends ToggleDialog implements Observer {
 
         createLayout(selectionPanel, true, Arrays.asList(new SideButton[] {
             new SideButton(new AbstractAction(tr("Create/update graph")) {
+                @Override
                 public void actionPerformed(ActionEvent e) {
                     plugin.createGraphViewLayer();
                 }
@@ -164,6 +167,7 @@ public class GraphViewDialog extends ToggleDialog implements Observer {
     }
 
     private final ActionListener rulesetActionListener = new ActionListener() {
+        @Override
         public void actionPerformed(ActionEvent e) {
             if (rulesetComboBox.getSelectedItem() != null) {
                 int selectedRulesetIndex = rulesetComboBox.getSelectedIndex();
@@ -185,8 +189,9 @@ public class GraphViewDialog extends ToggleDialog implements Observer {
     };
 
     private final ActionListener bookmarkActionListener = new ActionListener() {
+        @Override
         public void actionPerformed(ActionEvent e) {
-            String selectedBookmarkName = (String)bookmarkComboBox.getSelectedItem();
+            String selectedBookmarkName = (String) bookmarkComboBox.getSelectedItem();
             if (selectedBookmarkName != null) {
                 preferences.setCurrentParameterBookmarkName(selectedBookmarkName);
                 preferences.distributeChanges();
@@ -196,15 +201,17 @@ public class GraphViewDialog extends ToggleDialog implements Observer {
     };
 
     private final ActionListener colorSchemeActionListener = new ActionListener() {
+        @Override
         public void actionPerformed(ActionEvent e) {
             assert availableColorSchemes.containsKey(colorSchemeComboBox.getSelectedItem());
-            String colorSchemeLabel = (String)colorSchemeComboBox.getSelectedItem();
+            String colorSchemeLabel = (String) colorSchemeComboBox.getSelectedItem();
             preferences.setCurrentColorScheme(availableColorSchemes.get(colorSchemeLabel));
             preferences.distributeChanges();
             plugin.repaintGraphViewLayer();
         }
     };
 
+    @Override
     public void update(Observable observable, Object param) {
         if (observable == preferences) {
             updateSelections();
@@ -222,7 +229,7 @@ public class GraphViewDialog extends ToggleDialog implements Observer {
             rulesetFiles = null;
 
             rulesetComboBox.removeAllItems();
-            for (int i=0; i < InternalRuleset.values().length; i++) {
+            for (int i = 0; i < InternalRuleset.values().length; i++) {
                 InternalRuleset ruleset = InternalRuleset.values()[i];
                 rulesetComboBox.addItem(ruleset.toString());
                 if (ruleset == preferences.getCurrentInternalRuleset()) {
@@ -248,6 +255,7 @@ public class GraphViewDialog extends ToggleDialog implements Observer {
                         rulesetFiles.add(possibleRulesetFile);
                     } catch (IOException ioe) {
                         //don't add to rulesetFiles
+                        Main.debug(ioe);
                     }
                 }
             }
@@ -255,7 +263,7 @@ public class GraphViewDialog extends ToggleDialog implements Observer {
             Collections.sort(rulesetFiles);
 
             rulesetComboBox.removeAllItems();
-            for (int i=0; i < rulesetFiles.size(); i++) {
+            for (int i = 0; i < rulesetFiles.size(); i++) {
                 File rulesetFile = rulesetFiles.get(i);
                 rulesetComboBox.addItem(rulesetFile.getName());
                 if (rulesetFile.equals(preferences.getCurrentRulesetFile())) {

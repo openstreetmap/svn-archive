@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.graphview.core.property;
 
 import org.openstreetmap.josm.plugins.graphview.core.access.AccessParameters;
@@ -6,13 +7,15 @@ import org.openstreetmap.josm.plugins.graphview.core.data.TagGroup;
 
 public class RoadTracktype implements RoadPropertyType<Integer> {
 
+    @Override
     public <N, W, R, M> Integer evaluateN(N node, AccessParameters accessParameters,
-            DataSource<N,W,R,M> dataSource) {
+            DataSource<N, W, R, M> dataSource) {
         return null;
-    };
+    }
 
+    @Override
     public <N, W, R, M> Integer evaluateW(W way, boolean forward, AccessParameters accessParameters,
-            DataSource<N,W,R,M> dataSource) {
+            DataSource<N, W, R, M> dataSource) {
         assert way != null && accessParameters != null && dataSource != null;
 
         TagGroup tags = dataSource.getTagsW(way);
@@ -33,12 +36,13 @@ public class RoadTracktype implements RoadPropertyType<Integer> {
         }
 
         return null;
-    };
+    }
 
+    @Override
     public boolean isUsable(Object propertyValue, AccessParameters accessParameters) {
         assert propertyValue instanceof Integer;
 
-        int tracktype = (Integer)propertyValue;
+        int tracktype = (Integer) propertyValue;
 
         Integer maxTracktype =
             accessParameters.getVehiclePropertyValue(VehiclePropertyTypes.MAX_TRACKTYPE);
@@ -49,5 +53,4 @@ public class RoadTracktype implements RoadPropertyType<Integer> {
             return true;
         }
     }
-
 }

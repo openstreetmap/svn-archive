@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.graphview.core.transition;
 
 import java.util.Collection;
@@ -14,7 +15,7 @@ public interface TransitionStructureElement {
      *
      * @return  property type collection; != null
      */
-    public Collection<RoadPropertyType<?>> getAvailableProperties();
+    Collection<RoadPropertyType<?>> getAvailableProperties();
 
     /**
      * returns the value of a property for this object
@@ -22,6 +23,5 @@ public interface TransitionStructureElement {
      * @param propertyType   property type to return value for; != null
      * @return property      value of the property for this segment; null if not available
      */
-    public <P> P getPropertyValue(RoadPropertyType<P> propertyType);
-
+    <P> P getPropertyValue(RoadPropertyType<P> propertyType);
 }

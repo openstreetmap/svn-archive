@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.graphview.core.util;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -23,9 +24,11 @@ public final class TagConditionLogic {
     public static TagCondition tag(final Tag tag) {
         assert tag != null;
         return new TagCondition() {
+            @Override
             public boolean matches(TagGroup tags) {
                 return tags.contains(tag);
             }
+
             @Override
             public String toString() {
                 return tag.toString();
@@ -41,9 +44,11 @@ public final class TagConditionLogic {
     public static TagCondition key(final String key) {
         assert key != null;
         return new TagCondition() {
+            @Override
             public boolean matches(TagGroup tags) {
                 return tags.containsKey(key);
             }
+
             @Override
             public String toString() {
                 return key;
@@ -59,6 +64,7 @@ public final class TagConditionLogic {
      */
     public static TagCondition and(final TagCondition condition, final TagCondition... conditions) {
         return new TagCondition() {
+            @Override
             public boolean matches(TagGroup tags) {
                 for (TagCondition c : conditions) {
                     if (!c.matches(tags)) {
@@ -67,6 +73,7 @@ public final class TagConditionLogic {
                 }
                 return condition.matches(tags);
             }
+
             @Override
             public String toString() {
                 StringBuilder result = new StringBuilder();
@@ -92,6 +99,7 @@ public final class TagConditionLogic {
             throw new IllegalArgumentException(tr("Collection must contain at least one condition"));
         }
         return new TagCondition() {
+            @Override
             public boolean matches(TagGroup tags) {
                 for (TagCondition c : conditions) {
                     if (!c.matches(tags)) {
@@ -100,6 +108,7 @@ public final class TagConditionLogic {
                 }
                 return true;
             }
+
             @Override
             public String toString() {
                 StringBuilder result = new StringBuilder();
@@ -126,6 +135,7 @@ public final class TagConditionLogic {
      */
     public static TagCondition or(final TagCondition condition, final TagCondition... conditions) {
         return new TagCondition() {
+            @Override
             public boolean matches(TagGroup tags) {
                 for (TagCondition c : conditions) {
                     if (c.matches(tags)) {
@@ -134,6 +144,7 @@ public final class TagConditionLogic {
                 }
                 return condition.matches(tags);
             }
+
             @Override
             public String toString() {
                 StringBuilder result = new StringBuilder();
@@ -159,6 +170,7 @@ public final class TagConditionLogic {
             throw new IllegalArgumentException(tr("Collection must contain at least one condition"));
         }
         return new TagCondition() {
+            @Override
             public boolean matches(TagGroup tags) {
                 for (TagCondition c : conditions) {
                     if (c.matches(tags)) {
@@ -167,6 +179,7 @@ public final class TagConditionLogic {
                 }
                 return false;
             }
+
             @Override
             public String toString() {
                 StringBuilder result = new StringBuilder();
@@ -192,9 +205,11 @@ public final class TagConditionLogic {
      */
     public static TagCondition not(final TagCondition condition) {
         return new TagCondition() {
+            @Override
             public boolean matches(TagGroup tags) {
                 return !condition.matches(tags);
             }
+
             @Override
             public String toString() {
                 return "!" + condition;

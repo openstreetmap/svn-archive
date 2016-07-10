@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.graphview.core.transition;
 
 /**
@@ -10,6 +11,5 @@ public interface TransitionStructureObserver {
      * informs this observer about changes in an observed transition structure
      * @param transitionStructure  observed transition structure that has changed; != null
      */
-    public void update(TransitionStructure transitionStructure);
-
+    void update(TransitionStructure transitionStructure);
 }

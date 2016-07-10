@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.graphview.core.data;
 
 import java.util.Collection;
@@ -57,26 +58,31 @@ public class MapBasedTagGroup implements TagGroup {
         }
     }
 
+    @Override
     public String getValue(String key) {
         assert key != null;
         return tagMap.get(key);
     }
 
+    @Override
     public boolean containsKey(String key) {
         assert key != null;
         return tagMap.containsKey(key);
     }
 
+    @Override
     public boolean containsValue(String value) {
         assert value != null;
         return tagMap.containsValue(value);
     }
 
+    @Override
     public boolean contains(Tag tag) {
         assert tag != null;
         return tag.value.equals(tagMap.get(tag.key));
     }
 
+    @Override
     public int size() {
         return tagMap.size();
     }
@@ -85,6 +91,7 @@ public class MapBasedTagGroup implements TagGroup {
      * returns an Iterator providing access to all Tags.
      * The Iterator does not support the {@link Iterator#remove()} method.
      */
+    @Override
     public Iterator<Tag> iterator() {
 
         Collection<Tag> tagCollection = new LinkedList<>();

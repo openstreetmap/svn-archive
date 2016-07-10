@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.graphview.core.visualisation;
 
 import org.openstreetmap.josm.plugins.graphview.core.graph.GraphNode;

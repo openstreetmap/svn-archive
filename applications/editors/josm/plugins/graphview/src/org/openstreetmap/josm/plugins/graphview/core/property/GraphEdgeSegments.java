@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.graphview.core.property;
 
 import java.util.List;
@@ -24,14 +25,15 @@ public final class GraphEdgeSegments implements GraphEdgePropertyType<List<Segme
      */
     private GraphEdgeSegments() { }
 
+    @Override
     public List<Segment> evaluate(JunctionEvaluationGroup junctionGroup,
             List<Segment> segmentSequence, TransitionStructure transitionStructure) {
         return segmentSequence;
     }
 
+    @Override
     public List<Segment> evaluate(ConnectorEvaluationGroup connectorGroup,
             List<Segment> segmentSequence, TransitionStructure transitionStructure) {
         return segmentSequence;
     }
-
 }

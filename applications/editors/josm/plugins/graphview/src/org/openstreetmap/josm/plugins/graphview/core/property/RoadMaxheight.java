@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.graphview.core.property;
 
 import static org.openstreetmap.josm.plugins.graphview.core.property.VehiclePropertyTypes.HEIGHT;
@@ -8,6 +9,7 @@ public class RoadMaxheight extends RoadValueLimit {
     public RoadMaxheight() {
         super("maxheight", HEIGHT, LimitType.MAXIMUM);
     }
+
     @Override
     protected Float parse(String valueString) {
         return ValueStringParser.parseMeasure(valueString);

@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.graphview.core.graph;
 
 import java.util.Collection;
@@ -8,6 +9,7 @@ import java.util.Collection;
 public interface WayGraph {
 
     Collection<GraphNode> getNodes();
+
     Collection<GraphEdge> getEdges();
 
     /**
@@ -16,7 +18,7 @@ public interface WayGraph {
      *
      * @param observer  observer object, != null
      */
-    public void addObserver(WayGraphObserver observer);
+    void addObserver(WayGraphObserver observer);
 
     /**
      * deletes an observer that has been added using {@link #addObserver(WayGraphObserver)}.
@@ -24,6 +26,6 @@ public interface WayGraph {
      *
      * @param observer  observer object, != null
      */
-    public void deleteObserver(WayGraphObserver observer);
+    void deleteObserver(WayGraphObserver observer);
 
 }

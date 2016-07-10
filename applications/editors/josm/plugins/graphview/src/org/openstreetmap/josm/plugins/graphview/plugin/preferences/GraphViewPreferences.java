@@ -1,6 +1,5 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.graphview.plugin.preferences;
-
-import static org.openstreetmap.josm.tools.I18n.marktr;
 
 import static org.openstreetmap.josm.plugins.graphview.core.property.VehiclePropertyTypes.AXLELOAD;
 import static org.openstreetmap.josm.plugins.graphview.core.property.VehiclePropertyTypes.HEIGHT;
@@ -12,6 +11,7 @@ import static org.openstreetmap.josm.plugins.graphview.core.property.VehicleProp
 import static org.openstreetmap.josm.plugins.graphview.core.property.VehiclePropertyTypes.SURFACE_BLACKLIST;
 import static org.openstreetmap.josm.plugins.graphview.core.property.VehiclePropertyTypes.WEIGHT;
 import static org.openstreetmap.josm.plugins.graphview.core.property.VehiclePropertyTypes.WIDTH;
+import static org.openstreetmap.josm.tools.I18n.marktr;
 
 import java.awt.Color;
 import java.io.File;
@@ -41,14 +41,12 @@ import org.openstreetmap.josm.plugins.graphview.plugin.preferences.VehicleProper
  * Note: Currently, manual updates in the "advanced preferences" will not have any effect
  * because this class isn't registered as a preference listener.
  */
-public class GraphViewPreferences extends Observable {
+public final class GraphViewPreferences extends Observable {
 
     private static GraphViewPreferences instance;
 
     /**
      * returns the single instance of GraphViewPreferences.
-     * @param ignoreSyntaxErrors
-     * @return
      */
     public static GraphViewPreferences getInstance() {
         if (instance == null) {
@@ -77,6 +75,7 @@ public class GraphViewPreferences extends Observable {
     public synchronized boolean getUseInternalRulesets() {
         return useInternalRulesets;
     }
+
     public synchronized void setUseInternalRulesets(boolean useInternalRulesets) {
         this.useInternalRulesets = useInternalRulesets;
     }
@@ -84,6 +83,7 @@ public class GraphViewPreferences extends Observable {
     public synchronized File getRulesetFolder() {
         return rulesetFolder;
     }
+
     public synchronized void setRulesetFolder(File rulesetFolder) {
         this.rulesetFolder = rulesetFolder;
     }
@@ -91,6 +91,7 @@ public class GraphViewPreferences extends Observable {
     public synchronized File getCurrentRulesetFile() {
         return currentRulesetFile;
     }
+
     public synchronized void setCurrentRulesetFile(File currentRulesetFile) {
         this.currentRulesetFile = currentRulesetFile;
     }
@@ -98,6 +99,7 @@ public class GraphViewPreferences extends Observable {
     public synchronized InternalRuleset getCurrentInternalRuleset() {
         return currentInternalRuleset;
     }
+
     public synchronized void setCurrentInternalRuleset(InternalRuleset internalRuleset) {
         this.currentInternalRuleset = internalRuleset;
     }
@@ -140,6 +142,7 @@ public class GraphViewPreferences extends Observable {
     public synchronized Map<String, PreferenceAccessParameters> getParameterBookmarks() {
         return Collections.unmodifiableMap(parameterBookmarks);
     }
+
     public synchronized void setParameterBookmarks(
             Map<String, PreferenceAccessParameters> parameterBookmarks) {
         assert parameterBookmarks != null;
@@ -151,6 +154,7 @@ public class GraphViewPreferences extends Observable {
     public synchronized ColorScheme getCurrentColorScheme() {
         return currentColorScheme;
     }
+
     public synchronized void setCurrentColorScheme(ColorScheme currentColorScheme) {
         this.currentColorScheme = currentColorScheme;
     }
@@ -158,6 +162,7 @@ public class GraphViewPreferences extends Observable {
     public synchronized Color getNodeColor() {
         return nodeColor;
     }
+
     public synchronized void setNodeColor(Color nodeColor) {
         this.nodeColor = nodeColor;
     }
@@ -165,27 +170,31 @@ public class GraphViewPreferences extends Observable {
     public synchronized Color getSegmentColor() {
         return segmentColor;
     }
+
     public synchronized void setSegmentColor(Color segmentColor) {
         this.segmentColor = segmentColor;
     }
 
     public synchronized Color getArrowheadFillColor() {
-		return arrowheadFillColor;
-	}
-	public synchronized void setArrowheadFillColor(Color arrowheadFillColor) {
-		this.arrowheadFillColor = arrowheadFillColor;
-	}
+        return arrowheadFillColor;
+    }
 
-	public synchronized boolean getSeparateDirections() {
+    public synchronized void setArrowheadFillColor(Color arrowheadFillColor) {
+        this.arrowheadFillColor = arrowheadFillColor;
+    }
+
+    public synchronized boolean getSeparateDirections() {
         return separateDirections;
     }
+
     public synchronized void setSeparateDirections(boolean separateDirections) {
         this.separateDirections = separateDirections;
     }
 
     public synchronized double getArrowheadPlacement() {
-    	return arrowheadPlacement;
+        return arrowheadPlacement;
     }
+
     public synchronized void setArrowheadPlacement(double arrowheadPlacement) {
         this.arrowheadPlacement = arrowheadPlacement;
     }
@@ -314,7 +323,7 @@ public class GraphViewPreferences extends Observable {
 
         arrowheadPlacement = Main.pref.getDouble("graphview.arrowheadPlacement", 1.0);
         if (arrowheadPlacement < 0.0 || arrowheadPlacement >= 1.0) {
-        	arrowheadPlacement = 1.0;
+            arrowheadPlacement = 1.0;
         }
 
     }
@@ -325,7 +334,6 @@ public class GraphViewPreferences extends Observable {
 
     private static final Map<VehiclePropertyType<?>, String> VEHICLE_PROPERTY_TYPE_NAME_MAP =
         new HashMap<>();
-
 
     static {
         VEHICLE_PROPERTY_TYPE_NAME_MAP.put(AXLELOAD, "AXLELOAD");
@@ -380,7 +388,7 @@ public class GraphViewPreferences extends Observable {
             }
         }
 
-        if(stringBuilder.charAt(stringBuilder.length()-1) == ',') {
+        if (stringBuilder.charAt(stringBuilder.length()-1) == ',') {
             stringBuilder.deleteCharAt(stringBuilder.length()-1);
         }
         stringBuilder.append("}");
@@ -397,7 +405,7 @@ public class GraphViewPreferences extends Observable {
             }
         }
 
-        if(stringBuilder.charAt(stringBuilder.length()-1) == ',') {
+        if (stringBuilder.charAt(stringBuilder.length()-1) == ',') {
             stringBuilder.deleteCharAt(stringBuilder.length()-1);
         }
         stringBuilder.append("}");

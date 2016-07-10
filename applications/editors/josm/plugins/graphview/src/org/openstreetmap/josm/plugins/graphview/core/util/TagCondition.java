@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.graphview.core.util;
 
 import org.openstreetmap.josm.plugins.graphview.core.data.TagGroup;

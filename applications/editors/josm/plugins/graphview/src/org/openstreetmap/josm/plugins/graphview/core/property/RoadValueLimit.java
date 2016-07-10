@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.graphview.core.property;
 
 import org.openstreetmap.josm.plugins.graphview.core.access.AccessParameters;
@@ -8,9 +9,9 @@ import org.openstreetmap.josm.plugins.graphview.core.util.ValueStringParser;
 /**
  * abstract superclass for road property types that define a limit for a vehicle property
  */
-abstract public class RoadValueLimit implements RoadPropertyType<Float> {
+public abstract class RoadValueLimit implements RoadPropertyType<Float> {
 
-    protected static enum LimitType {MINIMUM, MAXIMUM};
+    protected enum LimitType { MINIMUM, MAXIMUM }
 
     private final String keyName;
     private final VehiclePropertyType<Float> vehicleProperty;
@@ -35,19 +36,21 @@ abstract public class RoadValueLimit implements RoadPropertyType<Float> {
 
     protected abstract Float parse(String valueString);
 
+    @Override
     public <N, W, R, M> Float evaluateW(W way, boolean forward,
             AccessParameters accessParameters, DataSource<N, W, R, M> dataSource) {
         assert way != null && accessParameters != null && dataSource != null;
         return evaluateTags(dataSource.getTagsW(way));
     }
 
+    @Override
     public <N, W, R, M> Float evaluateN(N node,
             AccessParameters accessParameters, DataSource<N, W, R, M> dataSource) {
         assert node != null && accessParameters != null && dataSource != null;
         return evaluateTags(dataSource.getTagsN(node));
     }
 
-    private final Float evaluateTags(TagGroup tags) {
+    private Float evaluateTags(TagGroup tags) {
         String valueString = tags.getValue(keyName);
         if (valueString != null) {
             Float value = parse(valueString);
@@ -57,6 +60,7 @@ abstract public class RoadValueLimit implements RoadPropertyType<Float> {
         }
     }
 
+    @Override
     public boolean isUsable(Object propertyValue, AccessParameters accessParameters) {
         assert propertyValue instanceof Float;
 

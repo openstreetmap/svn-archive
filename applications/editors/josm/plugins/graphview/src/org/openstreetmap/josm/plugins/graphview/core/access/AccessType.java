@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.graphview.core.access;
 
 public enum AccessType {
@@ -14,7 +15,7 @@ public enum AccessType {
     UNDEFINED();
 
     private String[] valueStrings;
-    private AccessType(String... valueStrings) {
+    AccessType(String... valueStrings) {
         this.valueStrings = valueStrings;
     }
 

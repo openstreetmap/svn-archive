@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.graphview.core.access;
 
 import java.util.Collection;
@@ -20,19 +21,18 @@ public interface AccessRuleset {
      *         in the order of decreasing specificness
      *         empty if the parameter was no known mode of transport; != null
      */
-    public List<String> getAccessHierarchyAncestors(String transportMode);
+    List<String> getAccessHierarchyAncestors(String transportMode);
 
     /**
      * returns all base tags.
      * Base tags are tags that make an object "eligible" for access evaluation
      * (commonly things like highway=* or barrier=*)
      */
-    public Collection<Tag> getBaseTags();
+    Collection<Tag> getBaseTags();
 
     /**
      * returns ruleset-specific implications
      * @return  list of implications in the order they are expected to be applied; != null
      */
-    public List<Implication> getImplications();
-
+    List<Implication> getImplications();
 }

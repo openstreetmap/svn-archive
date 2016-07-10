@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.graphview.core.transition;
 
 import java.util.Collection;
@@ -8,9 +9,11 @@ import java.util.Collection;
  */
 public interface TransitionStructure {
 
-    public Collection<SegmentNode> getNodes();
-    public Collection<Segment> getSegments();
-    public Collection<Restriction> getRestrictions();
+    Collection<SegmentNode> getNodes();
+
+    Collection<Segment> getSegments();
+
+    Collection<Restriction> getRestrictions();
 
     /**
      * adds an observer.
@@ -18,7 +21,7 @@ public interface TransitionStructure {
      *
      * @param observer  observer object, != null
      */
-    public void addObserver(TransitionStructureObserver observer);
+    void addObserver(TransitionStructureObserver observer);
 
     /**
      * deletes an observer that has been added using {@link #addObserver(TransitionStructureObserver)}.
@@ -26,6 +29,6 @@ public interface TransitionStructure {
      *
      * @param observer  observer object, != null
      */
-    public void deleteObserver(TransitionStructureObserver observer);
+    void deleteObserver(TransitionStructureObserver observer);
 
 }

@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.graphview.plugin.dialogs;
 
 import static org.openstreetmap.josm.plugins.graphview.core.property.VehiclePropertyTypes.MAX_INCLINE_DOWN;
@@ -38,8 +39,8 @@ import org.openstreetmap.josm.plugins.graphview.plugin.preferences.VehicleProper
 
 public class AccessParameterDialog extends JDialog {
 
-    public static interface BookmarkAction {
-        public void execute(String name, PreferenceAccessParameters parameters);
+    public interface BookmarkAction {
+        void execute(String name, PreferenceAccessParameters parameters);
     }
 
     /**
@@ -65,7 +66,7 @@ public class AccessParameterDialog extends JDialog {
 
         private final JTextField bookmarkNameTextField;
 
-        public BookmarkNamePanel(String initialName) {
+        BookmarkNamePanel(String initialName) {
             super();
             this.setBorder(BorderFactory.createTitledBorder(tr("Bookmark name")));
 
@@ -100,7 +101,7 @@ public class AccessParameterDialog extends JDialog {
 
         private final JTextField accessClassTextField;
 
-        public AccessClassPanel(PreferenceAccessParameters initialParameters) {
+        AccessClassPanel(PreferenceAccessParameters initialParameters) {
             super();
             this.setBorder(BorderFactory.createTitledBorder(tr("Access class")));
 
@@ -133,7 +134,7 @@ public class AccessParameterDialog extends JDialog {
         private final Map<AccessType, JCheckBox> accessTypeCheckBoxes =
             new EnumMap<>(AccessType.class);
 
-        public AccessTypesPanel(PreferenceAccessParameters initialParameters) {
+        AccessTypesPanel(PreferenceAccessParameters initialParameters) {
             super();
             this.setBorder(BorderFactory.createTitledBorder(tr("Access types")));
 
@@ -170,7 +171,7 @@ public class AccessParameterDialog extends JDialog {
         private final Map<VehiclePropertyType<Float>, JTextField> floatPropertyTextFields =
             new HashMap<>();
 
-        public VehiclePropertiesPanel(PreferenceAccessParameters initialParameters) {
+        VehiclePropertiesPanel(PreferenceAccessParameters initialParameters) {
             super();
             this.setBorder(BorderFactory.createTitledBorder(tr("Vehicle properties")));
 
@@ -219,10 +220,8 @@ public class AccessParameterDialog extends JDialog {
         private JTextField surfaceTextField;
         private JTextField tracktypeTextField;
 
-        public RoadQualityPanel(PreferenceAccessParameters initialParameters) {
-            super();
+        RoadQualityPanel(PreferenceAccessParameters initialParameters) {
             this.setBorder(BorderFactory.createTitledBorder(tr("Road requirements")));
-
 
             this.setLayout(new GridLayout(4, 2));
 
@@ -337,12 +336,13 @@ public class AccessParameterDialog extends JDialog {
 
     private class OkCancelPanel extends JPanel {
 
-        public OkCancelPanel() {
+        OkCancelPanel() {
 
             new BoxLayout(this, BoxLayout.X_AXIS);
 
-            JButton okButton = new JButton(existingBookmark?tr("Change bookmark"):tr("Create bookmark"));
+            JButton okButton = new JButton(existingBookmark ? tr("Change bookmark") : tr("Create bookmark"));
             okButton.addActionListener(new ActionListener() {
+                @Override
                 public void actionPerformed(ActionEvent e) {
                     String bookmarkName = bookmarkNamePanel.getBookmarkName();
                     if (bookmarkName != null) {
@@ -358,14 +358,13 @@ public class AccessParameterDialog extends JDialog {
 
             JButton cancelButton = new JButton(tr("Cancel"));
             cancelButton.addActionListener(new ActionListener() {
+                @Override
                 public void actionPerformed(ActionEvent e) {
                     AccessParameterDialog.this.dispose();
                 }
             });
             this.add(cancelButton);
-
         }
-
     }
 
     private boolean existingBookmark = false;

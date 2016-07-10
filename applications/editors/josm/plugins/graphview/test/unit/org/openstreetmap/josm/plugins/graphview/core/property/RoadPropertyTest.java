@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.graphview.core.property;
 
 import static org.junit.Assert.assertEquals;
@@ -7,7 +8,7 @@ import org.openstreetmap.josm.plugins.graphview.core.TestDataSource;
 import org.openstreetmap.josm.plugins.graphview.core.data.Tag;
 
 @Ignore("no test")
-abstract public class RoadPropertyTest {
+public abstract class RoadPropertyTest {
 
     protected static <P> void testEvaluateW(RoadPropertyType<P> property, P expectedForward, P expectedBackward, Tag... wayTags) {
 

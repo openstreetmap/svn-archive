@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.graphview.plugin.layer;
 
 import java.awt.Color;
@@ -18,10 +19,12 @@ public class PreferencesColorScheme implements ColorScheme {
         this.preferences = preferences;
     }
 
+    @Override
     public Color getNodeColor(GraphNode node) {
         return preferences.getNodeColor();
     }
 
+    @Override
     public Color getSegmentColor(Segment segment) {
         return preferences.getSegmentColor();
     }

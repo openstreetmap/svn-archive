@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.graphview.core.visualisation;
 
 import java.awt.Color;
@@ -19,10 +20,12 @@ public class SingleColorScheme implements ColorScheme {
         this.segmentColor = segmentColor;
     }
 
+    @Override
     public Color getNodeColor(GraphNode node) {
         return nodeColor;
     }
 
+    @Override
     public Color getSegmentColor(Segment segment) {
         return segmentColor;
     }

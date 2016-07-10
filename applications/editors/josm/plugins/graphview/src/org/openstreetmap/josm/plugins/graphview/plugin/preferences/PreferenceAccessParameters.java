@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.graphview.plugin.preferences;
 
 import java.util.Collection;
@@ -21,15 +22,18 @@ public class PreferenceAccessParameters implements AccessParameters {
     private final Map<VehiclePropertyType<?>, String> vehiclePropertyStrings;
     private final Map<VehiclePropertyType<?>, Object> vehiclePropertyValues;
 
+    @Override
     public String getAccessClass() {
         return accessClass;
     }
 
+    @Override
     public boolean getAccessTypeUsable(AccessType accessType) {
         assert accessType != null;
         return accessTypeUsableMap.get(accessType);
     }
 
+    @Override
     public Collection<VehiclePropertyType<?>> getAvailableVehicleProperties() {
         return vehiclePropertyValues.keySet();
     }
@@ -43,11 +47,12 @@ public class PreferenceAccessParameters implements AccessParameters {
      *                         Guaranteed to be valid according to vehicleProperty's
      *                         {@link VehiclePropertyType#isValidValue(Object)} method.
      */
+    @Override
     public <D> D getVehiclePropertyValue(VehiclePropertyType<D> vehicleProperty) {
         assert vehicleProperty != null;
 
         @SuppressWarnings("unchecked")
-        D value = (D)vehiclePropertyValues.get(vehicleProperty);
+        D value = (D) vehiclePropertyValues.get(vehicleProperty);
         return value;
     }
 

@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.graphview.core.property;
 
 import java.util.Collection;
@@ -8,24 +9,27 @@ import org.openstreetmap.josm.plugins.graphview.core.data.TagGroup;
 
 public class RoadSurface implements RoadPropertyType<String> {
 
+    @Override
     public <N, W, R, M> String evaluateN(N node, AccessParameters accessParameters,
-            DataSource<N,W,R,M> dataSource) {
+            DataSource<N, W, R, M> dataSource) {
         return null;
-    };
+    }
 
+    @Override
     public <N, W, R, M> String evaluateW(W way, boolean forward, AccessParameters accessParameters,
-            DataSource<N,W,R,M> dataSource) {
+            DataSource<N, W, R, M> dataSource) {
         assert way != null && accessParameters != null && dataSource != null;
 
         TagGroup tags = dataSource.getTagsW(way);
         return tags.getValue("surface");
 
-    };
+    }
 
+    @Override
     public boolean isUsable(Object propertyValue, AccessParameters accessParameters) {
         assert propertyValue instanceof String;
 
-        String surface = (String)propertyValue;
+        String surface = (String) propertyValue;
 
         Collection<String> surfaceBlacklist =
             accessParameters.getVehiclePropertyValue(VehiclePropertyTypes.SURFACE_BLACKLIST);

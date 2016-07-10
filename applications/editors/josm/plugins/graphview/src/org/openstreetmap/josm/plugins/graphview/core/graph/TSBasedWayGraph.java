@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.graphview.core.graph;
 
 import java.util.ArrayList;
@@ -31,32 +32,44 @@ public class TSBasedWayGraph implements WayGraph, TransitionStructureObserver {
         private final Segment segment;
         private final List<GraphEdge> incomingEdges = new ArrayList<>();
         private final List<GraphEdge> outgoingEdges = new ArrayList<>();
-        public GraphNodeImpl(SegmentNode node, Segment segment) {
+
+        GraphNodeImpl(SegmentNode node, Segment segment) {
             assert node != null && segment != null;
             assert segment.getNode1() == node || segment.getNode2() == node;
             this.node = node;
             this.segment = segment;
         }
+
+        @Override
         public SegmentNode getSegmentNode() {
             return node;
         }
+
+        @Override
         public Segment getSegment() {
             return segment;
         }
+
         public void addIncomingEdge(GraphEdge edge) {
             assert edge != null;
             incomingEdges.add(edge);
         }
+
+        @Override
         public Collection<GraphEdge> getInboundEdges() {
             return incomingEdges;
         }
+
         public void addOutgoingEdge(GraphEdge edge) {
             assert edge != null;
             outgoingEdges.add(edge);
         }
+
+        @Override
         public Collection<GraphEdge> getOutboundEdges() {
             return outgoingEdges;
         }
+
         @Override
         public String toString() {
             return "(" + node + "; " + segment + ")";
@@ -69,7 +82,7 @@ public class TSBasedWayGraph implements WayGraph, TransitionStructureObserver {
         private final GraphNode targetNode;
         private final Map<GraphEdgePropertyType<?>, Object> properties;
 
-        public GraphEdgeImpl(GraphNode startNode, GraphNode targetNode,
+        GraphEdgeImpl(GraphNode startNode, GraphNode targetNode,
                 Map<GraphEdgePropertyType<?>, Object> properties) {
             assert startNode != null && targetNode != null && properties != null;
             this.startNode = startNode;
@@ -77,16 +90,22 @@ public class TSBasedWayGraph implements WayGraph, TransitionStructureObserver {
             this.properties = properties;
         }
 
+        @Override
         public GraphNode getStartNode() {
             return startNode;
         }
+
+        @Override
         public GraphNode getTargetNode() {
             return targetNode;
         }
 
+        @Override
         public Collection<GraphEdgePropertyType<?>> getAvailableProperties() {
             return properties.keySet();
         }
+
+        @Override
         public <V> V getPropertyValue(GraphEdgePropertyType<V> property) {
             @SuppressWarnings("unchecked")
             V result = (V) properties.get(property);
@@ -98,7 +117,7 @@ public class TSBasedWayGraph implements WayGraph, TransitionStructureObserver {
             return "(" + startNode + "-->" + targetNode + ")";
         }
 
-    };
+    }
 
     private final Set<WayGraphObserver> observers = new HashSet<>();
 
@@ -120,10 +139,12 @@ public class TSBasedWayGraph implements WayGraph, TransitionStructureObserver {
         createNodesAndEdges();
     }
 
+    @Override
     public Collection<GraphEdge> getEdges() {
         return edges;
     }
 
+    @Override
     public Collection<GraphNode> getNodes() {
         return nodes;
     }
@@ -477,15 +498,18 @@ public class TSBasedWayGraph implements WayGraph, TransitionStructureObserver {
         map.get(key).add(entry);
     }
 
+    @Override
     public void update(TransitionStructure transitionStructure) {
         createNodesAndEdges();
         notifyObservers();
     }
 
+    @Override
     public void addObserver(WayGraphObserver observer) {
         observers.add(observer);
     }
 
+    @Override
     public void deleteObserver(WayGraphObserver observer) {
         observers.remove(observer);
     }
@@ -495,5 +519,4 @@ public class TSBasedWayGraph implements WayGraph, TransitionStructureObserver {
             observer.update(this);
         }
     }
-
 }

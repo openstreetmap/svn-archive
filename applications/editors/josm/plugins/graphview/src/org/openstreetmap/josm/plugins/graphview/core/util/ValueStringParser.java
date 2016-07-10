@@ -1,7 +1,10 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.graphview.core.util;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import org.openstreetmap.josm.Main;
 
 public final class ValueStringParser {
 
@@ -11,7 +14,7 @@ public final class ValueStringParser {
     /** pattern that splits into a part before and after a decimal point */
     private static final Pattern DEC_POINT_PATTERN = Pattern.compile("^(\\-?\\d+)\\.(\\d+)$");
 
-    public static final Float parseOsmDecimal(String value, boolean allowNegative) {
+    public static Float parseOsmDecimal(String value, boolean allowNegative) {
 
         /* positive integer */
 
@@ -19,10 +22,12 @@ public final class ValueStringParser {
 
             int weight = Integer.parseInt(value);
             if (weight >= 0 || allowNegative) {
-                return (float)weight;
+                return (float) weight;
             }
 
-        } catch (NumberFormatException nfe) {}
+        } catch (NumberFormatException nfe) {
+            Main.trace(nfe);
+        }
 
         /* positive number with decimal point */
 
@@ -45,11 +50,12 @@ public final class ValueStringParser {
                             + Math.pow(10, -stringAfterPoint.length()) * afterPoint);
 
                     if (result >= 0 || allowNegative) {
-                        return (float)result;
+                        return (float) result;
                     }
 
-                } catch (NumberFormatException nfe) {}
-
+                } catch (NumberFormatException nfe) {
+                    Main.trace(nfe);
+                }
             }
         }
 
@@ -66,7 +72,7 @@ public final class ValueStringParser {
      *
      * @return  speed in km/h; null if value had syntax errors
      */
-    public static final Float parseSpeed(String value) {
+    public static Float parseSpeed(String value) {
 
         /* try numeric speed (implied km/h) */
 
@@ -81,8 +87,10 @@ public final class ValueStringParser {
         if (kmhMatcher.matches()) {
             String kmhString = kmhMatcher.group(1);
             try {
-                return (float)Integer.parseInt(kmhString);
-            } catch (NumberFormatException nfe) {}
+                return (float) Integer.parseInt(kmhString);
+            } catch (NumberFormatException nfe) {
+                Main.trace(nfe);
+            }
         }
 
         /* try mph speed */
@@ -93,7 +101,9 @@ public final class ValueStringParser {
             try {
                 int mph = Integer.parseInt(mphString);
                 return KM_PER_MILE * mph;
-            } catch (NumberFormatException nfe) {}
+            } catch (NumberFormatException nfe) {
+                Main.trace(nfe);
+            }
         }
 
         /* all possibilities failed */
@@ -114,7 +124,7 @@ public final class ValueStringParser {
      *
      * @return  measure in m; null if value had syntax errors
      */
-    public static final Float parseMeasure(String value) {
+    public static Float parseMeasure(String value) {
 
         /* try numeric measure (implied m) */
 
@@ -146,7 +156,7 @@ public final class ValueStringParser {
         if (miMatcher.matches()) {
             String miString = miMatcher.group(1);
             float mi = parseOsmDecimal(miString, false);
-            return (float)(M_PER_MI * mi);
+            return (float) (M_PER_MI * mi);
         }
 
         /* try feet/inches measure */
@@ -159,9 +169,11 @@ public final class ValueStringParser {
                 int feet = Integer.parseInt(feetString);
                 int inches = Integer.parseInt(inchesString);
                 if (feet >= 0 && inches >= 0 && inches < 12) {
-                    return (float)(M_PER_INCH * (12 * feet + inches));
+                    return (float) (M_PER_INCH * (12 * feet + inches));
                 }
-            } catch (NumberFormatException nfe) {}
+            } catch (NumberFormatException nfe) {
+                Main.trace(nfe);
+            }
         }
 
         /* all possibilities failed */
@@ -206,7 +218,7 @@ public final class ValueStringParser {
      *
      * @return  incline in percents; null if value had syntax errors
      */
-    public static final Float parseIncline(String value) {
+    public static Float parseIncline(String value) {
 
         Matcher inclineMatcher = INCLINE_PATTERN.matcher(value);
         if (inclineMatcher.matches()) {

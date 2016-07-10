@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.graphview.core.graph;
 
 import java.util.Collection;
@@ -15,12 +16,12 @@ public interface GraphNode {
     /**
      * returns all edges that lead to this GraphNode; != null
      */
-    public Collection<GraphEdge> getInboundEdges();
+    Collection<GraphEdge> getInboundEdges();
 
     /**
      * returns all edges that start at this GraphNode; != null
      */
-    public Collection<GraphEdge> getOutboundEdges();
+    Collection<GraphEdge> getOutboundEdges();
 
     /**
      * returns the SegmentNode this GraphNode is based on
@@ -28,13 +29,12 @@ public interface GraphNode {
      * @return  SegmentNode, must be one of the nodes of the Segment returned
      *          by {@link #getSegment()}; != null
      */
-    public SegmentNode getSegmentNode();
+    SegmentNode getSegmentNode();
 
     /**
      * returns the Segment this GraphNode is based on
      *
      * @return  Segment; != null
      */
-    public Segment getSegment();
-
+    Segment getSegment();
 }

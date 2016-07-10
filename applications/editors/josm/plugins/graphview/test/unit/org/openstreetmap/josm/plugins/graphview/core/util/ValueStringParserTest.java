@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.graphview.core.util;
 
 import static org.junit.Assert.assertNull;
@@ -87,7 +88,7 @@ public class ValueStringParserTest {
         assertNull(parseWeight("heavy"));
     }
 
-    private static final void assertClose(float expected, float actual) {
+    private static void assertClose(float expected, float actual) {
         if (Math.abs(expected - actual) > 0.001) {
             throw new AssertionError("expected " + expected + ", was " + actual);
         }

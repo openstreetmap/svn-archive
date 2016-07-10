@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.graphview.core.access;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -20,7 +21,8 @@ public class ImplicationXMLReader {
 
     private final List<Implication> implications = new LinkedList<>();
 
-    private static enum State {BEFORE_IMPLICATION, BEFORE_CONDITION, CONDITION, BEFORE_IMPLIES, IMPLIES, AFTER_IMPLIES};
+    private enum State { BEFORE_IMPLICATION, BEFORE_CONDITION, CONDITION, BEFORE_IMPLIES, IMPLIES, AFTER_IMPLIES }
+
     private State state = State.BEFORE_IMPLICATION;
 
     private ConditionReader currentConditionReader;

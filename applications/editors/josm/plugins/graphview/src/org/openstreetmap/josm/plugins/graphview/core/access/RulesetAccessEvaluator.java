@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.graphview.core.access;
 
 import static org.openstreetmap.josm.plugins.graphview.core.access.AccessType.UNDEFINED;
@@ -36,6 +37,7 @@ public class RulesetAccessEvaluator<N, W, R, M> implements AccessEvaluator<N, W>
 
     }
 
+    @Override
     public boolean wayUsable(W way, boolean forward,
             Map<RoadPropertyType<?>, Object> segmentPropertyValues) {
 
@@ -62,7 +64,7 @@ public class RulesetAccessEvaluator<N, W, R, M> implements AccessEvaluator<N, W>
 
         /* evaluate one-way tagging */
 
-        String onewayValue =  wayTagsWithImplications.getValue("oneway");
+        String onewayValue = wayTagsWithImplications.getValue("oneway");
 
         if (forward && "-1".equals(onewayValue)
                 && !"foot".equals(parameters.getAccessClass())) {
@@ -80,12 +82,13 @@ public class RulesetAccessEvaluator<N, W, R, M> implements AccessEvaluator<N, W>
         return objectUsable(segmentPropertyValues, wayTags);
     }
 
-    public boolean nodeUsable(N node, Map<RoadPropertyType<?>,Object> roadPropertyValues) {
+    @Override
+    public boolean nodeUsable(N node, Map<RoadPropertyType<?>, Object> roadPropertyValues) {
 
         TagGroup nodeTags = dataSource.getTagsN(node);
 
         return objectUsable(roadPropertyValues, nodeTags);
-    };
+    }
 
     private boolean objectUsable(Map<RoadPropertyType<?>, Object> roadPropertyValues,
             TagGroup tags) {
@@ -109,7 +112,9 @@ public class RulesetAccessEvaluator<N, W, R, M> implements AccessEvaluator<N, W>
 
             for (String accessClass : ruleset.getAccessHierarchyAncestors(parameters.getAccessClass())) {
                 accessType = accessTypePerClass.get(accessClass);
-                if (accessType != UNDEFINED) { break; }
+                if (accessType != UNDEFINED) {
+                    break;
+                }
             }
 
         }

@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.graphview.core.property;
 
 import java.util.List;
@@ -20,15 +21,14 @@ public interface GraphEdgePropertyType<V> {
     /**
      * determines the property value for segments created from junction groups
      */
-    public V evaluate(JunctionEvaluationGroup junctionGroup,
+    V evaluate(JunctionEvaluationGroup junctionGroup,
             List<Segment> segmentSequence,
             TransitionStructure transitionStructure);
 
     /**
      * determines the property value for segments created from connector groups
      */
-    public V evaluate(ConnectorEvaluationGroup connectorGroup,
+    V evaluate(ConnectorEvaluationGroup connectorGroup,
             List<Segment> segmentSequence,
             TransitionStructure transitionStructure);
-
 }

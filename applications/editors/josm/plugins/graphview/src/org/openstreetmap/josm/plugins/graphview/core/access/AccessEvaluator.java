@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.graphview.core.access;
 
 import java.util.Map;
@@ -26,7 +27,7 @@ public interface AccessEvaluator<N, W> {
      *                           segments; each value must be a valid value for its property type;
      *                           != null
      */
-    public boolean wayUsable(W way, boolean forward,
+    boolean wayUsable(W way, boolean forward,
             Map<RoadPropertyType<?>, Object> roadPropertyValues);
 
     /**
@@ -37,6 +38,5 @@ public interface AccessEvaluator<N, W> {
      *                           based on this node, each value must be a valid value for its
      *                           property type; != null
      */
-    public boolean nodeUsable(N node, Map<RoadPropertyType<?>, Object> roadPropertyValues);
-
+    boolean nodeUsable(N node, Map<RoadPropertyType<?>, Object> roadPropertyValues);
 }

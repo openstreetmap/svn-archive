@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.graphview.core.data;
 
 /**
@@ -22,7 +23,7 @@ public class Tag {
         if (!(obj instanceof Tag)) {
             return false;
         } else {
-            Tag otherTag = (Tag)obj;
+            Tag otherTag = (Tag) obj;
             return key.equals(otherTag.key) && value.equals(otherTag.value);
         }
     }

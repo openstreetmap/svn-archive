@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.graphview.core.visualisation;
 
 import org.openstreetmap.josm.plugins.graphview.core.graph.GraphNode;
@@ -10,12 +11,13 @@ import org.openstreetmap.josm.plugins.graphview.core.transition.SegmentNode;
  */
 public class DefaultNodePositioner implements NodePositioner {
 
+    @Override
     public LatLonCoords getPosition(GraphNode node) {
 
         SegmentNode segmentNode = node.getSegmentNode();
 
         if (2 >= segmentNode.getInboundSegments().size()
-                + segmentNode.getOutboundSegments().size() ) {
+                + segmentNode.getOutboundSegments().size()) {
 
             return new LatLonCoords(
                     node.getSegmentNode().getLat(),

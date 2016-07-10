@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.graphview.core.util;
 
 import org.openstreetmap.josm.plugins.graphview.core.graph.GraphNode;
@@ -17,7 +18,7 @@ public final class GraphUtil {
      * checks whether a node is an "end node"
      * (a node whose {@link SegmentNode} is connected to at most one other {@link SegmentNode})
      */
-    public static final boolean isEndNode(GraphNode node) {
+    public static boolean isEndNode(GraphNode node) {
 
         SegmentNode ownSegmentNode = node.getSegmentNode();
 

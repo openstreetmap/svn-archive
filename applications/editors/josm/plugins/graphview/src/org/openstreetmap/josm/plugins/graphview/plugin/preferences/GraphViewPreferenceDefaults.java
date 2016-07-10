@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.graphview.plugin.preferences;
 
 import static org.openstreetmap.josm.plugins.graphview.core.access.AccessType.DESIGNATED;

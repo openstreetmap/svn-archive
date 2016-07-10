@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.graphview.core.graph;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -61,7 +62,9 @@ public class ConnectorEvaluationGroup extends EvaluationGroup {
         assert startNode != null && borderNodes.contains(startNode);
         assert targetNode != null && borderNodes.contains(targetNode);
 
-        if (!evaluated) { throw new IllegalStateException(tr("Group not yet evaluated")); }
+        if (!evaluated) {
+            throw new IllegalStateException(tr("Group not yet evaluated"));
+        }
 
         int inboundIndex = borderNodes.indexOf(startNode);
         int outboundIndex = borderNodes.indexOf(targetNode);
@@ -77,8 +80,8 @@ public class ConnectorEvaluationGroup extends EvaluationGroup {
         @SuppressWarnings("unchecked") //cannot create generic array without cast
         List<Segment>[][] sequenceArray = new List[borderNodes.size()][borderNodes.size()];
 
-        for (int startIndex = 0; startIndex < borderNodes.size(); startIndex ++) {
-            for (int targetIndex = 0; targetIndex < borderNodes.size(); targetIndex ++) {
+        for (int startIndex = 0; startIndex < borderNodes.size(); startIndex++) {
+            for (int targetIndex = 0; targetIndex < borderNodes.size(); targetIndex++) {
 
                 List<Segment> sequence =
                     findSegmentSequence(borderNodes.get(startIndex),
@@ -107,5 +110,4 @@ public class ConnectorEvaluationGroup extends EvaluationGroup {
     public String toString() {
         return "ConnectorEG " + segments;
     }
-
 }

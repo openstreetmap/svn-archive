@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.graphview.core.property;
 
 import org.junit.Test;
@@ -6,7 +7,7 @@ import org.openstreetmap.josm.plugins.graphview.core.data.Tag;
 public class RoadMaxspeedTest extends RoadPropertyTest {
 
     private static void testMaxspeed(float expectedMaxspeed, String maxspeedString) {
-        testEvaluateBoth(new RoadMaxspeed(),    expectedMaxspeed, new Tag("maxspeed", maxspeedString));
+        testEvaluateBoth(new RoadMaxspeed(), expectedMaxspeed, new Tag("maxspeed", maxspeedString));
     }
 
     @Test
@@ -28,5 +29,4 @@ public class RoadMaxspeedTest extends RoadPropertyTest {
         testMaxspeed(64.373764f, "40mph");
         testMaxspeed(24.14016f, "15 mph");
     }
-
 }

@@ -1,11 +1,14 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.graphview.core;
 
 import static org.junit.Assert.assertSame;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 import org.junit.Test;
@@ -48,13 +51,18 @@ public class FullGraphCreationTest {
     }
 
     private static final AccessRuleset TEST_RULESET = new AccessRuleset() {
+        @Override
         public java.util.List<String> getAccessHierarchyAncestors(String transportMode) {
             return Arrays.asList(transportMode);
         }
-        public java.util.Collection<Tag> getBaseTags() {
+
+        @Override
+        public Collection<Tag> getBaseTags() {
             return Arrays.asList(new Tag("highway", "test"));
         }
-        public java.util.List<Implication> getImplications() {
+
+        @Override
+        public List<Implication> getImplications() {
             return new LinkedList<>();
         }
     };
@@ -173,7 +181,7 @@ public class FullGraphCreationTest {
         int size = 0;
         while (iterator.hasNext()) {
             iterator.next();
-            size ++;
+            size++;
         }
         return size;
     }

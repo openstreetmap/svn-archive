@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.graphview.core.access;
 
 import java.util.Collection;
@@ -10,20 +11,20 @@ import org.openstreetmap.josm.plugins.graphview.core.property.VehiclePropertyTyp
  */
 public interface AccessParameters {
 
-    public String getAccessClass();
+    String getAccessClass();
 
     /**
      * returns true iff a road with a given access type can be used
      * @param accessType  access type to check usablitly for; != null
      */
-    public boolean getAccessTypeUsable(AccessType accessType);
+    boolean getAccessTypeUsable(AccessType accessType);
 
     /**
      * returns all {@link VehiclePropertyType}s a value is avaliable for.
      * The value can be accessed using {@link #getVehiclePropertyValue(VehiclePropertyType)}
      * @return  collection of property types; != null
      */
-    public Collection<VehiclePropertyType<?>> getAvailableVehicleProperties();
+    Collection<VehiclePropertyType<?>> getAvailableVehicleProperties();
 
     /**
      * returns the value for a vehicle property.
@@ -34,6 +35,5 @@ public interface AccessParameters {
      *                         Guaranteed to be valid according to vehicleProperty's
      *                         {@link VehiclePropertyType#isValidValue(Object)} method.
      */
-    public <V> V getVehiclePropertyValue(VehiclePropertyType<V> vehicleProperty);
-
+    <V> V getVehiclePropertyValue(VehiclePropertyType<V> vehicleProperty);
 }

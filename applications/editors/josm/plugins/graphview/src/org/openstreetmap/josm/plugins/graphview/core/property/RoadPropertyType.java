@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.graphview.core.property;
 
 import org.openstreetmap.josm.plugins.graphview.core.access.AccessParameters;
@@ -25,7 +26,7 @@ public interface RoadPropertyType<V> {
      * @return                  value of this property for the way;
      *                          null if property cannot be determined / does not apply
      */
-    public <N, W, R, M> V evaluateW(W way, boolean forward,
+    <N, W, R, M> V evaluateW(W way, boolean forward,
             AccessParameters accessParameters, DataSource<N, W, R, M> dataSource);
 
     /**
@@ -38,7 +39,7 @@ public interface RoadPropertyType<V> {
      * @return                  value of this property for the way;
      *                          null if property cannot be determined / does not apply
      */
-    public <N, W, R, M> V evaluateN(N node,
+    <N, W, R, M> V evaluateN(N node,
             AccessParameters accessParameters, DataSource<N, W, R, M> dataSource);
 
     /**
@@ -48,6 +49,5 @@ public interface RoadPropertyType<V> {
      * @param object  value of this property for the segment;
      *                MUST be of type V; != null
      */
-    public boolean isUsable(Object object, AccessParameters accessParameters);
-
+    boolean isUsable(Object object, AccessParameters accessParameters);
 }

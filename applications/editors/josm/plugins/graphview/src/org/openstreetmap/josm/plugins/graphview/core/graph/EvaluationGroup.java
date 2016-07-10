@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.graphview.core.graph;
 
 import java.util.ArrayList;
@@ -262,7 +263,9 @@ abstract class EvaluationGroup {
 
     public final void evaluate(Collection<Restriction> restrictions) {
 
-        if (evaluated) { return; }
+        if (evaluated) {
+            return;
+        }
 
         evaluateImpl(restrictions);
 
@@ -277,18 +280,17 @@ abstract class EvaluationGroup {
      * @param restrictions  restrictions that are used when determining possible connections,
      *                      will not be modified; != null
      */
-    abstract protected void evaluateImpl(Collection<Restriction> restrictions);
+    protected abstract void evaluateImpl(Collection<Restriction> restrictions);
 
     /**
      * returns whether a node can be used while finding a segment sequence
      * @param node  node to check; != null
      */
-    abstract protected boolean isUsableNode(SegmentNode node);
+    protected abstract boolean isUsableNode(SegmentNode node);
 
     /**
      * returns whether a segment can be used while finding a segment sequence
      * @param segment  segment to check; != null
      */
-    abstract protected boolean isUsableSegment(Segment segment);
-
+    protected abstract boolean isUsableSegment(Segment segment);
 }

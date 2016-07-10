@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.graphview.core.visualisation;
 
 import java.awt.Color;
@@ -41,6 +42,7 @@ public class FloatPropertyColorScheme implements ColorScheme {
         this.defaultColor = defaultColor;
     }
 
+    @Override
     public Color getSegmentColor(Segment segment) {
         assert segment != null;
 
@@ -49,7 +51,7 @@ public class FloatPropertyColorScheme implements ColorScheme {
         for (RoadPropertyType<?> property : availableProperties) {
             if (propertyClass.isInstance(property)) {
                 @SuppressWarnings("unchecked") //has been checked using isInstance
-                RoadPropertyType<Float> floatProperty = (RoadPropertyType<Float>)property;
+                RoadPropertyType<Float> floatProperty = (RoadPropertyType<Float>) property;
                 propertyValue = segment.getPropertyValue(floatProperty);
                 break;
             }
@@ -62,11 +64,10 @@ public class FloatPropertyColorScheme implements ColorScheme {
         }
     }
 
+    @Override
     public Color getNodeColor(GraphNode node) {
 
         List<Color> segmentColors = new ArrayList<>();
-
-
 
         for (GraphEdge edge : node.getInboundEdges()) {
             List<Segment> edgeSegments = edge.getPropertyValue(GraphEdgeSegments.PROPERTY);
@@ -157,7 +158,7 @@ public class FloatPropertyColorScheme implements ColorScheme {
 
         float weightPerColor = 1.0f / colors.size();
 
-        Color average = new Color(0,0,0);
+        Color average = new Color(0, 0, 0);
 
         for (Color color : colors) {
             average = new Color(

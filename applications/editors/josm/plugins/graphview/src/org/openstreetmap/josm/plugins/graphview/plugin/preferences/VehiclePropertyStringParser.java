@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.graphview.plugin.preferences;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -8,6 +9,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
+import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.plugins.graphview.core.property.VehiclePropertyType;
 import org.openstreetmap.josm.plugins.graphview.core.property.VehiclePropertyTypes;
 import org.openstreetmap.josm.plugins.graphview.core.util.ValueStringParser;
@@ -52,16 +54,16 @@ public final class VehiclePropertyStringParser {
     /**
      * returns the value represented by the propertyValueString
      *
-     * @throws PropertyValueSyntaxException  if the string has syntax errors that prevent parsing
-     * @throws InvalidParameterException     if an unknown property type was passed
-     *
      * @param propertyType         type of the property; != null
      * @param propertyValueString  string to parse; != null
      * @return                     property value; != null.
      *                             Guaranteed to be valid according to propertyType's
      *                             {@link VehiclePropertyType#isValidValue(Object)} method.
+     *
+     * @throws PropertyValueSyntaxException  if the string has syntax errors that prevent parsing
+     * @throws InvalidParameterException     if an unknown property type was passed
      */
-    public static final <V> V parsePropertyValue(
+    public static <V> V parsePropertyValue(
             VehiclePropertyType<V> propertyType, String propertyValueString)
     throws PropertyValueSyntaxException {
 
@@ -73,7 +75,7 @@ public final class VehiclePropertyStringParser {
             Float value = ValueStringParser.parseWeight(propertyValueString);
             if (value != null && propertyType.isValidValue(value)) {
                 @SuppressWarnings("unchecked") //V must be float because of propertyType condition
-                V result = (V)value;
+                V result = (V) value;
                 return result;
             } else {
                 throw new PropertyValueSyntaxException(ERROR_WEIGHT);
@@ -86,7 +88,7 @@ public final class VehiclePropertyStringParser {
             Float value = ValueStringParser.parseMeasure(propertyValueString);
             if (value != null && propertyType.isValidValue(value)) {
                 @SuppressWarnings("unchecked") //V must be float because of propertyType condition
-                V result = (V)value;
+                V result = (V) value;
                 return result;
             } else {
                 throw new PropertyValueSyntaxException(ERROR_LENGTH);
@@ -97,7 +99,7 @@ public final class VehiclePropertyStringParser {
             Float value = ValueStringParser.parseSpeed(propertyValueString);
             if (value != null && propertyType.isValidValue(value)) {
                 @SuppressWarnings("unchecked") //V must be float because of propertyType condition
-                V result = (V)value;
+                V result = (V) value;
                 return result;
             } else {
                 throw new PropertyValueSyntaxException(ERROR_SPEED);
@@ -109,7 +111,7 @@ public final class VehiclePropertyStringParser {
             Float value = ValueStringParser.parseIncline(propertyValueString);
             if (value != null && propertyType.isValidValue(value)) {
                 @SuppressWarnings("unchecked") //V must be float because of propertyType condition
-                V result = (V)value;
+                V result = (V) value;
                 return result;
             } else {
                 throw new PropertyValueSyntaxException(ERROR_INCLINE);
@@ -121,10 +123,12 @@ public final class VehiclePropertyStringParser {
                 int value = Integer.parseInt(propertyValueString);
                 if (0 <= value && value <= 5) {
                     @SuppressWarnings("unchecked") //V must be int because of propertyType condition
-                    V result = (V)(Integer)value;
+                    V result = (V) (Integer) value;
                     return result;
                 }
-            } catch (NumberFormatException e) {}
+            } catch (NumberFormatException e) {
+                Main.trace(e);
+            }
 
             throw new PropertyValueSyntaxException(ERROR_TRACKTYPE);
 
@@ -142,7 +146,7 @@ public final class VehiclePropertyStringParser {
             }
 
             @SuppressWarnings("unchecked") //V must be Collection because of propertyType condition
-            V result = (V)surfaceBlacklist;
+            V result = (V) surfaceBlacklist;
             return result;
 
         } else {

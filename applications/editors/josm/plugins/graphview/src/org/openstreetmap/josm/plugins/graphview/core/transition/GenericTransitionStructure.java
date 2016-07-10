@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.graphview.core.transition;
 
 import java.util.ArrayList;
@@ -40,27 +41,38 @@ public class GenericTransitionStructure<N, W, R, M> implements TransitionStructu
         private final List<Segment> inboundSegments = new LinkedList<>();
         private final List<Segment> outboundSegments = new LinkedList<>();
         private final Map<RoadPropertyType<?>, Object> properties;
-        public SegmentNodeImpl(double lat, double lon, Map<RoadPropertyType<?>, Object> properties) {
+
+        SegmentNodeImpl(double lat, double lon, Map<RoadPropertyType<?>, Object> properties) {
             assert properties != null;
             this.lat = lat;
             this.lon = lon;
             this.properties = properties;
         }
+
+        @Override
         public double getLat() {
             return lat;
         }
+
+        @Override
         public double getLon() {
             return lon;
         }
+
         public void addInboundSegment(Segment segment) {
             inboundSegments.add(segment);
         }
+
         public void addOutboundSegment(Segment segment) {
             outboundSegments.add(segment);
         }
+
+        @Override
         public Collection<Segment> getOutboundSegments() {
             return outboundSegments;
         }
+
+        @Override
         public Collection<Segment> getInboundSegments() {
             return inboundSegments;
         }
@@ -68,14 +80,18 @@ public class GenericTransitionStructure<N, W, R, M> implements TransitionStructu
         /*public <P> void setProperty(RoadPropertyType<P> property, P value) {
             properties.put(property, value);
         }*/
+        @Override
         public Collection<RoadPropertyType<?>> getAvailableProperties() {
             return properties.keySet();
         }
+
+        @Override
         public <P> P getPropertyValue(RoadPropertyType<P> property) {
             @SuppressWarnings("unchecked") //cast is safe due to type parameter of setProperty
             P result = (P) properties.get(property);
             return result;
         }
+
         public Map<RoadPropertyType<?>, Object> getProperties() {
             return properties;
         }
@@ -90,23 +106,33 @@ public class GenericTransitionStructure<N, W, R, M> implements TransitionStructu
         private final SegmentNode node1;
         private final SegmentNode node2;
         private final Map<RoadPropertyType<?>, Object> properties;
-        public SegmentImpl(SegmentNode node1, SegmentNode node2, Map<RoadPropertyType<?>, Object> properties) {
+
+        SegmentImpl(SegmentNode node1, SegmentNode node2, Map<RoadPropertyType<?>, Object> properties) {
             this.node1 = node1;
             this.node2 = node2;
             this.properties = properties;
         }
+
+        @Override
         public SegmentNode getNode1() {
             return node1;
         }
+
+        @Override
         public SegmentNode getNode2() {
             return node2;
         }
+
         /*public <P> void setProperty(RoadPropertyType<P> property, P value) {
             properties.put(property, value);
         }*/
+
+        @Override
         public Collection<RoadPropertyType<?>> getAvailableProperties() {
             return properties.keySet();
         }
+
+        @Override
         public <P> P getPropertyValue(RoadPropertyType<P> property) {
             @SuppressWarnings("unchecked") //cast is safe due to type parameter of setProperty
             P result = (P) properties.get(property);
@@ -125,18 +151,23 @@ public class GenericTransitionStructure<N, W, R, M> implements TransitionStructu
         private final Collection<Segment> tos;
 
         /** constructor, will directly use collection references, collections must not be changed after usage as constructor param */
-        public RestrictionImpl(Segment from, Collection<Segment> vias, Collection<Segment> tos) {
+        RestrictionImpl(Segment from, Collection<Segment> vias, Collection<Segment> tos) {
             this.from = from;
             this.vias = Collections.unmodifiableCollection(vias);
             this.tos = Collections.unmodifiableCollection(tos);
         }
 
+        @Override
         public Segment getFrom() {
             return from;
         }
+
+        @Override
         public Collection<Segment> getVias() {
             return vias;
         }
+
+        @Override
         public Collection<Segment> getTos() {
             return tos;
         }
@@ -212,14 +243,17 @@ public class GenericTransitionStructure<N, W, R, M> implements TransitionStructu
 
     }
 
+    @Override
     public Collection<SegmentNode> getNodes() {
         return nodes;
     }
 
+    @Override
     public Collection<Segment> getSegments() {
         return segments;
     }
 
+    @Override
     public Collection<Restriction> getRestrictions() {
         return restrictions;
     }
@@ -277,7 +311,8 @@ public class GenericTransitionStructure<N, W, R, M> implements TransitionStructu
             Collection<SegmentNode> nodes, Collection<Segment> segments,
             Map<N, SegmentNodeImpl> nodeCreationMap, Map<W, List<Segment>> waySegmentMap) {
 
-        assert way != null && wayAccessEvaluator != null && nodes != null && segments != null && nodeCreationMap != null && waySegmentMap != null;
+        assert way != null && wayAccessEvaluator != null && nodes != null
+                && segments != null && nodeCreationMap != null && waySegmentMap != null;
 
         /* calculate property values */
 
@@ -378,7 +413,7 @@ public class GenericTransitionStructure<N, W, R, M> implements TransitionStructu
             TagGroup tags = dataSource.getTagsR(relation);
 
             if ("restriction".equals(tags.getValue("type"))
-                    && tags.getValue("restriction") != null ) {
+                    && tags.getValue("restriction") != null) {
 
                 //evaluate relation
                 if (tags.getValue("restriction").startsWith("no_")) {
@@ -414,20 +449,20 @@ public class GenericTransitionStructure<N, W, R, M> implements TransitionStructu
                     //broken restriction
                     return EMPTY_RESTRICTION_COLLECTION;
                 } else {
-                    fromWay = (W)dataSource.getMember(member);
+                    fromWay = (W) dataSource.getMember(member);
                 }
             } else if ("to".equals(dataSource.getRole(member))) {
                 if (!dataSource.isWMember(member)) {
                     //broken restriction
                     return EMPTY_RESTRICTION_COLLECTION;
                 } else {
-                    toWays.add((W)dataSource.getMember(member));
+                    toWays.add((W) dataSource.getMember(member));
                 }
             } else if ("via".equals(dataSource.getRole(member))) {
                 if (dataSource.isWMember(member)) {
-                    viaWays.add((W)dataSource.getMember(member));
+                    viaWays.add((W) dataSource.getMember(member));
                 } else if (dataSource.isNMember(member)) {
-                    viaNodes.add((N)dataSource.getMember(member));
+                    viaNodes.add((N) dataSource.getMember(member));
                 }
             }
 
@@ -670,15 +705,18 @@ public class GenericTransitionStructure<N, W, R, M> implements TransitionStructu
         return propertyValues;
     }
 
+    @Override
     public void update(DataSource<?, ?, ?, ?> dataSource) {
         assert this.dataSource == dataSource;
         updateData();
     }
 
+    @Override
     public void addObserver(TransitionStructureObserver observer) {
         observers.add(observer);
     }
 
+    @Override
     public void deleteObserver(TransitionStructureObserver observer) {
         observers.remove(observer);
     }
@@ -688,5 +726,4 @@ public class GenericTransitionStructure<N, W, R, M> implements TransitionStructu
             observer.update(this);
         }
     }
-
 }

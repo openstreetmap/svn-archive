@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.graphview.core.graph;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -37,7 +38,9 @@ public class JunctionEvaluationGroup extends EvaluationGroup {
      * @return  segment collection; != null
      */
     public Collection<Segment> getInboundSegments() {
-        if (!evaluated) { throw new IllegalStateException(tr("Group not yet evaluated")); }
+        if (!evaluated) {
+            throw new IllegalStateException(tr("Group not yet evaluated"));
+        }
         return inboundSegments;
     }
 
@@ -48,7 +51,9 @@ public class JunctionEvaluationGroup extends EvaluationGroup {
      * @return  segment collection; != null
      */
     public Collection<Segment> getOutboundSegments() {
-        if (!evaluated) { throw new IllegalStateException(tr("Group not yet evaluated")); }
+        if (!evaluated) {
+            throw new IllegalStateException(tr("Group not yet evaluated"));
+        }
         return outboundSegments;
     }
 
@@ -67,7 +72,9 @@ public class JunctionEvaluationGroup extends EvaluationGroup {
         assert inboundSegment != null && inboundSegments.contains(inboundSegment);
         assert outboundSegment != null && outboundSegments.contains(outboundSegment);
 
-        if (!evaluated) { throw new IllegalStateException(tr("Group not yet evaluated")); }
+        if (!evaluated) {
+            throw new IllegalStateException(tr("Group not yet evaluated"));
+        }
 
         int inboundIndex = inboundSegments.indexOf(inboundSegment);
         int outboundIndex = outboundSegments.indexOf(outboundSegment);
@@ -104,8 +111,8 @@ public class JunctionEvaluationGroup extends EvaluationGroup {
         @SuppressWarnings("unchecked") //cannot create generic array without cast
         List<Segment>[][] sequenceArray = new List[inboundSegments.size()][outboundSegments.size()];
 
-        for (int inboundIndex = 0; inboundIndex < inboundSegments.size(); inboundIndex ++) {
-            for (int outboundIndex = 0; outboundIndex < outboundSegments.size(); outboundIndex ++) {
+        for (int inboundIndex = 0; inboundIndex < inboundSegments.size(); inboundIndex++) {
+            for (int outboundIndex = 0; outboundIndex < outboundSegments.size(); outboundIndex++) {
 
                 List<Segment> sequence =
                     findSegmentSequence(inboundSegments.get(inboundIndex),
@@ -117,7 +124,6 @@ public class JunctionEvaluationGroup extends EvaluationGroup {
         }
 
         segmentSequences = sequenceArray;
-
     }
 
     @Override

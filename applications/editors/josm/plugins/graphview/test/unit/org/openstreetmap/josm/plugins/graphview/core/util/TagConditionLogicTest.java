@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.graphview.core.util;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;

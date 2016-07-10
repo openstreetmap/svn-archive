@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.graphview.plugin.dialogs;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -75,6 +76,7 @@ public class GraphViewPreferenceEditor extends DefaultTabPreferenceSetting {
                 tr("Settings for the Graphview plugin that visualizes routing graphs."));
     }
 
+    @Override
     public void addGui(PreferenceTabbedPane gui) {
 
         readPreferences();
@@ -202,67 +204,68 @@ public class GraphViewPreferenceEditor extends DefaultTabPreferenceSetting {
 
     private JPanel createVisualizationPanel() {
 
-    	JPanel visualizationPanel = new JPanel();
-    	visualizationPanel.setBorder(BorderFactory.createTitledBorder(tr("Visualization")));
-    	visualizationPanel.setLayout(new BoxLayout(visualizationPanel, BoxLayout.Y_AXIS));
+        JPanel visualizationPanel = new JPanel();
+        visualizationPanel.setBorder(BorderFactory.createTitledBorder(tr("Visualization")));
+        visualizationPanel.setLayout(new BoxLayout(visualizationPanel, BoxLayout.Y_AXIS));
 
-    	separateDirectionsCheckBox = new JCheckBox(tr("Draw directions separately"));
-    	separateDirectionsCheckBox.setSelected(GraphViewPreferences.getInstance().getSeparateDirections());
-    	visualizationPanel.add(separateDirectionsCheckBox);
+        separateDirectionsCheckBox = new JCheckBox(tr("Draw directions separately"));
+        separateDirectionsCheckBox.setSelected(GraphViewPreferences.getInstance().getSeparateDirections());
+        visualizationPanel.add(separateDirectionsCheckBox);
 
-    	{ // create color chooser panel
+        { // create color chooser panel
 
-    		JPanel colorPanel = new JPanel();
-    		colorPanel.setLayout(new GridLayout(3, 2));
+            JPanel colorPanel = new JPanel();
+            colorPanel.setLayout(new GridLayout(3, 2));
 
-    		Color nodeColor = GraphViewPreferences.getInstance().getNodeColor();
+            Color nodeColor = GraphViewPreferences.getInstance().getNodeColor();
 
-    		nodeColorButton = new JButton(tr("Node color"));
-    		nodeColorButton.addActionListener(chooseNodeColorActionListener);
-    		colorPanel.add(nodeColorButton);
-    		nodeColorField = new JPanel();
-    		nodeColorField.setBackground(nodeColor);
-    		colorPanel.add(nodeColorField);
+            nodeColorButton = new JButton(tr("Node color"));
+            nodeColorButton.addActionListener(chooseNodeColorActionListener);
+            colorPanel.add(nodeColorButton);
+            nodeColorField = new JPanel();
+            nodeColorField.setBackground(nodeColor);
+            colorPanel.add(nodeColorField);
 
-    		Color segmentColor = GraphViewPreferences.getInstance().getSegmentColor();
+            Color segmentColor = GraphViewPreferences.getInstance().getSegmentColor();
 
-    		segmentColorButton = new JButton(tr("Arrow color"));
-    		segmentColorButton.addActionListener(chooseSegmentColorActionListener);
-    		colorPanel.add(segmentColorButton);
-    		segmentColorField = new JPanel();
-    		segmentColorField.setBackground(segmentColor);
-    		colorPanel.add(segmentColorField);
+            segmentColorButton = new JButton(tr("Arrow color"));
+            segmentColorButton.addActionListener(chooseSegmentColorActionListener);
+            colorPanel.add(segmentColorButton);
+            segmentColorField = new JPanel();
+            segmentColorField.setBackground(segmentColor);
+            colorPanel.add(segmentColorField);
 
-    		Color arrowheadFillColor = GraphViewPreferences.getInstance().getArrowheadFillColor();
+            Color arrowheadFillColor = GraphViewPreferences.getInstance().getArrowheadFillColor();
 
-    		arrowheadFillColorButton = new JButton(tr("Arrowhead fill color"));
-    		arrowheadFillColorButton.addActionListener(chooseArrowheadFillColorActionListener);
-    		colorPanel.add(arrowheadFillColorButton);
-    		arrowheadFillColorField = new JPanel();
-    		arrowheadFillColorField.setBackground(arrowheadFillColor);
-    		colorPanel.add(arrowheadFillColorField);
+            arrowheadFillColorButton = new JButton(tr("Arrowhead fill color"));
+            arrowheadFillColorButton.addActionListener(chooseArrowheadFillColorActionListener);
+            colorPanel.add(arrowheadFillColorButton);
+            arrowheadFillColorField = new JPanel();
+            arrowheadFillColorField.setBackground(arrowheadFillColor);
+            colorPanel.add(arrowheadFillColorField);
 
-    		visualizationPanel.add(colorPanel);
+            visualizationPanel.add(colorPanel);
 
-    	}
+        }
 
-    	arrowheadPlacementSlider = new JSlider(0, 100);
-    	arrowheadPlacementSlider.setToolTipText(tr("Arrowhead placement"));
-    	arrowheadPlacementSlider.setMajorTickSpacing(10);
-    	arrowheadPlacementSlider.setPaintTicks(true);
-    	arrowheadPlacementSlider.setName("name");
-    	arrowheadPlacementSlider.setLabelTable(null);
-    	arrowheadPlacementSlider.setValue((int)Math.round(
-    			100 * GraphViewPreferences.getInstance().getArrowheadPlacement()));
-    	arrowheadPlacementSlider.addChangeListener(arrowheadPlacementChangeListener);
-    	visualizationPanel.add(arrowheadPlacementSlider);
+        arrowheadPlacementSlider = new JSlider(0, 100);
+        arrowheadPlacementSlider.setToolTipText(tr("Arrowhead placement"));
+        arrowheadPlacementSlider.setMajorTickSpacing(10);
+        arrowheadPlacementSlider.setPaintTicks(true);
+        arrowheadPlacementSlider.setName("name");
+        arrowheadPlacementSlider.setLabelTable(null);
+        arrowheadPlacementSlider.setValue((int) Math.round(
+                100 * GraphViewPreferences.getInstance().getArrowheadPlacement()));
+        arrowheadPlacementSlider.addChangeListener(arrowheadPlacementChangeListener);
+        visualizationPanel.add(arrowheadPlacementSlider);
 
-    	arrowPreviewPanel = new ArrowPreviewPanel();
-    	visualizationPanel.add(arrowPreviewPanel);
+        arrowPreviewPanel = new ArrowPreviewPanel();
+        visualizationPanel.add(arrowPreviewPanel);
 
-    	return visualizationPanel;
+        return visualizationPanel;
     }
 
+    @Override
     public boolean ok() {
 
         GraphViewPreferences preferences = GraphViewPreferences.getInstance();
@@ -272,7 +275,7 @@ public class GraphViewPreferenceEditor extends DefaultTabPreferenceSetting {
 
         preferences.setParameterBookmarks(parameterBookmarks);
 
-        String selectedBookmarkName = (String)bookmarkComboBox.getSelectedItem();
+        String selectedBookmarkName = (String) bookmarkComboBox.getSelectedItem();
         preferences.setCurrentParameterBookmarkName(selectedBookmarkName);
 
         preferences.setSeparateDirections(separateDirectionsCheckBox.isSelected());
@@ -282,7 +285,7 @@ public class GraphViewPreferenceEditor extends DefaultTabPreferenceSetting {
         preferences.setArrowheadFillColor(arrowheadFillColorField.getBackground());
 
         preferences.setArrowheadPlacement(
-        		arrowheadPlacementSlider.getValue() / 100f);
+                arrowheadPlacementSlider.getValue() / 100f);
 
         preferences.distributeChanges();
 
@@ -290,12 +293,14 @@ public class GraphViewPreferenceEditor extends DefaultTabPreferenceSetting {
     }
 
     private final ActionListener internalRulesetActionListener = new ActionListener() {
+        @Override
         public void actionPerformed(ActionEvent e) {
             updateRulesetPanel();
         }
     };
 
     private final ActionListener selectRulesetFolderActionListener = new ActionListener() {
+        @Override
         public void actionPerformed(ActionEvent e) {
 
             File initialFCDirectory = rulesetFolder;
@@ -318,6 +323,7 @@ public class GraphViewPreferenceEditor extends DefaultTabPreferenceSetting {
     };
 
     private final ActionListener createVehicleActionListener = new ActionListener() {
+        @Override
         public void actionPerformed(ActionEvent e) {
 
             PreferenceAccessParameters defaultBookmarkParameters =
@@ -330,6 +336,7 @@ public class GraphViewPreferenceEditor extends DefaultTabPreferenceSetting {
                     parameterBookmarks.keySet(),
                     defaultBookmarkParameters,
                     new BookmarkAction() {
+                        @Override
                         public void execute(String name, PreferenceAccessParameters parameters) {
                             parameterBookmarks.put(name, parameters);
                             updateVehiclePanel(name);
@@ -341,10 +348,11 @@ public class GraphViewPreferenceEditor extends DefaultTabPreferenceSetting {
     };
 
     private final ActionListener editVehicleActionListener = new ActionListener() {
+        @Override
         public void actionPerformed(ActionEvent e) {
             if (bookmarkComboBox.getSelectedItem() != null) {
 
-                final String selectedBookmarkName = (String)bookmarkComboBox.getSelectedItem();
+                final String selectedBookmarkName = (String) bookmarkComboBox.getSelectedItem();
                 PreferenceAccessParameters parameters =
                     parameterBookmarks.get(selectedBookmarkName);
 
@@ -362,6 +370,7 @@ public class GraphViewPreferenceEditor extends DefaultTabPreferenceSetting {
                         otherBookmarkNames,
                         parameters,
                         new BookmarkAction() {
+                            @Override
                             public void execute(String name, PreferenceAccessParameters parameters) {
                                 parameterBookmarks.remove(selectedBookmarkName);
                                 parameterBookmarks.put(name, parameters);
@@ -371,15 +380,15 @@ public class GraphViewPreferenceEditor extends DefaultTabPreferenceSetting {
 
                 apd.setVisible(true);
             }
-
         }
     };
 
     private final ActionListener deleteVehicleActionListener = new ActionListener() {
+        @Override
         public void actionPerformed(ActionEvent e) {
             if (bookmarkComboBox.getSelectedItem() != null) {
 
-                String selectedBookmarkName = (String)bookmarkComboBox.getSelectedItem();
+                String selectedBookmarkName = (String) bookmarkComboBox.getSelectedItem();
 
                 int userChoice = JOptionPane.showConfirmDialog(
                         preferencePanel,
@@ -391,12 +400,12 @@ public class GraphViewPreferenceEditor extends DefaultTabPreferenceSetting {
                     parameterBookmarks.remove(selectedBookmarkName);
                     updateVehiclePanel(null);
                 }
-
             }
         }
     };
 
     private final ActionListener restoreVehicleDefaultsActionListener = new ActionListener() {
+        @Override
         public void actionPerformed(ActionEvent e) {
 
             int userChoice = JOptionPane.showConfirmDialog(
@@ -417,53 +426,57 @@ public class GraphViewPreferenceEditor extends DefaultTabPreferenceSetting {
     };
 
     private final ActionListener chooseNodeColorActionListener = new ActionListener() {
+        @Override
         public void actionPerformed(ActionEvent e) {
 
-        	Color selectedColor = JColorChooser.showDialog(
-        			preferencePanel, tr("Choose node color"), nodeColorField.getBackground());
+            Color selectedColor = JColorChooser.showDialog(
+                    preferencePanel, tr("Choose node color"), nodeColorField.getBackground());
 
-        	if (selectedColor != null) {
-        		nodeColorField.setBackground(selectedColor);
-        	}
+            if (selectedColor != null) {
+                nodeColorField.setBackground(selectedColor);
+            }
 
-        	arrowPreviewPanel.repaint();
+            arrowPreviewPanel.repaint();
 
         }
     };
 
     private final ActionListener chooseSegmentColorActionListener = new ActionListener() {
+        @Override
         public void actionPerformed(ActionEvent e) {
 
-        	Color selectedColor = JColorChooser.showDialog(
-        			preferencePanel, tr("Choose arrow color"), segmentColorField.getBackground());
+            Color selectedColor = JColorChooser.showDialog(
+                    preferencePanel, tr("Choose arrow color"), segmentColorField.getBackground());
 
-        	if (selectedColor != null) {
-        		segmentColorField.setBackground(selectedColor);
-        	}
+            if (selectedColor != null) {
+                segmentColorField.setBackground(selectedColor);
+            }
 
-        	arrowPreviewPanel.repaint();
+            arrowPreviewPanel.repaint();
 
         }
     };
 
     private final ActionListener chooseArrowheadFillColorActionListener = new ActionListener() {
+        @Override
         public void actionPerformed(ActionEvent e) {
 
-        	Color selectedColor = JColorChooser.showDialog(
-        			preferencePanel, tr("Choose arrowhead fill color"), segmentColorField.getBackground());
+            Color selectedColor = JColorChooser.showDialog(
+                    preferencePanel, tr("Choose arrowhead fill color"), segmentColorField.getBackground());
 
-        	if (selectedColor != null) {
-        		arrowheadFillColorField.setBackground(selectedColor);
-        	}
+            if (selectedColor != null) {
+                arrowheadFillColorField.setBackground(selectedColor);
+            }
 
-        	arrowPreviewPanel.repaint();
+            arrowPreviewPanel.repaint();
 
         }
     };
 
     private final ChangeListener arrowheadPlacementChangeListener = new ChangeListener() {
-    	public void stateChanged(ChangeEvent e) {
-        	arrowPreviewPanel.repaint();
+        @Override
+        public void stateChanged(ChangeEvent e) {
+            arrowPreviewPanel.repaint();
         }
     };
 
@@ -492,40 +505,36 @@ public class GraphViewPreferenceEditor extends DefaultTabPreferenceSetting {
 
         editBookmarkButton.setEnabled(parameterBookmarks.size() > 0);
         deleteBookmarkButton.setEnabled(parameterBookmarks.size() > 0);
-
     }
 
     private class ArrowPreviewPanel extends JPanel {
 
-    	public ArrowPreviewPanel() {
-    		setPreferredSize(new Dimension(100, 50));
-			setBackground(Color.DARK_GRAY);
-		}
+        ArrowPreviewPanel() {
+            setPreferredSize(new Dimension(100, 50));
+            setBackground(Color.DARK_GRAY);
+        }
 
-    	@Override
-    	public void paint(Graphics g) {
+        @Override
+        public void paint(Graphics g) {
 
-    		super.paint(g);
+            super.paint(g);
 
-    		Graphics2D g2D = (Graphics2D)g;
+            Graphics2D g2D = (Graphics2D) g;
 
-    		Point p1 = new Point(15, this.getHeight() / 2);
-    		Point p2 = new Point(this.getWidth()-15, this.getHeight() / 2);
+            Point p1 = new Point(15, this.getHeight() / 2);
+            Point p2 = new Point(this.getWidth()-15, this.getHeight() / 2);
 
-    		g2D.setStroke(new BasicStroke(3, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
-    		g2D.setColor(segmentColorField.getBackground());
-    		g2D.draw(new Line2D.Float(p1.x, p1.y, p2.x, p2.y));
+            g2D.setStroke(new BasicStroke(3, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
+            g2D.setColor(segmentColorField.getBackground());
+            g2D.draw(new Line2D.Float(p1.x, p1.y, p2.x, p2.y));
 
-    		GraphViewLayer.paintNode(g, p1, nodeColorField.getBackground());
-    		GraphViewLayer.paintNode(g, p2, nodeColorField.getBackground());
+            GraphViewLayer.paintNode(g, p1, nodeColorField.getBackground());
+            GraphViewLayer.paintNode(g, p2, nodeColorField.getBackground());
 
-    		GraphViewLayer.paintArrowhead(g2D, p1, p2,
-    				arrowheadPlacementSlider.getValue() / 100.0,
-    				segmentColorField.getBackground(),
-    				arrowheadFillColorField.getBackground());
-
-    	}
-
+            GraphViewLayer.paintArrowhead(g2D, p1, p2,
+                    arrowheadPlacementSlider.getValue() / 100.0,
+                    segmentColorField.getBackground(),
+                    arrowheadFillColorField.getBackground());
+        }
     }
-
 }

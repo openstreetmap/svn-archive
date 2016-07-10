@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.graphview.plugin.layer;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -117,7 +118,7 @@ public class GraphViewLayer extends Layer implements  WayGraphObserver {
 
     /** sets the arrowhead placement (relative offset from edge start) */
     public void setArrowheadPlacement(double arrowheadPlacement) {
-    	assert arrowheadPlacement >= 0 && arrowheadPlacement <= 1;
+        assert arrowheadPlacement >= 0 && arrowheadPlacement <= 1;
         this.arrowheadPlacement = arrowheadPlacement;
         invalidate();
     }
@@ -148,13 +149,13 @@ public class GraphViewLayer extends Layer implements  WayGraphObserver {
 
     }
 
-	public static void paintNode(final Graphics g, Point p, Color color) {
-		g.setColor(color);
+    public static void paintNode(final Graphics g, Point p, Color color) {
+        g.setColor(color);
         g.fillOval(p.x - NODE_RADIUS, p.y - NODE_RADIUS, 2 * NODE_RADIUS, 2 * NODE_RADIUS);
-	}
+    }
 
     private void paintGraphEdge(final GraphEdge e, final Graphics2D g2D, final MapView mv,
-    		boolean drawLine, boolean drawDirectionIndicator) {
+            boolean drawLine, boolean drawDirectionIndicator) {
 
         if (!CONNECT_ALL_NODE_PAIRS && GraphViewPreferences.getInstance().getSeparateDirections()) {
 
@@ -199,21 +200,21 @@ public class GraphViewLayer extends Layer implements  WayGraphObserver {
                 }
 
                 if (drawLine) {
-                	g2D.draw(new Line2D.Float(p1.x, p1.y, p2.x, p2.y));
+                    g2D.draw(new Line2D.Float(p1.x, p1.y, p2.x, p2.y));
                 }
 
             }
 
         } else {
 
-        	Color color = GraphViewPreferences.getInstance().getSegmentColor();
+            Color color = GraphViewPreferences.getInstance().getSegmentColor();
             g2D.setColor(color);
 
             Point p1 = getNodePoint(e.getStartNode(), mv);
             Point p2 = getNodePoint(e.getTargetNode(), mv);
 
             if (drawLine) {
-            	g2D.draw(new Line2D.Float(p1.x, p1.y, p2.x, p2.y));
+                g2D.draw(new Line2D.Float(p1.x, p1.y, p2.x, p2.y));
             }
 
         }
@@ -231,49 +232,48 @@ public class GraphViewLayer extends Layer implements  WayGraphObserver {
 
             if (drawDirectionIndicator) {
 
-	            paintArrowhead(g2D, p1, p2, arrowheadPlacement, null,
-	            		GraphViewPreferences.getInstance().getArrowheadFillColor());
+                paintArrowhead(g2D, p1, p2, arrowheadPlacement, null,
+                        GraphViewPreferences.getInstance().getArrowheadFillColor());
 
             }
 
         }
     }
 
-	public static void paintArrowhead(Graphics2D g2D,
-			Point p1, Point p2, Double arrowheadPlacement2,
-			Color casingColor, Color fillColor) {
+    public static void paintArrowhead(Graphics2D g2D,
+            Point p1, Point p2, Double arrowheadPlacement2,
+            Color casingColor, Color fillColor) {
 
-		Point pTip = new Point(
-				(int)(p1.x + arrowheadPlacement2 * (p2.x - p1.x)),
-				(int)(p1.y + arrowheadPlacement2 * (p2.y - p1.y)));
+        Point pTip = new Point(
+                (int) (p1.x + arrowheadPlacement2 * (p2.x - p1.x)),
+                (int) (p1.y + arrowheadPlacement2 * (p2.y - p1.y)));
 
-		double angle = angleFromXAxis(p1, p2); // angle between x-axis and [p1,p2]
+        double angle = angleFromXAxis(p1, p2); // angle between x-axis and [p1,p2]
 
-		{ //draw head shape
+        { //draw head shape
 
-			if (casingColor != null) {
-				g2D.setColor(casingColor);
-			}
+            if (casingColor != null) {
+                g2D.setColor(casingColor);
+            }
 
-		    Shape head = ARROW_HEAD;
-		    head = AffineTransform.getRotateInstance(angle).createTransformedShape(head);
-		    head = AffineTransform.getTranslateInstance(pTip.x, pTip.y).createTransformedShape(head);
-		    g2D.fill(head);
-		}
+            Shape head = ARROW_HEAD;
+            head = AffineTransform.getRotateInstance(angle).createTransformedShape(head);
+            head = AffineTransform.getTranslateInstance(pTip.x, pTip.y).createTransformedShape(head);
+            g2D.fill(head);
+        }
 
-		{ //draw head core shape
+        { //draw head core shape
 
-			if (fillColor != null) {
-				g2D.setColor(fillColor);
-			}
+            if (fillColor != null) {
+                g2D.setColor(fillColor);
+            }
 
-		    Shape headCore = ARROW_HEAD_CORE;
-		    headCore = AffineTransform.getRotateInstance(angle).createTransformedShape(headCore);
-		    headCore = AffineTransform.getTranslateInstance(pTip.x, pTip.y).createTransformedShape(headCore);
-		    g2D.fill(headCore);
-		}
-
-	}
+            Shape headCore = ARROW_HEAD_CORE;
+            headCore = AffineTransform.getRotateInstance(angle).createTransformedShape(headCore);
+            headCore = AffineTransform.getTranslateInstance(pTip.x, pTip.y).createTransformedShape(headCore);
+            g2D.fill(headCore);
+        }
+    }
 
     private Point getNodePoint(GraphNode node, MapView mv) {
 
@@ -310,10 +310,12 @@ public class GraphViewLayer extends Layer implements  WayGraphObserver {
 
         return nodePoint;
     }
+
     private static Point getNodePoint(SegmentNode node, MapView mv) {
         LatLonCoords coords = new LatLonCoords(node.getLat(), node.getLon());
         return getNodePoint(coords, mv);
     }
+
     private static Point getNodePoint(LatLonCoords coords, MapView mv) {
         LatLon latLon = new LatLon(coords.getLat(), coords.getLon());
         EastNorth eastNorth = Main.getProjection().latlon2eastNorth(latLon);
@@ -332,11 +334,11 @@ public class GraphViewLayer extends Layer implements  WayGraphObserver {
         final float vecX = p2.x - p1.x;
         final float vecY = p2.y - p1.y;
 
-        final float vecLength = (float)Math.sqrt(vecX*vecX + vecY*vecY);
+        final float vecLength = (float) Math.sqrt(vecX*vecX + vecY*vecY);
 
         final float dotProductVecAxis = vecX;
 
-        float angle = (float)Math.acos(dotProductVecAxis / vecLength);
+        float angle = (float) Math.acos(dotProductVecAxis / vecLength);
 
         if (p2.y < p1.y) {
             angle = -angle;
@@ -360,7 +362,7 @@ public class GraphViewLayer extends Layer implements  WayGraphObserver {
             }
 
             for (GraphEdge e : wayGraph.getEdges()) {
-            	//draw arrowheads last to make sure they end up on top
+                //draw arrowheads last to make sure they end up on top
                 paintGraphEdge(e, g, mv, false, true);
             }
 
@@ -403,6 +405,7 @@ public class GraphViewLayer extends Layer implements  WayGraphObserver {
                 new LayerListPopup.InfoAction(this)};
     }
 
+    @Override
     public void update(WayGraph wayGraph) {
         assert wayGraph == this.wayGraph;
         invalidate();

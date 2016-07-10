@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.graphview.core.property;
 
 import java.util.Collection;
@@ -12,8 +13,9 @@ public final class VehiclePropertyTypes {
     private VehiclePropertyTypes() { }
 
     private static final class NonnegativeFloatProperty implements VehiclePropertyType<Float> {
+        @Override
         public boolean isValidValue(Object value) {
-            return value instanceof Float && (Float)value >= 0;
+            return value instanceof Float && (Float) value >= 0;
         }
     }
 
@@ -43,13 +45,14 @@ public final class VehiclePropertyTypes {
 
     /** surface types ("surface" key values) the vehicle cannot use */
     public static final VehiclePropertyType<Collection<String>> SURFACE_BLACKLIST = new VehiclePropertyType<Collection<String>>() {
+        @Override
         public boolean isValidValue(Object value) {
 
             if (!(value instanceof Collection)) {
                 return false;
             }
 
-            for (Object contentObject : (Collection<?>)value) {
+            for (Object contentObject : (Collection<?>) value) {
                 if (!(contentObject instanceof String)) {
                     return false;
                 }
@@ -65,8 +68,9 @@ public final class VehiclePropertyTypes {
      * (values of key "tracktype" without "grade_" prefix, 0 is for "none")
      */
     public static final VehiclePropertyType<Integer> MAX_TRACKTYPE = new VehiclePropertyType<Integer>() {
+        @Override
         public boolean isValidValue(Object value) {
-            return value instanceof Integer && (Integer)value >= 0 && (Integer)value <= 5;
+            return value instanceof Integer && (Integer) value >= 0 && (Integer) value <= 5;
         }
     };
 

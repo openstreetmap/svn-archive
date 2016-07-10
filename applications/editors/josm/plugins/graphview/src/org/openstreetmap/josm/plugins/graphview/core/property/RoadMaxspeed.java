@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.graphview.core.property;
 
 import org.openstreetmap.josm.plugins.graphview.core.access.AccessParameters;
@@ -29,6 +30,7 @@ public class RoadMaxspeed implements RoadPropertyType<Float> {
         }
     }
 
+    @Override
     public <N, W, R, M> Float evaluateN(N node, AccessParameters accessParameters,
             DataSource<N, W, R, M> dataSource) {
         assert node != null && accessParameters != null && dataSource != null;
@@ -38,6 +40,7 @@ public class RoadMaxspeed implements RoadPropertyType<Float> {
         return evaluateTags(dataSource.getTagsN(node));
     }
 
+    @Override
     public <N, W, R, M> Float evaluateW(W way, boolean forward, AccessParameters accessParameters,
             DataSource<N, W, R, M> dataSource) {
         assert way != null && accessParameters != null && dataSource != null;
@@ -62,6 +65,7 @@ public class RoadMaxspeed implements RoadPropertyType<Float> {
         return null;
     }
 
+    @Override
     public boolean isUsable(Object propertyValue, AccessParameters accessParameters) {
         assert propertyValue instanceof Float;
         return true;

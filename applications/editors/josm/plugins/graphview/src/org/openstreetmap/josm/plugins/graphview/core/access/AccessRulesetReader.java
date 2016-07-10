@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.graphview.core.access;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -19,13 +20,14 @@ import org.xml.sax.helpers.XMLReaderFactory;
 /**
  * utility class that can read access rulesets from xml files
  */
-public class AccessRulesetReader {
+public final class AccessRulesetReader {
 
     public static class AccessRulesetSyntaxException extends IOException {
         private static final long serialVersionUID = 1L;
         public AccessRulesetSyntaxException(String message) {
             super(message);
-        };
+        }
+
         public AccessRulesetSyntaxException(Throwable t) {
             super(t.toString());
         }
@@ -57,10 +59,12 @@ public class AccessRulesetReader {
         private static class AccessClass {
             final String name;
             final AccessClass parent;
-            public AccessClass(String name, AccessClass parent) {
+
+            AccessClass(String name, AccessClass parent) {
                 this.name = name;
                 this.parent = parent;
             }
+
             List<String> getAncestorHierarchy() {
                 List<String> names;
                 if (parent == null) {
@@ -76,7 +80,8 @@ public class AccessRulesetReader {
         private final Collection<AccessClass> accessClasses = new LinkedList<>();
         private final Collection<Tag> baseTags = new LinkedList<>();
 
-        private static enum Section {NONE, CLASSES, BASETAGS, IMPLICATIONS};
+        private enum Section { NONE, CLASSES, BASETAGS, IMPLICATIONS }
+
         private Section currentSection = Section.NONE;
 
         private AccessClass currentAccessClass = null;
@@ -89,6 +94,7 @@ public class AccessRulesetReader {
 
             return new AccessRuleset() {
 
+                @Override
                 public List<String> getAccessHierarchyAncestors(String transportMode) {
                     for (AccessClass accessClass : accessClasses) {
                         if (accessClass.name.equals(transportMode)) {
@@ -98,10 +104,12 @@ public class AccessRulesetReader {
                     return new LinkedList<>();
                 }
 
+                @Override
                 public Collection<Tag> getBaseTags() {
                     return baseTags;
                 }
 
+                @Override
                 public List<Implication> getImplications() {
                     return implications;
                 }
@@ -233,5 +241,5 @@ public class AccessRulesetReader {
 
         }
 
-    };
+    }
 }

@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.graphview.core.transition;
 
 import java.util.Collection;
@@ -13,7 +14,7 @@ public interface Restriction {
      * returns the starting segment that will trigger the restriction when used;
      * != null
      */
-    public Segment getFrom();
+    Segment getFrom();
 
     /**
      * returns the "via" segments.
@@ -21,7 +22,7 @@ public interface Restriction {
      *
      * @return  unmodifiable collection of segments; != null
      */
-    public Collection<Segment> getVias();
+    Collection<Segment> getVias();
 
     /**
      * returns the forbidden "to" segments.
@@ -29,6 +30,5 @@ public interface Restriction {
      *
      * @return  unmodifiable collection of segments; != null
      */
-    public Collection<Segment> getTos();
-
+    Collection<Segment> getTos();
 }

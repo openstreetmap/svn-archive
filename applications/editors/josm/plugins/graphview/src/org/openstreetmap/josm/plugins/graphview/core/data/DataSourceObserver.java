@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.graphview.core.data;
 
 /**
@@ -11,6 +12,5 @@ public interface DataSourceObserver {
      * informs this observer about changes in an observed data source
      * @param dataSource  observed data source that has changed; != null
      */
-    public void update(DataSource<?, ?, ?, ?> dataSource);
-
+    void update(DataSource<?, ?, ?, ?> dataSource);
 }

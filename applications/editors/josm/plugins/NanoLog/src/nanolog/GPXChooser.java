@@ -1,6 +1,7 @@
 package nanolog;
 
-import javax.swing.*;
+import javax.swing.JDialog;
+
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.layer.GpxLayer;
 import org.openstreetmap.josm.gui.layer.Layer;
@@ -18,9 +19,9 @@ public class GPXChooser extends JDialog {
 
     public static GpxLayer topLayer() {
         // return first found local layer
-        for( Layer layer : Main.getLayerManager().getLayers() ) {
-            if( layer instanceof GpxLayer && ((GpxLayer)layer).isLocalFile() )
-                return (GpxLayer)layer;
+        for (Layer layer : Main.getLayerManager().getLayers()) {
+            if (layer instanceof GpxLayer && ((GpxLayer) layer).isLocalFile())
+                return (GpxLayer) layer;
         }
         return null;
     }

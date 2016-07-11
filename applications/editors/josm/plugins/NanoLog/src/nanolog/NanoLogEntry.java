@@ -6,7 +6,7 @@ import org.openstreetmap.josm.data.coor.LatLon;
 
 /**
  * This holds one NanoLog entry.
- * 
+ *
  * @author zverik
  */
 public class NanoLogEntry implements Comparable<NanoLogEntry> {
@@ -17,7 +17,7 @@ public class NanoLogEntry implements Comparable<NanoLogEntry> {
     private Integer baseDir;
     private LatLon basePos;
 
-    public NanoLogEntry( Date time, String message, LatLon basePos, Integer baseDir ) {
+    public NanoLogEntry(Date time, String message, LatLon basePos, Integer baseDir) {
         this.basePos = basePos;
         this.baseDir = baseDir;
         this.pos = basePos;
@@ -26,10 +26,10 @@ public class NanoLogEntry implements Comparable<NanoLogEntry> {
         this.message = message;
     }
 
-    public NanoLogEntry( Date time, String message ) {
+    public NanoLogEntry(Date time, String message) {
         this(time, message, null, null);
     }
-    
+
     public Integer getDirection() {
         return direction;
     }
@@ -42,11 +42,11 @@ public class NanoLogEntry implements Comparable<NanoLogEntry> {
         return pos;
     }
 
-    public void setPos( LatLon pos ) {
+    public void setPos(LatLon pos) {
         this.pos = pos;
     }
 
-    public void setDirection( Integer direction ) {
+    public void setDirection(Integer direction) {
         this.direction = direction;
     }
 
@@ -63,7 +63,7 @@ public class NanoLogEntry implements Comparable<NanoLogEntry> {
     }
 
     @Override
-    public int compareTo( NanoLogEntry t ) {
+    public int compareTo(NanoLogEntry t) {
         return time.compareTo(t.time);
     }
 }

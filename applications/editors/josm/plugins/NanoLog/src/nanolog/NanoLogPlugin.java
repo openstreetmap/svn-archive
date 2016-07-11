@@ -17,44 +17,45 @@ import org.openstreetmap.josm.plugins.PluginInformation;
 
 /**
  * Add NanoLog opening menu item and the panel.
- * 
+ *
  * @author zverik
  */
 public class NanoLogPlugin extends Plugin {
-    public NanoLogPlugin( PluginInformation info ) {
+    public NanoLogPlugin(PluginInformation info) {
         super(info);
         Main.main.menu.fileMenu.insert(new OpenNanoLogLayerAction(), 4);
     }
-    
+
     @Override
-    public void mapFrameInitialized( MapFrame oldFrame, MapFrame newFrame ) {
-        if( oldFrame == null && newFrame != null ) {
+    public void mapFrameInitialized(MapFrame oldFrame, MapFrame newFrame) {
+        if (oldFrame == null && newFrame != null) {
             NanoLogPanel panel = new NanoLogPanel();
             newFrame.addToggleDialog(panel);
             Main.getLayerManager().addLayerChangeListener(panel);
         }
     }
-    
+
     private class OpenNanoLogLayerAction extends JosmAction {
 
-        public OpenNanoLogLayerAction() {
+        OpenNanoLogLayerAction() {
             super(tr("Open NanoLog file..."), "nanolog.png", tr("Open NanoLog file..."), null, false);
         }
 
-        public void actionPerformed( ActionEvent e ) {
+        @Override
+        public void actionPerformed(ActionEvent e) {
             JFileChooser fc = new JFileChooser();
-            if( fc.showOpenDialog(Main.parent) == JFileChooser.APPROVE_OPTION ) {
+            if (fc.showOpenDialog(Main.parent) == JFileChooser.APPROVE_OPTION) {
                 try {
                     List<NanoLogEntry> entries = NanoLogLayer.readNanoLog(fc.getSelectedFile());
-                    if( !entries.isEmpty() ) {
+                    if (!entries.isEmpty()) {
                         NanoLogLayer layer = new NanoLogLayer(entries);
                         Main.getLayerManager().addLayer(layer);
                         layer.setupListeners();
                     }
-                } catch( IOException ex ) {
+                } catch (IOException ex) {
                     JOptionPane.showMessageDialog(Main.parent, tr("Could not read NanoLog file:") + "\n" + ex.getMessage());
                 }
             }
-        }        
+        }
     }
 }

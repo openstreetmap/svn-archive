@@ -24,29 +24,33 @@ import org.openstreetmap.josm.tools.date.DateUtils;
  *
  * @author zverik
  */
-public class Correlator {
+public final class Correlator {
+
+    private Correlator() {
+        // Hide default constructor for utilities classes
+    }
 
     /**
      * Matches entries to GPX so most points are on the trace.
      */
-    public static long crudeMatch( List<NanoLogEntry> entries, GpxData data ) {
+    public static long crudeMatch(List<NanoLogEntry> entries, GpxData data) {
         List<NanoLogEntry> sortedEntries = new ArrayList<>(entries);
         Collections.sort(sortedEntries);
         long firstExifDate = sortedEntries.get(0).getTime().getTime();
         long firstGPXDate = -1;
         outer:
-        for( GpxTrack trk : data.tracks ) {
-            for( GpxTrackSegment segment : trk.getSegments() ) {
-                for( WayPoint curWp : segment.getWayPoints() ) {
-                    String curDateWpStr = (String)curWp.attr.get("time");
-                    if( curDateWpStr == null ) {
+        for (GpxTrack trk : data.tracks) {
+            for (GpxTrackSegment segment : trk.getSegments()) {
+                for (WayPoint curWp : segment.getWayPoints()) {
+                    String curDateWpStr = (String) curWp.attr.get("time");
+                    if (curDateWpStr == null) {
                         continue;
                     }
 
                     try {
                         firstGPXDate = DateUtils.fromString(curDateWpStr).getTime();
                         break outer;
-                    } catch( Exception e ) {
+                    } catch (Exception e) {
                         Main.warn(e);
                     }
                 }
@@ -54,7 +58,7 @@ public class Correlator {
         }
 
         // No GPX timestamps found, exit
-        if( firstGPXDate < 0 ) {
+        if (firstGPXDate < 0) {
             JOptionPane.showMessageDialog(Main.parent,
                     tr("The selected GPX track does not contain timestamps. Please select another one."),
                     tr("GPX Track has no time information"), JOptionPane.WARNING_MESSAGE);
@@ -64,31 +68,28 @@ public class Correlator {
         return firstExifDate - firstGPXDate;
     }
 
-    public static void revertPos( List<NanoLogEntry> entries ) {
-        for( NanoLogEntry entry : entries ) {
+    public static void revertPos(List<NanoLogEntry> entries) {
+        for (NanoLogEntry entry : entries) {
             entry.setPos(entry.getBasePos());
         }
     }
 
     /**
      * Offset is in 1/1000 of a second.
-     * @param entries
-     * @param data
-     * @param offset
      */
-    public static void correlate( List<NanoLogEntry> entries, GpxData data, long offset ) {
+    public static void correlate(List<NanoLogEntry> entries, GpxData data, long offset) {
         List<NanoLogEntry> sortedEntries = new ArrayList<>(entries);
         //int ret = 0;
         Collections.sort(sortedEntries);
-        for( GpxTrack track : data.tracks ) {
-            for( GpxTrackSegment segment : track.getSegments() ) {
+        for (GpxTrack track : data.tracks) {
+            for (GpxTrackSegment segment : track.getSegments()) {
                 long prevWpTime = 0;
                 WayPoint prevWp = null;
 
-                for( WayPoint curWp : segment.getWayPoints() ) {
+                for (WayPoint curWp : segment.getWayPoints()) {
 
-                    String curWpTimeStr = (String)curWp.attr.get("time");
-                    if( curWpTimeStr != null ) {
+                    String curWpTimeStr = (String) curWp.attr.get("time");
+                    if (curWpTimeStr != null) {
                         try {
                             long curWpTime = DateUtils.fromString(curWpTimeStr).getTime() + offset;
                             /*ret +=*/ matchPoints(sortedEntries, prevWp, prevWpTime, curWp, curWpTime, offset);
@@ -96,7 +97,7 @@ public class Correlator {
                             prevWp = curWp;
                             prevWpTime = curWpTime;
 
-                        } catch( UncheckedParseException e ) {
+                        } catch (UncheckedParseException e) {
                             Main.error("Error while parsing date \"" + curWpTimeStr + '"');
                             Main.error(e);
                             prevWp = null;
@@ -111,8 +112,8 @@ public class Correlator {
         }
     }
 
-    private static int matchPoints( List<NanoLogEntry> entries, WayPoint prevWp, long prevWpTime,
-            WayPoint curWp, long curWpTime, long offset ) {
+    private static int matchPoints(List<NanoLogEntry> entries, WayPoint prevWp, long prevWpTime,
+            WayPoint curWp, long curWpTime, long offset) {
         // Time between the track point and the previous one, 5 sec if first point, i.e. photos take
         // 5 sec before the first track point can be assumed to be take at the starting position
         long interval = prevWpTime > 0 ? Math.abs(curWpTime - prevWpTime) : 5 * 1000;
@@ -122,27 +123,27 @@ public class Correlator {
         int i = getLastIndexOfListBefore(entries, curWpTime);
 
         // no photos match
-        if( i < 0 )
+        if (i < 0)
             return 0;
 
         Integer direction = null;
-        if( prevWp != null ) {
+        if (prevWp != null) {
             direction = Long.valueOf(Math.round(180.0 / Math.PI * prevWp.getCoor().heading(curWp.getCoor()))).intValue();
         }
 
         // First trackpoint, then interval is set to five seconds, i.e. photos up to five seconds
         // before the first point will be geotagged with the starting point
-        if( prevWpTime == 0 || curWpTime <= prevWpTime ) {
-            while( true ) {
-                if( i < 0 ) {
+        if (prevWpTime == 0 || curWpTime <= prevWpTime) {
+            while (true) {
+                if (i < 0) {
                     break;
                 }
                 final NanoLogEntry curImg = entries.get(i);
                 long time = curImg.getTime().getTime();
-                if( time > curWpTime || time < curWpTime - interval ) {
+                if (time > curWpTime || time < curWpTime - interval) {
                     break;
                 }
-                if( curImg.getPos() == null ) {
+                if (curImg.getPos() == null) {
                     curImg.setPos(curWp.getCoor());
                     curImg.setDirection(direction);
                     ret++;
@@ -154,19 +155,19 @@ public class Correlator {
 
         // This code gives a simple linear interpolation of the coordinates between current and
         // previous track point assuming a constant speed in between
-        while( true ) {
-            if( i < 0 ) {
+        while (true) {
+            if (i < 0) {
                 break;
             }
             NanoLogEntry curImg = entries.get(i);
             long imgTime = curImg.getTime().getTime();
-            if( imgTime < prevWpTime ) {
+            if (imgTime < prevWpTime) {
                 break;
             }
 
-            if( curImg.getPos() == null && prevWp != null ) {
+            if (curImg.getPos() == null && prevWp != null) {
                 // The values of timeDiff are between 0 and 1, it is not seconds but a dimensionless variable
-                double timeDiff = (double)(imgTime - prevWpTime) / interval;
+                double timeDiff = (double) (imgTime - prevWpTime) / interval;
                 curImg.setPos(prevWp.getCoor().interpolate(curWp.getCoor(), timeDiff));
                 curImg.setDirection(direction);
 
@@ -178,10 +179,10 @@ public class Correlator {
     }
 
     private static int getLastIndexOfListBefore(List<NanoLogEntry> entries, long searchedTime) {
-        int lstSize= entries.size();
+        int lstSize = entries.size();
 
         // No photos or the first photo taken is later than the search period
-        if(lstSize == 0 || searchedTime < entries.get(0).getTime().getTime())
+        if (lstSize == 0 || searchedTime < entries.get(0).getTime().getTime())
             return -1;
 
         // The search period is later than the last photo
@@ -189,15 +190,15 @@ public class Correlator {
             return lstSize-1;
 
         // The searched index is somewhere in the middle, do a binary search from the beginning
-        int curIndex= 0;
-        int startIndex= 0;
-        int endIndex= lstSize-1;
+        int curIndex = 0;
+        int startIndex = 0;
+        int endIndex = lstSize-1;
         while (endIndex - startIndex > 1) {
-            curIndex= (endIndex + startIndex) / 2;
+            curIndex = (endIndex + startIndex) / 2;
             if (searchedTime > entries.get(curIndex).getTime().getTime()) {
-                startIndex= curIndex;
+                startIndex = curIndex;
             } else {
-                endIndex= curIndex;
+                endIndex = curIndex;
             }
         }
         if (searchedTime < entries.get(endIndex).getTime().getTime())
@@ -214,28 +215,28 @@ public class Correlator {
     /**
      * Returns date of a potential point on GPX track (which can be between points).
      */
-    public static long getGpxDate( GpxData data, LatLon pos ) {
+    public static long getGpxDate(GpxData data, LatLon pos) {
         EastNorth en = Main.getProjection().latlon2eastNorth(pos);
-        for( GpxTrack track : data.tracks ) {
-            for( GpxTrackSegment segment : track.getSegments() ) {
+        for (GpxTrack track : data.tracks) {
+            for (GpxTrackSegment segment : track.getSegments()) {
                 long prevWpTime = 0;
                 WayPoint prevWp = null;
-                for( WayPoint curWp : segment.getWayPoints() ) {
-                    String curWpTimeStr = (String)curWp.attr.get("time");
-                    if( curWpTimeStr != null ) {
+                for (WayPoint curWp : segment.getWayPoints()) {
+                    String curWpTimeStr = (String) curWp.attr.get("time");
+                    if (curWpTimeStr != null) {
                         try {
                             long curWpTime = DateUtils.fromString(curWpTimeStr).getTime();
-                            if( prevWp != null ) {
+                            if (prevWp != null) {
                                 EastNorth c1 = Main.getProjection().latlon2eastNorth(prevWp.getCoor());
                                 EastNorth c2 = Main.getProjection().latlon2eastNorth(curWp.getCoor());
-                                if( !c1.equals(c2) ) {
+                                if (!c1.equals(c2)) {
                                     EastNorth middle = getSegmentAltitudeIntersection(c1, c2, en);
-                                    if( middle != null && en.distance(middle) < 1 ) {
+                                    if (middle != null && en.distance(middle) < 1) {
                                         // found our point, no further search is neccessary
                                         double prop = c1.east() == c2.east()
                                                 ? (middle.north() - c1.north()) / (c2.north() - c1.north())
                                                 : (middle.east() - c1.east()) / (c2.east() - c1.east());
-                                        if( prop >= 0 && prop <= 1 ) {
+                                        if (prop >= 0 && prop <= 1) {
                                             return Math.round(prevWpTime + prop * (curWpTime - prevWpTime));
                                         }
                                     }
@@ -244,7 +245,7 @@ public class Correlator {
 
                             prevWp = curWp;
                             prevWpTime = curWpTime;
-                        } catch( UncheckedParseException e ) {
+                        } catch (UncheckedParseException e) {
                             Main.error("Error while parsing date \"" + curWpTimeStr + '"');
                             Main.error(e);
                             prevWp = null;
@@ -264,9 +265,6 @@ public class Correlator {
      * Returns the coordinate of intersection of segment p1-p2 and an altitude
      * to it starting at point p. If the line defined with p1-p2 intersects
      * its altitude out of p1-p2, null is returned.
-     * @param p1
-     * @param p2
-     * @param point
      * @return Intersection coordinate or null
      **/
      public static EastNorth getSegmentAltitudeIntersection(EastNorth p1, EastNorth p2, EastNorth point) {

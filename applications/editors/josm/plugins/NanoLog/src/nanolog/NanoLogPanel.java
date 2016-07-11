@@ -10,8 +10,6 @@ import java.util.List;
 import javax.swing.AbstractListModel;
 import javax.swing.JList;
 
-import nanolog.NanoLogLayer.NanoLogLayerListener;
-
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.dialogs.ToggleDialog;
 import org.openstreetmap.josm.gui.layer.Layer;
@@ -19,6 +17,8 @@ import org.openstreetmap.josm.gui.layer.LayerManager.LayerAddEvent;
 import org.openstreetmap.josm.gui.layer.LayerManager.LayerChangeListener;
 import org.openstreetmap.josm.gui.layer.LayerManager.LayerOrderChangeEvent;
 import org.openstreetmap.josm.gui.layer.LayerManager.LayerRemoveEvent;
+
+import nanolog.NanoLogLayer.NanoLogLayerListener;
 
 /**
  * NanoLog Panel. Displays the selected log item, along with surrounding 30-50 lines.
@@ -39,7 +39,7 @@ public class NanoLogPanel extends ToggleDialog implements LayerChangeListener, N
 
     public void updateMarkers() {
         List<NanoLogEntry> entries = new ArrayList<>();
-        for( NanoLogLayer l : Main.getLayerManager().getLayersOfType(NanoLogLayer.class) ) {
+        for (NanoLogLayer l : Main.getLayerManager().getLayersOfType(NanoLogLayer.class)) {
             entries.addAll(l.getEntries());
         }
         listModel.setEntries(entries);
@@ -52,7 +52,7 @@ public class NanoLogPanel extends ToggleDialog implements LayerChangeListener, N
     @Override
     public void layerAdded(LayerAddEvent e) {
         Layer newLayer = e.getAddedLayer();
-        if (newLayer instanceof NanoLogLayer )
+        if (newLayer instanceof NanoLogLayer)
             ((NanoLogLayer) newLayer).addListener(this);
         updateMarkers();
     }
@@ -63,14 +63,14 @@ public class NanoLogPanel extends ToggleDialog implements LayerChangeListener, N
     }
 
     @Override
-    public void markersUpdated( NanoLogLayer layer ) {
+    public void markersUpdated(NanoLogLayer layer) {
         updateMarkers();
     }
 
     @Override
-    public void markerActivated( NanoLogLayer layer, NanoLogEntry entry ) {
+    public void markerActivated(NanoLogLayer layer, NanoLogEntry entry) {
         int idx = entry == null ? -1 : listModel.find(entry);
-        if( idx >= 0 ) {
+        if (idx >= 0) {
             logPanel.setSelectedIndex(idx);
             Rectangle rect = logPanel.getCellBounds(Math.max(0, idx-2), Math.min(idx+4, listModel.getSize()));
             logPanel.scrollRectToVisible(rect);
@@ -82,21 +82,21 @@ public class NanoLogPanel extends ToggleDialog implements LayerChangeListener, N
         private final SimpleDateFormat TIME_FORMAT = new SimpleDateFormat("HH:mm:ss");
 
         @Override
-		public int getSize() {
+        public int getSize() {
             return entries.size();
         }
 
         @Override
-		public String getElementAt( int index ) {
+        public String getElementAt(int index) {
             return TIME_FORMAT.format(entries.get(index).getTime()) + " " + entries.get(index).getMessage();
         }
 
-        public void setEntries( List<NanoLogEntry> entries ) {
+        public void setEntries(List<NanoLogEntry> entries) {
             this.entries = entries;
             fireContentsChanged(this, 0, entries.size());
         }
 
-        public int find( NanoLogEntry entry ) {
+        public int find(NanoLogEntry entry) {
             return entries.indexOf(entry);
         }
     }

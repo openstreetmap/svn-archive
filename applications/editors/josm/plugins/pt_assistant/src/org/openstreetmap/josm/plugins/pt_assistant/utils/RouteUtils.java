@@ -29,6 +29,11 @@ public class RouteUtils {
 	 *         with the pt_assistant plugin, false otherwise.
 	 */
 	public static boolean isTwoDirectionRoute(Relation r) {
+		
+		if (r == null) {
+			return false;
+		}
+		
 		if (!r.hasKey("route") || !r.hasTag("public_transport:version", "2")) {
 			return false;
 		}

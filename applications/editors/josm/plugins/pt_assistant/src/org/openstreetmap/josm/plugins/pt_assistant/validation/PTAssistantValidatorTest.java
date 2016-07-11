@@ -17,10 +17,8 @@ import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.validation.Severity;
 import org.openstreetmap.josm.data.validation.Test;
 import org.openstreetmap.josm.data.validation.TestError;
-import org.openstreetmap.josm.plugins.pt_assistant.actions.DownloadReferrersThread;
 import org.openstreetmap.josm.plugins.pt_assistant.actions.FixTask;
 import org.openstreetmap.josm.plugins.pt_assistant.actions.IncompleteMembersDownloadThread;
-import org.openstreetmap.josm.plugins.pt_assistant.gui.DownloadReferrersDialog;
 import org.openstreetmap.josm.plugins.pt_assistant.gui.IncompleteMembersDownloadDialog;
 import org.openstreetmap.josm.plugins.pt_assistant.gui.PTAssistantLayer;
 import org.openstreetmap.josm.plugins.pt_assistant.gui.ProceedDialog;
@@ -39,9 +37,6 @@ public class PTAssistantValidatorTest extends Test {
 	public static final int ERROR_CODE_PLATFORM_PART_OF_HIGHWAY = 3752;
 
 	private PTAssistantLayer layer;
-	private static boolean nodeReferrersDownloaded;
-	@SuppressWarnings("unused")
-	private static boolean incompleteRelationsDowloaded;
 
 
 	public PTAssistantValidatorTest() {
@@ -50,8 +45,6 @@ public class PTAssistantValidatorTest extends Test {
 
 		layer = new PTAssistantLayer();
 		DataSet.addSelectionListener(layer);
-		nodeReferrersDownloaded = false;
-		incompleteRelationsDowloaded = false;
 
 	}
 
@@ -62,11 +55,6 @@ public class PTAssistantValidatorTest extends Test {
 			return;
 		}
 
-		if (!nodeReferrersDownloaded) {
-			this.downloadReferrers(n);
-			nodeReferrersDownloaded = true;
-		}
-
 		NodeChecker nodeChecker = new NodeChecker(n, this);
 
 		// check for solitary stop positions:
@@ -75,8 +63,7 @@ public class PTAssistantValidatorTest extends Test {
 		}
 
 		// check that platforms are not part of any way:
-		if (n.hasTag("highway", "bus_stop") || n.hasTag("public_transport", "platform")
-				|| n.hasTag("highway", "platform") || n.hasTag("railway", "platform")) {
+		if (n.hasTag("public_transport", "platform")) {
 			nodeChecker.performPlatformPartOfWayTest();
 		}
 		
@@ -84,73 +71,6 @@ public class PTAssistantValidatorTest extends Test {
 
 	}
 	
-
-	/**
-	 * Downloads incomplete relation members in an extra thread (user input
-	 * required)
-	 * 
-	 * @return true if successful, false if not successful
-	 */
-	private boolean downloadReferrers(Node n) {
-
-		final int[] userSelection = { 0 };
-
-		try {
-
-			if (SwingUtilities.isEventDispatchThread()) {
-
-				userSelection[0] = showDownloadReferrersDialog();
-
-			} else {
-
-				SwingUtilities.invokeAndWait(new Runnable() {
-					@Override
-					public void run() {
-						try {
-							userSelection[0] = showDownloadReferrersDialog();
-						} catch (InterruptedException e) {
-							e.printStackTrace();
-						}
-
-					}
-				});
-
-			}
-
-		} catch (InterruptedException | InvocationTargetException e) {
-			return false;
-		}
-
-		if (userSelection[0] == JOptionPane.YES_OPTION) {
-
-			Thread t = new DownloadReferrersThread(n);
-			t.start();
-			synchronized (t) {
-				try {
-					t.wait();
-				} catch (InterruptedException e) {
-					return false;
-				}
-			}
-
-		}
-
-		return true;
-
-	}
-
-	/**
-	 * Shows the dialog asking the user about an incomplete member download
-	 * 
-	 * @return user's selection
-	 * @throws InterruptedException
-	 */
-	private int showDownloadReferrersDialog() throws InterruptedException {
-
-		DownloadReferrersDialog downloadReferrersDialog = new DownloadReferrersDialog();
-		return downloadReferrersDialog.getUserSelection();
-
-	}
 
 	@Override
 	public void visit(Relation r) {
@@ -167,8 +87,6 @@ public class PTAssistantValidatorTest extends Test {
 			if (!downloadSuccessful) {
 				return;
 			}
-			incompleteRelationsDowloaded = true;
-
 		}
 
 		if (r.hasIncompleteMembers()) {
@@ -470,10 +388,4 @@ public class PTAssistantValidatorTest extends Test {
 				new TestError(this, Severity.WARNING, tr("PT: dummy test warning"), ERROR_CODE_DIRECTION, primitives));
 	}
 	
-    public void endTest() {
-    	super.endTest();
-    	nodeReferrersDownloaded = false;
-    	incompleteRelationsDowloaded = false;
-    }
-
 }

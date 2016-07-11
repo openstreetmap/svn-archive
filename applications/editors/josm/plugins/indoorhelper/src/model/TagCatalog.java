@@ -31,71 +31,71 @@ import org.openstreetmap.josm.data.osm.Tag;
  */
 
 public final class TagCatalog {
-	
-	/**
-	 * Function to get a specific tag-set out of the {@link TagCatalog}. 
-	 * 
-	 * @param o the object for which you want the tag-set
-	 * @return a list of tags for the specified object
-	 */	
-	public List<Tag> getTags(IndoorObject o){
-		
-		List<Tag> tagList = new ArrayList<Tag>();
-		
-		switch(o){
-		case CONCRETE_WALL:
-			tagList.add(new Tag("indoor:area", "wall"));
-			tagList.add(new Tag("indoor:wall:material", "concrete"));
-			return tagList;
-		case DOOR:
-			tagList.add(new Tag("indoor:door", "yes"));
-			return tagList;
-		case ELEVATOR:
-			tagList.add(new Tag("indoor:area", "elevator"));
-			return tagList;
-		case ENTRANCE:
-			tagList.add(new Tag("indoor:entrance", "yes"));
-			return tagList;
-		case TOILET_FEMALE:
-			tagList.add(new Tag("indoor:area", "room"));
-			tagList.add(new Tag("amenity", "toilets"));
-			tagList.add(new Tag("female", "yes"));
-			return tagList;
-		case GLASS_WALL:
-			tagList.add(new Tag("indoor:area", "wall"));
-			tagList.add(new Tag("indoor:wall:material", "glass"));
-			return tagList;
-		case TOILET_MALE:
-			tagList.add(new Tag("indoor:area", "room"));
-			tagList.add(new Tag("amenity", "toilets"));
-			tagList.add(new Tag("male", "yes"));
-			return tagList;
-		case ROOM:
-			tagList.add(new Tag("indoor:area", "room"));
-			return tagList;
-		case SHELL:
-			tagList.add(new Tag("indoor:area", "shell"));
-			return tagList;
-		case STAIRWAYS:
-			tagList.add(new Tag("indoor:area", "stairways"));
-			return tagList;
-		case STEPS:
-			tagList.add(new Tag("indoor:highway", "steps"));
-			return tagList;
-		default:
-			tagList = null;
-			return tagList;
-		}
-	}
-	
-	/**
-	 * {@link Enum} class for an easier access of elements in the {@link TagCatalog}
-	 * 
-	 * @author egru
-	 *
-	 */
-	public enum IndoorObject{
-		SHELL, CONCRETE_WALL, GLASS_WALL, ROOM, TOILET_MALE, TOILET_FEMALE, ELEVATOR, STAIRWAYS, STEPS, DOOR, ENTRANCE;
-	}
+    
+    /**
+     * Function to get a specific tag-set out of the {@link TagCatalog}. 
+     * 
+     * @param o the object for which you want the tag-set
+     * @return a list of tags for the specified object
+     */    
+    public List<Tag> getTags(IndoorObject o) {
+        
+        List<Tag> tagList = new ArrayList<Tag>();
+        
+        switch(o) {
+        case CONCRETE_WALL:
+            tagList.add(new Tag("indoor:area", "wall"));
+            tagList.add(new Tag("indoor:wall:material", "concrete"));
+            return tagList;
+        case DOOR:
+            tagList.add(new Tag("indoor:door", "yes"));
+            return tagList;
+        case ELEVATOR:
+            tagList.add(new Tag("indoor:area", "elevator"));
+            return tagList;
+        case ENTRANCE:
+            tagList.add(new Tag("indoor:entrance", "yes"));
+            return tagList;
+        case TOILET_FEMALE:
+            tagList.add(new Tag("indoor:area", "room"));
+            tagList.add(new Tag("amenity", "toilets"));
+            tagList.add(new Tag("female", "yes"));
+            return tagList;
+        case GLASS_WALL:
+            tagList.add(new Tag("indoor:area", "wall"));
+            tagList.add(new Tag("indoor:wall:material", "glass"));
+            return tagList;
+        case TOILET_MALE:
+            tagList.add(new Tag("indoor:area", "room"));
+            tagList.add(new Tag("amenity", "toilets"));
+            tagList.add(new Tag("male", "yes"));
+            return tagList;
+        case ROOM:
+            tagList.add(new Tag("indoor:area", "room"));
+            return tagList;
+        case SHELL:
+            tagList.add(new Tag("indoor:area", "shell"));
+            return tagList;
+        case STAIRWAYS:
+            tagList.add(new Tag("indoor:area", "stairways"));
+            return tagList;
+        case STEPS:
+            tagList.add(new Tag("indoor:highway", "steps"));
+            return tagList;
+        default:
+            tagList = null;
+            return tagList;
+        }
+    }
+    
+    /**
+     * {@link Enum} class for an easier access of elements in the {@link TagCatalog}
+     * 
+     * @author egru
+     *
+     */
+    public enum IndoorObject {
+        SHELL, CONCRETE_WALL, GLASS_WALL, ROOM, TOILET_MALE, TOILET_FEMALE, ELEVATOR, STAIRWAYS, STEPS, DOOR, ENTRANCE;
+    }
 
 }

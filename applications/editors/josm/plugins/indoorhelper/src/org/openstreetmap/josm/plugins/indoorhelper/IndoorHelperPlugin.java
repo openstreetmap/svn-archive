@@ -36,169 +36,155 @@ import controller.IndoorHelperController;
  * @author egru
  * 
  */
-public class IndoorHelperPlugin extends Plugin{
+public class IndoorHelperPlugin extends Plugin {
 
 
-	@SuppressWarnings("unused")
-	private IndoorHelperController controller;
-	String sep = System.getProperty("file.separator");
+    @SuppressWarnings("unused")
+    private IndoorHelperController controller;
+    String sep = System.getProperty("file.separator");
 
-	/**
-	 * Constructor for the plug-in.
-	 * 
-	 * Exports the needed files and adds them to the settings.
-	 * 
-	 * @param info general information about the plug-in
-	 * @throws Exception 
-	 */
-	public IndoorHelperPlugin(PluginInformation info) throws Exception {
-		super(info);    
+    /**
+     * Constructor for the plug-in.
+     * 
+     * Exports the needed files and adds them to the settings.
+     * 
+     * @param info general information about the plug-in
+     */
+    public IndoorHelperPlugin(PluginInformation info) throws Exception {
+        super(info);    
 
-		this.exportValidator("/data/indoorhelper.validator.mapcss");
-		this.exportStyleFile("indoor.mapcss");
-		this.exportStyleFile("entrance_door_icon.png");
-		this.exportStyleFile("entrance_icon.png");
-//		this.setIndoorValidator();
-		
-	}
+        this.exportValidator("/data/indoorhelper.validator.mapcss");
+        this.exportStyleFile("indoor.mapcss");
+        this.exportStyleFile("entrance_door_icon.png");
+        this.exportStyleFile("entrance_icon.png");
+//        this.setIndoorValidator();
+    }
 
+    /**
+     * Secures that the plug-in is only loaded, if a new MapFrame is created.
+     */
+    @Override
+    public void mapFrameInitialized(MapFrame oldFrame, MapFrame newFrame) {
+        super.mapFrameInitialized(oldFrame, newFrame);
 
-	/**
-	 * Secures that the plug-in is only loaded, if a new MapFrame is created.
-	 */
-	@Override
-	public void mapFrameInitialized(MapFrame oldFrame, MapFrame newFrame) {
-		super.mapFrameInitialized(oldFrame, newFrame);
-
-		if( oldFrame == null && newFrame != null ) {
-			controller = new IndoorHelperController();
-		}
-
-	}
-
-	
-	/**
-	 * Exports the mapcss validator file to the preferences directory.
-	 * 
-	 * @param resourceName
-	 * @throws Exception
-	 */
-	private void exportValidator(String resourceName) throws Exception {
-		InputStream stream = null;
-		OutputStream resStreamOut = null;
+        if (oldFrame == null && newFrame != null) {
+            controller = new IndoorHelperController();
+        }
+    }
+    
+    /**
+     * Exports the mapcss validator file to the preferences directory.
+     */
+    private void exportValidator(String resourceName) throws Exception {
+        InputStream stream = null;
+        OutputStream resStreamOut = null;
 
 
-		try {
-			stream = IndoorHelperPlugin.class.getResourceAsStream(resourceName);
-			if(stream == null) {
-				System.out.println("Validator: stream is null");
-				throw new Exception("Cannot get resource \"" + resourceName + "\" from Jar file.");
-			}
+        try {
+            stream = IndoorHelperPlugin.class.getResourceAsStream(resourceName);
+            if (stream == null) {
+                System.out.println("Validator: stream is null");
+                throw new Exception("Cannot get resource \"" + resourceName + "\" from Jar file.");
+            }
 
-			String outPath;
-			int readBytes;
-			byte[] buffer = new byte[4096];
+            String outPath;
+            int readBytes;
+            byte[] buffer = new byte[4096];
 
-			String valDirPath = Main.pref.getUserDataDirectory() + sep + "validator";
-			File valDir = new File(valDirPath);
-			valDir.mkdirs();
-			outPath = valDir.getAbsolutePath() +sep+ "indoorhelper.validator.mapcss";
-			System.out.println("Validator:"+outPath);
+            String valDirPath = Main.pref.getUserDataDirectory() + sep + "validator";
+            File valDir = new File(valDirPath);
+            valDir.mkdirs();
+            outPath = valDir.getAbsolutePath() +sep+ "indoorhelper.validator.mapcss";
+            System.out.println("Validator:"+outPath);
 
-			resStreamOut = new FileOutputStream(outPath);
-			while ((readBytes = stream.read(buffer)) > 0) {
-				resStreamOut.write(buffer, 0, readBytes);
-			}
-			resStreamOut.close();
-		} catch (Exception ex) {
-			throw ex;
-		} finally {
-			stream.close();
-		}   
-	}
+            resStreamOut = new FileOutputStream(outPath);
+            while ((readBytes = stream.read(buffer)) > 0) {
+                resStreamOut.write(buffer, 0, readBytes);
+            }
+            resStreamOut.close();
+        } catch (Exception ex) {
+            throw ex;
+        } finally {
+            stream.close();
+        }   
+    }
 
-	/**
-	 * Exports the mapCSS file to the preferences directory.
-	 * 
-	 * @param resourceName
-	 * @throws Exception
-	 */
-	private void exportStyleFile(String resourceName) throws Exception {
-		InputStream stream = null;
-		OutputStream resStreamOut = null;
+    /**
+     * Exports the mapCSS file to the preferences directory.
+     */
+    private void exportStyleFile(String resourceName) throws Exception {
+        InputStream stream = null;
+        OutputStream resStreamOut = null;
 
+        try {
+            stream = IndoorHelperPlugin.class.getResourceAsStream("/data/" + resourceName);
+            if (stream == null) {
+                System.out.println("MapPaint: stream is null");
+                throw new Exception("Cannot get resource \"" + resourceName + "\" from Jar file.");
+            }
 
-		try {
-			stream = IndoorHelperPlugin.class.getResourceAsStream("/data/" + resourceName);
-			if(stream == null) {
-				System.out.println("MapPaint: stream is null");
-				throw new Exception("Cannot get resource \"" + resourceName + "\" from Jar file.");
-			}
+            String outPath;
+            int readBytes;
+            byte[] buffer = new byte[4096];
 
-			String outPath;
-			int readBytes;
-			byte[] buffer = new byte[4096];
+            String valDirPath = Main.pref.getUserDataDirectory() + sep + "styles";
+            File valDir = new File(valDirPath);
+            valDir.mkdirs();
+            outPath = valDir.getAbsolutePath() +sep+ resourceName;
+            System.out.println("MapPaint"+outPath);
 
-			String valDirPath = Main.pref.getUserDataDirectory() + sep + "styles";
-			File valDir = new File(valDirPath);
-			valDir.mkdirs();
-			outPath = valDir.getAbsolutePath() +sep+ resourceName;
-			System.out.println("MapPaint"+outPath);
-
-			resStreamOut = new FileOutputStream(outPath);
-			while ((readBytes = stream.read(buffer)) > 0) {
-				resStreamOut.write(buffer, 0, readBytes);
-			}
-			resStreamOut.close();
-		} catch (Exception ex) {
-			throw ex;
-		} finally {
-			stream.close();
-		}   
-	}
-	
-	/**
-	 * Writes the indoor validator file in the user preferences if it isn't there
-	 * and activates it.
-	 */
-//	private void setIndoorValidator(){
-//		//get the current validator settings
-//		Map<String, Setting<?>> settings =  Main.pref.getAllSettings();
-//		MapListSetting mapListSetting = (MapListSetting) settings.
-//				get("validator.org.openstreetmap.josm.data.validation.tests.MapCSSTagChecker.entries");
-//		List<Map<String, String>> validatorMaps;
-//		if(mapListSetting!=null){
-//			validatorMaps = mapListSetting.getValue();
-//		} else{
-//			validatorMaps = new ArrayList<>();
-//		}
-//		boolean validatorExists = false;
+            resStreamOut = new FileOutputStream(outPath);
+            while ((readBytes = stream.read(buffer)) > 0) {
+                resStreamOut.write(buffer, 0, readBytes);
+            }
+            resStreamOut.close();
+        } catch (Exception ex) {
+            throw ex;
+        } finally {
+            stream.close();
+        }   
+    }
+    
+    /**
+     * Writes the indoor validator file in the user preferences if it isn't there
+     * and activates it.
+     */
+//    private void setIndoorValidator() {
+//        //get the current validator settings
+//        Map<String, Setting<?>> settings =  Main.pref.getAllSettings();
+//        MapListSetting mapListSetting = (MapListSetting) settings.
+//                get("validator.org.openstreetmap.josm.data.validation.tests.MapCSSTagChecker.entries");
+//        List<Map<String, String>> validatorMaps;
+//        if (mapListSetting != null) {
+//            validatorMaps = mapListSetting.getValue();
+//        } else {
+//            validatorMaps = new ArrayList<>();
+//        }
+//        boolean validatorExists = false;
 //
-//		//check if indoor validator is already set
-//		for(Map<String, String> map : validatorMaps){
-//			if(map.containsValue("Indoor")){
-//				validatorExists = true;
-//			}
-//		}
+//        //check if indoor validator is already set
+//        for (Map<String, String> map : validatorMaps) {
+//            if (map.containsValue("Indoor")) {
+//                validatorExists = true;
+//            }
+//        }
 //
-//		//put it in the settings if not
-//		if(!validatorExists){
-//			List<Map<String, String>> validatorMapsNew = new ArrayList<>();
-//			if(!validatorMaps.isEmpty()){
-//				validatorMapsNew.addAll(validatorMaps);
-//			}
-//			Map<String, String> indoorValidator = new HashMap<>();
-//			indoorValidator.put("title", "Indoor");
-//			indoorValidator.put("active", "true");
-//			indoorValidator.put("url", Main.pref.getUserDataDirectory()+ sep +"validator" + 
-//					sep + "indoorhelper.validator.mapcss");
+//        //put it in the settings if not
+//        if (!validatorExists) {
+//            List<Map<String, String>> validatorMapsNew = new ArrayList<>();
+//            if (!validatorMaps.isEmpty()) {
+//                validatorMapsNew.addAll(validatorMaps);
+//            }
+//            Map<String, String> indoorValidator = new HashMap<>();
+//            indoorValidator.put("title", "Indoor");
+//            indoorValidator.put("active", "true");
+//            indoorValidator.put("url", Main.pref.getUserDataDirectory()+ sep +"validator" + 
+//                    sep + "indoorhelper.validator.mapcss");
 //
-//			validatorMapsNew.add(indoorValidator);
-//			Main.pref.putListOfStructs
-//			("validator.org.openstreetmap.josm.data.validation.tests.MapCSSTagChecker.entries", 
-//					validatorMapsNew);
-//		}
-//	}
-
-	
+//            validatorMapsNew.add(indoorValidator);
+//            Main.pref.putListOfStructs
+//            ("validator.org.openstreetmap.josm.data.validation.tests.MapCSSTagChecker.entries", 
+//                    validatorMapsNew);
+//        }
+//    }
 }

@@ -47,13 +47,13 @@ public class ToolboxViewOLD extends ToggleDialog{
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if(activatorButton.getText().equals("OFF")){
+				if (activatorButton.getText().equals("OFF")){
 					activatorButton.setText("ON");
 					
 					LevelSelectorView levSel = new LevelSelectorView();
 					levSel.createFrame();
 					
-				} else if(activatorButton.getText().equals("ON")){
+				} else if (activatorButton.getText().equals("ON")){
 					activatorButton.setText("OFF");
 				}
 				

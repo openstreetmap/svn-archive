@@ -19,6 +19,7 @@
 package views;
 
 import javax.swing.JButton;
+
 import model.TagCatalog.IndoorObject;
 
 /**
@@ -29,21 +30,21 @@ import model.TagCatalog.IndoorObject;
 
 @SuppressWarnings("serial")
 class PresetButton extends JButton {
-	
-	private IndoorObject indoorObject;
-	
-	public PresetButton(IndoorObject object){
-		this.setIndoorObject(object);		
-	}
-	
-	public IndoorObject getIndoorObject(){
-		return this.indoorObject;
-	}
-	
-	public void setIndoorObject(IndoorObject object){
-		this.indoorObject = object;
-		this.setText(indoorObject.toString());
-		this.setToolTipText(indoorObject.toString());
-	}
+
+    private IndoorObject indoorObject;
+
+    PresetButton(IndoorObject object) {
+        this.setIndoorObject(object);
+    }
+
+    public IndoorObject getIndoorObject() {
+        return this.indoorObject;
+    }
+
+    public void setIndoorObject(IndoorObject object) {
+        this.indoorObject = object;
+        this.setText(indoorObject.toString());
+        this.setToolTipText(indoorObject.toString());
+    }
 
 }

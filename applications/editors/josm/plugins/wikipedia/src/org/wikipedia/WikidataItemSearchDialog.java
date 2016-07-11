@@ -8,9 +8,12 @@ import java.awt.Dimension;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.TreeSet;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
@@ -21,6 +24,7 @@ import javax.swing.JPanel;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
+import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Tag;
 import org.openstreetmap.josm.gui.ExtendedDialog;
 import org.openstreetmap.josm.gui.tagging.ac.AutoCompletingComboBox;
@@ -28,6 +32,7 @@ import org.openstreetmap.josm.gui.tagging.ac.AutoCompletionListItem;
 import org.openstreetmap.josm.gui.util.GuiHelper;
 import org.openstreetmap.josm.gui.widgets.SearchTextResultListPanel;
 import org.openstreetmap.josm.tools.GBC;
+import org.openstreetmap.josm.tools.Predicate;
 import org.openstreetmap.josm.tools.Utils;
 
 public final class WikidataItemSearchDialog extends ExtendedDialog {
@@ -46,6 +51,7 @@ public final class WikidataItemSearchDialog extends ExtendedDialog {
             }
         });
         this.targetKey = new AutoCompletingComboBox();
+        this.targetKey.setEditable(true);
         this.targetKey.setSelectedItem(new AutoCompletionListItem("wikidata"));
 
         final JPanel panel = new JPanel(new GridBagLayout());
@@ -76,9 +82,26 @@ public final class WikidataItemSearchDialog extends ExtendedDialog {
     }
 
     private void initTargetKeys() {
-        final List<AutoCompletionListItem> keys = Main.getLayerManager().getEditLayer().data.getAutoCompletionManager().getKeys();
+        final DataSet editDataSet = Main.getLayerManager().getEditDataSet();
+        if (editDataSet == null) {
+            return;
+        }
+        final Collection<AutoCompletionListItem> keys = new TreeSet<>();
+        // from http://wiki.openstreetmap.org/wiki/Proposed_features/Wikidata#Tagging
+        keys.add(new AutoCompletionListItem("wikidata"));
+        keys.add(new AutoCompletionListItem("operator:wikidata"));
+        keys.add(new AutoCompletionListItem("brand:wikidata"));
+        keys.add(new AutoCompletionListItem("architect:wikidata"));
+        keys.add(new AutoCompletionListItem("artist:wikidata"));
+        keys.add(new AutoCompletionListItem("subject:wikidata"));
+        keys.add(new AutoCompletionListItem("name:etymology:wikidata"));
+        keys.addAll(Utils.filter(editDataSet.getAutoCompletionManager().getKeys(), new Predicate<AutoCompletionListItem>() {
+            @Override
+            public boolean evaluate(AutoCompletionListItem object) {
+                return object.getValue().contains("wikidata");
+            }
+        }));
         targetKey.setPossibleACItems(keys);
-        targetKey.setEditable(true);
     }
 
     @Override

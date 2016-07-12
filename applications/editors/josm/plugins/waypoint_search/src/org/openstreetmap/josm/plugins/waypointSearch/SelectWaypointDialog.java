@@ -30,7 +30,7 @@ class SelectWaypointDialog extends ToggleDialog implements KeyListener, MouseLis
     private JTextField searchPattern = new JTextField(20);
     private DefaultListModel<String> listModel = new DefaultListModel<>();
     private JList<String> searchResult = new JList<>(listModel);
-    private List<Marker> searchResultObjectCache = new ArrayList<>();
+    private transient List<Marker> searchResultObjectCache = new ArrayList<>();
     private boolean firstTimeSearch = true;
 
     SelectWaypointDialog(String name, String iconName, String tooltip,
@@ -80,17 +80,17 @@ class SelectWaypointDialog extends ToggleDialog implements KeyListener, MouseLis
     }
 
     @Override
-    public void keyPressed(KeyEvent arg0) {
+    public void keyPressed(KeyEvent e) {
         // Do nothing
     }
 
     @Override
-    public void keyReleased(KeyEvent arg0) {
+    public void keyReleased(KeyEvent e) {
         updateSearchResults();
     }
 
     @Override
-    public void keyTyped(KeyEvent arg0) {
+    public void keyTyped(KeyEvent e) {
         firstTimeSearch = false;
     }
 
@@ -98,30 +98,33 @@ class SelectWaypointDialog extends ToggleDialog implements KeyListener, MouseLis
     public void mouseClicked(MouseEvent e) {
         if (e.getSource() == searchResult) {
             //click on the search result box
-            Marker marker = searchResultObjectCache.get(searchResult.getSelectedIndex());
-            Main.map.mapView.zoomTo(marker.getCoor());
+            int idx = searchResult.getSelectedIndex();
+            if (idx >= 0) {
+                Marker marker = searchResultObjectCache.get(idx);
+                Main.map.mapView.zoomTo(marker.getCoor());
+            }
         }
     }
 
     @Override
-    public void mouseEntered(MouseEvent arg0) {
+    public void mouseEntered(MouseEvent e) {
         // Do nothing
     }
 
     @Override
-    public void mouseExited(MouseEvent arg0) {
+    public void mouseExited(MouseEvent e) {
         // Do nothing
     }
 
     @Override
-    public void mousePressed(MouseEvent arg0) {
+    public void mousePressed(MouseEvent e) {
         if (searchPattern.getSelectedText() == null) {
             searchPattern.selectAll();
         }
     }
 
     @Override
-    public void mouseReleased(MouseEvent arg0) {
+    public void mouseReleased(MouseEvent e) {
         // Do nothing
     }
 }

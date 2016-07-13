@@ -38,7 +38,6 @@ public class PTAssistantValidatorTest extends Test {
 
 	private PTAssistantLayer layer;
 
-
 	public PTAssistantValidatorTest() {
 		super(tr("Public Transport Assistant tests"),
 				tr("Check if route relations are compatible with public transport version 2"));
@@ -66,11 +65,10 @@ public class PTAssistantValidatorTest extends Test {
 		if (n.hasTag("public_transport", "platform")) {
 			nodeChecker.performPlatformPartOfWayTest();
 		}
-		
+
 		this.errors.addAll(nodeChecker.getErrors());
 
 	}
-	
 
 	@Override
 	public void visit(Relation r) {
@@ -82,7 +80,7 @@ public class PTAssistantValidatorTest extends Test {
 		// Download incomplete members. If the download does not work, return
 		// and do not do any testing.
 		if (r.hasIncompleteMembers()) {
-			
+
 			boolean downloadSuccessful = this.downloadIncompleteMembers();
 			if (!downloadSuccessful) {
 				return;
@@ -315,7 +313,9 @@ public class PTAssistantValidatorTest extends Test {
 	@Override
 	public boolean isFixable(TestError testError) {
 		if (testError.getCode() == ERROR_CODE_DIRECTION || testError.getCode() == ERROR_CODE_ROAD_TYPE
-				|| testError.getCode() == ERROR_CODE_CONSTRUCTION || testError.getCode() == ERROR_CODE_SORTING) {
+				|| testError.getCode() == ERROR_CODE_CONSTRUCTION || testError.getCode() == ERROR_CODE_SORTING
+				|| testError.getCode() == PTAssistantValidatorTest.ERROR_CODE_SOLITARY_STOP_POSITION
+				|| testError.getCode() == PTAssistantValidatorTest.ERROR_CODE_PLATFORM_PART_OF_HIGHWAY) {
 			return true;
 		}
 		return false;
@@ -332,15 +332,15 @@ public class PTAssistantValidatorTest extends Test {
 
 		if (testError.getCode() == ERROR_CODE_DIRECTION) {
 			commands.add(WayChecker.fixErrorByZooming(testError));
-			
+
 		}
 
 		if (testError.getCode() == ERROR_CODE_SORTING) {
 			commands.add(RouteChecker.fixSortingError(testError));
 		}
 
-		if (testError.getCode() == ERROR_CODE_SOLITARY_STOP_POSITION) {
-			// TODO
+		if (testError.getCode() == ERROR_CODE_SOLITARY_STOP_POSITION || testError.getCode() == ERROR_CODE_PLATFORM_PART_OF_HIGHWAY) {
+			commands.add(NodeChecker.fixError(testError));
 		}
 
 		if (commands.isEmpty()) {
@@ -387,5 +387,5 @@ public class PTAssistantValidatorTest extends Test {
 		errors.add(
 				new TestError(this, Severity.WARNING, tr("PT: dummy test warning"), ERROR_CODE_DIRECTION, primitives));
 	}
-	
+
 }

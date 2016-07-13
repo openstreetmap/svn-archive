@@ -2,9 +2,17 @@ package org.openstreetmap.josm.plugins.pt_assistant.validation;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
+
+import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.command.ChangeCommand;
+import org.openstreetmap.josm.command.Command;
+import org.openstreetmap.josm.command.SelectCommand;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.OsmPrimitiveType;
@@ -72,9 +80,79 @@ public class NodeChecker extends Checker {
 			}
 		}
 	}
-	
-	public static void fixError() {
-		
+
+	/**
+	 * Fixes errors: solitary stop position and platform which is part of a way.
+	 * Asks the user first.
+	 * 
+	 * @param testError
+	 * @return
+	 */
+	protected static Command fixError(TestError testError) {
+
+		if (testError.getCode() != PTAssistantValidatorTest.ERROR_CODE_SOLITARY_STOP_POSITION
+				&& testError.getCode() != PTAssistantValidatorTest.ERROR_CODE_PLATFORM_PART_OF_HIGHWAY) {
+			return null;
+		}
+
+		Node problematicNode = (Node) testError.getPrimitives().iterator().next();
+		ArrayList<OsmPrimitive> primitivesToSelect = new ArrayList<>(1);
+		primitivesToSelect.add(problematicNode);
+		SelectCommand selectCommand = new SelectCommand(primitivesToSelect);
+		selectCommand.executeCommand();
+
+		final int[] userSelection = { JOptionPane.YES_OPTION };
+		final TestError errorParameter = testError;
+		if (SwingUtilities.isEventDispatchThread()) {
+
+			userSelection[0] = showFixNodeTagDialog(errorParameter);
+
+		} else {
+
+			try {
+				SwingUtilities.invokeAndWait(new Runnable() {
+					@Override
+					public void run() {
+						userSelection[0] = showFixNodeTagDialog(errorParameter);
+					}
+				});
+			} catch (InvocationTargetException | InterruptedException e) {
+				e.printStackTrace();
+				return null;
+			}
+		}
+
+		if (userSelection[0] == JOptionPane.YES_OPTION) {
+
+			Node modifiedNode = new Node(problematicNode);
+			if (testError.getCode() == PTAssistantValidatorTest.ERROR_CODE_SOLITARY_STOP_POSITION) {
+				modifiedNode.put("public_transport", "platform");
+				ChangeCommand command = new ChangeCommand(problematicNode, modifiedNode);
+				return command;
+			} else {
+				modifiedNode.put("public_transport", "stop_position");
+				ChangeCommand command = new ChangeCommand(problematicNode, modifiedNode);
+				return command;
+			}
+		}
+
+		return null;
+
+	}
+
+	private static int showFixNodeTagDialog(TestError e) {
+		Node problematicNode = (Node) e.getPrimitives().iterator().next();
+		Main.map.mapView.zoomTo(problematicNode.getCoor());
+
+		String[] options = { tr("Yes"), tr("No") };
+		String message;
+		if (e.getCode() == PTAssistantValidatorTest.ERROR_CODE_SOLITARY_STOP_POSITION) {
+			message = "Do you want to change the tag public_transport=stop_position to public_transport=platform?";
+		} else {
+			message = "Do you want to change the tag public_transport=platform to public_transport=stop_position?";
+		}
+		return JOptionPane.showOptionDialog(null, message, tr("PT_Assistant Message"), JOptionPane.YES_NO_OPTION,
+				JOptionPane.QUESTION_MESSAGE, null, options, 0);
 	}
 
 }

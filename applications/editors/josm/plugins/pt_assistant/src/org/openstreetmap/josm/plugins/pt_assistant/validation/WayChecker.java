@@ -514,8 +514,6 @@ public class WayChecker extends Checker {
 
 		// open editor:
 		editor.setVisible(true);
-		editor.setFocusable(true);
-		editor.requestFocusInWindow();
 
 		// make the current relation purple in the pt_assistant layer:
 		PTAssistantLayer.getLayer().repaint(r);

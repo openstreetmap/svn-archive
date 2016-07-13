@@ -1,8 +1,7 @@
-// License: GPL v2 or later. Copyright 2007 by Raphael Mack, Immanuel Scholz and others
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.globalsat;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
-import gnu.io.CommPortIdentifier;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -22,10 +21,12 @@ import javax.swing.ListCellRenderer;
 
 import org.openstreetmap.josm.Main;
 
+import gnu.io.CommPortIdentifier;
+
 /**
  * Main download dialog.
  *
- * @author Raphael Mack <ramack@raphael-mack.de>
+ * @author Raphael Mack &lt;ramack@raphael-mack.de&gt;
  *
  */
 public class GlobalsatImportDialog extends JPanel {
@@ -40,27 +41,30 @@ public class GlobalsatImportDialog extends JPanel {
         setLayout(new GridBagLayout());
 
         portCombo = new JComboBox<>();
-        portCombo.setRenderer(new ListCellRenderer<CommPortIdentifier>(){
-                public java.awt.Component getListCellRendererComponent(JList<? extends CommPortIdentifier> list, CommPortIdentifier o, int x, boolean a, boolean b){
+        portCombo.setRenderer(new ListCellRenderer<CommPortIdentifier>() {
+                @Override
+                public java.awt.Component getListCellRendererComponent(JList<? extends CommPortIdentifier> list,
+                        CommPortIdentifier o, int x, boolean a, boolean b) {
                     String value = o.getName();
-                    if(value == null){
+                    if (value == null) {
                         value = "null";
                     }
                     return new JLabel(value);
                 }
             });
-        portCombo.addActionListener(new ActionListener(){
-                public void actionPerformed(java.awt.event.ActionEvent e){
+        portCombo.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(java.awt.event.ActionEvent e) {
                     Object i = portCombo.getSelectedItem();
-                    if(i instanceof CommPortIdentifier){
-                        GlobalsatPlugin.setPortIdent((CommPortIdentifier)i);
-                        Main.pref.put("globalsat.portIdentifier", ((CommPortIdentifier)i).getName());
+                    if (i instanceof CommPortIdentifier) {
+                        GlobalsatPlugin.setPortIdent((CommPortIdentifier) i);
+                        Main.pref.put("globalsat.portIdentifier", ((CommPortIdentifier) i).getName());
                     }
                 }
             });
 
         refreshPorts();
-        c.insets = new Insets(4,4,4,4);
+        c.insets = new Insets(4, 4, 4, 4);
         c.gridwidth = 1;
         c.weightx = 0.8;
         c.fill = GridBagConstraints.HORIZONTAL;
@@ -75,8 +79,9 @@ public class GlobalsatImportDialog extends JPanel {
         add(portCombo, c);
 
         refreshBtn = new JButton(tr("Refresh"));
-        refreshBtn.addActionListener(new ActionListener(){
-                public void actionPerformed(java.awt.event.ActionEvent e){
+        refreshBtn.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(java.awt.event.ActionEvent e) {
                     refreshPorts();
                 }
             });
@@ -89,21 +94,22 @@ public class GlobalsatImportDialog extends JPanel {
         add(refreshBtn, c);
 
         configBtn = new JButton(tr("Configure"));
-        configBtn.addActionListener(new ActionListener(){
-                public void actionPerformed(java.awt.event.ActionEvent e){
+        configBtn.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(java.awt.event.ActionEvent e) {
                     System.out.println("configureing the device");
-                    try{
+                    try {
 
                         GlobalsatConfigDialog dialog = new GlobalsatConfigDialog(GlobalsatPlugin.dg100().getConfig());
                         JOptionPane pane = new JOptionPane(dialog, JOptionPane.PLAIN_MESSAGE, JOptionPane.OK_CANCEL_OPTION);
                         JDialog dlg = pane.createDialog(Main.parent, tr("Configure Device"));
                         dlg.setVisible(true);
-                        if(((Integer)pane.getValue()) == JOptionPane.OK_OPTION){
+                        if (((Integer) pane.getValue()) == JOptionPane.OK_OPTION) {
                             GlobalsatPlugin.dg100().setConfig(dialog.getConfig());
                         }
                         dlg.dispose();
 
-                    }catch(GlobalsatDg100.ConnectionException ex){
+                    } catch (GlobalsatDg100.ConnectionException ex) {
                         JOptionPane.showMessageDialog(Main.parent, tr("Connection Error.") + " " + ex.toString());
                     }
                     System.out.println("configureing the device finised");
@@ -128,17 +134,17 @@ public class GlobalsatImportDialog extends JPanel {
         add(delete, c);
     }
 
-    public void refreshPorts(){
+    public void refreshPorts() {
         String sel = Main.pref.get("globalsat.portIdentifier");
         portCombo.setVisible(false);
         portCombo.removeAllItems();
 
         Enumeration<?> e = CommPortIdentifier.getPortIdentifiers();
-        for(e = CommPortIdentifier.getPortIdentifiers(); e.hasMoreElements(); ){
-            CommPortIdentifier port = (CommPortIdentifier)e.nextElement();
-            if(port.getPortType() == CommPortIdentifier.PORT_SERIAL){
+        for (e = CommPortIdentifier.getPortIdentifiers(); e.hasMoreElements();) {
+            CommPortIdentifier port = (CommPortIdentifier) e.nextElement();
+            if (port.getPortType() == CommPortIdentifier.PORT_SERIAL) {
                 portCombo.addItem(port);
-                if(sel != null && port.getName() == sel){
+                if (sel != null && port.getName() == sel) {
                     portCombo.setSelectedItem(port);
                     GlobalsatPlugin.setPortIdent(port);
                 }
@@ -149,11 +155,11 @@ public class GlobalsatImportDialog extends JPanel {
 
     }
 
-    public boolean deleteFilesAfterDownload(){
+    public boolean deleteFilesAfterDownload() {
         return delete.isSelected();
     }
 
-    public CommPortIdentifier getPort(){
-        return (CommPortIdentifier)portCombo.getSelectedItem();
+    public CommPortIdentifier getPort() {
+        return (CommPortIdentifier) portCombo.getSelectedItem();
     }
 }

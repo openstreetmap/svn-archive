@@ -1,7 +1,7 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.globalsat;
 /// @author Raphael Mack <ramack@raphael-mack.de>
 import static org.openstreetmap.josm.tools.I18n.tr;
-import gnu.io.CommPortIdentifier;
 
 import java.awt.GraphicsEnvironment;
 import java.awt.event.ActionEvent;
@@ -22,14 +22,16 @@ import org.openstreetmap.josm.plugins.PluginInformation;
 import org.openstreetmap.josm.tools.Shortcut;
 import org.xml.sax.SAXException;
 
+import gnu.io.CommPortIdentifier;
+
 public class GlobalsatPlugin extends Plugin {
     private static GlobalsatDg100 device = null;
-    public static GlobalsatDg100 dg100(){
+    public static GlobalsatDg100 dg100() {
         return device;
     }
 
-    public static void setPortIdent(CommPortIdentifier port){
-        if(device != null){
+    public static void setPortIdent(CommPortIdentifier port) {
+        if (device != null) {
             device.disconnect();
         }
         device = new GlobalsatDg100(port);
@@ -40,38 +42,38 @@ public class GlobalsatPlugin extends Plugin {
         public Exception eee;
         private boolean deleteAfter;
 
-        public ImportTask(boolean delete){
+        ImportTask(boolean delete) {
             super(tr("Importing data from device."));
             deleteAfter = delete;
         }
 
         @Override public void realRun() throws IOException, SAXException {
             progressMonitor.subTask(tr("Importing data from DG100..."));
-            try{
+            try {
                 data = GlobalsatPlugin.dg100().readData(progressMonitor.createSubTaskMonitor(ProgressMonitor.ALL_TICKS, true));
-            }catch(Exception e){
+            } catch (Exception e) {
                 eee = e;
             }
         }
 
         @Override protected void finish() {
-            if(deleteAfter && GlobalsatPlugin.dg100().isCanceled() == false){
+            if (deleteAfter && GlobalsatPlugin.dg100().isCanceled() == false) {
                 Main.pref.put("globalsat.deleteAfterDownload", true);
-                try{
+                try {
                     GlobalsatPlugin.dg100().deleteData();
-                }catch(Exception ex){
+                } catch (Exception ex) {
                     JOptionPane.showMessageDialog(Main.parent, tr("Error deleting data.") + " " + ex.toString());
                 }
-            }else{
+            } else {
                 Main.pref.put("globalsat.deleteAfterDownload", false);
             }
-            if(data != null && data.hasTrackPoints()){
+            if (data != null && data.hasTrackPoints()) {
                 Main.getLayerManager().addLayer(new GpxLayer(data, tr("imported data from {0}", "DG 100")));
                 Main.map.repaint();
-            }else{
+            } else {
                 JOptionPane.showMessageDialog(Main.parent, tr("No data found on device."));
             }
-            if(eee != null){
+            if (eee != null) {
                 eee.printStackTrace();
                 System.out.println(eee.getMessage());
                 JOptionPane.showMessageDialog(Main.parent, tr("Connection failed.") + " (" + eee.toString() + ")");
@@ -93,10 +95,12 @@ public class GlobalsatPlugin extends Plugin {
             CommPortIdentifier.getPortIdentifiers();
         } catch (UnsatisfiedLinkError e) {
             error = true;
+            // CHECKSTYLE.OFF: LineLength
             String msg = tr("Cannot load library rxtxSerial. If you need support to install it try Globalsat homepage at http://www.raphael-mack.de/josm-globalsat-gpx-import-plugin/");
+            // CHECKSTYLE.ON: LineLength
             Main.error(msg);
             if (!GraphicsEnvironment.isHeadless()) {
-            	JOptionPane.showMessageDialog(Main.parent, "<html>" + msg + "</html>");
+                JOptionPane.showMessageDialog(Main.parent, "<html>" + msg + "</html>");
             }
         }
         if (!error) {
@@ -105,19 +109,21 @@ public class GlobalsatPlugin extends Plugin {
         }
     }
 
-    class GlobalsatImportAction extends JosmAction{
-        public GlobalsatImportAction(){
+    class GlobalsatImportAction extends JosmAction {
+        GlobalsatImportAction() {
             super(tr("Globalsat Import"), "globalsatImport",
             tr("Import Data from Globalsat Datalogger DG100 into GPX layer."),
             Shortcut.registerShortcut("menu:globalsatimport", tr("Menu: {0}", tr("Globalsat Import")),
             KeyEvent.VK_G, Shortcut.ALT_CTRL), false);
         }
-        public void actionPerformed(ActionEvent e){
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
             GlobalsatImportDialog dialog = new GlobalsatImportDialog();
             JOptionPane pane = new JOptionPane(dialog, JOptionPane.PLAIN_MESSAGE, JOptionPane.OK_CANCEL_OPTION);
             JDialog dlg = pane.createDialog(Main.parent, tr("Import"));
             dlg.setVisible(true);
-            if(((Integer)pane.getValue()) == JOptionPane.OK_OPTION){
+            if (((Integer) pane.getValue()) == JOptionPane.OK_OPTION) {
                 setPortIdent(dialog.getPort());
                 ImportTask task = new ImportTask(dialog.deleteFilesAfterDownload());
                 Main.worker.execute(task);

@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.globalsat;
 
 import java.util.Collection;
@@ -18,18 +19,22 @@ public class SingleSegmentGpxTrack extends WithAttributes implements GpxTrack {
         this.trackSegment = trackSegment;
     }
 
+    @Override
     public Map<String, Object> getAttributes() {
         return attr;
     }
 
+    @Override
     public Bounds getBounds() {
         return trackSegment.getBounds();
     }
 
+    @Override
     public Collection<GpxTrackSegment> getSegments() {
         return Collections.singleton(trackSegment);
     }
 
+    @Override
     public double length() {
         return trackSegment.length();
     }

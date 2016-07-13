@@ -72,5 +72,9 @@ public class NodeChecker extends Checker {
 			}
 		}
 	}
+	
+	public static void fixError() {
+		
+	}
 
 }

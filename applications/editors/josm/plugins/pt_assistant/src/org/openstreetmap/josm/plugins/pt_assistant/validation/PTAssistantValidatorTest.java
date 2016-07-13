@@ -43,7 +43,7 @@ public class PTAssistantValidatorTest extends Test {
 		super(tr("Public Transport Assistant tests"),
 				tr("Check if route relations are compatible with public transport version 2"));
 
-		layer = new PTAssistantLayer();
+		layer = PTAssistantLayer.getLayer();
 		DataSet.addSelectionListener(layer);
 
 	}
@@ -332,7 +332,7 @@ public class PTAssistantValidatorTest extends Test {
 
 		if (testError.getCode() == ERROR_CODE_DIRECTION) {
 			commands.add(WayChecker.fixErrorByZooming(testError));
-
+			
 		}
 
 		if (testError.getCode() == ERROR_CODE_SORTING) {

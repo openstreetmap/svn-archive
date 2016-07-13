@@ -5,6 +5,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.junit.Test;
@@ -43,15 +44,15 @@ public class DirecionTestTest extends AbstractTest {
 
 		assertEquals(onewayErrorCaught, 2);
 
-		// fix the direction errors:
-
 		boolean detectedErrorsAreCorrect = true;
 		for (TestError e : errors) {
 			if (e.getCode() == PTAssistantValidatorTest.ERROR_CODE_DIRECTION) {
 				@SuppressWarnings("unchecked")
-				List<OsmPrimitive> highlighted = (List<OsmPrimitive>) e.getHighlighted();
-				if (highlighted.get(0).getId() != 225732678 && highlighted.get(0).getId() != 24215210) {
-					detectedErrorsAreCorrect = false;
+				Collection<OsmPrimitive> highlighted = (Collection<OsmPrimitive>) e.getHighlighted();
+				for (OsmPrimitive highlightedPrimitive: highlighted) {
+					if (highlightedPrimitive.getId() != 225732678 && highlightedPrimitive.getId() != 24215210) {
+						detectedErrorsAreCorrect = false;
+					}
 				}
 			}
 		}

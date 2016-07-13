@@ -37,14 +37,23 @@ import org.openstreetmap.josm.tools.ImageProvider;
 public class PTAssistantLayer extends Layer
 		implements SelectionChangedListener, PropertyChangeListener, LayerChangeListener {
 
+	private static PTAssistantLayer layer;
 	private List<OsmPrimitive> primitives = new ArrayList<>();
 	private PTAssistantPaintVisitor paintVisitor;
-
-	public PTAssistantLayer() {
+	
+	private PTAssistantLayer() {
 		super("pt_assistant layer");
 		KeyboardFocusManager.getCurrentKeyboardFocusManager().addPropertyChangeListener(this);
 		Main.getLayerManager().addLayerChangeListener(this);
+		layer = this;
 
+	}
+	
+	public static PTAssistantLayer getLayer() {
+		if (layer == null) {
+			new PTAssistantLayer();
+		}
+		return layer;
 	}
 
 	public void addPrimitive(OsmPrimitive primitive) {
@@ -158,30 +167,42 @@ public class PTAssistantLayer extends Layer
 				Relation relation = editor.getRelation();
 
 				if (RouteUtils.isTwoDirectionRoute(relation)) {
+					
+					this.repaint(relation);
 
-					this.primitives.clear();
-					this.primitives.add(relation);
-					if (!Main.getLayerManager().containsLayer(this)) {
-						Main.getLayerManager().addLayer(this);
-					}
-
-					if (paintVisitor == null) {
-						Graphics g = Main.map.mapView.getGraphics();
-						MapView mv = Main.map.mapView;
-						paintVisitor = new PTAssistantPaintVisitor(g, mv);
-					}
-
-					for (OsmPrimitive primitive : primitives) {
-						paintVisitor.visit(primitive);
-					}
-
-					Main.map.mapView.repaint();
 				}
 
 			}
 		}
 	}
+	
+	
+	
+	/**
+	 * Repaints the layer in cases when there was no selection change
+	 * @param relation
+	 */
+	public void repaint(Relation relation) {
+		this.primitives.clear();
+		this.primitives.add(relation);
+		if (!Main.getLayerManager().containsLayer(this)) {
+			Main.getLayerManager().addLayer(this);
+		}
 
+		if (paintVisitor == null) {
+			Graphics g = Main.map.mapView.getGraphics();
+			MapView mv = Main.map.mapView;
+			paintVisitor = new PTAssistantPaintVisitor(g, mv);
+		}
+
+		for (OsmPrimitive primitive : primitives) {
+			paintVisitor.visit(primitive);
+		}
+
+		Main.map.mapView.repaint();
+	}
+	
+	
 	@Override
 	public void layerAdded(LayerAddEvent arg0) {
 		// do nothing

@@ -1,5 +1,7 @@
 package org.openstreetmap.josm.plugins.pt_assistant.utils;
 
+import java.util.Collection;
+
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitiveType;
 import org.openstreetmap.josm.data.osm.OsmUtils;
@@ -29,11 +31,11 @@ public class RouteUtils {
 	 *         with the pt_assistant plugin, false otherwise.
 	 */
 	public static boolean isTwoDirectionRoute(Relation r) {
-		
+
 		if (r == null) {
 			return false;
 		}
-		
+
 		if (!r.hasKey("route") || !r.hasTag("public_transport:version", "2")) {
 			return false;
 		}
@@ -155,6 +157,7 @@ public class RouteUtils {
 
 	/**
 	 * Checks if the ways have a common node
+	 * 
 	 * @param w1
 	 * @param w2
 	 * @return
@@ -177,7 +180,32 @@ public class RouteUtils {
 
 		return false;
 	}
-	
+
+	/**
+	 * Checks if any way from the first collection touches any way from the
+	 * second collection
+	 * 
+	 * @param c1 first collection
+	 * @param c2 second collection
+	 * @return true if ways touch, false otherwise
+	 */
+	public static boolean waysTouch(Collection<Way> c1, Collection<Way> c2) {
+
+		if (c1 == null || c2 == null) {
+			return false;
+		}
+
+		for (Way w1 : c1) {
+			for (Way w2 : c2) {
+				if (waysTouch(w1, w2)) {
+					return true;
+				}
+			}
+		}
+
+		return false;
+	}
+
 	/**
 	 * Checks if the type of the way is suitable for buses to go on it. The
 	 * direction of the way (i.e. one-way roads) is irrelevant for this test.
@@ -206,18 +234,17 @@ public class RouteUtils {
 
 		return false;
 	}
-	
+
 	public static boolean isWaySuitableForPublicTransport(Way way) {
-		
-		if (isWaySuitableForBuses(way) || way.hasTag("railway", "tram")
-				|| way.hasTag("railway", "subway") || way.hasTag("raiilway", "subway")
-				|| way.hasTag("railway", "light_rail")
+
+		if (isWaySuitableForBuses(way) || way.hasTag("railway", "tram") || way.hasTag("railway", "subway")
+				|| way.hasTag("raiilway", "subway") || way.hasTag("railway", "light_rail")
 				|| way.hasTag("railway", "train")) {
 			return true;
 		}
-		
+
 		return false;
-		
+
 	}
 
 }

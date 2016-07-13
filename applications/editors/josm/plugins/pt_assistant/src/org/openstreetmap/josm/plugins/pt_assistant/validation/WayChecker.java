@@ -15,7 +15,6 @@ import org.openstreetmap.josm.actions.AutoScaleAction;
 import org.openstreetmap.josm.command.ChangeCommand;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.SelectCommand;
-import org.openstreetmap.josm.command.SequenceCommand;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.OsmPrimitiveType;
@@ -28,6 +27,7 @@ import org.openstreetmap.josm.data.validation.TestError;
 import org.openstreetmap.josm.gui.dialogs.relation.GenericRelationEditor;
 import org.openstreetmap.josm.gui.dialogs.relation.RelationEditor;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
+import org.openstreetmap.josm.plugins.pt_assistant.gui.PTAssistantLayer;
 import org.openstreetmap.josm.plugins.pt_assistant.utils.RouteUtils;
 
 /**
@@ -193,40 +193,43 @@ public class WayChecker extends Checker {
 			}
 		}
 
-		for (Way problematicWay : problematicWays) {
+		List<Relation> primitives = new ArrayList<>(1);
+		primitives.add(this.relation);
 
-			List<Relation> primitives = new ArrayList<>(1);
-			primitives.add(relation);
-			List<Way> highlighted = new ArrayList<>(1);
-			// highlighted.add(problematicWay);
-			Set<Way> adjacentWays = checkAdjacentWays(problematicWay, new HashSet<Way>());
-			adjacentWays.removeAll(problematicWays);
-			highlighted.add(problematicWay);
-			highlighted.addAll(adjacentWays);
-			TestError e = new TestError(this.test, Severity.WARNING,
-					tr("PT: Route passes a oneway road in the wrong direction"),
-					PTAssistantValidatorTest.ERROR_CODE_DIRECTION, primitives, highlighted);
-			this.errors.add(e);
+		List<Set<Way>> listOfSets = new ArrayList<>();
+		for (Way problematicWay : problematicWays) {
+			Set<Way> primitivesToReport = new HashSet<>();
+			primitivesToReport.add(problematicWay);
+			primitivesToReport.addAll(checkAdjacentWays(problematicWay, new HashSet<Way>()));
+			listOfSets.add(primitivesToReport);
+		}
+		
+		boolean changed = true;
+		while (changed) {
+			changed = false;
+			for (int i = 0; i < listOfSets.size(); i++) {
+				for (int j = i; j < listOfSets.size(); j++) {
+					if (i != j && RouteUtils.waysTouch(listOfSets.get(i), listOfSets.get(j))) {
+						listOfSets.get(i).addAll(listOfSets.get(j));
+						listOfSets.remove(j);
+						j = listOfSets.size();
+						changed = true;
+					}
+				}
+			}
 		}
 
-//		Set<Way> primitivesToReport = new HashSet<>();
-//		primitivesToReport.addAll(problematicWays);
-//		for (Way problematicWay : problematicWays) {
-//			Set<Way> adjacentWays = checkAdjacentWays(problematicWay, new HashSet<Way>());
-//			primitivesToReport.addAll(adjacentWays);
-//		}
-//
-//		List<Relation> primitives = new ArrayList<>(1);
-//		primitives.add(relation);
-//		TestError e = new TestError(this.test, Severity.WARNING,
-//				tr("PT: Route passes a oneway road in the wrong direction"),
-//				PTAssistantValidatorTest.ERROR_CODE_DIRECTION, primitives, primitivesToReport);
-//		this.errors.add(e);
+		for (Set<Way> currentSet : listOfSets) {
+			TestError e = new TestError(this.test, Severity.WARNING,
+					tr("PT: Route passes a oneway road in the wrong direction"),
+					PTAssistantValidatorTest.ERROR_CODE_DIRECTION, primitives, currentSet);
+			this.errors.add(e);
+		}
 
 	}
 
 	/**
-	 * Checks if the current way touches its neighbouring was correctly
+	 * Checks if the current way touches its neighboring was correctly
 	 * 
 	 * @param prev
 	 *            can be null
@@ -453,21 +456,14 @@ public class WayChecker extends Checker {
 			return null;
 		}
 
-		ArrayList<Command> commands = new ArrayList<>();
-
 		Collection<? extends OsmPrimitive> primitives = testError.getPrimitives();
 		Relation originalRelation = (Relation) primitives.iterator().next();
-		ArrayList<OsmPrimitive> primitivesToSelect = new ArrayList<>(1);
-		primitivesToSelect.add(originalRelation);
-		Collection<?> highlighted = testError.getHighlighted();
-		Way wayToHighlight = (Way) highlighted.iterator().next();
-		ArrayList<OsmPrimitive> primitivesToZoom = new ArrayList<>(1);
-		primitivesToZoom.add(wayToHighlight);
+		ArrayList<OsmPrimitive> primitivesToZoom = new ArrayList<>();
+		for (Object primitiveToZoom : testError.getHighlighted()) {
+			primitivesToZoom.add((OsmPrimitive) primitiveToZoom);
+		}
 
-		SelectCommand command1 = new SelectCommand(primitivesToSelect);
-		commands.add(command1);
-		SelectCommand command2 = new SelectCommand(primitivesToZoom);
-		commands.add(command2);
+		SelectCommand command = new SelectCommand(primitivesToZoom);
 
 		List<OsmDataLayer> listOfLayers = Main.getLayerManager().getLayersOfType(OsmDataLayer.class);
 		for (OsmDataLayer osmDataLayer : listOfLayers) {
@@ -494,7 +490,7 @@ public class WayChecker extends Checker {
 
 				}
 
-				return new SequenceCommand(null, commands);
+				return command;
 			}
 		}
 
@@ -507,18 +503,22 @@ public class WayChecker extends Checker {
 		// zoom to problem:
 		AutoScaleAction.zoomTo(primitives);
 
-		// create editor:
-		GenericRelationEditor editor = (GenericRelationEditor) RelationEditor.getEditor(layer, r,
-				r.getMembersFor(primitives));
-
 		// put stop-related members to the front and edit roles if necessary:
 		List<RelationMember> sortedRelationMembers = listStopMembers(r);
 		sortedRelationMembers.addAll(listNotStopMembers(r));
 		r.setMembers(sortedRelationMembers);
-		editor.reloadDataFromRelation();
+
+		// create editor:
+		GenericRelationEditor editor = (GenericRelationEditor) RelationEditor.getEditor(layer, r,
+				r.getMembersFor(primitives));
 
 		// open editor:
 		editor.setVisible(true);
+		editor.setFocusable(true);
+		editor.requestFocusInWindow();
+
+		// make the current relation purple in the pt_assistant layer:
+		PTAssistantLayer.getLayer().repaint(r);
 
 	}
 

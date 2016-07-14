@@ -488,7 +488,8 @@ public final class WikipediaApp {
 
         @Override
         public int compareTo(WikipediaEntry o) {
-            return AlphanumComparator.getInstance().compare(label, o.label);
+            final int c = AlphanumComparator.getInstance().compare(label, o.label);
+            return c != 0 ? c : AlphanumComparator.getInstance().compare(wikipediaArticle, o.wikipediaArticle);
         }
     }
 

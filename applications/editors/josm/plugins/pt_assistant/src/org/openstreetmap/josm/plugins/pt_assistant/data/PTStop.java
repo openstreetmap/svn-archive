@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.BBox;
 import org.openstreetmap.josm.data.osm.Node;
@@ -146,7 +145,8 @@ public class PTStop extends RelationMember {
 		Double by = platformCenter.getY() + 0.002;
 		BBox platformBBox = new BBox(ax, ay, bx, by);
 
-		Collection<Node> allNodes = Main.getLayerManager().getEditDataSet().getNodes();
+//		Collection<Node> allNodes = Main.getLayerManager().getEditDataSet().getNodes();
+		Collection<Node> allNodes = platform.getDataSet().getNodes();
 		for (Node currentNode : allNodes) {
 			if (platformBBox.bounds(currentNode.getBBox()) && currentNode.hasTag("public_transport", "stop_position")) {
 				potentialStopPositions.add(currentNode);

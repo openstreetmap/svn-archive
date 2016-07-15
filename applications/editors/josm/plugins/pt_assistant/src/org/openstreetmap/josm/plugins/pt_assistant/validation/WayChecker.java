@@ -86,28 +86,28 @@ public class WayChecker extends Checker {
 						isUnderConstruction = true;
 					}
 				} else if (relation.hasTag("route", "subway")) {
-					if (!relation.hasTag("railway", "subway")) {
+					if (!way.hasTag("railway", "subway")) {
 						isCorrectRoadType = false;
 					}
 					if (way.hasTag("railway", "construction")) {
 						isUnderConstruction = true;
 					}
 				} else if (relation.hasTag("route", "light_rail")) {
-					if (!relation.hasTag("raiilway", "subway")) {
+					if (!way.hasTag("railway", "subway")) {
 						isCorrectRoadType = false;
 					}
 					if (way.hasTag("railway", "construction")) {
 						isUnderConstruction = true;
 					}
 				} else if (relation.hasTag("route", "light_rail")) {
-					if (!relation.hasTag("railway", "light_rail")) {
+					if (!way.hasTag("railway", "light_rail")) {
 						isCorrectRoadType = false;
 					}
 					if (way.hasTag("railway", "construction")) {
 						isUnderConstruction = true;
 					}
 				} else if (relation.hasTag("route", "train")) {
-					if (!relation.hasTag("railway", "train")) {
+					if (!way.hasTag("railway", "rail")) {
 						isCorrectRoadType = false;
 					}
 					if (way.hasTag("railway", "construction")) {

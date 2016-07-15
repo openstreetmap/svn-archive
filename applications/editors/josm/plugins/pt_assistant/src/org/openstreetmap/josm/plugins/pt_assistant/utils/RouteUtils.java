@@ -238,8 +238,8 @@ public class RouteUtils {
 	public static boolean isWaySuitableForPublicTransport(Way way) {
 
 		if (isWaySuitableForBuses(way) || way.hasTag("railway", "tram") || way.hasTag("railway", "subway")
-				|| way.hasTag("raiilway", "subway") || way.hasTag("railway", "light_rail")
-				|| way.hasTag("railway", "train")) {
+				|| way.hasTag("railway", "subway") || way.hasTag("railway", "light_rail")
+				|| way.hasTag("railway", "rail")) {
 			return true;
 		}
 

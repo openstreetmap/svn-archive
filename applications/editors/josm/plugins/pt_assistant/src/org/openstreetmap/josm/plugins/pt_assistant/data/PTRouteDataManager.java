@@ -181,4 +181,40 @@ public class PTRouteDataManager {
 		return this.failedMembers;
 	}
 
+	/**
+	 * Returns a PTStop that matches the given id. Returns null if not found
+	 * 
+	 * @param id
+	 * @return
+	 */
+	public PTStop getPTStop(long id) {
+		for (PTStop stop : this.ptstops) {
+			if (stop.getStopPosition() != null && stop.getStopPosition().getId() == id) {
+				return stop;
+			}
+
+			if (stop.getPlatform() != null && stop.getPlatform().getId() == id) {
+				return stop;
+			}
+		}
+
+		return null;
+	}
+
+	/**
+	 * Returns a PTWay that matches the given id. Returns null if not found
+	 * 
+	 * @param id
+	 * @return
+	 */
+	public PTWay getPTWay(long id) {
+		for (PTWay ptway : this.ptways) {
+			for (Way way : ptway.getWays()) {
+				if (way.getId() == id) {
+					return ptway;
+				}
+			}
+		}
+		return null;
+	}
 }

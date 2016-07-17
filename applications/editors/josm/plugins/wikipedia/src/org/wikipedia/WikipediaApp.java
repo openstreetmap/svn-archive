@@ -101,11 +101,8 @@ public final class WikipediaApp {
                     }
                 }
                 if ("wikidata".equals(wikipediaLang)) {
-                    final List<WikipediaEntry> entriesWithLabel = new ArrayList<>(nodes.getLength());
-                    for (final List<WikipediaEntry> chunk : partitionList(entries, 50)) {
-                        entriesWithLabel.addAll(getLabelForWikidata(chunk, Locale.getDefault()));
-                    }
-                    return entriesWithLabel;
+                    final List<WikidataEntry> withLabel = getLabelForWikidata(entries, Locale.getDefault());
+                    return new ArrayList<WikipediaEntry>(withLabel);
                 } else {
                     return entries;
                 }
@@ -237,7 +234,14 @@ public final class WikipediaApp {
     /**
      * Returns a map mapping wikipedia articles to wikidata ids.
      */
-    static Map<String, String> getWikidataForArticles(String wikipediaLang, Collection<String> articles) {
+    static Map<String, String> getWikidataForArticles(String wikipediaLang, List<String> articles) {
+        if (articles.size() > 50) {
+            final Map<String, String> wikidataItems = new HashMap<>();
+            for (final List<String> chunk : partitionList(articles, 50)) {
+                wikidataItems.putAll(getWikidataForArticles(wikipediaLang, chunk));
+            }
+            return wikidataItems;
+        }
         try {
             final String url = "https://www.wikidata.org/w/api.php" +
                     "?action=wbgetentities" +
@@ -296,13 +300,20 @@ public final class WikipediaApp {
 
     static String getLabelForWikidata(String wikidataId, Locale locale, String ... preferredLanguage) {
         try {
-            return getLabelForWikidata(Collections.singleton(new WikidataEntry(wikidataId, null, null, null)), locale, preferredLanguage).get(0).label;
+            return getLabelForWikidata(Collections.singletonList(new WikidataEntry(wikidataId, null, null, null)), locale, preferredLanguage).get(0).label;
         } catch (IndexOutOfBoundsException ignore) {
             return null;
         }
     }
 
-    static List<WikidataEntry> getLabelForWikidata(Collection<? extends WikipediaEntry> entries, Locale locale, String ... preferredLanguage) {
+    static List<WikidataEntry> getLabelForWikidata(List<? extends WikipediaEntry> entries, Locale locale, String ... preferredLanguage) {
+        if (entries.size() > 50) {
+            final List<WikidataEntry> entriesWithLabel = new ArrayList<>(entries.size());
+            for (final List<? extends WikipediaEntry> chunk : partitionList(entries, 50)) {
+                entriesWithLabel.addAll(getLabelForWikidata(chunk, locale, preferredLanguage));
+            }
+            return entriesWithLabel;
+        }
         final Collection<String> wikidataIds = Utils.transform(entries, new Function<WikipediaEntry, String>() {
             @Override
             public String apply(WikipediaEntry x) {

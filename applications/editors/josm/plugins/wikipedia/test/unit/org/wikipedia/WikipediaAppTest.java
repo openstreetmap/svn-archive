@@ -5,6 +5,7 @@ import org.junit.Test;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.tools.Predicate;
+import org.openstreetmap.josm.tools.Predicates;
 import org.openstreetmap.josm.tools.Utils;
 import org.wikipedia.WikipediaApp.WikipediaEntry;
 import org.wikipedia.WikipediaApp.WikipediaLangArticle;
@@ -212,5 +213,11 @@ public class WikipediaAppTest {
         assertThat(entry1.getWiwosmStatus(), is(true));
         assertThat(entry2.getWiwosmStatus(), is(true));
         assertThat(entry3.getWiwosmStatus(), is(false));
+    }
+
+    @Test
+    public void testCategoriesForPrefix() throws Exception {
+        final List<String> categories = WikipediaApp.getCategoriesForPrefix("de", "Gemeinde in Öster");
+        assertTrue(Utils.exists(categories, Predicates.equalTo("Gemeinde in Österreich")));
     }
 }

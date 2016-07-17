@@ -10,11 +10,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.TreeSet;
-import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 import javax.swing.DefaultListCellRenderer;
@@ -30,7 +28,6 @@ import org.openstreetmap.josm.gui.ExtendedDialog;
 import org.openstreetmap.josm.gui.tagging.ac.AutoCompletingComboBox;
 import org.openstreetmap.josm.gui.tagging.ac.AutoCompletionListItem;
 import org.openstreetmap.josm.gui.util.GuiHelper;
-import org.openstreetmap.josm.gui.widgets.SearchTextResultListPanel;
 import org.openstreetmap.josm.tools.GBC;
 import org.openstreetmap.josm.tools.Predicate;
 import org.openstreetmap.josm.tools.Utils;
@@ -119,10 +116,7 @@ public final class WikidataItemSearchDialog extends ExtendedDialog {
         WikipediaToggleDialog.AddWikipediaTagAction.addTag(new Tag(key, value));
     }
 
-    private static class Selector extends SearchTextResultListPanel<WikipediaApp.WikidataEntry> {
-
-        final Debouncer debouncer = new Debouncer(
-                Executors.newSingleThreadScheduledExecutor(Utils.newThreadFactory("wikidata-search-%d", Thread.NORM_PRIORITY)));
+    private static class Selector extends WikiSearchTextResultListPanel<WikipediaApp.WikidataEntry> {
 
         Selector() {
             super();
@@ -134,17 +128,6 @@ public final class WikidataItemSearchDialog extends ExtendedDialog {
                     return super.getListCellRendererComponent(list, labelText, index, isSelected, cellHasFocus);
                 }
             });
-        }
-
-        public WikipediaApp.WikidataEntry getSelectedItem() {
-            final WikipediaApp.WikidataEntry selected = lsResult.getSelectedValue();
-            if (selected != null) {
-                return selected;
-            } else if (!lsResultModel.isEmpty()) {
-                return lsResultModel.getElementAt(0);
-            } else {
-                return null;
-            }
         }
 
         @Override

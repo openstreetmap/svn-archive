@@ -268,6 +268,32 @@ public final class WikipediaApp {
         }
     }
 
+    static List<String> getCategoriesForPrefix(final String wikipediaLang, final String prefix) {
+        try {
+            final String url = getSiteUrl(wikipediaLang) + "/w/api.php"
+                    + "?action=query"
+                    + "&list=prefixsearch"
+                    + "&format=xml"
+                    + "&psnamespace=14"
+                    + "&pslimit=50"
+                    + "&pssearch=" + Utils.encodeUrl(prefix);
+            // parse XML document
+            try (final InputStream in = HttpClient.create(new URL(url)).setReasonForRequest("Wikipedia").connect().getContent()) {
+                final Document doc = DOCUMENT_BUILDER.parse(in);
+                final NodeList nodes = (NodeList) X_PATH.compile("//ps/@title").evaluate(doc, XPathConstants.NODESET);
+                final List<String> categories = new ArrayList<>(nodes.getLength());
+                for (int i = 0; i < nodes.getLength(); i++) {
+                    final Node node = nodes.item(i);
+                    final String value = node.getNodeValue();
+                    categories.add(value.contains(":") ? value.split(":", 2)[1] : value);
+                }
+                return categories;
+            }
+        } catch (Exception ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
     static String getLabelForWikidata(String wikidataId, Locale locale, String ... preferredLanguage) {
         try {
             return getLabelForWikidata(Collections.singleton(new WikidataEntry(wikidataId, null, null, null)), locale, preferredLanguage).get(0).label;

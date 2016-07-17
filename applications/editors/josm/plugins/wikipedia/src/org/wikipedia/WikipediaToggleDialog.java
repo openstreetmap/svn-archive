@@ -204,9 +204,12 @@ public class WikipediaToggleDialog extends ToggleDialog implements ActiveLayerCh
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            final String category = JOptionPane.showInputDialog(
-                    Main.parent,
-                    tr("Enter the Wikipedia category"));
+            final WikipediaCategorySearchDialog categorySearchDialog = WikipediaCategorySearchDialog.getInstance();
+            categorySearchDialog.showDialog();
+            if (categorySearchDialog.getValue() != 1) {
+                return;
+            }
+            final String category = categorySearchDialog.getCategory();
             if (category == null) {
                 return;
             }

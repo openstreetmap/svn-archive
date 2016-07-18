@@ -49,7 +49,7 @@ public class SavePictureCalibrationAction extends JosmAction {
     /**
      * Constructor
      */
-    public SavePictureCalibrationAction( PicLayerAbstract owner ) {
+    public SavePictureCalibrationAction(PicLayerAbstract owner) {
         super(tr("Save Picture Calibration..."), null, tr("Saves calibration data to a file"), null, false);
         // Remember the owner...
         m_owner = owner;
@@ -62,18 +62,18 @@ public class SavePictureCalibrationAction extends JosmAction {
     public void actionPerformed(ActionEvent arg0) {
         // Save dialog
         final JFileChooser fc = new JFileChooser();
-        fc.setAcceptAllFileFilterUsed( true );
-        fc.setFileFilter( new CalibrationFileFilter() );
-        fc.setSelectedFile( new File(m_owner.getPicLayerName() + CalibrationFileFilter.EXTENSION));
-        int result = fc.showSaveDialog( Main.parent );
+        fc.setAcceptAllFileFilterUsed(true);
+        fc.setFileFilter(new CalibrationFileFilter());
+        fc.setSelectedFile(new File(m_owner.getPicLayerName() + CalibrationFileFilter.EXTENSION));
+        int result = fc.showSaveDialog(Main.parent);
 
-        if ( result == JFileChooser.APPROVE_OPTION ) {
+        if (result == JFileChooser.APPROVE_OPTION) {
             // Check file extension and force it to be valid
             File file = fc.getSelectedFile();
             String path = file.getAbsolutePath();
-            if ( path.length() < CalibrationFileFilter.EXTENSION.length()
-                || !path.substring( path.length() - 4 ).equals(CalibrationFileFilter.EXTENSION)) {
-                file = new File( path + CalibrationFileFilter.EXTENSION );
+            if (path.length() < CalibrationFileFilter.EXTENSION.length()
+                || !path.substring(path.length() - 4).equals(CalibrationFileFilter.EXTENSION)) {
+                file = new File(path + CalibrationFileFilter.EXTENSION);
             }
 
             // Save
@@ -84,7 +84,8 @@ public class SavePictureCalibrationAction extends JosmAction {
             } catch (Exception e) {
                 // Error
                 e.printStackTrace();
-                JOptionPane.showMessageDialog(Main.parent , tr("Saving file failed: {0}", e.getMessage()), tr("Problem occurred"), JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(Main.parent,
+                        tr("Saving file failed: {0}", e.getMessage()), tr("Problem occurred"), JOptionPane.WARNING_MESSAGE);
             }
         }
     }

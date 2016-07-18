@@ -27,7 +27,6 @@ public class TransformCommand extends Command {
         beforeTransform = extractTransform();
     }
 
-
     @Override
     public void fillModifiedData(Collection<OsmPrimitive> modified,
             Collection<OsmPrimitive> deleted, Collection<OsmPrimitive> added) {

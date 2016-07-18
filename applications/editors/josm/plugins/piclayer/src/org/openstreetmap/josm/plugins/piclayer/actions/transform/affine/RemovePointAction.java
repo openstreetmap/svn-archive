@@ -43,6 +43,4 @@ public class RemovePointAction extends GenericPicTransformAction {
         super.exitMode();
         updateDrawPoints(false);
     }
-
-
 }

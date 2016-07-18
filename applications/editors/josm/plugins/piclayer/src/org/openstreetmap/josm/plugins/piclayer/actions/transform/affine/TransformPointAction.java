@@ -25,9 +25,9 @@ public class TransformPointAction extends GenericPicTransformAction {
                 /*if (currentLayer.getTransformer().getOriginPoints().size() < 3)
                     JOptionPane.showMessageDialog(null, tr("You should have 3 checkpoints to transform the image!"), tr("PicLayer"), JOptionPane.ERROR_MESSAGE, null);
                 else*/
-                {
+                //{
                     currentLayer.getTransformer().updatePair(selectedPoint, pressed);
-                }
+                //}
             }
 
             currentCommand.addIfChanged();
@@ -35,6 +35,7 @@ public class TransformPointAction extends GenericPicTransformAction {
             e1.printStackTrace();
         }
     }
+
     @Override
     public void enterMode() {
         super.enterMode();

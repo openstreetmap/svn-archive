@@ -47,11 +47,10 @@ public class ShearPictureAction extends GenericPicTransformAction {
 
     @Override
     protected void doAction(MouseEvent e) {
-        EastNorth eastNorth = Main.map.mapView.getEastNorth(e.getX(),e.getY());
+        EastNorth eastNorth = Main.map.mapView.getEastNorth(e.getX(), e.getY());
         currentLayer.shearPictureBy(
             1000* (eastNorth.east() - prevEastNorth.east()),
             1000* (eastNorth.north() - prevEastNorth.north())
         );
     }
-
 }

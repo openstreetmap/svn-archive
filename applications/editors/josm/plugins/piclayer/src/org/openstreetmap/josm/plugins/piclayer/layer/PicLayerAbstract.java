@@ -26,8 +26,8 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
-import java.awt.Toolkit;
 import java.awt.RenderingHints;
+import java.awt.Toolkit;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
@@ -154,7 +154,7 @@ public abstract class PicLayerAbstract extends Layer {
         transformer = new PictureTransform();
 
         // If the map does not exist - we're screwed. We should not get into this situation in the first place!
-        if ( Main.map != null && Main.map.mapView != null ) {
+        if (Main.map != null && Main.map.mapView != null) {
 
             EastNorth center = Main.map.mapView.getCenter();
 
@@ -169,7 +169,7 @@ public abstract class PicLayerAbstract extends Layer {
 
         // Create image
         image = createImage();
-        if ( image == null ) {
+        if (image == null) {
             throw new IOException(tr("PicLayer failed to load or import the image."));
         }
         // Load image completely
@@ -187,16 +187,21 @@ public abstract class PicLayerAbstract extends Layer {
     protected abstract Image createImage() throws IOException;
 
     protected abstract void lookForCalibration() throws IOException;
+
     /**
      * To be overridden by subclasses. Returns the user readable name of the layer.
      */
     public abstract String getPicLayerName();
 
     @Override
-    public Icon getIcon() { return layerIcon; }
+    public Icon getIcon() {
+        return layerIcon;
+    }
 
     @Override
-    public Object getInfoComponent() { return null; }
+    public Object getInfoComponent() {
+        return null;
+    }
 
     @Override
     public Action[] getMenuEntries() {
@@ -208,7 +213,7 @@ public abstract class PicLayerAbstract extends Layer {
                 new LoadPictureCalibrationAction(this),
                 new LoadPictureCalibrationFromWorldAction(this),
                 SeparatorLayerAction.INSTANCE,
-                new RenameLayerAction(null,this),
+                new RenameLayerAction(null, this),
         };
     }
 
@@ -228,39 +233,39 @@ public abstract class PicLayerAbstract extends Layer {
     @Override
     public void paint(Graphics2D g2, MapView mv, Bounds bounds) {
 
-        if ( image != null) {
+        if (image != null) {
 
             // Position image at the right graphical place
             EastNorth center = mv.getCenter();
-            EastNorth leftop = mv.getEastNorth( 0, 0 );
+            EastNorth leftop = mv.getEastNorth(0, 0);
             // Number of pixels for one unit in east north space.
             // This is the same in x- and y- direction.
-            double pixel_per_en = ( mv.getWidth() / 2.0 ) / ( center.east() - leftop.east() );
+            double pixel_per_en = (mv.getWidth() / 2.0) / (center.east() - leftop.east());
 
             //     This is now the offset in screen pixels
             EastNorth imagePosition = transformer.getImagePosition();
-            double pic_offset_x = (( imagePosition.east() - leftop.east() ) * pixel_per_en);
-            double pic_offset_y = (( leftop.north() - imagePosition.north() ) * pixel_per_en);
+            double pic_offset_x = ((imagePosition.east() - leftop.east()) * pixel_per_en);
+            double pic_offset_y = ((leftop.north() - imagePosition.north()) * pixel_per_en);
 
-            Graphics2D g = (Graphics2D)g2.create();
+            Graphics2D g = (Graphics2D) g2.create();
             // Move
-            g.translate( pic_offset_x, pic_offset_y );
+            g.translate(pic_offset_x, pic_offset_y);
 
             // Scale
             double scalex = initialImageScale * pixel_per_en / getMetersPerEasting(imagePosition) / 100;
             double scaley = initialImageScale * pixel_per_en / getMetersPerNorthing(imagePosition) / 100;
-            g.scale( scalex, scaley );
+            g.scale(scalex, scaley);
 
             g.transform(transformer.getTransform());
 
             g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
 
             // Draw picture
-            g.drawImage( image, -image.getWidth(null) / 2, -image.getHeight(null) / 2, null );
+            g.drawImage(image, -image.getWidth(null) / 2, -image.getHeight(null) / 2, null);
 
             // Draw additional rectangle for the active pic layer
             if (mv.getLayerManager().getActiveLayer() == this) {
-                g.setColor( new Color( 0xFF0000 ) );
+                g.setColor(new Color(0xFF0000));
                 g.drawRect(
                     -image.getWidth(null) / 2,
                     -image.getHeight(null) / 2,
@@ -268,9 +273,9 @@ public abstract class PicLayerAbstract extends Layer {
                     image.getHeight(null)
                 );
             }
-            if (drawMarkers ) {
+            if (drawMarkers) {
                 // draw markers for selection
-                Graphics2D gPoints = (Graphics2D)g2.create();
+                Graphics2D gPoints = (Graphics2D) g2.create();
 
                 gPoints.translate(pic_offset_x, pic_offset_y);
 
@@ -281,16 +286,17 @@ public abstract class PicLayerAbstract extends Layer {
 
                 for (int i = 0; i < transformer.getOriginPoints().size(); i++) {
                    Point2D trP = tr.transform(transformer.getOriginPoints().get(i), null);
-                   int x = (int)trP.getX(), y = (int)trP.getY();
+                   int x = (int) trP.getX(), y = (int) trP.getY();
 
                    int dstx = x-pinAnchorX;
                    int dsty = y-pinAnchorY;
-                   gPoints.drawImage(pinTiledImage, dstx, dsty, dstx+pinWidth, dsty+pinHeight, pinTileOffsetX[i], pinTileOffsetY[i], pinTileOffsetX[i]+pinWidth, pinTileOffsetY[i]+pinHeight, null);
+                   gPoints.drawImage(pinTiledImage, dstx, dsty, dstx+pinWidth, dsty+pinHeight,
+                           pinTileOffsetX[i], pinTileOffsetY[i], pinTileOffsetX[i]+pinWidth, pinTileOffsetY[i]+pinHeight, null);
                 }
             }
         } else {
             // TODO: proper logging
-            System.out.println( "PicLayerAbstract::paint - general drawing error (image is null or Graphics not 2D" );
+            System.out.println("PicLayerAbstract::paint - general drawing error (image is null or Graphics not 2D");
         }
     }
 
@@ -343,7 +349,7 @@ public abstract class PicLayerAbstract extends Layer {
      * rotation.
      */
     public void visitBoundingBox(BoundingXYVisitor arg0) {
-        if ( image == null )
+        if (image == null)
             return;
         String projcode = projection.toCode();
 
@@ -353,7 +359,7 @@ public abstract class PicLayerAbstract extends Layer {
         // in meters, depending on the projection used at creation), but the
         // initial scale is in m/100pix
         // So for now, we support the bounding box only when everything is in meters
-        if (projcode.equals("EPSG:4326") )
+        if (projcode.equals("EPSG:4326"))
             return;
 
         EastNorth center = transformer.getImagePosition();
@@ -379,7 +385,7 @@ public abstract class PicLayerAbstract extends Layer {
      * Saves the calibration data into properties structure
      * @param props Properties to save to
      */
-    public void saveCalibration( Properties props ) {
+    public void saveCalibration(Properties props) {
         // Save
         double[] matrix = new double[6];
         transformer.getTransform().getMatrix(matrix);
@@ -400,7 +406,6 @@ public abstract class PicLayerAbstract extends Layer {
     /**
      * Loads calibration data from file
      * @param file The file to read from
-     * @return
      */
     public void loadCalibration(InputStream is) throws IOException {
         Properties props = new Properties();
@@ -411,9 +416,8 @@ public abstract class PicLayerAbstract extends Layer {
     /**
      * Loads calibration data from properties structure
      * @param props Properties to load from
-     * @return
      */
-    public void loadCalibration( Properties props ) {
+    public void loadCalibration(Properties props) {
         // Load
 
         AffineTransform transform;
@@ -425,7 +429,7 @@ public abstract class PicLayerAbstract extends Layer {
         transformer.setImagePosition(imagePosition);
 
         initialImageScale = Double.valueOf(props.getProperty(INITIAL_SCALE, "1")); //in_scale
-        if (props.containsKey(SCALEX)) {// old format
+        if (props.containsKey(SCALEX)) { // old format
             //double in_pos_x = Double.valueOf(props.getProperty(INITIAL_POS_X, "0"));
             //double in_pos_y = Double.valueOf(props.getProperty(INITIAL_POS_Y, "0"));
             double angle = Double.valueOf(props.getProperty(ANGLE, "0"));
@@ -458,17 +462,17 @@ public abstract class PicLayerAbstract extends Layer {
     }
 
     public void loadWorldfile(InputStream is) throws IOException {
-        
+
         try (
             Reader reader = new InputStreamReader(is);
             BufferedReader br = new BufferedReader(reader)
         ) {
-            double e[] = new double[6];
-            for (int i=0; i<6; ++i) {
+            double[] e = new double[6];
+            for (int i = 0; i < 6; ++i) {
                 String line = br.readLine();
                 e[i] = Double.parseDouble(line);
             }
-            double sx=e[0], ry=e[1], rx=e[2], sy=e[3], dx=e[4], dy=e[5];
+            double sx = e[0], ry = e[1], rx = e[2], sy = e[3], dx = e[4], dy = e[5];
             int w = image.getWidth(null);
             int h = image.getHeight(null);
             EastNorth imagePosition = new EastNorth(
@@ -497,15 +501,15 @@ public abstract class PicLayerAbstract extends Layer {
         // Position image at the right graphical place
 
         EastNorth center = Main.map.mapView.getCenter();
-        EastNorth leftop = Main.map.mapView.getEastNorth( 0, 0 );
+        EastNorth leftop = Main.map.mapView.getEastNorth(0, 0);
         // Number of pixels for one unit in east north space.
         // This is the same in x- and y- direction.
-        double pixel_per_en = ( Main.map.mapView.getWidth() / 2.0 ) / ( center.east() - leftop.east() );
+        double pixel_per_en = (Main.map.mapView.getWidth() / 2.0) / (center.east() - leftop.east());
 
         EastNorth imageCenter = transformer.getImagePosition();
         //     This is now the offset in screen pixels
-        double pic_offset_x = (( imageCenter.east() - leftop.east() ) * pixel_per_en);
-        double pic_offset_y = (( leftop.north() - imageCenter.north() ) * pixel_per_en); // something bad...
+        double pic_offset_x = ((imageCenter.east() - leftop.east()) * pixel_per_en);
+        double pic_offset_y = ((leftop.north() - imageCenter.north()) * pixel_per_en); // something bad...
 
         AffineTransform pointTrans = AffineTransform.getTranslateInstance(pic_offset_x, pic_offset_y);
 
@@ -526,7 +530,6 @@ public abstract class PicLayerAbstract extends Layer {
     public void movePictureBy(double x, double y) {
         transformer.setImagePosition(transformer.getImagePosition().add(x, y));
     }
-
 
     public void rotatePictureBy(double angle) {
         try {
@@ -571,11 +574,12 @@ public abstract class PicLayerAbstract extends Layer {
         try {
             Point2D pressed = transformPoint(point);
             double mindist = 10;
-            for (Point2D p : transformer.getOriginPoints())
+            for (Point2D p : transformer.getOriginPoints()) {
                 if (p.distance(pressed) < mindist) { // if user clicked to select some of origin point
                     selected = p;
                     mindist = p.distance(pressed);
                 }
+            }
             return selected;
         } catch (NoninvertibleTransformException e) {
             e.printStackTrace();

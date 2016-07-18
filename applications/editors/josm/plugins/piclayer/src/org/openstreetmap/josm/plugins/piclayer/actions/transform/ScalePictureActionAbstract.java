@@ -37,25 +37,24 @@ public abstract class ScalePictureActionAbstract extends GenericPicTransformActi
     /**
      * Constructor
      */
-    public ScalePictureActionAbstract (String name, String actionName, String icon, String tooltip, MapFrame frame) {
+    public ScalePictureActionAbstract(String name, String actionName, String icon, String tooltip, MapFrame frame) {
         super(name, actionName, icon, tooltip, frame, ImageProvider.getCursor("crosshair", null));
     }
 
     @Override
     protected void doAction(MouseEvent e) {
         double factor;
-        if ( ( e.getModifiersEx() & InputEvent.SHIFT_DOWN_MASK ) != 0 ) {
+        if ((e.getModifiersEx() & InputEvent.SHIFT_DOWN_MASK) != 0) {
             factor = Main.pref.getDouble("piclayer.scalefactors.high_precision", 1.0005);
-        }
-        else {
+        } else {
             factor = Main.pref.getDouble("piclayer.scalefactors.low_precision", 1.015);
         }
-        doTheScale( Math.pow(factor, prevMousePoint.getY() - e.getY() ) );
+        doTheScale(Math.pow(factor, prevMousePoint.getY() - e.getY()));
     }
 
     /**
      * Does the actual scaling in the inherited class.
      */
-     protected abstract void doTheScale( double scale );
+     protected abstract void doTheScale(double scale);
 
 }

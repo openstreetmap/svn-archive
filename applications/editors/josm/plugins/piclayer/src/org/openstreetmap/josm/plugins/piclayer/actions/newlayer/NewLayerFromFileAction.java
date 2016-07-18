@@ -58,38 +58,38 @@ public class NewLayerFromFileAction extends JosmAction {
 
         private String[] supportedExtensions;
 
-        public ImageFileFilter() {
+        ImageFileFilter() {
             List<String> extensions = new ArrayList<>();
             extensions.add("zip");
             extensions.add("kml");
-            for (String ext : ImageIO.getReaderFormatNames())
+            for (String ext : ImageIO.getReaderFormatNames()) {
                 extensions.add(ext);
+            }
             supportedExtensions = extensions.toArray(new String[0]);
         }
 
         @Override
         public boolean accept(File f) {
-            if ( f.isDirectory() )
+            if (f.isDirectory())
                 return true;
 
             String fileExtension = PicLayerFromFile.getFileExtension(f);
 
             // Unfortunately, getReaderFormatNames does not always return ALL extensions in
             // both lower and upper case, so we can not do a search in the array
-            for (String e: supportedExtensions)
-                if ( e.equalsIgnoreCase(fileExtension) ) {
+            for (String e: supportedExtensions) {
+                if (e.equalsIgnoreCase(fileExtension)) {
                     return true;
                 }
+            }
 
             return false;
         }
-
 
         @Override
         public String getDescription() {
             return tr("Supported image files, *.zip, *.kml");
         }
-
     }
 
     /**
@@ -107,24 +107,24 @@ public class NewLayerFromFileAction extends JosmAction {
 
         // Choose a file
         JFileChooser fc = new JFileChooser(Main.pref.get(m_lastdirprefname));
-        fc.setAcceptAllFileFilterUsed( true );
-        fc.setFileFilter( new ImageFileFilter() );
+        fc.setAcceptAllFileFilterUsed(true);
+        fc.setFileFilter(new ImageFileFilter());
 
         fc.setMultiSelectionEnabled(true);
-        int result = fc.showOpenDialog( Main.parent );
+        int result = fc.showOpenDialog(Main.parent);
 
         // Create a layer?
-        if ( result == JFileChooser.APPROVE_OPTION ) {
+        if (result == JFileChooser.APPROVE_OPTION) {
             // The first loaded layer will be placed at the top of any other layer of the same class,
             // or at the bottom of the stack if there is no such layer yet
             // The next layers we load will be placed one after the other after this first layer
             int newLayerPos = Main.getLayerManager().getLayers().size();
-            for(Layer l : Main.getLayerManager().getLayersOfType(PicLayerAbstract.class)) {
+            for (Layer l : Main.getLayerManager().getLayersOfType(PicLayerAbstract.class)) {
                 int pos = Main.getLayerManager().getLayers().indexOf(l);
                 if (pos < newLayerPos) newLayerPos = pos;
             }
 
-            for(File file : fc.getSelectedFiles() ) {
+            for (File file : fc.getSelectedFiles()) {
                 // TODO: we need a progress bar here, it can take quite some time
 
                 Main.pref.put(m_lastdirprefname, file.getParent());
@@ -149,14 +149,13 @@ public class NewLayerFromFileAction extends JosmAction {
 
     private void addNewLayerFromFile(File file, int newLayerPos, boolean isZoomToLayer) {
         try {
-            PicLayerFromFile layer = new PicLayerFromFile( file );
+            PicLayerFromFile layer = new PicLayerFromFile(file);
             layer.initialize();
 
             placeLayer(layer, newLayerPos, isZoomToLayer);
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             // Failed
-            System.out.println( "NewLayerFromFileAction::actionPerformed - " + e.getMessage() );
+            System.out.println("NewLayerFromFileAction::actionPerformed - " + e.getMessage());
             JOptionPane.showMessageDialog(null, e.getMessage(), tr("Problem occurred"), JOptionPane.WARNING_MESSAGE);
         }
     }
@@ -167,13 +166,14 @@ public class NewLayerFromFileAction extends JosmAction {
         Main.getLayerManager().addLayer(layer);
         Main.map.mapView.moveLayer(layer, newLayerPos++);
 
-        if ( isZoomToLayer && Main.pref.getInteger("piclayer.zoom-on-load", 1) != 0 ) {
+        if (isZoomToLayer && Main.pref.getInteger("piclayer.zoom-on-load", 1) != 0) {
             // if we are loading a single picture file, zoom on it, so that the user can see something
             BoundingXYVisitor v = new BoundingXYVisitor();
             layer.visitBoundingBox(v);
             Main.map.mapView.zoomTo(v);
         }
     }
+
     private void addNewLayerFromKML(File root, KMLGroundOverlay overlay, int newLayerPos) {
         try {
             PicLayerFromKML layer = new PicLayerFromKML(root, overlay);
@@ -182,7 +182,7 @@ public class NewLayerFromFileAction extends JosmAction {
             placeLayer(layer, newLayerPos, true);
         } catch (IOException e) {
             // Failed
-            System.out.println( "NewLayerFromFileAction::actionPerformed - " + e.getMessage() );
+            System.out.println("NewLayerFromFileAction::actionPerformed - " + e.getMessage());
             JOptionPane.showMessageDialog(null, e.getMessage(), tr("Problem occurred"), JOptionPane.WARNING_MESSAGE);
         }
     }

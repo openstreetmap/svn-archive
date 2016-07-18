@@ -41,7 +41,7 @@ public class PicLayerFromClipboard extends PicLayerAbstract {
         // Access the clipboard
         Transferable t = Toolkit.getDefaultToolkit().getSystemClipboard().getContents(null);
         // Check result
-        if ( t == null ) {
+        if (t == null) {
             throw new IOException(tr("Nothing in clipboard"));
         }
 
@@ -49,12 +49,12 @@ public class PicLayerFromClipboard extends PicLayerAbstract {
         // Try to make it an image data
         try {
             if (t.isDataFlavorSupported(DataFlavor.imageFlavor)) {
-                image = (Image)t.getTransferData(DataFlavor.imageFlavor);
+                image = (Image) t.getTransferData(DataFlavor.imageFlavor);
             } else {
                 throw new IOException(tr("The clipboard data is not an image"));
             }
         } catch (UnsupportedFlavorException e) {
-            throw new IOException( e.getMessage() );
+            throw new IOException(e.getMessage());
         }
 
         return image;

@@ -52,7 +52,7 @@ public class PicLayerFromFile extends PicLayerAbstract {
     // Tooltip text
     private String m_tooltiptext;
 
-    public PicLayerFromFile( File file ) {
+    public PicLayerFromFile(File file) {
         // Remember the file
         m_file = file;
 
@@ -101,7 +101,7 @@ public class PicLayerFromFile extends PicLayerAbstract {
                 return null;
             }
         } else {
-            image = ImageIO.read( m_file );
+            image = ImageIO.read(m_file);
             return image;
         }
     }
@@ -125,16 +125,16 @@ public class PicLayerFromFile extends PicLayerAbstract {
         // Manage a potential existing calibration file
 
         String[][] imgExtensions = new String[][] {
-            { ".jpg", ".jpeg" },
-            { ".png" },
-            { ".tif", ".tiff" },
-            { ".bmp" },
+            {".jpg", ".jpeg"},
+            {".png"},
+            {".tif", ".tiff"},
+            {".bmp"},
         };
         String[][] wldExtensions = new String[][] {
-            { ".wld", ".jgw", ".jpgw" },
-            { ".wld", ".pgw", ".pngw" },
-            { ".wld", ".tfw", ".tifw" },
-            { ".wld", ".bmpw", ".bpw"},
+            {".wld", ".jgw", ".jpgw"},
+            {".wld", ".pgw", ".pngw"},
+            {".wld", ".tfw", ".tifw"},
+            {".wld", ".bmpw", ".bpw"},
         };
 
         if (isZip) {
@@ -152,7 +152,7 @@ public class PicLayerFromFile extends PicLayerAbstract {
                     if (dotIdx == -1) return;
                     String extension = imgNameInZip.substring(dotIdx);
                     String namepart = imgNameInZip.substring(0, dotIdx);
-                    for (int i=0; i<imgExtensions.length; ++i) {
+                    for (int i = 0; i < imgExtensions.length; ++i) {
                         if (Arrays.asList(imgExtensions[i]).contains(extension.toLowerCase())) {
                             for (String wldExtension : wldExtensions[i]) {
                                 String wldName = namepart+wldExtension;
@@ -183,7 +183,7 @@ public class PicLayerFromFile extends PicLayerAbstract {
                 if (dotIdx == -1) return;
                 String extension = m_file.getName().substring(dotIdx);
                 String namepart = m_file.getName().substring(0, dotIdx);
-                for (int i=0; i<imgExtensions.length; ++i) {
+                for (int i = 0; i < imgExtensions.length; ++i) {
                     if (Arrays.asList(imgExtensions[i]).contains(extension.toLowerCase())) {
                         for (String wldExtension : wldExtensions[i]) {
                             File wldFile = new File(m_file.getParentFile(), namepart+wldExtension);
@@ -205,13 +205,11 @@ public class PicLayerFromFile extends PicLayerAbstract {
         boolean loadcal = false;
 
         String msg = tr("A calibration file associated to the picture file was found: {0}\n", fileName);
-        if ( policy.equals("yes") ) {
+        if (policy.equals("yes")) {
             loadcal = true;
-        }
-        else if ( policy.equals("no") ) {
+        } else if (policy.equals("no")) {
             loadcal = false;
-        }
-        else if ( policy.equals("ask") ) {
+        } else if (policy.equals("ask")) {
             msg += "\n" + tr("Set \"{0}\" to yes/no/ask in the preferences\n"+
                             "to control the autoloading of calibration files.", prefkey);
             msg += "\n" + tr("Do you want to apply it ?");
@@ -219,8 +217,7 @@ public class PicLayerFromFile extends PicLayerAbstract {
             if (answer == JOptionPane.YES_OPTION) {
                 loadcal = true;
             }
-        }
-        else {
+        } else {
             msg += "\n" + tr("It will be applied automatically.");
             msg += "\n" + tr("Also, from now on, calibration files will always be loaded automatically.");
             msg += "\n" + tr("Set \"{0}\" to yes/no/ask in the preferences\n"+

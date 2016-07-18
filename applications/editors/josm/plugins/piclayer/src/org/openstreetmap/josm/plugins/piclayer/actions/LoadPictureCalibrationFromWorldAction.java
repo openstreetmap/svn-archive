@@ -27,10 +27,10 @@ public class LoadPictureCalibrationFromWorldAction extends JosmAction {
     public void actionPerformed(ActionEvent e) {
 
         JFileChooser fc = new JFileChooser();
-        fc.setAcceptAllFileFilterUsed( true );
-        int result = fc.showOpenDialog(Main.parent );
+        fc.setAcceptAllFileFilterUsed(true);
+        int result = fc.showOpenDialog(Main.parent);
 
-        if ( result == JFileChooser.APPROVE_OPTION ) {
+        if (result == JFileChooser.APPROVE_OPTION) {
 
             // Load
             try {
@@ -38,7 +38,8 @@ public class LoadPictureCalibrationFromWorldAction extends JosmAction {
             } catch (Exception ex) {
                 // Error
                 ex.printStackTrace();
-                JOptionPane.showMessageDialog(Main.parent , tr("Loading file failed: {0}", ex.getMessage()), tr("Problem occurred"), JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(Main.parent,
+                        tr("Loading file failed: {0}", ex.getMessage()), tr("Problem occurred"), JOptionPane.WARNING_MESSAGE);
             }
         }
     }

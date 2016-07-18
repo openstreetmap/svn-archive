@@ -50,7 +50,7 @@ public class LoadPictureCalibrationAction extends JosmAction {
     /**
      * Constructor
      */
-    public LoadPictureCalibrationAction( PicLayerAbstract owner ) {
+    public LoadPictureCalibrationAction(PicLayerAbstract owner) {
         super(tr("Load Picture Calibration..."), null, tr("Loads calibration data from a file"), null, false);
         // Remember the owner...
         m_owner = owner;
@@ -63,12 +63,12 @@ public class LoadPictureCalibrationAction extends JosmAction {
     public void actionPerformed(ActionEvent arg0) {
         // Save dialog
         JFileChooser fc = new JFileChooser();
-        fc.setAcceptAllFileFilterUsed( true );
-        fc.setFileFilter( new CalibrationFileFilter() );
-        fc.setSelectedFile( new File(m_owner.getPicLayerName() + CalibrationFileFilter.EXTENSION));
-        int result = fc.showOpenDialog(Main.parent );
+        fc.setAcceptAllFileFilterUsed(true);
+        fc.setFileFilter(new CalibrationFileFilter());
+        fc.setSelectedFile(new File(m_owner.getPicLayerName() + CalibrationFileFilter.EXTENSION));
+        int result = fc.showOpenDialog(Main.parent);
 
-        if ( result == JFileChooser.APPROVE_OPTION ) {
+        if (result == JFileChooser.APPROVE_OPTION) {
 
             // Load
             try {
@@ -76,7 +76,8 @@ public class LoadPictureCalibrationAction extends JosmAction {
             } catch (Exception e) {
                 // Error
                 e.printStackTrace();
-                JOptionPane.showMessageDialog(Main.parent , tr("Loading file failed: {0}", e.getMessage()), tr("Problem occurred"), JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(Main.parent,
+                        tr("Loading file failed: {0}", e.getMessage()), tr("Problem occurred"), JOptionPane.WARNING_MESSAGE);
             }
         }
     }

@@ -50,7 +50,7 @@ class KMLHandler extends DefaultHandler {
     private List<KMLGroundOverlay> result;
     private KMLGroundOverlay overlay;
 
-    public KMLHandler() {
+    KMLHandler() {
         result = new ArrayList<>();
     }
 

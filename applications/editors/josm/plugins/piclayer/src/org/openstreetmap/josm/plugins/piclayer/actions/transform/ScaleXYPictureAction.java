@@ -28,9 +28,9 @@ import org.openstreetmap.josm.gui.MapFrame;
  * This class handles the input during scaling the picture.
  */
 @SuppressWarnings("serial")
-public class ScaleXYPictureAction extends ScalePictureActionAbstract
-{
-    /*
+public class ScaleXYPictureAction extends ScalePictureActionAbstract {
+
+    /**
      * Constructor
      */
     public ScaleXYPictureAction(MapFrame frame) {
@@ -38,7 +38,7 @@ public class ScaleXYPictureAction extends ScalePictureActionAbstract
     }
 
     @Override
-    public void doTheScale( double scale ) {
-            currentLayer.scalePictureBy( scale, scale );
-        }
+    public void doTheScale(double scale) {
+        currentLayer.scalePictureBy(scale, scale);
+    }
 }

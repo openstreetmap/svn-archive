@@ -73,7 +73,7 @@ public class PicLayerPlugin extends Plugin implements LayerChangeListener, Activ
         super(info);
 
         // Create menu entry
-        
+
         // Add menu items
         MainMenu.add(Main.main.menu.imagerySubMenu, newLayerFromFileAction);
         MainMenu.add(Main.main.menu.imagerySubMenu, newLayerFromClipboardAction);
@@ -88,7 +88,7 @@ public class PicLayerPlugin extends Plugin implements LayerChangeListener, Activ
      */
     @Override
     public void mapFrameInitialized(MapFrame oldFrame, MapFrame newFrame) {
-        if(newFrame != null) {
+        if (newFrame != null) {
             // Create plugin map modes
             MovePictureAction movePictureAction = new MovePictureAction(newFrame);
             MovePointAction movePointAction = new MovePointAction(newFrame);
@@ -113,7 +113,7 @@ public class PicLayerPlugin extends Plugin implements LayerChangeListener, Activ
             buttonList.add(picLayerActionButtonFactory(scaleYPictureAction));
             buttonList.add(picLayerActionButtonFactory(shearPictureAction));
 
-            for(IconToggleButton btn : buttonList) {
+            for (IconToggleButton btn : buttonList) {
                 newFrame.addMapMode(btn);
             }
         }

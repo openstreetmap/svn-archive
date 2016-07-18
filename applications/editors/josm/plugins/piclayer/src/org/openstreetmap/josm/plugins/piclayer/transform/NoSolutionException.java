@@ -1,8 +1,8 @@
 package org.openstreetmap.josm.plugins.piclayer.transform;
 
 class NoSolutionException extends Exception {
-    
-    public NoSolutionException(String message) {
+
+    NoSolutionException(String message) {
         super(message);
     }
 

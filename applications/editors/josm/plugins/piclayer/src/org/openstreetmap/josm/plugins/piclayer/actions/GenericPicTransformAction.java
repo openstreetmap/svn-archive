@@ -56,14 +56,14 @@ public abstract class GenericPicTransformAction extends MapMode implements Mouse
     @Override
     public void mousePressed(MouseEvent e) {
         // Start action
-        if ( Main.getLayerManager().getActiveLayer() instanceof PicLayerAbstract ) {
-            currentLayer = (PicLayerAbstract)Main.getLayerManager().getActiveLayer();
+        if (Main.getLayerManager().getActiveLayer() instanceof PicLayerAbstract) {
+            currentLayer = (PicLayerAbstract) Main.getLayerManager().getActiveLayer();
 
-            if ( currentLayer != null && e.getButton() == MouseEvent.BUTTON1 ) {
+            if (currentLayer != null && e.getButton() == MouseEvent.BUTTON1) {
                 requestFocusInMapView();
                 isDragging = true;
                 prevMousePoint = new Point(e.getPoint());
-                prevEastNorth = Main.map.mapView.getEastNorth(e.getX(),e.getY());
+                prevEastNorth = Main.map.mapView.getEastNorth(e.getX(), e.getY());
                 // try to find and fill selected point if possible
                 selectedPoint = currentLayer.findSelectedPoint(e.getPoint());
                 currentCommand = new TransformCommand(currentLayer, actionName);
@@ -74,10 +74,10 @@ public abstract class GenericPicTransformAction extends MapMode implements Mouse
     @Override
     public void mouseDragged(MouseEvent e) {
         // Call action performing
-        if(isDragging && currentLayer != null) {
+        if (isDragging && currentLayer != null) {
             doAction(e);
             prevMousePoint = new Point(e.getPoint());
-            prevEastNorth = Main.map.mapView.getEastNorth(e.getX(),e.getY());
+            prevEastNorth = Main.map.mapView.getEastNorth(e.getX(), e.getY());
             Main.map.mapView.repaint();
         }
     }
@@ -100,9 +100,8 @@ public abstract class GenericPicTransformAction extends MapMode implements Mouse
     protected void updateDrawPoints(boolean value) {
         Layer active = Main.getLayerManager().getActiveLayer();
         if (active instanceof PicLayerAbstract) {
-            ((PicLayerAbstract)active).setDrawPoints(value);
+            ((PicLayerAbstract) active).setDrawPoints(value);
         }
         Main.map.mapView.repaint();
     }
-
 }

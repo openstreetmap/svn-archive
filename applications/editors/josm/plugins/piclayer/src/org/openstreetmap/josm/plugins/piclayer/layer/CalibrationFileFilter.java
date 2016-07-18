@@ -35,12 +35,10 @@ public class CalibrationFileFilter extends FileFilter {
 
     @Override
     public boolean accept(File f) {
-        String ext3 = ( f.getName().length() > 4 ) ?  f.getName().substring( f.getName().length() - 4 ).toLowerCase() : "";
+        String ext3 = (f.getName().length() > 4) ? f.getName().substring(f.getName().length() - 4).toLowerCase() : "";
 
         // TODO: check what is supported by Java :)
-        return ( f.isDirectory()
-            ||  ext3.equals( EXTENSION )
-            );
+        return (f.isDirectory() || ext3.equals(EXTENSION));
     }
 
     @Override

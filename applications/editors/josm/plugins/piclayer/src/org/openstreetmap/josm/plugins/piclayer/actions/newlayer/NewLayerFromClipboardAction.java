@@ -55,14 +55,13 @@ public class NewLayerFromClipboardAction extends JosmAction {
         // Add layer only if successfully initialized
         try {
             layer.initialize();
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             // Failed
-            System.out.println( "NewLayerFromClipboardAction::actionPerformed - " + e.getMessage() );
+            System.out.println("NewLayerFromClipboardAction::actionPerformed - " + e.getMessage());
             JOptionPane.showMessageDialog(null, e.getMessage(), tr("Problem occurred"), JOptionPane.WARNING_MESSAGE);
             return;
         }
         // Add layer
-        Main.getLayerManager().addLayer( layer );
+        Main.getLayerManager().addLayer(layer);
     }
 }

@@ -27,6 +27,7 @@ public class PicLayerFromKML extends PicLayerAbstract {
         // Set the name of the layer as the base name of the file
         setName(picture.getName());
     }
+
     @Override
     protected Image createImage() throws IOException {
         Image image = ImageIO.read(picture);

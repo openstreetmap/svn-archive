@@ -29,7 +29,7 @@ public class GeoTiffReaderTest {
      * Setup test.
      */
     @Rule
-    public JOSMTestRules rules = new JOSMTestRules().preferences();
+    public JOSMTestRules rules = new JOSMTestRules().preferences().timeout(20000);
 
     @Test
     public void testReadGeoTiffFiles() throws IOException {

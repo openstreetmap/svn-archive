@@ -1,4 +1,4 @@
-// License: GPL (v2 or later)
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.roadsigns;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -52,7 +52,8 @@ public class Sign {
     }
 
     public static class SignParameter {
-        public enum Input {TEXTFIELD, COMBO};
+        public enum Input { TEXTFIELD, COMBO }
+
         public String ident;
         public Input input;
         String deflt;
@@ -72,9 +73,11 @@ public class Sign {
         public String getDefault() {
             return deflt == null ? "" : deflt;
         }
+
         public String getPrefix() {
             return prefix == null ? "" : prefix;
         }
+
         public String getSuffix() {
             return suffix == null ? "" : suffix;
         }
@@ -100,21 +103,17 @@ public class Sign {
         /* strip parameters */
         r = r.replaceAll("\\[.*\\]", "");
         if (r.startsWith("DE:")) {
-            r=r.replaceAll("DE:", "");
+            r = r.replaceAll("DE:", "");
             /* normal sign: starts with 3 digits, then a non-digit */
-            {
-                Pattern p = Pattern.compile("^\\d{3}(\\D|$)");
-                Matcher m = p.matcher(r);
-                if (m.find())
-                    return tr("Sign {0}", r);
-            }
+            Pattern p1 = Pattern.compile("^\\d{3}(\\D|$)");
+            Matcher m1 = p1.matcher(r);
+            if (m1.find())
+                return tr("Sign {0}", r);
             /* supplementary sign: starts with 4 digits, then a non-digit */
-            {
-                Pattern p = Pattern.compile("^\\d{4}(\\D|$)");
-                Matcher m = p.matcher(r);
-                if (m.find())
-                    return tr("Additional sign {0}", r);
-            }
+            Pattern p2 = Pattern.compile("^\\d{4}(\\D|$)");
+            Matcher m2 = p2.matcher(r);
+            if (m2.find())
+                return tr("Additional sign {0}", r);
             return null;
         }
         return null;

@@ -1,4 +1,4 @@
-// License: GPL (v2 or later)
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.roadsigns;
 
 import java.util.ArrayList;
@@ -27,7 +27,7 @@ public class ParametrizedString {
      * Describes the union of String and Parameter type. Both
      * types have a single String object as their backing data.
      */
-    public static interface StringOrParameter {
+    public interface StringOrParameter {
     }
 
     public static class Prm implements StringOrParameter {

@@ -1,4 +1,4 @@
-// License: GPL (v2 or later)
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.roadsigns;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -14,12 +14,6 @@ import java.util.Map;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParserFactory;
 
-import org.xml.sax.Attributes;
-import org.xml.sax.InputSource;
-import org.xml.sax.Locator;
-import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
-import org.xml.sax.helpers.DefaultHandler;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.plugins.roadsigns.Sign.SignParameter;
 import org.openstreetmap.josm.plugins.roadsigns.Sign.Tag;
@@ -27,6 +21,12 @@ import org.openstreetmap.josm.plugins.roadsigns.javacc.ParseException;
 import org.openstreetmap.josm.plugins.roadsigns.javacc.TokenMgrError;
 import org.openstreetmap.josm.tools.LanguageInfo;
 import org.openstreetmap.josm.tools.XmlParsingException;
+import org.xml.sax.Attributes;
+import org.xml.sax.InputSource;
+import org.xml.sax.Locator;
+import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
+import org.xml.sax.helpers.DefaultHandler;
 
 /**
  * Parses a road sign preset file.
@@ -59,7 +59,6 @@ public class RoadSignsReader {
         public void setDocumentLocator(Locator locator) {
             this.locator = locator;
         }
-
 
         @Override public void startElement(String ns, String lname, String qname, Attributes atts) throws SAXException {
             if (debug) System.err.println("<"+qname+">: ");
@@ -159,11 +158,12 @@ public class RoadSignsReader {
             }
 
             if (debug) {
-                for (int i=0; i<atts.getLength(); ++i) {
+                for (int i = 0; i < atts.getLength(); ++i) {
                     System.err.println("  "+atts.getQName(i)+": "+atts.getValue(i));
                 }
             }
         }
+
         @Override public void endElement(String ns, String lname, String qname) throws SAXException {
             if (debug) System.err.print("</"+qname+"> |");
             if (unknownLevel > 0) {
@@ -184,6 +184,7 @@ public class RoadSignsReader {
             }
             if (debug) System.err.println("|");
         }
+
         @Override public void characters(char[] ch, int start, int length) {
             String s = new String(ch, start, length);
             characters += s;
@@ -221,6 +222,7 @@ public class RoadSignsReader {
         protected void throwException(Exception e) throws ExtendedParsingException {
             throw new ExtendedParsingException(e).rememberLocation(locator);
         }
+
         protected void throwException(String msg) throws XmlParsingException {
             throw new XmlParsingException(msg).rememberLocation(locator);
         }
@@ -232,6 +234,7 @@ public class RoadSignsReader {
                 System.err.println("Warning: "+ex.getMessage());
             }
         }
+
         public void wireSupplements() throws XmlParsingException {
             Map<String, Sign> map = new HashMap<>();
             for (Sign sign : allSigns) {
@@ -249,7 +252,6 @@ public class RoadSignsReader {
             }
         }
     }
-
 
     public static class ExtendedParsingException extends SAXException {
         private int columnNumber;
@@ -303,8 +305,6 @@ public class RoadSignsReader {
     /**
      *
      * @return True if file was properly parsed, false if there was error during parsing but some data were parsed anyway
-     * @throws SAXException
-     * @throws IOException
      */
     public List<Sign> parse() throws SAXException, IOException {
         SignParser parser = new SignParser();

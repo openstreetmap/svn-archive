@@ -1,4 +1,4 @@
-// License: GPL (v2 or later)
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.roadsigns;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -108,14 +108,14 @@ class RoadSignInputDialog extends ExtendedDialog {
 
     private MultiSplitPane multiSplitPane;
 
-    public RoadSignInputDialog() {
+    RoadSignInputDialog() {
         super(Main.parent, tr("Road Sign Plugin"), new String[] {tr("OK"), tr("Cancel")}, false /* modal */);
         setRememberWindowGeometry(getClass().getName() + ".geometry",
             WindowGeometry.centerInWindow(Main.parent, new Dimension(750, 550)));
 
         this.signs = RoadSignsPlugin.signs;
         sel = new SignSelection();
-        setButtonIcons(new String[] { "ok.png", "cancel.png" });
+        setButtonIcons(new String[] {"ok.png", "cancel.png"});
         final JTabbedPane tabs = new JTabbedPane();
         tabs.add(tr("signs"), buildSignsPanel());
         Action updateAction = new AbstractAction() {
@@ -167,7 +167,7 @@ class RoadSignInputDialog extends ExtendedDialog {
 
     private Command createCommand(Collection<OsmPrimitive> selPrim) {
         List<Command> cmds = new LinkedList<>();
-        for (int i=0; i<previewModel.getRowCount(); i++) {
+        for (int i = 0; i < previewModel.getRowCount(); i++) {
             String key = (String) previewModel.getValueAt(i, 0);
             String value = (String) previewModel.getValueAt(i, 1);
             cmds.add(new ChangePropertyCommand(selPrim, key, value));
@@ -229,11 +229,13 @@ class RoadSignInputDialog extends ExtendedDialog {
         }
         multiSplitPane.add(new JScrollPane(pnlSignSelection), "upperleft");
         multiSplitPane.add(buildPreviewPanel(), "upperright");
-        JScrollPane scroll1 = new JScrollPane(pnlPossibleSigns, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        JScrollPane scroll1 = new JScrollPane(pnlPossibleSigns,
+                JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         scroll1.setPreferredSize(new Dimension(10, 10));
         multiSplitPane.add(scroll1, "middleleft");
 
-        JScrollPane scroll2 = new JScrollPane(pnlPossibleSupplements, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        JScrollPane scroll2 = new JScrollPane(pnlPossibleSupplements,
+                JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         scroll2.setPreferredSize(new Dimension(10, 10));
         multiSplitPane.add(scroll2, "middleright");
         info = new JEditorPane();
@@ -243,7 +245,7 @@ class RoadSignInputDialog extends ExtendedDialog {
         info.setBackground(this.getBackground());
         info.addHyperlinkListener(new HyperlinkListener() {
             @Override
-			public void hyperlinkUpdate(HyperlinkEvent e) {
+            public void hyperlinkUpdate(HyperlinkEvent e) {
                 if (e == null || e.getURL() == null)
                     return;
                 if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
@@ -288,8 +290,8 @@ class RoadSignInputDialog extends ExtendedDialog {
      *
      * Manages the update of gui elements when the selection changes.
      */
-    public class SignSelection  {
-        private final LinkedList<SignCombination> combos=new LinkedList<>();
+    public class SignSelection {
+        private final LinkedList<SignCombination> combos = new LinkedList<>();
 
         public void remove(SignCombination sc) {
             int i = findIndex(sc);
@@ -334,7 +336,7 @@ class RoadSignInputDialog extends ExtendedDialog {
         }
 
         private int findIndex(SignCombination scFind) {
-            int i=0;
+            int i = 0;
             for (SignCombination sc : combos) {
                 if (sc == scFind) {
                     return i;
@@ -345,9 +347,9 @@ class RoadSignInputDialog extends ExtendedDialog {
         }
 
         private Pair<Integer, Integer> findIndex(SignWrapper swFind) {
-            int selIdx=0;
+            int selIdx = 0;
             for (SignCombination sc : combos) {
-                int combIdx=0;
+                int combIdx = 0;
                 for (SignWrapper sw : sc.signs) {
                     if (swFind == sw) {
                         return new Pair<>(selIdx, combIdx);
@@ -363,11 +365,11 @@ class RoadSignInputDialog extends ExtendedDialog {
             panel.removeAll();
             panel.setLayout(new GridBagLayout());
             GridBagConstraints gbc = new GridBagConstraints();
-            gbc.anchor=GridBagConstraints.NORTHWEST;
-            gbc.gridx=0;
-            gbc.gridy=0;
-            gbc.weightx=0;
-            gbc.weighty=1.0;
+            gbc.anchor = GridBagConstraints.NORTHWEST;
+            gbc.gridx = 0;
+            gbc.gridy = 0;
+            gbc.weightx = 0;
+            gbc.weighty = 1.0;
             gbc.insets = new Insets(10, 10, 0, 10);
 
             for (SignCombination sc : combos) {
@@ -394,7 +396,7 @@ class RoadSignInputDialog extends ExtendedDialog {
     public class SignCombination {
         public LinkedList<SignWrapper> signs;
 
-        public SignCombination() {
+        SignCombination() {
             signs = new LinkedList<>();
         }
 
@@ -406,7 +408,7 @@ class RoadSignInputDialog extends ExtendedDialog {
             Border empty = BorderFactory.createEmptyBorder(3, 3, 3, 3);
             panel.setBorder(BorderFactory.createCompoundBorder(etched, empty));
 
-            int i=0;
+            int i = 0;
             for (SignWrapper sw : signs) {
                 GridBagConstraints gbc = new GridBagConstraints();
                 gbc.gridx = 0;
@@ -428,7 +430,7 @@ class RoadSignInputDialog extends ExtendedDialog {
 
         public void add(final Sign sign) {
             if (!signs.isEmpty() && !sign.isSupplementing)
-                throw new IllegalArgumentException("any sign but the first must be a supplement sign");//FIXME
+                throw new IllegalArgumentException("any sign but the first must be a supplement sign"); //FIXME
             final SignWrapper signWrp = new SignWrapper(sign);
             signs.add(signWrp);
         }
@@ -446,12 +448,14 @@ class RoadSignInputDialog extends ExtendedDialog {
         String signRef;
         JPanel paramsPanel;
         Map<String, String> paramValues = new HashMap<>();
-        public SignWrapper(Sign sign) {
+
+        SignWrapper(Sign sign) {
             this.sign = sign;
             for (final SignParameter p : this.sign.params) {
                 paramValues.put(p.ident, p.getDefault());
             }
         }
+
         @Override
         public String toString() {
             return sign.toString();
@@ -474,7 +478,7 @@ class RoadSignInputDialog extends ExtendedDialog {
             if (paramsPanel != null)
                 return paramsPanel;
             paramsPanel = new JPanel(new GridBagLayout());
-            int i=0;
+            int i = 0;
             for (final SignParameter p : this.sign.params) {
                 JPanel pnlInput = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
                 switch (p.input) {
@@ -490,24 +494,26 @@ class RoadSignInputDialog extends ExtendedDialog {
                         }
                         class TFDocumentListener implements DocumentListener {
                             @Override
-							public void insertUpdate(DocumentEvent e) {
+                            public void insertUpdate(DocumentEvent e) {
                                 update();
                             }
 
                             @Override
-							public void removeUpdate(DocumentEvent e) {
+                            public void removeUpdate(DocumentEvent e) {
                                 update();
                             }
 
                             @Override
-							public void changedUpdate(DocumentEvent e) {
+                            public void changedUpdate(DocumentEvent e) {
                                 update();
                             }
+
                             public void update() {
                                 paramValues.put(p.ident, tf.getText());
                                 previewModel.update();
                             }
-                        };
+                        }
+
                         TFDocumentListener listener = new TFDocumentListener();
                         tf.getDocument().addDocumentListener(listener);
                         JLabel lblPrefix = new JLabel(p.getPrefix());
@@ -522,10 +528,10 @@ class RoadSignInputDialog extends ExtendedDialog {
                 GridBagConstraints gbc = new GridBagConstraints();
                 gbc.gridy = i;
                 gbc.anchor = GridBagConstraints.WEST;
-                paramsPanel.add(pnlInput,gbc);
+                paramsPanel.add(pnlInput, gbc);
                 i++;
             }
-            if (i>0) {
+            if (i > 0) {
                 paramsPanel.setBorder(BorderFactory.createEmptyBorder(0, 3, 0, 0));
             }
             return paramsPanel;
@@ -561,7 +567,7 @@ class RoadSignInputDialog extends ExtendedDialog {
         String[][] data = {{}};
         previewTable = new JTable(data, columnNames) {
             @Override
-			public String getToolTipText(MouseEvent e) {
+            public String getToolTipText(MouseEvent e) {
                 int rowIndex = rowAtPoint(e.getPoint());
                 int colIndex = columnAtPoint(e.getPoint());
                 if (rowIndex == -1 || colIndex == -1)
@@ -586,7 +592,7 @@ class RoadSignInputDialog extends ExtendedDialog {
         addTrafficSignTag.setSelected(Main.pref.getBoolean("plugin.roadsigns.addTrafficSignTag"));
         addTrafficSignTag.addActionListener(new ActionListener() {
             @Override
-			public void actionPerformed(ActionEvent e) {
+            public void actionPerformed(ActionEvent e) {
                 previewModel.update();
             }
         });
@@ -600,21 +606,21 @@ class RoadSignInputDialog extends ExtendedDialog {
         private List<String> keys = new ArrayList<>();
         private List<String> values = new ArrayList<>();
 
-        int rows=3;
+        int rows = 3;
         String[] header = {tr("Key"), tr("Value")};
 
         @Override
-		public int getRowCount() {
+        public int getRowCount() {
             return keys.size();
         }
 
         @Override
-		public int getColumnCount() {
+        public int getColumnCount() {
             return 2;
         }
 
         @Override
-		public Object getValueAt(int rowIndex, int columnIndex) {
+        public Object getValueAt(int rowIndex, int columnIndex) {
             if (columnIndex == 0) {
                 return keys.get(rowIndex);
             } else if (columnIndex == 1) {
@@ -632,7 +638,7 @@ class RoadSignInputDialog extends ExtendedDialog {
          * Analyse the selection and derive corresponding tags.
          */
         public void update() {
-            final TreeMap<String, String> map= new TreeMap<>();
+            final TreeMap<String, String> map = new TreeMap<>();
             String traffic_sign = "";
 
             for (SignCombination sc : sel.combos) {
@@ -648,11 +654,9 @@ class RoadSignInputDialog extends ExtendedDialog {
                     String default_value;
                     List<String> values = new ArrayList<>();
                     List<String> conditions = new ArrayList<>();
-                    //String ident;
-                    public TagEvaluater(Tag t) {
+                    TagEvaluater(Tag t) {
                         key = t.key.evaluate(env);
                         default_value = t.value.evaluate(env);
-                        //ident = t.ident;
                     }
 
                     public void append_value(String v) {
@@ -671,7 +675,7 @@ class RoadSignInputDialog extends ExtendedDialog {
                             String sep = "";
                             for (String v : values) {
                                 value += sep+v;
-                                sep=";";
+                                sep = ";";
                             }
                         }
 
@@ -689,7 +693,7 @@ class RoadSignInputDialog extends ExtendedDialog {
 
                 Map<String, TagEvaluater> tags = new LinkedHashMap<>();
                 for (SignWrapper sw : sc.signs) {
-                    for (Map.Entry<String,String> entry : sw.paramValues.entrySet()) {
+                    for (Map.Entry<String, String> entry : sw.paramValues.entrySet()) {
                         env.put(entry.getKey(), entry.getValue());
                     }
                     if (sw.sign.ref != null) {
@@ -712,19 +716,22 @@ class RoadSignInputDialog extends ExtendedDialog {
                             if (t.append_value != null) {
                                 TagEvaluater te = tags.get(t.tag_ref);
                                 if (te == null) {
-                                    System.err.println(String.format("warning: referenced tag with ident '%s' not found for appending tag %s.",t.tag_ref, t.toString()));
+                                    System.err.println(String.format("warning: referenced tag with ident '%s' not found for appending tag %s.",
+                                            t.tag_ref, t.toString()));
                                 } else {
                                     te.append_value(t.append_value.evaluate(env));
                                 }
                             } else if (t.condition != null) {
                                 TagEvaluater te = tags.get(t.tag_ref);
                                 if (te == null) {
-                                    System.err.println(String.format("warning: referenced tag with ident '%s' not found for condition tag %s.",t.tag_ref, t.toString()));
+                                    System.err.println(String.format("warning: referenced tag with ident '%s' not found for condition tag %s.",
+                                            t.tag_ref, t.toString()));
                                 } else {
                                     te.condition(t.condition.evaluate(env));
                                 }
                             } else {
-                                System.err.println(String.format("warning: found tag_ref but neither append_value nor condition for tag %s.", t.toString()));
+                                System.err.println(String.format("warning: found tag_ref but neither append_value nor condition for tag %s.",
+                                        t.toString()));
                             }
                         } else if (t.ident != null) {
                             env.put(t.ident+"_key", t.key.evaluate(env));
@@ -737,7 +744,6 @@ class RoadSignInputDialog extends ExtendedDialog {
                         } else {
                             map.put(t.key.evaluate(env), t.value.evaluate(env));
                         }
-
                     }
                 }
                 for (TagEvaluater te : tags.values()) {
@@ -775,16 +781,17 @@ class RoadSignInputDialog extends ExtendedDialog {
      */
     private class SignClickListener extends MouseAdapter {
         private Sign sign;
-        public SignClickListener(Sign sign) {
+        SignClickListener(Sign sign) {
             this.sign = sign;
         }
+
         @Override
         public void mouseClicked(MouseEvent e) {
             info.setText(longText());
             /* scroll up again */
-            SwingUtilities.invokeLater(new Runnable(){
+            SwingUtilities.invokeLater(new Runnable() {
                 @Override
-				public void run() {
+                public void run() {
                     scrollInfo.getVerticalScrollBar().setValue(0);
                 }
             });
@@ -813,7 +820,7 @@ class RoadSignInputDialog extends ExtendedDialog {
                     txt.append("<a href=\""+link+"\">"+link+"</a>");
                     txt.append("<br>");
                 }
-                if (sign.wiki != null && ! sign.wiki.equals(sign.loc_wiki)) {
+                if (sign.wiki != null && !sign.wiki.equals(sign.loc_wiki)) {
                     String link = wikiPrefix+sign.wiki;
                     txt.append("<a href=\""+link+"\">"+link+"</a>");
                 }
@@ -830,7 +837,7 @@ class RoadSignInputDialog extends ExtendedDialog {
      * component.)
      */
     public static class FixedWidthPanel extends JPanel implements Scrollable {
-        public FixedWidthPanel() {
+        FixedWidthPanel() {
             super(new FlowLayout(FlowLayout.LEFT));
         }
 
@@ -845,29 +852,29 @@ class RoadSignInputDialog extends ExtendedDialog {
         }
 
         @Override
-		public Dimension getPreferredScrollableViewportSize() {
+        public Dimension getPreferredScrollableViewportSize() {
             return super.getPreferredSize();
         }
 
         @Override
-		public int getScrollableUnitIncrement( Rectangle visibleRect, int orientation, int direction ) {
+        public int getScrollableUnitIncrement(Rectangle visibleRect, int orientation, int direction) {
             final int FRAC = 20;
             int inc = (orientation == SwingConstants.VERTICAL ? getParent().getHeight() : getParent().getWidth()) / FRAC;
             return Math.max(inc, 1);
         }
 
         @Override
-		public int getScrollableBlockIncrement( Rectangle visibleRect, int orientation, int direction ) {
+        public int getScrollableBlockIncrement(Rectangle visibleRect, int orientation, int direction) {
             return orientation == SwingConstants.VERTICAL ? getParent().getHeight() : getParent().getWidth();
         }
 
         @Override
-		public boolean getScrollableTracksViewportWidth() {
+        public boolean getScrollableTracksViewportWidth() {
             return true;
         }
 
         @Override
-		public boolean getScrollableTracksViewportHeight() {
+        public boolean getScrollableTracksViewportHeight() {
             return false;
         }
 
@@ -892,7 +899,7 @@ class RoadSignInputDialog extends ExtendedDialog {
         private JComboBox<PresetMetaData> selectionBox;
         JRadioButton rbAll, rbUseful;
 
-        public SettingsPanel(boolean standalone, final Action update) {
+        SettingsPanel(boolean standalone, final Action update) {
             super(new GridBagLayout());
             presetsData = RoadSignsPlugin.getAvailablePresetsMetaData();
 

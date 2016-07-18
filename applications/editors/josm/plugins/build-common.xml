@@ -507,6 +507,7 @@
                                                                          org/marvinproject/**/*.java,
                                                                          org/netbeans/**/*.java,
 																		 org/openstreetmap/josm/plugins/ohe/parser/**/*.java
+																		 org/openstreetmap/josm/plugins/roadsigns/javacc/**/*.java
                                                                          org/osgeo/**/*.java"/>
             <fileset dir="${basedir}/test" includes="**/*.java" erroronmissingdir="false"/>
             <formatter type="xml" toFile="checkstyle-josm-${ant.project.name}.xml"/>

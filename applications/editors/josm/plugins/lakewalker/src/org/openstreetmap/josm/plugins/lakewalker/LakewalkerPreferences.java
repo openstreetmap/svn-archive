@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.lakewalker;
 
 import static org.openstreetmap.josm.tools.I18n.marktr;
@@ -108,8 +109,8 @@ public class LakewalkerPreferences extends DefaultTabPreferenceSetting {
     }
 
     public void buildPreferences(JPanel prefPanel) {
-        GBC labelConstraints = GBC.std().insets(10,5,5,0);
-        GBC dataConstraints = GBC.eol().insets(0,5,0,0).fill(GridBagConstraints.HORIZONTAL);
+        GBC labelConstraints = GBC.std().insets(10, 5, 5, 0);
+        GBC dataConstraints = GBC.eol().insets(0, 5, 0, 0).fill(GridBagConstraints.HORIZONTAL);
 
         prefPanel.add(maxSegsLabel, labelConstraints);
         prefPanel.add(maxSegsConfig.getControls(), dataConstraints);

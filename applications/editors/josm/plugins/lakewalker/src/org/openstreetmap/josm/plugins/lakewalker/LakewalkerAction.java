@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.lakewalker;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -48,7 +49,7 @@ class LakewalkerAction extends JosmAction implements MouseListener {
     protected Collection<Command> commands = new LinkedList<>();
     protected Collection<Way> ways = new ArrayList<>();
 
-    public LakewalkerAction(String name) {
+    LakewalkerAction(String name) {
         super(name, "lakewalker-sml", tr("Lake Walker."),
         Shortcut.registerShortcut("tools:lakewalker", tr("Tool: {0}", tr("Lake Walker")),
         KeyEvent.VK_L, Shortcut.ALT_CTRL_SHIFT), true);
@@ -57,7 +58,7 @@ class LakewalkerAction extends JosmAction implements MouseListener {
     }
 
     public void actionPerformed(ActionEvent e) {
-        if(Main.map == null || Main.map.mapView == null || active)
+        if (Main.map == null || Main.map.mapView == null || active)
             return;
 
         active = true;
@@ -78,12 +79,12 @@ class LakewalkerAction extends JosmAction implements MouseListener {
             File wmsCacheDir = new File(LakewalkerPlugin.getLakewalkerCacheDir(), wmsFolder);
 
             if (wmsCacheDir.exists() && wmsCacheDir.isDirectory()) {
-                File wmsCache[] = wmsCacheDir.listFiles();
+                File[] wmsCache = wmsCacheDir.listFiles();
 
                 // sort files by date (most recent first)
                 Arrays.sort(wmsCache, new Comparator<File>() {
                     public int compare(File f1, File f2) {
-                        return (int)(f2.lastModified()-f1.lastModified());
+                        return (int) (f2.lastModified()-f1.lastModified());
                     }
                 });
 
@@ -109,13 +110,13 @@ class LakewalkerAction extends JosmAction implements MouseListener {
                 // create cache directory
                 if (!wmsCacheDir.mkdirs()) {
                     JOptionPane.showMessageDialog(Main.parent,
-                    		tr("Error creating cache directory: {0}", wmsCacheDir.getPath()));
+                            tr("Error creating cache directory: {0}", wmsCacheDir.getPath()));
                 }
             }
         }
     }
 
-    protected void lakewalk(Point clickPoint){
+    protected void lakewalk(Point clickPoint) {
         // Positional data
         final LatLon pos = Main.map.mapView.getLatLon(clickPoint.x, clickPoint.y);
         final LatLon topLeft = Main.map.mapView.getLatLon(0, 0);
@@ -135,14 +136,15 @@ class LakewalkerAction extends JosmAction implements MouseListener {
         final String wmslayer = Main.pref.get(LakewalkerPreferences.PREF_WMS, "IR1");
 
         try {
-            PleaseWaitRunnable lakewalkerTask = new PleaseWaitRunnable(tr("Tracing")){
+            PleaseWaitRunnable lakewalkerTask = new PleaseWaitRunnable(tr("Tracing")) {
                 @Override protected void realRun() throws SAXException {
                     progressMonitor.subTask(tr("checking cache..."));
                     cleanupCache();
                     processnodelist(pos, topLeft, botRight, waylen, maxnode, threshold,
-                            epsilon,resolution,tilesize,startdir,wmslayer,
+                            epsilon, resolution, tilesize, startdir, wmslayer,
                             progressMonitor.createSubTaskMonitor(ProgressMonitor.ALL_TICKS, false));
                 }
+
                 @Override protected void finish() {
                 }
 
@@ -152,23 +154,22 @@ class LakewalkerAction extends JosmAction implements MouseListener {
             };
             Thread executeThread = new Thread(lakewalkerTask);
             executeThread.start();
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
           System.out.println("Exception caught: " + ex.getMessage());
         }
     }
 
     private void processnodelist(LatLon pos, LatLon topLeft, LatLon botRight, int waylen, int maxnode, int threshold,
-    		double epsilon, int resolution, int tilesize, String startdir, String wmslayer, ProgressMonitor progressMonitor){
+            double epsilon, int resolution, int tilesize, String startdir, String wmslayer, ProgressMonitor progressMonitor) {
         progressMonitor.beginTask(null, 3);
         try {
             ArrayList<double[]> nodelist = new ArrayList<>();
 
-            Lakewalker lw = new Lakewalker(waylen,maxnode,threshold,epsilon,resolution,tilesize,startdir,wmslayer);
+            Lakewalker lw = new Lakewalker(waylen, maxnode, threshold, epsilon, resolution, tilesize, startdir, wmslayer);
             try {
-                nodelist = lw.trace(pos.lat(),pos.lon(),topLeft.lon(),botRight.lon(),topLeft.lat(),botRight.lat(),
+                nodelist = lw.trace(pos.lat(), pos.lon(), topLeft.lon(), botRight.lon(), topLeft.lat(), botRight.lat(),
                         progressMonitor.createSubTaskMonitor(1, false));
-            } catch(LakewalkerException e){
+            } catch (LakewalkerException e) {
                 System.out.println(e.getMessage());
             }
 
@@ -225,7 +226,7 @@ class LakewalkerAction extends JosmAction implements MouseListener {
 
             int nodesinway = 0;
 
-            for(int i = 0; i< nodelist.size(); i++){
+            for (int i = 0; i < nodelist.size(); i++) {
                 if (cancel) {
                     return;
                 }
@@ -233,7 +234,7 @@ class LakewalkerAction extends JosmAction implements MouseListener {
                 try {
                     LatLon ll = new LatLon(nodelist.get(i)[0]+northOffset, nodelist.get(i)[1]+eastOffset);
                     n = new Node(ll);
-                    if(fn==null){
+                    if (fn == null) {
                         fn = n;
                     }
                     commands.add(new AddCommand(n));
@@ -244,11 +245,11 @@ class LakewalkerAction extends JosmAction implements MouseListener {
 
                 way.addNode(n);
 
-                if(nodesinway > Main.pref.getInteger(LakewalkerPreferences.PREF_MAX_SEG, 500)){
+                if (nodesinway > Main.pref.getInteger(LakewalkerPreferences.PREF_MAX_SEG, 500)) {
                     String waytype = Main.pref.get(LakewalkerPreferences.PREF_WAYTYPE, "water");
 
-                    if(!waytype.equals("none")){
-                        way.put("natural",waytype);
+                    if (!waytype.equals("none")) {
+                        way.put("natural", waytype);
                     }
 
                     way.put("source", Main.pref.get(LakewalkerPreferences.PREF_SOURCE, "Landsat"));
@@ -266,8 +267,8 @@ class LakewalkerAction extends JosmAction implements MouseListener {
 
             String waytype = Main.pref.get(LakewalkerPreferences.PREF_WAYTYPE, "water");
 
-            if(!waytype.equals("none")){
-                way.put("natural",waytype);
+            if (!waytype.equals("none")) {
+                way.put("natural", waytype);
             }
 
             way.put("source", Main.pref.get(LakewalkerPreferences.PREF_SOURCE, "Landsat"));
@@ -295,8 +296,7 @@ class LakewalkerAction extends JosmAction implements MouseListener {
     }
 
     public void mouseClicked(MouseEvent e) {
-        if(active)
-        {
+        if (active) {
             active = false;
             Main.map.mapView.removeMouseListener(this);
             Main.map.mapView.setCursor(oldCursor);

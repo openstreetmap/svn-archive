@@ -1,21 +1,4 @@
-/*
- * $Id: IntConfigurer.java 874 2006-03-15 14:20:56 +0000 (Wed, 15 Mar 2006) rodneykinney $
- *
- * Copyright (c) 2000-2007 by Rodney Kinney, Brent Easton
- *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Library General Public
- * License (LGPL) as published by the Free Software Foundation.
- *
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Library General Public License for more details.
- *
- * You should have received a copy of the GNU Library General Public
- * License along with this library; if not, copies are available
- * at http://www.opensource.org.
- */
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.lakewalker;
 
 /**
@@ -43,8 +26,7 @@ public class IntConfigurer extends StringConfigurer {
         Integer i = null;
         try {
             i = Integer.valueOf(s);
-        }
-        catch (NumberFormatException e) {
+        } catch (NumberFormatException e) {
             i = null;
         }
         if (i != null) {
@@ -54,9 +36,8 @@ public class IntConfigurer extends StringConfigurer {
 
     public int getIntValue(int defaultValue) {
         if (getValue() instanceof Integer) {
-            return ((Integer)getValue()).intValue();
-        }
-        else {
+            return ((Integer) getValue()).intValue();
+        } else {
             return defaultValue;
         }
     }

@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.lakewalker;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -27,6 +28,6 @@ public class LakewalkerPlugin extends Plugin {
     }
 
     public static File getLakewalkerCacheDir() {
-    	return new File(Main.pref.getCacheDirectory(), "lakewalkerwms");
+        return new File(Main.pref.getCacheDirectory(), "lakewalkerwms");
     }
 }

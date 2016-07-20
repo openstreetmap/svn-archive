@@ -1,28 +1,15 @@
-/*
- * $Id: BooleanConfigurer.java 705 2005-09-15 13:24:50 +0000 (Thu, 15 Sep 2005) rodneykinney $
- *
- * Copyright (c) 2000-2007 by Rodney Kinney, Brent Easton
- *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Library General Public
- * License (LGPL) as published by the Free Software Foundation.
- *
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Library General Public License for more details.
- *
- * You should have received a copy of the GNU Library General Public
- * License along with this library; if not, copies are available
- * at http://www.opensource.org.
- */
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.lakewalker;
+
+import java.awt.Component;
+
+import javax.swing.JCheckBox;
 
 /**
  * Configurer for Boolean values
  */
 public class BooleanConfigurer extends Configurer {
-    private javax.swing.JCheckBox box;
+    private JCheckBox box;
 
     public BooleanConfigurer() {
         this(false);
@@ -72,7 +59,7 @@ public class BooleanConfigurer extends Configurer {
     }
 
     @Override
-    public java.awt.Component getControls() {
+    public Component getControls() {
         if (box == null) {
             box = new javax.swing.JCheckBox(getName());
             box.setSelected(booleanValue().booleanValue());

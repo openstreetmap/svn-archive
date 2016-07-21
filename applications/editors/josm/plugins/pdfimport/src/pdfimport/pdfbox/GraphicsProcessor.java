@@ -11,6 +11,7 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.PathIterator;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
@@ -205,7 +206,7 @@ public class GraphicsProcessor {
         this.info.dash = 0;
 
         if (stroke.getDashArray() != null) {
-            this.info.dash = stroke.getDashArray().hashCode();
+            this.info.dash = Arrays.hashCode(stroke.getDashArray());
         }
     }
 

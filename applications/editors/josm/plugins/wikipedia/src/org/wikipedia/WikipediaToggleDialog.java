@@ -11,6 +11,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import javax.swing.AbstractAction;
@@ -42,7 +43,6 @@ import org.openstreetmap.josm.gui.layer.MainLayerManager.ActiveLayerChangeListen
 import org.openstreetmap.josm.tools.ImageProvider;
 import org.openstreetmap.josm.tools.LanguageInfo;
 import org.openstreetmap.josm.tools.OpenBrowser;
-import org.openstreetmap.josm.tools.Utils;
 import org.wikipedia.WikipediaApp.WikipediaEntry;
 
 public class WikipediaToggleDialog extends ToggleDialog implements ActiveLayerChangeListener, DataSetListenerAdapter.Listener {
@@ -72,13 +72,13 @@ public class WikipediaToggleDialog extends ToggleDialog implements ActiveLayerCh
                 @Override
                 public void mouseClicked(MouseEvent e) {
                     if (e.getClickCount() == 2 && getSelectedValue() != null) {
-                        final WikipediaEntry entry = (WikipediaEntry) getSelectedValue();
+                        final WikipediaEntry entry = getSelectedValue();
                         if (entry.coordinate != null) {
                             BoundingXYVisitor bbox = new BoundingXYVisitor();
                             bbox.visit(entry.coordinate);
                             Main.map.mapView.zoomTo(bbox);
                         }
-                        final String search = Utils.firstNonNull(entry.label, entry.wikipediaArticle).replaceAll("\\(.*\\)", "");
+                        final String search = Optional.ofNullable(entry.label).orElse(entry.wikipediaArticle).replaceAll("\\(.*\\)", "");
                         SearchAction.search(search, SearchAction.SearchMode.replace);
                     }
                 }
@@ -260,7 +260,7 @@ public class WikipediaToggleDialog extends ToggleDialog implements ActiveLayerCh
         @Override
         public void actionPerformed(ActionEvent e) {
             if (list.getSelectedValue() != null) {
-                final String url = ((WikipediaEntry) list.getSelectedValue()).getBrowserUrl();
+                final String url = list.getSelectedValue().getBrowserUrl();
                 Main.info("Wikipedia: opening " + url);
                 OpenBrowser.displayUrl(url);
             }
@@ -356,9 +356,9 @@ public class WikipediaToggleDialog extends ToggleDialog implements ActiveLayerCh
         final String language = getLanguageOfFirstItem();
         articles.clear();
         if (Main.main != null && Main.getLayerManager().getEditDataSet() != null) {
-            for (final OsmPrimitive p : Main.getLayerManager().getEditDataSet().allPrimitives()) {
-                articles.addAll(WikipediaApp.getWikipediaArticles(language, p));
-            }
+            Main.getLayerManager().getEditDataSet().allPrimitives().stream()
+                    .flatMap(p -> WikipediaApp.getWikipediaArticles(language, p))
+                    .forEach(articles::add);
         }
     }
 

@@ -20,8 +20,6 @@ import org.openstreetmap.josm.tools.LanguageInfo;
 
 public class WikipediaAddNamesAction extends JosmAction {
 
-    final StringProperty wikipediaLang = new StringProperty("wikipedia.lang", LanguageInfo.getJOSMLocaleCode().substring(0, 2));
-
     public WikipediaAddNamesAction() {
         super(tr("Add names from Wikipedia"), "dialogs/wikipedia",
                 tr("Fetches interwiki links from Wikipedia in order to add several name tags"),

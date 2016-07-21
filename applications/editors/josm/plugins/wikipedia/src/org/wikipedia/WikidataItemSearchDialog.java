@@ -7,7 +7,6 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -29,8 +28,6 @@ import org.openstreetmap.josm.gui.tagging.ac.AutoCompletingComboBox;
 import org.openstreetmap.josm.gui.tagging.ac.AutoCompletionListItem;
 import org.openstreetmap.josm.gui.util.GuiHelper;
 import org.openstreetmap.josm.tools.GBC;
-import org.openstreetmap.josm.tools.Predicate;
-import org.openstreetmap.josm.tools.Utils;
 
 public final class WikidataItemSearchDialog extends ExtendedDialog {
 
@@ -41,12 +38,7 @@ public final class WikidataItemSearchDialog extends ExtendedDialog {
     private WikidataItemSearchDialog() {
         super(Main.parent, tr("Search Wikidata items"), new String[]{tr("Add Tag"), tr("Cancel")});
         this.selector = new Selector();
-        this.selector.setDblClickListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                buttonAction(0, null);
-            }
-        });
+        this.selector.setDblClickListener(e -> buttonAction(0, null));
         this.targetKey = new AutoCompletingComboBox();
         this.targetKey.setEditable(true);
         this.targetKey.setSelectedItem(new AutoCompletionListItem("wikidata"));
@@ -92,12 +84,9 @@ public final class WikidataItemSearchDialog extends ExtendedDialog {
         keys.add(new AutoCompletionListItem("artist:wikidata"));
         keys.add(new AutoCompletionListItem("subject:wikidata"));
         keys.add(new AutoCompletionListItem("name:etymology:wikidata"));
-        keys.addAll(Utils.filter(editDataSet.getAutoCompletionManager().getKeys(), new Predicate<AutoCompletionListItem>() {
-            @Override
-            public boolean evaluate(AutoCompletionListItem object) {
-                return object.getValue().contains("wikidata");
-            }
-        }));
+        editDataSet.getAutoCompletionManager().getKeys().stream()
+                .filter(v -> v.getValue().contains("wikidata"))
+                .forEach(keys::add);
         targetKey.setPossibleACItems(keys);
     }
 
@@ -133,19 +122,11 @@ public final class WikidataItemSearchDialog extends ExtendedDialog {
         @Override
         protected void filterItems() {
             final String query = edSearchText.getText();
-            debouncer.debounce(Void.class, new Runnable() {
-                @Override
-                public void run() {
-                    final List<WikipediaApp.WikidataEntry> entries = query == null || query.isEmpty()
-                            ? Collections.<WikipediaApp.WikidataEntry>emptyList()
-                            : WikipediaApp.getWikidataEntriesForQuery(WikipediaToggleDialog.wikipediaLang.get(), query, Locale.getDefault());
-                    GuiHelper.runInEDT(new Runnable() {
-                        @Override
-                        public void run() {
-                            lsResultModel.setItems(entries);
-                        }
-                    });
-                }
+            debouncer.debounce(getClass(), () -> {
+                final List<WikipediaApp.WikidataEntry> entries = query == null || query.isEmpty()
+                        ? Collections.emptyList()
+                        : WikipediaApp.getWikidataEntriesForQuery(WikipediaToggleDialog.wikipediaLang.get(), query, Locale.getDefault());
+                GuiHelper.runInEDT(() -> lsResultModel.setItems(entries));
             }, 200, TimeUnit.MILLISECONDS);
         }
     }

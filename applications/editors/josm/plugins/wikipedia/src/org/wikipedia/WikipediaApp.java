@@ -19,6 +19,8 @@ import java.util.Scanner;
 import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -36,10 +38,7 @@ import org.openstreetmap.josm.data.osm.Tag;
 import org.openstreetmap.josm.tools.AlphanumComparator;
 import org.openstreetmap.josm.tools.CheckParameterUtil;
 import org.openstreetmap.josm.tools.HttpClient;
-import org.openstreetmap.josm.tools.Predicate;
-import org.openstreetmap.josm.tools.Predicates;
 import org.openstreetmap.josm.tools.Utils;
-import org.openstreetmap.josm.tools.Utils.Function;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -102,7 +101,7 @@ public final class WikipediaApp {
                 }
                 if ("wikidata".equals(wikipediaLang)) {
                     final List<WikidataEntry> withLabel = getLabelForWikidata(entries, Locale.getDefault());
-                    return new ArrayList<WikipediaEntry>(withLabel);
+                    return new ArrayList<>(withLabel);
                 } else {
                     return entries;
                 }
@@ -161,14 +160,9 @@ public final class WikipediaApp {
     }
 
     static List<WikipediaEntry> getEntriesFromClipboard(final String wikipediaLang) {
-        final List<String> clipboardLines = Arrays.asList(Utils.getClipboardContent().split("[\\n\\r]+"));
-        return new ArrayList<>(Utils.transform(clipboardLines, new Function<String, WikipediaEntry>() {
-
-            @Override
-            public WikipediaEntry apply(String x) {
-                return new WikipediaEntry(wikipediaLang, x);
-            }
-        }));
+        return Arrays.stream(Utils.getClipboardContent().split("[\\n\\r]+"))
+                .map(x -> new WikipediaEntry(wikipediaLang, x))
+                .collect(Collectors.toList());
     }
 
     static void updateWIWOSMStatus(String wikipediaLang, Collection<WikipediaEntry> entries) {
@@ -209,26 +203,18 @@ public final class WikipediaApp {
         }
     }
 
-    static Collection<String> getWikipediaArticles(final String wikipediaLang, OsmPrimitive p) {
+    static Stream<String> getWikipediaArticles(final String wikipediaLang, OsmPrimitive p) {
         if ("wikidata".equals(wikipediaLang)) {
-            return Utils.filter(Collections.singleton(p.get("wikidata")), Predicates.not(Predicates.isNull()));
+            return Stream.of(p.get("wikidata")).filter(Objects::nonNull);
         }
         final Map<String, String> tags = p.getKeys();
-        return Utils.transform(Utils.filter(
-                Arrays.asList(
+        return Stream
+                .of(
                         WikipediaLangArticle.parseTag("wikipedia", tags.get("wikipedia")),
                         WikipediaLangArticle.parseTag("wikipedia:" + wikipediaLang, tags.get("wikipedia:" + wikipediaLang))
-                ), new Predicate<WikipediaLangArticle>() {
-            @Override
-            public boolean evaluate(WikipediaLangArticle wp) {
-                return wp != null && wikipediaLang.equals(wp.lang);
-            }
-        }), new Function<WikipediaLangArticle, String>() {
-            @Override
-            public String apply(WikipediaLangArticle wp) {
-                return wp.article;
-            }
-        });
+                ).filter(Objects::nonNull)
+                .filter(wikipediaLang::equals)
+                .map(wp -> wp.article);
     }
 
     /**
@@ -249,12 +235,7 @@ public final class WikipediaApp {
                     "&sites=" + wikipediaLang + "wiki" +
                     "&sitefilter=" + wikipediaLang + "wiki" +
                     "&format=xml" +
-                    "&titles=" + Utils.join("|", Utils.transform(articles, new Function<String, String>() {
-                @Override
-                public String apply(String x) {
-                    return Utils.encodeUrl(x);
-                }
-            }));
+                    "&titles=" + articles.stream().map(Utils::encodeUrl).collect(Collectors.joining("|"));
             final Map<String, String> r = new TreeMap<>();
             try (final InputStream in = HttpClient.create(new URL(url)).setReasonForRequest("Wikipedia").connect().getContent()) {
                 final Document xml = DOCUMENT_BUILDER.parse(in);
@@ -314,17 +295,11 @@ public final class WikipediaApp {
             }
             return entriesWithLabel;
         }
-        final Collection<String> wikidataIds = Utils.transform(entries, new Function<WikipediaEntry, String>() {
-            @Override
-            public String apply(WikipediaEntry x) {
-                return x.wikipediaArticle;
-            }
-        });
         try {
             final String url = "https://www.wikidata.org/w/api.php" +
                     "?action=wbgetentities" +
                     "&props=labels|descriptions" +
-                    "&ids=" + Utils.join("|", wikidataIds) +
+                    "&ids=" + entries.stream().map(x -> x.wikipediaArticle).collect(Collectors.joining("|")) +
                     "&format=xml";
             final Collection<String> languages = new ArrayList<>();
             if (locale != null) {

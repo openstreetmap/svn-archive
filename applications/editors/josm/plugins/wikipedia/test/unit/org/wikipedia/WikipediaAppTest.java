@@ -4,9 +4,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.coor.LatLon;
-import org.openstreetmap.josm.tools.Predicate;
-import org.openstreetmap.josm.tools.Predicates;
-import org.openstreetmap.josm.tools.Utils;
 import org.wikipedia.WikipediaApp.WikipediaEntry;
 import org.wikipedia.WikipediaApp.WikipediaLangArticle;
 
@@ -19,6 +16,7 @@ import java.util.Map;
 import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
@@ -141,12 +139,10 @@ public class WikipediaAppTest {
     public void testFromCoordinates() throws Exception {
         final List<WikipediaEntry> entries = WikipediaApp.getEntriesFromCoordinates("de",
                 new LatLon(52.5179786, 13.3753321), new LatLon(52.5192215, 13.3768705));
-        assertTrue(Utils.exists(entries, new Predicate<WikipediaEntry>() {
-            @Override
-            public boolean evaluate(WikipediaEntry entry) {
-                return "Reichstagsgebäude".equals(entry.wikipediaArticle) && "de".equals(entry.wikipediaLang);
-            }
-        }));
+        final long c = entries.stream()
+                .filter(entry -> "Reichstagsgebäude".equals(entry.wikipediaArticle) && "de".equals(entry.wikipediaLang))
+                .count();
+        assertEquals(1, c);
     }
 
     @Test
@@ -165,12 +161,10 @@ public class WikipediaAppTest {
     public void testFromCoordinatesWikidata() throws Exception {
         final List<WikipediaEntry> entries = WikipediaApp.getEntriesFromCoordinates("wikidata",
                 new LatLon(47.20, 11.30), new LatLon(47.22, 11.32));
-        assertTrue(Utils.exists(entries, new Predicate<WikipediaEntry>() {
-            @Override
-            public boolean evaluate(WikipediaEntry entry) {
-                return "Q865406".equals(entry.wikipediaArticle) && "wikidata".equals(entry.wikipediaLang) && "Birgitzer Alm".equals(entry.label);
-            }
-        }));
+        final long c = entries.stream()
+                .filter(entry -> "Q865406".equals(entry.wikipediaArticle) && "wikidata".equals(entry.wikipediaLang) && "Birgitzer Alm".equals(entry.label))
+                .count();
+        assertEquals(1, c);
     }
 
     @Test
@@ -218,6 +212,6 @@ public class WikipediaAppTest {
     @Test
     public void testCategoriesForPrefix() throws Exception {
         final List<String> categories = WikipediaApp.getCategoriesForPrefix("de", "Gemeinde in Öster");
-        assertTrue(Utils.exists(categories, Predicates.equalTo("Gemeinde in Österreich")));
+        assertTrue(categories.contains("Gemeinde in Österreich"));
     }
 }

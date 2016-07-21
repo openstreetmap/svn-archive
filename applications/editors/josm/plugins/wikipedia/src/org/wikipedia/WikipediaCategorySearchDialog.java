@@ -22,12 +22,7 @@ public final class WikipediaCategorySearchDialog extends ExtendedDialog {
     private WikipediaCategorySearchDialog() {
         super(Main.parent, tr("Search Wikipedia category"), new String[]{tr("Load category"), tr("Cancel")});
         this.selector = new Selector();
-        this.selector.setDblClickListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                buttonAction(0, null);
-            }
-        });
+        this.selector.setDblClickListener(e -> buttonAction(0, null));
 
         setContent(selector, false);
         setPreferredSize(new Dimension(600, 300));
@@ -65,19 +60,11 @@ public final class WikipediaCategorySearchDialog extends ExtendedDialog {
         @Override
         protected void filterItems() {
             final String query = edSearchText.getText();
-            debouncer.debounce(Void.class, new Runnable() {
-                @Override
-                public void run() {
-                    final List<String> entries = query == null || query.isEmpty()
-                            ? Collections.<String>emptyList()
-                            : WikipediaApp.getCategoriesForPrefix(WikipediaToggleDialog.wikipediaLang.get(), query);
-                    GuiHelper.runInEDT(new Runnable() {
-                        @Override
-                        public void run() {
-                            lsResultModel.setItems(entries);
-                        }
-                    });
-                }
+            debouncer.debounce(getClass(), () -> {
+                final List<String> entries = query == null || query.isEmpty()
+                        ? Collections.emptyList()
+                        : WikipediaApp.getCategoriesForPrefix(WikipediaToggleDialog.wikipediaLang.get(), query);
+                GuiHelper.runInEDT(() -> lsResultModel.setItems(entries));
             }, 200, TimeUnit.MILLISECONDS);
         }
     }

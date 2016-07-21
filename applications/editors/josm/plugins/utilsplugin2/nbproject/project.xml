@@ -74,7 +74,7 @@
                 <package-root>src</package-root>
                 <classpath mode="compile">../../core/src;../../core/dist/josm-custom.jar</classpath>
                 <built-to>../../dist/utilsplugin2.jar</built-to>
-                <source-level>1.7</source-level>
+                <source-level>1.8</source-level>
             </compilation-unit>
         </java-data>
     </configuration>

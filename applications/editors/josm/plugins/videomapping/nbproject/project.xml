@@ -60,7 +60,7 @@
             <compilation-unit>
                 <package-root>src</package-root>
                 <classpath mode="compile">../../core/src;../../dist/jna.jar;lib/vlcj-3.1.0-javadoc.jar;lib/vlcj-3.1.0-sources.jar;lib/vlcj-3.1.0.jar</classpath>
-                <source-level>1.7</source-level>
+                <source-level>1.8</source-level>
             </compilation-unit>
         </java-data>
     </configuration>

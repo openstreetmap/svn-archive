@@ -7,7 +7,7 @@
 	<classpathentry kind="src" path="jrender/src"/>
 	<classpathentry kind="src" path="js57toosm/src"/>
 	<classpathentry kind="src" path="josmtos57/src"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/JOSM"/>
 	<classpathentry kind="lib" path="libs/batik-svggen-1.8.jar"/>
 	<classpathentry kind="lib" path="libs/batik-dom-1.8.jar"/>

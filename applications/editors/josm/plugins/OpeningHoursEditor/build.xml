@@ -3,7 +3,7 @@
     <!-- enter the SVN commit message -->
     <property name="commit.message" value="fixed main version"/>
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
-    <property name="plugin.main.version" value="10420"/>
+    <property name="plugin.main.version" value="10580"/>
 	
     <property name="plugin.author" value="Falko Thomale"/>
     <property name="plugin.class" value="org.openstreetmap.josm.plugins.ohe.OhePlugin"/>
@@ -23,7 +23,7 @@
             <arg value="-cp"/>
             <arg value="${javacc.home}/javacc.jar"/>
             <arg value="javacc"/>
-            <arg value="-JDK_VERSION=1.7"/>
+            <arg value="-JDK_VERSION=1.8"/>
             <arg value="-GRAMMAR_ENCODING=UTF-8"/>
             <arg value="-UNICODE_INPUT"/>
             <arg value="-OUTPUT_DIRECTORY=${parser.dir}"/>

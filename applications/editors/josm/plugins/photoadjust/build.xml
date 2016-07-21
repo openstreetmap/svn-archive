@@ -4,7 +4,7 @@
     <!-- enter the SVN commit message -->
     <property name="commit.message" value="Commit message"/>
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
-    <property name="plugin.main.version" value="10279"/>
+    <property name="plugin.main.version" value="10580"/>
 
     <!-- Configure these properties (replace "..." accordingly).
          See https://josm.openstreetmap.de/wiki/DevelopersGuide/DevelopingPlugins
@@ -58,7 +58,7 @@ msgstr ""
             <!-- Paths are relative to javadoc destdir (${plugin.javadoc.dir}). -->
             <link href="../../../core/javadoc/"/>
             <link href="https://josm.openstreetmap.de/doc/"/>
-            <link href="http://docs.oracle.com/javase/7/docs/api/"/>
+            <link href="http://docs.oracle.com/javase/8/docs/api/"/>
         </javadoc>
     </target>
 

@@ -1,6 +1,7 @@
 // License: GPL. See LICENSE file for details./*
 package org.wikipedia;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -10,12 +11,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Scanner;
 import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -144,15 +145,11 @@ public final class WikipediaApp {
                     + "&depth=" + depth
                     + "&cat=" + Utils.encodeUrl(category);
 
-            try (final Scanner scanner = new Scanner(
-                    HttpClient.create(new URL(url)).setReasonForRequest("Wikipedia").connect().getContentReader())
-                    .useDelimiter("\n")) {
-                final List<WikipediaEntry> entries = new ArrayList<>();
-                while (scanner.hasNext()) {
-                    final String article = scanner.next().trim().replace("_", " ");
-                    entries.add(new WikipediaEntry(wikipediaLang, article));
-                }
-                return entries;
+            try (final BufferedReader reader = HttpClient.create(new URL(url)).setReasonForRequest("Wikipedia")
+                    .connect().getContentReader()) {
+                return reader.lines()
+                        .map(line -> new WikipediaEntry(wikipediaLang, line.trim().replace("_", " ")))
+                        .collect(Collectors.toList());
             }
         } catch (IOException ex) {
             throw new RuntimeException(ex);
@@ -160,7 +157,8 @@ public final class WikipediaApp {
     }
 
     static List<WikipediaEntry> getEntriesFromClipboard(final String wikipediaLang) {
-        return Arrays.stream(Utils.getClipboardContent().split("[\\n\\r]+"))
+        return Pattern.compile("[\\n\\r]+")
+                .splitAsStream(Utils.getClipboardContent())
                 .map(x -> new WikipediaEntry(wikipediaLang, x))
                 .collect(Collectors.toList());
     }
@@ -177,22 +175,19 @@ public final class WikipediaApp {
 
             try {
                 final String requestBody = "articles=" + Utils.encodeUrl(articleNames.stream().collect(Collectors.joining(",")));
-                try (final Scanner scanner = new Scanner(
-                        HttpClient.create(new URL(url), "POST").setReasonForRequest("Wikipedia")
+                try (final BufferedReader reader = HttpClient.create(new URL(url), "POST").setReasonForRequest("Wikipedia")
                                 .setHeader("Content-Type", "application/x-www-form-urlencoded")
                                 .setRequestBody(requestBody.getBytes(StandardCharsets.UTF_8))
-                                .connect().getContentReader())
-                        .useDelimiter("\n")) {
-                    while (scanner.hasNext()) {
+                                .connect().getContentReader()) {
+                    reader.lines().forEach(line -> {
                         //[article]\t[0|1]
-                        final String line = scanner.next();
                         final String[] x = line.split("\t");
                         if (x.length == 2) {
                             status.put(x[0], "1".equals(x[1]));
                         } else {
                             Main.error("Unknown element " + line);
                         }
-                    }
+                    });
                 }
             } catch (Exception ex) {
                 throw new RuntimeException(ex);
@@ -207,13 +202,11 @@ public final class WikipediaApp {
         if ("wikidata".equals(wikipediaLang)) {
             return Stream.of(p.get("wikidata")).filter(Objects::nonNull);
         }
-        final Map<String, String> tags = p.getKeys();
         return Stream
-                .of(
-                        WikipediaLangArticle.parseTag("wikipedia", tags.get("wikipedia")),
-                        WikipediaLangArticle.parseTag("wikipedia:" + wikipediaLang, tags.get("wikipedia:" + wikipediaLang))
-                ).filter(Objects::nonNull)
-                .filter(wikipediaLang::equals)
+                .of("wikipedia", "wikipedia:" + wikipediaLang)
+                .map(key -> WikipediaLangArticle.parseTag(key, p.get(key)))
+                .filter(Objects::nonNull)
+                .filter(wp -> wikipediaLang.equals(wp.lang))
                 .map(wp -> wp.article);
     }
 
@@ -222,11 +215,9 @@ public final class WikipediaApp {
      */
     static Map<String, String> getWikidataForArticles(String wikipediaLang, List<String> articles) {
         if (articles.size() > 50) {
-            final Map<String, String> wikidataItems = new HashMap<>();
-            for (final List<String> chunk : partitionList(articles, 50)) {
-                wikidataItems.putAll(getWikidataForArticles(wikipediaLang, chunk));
-            }
-            return wikidataItems;
+            return partitionList(articles, 50).stream()
+                    .flatMap(chunk -> getWikidataForArticles(wikipediaLang, chunk).entrySet().stream())
+                    .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
         }
         try {
             final String url = "https://www.wikidata.org/w/api.php" +
@@ -289,11 +280,9 @@ public final class WikipediaApp {
 
     static List<WikidataEntry> getLabelForWikidata(List<? extends WikipediaEntry> entries, Locale locale, String ... preferredLanguage) {
         if (entries.size() > 50) {
-            final List<WikidataEntry> entriesWithLabel = new ArrayList<>(entries.size());
-            for (final List<? extends WikipediaEntry> chunk : partitionList(entries, 50)) {
-                entriesWithLabel.addAll(getLabelForWikidata(chunk, locale, preferredLanguage));
-            }
-            return entriesWithLabel;
+            return partitionList(entries, 50).stream()
+                    .flatMap(chunk -> getLabelForWikidata(chunk, locale, preferredLanguage).stream())
+                    .collect(Collectors.toList());
         }
         try {
             final String url = "https://www.wikidata.org/w/api.php" +
@@ -500,8 +489,10 @@ public final class WikipediaApp {
 
         @Override
         public int compareTo(WikipediaEntry o) {
-            final int c = AlphanumComparator.getInstance().compare(label, o.label);
-            return c != 0 ? c : AlphanumComparator.getInstance().compare(wikipediaArticle, o.wikipediaArticle);
+            return Comparator
+                    .<WikipediaEntry, String>comparing(x -> x.label, AlphanumComparator.getInstance())
+                    .thenComparing(x -> x.wikipediaArticle, AlphanumComparator.getInstance())
+                    .compare(this, o);
         }
     }
 

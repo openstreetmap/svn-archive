@@ -26,11 +26,7 @@ import java.util.stream.Stream;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathConstants;
-import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
-import javax.xml.xpath.XPathFactory;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.coor.LatLon;
@@ -42,13 +38,12 @@ import org.openstreetmap.josm.tools.HttpClient;
 import org.openstreetmap.josm.tools.Utils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 public final class WikipediaApp {
 
     public static Pattern WIKIDATA_PATTERN = Pattern.compile("Q\\d+");
     private static final DocumentBuilder DOCUMENT_BUILDER = newDocumentBuilder();
-    private static final XPath X_PATH = XPathFactory.newInstance().newXPath();
+    private static final XPath X_PATH = XPath.getInstance();
 
     private WikipediaApp() {
     }
@@ -79,30 +74,22 @@ public final class WikipediaApp {
                     + "&gslimit=500"
                     + "&gsbbox=" + max.lat() + "|" + min.lon() + "|" + min.lat() + "|" + max.lon();
             // parse XML document
-            final XPathExpression xpathPlacemark = X_PATH.compile("//gs");
-            final XPathExpression xpathName = X_PATH.compile("@title");
-            final XPathExpression xpathLat = X_PATH.compile("@lat");
-            final XPathExpression xpathLon = X_PATH.compile("@lon");
             try (final InputStream in = HttpClient.create(new URL(url)).setReasonForRequest("Wikipedia").connect().getContent()) {
                 final Document doc = DOCUMENT_BUILDER.parse(in);
-                final NodeList nodes = (NodeList) xpathPlacemark.evaluate(doc, XPathConstants.NODESET);
-                final List<WikipediaEntry> entries = new ArrayList<>(nodes.getLength());
-                for (int i = 0; i < nodes.getLength(); i++) {
-                    final Node node = nodes.item(i);
-                    final String name = xpathName.evaluate(node);
-                    final LatLon latLon = new LatLon((
-                            (double) xpathLat.evaluate(node, XPathConstants.NUMBER)),
-                            (double) xpathLon.evaluate(node, XPathConstants.NUMBER));
-                    if ("wikidata".equals(wikipediaLang)) {
-                        entries.add(new WikidataEntry(name, null, latLon, null));
-                    } else {
-                        entries.add(new WikipediaEntry(wikipediaLang, name, name, latLon
-                        ));
-                    }
-                }
+                final List<WikipediaEntry> entries = X_PATH.evaluateNodes("//gs", doc).stream()
+                        .map(node -> {
+                            final String name = X_PATH.evaluateString("@title", node);
+                            final LatLon latLon = new LatLon(
+                                    X_PATH.evaluateDouble("@lat", node),
+                                    X_PATH.evaluateDouble("@lon", node));
+                            if ("wikidata".equals(wikipediaLang)) {
+                                return new WikidataEntry(name, null, latLon, null);
+                            } else {
+                                return new WikipediaEntry(wikipediaLang, name, name, latLon);
+                            }
+                        }).collect(Collectors.toList());
                 if ("wikidata".equals(wikipediaLang)) {
-                    final List<WikidataEntry> withLabel = getLabelForWikidata(entries, Locale.getDefault());
-                    return new ArrayList<>(withLabel);
+                    return getLabelForWikidata(entries, Locale.getDefault()).stream().collect(Collectors.toList());
                 } else {
                     return entries;
                 }
@@ -121,18 +108,13 @@ public final class WikipediaApp {
                     "&search=" + Utils.encodeUrl(query) +
                     "&limit=50" +
                     "&format=xml";
-            final List<WikidataEntry> r = new ArrayList<>();
             try (final InputStream in = HttpClient.create(new URL(url)).setReasonForRequest("Wikipedia").connect().getContent()) {
                 final Document xml = DOCUMENT_BUILDER.parse(in);
-                final NodeList nodes = (NodeList) X_PATH.compile("//entity").evaluate(xml, XPathConstants.NODESET);
-                final XPathExpression xpathId = X_PATH.compile("@id");
-                for (int i = 0; i < nodes.getLength(); i++) {
-                    final Node node = nodes.item(i);
-                    final String id = (String) xpathId.evaluate(node, XPathConstants.STRING);
-                    r.add(new WikidataEntry(id, null, null, null));
-                }
+                final List<WikidataEntry> r = X_PATH.evaluateNodes("//entity", xml).stream()
+                        .map(node -> new WikidataEntry(X_PATH.evaluateString("@id", node), null, null, null))
+                        .collect(Collectors.toList());
+                return getLabelForWikidata(r, localeForLabels);
             }
-            return getLabelForWikidata(r, localeForLabels);
         } catch (Exception ex) {
             throw new RuntimeException(ex);
         }
@@ -164,17 +146,12 @@ public final class WikipediaApp {
     }
 
     static void updateWIWOSMStatus(String wikipediaLang, Collection<WikipediaEntry> entries) {
-        Collection<String> articleNames = new ArrayList<>();
-        for (WikipediaEntry i : entries) {
-            articleNames.add(i.wikipediaArticle);
-        }
         Map<String, Boolean> status = new HashMap<>();
-        if (!articleNames.isEmpty()) {
-            final String url = "https://tools.wmflabs.org/wiwosm/osmjson/getGeoJSON.php?action=check"
-                    + "&lang=" + wikipediaLang;
-
+        if (!entries.isEmpty()) {
+            final String url = "https://tools.wmflabs.org/wiwosm/osmjson/getGeoJSON.php?action=check&lang=" + wikipediaLang;
             try {
-                final String requestBody = "articles=" + Utils.encodeUrl(articleNames.stream().collect(Collectors.joining(",")));
+                final String articles = entries.stream().map(i -> i.wikipediaArticle).collect(Collectors.joining(","));
+                final String requestBody = "articles=" + Utils.encodeUrl(articles);
                 try (final BufferedReader reader = HttpClient.create(new URL(url), "POST").setReasonForRequest("Wikipedia")
                                 .setHeader("Content-Type", "application/x-www-form-urlencoded")
                                 .setRequestBody(requestBody.getBytes(StandardCharsets.UTF_8))
@@ -230,13 +207,11 @@ public final class WikipediaApp {
             final Map<String, String> r = new TreeMap<>();
             try (final InputStream in = HttpClient.create(new URL(url)).setReasonForRequest("Wikipedia").connect().getContent()) {
                 final Document xml = DOCUMENT_BUILDER.parse(in);
-                final NodeList nodes = (NodeList) X_PATH.compile("//entity").evaluate(xml, XPathConstants.NODESET);
-                for (int i = 0; i < nodes.getLength(); i++) {
-                    final Node node = nodes.item(i);
-                    final String wikidata = (String) X_PATH.compile("./@id").evaluate(node, XPathConstants.STRING);
-                    final String wikipedia = (String) X_PATH.compile("./sitelinks/sitelink/@title").evaluate(node, XPathConstants.STRING);
+                X_PATH.evaluateNodes("//entity", xml).forEach(node -> {
+                    final String wikidata = X_PATH.evaluateString("./@id", node);
+                    final String wikipedia = X_PATH.evaluateString("./sitelinks/sitelink/@title", node);
                     r.put(wikipedia, wikidata);
-                }
+                });
             }
             return r;
         } catch (Exception ex) {
@@ -256,14 +231,10 @@ public final class WikipediaApp {
             // parse XML document
             try (final InputStream in = HttpClient.create(new URL(url)).setReasonForRequest("Wikipedia").connect().getContent()) {
                 final Document doc = DOCUMENT_BUILDER.parse(in);
-                final NodeList nodes = (NodeList) X_PATH.compile("//ps/@title").evaluate(doc, XPathConstants.NODESET);
-                final List<String> categories = new ArrayList<>(nodes.getLength());
-                for (int i = 0; i < nodes.getLength(); i++) {
-                    final Node node = nodes.item(i);
-                    final String value = node.getNodeValue();
-                    categories.add(value.contains(":") ? value.split(":", 2)[1] : value);
-                }
-                return categories;
+                return X_PATH.evaluateNodes("//ps/@title", doc).stream()
+                        .map(Node::getNodeValue)
+                        .map(value -> value.contains(":") ? value.split(":", 2)[1] : value)
+                        .collect(Collectors.toList());
             }
         } catch (Exception ex) {
             throw new RuntimeException(ex);
@@ -272,7 +243,8 @@ public final class WikipediaApp {
 
     static String getLabelForWikidata(String wikidataId, Locale locale, String ... preferredLanguage) {
         try {
-            return getLabelForWikidata(Collections.singletonList(new WikidataEntry(wikidataId, null, null, null)), locale, preferredLanguage).get(0).label;
+            final List<WikidataEntry> entry = Collections.singletonList(new WikidataEntry(wikidataId, null, null, null));
+            return getLabelForWikidata(entry, locale, preferredLanguage).get(0).label;
         } catch (IndexOutOfBoundsException ignore) {
             return null;
         }
@@ -302,7 +274,7 @@ public final class WikipediaApp {
             try (final InputStream in = HttpClient.create(new URL(url)).setReasonForRequest("Wikipedia").connect().getContent()) {
                 final Document xml = DOCUMENT_BUILDER.parse(in);
                 for (final WikipediaEntry entry : entries) {
-                    final Node entity = (Node) X_PATH.compile("//entity[@id='" + entry.wikipediaArticle + "']").evaluate(xml, XPathConstants.NODE);
+                    final Node entity = X_PATH.evaluateNode("//entity[@id='" + entry.wikipediaArticle + "']", xml);
                     r.add(new WikidataEntry(
                             entry.wikipediaArticle,
                             getFirstField(languages, "label", entity),
@@ -317,17 +289,14 @@ public final class WikipediaApp {
         }
     }
 
-    private static String getFirstField(Iterable<String> languages, String field, Node entity) throws XPathExpressionException {
-        for (String language : languages) {
-            final String label = (String) X_PATH.compile(language != null
-                    ? ".//" + field + "[@language='" + language + "']/@value"
-                    : ".//" + field + "/@value"
-            ).evaluate(entity, XPathConstants.STRING);
-            if (label != null && !label.isEmpty()) {
-                return label;
-            }
-        }
-        return null;
+    private static String getFirstField(Collection<String> languages, String field, Node entity) throws XPathExpressionException {
+        return languages.stream()
+                .map(language -> X_PATH.evaluateString(language != null
+                        ? ".//" + field + "[@language='" + language + "']/@value"
+                        : ".//" + field + "/@value", entity))
+                .filter(label -> label != null && !label.isEmpty())
+                .findFirst()
+                .orElse(null);
     }
 
     static Collection<WikipediaLangArticle> getInterwikiArticles(String wikipediaLang, String article) {
@@ -341,14 +310,13 @@ public final class WikipediaApp {
                     "&format=xml";
             try (final InputStream in = HttpClient.create(new URL(url)).setReasonForRequest("Wikipedia").connect().getContent()) {
                 final Document xml = DOCUMENT_BUILDER.parse(in);
-                final NodeList nodes = (NodeList) X_PATH.compile("//ll").evaluate(xml, XPathConstants.NODESET);
-                for (int i = 0; i < nodes.getLength(); i++) {
-                    final String lang = nodes.item(i).getAttributes().getNamedItem("lang").getTextContent();
-                    final String name = nodes.item(i).getTextContent();
-                    r.add(new WikipediaLangArticle(lang, name));
-                }
+                return X_PATH.evaluateNodes("//ll", xml).stream()
+                        .map(node -> {
+                            final String lang = X_PATH.evaluateString("@lang", node);
+                            final String name = node.getTextContent();
+                            return new WikipediaLangArticle(lang, name);
+                        }).collect(Collectors.toList());
             }
-            return r;
         } catch (Exception ex) {
             throw new RuntimeException(ex);
         }
@@ -363,13 +331,11 @@ public final class WikipediaApp {
                     "&format=xml";
             try (final InputStream in = HttpClient.create(new URL(url)).setReasonForRequest("Wikipedia").connect().getContent()) {
                 final Document xml = DOCUMENT_BUILDER.parse(in);
-                final Node node = (Node) X_PATH.compile("//coordinates/co").evaluate(xml, XPathConstants.NODE);
+                final Node node = X_PATH.evaluateNode("//coordinates/co", xml);
                 if (node == null) {
                     return null;
                 } else {
-                    final double lat = Double.parseDouble(node.getAttributes().getNamedItem("lat").getTextContent());
-                    final double lon = Double.parseDouble(node.getAttributes().getNamedItem("lon").getTextContent());
-                    return new LatLon(lat, lon);
+                    return new LatLon(X_PATH.evaluateDouble("@lat", node), X_PATH.evaluateDouble("@lon", node));
                 }
             }
         } catch (Exception ex) {

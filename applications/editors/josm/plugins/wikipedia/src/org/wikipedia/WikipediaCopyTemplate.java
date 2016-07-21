@@ -99,11 +99,10 @@ public class WikipediaCopyTemplate {
 
         protected Node getSelectedNode() {
             DataSet ds = getLayerManager().getEditDataSet();
-            if (ds == null || ds.getSelected() == null) {
+            if (ds == null) {
                 return null;
             } else {
-                Collection<Node> nodes = Utils.filteredCollection(ds.getSelected(), Node.class);
-                return nodes.isEmpty() ? null : nodes.iterator().next();
+                return (Node) ds.getSelected().stream().filter(Node.class::isInstance).findFirst().orElse(null);
             }
         }
     }

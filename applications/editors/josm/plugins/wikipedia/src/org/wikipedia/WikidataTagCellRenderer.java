@@ -12,13 +12,13 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
+import java.util.stream.Collectors;
 
 import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 
 import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.tools.Predicates;
 import org.openstreetmap.josm.tools.Utils;
 
 public class WikidataTagCellRenderer extends DefaultTableCellRenderer {
@@ -60,7 +60,7 @@ public class WikidataTagCellRenderer extends DefaultTableCellRenderer {
             return renderValues(Collections.singleton(id), table, component);
         } else if (id.contains(";")) {
             final List<String> ids = Arrays.asList(id.split("\\s*;\\s*"));
-            if (Utils.forAll(ids, Predicates.stringMatchesPattern(WikipediaApp.WIKIDATA_PATTERN))) {
+            if (ids.stream().allMatch(i -> WikipediaApp.WIKIDATA_PATTERN.matcher(i).matches())) {
                 return renderValues(ids, table, component);
             }
         }
@@ -93,7 +93,7 @@ public class WikidataTagCellRenderer extends DefaultTableCellRenderer {
             }
             texts.add(WikipediaApp.WikidataEntry.getLabelText(id, label));
         }
-        component.setText("<html>" + Utils.join("; ", texts));
+        component.setText("<html>" + texts.stream().collect(Collectors.joining("; ")));
         component.setToolTipText("<html>" + Utils.joinAsHtmlUnorderedList(texts));
         return component;
     }

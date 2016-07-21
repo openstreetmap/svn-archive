@@ -176,7 +176,7 @@ public final class WikipediaApp {
                     + "&lang=" + wikipediaLang;
 
             try {
-                final String requestBody = "articles=" + Utils.encodeUrl(Utils.join(",", articleNames));
+                final String requestBody = "articles=" + Utils.encodeUrl(articleNames.stream().collect(Collectors.joining(",")));
                 try (final Scanner scanner = new Scanner(
                         HttpClient.create(new URL(url), "POST").setReasonForRequest("Wikipedia")
                                 .setHeader("Content-Type", "application/x-www-form-urlencoded")

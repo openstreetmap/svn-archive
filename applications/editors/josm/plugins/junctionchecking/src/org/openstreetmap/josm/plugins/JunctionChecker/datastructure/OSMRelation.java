@@ -41,8 +41,8 @@ public class OSMRelation extends OSMEntity {
     @Override
     public String toString() {
         String s = ("Relation-ID: " + this.getId() + " Relation-Type: " + this.getRelationType("type") +"\n");
-        for (int i = 0; i < members.size(); i++) {
-            s += ("Member: " + members.get(i).getRole() + ", ref:" + members.get(i).getId() + ", type:" + members.get(i).getType().getClass().getName());
+        for (Member member : members) {
+            s += member.toString();
         }
         return s;
     }
@@ -84,6 +84,11 @@ public class OSMRelation extends OSMEntity {
 
         public String getRole() {
             return role;
+        }
+
+        @Override
+        public String toString() {
+            return "Member: " + getRole() + ", ref:" + getId() + ", type:" + getType().getName();
         }
     }
 }

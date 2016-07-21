@@ -155,12 +155,12 @@ public class OSMXMLReader extends XMLReader {
                     break;
 
                 case XMLStreamConstants.END_ELEMENT:
-                    if (parser.getLocalName() == "node") {
+                    if (parser.getLocalName().equals("node")) {
                         node.setHashmap(hashmap);
                         osmgraph.addNode(node);
                     }
 
-                    if (parser.getLocalName() == "way") {
+                    if (parser.getLocalName().equals("way")) {
                         way.setHashmap(hashmap);
                         osmgraph.addWay(way);
                     }

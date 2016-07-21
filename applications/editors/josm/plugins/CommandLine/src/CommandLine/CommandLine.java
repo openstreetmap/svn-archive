@@ -39,6 +39,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.zip.ZipEntry;
@@ -517,7 +518,7 @@ public class CommandLine extends Plugin {
             synchronized (debugstr) {
                 Main.error(
                         tr("Error executing the script: ") +
-                        debugstr.toString() + e.getMessage() + "\n" + e.getStackTrace());
+                        debugstr.toString() + e.getMessage() + "\n" + Arrays.toString(e.getStackTrace()));
             }
             return;
         }

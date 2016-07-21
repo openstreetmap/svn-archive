@@ -64,6 +64,11 @@ public class ChartImage extends ImageryLayer implements ZoomChangeListener, Char
     }
 
     @Override
+    protected Action getAdjustAction() {
+        return null;
+    }
+
+    @Override
     public void visitBoundingBox(BoundingXYVisitor arg0) {
     }
 

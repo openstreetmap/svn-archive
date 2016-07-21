@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -203,7 +204,7 @@ public class ExtTool {
             synchronized (debugstr) {
                 showErrorMessage(
                         tr("Error executing the script:"),
-                        debugstr.toString() + e.getMessage() + "\n" + e.getStackTrace());
+                        debugstr.toString() + e.getMessage() + "\n" + Arrays.toString(e.getStackTrace()));
             }
             return;
         }

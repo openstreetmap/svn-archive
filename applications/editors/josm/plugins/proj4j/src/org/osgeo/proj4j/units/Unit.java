@@ -86,6 +86,7 @@ public class Unit implements Serializable {
 		return plural;
 	}
 
+  @Override
 	public boolean equals(Object o) {
 		if (o instanceof Unit) {
 			return ((Unit)o).value == value;

@@ -127,7 +127,6 @@ public class SimpleConicProjection extends ConicProjection {
 		del = 0.5 * (p2 - p1);
 		sig = 0.5 * (p2 + p1);
 		err = (Math.abs(del) < EPS || Math.abs(sig) < EPS) ? -42 : 0;
-		del = del;
 
 		if (err != 0)
 			throw new ProjectionException("Error "+err);

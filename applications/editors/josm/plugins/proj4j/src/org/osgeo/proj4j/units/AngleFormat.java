@@ -144,6 +144,7 @@ public class AngleFormat extends NumberFormat {
    * @deprecated
    * @see Angle#parse(String)
    */
+  @Deprecated
 	public Number parse(String text, ParsePosition parsePosition) {
 		double d = 0, m = 0, s = 0;
 		double result;

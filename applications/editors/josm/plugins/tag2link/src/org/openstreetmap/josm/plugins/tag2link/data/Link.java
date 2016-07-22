@@ -29,7 +29,7 @@ public class Link implements Cloneable {
     }
     
     protected final boolean containsParams(String s) {
-        return s.matches("[^{}]*{[^{}]*}[^{}]*");
+        return s.matches("[^{}]*\\{[^{}]*\\}[^{}]*");
     }
     
     public final boolean nameContainsParams() {

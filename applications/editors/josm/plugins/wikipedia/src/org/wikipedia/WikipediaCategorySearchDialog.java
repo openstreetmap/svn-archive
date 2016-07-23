@@ -4,8 +4,6 @@ package org.wikipedia;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -48,11 +46,6 @@ public final class WikipediaCategorySearchDialog extends ExtendedDialog {
 
     public String getCategory() {
         return selector.getSelectedItem();
-    }
-
-    @Override
-    protected void buttonAction(int buttonIndex, ActionEvent evt) {
-        super.buttonAction(buttonIndex, evt);
     }
 
     private static class Selector extends WikiSearchTextResultListPanel<String> {

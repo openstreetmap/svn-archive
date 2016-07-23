@@ -18,7 +18,7 @@ import java.util.Collection;
 
 public class XPath implements javax.xml.xpath.XPath {
     private final javax.xml.xpath.XPath xPath;
-    private static XPath INSTANCE = new XPath(XPathFactory.newInstance().newXPath());
+    private static final XPath INSTANCE = new XPath(XPathFactory.newInstance().newXPath());
 
     private XPath(javax.xml.xpath.XPath xPath) {
         this.xPath = xPath;

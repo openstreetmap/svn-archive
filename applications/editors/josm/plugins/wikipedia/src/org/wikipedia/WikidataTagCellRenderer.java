@@ -69,11 +69,11 @@ public class WikidataTagCellRenderer extends DefaultTableCellRenderer {
 
     protected JLabel renderValues(Collection<String> ids, JTable table, JLabel component) {
 
-        for (String id : ids) {
-            if (!labelCache.containsKey(id)) {
-                labelCache.put(id, Main.worker.submit(new LabelLoader(id, table)));
-            }
-        }
+        ids.stream()
+                .filter(id -> !labelCache.containsKey(id))
+                .forEach(id -> {
+                    labelCache.put(id, Main.worker.submit(new LabelLoader(id, table)));
+                });
 
         final Collection<String> texts = new ArrayList<>(ids.size());
         for (String id : ids) {

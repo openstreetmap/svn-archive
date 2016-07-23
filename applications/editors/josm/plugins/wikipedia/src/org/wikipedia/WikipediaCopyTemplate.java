@@ -17,7 +17,7 @@ import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.gui.MainMenu;
-import org.openstreetmap.josm.tools.Utils;
+import org.openstreetmap.josm.gui.datatransfer.ClipboardUtils;
 
 public class WikipediaCopyTemplate {
 
@@ -82,7 +82,7 @@ public class WikipediaCopyTemplate {
             if (node == null) {
                 return;
             }
-            Utils.copyToClipboard(pattern
+            ClipboardUtils.copyString(pattern
                     .replace("{lat}", Double.toString(node.getCoor().lat()))
                     .replace("{lon}", Double.toString(node.getCoor().lon())));
         }

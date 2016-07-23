@@ -185,9 +185,7 @@ public class WikipediaToggleDialog extends ToggleDialog implements ActiveLayerCh
         @Override
         protected void process(List<WikipediaEntry> chunks) {
             model.clear();
-            for (WikipediaEntry i : chunks) {
-                model.addElement(i);
-            }
+            chunks.forEach(model::addElement);
             updateTitle();
             updateWikipediaArticles();
         }

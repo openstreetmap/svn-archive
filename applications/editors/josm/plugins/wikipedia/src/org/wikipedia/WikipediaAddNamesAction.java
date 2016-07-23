@@ -14,9 +14,7 @@ import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
-import org.openstreetmap.josm.data.preferences.StringProperty;
 import org.openstreetmap.josm.io.remotecontrol.AddTagsDialog;
-import org.openstreetmap.josm.tools.LanguageInfo;
 
 public class WikipediaAddNamesAction extends JosmAction {
 
@@ -30,11 +28,10 @@ public class WikipediaAddNamesAction extends JosmAction {
     public void actionPerformed(ActionEvent e) {
         final WikipediaApp.WikipediaLangArticle wp = WikipediaApp.WikipediaLangArticle.parseTag("wikipedia", getWikipediaValue());
         List<String[]> tags = new ArrayList<>();
-        for (WikipediaApp.WikipediaLangArticle i : WikipediaApp.getInterwikiArticles(wp.lang, wp.article)) {
-            if (useWikipediaLangArticle(i)) {
-                tags.add(new String[]{"name:" + i.lang, i.article});
-            }
-        }
+        WikipediaApp.getInterwikiArticles(wp.lang, wp.article).stream()
+                .filter(this::useWikipediaLangArticle)
+                .map(i -> new String[]{"name:" + i.lang, i.article})
+                .forEach(tags::add);
         if (Main.isDebugEnabled()) {
             Main.debug(tags.toString());
         }

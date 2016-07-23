@@ -26,12 +26,12 @@ import java.util.stream.Stream;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.xpath.XPathExpressionException;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Tag;
+import org.openstreetmap.josm.gui.datatransfer.ClipboardUtils;
 import org.openstreetmap.josm.tools.AlphanumComparator;
 import org.openstreetmap.josm.tools.CheckParameterUtil;
 import org.openstreetmap.josm.tools.HttpClient;
@@ -41,7 +41,7 @@ import org.w3c.dom.Node;
 
 public final class WikipediaApp {
 
-    public static Pattern WIKIDATA_PATTERN = Pattern.compile("Q\\d+");
+    public static final Pattern WIKIDATA_PATTERN = Pattern.compile("Q\\d+");
     private static final DocumentBuilder DOCUMENT_BUILDER = newDocumentBuilder();
     private static final XPath X_PATH = XPath.getInstance();
 
@@ -140,7 +140,7 @@ public final class WikipediaApp {
 
     static List<WikipediaEntry> getEntriesFromClipboard(final String wikipediaLang) {
         return Pattern.compile("[\\n\\r]+")
-                .splitAsStream(Utils.getClipboardContent())
+                .splitAsStream(ClipboardUtils.getClipboardStringContent())
                 .map(x -> new WikipediaEntry(wikipediaLang, x))
                 .collect(Collectors.toList());
     }
@@ -289,7 +289,7 @@ public final class WikipediaApp {
         }
     }
 
-    private static String getFirstField(Collection<String> languages, String field, Node entity) throws XPathExpressionException {
+    private static String getFirstField(Collection<String> languages, String field, Node entity) {
         return languages.stream()
                 .map(language -> X_PATH.evaluateString(language != null
                         ? ".//" + field + "[@language='" + language + "']/@value"
@@ -301,7 +301,6 @@ public final class WikipediaApp {
 
     static Collection<WikipediaLangArticle> getInterwikiArticles(String wikipediaLang, String article) {
         try {
-            Collection<WikipediaLangArticle> r = new ArrayList<>();
             final String url = getSiteUrl(wikipediaLang) + "/w/api.php" +
                     "?action=query" +
                     "&prop=langlinks" +

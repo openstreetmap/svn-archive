@@ -258,8 +258,8 @@ public class AddressEditDialog extends JDialog implements ActionListener, ListSe
                             UNRESOLVED_ADDRESS,
                             editContainer.getNumberOfUnresolvedAddresses()));
         } else {
-            streetLabel.setText(String.format(STREET_HEADER_FMT, 0));
-            unresolvedAddressesLabel.setText(String.format(UNRESOLVED_HEADER_FMT, 0));
+            streetLabel.setText(String.format(STREET_HEADER_FMT, STREETS, 0));
+            unresolvedAddressesLabel.setText(String.format(UNRESOLVED_HEADER_FMT, UNRESOLVED_ADDRESS, 0));
         }
     }
 

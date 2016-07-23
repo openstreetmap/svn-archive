@@ -82,7 +82,7 @@ public class SdsPluginPreferences extends DefaultTabPreferenceSetting {
                 Main.pref.put(SDS_USERNAME, username.getText());
                 Main.pref.put(SDS_PASSWORD, new String(password.getPassword()));
                 try {
-                    api.requestShadowsFromSds(Collections.singletonList(new Long(1)), null, null, null);
+                    api.requestShadowsFromSds(Collections.singletonList(Long.valueOf(1L)), null, null, null);
                     JOptionPane.showMessageDialog(
                             Main.parent,
                             tr("Connection successful."),

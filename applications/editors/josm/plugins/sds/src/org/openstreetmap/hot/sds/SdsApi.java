@@ -16,6 +16,7 @@ import java.net.MalformedURLException;
 import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.net.UnknownHostException;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.zip.GZIPInputStream;
@@ -398,7 +399,7 @@ public class SdsApi extends SdsConnection {
                     // are null. Seems to be the case if the OSM server replies a 401
                     // Unauthorized, see #3887.
                     //
-                    BufferedReader in = new BufferedReader(new InputStreamReader(i));
+                    BufferedReader in = new BufferedReader(new InputStreamReader(i, StandardCharsets.UTF_8));
                     String s;
                     while ((s = in.readLine()) != null) {
                         responseBody.append(s);
@@ -495,7 +496,7 @@ public class SdsApi extends SdsConnection {
                     try {
                         InputStream i = FixEncoding(activeConnection.getErrorStream(), encoding);
                         if (i != null) {
-                            BufferedReader in = new BufferedReader(new InputStreamReader(i));
+                            BufferedReader in = new BufferedReader(new InputStreamReader(i, StandardCharsets.UTF_8));
                             String s;
                             while ((s = in.readLine()) != null) {
                                 errorBody.append(s);

@@ -133,6 +133,7 @@ public class DetermineSdsModificationsUploadHook implements UploadHook {
                            }
                        }
                        break;
+                   default: throw new AssertionError("unexpected case: " + old.getType());
                    }
                }
 

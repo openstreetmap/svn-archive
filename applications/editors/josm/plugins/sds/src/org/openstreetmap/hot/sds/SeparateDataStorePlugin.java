@@ -50,7 +50,7 @@ public class SeparateDataStorePlugin extends Plugin {
         }
     };
 
-    class QueueItem {
+    static class QueueItem {
         public IPrimitive primitive;
         public HashMap<String, String> tags;
         public boolean sdsOnly;
@@ -96,8 +96,8 @@ public class SeparateDataStorePlugin extends Plugin {
         case NODE: return originalNodes.get(other.getId());
         case WAY: return originalWays.get(other.getId());
         case RELATION: return originalRelations.get(other.getId());
+        default: throw new AssertionError("unexpected case: " + other.getType());
         }
-        return null;
     }
 
     protected void enqueueForUpload(IPrimitive prim, HashMap<String, String> tags, boolean onlySds) {

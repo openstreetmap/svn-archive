@@ -81,7 +81,7 @@ public class SdsMenu extends JMenu implements LayerChangeListener, ActiveLayerCh
         setEnabledState();
     }
 
-    private class SdsAboutAction extends JosmAction {
+    private static class SdsAboutAction extends JosmAction {
 
         SdsAboutAction() {
             super(tr("About"), "sds", tr("Information about SDS."), null, true);
@@ -122,7 +122,7 @@ public class SdsMenu extends JMenu implements LayerChangeListener, ActiveLayerCh
         }
     }
 
-    private final class SdsPreferencesAction extends JosmAction implements Runnable {
+    private static final class SdsPreferencesAction extends JosmAction implements Runnable {
 
         private SdsPreferencesAction() {
             super(tr("Preferences..."), "preference", tr("Open a preferences dialog for SDS."),

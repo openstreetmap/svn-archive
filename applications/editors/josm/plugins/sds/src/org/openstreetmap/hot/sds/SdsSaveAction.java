@@ -1,4 +1,4 @@
-//License: GPL.
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.hot.sds;
 
 import static org.openstreetmap.josm.tools.I18n.tr;

@@ -1,4 +1,4 @@
-// License: GPL. See LICENSE file for details.
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.hot.sds;
 
 import java.util.ArrayList;
@@ -15,32 +15,32 @@ import org.openstreetmap.josm.data.osm.OsmPrimitive;
 
 /**
  * This upload hook does the following things:
- * 
- * 1. Find out if there are any changes in the special tags that need to 
+ *
+ * 1. Find out if there are any changes in the special tags that need to
  *    be uploaded to a different server.
- * 2. Find out if any objects that did have special tags have now been 
+ * 2. Find out if any objects that did have special tags have now been
  *    deleted, resulting in tag deletions on the special server.
  * 3. Find out if any objects carrying special tags have been newly created.
  * 4. Also, if it is determined that an object modification consists exclusively
- *    of special tags, then skip uploading that object, by removing it from 
+ *    of special tags, then skip uploading that object, by removing it from
  *    the apiDataSet.
- *    
+ *
  * This upload hook stores its findings with the SeparateDataStorePlugin, and
  * changes are sent to the SDS server only after the OSM upload has sucessfully
  * completed. The UploadSuccessHook is responsible for that.
  */
-public class DetermineSdsModificationsUploadHook implements UploadHook
-{
+public class DetermineSdsModificationsUploadHook implements UploadHook {
     private SeparateDataStorePlugin plugin;
 
-    DetermineSdsModificationsUploadHook(SeparateDataStorePlugin plugin)    {
+    DetermineSdsModificationsUploadHook(SeparateDataStorePlugin plugin) {
         this.plugin = plugin;
     }
-    
+
+    @Override
     public boolean checkUpload(APIDataSet apiDataSet) {
-        
+
         ArrayList<OsmPrimitive> droplist = new ArrayList<>();
-        
+
         // check deleted primitives for special tags.
         for (OsmPrimitive del : apiDataSet.getPrimitivesToDelete()) {
             IPrimitive old = plugin.getOriginalPrimitive(del);
@@ -52,16 +52,16 @@ public class DetermineSdsModificationsUploadHook implements UploadHook
 
         // check modified primitives.
            for (OsmPrimitive upd : apiDataSet.getPrimitivesToUpdate()) {
-               
+
                HashSet<String> allKeys = new HashSet<>();
                boolean specialTags = false;
-               
+
                // process tags of new object
                for (String key : upd.keySet()) {
                    allKeys.add(key);
                    if (!specialTags && isSpecialKey(key)) specialTags = true;
                }
-               
+
                // process tags of old object
                IPrimitive old = plugin.getOriginalPrimitive(upd);
                for (String key : old.keySet()) {
@@ -71,7 +71,7 @@ public class DetermineSdsModificationsUploadHook implements UploadHook
 
                // if neither has special tags, done with this object.
                if (!specialTags) continue;
-               
+
                // special tags are involved. find out what, exactly, has changed.
                boolean changeInSpecialTags = false;
                boolean changeInOtherTags = false;
@@ -81,21 +81,21 @@ public class DetermineSdsModificationsUploadHook implements UploadHook
                        if (changeInSpecialTags && changeInOtherTags) break;
                    }
                }
-               
+
                // change *only* in standard tags - done with this object.
                if (!changeInSpecialTags) continue;
-               
+
                // assemble new set of special tags. might turn out to be empty.
                HashMap<String, String> newSpecialTags = new HashMap<>();
                for (String key : upd.keySet()) {
                    if (isSpecialKey(key)) newSpecialTags.put(key, upd.get(key));
                }
-               
+
                boolean uploadToOsm = changeInOtherTags;
-               
-               // not done yet: if no changes in standard tags, we need to find out if 
+
+               // not done yet: if no changes in standard tags, we need to find out if
                // there were changes in the other properties (node: lat/lon, way/relation:
-               // member list). If the answer is no, then the object must be removed from 
+               // member list). If the answer is no, then the object must be removed from
                // JOSM's normal upload queue, else we would be uploading a non-edit.
                if (!changeInOtherTags) {
                    switch(old.getType()) {
@@ -110,7 +110,7 @@ public class DetermineSdsModificationsUploadHook implements UploadHook
                        if (wold.getNodesCount() != wupd.getNodesCount()) {
                            uploadToOsm = true;
                            break;
-                       } 
+                       }
                        for (int i = 0; i < wold.getNodesCount(); i++) {
                            if (wold.getNodeId(i) != wupd.getNodeId(i)) {
                                uploadToOsm = true;
@@ -121,10 +121,10 @@ public class DetermineSdsModificationsUploadHook implements UploadHook
                    case RELATION:
                        IRelation rold = (IRelation) old;
                        IRelation rupd = (IRelation) upd;
-                       if (rold.getMembersCount()!= rupd.getMembersCount()) {
+                       if (rold.getMembersCount() != rupd.getMembersCount()) {
                            uploadToOsm = true;
                            break;
-                       } 
+                       }
                        for (int i = 0; i < rold.getMembersCount(); i++) {
                            if (rold.getMemberType(i) != rupd.getMemberType(i) ||
                                rold.getMemberId(i) != rupd.getMemberId(i)) {
@@ -135,19 +135,19 @@ public class DetermineSdsModificationsUploadHook implements UploadHook
                        break;
                    }
                }
-               
+
                // request that new set of special tags be uploaded
                plugin.enqueueForUpload(upd, newSpecialTags, !uploadToOsm);
-               
-               // we cannot remove from getPrimitivesToUpdate, this would result in a 
+
+               // we cannot remove from getPrimitivesToUpdate, this would result in a
                // ConcurrentModificationException.
                if (!uploadToOsm) droplist.add(upd);
-               
+
         }
-           
+
         apiDataSet.getPrimitivesToUpdate().removeAll(droplist);
-                   
-           // check added primitives. 
+
+           // check added primitives.
            for (OsmPrimitive add : apiDataSet.getPrimitivesToAdd()) {
                // assemble new set of special tags. might turn out to be empty.
                HashMap<String, String> newSpecialTags = new HashMap<>();
@@ -156,19 +156,19 @@ public class DetermineSdsModificationsUploadHook implements UploadHook
                }
                if (!newSpecialTags.isEmpty()) plugin.enqueueForUpload(add, newSpecialTags, false);
         }
-        
+
            // FIXME it is possible that the list of OSM edits is totally empty.
         return true;
 
     }
-    
+
     boolean hasSpecialTags(IPrimitive p) {
         for (String key : p.keySet()) {
             if (isSpecialKey(key)) return true;
-        }    
+        }
         return false;
     }
-    
+
     boolean isSpecialKey(String key) {
         return key.startsWith(plugin.getIgnorePrefix());
     }

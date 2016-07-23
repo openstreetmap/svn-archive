@@ -1,4 +1,4 @@
-//License: GPL. See README for details.
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.hot.sds;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -37,7 +37,7 @@ import org.openstreetmap.josm.tools.CheckParameterUtil;
  */
 public class SdsApi extends SdsConnection {
     /** max number of retries to send a request in case of HTTP 500 errors or timeouts */
-    static public final int DEFAULT_MAX_NUM_RETRIES = 5;
+    public static final int DEFAULT_MAX_NUM_RETRIES = 5;
 
     /** the collection of instantiated OSM APIs */
     private static HashMap<String, SdsApi> instances = new HashMap<>();
@@ -50,21 +50,22 @@ public class SdsApi extends SdsConnection {
      * @throws IllegalArgumentException thrown, if serverUrl is null
      *
      */
-    static public SdsApi getSdsApi(String serverUrl) {
+    public static SdsApi getSdsApi(String serverUrl) {
         SdsApi api = instances.get(serverUrl);
         if (api == null) {
             api = new SdsApi(serverUrl);
-            instances.put(serverUrl,api);
+            instances.put(serverUrl, api);
         }
         return api;
     }
+
     /**
      * replies the {@see OsmApi} for the URL given by the preference <code>sds-server.url</code>
      *
      * @return the OsmApi
      *
      */
-    static public SdsApi getSdsApi() {
+    public static SdsApi getSdsApi() {
         String serverUrl = Main.pref.get("sds-server.url", "http://datastore.hotosm.org");
         if (serverUrl == null)
             throw new IllegalStateException(tr("Preference ''{0}'' missing. Cannot initialize SdsApi.", "sds-server.url"));
@@ -85,7 +86,7 @@ public class SdsApi extends SdsConnection {
      * @param serverUrl the server URL. Must not be null
      * @exception IllegalArgumentException thrown, if serverUrl is null
      */
-    protected SdsApi(String serverUrl)  {
+    protected SdsApi(String serverUrl) {
         CheckParameterUtil.ensureParameterNotNull(serverUrl, "serverUrl");
         this.serverUrl = serverUrl;
     }
@@ -97,7 +98,6 @@ public class SdsApi extends SdsConnection {
     public String getVersion() {
         return version;
     }
-
 
     /**
      * Returns the base URL for API requests, including the negotiated version number.
@@ -112,17 +112,19 @@ public class SdsApi extends SdsConnection {
         rv.append("/");
         // this works around a ruby (or lighttpd) bug where two consecutive slashes in
         // an URL will cause a "404 not found" response.
-        int p; while ((p = rv.indexOf("//", 6)) > -1) { rv.delete(p, p + 1); }
+        int p;
+        while ((p = rv.indexOf("//", 6)) > -1) {
+            rv.delete(p, p + 1);
+        }
         return rv.toString();
     }
 
-    /**
+    /*
      * Creates an OSM primitive on the server. The OsmPrimitive object passed in
      * is modified by giving it the server-assigned id.
      *
      * @param osm the primitive
      * @throws SdsTransferException if something goes wrong
-
     public void createPrimitive(IPrimitive osm, ProgressMonitor monitor) throws SdsTransferException {
         String ret = "";
         try {
@@ -131,19 +133,18 @@ public class SdsApi extends SdsConnection {
             ret = sendRequest("PUT", OsmPrimitiveType.from(osm).getAPIName()+"/create", toXml(osm, true),monitor);
             osm.setOsmId(Long.parseLong(ret.trim()), 1);
             osm.setChangesetId(getChangeset().getId());
-        } catch(NumberFormatException e){
+        } catch (NumberFormatException e){
             throw new SdsTransferException(tr("Unexpected format of ID replied by the server. Got ''{0}''.", ret));
         }
     }
     */
 
-    /**
+    /*
      * Modifies an OSM primitive on the server.
      *
      * @param osm the primitive. Must not be null.
      * @param monitor the progress monitor
      * @throws SdsTransferException if something goes wrong
-
     public void modifyPrimitive(IPrimitive osm, ProgressMonitor monitor) throws SdsTransferException {
         String ret = null;
         try {
@@ -154,17 +155,16 @@ public class SdsApi extends SdsConnection {
             osm.setOsmId(osm.getId(), Integer.parseInt(ret.trim()));
             osm.setChangesetId(getChangeset().getId());
             osm.setVisible(true);
-        } catch(NumberFormatException e) {
+        } catch (NumberFormatException e) {
             throw new SdsTransferException(tr("Unexpected format of new version of modified primitive ''{0}''. Got ''{1}''.", osm.getId(), ret));
         }
     }
     */
 
-    /**
+    /*
      * Deletes an OSM primitive on the server.
      * @param osm the primitive
      * @throws SdsTransferException if something goes wrong
-
     public void deletePrimitive(IPrimitive osm, ProgressMonitor monitor) throws SdsTransferException {
         ensureValidChangeset();
         initialize(monitor);
@@ -176,7 +176,7 @@ public class SdsApi extends SdsConnection {
     }
     */
 
-    /**
+    /*
      * Uploads a list of changes in "diff" form to the server.
      *
      * @param list the list of changed OSM Primitives
@@ -185,7 +185,6 @@ public class SdsApi extends SdsConnection {
      * @return list of processed primitives
      * @throws SdsTransferException
      * @throws SdsTransferException if something is wrong
-
     public Collection<IPrimitive> uploadDiff(Collection<? extends IPrimitive> list, ProgressMonitor monitor) throws SdsTransferException {
         try {
             monitor.beginTask("", list.size() * 2);
@@ -217,9 +216,9 @@ public class SdsApi extends SdsConnection {
                     getChangeset(),
                     monitor.createSubTaskMonitor(ProgressMonitor.ALL_TICKS, false)
             );
-        } catch(SdsTransferException e) {
+        } catch (SdsTransferException e) {
             throw e;
-        } catch(OsmDataParsingException e) {
+        } catch (OsmDataParsingException e) {
             throw new SdsTransferException(e);
         } finally {
             monitor.finishTask();
@@ -227,7 +226,8 @@ public class SdsApi extends SdsConnection {
     }
     */
 
-    public String requestShadowsFromSds(List<Long> nodes, List<Long> ways, List<Long> relations, ProgressMonitor pm) throws SdsTransferException {
+    public String requestShadowsFromSds(List<Long> nodes, List<Long> ways, List<Long> relations, ProgressMonitor pm)
+            throws SdsTransferException {
 
         StringBuilder request = new StringBuilder();
         String delim = "";
@@ -267,21 +267,22 @@ public class SdsApi extends SdsConnection {
             }
         }
 
-        return sendRequest("POST", "collectshadows", request.toString(), pm ,true);
-
+        return sendRequest("POST", "collectshadows", request.toString(), pm, true);
     }
 
     private void sleepAndListen(int retry, ProgressMonitor monitor) throws SdsTransferException {
         System.out.print(tr("Waiting 10 seconds ... "));
-        for(int i=0; i < 10; i++) {
+        for (int i = 0; i < 10; i++) {
             if (monitor != null) {
-                monitor.setCustomText(tr("Starting retry {0} of {1} in {2} seconds ...", getMaxRetries() - retry,getMaxRetries(), 10-i));
+                monitor.setCustomText(tr("Starting retry {0} of {1} in {2} seconds ...", getMaxRetries() - retry, getMaxRetries(), 10-i));
             }
             if (cancel)
                 throw new SdsTransferException();
             try {
                 Thread.sleep(1000);
-            } catch (InterruptedException ex) {}
+            } catch (InterruptedException ex) {
+                Main.trace(ex);
+            }
         }
         System.out.println(tr("OK - trying again."));
     }
@@ -293,14 +294,15 @@ public class SdsApi extends SdsConnection {
      */
     protected int getMaxRetries() {
         int ret = Main.pref.getInteger("osm-server.max-num-retries", DEFAULT_MAX_NUM_RETRIES);
-        return Math.max(ret,0);
+        return Math.max(ret, 0);
     }
 
     private String sendRequest(String requestMethod, String urlSuffix, String requestBody, ProgressMonitor monitor) throws SdsTransferException {
         return sendRequest(requestMethod, urlSuffix, requestBody, monitor, true, false);
     }
 
-    private String sendRequest(String requestMethod, String urlSuffix, String requestBody, ProgressMonitor monitor, boolean doAuth) throws SdsTransferException {
+    private String sendRequest(String requestMethod, String urlSuffix, String requestBody, ProgressMonitor monitor, boolean doAuth)
+            throws SdsTransferException {
         return sendRequest(requestMethod, urlSuffix, requestBody, monitor, doAuth, false);
     }
 
@@ -333,16 +335,17 @@ public class SdsApi extends SdsConnection {
      * @exception SdsTransferException if the HTTP return code was not 200 (and retries have
      *    been exhausted), or rewrapping a Java exception.
      */
-    private String sendRequest(String requestMethod, String urlSuffix, String requestBody, ProgressMonitor monitor, boolean doAuthenticate, boolean fastFail) throws SdsTransferException {
+    private String sendRequest(String requestMethod, String urlSuffix, String requestBody, ProgressMonitor monitor,
+            boolean doAuthenticate, boolean fastFail) throws SdsTransferException {
         StringBuffer responseBody = new StringBuffer();
         int retries = getMaxRetries();
 
-        while(true) { // the retry loop
+        while (true) { // the retry loop
             try {
                 URL url = new URL(new URL(getBaseUrl()), urlSuffix);
                 System.out.print(requestMethod + " " + url + "... ");
-                activeConnection = (HttpURLConnection)url.openConnection();
-                activeConnection.setConnectTimeout(fastFail ? 1000 : Main.pref.getInteger("socket.timeout.connect",15)*1000);
+                activeConnection = (HttpURLConnection) url.openConnection();
+                activeConnection.setConnectTimeout(fastFail ? 1000 : Main.pref.getInteger("socket.timeout.connect", 15)*1000);
                 activeConnection.setRequestMethod(requestMethod);
                 if (doAuthenticate) {
                     addAuth(activeConnection);
@@ -374,7 +377,7 @@ public class SdsApi extends SdsConnection {
                 if (retCode >= 500) {
                     if (retries-- > 0) {
                         sleepAndListen(retries, monitor);
-                        System.out.println(tr("Starting retry {0} of {1}.", getMaxRetries() - retries,getMaxRetries()));
+                        System.out.println(tr("Starting retry {0} of {1}.", getMaxRetries() - retries, getMaxRetries()));
                         continue;
                     }
                 }
@@ -397,7 +400,7 @@ public class SdsApi extends SdsConnection {
                     //
                     BufferedReader in = new BufferedReader(new InputStreamReader(i));
                     String s;
-                    while((s = in.readLine()) != null) {
+                    while ((s = in.readLine()) != null) {
                         responseBody.append(s);
                         responseBody.append("\n");
                     }
@@ -407,13 +410,13 @@ public class SdsApi extends SdsConnection {
                 if (activeConnection.getHeaderField("Error") != null) {
                     errorHeader = activeConnection.getHeaderField("Error");
                     System.err.println("Error header: " + errorHeader);
-                } else if (retCode != 200 && responseBody.length()>0) {
+                } else if (retCode != 200 && responseBody.length() > 0) {
                     System.err.println("Error body: " + responseBody);
                 }
                 activeConnection.disconnect();
 
-                errorHeader = errorHeader == null? null : errorHeader.trim();
-                String errorBody = responseBody.length() == 0? null : responseBody.toString().trim();
+                errorHeader = errorHeader == null ? null : errorHeader.trim();
+                String errorBody = responseBody.length() == 0 ? null : responseBody.toString().trim();
                 switch(retCode) {
                 case HttpURLConnection.HTTP_OK:
                     return responseBody.toString();
@@ -434,9 +437,9 @@ public class SdsApi extends SdsConnection {
                     continue;
                 }
                 throw new SdsTransferException(e);
-            } catch(IOException e){
+            } catch (IOException e) {
                 throw new SdsTransferException(e);
-            } catch(SdsTransferException e) {
+            } catch (SdsTransferException e) {
                 throw e;
             }
         }
@@ -448,12 +451,12 @@ public class SdsApi extends SdsConnection {
             URL url = null;
             try {
                 url = new URL(urlStr.replace(" ", "%20"));
-            } catch(MalformedURLException e) {
+            } catch (MalformedURLException e) {
                 throw new SdsTransferException(e);
             }
             try {
-                activeConnection = (HttpURLConnection)url.openConnection();
-            } catch(Exception e) {
+                activeConnection = (HttpURLConnection) url.openConnection();
+            } catch (Exception e) {
                 throw new SdsTransferException(tr("Failed to open connection to API {0}.", url.toExternalForm()), e);
             }
             if (cancel) {
@@ -469,7 +472,7 @@ public class SdsApi extends SdsConnection {
                 activeConnection.setRequestProperty("Accept-Encoding", "gzip, deflate");
             }
 
-            activeConnection.setConnectTimeout(Main.pref.getInteger("socket.timeout.connect",15)*1000);
+            activeConnection.setConnectTimeout(Main.pref.getInteger("socket.timeout.connect", 15)*1000);
 
             try {
                 System.out.println("GET " + url);
@@ -480,7 +483,7 @@ public class SdsApi extends SdsConnection {
             }
             try {
                 if (activeConnection.getResponseCode() == HttpURLConnection.HTTP_UNAUTHORIZED)
-                    throw new OsmApiException(HttpURLConnection.HTTP_UNAUTHORIZED,null,null);
+                    throw new OsmApiException(HttpURLConnection.HTTP_UNAUTHORIZED, null, null);
 
                 if (activeConnection.getResponseCode() == HttpURLConnection.HTTP_PROXY_AUTH)
                     throw new OsmTransferCanceledException(tr("Proxy Authentication Required"));
@@ -489,19 +492,17 @@ public class SdsApi extends SdsConnection {
                 if (activeConnection.getResponseCode() != HttpURLConnection.HTTP_OK) {
                     String errorHeader = activeConnection.getHeaderField("Error");
                     StringBuilder errorBody = new StringBuilder();
-                    try
-                    {
+                    try {
                         InputStream i = FixEncoding(activeConnection.getErrorStream(), encoding);
                         if (i != null) {
                             BufferedReader in = new BufferedReader(new InputStreamReader(i));
                             String s;
-                            while((s = in.readLine()) != null) {
+                            while ((s = in.readLine()) != null) {
                                 errorBody.append(s);
                                 errorBody.append("\n");
                             }
                         }
-                    }
-                    catch(Exception e) {
+                    } catch (Exception e) {
                         errorBody.append(tr("Reading error text failed."));
                     }
 
@@ -509,9 +510,9 @@ public class SdsApi extends SdsConnection {
                 }
 
                 return FixEncoding(new ProgressInputStream(activeConnection, progressMonitor), encoding);
-            } catch(Exception e) {
+            } catch (Exception e) {
                 if (e instanceof SdsTransferException)
-                    throw (SdsTransferException)e;
+                    throw (SdsTransferException) e;
                 else
                     throw new SdsTransferException(e);
 
@@ -521,16 +522,12 @@ public class SdsApi extends SdsConnection {
         }
     }
 
-    private InputStream FixEncoding(InputStream stream, String encoding) throws IOException
-    {
+    private InputStream FixEncoding(InputStream stream, String encoding) throws IOException {
         if (encoding != null && encoding.equalsIgnoreCase("gzip")) {
             stream = new GZIPInputStream(stream);
-        }
-        else if (encoding != null && encoding.equalsIgnoreCase("deflate")) {
+        } else if (encoding != null && encoding.equalsIgnoreCase("deflate")) {
             stream = new InflaterInputStream(stream, new Inflater(true));
         }
         return stream;
     }
-
-
 }

@@ -1,4 +1,4 @@
-// License: GPL. Copyright 2007 by Immanuel Scholz and others
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.hot.sds;
 
 import java.io.PrintWriter;
@@ -16,18 +16,18 @@ import org.openstreetmap.josm.io.XmlWriter;
  * This is a special version of JOSM's OsmWriter that makes
  * sure that special tags are never written to JOSM's standard
  * output channels.
- * 
+ *
  * In the context of HOT's separate data store, this is very
  * important as otherwise private/confidential information could
  * end up on public servers.
- * 
+ *
  * @author Frederik Ramm
  *
  */
 public class SdsOsmWriter extends OsmWriter {
 
     private SeparateDataStorePlugin plugin;
-    
+
     public SdsOsmWriter(SeparateDataStorePlugin plugin, PrintWriter out, boolean osmConform, String version) {
         super(out, osmConform, version);
         this.plugin = plugin;
@@ -44,7 +44,7 @@ public class SdsOsmWriter extends OsmWriter {
             for (Entry<String, String> e : entries) {
                 String key = e.getKey();
                 if (!(osm instanceof Changeset) && ("created_by".equals(key))) continue;
-                if (key.startsWith(plugin.getIgnorePrefix())) continue;          
+                if (key.startsWith(plugin.getIgnorePrefix())) continue;
                 out.println("    <tag k='"+ XmlWriter.encode(e.getKey()) +
                             "' v='"+XmlWriter.encode(e.getValue())+ "' />");
             }

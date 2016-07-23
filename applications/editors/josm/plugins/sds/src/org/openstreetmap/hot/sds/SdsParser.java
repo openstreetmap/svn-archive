@@ -10,7 +10,7 @@ import org.xml.sax.helpers.DefaultHandler;
 
 /**
  * Parser for answers from SDS. These anwers look like this:
- * 
+ *
  * <pre>
 <?xml version="1.0" encoding="UTF-8"?>
 <osm_sds>
@@ -23,44 +23,39 @@ import org.xml.sax.helpers.DefaultHandler;
  * </pre>
  * @author Frederik Ramm
  */
-public class SdsParser extends DefaultHandler
-{
+public class SdsParser extends DefaultHandler {
     private DataSet dataSet;
     private OsmPrimitive currentPrimitive;
     private SeparateDataStorePlugin plugin;
     private boolean ensureMatch;
-    
+
     public SdsParser(DataSet ds, SeparateDataStorePlugin p, boolean ensureMatch) {
         this.dataSet = ds;
         plugin = p;
         this.ensureMatch = ensureMatch;
     }
-    
+
     public SdsParser(DataSet ds, SeparateDataStorePlugin p) {
         this(ds, p, true);
     }
-    
-    @Override public void endElement(String namespaceURI, String localName, String qName)
-    {
+
+    @Override public void endElement(String namespaceURI, String localName, String qName) {
         // after successfully reading a full set of tags from the separate data store,
         // update it in our cache so we can determine changes later.
         if ("osm_shadow".equals(qName) && currentPrimitive != null) {
             plugin.learn(currentPrimitive.save());
         }
     }
-    @Override public void startElement(String namespaceURI, String localName, String qName, Attributes atts) throws SAXException
-    {
-        if ("osm_shadow".equals(qName))
-        {
+
+    @Override public void startElement(String namespaceURI, String localName, String qName, Attributes atts) throws SAXException {
+        if ("osm_shadow".equals(qName)) {
             String type = atts.getValue("osm_type");
-            String id = atts.getValue("osm_id");         
+            String id = atts.getValue("osm_id");
             currentPrimitive = dataSet.getPrimitiveById(Long.parseLong(id), OsmPrimitiveType.fromApiTypeName(type));
             if (currentPrimitive == null && ensureMatch) {
                 throw new SAXException("unexpected object in response");
             }
-        }
-        else if ("tag".equals(qName))
-        {
+        } else if ("tag".equals(qName)) {
             String v = atts.getValue("v");
             String k = atts.getValue("k");
             if (currentPrimitive != null) currentPrimitive.put(k, v);

@@ -1,4 +1,4 @@
-// License: GPL. Copyright 2007 by Immanuel Scholz and others
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.hot.sds;
 
 import java.net.Authenticator.RequestorType;
@@ -6,21 +6,22 @@ import java.net.HttpURLConnection;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 
+import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.io.auth.CredentialsAgentException;
 import org.openstreetmap.josm.io.auth.CredentialsAgentResponse;
 
 /**
  * Base class that handles common things like authentication for the reader and writer
  * to the SDS server.
- * 
+ *
  * Modeled after JOSM's OsmConnection class.
  */
 public class SdsConnection {
-    
+
     protected boolean cancel = false;
     protected HttpURLConnection activeConnection;
     private SdsCredentialAgent credAgent = new SdsCredentialAgent();
-    
+
     /**
      * Initialize the http defaults and the authenticator.
      */
@@ -43,6 +44,7 @@ public class SdsConnection {
         try {
             Thread.sleep(100);
         } catch (InterruptedException ex) {
+            Main.trace(ex);
         }
 
         synchronized (this) {
@@ -62,7 +64,8 @@ public class SdsConnection {
         CredentialsAgentResponse response;
         String token;
         try {
-            response = credAgent.getCredentials(RequestorType.SERVER, con.getURL().getHost(), false /* don't know yet whether the credentials will succeed */);
+            response = credAgent.getCredentials(RequestorType.SERVER, con.getURL().getHost(),
+                    false /* don't know yet whether the credentials will succeed */);
         } catch (CredentialsAgentException e) {
             throw new SdsTransferException(e);
         }
@@ -72,7 +75,7 @@ public class SdsConnection {
             cancel = true;
             return;
         } else {
-            String username= response.getUsername() == null ? "" : response.getUsername();
+            String username = response.getUsername() == null ? "" : response.getUsername();
             String password = response.getPassword() == null ? "" : String.valueOf(response.getPassword());
             token = username + ":" + password;
             con.addRequestProperty("Authorization", "Basic "+Base64.getEncoder().encodeToString(token.getBytes(StandardCharsets.UTF_8)));
@@ -87,7 +90,6 @@ public class SdsConnection {
      * Replies true if this connection is canceled
      *
      * @return true if this connection is canceled
-     * @return
      */
     public boolean isCanceled() {
         return cancel;

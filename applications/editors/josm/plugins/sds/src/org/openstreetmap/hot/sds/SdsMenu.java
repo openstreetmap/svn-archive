@@ -1,4 +1,4 @@
-//License: GPL. See README for details.
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.hot.sds;
 
 import static org.openstreetmap.josm.gui.help.HelpUtil.ht;
@@ -51,7 +51,7 @@ public class SdsMenu extends JMenu implements LayerChangeListener, ActiveLayerCh
         menu.addSeparator();
         aboutItem = new JMenuItem(new SdsAboutAction());
         menu.add(aboutItem);
-        
+
         Main.getLayerManager().addLayerChangeListener(this);
         Main.getLayerManager().addActiveLayerChangeListener(this);
         setEnabledState();
@@ -62,25 +62,32 @@ public class SdsMenu extends JMenu implements LayerChangeListener, ActiveLayerCh
         loadItem.setEnabled(en);
         saveItem.setEnabled(en);
     }
-  
+
     @Override
-    public void activeOrEditLayerChanged(ActiveLayerChangeEvent e) {    setEnabledState(); }
+    public void activeOrEditLayerChanged(ActiveLayerChangeEvent e) {
+        setEnabledState();
+    }
 
     @Override
     public void layerOrderChanged(LayerOrderChangeEvent e) { }
 
     @Override
-    public void layerAdded(LayerAddEvent e) { setEnabledState(); }
+    public void layerAdded(LayerAddEvent e) {
+        setEnabledState();
+    }
 
     @Override
-    public void layerRemoving(LayerRemoveEvent e) { setEnabledState(); }
+    public void layerRemoving(LayerRemoveEvent e) {
+        setEnabledState();
+    }
 
     private class SdsAboutAction extends JosmAction {
 
-        public SdsAboutAction() {
+        SdsAboutAction() {
             super(tr("About"), "sds", tr("Information about SDS."), null, true);
         }
 
+        @Override
         public void actionPerformed(ActionEvent e) {
             JPanel about = new JPanel();
 
@@ -88,31 +95,34 @@ public class SdsMenu extends JMenu implements LayerChangeListener, ActiveLayerCh
             l.setLineWrap(true);
             l.setWrapStyleWord(true);
             l.setEditable(false);
-            l.setText("Separate Data Store\n\nThis plugin provides access to a \"Separate Data Store\" server. " +
-                    "Whenever data is loaded from the OSM API, it queries the SDS for additional tags that have been stored for the objects just loaded, " +
-                    "and adds these tags. When you upload data to JOSM, SDS tags will again be separated and, instead of sending them to OSM, they will be uplaoded to SDS." +
-                    "\n\n" +
-                    "This depends on SDS tags starting with a special prefix, which can be configured in the SDS preferences." + 
-                    "\n\n" + 
-                    "Using the SDS server will usually require an account to be set up there, which is completely independent of your OSM account.");
-            
-            l.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
+            l.setText(
+                "Separate Data Store\n\nThis plugin provides access to a \"Separate Data Store\" server. " +
+                "Whenever data is loaded from the OSM API, " +
+                "it queries the SDS for additional tags that have been stored for the objects just loaded, " +
+                "and adds these tags. When you upload data to JOSM, SDS tags will again be separated and, " +
+                "instead of sending them to OSM, they will be uploaded to SDS." +
+                "\n\n" +
+                "This depends on SDS tags starting with a special prefix, which can be configured in the SDS preferences." +
+                "\n\n" +
+                "Using the SDS server will usually require an account to be set up there, which is completely independent of your OSM account.");
+
+            l.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
             l.setOpaque(false);
-            l.setPreferredSize(new Dimension(500,300));
+            l.setPreferredSize(new Dimension(500, 300));
             JScrollPane sp = new JScrollPane(l);
             sp.setBorder(null);
             sp.setOpaque(false);
-                        
+
             about.add(sp);
-            
-            about.setPreferredSize(new Dimension(500,300));
+
+            about.setPreferredSize(new Dimension(500, 300));
 
             JOptionPane.showMessageDialog(Main.parent, about, tr("About SDS..."),
                     JOptionPane.INFORMATION_MESSAGE, null);
         }
     }
-    
-    private class SdsPreferencesAction extends JosmAction implements Runnable {
+
+    private final class SdsPreferencesAction extends JosmAction implements Runnable {
 
         private SdsPreferencesAction() {
             super(tr("Preferences..."), "preference", tr("Open a preferences dialog for SDS."),
@@ -123,23 +133,23 @@ public class SdsMenu extends JMenu implements LayerChangeListener, ActiveLayerCh
         /**
          * Launch the preferences dialog.
          */
+        @Override
         public void actionPerformed(ActionEvent e) {
             run();
         }
 
+        @Override
         public void run() {
             PreferenceDialog pd = new PreferenceDialog(Main.parent);
-            // unusual reflection mechanism to cater for older JOSM versions where 
+            // unusual reflection mechanism to cater for older JOSM versions where
             // the selectPreferencesTabByName method was not public
             try {
                 Method sptbn = pd.getClass().getMethod("selectPreferencesTabByName", String.class);
                 sptbn.invoke(pd, "sds");
             } catch (Exception ex) {
-                // ignore
+                Main.trace(ex);
             }
             pd.setVisible(true);
         }
     }
-
-
 }

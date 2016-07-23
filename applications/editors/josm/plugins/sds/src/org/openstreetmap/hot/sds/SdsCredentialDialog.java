@@ -10,7 +10,8 @@ import org.openstreetmap.josm.gui.io.CredentialDialog;
 @SuppressWarnings("serial")
 public class SdsCredentialDialog extends CredentialDialog {
 
-    static public SdsCredentialDialog getSdsApiCredentialDialog(String username, String password, String host, String saveUsernameAndPasswordCheckboxText) {
+    public static SdsCredentialDialog getSdsApiCredentialDialog(String username, String password, String host,
+            String saveUsernameAndPasswordCheckboxText) {
         SdsCredentialDialog dialog = new SdsCredentialDialog(saveUsernameAndPasswordCheckboxText);
         dialog.prepareForSdsApiCredentials(username, password);
         dialog.pack();
@@ -22,14 +23,14 @@ public class SdsCredentialDialog extends CredentialDialog {
     public SdsCredentialDialog(String saveUsernameAndPasswordCheckboxText) {
         super(saveUsernameAndPasswordCheckboxText);
     }
-         
+
     public void prepareForSdsApiCredentials(String username, String password) {
         setTitle(tr("Enter credentials for Separate Data Store API"));
         getContentPane().add(pnlCredentials = new SdsApiCredentialsPanel(this), BorderLayout.CENTER);
         pnlCredentials.init(username, password);
         validate();
     }
- 
+
     private static class SdsApiCredentialsPanel extends CredentialPanel {
 
         @Override
@@ -43,10 +44,9 @@ public class SdsCredentialDialog extends CredentialDialog {
             lblWarning.setText(tr("Warning: The password is transferred unencrypted."));
         }
 
-        public SdsApiCredentialsPanel(SdsCredentialDialog owner) {
+        SdsApiCredentialsPanel(SdsCredentialDialog owner) {
             super(owner);
             build();
         }
     }
-
-  }
+}

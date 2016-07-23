@@ -22,7 +22,7 @@ import org.openstreetmap.josm.io.auth.CredentialsAgentException;
 import org.openstreetmap.josm.io.auth.CredentialsAgentResponse;
 
 /**
- * Factored after JOSM's JosmPreferencesCredentialAgent. 
+ * Factored after JOSM's JosmPreferencesCredentialAgent.
  */
 public class SdsCredentialAgent extends AbstractCredentialsAgent {
 
@@ -32,7 +32,7 @@ public class SdsCredentialAgent extends AbstractCredentialsAgent {
      * @see CredentialsAgent#lookup(RequestorType)
      */
     @Override
-    public PasswordAuthentication lookup(RequestorType requestorType, String host) throws CredentialsAgentException{
+    public PasswordAuthentication lookup(RequestorType requestorType, String host) throws CredentialsAgentException {
         if (requestorType == null)
             return null;
         String user;
@@ -100,8 +100,10 @@ public class SdsCredentialAgent extends AbstractCredentialsAgent {
     @Override
     public Component getPreferencesDecorationPanel() {
         HtmlPanel pnlMessage = new HtmlPanel();
-        HTMLEditorKit kit = (HTMLEditorKit)pnlMessage.getEditorPane().getEditorKit();
-        kit.getStyleSheet().addRule(".warning-body {background-color:rgb(253,255,221);padding: 10pt; border-color:rgb(128,128,128);border-style: solid;border-width: 1px;}");
+        HTMLEditorKit kit = (HTMLEditorKit) pnlMessage.getEditorPane().getEditorKit();
+        kit.getStyleSheet().addRule(
+                ".warning-body {background-color:rgb(253,255,221);padding: 10pt; " +
+                "border-color:rgb(128,128,128);border-style: solid;border-width: 1px;}");
         pnlMessage.setText(
                 tr(
                         "<html><body>"
@@ -113,7 +115,7 @@ public class SdsCredentialAgent extends AbstractCredentialsAgent {
         );
         return pnlMessage;
     }
-    
+
     @Override
     public String getSaveUsernameAndPasswordCheckboxText() {
         return tr("Save user and password (unencrypted)");
@@ -123,14 +125,15 @@ public class SdsCredentialAgent extends AbstractCredentialsAgent {
     public void storeOAuthAccessToken(OAuthToken accessToken)
             throws CredentialsAgentException {
         // no-op
-        
+
     }
-    
+
     @Override
-    public CredentialsAgentResponse getCredentials(RequestorType requestorType, String host, boolean noSuccessWithLastResponse) throws CredentialsAgentException{
+    public CredentialsAgentResponse getCredentials(RequestorType requestorType, String host, boolean noSuccessWithLastResponse)
+            throws CredentialsAgentException {
         if (requestorType == null)
             return null;
-        PasswordAuthentication credentials =  lookup(requestorType, host);
+        PasswordAuthentication credentials = lookup(requestorType, host);
         String username = (credentials == null || credentials.getUserName() == null) ? "" : credentials.getUserName();
         String password = (credentials == null || credentials.getPassword() == null) ? "" : String.valueOf(credentials.getPassword());
 
@@ -157,8 +160,12 @@ public class SdsCredentialAgent extends AbstractCredentialsAgent {
         } else if (noSuccessWithLastResponse || username.equals("") || password.equals("")) {
             CredentialDialog dialog = null;
             switch(requestorType) {
-            case SERVER: dialog = SdsCredentialDialog.getSdsApiCredentialDialog(username, password, host, getSaveUsernameAndPasswordCheckboxText()); break;
-            case PROXY: dialog = CredentialDialog.getHttpProxyCredentialDialog(username, password, host, getSaveUsernameAndPasswordCheckboxText()); break;
+            case SERVER:
+                dialog = SdsCredentialDialog.getSdsApiCredentialDialog(username, password, host, getSaveUsernameAndPasswordCheckboxText());
+                break;
+            case PROXY:
+                dialog = CredentialDialog.getHttpProxyCredentialDialog(username, password, host, getSaveUsernameAndPasswordCheckboxText());
+                break;
             }
             dialog.setVisible(true);
             response.setCanceled(dialog.isCanceled());
@@ -189,5 +196,5 @@ public class SdsCredentialAgent extends AbstractCredentialsAgent {
         }
         return response;
     }
-    
+
 }

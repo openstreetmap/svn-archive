@@ -23,20 +23,20 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 public class ReadPostprocessor implements OsmServerReadPostprocessor {
-    
+
     private ArrayList<Long> nodeList;
     private ArrayList<Long> wayList;
     private ArrayList<Long> relationList;
-    
+
     private SeparateDataStorePlugin plugin;
 
     public ReadPostprocessor(SeparateDataStorePlugin plugin) {
         this.plugin = plugin;
     }
-    
+
     @Override
     public void postprocessDataSet(DataSet ds, ProgressMonitor progress) {
-        
+
         nodeList = new ArrayList<>();
         wayList = new ArrayList<>();
         relationList = new ArrayList<>();
@@ -47,24 +47,27 @@ public class ReadPostprocessor implements OsmServerReadPostprocessor {
                 nodeList.add(n.getId());
                 plugin.originalNodes.put(n.getId(), n.save());
             }
+
             @Override
             public void visit(Way w) {
                 wayList.add(w.getId());
                 plugin.originalWays.put(w.getId(), w.save());
             }
+
             @Override
             public void visit(Relation e) {
                 relationList.add(e.getId());
                 plugin.originalNodes.put(e.getId(), e.save());
             }
+
             @Override
             public void visit(Changeset cs) {}
         };
-        
+
         for (OsmPrimitive p : ds.allPrimitives()) {
             p.accept(adder);
         }
-            
+
         SdsApi api = SdsApi.getSdsApi();
         String rv = "";
         try {
@@ -73,8 +76,8 @@ public class ReadPostprocessor implements OsmServerReadPostprocessor {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-        
-        // this is slightly inefficient, as we're re-making the string into 
+
+        // this is slightly inefficient, as we're re-making the string into
         // an input stream when there was an input stream to be had inside the
         // SdsApi already, but this encapsulates things better.
         InputStream xmlStream;

@@ -1,6 +1,7 @@
 package org.openstreetmap.josm.plugins.pt_assistant.data;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import org.openstreetmap.josm.data.coor.LatLon;
@@ -181,9 +182,10 @@ public class PTRouteDataManager {
 	public List<RelationMember> getFailedMembers() {
 		return this.failedMembers;
 	}
-	
+
 	/**
 	 * Returns the route relation for which this manager was created:
+	 * 
 	 * @return
 	 */
 	public Relation getRelation() {
@@ -323,10 +325,10 @@ public class PTRouteDataManager {
 	 * @return
 	 */
 	public List<PTWay> getPTWaysBetween(Way start, Way end) {
-		
+
 		List<Integer> potentialStartIndices = new ArrayList<>();
 		List<Integer> potentialEndIndices = new ArrayList<>();
-		
+
 		for (int i = 0; i < ptways.size(); i++) {
 			if (ptways.get(i).getWays().contains(start)) {
 				potentialStartIndices.add(i);
@@ -335,55 +337,62 @@ public class PTRouteDataManager {
 				potentialEndIndices.add(i);
 			}
 		}
-		
+
 		List<int[]> pairList = new ArrayList<>();
-		for (Integer potentialStartIndex: potentialStartIndices) {
-			for (Integer potentialEndIndex: potentialEndIndices) {
+		for (Integer potentialStartIndex : potentialStartIndices) {
+			for (Integer potentialEndIndex : potentialEndIndices) {
 				if (potentialStartIndex <= potentialEndIndex) {
-					int[] pair = {potentialStartIndex, potentialEndIndex};
+					int[] pair = { potentialStartIndex, potentialEndIndex };
 					pairList.add(pair);
 				}
 			}
 		}
-		
+
 		int minDifference = Integer.MAX_VALUE;
-		int[] mostSuitablePair = {0, 0};
-		for (int[] pair: pairList) {
+		int[] mostSuitablePair = { 0, 0 };
+		for (int[] pair : pairList) {
 			int diff = pair[1] - pair[0];
 			if (diff < minDifference) {
 				minDifference = diff;
 				mostSuitablePair = pair;
 			}
 		}
-		
+
 		List<PTWay> result = new ArrayList<>();
 		for (int i = mostSuitablePair[0]; i <= mostSuitablePair[1]; i++) {
 			result.add(ptways.get(i));
 		}
 		return result;
 	}
-	
+
 	/**
-	 * Returns the common Node of two PTWays or null if there is no common Node
+	 * Returns the common Node of two PTWays or null if there is no common Node.
+	 * If there is more than one common Node, only the first found is returned.
+	 * 
 	 * @param way1
 	 * @param way2
 	 * @return
 	 */
 	public Node getCommonNode(PTWay way1, PTWay way2) {
-		
+
 		List<Way> wayList1 = way1.getWays();
 		List<Way> wayList2 = way2.getWays();
-		
-		for (int i = 0; i < wayList1.size(); i++) {
-			for (int j = 0; j < wayList2.size(); j++) {
-				if (wayList1.get(i).firstNode() == wayList2.get(j).firstNode() || wayList1.get(i).firstNode() == wayList2.get(j).lastNode()) {
-					return wayList1.get(i).firstNode();
-				}
-				if (wayList1.get(i).lastNode() == wayList2.get(j).firstNode() || wayList1.get(i).lastNode() == wayList2.get(j).lastNode()) {
-					return wayList1.get(i).lastNode();
-				}
+
+		HashSet<Node> nodeSet1 = new HashSet<>();
+		for (Way w : wayList1) {
+			nodeSet1.addAll(w.getNodes());
+		}
+		HashSet<Node> nodeSet2 = new HashSet<>();
+		for (Way w : wayList2) {
+			nodeSet2.addAll(w.getNodes());
+		}
+
+		for (Node n : nodeSet1) {
+			if (nodeSet2.contains(n)) {
+				return n;
 			}
 		}
+
 		return null;
 	}
 

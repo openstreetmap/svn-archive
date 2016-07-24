@@ -117,5 +117,16 @@ public class PTWay extends RelationMember {
 
 		return endNodes;
 	}
+	
+	public boolean containsUnsplitRoundabout() {
+		
+		List<Way> ways = this.getWays();
+		for (Way way: ways) {
+			if (way.hasTag("junction", "roundabout") && way.firstNode() == way.lastNode()) {
+				return true;
+			}
+		}
+		return false;
+	}
 
 }

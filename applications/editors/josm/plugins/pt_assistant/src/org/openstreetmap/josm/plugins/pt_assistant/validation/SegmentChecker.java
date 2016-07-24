@@ -341,28 +341,48 @@ public class SegmentChecker extends Checker {
 			// is passed multiple times by the bus, the algorithm should stop no
 			// matter which of the geometrically equal PTWays it finds
 
-			// find the next node in direction of travel (which is part of the
-			// PTWay start):
-			firstNodeOfRouteSegmentInDirectionOfTravel = getOppositeEndNode(current,
-					firstNodeOfRouteSegmentInDirectionOfTravel);
-
-			List<PTWay> nextWaysInDirectionOfTravel = this.findNextPTWaysInDirectionOfTravel(current,
-					firstNodeOfRouteSegmentInDirectionOfTravel);
-	
 			PTWay nextPTWayAccortingToExistingSorting = manager.getNextPTWay(current);
-			if (!nextWaysInDirectionOfTravel.contains(nextPTWayAccortingToExistingSorting)) {
-				List<Relation> primitives = new ArrayList<>(1);
-				primitives.add(relation);
-				List<OsmPrimitive> highlighted = new ArrayList<>();
 
-				highlighted.addAll(current.getWays());
-				highlighted.add(firstNodeOfRouteSegmentInDirectionOfTravel);
+			// if current contains an unsplit roundabout:
+			if (current.containsUnsplitRoundabout()) {
+				firstNodeOfRouteSegmentInDirectionOfTravel = manager.getCommonNode(current,
+						nextPTWayAccortingToExistingSorting);
+				if (firstNodeOfRouteSegmentInDirectionOfTravel == null) {
+					List<Relation> primitives = new ArrayList<>(1);
+					primitives.add(relation);
+					List<OsmPrimitive> highlighted = new ArrayList<>();
+					highlighted.addAll(current.getWays());
+					TestError e = new TestError(this.test, Severity.WARNING, tr("PT: Problem in the route segment"),
+							PTAssistantValidatorTest.ERROR_CODE_STOP_BY_STOP, primitives, highlighted);
+					this.errors.add(e);
+					return false;
+				}
+			} else {
+				// if this is a regular way, not an unsplit roundabout
 
-				TestError e = new TestError(this.test, Severity.WARNING, tr("PT: Problem in the route segment"),
-						PTAssistantValidatorTest.ERROR_CODE_STOP_BY_STOP, primitives, highlighted);
-				this.errors.add(e);
-				this.firstNodeOfRouteSegmentInDirectionOfTravel = null;
-				return false;
+				// find the next node in direction of travel (which is part of
+				// the PTWay start):
+				firstNodeOfRouteSegmentInDirectionOfTravel = getOppositeEndNode(current,
+						firstNodeOfRouteSegmentInDirectionOfTravel);
+
+				List<PTWay> nextWaysInDirectionOfTravel = this.findNextPTWaysInDirectionOfTravel(current,
+						firstNodeOfRouteSegmentInDirectionOfTravel);
+
+				if (!nextWaysInDirectionOfTravel.contains(nextPTWayAccortingToExistingSorting)) {
+					List<Relation> primitives = new ArrayList<>(1);
+					primitives.add(relation);
+					List<OsmPrimitive> highlighted = new ArrayList<>();
+
+					highlighted.addAll(current.getWays());
+					highlighted.add(firstNodeOfRouteSegmentInDirectionOfTravel);
+
+					TestError e = new TestError(this.test, Severity.WARNING, tr("PT: Problem in the route segment"),
+							PTAssistantValidatorTest.ERROR_CODE_STOP_BY_STOP, primitives, highlighted);
+					this.errors.add(e);
+					this.firstNodeOfRouteSegmentInDirectionOfTravel = null;
+					return false;
+
+				}
 			}
 
 			current = nextPTWayAccortingToExistingSorting;
@@ -372,6 +392,12 @@ public class SegmentChecker extends Checker {
 		return true;
 	}
 
+	/**
+	 * Will return the same node if the way is an unsplit roundabout
+	 * @param way
+	 * @param node
+	 * @return
+	 */
 	private Node getOppositeEndNode(Way way, Node node) {
 
 		if (node == way.firstNode()) {
@@ -385,6 +411,12 @@ public class SegmentChecker extends Checker {
 		return null;
 	}
 
+	/**
+	 * Does not work correctly for unsplit roundabouts
+	 * @param ptway
+	 * @param node
+	 * @return
+	 */
 	private Node getOppositeEndNode(PTWay ptway, Node node) {
 		if (ptway.isWay()) {
 			return getOppositeEndNode(ptway.getWays().get(0), node);
@@ -424,9 +456,10 @@ public class SegmentChecker extends Checker {
 		for (PTWay ptway : ptways) {
 
 			if (ptway != currentWay) {
-				Node[] endNodes = ptway.getEndNodes();
-				if (endNodes[0] == nextNodeInDirectionOfTravel || endNodes[1] == nextNodeInDirectionOfTravel) {
-					nextPtways.add(ptway);
+				for (Way way: ptway.getWays()) {
+					if (way.containsNode(nextNodeInDirectionOfTravel)) {
+						nextPtways.add(ptway);
+					}
 				}
 			}
 		}

@@ -45,6 +45,8 @@ public abstract class AbstractTest {
  public static final String PATH_TO_ONEWAY_WRONG_DIRECTION2 = "test/data/oneway-wrong-direction2.osm";
  
  public static final String PATH_TO_SOLITARY_STOP_POSITION = "test/data/solitary-stop-position.osm";
+ 
+ public static final String PATH_TO_SEGMENT_TEST = "test/data/segment-test.osm";
 
   /**
    * Initiates the basic parts of JOSM.

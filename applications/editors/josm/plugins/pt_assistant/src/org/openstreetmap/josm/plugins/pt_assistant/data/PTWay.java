@@ -3,6 +3,7 @@ package org.openstreetmap.josm.plugins.pt_assistant.data;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitiveType;
 import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.data.osm.Way;
@@ -62,7 +63,6 @@ public class PTWay extends RelationMember {
 	public List<Way> getWays() {
 		return this.ways;
 	}
-	
 
 	/**
 	 * Determines if this PTWay is modeled by an OsmPrimitiveType.WAY
@@ -73,9 +73,10 @@ public class PTWay extends RelationMember {
 		}
 		return false;
 	}
-	
+
 	/**
-	 * Determines if this PTWay is modeled by an OsmPrimitieType.RELATION (i.e. this is a nested relation)
+	 * Determines if this PTWay is modeled by an OsmPrimitieType.RELATION (i.e.
+	 * this is a nested relation)
 	 */
 	public boolean isRelation() {
 		if (this.getType().equals(OsmPrimitiveType.RELATION)) {
@@ -83,6 +84,38 @@ public class PTWay extends RelationMember {
 		}
 		return false;
 	}
-	
+
+	/**
+	 * Returns the end nodes of this PTWay. If this PTWay is a nested relation,
+	 * the order of the composing ways is assumed to be correct
+	 * 
+	 * @return
+	 */
+	public Node[] getEndNodes() {
+		Node[] endNodes = new Node[2];
+
+		if (this.isWay()) {
+			endNodes[0] = this.getWay().firstNode();
+			endNodes[1] = this.getWay().lastNode();
+			// TODO: if this is a roundabout
+		} else { // nested relation:
+			Way firstWay = this.getWays().get(0);
+			Way secondWay = this.getWays().get(1);
+			Way prelastWay = this.getWays().get(this.getWays().size() - 2);
+			Way lastWay = this.getWays().get(this.getWays().size() - 1);
+			if (firstWay.firstNode() == secondWay.firstNode() || firstWay.firstNode() == secondWay.lastNode()) {
+				endNodes[0] = firstWay.lastNode();
+			} else {
+				endNodes[0] = firstWay.firstNode();
+			}
+			if (lastWay.firstNode() == prelastWay.firstNode() || lastWay.firstNode() == prelastWay.lastNode()) {
+				endNodes[1] = lastWay.lastNode();
+			} else {
+				endNodes[1] = lastWay.firstNode();
+			}
+		}
+
+		return endNodes;
+	}
 
 }

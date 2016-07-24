@@ -14,15 +14,21 @@ import org.openstreetmap.josm.command.SequenceCommand;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.Relation;
+import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.data.validation.Severity;
 import org.openstreetmap.josm.data.validation.Test;
 import org.openstreetmap.josm.data.validation.TestError;
 import org.openstreetmap.josm.plugins.pt_assistant.actions.FixTask;
 import org.openstreetmap.josm.plugins.pt_assistant.actions.IncompleteMembersDownloadThread;
+import org.openstreetmap.josm.plugins.pt_assistant.data.PTRouteDataManager;
+import org.openstreetmap.josm.plugins.pt_assistant.data.PTRouteSegment;
+import org.openstreetmap.josm.plugins.pt_assistant.data.PTStop;
+import org.openstreetmap.josm.plugins.pt_assistant.data.PTWay;
 import org.openstreetmap.josm.plugins.pt_assistant.gui.IncompleteMembersDownloadDialog;
 import org.openstreetmap.josm.plugins.pt_assistant.gui.PTAssistantLayer;
 import org.openstreetmap.josm.plugins.pt_assistant.gui.ProceedDialog;
 import org.openstreetmap.josm.plugins.pt_assistant.utils.RouteUtils;
+import org.openstreetmap.josm.plugins.pt_assistant.utils.StopToWayAssigner;
 
 public class PTAssistantValidatorTest extends Test {
 
@@ -35,6 +41,9 @@ public class PTAssistantValidatorTest extends Test {
 	public static final int ERROR_CODE_RELAITON_MEMBER_ROLES = 3743;
 	public static final int ERROR_CODE_SOLITARY_STOP_POSITION = 3751;
 	public static final int ERROR_CODE_PLATFORM_PART_OF_HIGHWAY = 3752;
+	public static final int ERROR_CODE_STOP_NOT_SERVED = 3753;
+	public static final int ERROR_CODE_STOP_BY_STOP = 3754;
+
 
 	private PTAssistantLayer layer;
 
@@ -279,8 +288,8 @@ public class PTAssistantValidatorTest extends Test {
 
 		if (!routeChecker.getHasGap()) {
 			// Variant 1
-			// TODO: add the segments of this route to the list correct route
-			// segments
+//			storeCorrectRouteSegments(r);
+
 		}
 
 		// Variant 3:
@@ -301,10 +310,30 @@ public class PTAssistantValidatorTest extends Test {
 
 		segmentChecker.performFirstStopTest();
 		segmentChecker.performLastStopTest();
+		segmentChecker.performStopByStopTest();
 
-		// TODO: perform segment test
 		this.errors.addAll(segmentChecker.getErrors());
-		// performDummyTest(r);
+	}
+
+	/**
+	 * Creates the PTRouteSegments of a route that has been found correct and stores them in the list of correct route segments
+	 * @param r route relation
+	 */
+	@SuppressWarnings("unused")
+	private void storeCorrectRouteSegments(Relation r) {
+		PTRouteDataManager manager = new PTRouteDataManager(r);
+		StopToWayAssigner assigner = new StopToWayAssigner(manager.getPTWays());
+		if (manager.getPTStops().size() > 1) {
+			for (int i = 1; i < manager.getPTStops().size(); i++) {
+				PTStop segmentStartStop = manager.getPTStops().get(i-1);
+				PTStop segmentEndStop = manager.getPTStops().get(i);
+				Way segmentStartWay = assigner.get(segmentStartStop);
+				Way segmentEndWay = assigner.get(segmentEndStop);
+				List<PTWay> waysBetweenStops = manager.getPTWaysBetween(segmentStartWay, segmentEndWay);
+				PTRouteSegment routeSegment = new PTRouteSegment(segmentStartStop, segmentEndStop, waysBetweenStops);
+				SegmentChecker.addCorrectSegment(routeSegment);
+			}
+		}
 	}
 
 	/**
@@ -339,7 +368,8 @@ public class PTAssistantValidatorTest extends Test {
 			commands.add(RouteChecker.fixSortingError(testError));
 		}
 
-		if (testError.getCode() == ERROR_CODE_SOLITARY_STOP_POSITION || testError.getCode() == ERROR_CODE_PLATFORM_PART_OF_HIGHWAY) {
+		if (testError.getCode() == ERROR_CODE_SOLITARY_STOP_POSITION
+				|| testError.getCode() == ERROR_CODE_PLATFORM_PART_OF_HIGHWAY) {
 			commands.add(NodeChecker.fixError(testError));
 		}
 

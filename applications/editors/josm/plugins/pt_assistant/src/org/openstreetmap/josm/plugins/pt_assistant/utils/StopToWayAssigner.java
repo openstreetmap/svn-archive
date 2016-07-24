@@ -3,6 +3,7 @@ package org.openstreetmap.josm.plugins.pt_assistant.utils;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -29,16 +30,21 @@ import org.openstreetmap.josm.tools.Pair;
 public class StopToWayAssigner {
 
 	/* contains assigned stops */
-	private static HashMap<PTStop, PTWay> stopToWay = new HashMap<>();
+	public static HashMap<PTStop, List<Way>> stopToWay = new HashMap<>();
 
 	/*
 	 * contains all PTWays of the route relation for which this assigner was
 	 * created
 	 */
-	private List<PTWay> ptways;
+	private HashSet<Way> ways;
+
+	/* route relation for which this StopToWayAssigner was created */
 
 	public StopToWayAssigner(List<PTWay> ptways) {
-		this.ptways = ptways;
+		ways = new HashSet<Way>();
+		for (PTWay ptway: ptways) {
+			ways.addAll(ptway.getWays());
+		}
 	}
 
 	/**
@@ -47,19 +53,26 @@ public class StopToWayAssigner {
 	 * @param stop
 	 * @return
 	 */
-	public PTWay get(PTStop stop) {
+	public Way get(PTStop stop) {
 
 		// 1) Search if this stop has already been assigned:
 		if (stopToWay.containsKey(stop)) {
-			return stopToWay.get(stop);
+			List<Way> assignedWays = stopToWay.get(stop);
+			for (Way assignedWay: assignedWays) {
+				if (this.ways.contains(assignedWay)) {
+					return assignedWay;
+				}
+			}
 		}
 
 		// 2) Search if the stop has a stop position:
-		PTWay ptwayOfStopPosition = findPtwayForNode(stop.getStopPosition());
-		if (ptwayOfStopPosition != null) {
-			stopToWay.put(stop, ptwayOfStopPosition);
-			return ptwayOfStopPosition;
+		Way wayOfStopPosition = findWayForNode(stop.getStopPosition());
+		if (wayOfStopPosition != null) {
+			addAssignedWayToMap(stop, wayOfStopPosition);
+			return wayOfStopPosition;
 		}
+
+		// TODO: search if a stop position is in the vicinity of a platform
 
 		// 3) Search if the stop has a stop_area:
 		List<OsmPrimitive> stopElements = new ArrayList<>(2);
@@ -74,10 +87,10 @@ public class StopToWayAssigner {
 			if (parentRelation.hasTag("public_transport", "stop_area")) {
 				for (RelationMember rm : parentRelation.getMembers()) {
 					if (rm.getMember().hasTag("public_transport", "stop_position")) {
-						PTWay rmPtway = this.findPtwayForNode(rm.getNode());
-						if (rmPtway != null) {
-							stopToWay.put(stop, rmPtway);
-							return rmPtway;
+						Way rmWay = this.findWayForNode(rm.getNode());
+						if (rmWay != null) {
+							addAssignedWayToMap(stop, rmWay);
+							return rmWay;
 						}
 					}
 				}
@@ -88,15 +101,15 @@ public class StopToWayAssigner {
 		double searchRadius = 0.001;
 		while (searchRadius < 0.005) {
 
-			PTWay foundWay = this.findNearestWayInRadius(stop.getPlatform(), searchRadius);
+			Way foundWay = this.findNearestWayInRadius(stop.getPlatform(), searchRadius);
 			if (foundWay != null) {
-				stopToWay.put(stop, foundWay);
+				addAssignedWayToMap(stop, foundWay);
 				return foundWay;
 			}
 
 			foundWay = this.findNearestWayInRadius(stop.getStopPosition(), searchRadius);
 			if (foundWay != null) {
-				stopToWay.put(stop, foundWay);
+				addAssignedWayToMap(stop, foundWay);
 				return foundWay;
 			}
 
@@ -112,7 +125,7 @@ public class StopToWayAssigner {
 	 * @param stopPosition
 	 * @return
 	 */
-	private PTWay findPtwayForNode(Node stopPosition) {
+	private Way findWayForNode(Node stopPosition) {
 
 		if (stopPosition == null) {
 			return null;
@@ -123,10 +136,8 @@ public class StopToWayAssigner {
 		for (OsmPrimitive referredPrimitive : referrers) {
 			if (referredPrimitive.getType().equals(OsmPrimitiveType.WAY)) {
 				Way referredWay = (Way) referredPrimitive;
-				for (PTWay ptway : ptways) {
-					if (ptway.getWays().contains(referredWay)) {
-						return ptway;
-					}
+				if (this.ways.contains(referredWay)) {
+					return referredWay;
 				}
 			}
 		}
@@ -143,7 +154,7 @@ public class StopToWayAssigner {
 	 * @param searchRadius
 	 * @return
 	 */
-	private PTWay findNearestWayInRadius(OsmPrimitive platform, double searchRadius) {
+	private Way findNearestWayInRadius(OsmPrimitive platform, double searchRadius) {
 
 		if (platform == null) {
 			return null;
@@ -156,7 +167,7 @@ public class StopToWayAssigner {
 		Double by = platformCenter.getY() + searchRadius;
 		BBox platformBBox = new BBox(ax, ay, bx, by);
 
-		List<Way> potentialWays = new ArrayList<>();
+		Set<Way> potentialWays = new HashSet<>();
 
 		Collection<Node> allNodes = platform.getDataSet().getNodes();
 		for (Node currentNode : allNodes) {
@@ -165,17 +176,15 @@ public class StopToWayAssigner {
 				for (OsmPrimitive referrer : referrers) {
 					if (referrer.getType().equals(OsmPrimitiveType.WAY)) {
 						Way referrerWay = (Way) referrer;
-						for (PTWay ptway : this.ptways) {
-							if (ptway.getWays().contains(referrerWay)) {
-								potentialWays.add(referrerWay);
-							}
+						if (this.ways.contains(referrerWay)) {
+							potentialWays.add(referrerWay);
 						}
 					}
 				}
 
 			}
 		}
-		
+
 		Node platformNode = null;
 		if (platform.getType().equals(OsmPrimitiveType.NODE)) {
 			platformNode = (Node) platform;
@@ -184,37 +193,33 @@ public class StopToWayAssigner {
 		}
 		Way nearestWay = null;
 		Double minDistance = Double.MAX_VALUE;
-		for (Way potentialWay: potentialWays) {
-			double distance = this.calculateMinDistance(platformNode, potentialWay);
+		for (Way potentialWay : potentialWays) {
+			double distance = this.calculateMinDistanceToSegment(platformNode, potentialWay);
 			if (distance < minDistance) {
 				minDistance = distance;
 				nearestWay = potentialWay;
 			}
 		}
 
-		for (PTWay ptway: this.ptways) {
-			if (ptway.getWays().contains(nearestWay)) {
-				return ptway;
-			}
-		}
-		
-		return null;
+		return nearestWay;
 	}
 
 	/**
 	 * Calculates the minimum distance between a node and a way
+	 * 
 	 * @param node
 	 * @param way
 	 * @return
 	 */
-	private double calculateMinDistance(Node node, Way way) {
+	private double calculateMinDistanceToSegment(Node node, Way way) {
 
 		double minDistance = Double.MAX_VALUE;
 
 		List<Pair<Node, Node>> waySegments = way.getNodePairs(false);
+
 		for (Pair<Node, Node> waySegment : waySegments) {
 			if (waySegment.a != node && waySegment.b != node) {
-				double distanceToLine = this.calculateDistance(node, waySegment);
+				double distanceToLine = this.calculateDistanceToSegment(node, waySegment);
 				if (distanceToLine < minDistance) {
 					minDistance = distanceToLine;
 				}
@@ -226,14 +231,46 @@ public class StopToWayAssigner {
 	}
 
 	/**
-	 * // * Calculates the distance from point to segment using formulas for
-	 * triangle area.
+	 * Calculates the distance from point to segment and differentiates between
+	 * acute, right and obtuse triangles. If a triangle is acute or right, the
+	 * distance to segment is calculated as distance from point to line. If the
+	 * triangle is obtuse, the distance is calculated as the distance to the
+	 * nearest vertex of the segment.
+	 * 
+	 * @param node
+	 * @param segment
+	 * @return
+	 */
+	private double calculateDistanceToSegment(Node node, Pair<Node, Node> segment) {
+
+		if (node == segment.a || node == segment.b) {
+			return 0.0;
+		}
+
+		double lengthA = node.getCoor().distance(segment.a.getCoor());
+		double lengthB = node.getCoor().distance(segment.b.getCoor());
+		double lengthC = segment.a.getCoor().distance(segment.b.getCoor());
+
+		if (isObtuse(lengthC, lengthB, lengthA)) {
+			return lengthB;
+		}
+
+		if (isObtuse(lengthA, lengthC, lengthB)) {
+			return lengthA;
+		}
+
+		return calculateDistanceToLine(node, segment);
+	}
+
+	/**
+	 * Calculates the distance from point to line using formulas for triangle
+	 * area. Does not differentiate between acute, right and obtuse triangles
 	 * 
 	 * @param node
 	 * @param waySegment
 	 * @return
 	 */
-	private double calculateDistance(Node node, Pair<Node, Node> segment) {
+	private double calculateDistanceToLine(Node node, Pair<Node, Node> segment) {
 
 		/*
 		 * Let a be the triangle edge between the point and the first node of
@@ -253,6 +290,51 @@ public class StopToWayAssigner {
 		// calculate the distance from point to segment using the 0.5*c*h
 		// formula for triangle area:
 		return triangleArea * 2.0 / lengthC;
+	}
+
+	/**
+	 * Checks if the angle opposite of the edge c is obtuse. Uses the cosine
+	 * theorem
+	 * 
+	 * @param lengthA
+	 * @param lengthB
+	 * @param lengthC
+	 *            the triangle edge which is testes
+	 * @return true if the angle opposite of te edge c is obtuse
+	 */
+	private boolean isObtuse(double lengthA, double lengthB, double lengthC) {
+
+		/*-
+		 * Law of cosines:
+		 * c^2 = a^2 + b^2 - 2abcos
+		 * if c^2 = a^2 + b^2, it is a right triangle
+		 * if c^2 < a^2 + b^2, it is an acute triangle
+		 * if c^2 > a^2 + b^2, it is an obtuse triangle
+		 */
+
+		if (lengthC * lengthC > lengthA * lengthA + lengthB * lengthB) {
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Adds the given way to the map of assigned ways. Assumes that the given
+	 * way is not contained in the map.
+	 * 
+	 * @param stop
+	 * @param way
+	 */
+	private void addAssignedWayToMap(PTStop stop, Way way) {
+		if (stopToWay.containsKey(stop)) {
+			List<Way> assignedWays = stopToWay.get(stop);
+			assignedWays.add(way);
+		} else {
+			List<Way> assignedWays = new ArrayList<Way>();
+			assignedWays.add(way);
+			stopToWay.put(stop, assignedWays);
+		}
 	}
 
 	/**

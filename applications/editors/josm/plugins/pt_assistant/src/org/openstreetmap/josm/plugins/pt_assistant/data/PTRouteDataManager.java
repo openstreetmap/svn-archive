@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.openstreetmap.josm.data.coor.LatLon;
+import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.data.osm.Way;
@@ -180,6 +181,14 @@ public class PTRouteDataManager {
 	public List<RelationMember> getFailedMembers() {
 		return this.failedMembers;
 	}
+	
+	/**
+	 * Returns the route relation for which this manager was created:
+	 * @return
+	 */
+	public Relation getRelation() {
+		return this.relation;
+	}
 
 	/**
 	 * Returns a PTStop that matches the given id. Returns null if not found
@@ -217,4 +226,165 @@ public class PTRouteDataManager {
 		}
 		return null;
 	}
+
+	/**
+	 * Returns all PTWays of this route that contain the given way.
+	 * 
+	 * @param way
+	 * @return
+	 */
+	public List<PTWay> findPTWaysThatContain(Way way) {
+
+		List<PTWay> ptwaysThatContain = new ArrayList<>();
+		for (PTWay ptway : ptways) {
+			if (ptway.getWays().contains(way)) {
+				ptwaysThatContain.add(ptway);
+			}
+		}
+		return ptwaysThatContain;
+	}
+
+	/**
+	 * Returns all PTWays of this route that contain the given node as their
+	 * first or last node.
+	 * 
+	 * @return
+	 */
+	public List<PTWay> findPTWaysThatContainAsEndNode(Node node) {
+
+		List<PTWay> ptwaysThatContain = new ArrayList<>();
+		for (PTWay ptway : ptways) {
+			List<Way> ways = ptway.getWays();
+			if (ways.get(0).firstNode() == node || ways.get(0).lastNode() == node
+					|| ways.get(ways.size() - 1).firstNode() == node || ways.get(ways.size() - 1).lastNode() == node) {
+				ptwaysThatContain.add(ptway);
+			}
+		}
+		return ptwaysThatContain;
+
+	}
+
+	/**
+	 * Checks if at most one PTWay of this route refers to the given node
+	 * 
+	 * @param node
+	 * @return
+	 */
+	public boolean isDeadendNode(Node node) {
+
+		List<PTWay> referringPtways = this.findPTWaysThatContainAsEndNode(node);
+		if (referringPtways.size() <= 1) {
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * Returns the PTWay which comes directly after the given ptway according to
+	 * the existing route member sorting
+	 * 
+	 * @param ptway
+	 * @return
+	 */
+	public PTWay getNextPTWay(PTWay ptway) {
+
+		for (int i = 0; i < ptways.size() - 1; i++) {
+			if (ptways.get(i) == ptway) {
+				return ptways.get(i + 1);
+			}
+		}
+		return null;
+
+	}
+
+	/**
+	 * Returns the PTWay which comes directly before the given ptway according
+	 * to the existing route member sorting
+	 * 
+	 * @param ptway
+	 * @return
+	 */
+	public PTWay getPreviousPTWay(PTWay ptway) {
+
+		for (int i = 1; i < ptways.size(); i++) {
+			if (ptways.get(i) == ptway) {
+				return ptways.get(i - 1);
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * Returns a sequence of PTWays that are between the start way and the end
+	 * way. The resulting list includes the start and end PTWays.
+	 * 
+	 * @param start
+	 * @param end
+	 * @return
+	 */
+	public List<PTWay> getPTWaysBetween(Way start, Way end) {
+		
+		List<Integer> potentialStartIndices = new ArrayList<>();
+		List<Integer> potentialEndIndices = new ArrayList<>();
+		
+		for (int i = 0; i < ptways.size(); i++) {
+			if (ptways.get(i).getWays().contains(start)) {
+				potentialStartIndices.add(i);
+			}
+			if (ptways.get(i).getWays().contains(end)) {
+				potentialEndIndices.add(i);
+			}
+		}
+		
+		List<int[]> pairList = new ArrayList<>();
+		for (Integer potentialStartIndex: potentialStartIndices) {
+			for (Integer potentialEndIndex: potentialEndIndices) {
+				if (potentialStartIndex <= potentialEndIndex) {
+					int[] pair = {potentialStartIndex, potentialEndIndex};
+					pairList.add(pair);
+				}
+			}
+		}
+		
+		int minDifference = Integer.MAX_VALUE;
+		int[] mostSuitablePair = {0, 0};
+		for (int[] pair: pairList) {
+			int diff = pair[1] - pair[0];
+			if (diff < minDifference) {
+				minDifference = diff;
+				mostSuitablePair = pair;
+			}
+		}
+		
+		List<PTWay> result = new ArrayList<>();
+		for (int i = mostSuitablePair[0]; i <= mostSuitablePair[1]; i++) {
+			result.add(ptways.get(i));
+		}
+		return result;
+	}
+	
+	/**
+	 * Returns the common Node of two PTWays or null if there is no common Node
+	 * @param way1
+	 * @param way2
+	 * @return
+	 */
+	public Node getCommonNode(PTWay way1, PTWay way2) {
+		
+		List<Way> wayList1 = way1.getWays();
+		List<Way> wayList2 = way2.getWays();
+		
+		for (int i = 0; i < wayList1.size(); i++) {
+			for (int j = 0; j < wayList2.size(); j++) {
+				if (wayList1.get(i).firstNode() == wayList2.get(j).firstNode() || wayList1.get(i).firstNode() == wayList2.get(j).lastNode()) {
+					return wayList1.get(i).firstNode();
+				}
+				if (wayList1.get(i).lastNode() == wayList2.get(j).firstNode() || wayList1.get(i).lastNode() == wayList2.get(j).lastNode()) {
+					return wayList1.get(i).lastNode();
+				}
+			}
+		}
+		return null;
+	}
+
 }

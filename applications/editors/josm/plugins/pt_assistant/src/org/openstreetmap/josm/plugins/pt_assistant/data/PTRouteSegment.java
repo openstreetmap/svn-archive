@@ -26,6 +26,12 @@ public class PTRouteSegment {
 		ptways.addAll(ways);
 	}
 	
+	public PTRouteSegment(PTStop firstStop, PTStop lastStop) {
+		this.firstStop = firstStop;
+		this.lastStop = lastStop;
+		this.ptways = new ArrayList<>();
+	}
+	
 	public List<PTWay> getPTWays() {
 		return this.ptways;
 	}

@@ -54,8 +54,6 @@ public class PhotoAdjustMapMode extends MapMode implements LayerChangeListener, 
         GeoImageLayer.registerSupportedMapMode(this);
         initAdapters();
         this.worker = worker;
-        Main.getLayerManager().addLayerChangeListener(this);
-        Main.getLayerManager().addActiveLayerChangeListener(this);
     }
 
     /**
@@ -134,9 +132,11 @@ public class PhotoAdjustMapMode extends MapMode implements LayerChangeListener, 
     public void enterMode() {
         super.enterMode();
         modeSelected = true;
-        // Activate the mode only if the current layer is not a
-        // GeoImageLayer.  GeoImageLayer's are handled by the plug-in directly.
-        if (! (Main.getLayerManager().getActiveLayer() instanceof GeoImageLayer)) {
+        Main.getLayerManager().addLayerChangeListener(this);
+        Main.getLayerManager().addActiveLayerChangeListener(this);
+        // Activate the mode only if the current layer is not a GeoImageLayer.
+        // GeoImageLayer's are handled by the plug-in directly.
+        if (!(Main.getLayerManager().getActiveLayer() instanceof GeoImageLayer)) {
             activateMode();
         }
     }

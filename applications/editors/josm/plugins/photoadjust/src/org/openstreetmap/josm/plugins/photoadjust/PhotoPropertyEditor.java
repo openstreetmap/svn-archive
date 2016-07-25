@@ -370,7 +370,7 @@ public class PhotoPropertyEditor {
                 return null;
             }
             try {
-                return new Double(text);
+                return Double.valueOf(text);
             } catch(NumberFormatException nfe) {
                 return null;
             }

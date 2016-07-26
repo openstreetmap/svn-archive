@@ -347,6 +347,11 @@ public class PTAssistantValidatorTest extends Test {
 				|| testError.getCode() == PTAssistantValidatorTest.ERROR_CODE_PLATFORM_PART_OF_HIGHWAY) {
 			return true;
 		}
+		
+		if (testError.getCode() == ERROR_CODE_STOP_BY_STOP && SegmentChecker.isFixable(testError)) {
+			return true;
+		}
+		
 		return false;
 	}
 
@@ -371,6 +376,10 @@ public class PTAssistantValidatorTest extends Test {
 		if (testError.getCode() == ERROR_CODE_SOLITARY_STOP_POSITION
 				|| testError.getCode() == ERROR_CODE_PLATFORM_PART_OF_HIGHWAY) {
 			commands.add(NodeChecker.fixError(testError));
+		}
+		
+		if (testError.getCode() == ERROR_CODE_STOP_BY_STOP) {
+			commands.add(SegmentChecker.fixError(testError));
 		}
 
 		if (commands.isEmpty()) {

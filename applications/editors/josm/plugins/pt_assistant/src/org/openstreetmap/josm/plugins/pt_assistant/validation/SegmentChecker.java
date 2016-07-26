@@ -3,12 +3,15 @@ package org.openstreetmap.josm.plugins.pt_assistant.validation;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
+import org.openstreetmap.josm.command.ChangeCommand;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.data.osm.OsmPrimitiveType;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.data.osm.Way;
@@ -19,6 +22,7 @@ import org.openstreetmap.josm.plugins.pt_assistant.data.PTRouteDataManager;
 import org.openstreetmap.josm.plugins.pt_assistant.data.PTRouteSegment;
 import org.openstreetmap.josm.plugins.pt_assistant.data.PTStop;
 import org.openstreetmap.josm.plugins.pt_assistant.data.PTWay;
+import org.openstreetmap.josm.plugins.pt_assistant.utils.RouteUtils;
 import org.openstreetmap.josm.plugins.pt_assistant.utils.StopToWayAssigner;
 
 /**
@@ -32,6 +36,9 @@ public class SegmentChecker extends Checker {
 
 	/* PTRouteSegments that have been validated and are correct */
 	private static List<PTRouteSegment> correctSegments = new ArrayList<PTRouteSegment>();
+
+	/* PTRouteSegments that are wrong, stored in case the user calls the fix */
+	private static HashMap<TestError, PTRouteSegment> wrongSegments = new HashMap<TestError, PTRouteSegment>();
 
 	/* Manager of the PTStops and PTWays of the current route */
 	private PTRouteDataManager manager;
@@ -212,7 +219,7 @@ public class SegmentChecker extends Checker {
 	}
 
 	public void performStopByStopTest() {
-
+		
 		if (manager.getPTStopCount() < 2) {
 			return;
 		}
@@ -227,14 +234,19 @@ public class SegmentChecker extends Checker {
 			Way endWay = assigner.get(endStop);
 			if (startWay == null) {
 				this.firstNodeOfRouteSegmentInDirectionOfTravel = null;
+				if (i == 0) {
+					createStopError(startStop);
+				}
 				continue;
 			}
 			if (endWay == null) {
 				this.firstNodeOfRouteSegmentInDirectionOfTravel = null;
+				if (i != 0) {
+					createStopError(endStop);
+				}
 				continue;
 			}
-			// FIXME: throw error if cannot find the corresponding way (which
-			// means that the stop is too far away from way)
+
 			List<PTWay> segmentWays = manager.getPTWaysBetween(startWay, endWay);
 
 			if (this.firstNodeOfRouteSegmentInDirectionOfTravel == null) {
@@ -244,7 +256,6 @@ public class SegmentChecker extends Checker {
 				this.firstNodeOfRouteSegmentInDirectionOfTravel = findFirstNodeOfRouteSegmentInDirectionOfTravel(
 						segmentWays.get(0));
 				if (this.firstNodeOfRouteSegmentInDirectionOfTravel == null) {
-					// TODO: throw error
 					continue;
 				}
 			}
@@ -254,9 +265,32 @@ public class SegmentChecker extends Checker {
 			if (sortingCorrect) {
 				PTRouteSegment routeSegment = new PTRouteSegment(startStop, endStop, segmentWays);
 				correctSegments.add(routeSegment);
+			} else {
+				PTRouteSegment routeSegment = new PTRouteSegment(startStop, endStop, segmentWays);
+				TestError error = this.errors.get(this.errors.size() - 1);
+				wrongSegments.put(error, routeSegment);
 			}
 		}
+	}
 
+	/**
+	 * Creates a TestError and adds it to the list of errors for a stop that is
+	 * not served.
+	 * 
+	 * @param stop
+	 */
+	private void createStopError(PTStop stop) {
+		List<Relation> primitives = new ArrayList<>(1);
+		primitives.add(relation);
+		List<OsmPrimitive> highlighted = new ArrayList<>();
+		OsmPrimitive stopPrimitive = stop.getPlatform();
+		if (stopPrimitive == null) {
+			stopPrimitive = stop.getStopPosition();
+		}
+		highlighted.add(stopPrimitive);
+		TestError e = new TestError(this.test, Severity.WARNING, tr("PT: Stop not served"),
+				PTAssistantValidatorTest.ERROR_CODE_STOP_NOT_SERVED, primitives, highlighted);
+		this.errors.add(e);
 	}
 
 	private Node findFirstNodeOfRouteSegmentInDirectionOfTravel(PTWay startWay) {
@@ -394,6 +428,7 @@ public class SegmentChecker extends Checker {
 
 	/**
 	 * Will return the same node if the way is an unsplit roundabout
+	 * 
 	 * @param way
 	 * @param node
 	 * @return
@@ -413,6 +448,7 @@ public class SegmentChecker extends Checker {
 
 	/**
 	 * Does not work correctly for unsplit roundabouts
+	 * 
 	 * @param ptway
 	 * @param node
 	 * @return
@@ -456,7 +492,7 @@ public class SegmentChecker extends Checker {
 		for (PTWay ptway : ptways) {
 
 			if (ptway != currentWay) {
-				for (Way way: ptway.getWays()) {
+				for (Way way : ptway.getWays()) {
 					if (way.containsNode(nextNodeInDirectionOfTravel)) {
 						nextPtways.add(ptway);
 					}
@@ -468,9 +504,96 @@ public class SegmentChecker extends Checker {
 
 	}
 
+	protected static boolean isFixable(TestError testError) {
+
+		if (testError.getCode() == PTAssistantValidatorTest.ERROR_CODE_STOP_BY_STOP) {
+
+			PTRouteSegment wrongSegment = wrongSegments.get(testError);
+			PTRouteSegment correctSegment = null;
+			// TODO: now just the first correctSegment is taken over. Change
+			// that
+			// the segment is selected.
+			for (PTRouteSegment segment : correctSegments) {
+				if (wrongSegment.getFirstStop().equalsStop(segment.getFirstStop())
+						&& wrongSegment.getLastStop().equalsStop(segment.getLastStop())) {
+					correctSegment = segment;
+					// System.out.println("correct segment found: " +
+					// correctSegment.getFirstStop().getPlatform().getId());
+					break;
+				}
+			}
+
+			return correctSegment != null;
+		}
+
+		return false;
+
+	}
+
 	protected static Command fixError(TestError testError) {
 
-		// FIXME
+		PTRouteSegment wrongSegment = wrongSegments.get(testError);
+		PTRouteSegment correctSegment = null;
+		// TODO: now just the first correctSegment is taken over. Change that
+		// the segment is selected.
+		for (PTRouteSegment segment : correctSegments) {
+			if (wrongSegment.getFirstStop().equalsStop(segment.getFirstStop())
+					&& wrongSegment.getLastStop().equalsStop(segment.getLastStop())) {
+				correctSegment = segment;
+				break;
+			}
+		}
+
+		if (correctSegment != null) {
+			// TODO: ask user if the change should be undertaken
+			Relation originalRelation = (Relation) testError.getPrimitives().iterator().next();
+			Relation modifiedRelation = new Relation(originalRelation);
+			List<RelationMember> originalRelationMembers = originalRelation.getMembers();
+			List<RelationMember> modifiedRelationMembers = new ArrayList<>();
+			
+			// copy stops first:
+			for (RelationMember rm: originalRelationMembers) {
+				if (RouteUtils.isPTStop(rm)) {
+					if (rm.getRole().equals("stop_position")) {
+						if (rm.getType().equals(OsmPrimitiveType.NODE)) {
+							RelationMember newMember = new RelationMember("stop", rm.getNode());
+							modifiedRelationMembers.add(newMember);
+						} else { // if it is a way:
+							RelationMember newMember = new RelationMember("stop", rm.getWay());
+							modifiedRelationMembers.add(newMember);
+						}
+					} else {
+						// if the relation member does not have the role
+						// "stop_position":
+						modifiedRelationMembers.add(rm);
+					}
+				} 
+			}
+			
+			// copy PTWays next:
+			List<RelationMember> waysOfOriginalRelation = new ArrayList<>();
+			for (RelationMember rm: originalRelation.getMembers()) {
+				if (RouteUtils.isPTWay(rm)) {
+					waysOfOriginalRelation.add(rm);
+				}
+			}
+			
+			for (int i = 0; i < waysOfOriginalRelation.size(); i++) {
+				if (waysOfOriginalRelation.get(i).getWay() == wrongSegment.getPTWays().get(0).getWays().get(0)) {
+//				if (waysOfOriginalRelation.get(i) == wrongSegment.getPTWays().get(0)) {
+					modifiedRelationMembers.addAll(correctSegment.getPTWays());
+					i = i + wrongSegment.getPTWays().size() - 1;
+				} else {
+					modifiedRelationMembers.add(waysOfOriginalRelation.get(i));
+				}
+			}
+
+
+			modifiedRelation.setMembers(modifiedRelationMembers);
+			// TODO: change the data model too
+			ChangeCommand changeCommand = new ChangeCommand(originalRelation, modifiedRelation);
+			return changeCommand;
+		}
 
 		return null;
 	}

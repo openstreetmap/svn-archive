@@ -8,10 +8,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.concurrent.Callable;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 
 import javax.swing.JLabel;
@@ -19,29 +18,12 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 
 import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.gui.util.GuiHelper;
 import org.openstreetmap.josm.tools.Utils;
 
 public class WikidataTagCellRenderer extends DefaultTableCellRenderer {
 
-    final Map<String, Future<String>> labelCache = new ConcurrentHashMap<>();
-
-    static class LabelLoader implements Callable<String> {
-        final String id;
-        JTable table;
-
-        public LabelLoader(String id, JTable table) {
-            this.id = id;
-            this.table = table;
-        }
-
-        @Override
-        public String call() throws Exception {
-            final String label = WikipediaApp.getLabelForWikidata(id, Locale.getDefault());
-            table.repaint();
-            table = null;
-            return label;
-        }
-    }
+    private final Map<String, CompletableFuture<String>> labelCache = new ConcurrentHashMap<>();
 
     @Override
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
@@ -69,15 +51,15 @@ public class WikidataTagCellRenderer extends DefaultTableCellRenderer {
 
     protected JLabel renderValues(Collection<String> ids, JTable table, JLabel component) {
 
-        ids.stream()
-                .filter(id -> !labelCache.containsKey(id))
-                .forEach(id -> {
-                    labelCache.put(id, Main.worker.submit(new LabelLoader(id, table)));
-                });
+        ids.forEach(id ->
+                labelCache.computeIfAbsent(id, x ->
+                        CompletableFuture.supplyAsync(() -> WikipediaApp.getLabelForWikidata(x, Locale.getDefault())))
+        );
 
         final Collection<String> texts = new ArrayList<>(ids.size());
         for (String id : ids) {
             if (!labelCache.get(id).isDone()) {
+                labelCache.get(id).thenRun(() -> GuiHelper.runInEDT(table::repaint));
                 return null;
             }
             final String label;

@@ -34,7 +34,6 @@ import org.openstreetmap.josm.data.osm.event.DataSetListenerAdapter;
 import org.openstreetmap.josm.data.osm.event.DatasetEventManager;
 import org.openstreetmap.josm.data.osm.event.DatasetEventManager.FireMode;
 import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
-import org.openstreetmap.josm.data.preferences.IntegerProperty;
 import org.openstreetmap.josm.data.preferences.StringProperty;
 import org.openstreetmap.josm.gui.SideButton;
 import org.openstreetmap.josm.gui.dialogs.ToggleDialog;
@@ -167,8 +166,6 @@ public class WikipediaToggleDialog extends ToggleDialog implements ActiveLayerCh
 
     abstract class UpdateWikipediaArticlesSwingWorker extends SwingWorker<Void, WikipediaEntry> {
 
-        private final IntegerProperty wikipediaStatusUpdateChunkSize = new IntegerProperty("wikipedia.statusupdate.chunk-size", 20);
-
         abstract List<WikipediaEntry> getEntries();
 
         @Override
@@ -176,8 +173,8 @@ public class WikipediaToggleDialog extends ToggleDialog implements ActiveLayerCh
             final List<WikipediaEntry> entries = getEntries();
             Collections.sort(entries);
             publish(entries.toArray(new WikipediaEntry[entries.size()]));
-            for (List<WikipediaEntry> chunk : WikipediaApp.partitionList(entries, wikipediaStatusUpdateChunkSize.get())) {
-                WikipediaApp.updateWIWOSMStatus(chunk.get(0).wikipediaLang, chunk);
+            if (!entries.isEmpty()) {
+                WikipediaApp.updateWIWOSMStatus(entries.get(0).wikipediaLang, entries);
             }
             return null;
         }

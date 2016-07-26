@@ -145,7 +145,11 @@ public final class WikipediaApp {
                 .collect(Collectors.toList());
     }
 
-    static void updateWIWOSMStatus(String wikipediaLang, Collection<WikipediaEntry> entries) {
+    static void updateWIWOSMStatus(String wikipediaLang, List<WikipediaEntry> entries) {
+        if (entries.size() > 20) {
+            partitionList(entries, 20).forEach(chunk -> updateWIWOSMStatus(wikipediaLang, chunk));
+            return;
+        }
         Map<String, Boolean> status = new HashMap<>();
         if (!entries.isEmpty()) {
             final String url = "https://tools.wmflabs.org/wiwosm/osmjson/getGeoJSON.php?action=check&lang=" + wikipediaLang;

@@ -195,6 +195,8 @@ public final class WikipediaApp {
             return partitionList(articles, 50).stream()
                     .flatMap(chunk -> getWikidataForArticles(wikipediaLang, chunk).entrySet().stream())
                     .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+        } else if (articles.isEmpty()) {
+            return Collections.emptyMap();
         }
         try {
             final String url = "https://www.wikidata.org/w/api.php" +
@@ -255,6 +257,8 @@ public final class WikipediaApp {
             return partitionList(entries, 50).stream()
                     .flatMap(chunk -> getLabelForWikidata(chunk, locale, preferredLanguage).stream())
                     .collect(Collectors.toList());
+        } else if (entries.isEmpty()) {
+            return Collections.emptyList();
         }
         try {
             final String url = "https://www.wikidata.org/w/api.php" +

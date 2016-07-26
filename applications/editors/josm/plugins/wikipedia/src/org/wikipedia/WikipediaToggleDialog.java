@@ -8,7 +8,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -171,11 +170,12 @@ public class WikipediaToggleDialog extends ToggleDialog implements ActiveLayerCh
         @Override
         protected Void doInBackground() throws Exception {
             final List<WikipediaEntry> entries = getEntries();
-            Collections.sort(entries);
+            entries.sort(null);
             publish(entries.toArray(new WikipediaEntry[entries.size()]));
-            if (!entries.isEmpty()) {
-                WikipediaApp.updateWIWOSMStatus(entries.get(0).wikipediaLang, entries);
-            }
+            WikipediaApp.partitionList(entries, 20).forEach(chunk -> {
+                WikipediaApp.updateWIWOSMStatus(chunk.get(0).wikipediaLang, chunk);
+                list.repaint();
+            });
             return null;
         }
 

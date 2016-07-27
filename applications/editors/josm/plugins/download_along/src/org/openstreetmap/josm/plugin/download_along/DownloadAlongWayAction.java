@@ -23,7 +23,6 @@ import org.openstreetmap.josm.gui.help.HelpUtil;
 import org.openstreetmap.josm.gui.layer.gpx.DownloadAlongPanel;
 import org.openstreetmap.josm.gui.progress.NullProgressMonitor;
 import org.openstreetmap.josm.tools.Shortcut;
-import org.openstreetmap.josm.tools.Utils;
 
 class DownloadAlongWayAction extends DownloadAlongAction {
 
@@ -141,6 +140,6 @@ class DownloadAlongWayAction extends DownloadAlongAction {
 
     @Override
     protected void updateEnabledState(Collection<? extends OsmPrimitive> selection) {
-        setEnabled(Utils.exists(selection, OsmPrimitive.wayPredicate));
+        setEnabled(selection.stream().anyMatch(OsmPrimitive.wayPredicate));
     }
 }

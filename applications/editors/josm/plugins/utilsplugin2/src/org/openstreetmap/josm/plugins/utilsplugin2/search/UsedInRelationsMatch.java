@@ -24,7 +24,7 @@ public class UsedInRelationsMatch extends RangeMatch {
         this(tokenizer.readRange(tr("Range of referencing relation count")));
     }
 
-    private class RelationCounter implements Visitor {
+    private static class RelationCounter implements Visitor {
         int count;
         @Override
         public void visit(Way w) {
@@ -53,7 +53,7 @@ public class UsedInRelationsMatch extends RangeMatch {
     protected Long getNumber(OsmPrimitive osm) {
         counter.count = 0;
         osm.visitReferrers(counter);
-        return new Long(counter.count);
+        return Long.valueOf(counter.count);
     }
 
     @Override

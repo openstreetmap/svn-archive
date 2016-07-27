@@ -10,6 +10,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 import org.openstreetmap.josm.command.AddCommand;
@@ -177,12 +178,12 @@ public final class CircleArcMaker {
                     i++;
                     // We look for the first anchor node. The next should be directly to the left or right.
                     // Exception when the way is closed
-                    if (n == anchorNodes[a]) {
+                    if (Objects.equals(n, anchorNodes[a])) {
                         bi = i;
                         Node otherAnchor = anchorNodes[a + 1];
-                        if (i > 0 && tw.getNode(i - 1) == otherAnchor) {
+                        if (i > 0 && Objects.equals(tw.getNode(i - 1), otherAnchor)) {
                             ei = i - 1;
-                        } else if (i < (tw.getNodesCount() - 1) && tw.getNode(i + 1) == otherAnchor) {
+                        } else if (i < (tw.getNodesCount() - 1) && Objects.equals(tw.getNode(i + 1), otherAnchor)) {
                             ei = i + 1;
                         } else {
                             continue; // this can happen with closed ways. Continue searching for the correct index

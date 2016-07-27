@@ -5,6 +5,7 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.util.Collection;
 import java.util.LinkedList;
+import java.util.Objects;
 
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
@@ -35,7 +36,7 @@ public class ChangeRelationMemberCommand extends Command {
         }
         LinkedList<RelationMember> newrms = new LinkedList<>();
         for (RelationMember rm : relation.getMembers()) {
-            if (rm.getMember() == oldP) {
+            if (Objects.equals(rm.getMember(), oldP)) {
                 newrms.add(new RelationMember(rm.getRole(), newP));
             } else {
                 newrms.add(rm);

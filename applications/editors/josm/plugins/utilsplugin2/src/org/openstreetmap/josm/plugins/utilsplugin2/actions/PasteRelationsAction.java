@@ -3,10 +3,13 @@ package org.openstreetmap.josm.plugins.utilsplugin2.actions;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
+import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,6 +23,8 @@ import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.PrimitiveData;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.RelationMember;
+import org.openstreetmap.josm.gui.datatransfer.ClipboardUtils;
+import org.openstreetmap.josm.gui.datatransfer.data.PrimitiveTransferData;
 import org.openstreetmap.josm.tools.Shortcut;
 
 /**
@@ -43,7 +48,13 @@ public class PasteRelationsAction extends JosmAction {
             return;
 
         Map<Relation, String> relations = new HashMap<>();
-        for (PrimitiveData pdata : Main.pasteBuffer.getDirectlyAdded()) {
+        Collection<PrimitiveData> data = Collections.emptySet();
+        try {
+            data = ((PrimitiveTransferData) ClipboardUtils.getClipboard().getData(PrimitiveTransferData.DATA_FLAVOR)).getDirectlyAdded();
+        } catch (UnsupportedFlavorException | IOException ex) {
+            Main.warn(ex);
+        }
+        for (PrimitiveData pdata : data) {
             OsmPrimitive p = getLayerManager().getEditDataSet().getPrimitiveById(pdata.getUniqueId(), pdata.getType());
             if (p != null) {
                 for (Relation r : OsmPrimitive.getFilteredList(p.getReferrers(), Relation.class)) {
@@ -97,6 +108,7 @@ public class PasteRelationsAction extends JosmAction {
 
     @Override
     protected void updateEnabledState(Collection<? extends OsmPrimitive> selection) {
-        setEnabled(selection != null && !selection.isEmpty() && !Main.pasteBuffer.isEmpty());
+        setEnabled(selection != null && !selection.isEmpty()
+                && ClipboardUtils.getClipboard().isDataFlavorAvailable(PrimitiveTransferData.DATA_FLAVOR));
     }
 }

@@ -8,6 +8,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 import javax.swing.JOptionPane;
@@ -106,7 +107,7 @@ public final class NodeWayUtils {
         List<Pair<Node, Node>> nodePairs = w.getNodePairs(false);
         int count = 0;
         for (Way anyway: ways) {
-            if (anyway == w) continue;
+            if (Objects.equals(anyway, w)) continue;
             if (newWays.contains(anyway) || excludeWays.contains(anyway)) continue;
 
             List<Pair<Node, Node>> nodePairs2 = anyway.getNodePairs(false);
@@ -129,7 +130,7 @@ public final class NodeWayUtils {
         List<Pair<Node, Node>> nodePairs = w.getNodePairs(false);
         int count = 0;
         for (Way anyway: ways) {
-            if (anyway == w) continue;
+            if (Objects.equals(anyway, w)) continue;
             if (newWays.contains(anyway)) continue;
             List<Pair<Node, Node>> nodePairs2 = anyway.getNodePairs(false);
             loop: for (Pair<Node, Node> p1 : nodePairs) {
@@ -290,18 +291,18 @@ public final class NodeWayUtils {
             nextWay = null;
 
             for (OsmPrimitive ref : curNode.getReferrers()) {
-                if (ref instanceof Way && ref != w && ref.isSelectable()) {
+                if (ref instanceof Way && !Objects.equals(ref, w) && ref.isSelectable()) {
                     //
                     Way w2 = (Way) ref;
                     //  -----[prevNode]-(curNode)-[nextNode]------[preLast]-(endNode)
                     //          w           |              w2
                     if (w2.getNodesCount() < 2 || w2.isClosed()) continue;
 
-                    if (curNode == w2.firstNode()) {
+                    if (Objects.equals(curNode, w2.firstNode())) {
                         nextNode = w2.getNode(1);
                         preLast = w2.getNode(w2.getNodesCount()-2);
                         endNode = w2.lastNode(); // forward direction
-                    } else if (curNode == w2.lastNode()) {
+                    } else if (Objects.equals(curNode, w2.lastNode())) {
                         nextNode = w2.getNode(w2.getNodesCount()-2);
                         preLast = w2.getNode(1);
                         endNode = w2.firstNode(); // backward direction
@@ -320,9 +321,9 @@ public final class NodeWayUtils {
                     }
                 }
             }
-            if (firstWay == nextWay) {
+            if (Objects.equals(firstWay, nextWay)) {
                 //we came to starting way, but not not the right end
-                if (otherEnd == firstWay.firstNode()) return false;
+                if (Objects.equals(otherEnd, firstWay.firstNode())) return false;
                 newWays.addAll(newestWays);
                 return true; // correct loop found
             }

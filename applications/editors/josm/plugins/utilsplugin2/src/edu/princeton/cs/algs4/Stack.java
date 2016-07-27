@@ -7,8 +7,8 @@ package edu.princeton.cs.algs4;
  *
  *  A generic stack, implemented using a linked list. Each stack
  *  element is of type Item.
- *  
- *  % more tobe.txt 
+ *
+ *  % more tobe.txt
  *  to be or not to - be - - that - - - is
  *
  *  % java Stack < tobe.txt
@@ -41,7 +41,7 @@ public class Stack<Item> implements Iterable<Item> {
         private Node next;
     }
 
-   /**
+    /**
      * Create an empty stack.
      */
     public Stack() {
@@ -50,21 +50,21 @@ public class Stack<Item> implements Iterable<Item> {
         assert check();
     }
 
-   /**
+    /**
      * Is the stack empty?
      */
     public boolean isEmpty() {
         return first == null;
     }
 
-   /**
+    /**
      * Return the number of items in the stack.
      */
     public int size() {
         return N;
     }
 
-   /**
+    /**
      * Add the item to the stack.
      */
     public void push(Item item) {
@@ -76,7 +76,7 @@ public class Stack<Item> implements Iterable<Item> {
         assert check();
     }
 
-   /**
+    /**
      * Delete and return the item most recently added to the stack.
      * Throw an exception if no such item exists because the stack is empty.
      */
@@ -90,7 +90,7 @@ public class Stack<Item> implements Iterable<Item> {
     }
 
 
-   /**
+    /**
      * Return the item most recently added to the stack.
      * Throw an exception if no such item exists because the stack is empty.
      */
@@ -99,16 +99,17 @@ public class Stack<Item> implements Iterable<Item> {
         return first.item;
     }
 
-   /**
+    /**
      * Return string representation.
      */
+    @Override
     public String toString() {
         StringBuilder s = new StringBuilder();
         for (Item item : this)
             s.append(item + " ");
         return s.toString();
     }
-       
+
 
     // check internal invariants
     private boolean check() {
@@ -131,40 +132,44 @@ public class Stack<Item> implements Iterable<Item> {
         if (numberOfNodes != N) return false;
 
         return true;
-    } 
+    }
 
 
-   /**
+    /**
      * Return an iterator to the stack that iterates through the items in LIFO order.
      */
+    @Override
     public Iterator<Item> iterator()  { return new ListIterator();  }
 
     // an iterator, doesn't implement remove() since it's optional
     private class ListIterator implements Iterator<Item> {
         private Node current = first;
+        @Override
         public boolean hasNext()  { return current != null;                     }
+        @Override
         public void remove()      { throw new UnsupportedOperationException();  }
 
+        @Override
         public Item next() {
             if (!hasNext()) throw new NoSuchElementException();
             Item item = current.item;
-            current = current.next; 
+            current = current.next;
             return item;
         }
     }
 
 
-   /**
+    /**
      * A test client.
      */
-//    public static void main(String[] args) {
-//        Stack<String> s = new Stack<String>();
-//        while (!StdIn.isEmpty()) {
-//            String item = StdIn.readString();
-//            if (!item.equals("-")) s.push(item);
-//            else if (!s.isEmpty()) StdOut.print(s.pop() + " ");
-//        }
-//        StdOut.println("(" + s.size() + " left on stack)");
-//    }
+    //    public static void main(String[] args) {
+    //        Stack<String> s = new Stack<String>();
+    //        while (!StdIn.isEmpty()) {
+    //            String item = StdIn.readString();
+    //            if (!item.equals("-")) s.push(item);
+    //            else if (!s.isEmpty()) StdOut.print(s.pop() + " ");
+    //        }
+    //        StdOut.println("(" + s.size() + " left on stack)");
+    //    }
 }
 

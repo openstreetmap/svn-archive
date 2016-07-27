@@ -67,15 +67,13 @@ public final class LatLonAction extends JosmAction {
             cmds.add(new AddCommand(nnew));
         }
 
-        if (type == "nodes") {
+        if ("nodes".equals(type)) {
             //we dont need to do anything, we already have all the nodes
-        }
-        if (type == "way") {
+        } else if ("way".equals(type)) {
             Way wnew = new Way();
             wnew.setNodes(nodes);
             cmds.add(new AddCommand(wnew));
-        }
-        if (type == "area") {
+        } else if ("area".equals(type)) {
             nodes.add(nodes.get(0)); // this is needed to close the way.
             Way wnew = new Way();
             wnew.setNodes(nodes);

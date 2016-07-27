@@ -21,7 +21,7 @@ public class ParentsMatch extends RangeMatch {
 
     @Override
     protected Long getNumber(OsmPrimitive osm) {
-        return new Long(osm.getReferrers().size());
+        return Long.valueOf(osm.getReferrers().size());
     }
 
     @Override

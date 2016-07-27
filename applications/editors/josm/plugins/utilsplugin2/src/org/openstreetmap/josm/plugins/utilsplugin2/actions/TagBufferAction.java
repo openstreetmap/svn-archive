@@ -12,6 +12,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Predicate;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
@@ -19,9 +20,8 @@ import org.openstreetmap.josm.command.ChangePropertyCommand;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.SequenceCommand;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
-import org.openstreetmap.josm.tools.Predicate;
 import org.openstreetmap.josm.tools.Shortcut;
-import org.openstreetmap.josm.tools.Utils;
+import org.openstreetmap.josm.tools.SubclassFilteredCollection;
 
 /**
  * Remembers tags of selected object(s) and when clicked, pastes them onto selection.
@@ -30,12 +30,7 @@ import org.openstreetmap.josm.tools.Utils;
  */
 public class TagBufferAction extends JosmAction {
     private static final String TITLE = tr("Copy tags from previous selection");
-    private static final Predicate<OsmPrimitive> IS_TAGGED_PREDICATE = new Predicate<OsmPrimitive>() {
-        @Override
-        public boolean evaluate(OsmPrimitive object) {
-            return object.isTagged();
-        }
-    };
+    private static final Predicate<OsmPrimitive> IS_TAGGED_PREDICATE = object -> object.isTagged();
     private Map<String, String> tags = new HashMap<>();
     private Map<String, String> currentTags = new HashMap<>();
     private Set<OsmPrimitive> selectionBuf = new HashSet<>();
@@ -116,7 +111,7 @@ public class TagBufferAction extends JosmAction {
 
     private void rememberSelectionTags() {
         // Fix #8350 - only care about tagged objects
-        final Collection<OsmPrimitive> selectedTaggedObjects = Utils.filter(
+        final Collection<OsmPrimitive> selectedTaggedObjects = SubclassFilteredCollection.filter(
                 getLayerManager().getEditDataSet().getSelected(), IS_TAGGED_PREDICATE);
         if (!selectedTaggedObjects.isEmpty()) {
             currentTags.clear();

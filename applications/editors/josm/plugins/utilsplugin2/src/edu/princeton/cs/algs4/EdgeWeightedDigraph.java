@@ -24,7 +24,7 @@ public class EdgeWeightedDigraph {
     private final int V;
     private int E;
     private Bag<DirectedEdge>[] adj;
-    
+
     /**
      * Create an empty edge-weighted digraph with V vertices.
      */
@@ -33,12 +33,12 @@ public class EdgeWeightedDigraph {
         if (V < 0) throw new RuntimeException("Number of vertices must be nonnegative");
         this.V = V;
         this.E = 0;
-        adj = (Bag<DirectedEdge>[]) new Bag[V];
+        adj = new Bag[V];
         for (int v = 0; v < V; v++)
             adj[v] = new Bag<>();
     }
 
-   /**
+    /**
      * Create a edge-weighted digraph with V vertices and E edges.
      */
     public EdgeWeightedDigraph(int V, int E) {
@@ -56,18 +56,18 @@ public class EdgeWeightedDigraph {
     /**
      * Create an edge-weighted digraph from input stream.
      */
-//    public EdgeWeightedDigraph(In in) {
-//        this(in.readInt());
-//        int E = in.readInt();
-//        for (int i = 0; i < E; i++) {
-//            int v = in.readInt();
-//            int w = in.readInt();
-//            double weight = in.readDouble();
-//            addEdge(new DirectedEdge(v, w, weight));
-//        }
-//    }
+    //    public EdgeWeightedDigraph(In in) {
+    //        this(in.readInt());
+    //        int E = in.readInt();
+    //        for (int i = 0; i < E; i++) {
+    //            int v = in.readInt();
+    //            int w = in.readInt();
+    //            double weight = in.readDouble();
+    //            addEdge(new DirectedEdge(v, w, weight));
+    //        }
+    //    }
 
-   /**
+    /**
      * Copy constructor.
      */
     public EdgeWeightedDigraph(EdgeWeightedDigraph G) {
@@ -85,21 +85,21 @@ public class EdgeWeightedDigraph {
         }
     }
 
-   /**
+    /**
      * Return the number of vertices in this digraph.
      */
     public int V() {
         return V;
     }
 
-   /**
+    /**
      * Return the number of edges in this digraph.
      */
     public int E() {
         return E;
     }
 
-   /**
+    /**
      * Add the edge e to this digraph.
      */
     public void addEdge(DirectedEdge e) {
@@ -108,7 +108,7 @@ public class EdgeWeightedDigraph {
         E++;
     }
 
-   /**
+    /**
      * Return the edges leaving vertex v as an Iterable.
      * To iterate over the edges leaving vertex v, use foreach notation:
      * <tt>for (DirectedEdge e : graph.adj(v))</tt>.
@@ -117,7 +117,7 @@ public class EdgeWeightedDigraph {
         return adj[v];
     }
 
-   /**
+    /**
      * Return all edges in this graph as an Iterable.
      * To iterate over the edges, use foreach notation:
      * <tt>for (DirectedEdge e : graph.edges())</tt>.
@@ -130,18 +130,19 @@ public class EdgeWeightedDigraph {
             }
         }
         return list;
-    } 
+    }
 
-   /**
+    /**
      * Return number of edges leaving v.
      */
     public int outdegree(int v) {
         return adj[v].size();
     }
 
-   /**
+    /**
      * Return a string representation of this graph.
      */
+    @Override
     public String toString() {
         String NEWLINE = System.getProperty("line.separator");
         StringBuilder s = new StringBuilder();

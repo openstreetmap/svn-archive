@@ -50,27 +50,27 @@ public class IndexMinPQ<Key extends Comparable<Key>> implements Iterable<Integer
     }
 
     // return the index associated with a minimal key
-    public int minIndex() { 
+    public int minIndex() {
         if (N == 0) throw new NoSuchElementException("Priority queue underflow");
-        return pq[1];        
+        return pq[1];
     }
 
     // return a minimal key
-    public Key minKey() { 
+    public Key minKey() {
         if (N == 0) throw new NoSuchElementException("Priority queue underflow");
-        return keys[pq[1]];        
+        return keys[pq[1]];
     }
 
     // delete a minimal key and returns its associated index
-    public int delMin() { 
+    public int delMin() {
         if (N == 0) throw new NoSuchElementException("Priority queue underflow");
-        int min = pq[1];        
-        exch(1, N--); 
+        int min = pq[1];
+        exch(1, N--);
         sink(1);
         qp[min] = -1;            // delete
         keys[pq[N+1]] = null;    // to help with garbage collection
         pq[N+1] = -1;            // not needed
-        return min; 
+        return min;
     }
 
     // return key associated with index k
@@ -120,9 +120,9 @@ public class IndexMinPQ<Key extends Comparable<Key>> implements Iterable<Integer
     }
 
 
-   /**************************************************************
-    * General helper functions
-    **************************************************************/
+    /**************************************************************
+     * General helper functions
+     **************************************************************/
     private boolean greater(int i, int j) {
         return keys[pq[i]].compareTo(keys[pq[j]]) > 0;
     }
@@ -133,9 +133,9 @@ public class IndexMinPQ<Key extends Comparable<Key>> implements Iterable<Integer
     }
 
 
-   /**************************************************************
-    * Heap helper functions
-    **************************************************************/
+    /**************************************************************
+     * Heap helper functions
+     **************************************************************/
     private void swim(int k)  {
         while (k > 1 && greater(k/2, k)) {
             exch(k, k/2);
@@ -154,16 +154,17 @@ public class IndexMinPQ<Key extends Comparable<Key>> implements Iterable<Integer
     }
 
 
-   /***********************************************************************
-    * Iterators
-    **********************************************************************/
+    /***********************************************************************
+     * Iterators
+     **********************************************************************/
 
-   /**
+    /**
      * Return an iterator that iterates over all of the elements on the
      * priority queue in ascending order.
      * <p>
      * The iterator doesn't implement <tt>remove()</tt> since it's optional.
      */
+    @Override
     public Iterator<Integer> iterator() { return new HeapIterator(); }
 
     private class HeapIterator implements Iterator<Integer> {
@@ -178,9 +179,12 @@ public class IndexMinPQ<Key extends Comparable<Key>> implements Iterable<Integer
                 copy.insert(pq[i], keys[pq[i]]);
         }
 
+        @Override
         public boolean hasNext()  { return !copy.isEmpty();                     }
+        @Override
         public void remove()      { throw new UnsupportedOperationException();  }
 
+        @Override
         public Integer next() {
             if (!hasNext()) throw new NoSuchElementException();
             return copy.delMin();

@@ -3,9 +3,10 @@ package org.openstreetmap.josm.plugins.utilsplugin2.customurl;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -69,21 +70,14 @@ public final class URLList {
 
     public static List<String> loadURLList() {
         ArrayList<String> items = new ArrayList<>();
-        BufferedReader fr = null;
-        try {
-            File f = new File(UtilsPlugin2.getInstance().getPluginDir(), "customurl.txt");
-            fr = new BufferedReader(new FileReader(f));
+        File f = new File(UtilsPlugin2.getInstance().getPluginDir(), "customurl.txt");
+        try (BufferedReader fr = Files.newBufferedReader(f.toPath(), StandardCharsets.UTF_8)) {
             String s;
-            while ((s = fr.readLine()) != null) items.add(s);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if (fr != null)
-                    fr.close();
-            } catch (Exception e) {
-                Main.warn(e);
+            while ((s = fr.readLine()) != null) {
+                items.add(s);
             }
+        } catch (IOException e) {
+            Main.error(e);
         }
         return items;
     }

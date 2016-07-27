@@ -24,7 +24,7 @@ public class UsedInWaysMatch extends RangeMatch {
         this(tokenizer.readRange(tr("Range of attached ways count")));
     }
 
-    private class WayCounter implements Visitor {
+    private static class WayCounter implements Visitor {
         int count;
         @Override
         public void visit(Way w) {
@@ -53,7 +53,7 @@ public class UsedInWaysMatch extends RangeMatch {
         if (osm instanceof Node) {
             counter.count = 0;
             osm.visitReferrers(counter);
-            return new Long(counter.count);
+            return Long.valueOf(counter.count);
         } else return null;
     }
 

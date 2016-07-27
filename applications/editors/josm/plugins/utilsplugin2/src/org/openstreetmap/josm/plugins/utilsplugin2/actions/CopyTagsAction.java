@@ -17,6 +17,7 @@ import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Tag;
+import org.openstreetmap.josm.gui.datatransfer.ClipboardUtils;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import org.openstreetmap.josm.tools.Shortcut;
 import org.openstreetmap.josm.tools.Utils;
@@ -61,7 +62,8 @@ public final class CopyTagsAction extends JosmAction {
                 values.add(new Tag(kv.getKey(), kv.getValue()).toString());
             }
         }
-        if (!values.isEmpty()) Utils.copyToClipboard(Utils.join("\n", values));
+        if (!values.isEmpty())
+            ClipboardUtils.copyString(Utils.join("\n", values));
     }
 
     @Override
@@ -82,7 +84,7 @@ public final class CopyTagsAction extends JosmAction {
                     tr("Please select something to copy."),
                     tr("Information"),
                     JOptionPane.INFORMATION_MESSAGE
-            );
+                    );
             return true;
         }
         return false;

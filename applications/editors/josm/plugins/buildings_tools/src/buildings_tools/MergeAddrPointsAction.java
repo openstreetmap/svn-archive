@@ -121,7 +121,7 @@ public class MergeAddrPointsAction extends JosmAction {
                         Relation rnew = new Relation(r);
                         for (int i = 0; i < r.getMembersCount(); i++) {
                             RelationMember member = r.getMember(i);
-                            if (member.getMember() == mergeNode) {
+                            if (mergeNode.equals(member.getMember())) {
                                 rnew.removeMember(i);
                                 rnew.addMember(i, new RelationMember(member.getRole(), w));
                             }

@@ -315,7 +315,7 @@ class Building {
                     Relation rnew = new Relation(r);
                     for (int i = 0; i < r.getMembersCount(); i++) {
                         RelationMember member = r.getMember(i);
-                        if (member.getMember() == addrNode) {
+                        if (addrNode.equals(member.getMember())) {
                             rnew.removeMember(i);
                             rnew.addMember(i, new RelationMember(member.getRole(), w));
                         }

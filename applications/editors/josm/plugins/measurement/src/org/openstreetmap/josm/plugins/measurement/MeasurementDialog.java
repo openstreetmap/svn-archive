@@ -89,8 +89,8 @@ public class MeasurementDialog extends ToggleDialog implements SelectionChangedL
     public MeasurementDialog()
     {
         super(tr("Measured values"), "measure", tr("Open the measurement window."),
-        Shortcut.registerShortcut("subwindow:measurement", tr("Toggle: {0}", tr("Measured values")),
-        KeyEvent.VK_U, Shortcut.CTRL_SHIFT), 150);
+                Shortcut.registerShortcut("subwindow:measurement", tr("Toggle: {0}", tr("Measured values")),
+                        KeyEvent.VK_U, Shortcut.CTRL_SHIFT), 150);
 
         resetButton = new SideButton(new AbstractAction() {
             {
@@ -138,7 +138,7 @@ public class MeasurementDialog extends ToggleDialog implements SelectionChangedL
         this.setPreferredSize(new Dimension(0, 92));
 
         createLayout(valuePanel, false, Arrays.asList(new SideButton[] {
-            resetButton
+                resetButton
         }));
 
         DataSet.addSelectionListener(this);
@@ -209,12 +209,12 @@ public class MeasurementDialog extends ToggleDialog implements SelectionChangedL
                         length += segLength;
                         //http://local.wasp.uwa.edu.au/~pbourke/geometry/polyarea/
                         wayArea += (MeasurementLayer.calcX(n.getCoor()) * MeasurementLayer.calcY(lastN.getCoor()))
-                                 - (MeasurementLayer.calcY(n.getCoor()) * MeasurementLayer.calcX(lastN.getCoor()));
+                                - (MeasurementLayer.calcY(n.getCoor()) * MeasurementLayer.calcX(lastN.getCoor()));
                         segAngle = MeasurementLayer.angleBetween(lastN.getCoor(), n.getCoor());
                     }
                     lastN = n;
                 }
-                if (lastN != null && lastN == w.getNodes().iterator().next())
+                if (lastN != null && lastN.equals(w.getNodes().iterator().next()))
                     wayArea = Math.abs(wayArea / 2);
                 else
                     wayArea = 0;

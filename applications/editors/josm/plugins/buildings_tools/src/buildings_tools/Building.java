@@ -217,7 +217,7 @@ class Building {
         double mindist = 0.0003;
         for (Node n : nodes) {
             double dist = n.getCoor().distanceSq(l);
-            if (dist < mindist && OsmPrimitive.isUsablePredicate.evaluate(n)) {
+            if (dist < mindist && n.isUsable()) {
                 bestnode = n;
                 mindist = dist;
             }

@@ -42,7 +42,7 @@ public class StopToWayAssigner {
 
 	public StopToWayAssigner(List<PTWay> ptways) {
 		ways = new HashSet<Way>();
-		for (PTWay ptway: ptways) {
+		for (PTWay ptway : ptways) {
 			ways.addAll(ptway.getWays());
 		}
 	}
@@ -58,7 +58,7 @@ public class StopToWayAssigner {
 		// 1) Search if this stop has already been assigned:
 		if (stopToWay.containsKey(stop)) {
 			List<Way> assignedWays = stopToWay.get(stop);
-			for (Way assignedWay: assignedWays) {
+			for (Way assignedWay : assignedWays) {
 				if (this.ways.contains(assignedWay)) {
 					return assignedWay;
 				}
@@ -71,8 +71,6 @@ public class StopToWayAssigner {
 			addAssignedWayToMap(stop, wayOfStopPosition);
 			return wayOfStopPosition;
 		}
-
-		// TODO: search if a stop position is in the vicinity of a platform
 
 		// 3) Search if the stop has a stop_area:
 		List<OsmPrimitive> stopElements = new ArrayList<>(2);
@@ -97,7 +95,39 @@ public class StopToWayAssigner {
 			}
 		}
 
-		// 4) Run the growing-bounding-boxes algorithm:
+		// 4) Search if a stop position is in the vicinity of a platform:
+		if (stop.getPlatform() != null) {
+			List<Node> potentialStopPositionList = stop.findPotentialStopPositions();
+			Node closestStopPosition = null;
+			double minDistanceSq = Double.MAX_VALUE;
+			for (Node potentialStopPosition : potentialStopPositionList) {
+				double distanceSq = potentialStopPosition.getCoor()
+						.distanceSq(stop.getPlatform().getBBox().getCenter());
+				if (distanceSq < minDistanceSq) {
+					closestStopPosition = potentialStopPosition;
+					minDistanceSq = distanceSq;
+				}
+			}
+			if (closestStopPosition != null) {
+				Way closestWay = null;
+				double minDistanceSqToWay = Double.MAX_VALUE;
+				for (Way way: this.ways) {
+					if (way.containsNode(closestStopPosition)) {
+						double distanceSq = calculateMinDistanceToSegment(new Node(stop.getPlatform().getBBox().getCenter()), way);
+						if (distanceSq < minDistanceSqToWay) {
+							closestWay = way;
+							minDistanceSqToWay = distanceSq;
+						}
+					}
+				}
+				if (closestWay != null) {
+					addAssignedWayToMap(stop, closestWay);
+					return closestWay;
+				}
+			}
+		}
+
+		// 5) Run the growing-bounding-boxes algorithm:
 		double searchRadius = 0.001;
 		while (searchRadius < 0.005) {
 

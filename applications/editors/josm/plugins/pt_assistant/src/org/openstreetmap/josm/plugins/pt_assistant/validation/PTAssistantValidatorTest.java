@@ -44,7 +44,6 @@ public class PTAssistantValidatorTest extends Test {
 	public static final int ERROR_CODE_STOP_NOT_SERVED = 3753;
 	public static final int ERROR_CODE_STOP_BY_STOP = 3754;
 
-
 	private PTAssistantLayer layer;
 
 	public PTAssistantValidatorTest() {
@@ -283,14 +282,13 @@ public class PTAssistantValidatorTest extends Test {
 			// Variant 2
 			// If there is only the sorting error, add it and stop testing.
 			this.errors.addAll(routeChecker.getErrors());
-			return;
+			// return;
 		}
 
-		if (!routeChecker.getHasGap()) {
-			// Variant 1
-//			storeCorrectRouteSegments(r);
-
-		}
+		// if (!routeChecker.getHasGap()) {
+		// // Variant 1
+		// storeCorrectRouteSegments(r);
+		// }
 
 		// Variant 3:
 		proceedAfterSorting(r);
@@ -310,14 +308,28 @@ public class PTAssistantValidatorTest extends Test {
 
 		segmentChecker.performFirstStopTest();
 		segmentChecker.performLastStopTest();
-		segmentChecker.performStopByStopTest();
+		segmentChecker.performStopNotServedTest();
+
+		boolean sortingErrorFound = false;
+		for (TestError error : this.errors) {
+			if (error.getCode() == ERROR_CODE_SORTING) {
+				sortingErrorFound = true;
+				break;
+			}
+		}
+		if (!sortingErrorFound) {
+			segmentChecker.performStopByStopTest();
+		}
 
 		this.errors.addAll(segmentChecker.getErrors());
 	}
 
 	/**
-	 * Creates the PTRouteSegments of a route that has been found correct and stores them in the list of correct route segments
-	 * @param r route relation
+	 * Creates the PTRouteSegments of a route that has been found correct and
+	 * stores them in the list of correct route segments
+	 * 
+	 * @param r
+	 *            route relation
 	 */
 	@SuppressWarnings("unused")
 	private void storeCorrectRouteSegments(Relation r) {
@@ -325,7 +337,7 @@ public class PTAssistantValidatorTest extends Test {
 		StopToWayAssigner assigner = new StopToWayAssigner(manager.getPTWays());
 		if (manager.getPTStops().size() > 1) {
 			for (int i = 1; i < manager.getPTStops().size(); i++) {
-				PTStop segmentStartStop = manager.getPTStops().get(i-1);
+				PTStop segmentStartStop = manager.getPTStops().get(i - 1);
 				PTStop segmentEndStop = manager.getPTStops().get(i);
 				Way segmentStartWay = assigner.get(segmentStartStop);
 				Way segmentEndWay = assigner.get(segmentEndStop);
@@ -347,11 +359,11 @@ public class PTAssistantValidatorTest extends Test {
 				|| testError.getCode() == PTAssistantValidatorTest.ERROR_CODE_PLATFORM_PART_OF_HIGHWAY) {
 			return true;
 		}
-		
+
 		if (testError.getCode() == ERROR_CODE_STOP_BY_STOP && SegmentChecker.isFixable(testError)) {
 			return true;
 		}
-		
+
 		return false;
 	}
 
@@ -377,7 +389,7 @@ public class PTAssistantValidatorTest extends Test {
 				|| testError.getCode() == ERROR_CODE_PLATFORM_PART_OF_HIGHWAY) {
 			commands.add(NodeChecker.fixError(testError));
 		}
-		
+
 		if (testError.getCode() == ERROR_CODE_STOP_BY_STOP) {
 			commands.add(SegmentChecker.fixError(testError));
 		}

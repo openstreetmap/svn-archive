@@ -218,8 +218,21 @@ public class SegmentChecker extends Checker {
 		return -1;
 	}
 
+	public void performStopNotServedTest() {
+		for (PTStop stop : manager.getPTStops()) {
+			Way way = assigner.get(stop);
+			if (way == null) {
+				createStopError(stop);
+			}
+		}
+	}
+
+	/**
+	 * Performs the stop-by-stop test by visiting each segment between two
+	 * consecutive stops and checking if the ways between them are correct
+	 */
 	public void performStopByStopTest() {
-		
+
 		if (manager.getPTStopCount() < 2) {
 			return;
 		}
@@ -232,20 +245,14 @@ public class SegmentChecker extends Checker {
 
 			Way startWay = assigner.get(startStop);
 			Way endWay = assigner.get(endStop);
-			if (startWay == null) {
+			if (startWay == null || endWay == null) {
 				this.firstNodeOfRouteSegmentInDirectionOfTravel = null;
-				if (i == 0) {
-					createStopError(startStop);
-				}
 				continue;
 			}
-			if (endWay == null) {
-				this.firstNodeOfRouteSegmentInDirectionOfTravel = null;
-				if (i != 0) {
-					createStopError(endStop);
-				}
-				continue;
-			}
+//
+//			System.out.println();
+//			System.out.println("start way: " + startWay.getId());
+//			System.out.println("end way: " + endWay.getId());
 
 			List<PTWay> segmentWays = manager.getPTWaysBetween(startWay, endWay);
 
@@ -266,6 +273,7 @@ public class SegmentChecker extends Checker {
 				PTRouteSegment routeSegment = new PTRouteSegment(startStop, endStop, segmentWays);
 				correctSegments.add(routeSegment);
 			} else {
+//				System.out.println("ERROR");
 				PTRouteSegment routeSegment = new PTRouteSegment(startStop, endStop, segmentWays);
 				TestError error = this.errors.get(this.errors.size() - 1);
 				wrongSegments.put(error, routeSegment);
@@ -365,6 +373,7 @@ public class SegmentChecker extends Checker {
 
 		if (start == end) {
 			// if both PTStops are on the same PTWay
+			this.firstNodeOfRouteSegmentInDirectionOfTravel = null;
 			return true;
 		}
 
@@ -396,8 +405,20 @@ public class SegmentChecker extends Checker {
 
 				// find the next node in direction of travel (which is part of
 				// the PTWay start):
+//				if (firstNodeOfRouteSegmentInDirectionOfTravel != null) {
+//					System.out.println("previous node in direction of travel: "
+//							+ firstNodeOfRouteSegmentInDirectionOfTravel.getId());
+//				} else {
+//					System.out.println("previous node in direction of travel: null");
+//				}
 				firstNodeOfRouteSegmentInDirectionOfTravel = getOppositeEndNode(current,
 						firstNodeOfRouteSegmentInDirectionOfTravel);
+//				if (firstNodeOfRouteSegmentInDirectionOfTravel != null) {
+//					System.out.println(
+//							"next node in direction of travel: " + firstNodeOfRouteSegmentInDirectionOfTravel.getId());
+//				} else {
+//					System.out.println("next node in direction of travel: null");
+//				}
 
 				List<PTWay> nextWaysInDirectionOfTravel = this.findNextPTWaysInDirectionOfTravel(current,
 						firstNodeOfRouteSegmentInDirectionOfTravel);
@@ -550,9 +571,9 @@ public class SegmentChecker extends Checker {
 			Relation modifiedRelation = new Relation(originalRelation);
 			List<RelationMember> originalRelationMembers = originalRelation.getMembers();
 			List<RelationMember> modifiedRelationMembers = new ArrayList<>();
-			
+
 			// copy stops first:
-			for (RelationMember rm: originalRelationMembers) {
+			for (RelationMember rm : originalRelationMembers) {
 				if (RouteUtils.isPTStop(rm)) {
 					if (rm.getRole().equals("stop_position")) {
 						if (rm.getType().equals(OsmPrimitiveType.NODE)) {
@@ -567,30 +588,42 @@ public class SegmentChecker extends Checker {
 						// "stop_position":
 						modifiedRelationMembers.add(rm);
 					}
-				} 
+				}
 			}
-			
+
 			// copy PTWays next:
 			List<RelationMember> waysOfOriginalRelation = new ArrayList<>();
-			for (RelationMember rm: originalRelation.getMembers()) {
+			for (RelationMember rm : originalRelation.getMembers()) {
 				if (RouteUtils.isPTWay(rm)) {
 					waysOfOriginalRelation.add(rm);
 				}
 			}
-			
+
 			for (int i = 0; i < waysOfOriginalRelation.size(); i++) {
 				if (waysOfOriginalRelation.get(i).getWay() == wrongSegment.getPTWays().get(0).getWays().get(0)) {
-//				if (waysOfOriginalRelation.get(i) == wrongSegment.getPTWays().get(0)) {
-					modifiedRelationMembers.addAll(correctSegment.getPTWays());
+					// if (waysOfOriginalRelation.get(i) ==
+					// wrongSegment.getPTWays().get(0)) {
+					for (PTWay ptway : correctSegment.getPTWays()) {
+						if (ptway.getRole().equals("forward") || ptway.getRole().equals("backward")) {
+							modifiedRelationMembers.add(new RelationMember("", ptway.getMember()));
+						} else {
+							modifiedRelationMembers.add(ptway);
+						}
+					}
 					i = i + wrongSegment.getPTWays().size() - 1;
 				} else {
-					modifiedRelationMembers.add(waysOfOriginalRelation.get(i));
+					if (waysOfOriginalRelation.get(i).getRole().equals("forward")
+							|| waysOfOriginalRelation.get(i).getRole().equals("backward")) {
+						modifiedRelationMembers.add(new RelationMember("", waysOfOriginalRelation.get(i).getMember()));
+					} else {
+						modifiedRelationMembers.add(waysOfOriginalRelation.get(i));
+					}
 				}
 			}
 
-
 			modifiedRelation.setMembers(modifiedRelationMembers);
 			// TODO: change the data model too
+			wrongSegments.remove(testError);
 			ChangeCommand changeCommand = new ChangeCommand(originalRelation, modifiedRelation);
 			return changeCommand;
 		}

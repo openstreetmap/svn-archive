@@ -136,7 +136,7 @@ public class PTStop extends RelationMember {
 			return potentialStopPositions;
 		}
 
-		// Look for a stop position within 100 m (around 0.002 degrees) of this
+		// Look for a stop position within 0.002 degrees (around 100 m) of this
 		// platform:
 
 		LatLon platformCenter = platform.getBBox().getCenter();
@@ -146,8 +146,6 @@ public class PTStop extends RelationMember {
 		Double by = platformCenter.getY() + 0.002;
 		BBox platformBBox = new BBox(ax, ay, bx, by);
 
-		// Collection<Node> allNodes =
-		// Main.getLayerManager().getEditDataSet().getNodes();
 		Collection<Node> allNodes = platform.getDataSet().getNodes();
 		for (Node currentNode : allNodes) {
 			if (platformBBox.bounds(currentNode.getBBox()) && currentNode.hasTag("public_transport", "stop_position")) {
@@ -162,7 +160,8 @@ public class PTStop extends RelationMember {
 	 * Checks if this stop equals to other by comparing if they have the same
 	 * stop_position or a platform
 	 * 
-	 * @param other PTStop to be compared
+	 * @param other
+	 *            PTStop to be compared
 	 * @return true if equal, false otherwise
 	 */
 	public boolean equalsStop(PTStop other) {
@@ -171,15 +170,17 @@ public class PTStop extends RelationMember {
 			return false;
 		}
 
-		if (this.stopPosition != null && (this.stopPosition == other.getStopPosition() || this.stopPosition == other.getPlatform())) {
+		if (this.stopPosition != null
+				&& (this.stopPosition == other.getStopPosition() || this.stopPosition == other.getPlatform())) {
 			return true;
 		}
-		
-		if (this.platform != null && (this.platform == other.getPlatform() || this.platform == other.getStopPosition())) {
+
+		if (this.platform != null
+				&& (this.platform == other.getPlatform() || this.platform == other.getStopPosition())) {
 			return true;
 		}
 
 		return false;
 	}
-	
+
 }

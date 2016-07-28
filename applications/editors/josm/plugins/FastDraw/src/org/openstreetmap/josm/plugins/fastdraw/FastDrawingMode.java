@@ -7,8 +7,10 @@ import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -37,6 +39,8 @@ import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.gui.ConditionalOptionPaneUtil;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.gui.MapView;
+import org.openstreetmap.josm.gui.datatransfer.ClipboardUtils;
+import org.openstreetmap.josm.gui.datatransfer.data.PrimitiveTransferData;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.gui.layer.MapViewPaintable;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
@@ -577,10 +581,13 @@ class FastDrawingMode extends MapMode implements MapViewPaintable, KeyPressRelea
             // paste tags - from ctrl-shift-v
             Set<OsmPrimitive> ts = new HashSet<>();
             ts.add(w);
-            TagPaster tp = new TagPaster(Main.pasteBuffer.getDirectlyAdded(), ts);
-            List<Tag> execute = tp.execute();
-            for (Tag t : execute) {
-                w.put(t.getKey(), t.getValue());
+            try {
+                PrimitiveTransferData data = (PrimitiveTransferData) ClipboardUtils.getClipboard().getData(PrimitiveTransferData.DATA_FLAVOR);
+                for (Tag t : new TagPaster(data.getDirectlyAdded(), ts).execute()) {
+                    w.put(t.getKey(), t.getValue());
+                }
+            } catch (UnsupportedFlavorException | IOException e) {
+                Main.error(e);
             }
         }
         if (!settings.autoTags.isEmpty()) {

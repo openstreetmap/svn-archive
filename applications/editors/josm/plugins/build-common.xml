@@ -77,6 +77,8 @@
             </compilerclasspath>
             <compilerarg value="-Xlint:deprecation"/>
             <compilerarg value="-Xlint:unchecked"/>
+            <compilerarg value="-Xep:ReferenceEquality:OFF"/>
+            <compilerarg line="-Xmaxwarns 1000"/>
             <classpath refid="plugin.classpath"/>
         </javac>
     </target>

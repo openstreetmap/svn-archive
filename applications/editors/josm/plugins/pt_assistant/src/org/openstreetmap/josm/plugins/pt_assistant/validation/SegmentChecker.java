@@ -240,7 +240,7 @@ public class SegmentChecker extends Checker {
 		// Check each route segment:
 		for (int i = 1; i < manager.getPTStopCount(); i++) {
 
-			this.firstNodeOfRouteSegmentInDirectionOfTravel = null;
+//			this.firstNodeOfRouteSegmentInDirectionOfTravel = null;
 
 			PTStop startStop = manager.getPTStops().get(i - 1);
 			PTStop endStop = manager.getPTStops().get(i);
@@ -248,42 +248,35 @@ public class SegmentChecker extends Checker {
 			Way startWay = assigner.get(startStop);
 			Way endWay = assigner.get(endStop);
 			if (startWay == null || endWay == null) {
-				this.firstNodeOfRouteSegmentInDirectionOfTravel = null;
 				continue;
 			}
 
 			List<PTWay> segmentWays = manager.getPTWaysBetween(startWay, endWay);
 
-			if (this.firstNodeOfRouteSegmentInDirectionOfTravel == null) {
-				// if we are at the beginning of the route or after a gap /
-				// error:
-
-				this.firstNodeOfRouteSegmentInDirectionOfTravel = findFirstNodeOfRouteSegmentInDirectionOfTravel(
-						segmentWays.get(0));
-				if (this.firstNodeOfRouteSegmentInDirectionOfTravel == null) {
-					// check if this error has just been reported:
-					TestError previousError = this.errors.get(this.errors.size() - 1);
-					if (previousError.getHighlighted().size() == 1
-							&& previousError.getHighlighted().iterator().next() == startWay) {
-						// do nothing, this error has already been reported in
-						// the previous step
-					} else {
-						List<Relation> primitives = new ArrayList<>(1);
-						primitives.add(relation);
-						List<OsmPrimitive> highlighted = new ArrayList<>();
-						highlighted.add(startWay);
-						TestError e = new TestError(this.test, Severity.WARNING, tr("PT: Problem in the route segment"),
-								PTAssistantValidatorTest.ERROR_CODE_STOP_BY_STOP, primitives, highlighted);
-						this.errors.add(e);
-						PTRouteSegment routeSegment = new PTRouteSegment(startStop, endStop, segmentWays);
-						wrongSegments.put(e, routeSegment);
-					}
-					continue;
+			Node testNode = findFirstNodeOfRouteSegmentInDirectionOfTravel(
+					segmentWays.get(0));
+			if (testNode == null) {
+				// check if this error has just been reported:
+				if (!this.errors.isEmpty() && this.errors.get(this.errors.size() - 1).getHighlighted().size() == 1
+						&& this.errors.get(this.errors.size() - 1).getHighlighted().iterator().next() == startWay) {
+					// do nothing, this error has already been reported in
+					// the previous route segment
+				} else {
+					List<Relation> primitives = new ArrayList<>(1);
+					primitives.add(relation);
+					List<OsmPrimitive> highlighted = new ArrayList<>();
+					highlighted.add(startWay);
+					TestError e = new TestError(this.test, Severity.WARNING, tr("PT: Problem in the route segment"),
+							PTAssistantValidatorTest.ERROR_CODE_STOP_BY_STOP, primitives, highlighted);
+					this.errors.add(e);
+					PTRouteSegment routeSegment = new PTRouteSegment(startStop, endStop, segmentWays);
+					wrongSegments.put(e, routeSegment);
 				}
+				continue;
 			}
 
 			boolean sortingCorrect = existingWaySortingIsCorrect(segmentWays.get(0),
-					this.firstNodeOfRouteSegmentInDirectionOfTravel, segmentWays.get(segmentWays.size() - 1));
+					testNode, segmentWays.get(segmentWays.size() - 1));
 			if (sortingCorrect) {
 				PTRouteSegment routeSegment = new PTRouteSegment(startStop, endStop, segmentWays);
 				correctSegments.add(routeSegment);
@@ -412,11 +405,11 @@ public class SegmentChecker extends Checker {
 
 		if (start == end) {
 			// if both PTStops are on the same PTWay
-			this.firstNodeOfRouteSegmentInDirectionOfTravel = null;
 			return true;
 		}
 
 		PTWay current = start;
+		Node currentNode = startWayPreviousNodeInDirectionOfTravel;
 
 		while (!current.equals(end)) {
 			// "equals" is used here instead of "==" because when the same way
@@ -427,9 +420,8 @@ public class SegmentChecker extends Checker {
 
 			// if current contains an unsplit roundabout:
 			if (current.containsUnsplitRoundabout()) {
-				firstNodeOfRouteSegmentInDirectionOfTravel = manager.getCommonNode(current,
-						nextPTWayAccortingToExistingSorting);
-				if (firstNodeOfRouteSegmentInDirectionOfTravel == null) {
+				currentNode = manager.getCommonNode(current, nextPTWayAccortingToExistingSorting);
+				if (currentNode == null) {
 					List<Relation> primitives = new ArrayList<>(1);
 					primitives.add(relation);
 					List<OsmPrimitive> highlighted = new ArrayList<>();
@@ -444,11 +436,10 @@ public class SegmentChecker extends Checker {
 
 				// find the next node in direction of travel (which is part of
 				// the PTWay start):
-				firstNodeOfRouteSegmentInDirectionOfTravel = getOppositeEndNode(current,
-						firstNodeOfRouteSegmentInDirectionOfTravel);
+				currentNode = getOppositeEndNode(current, currentNode);
 
 				List<PTWay> nextWaysInDirectionOfTravel = this.findNextPTWaysInDirectionOfTravel(current,
-						firstNodeOfRouteSegmentInDirectionOfTravel);
+						currentNode);
 
 				if (!nextWaysInDirectionOfTravel.contains(nextPTWayAccortingToExistingSorting)) {
 					List<Relation> primitives = new ArrayList<>(1);
@@ -456,12 +447,11 @@ public class SegmentChecker extends Checker {
 					List<OsmPrimitive> highlighted = new ArrayList<>();
 
 					highlighted.addAll(current.getWays());
-					highlighted.add(firstNodeOfRouteSegmentInDirectionOfTravel);
+					highlighted.add(currentNode);
 
 					TestError e = new TestError(this.test, Severity.WARNING, tr("PT: Problem in the route segment"),
 							PTAssistantValidatorTest.ERROR_CODE_STOP_BY_STOP, primitives, highlighted);
 					this.errors.add(e);
-					this.firstNodeOfRouteSegmentInDirectionOfTravel = null;
 					return false;
 
 				}

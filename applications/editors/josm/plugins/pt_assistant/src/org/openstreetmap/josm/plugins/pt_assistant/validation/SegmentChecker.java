@@ -240,6 +240,8 @@ public class SegmentChecker extends Checker {
 		// Check each route segment:
 		for (int i = 1; i < manager.getPTStopCount(); i++) {
 
+			this.firstNodeOfRouteSegmentInDirectionOfTravel = null;
+
 			PTStop startStop = manager.getPTStops().get(i - 1);
 			PTStop endStop = manager.getPTStops().get(i);
 
@@ -249,10 +251,6 @@ public class SegmentChecker extends Checker {
 				this.firstNodeOfRouteSegmentInDirectionOfTravel = null;
 				continue;
 			}
-//
-//			System.out.println();
-//			System.out.println("start way: " + startWay.getId());
-//			System.out.println("end way: " + endWay.getId());
 
 			List<PTWay> segmentWays = manager.getPTWaysBetween(startWay, endWay);
 
@@ -263,6 +261,23 @@ public class SegmentChecker extends Checker {
 				this.firstNodeOfRouteSegmentInDirectionOfTravel = findFirstNodeOfRouteSegmentInDirectionOfTravel(
 						segmentWays.get(0));
 				if (this.firstNodeOfRouteSegmentInDirectionOfTravel == null) {
+					// check if this error has just been reported:
+					TestError previousError = this.errors.get(this.errors.size() - 1);
+					if (previousError.getHighlighted().size() == 1
+							&& previousError.getHighlighted().iterator().next() == startWay) {
+						// do nothing, this error has already been reported in
+						// the previous step
+					} else {
+						List<Relation> primitives = new ArrayList<>(1);
+						primitives.add(relation);
+						List<OsmPrimitive> highlighted = new ArrayList<>();
+						highlighted.add(startWay);
+						TestError e = new TestError(this.test, Severity.WARNING, tr("PT: Problem in the route segment"),
+								PTAssistantValidatorTest.ERROR_CODE_STOP_BY_STOP, primitives, highlighted);
+						this.errors.add(e);
+						PTRouteSegment routeSegment = new PTRouteSegment(startStop, endStop, segmentWays);
+						wrongSegments.put(e, routeSegment);
+					}
 					continue;
 				}
 			}
@@ -273,7 +288,6 @@ public class SegmentChecker extends Checker {
 				PTRouteSegment routeSegment = new PTRouteSegment(startStop, endStop, segmentWays);
 				correctSegments.add(routeSegment);
 			} else {
-//				System.out.println("ERROR");
 				PTRouteSegment routeSegment = new PTRouteSegment(startStop, endStop, segmentWays);
 				TestError error = this.errors.get(this.errors.size() - 1);
 				wrongSegments.put(error, routeSegment);
@@ -319,7 +333,20 @@ public class SegmentChecker extends Checker {
 		if (nextWay == null) {
 			return null;
 		}
+		PTWay wayAfterNext = manager.getNextPTWay(nextWay);
 		Node[] nextWayEndnodes = nextWay.getEndNodes();
+		if ((startWayEndnodes[0] == nextWayEndnodes[0] && startWayEndnodes[1] == nextWayEndnodes[1])
+				|| (startWayEndnodes[0] == nextWayEndnodes[1] && startWayEndnodes[1] == nextWayEndnodes[0])) {
+			// if this is a split roundabout:
+			Node[] wayAfterNextEndnodes = wayAfterNext.getEndNodes();
+			if (startWayEndnodes[0] == wayAfterNextEndnodes[0] || startWayEndnodes[0] == wayAfterNextEndnodes[1]) {
+				return startWayEndnodes[0];
+			}
+			if (startWayEndnodes[1] == wayAfterNextEndnodes[0] || startWayEndnodes[1] == wayAfterNextEndnodes[1]) {
+				return startWayEndnodes[1];
+			}
+		}
+
 		if (startWayEndnodes[0] == nextWayEndnodes[0] || startWayEndnodes[0] == nextWayEndnodes[1]) {
 			return startWayEndnodes[1];
 		}
@@ -369,6 +396,18 @@ public class SegmentChecker extends Checker {
 
 	}
 
+	/**
+	 * Checks if the existing sorting of the given route segment is correct
+	 * 
+	 * @param start
+	 *            PTWay assigned to the first stop of the segment
+	 * @param startWayPreviousNodeInDirectionOfTravel
+	 *            Node if the start way which is furthest away from the rest of
+	 *            the route
+	 * @param end
+	 *            PTWay assigned to the end stop of the segment
+	 * @return true if the sorting is correct, false otherwise.
+	 */
 	private boolean existingWaySortingIsCorrect(PTWay start, Node startWayPreviousNodeInDirectionOfTravel, PTWay end) {
 
 		if (start == end) {
@@ -405,20 +444,8 @@ public class SegmentChecker extends Checker {
 
 				// find the next node in direction of travel (which is part of
 				// the PTWay start):
-//				if (firstNodeOfRouteSegmentInDirectionOfTravel != null) {
-//					System.out.println("previous node in direction of travel: "
-//							+ firstNodeOfRouteSegmentInDirectionOfTravel.getId());
-//				} else {
-//					System.out.println("previous node in direction of travel: null");
-//				}
 				firstNodeOfRouteSegmentInDirectionOfTravel = getOppositeEndNode(current,
 						firstNodeOfRouteSegmentInDirectionOfTravel);
-//				if (firstNodeOfRouteSegmentInDirectionOfTravel != null) {
-//					System.out.println(
-//							"next node in direction of travel: " + firstNodeOfRouteSegmentInDirectionOfTravel.getId());
-//				} else {
-//					System.out.println("next node in direction of travel: null");
-//				}
 
 				List<PTWay> nextWaysInDirectionOfTravel = this.findNextPTWaysInDirectionOfTravel(current,
 						firstNodeOfRouteSegmentInDirectionOfTravel);
@@ -527,28 +554,62 @@ public class SegmentChecker extends Checker {
 
 	protected static boolean isFixable(TestError testError) {
 
+		/*-
+		 * When is an error fixable?
+		 * - if there is a correct segment
+		 * - if it can be fixed by sorting
+		 * - if the route is compete even without some ways
+		 * - if simple routing closes the gap
+		 */
+
 		if (testError.getCode() == PTAssistantValidatorTest.ERROR_CODE_STOP_BY_STOP) {
-
-			PTRouteSegment wrongSegment = wrongSegments.get(testError);
-			PTRouteSegment correctSegment = null;
-			// TODO: now just the first correctSegment is taken over. Change
-			// that
-			// the segment is selected.
-			for (PTRouteSegment segment : correctSegments) {
-				if (wrongSegment.getFirstStop().equalsStop(segment.getFirstStop())
-						&& wrongSegment.getLastStop().equalsStop(segment.getLastStop())) {
-					correctSegment = segment;
-					// System.out.println("correct segment found: " +
-					// correctSegment.getFirstStop().getPlatform().getId());
-					break;
-				}
+			if (isFixableByUsingCorrectSegment(testError)) {
+				return true;
 			}
-
-			return correctSegment != null;
+			if (isFixableBySegmentSorting(testError)) {
+				return true;
+			}
+			if (isFixableByRemovingWays()) {
+				return true;
+			}
+			if (isFixableBySimpleRouting()) {
+				return true;
+			}
 		}
 
 		return false;
 
+	}
+
+	private static boolean isFixableByUsingCorrectSegment(TestError testError) {
+		PTRouteSegment wrongSegment = wrongSegments.get(testError);
+		PTRouteSegment correctSegment = null;
+		// TODO: now just the first correctSegment is taken over. Change
+		// that the segment is selected.
+		for (PTRouteSegment segment : correctSegments) {
+			if (wrongSegment.getFirstStop().equalsStop(segment.getFirstStop())
+					&& wrongSegment.getLastStop().equalsStop(segment.getLastStop())) {
+				correctSegment = segment;
+				break;
+			}
+		}
+		return correctSegment != null;
+	}
+
+	private static boolean isFixableBySegmentSorting(TestError testError) {
+		PTRouteSegment wrongSegment = wrongSegments.get(testError);
+
+		return false;
+	}
+
+	private static boolean isFixableByRemovingWays() {
+		// TODO
+		return false;
+	}
+
+	private static boolean isFixableBySimpleRouting() {
+		// TODO
+		return false;
 	}
 
 	protected static Command fixError(TestError testError) {

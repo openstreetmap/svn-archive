@@ -1,6 +1,7 @@
 package org.wikipedia;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 
 import java.util.Arrays;
@@ -31,6 +32,7 @@ public class WikidataTagCellRendererTest {
             }
         }).get(); // wait for labels to be fetched
         final JLabel label = renderer.renderValues(ids, new JTable(), new JLabel());
+        assertNotNull(label);
         assertThat(label.getText(), is("<html>" +
                 "Q84 <span color='gray'>London</span>; " +
                 "Q1741 <span color='gray'>Vienna</span>; " +

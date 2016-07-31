@@ -122,9 +122,23 @@ public class PTWay extends RelationMember {
 		
 		List<Way> ways = this.getWays();
 		for (Way way: ways) {
-			if (way.hasTag("junction", "roundabout") && way.firstNode() == way.lastNode()) {
+			if (way.firstNode() == way.lastNode()) {
 				return true;
 			}
+		}
+		return false;
+	}
+	
+	public boolean startsWithUnsplitRoundabout() {
+		if (this.ways.get(0).firstNode() == this.ways.get(0).lastNode()) {
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean endsWithUnsplitRoundabout() {
+		if (this.ways.get(this.ways.size() - 1).firstNode() == this.ways.get(this.ways.size()-1).lastNode()) {
+			return true;
 		}
 		return false;
 	}

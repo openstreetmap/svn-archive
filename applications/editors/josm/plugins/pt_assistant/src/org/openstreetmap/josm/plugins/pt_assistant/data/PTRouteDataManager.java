@@ -121,7 +121,8 @@ public class PTRouteDataManager {
 	}
 
 	/**
-	 * Assigns the given way to a PTWay of this route relation.
+	 * Assigns the given way to a PTWay of this route relation. If multiple
+	 * PTWays contain the same inputWay, the first found PTWay is returned.
 	 * 
 	 * @param inputWay
 	 *            Way to be assigned to a PTWAy of this route relation

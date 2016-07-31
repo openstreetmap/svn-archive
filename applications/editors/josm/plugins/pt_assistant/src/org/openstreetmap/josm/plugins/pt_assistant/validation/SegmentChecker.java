@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import javax.swing.JOptionPane;
+
 import org.openstreetmap.josm.command.ChangeCommand;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.data.coor.LatLon;
@@ -46,11 +48,11 @@ public class SegmentChecker extends Checker {
 	/* Assigns PTStops to nearest PTWays and stores that correspondence */
 	private StopToWayAssigner assigner;
 
-	/*
-	 * Stores reference that shows in which direction the segment checker is
-	 * moving
-	 */
-	private Node firstNodeOfRouteSegmentInDirectionOfTravel;
+	private List<PTWay> unusedWays = new ArrayList<>();
+
+	private HashMap<TestError, PTWay> erroneousPTWays = new HashMap<>();
+
+	private HashMap<TestError, Node> firstNodeOfErroneousPTWay = new HashMap<>();
 
 	public SegmentChecker(Relation relation, Test test) {
 
@@ -69,6 +71,8 @@ public class SegmentChecker extends Checker {
 		}
 
 		this.assigner = new StopToWayAssigner(manager.getPTWays());
+
+		unusedWays.addAll(manager.getPTWays());
 
 	}
 
@@ -240,8 +244,6 @@ public class SegmentChecker extends Checker {
 		// Check each route segment:
 		for (int i = 1; i < manager.getPTStopCount(); i++) {
 
-//			this.firstNodeOfRouteSegmentInDirectionOfTravel = null;
-
 			PTStop startStop = manager.getPTStops().get(i - 1);
 			PTStop endStop = manager.getPTStops().get(i);
 
@@ -253,9 +255,8 @@ public class SegmentChecker extends Checker {
 
 			List<PTWay> segmentWays = manager.getPTWaysBetween(startWay, endWay);
 
-			Node testNode = findFirstNodeOfRouteSegmentInDirectionOfTravel(
-					segmentWays.get(0));
-			if (testNode == null) {
+			Node firstNode = findFirstNodeOfRouteSegmentInDirectionOfTravel(segmentWays.get(0));
+			if (firstNode == null) {
 				// check if this error has just been reported:
 				if (!this.errors.isEmpty() && this.errors.get(this.errors.size() - 1).getHighlighted().size() == 1
 						&& this.errors.get(this.errors.size() - 1).getHighlighted().iterator().next() == startWay) {
@@ -271,15 +272,18 @@ public class SegmentChecker extends Checker {
 					this.errors.add(e);
 					PTRouteSegment routeSegment = new PTRouteSegment(startStop, endStop, segmentWays);
 					wrongSegments.put(e, routeSegment);
+					erroneousPTWays.put(e, manager.getPTWay(startWay));
+					firstNodeOfErroneousPTWay.put(e, null);
 				}
 				continue;
 			}
 
-			boolean sortingCorrect = existingWaySortingIsCorrect(segmentWays.get(0),
-					testNode, segmentWays.get(segmentWays.size() - 1));
+			boolean sortingCorrect = existingWaySortingIsCorrect(segmentWays.get(0), firstNode,
+					segmentWays.get(segmentWays.size() - 1));
 			if (sortingCorrect) {
 				PTRouteSegment routeSegment = new PTRouteSegment(startStop, endStop, segmentWays);
 				correctSegments.add(routeSegment);
+				unusedWays.removeAll(segmentWays);
 			} else {
 				PTRouteSegment routeSegment = new PTRouteSegment(startStop, endStop, segmentWays);
 				TestError error = this.errors.get(this.errors.size() - 1);
@@ -429,6 +433,7 @@ public class SegmentChecker extends Checker {
 					TestError e = new TestError(this.test, Severity.WARNING, tr("PT: Problem in the route segment"),
 							PTAssistantValidatorTest.ERROR_CODE_STOP_BY_STOP, primitives, highlighted);
 					this.errors.add(e);
+					erroneousPTWays.put(e, current);
 					return false;
 				}
 			} else {
@@ -438,8 +443,7 @@ public class SegmentChecker extends Checker {
 				// the PTWay start):
 				currentNode = getOppositeEndNode(current, currentNode);
 
-				List<PTWay> nextWaysInDirectionOfTravel = this.findNextPTWaysInDirectionOfTravel(current,
-						currentNode);
+				List<PTWay> nextWaysInDirectionOfTravel = this.findNextPTWaysInDirectionOfTravel(current, currentNode);
 
 				if (!nextWaysInDirectionOfTravel.contains(nextPTWayAccortingToExistingSorting)) {
 					List<Relation> primitives = new ArrayList<>(1);
@@ -556,10 +560,7 @@ public class SegmentChecker extends Checker {
 			if (isFixableByUsingCorrectSegment(testError)) {
 				return true;
 			}
-			if (isFixableBySegmentSorting(testError)) {
-				return true;
-			}
-			if (isFixableByRemovingWays()) {
+			if (isFixableBySortingAndRemoval(testError)) {
 				return true;
 			}
 			if (isFixableBySimpleRouting()) {
@@ -586,14 +587,12 @@ public class SegmentChecker extends Checker {
 		return correctSegment != null;
 	}
 
-	private static boolean isFixableBySegmentSorting(TestError testError) {
+	private static boolean isFixableBySortingAndRemoval(TestError testError) {
 		PTRouteSegment wrongSegment = wrongSegments.get(testError);
-
-		return false;
-	}
-
-	private static boolean isFixableByRemovingWays() {
-		// TODO
+		List<List<PTWay>> fixVariants = wrongSegment.getFixVariants();
+		if (!fixVariants.isEmpty()) {
+			return true;
+		}
 		return false;
 	}
 
@@ -602,9 +601,90 @@ public class SegmentChecker extends Checker {
 		return false;
 	}
 
+	protected void findFixes() {
+		for (TestError error : wrongSegments.keySet()) {
+			findFix(error);
+		}
+	}
+
+	/**
+	 * This method assumes that the first and the second ways of the route
+	 * segment are correctly connected. If they are not, the error will be
+	 * marked as not fixable.
+	 * 
+	 * @param testError
+	 */
+	private void findFix(TestError testError) {
+
+		PTRouteSegment wrongSegment = wrongSegments.get(testError);
+		PTWay startPTWay = wrongSegment.getFirstPTWay();
+		PTWay endPTWay = wrongSegment.getLastPTWay();
+
+		Node previousNode = findFirstNodeOfRouteSegmentInDirectionOfTravel(startPTWay);
+		if (previousNode == null) {
+			// TODO: sort route ways
+			return;
+		}
+
+		List<List<PTWay>> initialFixes = new ArrayList<>();
+		List<PTWay> initialFix = new ArrayList<>();
+		initialFix.add(startPTWay);
+		initialFixes.add(initialFix);
+		List<PTWay> fix = findWaysForFix(initialFixes, initialFix, previousNode, endPTWay).get(0);
+
+		if (!fix.isEmpty() && fix.get(fix.size() - 1).equals(endPTWay)) {
+			wrongSegment.addFixVariant(fix);
+		}
+
+	}
+
+	/**
+	 * 
+	 * @param allFixes
+	 * @param currentFix
+	 * @param previousNode
+	 * @param endWay
+	 * @return
+	 */
+	private List<List<PTWay>> findWaysForFix (List<List<PTWay>> allFixes, List<PTWay> currentFix, Node previousNode,
+			PTWay endWay) {
+
+		PTWay currentWay = currentFix.get(currentFix.size() - 1);
+		Node nextNode = getOppositeEndNode(currentWay, previousNode);
+
+		List<PTWay> potentialNextWays = this.findNextPTWaysInDirectionOfTravel(currentWay, nextNode);
+		List<PTWay> nextWays = new ArrayList<>();
+		for (PTWay potentianNextWay : potentialNextWays) {
+			if (unusedWays.contains(potentianNextWay)) {
+				nextWays.add(potentianNextWay);
+			}
+		}
+
+		if (!nextWays.isEmpty()) {
+			currentFix.add(nextWays.get(0));
+			if (!nextWays.get(0).equals(endWay)) {
+				allFixes = findWaysForFix(allFixes, currentFix, nextNode, endWay);
+			}
+		}
+
+//		if (nextWays.size() > 1) {
+//			for (int i = 1; i < nextWays.size(); i++) {
+//				List<PTWay> newList = new ArrayList<>();
+//				newList.addAll(currentFix);
+//				newList.add(nextWays.get(i));
+//				allFixes.add(newList);
+//				// TODO: go on
+//			}
+//		}
+
+		return allFixes;
+	}
+
 	protected static Command fixError(TestError testError) {
 
 		PTRouteSegment wrongSegment = wrongSegments.get(testError);
+
+		// 1) try to fix by using the correct segment:
 		PTRouteSegment correctSegment = null;
 		// TODO: now just the first correctSegment is taken over. Change that
 		// the segment is selected.
@@ -652,8 +732,6 @@ public class SegmentChecker extends Checker {
 
 			for (int i = 0; i < waysOfOriginalRelation.size(); i++) {
 				if (waysOfOriginalRelation.get(i).getWay() == wrongSegment.getPTWays().get(0).getWays().get(0)) {
-					// if (waysOfOriginalRelation.get(i) ==
-					// wrongSegment.getPTWays().get(0)) {
 					for (PTWay ptway : correctSegment.getPTWays()) {
 						if (ptway.getRole().equals("forward") || ptway.getRole().equals("backward")) {
 							modifiedRelationMembers.add(new RelationMember("", ptway.getMember()));
@@ -677,6 +755,69 @@ public class SegmentChecker extends Checker {
 			wrongSegments.remove(testError);
 			ChangeCommand changeCommand = new ChangeCommand(originalRelation, modifiedRelation);
 			return changeCommand;
+
+		} else if (!wrongSegment.getFixVariants().isEmpty()) {
+			// 2) try to fix by using the sort & remove method:
+			// TODO: ask user if the change should be undertaken
+			Relation originalRelation = (Relation) testError.getPrimitives().iterator().next();
+			Relation modifiedRelation = new Relation(originalRelation);
+			List<RelationMember> originalRelationMembers = originalRelation.getMembers();
+			List<RelationMember> modifiedRelationMembers = new ArrayList<>();
+
+			// copy stops first:
+			for (RelationMember rm : originalRelationMembers) {
+				if (RouteUtils.isPTStop(rm)) {
+					if (rm.getRole().equals("stop_position")) {
+						if (rm.getType().equals(OsmPrimitiveType.NODE)) {
+							RelationMember newMember = new RelationMember("stop", rm.getNode());
+							modifiedRelationMembers.add(newMember);
+						} else { // if it is a way:
+							RelationMember newMember = new RelationMember("stop", rm.getWay());
+							modifiedRelationMembers.add(newMember);
+						}
+					} else {
+						// if the relation member does not have the role
+						// "stop_position":
+						modifiedRelationMembers.add(rm);
+					}
+				}
+			}
+
+			// copy PTWays next:
+			List<RelationMember> waysOfOriginalRelation = new ArrayList<>();
+			for (RelationMember rm : originalRelation.getMembers()) {
+				if (RouteUtils.isPTWay(rm)) {
+					waysOfOriginalRelation.add(rm);
+				}
+			}
+
+			for (int i = 0; i < waysOfOriginalRelation.size(); i++) {
+				if (waysOfOriginalRelation.get(i).getWay() == wrongSegment.getPTWays().get(0).getWays().get(0)) {
+					for (PTWay ptway : wrongSegment.getFixVariants().get(0)) {
+						if (ptway.getRole().equals("forward") || ptway.getRole().equals("backward")) {
+							modifiedRelationMembers.add(new RelationMember("", ptway.getMember()));
+						} else {
+							modifiedRelationMembers.add(ptway);
+						}
+					}
+					i = i + wrongSegment.getPTWays().size() - 1;
+				} else {
+					if (waysOfOriginalRelation.get(i).getRole().equals("forward")
+							|| waysOfOriginalRelation.get(i).getRole().equals("backward")) {
+						modifiedRelationMembers.add(new RelationMember("", waysOfOriginalRelation.get(i).getMember()));
+					} else {
+						modifiedRelationMembers.add(waysOfOriginalRelation.get(i));
+					}
+				}
+			}
+			modifiedRelation.setMembers(modifiedRelationMembers);
+			// TODO: change the data model too
+			wrongSegments.remove(testError);
+			wrongSegment.setPTWays(wrongSegment.getFixVariants().get(0));
+			correctSegments.add(wrongSegment);
+			ChangeCommand changeCommand = new ChangeCommand(originalRelation, modifiedRelation);
+			return changeCommand;
+
 		}
 
 		return null;

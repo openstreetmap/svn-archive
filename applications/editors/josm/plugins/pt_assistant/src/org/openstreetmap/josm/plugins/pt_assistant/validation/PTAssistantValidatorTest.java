@@ -319,6 +319,7 @@ public class PTAssistantValidatorTest extends Test {
 		}
 		if (!sortingErrorFound) {
 			segmentChecker.performStopByStopTest();
+			segmentChecker.findFixes();
 		}
 
 		this.errors.addAll(segmentChecker.getErrors());

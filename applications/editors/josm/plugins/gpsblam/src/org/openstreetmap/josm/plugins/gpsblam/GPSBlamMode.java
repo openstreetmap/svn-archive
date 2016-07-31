@@ -72,6 +72,7 @@ class GPSBlamMode extends MapMode implements LayerChangeListener, MouseWheelList
     @Override
     public void exitMode() {
         super.exitMode();
+        getLayerManager().removeLayerChangeListener(this);
         Main.map.mapView.removeMouseListener(this);
         Main.map.mapView.removeMouseMotionListener(this);
         Main.map.mapView.removeMouseWheelListener(this);
@@ -216,11 +217,5 @@ class GPSBlamMode extends MapMode implements LayerChangeListener, MouseWheelList
             if(Main.map.mapMode instanceof GPSBlamMode)
                 Main.map.selectSelectTool(false);
         }
-    }
-
-    @Override
-    public void destroy() {
-        super.destroy();
-        getLayerManager().removeLayerChangeListener(this);
     }
 }

@@ -32,7 +32,7 @@ public class WikidataTagCellRenderer extends DefaultTableCellRenderer {
             return null;
         }
         final String key = table.getValueAt(row, 0).toString();
-        if (!("wikidata".equals(key) || key != null && key.endsWith(":wikidata"))) {
+        if (!("wikidata".equals(key) || (key != null && key.endsWith(":wikidata")))) {
             return null;
         }
 

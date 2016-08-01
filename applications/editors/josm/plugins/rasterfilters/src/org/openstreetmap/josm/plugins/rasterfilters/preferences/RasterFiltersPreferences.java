@@ -107,7 +107,7 @@ public class RasterFiltersPreferences implements SubPreferenceSetting {
 		return gui.getMapPreference();
 	}
 
-	class FiltersTableModel extends AbstractTableModel {
+	static class FiltersTableModel extends AbstractTableModel {
 
 		String[] columnNames = { "Filter Name", "Author", "Description", "" };
 		Class<?>[] columnClasses = { String.class, String.class, String.class, Boolean.class };

@@ -285,7 +285,7 @@ public class FilterPanel extends JPanel {
 
 				if ((i % 20) == 0) {
 
-					labelTable.put(new Integer(i),
+					labelTable.put(Integer.valueOf(i),
 							new JLabel(String.valueOf(i * delta / 100)));
 
 				}
@@ -293,8 +293,7 @@ public class FilterPanel extends JPanel {
 
 			try {
 
-				slider = new JSlider(JSlider.HORIZONTAL, minValue, maxValue,
-						new Double(initValue).intValue());
+				slider = new JSlider(JSlider.HORIZONTAL, minValue, maxValue, (int) initValue);
 				slider.setMinorTickSpacing(maxValue / 4);
 				slider.setName(json.getString("name"));
 				slider.setToolTipText(String.valueOf((double) slider.getValue() / 100));

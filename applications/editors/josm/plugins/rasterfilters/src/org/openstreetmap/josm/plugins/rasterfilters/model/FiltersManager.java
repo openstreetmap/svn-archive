@@ -78,11 +78,9 @@ ActionListener, ItemListener {
 			Main.debug("ClassName for loading " + filterState.getFilterClassName());
 			clazz = FiltersDownloader.loader.loadClass(filterState
 					.getFilterClassName());
-			filter = (Filter) clazz.newInstance();
+			filter = (Filter) clazz.getConstructor().newInstance();
 
-		} catch (InstantiationException | IllegalAccessException e) {
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
+		} catch (ReflectiveOperationException | IllegalArgumentException | SecurityException e) {
 			e.printStackTrace();
 		}
 

@@ -19,6 +19,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.net.URLConnection;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -222,11 +224,8 @@ public class FiltersDownloader implements ActionListener {
 		File file = new File(pluginDir, "urls.map");
 		Main.debug("EXIST FILE? " + file.exists());
 
-		try {
-			FileReader fileReader = new FileReader(file);
-			BufferedReader br = new BufferedReader(fileReader);
-
-			String temp = null;
+		try (BufferedReader br = Files.newBufferedReader(file.toPath(), StandardCharsets.UTF_8)) {
+			String temp;
 
 			while ((temp = br.readLine()) != null) {
 				String[] mapEntry = temp.split("\\t");
@@ -243,8 +242,6 @@ public class FiltersDownloader implements ActionListener {
 					}
 				}
 			}
-
-			br.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -288,16 +285,8 @@ public class FiltersDownloader implements ActionListener {
 		File file = new File(pluginDir, "urls.map");
 		Main.debug("pluginDir and urls map" + file.getAbsoluteFile());
 
-		FileWriter fileWriter = null;
-		BufferedWriter writer = null;
-		try {
-			fileWriter = new FileWriter(file);
-			writer = new BufferedWriter(fileWriter);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		for (JsonObject temp : metaList) {
+		try (BufferedWriter writer = Files.newBufferedWriter(file.toPath(), StandardCharsets.UTF_8)) {
+		    for (JsonObject temp : metaList) {
 			JsonArray binaries = temp.getJsonArray("binaries");
 
 			for (int i = 0; i < binaries.size(); i++) {
@@ -313,11 +302,7 @@ public class FiltersDownloader implements ActionListener {
 					e.printStackTrace();
 				}
 			}
-		}
-
-		try {
-			writer.close();
-			fileWriter.close();
+		    }
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

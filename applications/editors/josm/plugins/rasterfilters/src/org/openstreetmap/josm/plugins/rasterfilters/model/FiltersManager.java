@@ -129,7 +129,9 @@ ActionListener, ItemListener {
 		fp.setMaximumSize(new Dimension(300, fp.getNeededHeight()));
 		fp.setPreferredSize(new Dimension(300, fp.getNeededHeight()));
 
-		filter.changeFilterState(filterState.encodeJson());
+		if (filter != null) {
+		    filter.changeFilterState(filterState.encodeJson());
+		}
 		Main.getLayerManager().getActiveLayer().setFilterStateChanged();
 
 		fp.createBottomPanel(this);

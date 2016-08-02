@@ -228,11 +228,4 @@ public class PhotoAdjustMapMode extends MapMode implements LayerChangeListener, 
         }
         return all;
     }
-
-    @Override
-    public void destroy() {
-        super.destroy();
-        Main.getLayerManager().removeLayerChangeListener(this);
-        Main.getLayerManager().removeActiveLayerChangeListener(this);
-    }
 }

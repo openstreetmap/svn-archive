@@ -32,7 +32,7 @@ public class AddStopPositionAction extends JosmAction {
 	private static final long serialVersionUID = -5140181388906670207L;
 
 	public AddStopPositionAction() {
-		super(tr("Add stop position"), new ImageProvider("presets", "bus.png"), tr("Add stop position"),
+		super(tr("Add stop position"), new ImageProvider("presets/transport", "bus.svg"), tr("Add stop position"),
 				Shortcut.registerShortcut("Add stop position", tr("Add stop position"), KeyEvent.VK_T, Shortcut.NONE),
 				false, "addStopPosition", false);
 

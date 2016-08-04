@@ -512,9 +512,11 @@
                                                                          org/kaintoch/**/*.java,
                                                                          org/marvinproject/**/*.java,
                                                                          org/netbeans/**/*.java,
-																		 org/openstreetmap/josm/plugins/ohe/parser/**/*.java
-																		 org/openstreetmap/josm/plugins/roadsigns/javacc/**/*.java
-                                                                         org/osgeo/**/*.java"/>
+																		 org/openstreetmap/josm/plugins/ohe/parser/**/*.java,
+																		 org/openstreetmap/josm/plugins/roadsigns/javacc/**/*.java,
+                                                                         org/osgeo/**/*.java,
+																		 pdfimport/pdfbox/operators/**/*.java
+																		 "/>
             <fileset dir="${basedir}/test" includes="**/*.java" erroronmissingdir="false"/>
             <formatter type="xml" toFile="checkstyle-josm-${ant.project.name}.xml"/>
         </checkstyle>

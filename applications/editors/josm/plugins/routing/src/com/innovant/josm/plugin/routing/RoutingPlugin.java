@@ -1,30 +1,4 @@
-/*
- * Copyright (C) 2008 Innovant
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307,USA.
- *
- * For more information, please contact:
- *
- *  Innovant
- *   juangui@gmail.com
- *   vidalfree@gmail.com
- *
- *  http://public.grupoinnovant.com/blog
- *
- */
-
+// License: GPL. For details, see LICENSE file.
 package com.innovant.josm.plugin.routing;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -147,7 +121,7 @@ public class RoutingPlugin extends Plugin implements LayerChangeListener, DataSe
             System.err.println("Routing plugin warning: log4j configuration not found");
         }
         logger.debug("Loading routing plugin...");
-        preferenceSettings=new RoutingPreferenceDialog();
+        preferenceSettings = new RoutingPreferenceDialog();
         // Initialize layers list
         layers = new ArrayList<>();
         // Add menu
@@ -221,7 +195,7 @@ public class RoutingPlugin extends Plugin implements LayerChangeListener, DataSe
                 routingDialog.showDialog();
                 routingDialog.refresh();
             }
-        }else{                                            /*   hide Routing toolbar and dialog window  */
+        } else {                                           /*   hide Routing toolbar and dialog window  */
             menu.disableRestOfItems();
             if (routingDialog != null) {
                 routingDialog.hideDialog();
@@ -249,7 +223,7 @@ public class RoutingPlugin extends Plugin implements LayerChangeListener, DataSe
     @Override
     public void layerRemoving(LayerRemoveEvent evt) {
         Layer oldLayer = evt.getRemovedLayer();
-        if ((oldLayer instanceof RoutingLayer) & (layers.size()==1)) {
+        if ((oldLayer instanceof RoutingLayer) & (layers.size() == 1)) {
             // Remove button(s) from the tool bar when the last routing layer is removed
             addRouteNodeButton.setVisible(false);
             removeRouteNodeButton.setVisible(false);
@@ -262,7 +236,7 @@ public class RoutingPlugin extends Plugin implements LayerChangeListener, DataSe
             // Convert to Array to prevent ConcurrentModificationException when removing layers from ArrayList
             // FIXME: can't remove associated routing layers without triggering exceptions in some cases
             RoutingLayer[] layersArray = layers.toArray(new RoutingLayer[0]);
-            for (int i=0;i<layersArray.length;i++) {
+            for (int i = 0; i < layersArray.length; i++) {
                 if (layersArray[i].getDataLayer().equals(oldLayer)) {
                     try {
                         // Remove layer

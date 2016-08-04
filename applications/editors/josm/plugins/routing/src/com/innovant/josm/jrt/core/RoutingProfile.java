@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package com.innovant.josm.jrt.core;
 
 import java.util.HashMap;
@@ -56,14 +57,14 @@ public class RoutingProfile {
      * Holds traverse speed for each type of way, using the type as key.
      * A speed of zero means that this type of way cannot be traversed.
      */
-    private Map<String,Double> waySpeeds;
+    private Map<String, Double> waySpeeds;
 
 
 
     /**
      * Holds permission of use for each type of transport mode, using the mode as key.
      */
-    private Map<String,Boolean> allowedModes;
+    private Map<String, Boolean> allowedModes;
 
     /**
      * Constructor
@@ -74,13 +75,14 @@ public class RoutingProfile {
     public RoutingProfile(String name) {
         logger.debug("Init RoutingProfile with name: "+name);
         this.name = name;
-        waySpeeds=new HashMap<>();
-        Map<String,String> prefs=Main.pref.getAllPrefix("routing.profile."+name+".speed");
-        for(String key:prefs.keySet()){
+        waySpeeds = new HashMap<>();
+        Map<String, String> prefs = Main.pref.getAllPrefix("routing.profile."+name+".speed");
+        for (String key:prefs.keySet()) {
             waySpeeds.put((key.split("\\.")[4]), Double.valueOf(prefs.get(key)));
         }
-        for (String key:waySpeeds.keySet())
+        for (String key:waySpeeds.keySet()) {
             logger.debug(key+ "-- speed: "+waySpeeds.get(key));
+        }
         logger.debug("End init RoutingProfile with name: "+name);
     }
 
@@ -146,8 +148,8 @@ public class RoutingProfile {
         return allowedModes.get(mode);
     }
 
-    public double getSpeed(String key){
-        if(!waySpeeds.containsKey(key)) return 0.0;
+    public double getSpeed(String key) {
+        if (!waySpeeds.containsKey(key)) return 0.0;
         return waySpeeds.get(key);
     }
 

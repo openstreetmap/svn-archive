@@ -1,30 +1,4 @@
-/*
- * Copyright (C) 2008 Innovant
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307,USA.
- *
- * For more information, please contact:
- *
- *  Innovant
- *   juangui@gmail.com
- *   vidalfree@gmail.com
- *
- *  http://public.grupoinnovant.com/blog
- *
- */
-
+// License: GPL. For details, see LICENSE file.
 package com.innovant.josm.plugin.routing.actions;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -38,9 +12,8 @@ import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.mapmode.MapMode;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.gui.MapFrame;
-import org.openstreetmap.josm.tools.ImageProvider;
-
 import org.openstreetmap.josm.gui.layer.Layer;
+import org.openstreetmap.josm.tools.ImageProvider;
 
 import com.innovant.josm.plugin.routing.RoutingLayer;
 import com.innovant.josm.plugin.routing.RoutingModel;
@@ -73,7 +46,7 @@ public class MoveRouteNodeAction extends MapMode {
 
     /**
      * Constructor
-     * @param mapFrame
+     * @param mapFrame map frame
      */
     public MoveRouteNodeAction(MapFrame mapFrame) {
         // TODO Use constructor with shortcut
@@ -97,13 +70,13 @@ public class MoveRouteNodeAction extends MapMode {
         if (e.getButton() == MouseEvent.BUTTON1) {
             if (Main.getLayerManager().getActiveLayer() instanceof RoutingLayer) {
                 requestFocusInMapView();
-                RoutingLayer layer = (RoutingLayer)Main.getLayerManager().getActiveLayer();
+                RoutingLayer layer = (RoutingLayer) Main.getLayerManager().getActiveLayer();
                 RoutingModel routingModel = layer.getRoutingModel();
                 // Search for the nearest node in the list
                 List<Node> nl = routingModel.getSelectedNodes();
                 index = -1;
                 double dmax = DRAG_SQR_RADIUS; // maximum distance, in pixels
-                for (int i=0;i<nl.size();i++) {
+                for (int i = 0; i < nl.size(); i++) {
                     Node node = nl.get(i);
                     double d = Main.map.mapView.getPoint(node).distanceSq(e.getPoint());
                     if (d < dmax) {
@@ -111,7 +84,7 @@ public class MoveRouteNodeAction extends MapMode {
                         index = i;
                     }
                 }
-                if (index>=0)
+                if (index >= 0)
                     logger.debug("Moved from node " + nl.get(index));
             }
         }
@@ -119,7 +92,7 @@ public class MoveRouteNodeAction extends MapMode {
 
     @Override public void mouseReleased(MouseEvent e) {
         // If left button is released and a route node is being dragged
-        if ((e.getButton() == MouseEvent.BUTTON1) && (index>=0)) {
+        if ((e.getButton() == MouseEvent.BUTTON1) && (index >= 0)) {
             searchAndReplaceNode(e.getPoint());
         }
     }
@@ -129,7 +102,7 @@ public class MoveRouteNodeAction extends MapMode {
 
     private void searchAndReplaceNode(Point point) {
         if (Main.getLayerManager().getActiveLayer() instanceof RoutingLayer) {
-            RoutingLayer layer = (RoutingLayer)Main.getLayerManager().getActiveLayer();
+            RoutingLayer layer = (RoutingLayer) Main.getLayerManager().getActiveLayer();
             RoutingModel routingModel = layer.getRoutingModel();
             RoutingDialog routingDialog = RoutingPlugin.getInstance().getRoutingDialog();
             // Search for nearest highway node
@@ -147,8 +120,8 @@ public class MoveRouteNodeAction extends MapMode {
             Main.map.repaint();
         }
     }
+
     @Override public boolean layerIsSupported(Layer l) {
         return l instanceof RoutingLayer;
     }
-
 }

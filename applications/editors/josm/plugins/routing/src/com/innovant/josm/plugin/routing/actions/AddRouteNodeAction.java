@@ -1,30 +1,4 @@
-/*
- * Copyright (C) 2008 Innovant
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307,USA.
- *
- * For more information, please contact:
- *
- *  Innovant
- *   juangui@gmail.com
- *   vidalfree@gmail.com
- *
- *  http://public.grupoinnovant.com/blog
- *
- */
-
+// License: GPL. For details, see LICENSE file.
 package com.innovant.josm.plugin.routing.actions;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -58,7 +32,7 @@ public class AddRouteNodeAction extends MapMode {
 
     /**
      * Constructor
-     * @param mapFrame
+     * @param mapFrame map frame
      */
     public AddRouteNodeAction(MapFrame mapFrame) {
         // TODO Use constructor with shortcut
@@ -83,9 +57,9 @@ public class AddRouteNodeAction extends MapMode {
             // Search for nearest highway node
             Node node = null;
             if (Main.getLayerManager().getActiveLayer() instanceof RoutingLayer) {
-                RoutingLayer layer = (RoutingLayer)Main.getLayerManager().getActiveLayer();
+                RoutingLayer layer = (RoutingLayer) Main.getLayerManager().getActiveLayer();
                 node = layer.getNearestHighwayNode(e.getPoint());
-                if(node == null) {
+                if (node == null) {
                     logger.debug("no selected node");
                     return;
                 }
@@ -96,6 +70,7 @@ public class AddRouteNodeAction extends MapMode {
         }
         Main.map.repaint();
     }
+
     @Override public boolean layerIsSupported(Layer l) {
         return l instanceof RoutingLayer;
     }

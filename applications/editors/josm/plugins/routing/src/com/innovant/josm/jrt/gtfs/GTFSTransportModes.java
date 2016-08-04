@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package com.innovant.josm.jrt.gtfs;
 
 /**
@@ -6,7 +7,11 @@ package com.innovant.josm.jrt.gtfs;
  * TODO Using integers is suitable to parse gtfs feeds but
  * Routing Profile keys should be Strings
  */
-public class GTFSTransportModes {
+public final class GTFSTransportModes {
+
+    private GTFSTransportModes() {
+
+    }
 
     /**
      * 0 - Tram, Streetcar, Light rail. Any light rail or street level system within

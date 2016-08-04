@@ -1,27 +1,28 @@
+// License: GPL. For details, see LICENSE file.
 package com.innovant.josm.jrt.core;
 
 import org.openstreetmap.josm.data.coor.LatLon;
 
 public interface RoutingEdge {
 
-      public LatLon fromLatLon();
+    LatLon fromLatLon();
 
-      public LatLon toLatLon();
+    LatLon toLatLon();
 
-      public Object fromV();
+    Object fromV();
 
-      public Object toV();
+    Object toV();
 
-      public double getLength();
+    double getLength();
 
-      public void setLength(double length);
+    void setLength(double length);
 
-      public double getSpeed();
+    double getSpeed();
 
-      public void setSpeed(double speed);
+    void setSpeed(double speed);
 
-      public boolean isOneway();
+    boolean isOneway();
 
-      public void setOneway(boolean isOneway);
+    void setOneway(boolean isOneway);
 
 }

@@ -1,30 +1,4 @@
-/*
- * Copyright (C) 2008 Innovant
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307,USA.
- *
- * For more information, please contact:
- *
- *  Innovant
- *   juangui@gmail.com
- *   vidalfree@gmail.com
- *
- *  http://public.grupoinnovant.com/blog
- *
- */
-
+// License: GPL. For details, see LICENSE file.
 package com.innovant.josm.plugin.routing;
 
 import static org.openstreetmap.josm.tools.I18n.marktr;
@@ -71,17 +45,19 @@ import com.innovant.josm.jrt.osm.OsmEdge;
 public class RoutingLayer extends Layer {
 
     public enum PreferencesKeys {
-        KEY_ACTIVE_ROUTE_COLOR (marktr("routing active route")),
-        KEY_INACTIVE_ROUTE_COLOR (marktr("routing inactive route")),
-        KEY_ROUTE_WIDTH ("routing.route.width"),
-        KEY_ROUTE_SELECT ("routing.route.select");
+        KEY_ACTIVE_ROUTE_COLOR(marktr("routing active route")),
+        KEY_INACTIVE_ROUTE_COLOR(marktr("routing inactive route")),
+        KEY_ROUTE_WIDTH("routing.route.width"),
+        KEY_ROUTE_SELECT("routing.route.select");
 
         public final String key;
-        PreferencesKeys (String key) {
-            this.key=key;
+        PreferencesKeys(String key) {
+            this.key = key;
         }
 
-        public String getKey() {return key;};
+        public String getKey() {
+            return key;
+        }
     }
 
     /**
@@ -102,7 +78,7 @@ public class RoutingLayer extends Layer {
     /**
      * Start, Middle and End icons
      */
-    private Icon startIcon,middleIcon,endIcon;
+    private Icon startIcon, middleIcon, endIcon;
 
     /**
      * Associated OSM layer
@@ -116,13 +92,13 @@ public class RoutingLayer extends Layer {
     public RoutingLayer(String name, OsmDataLayer dataLayer) {
         super(name);
         logger.debug("Creating Routing Layer...");
-        if(startIcon == null) startIcon = ImageProvider.get("routing", "startflag");
-        if(middleIcon == null) middleIcon = ImageProvider.get("routing", "middleflag");
-        if(endIcon == null) endIcon = ImageProvider.get("routing", "endflag");
+        if (startIcon == null) startIcon = ImageProvider.get("routing", "startflag");
+        if (middleIcon == null) middleIcon = ImageProvider.get("routing", "middleflag");
+        if (endIcon == null) endIcon = ImageProvider.get("routing", "endflag");
         this.dataLayer = dataLayer;
         this.routingModel = new RoutingModel(dataLayer.data);
         logger.debug("Routing Layer created.");
-        
+
 
         this.routingModel.routingGraph.createGraph();    /* construct the graph right after we we create the layer */
         Main.map.repaint();                            /* update MapView */
@@ -154,7 +130,7 @@ public class RoutingLayer extends Layer {
         int snapDistance = NavigatableComponent.PROP_SNAP_DISTANCE.get();
         double minDist = 0;
         for (Way w : dataLayer.data.getWays()) {
-            if (w.isDeleted() || w.isIncomplete() || w.get("highway")==null) continue;
+            if (w.isDeleted() || w.isIncomplete() || w.get("highway") == null) continue;
             for (Node n : w.getNodes()) {
                 if (n.isDeleted() || n.isIncomplete()) continue;
 
@@ -180,11 +156,11 @@ public class RoutingLayer extends Layer {
     @Override
     public Object getInfoComponent() {
         String info = "<html>"
-                        + "<body>"
-                            +"Graph Vertex: "+this.routingModel.routingGraph.getVertexCount()+"<br/>"
-                            +"Graph Edges: "+this.routingModel.routingGraph.getEdgeCount()+"<br/>"
-                        + "</body>"
-                    + "</html>";
+                + "<body>"
+                +"Graph Vertex: "+this.routingModel.routingGraph.getVertexCount()+"<br/>"
+                +"Graph Edges: "+this.routingModel.routingGraph.getEdgeCount()+"<br/>"
+                + "</body>"
+                + "</html>";
         return info;
     }
 
@@ -192,7 +168,7 @@ public class RoutingLayer extends Layer {
     public Action[] getMenuEntries() {
         Collection<Action> components = new ArrayList<>();
         components.add(LayerListDialog.getInstance().createShowHideLayerAction());
-//        components.add(new JMenuItem(new LayerListDialog.ShowHideMarkerText(this)));
+        //        components.add(new JMenuItem(new LayerListDialog.ShowHideMarkerText(this)));
         components.add(LayerListDialog.getInstance().createDeleteLayerAction());
         components.add(SeparatorLayerAction.INSTANCE);
         components.add(new RenameLayerAction(getAssociatedFile(), this));
@@ -240,33 +216,33 @@ public class RoutingLayer extends Layer {
             // FIXME add after good width is found: Main.pref.put(KEY_ROUTE_WIDTH, widthString);
         }
         int width = Integer.parseInt(widthString);
-        
-        
+
+
         // draw our graph
         if (isActiveLayer) {
-            if(routingModel != null) {
-                if(routingModel.routingGraph != null && routingModel.routingGraph.getGraph() != null) {
-                    Set<OsmEdge> graphEdges =  routingModel.routingGraph.getGraph().edgeSet();
+            if (routingModel != null) {
+                if (routingModel.routingGraph != null && routingModel.routingGraph.getGraph() != null) {
+                    Set<OsmEdge> graphEdges = routingModel.routingGraph.getGraph().edgeSet();
                     if (!graphEdges.isEmpty()) {
                         Color color2 = ColorHelper.html2color("#00ff00");        /* just green for now  */
                         OsmEdge firstedge = (OsmEdge) graphEdges.toArray()[0];
                         Point from = mv.getPoint(firstedge.fromEastNorth());
                         g.drawRect(from.x-4, from.y+4, from.x+4, from.y-4);
-                        for(OsmEdge edge : graphEdges) {
+                        for (OsmEdge edge : graphEdges) {
                             drawGraph(g, mv, edge, color2, width);
                         }
                     }
-                 }
-             }
+                }
+            }
         }
-                    
-        
-        if(nodes == null || nodes.size() == 0) return;
-        
+
+
+        if (nodes == null || nodes.size() == 0) return;
+
         // Paint routing path
         List<OsmEdge> routeEdges = routingModel.getRouteEdges();
-        if(routeEdges != null) {
-            for(OsmEdge edge : routeEdges) {
+        if (routeEdges != null) {
+            for (OsmEdge edge : routeEdges) {
                 drawEdge(g, mv, edge, color, width, true);
             }
         }
@@ -278,14 +254,14 @@ public class RoutingLayer extends Layer {
                 screen.y - startIcon.getIconHeight());
 
         // paint middle icons
-        for(int index = 1; index < nodes.size() - 1; ++index) {
+        for (int index = 1; index < nodes.size() - 1; ++index) {
             node = nodes.get(index);
             screen = mv.getPoint(node);
             middleIcon.paintIcon(mv, g, screen.x - startIcon.getIconWidth()/2,
                     screen.y - middleIcon.getIconHeight());
         }
         // paint end icon
-        if(nodes.size() > 1) {
+        if (nodes.size() > 1) {
             node = nodes.get(nodes.size() - 1);
             screen = mv.getPoint(node);
             endIcon.paintIcon(mv, g, screen.x - startIcon.getIconWidth()/2,
@@ -303,7 +279,7 @@ public class RoutingLayer extends Layer {
     @Override
     public void destroy() {
         routingModel.reset();
-//      layerAdded = false;
+        //      layerAdded = false;
     }
 
     /**
@@ -317,33 +293,34 @@ public class RoutingLayer extends Layer {
         from = mv.getPoint(edge.fromEastNorth());
         to = mv.getPoint(edge.toEastNorth());
 
-            Graphics2D g2d = (Graphics2D)g;
-            g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON); // Anti-alias!
-            Stroke oldStroke = g2d.getStroke();
-            g2d.setStroke(new BasicStroke(width)); // thickness
-            g2d.drawLine(from.x, from.y, to.x, to.y);
-            if (showDirection) {
-                double t = Math.atan2(to.y-from.y, to.x-from.x) + Math.PI;
-                g.drawLine(to.x,to.y, (int)(to.x + 10*Math.cos(t-ARROW_PHI)), (int)(to.y + 10*Math.sin(t-ARROW_PHI)));
-                g.drawLine(to.x,to.y, (int)(to.x + 10*Math.cos(t+ARROW_PHI)), (int)(to.y + 10*Math.sin(t+ARROW_PHI)));
-            }
-            g2d.setStroke(oldStroke);
+        Graphics2D g2d = (Graphics2D) g;
+        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON); // Anti-alias!
+        Stroke oldStroke = g2d.getStroke();
+        g2d.setStroke(new BasicStroke(width)); // thickness
+        g2d.drawLine(from.x, from.y, to.x, to.y);
+        if (showDirection) {
+            double t = Math.atan2(to.y-from.y, to.x-from.x) + Math.PI;
+            g.drawLine(to.x, to.y, (int) (to.x + 10*Math.cos(t-ARROW_PHI)), (int) (to.y + 10*Math.sin(t-ARROW_PHI)));
+            g.drawLine(to.x, to.y, (int) (to.x + 10*Math.cos(t+ARROW_PHI)), (int) (to.y + 10*Math.sin(t+ARROW_PHI)));
+        }
+        g2d.setStroke(oldStroke);
     }
+
     private void drawGraph(Graphics g, MapView mv, OsmEdge edge, Color col, int width) {
         g.setColor(col);
         Point from;
         Point to;
         from = mv.getPoint(edge.fromEastNorth());
         to = mv.getPoint(edge.toEastNorth());
-        
-            Graphics2D g2d = (Graphics2D)g;
-            Stroke oldStroke = g2d.getStroke();
-            g2d.setStroke(new BasicStroke(width)); // thickness
-            g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_ON);  // Anti-alias!
-            g2d.drawLine(from.x, from.y, to.x, to.y);
-            g2d.drawRect(to.x- 4, to.y+4, 4, 4);
 
-            g2d.setStroke(oldStroke);
-     }
-        
+        Graphics2D g2d = (Graphics2D) g;
+        Stroke oldStroke = g2d.getStroke();
+        g2d.setStroke(new BasicStroke(width)); // thickness
+        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON); // Anti-alias!
+        g2d.drawLine(from.x, from.y, to.x, to.y);
+        g2d.drawRect(to.x- 4, to.y+4, 4, 4);
+
+        g2d.setStroke(oldStroke);
+    }
+
 }

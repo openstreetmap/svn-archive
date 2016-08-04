@@ -1,30 +1,4 @@
-/*
- * Copyright (C) 2008 Innovant
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307,USA.
- *
- * For more information, please contact:
- *
- *  Innovant
- *   juangui@gmail.com
- *   vidalfree@gmail.com
- *
- *  http://public.grupoinnovant.com/blog
- *
- */
-
+// License: GPL. For details, see LICENSE file.
 package com.innovant.josm.plugin.routing.actions;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -84,13 +58,13 @@ public class RemoveRouteNodeAction extends MapMode {
         // If left button is clicked
         if (e.getButton() == MouseEvent.BUTTON1) {
             if (Main.getLayerManager().getActiveLayer() instanceof RoutingLayer) {
-                RoutingLayer layer = (RoutingLayer)Main.getLayerManager().getActiveLayer();
+                RoutingLayer layer = (RoutingLayer) Main.getLayerManager().getActiveLayer();
                 RoutingModel routingModel = layer.getRoutingModel();
                 // Search for the nearest node in the list
                 List<Node> nl = routingModel.getSelectedNodes();
                 int index = -1;
                 double dmax = REMOVE_SQR_RADIUS; // maximum distance, in pixels
-                for (int i=0;i<nl.size();i++) {
+                for (int i = 0; i < nl.size(); i++) {
                     Node node = nl.get(i);
                     double d = Main.map.mapView.getPoint(node).distanceSq(e.getPoint());
                     if (d < dmax) {

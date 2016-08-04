@@ -1,30 +1,4 @@
-/*
- * Copyright (C) 2008 Innovant
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307,USA.
- *
- * For more information, please contact:
- *
- *  Innovant
- *   juangui@gmail.com
- *   vidalfree@gmail.com
- *
- *  http://public.grupoinnovant.com/blog
- *
- */
-
+// License: GPL. For details, see LICENSE file.
 package com.innovant.josm.plugin.routing.gui;
 
 import static org.openstreetmap.josm.gui.help.HelpUtil.ht;
@@ -77,6 +51,7 @@ public class RoutingMenu extends JMenu {
 
         startMI = new JMenuItem(tr("Add routing layer"));
         startMI.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
                 RoutingPlugin.getInstance().addLayer();
             }
@@ -91,11 +66,12 @@ public class RoutingMenu extends JMenu {
         JRadioButtonMenuItem rshorter = new JRadioButtonMenuItem(tr("Shortest"));
         rshorter.setSelected(true);
         rshorter.addItemListener(new ItemListener() {
+            @Override
             public void itemStateChanged(ItemEvent e) {
                 if (Main.getLayerManager().getActiveLayer() instanceof RoutingLayer) {
-                    RoutingLayer layer = (RoutingLayer)Main.getLayerManager().getActiveLayer();
+                    RoutingLayer layer = (RoutingLayer) Main.getLayerManager().getActiveLayer();
                     RoutingModel routingModel = layer.getRoutingModel();
-                    if (e.getStateChange()==ItemEvent.SELECTED) {
+                    if (e.getStateChange() == ItemEvent.SELECTED) {
                         routingModel.routingGraph.setTypeRoute(RouteType.SHORTEST);
                     } else {
                         routingModel.routingGraph.setTypeRoute(RouteType.FASTEST);
@@ -120,11 +96,12 @@ public class RoutingMenu extends JMenu {
         criteriaM.addSeparator();
         JCheckBoxMenuItem cbmi = new JCheckBoxMenuItem(tr("Ignore oneways"));
         cbmi.addItemListener(new ItemListener() {
+            @Override
             public void itemStateChanged(ItemEvent e) {
                 if (Main.getLayerManager().getActiveLayer() instanceof RoutingLayer) {
-                    RoutingLayer layer = (RoutingLayer)Main.getLayerManager().getActiveLayer();
+                    RoutingLayer layer = (RoutingLayer) Main.getLayerManager().getActiveLayer();
                     RoutingModel routingModel = layer.getRoutingModel();
-                    if (e.getStateChange()==ItemEvent.SELECTED)
+                    if (e.getStateChange() == ItemEvent.SELECTED)
                         routingModel.routingGraph.getRoutingProfile().setOnewayUse(false);
                     else
                         routingModel.routingGraph.getRoutingProfile().setOnewayUse(true);
@@ -140,9 +117,10 @@ public class RoutingMenu extends JMenu {
         menu.addSeparator();
         reverseMI = new JMenuItem(tr("Reverse route"));
         reverseMI.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
                 if (Main.getLayerManager().getActiveLayer() instanceof RoutingLayer) {
-                    RoutingLayer layer = (RoutingLayer)Main.getLayerManager().getActiveLayer();
+                    RoutingLayer layer = (RoutingLayer) Main.getLayerManager().getActiveLayer();
                     RoutingModel routingModel = layer.getRoutingModel();
                     routingModel.reverseNodes();
                     Main.map.repaint();
@@ -153,9 +131,10 @@ public class RoutingMenu extends JMenu {
 
         clearMI = new JMenuItem(tr("Clear route"));
         clearMI.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
                 if (Main.getLayerManager().getActiveLayer() instanceof RoutingLayer) {
-                    RoutingLayer layer = (RoutingLayer)Main.getLayerManager().getActiveLayer();
+                    RoutingLayer layer = (RoutingLayer) Main.getLayerManager().getActiveLayer();
                     RoutingModel routingModel = layer.getRoutingModel();
                     // Reset routing nodes and paths
                     routingModel.reset();
@@ -168,10 +147,11 @@ public class RoutingMenu extends JMenu {
 
         regraphMI = new JMenuItem(tr("Reconstruct Graph"));
         regraphMI.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
 
                 if (Main.getLayerManager().getActiveLayer() instanceof RoutingLayer) {
-                    RoutingLayer layer = (RoutingLayer)Main.getLayerManager().getActiveLayer();
+                    RoutingLayer layer = (RoutingLayer) Main.getLayerManager().getActiveLayer();
                     RoutingModel routingModel = layer.getRoutingModel();
                     routingModel.routingGraph.resetGraph();
                     routingModel.routingGraph.createGraph();

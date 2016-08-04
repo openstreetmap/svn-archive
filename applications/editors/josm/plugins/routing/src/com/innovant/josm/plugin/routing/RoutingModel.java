@@ -1,30 +1,4 @@
-/*
- * Copyright (C) 2008 Innovant
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307,USA.
- *
- * For more information, please contact:
- *
- *  Innovant
- *   juangui@gmail.com
- *   vidalfree@gmail.com
- *
- *  http://public.grupoinnovant.com/blog
- *
- */
-
+// License: GPL. For details, see LICENSE file.
 package com.innovant.josm.plugin.routing;
 
 import java.util.ArrayList;
@@ -55,24 +29,24 @@ public class RoutingModel {
     /**
      * Graph to calculate route
      */
-    public RoutingGraph routingGraph=null;
+    public RoutingGraph routingGraph = null;
 
     /**
      * List of nodes that the route has to traverse
      */
-    private List<Node> nodes=null;
+    private List<Node> nodes = null;
 
-    private List<OsmEdge> path=null;
+    private List<OsmEdge> path = null;
 
     /**
      * Flag to advise about changes in the selected nodes.
      */
-    private boolean changeNodes=false;
+    private boolean changeNodes = false;
 
     /**
      * Flag to advise about changes in ways.
      */
-    private boolean changeOneway=false;
+    private boolean changeOneway = false;
 
     /**
      * Default Constructor.
@@ -97,7 +71,7 @@ public class RoutingModel {
      */
     public void addNode(Node node) {
         nodes.add(node);
-        this.changeNodes=true;
+        this.changeNodes = true;
     }
 
     /**
@@ -105,9 +79,9 @@ public class RoutingModel {
      * @param index the index of the node to remove.
      */
     public void removeNode(int index) {
-        if (nodes.size()>index) {
+        if (nodes.size() > index) {
             nodes.remove(index);
-            this.changeNodes=true;
+            this.changeNodes = true;
         }
     }
 
@@ -117,9 +91,9 @@ public class RoutingModel {
      * @param node the node to be inserted
      */
     public void insertNode(int index, Node node) {
-        if (nodes.size()>=index) {
+        if (nodes.size() >= index) {
             nodes.add(index, node);
-            this.changeNodes=true;
+            this.changeNodes = true;
         }
     }
 
@@ -129,10 +103,10 @@ public class RoutingModel {
     public void reverseNodes() {
         List<Node> aux = new ArrayList<>();
         for (Node n : nodes) {
-            aux.add(0,n);
+            aux.add(0, n);
         }
         nodes = aux;
-        this.changeNodes=true;
+        this.changeNodes = true;
     }
 
     /**
@@ -140,11 +114,10 @@ public class RoutingModel {
      * @return A list of edges forming the shortest path
      */
     public List<OsmEdge> getRouteEdges() {
-        if (this.changeNodes || path==null)
-        {
-            path=this.routingGraph.applyAlgorithm(nodes, Algorithm.ROUTING_ALG_DIJKSTRA);
-            this.changeNodes=false;
-            this.changeOneway=false;
+        if (this.changeNodes || path == null) {
+            path = this.routingGraph.applyAlgorithm(nodes, Algorithm.ROUTING_ALG_DIJKSTRA);
+            this.changeNodes = false;
+            this.changeOneway = false;
         }
         return path;
     }
@@ -175,7 +148,7 @@ public class RoutingModel {
      */
     public void reset() {
         nodes.clear();
-        this.changeNodes=true;
+        this.changeNodes = true;
     }
 
 }

@@ -1,31 +1,4 @@
-/*
- *
- * Copyright (C) 2008 Innovant
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307,USA.
- *
- * For more information, please contact:
- *
- *  Innovant
- *   juangui@gmail.com
- *   vidalfree@gmail.com
- *
- *  http://public.grupoinnovant.com/blog
- *
- */
-
+// License: GPL. For details, see LICENSE file.
 package com.innovant.josm.plugin.routing.gui;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -78,6 +51,7 @@ public class RoutingPreferenceDialog extends DefaultTabPreferenceSetting {
         readPreferences();
     }
 
+    @Override
     public void addGui(final PreferenceTabbedPane gui) {
 
         JPanel principal = gui.createPreferenceTab(this);
@@ -85,7 +59,7 @@ public class RoutingPreferenceDialog extends DefaultTabPreferenceSetting {
         JPanel p = new JPanel();
         p.setLayout(new GridBagLayout());
 
-        model = new DefaultTableModel(new String[] { tr("Highway type"),
+        model = new DefaultTableModel(new String[] {tr("Highway type"),
                 tr("Speed (Km/h)") }, 0) {
             private static final long serialVersionUID = 4253339034781567453L;
 
@@ -106,12 +80,14 @@ public class RoutingPreferenceDialog extends DefaultTabPreferenceSetting {
         p.add(Box.createHorizontalGlue(), GBC.std().fill(GBC.HORIZONTAL));
         p.add(add, GBC.std().insets(0, 5, 0, 0));
         add.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
                 JPanel p = new JPanel(new GridBagLayout());
                 p.add(new JLabel(tr("Weight")), GBC.std().insets(0, 0, 5, 0));
                 JComboBox<String> key = new JComboBox<>();
-                for (OsmWayTypes pk : OsmWayTypes.values())
+                for (OsmWayTypes pk : OsmWayTypes.values()) {
                     key.addItem(pk.getTag());
+                }
                 JTextField value = new JTextField(10);
                 p.add(key, GBC.eop().insets(5, 0, 0, 0).fill(GBC.HORIZONTAL));
                 p.add(new JLabel(tr("Value")), GBC.std().insets(0, 0, 5, 0));
@@ -131,14 +107,16 @@ public class RoutingPreferenceDialog extends DefaultTabPreferenceSetting {
         JButton delete = new JButton(tr("Delete"));
         p.add(delete, GBC.std().insets(0, 5, 0, 0));
         delete.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
                 if (list.getSelectedRow() == -1)
                     JOptionPane.showMessageDialog(gui,
                             tr("Please select the row to delete."));
                 else {
                     Integer i;
-                    while ((i = list.getSelectedRow()) != -1)
+                    while ((i = list.getSelectedRow()) != -1) {
                         model.removeRow(i);
+                    }
                 }
             }
         });
@@ -146,6 +124,7 @@ public class RoutingPreferenceDialog extends DefaultTabPreferenceSetting {
         JButton edit = new JButton(tr("Edit"));
         p.add(edit, GBC.std().insets(5, 5, 5, 0));
         edit.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
                 edit(gui, list);
             }
@@ -157,7 +136,7 @@ public class RoutingPreferenceDialog extends DefaultTabPreferenceSetting {
         Opciones.addTab("Profile", null, p, null);
         //      Opciones.addTab("Preferences", new JPanel());
 
-        list.addMouseListener(new MouseAdapter(){
+        list.addMouseListener(new MouseAdapter() {
             @Override public void mouseClicked(MouseEvent e) {
                 if (e.getClickCount() == 2)
                     edit(gui, list);
@@ -168,6 +147,7 @@ public class RoutingPreferenceDialog extends DefaultTabPreferenceSetting {
 
     }
 
+    @Override
     public boolean ok() {
         for (int i = 0; i < model.getRowCount(); ++i) {
             String value = model.getValueAt(i, 1).toString();
@@ -179,8 +159,9 @@ public class RoutingPreferenceDialog extends DefaultTabPreferenceSetting {
                 orig.remove(key); // processed.
             }
         }
-        for (Entry<String, String> e : orig.entrySet())
+        for (Entry<String, String> e : orig.entrySet()) {
             Main.pref.put(e.getKey(), null);
+        }
         return false;
     }
 
@@ -202,7 +183,7 @@ public class RoutingPreferenceDialog extends DefaultTabPreferenceSetting {
         readPreferences();
         // Put these values in the model
         for (String tag : orig.keySet()) {
-            model.addRow(new String[] { tag, orig.get(tag) });
+            model.addRow(new String[] {tag, orig.get(tag)});
         }
     }
 
@@ -215,8 +196,7 @@ public class RoutingPreferenceDialog extends DefaultTabPreferenceSetting {
                         + owt.getTag(), owt.getSpeed());
             }
             orig = Main.pref.getAllPrefix("routing.profile.default.speed");
-        }
-        else logger.debug("Default preferences already exist.");
+        } else logger.debug("Default preferences already exist.");
     }
     /*
     private String getKeyTag(String tag) {

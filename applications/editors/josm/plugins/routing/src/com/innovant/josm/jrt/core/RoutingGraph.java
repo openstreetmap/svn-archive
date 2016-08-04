@@ -1,30 +1,4 @@
-/*
- * Copyright (C) 2008 Innovant
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307,USA.
- *
- * For more information, please contact:
- *
- *  Innovant
- *   juangui@gmail.com
- *   vidalfree@gmail.com
- *
- *  http://public.grupoinnovant.com/blog
- *
- */
-
+// License: GPL. For details, see LICENSE file.
 package com.innovant.josm.jrt.core;
 
 import java.util.ArrayList;
@@ -67,12 +41,15 @@ public class RoutingGraph {
      */
     public enum Algorithm {
         ROUTING_ALG_DIJKSTRA, ROUTING_ALG_BELLMANFORD
-    };
+    }
 
     /**
      * Search criteria for the route.
      */
-    public enum RouteType {FASTEST,SHORTEST};
+    public enum RouteType {
+        FASTEST,
+        SHORTEST
+    }
 
     /**
      *
@@ -90,10 +67,10 @@ public class RoutingGraph {
     static Logger logger = Logger.getLogger(RoutingGraph.class);
 
     private static Collection<String> excludedHighwayValues = Arrays.asList(new String[]{
-        "bus_stop", "traffic_signals", "street_lamp", "stop", "construction", 
-        "platform", "give_way", "proposed", "milestone", "speed_camera", "abandoned"
+            "bus_stop", "traffic_signals", "street_lamp", "stop", "construction",
+            "platform", "give_way", "proposed", "milestone", "speed_camera", "abandoned"
     });
-    
+
     /**
      * Graph state
      * <code>true</code> Graph in memory.
@@ -107,35 +84,33 @@ public class RoutingGraph {
     //  private DirectedWeightedMultigraph<Node, OsmEdge> graph;
     //  private WeightedMultigraph<Node, OsmEdge> graph;
     private Graph<Node, OsmEdge> graph;
-    private RoutingGraphDelegator rgDelegator=null;
+    private RoutingGraphDelegator rgDelegator = null;
 
 
     /**
      * Graph getter
      */
-    public Graph<Node, OsmEdge> getGraph(){
+    public Graph<Node, OsmEdge> getGraph() {
         return graph;
-
     }
 
-
-    private void addEdgeBidirectional( Way way, Node from, Node to){
-        addEdge(way,from,to);
-        addEdge(way,to,from);
+    private void addEdgeBidirectional(Way way, Node from, Node to) {
+        addEdge(way, from, to);
+        addEdge(way, to, from);
     }
 
-    private void addEdgeReverseOneway( Way way, Node from, Node to){
-        addEdge(way,to,from);
+    private void addEdgeReverseOneway(Way way, Node from, Node to) {
+        addEdge(way, to, from);
     }
 
-    private void addEdgeNormalOneway( Way way, Node from, Node to){
-        addEdge(way,from,to);
+    private void addEdgeNormalOneway(Way way, Node from, Node to) {
+        addEdge(way, from, to);
     }
 
     /**
      * Speeds
      */
-    private Map<String,Double> waySpeeds;
+    private Map<String, Double> waySpeeds;
 
     /**
      * Default Constructor.
@@ -144,8 +119,8 @@ public class RoutingGraph {
         //      this.graphState = false;
         this.graph = null;
         this.data = data;
-        routeType=RouteType.SHORTEST;
-        routingProfile=new RoutingProfile("default");
+        routeType = RouteType.SHORTEST;
+        routingProfile = new RoutingProfile("default");
         routingProfile.setOnewayUse(true); // Don't ignore oneways by default
         this.setWaySpeeds(routingProfile.getWaySpeeds());
         logger.debug("Created RoutingGraph");
@@ -153,14 +128,12 @@ public class RoutingGraph {
 
     /**
      * Create OSM graph for routing
-     *
-     * @return
      */
     public void createGraph() {
 
         logger.debug("Creating Graph...");
         graph = new DirectedWeightedMultigraph<>(OsmEdge.class);
-        rgDelegator=new RoutingGraphDelegator(graph);
+        rgDelegator = new RoutingGraphDelegator(graph);
         rgDelegator.setRouteType(this.routeType);
         // iterate all ways and segments for all nodes:
         for (Way way : data.getWays()) {
@@ -177,20 +150,20 @@ public class RoutingGraph {
 
             /*
              * Assume node is A B C D E. The procedure should be
-             * 
+             *
              *  case 1 - bidirectional ways:
              *  1) Add vertex A B C D E
              *  2) Link A<->B, B<->C, C<->D, D<->E as Edges
-             * 
+             *
              *  case 2 - oneway reverse:
              *  1) Add vertex A B C D E
              *  2) Link B->A,C->B,D->C,E->D as Edges. result: A<-B<-C<-D<-E
-             * 
+             *
              *  case 3 - oneway normal:
              *  1) Add vertex A B C D E
              *  2) Link A->B, B->C, C->D, D->E as Edges. result: A->B->C->D->E
-             * 
-             * 
+             *
+             *
              */
 
             String oneway_val = way.get("oneway");   /*   get (oneway=?) tag for this way.   */
@@ -243,11 +216,8 @@ public class RoutingGraph {
 
     /**
      * Compute weight and add edge to the graph
-     * @param way
-     * @param from
-     * @param to
      */
-    private void addEdge(Way way,Node from, Node to) {
+    private void addEdge(Way way, Node from, Node to) {
         LatLon fromLL = from.getCoor();
         LatLon toLL = from.getCoor();
         if (fromLL == null || toLL == null) {
@@ -262,9 +232,9 @@ public class RoutingGraph {
         double weight = getWeight(way, length);
         setWeight(edge, length);
         logger.debug("edge for way " + way.getId()
-                + "(from node " + from.getId() + " to node "
-                + to.getId() + ") has weight: " + weight);
-        ((DirectedWeightedMultigraph<Node,OsmEdge>)graph).setEdgeWeight(edge, weight);
+        + "(from node " + from.getId() + " to node "
+        + to.getId() + ") has weight: " + weight);
+        ((DirectedWeightedMultigraph<Node, OsmEdge>) graph).setEdgeWeight(edge, weight);
     }
 
     /**
@@ -274,7 +244,6 @@ public class RoutingGraph {
      *
      * @param way
      *            the way.
-     * @return
      */
     private void setWeight(OsmEdge osmedge, double length) {
 
@@ -291,7 +260,6 @@ public class RoutingGraph {
      *
      * @param way
      *            the way.
-     * @return
      */
     private double getWeight(Way way, double length) {
         // Default speed if no setting is found
@@ -301,12 +269,12 @@ public class RoutingGraph {
         case SHORTEST:
             // Same speed for all types of ways
             if (this.waySpeeds.containsKey("residential"))
-                speed=this.waySpeeds.get("residential");
+                speed = this.waySpeeds.get("residential");
             break;
         case FASTEST:
             // Each type of way may have a different speed
             if (this.waySpeeds.containsKey(way.get("highway")))
-                speed=this.waySpeeds.get(way.get("highway"));
+                speed = this.waySpeeds.get(way.get("highway"));
             logger.debug("Speed="+speed);
             break;
         default:
@@ -326,7 +294,7 @@ public class RoutingGraph {
     public boolean isvalidWay(Way way) {
         //if (!way.isTagged())            <---not needed me thinks
         //    return false;
-        
+
         String highway = way.get("highway");
 
         return (highway != null && !excludedHighwayValues.contains(highway)) || way.get("junction") != null
@@ -347,9 +315,9 @@ public class RoutingGraph {
      */
     public List<OsmEdge> applyAlgorithm(List<Node> nodes, Algorithm algorithm) {
         List<OsmEdge> path = new ArrayList<>();
-        Graph<Node,OsmEdge> g;
+        Graph<Node, OsmEdge> g;
         double totalWeight = 0;
-        RoutingLayer layer = (RoutingLayer)Main.getLayerManager().getActiveLayer();
+        RoutingLayer layer = (RoutingLayer) Main.getLayerManager().getActiveLayer();
         RoutingModel routingModel = layer.getRoutingModel();
 
         if (graph == null || routingModel.getOnewayChanged())
@@ -404,9 +372,9 @@ public class RoutingGraph {
      * Return the number of vertices.
      * @return the number of vertices.
      */
-    public int getVertexCount(){
-        int value=0;
-        if (graph!=null) value=graph.vertexSet().size();
+    public int getVertexCount() {
+        int value = 0;
+        if (graph != null) value = graph.vertexSet().size();
         return value;
     }
 
@@ -414,9 +382,9 @@ public class RoutingGraph {
      * Return the number of edges.
      * @return the number of edges.
      */
-    public int getEdgeCount(){
-        int value=0;
-        if (graph!=null) value=graph.edgeSet().size();
+    public int getEdgeCount() {
+        int value = 0;
+        if (graph != null) value = graph.edgeSet().size();
         return value;
     }
 
@@ -444,7 +412,7 @@ public class RoutingGraph {
     }
 
     public void resetGraph() {
-        graph=null;
+        graph = null;
     }
 
     public RoutingProfile getRoutingProfile() {

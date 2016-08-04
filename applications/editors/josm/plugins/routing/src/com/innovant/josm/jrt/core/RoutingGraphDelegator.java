@@ -1,6 +1,4 @@
-/**
- *
- */
+// License: GPL. For details, see LICENSE file.
 package com.innovant.josm.jrt.core;
 
 import org.apache.log4j.Logger;
@@ -8,7 +6,6 @@ import org.jgrapht.Graph;
 import org.jgrapht.graph.GraphDelegator;
 import org.openstreetmap.josm.data.osm.Node;
 
-import com.innovant.josm.jrt.core.RoutingGraphDelegator;
 import com.innovant.josm.jrt.core.RoutingGraph.RouteType;
 import com.innovant.josm.jrt.osm.OsmEdge;
 
@@ -32,7 +29,6 @@ public class RoutingGraphDelegator extends GraphDelegator<Node, OsmEdge> {
         super(arg0);
     }
 
-
     public RouteType getRouteType() {
         return routeType;
     }
@@ -41,7 +37,6 @@ public class RoutingGraphDelegator extends GraphDelegator<Node, OsmEdge> {
         this.routeType = routeType;
     }
 
-
     /**
      *
      */
@@ -49,10 +44,10 @@ public class RoutingGraphDelegator extends GraphDelegator<Node, OsmEdge> {
 
     @Override
     public double getEdgeWeight(OsmEdge edge) {
-        double weight=Double.MAX_VALUE;
+        double weight = Double.MAX_VALUE;
 
-        if (routeType==RouteType.SHORTEST) weight=edge.getLength();
-        if (routeType==RouteType.FASTEST) weight=edge.getLength() / edge.getSpeed();
+        if (routeType == RouteType.SHORTEST) weight = edge.getLength();
+        if (routeType == RouteType.FASTEST) weight = edge.getLength() / edge.getSpeed();
         // Return the time spent to traverse the way
         return weight;
     }

@@ -172,15 +172,12 @@ public class EleVertex {
                 + Arrays.toString(points) + "]";
     }
 
-
-
-
     class TriangleEdge implements Comparable<TriangleEdge> {
         private final int i;
         private final int j;
         private final double dist;
 
-        public TriangleEdge(int i, int j, double dist) {
+        TriangleEdge(int i, int j, double dist) {
             super();
             this.i = i;
             this.j = j;

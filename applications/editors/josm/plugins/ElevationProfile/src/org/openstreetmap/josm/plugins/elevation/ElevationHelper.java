@@ -15,19 +15,24 @@ import org.openstreetmap.josm.plugins.elevation.gpx.GeoidCorrectionKind;
 /**
  * Provides methods to access way point attributes and some utility methods regarding elevation stuff (
  * e. g. special text formats, unit conversion, geoid calc).
- * @author Oliver Wieland <oliver.wieland@online.de>
+ * @author Oliver Wieland &lt;oliver.wieland@online.de&gt;
  */
-public class ElevationHelper {
+public final class ElevationHelper {
+
+    private ElevationHelper() {
+        // Hide default constructor for utilities classes
+    }
+
     public static double METER_TO_FEET = 3.280948;
 
     /* Countries which use the imperial system instead of the metric system. */
-    private static String IMPERIAL_SYSTEM_COUNTRIES[] = {
-        "en_US",     /* USA */
-        "en_CA",    /* Canada */
-        "en_AU",    /* Australia */
-        "en_NZ",    /* New Zealand */
-        //        "de_DE",    /* for testing only */
-        "en_ZA"    /* South Africa */
+    private static String[] IMPERIAL_SYSTEM_COUNTRIES = {
+            "en_US",     /* USA */
+            "en_CA",    /* Canada */
+            "en_AU",    /* Australia */
+            "en_NZ",    /* New Zealand */
+            //        "de_DE",    /* for testing only */
+            "en_ZA"    /* South Africa */
     };
 
     /** The 'no elevation' data magic. */
@@ -47,7 +52,6 @@ public class ElevationHelper {
 
     /**
      * Gets the current mode of GEOID correction.
-     * @return
      */
     public static GeoidCorrectionKind getGeoidKind() {
         return geoidKind;
@@ -59,7 +63,6 @@ public class ElevationHelper {
 
     /**
      * Gets the current unit mode (metric or imperial).
-     * @return
      */
     public static UnitMode getUnitMode() {
         //TODO: Use this until /JOSM/src/org/openstreetmap/josm/gui/NavigatableComponent.java
@@ -87,7 +90,6 @@ public class ElevationHelper {
 
     /**
      * Gets the unit string for elevation ("m" or "ft").
-     * @return
      */
     public static String getUnit() {
         switch (getUnitMode()) {
@@ -147,7 +149,6 @@ public class ElevationHelper {
             return NO_ELEVATION;
         }
     }
-
 
     private static double getElevation(LatLon ll) {
         double ele = getSrtmElevation(ll);
@@ -210,8 +211,6 @@ public class ElevationHelper {
 
     /**
      * Gets the elevation string for a given elevation, e. g "300m" or "800ft".
-     * @param elevation
-     * @return
      */
     public static String getElevationText(int elevation) {
         return String.format("%d %s", elevation, getUnit());
@@ -219,11 +218,9 @@ public class ElevationHelper {
 
     /**
      * Gets the elevation string for a given elevation, e. g "300m" or "800ft".
-     * @param elevation
-     * @return
      */
     public static String getElevationText(double elevation) {
-        return String.format("%d %s", (int)Math.round(elevation), getUnit());
+        return String.format("%d %s", (int) Math.round(elevation), getUnit());
     }
 
     /**
@@ -235,14 +232,12 @@ public class ElevationHelper {
     public static String getElevationText(WayPoint wpt) {
         if (wpt == null) return "-";
 
-        int elevation = (int)Math.round(ElevationHelper.getElevation(wpt));
+        int elevation = (int) Math.round(ElevationHelper.getElevation(wpt));
         return String.format("%d %s", elevation, getUnit());
     }
 
     /**
      * Get the time string for a given way point.
-     * @param wpt
-     * @return
      */
     public static String getTimeText(WayPoint wpt) {
         if (wpt == null) return null;
@@ -286,7 +281,7 @@ public class ElevationHelper {
         LatLon tl = bounds.getMin();
         LatLon br = bounds.getMax();
 
-        return     isValidElevation(getSrtmElevation(tl)) &&
+        return isValidElevation(getSrtmElevation(tl)) &&
                 isValidElevation(getSrtmElevation(br));
     }
 
@@ -342,8 +337,6 @@ public class ElevationHelper {
 
     /**
      * Gets the hour value of a way point in 24h format.
-     * @param wpt
-     * @return
      */
     public static int getHourOfWayPoint(WayPoint wpt) {
         if (wpt == null) return -1;
@@ -355,8 +348,6 @@ public class ElevationHelper {
 
     /**
      * Gets the minute value of a way point in 24h format.
-     * @param wpt
-     * @return
      */
     public static int getMinuteOfWayPoint(WayPoint wpt) {
         if (wpt == null) return -1;

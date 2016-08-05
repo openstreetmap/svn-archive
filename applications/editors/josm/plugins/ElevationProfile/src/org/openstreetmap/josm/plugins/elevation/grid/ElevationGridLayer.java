@@ -27,7 +27,7 @@ import org.openstreetmap.josm.plugins.elevation.IVertexRenderer;
 import org.openstreetmap.josm.tools.ImageProvider;
 
 /**
- * @author Oliver Wieland <oliver.wieland@online.de>
+ * @author Oliver Wieland &lt;oliver.wieland@online.de&gt;
  *
  */
 public class ElevationGridLayer extends Layer implements TileLoaderListener {
@@ -41,9 +41,6 @@ public class ElevationGridLayer extends Layer implements TileLoaderListener {
     private Bounds lastBounds;
     private TileSet tileSet;
 
-    /**
-     * @param info
-     */
     public ElevationGridLayer(String name) {
         super(name);
 
@@ -79,12 +76,12 @@ public class ElevationGridLayer extends Layer implements TileLoaderListener {
             return;
         }
 
-        for(int x = tileSet.x0; x <= tileSet.x1; x++) {
-            for(int y = tileSet.y0; y <= tileSet.y1; y++) {
+        for (int x = tileSet.x0; x <= tileSet.x1; x++) {
+            for (int y = tileSet.y0; y <= tileSet.y1; y++) {
                 Tile t = tileController.getTile(x, y, ELE_ZOOM_LEVEL);
 
                 if (t != null && t.isLoaded() && t instanceof ElevationGridTile) {
-                    ((ElevationGridTile)t).paintTile(g, mv, vertexRenderer);
+                    ((ElevationGridTile) t).paintTile(g, mv, vertexRenderer);
                 } else {
                     // give some consolation...
                     Point topLeft = mv.getPoint(new LatLon(tileSource.tileXYToLatLon(x, y, ELE_ZOOM_LEVEL)));
@@ -118,7 +115,7 @@ public class ElevationGridLayer extends Layer implements TileLoaderListener {
             if (Main.map != null) {
                 Main.map.repaint(100);
             }
-        } catch(Exception ex) {
+        } catch (Exception ex) {
             System.err.println(ex);
             ex.printStackTrace(System.err);
         }
@@ -152,9 +149,9 @@ public class ElevationGridLayer extends Layer implements TileLoaderListener {
     void myDrawString(Graphics g, String text, int x, int y) {
         Color oldColor = g.getColor();
         g.setColor(Color.black);
-        g.drawString(text,x+1,y+1);
+        g.drawString(text, x+1, y+1);
         g.setColor(oldColor);
-        g.drawString(text,x,y);
+        g.drawString(text, x, y);
     }
 
     private class TileSet {
@@ -164,7 +161,7 @@ public class ElevationGridLayer extends Layer implements TileLoaderListener {
         /**
          * Create a TileSet by known LatLon bbox without layer shift correction
          */
-        public TileSet(LatLon topLeft, LatLon botRight, int zoom) {
+        TileSet(LatLon topLeft, LatLon botRight, int zoom) {
             if (zoom == 0)
                 return;
 
@@ -185,7 +182,7 @@ public class ElevationGridLayer extends Layer implements TileLoaderListener {
                 y0 = y1;
                 y1 = tmp;
             }
-            tileMax = (int)Math.pow(2.0, zoom);
+            tileMax = (int) Math.pow(2.0, zoom);
             if (x0 < 0) {
                 x0 = 0;
             }

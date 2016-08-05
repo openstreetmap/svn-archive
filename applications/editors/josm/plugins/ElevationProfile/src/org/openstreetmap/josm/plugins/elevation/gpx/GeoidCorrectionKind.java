@@ -2,7 +2,7 @@
 package org.openstreetmap.josm.plugins.elevation.gpx;
 
 /**
- * @author Oliver Wieland <oliver.wieland@online.de>
+ * @author Oliver Wieland &lt;oliver.wieland@online.de&gt;
  * Enumeration for available elevation correction modes.
  */
 public enum GeoidCorrectionKind {

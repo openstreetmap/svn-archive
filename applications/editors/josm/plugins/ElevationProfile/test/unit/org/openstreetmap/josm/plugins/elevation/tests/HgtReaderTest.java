@@ -66,6 +66,6 @@ public class HgtReaderTest extends TestCase {
         System.out.println(d);
         assertFalse("Data missing or void for coor " + l, Double.isNaN(d));
 
-        assertEquals((int)d, expHeight);
+        assertEquals((int) d, expHeight);
     }
 }

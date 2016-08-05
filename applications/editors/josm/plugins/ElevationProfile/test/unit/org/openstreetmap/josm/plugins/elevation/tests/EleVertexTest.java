@@ -4,14 +4,14 @@ package org.openstreetmap.josm.plugins.elevation.tests;
 import java.awt.Color;
 import java.util.List;
 
-import junit.framework.TestCase;
-
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.Preferences;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.plugins.elevation.ColorMap;
 import org.openstreetmap.josm.plugins.elevation.grid.EleCoordinate;
 import org.openstreetmap.josm.plugins.elevation.grid.EleVertex;
+
+import junit.framework.TestCase;
 
 public class EleVertexTest extends TestCase {
 
@@ -61,7 +61,7 @@ public class EleVertexTest extends TestCase {
     }
 
     private void recurse(EleVertex v, int depth) {
-        if (!v.isFinished() && depth <100) {
+        if (!v.isFinished() && depth < 100) {
             System.out.println("\tDivide: " + v);
             List<EleVertex> list = v.divide();
             assertNotNull(list);
@@ -89,7 +89,7 @@ public class EleVertexTest extends TestCase {
     }*/
 
     public void testColorMap() {
-        ColorMap testMap  = ColorMap.create("Test", new Color[]{Color.white, Color.black}, new int[]{0, 1000});
+        ColorMap testMap = ColorMap.create("Test", new Color[]{Color.white, Color.black}, new int[]{0, 1000});
 
         // range test
         Color c1 = testMap.getColor(-100);

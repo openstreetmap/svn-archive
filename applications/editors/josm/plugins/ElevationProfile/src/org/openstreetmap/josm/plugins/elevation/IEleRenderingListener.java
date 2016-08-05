@@ -10,10 +10,10 @@ public interface IEleRenderingListener {
      *
      * @param vertex the vertex
      */
-    public void finished(EleVertex vertex);
+    void finished(EleVertex vertex);
 
     /**
      * Notifies a client that all vertices can be rendered now.
      */
-    public void finishedAll();
+    void finishedAll();
 }

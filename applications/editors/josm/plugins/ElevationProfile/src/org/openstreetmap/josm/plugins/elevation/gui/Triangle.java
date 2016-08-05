@@ -12,7 +12,7 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 
 /**
- * @author Oliver Wieland <oliver.wieland@online.de>
+ * @author Oliver Wieland &lt;oliver.wieland@online.de&gt;
  * Class to represent a triangle shape. {@see java.awt.Shape}.
  */
 public class Triangle implements Shape {
@@ -20,7 +20,6 @@ public class Triangle implements Shape {
 
     /**
      * Copy constructor.
-     * @param p
      */
     public Triangle(Polygon p) {
         if (p == null || p.npoints != 3) throw new RuntimeException("Given polygon was null or had invalid number of points");
@@ -30,9 +29,6 @@ public class Triangle implements Shape {
     /**
      * Creates a triangle from 3 given points. The points are used without any sanity check, so it is up to
      * the user that the points form a triangle.
-     * @param p1
-     * @param p2
-     * @param p3
      */
     public Triangle(Point p1, Point p2, Point p3) {
         poly = new Polygon();
@@ -43,7 +39,6 @@ public class Triangle implements Shape {
 
     /**
      * Draws an outlined triangle.
-     * @param g
      */
     public void draw(Graphics g) {
         g.drawPolygon(poly);
@@ -51,7 +46,6 @@ public class Triangle implements Shape {
 
     /**
      * Draws a filled triangle.
-     * @param g
      */
     public void fill(Graphics g) {
         g.fillPolygon(poly);

@@ -44,7 +44,7 @@ import org.openstreetmap.josm.plugins.elevation.gpx.ElevationModel;
 import org.openstreetmap.josm.tools.Shortcut;
 
 /**
- * @author Oliver Wieland <oliver.wieland@online.de>
+ * @author Oliver Wieland &lt;oliver.wieland@online.de&gt;
  * Implements a JOSM ToggleDialog to show the elevation profile. It monitors the
  * connection between layer and elevation profile.
  */
@@ -215,7 +215,6 @@ public class ElevationProfileDialog extends ToggleDialog implements LayerChangeL
 
     /**
      * Gets the elevation model instance.
-     * @return
      */
     public IElevationModel getModel() {
         return model;
@@ -235,7 +234,6 @@ public class ElevationProfileDialog extends ToggleDialog implements LayerChangeL
 
     /**
      * Gets the associated layer instance of the elevation profile.
-     * @return
      */
     public ElevationProfileLayer getProfileLayer() {
         return profileLayer;

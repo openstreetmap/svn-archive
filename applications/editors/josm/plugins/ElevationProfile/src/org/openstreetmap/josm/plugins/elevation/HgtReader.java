@@ -18,7 +18,7 @@ import org.openstreetmap.josm.tools.CheckParameterUtil;
  *  Class HgtReader reads data from SRTM HGT files. Currently this class is restricted to a resolution of 3 arc seconds.
  *
  *  SRTM data files are available at the <a href="http://dds.cr.usgs.gov/srtm/version2_1/SRTM3">NASA SRTM site</a>
- *  @author Oliver Wieland <oliver.wieland@online.de>
+ *  @author Oliver Wieland &lt;oliver.wieland@online.de&gt;
  */
 public class HgtReader {
     private static final int SECONDS_PER_MINUTE = 60;
@@ -115,11 +115,11 @@ public class HgtReader {
         double fLon = frac(coor.lon()) * SECONDS_PER_MINUTE;
 
         // compute offset within HGT file
-        int row = (int)Math.round(fLat * SECONDS_PER_MINUTE / HGT_RES);
-        int col = (int)Math.round(fLon * SECONDS_PER_MINUTE / HGT_RES);
+        int row = (int) Math.round(fLat * SECONDS_PER_MINUTE / HGT_RES);
+        int col = (int) Math.round(fLon * SECONDS_PER_MINUTE / HGT_RES);
 
         row = HGT_ROW_LENGTH - row;
-        int cell = (HGT_ROW_LENGTH*  (row - 1)) + col;
+        int cell = (HGT_ROW_LENGTH * (row - 1)) + col;
 
         //System.out.println("Read SRTM elevation data from row/col/cell " + row + "," + col + ", " + cell + ", " + sb.limit());
 

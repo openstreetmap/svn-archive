@@ -19,8 +19,8 @@ import org.openstreetmap.josm.tools.CheckParameterUtil;
  * Represents the top-level part of the elevation model. The elevation model
  * breaks done into the tracks/routes of a GPX file.
  *
+ * @author Oliver Wieland &lt;oliver.wieland@online.de&gt;
  * @see IElevationModelTrackListener
- * @author Oliver Wieland <oliver.wieland@online.de>
  */
 public class ElevationModel implements IGpxVisitor, IElevationModel {
     // private int sliceSize;
@@ -54,8 +54,6 @@ public class ElevationModel implements IGpxVisitor, IElevationModel {
 
     /**
      * Gets the GPX data instance used by this model.
-     *
-     * @return
      */
     public GpxData getGpxData() {
         return gpxData;
@@ -118,7 +116,8 @@ public class ElevationModel implements IGpxVisitor, IElevationModel {
 
     @Override
     public void setCurrentProfile(int index) {
-        if (index < 0 || index >= profileCount()) throw new RuntimeException("Invalid arg for setCurrentProfile: " + index + ", value must be 0.." + profileCount());
+        if (index < 0 || index >= profileCount())
+            throw new RuntimeException("Invalid arg for setCurrentProfile: " + index + ", value must be 0.." + profileCount());
 
         currentProfileIndex = index;
         fireModelChanged();
@@ -145,7 +144,6 @@ public class ElevationModel implements IGpxVisitor, IElevationModel {
     public void visitWayPoint(WayPoint wp) {
         // we ignore single way points (elevation profile is quite meaningless...)
     }
-
 
     @Override
     public void beginTrack(GpxTrack track) {

@@ -6,7 +6,6 @@ import org.openstreetmap.josm.data.gpx.WayPoint;
 public interface IElevationProfileSelectionListener {
     /**
      * Notifies clients about selected index changed.
-     * @param newIndex
      */
-    public void selectedWayPointChanged(WayPoint wpt);
+    void selectedWayPointChanged(WayPoint wpt);
 }

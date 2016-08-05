@@ -9,15 +9,14 @@ import org.openstreetmap.josm.actions.mapmode.MapMode;
 import org.openstreetmap.josm.gui.MapFrame;
 
 /**
- * @author Oliver Wieland <oliver.wieland@online.de>
+ * @author Oliver Wieland &lt;oliver.wieland@online.de&gt;
  * Provides the map mode and controls visibility of the elevation profile layer/panel.
  */
 public class ElevationMapMode extends MapMode implements IElevationModelListener {
     /**
-     * 
+     *
      */
     private static final long serialVersionUID = -1011179566962655639L;
-
 
     public ElevationMapMode(String name, MapFrame mapFrame) {
         super(name,

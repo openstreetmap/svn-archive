@@ -4,7 +4,7 @@ package org.openstreetmap.josm.plugins.elevation.gpx;
 import org.openstreetmap.josm.data.gpx.WayPoint;
 
 /**
- * @author Oliver Wieland <oliver.wieland@online.de>
+ * @author Oliver Wieland &lt;oliver.wieland@online.de&gt;
  * Interface for all GPX data visitors. Hopefully this will be part of JOSM some day.
  */
 public interface IGpxWaypointVisitor {

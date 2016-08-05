@@ -58,7 +58,8 @@ public class ElevationGridTile extends Tile {
     }
 
     /**
-     * Use {@link ElevationGridTile#paintTile(Graphics2D, MapView, IVertexRenderer)} to render the tile as grid. This method just issues a debug text.
+     * Use {@link ElevationGridTile#paintTile(Graphics2D, MapView, IVertexRenderer)} to render the tile as grid.
+     * This method just issues a debug text.
      */
     @Override
     public void paint(Graphics g, int x, int y) {
@@ -169,6 +170,4 @@ public class ElevationGridTile extends Tile {
         return "ElevationGridTile [box=" + box + ", xtile=" + xtile
                 + ", ytile=" + ytile + "]";
     }
-
-
 }

@@ -8,7 +8,7 @@ import org.openstreetmap.josm.data.gpx.WayPoint;
 
 /**
  * Interface for all GPX visitors.
- * @author Oliver Wieland <oliver.wieland@online.de>
+ * @author Oliver Wieland &lt;oliver.wieland@online.de&gt;
  */
 public interface IGpxVisitor extends IGpxWaypointVisitor {
     /**

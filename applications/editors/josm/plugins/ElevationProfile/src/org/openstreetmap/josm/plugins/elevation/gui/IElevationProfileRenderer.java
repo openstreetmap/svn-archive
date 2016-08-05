@@ -14,8 +14,8 @@ import org.openstreetmap.josm.plugins.elevation.gpx.ElevationWayPointKind;
  * for a given way point, so that as well the dialog as the layer can share the color scheme.
  * Second, the layer can simply pass the painting stuff to a renderer without taking care of
  * details.
- * 
- * @author Oliver Wieland <oliver.wieland@online.de>
+ *
+ * @author Oliver Wieland &lt;oliver.wieland@online.de&gt;
  *
  */
 public interface IElevationProfileRenderer {

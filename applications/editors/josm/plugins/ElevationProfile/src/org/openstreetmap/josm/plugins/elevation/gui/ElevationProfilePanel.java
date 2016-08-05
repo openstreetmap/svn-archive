@@ -31,7 +31,7 @@ import org.openstreetmap.josm.plugins.elevation.gpx.ElevationWayPointKind;
 
 /**
  * Provides the panel showing the elevation profile.
- * @author Oliver Wieland <oliver.wieland@online.de>
+ * @author Oliver Wieland &lt;oliver.wieland@online.de&gt;
  *
  */
 public class ElevationProfilePanel extends JPanel implements ComponentListener, MouseMotionListener {
@@ -68,7 +68,6 @@ public class ElevationProfilePanel extends JPanel implements ComponentListener, 
 
     /**
      * Gets the elevation profile instance.
-     * @return
      */
     public IElevationModel getProfile() {
         return model;
@@ -76,7 +75,6 @@ public class ElevationProfilePanel extends JPanel implements ComponentListener, 
 
     /**
      * Sets the new elevation profile instance.
-     * @param model
      */
     public void setElevationModel(IElevationModel model) {
         if (this.model != model) {
@@ -87,7 +85,6 @@ public class ElevationProfilePanel extends JPanel implements ComponentListener, 
 
     /**
      * Gets the plot area coordinates.
-     * @return
      */
     public Rectangle getPlotArea() {
         return plotArea;
@@ -95,7 +92,6 @@ public class ElevationProfilePanel extends JPanel implements ComponentListener, 
 
     /**
      * Sets the plot area coordinates.
-     * @param plotArea
      */
     public void setPlotArea(Rectangle plotArea) {
         this.plotArea = plotArea;
@@ -103,7 +99,6 @@ public class ElevationProfilePanel extends JPanel implements ComponentListener, 
 
     /**
      * Gets the selected index of the bar.
-     * @return
      */
     public int getSelectedIndex() {
         return selectedIndex;
@@ -111,7 +106,6 @@ public class ElevationProfilePanel extends JPanel implements ComponentListener, 
 
     /**
      * Sets the selected index of the bar.
-     * @param selectedIndex
      */
     public void setSelectedIndex(int selectedIndex) {
         this.selectedIndex = selectedIndex;
@@ -258,8 +252,6 @@ public class ElevationProfilePanel extends JPanel implements ComponentListener, 
 
     /**
      * Formats the date in a predefined manner: "21. Oct 2010, 12:10".
-     * @param date
-     * @return
      */
     private String formatDate(Date date) {
         Format formatter = new SimpleDateFormat("d MMM yy, HH:mm");
@@ -269,7 +261,6 @@ public class ElevationProfilePanel extends JPanel implements ComponentListener, 
 
     /**
      * Helper function to draw elevation axes.
-     * @param g
      */
     private void drawElevationLines(Graphics g) {
         IElevationProfile profile = model.getCurrentProfile();
@@ -320,8 +311,6 @@ public class ElevationProfilePanel extends JPanel implements ComponentListener, 
     /**
      * Gets the x value of the left border for axes (slightly smaller than the
      * left x).
-     *
-     * @return
      */
     private int getPlotLeftAxis() {
         return plotArea.x - 3;
@@ -329,8 +318,6 @@ public class ElevationProfilePanel extends JPanel implements ComponentListener, 
 
     /**
      * Gets the x value of the left border.
-     *
-     * @return
      */
     private int getPlotLeft() {
         return plotArea.x + 1;
@@ -338,8 +325,6 @@ public class ElevationProfilePanel extends JPanel implements ComponentListener, 
 
     /**
      * Gets the horizontal center coordinate (mid between left and right x).
-     *
-     * @return
      */
     private int getPlotHCenter() {
         return (getPlotLeft() + getPlotRight()) / 2;
@@ -347,8 +332,6 @@ public class ElevationProfilePanel extends JPanel implements ComponentListener, 
 
     /**
      * Gets the vertical center coordinate (mid between top and bottom y).
-     *
-     * @return
      */
     private int getPlotVCenter() {
         return (getPlotTop() + getPlotBottom()) / 2;
@@ -356,8 +339,6 @@ public class ElevationProfilePanel extends JPanel implements ComponentListener, 
 
     /**
      * Gets the x value of the right border.
-     *
-     * @return
      */
     private int getPlotRight() {
         return plotArea.x + plotArea.width - 1;
@@ -373,8 +354,6 @@ public class ElevationProfilePanel extends JPanel implements ComponentListener, 
 
     /**
      * Gets for an elevation value the according y coordinate in the plot area.
-     *
-     * @param elevation
      * @return The y coordinate in the plot area.
      */
     private int getYForEelevation(int elevation) {
@@ -393,8 +372,6 @@ public class ElevationProfilePanel extends JPanel implements ComponentListener, 
 
     /**
      * Draws the elevation profile
-     *
-     * @param g
      */
     private void drawProfile(Graphics g) {
         IElevationProfile profile = model.getCurrentProfile();
@@ -510,7 +487,7 @@ public class ElevationProfilePanel extends JPanel implements ComponentListener, 
     public String getToolTipText() {
         WayPoint wpt = getSelectedWayPoint();
         if (wpt != null) {
-            return  String.format("%s: %s", ElevationHelper.getTimeText(wpt), ElevationHelper.getElevationText(wpt));
+            return String.format("%s: %s", ElevationHelper.getTimeText(wpt), ElevationHelper.getElevationText(wpt));
         }
 
         return super.getToolTipText();

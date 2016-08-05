@@ -11,9 +11,9 @@ import org.openstreetmap.josm.data.gpx.WayPoint;
 
 /**
  * Utility class to apply a visitor on GPX containers (track, route, data).
- * @author Oliver Wieland <oliver.wieland@online.de>
+ * @author Oliver Wieland &lt;oliver.wieland@online.de&gt;
  */
-public class GpxIterator {
+public final class GpxIterator {
     /**
      * Static class, no need to instantiate me.
      */
@@ -22,7 +22,7 @@ public class GpxIterator {
     /**
      * Runs the given visitor on a GPX data instance. If one or both
      * arguments are null, this method will return immediately.
-     * 
+     *
      * @param data
      *            The GPX data instance.
      * @param visitor
@@ -73,10 +73,6 @@ public class GpxIterator {
 
     // ---------------------- Helper methods ----------------
 
-    /**
-     * @param visitor
-     * @param trk
-     */
     private static void visitTrack(IGpxVisitor visitor, GpxTrack trk) {
         if (trk == null) return;
         if (visitor == null) return;
@@ -102,13 +98,8 @@ public class GpxIterator {
             }
             visitor.endTrack(trk);
         }
-
     }
 
-    /**
-     * @param visitor
-     * @param route
-     */
     private static void visitRoute(IGpxVisitor visitor, GpxRoute route) {
         if (route == null) return;
         if (visitor == null) return;
@@ -120,10 +111,6 @@ public class GpxIterator {
         visitor.endWayPoints();
     }
 
-    /**
-     * @param data
-     * @param visitor
-     */
     private static void visitSingleWaypoints(GpxData data, IGpxVisitor visitor) {
         // isolated way points
         if (data.waypoints != null) { // better with an hasWaypoints method!?

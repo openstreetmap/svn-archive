@@ -27,7 +27,7 @@ import org.openstreetmap.josm.tools.CheckParameterUtil;
 
 /**
  * Provides default rendering for elevation profile layer.
- * @author Oliver Wieland <oliver.wieland@online.de>
+ * @author Oliver Wieland &lt;oliver.wieland@online.de&gt;
  */
 public class DefaultElevationProfileRenderer implements
 IElevationProfileRenderer {
@@ -286,7 +286,7 @@ IElevationProfileRenderer {
         int b2 = baseLength >> 1;
 
         // coordinates for upwards directed triangle
-        Point p[] = new Point[3];
+        Point[] p = new Point[3];
 
         for (int i = 0; i < p.length; i++) {
             p[i] = new Point();
@@ -383,8 +383,8 @@ IElevationProfileRenderer {
         Point2D center = new Point2D.Float(x, y);
         Point2D focus = new Point2D.Float(x - (radius * 0.6f), y
                 - (radius * 0.6f));
-        float[] dist = { 0.1f, 0.2f, 1.0f };
-        Color[] colors = { firstCol, secondCol, Color.DARK_GRAY };
+        float[] dist = {0.1f, 0.2f, 1.0f};
+        Color[] colors = {firstCol, secondCol, Color.DARK_GRAY};
         RadialGradientPaint p = new RadialGradientPaint(center, radius, focus,
                 dist, colors, CycleMethod.NO_CYCLE);
 
@@ -413,7 +413,7 @@ IElevationProfileRenderer {
     }
 
     /**
-     * Draws a label within a filled rounded rectangle with the specified second gradient color (first color is <tt>Color.WHITE<tt>).
+     * Draws a label within a filled rounded rectangle with the specified second gradient color (first color is <tt>Color.WHITE</tt>).
      *
      * @param s
      *            The text to draw.
@@ -538,6 +538,4 @@ IElevationProfileRenderer {
     public void finishRendering() {
         // nothing to do currently
     }
-
-
 }

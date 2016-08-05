@@ -24,9 +24,9 @@ import org.openstreetmap.josm.tools.ImageProvider;
 /**
  * Layer class to show additional information on the elevation map, e. g. show
  * min/max elevation markers.
- * 
- * @author Oliver Wieland <oliver.wieland@online.de>
- * 
+ *
+ * @author Oliver Wieland &lt;oliver.wieland@online.de&gt;
+ *
  */
 public class ElevationProfileLayer extends Layer implements IElevationProfileSelectionListener {
 
@@ -37,7 +37,7 @@ public class ElevationProfileLayer extends Layer implements IElevationProfileSel
 
     /**
      * Creates a new elevation profile layer
-     * 
+     *
      * @param name
      *            The name of the layer.
      */
@@ -47,8 +47,6 @@ public class ElevationProfileLayer extends Layer implements IElevationProfileSel
 
     /**
      * Gets the current elevation profile shown in this layer.
-     * 
-     * @return
      */
     public IElevationProfile getProfile() {
         return profile;
@@ -56,7 +54,7 @@ public class ElevationProfileLayer extends Layer implements IElevationProfileSel
 
     /**
      * Sets the current elevation profile shown in this layer.
-     * 
+     *
      * @param profile
      *            The profile to show in the layer
      */
@@ -80,7 +78,7 @@ public class ElevationProfileLayer extends Layer implements IElevationProfileSel
     @Override
     public Action[] getMenuEntries() {
         // TODO: More entries???
-        return new Action[] { new LayerListPopup.InfoAction(this) };
+        return new Action[] {new LayerListPopup.InfoAction(this)};
     }
 
     @Override
@@ -158,7 +156,7 @@ public class ElevationProfileLayer extends Layer implements IElevationProfileSel
 
     /**
      * Checks if the given way point requires special decoration (e. g. elevation gain/loss or level crossing).
-     * 
+     *
      * Parameters <tt>ele1</tt> and <tt>ele2</tt> point are used for detecting "level crossings",
      * e. g. 1 to 2 indicate that we crossed the 200m elevation in upward direction
      *
@@ -172,8 +170,8 @@ public class ElevationProfileLayer extends Layer implements IElevationProfileSel
         int lastEle = (int) ElevationHelper.getElevation(lastWpt);
 
         // normalize elevation to levels
-        int actLevel = (int)(actEle / Level_Factor);
-        int lastLevel = (int)(lastEle / Level_Factor);
+        int actLevel = (int) (actEle / Level_Factor);
+        int lastLevel = (int) (lastEle / Level_Factor);
         double slope = Math.abs(ElevationHelper.computeSlope(lastWpt.getCoor(), actWpt.getCoor()));
 
         // plain way point by default
@@ -183,18 +181,18 @@ public class ElevationProfileLayer extends Layer implements IElevationProfileSel
         // We assume, that we cannot pass more than one levels between two way points ;-)
         if (actLevel != lastLevel && Math.abs(actLevel - lastLevel) == 1) {
             if (actLevel > lastLevel) { // we went down?
-                kind =ElevationWayPointKind.ElevationLevelGain;
+                kind = ElevationWayPointKind.ElevationLevelGain;
             } else {
-                kind =ElevationWayPointKind.ElevationLevelLoss;
+                kind = ElevationWayPointKind.ElevationLevelLoss;
             }
         } else { // check for elevation gain or loss
             if (actEle > lastEle) { // we went uphill?
                 // TODO: Provide parameters for high/low thresholds
-                if (slope > 2) kind =ElevationWayPointKind.ElevationGainLow;
-                if (slope > 15) kind =ElevationWayPointKind.ElevationGainHigh;
+                if (slope > 2) kind = ElevationWayPointKind.ElevationGainLow;
+                if (slope > 15) kind = ElevationWayPointKind.ElevationGainHigh;
             } else {
-                if (slope > 2) kind =ElevationWayPointKind.ElevationLossLow;
-                if (slope > 15) kind =ElevationWayPointKind.ElevationLossHigh;
+                if (slope > 2) kind = ElevationWayPointKind.ElevationLossLow;
+                if (slope > 15) kind = ElevationWayPointKind.ElevationLossHigh;
             }
         }
         return kind;

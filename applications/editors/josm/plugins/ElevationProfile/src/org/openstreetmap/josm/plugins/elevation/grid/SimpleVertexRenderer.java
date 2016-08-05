@@ -13,9 +13,6 @@ import org.openstreetmap.josm.plugins.elevation.IVertexRenderer;
 public class SimpleVertexRenderer implements IVertexRenderer {
     private ColorMap cMap = null;
 
-    /**
-     * 
-     */
     public SimpleVertexRenderer() {
         cMap = ColorMap.getMap(ColorMap.getNames()[0]);
     }
@@ -25,11 +22,8 @@ public class SimpleVertexRenderer implements IVertexRenderer {
         return cMap.getColor((int) vertex.getEle());
     }
 
-
     @Override
     public void selectColorMap(String name) {
         // TODO Auto-generated method stub
-
     }
-
 }

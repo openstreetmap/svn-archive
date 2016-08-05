@@ -27,7 +27,7 @@ import org.openstreetmap.josm.plugins.elevation.IElevationProfile;
  *
  * {@link IElevationProfile} {@link IGpxWaypointVisitor} {@link GpxIterator}
  *
- * @author Oliver Wieland <oliver.wieland@online.de>
+ * @author Oliver Wieland &lt;oliver.wieland@online.de&gt;
  *
  */
 public class ElevationProfile implements IElevationProfile,
@@ -57,8 +57,6 @@ IGpxWaypointVisitor {
 
     /**
      * Creates a name elevation profile without any way points.
-     *
-     * @param name
      */
     public ElevationProfile(String name) {
         this(name, null, null, 0);
@@ -185,7 +183,6 @@ IGpxWaypointVisitor {
 
     /**
      * Sets the average height.
-     * @param avrgHeight
      */
     protected void setAvrgHeight(int avrgHeight) {
         this.avrgHeight = avrgHeight;
@@ -193,7 +190,6 @@ IGpxWaypointVisitor {
 
     /**
      * Sets the very first way point.
-     * @param wp
      */
     protected void setStart(WayPoint wp) {
         importantWayPoints[WAYPOINT_START] = wp;
@@ -202,7 +198,6 @@ IGpxWaypointVisitor {
 
     /**
      * Sets the very last way point.
-     * @param wp
      */
     protected void setEnd(WayPoint wp) {
         importantWayPoints[WAYPOINT_END] = wp;
@@ -215,15 +210,12 @@ IGpxWaypointVisitor {
 
     /**
      * Sets the way points of this profile.
-     *
-     * @param wayPoints
      */
     public void setWayPoints(List<WayPoint> wayPoints) {
         if (this.wayPoints != wayPoints) {
             this.wayPoints = new ArrayList<>(wayPoints);
             numWayPoints = wayPoints != null ? wayPoints.size() : 0;
             updateValues();
-
         }
     }
 
@@ -276,8 +268,6 @@ IGpxWaypointVisitor {
 
     /**
      * Gets the difference between min and max elevation.
-     *
-     * @return
      */
     @Override
     public int getHeightDifference() {
@@ -286,8 +276,6 @@ IGpxWaypointVisitor {
 
     /**
      * Gets the elevation gain.
-     *
-     * @return
      */
     @Override
     public int getGain() {
@@ -301,7 +289,6 @@ IGpxWaypointVisitor {
 
     /**
      * Sets the distance of the elevation profile.
-     * @param dist
      */
     protected void setDistance(double dist) {
         this.dist = dist;
@@ -309,7 +296,6 @@ IGpxWaypointVisitor {
 
     /**
      * Returns the time between start and end of the track.
-     * @return
      */
     @Override
     public long getTimeDifference() {
@@ -361,7 +347,7 @@ IGpxWaypointVisitor {
 
     @Override
     public int getNumberOfWayPoints() {
-        return numWayPoints;// wayPoints != null ? wayPoints.size() : 0;
+        return numWayPoints; // wayPoints != null ? wayPoints.size() : 0;
     }
 
     /**
@@ -378,8 +364,6 @@ IGpxWaypointVisitor {
      * Gets a flag indicating whether the associated way points contained
      * elevation data or not. This is the case if min and max height or both
      * zero.
-     *
-     * @return
      */
     @Override
     public boolean hasElevationData() {

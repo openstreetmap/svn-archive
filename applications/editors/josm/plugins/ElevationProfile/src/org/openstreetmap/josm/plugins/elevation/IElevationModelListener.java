@@ -7,7 +7,7 @@ import org.openstreetmap.josm.plugins.elevation.gpx.ElevationModel;
  * This interface is intended to allow clients reaction on changes in the elevation model changes (e. g.
  * repaint UI widgets).
  * {@link ElevationModel}
- * @author Oliver Wieland <oliver.wieland@online.de>
+ * @author Oliver Wieland &lt;oliver.wieland@online.de&gt;
  */
 public interface IElevationModelListener {
     /**

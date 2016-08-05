@@ -17,7 +17,7 @@ import org.openstreetmap.josm.plugins.elevation.gui.ElevationProfileLayer;
 
 /**
  * Plugin class for displaying an elevation profile of the tracks.
- * @author Oliver Wieland <oliver.wieland@online.de>
+ * @author Oliver Wieland &lt;oliver.wieland@online.de&gt;
  *
  */
 public class ElevationProfilePlugin extends Plugin {
@@ -59,10 +59,9 @@ public class ElevationProfilePlugin extends Plugin {
     /**
      * Gets the elevation profile layer which decorates the current layer
      * with some markers.
-     * @return
      */
-    public static ElevationProfileLayer getCurrentLayer(){
-        if(currentLayer == null){
+    public static ElevationProfileLayer getCurrentLayer() {
+        if (currentLayer == null) {
             currentLayer = new ElevationProfileLayer(tr("Elevation Profile"));
             Main.getLayerManager().addLayer(currentLayer);
         }
@@ -73,28 +72,28 @@ public class ElevationProfilePlugin extends Plugin {
         // Data taken from http://proceedings.esri.com/library/userconf/proc98/proceed/to850/pap842/p842.htm
         ColorMap.create("Physical_US",
                 new Color[]{
-                        new Color(18,129,242),
-                        new Color(113,153,89),
-                        new Color(117,170,101),
-                        new Color(149,190,113),
-                        new Color(178,214,117),
-                        new Color(202,226,149),
-                        new Color(222,238,161),
-                        new Color(242,238,161),
-                        new Color(238,222,153),
-                        new Color(242,206,133),
-                        new Color(234,182,129),
-                        new Color(218,157,121),
-                        new Color(194,141,125),
-                        new Color(214,157,145),
-                        new Color(226,174,165),
-                        new Color(222,186,182),
-                        new Color(238,198,210),
-                        new Color(255,206,226),
-                        new Color(250,218,234),
-                        new Color(255,222,230),
-                        new Color(255,230,242),
-                        new Color(255,242,255)
+                        new Color(18, 129, 242),
+                        new Color(113, 153, 89),
+                        new Color(117, 170, 101),
+                        new Color(149, 190, 113),
+                        new Color(178, 214, 117),
+                        new Color(202, 226, 149),
+                        new Color(222, 238, 161),
+                        new Color(242, 238, 161),
+                        new Color(238, 222, 153),
+                        new Color(242, 206, 133),
+                        new Color(234, 182, 129),
+                        new Color(218, 157, 121),
+                        new Color(194, 141, 125),
+                        new Color(214, 157, 145),
+                        new Color(226, 174, 165),
+                        new Color(222, 186, 182),
+                        new Color(238, 198, 210),
+                        new Color(255, 206, 226),
+                        new Color(250, 218, 234),
+                        new Color(255, 222, 230),
+                        new Color(255, 230, 242),
+                        new Color(255, 242, 255)
         },
                 // elevation in meters - the page above uses feet, so these values differs slightly
                 new int[]{

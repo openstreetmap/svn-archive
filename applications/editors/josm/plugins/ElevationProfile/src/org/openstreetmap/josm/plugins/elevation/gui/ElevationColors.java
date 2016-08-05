@@ -7,9 +7,14 @@ import org.openstreetmap.josm.plugins.elevation.ElevationHelper;
 
 /**
  * Contains some extra predefined colors.
- * @author Oliver Wieland <oliver.wieland@online.de>
+ * @author Oliver Wieland &lt;oliver.wieland@online.de&gt;
  */
-public class ElevationColors {
+public final class ElevationColors {
+
+    private ElevationColors() {
+        // Hide default constructor for utilities classes
+    }
+
     public static Color EPDarkBlue = new Color(21, 59, 99);
     public static Color EPMidBlue = new Color(115, 140, 180);
     public static Color EPLightBlue = new Color(176, 187, 208);
@@ -23,7 +28,8 @@ public class ElevationColors {
     static class ColorMapEntry {
         private final int ele; // limit
         private final Color color;
-        public ColorMapEntry(java.awt.Color color, int ele) {
+
+        ColorMapEntry(Color color, int ele) {
             super();
             this.color = color;
             this.ele = ele;
@@ -38,18 +44,15 @@ public class ElevationColors {
         }
     }
 
-
-
     private static ColorMapEntry[] colors = new ColorMapEntry[]{
-        new ColorMapEntry(new Color(0,128, 0), 0),
-        new ColorMapEntry(new Color(156,187, 105), 1),
-        new ColorMapEntry(new Color(193,208, 107), 100),
-        new ColorMapEntry(new Color(244,224, 100), 200),
-        new ColorMapEntry(new Color(242,216, 149), 500),
-        new ColorMapEntry(new Color(234,191, 104), 1000),
-        new ColorMapEntry(new Color(207,169, 96), 2000),
+            new ColorMapEntry(new Color(0, 128, 0), 0),
+            new ColorMapEntry(new Color(156, 187, 105), 1),
+            new ColorMapEntry(new Color(193, 208, 107), 100),
+            new ColorMapEntry(new Color(244, 224, 100), 200),
+            new ColorMapEntry(new Color(242, 216, 149), 500),
+            new ColorMapEntry(new Color(234, 191, 104), 1000),
+            new ColorMapEntry(new Color(207, 169, 96), 2000),
     };
-
 
     public static Color getElevationColor(double ele) {
         if (!ElevationHelper.isValidElevation(ele)) {

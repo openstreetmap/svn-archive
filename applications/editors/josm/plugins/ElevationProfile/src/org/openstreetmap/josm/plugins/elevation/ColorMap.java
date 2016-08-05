@@ -14,7 +14,7 @@ import org.openstreetmap.josm.tools.CheckParameterUtil;
  * @author Olli
  *
  */
-public class ColorMap {
+public final class ColorMap {
     private List<ColorMapEntry> colorList;
     private String name;
     private static HashMap<String, ColorMap> colorMaps;
@@ -66,7 +66,7 @@ public class ColorMap {
             if (e1.getEle() <= elevation && e2.getEle() >= elevation) {
 
                 // interpolate color between both
-                double val = (elevation - e1.getEle()) / (double)(e2.getEle() - e1.getEle());
+                double val = (elevation - e1.getEle()) / (double) (e2.getEle() - e1.getEle());
                 return interpolate(e1.getColor(), e2.getColor(), val);
             }
         }
@@ -164,12 +164,11 @@ public class ColorMap {
         return map;
     }
 
-
     class ColorMapEntry implements Comparable<ColorMapEntry> {
         private final int ele; // limit
         private final Color color;
 
-        public ColorMapEntry(Color color, int ele) {
+        ColorMapEntry(Color color, int ele) {
             super();
             this.color = color;
             this.ele = ele;

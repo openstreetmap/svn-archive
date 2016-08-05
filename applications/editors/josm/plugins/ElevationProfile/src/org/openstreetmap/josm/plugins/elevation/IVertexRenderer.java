@@ -7,7 +7,7 @@ import org.openstreetmap.josm.plugins.elevation.grid.EleVertex;
 
 /**
  * The interface IVertexRenderer.
- * 
+ *
  * Implementors should provide a default color map which cannot be unregistered
  */
 public interface IVertexRenderer {
@@ -18,7 +18,7 @@ public interface IVertexRenderer {
      * @param vertex the elevation vertex
      * @return the elevation color
      */
-    public Color getElevationColor(EleVertex vertex);
+    Color getElevationColor(EleVertex vertex);
 
     /**
      * Selects color map with the given name. If no
@@ -26,6 +26,5 @@ public interface IVertexRenderer {
      *
      * @param mapToUse the map to use
      */
-    public void selectColorMap(String name);
-
+    void selectColorMap(String name);
 }

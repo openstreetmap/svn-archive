@@ -15,11 +15,6 @@ import org.openstreetmap.gui.jmapviewer.interfaces.TileSource;
  */
 public class ElevationGridTileController extends TileController {
 
-    /**
-     * @param source
-     * @param tileCache
-     * @param listener
-     */
     public ElevationGridTileController(TileSource source, TileCache tileCache,
             TileLoaderListener listener, TileLoader loader) {
         super(source, tileCache, listener);

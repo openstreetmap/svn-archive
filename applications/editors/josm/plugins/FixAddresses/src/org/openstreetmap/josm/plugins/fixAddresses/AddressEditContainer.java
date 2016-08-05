@@ -741,7 +741,7 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
         public int compareTo(StreetScore arg0) {
             if (arg0 == null) return 1;
 
-            return new Integer(score).compareTo(new Integer(arg0.score));
+            return Integer.valueOf(score).compareTo(Integer.valueOf(arg0.score));
         }
     }
 }

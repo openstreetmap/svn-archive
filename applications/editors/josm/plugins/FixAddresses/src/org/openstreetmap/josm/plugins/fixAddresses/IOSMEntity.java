@@ -65,5 +65,6 @@ public interface IOSMEntity extends Comparable<IOSMEntity> {
      */
     public void visit(IAllKnowingTrashHeap trashHeap, IProblemVisitor visitor);
 
+    @Override
     int compareTo(IOSMEntity o);
 }

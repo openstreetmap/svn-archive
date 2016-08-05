@@ -107,6 +107,7 @@ public abstract class AddressEditTableModel extends DefaultTableModel implements
             table = t;
         }
 
+        @Override
         public void mouseClicked(MouseEvent e) {
             TableColumnModel colModel = table.getColumnModel();
             int columnModelIndex = colModel.getColumnIndexAtX(e.getX());
@@ -140,7 +141,7 @@ public abstract class AddressEditTableModel extends DefaultTableModel implements
     /**
      * Internal base class to sort items by different columns.
      */
-    protected abstract class ColumnSorter<E> implements Comparator<E> {
+    protected static abstract class ColumnSorter<E> implements Comparator<E> {
         private int column;
         private boolean ascending;
 

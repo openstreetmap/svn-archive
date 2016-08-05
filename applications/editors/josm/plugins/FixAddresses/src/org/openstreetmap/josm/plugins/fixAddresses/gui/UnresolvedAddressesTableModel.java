@@ -127,7 +127,7 @@ public class UnresolvedAddressesTableModel extends AddressEditTableModel {
     /**
      * Internal class StreetModelSorter.
      */
-    class UnresolvedAddressModelSorter extends ColumnSorter<OSMAddress> {
+    static class UnresolvedAddressModelSorter extends ColumnSorter<OSMAddress> {
 
         public UnresolvedAddressModelSorter(int column, boolean asc) {
             super(column, asc);

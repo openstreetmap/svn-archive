@@ -24,6 +24,7 @@ public class FixAddressesPreferences extends DefaultTabPreferenceSetting {
      * create the preference setting instance. 
      */
     public static class Factory implements PreferenceSettingFactory {
+        @Override
         public PreferenceSetting createPreferenceSetting() {
             return new FixAddressesPreferences();
         }

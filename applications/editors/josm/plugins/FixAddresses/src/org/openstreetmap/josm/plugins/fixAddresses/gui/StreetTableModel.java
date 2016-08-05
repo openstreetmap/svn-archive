@@ -104,12 +104,13 @@ public class StreetTableModel extends AddressEditTableModel {
     /**
      * Internal class StreetModelSorter.
      */
-    class StreetModelSorter extends ColumnSorter<OSMStreet> {
+    static class StreetModelSorter extends ColumnSorter<OSMStreet> {
 
         public StreetModelSorter(int column, boolean asc) {
             super(column, asc);
         }
 
+        @Override
         public int compare(OSMStreet arg0, OSMStreet arg1) {
             if (arg0 == null || arg1 == null) return 0;
 
@@ -127,8 +128,8 @@ public class StreetTableModel extends AddressEditTableModel {
                     return arg1.hasName() ? -1 : 0;
                 }
             case 2:
-                return new Integer(arg0.getNumberOfAddresses()).
-                                compareTo(new Integer(arg1.getNumberOfAddresses()));
+                return Integer.valueOf(arg0.getNumberOfAddresses()).
+                                compareTo(Integer.valueOf(arg1.getNumberOfAddresses()));
             default:
             }
             return 0;

@@ -116,7 +116,7 @@ public class IncompleteAddressesTableModel extends AddressEditTableModel  {
     /**
      * Internal class StreetModelSorter.
      */
-    class IncompleteAddressModelSorter extends ColumnSorter<OSMAddress> {
+    static class IncompleteAddressModelSorter extends ColumnSorter<OSMAddress> {
 
         /**
          * Instantiates a new incomplete address model sorter.

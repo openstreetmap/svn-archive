@@ -194,7 +194,7 @@ public class GuessAddressRunnable extends PleaseWaitRunnable {
     }
 
     // TODO: Put in separate file
-    private class GuessStreetValueHandler extends GuessedValueHandler {
+    private static class GuessStreetValueHandler extends GuessedValueHandler {
         public GuessStreetValueHandler(String tag) {
             this(tag, null);
         }

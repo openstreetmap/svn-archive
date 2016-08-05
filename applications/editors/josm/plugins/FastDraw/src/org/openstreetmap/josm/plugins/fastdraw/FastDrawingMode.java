@@ -7,23 +7,19 @@ import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Graphics2D;
 import java.awt.Point;
-import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javax.swing.JOptionPane;
 
 import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.actions.PasteTagsAction.TagPaster;
 import org.openstreetmap.josm.actions.mapmode.MapMode;
 import org.openstreetmap.josm.command.AddCommand;
 import org.openstreetmap.josm.command.ChangeCommand;
@@ -34,13 +30,11 @@ import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
-import org.openstreetmap.josm.data.osm.Tag;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.gui.ConditionalOptionPaneUtil;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.gui.MapView;
-import org.openstreetmap.josm.gui.datatransfer.ClipboardUtils;
-import org.openstreetmap.josm.gui.datatransfer.data.PrimitiveTransferData;
+import org.openstreetmap.josm.gui.datatransfer.OsmTransferHandler;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.gui.layer.MapViewPaintable;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
@@ -554,7 +548,7 @@ class FastDrawingMode extends MapMode implements MapViewPaintable, KeyPressRelea
         Node firstNode = null;
 
         for (LatLon p : pts) {
-            Node nd = Main.map.mapView.getNearestNode(line.getPoint(p), OsmPrimitive.isSelectablePredicate);
+            Node nd = Main.map.mapView.getNearestNode(line.getPoint(p), OsmPrimitive::isSelectable);
             // there may be a node with the same coords!
 
             if (nd != null && p.greatCircleDistance(nd.getCoor()) > 0.01) nd = null;
@@ -579,16 +573,7 @@ class FastDrawingMode extends MapMode implements MapViewPaintable, KeyPressRelea
         }
         if (ctrl) {
             // paste tags - from ctrl-shift-v
-            Set<OsmPrimitive> ts = new HashSet<>();
-            ts.add(w);
-            try {
-                PrimitiveTransferData data = (PrimitiveTransferData) ClipboardUtils.getClipboard().getData(PrimitiveTransferData.DATA_FLAVOR);
-                for (Tag t : new TagPaster(data.getDirectlyAdded(), ts).execute()) {
-                    w.put(t.getKey(), t.getValue());
-                }
-            } catch (UnsupportedFlavorException | IOException e) {
-                Main.error(e);
-            }
+            new OsmTransferHandler().pasteTags(Collections.singleton(w));
         }
         if (!settings.autoTags.isEmpty()) {
             Map<String, String> tags = TextTagParser.readTagsFromText(settings.autoTags);
@@ -728,7 +713,7 @@ class FastDrawingMode extends MapMode implements MapViewPaintable, KeyPressRelea
     // <editor-fold defaultstate="collapsed" desc="Helper functions">
 
     private Node getNearestNode(Point point, double maxDist) {
-        Node nd = Main.map.mapView.getNearestNode(point, OsmPrimitive.isSelectablePredicate);
+        Node nd = Main.map.mapView.getNearestNode(point, OsmPrimitive::isSelectable);
         if (nd != null && line.getPoint(nd.getCoor()).distance(point) <= maxDist) return nd;
         else return null;
     }

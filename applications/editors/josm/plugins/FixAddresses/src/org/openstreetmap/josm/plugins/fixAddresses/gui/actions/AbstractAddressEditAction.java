@@ -182,7 +182,9 @@ public abstract class AbstractAddressEditAction extends JosmAction implements IA
         // execute the command
         Main.main.undoRedo.add(new SequenceCommand(txName, commands));
         commands.clear();
-        container.invalidate();
+        if (container != null) {
+            container.invalidate();
+        }
     }
 
     /**

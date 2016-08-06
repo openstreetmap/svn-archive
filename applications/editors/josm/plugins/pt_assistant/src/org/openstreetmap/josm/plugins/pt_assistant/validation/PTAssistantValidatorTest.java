@@ -418,7 +418,6 @@ public class PTAssistantValidatorTest extends Test {
 
 		// run fix task asynchronously
 		FixTask fixTask = new FixTask(testErrors);
-		// Main.worker.submit(fixTask);
 
 		Thread t = new Thread(fixTask);
 		t.start();
@@ -430,6 +429,18 @@ public class PTAssistantValidatorTest extends Test {
 			JOptionPane.showMessageDialog(null, "Error occurred during fixing");
 		}
 
+	}
+	
+	public void addFixVariants(List<List<PTWay>> fixVariants) {
+		layer.addFixVariants(fixVariants);
+	}
+	
+	public void clearFixVariants() {
+		layer.clearFixVariants();
+	}
+	
+	public List<PTWay> getFixVariant(Character c) {
+		return layer.getFixVariant(c);
 	}
 
 	@SuppressWarnings("unused")

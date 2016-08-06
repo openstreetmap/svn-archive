@@ -10,6 +10,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 
+import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.OsmPrimitiveType;
@@ -18,7 +19,9 @@ import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.data.validation.PaintVisitor;
 import org.openstreetmap.josm.gui.MapView;
+import org.openstreetmap.josm.plugins.pt_assistant.data.PTWay;
 import org.openstreetmap.josm.plugins.pt_assistant.utils.RouteUtils;
+import org.openstreetmap.josm.tools.Pair;
 
 public class PTAssistantPaintVisitor extends PaintVisitor {
 
@@ -84,7 +87,11 @@ public class PTAssistantPaintVisitor extends PaintVisitor {
 				}
 
 				stopOrderMap.put(rm.getUniqueId(), label);
-				drawStopLabel(rm.getMember(), label);
+				try {
+					drawStopLabel(rm.getMember(), label);
+				} catch (NullPointerException ex) {
+					// do nothing
+				}
 				stopCount++;
 			}
 		}
@@ -169,7 +176,12 @@ public class PTAssistantPaintVisitor extends PaintVisitor {
 	 */
 	protected void drawSegment(Node n1, Node n2, Color color, int oneway) {
 		if (n1.isDrawable() && n2.isDrawable() && isSegmentVisible(n1, n2)) {
-			drawSegment(mv.getPoint(n1), mv.getPoint(n2), color, oneway);
+			try {
+				drawSegment(mv.getPoint(n1), mv.getPoint(n2), color, oneway);
+			} catch (NullPointerException ex) {
+				// do nothing
+			}
+
 		}
 	}
 
@@ -280,10 +292,12 @@ public class PTAssistantPaintVisitor extends PaintVisitor {
 
 		Point p = mv.getPoint(n);
 
-		g.setColor(Color.WHITE);
-		Font stringFont = new Font("SansSerif", Font.PLAIN, 24);
-		g.setFont(stringFont);
-		g.drawString(label, p.x + 20, p.y - 20);
+		if (label != null && !label.equals("")) {
+			g.setColor(Color.WHITE);
+			Font stringFont = new Font("SansSerif", Font.PLAIN, 24);
+			g.setFont(stringFont);
+			g.drawString(label, p.x + 20, p.y - 20);
+		}
 
 		// draw the ref values of all parent routes:
 		List<String> parentsLabelList = new ArrayList<>();
@@ -379,6 +393,54 @@ public class PTAssistantPaintVisitor extends PaintVisitor {
 
 		}
 
+	}
+
+	/**
+	 * 
+	 * @param fixVariants
+	 */
+	protected void visitFixVariants(HashMap<Character, List<PTWay>> fixVariants) {
+		Color[] colors = { new Color(255, 0, 0, 150), new Color(0, 255, 0, 150), new Color(0, 0, 255, 150),
+				new Color(255, 255, 0, 150), new Color(0, 255, 255, 150) };
+
+		int colorIndex = 0;
+		
+		double letterX = Main.map.mapView.getBounds().getMinX() + 20;
+		double letterY = Main.map.mapView.getBounds().getMinY() + 100;
+
+		for (Character c : fixVariants.keySet()) {
+			if (fixVariants.get(c) != null) {
+				drawFixVariant(fixVariants.get(c), colors[colorIndex % 5]);
+				drawFixVariantLetter(fixVariants.get(c), c, colors[colorIndex%5], letterX, letterY);
+				colorIndex++;
+				letterY = letterY + 60;
+			}
+		}
+		
+		
+	}
+
+	/**
+	 * 
+	 * @param fixVariant
+	 * @param color
+	 */
+	private void drawFixVariant(List<PTWay> fixVariant, Color color) {
+		for (PTWay ptway : fixVariant) {
+			for (Way way : ptway.getWays()) {
+				for (Pair<Node, Node> nodePair : way.getNodePairs(false)) {
+					drawSegment(nodePair.a, nodePair.b, color, 0);
+				}
+			}
+		}
+	}
+	
+	private void drawFixVariantLetter(List<PTWay> fixVariant, Character letter, Color color, double letterX, double letterY) {
+		g.setColor(color);
+		Font stringFont = new Font("SansSerif", Font.PLAIN, 50);
+		g.setFont(stringFont);
+		g.drawString(letter.toString(), (int) letterX, (int) letterY);
+		g.drawString(letter.toString(), (int) letterX, (int) letterY);
 	}
 
 }

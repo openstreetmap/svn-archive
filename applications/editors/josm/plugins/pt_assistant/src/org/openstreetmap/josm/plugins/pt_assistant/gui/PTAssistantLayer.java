@@ -7,6 +7,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.swing.Action;
@@ -31,6 +32,7 @@ import org.openstreetmap.josm.gui.layer.LayerManager.LayerOrderChangeEvent;
 import org.openstreetmap.josm.gui.layer.LayerManager.LayerRemoveEvent;
 import org.openstreetmap.josm.gui.layer.LayerPositionStrategy;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
+import org.openstreetmap.josm.plugins.pt_assistant.data.PTWay;
 import org.openstreetmap.josm.plugins.pt_assistant.utils.RouteUtils;
 import org.openstreetmap.josm.tools.ImageProvider;
 
@@ -40,6 +42,7 @@ public class PTAssistantLayer extends Layer
 	private static PTAssistantLayer layer;
 	private List<OsmPrimitive> primitives = new ArrayList<>();
 	private PTAssistantPaintVisitor paintVisitor;
+	private HashMap<Character, List<PTWay>> fixVariants = new HashMap<>();
 	
 	private PTAssistantLayer() {
 		super("pt_assistant layer");
@@ -63,6 +66,42 @@ public class PTAssistantLayer extends Layer
 	public void clear() {
 		this.primitives.clear();
 	}
+	
+	public void clearFixVariants() {
+		fixVariants.clear();
+		Main.map.mapView.repaint();
+	}
+	
+	/**
+	 * Adds fix variants to be displayed in the pt_assistant layer
+	 * @param fixVariants
+	 */
+	public void addFixVariants(List<List<PTWay>> fixVariants) {
+		char alphabet = 'A';
+		for (int i = 0; i < fixVariants.size(); i++) {
+			if (i < 5) {
+				List<PTWay> fixVariant = fixVariants.get(0);
+				this.fixVariants.put(alphabet, fixVariant);
+				alphabet++;
+			}
+		}
+		
+//		for (List<PTWay> fixVariant: fixVariants) {
+//			
+//			this.fixVariants.put(alphabet, fixVariant);
+//			alphabet++;
+//		}
+	}
+	
+	/**
+	 * Returns fix variant (represented by a list of PTWays) that corresponds to the given character. 
+	 * @param c
+	 * @return
+	 */
+	public List<PTWay> getFixVariant(char c) {
+		return this.fixVariants.get(Character.toUpperCase(c));
+	}
+	
 
 	@Override
 	public void paint(final Graphics2D g, final MapView mv, Bounds bounds) {
@@ -71,8 +110,9 @@ public class PTAssistantLayer extends Layer
 
 		for (OsmPrimitive primitive : primitives) {
 			paintVisitor.visit(primitive);
-
 		}
+		
+		paintVisitor.visitFixVariants(this.fixVariants);
 
 	}
 
@@ -198,6 +238,8 @@ public class PTAssistantLayer extends Layer
 		for (OsmPrimitive primitive : primitives) {
 			paintVisitor.visit(primitive);
 		}
+		
+		paintVisitor.visitFixVariants(this.fixVariants);
 
 		Main.map.mapView.repaint();
 	}

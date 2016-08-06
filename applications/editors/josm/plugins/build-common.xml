@@ -28,6 +28,7 @@
     <property name="ant.build.javac.target" value="1.8"/>
     <property name="ant.build.javac.source" value="1.8"/>
     <property name="plugin.jar"             location="${plugin.dist.dir}/${ant.project.name}.jar"/>
+    <property name="javac.compiler"         value="com.google.errorprone.ErrorProneAntCompilerAdapter" />
 
     <!-- For Windows-specific stuff -->
     <condition property="isWindows">
@@ -71,13 +72,13 @@
     </target>
     <target name="compile" depends="init, pre-compile" unless="skip-compile">
         <echo message="compiling sources for ${plugin.jar} ..."/>
-        <javac compiler="com.google.errorprone.ErrorProneAntCompilerAdapter" srcdir="src" debug="true" destdir="${plugin.build.dir}" includeantruntime="false" encoding="UTF-8">
+        <javac compiler="${javac.compiler}" srcdir="src" debug="true" destdir="${plugin.build.dir}" includeantruntime="false" encoding="UTF-8">
             <compilerclasspath>
                 <pathelement location="${error_prone_ant.jar}"/>
             </compilerclasspath>
             <compilerarg value="-Xlint:deprecation"/>
             <compilerarg value="-Xlint:unchecked"/>
-            <compilerarg value="-Xep:ReferenceEquality:OFF"/>
+            <compilerarg value="-Xep:ReferenceEquality:OFF" compiler="com.google.errorprone.ErrorProneAntCompilerAdapter"/>
             <compilerarg line="-Xmaxwarns 1000"/>
             <classpath refid="plugin.classpath"/>
         </javac>

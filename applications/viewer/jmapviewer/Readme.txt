@@ -9,7 +9,7 @@ JMapViewer
 (c) 2010-2011, Ian Dees
 (c) 2010-2011, Michael Vigovsky
 (c) 2011-2016, Paul Hartmann
-(c) 2011-2014, Gleb Smirnoff
+(c) 2011-2016, Gleb Smirnoff
 (c) 2011-2016, Vincent Privat
 (c) 2011, Jason Huntley
 (c) 2012-2016, Simon Legner

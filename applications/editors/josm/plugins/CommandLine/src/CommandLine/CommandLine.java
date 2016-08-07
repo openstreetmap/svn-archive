@@ -457,7 +457,7 @@ public class CommandLine extends Plugin {
         }
     }
 
-    private class ToolProcess {
+    private static class ToolProcess {
         public Process process;
         public volatile boolean running;
     }
@@ -516,7 +516,7 @@ public class CommandLine extends Plugin {
                     int len;
                     while ((len = errStream.read(buffer)) > 0) {
                         synchronized (debugstr) {
-                            debugstr.append(new String(buffer, 0, len));
+                            debugstr.append(new String(buffer, 0, len, StandardCharsets.UTF_8));
                         }
                         System.err.write(buffer, 0, len);
                     }
@@ -550,9 +550,9 @@ public class CommandLine extends Plugin {
                     else
                         bbox.addPrimitive(primitive, 0.0);
                 }
-                osmWriter.writeNodes(new SubclassFilteredCollection<OsmPrimitive, Node>(contents, OsmPrimitive.nodePredicate));
-                osmWriter.writeWays(new SubclassFilteredCollection<OsmPrimitive, Way>(contents, OsmPrimitive.wayPredicate));
-                osmWriter.writeRelations(new SubclassFilteredCollection<OsmPrimitive, Relation>(contents, OsmPrimitive.relationPredicate));
+                osmWriter.writeNodes(new SubclassFilteredCollection<OsmPrimitive, Node>(contents, Node.class::isInstance));
+                osmWriter.writeWays(new SubclassFilteredCollection<OsmPrimitive, Way>(contents, Way.class::isInstance));
+                osmWriter.writeRelations(new SubclassFilteredCollection<OsmPrimitive, Relation>(contents, Relation.class::isInstance));
                 osmWriter.footer();
                 osmWriter.flush();
 
@@ -569,9 +569,9 @@ public class CommandLine extends Plugin {
                         else
                             bbox.addPrimitive(primitive, 0.0);
                     }
-                    osmWriter.writeNodes(new SubclassFilteredCollection<OsmPrimitive, Node>(contents, OsmPrimitive.nodePredicate));
-                    osmWriter.writeWays(new SubclassFilteredCollection<OsmPrimitive, Way>(contents, OsmPrimitive.wayPredicate));
-                    osmWriter.writeRelations(new SubclassFilteredCollection<OsmPrimitive, Relation>(contents, OsmPrimitive.relationPredicate));
+                    osmWriter.writeNodes(new SubclassFilteredCollection<OsmPrimitive, Node>(contents, Node.class::isInstance));
+                    osmWriter.writeWays(new SubclassFilteredCollection<OsmPrimitive, Way>(contents, Way.class::isInstance));
+                    osmWriter.writeRelations(new SubclassFilteredCollection<OsmPrimitive, Relation>(contents, Relation.class::isInstance));
                     osmWriter.footer();
                     osmWriter.flush();
                 }

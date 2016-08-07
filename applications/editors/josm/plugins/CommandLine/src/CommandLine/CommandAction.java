@@ -1,9 +1,4 @@
-/*
- *      CommandAction.java
- *
- *      Copyright 2011 Hind <foxhind@gmail.com>
- *
- */
+// License: GPL. For details, see LICENSE file.
 package CommandLine;
 
 import static org.openstreetmap.josm.tools.I18n.tr;

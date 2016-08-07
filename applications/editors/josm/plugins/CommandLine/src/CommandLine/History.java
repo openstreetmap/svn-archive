@@ -1,10 +1,4 @@
-/*
- *      History.java
- *
- *      Copyright 2010 Hind <foxhind@gmail.com>
- *
- */
-
+// License: GPL. For details, see LICENSE file.
 package CommandLine;
 
 import java.util.LinkedList;
@@ -25,8 +19,7 @@ public class History {
             String prevItem = historyList.peekFirst();
             if (prevItem == null) {
                 historyList.addFirst(item);
-            }
-            else {
+            } else {
                 if (!prevItem.equalsIgnoreCase(item))
                     historyList.addFirst(item);
             }

@@ -1,10 +1,4 @@
-/*
- *      Command.java
- *
- *      Copyright 2011 Hind <foxhind@gmail.com>
- *
- */
-
+// License: GPL. For details, see LICENSE file.
 package CommandLine;
 
 import java.util.ArrayList;
@@ -18,16 +12,16 @@ import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.Way;
 
 public class Command {
-    public String name;						// Command name
-    public String run;						// Executable file with arguments ("nya.exe {arg1} {arg2} ... {argn}")
-    public String icon;						// Icon file name
-    public ArrayList<Parameter> parameters;	// Required parameters list
-    public ArrayList<Parameter> optParameters;	// Optional parameters list
+    public String name;                         // Command name
+    public String run;                          // Executable file with arguments ("nya.exe {arg1} {arg2} ... {argn}")
+    public String icon;                         // Icon file name
+    public ArrayList<Parameter> parameters;    // Required parameters list
+    public ArrayList<Parameter> optParameters;    // Optional parameters list
     public int currentParameterNum;
     public boolean tracks;
     public boolean asynchronous;
 
-    public Command () {
+    public Command() {
         parameters = new ArrayList<>();
         optParameters = new ArrayList<>();
         currentParameterNum = 0;
@@ -44,30 +38,26 @@ public class Command {
                 currentParameter.setValue(obj);
                 return true;
             }
-        }
-        else {
+        } else {
             ArrayList<OsmPrimitive> multiValue = currentParameter.getValueList();
             if (obj instanceof Collection) {
-                if ( ((Collection<?>)obj).size() > currentParameter.maxInstances && currentParameter.maxInstances != 0)
+                if (((Collection<?>) obj).size() > currentParameter.maxInstances && currentParameter.maxInstances != 0)
                     return false;
                 multiValue.clear();
-                multiValue.addAll((Collection<OsmPrimitive>)obj);
+                multiValue.addAll((Collection<OsmPrimitive>) obj);
                 return true;
-            }
-            else if (obj instanceof OsmPrimitive) {
+            } else if (obj instanceof OsmPrimitive) {
                 if (multiValue.size() < currentParameter.maxInstances || currentParameter.maxInstances == 0) {
                     if (isPair(obj, currentParameter)) {
-                        multiValue.add((OsmPrimitive)obj);
+                        multiValue.add((OsmPrimitive) obj);
                         return true;
                     } else if (nextParameter() && multiValue.size() > 0) {
                         return loadObject(obj);
                     }
-                }
-                else if (nextParameter()) {
+                } else if (nextParameter()) {
                     return loadObject(obj);
                 }
-            }
-            else if (obj instanceof String) {
+            } else if (obj instanceof String) {
                 if (isPair(obj, currentParameter)) {
                     currentParameter.setValue(obj);
                     return true;
@@ -99,7 +89,7 @@ public class Command {
         case POINT:
             if (obj instanceof String) {
                 Pattern p = Pattern.compile("(-?\\d*\\.?\\d*,-?\\d*\\.?\\d*;?)*");
-                Matcher m = p.matcher((String)obj);
+                Matcher m = p.matcher((String) obj);
                 return m.matches();
             }
             break;
@@ -118,9 +108,9 @@ public class Command {
         case LENGTH:
             if (obj instanceof String) {
                 Pattern p = Pattern.compile("\\d*\\.?\\d*");
-                Matcher m = p.matcher((String)obj);
+                Matcher m = p.matcher((String) obj);
                 if (m.matches()) {
-                    Float value = Float.parseFloat((String)obj);
+                    Float value = Float.parseFloat((String) obj);
                     if (parameter.minVal != 0 && value < parameter.minVal)
                         break;
                     if (parameter.maxVal != 0 && value > parameter.maxVal)
@@ -132,9 +122,9 @@ public class Command {
         case NATURAL:
             if (obj instanceof String) {
                 Pattern p = Pattern.compile("\\d*");
-                Matcher m = p.matcher((String)obj);
+                Matcher m = p.matcher((String) obj);
                 if (m.matches()) {
-                    Integer value = Integer.parseInt((String)obj);
+                    Integer value = Integer.parseInt((String) obj);
                     if (parameter.minVal != 0 && value < parameter.minVal)
                         break;
                     if (parameter.maxVal != 0 && value > parameter.maxVal)
@@ -149,7 +139,7 @@ public class Command {
         case RELAY:
             if (obj instanceof String) {
                 if (parameter.getRawValue() instanceof Relay) {
-                    if ( ((Relay)(parameter.getRawValue())).isCorrectValue((String)obj) )
+                    if (((Relay) (parameter.getRawValue())).isCorrectValue((String) obj))
                         return true;
                 }
             }
@@ -173,9 +163,8 @@ public class Command {
             if (!parameter.isOsm())
                 continue;
             if (parameter.maxInstances == 1) {
-                depsObjects.addAll(getDepsObjects(depsObjects, (OsmPrimitive)parameter.getRawValue()));
-            }
-            else {
+                depsObjects.addAll(getDepsObjects(depsObjects, (OsmPrimitive) parameter.getRawValue()));
+            } else {
                 for (OsmPrimitive primitive : parameter.getValueList()) {
                     depsObjects.addAll(getDepsObjects(depsObjects, primitive));
                 }
@@ -188,10 +177,9 @@ public class Command {
         ArrayList<OsmPrimitive> depsObjects = new ArrayList<>();
         if (!currentObjects.contains(primitive)) {
             if (primitive instanceof Way) {
-                depsObjects.addAll(((Way)primitive).getNodes());
-            }
-            else if (primitive instanceof Relation) {
-                Collection<OsmPrimitive> relationMembers = ((Relation)primitive).getMemberPrimitives();
+                depsObjects.addAll(((Way) primitive).getNodes());
+            } else if (primitive instanceof Relation) {
+                Collection<OsmPrimitive> relationMembers = ((Relation) primitive).getMemberPrimitives();
                 for (OsmPrimitive member : relationMembers) {
                     if (!currentObjects.contains(member)) {
                         depsObjects.add(member);

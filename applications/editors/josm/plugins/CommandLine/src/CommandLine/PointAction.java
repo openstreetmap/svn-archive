@@ -1,10 +1,4 @@
-/*
- *	  PointAction.java
- *
- *	  Copyright 2011 Hind <foxhind@gmail.com>
- *
- */
-
+// License: GPL. For details, see LICENSE file.
 package CommandLine;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -31,8 +25,8 @@ import org.openstreetmap.josm.tools.ImageProvider;
 
 public class PointAction extends MapMode implements AWTEventListener {
     private final CommandLine parentPlugin;
-    final private Cursor cursorCrosshair;
-    final private Cursor cursorJoinNode;
+    private final Cursor cursorCrosshair;
+    private final Cursor cursorJoinNode;
     private Cursor currentCursor;
     private Point mousePos;
     private Node nearestNode;
@@ -61,6 +55,7 @@ public class PointAction extends MapMode implements AWTEventListener {
         try {
             Toolkit.getDefaultToolkit().addAWTEventListener(this, AWTEvent.KEY_EVENT_MASK);
         } catch (SecurityException ex) {
+            Main.warn(ex);
         }
     }
 
@@ -71,6 +66,7 @@ public class PointAction extends MapMode implements AWTEventListener {
         try {
             Toolkit.getDefaultToolkit().removeAWTEventListener(this);
         } catch (SecurityException ex) {
+            Main.warn(ex);
         }
     }
 
@@ -81,15 +77,14 @@ public class PointAction extends MapMode implements AWTEventListener {
                     pointList.remove(pointList.size() - 1);
                     updateTextEdit();
                 }
-            }
-            else {
+            } else {
                 LatLon coor;
                 if (nearestNode == null)
                     coor = Main.map.mapView.getLatLon(e.getX(), e.getY());
                 else
                     coor = nearestNode.getCoor();
                 if (coor.isOutSideWorld()) {
-                    JOptionPane.showMessageDialog(Main.parent,tr("Can not draw outside of the world."));
+                    JOptionPane.showMessageDialog(Main.parent, tr("Can not draw outside of the world."));
                     return;
                 }
                 String point = String.valueOf(coor.getX()) + "," + String.valueOf(coor.getY());
@@ -97,13 +92,11 @@ public class PointAction extends MapMode implements AWTEventListener {
                 if (maxInstances == 1) {
                     parentPlugin.loadParameter(point, true);
                     exitMode();
-                }
-                else {
+                } else {
                     if (pointList.size() < maxInstances || maxInstances == 0) {
                         pointList.add(point);
                         updateTextEdit();
-                    }
-                    else
+                    } else
                         Main.info("Maximum instances!");
                 }
             }
@@ -135,11 +128,10 @@ public class PointAction extends MapMode implements AWTEventListener {
         if (mousePos != null) {
             if (!Main.isDisplayingMapView())
                 return;
-            nearestNode = Main.map.mapView.getNearestNode(mousePos, OsmPrimitive.isUsablePredicate);
+            nearestNode = Main.map.mapView.getNearestNode(mousePos, OsmPrimitive::isUsable);
             if (nearestNode != null) {
                 setCursor(cursorJoinNode);
-            }
-            else {
+            } else {
                 setCursor(cursorCrosshair);
             }
         }
@@ -167,6 +159,7 @@ public class PointAction extends MapMode implements AWTEventListener {
             });
             currentCursor = c;
         } catch (Exception e) {
+            Main.warn(e);
         }
     }
 

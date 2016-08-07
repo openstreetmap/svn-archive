@@ -1,10 +1,4 @@
-/*
- *      DummyAction.java
- *
- *      Copyright 2010 Hind <foxhind@gmail.com>
- *
- */
-
+// License: GPL. For details, see LICENSE file.
 package CommandLine;
 
 import java.awt.AWTEvent;
@@ -17,7 +11,7 @@ import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.tools.ImageProvider;
 
 public class DummyAction extends MapMode implements AWTEventListener {
-    private CommandLine parentPlugin;
+    private final CommandLine parentPlugin;
 
     public DummyAction(MapFrame mapFrame, CommandLine parentPlugin) {
             super(null, "addsegment.png", null, mapFrame, ImageProvider.getCursor("normal", null));

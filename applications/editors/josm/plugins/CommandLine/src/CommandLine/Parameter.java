@@ -1,10 +1,4 @@
-/*
- *      Parameter.java
- *
- *      Copyright 2011 Hind <foxhind@gmail.com>
- *
- */
-
+// License: GPL. For details, see LICENSE file.
 package CommandLine;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -38,7 +32,7 @@ public class Parameter {
         String out = "";
         switch (type) {
         case POINT:
-            out = (String)value;
+            out = (String) value;
             break;
         case LENGTH:
             out = String.valueOf(value);
@@ -50,7 +44,7 @@ public class Parameter {
             out = String.valueOf(value);
             break;
         case RELAY:
-            out = String.valueOf(((Relay)value).getValue());
+            out = String.valueOf(((Relay) value).getValue());
             break;
         case NODE:
             out = String.valueOf(valueList.size()) + " " + tr("nodes");
@@ -87,9 +81,8 @@ public class Parameter {
 
     public void setValue(Object obj) {
         if (type == Type.RELAY && obj instanceof String && value instanceof Relay) {
-            ((Relay)value).setValue((String)obj);
-        }
-        else
+            ((Relay) value).setValue((String) obj);
+        } else
             value = obj;
     }
 
@@ -97,9 +90,8 @@ public class Parameter {
         ArrayList<OsmPrimitive> pObjects = new ArrayList<>();
         if (isOsm()) {
             if (maxInstances == 1) {
-                pObjects.add((OsmPrimitive)value);
-            }
-            else {
+                pObjects.add((OsmPrimitive) value);
+            } else {
                 return valueList;
             }
         }

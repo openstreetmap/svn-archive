@@ -1,9 +1,4 @@
-/*
- *	  OsmToCmd.java
- *
- *	  Copyright 2011 Hind <foxhind@gmail.com>
- *
- */
+// License: GPL. For details, see LICENSE file.
 package CommandLine;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -56,7 +51,7 @@ final class OsmToCmd {
     private final LinkedList<Command> cmds = new LinkedList<>();
     private final HashMap<PrimitiveId, OsmPrimitive> externalIdMap; // Maps external ids to internal primitives
 
-    public OsmToCmd(CommandLine parentPlugin, DataSet targetDataSet) {
+    OsmToCmd(CommandLine parentPlugin, DataSet targetDataSet) {
         this.parentPlugin = parentPlugin;
         this.targetDataSet = targetDataSet;
         externalIdMap = new HashMap<>();
@@ -69,13 +64,13 @@ final class OsmToCmd {
             Parser handler = new Parser();
             parser.setProperty("http://xml.org/sax/properties/lexical-handler", handler);
             parser.parse(inputSource, handler);
-        } catch(ParserConfigurationException e) {
+        } catch (ParserConfigurationException e) {
             throw new IllegalDataException(e.getMessage(), e);
         } catch (SAXParseException e) {
             throw new IllegalDataException(tr("Line {0} column {1}: ", e.getLineNumber(), e.getColumnNumber()) + e.getMessage(), e);
-        } catch(SAXException e) {
+        } catch (SAXException e) {
             throw new IllegalDataException(e.getMessage(), e);
-        } catch(Exception e) {
+        } catch (Exception e) {
             throw new IllegalDataException(e);
         }
     }
@@ -114,7 +109,7 @@ final class OsmToCmd {
                         throwException(tr("Missing mandatory attribute ''{0}''.", "version"));
                         return;
                     }
-                    if ( !(v.equals("0.6")) ) {
+                    if (!(v.equals("0.6"))) {
                         throwException(tr("Unsupported version: {0}", v));
                         return;
                     }
@@ -126,9 +121,9 @@ final class OsmToCmd {
                     NodeData source = new NodeData();
                     source.setCoor(new LatLon(getDouble(atts, "lat"), getDouble(atts, "lon")));
                     readCommon(atts, source);
-                    Node target = (Node)targetDataSet.getPrimitiveById( source.getUniqueId(), source.getType() );
+                    Node target = (Node) targetDataSet.getPrimitiveById(source.getUniqueId(), source.getType());
 
-                    if (target == null || !(source.isModified() || source.isDeleted()) )
+                    if (target == null || !(source.isModified() || source.isDeleted()))
                         n.load(source);
                     else {
                         n.cloneFrom(target);
@@ -137,14 +132,13 @@ final class OsmToCmd {
 
                     currentPrimitive = n;
                     externalIdMap.put(source.getPrimitiveId(), n);
-                }
-                else if (qName.equals("way")) {
+                } else if (qName.equals("way")) {
                     Way w = new Way();
                     WayData source = new WayData();
                     readCommon(atts, source);
-                    Way target = (Way)targetDataSet.getPrimitiveById( source.getUniqueId(), source.getType() );
+                    Way target = (Way) targetDataSet.getPrimitiveById(source.getUniqueId(), source.getType());
 
-                    if (target == null || !(source.isModified() || source.isDeleted()) )
+                    if (target == null || !(source.isModified() || source.isDeleted()))
                         w.load(source);
                     else {
                         w.cloneFrom(target);
@@ -154,30 +148,26 @@ final class OsmToCmd {
                     currentPrimitive = w;
                     currentWayNodes.clear();
                     externalIdMap.put(source.getPrimitiveId(), w);
-                }
-                else if (qName.equals("nd")) {
+                } else if (qName.equals("nd")) {
                     if (atts.getValue("ref") == null)
                         throwException(tr("Missing mandatory attribute ''{0}'' on <nd> of way {1}.", "ref", currentPrimitive.getUniqueId()));
                     long id = getLong(atts, "ref");
                     if (id == 0)
-                        throwException(tr("Illegal value of attribute ''ref'' of element <nd>. Got {0}.", id) );
-                    Node node = (Node)externalIdMap.get(new SimplePrimitiveId(id, OsmPrimitiveType.NODE));
+                        throwException(tr("Illegal value of attribute ''ref'' of element <nd>. Got {0}.", id));
+                    Node node = (Node) externalIdMap.get(new SimplePrimitiveId(id, OsmPrimitiveType.NODE));
                     if (node == null || node.isModified()) {
-                        node = (Node)targetDataSet.getPrimitiveById( new SimplePrimitiveId(id, OsmPrimitiveType.NODE) );
+                        node = (Node) targetDataSet.getPrimitiveById(new SimplePrimitiveId(id, OsmPrimitiveType.NODE));
                         if (node == null)
                             throwException(tr("Missing definition of new object with id {0}.", id));
                     }
                     currentWayNodes.add(node);
-                }
-                // ---- PARSING RELATIONS ----
-
-                else if (qName.equals("relation")) {
+                } else if (qName.equals("relation")) { // ---- PARSING RELATIONS ----
                     Relation r = new Relation();
                     RelationData source = new RelationData();
                     readCommon(atts, source);
-                    Relation target = (Relation)targetDataSet.getPrimitiveById( source.getUniqueId(), source.getType() );
+                    Relation target = (Relation) targetDataSet.getPrimitiveById(source.getUniqueId(), source.getType());
 
-                    if (target == null || !(source.isModified() || source.isDeleted()) )
+                    if (target == null || !(source.isModified() || source.isDeleted()))
                         r.load(source);
                     else {
                         r.cloneFrom(target);
@@ -187,24 +177,25 @@ final class OsmToCmd {
                     currentPrimitive = r;
                     currentRelationMembers.clear();
                     externalIdMap.put(source.getPrimitiveId(), r);
-                }
-                else if (qName.equals("member")) {
+                } else if (qName.equals("member")) {
                     if (atts.getValue("ref") == null)
-                        throwException(tr("Missing mandatory attribute ''{0}'' on <member> of relation {1}.", "ref", currentPrimitive.getUniqueId()));
+                        throwException(tr("Missing mandatory attribute ''{0}'' on <member> of relation {1}.",
+                                "ref", currentPrimitive.getUniqueId()));
                     long id = getLong(atts, "ref");
                     if (id == 0)
-                        throwException(tr("Illegal value of attribute ''ref'' of element <nd>. Got {0}.", id) );
+                        throwException(tr("Illegal value of attribute ''ref'' of element <nd>. Got {0}.", id));
 
                     OsmPrimitiveType type = OsmPrimitiveType.NODE;
                     String value = atts.getValue("type");
                     if (value == null) {
-                        throwException(tr("Missing attribute ''type'' on member {0} in relation {1}.", Long.toString(id), Long.toString(currentPrimitive.getUniqueId())));
+                        throwException(tr("Missing attribute ''type'' on member {0} in relation {1}.", Long.toString(id),
+                                Long.toString(currentPrimitive.getUniqueId())));
                     }
                     try {
                         type = OsmPrimitiveType.fromApiTypeName(value);
-                    }
-                    catch(IllegalArgumentException e) {
-                        throwException(tr("Illegal value for attribute ''type'' on member {0} in relation {1}. Got {2}.", Long.toString(id), Long.toString(currentPrimitive.getUniqueId()), value));
+                    } catch (IllegalArgumentException e) {
+                        throwException(tr("Illegal value for attribute ''type'' on member {0} in relation {1}. Got {2}.",
+                                Long.toString(id), Long.toString(currentPrimitive.getUniqueId()), value));
                     }
 
                     String role = atts.getValue("role");
@@ -217,11 +208,7 @@ final class OsmToCmd {
                     }
                     RelationMember relationMember = new RelationMember(role, member);
                     currentRelationMembers.add(relationMember);
-                }
-
-                // ---- PARSING TAGS (applicable to all objects) ----
-
-                else if (qName.equals("tag")) {
+                } else if (qName.equals("tag")) { // ---- PARSING TAGS (applicable to all objects) ----
                     String key = atts.getValue("k");
                     String value = atts.getValue("v");
                     if (key == null || value == null) {
@@ -229,12 +216,10 @@ final class OsmToCmd {
                         return;
                     }
                     currentPrimitive.put(key.intern(), value.intern());
-                }
-                else {
+                } else {
                     Main.warn(tr("Undefined element ''{0}'' found in input stream. Skipping.", qName));
                 }
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 throw new SAXParseException(e.getMessage(), locator, e);
             }
         }
@@ -243,36 +228,31 @@ final class OsmToCmd {
         public void endElement(String namespaceURI, String localName, String qName) {
             if (qName.equals("node")) {
                 if (currentPrimitive.isDeleted()) {
-                    cmds.add(new DeleteCommand( targetDataSet.getPrimitiveById(currentPrimitive.getPrimitiveId()) ));
-                }
-                else if (currentPrimitive.isModified()) {
-                    cmds.add(new ChangeCommand(Main.getLayerManager().getEditLayer(), targetDataSet.getPrimitiveById(currentPrimitive.getPrimitiveId()), currentPrimitive));
-                }
-                else if (currentPrimitive.isNew()) {
+                    cmds.add(new DeleteCommand(targetDataSet.getPrimitiveById(currentPrimitive.getPrimitiveId())));
+                } else if (currentPrimitive.isModified()) {
+                    cmds.add(new ChangeCommand(Main.getLayerManager().getEditLayer(),
+                            targetDataSet.getPrimitiveById(currentPrimitive.getPrimitiveId()), currentPrimitive));
+                } else if (currentPrimitive.isNew()) {
                     cmds.add(new AddCommand(currentPrimitive));
                 }
-            }
-            else if (qName.equals("way")) {
-                ((Way)currentPrimitive).setNodes(currentWayNodes);
+            } else if (qName.equals("way")) {
+                ((Way) currentPrimitive).setNodes(currentWayNodes);
                 if (currentPrimitive.isDeleted()) {
-                    cmds.add(new DeleteCommand( targetDataSet.getPrimitiveById(currentPrimitive.getPrimitiveId()) ));
-                }
-                else if (currentPrimitive.isModified()) {
-                    cmds.add(new ChangeCommand(Main.getLayerManager().getEditLayer(), targetDataSet.getPrimitiveById(currentPrimitive.getPrimitiveId()), currentPrimitive));
-                }
-                else if (currentPrimitive.isNew()) {
+                    cmds.add(new DeleteCommand(targetDataSet.getPrimitiveById(currentPrimitive.getPrimitiveId())));
+                } else if (currentPrimitive.isModified()) {
+                    cmds.add(new ChangeCommand(Main.getLayerManager().getEditLayer(),
+                            targetDataSet.getPrimitiveById(currentPrimitive.getPrimitiveId()), currentPrimitive));
+                } else if (currentPrimitive.isNew()) {
                     cmds.add(new AddCommand(currentPrimitive));
                 }
-            }
-            else if (qName.equals("relation")) {
-                ((Relation)currentPrimitive).setMembers(currentRelationMembers);
+            } else if (qName.equals("relation")) {
+                ((Relation) currentPrimitive).setMembers(currentRelationMembers);
                 if (currentPrimitive.isDeleted()) {
-                    cmds.add(new DeleteCommand( targetDataSet.getPrimitiveById(currentPrimitive.getPrimitiveId()) ));
-                }
-                else if (currentPrimitive.isModified()) {
-                    cmds.add(new ChangeCommand(Main.getLayerManager().getEditLayer(), targetDataSet.getPrimitiveById(currentPrimitive.getPrimitiveId()), currentPrimitive));
-                }
-                else if (currentPrimitive.isNew()) {
+                    cmds.add(new DeleteCommand(targetDataSet.getPrimitiveById(currentPrimitive.getPrimitiveId())));
+                } else if (currentPrimitive.isModified()) {
+                    cmds.add(new ChangeCommand(Main.getLayerManager().getEditLayer(),
+                            targetDataSet.getPrimitiveById(currentPrimitive.getPrimitiveId()), currentPrimitive));
+                } else if (currentPrimitive.isNew()) {
                     cmds.add(new AddCommand(currentPrimitive));
                 }
             }
@@ -314,13 +294,12 @@ final class OsmToCmd {
         private long getLong(Attributes atts, String name) throws SAXException {
             String value = atts.getValue(name);
             if (value == null) {
-                throwException(tr("Missing required attribute ''{0}''.",name));
+                throwException(tr("Missing required attribute ''{0}''.", name));
             }
             try {
                 return Long.parseLong(value);
-            }
-            catch(NumberFormatException e) {
-                throwException(tr("Illegal long value for attribute ''{0}''. Got ''{1}''.",name, value));
+            } catch (NumberFormatException e) {
+                throwException(tr("Illegal long value for attribute ''{0}''. Got ''{1}''.", name, value));
             }
             return 0; // should not happen
         }
@@ -334,8 +313,7 @@ final class OsmToCmd {
             try {
                 long id = Long.parseLong(uid);
                 return User.createOsmUser(id, name);
-            }
-            catch(NumberFormatException e) {
+            } catch (NumberFormatException e) {
                 throwException(tr("Illegal value for attribute ''uid''. Got ''{0}''.", uid));
             }
             return null;
@@ -366,8 +344,9 @@ final class OsmToCmd {
             if (versionString != null) {
                 try {
                     version = Integer.parseInt(versionString);
-                } catch(NumberFormatException e) {
-                    throwException(tr("Illegal value for attribute ''version'' on OSM primitive with ID {0}. Got {1}.", Long.toString(current.getUniqueId()), versionString));
+                } catch (NumberFormatException e) {
+                    throwException(tr("Illegal value for attribute ''version'' on OSM primitive with ID {0}. Got {1}.",
+                            Long.toString(current.getUniqueId()), versionString));
                 }
             }
             current.setVersion(version);
@@ -388,17 +367,19 @@ final class OsmToCmd {
             } else {
                 try {
                     current.setChangesetId(Integer.parseInt(v));
-                } catch(NumberFormatException e) {
+                } catch (NumberFormatException e) {
                     if (current.getUniqueId() <= 0) {
-                        Main.warn(tr("Illegal value for attribute ''changeset'' on new object {1}. Got {0}. Resetting to 0.", v, current.getUniqueId()));
+                        Main.warn(tr("Illegal value for attribute ''changeset'' on new object {1}. Got {0}. Resetting to 0.",
+                                v, current.getUniqueId()));
                         current.setChangesetId(0);
                     } else {
                         throwException(tr("Illegal value for attribute ''changeset''. Got {0}.", v));
                     }
                 }
-                if (current.getChangesetId() <=0) {
+                if (current.getChangesetId() <= 0) {
                     if (current.getUniqueId() <= 0) {
-                        Main.warn(tr("Illegal value for attribute ''changeset'' on new object {1}. Got {0}. Resetting to 0.", v, current.getUniqueId()));
+                        Main.warn(tr("Illegal value for attribute ''changeset'' on new object {1}. Got {0}. Resetting to 0.",
+                                v, current.getUniqueId()));
                         current.setChangesetId(0);
                     } else {
                         throwException(tr("Illegal value for attribute ''changeset''. Got {0}.", v));

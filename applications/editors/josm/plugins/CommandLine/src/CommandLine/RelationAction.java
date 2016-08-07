@@ -1,10 +1,4 @@
-/*
- *      RelationAction.java
- *      
- *      Copyright 2011 Hind <foxhind@gmail.com>
- *      
- */
-
+// License: GPL. For details, see LICENSE file.
 package CommandLine;
 
 import java.awt.AWTEvent;
@@ -17,18 +11,18 @@ import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.tools.ImageProvider;
 
 public class RelationAction extends MapMode implements AWTEventListener {
-	private CommandLine parentPlugin;
+    private final CommandLine parentPlugin;
 
-	public RelationAction(MapFrame mapFrame, CommandLine parentPlugin) {
-		super(null, "addsegment.png", null, mapFrame, ImageProvider.getCursor("normal", null));
-		this.parentPlugin = parentPlugin;
-	}
+    public RelationAction(MapFrame mapFrame, CommandLine parentPlugin) {
+        super(null, "addsegment.png", null, mapFrame, ImageProvider.getCursor("normal", null));
+        this.parentPlugin = parentPlugin;
+    }
 
         @Override
-	public void eventDispatched(AWTEvent arg0) {
-		if (!(arg0 instanceof KeyEvent))
-			return;
-		KeyEvent ev = (KeyEvent) arg0;
+    public void eventDispatched(AWTEvent arg0) {
+        if (!(arg0 instanceof KeyEvent))
+            return;
+        KeyEvent ev = (KeyEvent) arg0;
         if (ev.getKeyCode() == KeyEvent.VK_ESCAPE && ev.getID() == KeyEvent.KEY_PRESSED) {
             ev.consume();
             cancelDrawing();

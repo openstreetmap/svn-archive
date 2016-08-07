@@ -1,10 +1,4 @@
-/*
- *      NodeAction.java
- *
- *      Copyright 2011 Hind <foxhind@gmail.com>
- *
- */
-
+// License: GPL. For details, see LICENSE file.
 package CommandLine;
 
 import java.awt.AWTEvent;
@@ -26,7 +20,7 @@ import org.openstreetmap.josm.tools.ImageProvider;
 
 public class NodeAction extends MapMode implements AWTEventListener {
     private final CommandLine parentPlugin;
-    final private Cursor cursorNormal, cursorActive;
+    private final Cursor cursorNormal, cursorActive;
     private Cursor currentCursor;
     private Point mousePos;
     private Node nearestNode;
@@ -50,6 +44,7 @@ public class NodeAction extends MapMode implements AWTEventListener {
         try {
             Toolkit.getDefaultToolkit().addAWTEventListener(this, AWTEvent.KEY_EVENT_MASK);
         } catch (SecurityException ex) {
+            Main.warn(ex);
         }
     }
 
@@ -60,6 +55,7 @@ public class NodeAction extends MapMode implements AWTEventListener {
         try {
             Toolkit.getDefaultToolkit().removeAWTEventListener(this);
         } catch (SecurityException ex) {
+            Main.warn(ex);
         }
     }
 
@@ -83,8 +79,7 @@ public class NodeAction extends MapMode implements AWTEventListener {
             if (isCtrlDown) {
                 ds.clearSelection(nearestNode);
                 Main.map.mapView.repaint();
-            }
-            else {
+            } else {
                 int maxInstances = parentPlugin.currentCommand.parameters.get(parentPlugin.currentCommand.currentParameterNum).maxInstances;
                 switch (maxInstances) {
                 case 0:
@@ -101,8 +96,7 @@ public class NodeAction extends MapMode implements AWTEventListener {
                     if (ds.getSelected().size() < maxInstances) {
                         ds.addSelected(nearestNode);
                         Main.map.mapView.repaint();
-                    }
-                    else
+                    } else
                         parentPlugin.printHistory("Maximum instances is " + String.valueOf(maxInstances));
                 }
             }
@@ -126,18 +120,19 @@ public class NodeAction extends MapMode implements AWTEventListener {
         if (mousePos != null) {
             if (!Main.isDisplayingMapView())
                 return;
-            nearestNode = Main.map.mapView.getNearestNode(mousePos, OsmPrimitive.isUsablePredicate);
+            nearestNode = Main.map.mapView.getNearestNode(mousePos, OsmPrimitive::isUsable);
             if (nearestNode != null) {
                 setCursor(cursorActive);
-            }
-            else {
+            } else {
                 setCursor(cursorNormal);
             }
         }
     }
 
     private void processMouseEvent(MouseEvent e) {
-        if (e != null) { mousePos = e.getPoint(); }
+        if (e != null) {
+            mousePos = e.getPoint();
+        }
     }
 
     private void setCursor(final Cursor c) {
@@ -156,6 +151,7 @@ public class NodeAction extends MapMode implements AWTEventListener {
             });
             currentCursor = c;
         } catch (Exception e) {
+            Main.warn(e);
         }
     }
 

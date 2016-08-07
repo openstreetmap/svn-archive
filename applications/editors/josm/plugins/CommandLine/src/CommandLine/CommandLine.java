@@ -1,23 +1,4 @@
-/*
- *      CommandLine.java
- *
- *      Copyright 2011 Hind <foxhind@gmail.com>
- *
- *      This program is free software; you can redistribute it and/or modify
- *      it under the terms of the GNU General Public License as published by
- *      the Free Software Foundation; either version 2 of the License, or
- *      (at your option) any later version.
- *
- *      This program is distributed in the hope that it will be useful,
- *      but WITHOUT ANY WARRANTY; without even the implied warranty of
- *      MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *      GNU General Public License for more details.
- *
- *      You should have received a copy of the GNU General Public License
- *      along with this program; if not, write to the Free Software
- *      Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
- *      MA 02110-1301, USA.
- */
+// License: GPL. For details, see LICENSE file.
 package CommandLine;
 
 import static org.openstreetmap.josm.gui.help.HelpUtil.ht;
@@ -120,12 +101,14 @@ public class CommandLine extends Plugin {
                             }
                             break;
                         case SELECTION:
-                            if (currentMapFrame.mapMode instanceof WayAction || currentMapFrame.mapMode instanceof NodeAction || currentMapFrame.mapMode instanceof RelationAction || currentMapFrame.mapMode instanceof AnyAction) {
+                            if (currentMapFrame.mapMode instanceof WayAction
+                             || currentMapFrame.mapMode instanceof NodeAction
+                             || currentMapFrame.mapMode instanceof RelationAction
+                             || currentMapFrame.mapMode instanceof AnyAction) {
                                 Collection<OsmPrimitive> selected = Main.getLayerManager().getEditDataSet().getSelected();
                                 if (selected.size() > 0)
                                     loadParameter(selected, true);
-                            }
-                            else {
+                            } else {
                                 loadParameter(commandText, currentCommand.parameters.get(currentCommand.currentParameterNum).maxInstances == 1);
                             }
                             break;
@@ -133,40 +116,35 @@ public class CommandLine extends Plugin {
                             break;
                         }
                         e.consume();
-                    }
-                    else if (code == KeyEvent.VK_UP) {
+                    } else if (code == KeyEvent.VK_UP) {
                         textField.setText(prefix + history.getPrevItem());
                         e.consume();
-                    }
-                    else if (code == KeyEvent.VK_DOWN) {
+                    } else if (code == KeyEvent.VK_DOWN) {
                         textField.setText(prefix + history.getNextItem());
                         e.consume();
-                    }
-                    else if (code == KeyEvent.VK_BACK_SPACE || code == KeyEvent.VK_LEFT) {
+                    } else if (code == KeyEvent.VK_BACK_SPACE || code == KeyEvent.VK_LEFT) {
                         if (textField.getCaretPosition() <= prefix.length())
                             e.consume();
-                    }
-                    else if (code == KeyEvent.VK_HOME) {
+                    } else if (code == KeyEvent.VK_HOME) {
                         setCaretPosition(prefix.length());
                         e.consume();
-                    }
-                    else if (code == KeyEvent.VK_ESCAPE) {
+                    } else if (code == KeyEvent.VK_ESCAPE) {
                         if (textField.getText().length() == prefix.length() && mode == Mode.IDLE)
                             deactivate();
                         else
                             endInput();
                         e.consume();
-                    }
-                    else if (code == KeyEvent.VK_DELETE || code == KeyEvent.VK_RIGHT || code == KeyEvent.VK_END) {
-                    }
-                    else {
+                    } else if (code == KeyEvent.VK_DELETE || code == KeyEvent.VK_RIGHT || code == KeyEvent.VK_END) {
+                    } else {
                         e.consume();
                     }
-                    if (textField.getCaretPosition() < prefix.length() || (textField.getSelectionStart() < prefix.length() && textField.getSelectionStart() > 0) )
+                    if (textField.getCaretPosition() < prefix.length() ||
+                            (textField.getSelectionStart() < prefix.length() && textField.getSelectionStart() > 0))
                         e.consume();
                 }
                 if (e.getID() == KeyEvent.KEY_TYPED)
-                    if (textField.getCaretPosition() < prefix.length() || (textField.getSelectionStart() < prefix.length() && textField.getSelectionStart() > 0) )
+                    if (textField.getCaretPosition() < prefix.length() ||
+                            (textField.getSelectionStart() < prefix.length() && textField.getSelectionStart() > 0))
                         e.consume();
                 super.processKeyEvent(e);
                 if (textField.getText().length() < prefix.length()) { // Safe
@@ -184,6 +162,7 @@ public class CommandLine extends Plugin {
                     }
                 }
             }
+
             @Override
             protected void processMouseEvent(MouseEvent e) {
                 super.processMouseEvent(e);
@@ -220,7 +199,13 @@ public class CommandLine extends Plugin {
         currentCommand = command;
         currentCommand.resetLoading();
         parseSelection(ds.getSelected());
-        if (!(Main.map.mapMode instanceof AnyAction || Main.map.mapMode instanceof DummyAction || Main.map.mapMode instanceof LengthAction || Main.map.mapMode instanceof NodeAction || Main.map.mapMode instanceof PointAction || Main.map.mapMode instanceof RelationAction || Main.map.mapMode instanceof WayAction)) {
+        if (!(Main.map.mapMode instanceof AnyAction
+           || Main.map.mapMode instanceof DummyAction
+           || Main.map.mapMode instanceof LengthAction
+           || Main.map.mapMode instanceof NodeAction
+           || Main.map.mapMode instanceof PointAction
+           || Main.map.mapMode instanceof RelationAction
+           || Main.map.mapMode instanceof WayAction)) {
             previousMode = Main.map.mapMode;
         }
         if (currentCommand.currentParameterNum < currentCommand.parameters.size())
@@ -286,7 +271,7 @@ public class CommandLine extends Plugin {
                 dir.mkdirs();
             }
             ZipEntry entry = null;
-            while ( (entry = zis.getNextEntry()) != null ) {
+            while ((entry = zis.getNextEntry()) != null) {
                 if (!entry.isDirectory()) {
                     String name = entry.getName();
                     if (name.contains("/")) {
@@ -312,10 +297,10 @@ public class CommandLine extends Plugin {
     private Command findCommand(String text, boolean strict) {
         for (int i = 0; i < commands.size(); i++) {
             if (strict) {
-                if ( commands.get(i).name.equalsIgnoreCase(text) ) {
+                if (commands.get(i).name.equalsIgnoreCase(text)) {
                     return commands.get(i);
                 }
-            } else if ( commands.get(i).name.toLowerCase().startsWith( text.toLowerCase() ) && text.length() > 1 ) {
+            } else if (commands.get(i).name.toLowerCase().startsWith(text.toLowerCase()) && text.length() > 1) {
                 return commands.get(i);
             }
         }
@@ -333,13 +318,12 @@ public class CommandLine extends Plugin {
             currentCommand = null;
             prefix = tr("Command") + commandSymbol;
             textField.setText(prefix);
-        }
-        else if (targetMode == Mode.SELECTION) {
+        } else if (targetMode == Mode.SELECTION) {
             mode = Mode.SELECTION;
             Parameter currentParameter = currentCommand.parameters.get(currentCommand.currentParameterNum);
             prefix = tr(currentParameter.description == null ? currentParameter.name : currentParameter.description);
             if (currentParameter.getRawValue() instanceof Relay)
-                prefix = prefix + " (" + ((Relay)(currentParameter.getRawValue())).getOptionsString() + ")";
+                prefix = prefix + " (" + ((Relay) (currentParameter.getRawValue())).getOptionsString() + ")";
             prefix += commandSymbol;
             String value = currentParameter.getValue();
             textField.setText(prefix + value);
@@ -375,14 +359,13 @@ public class CommandLine extends Plugin {
                         List<ImageryLayer> imageryLayers = Main.getLayerManager().getLayersOfType(ImageryLayer.class);
                         if (imageryLayers.size() == 1) {
                             layer = imageryLayers.get(0);
-                        }
-                        else {
+                        } else {
                             endInput();
                             return;
                         }
                     }
                 }
-                ImageryInfo info = ((ImageryLayer)layer).getInfo();
+                ImageryInfo info = ((ImageryLayer) layer).getInfo();
                 String url = info.getUrl();
                 String itype = info.getImageryType().getTypeString();
                 loadParameter((url.equals("") ? itype : url), true);
@@ -395,14 +378,13 @@ public class CommandLine extends Plugin {
                         List<ImageryLayer> imageryLayers = Main.getLayerManager().getLayersOfType(ImageryLayer.class);
                         if (imageryLayers.size() == 1) {
                             olayer = imageryLayers.get(0);
-                        }
-                        else {
+                        } else {
                             endInput();
                             return;
                         }
                     }
                 }
-                loadParameter((String.valueOf(((ImageryLayer)olayer).getDx()) + "," + String.valueOf(((ImageryLayer)olayer).getDy())), true);
+                loadParameter((String.valueOf(((ImageryLayer) olayer).getDx()) + "," + String.valueOf(((ImageryLayer) olayer).getDy())), true);
                 action = new DummyAction(currentMapFrame, this);
                 break;
             default:
@@ -412,8 +394,7 @@ public class CommandLine extends Plugin {
             currentMapFrame.selectMapMode(action);
             activate();
             textField.select(prefix.length(), textField.getText().length());
-        }
-        else if (targetMode == Mode.PROCESSING) {
+        } else if (targetMode == Mode.PROCESSING) {
             mode = Mode.PROCESSING;
             prefix = tr("Processing...");
             textField.setText(prefix);
@@ -506,8 +487,9 @@ public class CommandLine extends Plugin {
         final StringBuilder debugstr = new StringBuilder();
 
         // debug: print resulting cmdline
-        for (String s : builder.command())
+        for (String s : builder.command()) {
             debugstr.append(s + " ");
+        }
         debugstr.append("\n");
         Main.info(debugstr.toString());
 
@@ -539,6 +521,7 @@ public class CommandLine extends Plugin {
                         System.err.write(buffer, 0, len);
                     }
                 } catch (IOException e) {
+                    Main.warn(e);
                 }
             }
         }).start();
@@ -638,8 +621,8 @@ public class CommandLine extends Plugin {
                         });
                     }
                 } catch (Exception e) {
-                }
-                finally {
+                    Main.warn(e);
+                } finally {
                     synchronized (syncObj) {
                         tp.running = false;
                         syncObj.notifyAll();
@@ -656,6 +639,7 @@ public class CommandLine extends Plugin {
             try {
                 syncObj.wait(Main.pref.getInteger("commandline.timeout", 20000));
             } catch (InterruptedException e) {
+                Main.warn(e);
             }
         }
         if (tp.running) {
@@ -669,6 +653,7 @@ public class CommandLine extends Plugin {
                                 syncObj.wait();
                         }
                     } catch (InterruptedException e) {
+                        Main.warn(e);
                     }
                 }
 

@@ -1,10 +1,4 @@
-/*
- *      Relay.java
- *
- *      Copyright 2010 Hind <foxhind@gmail.com>
- *
- */
-
+// License: GPL. For details, see LICENSE file.
 package CommandLine;
 
 import java.util.HashMap;
@@ -32,7 +26,7 @@ public class Relay {
         String letter = null;
         if (!(options.containsValue(value))) {
             int i = 0;
-            for (; i < value.length() ; i++) {
+            for (; i < value.length(); i++) {
                 letter = value.substring(i, i + 1).toLowerCase();
                 if (!options.containsKey(letter))
                     break;
@@ -40,8 +34,7 @@ public class Relay {
             if (i == value.length()) {
                 letter = String.valueOf(System.currentTimeMillis());
                 optionsString = optionsString + (optionsString.length() == 0 ? "" : ", ") + value;
-            }
-            else
+            } else
                 optionsString = optionsString + (optionsString.length() == 0 ? "" : ", ") + value.substring(0, i) + marker + value.substring(i);
             options.put(letter, value);
         }

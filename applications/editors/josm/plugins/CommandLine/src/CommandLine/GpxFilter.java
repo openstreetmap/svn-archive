@@ -1,10 +1,4 @@
-/*
- *      GpxFilter.java
- *
- *      Copyright 2011 Hind <foxhind@gmail.com>
- *
- */
-
+// License: GPL. For details, see LICENSE file.
 package CommandLine;
 
 import java.util.ArrayList;
@@ -39,7 +33,7 @@ public class GpxFilter {
             for (GpxTrackSegment segment : track.getSegments()) {
                 currentSegment = new ArrayList<>();
                 for (WayPoint wp : segment.getWayPoints()) {
-                    if ( bbox.bounds(wp.getCoor()) ) {
+                    if (bbox.bounds(wp.getCoor())) {
                         currentSegment.add(wp);
                     } else {
                         if (currentSegment.size() > 1) {
@@ -53,7 +47,7 @@ public class GpxFilter {
                     currentSegment = new ArrayList<>();
                 }
             }
-            this.data.tracks.add( new ImmutableGpxTrack( currentTrack, Collections.<String, Object>emptyMap()) );
+            this.data.tracks.add(new ImmutableGpxTrack(currentTrack, Collections.<String, Object>emptyMap()));
         }
     }
 

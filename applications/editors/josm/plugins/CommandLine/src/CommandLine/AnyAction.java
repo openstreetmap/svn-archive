@@ -1,10 +1,4 @@
-/*
- *      AnyAction.java
- *
- *      Copyright 2010 Hind <foxhind@gmail.com>
- *
- */
-
+// License: GPL. For details, see LICENSE file.
 package CommandLine;
 
 import java.awt.AWTEvent;
@@ -25,7 +19,7 @@ import org.openstreetmap.josm.tools.ImageProvider;
 
 public class AnyAction extends MapMode implements AWTEventListener {
     private final CommandLine parentPlugin;
-    final private Cursor cursorNormal, cursorActive;
+    private final Cursor cursorNormal, cursorActive;
     private Cursor currentCursor;
     private Point mousePos;
     private OsmPrimitive nearestPrimitive;
@@ -48,6 +42,7 @@ public class AnyAction extends MapMode implements AWTEventListener {
         try {
             Toolkit.getDefaultToolkit().addAWTEventListener(this, AWTEvent.KEY_EVENT_MASK);
         } catch (SecurityException ex) {
+            Main.warn(ex);
         }
     }
 
@@ -58,6 +53,7 @@ public class AnyAction extends MapMode implements AWTEventListener {
         try {
             Toolkit.getDefaultToolkit().removeAWTEventListener(this);
         } catch (SecurityException ex) {
+            Main.warn(ex);
         }
     }
 
@@ -98,8 +94,7 @@ public class AnyAction extends MapMode implements AWTEventListener {
                     if (ds.getSelected().size() < maxInstances) {
                         ds.addSelected(nearestPrimitive);
                         Main.map.mapView.repaint();
-                    }
-                    else
+                    } else
                         Main.info("Maximum instances!");
                 }
             }
@@ -123,18 +118,19 @@ public class AnyAction extends MapMode implements AWTEventListener {
         if (mousePos != null) {
             if (!Main.isDisplayingMapView())
                 return;
-            nearestPrimitive = Main.map.mapView.getNearestNodeOrWay(mousePos, OsmPrimitive.isUsablePredicate, false);
+            nearestPrimitive = Main.map.mapView.getNearestNodeOrWay(mousePos, OsmPrimitive::isUsable, false);
             if (nearestPrimitive != null) {
                 setCursor(cursorActive);
-            }
-            else {
+            } else {
                 setCursor(cursorNormal);
             }
         }
     }
 
     private void processMouseEvent(MouseEvent e) {
-        if (e != null) { mousePos = e.getPoint(); }
+        if (e != null) {
+            mousePos = e.getPoint();
+        }
     }
 
     private void setCursor(final Cursor c) {
@@ -153,6 +149,7 @@ public class AnyAction extends MapMode implements AWTEventListener {
             });
             currentCursor = c;
         } catch (Exception e) {
+            Main.warn(e);
         }
     }
 

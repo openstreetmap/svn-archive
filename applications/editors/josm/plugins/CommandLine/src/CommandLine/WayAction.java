@@ -1,10 +1,4 @@
-/*
- *      WayAction.java
- *
- *      Copyright 2011 Hind <foxhind@gmail.com>
- *
- */
-
+// License: GPL. For details, see LICENSE file.
 package CommandLine;
 
 import java.awt.AWTEvent;
@@ -26,7 +20,7 @@ import org.openstreetmap.josm.tools.ImageProvider;
 
 public class WayAction extends MapMode implements AWTEventListener {
     private final CommandLine parentPlugin;
-    final private Cursor cursorNormal, cursorActive;
+    private final Cursor cursorNormal, cursorActive;
     private Cursor currentCursor;
     private Point mousePos;
     private Way nearestWay;
@@ -37,27 +31,27 @@ public class WayAction extends MapMode implements AWTEventListener {
         super(null, "addsegment.png", null, mapFrame, ImageProvider.getCursor("normal", "selection"));
         this.parentPlugin = parentPlugin;
         /*
-		this.type = type;
-		switch (type) {
-			case POINT:
-				cursorNormal = ImageProvider.getCursor("crosshair", null);
-				cursorActive = ImageProvider.getCursor("crosshair", "joinnode");
-				break;
-			case NODE:
-				cursorNormal = ImageProvider.getCursor("normal", "selection");
-				cursorActive = ImageProvider.getCursor("normal", "joinnode");
-				break;
-			case WAY:
+        this.type = type;
+        switch (type) {
+            case POINT:
+                cursorNormal = ImageProvider.getCursor("crosshair", null);
+                cursorActive = ImageProvider.getCursor("crosshair", "joinnode");
+                break;
+            case NODE:
+                cursorNormal = ImageProvider.getCursor("normal", "selection");
+                cursorActive = ImageProvider.getCursor("normal", "joinnode");
+                break;
+            case WAY:
          */
         cursorNormal = ImageProvider.getCursor("normal", "selection");
         cursorActive = ImageProvider.getCursor("normal", "joinway");
         /*
-				break;
-			default:
-				cursorNormal = ImageProvider.getCursor("normal", "selection");
-				cursorActive = ImageProvider.getCursor("normal", null);
-				break;
-		}
+                break;
+            default:
+                cursorNormal = ImageProvider.getCursor("normal", "selection");
+                cursorActive = ImageProvider.getCursor("normal", null);
+                break;
+        }
          */
         currentCursor = cursorNormal;
         nearestWay = null;
@@ -71,6 +65,7 @@ public class WayAction extends MapMode implements AWTEventListener {
         try {
             Toolkit.getDefaultToolkit().addAWTEventListener(this, AWTEvent.KEY_EVENT_MASK);
         } catch (SecurityException ex) {
+            Main.warn(ex);
         }
     }
 
@@ -81,6 +76,7 @@ public class WayAction extends MapMode implements AWTEventListener {
         try {
             Toolkit.getDefaultToolkit().removeAWTEventListener(this);
         } catch (SecurityException ex) {
+            Main.warn(ex);
         }
     }
 
@@ -121,8 +117,7 @@ public class WayAction extends MapMode implements AWTEventListener {
                     if (ds.getSelected().size() < maxInstances) {
                         ds.addSelected(nearestWay);
                         Main.map.mapView.repaint();
-                    }
-                    else
+                    } else
                         Main.info("Maximum instances!");
                 }
             }
@@ -146,18 +141,19 @@ public class WayAction extends MapMode implements AWTEventListener {
         if (mousePos != null) {
             if (!Main.isDisplayingMapView())
                 return;
-            nearestWay = Main.map.mapView.getNearestWay(mousePos, OsmPrimitive.isUsablePredicate);
+            nearestWay = Main.map.mapView.getNearestWay(mousePos, OsmPrimitive::isUsable);
             if (nearestWay != null) {
                 setCursor(cursorActive);
-            }
-            else {
+            } else {
                 setCursor(cursorNormal);
             }
         }
     }
 
     private void processMouseEvent(MouseEvent e) {
-        if (e != null) { mousePos = e.getPoint(); }
+        if (e != null) {
+            mousePos = e.getPoint();
+        }
     }
 
     private void setCursor(final Cursor c) {
@@ -176,6 +172,7 @@ public class WayAction extends MapMode implements AWTEventListener {
             });
             currentCursor = c;
         } catch (Exception e) {
+            Main.warn(e);
         }
     }
 

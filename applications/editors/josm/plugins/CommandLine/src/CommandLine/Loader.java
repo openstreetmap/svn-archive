@@ -1,10 +1,4 @@
-/*
- *	  Loader.java
- *
- *	  Copyright 2011 Hind <foxhind@gmail.com>
- *
- */
-
+// License: GPL. For details, see LICENSE file.
 package CommandLine;
 
 import java.io.File;
@@ -27,7 +21,7 @@ public class Loader extends DefaultHandler {
     private Parameter currentParameter;
     private final ArrayList<Command> loadingCommands;
 
-    public Loader (String dir) {
+    public Loader(String dir) {
         dirToScan = dir;
         currentTag = "";
         loadingCommands = new ArrayList<>();
@@ -89,16 +83,14 @@ public class Loader extends DefaultHandler {
                     currentCommand.asynchronous = Value.equals("true") ? true : false;
                 }
             }
-        }
-        else if (rawName.equals("parameter")) {
+        } else if (rawName.equals("parameter")) {
             currentParameter = new Parameter();
             for (int i = 0; i < len; i++) {
                 Name = attrs.getQName(i);
                 Value = attrs.getValue(i);
                 if (Name.equals("required")) {
                     currentParameter.required = Value.equals("true") ? true : false;
-                }
-                else if (Name.equals("type")) {
+                } else if (Name.equals("type")) {
                     if (Value.equals("node")) currentParameter.type = Type.NODE;
                     else if (Value.equals("way")) currentParameter.type = Type.WAY;
                     else if (Value.equals("relation")) currentParameter.type = Type.RELATION;
@@ -111,14 +103,11 @@ public class Loader extends DefaultHandler {
                     else if (Value.equals("username")) currentParameter.type = Type.USERNAME;
                     else if (Value.equals("imageryurl")) currentParameter.type = Type.IMAGERYURL;
                     else if (Value.equals("imageryoffset")) currentParameter.type = Type.IMAGERYOFFSET;
-                }
-                else if (Name.equals("maxinstances")) {
+                } else if (Name.equals("maxinstances")) {
                     currentParameter.maxInstances = Integer.parseInt(Value);
-                }
-                else if (Name.equals("maxvalue")) {
+                } else if (Name.equals("maxvalue")) {
                     currentParameter.maxVal = Float.parseFloat(Value);
-                }
-                else if (Name.equals("minvalue")) {
+                } else if (Name.equals("minvalue")) {
                     currentParameter.minVal = Float.parseFloat(Value);
                 }
             }
@@ -126,22 +115,19 @@ public class Loader extends DefaultHandler {
     }
 
     @Override
-    public void characters(char ch[], int start, int length) {
+    public void characters(char[] ch, int start, int length) {
         String text = (new String(ch, start, length)).trim();
         if (currentParameter != null) {
             if (currentTag.equals("name")) {
                 currentParameter.name = text;
-            }
-            else if (currentTag.equals("description")) {
+            } else if (currentTag.equals("description")) {
                 currentParameter.description = text;
-            }
-            else if (currentTag.equals("value")) {
+            } else if (currentTag.equals("value")) {
                 if (currentParameter.type == Type.RELAY) {
                     if (!(currentParameter.getRawValue() instanceof Relay))
                         currentParameter.setValue(new Relay());
-                    ((Relay)(currentParameter.getRawValue())).addValue(text);
-                }
-                else {
+                    ((Relay) currentParameter.getRawValue()).addValue(text);
+                } else {
                     currentParameter.setValue(text);
                 }
             }
@@ -153,15 +139,13 @@ public class Loader extends DefaultHandler {
         if (rawName.equals("command")) {
             loadingCommands.add(currentCommand);
             currentCommand = null;
-        }
-        else if (rawName.equals("parameter")) {
-            if(currentParameter.required)
+        } else if (rawName.equals("parameter")) {
+            if (currentParameter.required)
                 currentCommand.parameters.add(currentParameter);
             else
                 currentCommand.optParameters.add(currentParameter);
             currentParameter = null;
-        }
-        else {
+        } else {
             currentTag = "";
         }
     }

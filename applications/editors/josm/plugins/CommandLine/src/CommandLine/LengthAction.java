@@ -1,10 +1,4 @@
-/*
- *	  LengthAction.java
- *
- *	  Copyright 2010 Hind <foxhind@gmail.com>
- *
- */
-
+// License: GPL. For details, see LICENSE file.
 package CommandLine;
 
 import static org.openstreetmap.josm.tools.I18n.marktr;
@@ -38,8 +32,8 @@ import org.openstreetmap.josm.tools.ImageProvider;
 
 public class LengthAction extends MapMode implements MapViewPaintable, AWTEventListener {
     private final CommandLine parentPlugin;
-    final private Cursor cursorCrosshair;
-    final private Cursor cursorJoinNode;
+    private final Cursor cursorCrosshair;
+    private final Cursor cursorJoinNode;
     private Cursor currentCursor;
     private final Color selectedColor;
     private Point drawStartPos;
@@ -69,6 +63,7 @@ public class LengthAction extends MapMode implements MapViewPaintable, AWTEventL
         try {
             Toolkit.getDefaultToolkit().addAWTEventListener(this, AWTEvent.KEY_EVENT_MASK);
         } catch (SecurityException ex) {
+            Main.warn(ex);
         }
     }
 
@@ -81,6 +76,7 @@ public class LengthAction extends MapMode implements MapViewPaintable, AWTEventL
         try {
             Toolkit.getDefaultToolkit().removeAWTEventListener(this);
         } catch (SecurityException ex) {
+            Main.warn(ex);
         }
         if (drawing)
             Main.map.mapView.repaint();
@@ -160,8 +156,7 @@ public class LengthAction extends MapMode implements MapViewPaintable, AWTEventL
                 return;
             requestFocusInMapView();
             drawingStart(e);
-        }
-        else
+        } else
             drawing = false;
     }
 
@@ -221,11 +216,10 @@ public class LengthAction extends MapMode implements MapViewPaintable, AWTEventL
         if (mousePos != null) {
             if (!Main.isDisplayingMapView())
                 return;
-            nearestNode = Main.map.mapView.getNearestNode(mousePos, OsmPrimitive.isUsablePredicate);
+            nearestNode = Main.map.mapView.getNearestNode(mousePos, OsmPrimitive::isUsable);
             if (nearestNode != null) {
                 setCursor(cursorJoinNode);
-            }
-            else {
+            } else {
                 setCursor(cursorCrosshair);
             }
         }
@@ -247,6 +241,7 @@ public class LengthAction extends MapMode implements MapViewPaintable, AWTEventL
             });
             currentCursor = c;
         } catch (Exception e) {
+            Main.warn(e);
         }
     }
 }

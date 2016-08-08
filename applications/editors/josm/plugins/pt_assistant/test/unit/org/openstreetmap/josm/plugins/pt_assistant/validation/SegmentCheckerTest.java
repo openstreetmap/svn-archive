@@ -32,7 +32,7 @@ public class SegmentCheckerTest extends AbstractTest {
 		
 		SegmentChecker segmentChecker = new SegmentChecker(route, test);
 		segmentChecker.performStopByStopTest();
-		assertEquals(SegmentChecker.getCorrectSegmentCount(), 29);
+		assertEquals(SegmentChecker.getCorrectSegmentCount(), 27);
 		assertEquals(segmentChecker.getErrors().size(), 0);
 		
 		

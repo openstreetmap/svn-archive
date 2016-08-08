@@ -1,13 +1,25 @@
 package org.openstreetmap.josm.plugins.pt_assistant.validation;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
+import javax.swing.SwingUtilities;
+
+import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.actions.AutoScaleAction;
+import org.openstreetmap.josm.command.Command;
+import org.openstreetmap.josm.command.SelectCommand;
 import org.openstreetmap.josm.data.osm.Node;
+import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.data.validation.Test;
 import org.openstreetmap.josm.data.validation.TestError;
+import org.openstreetmap.josm.gui.dialogs.relation.GenericRelationEditor;
+import org.openstreetmap.josm.gui.dialogs.relation.RelationEditor;
+import org.openstreetmap.josm.gui.layer.OsmDataLayer;
+import org.openstreetmap.josm.plugins.pt_assistant.gui.PTAssistantLayer;
 import org.openstreetmap.josm.plugins.pt_assistant.utils.RouteUtils;
 
 /**
@@ -112,6 +124,81 @@ public abstract class Checker {
 		}
 
 		return resultList;
+	}
+	
+	/**
+	 * 
+	 * @param testError
+	 * @return
+	 */
+	protected static Command fixErrorByZooming(TestError testError) {
+
+		if (testError.getCode() != PTAssistantValidatorTest.ERROR_CODE_STOP_BY_STOP) {
+			return null;
+		}
+
+		Collection<? extends OsmPrimitive> primitives = testError.getPrimitives();
+		Relation originalRelation = (Relation) primitives.iterator().next();
+		ArrayList<OsmPrimitive> primitivesToZoom = new ArrayList<>();
+		for (Object primitiveToZoom : testError.getHighlighted()) {
+			primitivesToZoom.add((OsmPrimitive) primitiveToZoom);
+		}
+
+		SelectCommand command = new SelectCommand(primitivesToZoom);
+
+		List<OsmDataLayer> listOfLayers = Main.getLayerManager().getLayersOfType(OsmDataLayer.class);
+		for (OsmDataLayer osmDataLayer : listOfLayers) {
+			if (osmDataLayer.data == originalRelation.getDataSet()) {
+
+				final OsmDataLayer layerParameter = osmDataLayer;
+				final Relation relationParameter = originalRelation;
+				final Collection<OsmPrimitive> zoomParameter = primitivesToZoom;
+
+				if (SwingUtilities.isEventDispatchThread()) {
+
+					showRelationEditorAndZoom(layerParameter, relationParameter, zoomParameter);
+
+				} else {
+
+					SwingUtilities.invokeLater(new Runnable() {
+						@Override
+						public void run() {
+
+							showRelationEditorAndZoom(layerParameter, relationParameter, zoomParameter);
+
+						}
+					});
+
+				}
+
+				return command;
+			}
+		}
+
+		return null;
+
+	}
+
+	private static void showRelationEditorAndZoom(OsmDataLayer layer, Relation r, Collection<OsmPrimitive> primitives) {
+
+		// zoom to problem:
+		AutoScaleAction.zoomTo(primitives);
+
+		// put stop-related members to the front and edit roles if necessary:
+		List<RelationMember> sortedRelationMembers = listStopMembers(r);
+		sortedRelationMembers.addAll(listNotStopMembers(r));
+		r.setMembers(sortedRelationMembers);
+
+		// create editor:
+		GenericRelationEditor editor = (GenericRelationEditor) RelationEditor.getEditor(layer, r,
+				r.getMembersFor(primitives));
+
+		// open editor:
+		editor.setVisible(true);
+
+		// make the current relation purple in the pt_assistant layer:
+		PTAssistantLayer.getLayer().repaint(r);
+
 	}
 
 }

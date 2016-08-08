@@ -49,7 +49,6 @@ public class PTAssistantLayer extends Layer
 		KeyboardFocusManager.getCurrentKeyboardFocusManager().addPropertyChangeListener(this);
 		Main.getLayerManager().addLayerChangeListener(this);
 		layer = this;
-
 	}
 	
 	public static PTAssistantLayer getLayer() {
@@ -73,24 +72,18 @@ public class PTAssistantLayer extends Layer
 	}
 	
 	/**
-	 * Adds fix variants to be displayed in the pt_assistant layer
+	 * Adds the first 5 fix variants to be displayed in the pt_assistant layer
 	 * @param fixVariants
 	 */
 	public void addFixVariants(List<List<PTWay>> fixVariants) {
 		char alphabet = 'A';
 		for (int i = 0; i < fixVariants.size(); i++) {
 			if (i < 5) {
-				List<PTWay> fixVariant = fixVariants.get(0);
+				List<PTWay> fixVariant = fixVariants.get(i);
 				this.fixVariants.put(alphabet, fixVariant);
 				alphabet++;
 			}
 		}
-		
-//		for (List<PTWay> fixVariant: fixVariants) {
-//			
-//			this.fixVariants.put(alphabet, fixVariant);
-//			alphabet++;
-//		}
 	}
 	
 	/**

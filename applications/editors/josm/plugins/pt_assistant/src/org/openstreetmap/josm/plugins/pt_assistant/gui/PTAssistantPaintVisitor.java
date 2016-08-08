@@ -404,20 +404,23 @@ public class PTAssistantPaintVisitor extends PaintVisitor {
 				new Color(255, 255, 0, 150), new Color(0, 255, 255, 150) };
 
 		int colorIndex = 0;
-		
+
 		double letterX = Main.map.mapView.getBounds().getMinX() + 20;
 		double letterY = Main.map.mapView.getBounds().getMinY() + 100;
 
 		for (Character c : fixVariants.keySet()) {
 			if (fixVariants.get(c) != null) {
 				drawFixVariant(fixVariants.get(c), colors[colorIndex % 5]);
-				drawFixVariantLetter(fixVariants.get(c), c, colors[colorIndex%5], letterX, letterY);
+				drawFixVariantLetter(c.toString(), colors[colorIndex % 5], letterX, letterY);
 				colorIndex++;
 				letterY = letterY + 60;
 			}
 		}
-		
-		
+
+		// display the "Esc" label:
+		if (!fixVariants.isEmpty()) {
+			drawFixVariantLetter("Esc", Color.WHITE, letterX, letterY);
+		}
 	}
 
 	/**
@@ -435,12 +438,38 @@ public class PTAssistantPaintVisitor extends PaintVisitor {
 		}
 	}
 	
-	private void drawFixVariantLetter(List<PTWay> fixVariant, Character letter, Color color, double letterX, double letterY) {
+	/**
+	 * 
+	 * @param n1
+	 * @param n2
+	 * @param color
+	 */
+	protected void drawSegmentWithParallelLines(Node n1, Node n2, Color color) {
+		if (!n1.isDrawable() || !n2.isDrawable() || !isSegmentVisible(n1, n2)) {
+				return;
+		}
+		
+		Point p1 = mv.getPoint(n1);
+		Point p2 = mv.getPoint(n2);
+
+		double t = Math.atan2((double) p2.x - p1.x, (double) p2.y - p1.y);
+		double cosT = 9 * Math.cos(t);
+		double sinT = 9 * Math.sin(t);
+
+		int[] xPoints = { (int) (p1.x + cosT), (int) (p2.x + cosT), (int) (p2.x - cosT), (int) (p1.x - cosT) };
+		int[] yPoints = { (int) (p1.y - sinT), (int) (p2.y - sinT), (int) (p2.y + sinT), (int) (p1.y + sinT) };
+		g.setColor(color);
+		g.fillPolygon(xPoints, yPoints, 4);
+		g.fillOval((int) (p1.x - 9), (int) (p1.y - 9), 18, 18);
+		g.fillOval((int) (p2.x - 9), (int) (p2.y - 9), 18, 18);
+	}
+
+	private void drawFixVariantLetter(String letter, Color color, double letterX, double letterY) {
 		g.setColor(color);
 		Font stringFont = new Font("SansSerif", Font.PLAIN, 50);
 		g.setFont(stringFont);
-		g.drawString(letter.toString(), (int) letterX, (int) letterY);
-		g.drawString(letter.toString(), (int) letterX, (int) letterY);
+		g.drawString(letter, (int) letterX, (int) letterY);
+		g.drawString(letter, (int) letterX, (int) letterY);
 	}
 
 }

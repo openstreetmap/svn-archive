@@ -2,39 +2,34 @@ package org.openstreetmap.josm.plugins.pt_assistant.validation;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
-import java.lang.reflect.InvocationTargetException;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
-import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.AutoScaleAction;
 import org.openstreetmap.josm.command.ChangeCommand;
 import org.openstreetmap.josm.command.Command;
-import org.openstreetmap.josm.command.SelectCommand;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
-import org.openstreetmap.josm.data.osm.OsmPrimitiveType;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.data.validation.Severity;
 import org.openstreetmap.josm.data.validation.Test;
 import org.openstreetmap.josm.data.validation.TestError;
-import org.openstreetmap.josm.gui.dialogs.relation.GenericRelationEditor;
-import org.openstreetmap.josm.gui.dialogs.relation.RelationEditor;
-import org.openstreetmap.josm.gui.layer.OsmDataLayer;
+import org.openstreetmap.josm.gui.Notification;
 import org.openstreetmap.josm.plugins.pt_assistant.data.PTRouteDataManager;
 import org.openstreetmap.josm.plugins.pt_assistant.data.PTRouteSegment;
 import org.openstreetmap.josm.plugins.pt_assistant.data.PTStop;
 import org.openstreetmap.josm.plugins.pt_assistant.data.PTWay;
 import org.openstreetmap.josm.plugins.pt_assistant.gui.PTAssistantLayer;
-import org.openstreetmap.josm.plugins.pt_assistant.utils.RouteUtils;
 import org.openstreetmap.josm.plugins.pt_assistant.utils.StopToWayAssigner;
 
 /**
@@ -534,6 +529,7 @@ public class SegmentChecker extends Checker {
 	}
 
 	/**
+	 * Finds the next ways for the route stop-by-stop parsing procedure
 	 * 
 	 * @param way
 	 * @param nodeInDirectionOfTravel
@@ -692,6 +688,10 @@ public class SegmentChecker extends Checker {
 	 */
 	protected static Command fixError(TestError testError) {
 
+		// if fix options for another route are displayed in the pt_assistant
+		// layer, clear them:
+		((PTAssistantValidatorTest) testError.getTester()).clearFixVariants();
+
 		PTRouteSegment wrongSegment = wrongSegments.get(testError);
 
 		// 1) try to fix by using the correct segment:
@@ -705,194 +705,26 @@ public class SegmentChecker extends Checker {
 
 		if (!correctSegmentsForThisError.isEmpty()) {
 
-			List<PTWay> fix = null;
-
 			if (correctSegmentsForThisError.size() > 1) {
-				fix = displayCorrectSegmentVariants(correctSegmentsForThisError, testError);
-				if (fix == null) {
-					return null;
+				List<List<PTWay>> fixVariants = new ArrayList<>();
+				for (PTRouteSegment segment : correctSegmentsForThisError) {
+					fixVariants.add(segment.getPTWays());
 				}
-			} else {
-				fix = correctSegmentsForThisError.get(0).getPTWays();
-				final Collection<OsmPrimitive> waysToZoom = new ArrayList<>();
-				for (Object highlightedPrimitive: testError.getHighlighted()) {
-					waysToZoom.add((OsmPrimitive)highlightedPrimitive);
-				}
-				if (SwingUtilities.isEventDispatchThread()) {
-					AutoScaleAction.zoomTo(waysToZoom);
-				} else {
-					SwingUtilities.invokeLater(new Runnable() {
-						@Override
-						public void run() {
-							AutoScaleAction.zoomTo(waysToZoom);
-						}
-					});
-				}
-				synchronized(SegmentChecker.class) {
-					try {
-						SegmentChecker.class.wait(2000);
-					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				}
+				displayFixVariants(fixVariants, testError);
+				return null;
 			}
 
-			Relation originalRelation = (Relation) testError.getPrimitives().iterator().next();
-			Relation modifiedRelation = new Relation(originalRelation);
-			List<RelationMember> originalRelationMembers = originalRelation.getMembers();
-			List<RelationMember> modifiedRelationMembers = new ArrayList<>();
-
-			// copy stops first:
-			for (RelationMember rm : originalRelationMembers) {
-				if (RouteUtils.isPTStop(rm)) {
-					if (rm.getRole().equals("stop_position")) {
-						if (rm.getType().equals(OsmPrimitiveType.NODE)) {
-							RelationMember newMember = new RelationMember("stop", rm.getNode());
-							modifiedRelationMembers.add(newMember);
-						} else { // if it is a way:
-							RelationMember newMember = new RelationMember("stop", rm.getWay());
-							modifiedRelationMembers.add(newMember);
-						}
-					} else {
-						// if the relation member does not have the role
-						// "stop_position":
-						modifiedRelationMembers.add(rm);
-					}
-				}
-			}
-
-			// copy PTWays next:
-			List<RelationMember> waysOfOriginalRelation = new ArrayList<>();
-			for (RelationMember rm : originalRelation.getMembers()) {
-				if (RouteUtils.isPTWay(rm)) {
-					waysOfOriginalRelation.add(rm);
-				}
-			}
-
-			for (int i = 0; i < waysOfOriginalRelation.size(); i++) {
-				if (waysOfOriginalRelation.get(i).getWay() == wrongSegment.getPTWays().get(0).getWays().get(0)) {
-					for (PTWay ptway : fix) {
-						if (ptway.getRole().equals("forward") || ptway.getRole().equals("backward")) {
-							modifiedRelationMembers.add(new RelationMember("", ptway.getMember()));
-						} else {
-							modifiedRelationMembers.add(ptway);
-						}
-					}
-					i = i + wrongSegment.getPTWays().size() - 1;
-				} else {
-					if (waysOfOriginalRelation.get(i).getRole().equals("forward")
-							|| waysOfOriginalRelation.get(i).getRole().equals("backward")) {
-						modifiedRelationMembers.add(new RelationMember("", waysOfOriginalRelation.get(i).getMember()));
-					} else {
-						modifiedRelationMembers.add(waysOfOriginalRelation.get(i));
-					}
-				}
-			}
-
-			modifiedRelation.setMembers(modifiedRelationMembers);
-			// TODO: change the data model too
-			wrongSegments.remove(testError);
-			ChangeCommand changeCommand = new ChangeCommand(originalRelation, modifiedRelation);
-			return changeCommand;
+			return carryOutSingleFix(testError, correctSegmentsForThisError.get(0).getPTWays());
 
 		} else if (!wrongSegment.getFixVariants().isEmpty()) {
-
-			List<PTWay> fix = null;
-
+			// 2) try to fix using the sorting and removal of existing ways
+			// of the wrong segment:
 			if (wrongSegment.getFixVariants().size() > 1) {
-				fix = displayFixVariants(wrongSegment.getFixVariants(), testError);
-				if (fix == null) {
-					return null;
-				}
-			} else {
-				fix = wrongSegment.getFixVariants().get(0);
-				final Collection<OsmPrimitive> waysToZoom = new ArrayList<>();
-				for (Object highlightedPrimitive: testError.getHighlighted()) {
-					waysToZoom.add((OsmPrimitive)highlightedPrimitive);
-				}
-				if (SwingUtilities.isEventDispatchThread()) {
-					AutoScaleAction.zoomTo(waysToZoom);
-				} else {
-					SwingUtilities.invokeLater(new Runnable() {
-						@Override
-						public void run() {
-							AutoScaleAction.zoomTo(waysToZoom);
-						}
-					});
-				}
-				synchronized(SegmentChecker.class) {
-					try {
-						SegmentChecker.class.wait(2000);
-					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				}
+				displayFixVariants(wrongSegment.getFixVariants(), testError);
+				return null;
 			}
 
-			// 2) try to fix by using the sort & remove method:
-			// TODO: ask user if the change should be undertaken
-			Relation originalRelation = (Relation) testError.getPrimitives().iterator().next();
-			Relation modifiedRelation = new Relation(originalRelation);
-			List<RelationMember> originalRelationMembers = originalRelation.getMembers();
-			List<RelationMember> modifiedRelationMembers = new ArrayList<>();
-
-			// copy stops first:
-			for (RelationMember rm : originalRelationMembers) {
-				if (RouteUtils.isPTStop(rm)) {
-					if (rm.getRole().equals("stop_position")) {
-						if (rm.getType().equals(OsmPrimitiveType.NODE)) {
-							RelationMember newMember = new RelationMember("stop", rm.getNode());
-							modifiedRelationMembers.add(newMember);
-						} else { // if it is a way:
-							RelationMember newMember = new RelationMember("stop", rm.getWay());
-							modifiedRelationMembers.add(newMember);
-						}
-					} else {
-						// if the relation member does not have the role
-						// "stop_position":
-						modifiedRelationMembers.add(rm);
-					}
-				}
-			}
-
-			// copy PTWays next:
-			List<RelationMember> waysOfOriginalRelation = new ArrayList<>();
-			for (RelationMember rm : originalRelation.getMembers()) {
-				if (RouteUtils.isPTWay(rm)) {
-					waysOfOriginalRelation.add(rm);
-				}
-			}
-
-			for (int i = 0; i < waysOfOriginalRelation.size(); i++) {
-				if (waysOfOriginalRelation.get(i).getWay() == wrongSegment.getPTWays().get(0).getWays().get(0)) {
-					for (PTWay ptway : fix) {
-						if (ptway.getRole().equals("forward") || ptway.getRole().equals("backward")) {
-							modifiedRelationMembers.add(new RelationMember("", ptway.getMember()));
-						} else {
-							modifiedRelationMembers.add(ptway);
-						}
-					}
-					i = i + wrongSegment.getPTWays().size() - 1;
-				} else {
-					if (waysOfOriginalRelation.get(i).getRole().equals("forward")
-							|| waysOfOriginalRelation.get(i).getRole().equals("backward")) {
-						modifiedRelationMembers.add(new RelationMember("", waysOfOriginalRelation.get(i).getMember()));
-					} else {
-						modifiedRelationMembers.add(waysOfOriginalRelation.get(i));
-					}
-				}
-			}
-
-			modifiedRelation.setMembers(modifiedRelationMembers);
-			// TODO: change the data model too
-			wrongSegments.remove(testError);
-			wrongSegment.setPTWays(wrongSegment.getFixVariants().get(0));
-			addCorrectSegment(wrongSegment);
-			ChangeCommand changeCommand = new ChangeCommand(originalRelation, modifiedRelation);
-			return changeCommand;
-
+			return carryOutSingleFix(testError, wrongSegment.getFixVariants().get(0));
 		}
 
 		// if there is no fix:
@@ -901,25 +733,16 @@ public class SegmentChecker extends Checker {
 	}
 
 	/**
-	 * 
-	 * @param segments
-	 */
-	private static List<PTWay> displayCorrectSegmentVariants(List<PTRouteSegment> segments, TestError testError) {
-		List<List<PTWay>> fixVariantList = new ArrayList<>();
-		for (PTRouteSegment segment : segments) {
-			fixVariantList.add(segment.getPTWays());
-		}
-		return displayFixVariants(fixVariantList, testError);
-	}
-
-	/**
+	 * This is largely a copy of the displayFixVariants() method, adapted for
+	 * use with the key listener
 	 * 
 	 * @param fixVariants
+	 * @param testError
 	 */
-	private static List<PTWay> displayFixVariants(List<List<PTWay>> fixVariants, TestError testError) {
+	private static void displayFixVariants(List<List<PTWay>> fixVariants, TestError testError) {
 		// find the letters of the fix variants:
 		char alphabet = 'A';
-		List<Character> allowedCharacters = new ArrayList<>();
+		final List<Character> allowedCharacters = new ArrayList<>();
 		for (int i = 0; i < fixVariants.size(); i++) {
 			allowedCharacters.add(alphabet);
 			alphabet++;
@@ -927,13 +750,8 @@ public class SegmentChecker extends Checker {
 
 		// zoom to problem:
 		final Collection<OsmPrimitive> waysToZoom = new ArrayList<>();
-//		for (List<PTWay> fix : fixVariants) {
-//			for (PTWay ptway : fix) {
-//				waysToZoom.addAll(ptway.getWays());
-//			}
-//		}
-		for (Object highlightedPrimitive: testError.getHighlighted()) {
-			waysToZoom.add((OsmPrimitive)highlightedPrimitive);
+		for (Object highlightedPrimitive : testError.getHighlighted()) {
+			waysToZoom.add((OsmPrimitive) highlightedPrimitive);
 		}
 		if (SwingUtilities.isEventDispatchThread()) {
 			AutoScaleAction.zoomTo(waysToZoom);
@@ -947,137 +765,154 @@ public class SegmentChecker extends Checker {
 		}
 
 		// display the fix variants:
-		PTAssistantValidatorTest test = (PTAssistantValidatorTest) testError.getTester();
+		final PTAssistantValidatorTest test = (PTAssistantValidatorTest) testError.getTester();
 		test.addFixVariants(fixVariants);
 		PTAssistantLayer.getLayer().repaint((Relation) testError.getPrimitives().iterator().next());
 
-		// get user input:
-		Character userInput = getUserInput(allowedCharacters);
-		if (userInput == null) {
-			test.clearFixVariants();
-			return null;
-		}
-		List<PTWay> selectedFix = test.getFixVariant(userInput);
-		test.clearFixVariants();
-		return selectedFix;
-	}
+		// prepare the variables for the key listener:
+		final TestError testErrorParameter = testError;
 
-	/**
-	 * Asks user to choose the fix variant and returns the choice
-	 * 
-	 * @param allowedCharacters
-	 * @return
-	 */
-	private static Character getUserInput(List<Character> allowedCharacters) {
-		final String[] userInput = { "" };
+		// add the key listener:
+		Main.map.mapView.requestFocus();
+		Main.map.mapView.addKeyListener(new KeyListener() {
 
-		while (userInput[0] == null || userInput[0].length() != 1 || userInput[0].equals("")
-				|| !allowedCharacters.contains(userInput[0].toUpperCase().toCharArray()[0])) {
-			if (SwingUtilities.isEventDispatchThread()) {
+			@Override
+			public void keyTyped(KeyEvent e) {
+				// TODO Auto-generated method stub
+			}
 
-				userInput[0] = JOptionPane.showInputDialog("Enter a letter to select the fix variant: ");
-
-			} else {
-
-				try {
-					SwingUtilities.invokeAndWait(new Runnable() {
-						@Override
-						public void run() {
-
-							userInput[0] = JOptionPane.showInputDialog("Enter a letter to select the fix variant: ");
-
-						}
-					});
-				} catch (InvocationTargetException | InterruptedException e1) {
-					break;
+			@Override
+			public void keyPressed(KeyEvent e) {
+				Character typedKey = e.getKeyChar();
+				Character typedKeyUpperCase = typedKey.toString().toUpperCase().toCharArray()[0];
+				if (allowedCharacters.contains(typedKeyUpperCase)) {
+					Main.map.mapView.removeKeyListener(this);
+					List<PTWay> selectedFix = test.getFixVariant(typedKeyUpperCase);
+					test.clearFixVariants();
+					carryOutSelectedFix(testErrorParameter, selectedFix);
 				}
-
+				if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+					Main.map.mapView.removeKeyListener(this);
+					test.clearFixVariants();
+				}
 			}
-			if (userInput[0] == null) {
-				break;
+
+			@Override
+			public void keyReleased(KeyEvent e) {
+				// TODO Auto-generated method stub
 			}
-		}
+		});
 
-		if (userInput[0] == null) {
-			return null;
+		// display the notification:
+		if (SwingUtilities.isEventDispatchThread()) {
+			Notification notification = new Notification(
+					tr("Type letter to select the fix variant or press Escape for no fix"));
+			notification.show();
+		} else {
+			SwingUtilities.invokeLater(new Runnable() {
+				@Override
+				public void run() {
+					Notification notification = new Notification(
+							tr("Type letter to select the fix variant or press Escape for no fix"));
+					notification.show();
+				}
+			});
 		}
-		return userInput[0].toCharArray()[0];
-
 	}
 
 	/**
+	 * Carries out the fix (i.e. modifies the route) after the user has picked
+	 * the fix from several fix variants.
 	 * 
 	 * @param testError
-	 * @return
+	 *            test error to be fixed
+	 * @param fix
+	 *            the fix variant to be adopted
 	 */
-	protected static Command fixErrorByZooming(TestError testError) {
+	private static void carryOutSelectedFix(TestError testError, List<PTWay> fix) {
+		Relation route = (Relation) testError.getPrimitives().iterator().next();
+		route.setMembers(getModifiedRelationMembers(testError, fix));
+		PTRouteSegment wrongSegment = wrongSegments.get(testError);
+		wrongSegments.remove(testError);
+		wrongSegment.setPTWays(wrongSegment.getFixVariants().get(0));
+		addCorrectSegment(wrongSegment);
+	}
 
-		if (testError.getCode() != PTAssistantValidatorTest.ERROR_CODE_STOP_BY_STOP) {
-			return null;
+	/**
+	 * Carries out the fix (i.e. modifies the route) when there is only one fix
+	 * variant.
+	 * 
+	 * @param testError
+	 * @param fix
+	 */
+	private static Command carryOutSingleFix(TestError testError, List<PTWay> fix) {
+		// Zoom to the problematic ways:
+		final Collection<OsmPrimitive> waysToZoom = new ArrayList<>();
+		for (Object highlightedPrimitive : testError.getHighlighted()) {
+			waysToZoom.add((OsmPrimitive) highlightedPrimitive);
 		}
-
-		Collection<? extends OsmPrimitive> primitives = testError.getPrimitives();
-		Relation originalRelation = (Relation) primitives.iterator().next();
-		ArrayList<OsmPrimitive> primitivesToZoom = new ArrayList<>();
-		for (Object primitiveToZoom : testError.getHighlighted()) {
-			primitivesToZoom.add((OsmPrimitive) primitiveToZoom);
-		}
-
-		SelectCommand command = new SelectCommand(primitivesToZoom);
-
-		List<OsmDataLayer> listOfLayers = Main.getLayerManager().getLayersOfType(OsmDataLayer.class);
-		for (OsmDataLayer osmDataLayer : listOfLayers) {
-			if (osmDataLayer.data == originalRelation.getDataSet()) {
-
-				final OsmDataLayer layerParameter = osmDataLayer;
-				final Relation relationParameter = originalRelation;
-				final Collection<OsmPrimitive> zoomParameter = primitivesToZoom;
-
-				if (SwingUtilities.isEventDispatchThread()) {
-
-					showRelationEditorAndZoom(layerParameter, relationParameter, zoomParameter);
-
-				} else {
-
-					SwingUtilities.invokeLater(new Runnable() {
-						@Override
-						public void run() {
-
-							showRelationEditorAndZoom(layerParameter, relationParameter, zoomParameter);
-
-						}
-					});
-
+		if (SwingUtilities.isEventDispatchThread()) {
+			AutoScaleAction.zoomTo(waysToZoom);
+		} else {
+			SwingUtilities.invokeLater(new Runnable() {
+				@Override
+				public void run() {
+					AutoScaleAction.zoomTo(waysToZoom);
 				}
+			});
+		}
 
-				return command;
+		// wait:
+		synchronized (SegmentChecker.class) {
+			try {
+				SegmentChecker.class.wait(1500);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 		}
 
-		return null;
+		// modify the route:
+		Relation originalRelation = (Relation) testError.getPrimitives().iterator().next();
+		Relation modifiedRelation = new Relation(originalRelation);
+		modifiedRelation.setMembers(getModifiedRelationMembers(testError, fix));
+		wrongSegments.remove(testError);
+		return new ChangeCommand(originalRelation, modifiedRelation);
 
 	}
 
-	private static void showRelationEditorAndZoom(OsmDataLayer layer, Relation r, Collection<OsmPrimitive> primitives) {
+	/**
+	 * Returns a list of the modified relation members. This list can be used by
+	 * the calling method (relation.setMemers()) to modify the modify the route
+	 * relation. The route relation is not modified by this method. The lists of
+	 * wrong and correct segments are not updated.
+	 * 
+	 * @param testError
+	 *            test error to be fixed
+	 * @param fix
+	 *            the fix variant to be adopted
+	 * @return List of modified relation members to be applied to the route
+	 *         relation
+	 */
+	private static List<RelationMember> getModifiedRelationMembers(TestError testError, List<PTWay> fix) {
+		PTRouteSegment wrongSegment = wrongSegments.get(testError);
+		Relation originalRelation = (Relation) testError.getPrimitives().iterator().next();
 
-		// zoom to problem:
-		AutoScaleAction.zoomTo(primitives);
+		// copy stops first:
+		List<RelationMember> modifiedRelationMembers = listStopMembers(originalRelation);
 
-		// put stop-related members to the front and edit roles if necessary:
-		List<RelationMember> sortedRelationMembers = listStopMembers(r);
-		sortedRelationMembers.addAll(listNotStopMembers(r));
-		r.setMembers(sortedRelationMembers);
+		// copy PTWays last:
+		List<RelationMember> waysOfOriginalRelation = listNotStopMembers(originalRelation);
+		for (int i = 0; i < waysOfOriginalRelation.size(); i++) {
+			if (waysOfOriginalRelation.get(i).getWay() == wrongSegment.getPTWays().get(0).getWays().get(0)) {
+				modifiedRelationMembers.addAll(fix);
+				i = i + wrongSegment.getPTWays().size() - 1;
+			} else {
+				modifiedRelationMembers.add(waysOfOriginalRelation.get(i));
+			}
+		}
 
-		// create editor:
-		GenericRelationEditor editor = (GenericRelationEditor) RelationEditor.getEditor(layer, r,
-				r.getMembersFor(primitives));
-
-		// open editor:
-		editor.setVisible(true);
-
-		// make the current relation purple in the pt_assistant layer:
-		PTAssistantLayer.getLayer().repaint(r);
-
+		return modifiedRelationMembers;
 	}
 
 }

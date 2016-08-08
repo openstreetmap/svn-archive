@@ -52,7 +52,7 @@ public enum MapdustServiceCommand {
     /**
      * Builds a new <code>MapdustServiceCommand</code> object
      */
-    private MapdustServiceCommand() {}
+    MapdustServiceCommand() {}
 
     /**
      * Builds a new <code>MapdustServiceCommand</code> object
@@ -60,7 +60,7 @@ public enum MapdustServiceCommand {
      * @param key The key
      * @param value The value
      */
-    private MapdustServiceCommand(String key, String value) {
+    MapdustServiceCommand(String key, String value) {
         this.key = key;
         this.value = value;
     }

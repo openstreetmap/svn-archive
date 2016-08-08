@@ -34,7 +34,6 @@ package org.openstreetmap.josm.plugins.mapdust.gui.observer;
 
 import org.openstreetmap.josm.plugins.mapdust.service.value.MapdustBugFilter;
 
-
 /**
  * The observable interface for the MapDust bug update action.
  *
@@ -48,14 +47,14 @@ public interface MapdustUpdateObservable {
      *
      * @param observer The <code>MapdustUpdateObserver</code> object
      */
-    public void addObserver(MapdustUpdateObserver observer);
+    void addObserver(MapdustUpdateObserver observer);
 
     /**
      * Removes the given observer from the list of observers.
      *
      * @param observer The <code>MapdustUpdateObserver</code> object
      */
-    public void removeObserver(MapdustUpdateObserver observer);
+    void removeObserver(MapdustUpdateObserver observer);
 
     /**
      * Notifies all the observers observing the MapDust bug update action.
@@ -64,6 +63,5 @@ public interface MapdustUpdateObservable {
      * @param initialUpdate Indicates if the update action is for the first time
      * or not.
      */
-    public void notifyObservers(MapdustBugFilter filter, boolean initialUpdate);
-
+    void notifyObservers(MapdustBugFilter filter, boolean initialUpdate);
 }

@@ -87,7 +87,7 @@ public enum MapdustResponseStatusCode {
      * @param apiCode The code of the Mapdust API
      * @param description The description of the response
      */
-    private MapdustResponseStatusCode(Integer statusCode, Integer apiCode,
+    MapdustResponseStatusCode(Integer statusCode, Integer apiCode,
             String description) {
         this.statusCode = statusCode;
         this.apiCode = apiCode;

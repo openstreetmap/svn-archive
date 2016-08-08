@@ -62,7 +62,7 @@ public class WindowClose extends WindowAdapter {
      * @param dialog The dialog which will be closed
      * @param btnPanel The button panel
      */
-    public WindowClose(AbstractDialog dialog, MapdustButtonPanel btnPanel ) {
+    public WindowClose(AbstractDialog dialog, MapdustButtonPanel btnPanel) {
         this.dialog = dialog;
         this.btnPanel = btnPanel;
     }

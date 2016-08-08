@@ -97,7 +97,7 @@ public class ExecuteFilterBug extends MapdustExecuteAction implements
                 /* get the selected description filter */
                 boolean descr = dialog.isDescrFilterChecked();
                 MapdustRelevance minValue = dialog.getSelectedMinRelevance();
-                MapdustRelevance maxValue= dialog.getSelectedMaxRelevance();
+                MapdustRelevance maxValue = dialog.getSelectedMaxRelevance();
                 /* notifies the observers about the filters */
                 notifyObservers(new MapdustBugFilter(statuses, types, descr,
                         minValue, maxValue), false);

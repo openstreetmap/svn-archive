@@ -54,7 +54,7 @@ public class MapdustGetBugResponse {
     /**
      * Builds a <code>MapdustGetBugResponse</code> object
      *
-     * @param geometry The <code>Geometry</code object
+     * @param geometry The <code>Geometry</code> object
      * @param id The id of the object
      * @param properties The <code>MapdustBugProperties</code> object
      */
@@ -64,7 +64,6 @@ public class MapdustGetBugResponse {
         this.id = id;
         this.properties = properties;
     }
-
     
     public Geometry getGeometry() {
         return geometry;

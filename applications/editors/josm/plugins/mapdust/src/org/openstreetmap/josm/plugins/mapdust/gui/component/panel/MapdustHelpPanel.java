@@ -99,15 +99,15 @@ public class MapdustHelpPanel extends JPanel implements HyperlinkListener {
      */
     private String buildText() {
         Integer version;
-        try{
+        try {
             version = Integer.decode(Main.pref.get("mapdust.version"));
-        } catch (NumberFormatException e){
+        } catch (NumberFormatException e) {
             version = null;
         }
                 
         Integer localVersion;
-        try{
-            localVersion= Integer.decode(Main.pref.get("mapdust.localVersion"));
+        try {
+            localVersion = Integer.decode(Main.pref.get("mapdust.localVersion"));
         } catch (NumberFormatException e) {
             localVersion = null;
         }

@@ -89,5 +89,4 @@ public class CommentListModel implements ListModel<MapdustComment> {
 
     @Override
     public void addListDataListener(ListDataListener l) {}
-
 }

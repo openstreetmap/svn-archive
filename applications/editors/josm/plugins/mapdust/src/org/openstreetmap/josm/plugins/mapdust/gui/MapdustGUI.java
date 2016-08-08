@@ -247,7 +247,7 @@ public class MapdustGUI extends ToggleDialog implements MapdustActionObserver,
                 panel = null;
             }
             List<MapdustAction> actionList = actionPanel != null ?
-                    actionPanel.getActionList() : new ArrayList<MapdustAction>();
+                    actionPanel.getActionList() : new ArrayList<>();
 
             /* update panels */
             List<MapdustBug> bugs = filterMapdustBugList(mapdustBugs,

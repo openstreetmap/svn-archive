@@ -108,7 +108,7 @@ public class ExecuteWorkOffline extends MapdustExecuteAction implements
                                     getMapdustGUI().getMapdustActionList());
                         } catch (MapdustActionUploaderException e) {
                             String errorMessage = "There was a Mapdust service";
-                            errorMessage+=" error.";
+                            errorMessage += " error.";
                             JOptionPane.showMessageDialog(Main.parent,
                                     tr(errorMessage), tr("Error"),
                                     JOptionPane.ERROR_MESSAGE);

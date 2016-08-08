@@ -157,8 +157,8 @@ public class RelevanceSlider extends JSlider {
      * @return upperValue
      */
     public int getUpperValue() {
-        if (upperValue<lowerValue){
-            upperValue=lowerValue;
+        if (upperValue < lowerValue) {
+            upperValue = lowerValue;
         }
         return upperValue;
     }
@@ -182,7 +182,6 @@ public class RelevanceSlider extends JSlider {
     @Override
     public void setExtent(int extent) {
         super.setExtent(extent);
-        this.upperValue=getLowerValue()+getExtent();
+        this.upperValue = getLowerValue()+getExtent();
     }
-
 }

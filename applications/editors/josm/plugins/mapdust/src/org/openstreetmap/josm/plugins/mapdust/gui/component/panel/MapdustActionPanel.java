@@ -83,11 +83,9 @@ public class MapdustActionPanel extends JPanel {
      * @param list The list of <code>MapdustAction</code> objects
      * @param mapdustPlugin The <code>MapdustPlugin</code> object
      */
-    private void addComponents(List<MapdustAction> list,
-            MapdustPlugin mapdustPlugin) {
+    private void addComponents(List<MapdustAction> list, MapdustPlugin mapdustPlugin) {
         /* create components */
-        AbstractAction action = new ExecuteActionList
-        (mapdustPlugin.getMapdustGUI());
+        AbstractAction action = new ExecuteActionList(mapdustPlugin.getMapdustGUI());
         JToggleButton btnUpload = ComponentUtil.createJButton("Upload list data",
                 null, null, action);
         ((ExecuteActionList) action).addObserver(mapdustPlugin);

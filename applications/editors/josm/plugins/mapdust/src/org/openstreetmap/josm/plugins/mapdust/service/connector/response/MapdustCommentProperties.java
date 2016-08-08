@@ -81,7 +81,6 @@ public class MapdustCommentProperties {
         this.extUid = extUid;
         this.source = source;
     }
-
     
     public Date getDateCreated() {
         return dateCreated;
@@ -90,7 +89,6 @@ public class MapdustCommentProperties {
     public String getComment() {
         return comment;
     }
-
 
     public String getNickname() {
         return nickname;

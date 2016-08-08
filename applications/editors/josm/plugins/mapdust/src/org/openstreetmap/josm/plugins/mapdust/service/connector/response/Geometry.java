@@ -27,7 +27,6 @@
  */
 package org.openstreetmap.josm.plugins.mapdust.service.connector.response;
 
-
 /**
  * Defines the attributes of the geometry object.
  * 
@@ -37,7 +36,7 @@ package org.openstreetmap.josm.plugins.mapdust.service.connector.response;
 public class Geometry {
     
     /** The array of coordinates */
-    private Double coordinates[];
+    private Double[] coordinates;
     
     /**
      * Builds a <code>Geometry</code> object
@@ -52,10 +51,8 @@ public class Geometry {
     public Geometry(Double[] coordinates) {
         this.coordinates = coordinates;
     }
-    
-    
+        
     public Double[] getCoordinates() {
         return coordinates;
     }
-    
 }

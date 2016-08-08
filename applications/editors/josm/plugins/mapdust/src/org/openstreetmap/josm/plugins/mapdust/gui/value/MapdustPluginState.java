@@ -50,7 +50,7 @@ public enum MapdustPluginState {
      *
      * @param value The value of the object
      */
-    private MapdustPluginState(String value) {
+    MapdustPluginState(String value) {
         this.value = value;
     }
 

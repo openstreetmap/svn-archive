@@ -543,8 +543,7 @@ public class MapdustConnector {
                         MapdustResponseStatusCode.Status.getDescription());
         }
     }
-    
-    
+        
     private <T> T parseResponse(String httpResponse, Class<T> responseType)
             throws MapdustConnectorException {
         T result;

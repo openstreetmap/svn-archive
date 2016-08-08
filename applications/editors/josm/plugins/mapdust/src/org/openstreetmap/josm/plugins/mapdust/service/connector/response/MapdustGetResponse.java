@@ -57,10 +57,8 @@ public class MapdustGetResponse {
     public MapdustGetResponse(Paging paging) {
         this.paging = paging;
     }
-
     
     public Paging getPaging() {
         return paging;
     }
-
 }

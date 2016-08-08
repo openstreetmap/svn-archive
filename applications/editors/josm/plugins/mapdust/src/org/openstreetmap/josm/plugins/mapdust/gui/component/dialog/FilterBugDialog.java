@@ -65,7 +65,7 @@ import org.openstreetmap.josm.tools.ImageProvider;
  * @author Bea
  */
 public class FilterBugDialog extends AbstractDialog {
-    org.openstreetmap.josm.plugins.mapdust.service.value.BugType ttt=org.openstreetmap.josm.plugins.mapdust.service.value.BugType.WRONG_TURN;
+    org.openstreetmap.josm.plugins.mapdust.service.value.BugType ttt = org.openstreetmap.josm.plugins.mapdust.service.value.BugType.WRONG_TURN;
 
     /** The serial version UID */
     private static final long serialVersionUID = -3333642616656969760L;
@@ -291,7 +291,7 @@ public class FilterBugDialog extends AbstractDialog {
                 BugType.WRONG_ROUNDABOUT.getValue(), new Rectangle(290, 90, 180,
                         25));
         /* oneway_road type */
-        filterTypes[2] =  new FilterCheckBox(BugType.MISSING_STREET.getKey(),
+        filterTypes[2] = new FilterCheckBox(BugType.MISSING_STREET.getKey(),
                 new Rectangle(110, 125, 20, 25), "dialogs/missing_street.png",
                 BugType.MISSING_STREET.getValue(), new Rectangle(130, 125, 150,
                         25));

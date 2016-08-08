@@ -41,7 +41,7 @@ import org.openstreetmap.josm.plugins.mapdust.service.MapdustServiceHandlerExcep
  * @author Bea
  * @version $Revision$
  */
-public class MapdustActionUploader {
+public final class MapdustActionUploader {
 
     /** The <code>MapdustActionUploader</code> instance */
     private static MapdustActionUploader instance;

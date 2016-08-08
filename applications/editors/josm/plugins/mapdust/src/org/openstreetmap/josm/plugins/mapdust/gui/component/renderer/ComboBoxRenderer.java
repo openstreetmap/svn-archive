@@ -67,7 +67,7 @@ public class ComboBoxRenderer implements ListCellRenderer<BugType> {
         ImageIcon icon = ImageProvider.get(iconPath);
         label.setIcon(icon);
         label.setText(text);
-        label.setFont( new Font("Times New Roman", Font.BOLD, 12));
+        label.setFont(new Font("Times New Roman", Font.BOLD, 12));
         return label;
     }
 }

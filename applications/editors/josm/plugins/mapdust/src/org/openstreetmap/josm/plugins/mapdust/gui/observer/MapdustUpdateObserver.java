@@ -54,6 +54,5 @@ public interface MapdustUpdateObserver {
      * @param initialUpdate Indicates if the update action is for the first time
      * or not.
      */
-    public void update(MapdustBugFilter filter, boolean initialUpdate);
-
+    void update(MapdustBugFilter filter, boolean initialUpdate);
 }

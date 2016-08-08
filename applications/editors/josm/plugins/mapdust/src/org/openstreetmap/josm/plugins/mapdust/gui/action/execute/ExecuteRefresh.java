@@ -57,7 +57,7 @@ public class ExecuteRefresh extends AbstractAction implements
             new ArrayList<>();
 
     /**
-     * Builds a <code>EexecuteRefresh<code> object
+     * Builds a <code>EexecuteRefresh</code> object
      */
     public ExecuteRefresh() {}
 

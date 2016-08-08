@@ -162,7 +162,7 @@ public class MapdustBugListPanel extends JPanel implements
         if (mapdustBugsList == null || mapdustBugsList.isEmpty()) {
             String text = " No bugs in the current view for the selected";
             text += " filters!";
-            JList<String> textJList = new JList<>(new String[] { text });
+            JList<String> textJList = new JList<>(new String[] {text});
             textJList.setBorder(new LineBorder(Color.black, 1, false));
             textJList.setCellRenderer(new BugListCellRenderer());
             cmpMapdustBugs = ComponentUtil.createJScrollPane(textJList);
@@ -191,7 +191,7 @@ public class MapdustBugListPanel extends JPanel implements
         if (mapdustBugsList == null || mapdustBugsList.isEmpty()) {
             String text = " No bugs in the current view for the selected";
             text += " filters!";
-            JList<String> textJList = new JList<>(new String[] { text });
+            JList<String> textJList = new JList<>(new String[] {text});
             textJList.setBorder(new LineBorder(Color.black, 1, false));
             textJList.setCellRenderer(new BugListCellRenderer());
             cmpMapdustBugs.getViewport().setView(textJList);

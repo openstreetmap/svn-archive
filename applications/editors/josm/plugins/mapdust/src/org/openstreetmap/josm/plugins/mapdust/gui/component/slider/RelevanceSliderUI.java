@@ -260,7 +260,7 @@ public class RelevanceSliderUI extends BasicSliderUI {
             if (incr <= 0 && max > min) {
                 incr = 1;
             }
-            int delta = incr  * ((direction > 0) ? POSITIVE_SCROLL
+            int delta = incr * ((direction > 0) ? POSITIVE_SCROLL
                     : NEGATIVE_SCROLL);
             if (isUpperSelected) {
                 int oldValue = getSlider().getUpperValue();
@@ -598,5 +598,4 @@ public class RelevanceSliderUI extends BasicSliderUI {
             return snappedValue;
         }
     }
-
 }

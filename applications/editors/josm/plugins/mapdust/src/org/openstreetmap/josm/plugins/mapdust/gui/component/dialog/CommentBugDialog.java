@@ -243,5 +243,4 @@ public class CommentBugDialog extends AbstractDialog {
     public JButton getBtnOk() {
         return btnOk;
     }
-
 }

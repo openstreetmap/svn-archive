@@ -62,8 +62,8 @@ public class BugListCellRenderer extends DefaultListCellRenderer {
     @Override
     public Component getListCellRendererComponent(JList<?> list, Object value,
             int index, boolean isSelected, boolean hasFocus) {
-        JLabel label =(JLabel) super.getListCellRendererComponent(list, value,
-                index,isSelected, hasFocus);
+        JLabel label = (JLabel) super.getListCellRendererComponent(list, value,
+                index, isSelected, hasFocus);
         if (value instanceof MapdustBug) {
             /* show the MapdustBug in the list */
             MapdustBug mapdustBug = (MapdustBug) value;
@@ -77,22 +77,22 @@ public class BugListCellRenderer extends DefaultListCellRenderer {
             String text = "" + mapdustBug.getId() + ": ";
             text += mapdustBug.getType().getValue();
             if (mapdustBug.getAddress() != null) {
-                String addressStr=mapdustBug.getAddress().toString();
+                String addressStr = mapdustBug.getAddress().toString();
                 if (!addressStr.trim().isEmpty()) {
                     text += " (" + mapdustBug.getAddress().toString() + " )";
                 }
             }
             DateFormat df = DateFormat.getDateInstance(DateFormat.DEFAULT,
                     Locale.getDefault());
-            text +=" last modified on ";
+            text += " last modified on ";
             text += df.format(mapdustBug.getDateUpdated());
             label.setText(text);
             label.setFont(new Font("Times New Roman", Font.BOLD, 12));
             label.setSize(200, 20);
         }
-        if (value instanceof String){
+        if (value instanceof String) {
             /* show default text in the list */
-            String text=(String)value;
+            String text = (String) value;
             label.setText(text);
             label.setFont(new Font("Times New Roman", Font.BOLD, 12));
         }

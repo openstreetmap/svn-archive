@@ -27,9 +27,7 @@
  */
 package org.openstreetmap.josm.plugins.mapdust.gui.observer;
 
-
 import org.openstreetmap.josm.plugins.mapdust.gui.value.MapdustAction;
-
 
 /**
  * Observable interface for the <code>MapdustAction</code> object.
@@ -44,14 +42,14 @@ public interface MapdustActionObservable {
      *
      * @param observer The <code>MapdustActionObserver</code> object
      */
-    public void addObserver(MapdustActionObserver observer);
+    void addObserver(MapdustActionObserver observer);
 
     /**
      * Removes the given observer from the list of observers.
      *
      * @param observer The <code>MapdustActionObserver</code> object
      */
-    public void removeObserver(MapdustActionObserver observer);
+    void removeObserver(MapdustActionObserver observer);
 
     /**
      * Notifies all the observers observing the given <code>MapdustAction</code>
@@ -59,5 +57,5 @@ public interface MapdustActionObservable {
      *
      * @param mapdustAction The <code>MapdustAction</code> object
      */
-    public void notifyObservers(MapdustAction mapdustAction);
+    void notifyObservers(MapdustAction mapdustAction);
 }

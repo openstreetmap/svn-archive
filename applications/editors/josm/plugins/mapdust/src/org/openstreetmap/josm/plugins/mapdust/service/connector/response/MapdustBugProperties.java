@@ -131,8 +131,7 @@ public class MapdustBugProperties {
         this.numberOfComments = numberOfComments;
         this.comments = comments;
     }
-    
-    
+        
     public Date getDateCreated() {
         return dateCreated;
     }

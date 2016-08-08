@@ -51,7 +51,11 @@ import org.openstreetmap.josm.plugins.mapdust.service.value.BugType;
  * @author Bea
  * 
  */
-class MapdustConverter {
+final class MapdustConverter {
+    
+    private MapdustConverter() {
+        // Hide default constructor for utilities classes
+    }
     
     /**
      * Builds a <code>MapdustBug</code> object from the given

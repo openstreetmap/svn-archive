@@ -33,11 +33,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.Map;
 
+import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.plugins.mapdust.util.retry.RetryAgent;
 import org.openstreetmap.josm.plugins.mapdust.util.retry.RetrySetup;
 
@@ -229,7 +231,9 @@ public class HttpConnector {
             try {
                 buf.append(key).append("=").append(URLEncoder.encode(
                         postParameters.get(key), "utf-8"));
-            } catch (java.io.UnsupportedEncodingException neverHappen) {}
+            } catch (UnsupportedEncodingException e) {
+                Main.error(e);
+            }
             i++;
         }
         return buf.toString();

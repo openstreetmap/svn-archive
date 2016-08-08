@@ -38,7 +38,7 @@ import java.util.ResourceBundle;
  *
  * @author Bea
  */
-public class Configuration {
+public final class Configuration {
 
     /** The instance of this singleton object type */
     private static final Configuration INSTANCE = new Configuration();

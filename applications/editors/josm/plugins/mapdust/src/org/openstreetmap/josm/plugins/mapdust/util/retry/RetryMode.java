@@ -27,7 +27,6 @@
  */
 package org.openstreetmap.josm.plugins.mapdust.util.retry;
 
-
 /**
  * The mode in which the {@link RetryAgent} should work.
  *
@@ -55,7 +54,7 @@ public enum RetryMode {
      * 
      * @param name the name of the mode
      */
-    private RetryMode(String name) {
+    RetryMode(String name) {
         this.name = name;
     }
 

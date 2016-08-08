@@ -59,8 +59,7 @@ public class MapdustBugContent extends GeneralContent {
         this.geometry = geometry;
         this.properties = properties;
     }
-    
-    
+        
     public Geometry getGeometry() {
         return geometry;
     }

@@ -129,7 +129,7 @@ public class ExecuteCloseBug extends MapdustExecuteAction implements
                     enableFiredButton(issueDialog.getFiredButton());
                     mapdustGUI.enableBtnPanel(true);
                     issueDialog.dispose();
-                    if (getMapdustGUI().getActionPanel()!= null) {
+                    if (getMapdustGUI().getActionPanel() != null) {
                         notifyObservers(mapdustAction);
                     }
                 } else {

@@ -27,7 +27,6 @@
  */
 package org.openstreetmap.josm.plugins.mapdust.service.connector.response;
 
-
 /**
  * Represents a response object for the HTTP POST method.
  *
@@ -54,7 +53,6 @@ public class MapdustPostResponse {
     public MapdustPostResponse(Long id) {
         this.id = id;
     }
-
     
     public Long getId() {
         return id;

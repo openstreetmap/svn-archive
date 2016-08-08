@@ -67,8 +67,8 @@ public class RetrySetup {
     /**
      * Returns the method for computing time intervals between attempts.
      *
-     * @see RetryMode
      * @return the retry mode
+     * @see RetryMode
      */
     public RetryMode getMode() {
         return mode;

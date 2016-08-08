@@ -12,7 +12,7 @@
     -->
     <import file="../build-common.xml"/>
   
-	<fileset id="plugin.requires.jars" dir="${plugin.dist.dir}">
+    <fileset id="plugin.requires.jars" dir="${plugin.dist.dir}">
         <include name="gson.jar"/>
     </fileset>
 

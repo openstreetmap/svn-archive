@@ -71,8 +71,12 @@ import org.openstreetmap.josm.tools.ImageProvider;
  * @author Bea
  * @version $Revision$
  */
-public class ComponentUtil {
+public final class ComponentUtil {
 
+    private ComponentUtil() {
+        // Hide default constructor for utilities classes
+    }
+    
     /**
      * Creates a <code>JLabel</code> object with the given properties.
      *

@@ -70,5 +70,4 @@ public abstract class AbstractDialog extends JDialog {
     public void setFiredButton(JToggleButton firedButton) {
         this.firedButton = firedButton;
     }
-
 }

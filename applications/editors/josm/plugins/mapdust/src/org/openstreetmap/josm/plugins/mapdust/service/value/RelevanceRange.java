@@ -44,7 +44,7 @@ import java.util.Iterator;
  * @author Bea
  * @version $Revision$
  */
-public class RelevanceRange implements Serializable, Comparable<RelevanceRange> {
+public final class RelevanceRange implements Serializable, Comparable<RelevanceRange> {
 
     /** The serial version UID */
     private static final long serialVersionUID = -5187434838022942754L;

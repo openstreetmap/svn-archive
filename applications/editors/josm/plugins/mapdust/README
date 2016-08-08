@@ -1,16 +1,16 @@
 JOSM plugin for the MapDust Bug Reporter service. This plugin was created 
 in order to help to improve the Open Street Map.
 The MapDust plugin contains the following features:
-	- viewing the Bug Reports on the current area
-	- viewing the details of a given Bug report
-	- creating a new Bug Report
-	- commenting a new Bug Report
-	- closing a given Bug Report
-	- re-opening a given Bug Report
-	- invalidating a given Bug Report
-	- working in online and offline mode
-	
+    - viewing the Bug Reports on the current area
+    - viewing the details of a given Bug report
+    - creating a new Bug Report
+    - commenting a new Bug Report
+    - closing a given Bug Report
+    - re-opening a given Bug Report
+    - invalidating a given Bug Report
+    - working in online and offline mode
+
 * This plugin was created by Beata Jancso <beata.jancso@skobbler.com> .
 * This plugin is licensed under the GNU GPL v3 or later. See GPL-v3,0.txt for 
   more details.
-     
+    

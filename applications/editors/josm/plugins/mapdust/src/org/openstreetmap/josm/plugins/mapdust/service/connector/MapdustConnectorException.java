@@ -76,5 +76,4 @@ public class MapdustConnectorException extends Exception {
     public MapdustConnectorException(String message, Throwable cause) {
         super(message, cause);
     }
-
 }

@@ -278,7 +278,7 @@ public class MapdustLayer extends Layer {
     private String buildTooltipText(MapdustBug bug) {
         DateFormat df = DateFormat.getDateInstance(DateFormat.DEFAULT,
                 Locale.getDefault());
-        String text = "<html><b>Type:</b> " + bug.getType().getValue() ;
+        String text = "<html><b>Type:</b> " + bug.getType().getValue();
         text += "<br/>";
         text += "<b>Status:</b> " + bug.getStatus().getValue() + "<br/>";
         text += "<b>Relevance:</b> " + bug.getRelevance().getName() + "<br/>";
@@ -286,7 +286,7 @@ public class MapdustLayer extends Layer {
         text += "<b>Created by:</b> " + bug.getNickname() + "<br/>";
         text += "<b>Created on:</b> " + df.format(bug.getDateCreated());
         text += "<br/>";
-        text += "<b>Last modified on:</b> "+ df.format(bug.getDateUpdated()) ;
+        text += "<b>Last modified on:</b> "+ df.format(bug.getDateUpdated());
         text += "<br/>";
         text += "<b>Comments:</b> " + bug.getNumberOfComments();
         text += "</html>";

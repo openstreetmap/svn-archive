@@ -53,10 +53,8 @@ public class MapdustGetBugsResponse {
     public MapdustGetBugsResponse(MapdustBugContent[] features) {
         this.features = features;
     }
-
     
     public MapdustBugContent[] getFeatures() {
         return features;
     }
-
 }

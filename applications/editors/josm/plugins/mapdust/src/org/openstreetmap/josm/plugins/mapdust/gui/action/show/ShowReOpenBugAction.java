@@ -79,7 +79,8 @@ public class ShowReOpenBugAction extends MapdustShowAction {
             if (event.getSource() instanceof JToggleButton) {
                 btn = (JToggleButton) event.getSource();
                 btn.setSelected(true);
-            } if (event.getSource() instanceof JMenuItem){
+            }
+            if (event.getSource() instanceof JMenuItem) {
                 getButtonPanel().getBtnReOpenBugReport().setSelected(true);
             }
             disableButtons(getButtonPanel());

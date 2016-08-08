@@ -43,7 +43,7 @@ import org.openstreetmap.josm.plugins.mapdust.service.value.MapdustRelevance;
  * @author Bea
  * @version $Revision$
  */
-public class MapdustRelevanceValue {
+public final class MapdustRelevanceValue {
 
     /** The low MapDust bug relevance value */
     public static final MapdustRelevanceValue LOW = new MapdustRelevanceValue(

@@ -132,7 +132,7 @@ public class MapdustPlugin extends Plugin implements LayerChangeListener,
         Main.pref.put("mapdust.nickname", "");
         Main.pref.put("mapdust.showError", true);
         Main.pref.put("mapdust.version", getPluginInformation().version);
-        Main.pref.put("mapdust.localVersion",getPluginInformation().localversion);
+        Main.pref.put("mapdust.localVersion", getPluginInformation().localversion);
         Main.pref.addPreferenceChangeListener(this);
     }
 

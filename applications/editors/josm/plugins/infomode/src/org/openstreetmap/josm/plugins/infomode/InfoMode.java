@@ -1,12 +1,4 @@
-/*
- * This file is part of InfoMode plugin for JOSM.
- * http://wiki.openstreetmap.org/wiki/JOSM/Plugins/InfoMode
- *
- * Licence: GPL v2 or later
- * Author:  Alexei Kasatkin, 2011
- * Thanks to authors of BuildingTools, ImproveWayAccuracy
- * for good sample code
- */
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.infomode;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -59,9 +51,9 @@ class InfoMode extends MapMode implements MapViewPaintable, AWTEventListener {
 
     InfoMode(MapFrame mapFrame) {
         super(tr("InfoMode"), "infomode.png", tr("GPX info mode"),
-		Shortcut.registerShortcut("mapmode:infomode", tr("Mode: {0}", tr("GPX info mode")), KeyEvent.VK_BACK_SLASH, Shortcut.DIRECT), mapFrame, Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-        infoPanel=new InfoPanel();
-
+                Shortcut.registerShortcut("mapmode:infomode", tr("Mode: {0}", tr("GPX info mode")), KeyEvent.VK_BACK_SLASH, Shortcut.DIRECT),
+                mapFrame, Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+        infoPanel = new InfoPanel();
     }
 
 // <editor-fold defaultstate="collapsed" desc="Event listeners">
@@ -89,6 +81,7 @@ class InfoMode extends MapMode implements MapViewPaintable, AWTEventListener {
             Toolkit.getDefaultToolkit().addAWTEventListener(this,
                     AWTEvent.KEY_EVENT_MASK);
         } catch (SecurityException ex) {
+            Main.error(ex);
         }
     }
 
@@ -99,11 +92,12 @@ class InfoMode extends MapMode implements MapViewPaintable, AWTEventListener {
         Main.map.mapView.removeMouseMotionListener(this);
 
         Main.map.mapView.removeTemporaryLayer(this);
-        if (oldPopup!=null) oldPopup.hide();
+        if (oldPopup != null) oldPopup.hide();
 
         try {
             Toolkit.getDefaultToolkit().removeAWTEventListener(this);
         } catch (SecurityException ex) {
+            Main.error(ex);
         }
 
         repaint();
@@ -114,14 +108,12 @@ class InfoMode extends MapMode implements MapViewPaintable, AWTEventListener {
         return true;
     }
 
-
-
     //////////    Event listener methods
 
     @Override
     public void paint(Graphics2D g, MapView mv, Bounds bbox) {
         if (pos == null) return;
-        Layer curL= mv.getLayerManager().getActiveLayer();
+        Layer curL = mv.getLayerManager().getActiveLayer();
         if (curL instanceof GpxLayer) showLayerInfo(g, curL, mv); else {
             for (Layer l : mv.getLayerManager().getLayers()) {
                 if (l instanceof GpxLayer) {
@@ -154,18 +146,20 @@ class InfoMode extends MapMode implements MapViewPaintable, AWTEventListener {
     public void mouseReleased(MouseEvent e) {
         if (!isEnabled()) return;
         if (e.getButton() != MouseEvent.BUTTON1) return;
-        if (oldPopup!=null) {
+        if (oldPopup != null) {
             oldPopup.hide();
-            oldPopup=null;        wpOld=null;
+            oldPopup = null;
+            wpOld = null;
         }
         repaint();
     }
 
     @Override
     public void mouseDragged(MouseEvent e) {
-        if (oldPopup!=null) {
+        if (oldPopup != null) {
             oldPopup.hide();
-            oldPopup=null;        wpOld=null;
+            oldPopup = null;
+            wpOld = null;
         }
     }
 
@@ -208,10 +202,8 @@ class InfoMode extends MapMode implements MapViewPaintable, AWTEventListener {
     }
 // </editor-fold>
 
-
-
     private void repaint() {
-        if (Main.map!=null) Main.map.mapView.repaint();
+        if (Main.map != null) Main.map.mapView.repaint();
     }
     /*private void setStatusLine(String tr) {
         statusText=tr;
@@ -221,14 +213,17 @@ class InfoMode extends MapMode implements MapViewPaintable, AWTEventListener {
     private synchronized void filterTracks() {
         Layer l = getLayerManager().getActiveLayer();
 
-        if (l instanceof GpxLayer && pos!=null) {
-            GpxLayer gpxL = (GpxLayer )l;
+        if (l instanceof GpxLayer && pos != null) {
+            GpxLayer gpxL = (GpxLayer) l;
             Set<GpxTrack> toRemove = new HashSet<>();
             for (GpxTrack track : gpxL.data.tracks) {
-                boolean f=true;
+                boolean f = true;
                 sg: for (GpxTrackSegment seg : track.getSegments()) {
                     for (WayPoint S : seg.getWayPoints()) {
-                        if (S.time!=0) {f=false; break sg;}
+                        if (S.time != 0) {
+                            f = false;
+                            break sg;
+                        }
                     }
                 }
                 if (f) toRemove.add(track);
@@ -238,65 +233,66 @@ class InfoMode extends MapMode implements MapViewPaintable, AWTEventListener {
     }
 
     private boolean showLayerInfo(Graphics2D g, Layer l, MapView mv) {
-            GpxLayer gpxL = (GpxLayer )l;
+            GpxLayer gpxL = (GpxLayer) l;
 
-            double minDist=1e9,d;
-            WayPoint wp=null,oldWp=null,prevWp=null;
-            GpxTrack trk=null;
+            double minDist = 1e9, d;
+            WayPoint wp = null, oldWp = null, prevWp = null;
+            GpxTrack trk = null;
             double maxD = mv.getDist100Pixel()/3;
             for (GpxTrack track : gpxL.data.tracks) {
                 for (GpxTrackSegment seg : track.getSegments()) {
-                    oldWp=null;// next segment will have new previous point
+                    oldWp = null; // next segment will have new previous point
                     for (WayPoint S : seg.getWayPoints()) {
                         d = S.getEastNorth().distance(pos);
 
-                        if (d<minDist && d<maxD) {
+                        if (d < minDist && d < maxD) {
                             minDist = d;
-                            prevWp=oldWp;
-                            wp=S;
-                            trk=track;
+                            prevWp = oldWp;
+                            wp = S;
+                            trk = track;
                             }
-                        oldWp=S;
+                        oldWp = S;
                     }
                 }
             }
-            if (wp!=null) {
+            if (wp != null) {
                 Point p = mv.getPoint(wp.getCoor());
 
                 g.setColor(Color.RED);
                 g.fillOval(p.x-10, p.y-10, 20, 20); // mark selected point
                 if (shift) { // highlight track
-                    g.setColor(new Color(255,30,0,128));
+                    g.setColor(new Color(255, 30, 0, 128));
                     Stroke oldStroke = g.getStroke();
-                    g.setStroke( new BasicStroke(10) );
+                    g.setStroke(new BasicStroke(10));
                     for (GpxTrackSegment seg : trk.getSegments()) {
-                    Point oldP=null,curP=null;// next segment will have new previous point
+                    Point oldP = null, curP = null; // next segment will have new previous point
                         for (WayPoint S : seg.getWayPoints()) {
                             curP = mv.getPoint(S.getEastNorth());
-                            if (oldP!=null) g.drawLine(oldP.x, oldP.y, curP.x, curP.y);
+                            if (oldP != null) g.drawLine(oldP.x, oldP.y, curP.x, curP.y);
                             oldP = curP;
                         }
                     }
                     g.setStroke(oldStroke);
                 }
-                Point s=mv.getLocationOnScreen();
+                Point s = mv.getLocationOnScreen();
                 int pcx = s.x+p.x-40;
                 int pcy = s.y+p.y+30;
-                if (shift) {pcx+=40; pcy-=30;}
-
-                if (wp!=wpOld) {
-                    if (oldPopup!=null) oldPopup.hide();
-                    double vel=-1;
-                    if (prevWp!=null && wp.time!=prevWp.time) {
-                        vel=wp.getCoor().greatCircleDistance(prevWp.getCoor())/
+                if (shift) {
+                    pcx += 40;
+                    pcy -= 30;
+                }
+                if (wp != wpOld) {
+                    if (oldPopup != null) oldPopup.hide();
+                    double vel = -1;
+                    if (prevWp != null && wp.time != prevWp.time) {
+                        vel = wp.getCoor().greatCircleDistance(prevWp.getCoor())/
                                 (wp.time-prevWp.time)*3.6;
                     }
-                    infoPanel.setData(wp,trk,vel,gpxL.data.tracks);
-                    Popup pp=PopupFactory.getSharedInstance().getPopup(mv, infoPanel,
-                            pcx, pcy);
+                    infoPanel.setData(wp, trk, vel, gpxL.data.tracks);
+                    Popup pp = PopupFactory.getSharedInstance().getPopup(mv, infoPanel, pcx, pcy);
                     pp.show();
-                    wpOld=wp;
-                    oldPopup=pp;
+                    wpOld = wp;
+                    oldPopup = pp;
                 }
                 return true;
             }

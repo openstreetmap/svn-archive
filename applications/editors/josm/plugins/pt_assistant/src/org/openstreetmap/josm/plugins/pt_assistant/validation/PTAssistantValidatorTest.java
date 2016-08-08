@@ -4,7 +4,10 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
@@ -13,6 +16,7 @@ import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.SequenceCommand;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
+import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.data.validation.Severity;
@@ -28,6 +32,7 @@ import org.openstreetmap.josm.plugins.pt_assistant.gui.IncompleteMembersDownload
 import org.openstreetmap.josm.plugins.pt_assistant.gui.PTAssistantLayer;
 import org.openstreetmap.josm.plugins.pt_assistant.gui.ProceedDialog;
 import org.openstreetmap.josm.plugins.pt_assistant.utils.RouteUtils;
+import org.openstreetmap.josm.plugins.pt_assistant.utils.StopUtils;
 import org.openstreetmap.josm.plugins.pt_assistant.utils.StopToWayAssigner;
 
 public class PTAssistantValidatorTest extends Test {
@@ -43,6 +48,17 @@ public class PTAssistantValidatorTest extends Test {
 	public static final int ERROR_CODE_PLATFORM_PART_OF_HIGHWAY = 3752;
 	public static final int ERROR_CODE_STOP_NOT_SERVED = 3753;
 	public static final int ERROR_CODE_STOP_BY_STOP = 3754;
+	public static final int ERROR_CODE_STOP_POSITION_COMPARE_RELATIONS = 3755;
+	public static final int ERROR_CODE_NODE_PART_OF_STOP_AREA = 3761;
+	public static final int ERROR_CODE_STOP_AREA_MEMBERS_EXCESS = 3762;
+	public static final int ERROR_CODE_STOP_AREA_STOP_POSITION = 3763;
+	public static final int ERROR_CODE_STOP_AREA_PLATFORM = 3764;
+	public static final int ERROR_CODE_STOP_AREA_NO_STOPS = 3765;
+	public static final int ERROR_CODE_STOP_AREA_MANY_STOPS = 3765;
+	public static final int ERROR_CODE_STOP_AREA_NO_PLATFORM = 3766;
+	public static final int ERROR_CODE_STOP_AREA_MANY_PLATFORMS = 3767;
+	public static final int ERROR_CODE_STOP_AREA_MEMBERS_RELATIONS = 3768;
+
 
 	private PTAssistantLayer layer;
 
@@ -64,22 +80,56 @@ public class PTAssistantValidatorTest extends Test {
 
 		NodeChecker nodeChecker = new NodeChecker(n, this);
 
-		// check for solitary stop positions:
+		// select only stop_positions
 		if (n.hasTag("public_transport", "stop_position")) {
+			
+			// check if stop positions are on a way:
 			nodeChecker.performSolitaryStopPositionTest();
+			
+			// check if stop positions are in any stop_area relation:
+			nodeChecker.performNodePartOfStopAreaTest();
+			
+			// Check if stop positions belong the same route relation as related platform(s)
+			nodeChecker.performStopPositionComparePlatformRelations();
 		}
 
-		// check that platforms are not part of any way:
+		// select only platforms
 		if (n.hasTag("public_transport", "platform")) {
+			
+			// check that platforms are not part of any way:
 			nodeChecker.performPlatformPartOfWayTest();
+			
+			// check if platforms are in any stop_area relation:
+			nodeChecker.performNodePartOfStopAreaTest();
 		}
-
+		
 		this.errors.addAll(nodeChecker.getErrors());
 
 	}
 
 	@Override
 	public void visit(Relation r) {
+		
+		// Do some testing on stop area relations
+		if (StopUtils.isStopArea(r)) {
+
+			StopChecker stopChecker = new StopChecker(r, this);
+			
+			// Check if stop area relation has one stop position. 
+			stopChecker.performStopAreaStopPositionTest();
+			
+			// Check if stop area relation has more than one stop position. 
+			stopChecker.performStopAreaMultiStopPositionTest();
+
+			// Check if stop area relation has one platform. 
+			stopChecker.performStopAreaPlatformTest();
+
+			// Check if stop area relation has more than one platform. 
+			stopChecker.performStopAreaMultiPlatformTest();
+
+			// Attach thrown errors
+			this.errors.addAll(stopChecker.getErrors());
+		}
 
 		if (!RouteUtils.isTwoDirectionRoute(r)) {
 			return;

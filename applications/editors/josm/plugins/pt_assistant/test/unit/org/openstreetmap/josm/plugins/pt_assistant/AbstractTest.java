@@ -45,6 +45,14 @@ public abstract class AbstractTest {
  public static final String PATH_TO_ONEWAY_WRONG_DIRECTION2 = "test/data/oneway-wrong-direction2.osm";
  
  public static final String PATH_TO_SOLITARY_STOP_POSITION = "test/data/solitary-stop-position.osm";
+
+ public static final String PATH_TO_STOP_AREA_MEMBERS = "test/data/stop-area-members.osm";
+ public static final String PATH_TO_STOP_AREA_RELATIONS = "test/data/stop-area-relations.osm";
+ public static final String PATH_TO_STOP_AREA_NO_STOPS = "test/data/stop-area-no-stops.osm";
+ public static final String PATH_TO_STOP_AREA_MANY_STOPS = "test/data/stop-area-many-stops.osm";
+ public static final String PATH_TO_STOP_AREA_NO_PLATFORMS = "test/data/stop-area-no-platform.osm";
+ public static final String PATH_TO_STOP_AREA_MANY_PLATFORMS = "test/data/stop-area-many-platforms.osm";
+
  
  public static final String PATH_TO_SEGMENT_TEST = "test/data/segment-test.osm";
 

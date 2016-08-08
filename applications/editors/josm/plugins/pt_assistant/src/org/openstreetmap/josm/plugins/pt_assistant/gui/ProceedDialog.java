@@ -59,7 +59,7 @@ public class ProceedDialog extends JPanel {
 		label4.setAlignmentX(Component.LEFT_ALIGNMENT);
 
 		radioButtonFixAutomatically = new JRadioButton("Fix all errors automatically and proceed");
-		radioButtonFixManually = new JRadioButton("I will fix the erros manually and click the button to proceed");
+		radioButtonFixManually = new JRadioButton("I will fix the errors manually and click the button to proceed");
 		radioButtonDontFix = new JRadioButton("Do not fix anything and proceed with further tests", true);
 		ButtonGroup fixOptionButtonGroup = new ButtonGroup();
 		fixOptionButtonGroup.add(radioButtonFixAutomatically);

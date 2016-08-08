@@ -229,7 +229,7 @@ public class WayChecker extends Checker {
 	}
 
 	/**
-	 * Checks if the current way touches its neighboring was correctly
+	 * Checks if the current way touches its neighbouring was correctly
 	 * 
 	 * @param prev
 	 *            can be null

@@ -1,0 +1,88 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<osm version='0.6' upload='true' generator='JOSM'>
+  <node id='-60958' action='modify' visible='true' lat='12.12569675765' lon='-86.28455907163'>
+    <tag k='bus' v='yes' />
+    <tag k='public_transport' v='stop_position' />
+  </node>
+  <node id='-60960' action='modify' visible='true' lat='12.12574315765' lon='-86.28459437163'>
+    <tag k='bus' v='yes' />
+    <tag k='public_transport' v='platform' />
+  </node>
+  <node id='-60966' action='modify' visible='true' lat='12.12586275765' lon='-86.28635997163' />
+  <node id='-60968' action='modify' visible='true' lat='12.12586605765' lon='-86.28641487163' />
+  <node id='-60970' action='modify' visible='true' lat='12.12592805765' lon='-86.28729767163' />
+  <node id='-60972' action='modify' visible='true' lat='12.12598865765' lon='-86.28844557163' />
+  <node id='-60974' action='modify' visible='true' lat='12.12599975765' lon='-86.28875027163'>
+    <tag k='highway' v='traffic_signals' />
+  </node>
+  <node id='-60976' action='modify' visible='true' lat='12.12602745765' lon='-86.29081977163' />
+  <node id='-60978' action='modify' visible='true' lat='12.12603135765' lon='-86.29160537163' />
+  <node id='-60980' action='modify' visible='true' lat='12.12603245765' lon='-86.29184287163'>
+    <tag k='highway' v='traffic_signals' />
+  </node>
+  <node id='-60997' action='modify' visible='true' lat='12.12605336295' lon='-86.29221374917'>
+    <tag k='bus' v='yes' />
+    <tag k='public_transport' v='stop_position' />
+  </node>
+  <node id='-61002' visible='true' lat='12.1261061435' lon='-86.2922353432'>
+    <tag k='bus' v='yes' />
+    <tag k='public_transport' v='platform' />
+  </node>
+  <way id='-60982' action='modify' visible='true'>
+    <nd ref='-60958' />
+    <nd ref='-60966' />
+    <nd ref='-60968' />
+    <nd ref='-60970' />
+    <nd ref='-60972' />
+    <nd ref='-60974' />
+    <tag k='highway' v='primary' />
+    <tag k='lanes' v='2' />
+    <tag k='maxspeed' v='30' />
+    <tag k='name' v='Pista de la Resistencia' />
+    <tag k='oneway' v='yes' />
+    <tag k='surface' v='asphalt' />
+  </way>
+  <way id='-63380' action='modify' visible='true'>
+    <nd ref='-60974' />
+    <nd ref='-60976' />
+    <nd ref='-60978' />
+    <nd ref='-60980' />
+    <nd ref='-60997' />
+    <tag k='highway' v='primary' />
+    <tag k='lanes' v='2' />
+    <tag k='maxspeed' v='30' />
+    <tag k='name' v='Pista de la Resistencia' />
+    <tag k='oneway' v='yes' />
+    <tag k='surface' v='asphalt' />
+  </way>
+  <relation id='-60984' action='modify' visible='true'>
+    <member type='node' ref='-60958' role='stop' />
+    <member type='node' ref='-60960' role='platform' />
+    <tag k='name' v='Rotonda El Periodista' />
+    <tag k='public_transport' v='stop_area' />
+    <tag k='public_transport:version' v='2' />
+    <tag k='type' v='public_transport' />
+  </relation>
+  <relation id='-60986' action='modify' visible='true'>
+    <member type='node' ref='-60958' role='stop' />
+    <member type='node' ref='-61002' role='platform' />
+    <member type='way' ref='-60982' role='' />
+    <member type='way' ref='-63380' role='' />
+    <tag k='bus' v='yes' />
+    <tag k='from' v='Cuesta el Plomo' />
+    <tag k='name' v='Ruta 103: Cuesta el Plomo =&gt; Laureles Sur' />
+    <tag k='public_transport:version' v='2' />
+    <tag k='ref' v='103' />
+    <tag k='route' v='bus' />
+    <tag k='to' v='Laureles Sur' />
+    <tag k='type' v='route' />
+  </relation>
+  <relation id='-61332' action='modify' visible='true'>
+    <member type='node' ref='-60997' role='stop' />
+    <member type='node' ref='-61002' role='platform' />
+    <tag k='name' v='Mercado Oriental' />
+    <tag k='public_transport' v='stop_area' />
+    <tag k='public_transport:version' v='2' />
+    <tag k='type' v='public_transport' />
+  </relation>
+</osm>

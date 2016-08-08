@@ -1,0 +1,44 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<osm version='0.6' upload='true' generator='JOSM'>
+  <node id='-14897' action='modify' visible='true' lat='12.12569675765' lon='-86.28455907163'>
+    <tag k='bus' v='yes' />
+    <tag k='public_transport' v='stop_position' />
+  </node>
+  <node id='-14899' action='modify' visible='true' lat='12.12574315765' lon='-86.28459437163'>
+    <tag k='bus' v='yes' />
+    <tag k='public_transport' v='platform' />
+  </node>
+  <node id='-14900' action='modify' visible='true' lat='12.12566785765' lon='-86.28424177163' />
+  <node id='-14901' action='modify' visible='true' lat='12.12569085765' lon='-86.28449517163' />
+  <node id='-14902' action='modify' visible='true' lat='12.12586275765' lon='-86.28635997163' />
+  <node id='-14903' action='modify' visible='true' lat='12.12586605765' lon='-86.28641487163' />
+  <node id='-14904' action='modify' visible='true' lat='12.12592805765' lon='-86.28729767163' />
+  <node id='-14906' action='modify' visible='true' lat='12.12598865765' lon='-86.28844557163' />
+  <node id='-14907' action='modify' visible='true' lat='12.12599975765' lon='-86.28875027163'>
+    <tag k='highway' v='traffic_signals' />
+  </node>
+  <node id='-14908' action='modify' visible='true' lat='12.12602745765' lon='-86.29081977163' />
+  <node id='-14909' action='modify' visible='true' lat='12.12603135765' lon='-86.29160537163' />
+  <node id='-14910' action='modify' visible='true' lat='12.12603245765' lon='-86.29184287163'>
+    <tag k='highway' v='traffic_signals' />
+  </node>
+  <way id='-14898' action='modify' visible='true'>
+    <nd ref='-14900' />
+    <nd ref='-14901' />
+    <nd ref='-14897' />
+    <nd ref='-14902' />
+    <nd ref='-14903' />
+    <nd ref='-14904' />
+    <nd ref='-14906' />
+    <nd ref='-14907' />
+    <nd ref='-14908' />
+    <nd ref='-14909' />
+    <nd ref='-14910' />
+    <tag k='highway' v='primary' />
+    <tag k='lanes' v='2' />
+    <tag k='maxspeed' v='30' />
+    <tag k='name' v='Pista de la Resistencia' />
+    <tag k='oneway' v='yes' />
+    <tag k='surface' v='asphalt' />
+  </way>
+</osm>

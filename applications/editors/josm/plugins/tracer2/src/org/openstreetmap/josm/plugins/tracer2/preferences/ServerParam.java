@@ -1,21 +1,4 @@
-/**
- *  Tracer2 - plug-in for JOSM to capture contours
- *  
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
- *  
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *  
- *  You should have received a copy of the GNU General Public License along
- *  with this program; if not, write to the Free Software Foundation, Inc.,
- *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
- */
-
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.tracer2.preferences;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -34,7 +17,7 @@ import org.openstreetmap.josm.gui.widgets.JMultilineLabel;
 import org.openstreetmap.josm.tools.GBC;
 
 public class ServerParam {
-	
+
     protected boolean m_bEnabled;
     private String m_strName = "Name";
     private String m_strDescription = "";
@@ -47,104 +30,116 @@ public class ServerParam {
     private String m_strPointsPerCircle = "16";
     private String m_strTag = "building";
     private String m_strPreferredValues = "yes;house;garage";
-    
+
     protected JMenuItem m_oMenuItem;
-    
+
     public boolean isEnabled() {
         return m_bEnabled;
     }
+
     public void setEnabled(boolean enabled) {
-    	if (!m_bEnabled ^ enabled)
+        if (!m_bEnabled ^ enabled)
             return;
         m_bEnabled = enabled;
     }
-    
+
     public String getName() {
         return m_strName;
     }
+
     public void setName(String name) {
         m_strName = name;
     }
-    
+
     public String getDescription() {
         return m_strDescription;
     }
+
     public void setDescription(String description) {
         m_strDescription = description;
     }
-    
+
     public String getUrl() {
         return m_strUrl;
     }
+
     public void setUrl(String url) {
         m_strUrl = url;
     }
-    
+
     public String getTileSize() {
         return m_strTileSize;
     }
+
     public void setTileSize(String tileSize) {
         m_strTileSize = tileSize;
     }
-    
+
     public String getResolution() {
         return m_strResolution;
     }
+
     public void setResolution(String resolution) {
         m_strResolution = resolution;
     }
-    
+
     public String getSkipBottom() {
         return m_strSkipBottom;
     }
+
     public void setSkipBottom(String skipBottom) {
         m_strSkipBottom = skipBottom;
     }
-    
+
     public String getMode() {
         return m_strMode;
     }
+
     public void setMode(String mode) {
         m_strMode = mode;
     }
-    
+
     public String getThreshold() {
         return m_strThreshold;
     }
+
     public void setThreshold(String threshold) {
         m_strThreshold = threshold;
     }
-    
+
     public String getPointsPerCircle() {
         return m_strPointsPerCircle;
     }
+
     public void setPointsPerCircle(String pointsPerCircle) {
         m_strPointsPerCircle = pointsPerCircle;
     }
-    
+
     public String getTag() {
         return m_strTag;
     }
+
     public void setTag(String tag) {
         m_strTag = tag;
     }
-    
+
     public String getPreferredValues() {
         return m_strPreferredValues;
     }
+
     public void setPreferredValues(String preferredValues) {
         m_strPreferredValues = preferredValues;
     }
-    
+
     public ServerParam() {
         m_bEnabled = false;
     }
-    
+
     public ServerParam(String name) {
         this();
         m_strName = name;
     }
-    
+
     public String serialize() {
         StringBuilder oBuilder = new StringBuilder();
         oBuilder.append("name=").append(m_strName).append('\n');
@@ -162,9 +157,9 @@ public class ServerParam {
         oBuilder.append('\n');
         return oBuilder.toString();
     }
-    
+
     public static ServerParam unserialize(String str) {
-    	ServerParam oParam = new ServerParam();
+        ServerParam oParam = new ServerParam();
         String[] lines = str.split("\n");
         for (String line : lines) {
             String[] parts = line.split("=", 2);
@@ -195,10 +190,10 @@ public class ServerParam {
         }
         return oParam;
     }
-    
+
     protected void showErrorMessage(String message, String details) {
         final JPanel p = new JPanel(new GridBagLayout());
-        p.add(new JMultilineLabel(message),GBC.eol());
+        p.add(new JMultilineLabel(message), GBC.eol());
         if (details != null) {
             JTextArea info = new JTextArea(details, 20, 60);
             info.setCaretPosition(0);
@@ -206,10 +201,11 @@ public class ServerParam {
             p.add(new JScrollPane(info), GBC.eop());
         }
         SwingUtilities.invokeLater(new Runnable() {
+            @Override
             public void run() {
                 JOptionPane.showMessageDialog(Main.parent, p, tr("Tracer2 error"), JOptionPane.ERROR_MESSAGE);
             }
         });
     }
-    
+
 }

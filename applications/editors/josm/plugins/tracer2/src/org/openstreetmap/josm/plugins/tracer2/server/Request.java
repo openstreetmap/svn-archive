@@ -1,21 +1,4 @@
-/**
- *  Tracer2 - plug-in for JOSM to capture contours
- *  
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
- *  
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *  
- *  You should have received a copy of the GNU General Public License along
- *  with this program; if not, write to the Free Software Foundation, Inc.,
- *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
- */
-
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.tracer2.server;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -30,12 +13,12 @@ import javax.swing.JOptionPane;
 import org.openstreetmap.josm.Main;
 
 public class Request extends Thread {
-	
+
     static final String URL = "http://localhost:49243/";
-    
+
     public Request() {
     }
-    
+
     /**
      * Send request to the server.
      * @param strUrl request.
@@ -52,15 +35,17 @@ public class Request extends Thread {
             }
             return oBuilder.toString();
         } catch (ConnectException e) {
-            JOptionPane.showMessageDialog(Main.parent, tr("Tracer2Server isn''t running. Please start the Server.\nIf you don''t have the server, please download it from\n{0}.",
-            		"http://sourceforge.net/projects/tracer2server/") , tr("Error"),  JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(Main.parent,
+                    tr("Tracer2Server isn''t running. Please start the Server.\nIf you don''t have the server, please download it from\n{0}.",
+                            "http://sourceforge.net/projects/tracer2server/"), tr("Error"), JOptionPane.ERROR_MESSAGE);
             return "";
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(Main.parent, tr("Tracer2Server hasn''t found anything.") + "\n", tr("Error"),  JOptionPane.ERROR_MESSAGE);
-    		return "";
-    	}
+            JOptionPane.showMessageDialog(Main.parent, tr("Tracer2Server hasn''t found anything.") + "\n",
+                    tr("Error"), JOptionPane.ERROR_MESSAGE);
+            return "";
+        }
     }
-    
+
     /**
      * Checks errors in response from the server.
      * @param strResponse response from the server.
@@ -69,14 +54,15 @@ public class Request extends Thread {
     protected boolean checkError(String strResponse) {
         String strIdentifier = "&traceError=";
         if (strResponse.contains(strIdentifier)) {
-        	String strError = strResponse.replaceFirst(strIdentifier, "").trim();
-            JOptionPane.showMessageDialog(Main.parent, tr("Tracer2Server has detected an error.") + "\n" + strError, tr("Error"),  JOptionPane.ERROR_MESSAGE);
-        	return true;
+            String strError = strResponse.replaceFirst(strIdentifier, "").trim();
+            JOptionPane.showMessageDialog(Main.parent, tr("Tracer2Server has detected an error.") + "\n" + strError,
+                    tr("Error"), JOptionPane.ERROR_MESSAGE);
+            return true;
         }
         return false;
     }
-    
+
+    @Override
     public void run() {
     }
-    
 }

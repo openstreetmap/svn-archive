@@ -3,19 +3,11 @@ package org.openstreetmap.josm.plugins.pt_assistant.validation;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Set;
-import java.util.HashMap;
 
-
-import org.openstreetmap.josm.command.ChangeCommand;
-import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
-import org.openstreetmap.josm.data.osm.OsmPrimitiveType;
 import org.openstreetmap.josm.data.osm.Relation;
-import org.openstreetmap.josm.data.osm.RelationMember;
-import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.data.validation.Severity;
 import org.openstreetmap.josm.data.validation.Test;
 import org.openstreetmap.josm.data.validation.TestError;

@@ -4,10 +4,7 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
@@ -16,7 +13,6 @@ import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.SequenceCommand;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
-import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.data.validation.Severity;
@@ -32,8 +28,8 @@ import org.openstreetmap.josm.plugins.pt_assistant.gui.IncompleteMembersDownload
 import org.openstreetmap.josm.plugins.pt_assistant.gui.PTAssistantLayer;
 import org.openstreetmap.josm.plugins.pt_assistant.gui.ProceedDialog;
 import org.openstreetmap.josm.plugins.pt_assistant.utils.RouteUtils;
-import org.openstreetmap.josm.plugins.pt_assistant.utils.StopUtils;
 import org.openstreetmap.josm.plugins.pt_assistant.utils.StopToWayAssigner;
+import org.openstreetmap.josm.plugins.pt_assistant.utils.StopUtils;
 
 public class PTAssistantValidatorTest extends Test {
 
@@ -110,6 +106,8 @@ public class PTAssistantValidatorTest extends Test {
 	@Override
 	public void visit(Relation r) {
 		
+		System.out.println("starting: visit relation id=" + r.getId() + ", ref: " + r.get("ref") + ", " + r.getMembersCount() + " members");
+		
 		// Do some testing on stop area relations
 		if (StopUtils.isStopArea(r)) {
 
@@ -132,6 +130,7 @@ public class PTAssistantValidatorTest extends Test {
 		}
 
 		if (!RouteUtils.isTwoDirectionRoute(r)) {
+			System.out.println("return: not two-direction route");
 			return;
 		}
 
@@ -141,11 +140,13 @@ public class PTAssistantValidatorTest extends Test {
 
 			boolean downloadSuccessful = this.downloadIncompleteMembers();
 			if (!downloadSuccessful) {
+				System.out.println("return: download not successful");
 				return;
 			}
 		}
 
 		if (r.hasIncompleteMembers()) {
+			System.out.println("return: has incomplete members");
 			return;
 		}
 
@@ -163,6 +164,8 @@ public class PTAssistantValidatorTest extends Test {
 		} else {
 			this.proceedAfterWayCheckerErrors(r);
 		}
+
+		System.out.println("ending: visit relation id=" + r.getId() + ", ref: " + r.get("ref") + ", " + r.getMembersCount() + " members");
 
 	}
 

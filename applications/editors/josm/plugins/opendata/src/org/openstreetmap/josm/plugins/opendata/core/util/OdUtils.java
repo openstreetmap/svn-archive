@@ -4,6 +4,7 @@ package org.openstreetmap.josm.plugins.opendata.core.util;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
@@ -86,17 +87,7 @@ public abstract class OdUtils {
     }
 
     public static final File createTempDir() throws IOException {
-        final File temp = File.createTempFile(TEMP_DIR_PREFIX, Long.toString(System.nanoTime()));
-
-        if (!temp.delete()) {
-            throw new IOException("Could not delete temp file: " + temp.getAbsolutePath());
-        }
-
-        if (!temp.mkdir()) {
-            throw new IOException("Could not create temp directory: " + temp.getAbsolutePath());
-        }
-
-        return temp;
+        return Files.createTempDirectory(TEMP_DIR_PREFIX).toFile();
     }
 
     public static final void deleteDir(File dir) {

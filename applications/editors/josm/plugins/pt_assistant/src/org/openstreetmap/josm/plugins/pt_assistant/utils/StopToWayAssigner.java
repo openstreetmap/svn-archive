@@ -313,7 +313,7 @@ public class StopToWayAssigner {
 		double lengthB = node.getCoor().distance(segment.b.getCoor());
 		double lengthC = segment.a.getCoor().distance(segment.b.getCoor());
 
-		// calculate triangle area using Feron's formula:
+		// calculate triangle area using Heron's formula:
 		double p = (lengthA + lengthB + lengthC) / 2.0;
 		double triangleArea = Math.sqrt(p * (p - lengthA) * (p - lengthB) * (p - lengthC));
 

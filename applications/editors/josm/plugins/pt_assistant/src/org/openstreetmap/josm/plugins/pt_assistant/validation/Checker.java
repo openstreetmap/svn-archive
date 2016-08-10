@@ -32,7 +32,7 @@ public abstract class Checker {
 
 	// test which created this WayChecker:
 	protected final Test test;
-	
+
 	// node that is checked:
 	protected Node node;
 
@@ -41,7 +41,7 @@ public abstract class Checker {
 
 	// stores all found errors:
 	protected ArrayList<TestError> errors = new ArrayList<>();
-	
+
 	protected Checker(Node node, Test test) {
 		this.node = node;
 		this.test = test;
@@ -125,7 +125,7 @@ public abstract class Checker {
 
 		return resultList;
 	}
-	
+
 	/**
 	 * 
 	 * @param testError
@@ -133,7 +133,8 @@ public abstract class Checker {
 	 */
 	protected static Command fixErrorByZooming(TestError testError) {
 
-		if (testError.getCode() != PTAssistantValidatorTest.ERROR_CODE_STOP_BY_STOP) {
+		if (testError.getCode() != PTAssistantValidatorTest.ERROR_CODE_STOP_BY_STOP
+				&& testError.getCode() != PTAssistantValidatorTest.ERROR_CODE_DIRECTION) {
 			return null;
 		}
 

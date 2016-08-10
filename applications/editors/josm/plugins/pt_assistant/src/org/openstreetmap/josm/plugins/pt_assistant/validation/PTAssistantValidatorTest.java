@@ -105,9 +105,7 @@ public class PTAssistantValidatorTest extends Test {
 
 	@Override
 	public void visit(Relation r) {
-		
-		System.out.println("starting: visit relation id=" + r.getId() + ", ref: " + r.get("ref") + ", " + r.getMembersCount() + " members");
-		
+				
 		// Do some testing on stop area relations
 		if (StopUtils.isStopArea(r)) {
 
@@ -130,7 +128,6 @@ public class PTAssistantValidatorTest extends Test {
 		}
 
 		if (!RouteUtils.isTwoDirectionRoute(r)) {
-			System.out.println("return: not two-direction route");
 			return;
 		}
 
@@ -140,13 +137,11 @@ public class PTAssistantValidatorTest extends Test {
 
 			boolean downloadSuccessful = this.downloadIncompleteMembers();
 			if (!downloadSuccessful) {
-				System.out.println("return: download not successful");
 				return;
 			}
 		}
 
 		if (r.hasIncompleteMembers()) {
-			System.out.println("return: has incomplete members");
 			return;
 		}
 
@@ -164,8 +159,6 @@ public class PTAssistantValidatorTest extends Test {
 		} else {
 			this.proceedAfterWayCheckerErrors(r);
 		}
-
-		System.out.println("ending: visit relation id=" + r.getId() + ", ref: " + r.get("ref") + ", " + r.getMembersCount() + " members");
 
 	}
 

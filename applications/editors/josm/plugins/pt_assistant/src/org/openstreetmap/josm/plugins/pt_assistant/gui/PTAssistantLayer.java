@@ -20,6 +20,7 @@ import org.openstreetmap.josm.data.SelectionChangedListener;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.OsmPrimitiveType;
 import org.openstreetmap.josm.data.osm.Relation;
+import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.dialogs.LayerListDialog;
@@ -43,14 +44,15 @@ public class PTAssistantLayer extends Layer
 	private List<OsmPrimitive> primitives = new ArrayList<>();
 	private PTAssistantPaintVisitor paintVisitor;
 	private HashMap<Character, List<PTWay>> fixVariants = new HashMap<>();
-	
+	private HashMap<Way, List<Character>> wayColoring = new HashMap<>();
+
 	private PTAssistantLayer() {
 		super("pt_assistant layer");
 		KeyboardFocusManager.getCurrentKeyboardFocusManager().addPropertyChangeListener(this);
 		Main.getLayerManager().addLayerChangeListener(this);
 		layer = this;
 	}
-	
+
 	public static PTAssistantLayer getLayer() {
 		if (layer == null) {
 			new PTAssistantLayer();
@@ -65,36 +67,56 @@ public class PTAssistantLayer extends Layer
 	public void clear() {
 		this.primitives.clear();
 	}
-	
+
 	public void clearFixVariants() {
 		fixVariants.clear();
 		Main.map.mapView.repaint();
 	}
-	
+
 	/**
 	 * Adds the first 5 fix variants to be displayed in the pt_assistant layer
+	 * 
 	 * @param fixVariants
 	 */
 	public void addFixVariants(List<List<PTWay>> fixVariants) {
+		HashMap<List<PTWay>, Character> fixVariantLetterMap = new HashMap<>();
+
 		char alphabet = 'A';
 		for (int i = 0; i < fixVariants.size(); i++) {
 			if (i < 5) {
 				List<PTWay> fixVariant = fixVariants.get(i);
 				this.fixVariants.put(alphabet, fixVariant);
+				fixVariantLetterMap.put(fixVariant, alphabet);
 				alphabet++;
 			}
 		}
+
+		for (List<PTWay> fixVariant : fixVariants) {
+			Character currentFixVariantLetter = fixVariantLetterMap.get(fixVariant);
+			for (PTWay ptway : fixVariant) {
+				for (Way way : ptway.getWays()) {
+					if (wayColoring.containsKey(way)) {
+						wayColoring.get(way).add(currentFixVariantLetter);
+					} else {
+						List<Character> letterList = new ArrayList<>();
+						letterList.add(currentFixVariantLetter);
+						wayColoring.put(way, letterList);
+					}
+				}
+			}
+		}
 	}
-	
+
 	/**
-	 * Returns fix variant (represented by a list of PTWays) that corresponds to the given character. 
+	 * Returns fix variant (represented by a list of PTWays) that corresponds to
+	 * the given character.
+	 * 
 	 * @param c
 	 * @return
 	 */
 	public List<PTWay> getFixVariant(char c) {
 		return this.fixVariants.get(Character.toUpperCase(c));
 	}
-	
 
 	@Override
 	public void paint(final Graphics2D g, final MapView mv, Bounds bounds) {
@@ -104,8 +126,8 @@ public class PTAssistantLayer extends Layer
 		for (OsmPrimitive primitive : primitives) {
 			paintVisitor.visit(primitive);
 		}
-		
-		paintVisitor.visitFixVariants(this.fixVariants);
+
+		paintVisitor.visitFixVariants(this.fixVariants, this.wayColoring);
 
 	}
 
@@ -200,7 +222,7 @@ public class PTAssistantLayer extends Layer
 				Relation relation = editor.getRelation();
 
 				if (RouteUtils.isTwoDirectionRoute(relation)) {
-					
+
 					this.repaint(relation);
 
 				}
@@ -208,11 +230,10 @@ public class PTAssistantLayer extends Layer
 			}
 		}
 	}
-	
-	
-	
+
 	/**
 	 * Repaints the layer in cases when there was no selection change
+	 * 
 	 * @param relation
 	 */
 	public void repaint(Relation relation) {
@@ -231,13 +252,12 @@ public class PTAssistantLayer extends Layer
 		for (OsmPrimitive primitive : primitives) {
 			paintVisitor.visit(primitive);
 		}
-		
-		paintVisitor.visitFixVariants(this.fixVariants);
+
+		paintVisitor.visitFixVariants(this.fixVariants, this.wayColoring);
 
 		Main.map.mapView.repaint();
 	}
-	
-	
+
 	@Override
 	public void layerAdded(LayerAddEvent arg0) {
 		// do nothing
@@ -248,7 +268,6 @@ public class PTAssistantLayer extends Layer
 		// do nothing
 
 	}
-
 
 	@Override
 	public void layerRemoving(LayerRemoveEvent event) {

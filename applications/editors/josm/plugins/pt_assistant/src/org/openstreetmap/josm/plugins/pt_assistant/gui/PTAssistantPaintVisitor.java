@@ -406,7 +406,7 @@ public class PTAssistantPaintVisitor extends PaintVisitor {
 	protected void visitFixVariants(HashMap<Character, List<PTWay>> fixVariants,
 			HashMap<Way, List<Character>> wayColoring) {
 
-		drawFixVariantsWithParallelLines(wayColoring);
+//		drawFixVariantsWithParallelLines(wayColoring);
 
 		Color[] colors = { new Color(255, 0, 0, 150), new Color(0, 255, 0, 150), new Color(0, 0, 255, 150),
 				new Color(255, 255, 0, 150), new Color(0, 255, 255, 150) };
@@ -418,7 +418,7 @@ public class PTAssistantPaintVisitor extends PaintVisitor {
 
 		for (Character c : fixVariants.keySet()) {
 			if (fixVariants.get(c) != null) {
-				// drawFixVariant(fixVariants.get(c), colors[colorIndex % 5]);
+				drawFixVariant(fixVariants.get(c), colors[colorIndex % 5]);
 				drawFixVariantLetter(c.toString(), colors[colorIndex % 5], letterX, letterY);
 				colorIndex++;
 				letterY = letterY + 60;

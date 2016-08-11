@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Point;
-import java.awt.Polygon;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -24,8 +23,6 @@ import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.plugins.pt_assistant.data.PTWay;
 import org.openstreetmap.josm.plugins.pt_assistant.utils.RouteUtils;
 import org.openstreetmap.josm.tools.Pair;
-
-import com.sun.org.apache.bcel.internal.generic.CPInstruction;
 
 public class PTAssistantPaintVisitor extends PaintVisitor {
 
@@ -406,7 +403,7 @@ public class PTAssistantPaintVisitor extends PaintVisitor {
 	protected void visitFixVariants(HashMap<Character, List<PTWay>> fixVariants,
 			HashMap<Way, List<Character>> wayColoring) {
 
-//		drawFixVariantsWithParallelLines(wayColoring);
+		drawFixVariantsWithParallelLines(wayColoring, fixVariants.size());
 
 		Color[] colors = { new Color(255, 0, 0, 150), new Color(0, 255, 0, 150), new Color(0, 0, 255, 150),
 				new Color(255, 255, 0, 150), new Color(0, 255, 255, 150) };
@@ -418,7 +415,7 @@ public class PTAssistantPaintVisitor extends PaintVisitor {
 
 		for (Character c : fixVariants.keySet()) {
 			if (fixVariants.get(c) != null) {
-				drawFixVariant(fixVariants.get(c), colors[colorIndex % 5]);
+				// drawFixVariant(fixVariants.get(c), colors[colorIndex % 5]);
 				drawFixVariantLetter(c.toString(), colors[colorIndex % 5], letterX, letterY);
 				colorIndex++;
 				letterY = letterY + 60;
@@ -450,24 +447,26 @@ public class PTAssistantPaintVisitor extends PaintVisitor {
 	 * 
 	 * @param wayColoring
 	 */
-	protected void drawFixVariantsWithParallelLines(Map<Way, List<Character>> wayColoring) {
+	protected void drawFixVariantsWithParallelLines(Map<Way, List<Character>> wayColoring, int numberOfFixVariants) {
 
 		HashMap<Character, Color> colors = new HashMap<>();
-		colors.put('A', new Color(255, 0, 0, 150));
-		colors.put('B', new Color(0, 255, 0, 150));
-		colors.put('C', new Color(0, 0, 255, 150));
-		colors.put('D', new Color(255, 255, 0, 150));
-		colors.put('E', new Color(0, 255, 255, 150));
+		colors.put('A', new Color(255, 0, 0, 200));
+		colors.put('B', new Color(0, 255, 0, 200));
+		colors.put('C', new Color(0, 0, 255, 200));
+		colors.put('D', new Color(255, 255, 0, 200));
+		colors.put('E', new Color(0, 255, 255, 200));
 
 		for (Way way : wayColoring.keySet()) {
 			List<Character> letterList = wayColoring.get(way);
-			List<Color> wayColors = new ArrayList<>();
-			for (Character letter : letterList) {
-				wayColors.add(colors.get(letter));
-			}
-			for (Pair<Node, Node> nodePair : way.getNodePairs(false)) {
-				drawSegmentWithParallelLines(nodePair.a, nodePair.b, wayColors);
-			}
+//			if (letterList.size() != numberOfFixVariants) {
+				List<Color> wayColors = new ArrayList<>();
+				for (Character letter : letterList) {
+					wayColors.add(colors.get(letter));
+				}
+				for (Pair<Node, Node> nodePair : way.getNodePairs(false)) {
+					drawSegmentWithParallelLines(nodePair.a, nodePair.b, wayColors);
+				}
+//			}
 		}
 	}
 
@@ -485,90 +484,111 @@ public class PTAssistantPaintVisitor extends PaintVisitor {
 		Point p1 = mv.getPoint(n1);
 		Point p2 = mv.getPoint(n2);
 		double t = Math.atan2((double) p2.x - p1.x, (double) p2.y - p1.y);
-		// double cosT = 9 * Math.cos(t);
-		// double sinT = 9 * Math.sin(t);
-		//
-		// int[] xPoints = { (int) (p1.x + cosT), (int) (p2.x + cosT), (int)
-		// (p2.x - cosT), (int) (p1.x - cosT) };
-		// int[] yPoints = { (int) (p1.y - sinT), (int) (p2.y - sinT), (int)
-		
-		double cosT = 9*Math.cos(t);
-		double sinT = 9*Math.sin(t);
-		
-		 int[] xPointsBasic = { (int) (p1.x + cosT/colors.size()), (int) (p2.x + cosT/colors.size()),
-		 (int) (p2.x - cosT/colors.size()), (int) (p1.x - cosT/colors.size()) };
-		 int[] yPointsBasic = { (int) (p1.y - sinT/colors.size()), (int) (p2.y - sinT/colors.size()),
-		 (int) (p2.y + sinT/colors.size()), (int) (p1.y + sinT/colors.size()) };
-		
-		for (int i = 0; i < colors.size(); i++) {
-			Polygon polygon = new Polygon(xPointsBasic, yPointsBasic, 4);
-			int halfStripeWidthCos = (int) cosT/colors.size();
-			int halfStripeWidthSin = (int) sinT / colors.size();
-			polygon.translate((int)(-cosT + halfStripeWidthCos*(i)*2), (int)(- sinT + halfStripeWidthSin*(i)*2));
-			g.setColor(colors.get(i));
-			g.fillPolygon(polygon);
+		double cosT = 9 * Math.cos(t);
+		double sinT = 9 * Math.sin(t);
+		double heightCosT = 9 * Math.cos(t);
+		double heightSinT = 9 * Math.sin(t);
+
+		double prevPointX = p1.x;
+		double prevPointY = p1.y;
+		double nextPointX = p1.x + heightSinT;
+		double nextPointY = p1.y + heightCosT;
+
+		Color currentColor = colors.get(0);
+		int i = 0;
+		g.setColor(currentColor);
+		g.fillOval((int) (p1.x - 9), (int) (p1.y - 9), 18, 18);
+
+		if (colors.size() == 1) {
+			int[] xPoints = { (int) (p1.x + cosT), (int) (p2.x + cosT), (int) (p2.x - cosT), (int) (p1.x - cosT) };
+			int[] yPoints = { (int) (p1.y - sinT), (int) (p2.y - sinT), (int) (p2.y + sinT), (int) (p1.y + sinT) };
+			g.setColor(currentColor);
+			g.fillPolygon(xPoints, yPoints, 4);
+		} else {
+			boolean iterate = true;
+//			while (Math.abs(p2.x - p1.x) > Math.abs(nextPointX - p1.x) && Math.abs(p2.y - p1.y) > Math.abs(nextPointY - p1.y)) {
+//			while((p1.x < p2.x && nextPointX < p2.x) || (p1.x >= p2.x && nextPointX >= p2.x)) {
+			while (iterate) {
+				// for (int i = 0; i < colors.size(); i++) {
+				currentColor = colors.get(i % colors.size());
+				// if (Math.abs(p2.x - p1.x) > Math.abs(nextPointX - p1.x)) {
+
+				int[] xPoints = { (int) (prevPointX + cosT), (int) (nextPointX + cosT), (int) (nextPointX - cosT),
+						(int) (prevPointX - cosT) };
+				int[] yPoints = { (int) (prevPointY - sinT), (int) (nextPointY - sinT), (int) (nextPointY + sinT),
+						(int) (prevPointY + sinT) };
+				g.setColor(currentColor);
+				g.fillPolygon(xPoints, yPoints, 4);
+
+				prevPointX = prevPointX + heightSinT;
+				prevPointY = prevPointY + heightCosT;
+				nextPointX = nextPointX + heightSinT;
+				nextPointY = nextPointY + heightCosT;
+				i++;
+				if ((p1.x < p2.x && nextPointX >= p2.x) || (p1.x >= p2.x && nextPointX <= p2.x)) {
+					iterate = false;
+				}
+				
+				// }
+				// }
+			}
+
+			int[] lastXPoints = { (int) (prevPointX + cosT), (int) (p2.x + cosT), (int) (p2.x - cosT),
+					(int) (prevPointX - cosT) };
+			int[] lastYPoints = { (int) (prevPointY - sinT), (int) (p2.y - sinT), (int) (p2.y + sinT),
+					(int) (prevPointY + sinT) };
+			g.setColor(currentColor);
+			g.fillPolygon(lastXPoints, lastYPoints, 4);
 		}
-		
-		
-//		double cosT = 18 * Math.cos(t);
-//		double sinT = 18 * Math.sin(t);
-//		// int[] xPointsBasic = { (int) (p1.x + cosT), (int) (p2.x + cosT),
-//		// (int) (p2.x - cosT), (int) (p1.x - cosT) };
-//		// int[] yPointsBasic = { (int) (p1.y - sinT), (int) (p2.y - sinT),
-//		// (int) (p2.y + sinT), (int) (p1.y + sinT) };
-//
-//		for (int i = 0; i < colors.size(); i++) {
-//			int[] xPoints = { (int) (p1.x - cosT / 2 + cosT / colors.size() *(i+0.5)),
-//					(int) (p2.x - cosT / 2 + cosT / colors.size() * (i+0.5)),
-//					(int) (p2.x - cosT / 2 + cosT / colors.size() * (i)),//
-//					(int) (p1.x - cosT / 2 + cosT / colors.size() * (i)) };//
-//			int[] yPoints = { (int) (p1.y - sinT / 2 + sinT / colors.size() * (i)),//
-//					(int) (p2.y - sinT / 2 + sinT / colors.size() * (i)),//
-//					(int) (p2.y - sinT / 2 + sinT / colors.size() * (i+0.5)),
-//					(int) (p1.y - sinT / 2 + sinT / colors.size() * (i+0.5)) };
-//			g.setColor(colors.get(i));
-//			g.fillPolygon(xPoints, yPoints, 4);
-//		}
-		
-		
 
-		// int[] xPoints1 = { (int) (p1.x + cosT), (int) (p2.x + cosT), (int)
-		// (p2.x - cosT), (int) (p1.x - cosT) };
-		// int[] yPoints1 = { (int) (p1.y - sinT), (int) (p2.y - sinT), (int)
-		// (p2.y + sinT), (int) (p1.y + sinT) };
-		// Polygon polygon1 = new Polygon(xPointsBasic, yPointsBasic, 4);
-		// polygon1.translate((int)(4.5 * Math.cos(t)), (int)(4.5 *
-		// Math.sin(t)));
-		// g.setColor(colors.get(0));
-		// g.fillPolygon(polygon1);
+		g.setColor(currentColor);
+		g.fillOval((int) (p2.x - 9), (int) (p2.y - 9), 18, 18);
+
+		// double cosT = 20*Math.cos(t);
+		// double sinT = 20*Math.sin(t);
+		// int[] xPointsBasic = { (int) (p1.x + cosT/colors.size()/2), (int)
+		// (p2.x + cosT/colors.size()/2),
+		// (int) (p2.x - cosT/colors.size()/2), (int) (p1.x -
+		// cosT/colors.size()/2) };
+		// int[] yPointsBasic = { (int) (p1.y - sinT/colors.size()/2), (int)
+		// (p2.y - sinT/colors.size()/2),
+		// (int) (p2.y + sinT/colors.size()/2), (int) (p1.y +
+		// sinT/colors.size()/2) };
 		//
-		// if (colors.size() > 1) {
-		// Polygon polygon2 = new Polygon(xPointsBasic, yPointsBasic, 4);
-		// polygon2.translate((int)(-4.5 * Math.cos(t)),
-		// (int)(-4.5*Math.sin(t)));
-		// g.setColor(colors.get(1));
-		// g.fillPolygon(polygon2);
+		// for (int i = 0; i < colors.size(); i++) {
+		// Polygon polygon = new Polygon(xPointsBasic, yPointsBasic, 4);
+		// double halfStripeWidthCos = cosT/colors.size();
+		// double halfStripeWidthSin = sinT/colors.size();
+		//// polygon.translate((int)(-cosT + halfStripeWidthCos*(2*i+1)),
+		// (int)(- sinT + halfStripeWidthSin*(2*i+1)));
+		// int deltaX, deltaY;
+		// if (cosT > 0) {
+		// deltaX = (int)(-cosT + halfStripeWidthCos * (2*i+1));
+		// } else {
+		// deltaX = (int)(cosT - halfStripeWidthCos * (2*i+1));
 		// }
-
-		// double cosT = 9 * Math.cos(t);
-		// double sinT = 9 * Math.sin(t);
-		//
-		// int[] xPoints = { (int) (p1.x + cosT), (int) (p2.x + cosT), (int)
-		// (p2.x - cosT), (int) (p1.x - cosT) };
-		// int[] yPoints = { (int) (p1.y - sinT), (int) (p2.y - sinT), (int)
-		// (p2.y + sinT), (int) (p1.y + sinT) };
-		// g.setColor(color);
-		// g.fillPolygon(xPoints, yPoints, 4);
-		// g.fillOval((int) (p1.x - 9), (int) (p1.y - 9), 18, 18);
-		// g.fillOval((int) (p2.x - 9), (int) (p2.y - 9), 18, 18);
+		// if (sinT > 0) {
+		// deltaY = (int)(- sinT + halfStripeWidthSin*(2*i+1));
+		// } else {
+		// deltaY = (int)(sinT - halfStripeWidthSin*(2*i+1));
+		// }
+		// polygon.translate(deltaX, deltaY);
+		// g.setColor(colors.get(i));
+		// g.fillPolygon(polygon);
+		// }
 	}
 
 	private void drawFixVariantLetter(String letter, Color color, double letterX, double letterY) {
 		g.setColor(color);
 		Font stringFont = new Font("SansSerif", Font.PLAIN, 50);
 		g.setFont(stringFont);
-		g.drawString(letter, (int) letterX, (int) letterY);
-		g.drawString(letter, (int) letterX, (int) letterY);
+		try {
+			g.drawString(letter, (int) letterX, (int) letterY);
+			g.drawString(letter, (int) letterX, (int) letterY);
+		} catch (NullPointerException ex) {
+			// do nothing
+		}
+
 	}
 
 }

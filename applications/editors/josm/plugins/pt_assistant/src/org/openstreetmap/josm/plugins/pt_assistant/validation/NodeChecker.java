@@ -125,20 +125,24 @@ public class NodeChecker extends Checker {
 			// Create list of relations the related platform(s) belongs to
 			else if (referrer.get("public_transport") == "stop_area") {
 				for (RelationMember stopAreaMember : referrer.getMembers()) {
-					if (stopAreaMember.isNode()) {
-						Node stopAreaMemberFoo = stopAreaMember.getNode();
-						if (stopAreaMemberFoo.get("public_transport") == "platform") {
-							for (Relation stopAreaMemberReferrer : OsmPrimitive
-									.getFilteredList(stopAreaMemberFoo.getReferrers(), Relation.class)) {
-								if (stopAreaMemberReferrer.get("type") == "route") {
-									platformRelationIds.put(stopAreaMemberReferrer.getId(),
-											stopAreaMemberReferrer.getId());
-								}
+					OsmPrimitive stopAreaMemberFoo = stopAreaMember.getMember();
+					if (stopAreaMemberFoo.get("public_transport") == "platform") {
+						for (Relation stopAreaMemberReferrer : OsmPrimitive
+								.getFilteredList(stopAreaMemberFoo.getReferrers(), Relation.class)) {
+							if (stopAreaMemberReferrer.get("type") == "route") {
+								platformRelationIds.put(stopAreaMemberReferrer.getId(), stopAreaMemberReferrer.getId());
 							}
 						}
 					}
 				}
 			}
+		}
+
+		// Check if the stop_position has no referrers at all. If it has no
+		// referrers, then no error should be reported (changed on 11.08.2016 by
+		// darya):
+		if (stopPositionRelationIds.isEmpty()) {
+			return;
 		}
 
 		// Check if route relation lists are identical

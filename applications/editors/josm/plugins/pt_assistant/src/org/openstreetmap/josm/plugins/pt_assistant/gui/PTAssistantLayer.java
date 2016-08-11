@@ -70,6 +70,7 @@ public class PTAssistantLayer extends Layer
 
 	public void clearFixVariants() {
 		fixVariants.clear();
+		wayColoring.clear();
 		Main.map.mapView.repaint();
 	}
 
@@ -273,8 +274,9 @@ public class PTAssistantLayer extends Layer
 	public void layerRemoving(LayerRemoveEvent event) {
 
 		if (event.getRemovedLayer() instanceof OsmDataLayer) {
-
 			this.primitives.clear();
+			this.fixVariants.clear();
+			this.wayColoring.clear();
 			Main.map.mapView.repaint();
 		}
 

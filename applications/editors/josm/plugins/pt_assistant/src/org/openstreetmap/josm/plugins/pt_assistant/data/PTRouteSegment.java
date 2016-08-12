@@ -60,8 +60,53 @@ public class PTRouteSegment {
 		}
 		return ptways.get(ptways.size() - 1);
 	}
+	
+	public Way getFirstWay() {
+		if (ptways.isEmpty()) {
+			return null;
+		}
+		return ptways.get(0).getWays().get(0);
+	}
+	
+	public Way getLastWay() {
+		if (ptways.isEmpty()) {
+			return null;
+		}
+		List<Way> waysOfLast = ptways.get(ptways.size() - 1).getWays();
+		return waysOfLast.get(waysOfLast.size() - 1);
+	}
 
-	public void addFixVariant(List<PTWay> list) {
+	/**
+	 * Adds the new fix variant if an identical fix variant (i.e. same ways) is
+	 * not already contained in the list of the fix variants of this.
+	 * 
+	 * @param list the PTWays of the new fix variant
+	 */
+	public synchronized void addFixVariant(List<PTWay> list) {
+		List<Way> otherWays = new ArrayList<>();
+		for (PTWay ptway : list) {
+			otherWays.addAll(ptway.getWays());
+		}
+
+		for (List<PTWay> fixVariant : this.fixVariants) {
+			List<Way> thisWays = new ArrayList<>();
+			for (PTWay ptway : fixVariant) {
+				thisWays.addAll(ptway.getWays());
+			}
+			boolean listsEqual = (thisWays.size() == otherWays.size());
+			if (listsEqual) {
+				for (int i = 0; i < thisWays.size(); i++) {
+					if (thisWays.get(i).getId() != otherWays.get(i).getId()) {
+						listsEqual = false;
+						break;
+					}
+				}
+			}
+			if (listsEqual) {
+				return;
+			}
+		}
+
 		this.fixVariants.add(list);
 	}
 
@@ -76,6 +121,7 @@ public class PTRouteSegment {
 	 * @return
 	 */
 	public boolean equalsRouteSegment(PTRouteSegment other) {
+
 		List<Way> thisWays = new ArrayList<>();
 		for (PTWay ptway : this.ptways) {
 			thisWays.addAll(ptway.getWays());
@@ -84,16 +130,17 @@ public class PTRouteSegment {
 		for (PTWay ptway : other.getPTWays()) {
 			otherWays.addAll(ptway.getWays());
 		}
+
 		if (thisWays.size() != otherWays.size()) {
 			return false;
 		}
-		
+
 		for (int i = 0; i < thisWays.size(); i++) {
-			if (thisWays.get(i) != otherWays.get(i)) {
+			if (thisWays.get(i).getId() != otherWays.get(i).getId()) {
 				return false;
 			}
 		}
-		
+
 		return true;
 	}
 

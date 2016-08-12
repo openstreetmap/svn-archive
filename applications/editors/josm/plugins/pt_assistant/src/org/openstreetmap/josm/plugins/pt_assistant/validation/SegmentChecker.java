@@ -98,7 +98,7 @@ public class SegmentChecker extends Checker {
 	 * @param segment
 	 *            to add to the list of correct segments
 	 */
-	public static void addCorrectSegment(PTRouteSegment segment) {
+	public synchronized static void addCorrectSegment(PTRouteSegment segment) {
 		for (PTRouteSegment correctSegment : correctSegments) {
 			if (correctSegment.equalsRouteSegment(segment)) {
 				return;
@@ -365,6 +365,11 @@ public class SegmentChecker extends Checker {
 
 	}
 
+	/**
+	 * 
+	 * @param node
+	 * @return
+	 */
 	private boolean isDeadendNode(Node node) {
 		int count = 0;
 		for (PTWay ptway : manager.getPTWays()) {
@@ -691,15 +696,42 @@ public class SegmentChecker extends Checker {
 		// if fix options for another route are displayed in the pt_assistant
 		// layer, clear them:
 		((PTAssistantValidatorTest) testError.getTester()).clearFixVariants();
-
+		
 		PTRouteSegment wrongSegment = wrongSegments.get(testError);
 
 		// 1) try to fix by using the correct segment:
 		List<PTRouteSegment> correctSegmentsForThisError = new ArrayList<>();
 		for (PTRouteSegment segment : correctSegments) {
-			if (wrongSegment.getFirstStop().equalsStop(segment.getFirstStop())
-					&& wrongSegment.getLastStop().equalsStop(segment.getLastStop())) {
+			if (wrongSegment.getFirstWay().getId() == segment.getFirstWay().getId()
+					&& wrongSegment.getLastWay().getId() == segment.getLastWay().getId()) {
 				correctSegmentsForThisError.add(segment);
+			}
+		}
+
+		// if no correct segment found, apply less strict criteria to look for one:
+		if (correctSegmentsForThisError.isEmpty() && wrongSegment.getFixVariants().isEmpty()) {
+			for (PTRouteSegment segment : correctSegments) {
+				if (wrongSegment.getFirstStop().equalsStop(segment.getFirstStop())
+						&& wrongSegment.getLastStop().equalsStop(segment.getLastStop())) {
+					correctSegmentsForThisError.add(segment);
+				}
+			}
+			if (!correctSegmentsForThisError.isEmpty()) {
+				// display the notification:
+				if (SwingUtilities.isEventDispatchThread()) {
+					Notification notification = new Notification(
+							tr("Warning: the diplayed fix variants are based on less strict criteria"));
+					notification.show();
+				} else {
+					SwingUtilities.invokeLater(new Runnable() {
+						@Override
+						public void run() {
+							Notification notification = new Notification(
+									tr("Warning: the diplayed fix variants are based on less strict criteria"));
+							notification.show();
+						}
+					});
+				}
 			}
 		}
 
@@ -834,7 +866,7 @@ public class SegmentChecker extends Checker {
 		route.setMembers(getModifiedRelationMembers(testError, fix));
 		PTRouteSegment wrongSegment = wrongSegments.get(testError);
 		wrongSegments.remove(testError);
-		wrongSegment.setPTWays(wrongSegment.getFixVariants().get(0));
+		wrongSegment.setPTWays(fix);
 		addCorrectSegment(wrongSegment);
 	}
 

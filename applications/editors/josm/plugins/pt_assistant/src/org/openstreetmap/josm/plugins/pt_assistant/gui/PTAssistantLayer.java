@@ -81,23 +81,23 @@ public class PTAssistantLayer extends Layer
 	 */
 	public void addFixVariants(List<List<PTWay>> fixVariants) {
 		HashMap<List<PTWay>, Character> fixVariantLetterMap = new HashMap<>();
-
+		
 		char alphabet = 'A';
-		for (int i = 0; i < fixVariants.size(); i++) {
-			if (i < 5) {
-				List<PTWay> fixVariant = fixVariants.get(i);
-				this.fixVariants.put(alphabet, fixVariant);
-				fixVariantLetterMap.put(fixVariant, alphabet);
-				alphabet++;
-			}
+		for (int i = 0; i < 5 && i < fixVariants.size(); i++) {
+			List<PTWay> fixVariant = fixVariants.get(i);
+			this.fixVariants.put(alphabet, fixVariant);
+			fixVariantLetterMap.put(fixVariant, alphabet);
+			alphabet++;
 		}
 
-		for (List<PTWay> fixVariant : fixVariants) {
-			Character currentFixVariantLetter = fixVariantLetterMap.get(fixVariant);
+		for (Character currentFixVariantLetter: this.fixVariants.keySet()) {
+			List<PTWay> fixVariant = this.fixVariants.get(currentFixVariantLetter);
 			for (PTWay ptway : fixVariant) {
 				for (Way way : ptway.getWays()) {
 					if (wayColoring.containsKey(way)) {
-						wayColoring.get(way).add(currentFixVariantLetter);
+						if (!wayColoring.get(way).contains(currentFixVariantLetter)) {
+							wayColoring.get(way).add(currentFixVariantLetter);
+						}
 					} else {
 						List<Character> letterList = new ArrayList<>();
 						letterList.add(currentFixVariantLetter);

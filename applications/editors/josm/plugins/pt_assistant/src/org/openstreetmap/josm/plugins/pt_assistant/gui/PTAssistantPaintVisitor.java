@@ -433,6 +433,7 @@ public class PTAssistantPaintVisitor extends PaintVisitor {
 	 * @param fixVariant
 	 * @param color
 	 */
+	@SuppressWarnings("unused")
 	private void drawFixVariant(List<PTWay> fixVariant, Color color) {
 		for (PTWay ptway : fixVariant) {
 			for (Way way : ptway.getWays()) {
@@ -458,15 +459,13 @@ public class PTAssistantPaintVisitor extends PaintVisitor {
 
 		for (Way way : wayColoring.keySet()) {
 			List<Character> letterList = wayColoring.get(way);
-//			if (letterList.size() != numberOfFixVariants) {
-				List<Color> wayColors = new ArrayList<>();
-				for (Character letter : letterList) {
-					wayColors.add(colors.get(letter));
-				}
-				for (Pair<Node, Node> nodePair : way.getNodePairs(false)) {
-					drawSegmentWithParallelLines(nodePair.a, nodePair.b, wayColors);
-				}
-//			}
+			List<Color> wayColors = new ArrayList<>();
+			for (Character letter : letterList) {
+				wayColors.add(colors.get(letter));
+			}
+			for (Pair<Node, Node> nodePair : way.getNodePairs(false)) {
+				drawSegmentWithParallelLines(nodePair.a, nodePair.b, wayColors);
+			}
 		}
 	}
 
@@ -506,12 +505,8 @@ public class PTAssistantPaintVisitor extends PaintVisitor {
 			g.fillPolygon(xPoints, yPoints, 4);
 		} else {
 			boolean iterate = true;
-//			while (Math.abs(p2.x - p1.x) > Math.abs(nextPointX - p1.x) && Math.abs(p2.y - p1.y) > Math.abs(nextPointY - p1.y)) {
-//			while((p1.x < p2.x && nextPointX < p2.x) || (p1.x >= p2.x && nextPointX >= p2.x)) {
 			while (iterate) {
-				// for (int i = 0; i < colors.size(); i++) {
 				currentColor = colors.get(i % colors.size());
-				// if (Math.abs(p2.x - p1.x) > Math.abs(nextPointX - p1.x)) {
 
 				int[] xPoints = { (int) (prevPointX + cosT), (int) (nextPointX + cosT), (int) (nextPointX - cosT),
 						(int) (prevPointX - cosT) };
@@ -528,9 +523,6 @@ public class PTAssistantPaintVisitor extends PaintVisitor {
 				if ((p1.x < p2.x && nextPointX >= p2.x) || (p1.x >= p2.x && nextPointX <= p2.x)) {
 					iterate = false;
 				}
-				
-				// }
-				// }
 			}
 
 			int[] lastXPoints = { (int) (prevPointX + cosT), (int) (p2.x + cosT), (int) (p2.x - cosT),
@@ -543,39 +535,6 @@ public class PTAssistantPaintVisitor extends PaintVisitor {
 
 		g.setColor(currentColor);
 		g.fillOval((int) (p2.x - 9), (int) (p2.y - 9), 18, 18);
-
-		// double cosT = 20*Math.cos(t);
-		// double sinT = 20*Math.sin(t);
-		// int[] xPointsBasic = { (int) (p1.x + cosT/colors.size()/2), (int)
-		// (p2.x + cosT/colors.size()/2),
-		// (int) (p2.x - cosT/colors.size()/2), (int) (p1.x -
-		// cosT/colors.size()/2) };
-		// int[] yPointsBasic = { (int) (p1.y - sinT/colors.size()/2), (int)
-		// (p2.y - sinT/colors.size()/2),
-		// (int) (p2.y + sinT/colors.size()/2), (int) (p1.y +
-		// sinT/colors.size()/2) };
-		//
-		// for (int i = 0; i < colors.size(); i++) {
-		// Polygon polygon = new Polygon(xPointsBasic, yPointsBasic, 4);
-		// double halfStripeWidthCos = cosT/colors.size();
-		// double halfStripeWidthSin = sinT/colors.size();
-		//// polygon.translate((int)(-cosT + halfStripeWidthCos*(2*i+1)),
-		// (int)(- sinT + halfStripeWidthSin*(2*i+1)));
-		// int deltaX, deltaY;
-		// if (cosT > 0) {
-		// deltaX = (int)(-cosT + halfStripeWidthCos * (2*i+1));
-		// } else {
-		// deltaX = (int)(cosT - halfStripeWidthCos * (2*i+1));
-		// }
-		// if (sinT > 0) {
-		// deltaY = (int)(- sinT + halfStripeWidthSin*(2*i+1));
-		// } else {
-		// deltaY = (int)(sinT - halfStripeWidthSin*(2*i+1));
-		// }
-		// polygon.translate(deltaX, deltaY);
-		// g.setColor(colors.get(i));
-		// g.fillPolygon(polygon);
-		// }
 	}
 
 	private void drawFixVariantLetter(String letter, Color color, double letterX, double letterY) {

@@ -1,3 +1,0 @@
-<?php
-$contents.="dashboard";
-?>

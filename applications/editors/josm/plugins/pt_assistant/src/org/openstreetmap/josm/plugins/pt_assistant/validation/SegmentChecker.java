@@ -25,6 +25,9 @@ import org.openstreetmap.josm.data.validation.Severity;
 import org.openstreetmap.josm.data.validation.Test;
 import org.openstreetmap.josm.data.validation.TestError;
 import org.openstreetmap.josm.gui.Notification;
+import org.openstreetmap.josm.gui.dialogs.relation.GenericRelationEditor;
+import org.openstreetmap.josm.gui.dialogs.relation.RelationEditor;
+import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import org.openstreetmap.josm.plugins.pt_assistant.data.PTRouteDataManager;
 import org.openstreetmap.josm.plugins.pt_assistant.data.PTRouteSegment;
 import org.openstreetmap.josm.plugins.pt_assistant.data.PTStop;
@@ -564,7 +567,7 @@ public class SegmentChecker extends Checker {
 	protected static boolean isFixable(TestError testError) {
 
 		/*-
-		 * When is an error fixable?
+		 * When is an error fixable (outdated)?
 		 * - if there is a correct segment
 		 * - if it can be fixed by sorting
 		 * - if the route is compete even without some ways
@@ -583,8 +586,6 @@ public class SegmentChecker extends Checker {
 	private static boolean isFixableByUsingCorrectSegment(TestError testError) {
 		PTRouteSegment wrongSegment = wrongSegments.get(testError);
 		PTRouteSegment correctSegment = null;
-		// TODO: now just the first correctSegment is taken over. Change
-		// that the segment is selected.
 		for (PTRouteSegment segment : correctSegments) {
 			if (wrongSegment.getFirstStop().equalsStop(segment.getFirstStop())
 					&& wrongSegment.getLastStop().equalsStop(segment.getLastStop())) {
@@ -605,10 +606,51 @@ public class SegmentChecker extends Checker {
 		return false;
 	}
 
+	/**
+	 * Finds fixes using sorting and removal. Modifies the messages in the test
+	 * error according to the availability of automatic fixes.
+	 */
 	protected void findFixes() {
+
 		for (TestError error : wrongSegments.keySet()) {
+			// look for fixes using sorting and removing:
 			findFix(error);
+
+			// change the error code based on the availability of fixes:
+			PTRouteSegment wrongSegment = wrongSegments.get(error);
+			List<PTRouteSegment> correctSegmentsForThisError = new ArrayList<>();
+			for (PTRouteSegment segment : correctSegments) {
+				if (wrongSegment.getFirstWay().getId() == segment.getFirstWay().getId()
+						&& wrongSegment.getLastWay().getId() == segment.getLastWay().getId()) {
+					correctSegmentsForThisError.add(segment);
+				}
+			}
+
+			int numberOfFixes = correctSegmentsForThisError.size();
+
+			if (numberOfFixes == 0) {
+				numberOfFixes = wrongSegment.getFixVariants().size();
+			}
+			if (numberOfFixes == 0) {
+				for (PTRouteSegment segment : correctSegments) {
+					if (wrongSegment.getFirstStop().equalsStop(segment.getFirstStop())
+							&& wrongSegment.getLastStop().equalsStop(segment.getLastStop())) {
+						correctSegmentsForThisError.add(segment);
+					}
+				}
+				numberOfFixes = correctSegmentsForThisError.size();
+			}
+
+			// change the error code:
+			if (numberOfFixes == 0) {
+				error.setMessage(tr("PT: Problem in the route segment with no automatic fix"));
+			} else if (numberOfFixes == 1) {
+				error.setMessage(tr("PT: Problem in the route segment with one automatic fix"));
+			} else {
+				error.setMessage("PT: Problem in the route segment with several automatic fixes");
+			}
 		}
+
 	}
 
 	/**
@@ -626,7 +668,6 @@ public class SegmentChecker extends Checker {
 
 		Node previousNode = findFirstNodeOfRouteSegmentInDirectionOfTravel(startPTWay);
 		if (previousNode == null) {
-			// TODO: sort route ways
 			return;
 		}
 
@@ -696,7 +737,7 @@ public class SegmentChecker extends Checker {
 		// if fix options for another route are displayed in the pt_assistant
 		// layer, clear them:
 		((PTAssistantValidatorTest) testError.getTester()).clearFixVariants();
-		
+
 		PTRouteSegment wrongSegment = wrongSegments.get(testError);
 
 		// 1) try to fix by using the correct segment:
@@ -708,7 +749,8 @@ public class SegmentChecker extends Checker {
 			}
 		}
 
-		// if no correct segment found, apply less strict criteria to look for one:
+		// if no correct segment found, apply less strict criteria to look for
+		// one:
 		if (correctSegmentsForThisError.isEmpty() && wrongSegment.getFixVariants().isEmpty()) {
 			for (PTRouteSegment segment : correctSegments) {
 				if (wrongSegment.getFirstStop().equalsStop(segment.getFirstStop())
@@ -862,12 +904,37 @@ public class SegmentChecker extends Checker {
 	 *            the fix variant to be adopted
 	 */
 	private static void carryOutSelectedFix(TestError testError, List<PTWay> fix) {
+		// modify the route:
 		Relation route = (Relation) testError.getPrimitives().iterator().next();
 		route.setMembers(getModifiedRelationMembers(testError, fix));
 		PTRouteSegment wrongSegment = wrongSegments.get(testError);
 		wrongSegments.remove(testError);
 		wrongSegment.setPTWays(fix);
 		addCorrectSegment(wrongSegment);
+
+		// get ways for the fix:
+		List<Way> primitives = new ArrayList<>();
+		for (PTWay ptway : fix) {
+			primitives.addAll(ptway.getWays());
+		}
+
+		// get layer:
+		OsmDataLayer layer = null;
+		List<OsmDataLayer> listOfLayers = Main.getLayerManager().getLayersOfType(OsmDataLayer.class);
+		for (OsmDataLayer osmDataLayer : listOfLayers) {
+			if (osmDataLayer.data == route.getDataSet()) {
+				layer = osmDataLayer;
+				break;
+			}
+		}
+
+		// create editor:
+		GenericRelationEditor editor = (GenericRelationEditor) RelationEditor.getEditor(layer, route,
+				route.getMembersFor(primitives));
+
+		// open editor:
+		editor.setVisible(true);
+
 	}
 
 	/**

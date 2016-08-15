@@ -108,7 +108,11 @@ public class PasteRelationsAction extends JosmAction {
 
     @Override
     protected void updateEnabledState(Collection<? extends OsmPrimitive> selection) {
-        setEnabled(selection != null && !selection.isEmpty()
-                && ClipboardUtils.getClipboard().isDataFlavorAvailable(PrimitiveTransferData.DATA_FLAVOR));
+        try {
+            setEnabled(selection != null && !selection.isEmpty()
+                    && ClipboardUtils.getClipboard().isDataFlavorAvailable(PrimitiveTransferData.DATA_FLAVOR));
+        } catch (IllegalStateException e) {
+            Main.warn(e);
+        }
     }
 }

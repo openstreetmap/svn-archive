@@ -36,7 +36,7 @@ import org.openstreetmap.josm.tools.Pair;
 import org.openstreetmap.josm.tools.Utils;
 
 public class PublicTransportLayer extends Layer {
-    private static final ImageProvider ICON = new ImageProvider("presets/misc", "path");
+    private static final ImageProvider ICON = new ImageProvider("presets/misc", "route");
     private boolean doDrawArrows = true;
     private boolean doDrawRefLabels = true;
 

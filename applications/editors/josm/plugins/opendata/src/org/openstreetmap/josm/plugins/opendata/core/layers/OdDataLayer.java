@@ -88,19 +88,21 @@ public class OdDataLayer extends OsmDataLayer implements OdLayer, LayerChangeLis
     }
 
     public final void downloadOsmData() {
-        String oapiReq = handler.getOverpassApiRequest(bounds);
-        Collection<String> xapiReqs = handler.getOsmXapiRequests(bounds);
-        if (oapiReq != null || xapiReqs != null) {
-            DataSet dataSet = new DataSet();
-            final OdOsmDataLayer layer = new OdOsmDataLayer(this, dataSet, getName()+"/OSM");
-            addOsmLayer(layer);
-            Main.getLayerManager().setActiveLayer(osmLayer);
-            if (oapiReq != null) {
-                OsmDownloader.downloadOapi(oapiReq);
-                // Overpass API does not allow to exclude tags :(
-                layer.removeForbiddenTags();
-            } else {
-                OsmDownloader.downloadXapi(xapiReqs);
+        if (handler != null) {
+            String oapiReq = handler.getOverpassApiRequest(bounds);
+            Collection<String> xapiReqs = handler.getOsmXapiRequests(bounds);
+            if (oapiReq != null || xapiReqs != null) {
+                DataSet dataSet = new DataSet();
+                final OdOsmDataLayer layer = new OdOsmDataLayer(this, dataSet, getName()+"/OSM");
+                addOsmLayer(layer);
+                Main.getLayerManager().setActiveLayer(osmLayer);
+                if (oapiReq != null) {
+                    OsmDownloader.downloadOapi(oapiReq);
+                    // Overpass API does not allow to exclude tags :(
+                    layer.removeForbiddenTags();
+                } else {
+                    OsmDownloader.downloadXapi(xapiReqs);
+                }
             }
         }
     }

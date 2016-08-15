@@ -1,4 +1,4 @@
-org.geotools.filter.AreaFunction
+org.geotools.resources.coverage.FilterFunction_isCoverageorg.geotools.filter.AreaFunction
 org.geotools.filter.LengthFunction
 org.geotools.filter.function.CategorizeFunction
 org.geotools.filter.function.ClassifyFunction
@@ -173,4 +173,3 @@ org.geotools.filter.function.string.ConcatenateFunction
 org.geotools.filter.function.JenksNaturalBreaksFunction
 org.geotools.filter.function.FilterFunction_list
 org.geotools.styling.visitor.RescaleToPixelsFunction
-org.geotools.resources.coverage.FilterFunction_isCoverage

@@ -1,6 +1,6 @@
-#############################
-# FROM gt-referencing-14.0.jar
-#############################
+org.geotools.referencing.factory.epsg.ThreadedHsqlEpsgFactory
+# pending review
+# org.geotools.referencing.factory.epsg.HsqlDialectEpsgMediator
 org.geotools.referencing.factory.epsg.CoordinateOperationFactoryUsingWKT
 org.geotools.referencing.factory.epsg.DefaultFactory
 org.geotools.referencing.factory.epsg.LongitudeFirstFactory
@@ -9,10 +9,3 @@ org.geotools.referencing.factory.HTTP_AuthorityFactory
 org.geotools.referencing.factory.HTTP_URI_AuthorityFactory
 # pending review
 org.geotools.referencing.factory.epsg.LongitudeFirstEpsgDecorator
-
-###########################
-# FROM gt-epsg-hsql-14.0.jar
-###########################
-org.geotools.referencing.factory.epsg.ThreadedHsqlEpsgFactory
-# pending review
-# org.geotools.referencing.factory.epsg.HsqlDialectEpsgMediator

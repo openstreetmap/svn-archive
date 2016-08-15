@@ -21,6 +21,18 @@
         <include name="ejml.jar"/>
     </fileset>
 
+    <target name="merge-geotools-services">
+        <taskdef resource="org/pescuma/mergeservices/antlib.xml" classpath="tools/merge-services.jar" />
+    	<delete dir="jar/META-INF/services"/>
+    	<merge-services dest="jar">
+    	    <fileset dir="lib">
+    	        <include name="**/*.jar" />
+    	        <exclude name="**/*-javadoc.jar" />
+    	        <exclude name="**/*-source.jar" />
+    	    </fileset>
+    	</merge-services>
+    </target>
+
     <!--
     **********************************************************
     ** post-dist - replaces files from the generated jar
@@ -54,10 +66,10 @@
         	<!-- JAI requires a vendor name for some of its deep internals, 
         	     see http://stackoverflow.com/a/18495658/2257172 -->
             <attribute name="Specification-Title" value="JOSM GeoTools plugin"/>
-            <attribute name="Specification-Version" value="14.1"/>
+            <attribute name="Specification-Version" value="15.1"/>
             <attribute name="Specification-Vendor" value="JOSM developers" />
             <attribute name="Implementation-Title" value="org.openstreetmap.josm.plugins.geotools" />
-            <attribute name="Implementation-Version" value="14.1" />
+            <attribute name="Implementation-Version" value="15.1" />
             <attribute name="Implementation-Vendor" value="JOSM developers"/>
         </manifest>
     </target>

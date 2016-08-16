@@ -262,7 +262,7 @@ public class SegmentChecker extends Checker {
 
 			Way startWay = assigner.get(startStop);
 			Way endWay = assigner.get(endStop);
-			if (startWay == null || endWay == null) {
+			if (startWay == null || endWay == null || (startWay == endWay && startWay == manager.getLastWay())) {
 				continue;
 			}
 

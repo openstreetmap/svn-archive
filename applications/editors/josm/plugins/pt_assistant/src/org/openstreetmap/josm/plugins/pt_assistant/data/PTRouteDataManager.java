@@ -396,5 +396,17 @@ public class PTRouteDataManager {
 
 		return null;
 	}
+	
+	/**
+	 * Returns the last way of this route
+	 * @return
+	 */
+	public Way getLastWay() {
+		PTWay lastPTWay = this.ptways.get(ptways.size()-1);
+		if (lastPTWay == null) {
+			return null;
+		}
+		return lastPTWay.getWays().get(lastPTWay.getWays().size()-1);
+	}
 
 }

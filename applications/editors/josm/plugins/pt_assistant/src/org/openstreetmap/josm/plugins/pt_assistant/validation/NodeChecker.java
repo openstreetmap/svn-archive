@@ -4,7 +4,6 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import javax.swing.JOptionPane;
@@ -98,65 +97,11 @@ public class NodeChecker extends Checker {
 			primitives.add(node);
 			TestError e = new TestError(this.test, Severity.WARNING,
 					tr("PT: Stop position or platform is not part of a stop area relation"),
-					PTAssistantValidatorTest.ERROR_CODE_NODE_PART_OF_STOP_AREA, primitives);
+					PTAssistantValidatorTest.ERROR_CODE_NOT_PART_OF_STOP_AREA, primitives);
 			errors.add(e);
 		}
 	}
 
-	/**
-	 * Checks if the given stop_position belongs to the same route relations as
-	 * its related platform(s). *
-	 * 
-	 * @param n
-	 */
-	protected void performStopPositionComparePlatformRelations() {
-
-		HashMap<Long, Long> stopPositionRelationIds = new HashMap<>();
-		HashMap<Long, Long> platformRelationIds = new HashMap<>();
-
-		// Loop through all referrer relations
-		for (Relation referrer : OsmPrimitive.getFilteredList(node.getReferrers(), Relation.class)) {
-
-			// Create list of relations the stop position belongs to
-			if (referrer.get("type") == "route") {
-				stopPositionRelationIds.put(referrer.getId(), referrer.getId());
-			}
-
-			// Create list of relations the related platform(s) belongs to
-			else if (referrer.get("public_transport") == "stop_area") {
-				for (RelationMember stopAreaMember : referrer.getMembers()) {
-					OsmPrimitive stopAreaMemberFoo = stopAreaMember.getMember();
-					if (stopAreaMemberFoo.get("public_transport") == "platform") {
-						for (Relation stopAreaMemberReferrer : OsmPrimitive
-								.getFilteredList(stopAreaMemberFoo.getReferrers(), Relation.class)) {
-							if (stopAreaMemberReferrer.get("type") == "route") {
-								platformRelationIds.put(stopAreaMemberReferrer.getId(), stopAreaMemberReferrer.getId());
-							}
-						}
-					}
-				}
-			}
-		}
-
-		// Check if the stop_position has no referrers at all. If it has no
-		// referrers, then no error should be reported (changed on 11.08.2016 by
-		// darya):
-		if (stopPositionRelationIds.isEmpty()) {
-			return;
-		}
-
-		// Check if route relation lists are identical
-		if (stopPositionRelationIds.equals(platformRelationIds)) {
-			return;
-		}
-
-		List<OsmPrimitive> primitives = new ArrayList<>(1);
-		primitives.add(node);
-		TestError e = new TestError(this.test, Severity.WARNING,
-				tr("PT: Stop position and its related platform(s) have different route relations"),
-				PTAssistantValidatorTest.ERROR_CODE_STOP_POSITION_COMPARE_RELATIONS, primitives);
-		errors.add(e);
-	}
 
 	/**
 	 * Fixes errors: solitary stop position and platform which is part of a way.

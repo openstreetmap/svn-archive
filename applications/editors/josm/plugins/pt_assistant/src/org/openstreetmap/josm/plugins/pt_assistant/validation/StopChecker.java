@@ -5,9 +5,11 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.HashMap;
 
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
+import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.data.validation.Severity;
 import org.openstreetmap.josm.data.validation.Test;
 import org.openstreetmap.josm.data.validation.TestError;
@@ -49,33 +51,6 @@ public class StopChecker extends Checker {
 		errors.add(e);
 	}
 
-	/**
-	 * Checks if the given stop area relation has more than one stop position.
-	 */
-	protected void performStopAreaMultiStopPositionTest() {
-		
-		// Count members tagged as stop position.
-		int countStopPosition = 0;
-		for (OsmPrimitive member : members) {
-			if (StopUtils.verifyStopAreaStopPosition(member)) {
-				countStopPosition++;
-
-			}
-		}
-
-		// No errors if there are more than one stop position.
-		if (countStopPosition <= 1) {
-			return;
-		}
-		
-		// Throw error message
-		List<OsmPrimitive> primitives = new ArrayList<>(1);
-		primitives.add(relation);
-		TestError e = new TestError(this.test, Severity.WARNING, tr("PT: Stop area relation has several stop positions"),
-				PTAssistantValidatorTest.ERROR_CODE_STOP_AREA_MANY_STOPS, primitives);
-		errors.add(e);
-		
-	}
 	
 	/**
 	 * Checks if the given stop area relation has a platform.
@@ -100,31 +75,62 @@ public class StopChecker extends Checker {
 	
 
 	/**
-	 * Checks if the given stop area relation has more than one platform. 
+	 * Checks if the stop_position(s) of an stop area belong to the same route relations as
+	 * its related platform(s). 
+	 * 
+	 * @param n
 	 */
-	protected void performStopAreaMultiPlatformTest() {
-		
-		// Count members tagged as platformn.
-		int countPlatform = 0;
-		for (OsmPrimitive member : members) {
-			if (StopUtils.verifyStopAreaPlatform(member)) {
-				countPlatform++;
+	protected void performStopAreaRelationsTest() {
 
+		HashMap<Long, Long> stopPositionRelationIds = new HashMap<>();
+		HashMap<Long, Long> platformRelationIds = new HashMap<>();
+
+
+		// Loop through all members
+		for (OsmPrimitive member : members) {
+			
+			// For stop positions...
+			if (StopUtils.verifyStopAreaStopPosition(member)) {
+				
+				// Create a list of assigned route relations
+				for (Relation referrer : OsmPrimitive.getFilteredList(member.getReferrers(), Relation.class)) {
+					if (referrer.get("type") == "route") {
+						stopPositionRelationIds.put(referrer.getId(), referrer.getId());
+					}
+				}
 			}
+			
+			// For platforms...
+			else if (StopUtils.verifyStopAreaPlatform(member)) {
+
+				// Create a list of assigned route relations
+				for (Relation referrer : OsmPrimitive.getFilteredList(member.getReferrers(), Relation.class)) {
+					if (referrer.get("type") == "route") {
+						platformRelationIds.put(referrer.getId(), referrer.getId());
+					}
+				}
+			}	
 		}
 		
-		// No errors if there are more than one platformnn.
-		if (countPlatform <= 1) {
+		// Check if the stop_position has no referrers at all. If it has no
+		// referrers, then no error should be reported (changed on 11.08.2016 by
+		// darya):
+		if (stopPositionRelationIds.isEmpty()) {
 			return;
 		}
-				
+
+		// Check if route relation lists are identical
+		if (stopPositionRelationIds.equals(platformRelationIds)) {
+			return;
+		}
+		
 		// Throw error message
 		List<OsmPrimitive> primitives = new ArrayList<>(1);
 		primitives.add(relation);
-		TestError e = new TestError(this.test, Severity.WARNING, tr("PT: Stop area relation has several platforms"),
-				PTAssistantValidatorTest.ERROR_CODE_STOP_AREA_MANY_PLATFORMS, primitives);
+		TestError e = new TestError(this.test, Severity.WARNING,
+				tr("PT: Route relations of stop position(s) and platform(s) of stop area memebrs diverge"),
+				PTAssistantValidatorTest.ERROR_CODE_STOP_AREA_COMPARE_RELATIONS, primitives);
 		errors.add(e);
-		
 	}
 	
 }

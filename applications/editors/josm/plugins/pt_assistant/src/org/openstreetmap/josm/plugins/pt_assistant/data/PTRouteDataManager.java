@@ -44,7 +44,7 @@ public class PTRouteDataManager {
 		this.relation = relation;
 
 		PTStop prev = null; // stores the last created PTStop
-
+		
 		for (RelationMember member : this.relation.getMembers()) {
 
 			if (RouteUtils.isPTStop(member)) {
@@ -60,10 +60,10 @@ public class PTRouteDataManager {
 						// if there is no name, check by proximity:
 						// Squared distance of 0.000004 corresponds to
 						// around 100 m
-						if (this.calculateDistanceSq(member, prev) < 0.000004) {
-
+						if (this.calculateDistanceSq(member, prev) < 0.000001) {
 							stopExists = true;
 						}
+						
 					} else {
 
 						// if there is a name, check by name comparison:
@@ -98,7 +98,9 @@ public class PTRouteDataManager {
 				ptways.add(ptway);
 
 			} else {
+			
 				this.failedMembers.add(member);
+				
 			}
 
 		}

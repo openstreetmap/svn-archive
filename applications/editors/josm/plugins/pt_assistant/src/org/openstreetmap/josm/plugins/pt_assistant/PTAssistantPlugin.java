@@ -10,6 +10,7 @@ import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
 import org.openstreetmap.josm.plugins.pt_assistant.actions.AddStopPositionAction;
+import org.openstreetmap.josm.plugins.pt_assistant.actions.RepeatLastFixAction;
 import org.openstreetmap.josm.plugins.pt_assistant.validation.PTAssistantValidatorTest;
 
 /**
@@ -21,6 +22,7 @@ import org.openstreetmap.josm.plugins.pt_assistant.validation.PTAssistantValidat
 public class PTAssistantPlugin extends Plugin {
 
 	private JMenuItem addStopPositionMenu;
+	private JMenuItem repeatLastFixMenu;
 
 	/**
 	 * Main constructor.
@@ -36,7 +38,9 @@ public class PTAssistantPlugin extends Plugin {
 		
 		AddStopPositionAction addStopPositionAction = new AddStopPositionAction();
 		addStopPositionMenu = MainMenu.add(Main.main.menu.toolsMenu, addStopPositionAction, false);
-
+		RepeatLastFixAction repeatLastFixAction = new RepeatLastFixAction();
+		repeatLastFixMenu = MainMenu.add(Main.main.menu.toolsMenu, repeatLastFixAction, false);
+		
 	}
 
 	/**

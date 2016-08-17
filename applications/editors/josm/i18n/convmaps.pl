@@ -40,7 +40,7 @@ for my $line (@lines)
     $val =~ s/&amp;/&/g;
     print "tr(\"$val\"); /* $line */\n";
   }
-  if($line =~ /<description +lang=['"]en['"]>(.*)<\/description>/)
+  elsif($line =~ /<description +lang=['"]en['"]>(.*)<\/description>/)
   {
     my $val = $1;
     $val =~ s/&amp;/&/g;

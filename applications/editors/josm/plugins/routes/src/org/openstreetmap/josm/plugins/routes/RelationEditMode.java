@@ -46,7 +46,7 @@ public class RelationEditMode extends MapMode {
 
     @Override
     public void mouseMoved(MouseEvent e) {
-        Way nearestWay = Main.map.mapView.getNearestWay(e.getPoint(), OsmPrimitive.isUsablePredicate);
+        Way nearestWay = Main.map.mapView.getNearestWay(e.getPoint(), OsmPrimitive::isUsable);
         if (nearestWay != highlightedWay) {
             if (highlightedWay != null) {
                 highlightedWay.setHighlighted(false);
@@ -64,7 +64,7 @@ public class RelationEditMode extends MapMode {
         if (getLayerManager().getEditDataSet() == null)
             return;
 
-        Way way = Main.map.mapView.getNearestWay(e.getPoint(), OsmPrimitive.isUsablePredicate);
+        Way way = Main.map.mapView.getNearestWay(e.getPoint(), OsmPrimitive::isUsable);
         Collection<Relation> selectedRelations = getLayerManager().getEditDataSet().getSelectedRelations();
 
         if (way != null) {

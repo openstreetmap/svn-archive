@@ -23,7 +23,7 @@ import org.openstreetmap.josm.tools.Utils;
 
 public class WikidataTagCellRenderer extends DefaultTableCellRenderer {
 
-    private final Map<String, CompletableFuture<String>> labelCache = new ConcurrentHashMap<>();
+    final Map<String, CompletableFuture<String>> labelCache = new ConcurrentHashMap<>();
 
     @Override
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {

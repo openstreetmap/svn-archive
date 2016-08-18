@@ -26,11 +26,10 @@ public class WikidataTagCellRendererTest {
         final List<String> ids = Arrays.asList("Q84", "Q1741", "Q278250");
         final WikidataTagCellRenderer renderer = new WikidataTagCellRenderer();
         renderer.renderValues(ids, new JTable(), new JLabel());
-        Main.worker.submit(new Runnable() {
-            @Override
-            public void run() {
-            }
-        }).get(); // wait for labels to be fetched
+        for (String id : ids) {
+            // wait for labels to be fetched
+            renderer.labelCache.get(id).get();
+        }
         final JLabel label = renderer.renderValues(ids, new JTable(), new JLabel());
         assertNotNull(label);
         assertThat(label.getText(), is("<html>" +

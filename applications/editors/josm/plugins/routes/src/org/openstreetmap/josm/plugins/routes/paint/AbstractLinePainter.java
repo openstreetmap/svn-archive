@@ -21,10 +21,10 @@ public abstract class AbstractLinePainter implements PathPainter {
             Line2D.Double l2,
             Point intersection)
     {
-        double  x1 = l1.getX1(), y1 = l1.getY1(),
-        x2 = l1.getX2(), y2 = l1.getY2(),
-        x3 = l2.getX1(), y3 = l2.getY1(),
-        x4 = l2.getX2(), y4 = l2.getY2();
+        double x1 = l1.getX1(), y1 = l1.getY1(),
+               x2 = l1.getX2(), y2 = l1.getY2(),
+               x3 = l2.getX1(), y3 = l2.getY1(),
+               x4 = l2.getX2(), y4 = l2.getY2();
         double dx1 = x2 - x1;
         double dx2 = x4 - x3;
         double dy1 = y2 - y1;
@@ -144,7 +144,7 @@ public abstract class AbstractLinePainter implements PathPainter {
         return path;
     }
 
-    private void drawSegment(Graphics2D g, NavigatableComponent nc, GeneralPath path, Point p1, Point p2) {
+    private void drawSegment(Graphics2D g, NavigatableComponent nc, GeneralPath path, Point2D p1, Point2D p2) {
         boolean drawIt = false;
         if (Main.isOpenjdk) {
             /**
@@ -164,16 +164,16 @@ public abstract class AbstractLinePainter implements PathPainter {
         }
         if (drawIt) {
             /* draw segment line */
-            path.moveTo(p1.x, p1.y);
-            path.lineTo(p2.x, p2.y);
+            path.moveTo(p1.getX(), p1.getY());
+            path.lineTo(p2.getX(), p2.getY());
         }
     }
 
-    private boolean isSegmentVisible(NavigatableComponent nc, Point p1, Point p2) {
-        if ((p1.x < 0) && (p2.x < 0)) return false;
-        if ((p1.y < 0) && (p2.y < 0)) return false;
-        if ((p1.x > nc.getWidth()) && (p2.x > nc.getWidth())) return false;
-        if ((p1.y > nc.getHeight()) && (p2.y > nc.getHeight())) return false;
+    private boolean isSegmentVisible(NavigatableComponent nc, Point2D p1, Point2D p2) {
+        if ((p1.getX() < 0) && (p2.getX() < 0)) return false;
+        if ((p1.getY() < 0) && (p2.getY() < 0)) return false;
+        if ((p1.getX() > nc.getWidth()) && (p2.getX() > nc.getWidth())) return false;
+        if ((p1.getY() > nc.getHeight()) && (p2.getY() > nc.getHeight())) return false;
         return true;
     }
 

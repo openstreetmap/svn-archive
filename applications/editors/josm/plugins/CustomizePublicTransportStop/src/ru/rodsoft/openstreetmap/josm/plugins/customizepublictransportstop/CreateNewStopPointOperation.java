@@ -111,16 +111,14 @@ public class CreateNewStopPointOperation extends StopAreaOperationBase
     				if(way.getNodes().contains(node) && testWay(way, stopArea))
     				{
     					nearestNode = node;
-    					break;
+    					return new AbstractMap.SimpleEntry<Double, Node> (distances[distanceIndex], nearestNode);
     				}
     			}
     			if(nearestNode != null)
     				break;
     		}
     	}
-    	if(nearestNode == null)
-    		return null;
-    	return new AbstractMap.SimpleEntry<Double, Node> (distances[--distanceIndex], nearestNode);
+   		return null;
     }
 
     /**
@@ -322,12 +320,17 @@ public class CreateNewStopPointOperation extends StopAreaOperationBase
 		Node newStopPointNode = null;
 		if(nearestNode != null && nearestWaySegment != null)
 		{
-			if(nearestWaySegment.distanceSq < nearestNode.getKey())
+			Double segmentDist = Main.map.mapView.getPoint2D(platformCoord).distanceSq(Main.map.mapView.getPoint2D(nearestWaySegment.newNode));
+			Double nodeDistSq =  nearestNode.getKey();
+//			nodeDistSq *= nodeDistSq - 2;
+			if(segmentDist < nodeDistSq - 2)
 			{
+//				MessageBox.ok("new stop node v2 "  + segmentDist.toString() + "   " + nodeDistSq.toString());
 				newStopPointNode = createNodeOnWay(nearestWaySegment.newNode, nearestWaySegment.waySegment);
 			}
 			else
 			{
+//				MessageBox.ok("new stop node v3 "  + segmentDist.toString() + "   " + nodeDistSq.toString());
 				newStopPointNode = nearestNode.getValue();
 			}
 		}
@@ -339,6 +342,7 @@ public class CreateNewStopPointOperation extends StopAreaOperationBase
 			else
 				if(nearestNode == null && nearestWaySegment != null)
 				{
+//					MessageBox.ok("new stop node2");
 					newStopPointNode = createNodeOnWay(nearestWaySegment.newNode, nearestWaySegment.waySegment);
 				}
 		if(newStopPointNode != null)

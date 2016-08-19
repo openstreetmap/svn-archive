@@ -75,8 +75,7 @@ public class CustomizeStopAction extends JosmAction implements IStopAreaCustomiz
     {
 		if (!isEnabled())
 			return;
-		CreateStopAreaFromSelectedObjectOperation createStopAreaFromSelectedObjectOperation = new CreateStopAreaFromSelectedObjectOperation(
-		        getLayerManager().getEditDataSet());
+		CreateStopAreaFromSelectedObjectOperation createStopAreaFromSelectedObjectOperation = new CreateStopAreaFromSelectedObjectOperation(getLayerManager().getEditDataSet());
 		StopArea stopArea = createStopAreaFromSelectedObjectOperation.performCustomizing(null);
 		if(stopArea == null)
 			return;

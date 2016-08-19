@@ -43,6 +43,8 @@ public class CreateStopAreaFromSelectedObjectOperation extends
 			stopArea.network = getTagValue(member, OSMTags.NETWORK_TAG);
 		if(stopArea.service == null)
 			stopArea.service = getTagValue(member, OSMTags.SERVICE_TAG);
+		if(OSMTags.LOCAL_NETWORK_TAG_VALUE.equals(stopArea.service))
+			stopArea.service = OSMTags.COMMUTER_NETWORK_TAG_VALUE;
 		if(compareTag(member, OSMTags.BUS_TAG, OSMTags.YES_TAG_VALUE))
 			stopArea.isBus = true;
 		if(compareTag(member, OSMTags.TROLLEYBUS_TAG, OSMTags.YES_TAG_VALUE))

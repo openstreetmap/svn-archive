@@ -58,6 +58,22 @@ public class CustomizeStopAreaOperation extends StopAreaOperationBase
     }
 	
     /**
+     * Clear transport type tags
+     * @param target Josm object for tag clearing 
+     * @param commands Command list
+     * @return Resulting list of commands
+     */
+	protected List<Command> transportTypeTagClearing(OsmPrimitive target,
+			List<Command> commands) {
+		commands = clearTag(commands, target, OSMTags.BUS_TAG);
+		commands = clearTag(commands, target, OSMTags.SHARE_TAXI_TAG);
+		commands = clearTag(commands, target, OSMTags.TROLLEYBUS_TAG);
+		commands = clearTag(commands, target, OSMTags.TRAM_TAG);
+		commands = clearTag(commands, target, OSMTags.TRAIN_TAG);
+		return commands;
+	}
+
+	/**
      * Assign transport type tags to node
      * @param target Josm object for tag assigning 
      * @param commands Command list
@@ -101,11 +117,7 @@ public class CustomizeStopAreaOperation extends StopAreaOperationBase
 	    	}
 			else
 			{
-	    		commands = clearTag(commands, target, OSMTags.BUS_TAG);
-	    		commands = clearTag(commands, target, OSMTags.SHARE_TAXI_TAG);
-	    		commands = clearTag(commands, target, OSMTags.TROLLEYBUS_TAG);
-	    		commands = clearTag(commands, target, OSMTags.TRAM_TAG);
-	    		commands = clearTag(commands, target, OSMTags.TRAIN_TAG);    		
+	    		commands = transportTypeTagClearing(target, commands);    		
 			}
 		}
 		return commands;
@@ -116,10 +128,9 @@ public class CustomizeStopAreaOperation extends StopAreaOperationBase
 	 * @param target Stop area member or relation
 	 * @param commands List of commands
 	 * @param stopArea Stop area object
-     * @param isStopPoint Flag of stop point
 	 * @return Resulting list of commands
 	 */
-    public List<Command> generalTagAssign(OsmPrimitive target, List<Command> commands, StopArea stopArea, Boolean isStopPoint)
+    public List<Command> generalTagAssign(OsmPrimitive target, List<Command> commands, StopArea stopArea)
     {
     	if(commands == null)
     		commands = new ArrayList<Command>();
@@ -129,7 +140,6 @@ public class CustomizeStopAreaOperation extends StopAreaOperationBase
     	commands = assignTag(commands, target, OSMTags.OPERATOR_TAG, "".equals(stopArea.operator) ? null : stopArea.operator);
     	commands = assignTag(commands, target, OSMTags.SERVICE_TAG, null == stopArea.service || OSMTags.CITY_NETWORK_TAG_VALUE.equals(stopArea.service) ? null : stopArea.service);
     	
-    	commands = transportTypeTagAssign(target, commands, stopArea, isStopPoint);
     	return commands;
     }
 
@@ -147,7 +157,8 @@ public class CustomizeStopAreaOperation extends StopAreaOperationBase
     	if(commands == null)
     		commands = new ArrayList<Command>();
     	
-    	commands = generalTagAssign(target, commands, stopArea, true);
+    	commands = generalTagAssign(target, commands, stopArea);
+    	commands = transportTypeTagAssign(target, commands, stopArea, true);
     	if(isFirst)
     	{
     		if(stopArea.isTrainStop)
@@ -191,7 +202,8 @@ public class CustomizeStopAreaOperation extends StopAreaOperationBase
     	if(commands == null)
     		commands = new ArrayList<Command>();
     	
-    	commands = generalTagAssign(target, commands, stopArea, false);
+    	commands = generalTagAssign(target, commands, stopArea);
+    	commands = transportTypeTagAssign(target, commands, stopArea, false);
     	
     	if(compareTag(target, OSMTags.RAILWAY_TAG, OSMTags.HALT_TAG_VALUE) || compareTag(target, OSMTags.RAILWAY_TAG, OSMTags.STATION_TAG_VALUE))
     		commands = clearTag(commands, target, OSMTags.RAILWAY_TAG);
@@ -262,7 +274,7 @@ public class CustomizeStopAreaOperation extends StopAreaOperationBase
 			newRelation.addMember(new RelationMember("", otherMember));
 		}
 		Main.main.undoRedo.add(new AddCommand(newRelation));
-		commands = generalTagAssign(newRelation, commands, stopArea, false);
+		commands = generalTagAssign(newRelation, commands, stopArea);
 		commands = assignTag(commands, newRelation, OSMTags.TYPE_TAG, OSMTags.PUBLIC_TRANSPORT_TAG);
 		commands = assignTag(commands, newRelation, OSMTags.PUBLIC_TRANSPORT_TAG, OSMTags.STOP_AREA_TAG_VALUE);
     	return commands;
@@ -580,7 +592,8 @@ public class CustomizeStopAreaOperation extends StopAreaOperationBase
 			}
 			else
 			{
-				commands = generalTagAssign(stopArea.stopAreaRelation, commands, stopArea, false);
+				commands = generalTagAssign(stopArea.stopAreaRelation, commands, stopArea);
+				commands = transportTypeTagClearing(stopArea.stopAreaRelation, commands);
 				commands = addNewRelationMembers(commands, stopArea);
 			}
 			return commands;

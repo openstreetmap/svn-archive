@@ -56,12 +56,12 @@ public class CustomizePublicTransportStopDialog implements ActionListener, ItemL
 	private static final String STOP_CUSTOMIZING_DIALOG_CAPTION = "Stop customizing";
 	public static final String LONG_DISTANCE_NETWORK_CAPTION = "Long distance";
 	public static final String REGIONAL_NETWORK_CAPTION = "Regional";
-	public static final String LOCAL_NETWORK_CAPTION = "Local";
+	public static final String COMMUTER_NETWORK_CAPTION = "Commuter";
 	public static final String CITY_NETWORK_CAPTION = "City transport";
 	public static final String HIGH_SPEED_NETWORK_CAPTION = "High speed";
 	
-	private String[] serviceCaptionStrings = { CITY_NETWORK_CAPTION, LOCAL_NETWORK_CAPTION, REGIONAL_NETWORK_CAPTION, LONG_DISTANCE_NETWORK_CAPTION, HIGH_SPEED_NETWORK_CAPTION };
-    private String[] serviceStrings = { OSMTags.CITY_NETWORK_TAG_VALUE, OSMTags.LOCAL_NETWORK_TAG_VALUE, 
+	private String[] serviceCaptionStrings = { CITY_NETWORK_CAPTION, COMMUTER_NETWORK_CAPTION, REGIONAL_NETWORK_CAPTION, LONG_DISTANCE_NETWORK_CAPTION, HIGH_SPEED_NETWORK_CAPTION };
+    private String[] serviceStrings = { OSMTags.CITY_NETWORK_TAG_VALUE, OSMTags.COMMUTER_NETWORK_TAG_VALUE, 
     									OSMTags.REGIONAL_NETWORK_TAG_VALUE, OSMTags.LONG_DISTANCE_NETWORK_TAG_VALUE, OSMTags.HIGH_SPEED_NETWORK_TAG_VALUE };
 
     private JDialog jDialog = null;

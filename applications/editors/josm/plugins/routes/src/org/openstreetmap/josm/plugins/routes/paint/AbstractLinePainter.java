@@ -2,15 +2,12 @@ package org.openstreetmap.josm.plugins.routes.paint;
 
 import java.awt.Graphics2D;
 import java.awt.Point;
-import java.awt.Rectangle;
 import java.awt.geom.GeneralPath;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.util.List;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.osm.Node;
-import org.openstreetmap.josm.data.osm.visitor.paint.LineClip;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.NavigatableComponent;
 
@@ -145,23 +142,7 @@ public abstract class AbstractLinePainter implements PathPainter {
     }
 
     private void drawSegment(Graphics2D g, NavigatableComponent nc, GeneralPath path, Point2D p1, Point2D p2) {
-        boolean drawIt = false;
-        if (Main.isOpenjdk) {
-            /**
-             * Work around openjdk bug. It leads to drawing artefacts when zooming in a lot. (#4289, #4424)
-             * (It looks like int overflow when clipping.) We do custom clipping.
-             */
-            Rectangle bounds = g.getClipBounds();
-            bounds.grow(100, 100);                  // avoid arrow heads at the border
-            LineClip clip = new LineClip(p1, p2, bounds);
-            drawIt = clip.execute();
-            if (drawIt) {
-                p1 = clip.getP1();
-                p2 = clip.getP2();
-            }
-        } else {
-            drawIt = isSegmentVisible(nc, p1, p2);
-        }
+        boolean drawIt = isSegmentVisible(nc, p1, p2);
         if (drawIt) {
             /* draw segment line */
             path.moveTo(p1.getX(), p1.getY());
@@ -176,6 +157,4 @@ public abstract class AbstractLinePainter implements PathPainter {
         if ((p1.getY() > nc.getHeight()) && (p2.getY() > nc.getHeight())) return false;
         return true;
     }
-
-
 }

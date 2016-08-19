@@ -21,8 +21,8 @@
 
     <!-- Configure these properties (replace "..." accordingly).
          See https://josm.openstreetmap.de/wiki/DevelopersGuide/DevelopingPlugins
-    <property name="plugin.canloadatruntime" value="true"/>
     -->
+    <property name="plugin.canloadatruntime" value="true"/>
     <property name="plugin.author" value="Gerd Petermann"/>
     <property name="plugin.class" value="org.openstreetmap.josm.plugins.o5m.O5mPlugin"/>
     <property name="plugin.description" value="Import OSM data in o5m format"/>

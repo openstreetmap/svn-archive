@@ -1,9 +1,11 @@
 // License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.pointinfo.ruian;
 
+import java.net.URL;
+
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.coor.LatLon;
-import org.openstreetmap.josm.plugins.pointinfo.PointInfoServer;
+import org.openstreetmap.josm.tools.HttpClient;
 
 /**
  * A module for the Czech RUIAN database
@@ -13,7 +15,6 @@ public class RuianModule {
 
     private String m_text = "";
     private String URL = "http://josm.poloha.net/pointInfo/v4/index.php";
-    protected PointInfoServer server = new PointInfoServer();
 
     private RuianRecord m_record = new RuianRecord();
 
@@ -45,10 +46,7 @@ public class RuianModule {
     public void prepareData(LatLon pos) {
         try {
             String request = URL + "?lat=" + pos.lat() + "&lon=" + pos.lon();
-            System.out.println("Request: "+ request);
-            String content = server.callServer(request);
-            System.out.println("Reply: " + content);
-            m_record.parseJSON(content);
+            m_record.parseJSON(HttpClient.create(new URL(request)).connect().fetchContent());
         } catch (Exception e) {
             Main.warn(e);
         }

@@ -45,8 +45,7 @@ public abstract class PointInfoUtils {
         symbols.setGroupingSeparator(' ');
         DecimalFormat df = new DecimalFormat("#.00000", symbols);
 
-        r = "(" + df.format(lat) + ", " +
-                df.format(lon) + ")";
+        r = "(" + df.format(lat) + ", " + df.format(lon) + ")";
         return r;
     }
 }

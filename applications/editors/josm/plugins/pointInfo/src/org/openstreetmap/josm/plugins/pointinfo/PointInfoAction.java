@@ -24,6 +24,7 @@ import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.gui.PleaseWaitRunnable;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
+import org.openstreetmap.josm.gui.util.GuiHelper;
 import org.openstreetmap.josm.plugins.pointinfo.ruian.RuianModule;
 import org.openstreetmap.josm.tools.ImageProvider;
 import org.openstreetmap.josm.tools.OpenBrowser;
@@ -142,7 +143,8 @@ class PointInfoAction extends MapMode implements MouseListener {
         }
         progressMonitor.invalidate();
         if (htmlText.length() == 0) {
-            PointInfoUtils.showNotification(tr("Data not available.")+ "\n(" + pos.toDisplayString() + ")", "warning");
+            GuiHelper.runInEDTAndWait(
+                    () -> PointInfoUtils.showNotification(tr("Data not available.")+ "\n(" + pos.toDisplayString() + ")", "warning"));
             return;
         }
     }

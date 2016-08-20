@@ -4,6 +4,7 @@ package org.openstreetmap.josm.plugins.pointinfo.ruian;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.io.ByteArrayInputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -13,6 +14,7 @@ import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonObject;
 import javax.json.JsonReader;
+import javax.json.JsonValue;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.command.AddCommand;
@@ -23,8 +25,8 @@ import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Tag;
 import org.openstreetmap.josm.data.osm.TagCollection;
+import org.openstreetmap.josm.gui.datatransfer.ClipboardUtils;
 import org.openstreetmap.josm.plugins.pointinfo.PointInfoUtils;
-import org.openstreetmap.josm.tools.Utils;
 
 /**
  * Private class contains RUIAN data
@@ -106,8 +108,8 @@ class RuianRecord {
         m_err_type = "";
         m_err_note = "";
 
-        m_so_bez_geometrie = new ArrayList<ObjectWithoutGeometry>();
-        m_adresni_mista = new ArrayList<AddrPlaces>();
+        m_so_bez_geometrie = new ArrayList<>();
+        m_adresni_mista = new ArrayList<>();
 
         m_parcela_ruian_id = 0;
         m_parcela_druh_pozemku = "";
@@ -136,7 +138,7 @@ class RuianRecord {
 
         init();
 
-        JsonReader jsonReader = Json.createReader(new ByteArrayInputStream(jsonStr.getBytes()));
+        JsonReader jsonReader = Json.createReader(new ByteArrayInputStream(jsonStr.getBytes(StandardCharsets.UTF_8)));
         JsonObject obj = jsonReader.readObject();
         jsonReader.close();
 
@@ -164,126 +166,139 @@ class RuianRecord {
         parseKatastr(obj);
     }
 
+    private JsonObject getSafeJsonObject(JsonObject obj, String key) {
+        JsonValue val = obj.get(key);
+        if (val instanceof JsonObject) {
+            return (JsonObject) val;
+        } else if (val instanceof JsonArray) {
+            JsonArray array = (JsonArray) val;
+            if (!array.isEmpty()) {
+                return array.getJsonObject(0);
+            }
+        }
+        throw new IllegalArgumentException("No value for " + key);
+    }
+
     private void parseCoordinates(JsonObject obj) {
         try {
             JsonObject coorObjekt = obj.getJsonObject("coordinates");
 
             try {
                 m_coor_lat = Double.parseDouble(coorObjekt.getString("lat"));
-            } catch (Exception e) {
-                System.out.println("coordinates.lat: " + e.getMessage());
+            } catch (NumberFormatException e) {
+                Main.warn(e, "coordinates.lat:");
             }
 
             try {
                 m_coor_lon = Double.parseDouble(coorObjekt.getString("lon"));
-            } catch (Exception e) {
-                System.out.println("coordinates.lon: " + e.getMessage());
+            } catch (NumberFormatException e) {
+                Main.warn(e, "coordinates.lon:");
             }
 
             try {
                 m_source = obj.getString("source");
-            } catch (Exception e) {
-                System.out.println("source: " + e.getMessage());
+            } catch (RuntimeException e) {
+                Main.warn(e, "source:");
             }
 
         } catch (Exception e) {
-            System.out.println("coordinates: " + e.getMessage());
+            Main.warn(e, "coordinates:");
         }
     }
 
     private void parseStavebniObjekt(JsonObject obj) {
         try {
-            JsonObject stavebniObjekt = obj.getJsonObject("stavebni_objekt");
+            JsonObject stavebniObjekt = getSafeJsonObject(obj, "stavebni_objekt");
 
             try {
                 m_objekt_ruian_id = Long.parseLong(stavebniObjekt.getString("ruian_id"));
             } catch (Exception e) {
-                System.out.println("stavebni_objekt.ruian_id: " + e.getMessage());
+                Main.warn(e, "stavebni_objekt.ruian_id:");
             }
 
             try {
                 m_objekt_podlazi = Integer.parseInt(stavebniObjekt.getString("pocet_podlazi"));
             } catch (Exception e) {
-                System.out.println("stavebni_objekt.pocet_podlazi: " + e.getMessage());
+                Main.warn(e, "stavebni_objekt.pocet_podlazi:");
             }
 
             try {
                 m_objekt_byty = Integer.parseInt(stavebniObjekt.getString("pocet_bytu"));
             } catch (Exception e) {
-                System.out.println("stavebni_objekt.pocet_bytu: " + e.getMessage());
+                Main.warn(e, "stavebni_objekt.pocet_bytu:");
             }
 
             try {
                 m_objekt_zpusob_vyuziti = stavebniObjekt.getString("zpusob_vyuziti");
             } catch (Exception e) {
-                System.out.println("stavebni_objekt.zpusob_vyuziti: " + e.getMessage());
+                Main.warn(e, "stavebni_objekt.zpusob_vyuziti:");
             }
 
             try {
                 m_objekt_zpusob_vyuziti_kod = stavebniObjekt.getString("zpusob_vyuziti_kod");
             } catch (Exception e) {
-                System.out.println("stavebni_objekt.m_objekt_zpusob_vyuziti_kod: " + e.getMessage());
+                Main.warn(e, "stavebni_objekt.m_objekt_zpusob_vyuziti_kod:");
             }
 
             try {
                 m_objekt_zpusob_vyuziti_key = stavebniObjekt.getString("zpusob_vyuziti_key");
             } catch (Exception e) {
-                System.out.println("stavebni_objekt.zpusob_vyuziti_key: " + e.getMessage());
+                Main.warn(e, "stavebni_objekt.zpusob_vyuziti_key:");
             }
 
             try {
                 m_objekt_zpusob_vyuziti_val = stavebniObjekt.getString("zpusob_vyuziti_val");
             } catch (Exception e) {
-                System.out.println("stavebni_objekt.m_objekt_zpusob_vyuziti_val: " + e.getMessage());
+                Main.warn(e, "stavebni_objekt.m_objekt_zpusob_vyuziti_val:");
             }
 
             try {
                 m_objekt_plati_od = stavebniObjekt.getString("plati_od");
             } catch (Exception e) {
-                System.out.println("stavebni_objekt.plati_od: " + e.getMessage());
+                Main.warn(e, "stavebni_objekt.plati_od:");
             }
 
             try {
                 m_objekt_dokonceni = stavebniObjekt.getString("dokonceni");
             } catch (Exception e) {
-                System.out.println("stavebni_objekt.dokonceni: " + e.getMessage());
+                Main.warn(e, "stavebni_objekt.dokonceni:");
             }
 
         } catch (Exception e) {
-            System.out.println("stavebni_objekt: " + e.getMessage());
+            Main.warn(e, "stavebni_objekt:");
         }
     }
 
     private void parseNahlasenyProblem(JsonObject obj) {
         try {
-            JsonObject errObjekt = obj.getJsonObject("nahlaseny_problem");
+            JsonObject errObjekt = getSafeJsonObject(obj, "nahlaseny_problem");
 
             try {
                 m_err_user = errObjekt.getString("uzivatel");
             } catch (Exception e) {
-                System.out.println("nahlaseny_problem.uzivatel: " + e.getMessage());
+                Main.warn(e, "nahlaseny_problem.uzivatel:");
             }
 
             try {
                 m_err_date = errObjekt.getString("datum");
             } catch (Exception e) {
-                System.out.println("nahlaseny_problem.datum: " + e.getMessage());
+                Main.warn(e, "nahlaseny_problem.datum:");
             }
 
             try {
                 m_err_type = errObjekt.getString("duvod");
             } catch (Exception e) {
-                System.out.println("nahlaseny_problem.duvod: " + e.getMessage());
+                Main.warn(e, "nahlaseny_problem.duvod:");
             }
 
             try {
                 m_err_note = errObjekt.getString("poznamka");
             } catch (Exception e) {
-                System.out.println("nahlaseny_problem.poznamka: " + e.getMessage());
+                Main.warn(e, "nahlaseny_problem.poznamka:");
             }
 
         } catch (Exception e) {
-            System.out.println("nahlaseny_problem: " + e.getMessage());
+            Main.warn(e, "nahlaseny_problem:");
         }
     }
 
@@ -298,67 +313,67 @@ class RuianRecord {
                 try {
                     so.setRuianID(Long.parseLong(soBezGeom.getString("ruian_id")));
                 } catch (Exception e) {
-                    System.out.println("so_bez_geometrie.ruian_id: " + e.getMessage());
+                    Main.warn(e, "so_bez_geometrie.ruian_id:");
                 }
 
                 try {
                     so.setPodlazi(Integer.parseInt(soBezGeom.getString("pocet_podlazi")));
                 } catch (Exception e) {
-                    System.out.println("so_bez_geometrie.pocet_podlazi: " + e.getMessage());
+                    Main.warn(e, "so_bez_geometrie.pocet_podlazi:");
                 }
 
                 try {
                     so.setByty(Integer.parseInt(soBezGeom.getString("pocet_bytu")));
                 } catch (Exception e) {
-                    System.out.println("so_bez_geometrie.pocet_bytu: " + e.getMessage());
+                    Main.warn(e, "so_bez_geometrie.pocet_bytu:");
                 }
 
                 try {
                     so.setZpusobVyuziti(soBezGeom.getString("zpusob_vyuziti"));
                 } catch (Exception e) {
-                    System.out.println("so_bez_geometrie.zpusob_vyuziti: " + e.getMessage());
+                    Main.warn(e, "so_bez_geometrie.zpusob_vyuziti:");
                 }
 
                 try {
                     so.setZpusobVyuzitiKod(soBezGeom.getString("zpusob_vyuziti_kod"));
                 } catch (Exception e) {
-                    System.out.println("so_bez_geometrie.zpusob_vyuziti_kod: " + e.getMessage());
+                    Main.warn(e, "so_bez_geometrie.zpusob_vyuziti_kod:");
                 }
 
                 try {
                     so.setZpusobVyuzitiKey(soBezGeom.getString("zpusob_vyuziti_key"));
                 } catch (Exception e) {
-                    System.out.println("so_bez_geometrie.zpusob_vyuziti_key: " + e.getMessage());
+                    Main.warn(e, "so_bez_geometrie.zpusob_vyuziti_key:");
                 }
 
                 try {
                     so.setZpusobVyuzitiVal(soBezGeom.getString("zpusob_vyuziti_val"));
                 } catch (Exception e) {
-                    System.out.println("so_bez_geometrie.zpusob_vyuziti_val: " + e.getMessage());
+                    Main.warn(e, "so_bez_geometrie.zpusob_vyuziti_val:");
                 }
 
                 try {
                     so.setDokonceni(soBezGeom.getString("dokonceni"));
                 } catch (Exception e) {
-                    System.out.println("so_bez_geometrie.dokonceni: " + e.getMessage());
+                    Main.warn(e, "so_bez_geometrie.dokonceni:");
                 }
 
                 try {
                     so.setPlatiOd(soBezGeom.getString("plati_od"));
                 } catch (Exception e) {
-                    System.out.println("so_bez_geometrie.plati_od: " + e.getMessage());
+                    Main.warn(e, "so_bez_geometrie.plati_od:");
                 }
 
                 try {
                     so.setVzdalenost(Float.parseFloat(soBezGeom.getString("vzdalenost")));
                 } catch (Exception e) {
-                    System.out.println("so_bez_geometrie.vzdalenost: " + e.getMessage());
+                    Main.warn(e, "so_bez_geometrie.vzdalenost:");
                 }
 
                 m_so_bez_geometrie.add(so);
             }
         } catch (Exception e) {
-            System.out.println("so_bez_geometrie: " + e.getMessage());
+            Main.warn(e, "so_bez_geometrie:");
         }
     }
 
@@ -373,7 +388,7 @@ class RuianRecord {
                 try {
                     am.setRuianID(Long.parseLong(adresniMisto.getString("ruian_id")));
                 } catch (Exception e) {
-                    System.out.println("adresni_mista.ruian_id: " + e.getMessage());
+                    Main.warn(e, "adresni_mista.ruian_id:");
                 }
 
                 try {
@@ -383,232 +398,232 @@ class RuianRecord {
                             LatLon.roundToOsmPrecision(node.getJsonNumber(0).doubleValue()))
                             );
                 } catch (Exception e) {
-                    System.out.println("adresni_mista.pozice: " + e.getMessage());
+                    Main.warn(e, "adresni_mista.pozice:");
                 }
 
                 try {
                     am.setBudovaID(Long.parseLong(adresniMisto.getString("budova_kod")));
                 } catch (Exception e) {
-                    System.out.println("adresni_mista.budova_kod: " + e.getMessage());
+                    Main.warn(e, "adresni_mista.budova_kod:");
                 }
 
                 try {
                     am.setCisloTyp(adresniMisto.getString("cislo_typ"));
                 } catch (Exception e) {
-                    System.out.println("adresni_mista.cislo_typ: " + e.getMessage());
+                    Main.warn(e, "adresni_mista.cislo_typ:");
                 }
 
                 try {
                     am.setCisloDomovni(adresniMisto.getString("cislo_domovni"));
                 } catch (Exception e) {
-                    System.out.println("adresni_mista.cislo_domovni: " + e.getMessage());
+                    Main.warn(e, "adresni_mista.cislo_domovni:");
                 }
 
                 try {
                     am.setCisloOrientacni(adresniMisto.getString("cislo_orientacni"));
                 } catch (Exception e) {
-                    System.out.println("adresni_mista.cislo_orientacni: " + e.getMessage());
+                    Main.warn(e, "adresni_mista.cislo_orientacni:");
                 }
 
                 try {
                     am.setUliceID(Long.parseLong(adresniMisto.getString("ulice_kod")));
                 } catch (Exception e) {
-                    System.out.println("adresni_mista.ulice_kod: " + e.getMessage());
+                    Main.warn(e, "adresni_mista.ulice_kod:");
                 }
 
                 try {
                     am.setUlice(adresniMisto.getString("ulice"));
                 } catch (Exception e) {
-                    System.out.println("adresni_mista.ulice: " + e.getMessage());
+                    Main.warn(e, "adresni_mista.ulice:");
                 }
 
                 try {
                     am.setCastObceID(Long.parseLong(adresniMisto.getString("cast_obce_kod")));
                 } catch (Exception e) {
-                    System.out.println("adresni_mista.cast_obce_kod: " + e.getMessage());
+                    Main.warn(e, "adresni_mista.cast_obce_kod:");
                 }
 
                 try {
                     am.setCastObce(adresniMisto.getString("cast_obce"));
                 } catch (Exception e) {
-                    System.out.println("adresni_mista.m_cast_obce: " + e.getMessage());
+                    Main.warn(e, "adresni_mista.m_cast_obce:");
                 }
 
                 try {
                     am.setMestskaCastID(Long.parseLong(adresniMisto.getString("mestska_cast_kod")));
                 } catch (Exception e) {
-                    System.out.println("adresni_mista.mestska_cast_kod: " + e.getMessage());
+                    Main.warn(e, "adresni_mista.mestska_cast_kod:");
                 }
 
                 try {
                     am.setMestskaCast(adresniMisto.getString("mestska_cast"));
                 } catch (Exception e) {
-                    System.out.println("adresni_mista.mestska_cast: " + e.getMessage());
+                    Main.warn(e, "adresni_mista.mestska_cast:");
                 }
 
                 try {
                     am.setObecID(Long.parseLong(adresniMisto.getString("obec_kod")));
                 } catch (Exception e) {
-                    System.out.println("adresni_mista.obec:_kod " + e.getMessage());
+                    Main.warn(e, "adresni_mista.obec_kod:");
                 }
 
                 try {
                     am.setObec(adresniMisto.getString("obec"));
                 } catch (Exception e) {
-                    System.out.println("adresni_mista.obec: " + e.getMessage());
+                    Main.warn(e, "adresni_mista.obec:");
                 }
 
                 try {
                     am.setOkresID(Long.parseLong(adresniMisto.getString("okres_kod")));
                 } catch (Exception e) {
-                    System.out.println("adresni_mista.okres_kod: " + e.getMessage());
+                    Main.warn(e, "adresni_mista.okres_kod:");
                 }
 
                 try {
                     am.setOkres(adresniMisto.getString("okres"));
                 } catch (Exception e) {
-                    System.out.println("adresni_mista.okres: " + e.getMessage());
+                    Main.warn(e, "adresni_mista.okres:");
                 }
 
                 try {
                     am.setKrajID(Long.parseLong(adresniMisto.getString("kraj_kod")));
                 } catch (Exception e) {
-                    System.out.println("adresni_mista.kraj_kod: " + e.getMessage());
+                    Main.warn(e, "adresni_mista.kraj_kod:");
                 }
 
                 try {
                     am.setKraj(adresniMisto.getString("kraj"));
                 } catch (Exception e) {
-                    System.out.println("adresni_mista.kraj: " + e.getMessage());
+                    Main.warn(e, "adresni_mista.kraj:");
                 }
 
                 try {
                     am.setPsc(adresniMisto.getString("psc"));
                 } catch (Exception e) {
-                    System.out.println("adresni_mista.psc: " + e.getMessage());
+                    Main.warn(e, "adresni_mista.psc:");
                 }
 
                 try {
                     am.setVzdalenost(Float.parseFloat(adresniMisto.getString("vzdalenost")));
                 } catch (Exception e) {
-                    System.out.println("adresni_mista.vzdalenost: " + e.getMessage());
+                    Main.warn(e, "adresni_mista.vzdalenost:");
                 }
 
                 m_adresni_mista.add(am);
             }
         } catch (Exception e) {
-            System.out.println("adresni_mista: " + e.getMessage());
+            Main.warn(e, "adresni_mista:");
         }
     }
 
     private void parseParcela(JsonObject obj) {
         try {
-            JsonObject parcela = obj.getJsonObject("parcela");
+            JsonObject parcela = getSafeJsonObject(obj, "parcela");
 
             try {
                 m_parcela_ruian_id = Long.parseLong(parcela.getString("ruian_id"));
             } catch (Exception e) {
-                System.out.println("parcela.ruian_id: " + e.getMessage());
+                Main.warn(e, "parcela.ruian_id:");
             }
 
             try {
                 m_parcela_druh_pozemku = parcela.getString("druh_pozemku");
             } catch (Exception e) {
-                System.out.println("parcela.druh_pozemku: " + e.getMessage());
+                Main.warn(e, "parcela.druh_pozemku:");
             }
 
             try {
                 m_parcela_zpusob_vyuziti = parcela.getString("zpusob_vyuziti");
             } catch (Exception e) {
-                System.out.println("parcela.zpusob_vyuziti: " + e.getMessage());
+                Main.warn(e, "parcela.zpusob_vyuziti:");
             }
 
             try {
                 m_parcela_plati_od = parcela.getString("plati_od");
             } catch (Exception e) {
-                System.out.println("parcela.plati_od: " + e.getMessage());
+                Main.warn(e, "parcela.plati_od:");
             }
 
         } catch (Exception e) {
-            System.out.println("parcela: " + e.getMessage());
+            Main.warn(e, "parcela:");
         }
     }
 
     private void parseUlice(JsonObject obj) {
         try {
-            JsonObject ulice = obj.getJsonObject("ulice");
+            JsonObject ulice = getSafeJsonObject(obj, "ulice");
 
             try {
                 m_ulice_ruian_id = Long.parseLong(ulice.getString("ruian_id"));
             } catch (Exception e) {
-                System.out.println("ulice.ruian_id: " + e.getMessage());
+                Main.warn(e, "ulice.ruian_id:");
             }
 
             try {
                 m_ulice_jmeno = ulice.getString("jmeno");
             } catch (Exception e) {
-                System.out.println("ulice.jmeno: " + e.getMessage());
+                Main.warn(e, "ulice.jmeno:");
             }
 
         } catch (Exception e) {
-            System.out.println("ulice: " + e.getMessage());
+            Main.warn(e, "ulice:");
         }
     }
 
     private void parseKatastr(JsonObject obj) {
         try {
-            JsonObject katastr = obj.getJsonObject("katastr");
+            JsonObject katastr = getSafeJsonObject(obj, "katastr");
 
             try {
                 m_katastr_ruian_id = Long.parseLong(katastr.getString("ruian_id"));
             } catch (Exception e) {
-                System.out.println("katastr.ruian_id: " + e.getMessage());
+                Main.warn(e, "katastr.ruian_id:");
             }
 
             try {
                 m_katastr_nazev = katastr.getString("nazev");
             } catch (Exception e) {
-                System.out.println("katastr.nazev: " + e.getMessage());
+                Main.warn(e, "katastr.nazev:");
             }
 
             try {
                 m_katastr_obec_kod = Long.parseLong(katastr.getString("obec_kod"));
             } catch (Exception e) {
-                System.out.println("katastr.obec_kod: " + e.getMessage());
+                Main.warn(e, "katastr.obec_kod:");
             }
 
             try {
                 m_katastr_obec = katastr.getString("obec");
             } catch (Exception e) {
-                System.out.println("katastr.okres: " + e.getMessage());
+                Main.warn(e, "katastr.okres:");
             }
 
             try {
                 m_katastr_okres_kod = Long.parseLong(katastr.getString("okres_kod"));
             } catch (Exception e) {
-                System.out.println("katastr.okres_kod: " + e.getMessage());
+                Main.warn(e, "katastr.okres_kod:");
             }
 
             try {
                 m_katastr_okres = katastr.getString("okres");
             } catch (Exception e) {
-                System.out.println("katastr.okres: " + e.getMessage());
+                Main.warn(e, "katastr.okres:");
             }
 
             try {
                 m_katastr_kraj_kod = Long.parseLong(katastr.getString("kraj_kod"));
             } catch (Exception e) {
-                System.out.println("katastr.kraj_kod: " + e.getMessage());
+                Main.warn(e, "katastr.kraj_kod:");
             }
 
             try {
                 m_katastr_kraj = katastr.getString("kraj");
             } catch (Exception e) {
-                System.out.println("katastr.kraj: " + e.getMessage());
+                Main.warn(e, "katastr.kraj:");
             }
 
         } catch (Exception e) {
-            System.out.println("katastr: " + e.getMessage());
+            Main.warn(e, "katastr:");
         }
     }
 
@@ -906,10 +921,10 @@ class RuianRecord {
         String r = new String();
         String[] parts = ruianDate.split("\\.");
         try {
-            int day = Integer.parseInt(parts[0]);
-            int month = Integer.parseInt(parts[1]);
-            int year = Integer.parseInt(parts[2]);
-            r = new Integer(year).toString() + "-" + String.format("%02d", month) + "-" + String.format("%02d", day);
+            int day = Integer.valueOf(parts[0]);
+            int month = Integer.valueOf(parts[1]);
+            int year = Integer.valueOf(parts[2]);
+            r = Integer.toString(year) + "-" + String.format("%02d", month) + "-" + String.format("%02d", day);
         } catch (Exception e) {
             Main.warn(e);
         }
@@ -939,8 +954,8 @@ class RuianRecord {
         // Copy building tags to clipboard
         if (keyType.equals("building") && m_objekt_ruian_id > 0) {
             c.append(tagToString("ref:ruian:building", Long.toString(m_objekt_ruian_id)));
-            if (m_objekt_zpusob_vyuziti_key.length() > 0 &&
-                    m_objekt_zpusob_vyuziti_val.length() > 0
+            if (!m_objekt_zpusob_vyuziti_key.isEmpty() &&
+                !m_objekt_zpusob_vyuziti_val.isEmpty()
                     ) {
                 c.append(tagToString(m_objekt_zpusob_vyuziti_key, m_objekt_zpusob_vyuziti_val));
             }
@@ -959,9 +974,9 @@ class RuianRecord {
             c.append(tagToString("source", "cuzk:ruian"));
         }
 
-        if (keyType.startsWith("ghost") && m_so_bez_geometrie.size() > 0) {
+        if (keyType.startsWith("ghost") && !m_so_bez_geometrie.isEmpty()) {
             String[] key = keyType.split(":");
-            int i = new Integer(key[1]);
+            int i = Integer.valueOf(key[1]);
             System.out.println("Ghost ID: " + i);
 
             c.append(tagToString("ref:ruian:building", Long.toString(m_so_bez_geometrie.get(i).getRuianID())));
@@ -987,15 +1002,15 @@ class RuianRecord {
 
         // Copy address tags to clipboard
         if (keyType.startsWith("address")) {
-            if (m_adresni_mista.size() > 0) {
+            if (!m_adresni_mista.isEmpty()) {
                 int i;
 
-                if (m_adresni_mista.size() == 0) {
+                if (m_adresni_mista.isEmpty()) {
                     i = 0;
                 } else {
                     String[] key = keyType.split(":");
-                    i = new Integer(key[1]);
-                    System.out.println("Address ID: " + i);
+                    i = Integer.valueOf(key[1]);
+                    Main.info("Address ID: " + i);
                 }
 
                 // Only one address place
@@ -1078,25 +1093,25 @@ class RuianRecord {
      * @param t OSM tags in string
      */
     void createAddrPoint(String cmd, String t) {
-        Collection<Command> commands = new LinkedList<Command>();
+        Collection<Command> commands = new LinkedList<>();
         Node node;
         if (cmd.startsWith("tags.create-on-place")) {
             String[] key = cmd.split(":");
-            int i = new Integer(key[1]);
+            int i = Integer.valueOf(key[1]);
             node = new Node(m_adresni_mista.get(i).getPosition());
         } else {
             node = new Node(new LatLon(m_coor_lat, m_coor_lon));
         }
         commands.add(new AddCommand(node));
 
-        Collection<OsmPrimitive> coll = new LinkedList<OsmPrimitive>();
+        Collection<OsmPrimitive> coll = new LinkedList<>();
         coll.add(node);
 
         TagCollection tc = new TagCollection();
-        ArrayList<String> list = new ArrayList<String>(Arrays.asList(t.split("\n")));
+        ArrayList<String> list = new ArrayList<>(Arrays.asList(t.split("\n")));
         for (String line : list) {
             String[] tag = line.split("\"=\"");
-            System.out.println("<" + tag[0] + ">. <" + tag[1] +">");
+            Main.info("<" + tag[0] + ">. <" + tag[1] +">");
             tc.add(new Tag(tag[0].substring(1), tag[1].substring(0, tag[1].length()-1)));
         }
 
@@ -1112,7 +1127,7 @@ class RuianRecord {
      */
     public void performAction(String act) {
 
-        System.out.println("act: " + act.substring(7));
+        Main.info("act: " + act.substring(7));
         String[] params = act.substring(7).split("/");
         if (!params[0].equals("tags.copy") && !params[0].startsWith("tags.create")) {
             return;
@@ -1122,15 +1137,15 @@ class RuianRecord {
 
         // Copy tags to clipboard
         if (params[0].equals("tags.copy")) {
-            if (task.length() > 0) {
-                Utils.copyToClipboard(task);
+            if (!task.isEmpty()) {
+                ClipboardUtils.copyString(task);
                 PointInfoUtils.showNotification(tr("Tags copied to clipboard."), "info");
             }
         }
 
         // Create address node
         if (params[0].startsWith("tags.create")) {
-            if (task.length() > 0) {
+            if (!task.isEmpty()) {
                 createAddrPoint(act.substring(7), task);
                 PointInfoUtils.showNotification(tr("New address point added."), "info");
             }

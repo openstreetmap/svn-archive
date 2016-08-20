@@ -4,7 +4,7 @@
     <!-- enter the SVN commit message -->
     <property name="commit.message" value="PointInfo: Fix breakage caused by API cleaning."/>
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
-    <property name="plugin.main.version" value="10580"/>
+    <property name="plugin.main.version" value="10604"/>
 
     <!-- plugin can load at runtime -->
     <property name="plugin.canloadatruntime" value="true"/>

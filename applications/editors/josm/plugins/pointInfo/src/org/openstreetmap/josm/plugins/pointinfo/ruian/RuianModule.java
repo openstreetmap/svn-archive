@@ -13,7 +13,6 @@ import org.openstreetmap.josm.tools.HttpClient;
  */
 public class RuianModule {
 
-    private String m_text = "";
     private String URL = "http://josm.poloha.net/pointInfo/v4/index.php";
 
     private RuianRecord m_record = new RuianRecord();

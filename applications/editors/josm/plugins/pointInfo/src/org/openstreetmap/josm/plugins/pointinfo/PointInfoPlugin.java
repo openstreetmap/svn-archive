@@ -12,6 +12,10 @@ import org.openstreetmap.josm.plugins.PluginInformation;
  */
 public class PointInfoPlugin extends Plugin {
 
+    /**
+     * Constructs a new {@code PointInfoPlugin}.
+     * @param info plugin information
+     */
     public PointInfoPlugin(PluginInformation info) {
         super(info);
         MainMenu.add(Main.main.menu.moreToolsMenu, new PointInfoAction(Main.map));

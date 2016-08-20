@@ -16,7 +16,6 @@ import javax.swing.JEditorPane;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.event.HyperlinkEvent;
-import javax.swing.event.HyperlinkListener;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.mapmode.MapMode;
@@ -92,21 +91,18 @@ class PointInfoAction extends MapMode implements MouseListener {
                         JEditorPane msgLabel = new JEditorPane("text/html", htmlText);
                         msgLabel.setEditable(false);
                         msgLabel.setOpaque(false);
-                        msgLabel.addHyperlinkListener(new HyperlinkListener() {
-                            @Override
-                            public void hyperlinkUpdate(HyperlinkEvent hle) {
-                                if (HyperlinkEvent.EventType.ACTIVATED.equals(hle.getEventType())) {
-                                    if (hle.getURL() == null || hle.getURL().toString().isEmpty()) {
-                                        return;
-                                    }
-                                    System.out.println("URL: "+ hle.getURL());
-                                    if (!hle.getURL().toString().startsWith("http")) {
-                                        mRuian.performAction(hle.getURL().toString());
-                                    } else {
-                                        String ret = OpenBrowser.displayUrl(hle.getURL().toString());
-                                        if (ret != null) {
-                                            PointInfoUtils.showNotification(ret, "error");
-                                        }
+                        msgLabel.addHyperlinkListener(hle -> {
+                            if (HyperlinkEvent.EventType.ACTIVATED.equals(hle.getEventType())) {
+                                if (hle.getURL() == null || hle.getURL().toString().isEmpty()) {
+                                    return;
+                                }
+                                System.out.println("URL: "+ hle.getURL());
+                                if (!hle.getURL().toString().startsWith("http")) {
+                                    mRuian.performAction(hle.getURL().toString());
+                                } else {
+                                    String ret = OpenBrowser.displayUrl(hle.getURL().toString());
+                                    if (ret != null) {
+                                        PointInfoUtils.showNotification(ret, "error");
                                     }
                                 }
                             }
@@ -126,7 +122,7 @@ class PointInfoAction extends MapMode implements MouseListener {
             };
             new Thread(infoTask).start();
         } catch (Exception e) {
-            e.printStackTrace();
+            Main.error(e);
         }
     }
 

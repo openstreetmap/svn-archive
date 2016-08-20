@@ -8,7 +8,11 @@ import javax.swing.JOptionPane;
 
 import org.openstreetmap.josm.gui.Notification;
 
-public abstract class PointInfoUtils {
+public final class PointInfoUtils {
+
+    private PointInfoUtils() {
+        // Hide default constructor for utilities classes
+    }
 
     /**
      * Show notification.
@@ -18,11 +22,11 @@ public abstract class PointInfoUtils {
     public static void showNotification(String message, String type) {
         Notification note = new Notification(message);
 
-        if (type.equals("info"))
+        if ("info".equals(type))
             note.setIcon(JOptionPane.INFORMATION_MESSAGE);
-        else if (type.equals("warning"))
+        else if ("warning".equals(type))
             note.setIcon(JOptionPane.WARNING_MESSAGE);
-        else if (type.equals("error"))
+        else if ("error".equals(type))
             note.setIcon(JOptionPane.ERROR_MESSAGE);
         else
             note.setIcon(JOptionPane.PLAIN_MESSAGE);
@@ -39,13 +43,11 @@ public abstract class PointInfoUtils {
      */
     public static String formatCoordinates(double lat, double lon) {
 
-        String r = "";
         DecimalFormatSymbols symbols = new DecimalFormatSymbols();
         symbols.setDecimalSeparator('.');
         symbols.setGroupingSeparator(' ');
         DecimalFormat df = new DecimalFormat("#.00000", symbols);
 
-        r = "(" + df.format(lat) + ", " + df.format(lon) + ")";
-        return r;
+        return "(" + df.format(lat) + ", " + df.format(lon) + ")";
     }
 }

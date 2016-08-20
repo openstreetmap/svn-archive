@@ -127,12 +127,11 @@ class RuianRecord {
         m_katastr_okres = "";
         m_katastr_kraj_kod = 0;
         m_katastr_kraj = "";
-
     }
 
     /**
      * Parse given JSON string and fill variables with RUIAN data
-     *
+     * @param jsonStr JSON string
      */
     public void parseJSON(String jsonStr) {
 
@@ -662,10 +661,10 @@ class RuianRecord {
         StringBuilder r = new StringBuilder();
 
         if (m_objekt_ruian_id == 0 &&
-                m_parcela_ruian_id == 0 &&
-                m_adresni_mista.size() == 0 &&
-                m_ulice_ruian_id == 0 &&
-                m_katastr_ruian_id == 0)
+            m_parcela_ruian_id == 0 &&
+            m_adresni_mista.size() == 0 &&
+            m_ulice_ruian_id == 0 &&
+            m_katastr_ruian_id == 0)
             return "";
 
         r.append("<html><body bgcolor=\"white\" color=\"black\" ><table><tr><td>");
@@ -768,7 +767,7 @@ class RuianRecord {
         }
 
         // Reported errors
-        if (m_objekt_ruian_id > 0 && !m_err_user.equals("")) {
+        if (m_objekt_ruian_id > 0 && !m_err_user.isEmpty()) {
             r.append("<i><u>Nahlášený problém</u></i>");
             r.append("&nbsp;&nbsp;<a href=" + url_ruian_error + m_objekt_ruian_id + ">"+ icon_ext_link +"</a><br/>");
             r.append("<b>Nahlásil: </b>" + m_err_user);
@@ -777,7 +776,7 @@ class RuianRecord {
             r.append("<br/>");
             r.append("<b>Typ problému: </b>" + m_err_type);
             r.append("<br/>");
-            if (!m_err_note.equals("")) {
+            if (!m_err_note.isEmpty()) {
                 r.append("<b>Poznámka: </b>" + m_err_note);
                 r.append("<br/>");
             }
@@ -841,7 +840,7 @@ class RuianRecord {
         }
 
         // Near address places
-        if (m_adresni_mista.size() > 0 && m_objekt_ruian_id == 0) {
+        if (!m_adresni_mista.isEmpty() && m_objekt_ruian_id == 0) {
             String x, x_name;
             r.append("<i><u>Adresní místa v okolí</u></i><br/>");
             r.append("<table>");
@@ -885,7 +884,7 @@ class RuianRecord {
             r.append("</table><br/>");
         }
 
-        if (m_so_bez_geometrie.size() > 0) {
+        if (!m_so_bez_geometrie.isEmpty()) {
             r.append("<i><u>Budovy bez geometrie v okolí</u></i><br/>");
             r.append("<table>");
             for (int i = 0; i < m_so_bez_geometrie.size(); i++) {
@@ -921,9 +920,9 @@ class RuianRecord {
         String r = new String();
         String[] parts = ruianDate.split("\\.");
         try {
-            int day = Integer.valueOf(parts[0]);
-            int month = Integer.valueOf(parts[1]);
-            int year = Integer.valueOf(parts[2]);
+            int day = Integer.parseInt(parts[0]);
+            int month = Integer.parseInt(parts[1]);
+            int year = Integer.parseInt(parts[2]);
             r = Integer.toString(year) + "-" + String.format("%02d", month) + "-" + String.format("%02d", day);
         } catch (Exception e) {
             Main.warn(e);
@@ -939,8 +938,7 @@ class RuianRecord {
      * @return String OSM tag string for clipboard
      */
     String tagToString(String k, String v) {
-        String r = "\"" + k + "\"=\"" + v + "\"\n";
-        return r;
+        return "\"" + k + "\"=\"" + v + "\"\n";
     }
 
     /**
@@ -976,7 +974,7 @@ class RuianRecord {
 
         if (keyType.startsWith("ghost") && !m_so_bez_geometrie.isEmpty()) {
             String[] key = keyType.split(":");
-            int i = Integer.valueOf(key[1]);
+            int i = Integer.parseInt(key[1]);
             System.out.println("Ghost ID: " + i);
 
             c.append(tagToString("ref:ruian:building", Long.toString(m_so_bez_geometrie.get(i).getRuianID())));
@@ -1097,7 +1095,7 @@ class RuianRecord {
         Node node;
         if (cmd.startsWith("tags.create-on-place")) {
             String[] key = cmd.split(":");
-            int i = Integer.valueOf(key[1]);
+            int i = Integer.parseInt(key[1]);
             node = new Node(m_adresni_mista.get(i).getPosition());
         } else {
             node = new Node(new LatLon(m_coor_lat, m_coor_lon));

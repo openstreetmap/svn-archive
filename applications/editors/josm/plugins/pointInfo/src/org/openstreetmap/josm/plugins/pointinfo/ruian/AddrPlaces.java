@@ -217,7 +217,6 @@ class AddrPlaces {
     }
 
     public String getVzdalenost() {
-        DecimalFormat df = new DecimalFormat("0.00");
-        return df.format(m_vzdalenost) + "m";
+        return new DecimalFormat("0.00").format(m_vzdalenost) + "m";
     }
 }

@@ -4,21 +4,26 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
 import org.openstreetmap.josm.command.Command;
+import org.openstreetmap.josm.command.SelectCommand;
 import org.openstreetmap.josm.command.SequenceCommand;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
+import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.OsmPrimitiveType;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.data.validation.Severity;
 import org.openstreetmap.josm.data.validation.Test;
 import org.openstreetmap.josm.data.validation.TestError;
+import org.openstreetmap.josm.gui.Notification;
+import org.openstreetmap.josm.plugins.pt_assistant.PTAssistantPlugin;
 import org.openstreetmap.josm.plugins.pt_assistant.actions.FixTask;
 import org.openstreetmap.josm.plugins.pt_assistant.actions.IncompleteMembersDownloadThread;
 import org.openstreetmap.josm.plugins.pt_assistant.data.PTRouteDataManager;
@@ -50,8 +55,6 @@ public class PTAssistantValidatorTest extends Test {
 	public static final int ERROR_CODE_STOP_AREA_NO_PLATFORM = 3763;
 	public static final int ERROR_CODE_STOP_AREA_COMPARE_RELATIONS = 3764;
 
-
-
 	private PTAssistantLayer layer;
 
 	public PTAssistantValidatorTest() {
@@ -74,10 +77,10 @@ public class PTAssistantValidatorTest extends Test {
 
 		// select only stop_positions
 		if (n.hasTag("public_transport", "stop_position")) {
-			
+
 			// check if stop positions are on a way:
 			nodeChecker.performSolitaryStopPositionTest();
-			
+
 			// check if stop positions are in any stop_area relation:
 			nodeChecker.performNodePartOfStopAreaTest();
 
@@ -85,33 +88,34 @@ public class PTAssistantValidatorTest extends Test {
 
 		// select only platforms
 		if (n.hasTag("public_transport", "platform")) {
-			
+
 			// check that platforms are not part of any way:
 			nodeChecker.performPlatformPartOfWayTest();
-			
+
 			// check if platforms are in any stop_area relation:
 			nodeChecker.performNodePartOfStopAreaTest();
 		}
-		
+
 		this.errors.addAll(nodeChecker.getErrors());
 
 	}
 
 	@Override
 	public void visit(Relation r) {
-				
+
 		// Do some testing on stop area relations
 		if (StopUtils.isStopArea(r)) {
 
 			StopChecker stopChecker = new StopChecker(r, this);
-			
-			// Check if stop area relation has one stop position. 
+
+			// Check if stop area relation has one stop position.
 			stopChecker.performStopAreaStopPositionTest();
 
-			// Check if stop area relation has one platform. 
+			// Check if stop area relation has one platform.
 			stopChecker.performStopAreaPlatformTest();
-			
-			// Check if stop position(s) belong the same route relation as related platform(s)
+
+			// Check if stop position(s) belong the same route relation as
+			// related platform(s)
 			stopChecker.performStopAreaRelationsTest();
 
 			// Attach thrown errors
@@ -380,7 +384,7 @@ public class PTAssistantValidatorTest extends Test {
 				Way segmentStartWay = assigner.get(segmentStartStop);
 				Way segmentEndWay = assigner.get(segmentEndStop);
 				List<PTWay> waysBetweenStops = manager.getPTWaysBetween(segmentStartWay, segmentEndWay);
-				PTRouteSegment routeSegment = new PTRouteSegment(segmentStartStop, segmentEndStop, waysBetweenStops);
+				PTRouteSegment routeSegment = new PTRouteSegment(segmentStartStop, segmentEndStop, waysBetweenStops, r);
 				SegmentChecker.addCorrectSegment(routeSegment);
 			}
 		}
@@ -407,12 +411,15 @@ public class PTAssistantValidatorTest extends Test {
 
 	@Override
 	public Command fixError(TestError testError) {
-		
+
 		// repaint the relation in the pt_assistant layer:
 		if (testError.getPrimitives().iterator().next().getType().equals(OsmPrimitiveType.RELATION)) {
 			Relation relationToBeFixed = (Relation) testError.getPrimitives().iterator().next();
 			this.layer.repaint(relationToBeFixed);
 		}
+
+		// reset the last fix:
+		PTAssistantPlugin.setLastFix(null);
 
 		List<Command> commands = new ArrayList<>();
 
@@ -436,6 +443,18 @@ public class PTAssistantValidatorTest extends Test {
 
 		if (testError.getCode() == ERROR_CODE_STOP_BY_STOP) {
 			commands.add(SegmentChecker.fixError(testError));
+			// make sure the primitives of this testError are selected:
+			Collection<OsmPrimitive> primitivesToSelect = new ArrayList<>();
+			for (Object obj : testError.getPrimitives()) {
+				primitivesToSelect.add((OsmPrimitive) obj);
+			}
+			SelectCommand selectCommand = new SelectCommand(primitivesToSelect);
+			SwingUtilities.invokeLater(new Runnable() {
+				@Override
+				public void run() {
+					selectCommand.executeCommand();
+				}
+			});
 		}
 
 		if (commands.isEmpty()) {
@@ -473,15 +492,15 @@ public class PTAssistantValidatorTest extends Test {
 		}
 
 	}
-	
+
 	public void addFixVariants(List<List<PTWay>> fixVariants) {
 		layer.addFixVariants(fixVariants);
 	}
-	
+
 	public void clearFixVariants() {
 		layer.clearFixVariants();
 	}
-	
+
 	public List<PTWay> getFixVariant(Character c) {
 		return layer.getFixVariant(c);
 	}

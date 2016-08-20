@@ -1,16 +1,21 @@
 //License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.pt_assistant;
 
+import static org.openstreetmap.josm.tools.I18n.tr;
+
 import javax.swing.JMenuItem;
+import javax.swing.SwingUtilities;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.validation.OsmValidator;
 import org.openstreetmap.josm.gui.MainMenu;
 import org.openstreetmap.josm.gui.MapFrame;
+import org.openstreetmap.josm.gui.Notification;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
 import org.openstreetmap.josm.plugins.pt_assistant.actions.AddStopPositionAction;
 import org.openstreetmap.josm.plugins.pt_assistant.actions.RepeatLastFixAction;
+import org.openstreetmap.josm.plugins.pt_assistant.data.PTRouteSegment;
 import org.openstreetmap.josm.plugins.pt_assistant.validation.PTAssistantValidatorTest;
 
 /**
@@ -21,8 +26,14 @@ import org.openstreetmap.josm.plugins.pt_assistant.validation.PTAssistantValidat
  */
 public class PTAssistantPlugin extends Plugin {
 
+	/*
+	 * last fix that was can be re-applied to all similar route segments, can be
+	 * null if unavailable
+	 */
+	private static PTRouteSegment lastFix;
+
 	private JMenuItem addStopPositionMenu;
-	private JMenuItem repeatLastFixMenu;
+	private static JMenuItem repeatLastFixMenu;
 
 	/**
 	 * Main constructor.
@@ -35,12 +46,12 @@ public class PTAssistantPlugin extends Plugin {
 		super(info);
 
 		OsmValidator.addTest(PTAssistantValidatorTest.class);
-		
+
 		AddStopPositionAction addStopPositionAction = new AddStopPositionAction();
 		addStopPositionMenu = MainMenu.add(Main.main.menu.toolsMenu, addStopPositionAction, false);
 		RepeatLastFixAction repeatLastFixAction = new RepeatLastFixAction();
 		repeatLastFixMenu = MainMenu.add(Main.main.menu.toolsMenu, repeatLastFixAction, false);
-		
+
 	}
 
 	/**
@@ -50,9 +61,32 @@ public class PTAssistantPlugin extends Plugin {
 	public void mapFrameInitialized(MapFrame oldFrame, MapFrame newFrame) {
 		if (oldFrame == null && newFrame != null) {
 			addStopPositionMenu.setEnabled(true);
+			repeatLastFixMenu.setEnabled(false);
 		} else if (oldFrame != null && newFrame == null) {
 			addStopPositionMenu.setEnabled(false);
+			repeatLastFixMenu.setEnabled(false);
 		}
+	}
+	
+	public static PTRouteSegment getLastFix() {
+		return lastFix;
+	}
+
+	/**
+	 * Remembers the last fix and enables/disables the Repeat last fix menu
+	 * 
+	 * @param segment
+	 *            The last fix, call be null to disable the Repeat last fix menu
+	 */
+	public static void setLastFix(PTRouteSegment segment) {
+		lastFix = segment;
+		
+		SwingUtilities.invokeLater(new Runnable() {
+			@Override
+			public void run() {
+				repeatLastFixMenu.setEnabled(segment != null);
+			}
+		});
 	}
 
 }

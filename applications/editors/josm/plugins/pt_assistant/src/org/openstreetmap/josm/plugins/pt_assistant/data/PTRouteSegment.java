@@ -3,6 +3,7 @@ package org.openstreetmap.josm.plugins.pt_assistant.data;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.Way;
 
 /**
@@ -21,13 +22,15 @@ public class PTRouteSegment {
 	private PTStop lastStop;
 	private List<PTWay> ptways;
 	private List<List<PTWay>> fixVariants;
+	private Relation relation;
 
-	public PTRouteSegment(PTStop firstStop, PTStop lastStop, List<PTWay> ways) {
+	public PTRouteSegment(PTStop firstStop, PTStop lastStop, List<PTWay> ways, Relation relation) {
 		this.firstStop = firstStop;
 		this.lastStop = lastStop;
 		this.ptways = new ArrayList<>(ways.size());
 		ptways.addAll(ways);
 		fixVariants = new ArrayList<>();
+		this.relation = relation;
 	}
 
 	public List<PTWay> getPTWays() {
@@ -112,6 +115,10 @@ public class PTRouteSegment {
 
 	public List<List<PTWay>> getFixVariants() {
 		return this.fixVariants;
+	}
+	
+	public Relation getRelation() {
+		return this.relation;
 	}
 
 	/**

@@ -3,13 +3,12 @@ package org.openstreetmap.josm.plugins.pt_assistant.validation;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
-import java.util.HashMap;
 
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
-import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.data.validation.Severity;
 import org.openstreetmap.josm.data.validation.Test;
 import org.openstreetmap.josm.data.validation.TestError;
@@ -128,7 +127,7 @@ public class StopChecker extends Checker {
 		List<OsmPrimitive> primitives = new ArrayList<>(1);
 		primitives.add(relation);
 		TestError e = new TestError(this.test, Severity.WARNING,
-				tr("PT: Route relations of stop position(s) and platform(s) of stop area memebrs diverge"),
+				tr("PT: Route relations of stop position(s) and platform(s) of stop area members diverge"),
 				PTAssistantValidatorTest.ERROR_CODE_STOP_AREA_COMPARE_RELATIONS, primitives);
 		errors.add(e);
 	}

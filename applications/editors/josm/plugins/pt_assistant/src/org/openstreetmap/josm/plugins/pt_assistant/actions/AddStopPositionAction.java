@@ -36,7 +36,6 @@ public class AddStopPositionAction extends JosmAction {
 				Shortcut.registerShortcut("Add stop position", tr("Add stop position"), KeyEvent.VK_T, Shortcut.NONE),
 				false, "addStopPosition", false);
 
-		this.setEnabled(true);
 	}
 
 	@Override

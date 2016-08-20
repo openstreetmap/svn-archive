@@ -28,6 +28,7 @@ import org.openstreetmap.josm.gui.Notification;
 import org.openstreetmap.josm.gui.dialogs.relation.GenericRelationEditor;
 import org.openstreetmap.josm.gui.dialogs.relation.RelationEditor;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
+import org.openstreetmap.josm.plugins.pt_assistant.PTAssistantPlugin;
 import org.openstreetmap.josm.plugins.pt_assistant.data.PTRouteDataManager;
 import org.openstreetmap.josm.plugins.pt_assistant.data.PTRouteSegment;
 import org.openstreetmap.josm.plugins.pt_assistant.data.PTStop;
@@ -56,12 +57,6 @@ public class SegmentChecker extends Checker {
 	/* Assigns PTStops to nearest PTWays and stores that correspondence */
 	private StopToWayAssigner assigner;
 
-	private List<PTWay> unusedWays = new ArrayList<>();
-
-	private HashMap<TestError, PTWay> erroneousPTWays = new HashMap<>();
-
-	private HashMap<TestError, Node> firstNodeOfErroneousPTWay = new HashMap<>();
-
 	public SegmentChecker(Relation relation, Test test) {
 
 		super(relation, test);
@@ -79,8 +74,6 @@ public class SegmentChecker extends Checker {
 		}
 
 		this.assigner = new StopToWayAssigner(manager.getPTWays());
-
-		unusedWays.addAll(manager.getPTWays());
 
 	}
 
@@ -283,10 +276,8 @@ public class SegmentChecker extends Checker {
 					TestError e = new TestError(this.test, Severity.WARNING, tr("PT: Problem in the route segment"),
 							PTAssistantValidatorTest.ERROR_CODE_STOP_BY_STOP, primitives, highlighted);
 					this.errors.add(e);
-					PTRouteSegment routeSegment = new PTRouteSegment(startStop, endStop, segmentWays);
+					PTRouteSegment routeSegment = new PTRouteSegment(startStop, endStop, segmentWays, relation);
 					wrongSegments.put(e, routeSegment);
-					erroneousPTWays.put(e, manager.getPTWay(startWay));
-					firstNodeOfErroneousPTWay.put(e, null);
 				}
 				continue;
 			}
@@ -294,11 +285,10 @@ public class SegmentChecker extends Checker {
 			boolean sortingCorrect = existingWaySortingIsCorrect(segmentWays.get(0), firstNode,
 					segmentWays.get(segmentWays.size() - 1));
 			if (sortingCorrect) {
-				PTRouteSegment routeSegment = new PTRouteSegment(startStop, endStop, segmentWays);
+				PTRouteSegment routeSegment = new PTRouteSegment(startStop, endStop, segmentWays, relation);
 				addCorrectSegment(routeSegment);
-				unusedWays.removeAll(segmentWays);
 			} else {
-				PTRouteSegment routeSegment = new PTRouteSegment(startStop, endStop, segmentWays);
+				PTRouteSegment routeSegment = new PTRouteSegment(startStop, endStop, segmentWays, relation);
 				TestError error = this.errors.get(this.errors.size() - 1);
 				wrongSegments.put(error, routeSegment);
 			}
@@ -451,7 +441,6 @@ public class SegmentChecker extends Checker {
 					TestError e = new TestError(this.test, Severity.WARNING, tr("PT: Problem in the route segment"),
 							PTAssistantValidatorTest.ERROR_CODE_STOP_BY_STOP, primitives, highlighted);
 					this.errors.add(e);
-					erroneousPTWays.put(e, current);
 					return false;
 				}
 			} else {
@@ -648,7 +637,7 @@ public class SegmentChecker extends Checker {
 				error.setMessage(tr("PT: Problem in the route segment with one automatic fix"));
 			} else {
 				error.setMessage("PT: Problem in the route segment with several automatic fixes");
-			}
+			} 
 		}
 
 	}
@@ -788,6 +777,7 @@ public class SegmentChecker extends Checker {
 				return null;
 			}
 
+			PTAssistantPlugin.setLastFix(correctSegmentsForThisError.get(0));
 			return carryOutSingleFix(testError, correctSegmentsForThisError.get(0).getPTWays());
 
 		} else if (!wrongSegment.getFixVariants().isEmpty()) {
@@ -798,6 +788,8 @@ public class SegmentChecker extends Checker {
 				return null;
 			}
 
+			PTAssistantPlugin.setLastFix(new PTRouteSegment(wrongSegment.getFirstStop(),
+					wrongSegment.getLastStop(), wrongSegment.getFixVariants().get(0), (Relation) testError.getPrimitives().iterator().next()));
 			return carryOutSingleFix(testError, wrongSegment.getFixVariants().get(0));
 		}
 
@@ -903,14 +895,19 @@ public class SegmentChecker extends Checker {
 	 * @param fix
 	 *            the fix variant to be adopted
 	 */
-	private static void carryOutSelectedFix(TestError testError, List<PTWay> fix) {
+	private static void carryOutSelectedFix(TestError testError, List<PTWay> fix){
 		// modify the route:
-		Relation route = (Relation) testError.getPrimitives().iterator().next();
-		route.setMembers(getModifiedRelationMembers(testError, fix));
+		Relation originalRelation = (Relation) testError.getPrimitives().iterator().next();
+		Relation modifiedRelation = new Relation(originalRelation);
+		modifiedRelation.setMembers(getModifiedRelationMembers(testError, fix));
+		ChangeCommand changeCommand = new ChangeCommand(originalRelation, modifiedRelation);
+		Main.main.undoRedo.addNoRedraw(changeCommand);
+		Main.main.undoRedo.afterAdd();
 		PTRouteSegment wrongSegment = wrongSegments.get(testError);
 		wrongSegments.remove(testError);
 		wrongSegment.setPTWays(fix);
 		addCorrectSegment(wrongSegment);
+		PTAssistantPlugin.setLastFix(wrongSegment);
 
 		// get ways for the fix:
 		List<Way> primitives = new ArrayList<>();
@@ -922,15 +919,15 @@ public class SegmentChecker extends Checker {
 		OsmDataLayer layer = null;
 		List<OsmDataLayer> listOfLayers = Main.getLayerManager().getLayersOfType(OsmDataLayer.class);
 		for (OsmDataLayer osmDataLayer : listOfLayers) {
-			if (osmDataLayer.data == route.getDataSet()) {
+			if (osmDataLayer.data == originalRelation.getDataSet()) {
 				layer = osmDataLayer;
 				break;
 			}
 		}
 
 		// create editor:
-		GenericRelationEditor editor = (GenericRelationEditor) RelationEditor.getEditor(layer, route,
-				route.getMembersFor(primitives));
+		GenericRelationEditor editor = (GenericRelationEditor) RelationEditor.getEditor(layer, originalRelation,
+				originalRelation.getMembersFor(primitives));
 
 		// open editor:
 		editor.setVisible(true);
@@ -976,8 +973,8 @@ public class SegmentChecker extends Checker {
 		Relation modifiedRelation = new Relation(originalRelation);
 		modifiedRelation.setMembers(getModifiedRelationMembers(testError, fix));
 		wrongSegments.remove(testError);
-		return new ChangeCommand(originalRelation, modifiedRelation);
-
+		ChangeCommand changeCommand = new ChangeCommand(originalRelation, modifiedRelation);
+		return changeCommand;
 	}
 
 	/**
@@ -1012,6 +1009,51 @@ public class SegmentChecker extends Checker {
 		}
 
 		return modifiedRelationMembers;
+	}
+	
+	public static void carryOutRepeatLastFix(PTRouteSegment segment) {
+		
+		System.out.println("last fix relation: " + segment.getRelation().getId());
+		List<TestError> wrongSegmentsToRemove = new ArrayList<>();
+		
+		int counter = 0;
+		// find all wrong ways that have the same segment:
+		for (TestError testError: wrongSegments.keySet()) {
+			PTRouteSegment wrongSegment = wrongSegments.get(testError);
+			if (wrongSegment.getFirstWay() == segment.getFirstWay() && wrongSegment.getLastWay() == segment.getLastWay()) {
+				counter++;
+				System.out.println("wrong segment: " + wrongSegment.getRelation().getId());
+				// modify the route:
+				Relation originalRelation = wrongSegment.getRelation();
+				Relation modifiedRelation = new Relation(originalRelation);
+				modifiedRelation.setMembers(getModifiedRelationMembers(testError, segment.getPTWays())); 
+				ChangeCommand changeCommand = new ChangeCommand(originalRelation, modifiedRelation);
+				Main.main.undoRedo.addNoRedraw(changeCommand);
+				Main.main.undoRedo.afterAdd();
+				wrongSegmentsToRemove.add(testError);
+			}
+		}
+		
+		// update the errors displayed in the validator dialog:
+		List<TestError> modifiedValidatorTestErrors = new ArrayList<>();
+		for (TestError validatorTestError: Main.map.validatorDialog.tree.getErrors()) {
+			if (!wrongSegmentsToRemove.contains(validatorTestError)) {
+				modifiedValidatorTestErrors.add(validatorTestError);
+			}
+		}
+		Main.map.validatorDialog.tree.setErrors(modifiedValidatorTestErrors);
+		
+		// update wrong segments:
+		for (TestError testError: wrongSegmentsToRemove) {
+			wrongSegments.remove(testError);
+		}
+		
+		System.out.println("wrong segments found: " + counter);
+		System.out.println();
+		
+		
+		
+		
 	}
 
 }

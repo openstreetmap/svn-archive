@@ -4,20 +4,18 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
-import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.actions.AutoScaleAction;
 import org.openstreetmap.josm.command.ChangeCommand;
 import org.openstreetmap.josm.command.Command;
-import org.openstreetmap.josm.command.SelectCommand;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.OsmPrimitiveType;
-import org.openstreetmap.josm.data.osm.Relation;
-import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.data.validation.Severity;
 import org.openstreetmap.josm.data.validation.Test;
@@ -102,7 +100,6 @@ public class NodeChecker extends Checker {
 		}
 	}
 
-
 	/**
 	 * Fixes errors: solitary stop position and platform which is part of a way.
 	 * Asks the user first.
@@ -118,10 +115,6 @@ public class NodeChecker extends Checker {
 		}
 
 		Node problematicNode = (Node) testError.getPrimitives().iterator().next();
-		ArrayList<OsmPrimitive> primitivesToSelect = new ArrayList<>(1);
-		primitivesToSelect.add(problematicNode);
-		SelectCommand selectCommand = new SelectCommand(primitivesToSelect);
-		selectCommand.executeCommand();
 
 		final int[] userSelection = { JOptionPane.YES_OPTION };
 		final TestError errorParameter = testError;
@@ -164,7 +157,11 @@ public class NodeChecker extends Checker {
 
 	private static int showFixNodeTagDialog(TestError e) {
 		Node problematicNode = (Node) e.getPrimitives().iterator().next();
-		Main.map.mapView.zoomTo(problematicNode.getCoor());
+		// Main.map.mapView.zoomTo(problematicNode.getCoor());
+		// zoom to problem:
+		Collection<OsmPrimitive> primitives = new ArrayList<>(1);
+		primitives.add(problematicNode);
+		AutoScaleAction.zoomTo(primitives);
 
 		String[] options = { tr("Yes"), tr("No") };
 		String message;

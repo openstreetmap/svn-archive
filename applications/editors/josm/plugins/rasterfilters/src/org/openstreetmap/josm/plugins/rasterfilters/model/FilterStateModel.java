@@ -1,19 +1,15 @@
 package org.openstreetmap.josm.plugins.rasterfilters.model;
 
-import java.awt.Color;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Map.Entry;
+import org.openstreetmap.josm.plugins.rasterfilters.values.*;
 
 import javax.json.Json;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
+import java.awt.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 
-import org.openstreetmap.josm.plugins.rasterfilters.values.BooleanValue;
-import org.openstreetmap.josm.plugins.rasterfilters.values.ColorValue;
-import org.openstreetmap.josm.plugins.rasterfilters.values.SelectValue;
-import org.openstreetmap.josm.plugins.rasterfilters.values.SliderValue;
-import org.openstreetmap.josm.plugins.rasterfilters.values.Value;
 /**
  * Filter state's model which stores all parameters of
  * the filter according to its meta-information.
@@ -21,144 +17,143 @@ import org.openstreetmap.josm.plugins.rasterfilters.values.Value;
  * into subtypes of the generic interface {@link Value}
  *
  * @author Nipel-Crumple
- *
  */
 public class FilterStateModel {
 
-	private Map<String, Value<?>> params = new HashMap<>();
-	private String filterClassName;
+    private Map<String, Value<?>> params = new HashMap<>();
+    private String filterClassName;
 
-	public FilterStateModel() {
+    public FilterStateModel() {
 
-	}
+    }
 
-	public Map<String, Value<?>> getParams() {
-		return params;
-	}
+    public Map<String, Value<?>> getParams() {
+        return params;
+    }
 
-	public String getFilterClassName() {
-		return filterClassName;
-	}
+    public String getFilterClassName() {
+        return filterClassName;
+    }
 
-	public void setFilterClassName(String filterClassName) {
-		this.filterClassName = filterClassName;
-	}
+    public void setFilterClassName(String filterClassName) {
+        this.filterClassName = filterClassName;
+    }
 
-	public void addParams(JsonObject json) {
+    public void addParams(JsonObject json) {
 
-		String parameterName = json.getString("name");
-		String valueType = json.getString("value_type");
+        String parameterName = json.getString("name");
+        String valueType = json.getString("value_type");
 
-		// setting up the beginning state of filter
-		// according to its metainfo
-		if (json.getString("type").equals("linear_slider")) {
+        // setting up the beginning state of filter
+        // according to its metainfo
+        if (json.getString("type").equals("linear_slider")) {
 
-			if (valueType.equals("float") || valueType.equals("double")) {
+            if (valueType.equals("float") || valueType.equals("double")) {
 
-				double defaultValue = json.getJsonNumber("default")
-						.doubleValue();
+                double defaultValue = json.getJsonNumber("default")
+                        .doubleValue();
 
-				SliderValue<Double> value = new SliderValue<>(parameterName,
-						defaultValue);
-				params.put(parameterName, value);
+                SliderValue<Double> value = new SliderValue<>(parameterName,
+                        defaultValue);
+                params.put(parameterName, value);
 
-			} else if (valueType.equals("integer")) {
+            } else if (valueType.equals("integer")) {
 
-				int defaultValue = json.getJsonNumber("default").intValue();
+                int defaultValue = json.getJsonNumber("default").intValue();
 
-				SliderValue<Integer> value = new SliderValue<>(parameterName,
-						defaultValue);
-				params.put(parameterName, value);
+                SliderValue<Integer> value = new SliderValue<>(parameterName,
+                        defaultValue);
+                params.put(parameterName, value);
 
-			}
+            }
 
-		} else if (json.getString("type").equals("checkbox")) {
+        } else if (json.getString("type").equals("checkbox")) {
 
-			boolean defaultValue = json.getBoolean("default");
+            boolean defaultValue = json.getBoolean("default");
 
-			BooleanValue value = new BooleanValue(parameterName, defaultValue);
-			params.put(parameterName, value);
+            BooleanValue value = new BooleanValue(parameterName, defaultValue);
+            params.put(parameterName, value);
 
-		} else if (json.getString("type").equals("select")) {
+        } else if (json.getString("type").equals("select")) {
 
-			String defaultValue = json.getString("default");
+            String defaultValue = json.getString("default");
 
-			SelectValue<String> value = new SelectValue<>(parameterName,
-					defaultValue);
-			params.put(parameterName, value);
+            SelectValue<String> value = new SelectValue<>(parameterName,
+                    defaultValue);
+            params.put(parameterName, value);
 
-		} else if (json.getString("type").equals("colorpicker")) {
+        } else if (json.getString("type").equals("colorpicker")) {
 
-			JsonObject defaultColorJson = json.getJsonObject("default");
-			int r = defaultColorJson.getInt("red");
-			int g = defaultColorJson.getInt("green");
-			int b = defaultColorJson.getInt("blue");
+            JsonObject defaultColorJson = json.getJsonObject("default");
+            int r = defaultColorJson.getInt("red");
+            int g = defaultColorJson.getInt("green");
+            int b = defaultColorJson.getInt("blue");
 
-			Color defaultColor = new Color(r, g, b);
+            Color defaultColor = new Color(r, g, b);
 
-			ColorValue<Color> value = new ColorValue<>(parameterName,
-					defaultColor);
-			params.put(parameterName, value);
+            ColorValue<Color> value = new ColorValue<>(parameterName,
+                    defaultColor);
+            params.put(parameterName, value);
 
-		}
-	}
+        }
+    }
 
-	/**
-	 * Method generates json from the current filter's model state.
-	 *
-	 * @return encoded json which describes current filter's state
-	 */
-	public JsonObject encodeJson() {
+    /**
+     * Method generates json from the current filter's model state.
+     *
+     * @return encoded json which describes current filter's state
+     */
+    public JsonObject encodeJson() {
 
-		JsonObjectBuilder jsonBuilder = Json.createObjectBuilder();
+        JsonObjectBuilder jsonBuilder = Json.createObjectBuilder();
 
-		for (Entry<String, Value<?>> entry : params.entrySet()) {
+        for (Entry<String, Value<?>> entry : params.entrySet()) {
 
-			Object value = entry.getValue().getValue();
+            Object value = entry.getValue().getValue();
 
-			if (value instanceof String) {
+            if (value instanceof String) {
 
-				jsonBuilder.add(entry.getKey(),
-						Json.createObjectBuilder().add("value", (String) value)
-								.build());
+                jsonBuilder.add(entry.getKey(),
+                        Json.createObjectBuilder().add("value", (String) value)
+                                .build());
 
-			}
+            }
 
-			if (value instanceof Boolean) {
-				jsonBuilder.add(entry.getKey(),
-						Json.createObjectBuilder()
-								.add("value", (Boolean) value).build());
-			}
+            if (value instanceof Boolean) {
+                jsonBuilder.add(entry.getKey(),
+                        Json.createObjectBuilder()
+                                .add("value", (Boolean) value).build());
+            }
 
-			if (value instanceof Number) {
+            if (value instanceof Number) {
 
-				if (value instanceof Double) {
+                if (value instanceof Double) {
 
-					jsonBuilder.add(entry.getKey(), Json.createObjectBuilder()
-							.add("value", (Double) value).build());
+                    jsonBuilder.add(entry.getKey(), Json.createObjectBuilder()
+                            .add("value", (Double) value).build());
 
-				} else if (value instanceof Integer) {
+                } else if (value instanceof Integer) {
 
-					jsonBuilder.add(entry.getKey(), Json.createObjectBuilder()
-							.add("value", (Integer) value).build());
+                    jsonBuilder.add(entry.getKey(), Json.createObjectBuilder()
+                            .add("value", (Integer) value).build());
 
-				}
-			}
+                }
+            }
 
-			if (value instanceof Color) {
+            if (value instanceof Color) {
 
-				jsonBuilder.add(entry.getKey(),
-							Json.createObjectBuilder()
-								.add("value", Json.createObjectBuilder()
-												  .add("red", ((Color) value).getRed())
-												  .add("green", ((Color) value).getGreen())
-												  .add("blue", ((Color) value).getBlue())
-												  .build())
-								.build());
+                jsonBuilder.add(entry.getKey(),
+                        Json.createObjectBuilder()
+                                .add("value", Json.createObjectBuilder()
+                                        .add("red", ((Color) value).getRed())
+                                        .add("green", ((Color) value).getGreen())
+                                        .add("blue", ((Color) value).getBlue())
+                                        .build())
+                                .build());
 
-			}
-		}
+            }
+        }
 
-		return jsonBuilder.build();
-	}
+        return jsonBuilder.build();
+    }
 }

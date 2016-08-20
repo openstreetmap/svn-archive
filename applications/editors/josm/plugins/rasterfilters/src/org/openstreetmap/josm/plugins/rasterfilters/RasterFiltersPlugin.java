@@ -1,11 +1,5 @@
 package org.openstreetmap.josm.plugins.rasterfilters;
 
-import java.awt.Container;
-import java.io.File;
-import java.io.IOException;
-
-import javax.swing.JPanel;
-
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.gui.SideButton;
@@ -25,6 +19,11 @@ import org.openstreetmap.josm.plugins.rasterfilters.gui.FiltersDialog;
 import org.openstreetmap.josm.plugins.rasterfilters.preferences.FiltersDownloader;
 import org.openstreetmap.josm.plugins.rasterfilters.preferences.RasterFiltersPreferences;
 
+import javax.swing.*;
+import java.awt.*;
+import java.io.File;
+import java.io.IOException;
+
 /**
  * Main Plugin class. This class embed new plugin button for adding filter and
  * subtab in Preferences menu
@@ -34,115 +33,116 @@ import org.openstreetmap.josm.plugins.rasterfilters.preferences.RasterFiltersPre
  */
 public class RasterFiltersPlugin extends Plugin implements LayerChangeListener, ActiveLayerChangeListener {
 
-	private SideButton filterButton;
-	private ShowLayerFiltersDialog action;
-	private PreferenceSetting setting;
+    private SideButton filterButton;
+    private ShowLayerFiltersDialog action;
+    private PreferenceSetting setting;
 
-	public RasterFiltersPlugin(PluginInformation info) {
-		super(info);
-		Main.debug("Loading RasterFiltersPlugin");
+    public RasterFiltersPlugin(PluginInformation info) {
+        super(info);
+        Main.debug("Loading RasterFiltersPlugin");
 
-		File file = new File(getPluginDir());
-		if (file.mkdir()) {
+        File file = new File(getPluginDir());
+        if (file.mkdir()) {
 
-			// opening file with last user's settings
-			file = new File(file.getAbsoluteFile(), "urls.map");
-			if (!file.exists()) {
-				try {
-					file.createNewFile();
-				} catch (IOException e) {
-					Main.debug("Cannot create file" + file.getAbsolutePath() + "\n" + e.getMessage());
-				}
-			}
-		}
+            // opening file with last user's settings
+            file = new File(file.getAbsoluteFile(), "urls.map");
+            if (!file.exists()) {
+                try {
+                    file.createNewFile();
+                } catch (IOException e) {
+                    Main.debug("Cannot create file" + file.getAbsolutePath() + "\n" + e.getMessage());
+                }
+            }
+        }
 
-		FiltersDownloader.setPluginDir(getPluginDir());
-	}
+        FiltersDownloader.setPluginDir(getPluginDir());
+    }
 
-	@Override
-	public void mapFrameInitialized(MapFrame oldFrame, MapFrame newFrame) {
-		if (Main.isDisplayingMapView()) {
-			Main.getLayerManager().addLayerChangeListener(this);
+    @Override
+    public void mapFrameInitialized(MapFrame oldFrame, MapFrame newFrame) {
+        if (Main.isDisplayingMapView()) {
+            Main.getLayerManager().addLayerChangeListener(this);
             Main.getLayerManager().addActiveLayerChangeListener(this);
-		}
-	}
+        }
+    }
 
-	@Override
-	public void activeOrEditLayerChanged(ActiveLayerChangeEvent e) {
-		if (!(Main.getLayerManager().getActiveLayer() instanceof ImageryLayer)) {
-			filterButton.setEnabled(false);
-		} else {
-			filterButton.setEnabled(true);
-		}
-	}
+    @Override
+    public void activeOrEditLayerChanged(ActiveLayerChangeEvent e) {
+        if (!(Main.getLayerManager().getActiveLayer() instanceof ImageryLayer)) {
+            filterButton.setEnabled(false);
+        } else {
+            filterButton.setEnabled(true);
+        }
+    }
 
-	@Override
-	public void layerAdded(LayerAddEvent e) {
+    @Override
+    public void layerAdded(LayerAddEvent e) {
 
-		if (filterButton == null) {
+        if (filterButton == null) {
 
-			// filter reading and adding to the collections of FilterDownloader
-			FiltersDownloader.downloadFiltersInfoList();
-			FiltersDownloader.initFilters();
+            // filter reading and adding to the collections of FilterDownloader
+            FiltersDownloader.downloadFiltersInfoList();
+            FiltersDownloader.initFilters();
 
-			if (action == null) {
-				action = new ShowLayerFiltersDialog();
-			}
+            if (action == null) {
+                action = new ShowLayerFiltersDialog();
+            }
 
-			if (e.getAddedLayer() instanceof ImageryLayer) {
-				filterButton = new SideButton(action, false);
-				filterButton.setEnabled(true);
-			} else {
-				filterButton = new SideButton(action, false);
-				filterButton.setEnabled(false);
-			}
+            if (e.getAddedLayer() instanceof ImageryLayer) {
+                filterButton = new SideButton(action, false);
+                filterButton.setEnabled(true);
+            } else {
+                filterButton = new SideButton(action, false);
+                filterButton.setEnabled(false);
+            }
 
-			LayerListDialog dialog = LayerListDialog.getInstance();
+            LayerListDialog dialog = LayerListDialog.getInstance();
 
-			JPanel buttonRowPanel = (JPanel) ((JPanel) dialog.getComponent(2)).getComponent(0);
-			buttonRowPanel.add(filterButton);
-		}
+            JPanel buttonRowPanel = (JPanel) ((JPanel) dialog.getComponent(2)).getComponent(0);
+            buttonRowPanel.add(filterButton);
+        }
 
-		if (e.getAddedLayer() instanceof ImageryLayer) {
-			FiltersDialog dialog = new FiltersDialog((ImageryLayer) e.getAddedLayer());
-			action.addFiltersDialog(dialog);
-		}
+        if (e.getAddedLayer() instanceof ImageryLayer) {
+            FiltersDialog dialog = new FiltersDialog((ImageryLayer) e.getAddedLayer());
+            action.addFiltersDialog(dialog);
+        }
 
-	}
+    }
 
-	@Override
-	public void layerRemoving(LayerRemoveEvent e) {
+    @Override
+    public void layerRemoving(LayerRemoveEvent e) {
 
-		if (e.getRemovedLayer() instanceof ImageryLayer) {
-			FiltersDialog dialog = action.getDialogByLayer(e.getRemovedLayer());
-			((ImageryLayer) e.getRemovedLayer()).removeImageProcessor(dialog.getFiltersManager());
-			dialog.closeFrame();
-			action.removeFiltersDialog(dialog);
-		}
+        if (e.getRemovedLayer() instanceof ImageryLayer) {
+            FiltersDialog dialog = action.getDialogByLayer(e.getRemovedLayer());
+            ((ImageryLayer) e.getRemovedLayer()).removeImageProcessor(dialog.getFiltersManager());
+            dialog.closeFrame();
+            action.removeFiltersDialog(dialog);
+        }
 
-		if (Main.getLayerManager().getLayers().isEmpty()) {
+        if (Main.getLayerManager().getLayers().isEmpty()) {
+            Container container = filterButton.getParent();
+            if (container != null)
+                container.remove(filterButton);
 
-			Container container = filterButton.getParent();
-			if (container != null)
-				container.remove(filterButton);
-			
-			FiltersDownloader.destroyFilters();
-			filterButton = null;
+            FiltersDownloader.destroyFilters();
+            filterButton = null;
+        }
 
-		}
-	}
+        Main.getLayerManager().removeLayerChangeListener(this);
+        Main.getLayerManager().removeActiveLayerChangeListener(this);
+    }
 
-	@Override
+    @Override
     public void layerOrderChanged(LayerOrderChangeEvent e) {
         // Do nothing
     }
 
     @Override
-	public PreferenceSetting getPreferenceSetting() {
-		if (setting == null) {
-			setting = new RasterFiltersPreferences();
-		}
+    public PreferenceSetting getPreferenceSetting() {
+        if (setting == null) {
+            setting = new RasterFiltersPreferences();
+        }
 
-		return setting;
-	}
+        return setting;
+    }
 }

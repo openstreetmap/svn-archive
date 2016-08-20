@@ -8,6 +8,7 @@ import org.openstreetmap.josm.plugins.PluginInformation;
 
 /**
  * This is the main class for the PointInfo plugin.
+ * @author Marián Kyral
  */
 public class PointInfoPlugin extends Plugin {
 

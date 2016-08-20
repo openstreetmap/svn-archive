@@ -24,6 +24,7 @@ import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.gui.PleaseWaitRunnable;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
+import org.openstreetmap.josm.plugins.pointinfo.ruian.RuianModule;
 import org.openstreetmap.josm.tools.ImageProvider;
 import org.openstreetmap.josm.tools.OpenBrowser;
 import org.openstreetmap.josm.tools.Shortcut;
@@ -34,7 +35,7 @@ class PointInfoAction extends MapMode implements MouseListener {
     private static final long serialVersionUID = 1L;
 
     protected boolean cancel;
-    protected ruianModule mRuian = new ruianModule();
+    protected RuianModule mRuian = new RuianModule();
 
     private String htmlText = "";
     private String coordinatesText = "";

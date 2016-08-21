@@ -499,7 +499,7 @@ public class PbfWriter implements Closeable {
     }
 
     /**
-     * Writes data to an OSM data layer.
+     * Writes data from an OSM data layer.
      * @param layer data layer
      */
     public void writeLayer(OsmDataLayer layer) {
@@ -507,7 +507,7 @@ public class PbfWriter implements Closeable {
     }
 
     /**
-     * Writes data to a dataset.
+     * Writes data from a dataset.
      * @param ds dataset
      */
     public void writeData(DataSet ds) {

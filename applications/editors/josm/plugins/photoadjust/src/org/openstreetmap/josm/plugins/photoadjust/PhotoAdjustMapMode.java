@@ -42,6 +42,8 @@ public class PhotoAdjustMapMode extends MapMode implements LayerChangeListener, 
     private MouseMotionAdapter mouseMotionAdapter;
     private IconToggleButton mmButton;
     private PhotoAdjustWorker worker;
+    /** True if one existing GeoImageLayer is to be ignored. */
+    private boolean ignoreOneGILayer = false;
 
     public PhotoAdjustMapMode(MapFrame mapFrame, PhotoAdjustWorker worker) {
         super(tr("Adjust photos"), "photoadjust.png",
@@ -54,6 +56,8 @@ public class PhotoAdjustMapMode extends MapMode implements LayerChangeListener, 
         GeoImageLayer.registerSupportedMapMode(this);
         initAdapters();
         this.worker = worker;
+        Main.getLayerManager().addLayerChangeListener(this);
+        Main.getLayerManager().addActiveLayerChangeListener(this);
     }
 
     /**
@@ -132,8 +136,6 @@ public class PhotoAdjustMapMode extends MapMode implements LayerChangeListener, 
     public void enterMode() {
         super.enterMode();
         modeSelected = true;
-        Main.getLayerManager().addLayerChangeListener(this);
-        Main.getLayerManager().addActiveLayerChangeListener(this);
         // Activate the mode only if the current layer is not a GeoImageLayer.
         // GeoImageLayer's are handled by the plug-in directly.
         if (!(Main.getLayerManager().getActiveLayer() instanceof GeoImageLayer)) {
@@ -144,8 +146,6 @@ public class PhotoAdjustMapMode extends MapMode implements LayerChangeListener, 
     @Override
     public void exitMode() {
         super.exitMode();
-        Main.getLayerManager().removeActiveLayerChangeListener(this);
-        Main.getLayerManager().removeLayerChangeListener(this);
         deactivateMode();
         modeSelected = false;
     }
@@ -167,9 +167,16 @@ public class PhotoAdjustMapMode extends MapMode implements LayerChangeListener, 
     }
 
     @Override
-    public void layerRemoving(LayerRemoveEvent e) {
+    public void layerRemoving(LayerRemoveEvent lre) {
+        if (lre.getRemovedLayer() instanceof GeoImageLayer) {
+            // A GeoImageLayer is about to be removed.  We ignore this layer
+            // in the following update methods to get the correct number of
+            // future GeoImageLayers.
+            ignoreOneGILayer = true;
+        }
         if (modeActive) updateStatusLine();
         updateButtonState();
+        ignoreOneGILayer = false;
     }
 
     @Override
@@ -212,7 +219,11 @@ public class PhotoAdjustMapMode extends MapMode implements LayerChangeListener, 
      */
     private boolean hasLayersToAdjust() {
         if (Main.map == null || Main.map.mapView == null) return false;
-        return ! Main.getLayerManager().getLayersOfType(GeoImageLayer.class).isEmpty();
+        int giLayerNum = Main.getLayerManager().getLayersOfType(GeoImageLayer.class).size();
+        if (ignoreOneGILayer) {
+            giLayerNum--;
+        }
+        return giLayerNum > 0;
     }
 
     /**
@@ -228,4 +239,13 @@ public class PhotoAdjustMapMode extends MapMode implements LayerChangeListener, 
         }
         return all;
     }
+
+ 
+    @Override 
+    public void destroy() { 
+        super.destroy(); 
+        Main.getLayerManager().removeActiveLayerChangeListener(this);
+        Main.getLayerManager().removeLayerChangeListener(this);
+    } 
+
 }

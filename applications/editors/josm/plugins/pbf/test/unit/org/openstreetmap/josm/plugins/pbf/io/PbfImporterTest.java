@@ -66,4 +66,17 @@ public class PbfImporterTest {
     public void testTicket10132() throws Exception {
         doTestMonaco(TestUtils.getRegressionDataFile(10132, "Monaco-SP.osm.pbf"), true);
     }
+
+    /**
+     * Non-regression test for <a href="https://josm.openstreetmap.de/ticket/12567">Ticket #12567</a>.
+     * @throws Exception if an error occurs
+     */
+    @Test
+    public void testTicket12567() throws Exception {
+        DataSet ds = new PbfImporter().parseDataSet(TestUtils.getRegressionDataFile(12567, "12390008.osm.pbf"));
+        assertNotNull(ds);
+        assertEquals(103210, ds.getNodes().size());
+        assertEquals(8727, ds.getWays().size());
+        assertEquals(97, ds.getRelations().size());
+    }
 }

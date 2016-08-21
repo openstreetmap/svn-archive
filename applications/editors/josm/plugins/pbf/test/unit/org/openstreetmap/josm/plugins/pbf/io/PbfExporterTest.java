@@ -6,7 +6,6 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.openstreetmap.josm.TestUtils;
@@ -32,7 +31,6 @@ public class PbfExporterTest {
      * @throws Exception if an error occurs
      */
     @Test
-    @Ignore("TODO: to fix")
     public void testTicket11169() throws Exception {
         try (InputStream is = Compression.ZIP.getUncompressedInputStream(
                 new FileInputStream(TestUtils.getRegressionDataFile(11169, "Portsmouth_Area.osm.zip")))) {

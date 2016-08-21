@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map.Entry;
 
@@ -97,10 +98,17 @@ public class PbfWriter implements Closeable {
                         stable.incr(tag.getKey());
                         stable.incr(tag.getValue());
                     }
-                    if (!omit_metadata && i.getUser() != null) {
-                        stable.incr(i.getUser().getName());
+                    if (!omit_metadata) {
+                        stable.incr(getUserId(i));
                     }
                 }
+            }
+
+            private String getUserId(OsmPrimitive osm) {
+                String userId = osm.getUser() != null ? osm.getUser().getName() : null;
+                if (userId == null)
+                    userId = "";
+                return userId;
             }
 
             public void serializeMetadataDense(DenseInfo.Builder b, List<? extends OsmPrimitive> entities) {
@@ -116,7 +124,7 @@ public class PbfWriter implements Closeable {
                 for (OsmPrimitive e : entities) {
 
                     int uid = e.getUser() == null ? -1 : (int) e.getUser().getId();
-                    int userSid = stable.getIndex(e.getUser() == null ? "" : e.getUser().getName());
+                    int userSid = stable.getIndex(getUserId(e));
                     int timestamp = (int) (e.getTimestamp().getTime() / date_granularity);
                     int version = e.getVersion();
                     long changeset = e.getChangesetId();
@@ -186,7 +194,7 @@ public class PbfWriter implements Closeable {
                 }
 
                 for (Node i : contents) {
-                    long id = i.getId();
+                    long id = i.getUniqueId();
                     bi.addId(id - lastid);
                     lastid = id;
                     LatLon coor = i.getCoor();
@@ -224,7 +232,7 @@ public class PbfWriter implements Closeable {
                 StringTable stable = getStringTable();
                 Osmformat.PrimitiveGroup.Builder builder = Osmformat.PrimitiveGroup.newBuilder();
                 for (Node i : contents) {
-                    long id = i.getId();
+                    long id = i.getUniqueId();
                     LatLon coor = i.getCoor();
                     int lat = mapDegrees(coor.lat());
                     int lon = mapDegrees(coor.lon());
@@ -257,10 +265,10 @@ public class PbfWriter implements Closeable {
                 Osmformat.PrimitiveGroup.Builder builder = Osmformat.PrimitiveGroup.newBuilder();
                 for (Way i : contents) {
                     Osmformat.Way.Builder bi = Osmformat.Way.newBuilder();
-                    bi.setId(i.getId());
+                    bi.setId(i.getUniqueId());
                     long lastid = 0;
                     for (Node j : i.getNodes()) {
-                        long id = j.getId();
+                        long id = j.getUniqueId();
                         bi.addRefs(id - lastid);
                         lastid = id;
                     }
@@ -299,12 +307,12 @@ public class PbfWriter implements Closeable {
                 Osmformat.PrimitiveGroup.Builder builder = Osmformat.PrimitiveGroup.newBuilder();
                 for (Relation i : contents) {
                     Osmformat.Relation.Builder bi = Osmformat.Relation.newBuilder();
-                    bi.setId(i.getId());
+                    bi.setId(i.getUniqueId());
                     RelationMember[] arr = new RelationMember[i.getMembers().size()];
                     i.getMembers().toArray(arr);
                     long lastid = 0;
                     for (RelationMember j : i.getMembers()) {
-                        long id = j.getMember().getId();
+                        long id = j.getMember().getUniqueId();
                         bi.addMemids(id - lastid);
                         lastid = id;
                         if (j.getType() == OsmPrimitiveType.NODE) {
@@ -476,15 +484,10 @@ public class PbfWriter implements Closeable {
 
         public void process(DataSet ds) {
             processor.processSources(ds.dataSources);
-            for (Node n : ds.getNodes()) {
-                processor.processNode(n);
-            }
-            for (Way w : ds.getWays()) {
-                processor.processWay(w);
-            }
-            for (Relation r : ds.getRelations()) {
-                processor.processRelation(r);
-            }
+            Comparator<OsmPrimitive> cmp = Comparator.comparingLong(OsmPrimitive::getUniqueId);
+            ds.getNodes().stream().sorted(cmp).filter(n -> n.isLatLonKnown()).forEach(processor::processNode);
+            ds.getWays().stream().sorted(cmp).filter(w -> w.getNodesCount() > 0).forEach(processor::processWay);
+            ds.getRelations().stream().sorted(cmp).filter(r -> r.getMembersCount() > 0).forEach(processor::processRelation);
         }
 
         public void complete() {

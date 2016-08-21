@@ -27,6 +27,9 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.data.Bounds;
+import org.openstreetmap.josm.data.DataSource;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
@@ -49,7 +52,8 @@ import org.openstreetmap.josm.tools.CheckParameterUtil;
  */
 public class O5mReader extends AbstractReader {
 	public IllegalDataException exception = null;
-
+	private boolean discourageUpload;
+	
     private static void checkCoordinates(LatLon coor) throws IllegalDataException {
         if (!coor.isValid()) {
             throw new IllegalDataException(tr("Invalid coordinates: {0}", coor));
@@ -114,13 +118,10 @@ public class O5mReader extends AbstractReader {
     	private int lastLon,lastLat;
     	private int version;
 		private User osmUser;
-    	
+    	private String header; 
     	/**
     	 * A parser for the o5m format
-    	 * @param processor A mapProcessor instance
     	 * @param stream The InputStream that contains the OSM data in o5m format 
-    	 * @param skipArray An Array of longs that is used to hold information of file position of the first occurrence of 
-    	 * each known 05m data type (esp. nodes, ways, and relations). 
     	 */
     	O5mReader(InputStream stream) {
     		this.fis = new BufferedInputStream(stream);
@@ -143,6 +144,8 @@ public class O5mReader extends AbstractReader {
     			if (start != RESET_FLAG) 
     				throw new IOException(tr("wrong header byte ") + Integer.toHexString(start));
     			readFile();
+    			if (discourageUpload)
+    				ds.setUploadDiscouraged(true);
     		} catch (IOException e) {
     			e.printStackTrace();
     		}
@@ -188,7 +191,7 @@ public class O5mReader extends AbstractReader {
     			else if (fileType == NODE_DATASET) readNode();
     			else if (fileType == WAY_DATASET) readWay();
     			else if (fileType == REL_DATASET) readRel();
-    			//else if (fileType == BBOX_DATASET) readBBox();
+    			else if (fileType == BBOX_DATASET) readBBox();
     			else if (fileType == TIMESTAMP_DATASET) readFileTimestamp();
     			else if (fileType == HEADER_DATASET) readHeader();
     			else if (fileType == EOD_FLAG) done = true;
@@ -221,16 +224,20 @@ public class O5mReader extends AbstractReader {
     	 * read the bounding box data set
     	 * @throws IOException
     	 */
-		/*
     	private void readBBox() {
-    		double leftf = (double) (100L*readSignedNum32()) * FACTOR;
-    		double bottomf = (double) (100L*readSignedNum32()) * FACTOR;
-    		double rightf = (double) (100L*readSignedNum32()) * FACTOR;
-    		double topf = (double) (100L*readSignedNum32()) * FACTOR;
-    		assert bytesToRead == 0;
-    		setBBox(bottomf, leftf, topf, rightf);
+    		double minlon = FACTOR * 100L * readSignedNum32();
+    		double minlat = FACTOR * 100L * readSignedNum32();
+    		double maxlon = FACTOR * 100L * readSignedNum32();
+    		double maxlat = FACTOR * 100L * readSignedNum32();
+
+            Bounds b = new Bounds(minlat, minlon, maxlat, maxlon);
+            if (!b.isCollapsed() && LatLon.isValidLat(minlat) && LatLon.isValidLat(maxlat) 
+                                 && LatLon.isValidLon(minlon) && LatLon.isValidLon(maxlon)) {
+                ds.dataSources.add(new DataSource(b, header));
+            } else {
+                Main.error("Invalid Bounds: "+b);
+            }
     	}
-		 */
 
     	/**
     	 * read a node data set 
@@ -254,6 +261,8 @@ public class O5mReader extends AbstractReader {
     			double flat = FACTOR * (100L*lat);
     			assert flat >= -90.0 && flat <= 90.0;  
     			assert flon >= -180.0 && flon <= 180.0;  
+    			if (version == 0)
+    				discourageUpload = true;
     			Node node = new Node(lastNodeId, version == 0 ? 1:version);
     			node.setCoor(new LatLon(flat, flon).getRoundedToOsmPrecision());
     			
@@ -294,6 +303,8 @@ public class O5mReader extends AbstractReader {
     			readVersionTsAuthor();
     			if (bytesToRead == 0)
     				return; // only wayId + version: this is a delete action, we ignore it
+    			if (version == 0)
+    				discourageUpload = true;
     			final Way way = new Way(lastWayId, version == 0 ? 1:version);
     			checkChangesetId(lastChangeSet);
     			way.setChangesetId((int) lastChangeSet);
@@ -338,6 +349,8 @@ public class O5mReader extends AbstractReader {
     			readVersionTsAuthor();
     			if (bytesToRead == 0)
     				return; // only relId + version: this is a delete action, we ignore it 
+    			if (version == 0)
+    				discourageUpload = true;
     			final Relation rel = new Relation(lastRelId, version == 0 ? 1:version);
     			checkChangesetId(lastChangeSet);
     			rel.setChangesetId((int) lastChangeSet);
@@ -564,6 +577,7 @@ public class O5mReader extends AbstractReader {
     		if (ioBuf[0] != 'o' || ioBuf[1] != '5' || (ioBuf[2]!='c'&&ioBuf[2]!='m') ||ioBuf[3] != '2' ){
     			throw new IOException(tr("unsupported header"));
     		}
+    		header = new String(ioBuf, 0, 3, "UTF-8");
     	}
     	
     	/**

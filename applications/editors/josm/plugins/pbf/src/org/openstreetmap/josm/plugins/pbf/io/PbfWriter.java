@@ -28,10 +28,18 @@ import crosby.binary.StringTable;
 import crosby.binary.file.BlockOutputStream;
 import crosby.binary.file.FileBlock;
 
+/**
+ * OSM writer for the PBF file format.
+ * @author Don-vip
+ */
 public class PbfWriter implements Closeable {
 
     private final PbfSerializer out;
 
+    /**
+     * Constructs a new {@code PbfWriter}.
+     * @param out output stream
+     */
     public PbfWriter(OutputStream out) {
         this.out = new PbfSerializer(new BlockOutputStream(out));
     }
@@ -41,13 +49,13 @@ public class PbfWriter implements Closeable {
 
         /** Additional configuration flag for whether to serialize into DenseNodes/DenseInfo? */
         protected boolean useDense = true;
-        
+
         /** Has the header been written yet? */
         protected boolean headerWritten = false;
 
         /**
          * Constructs a new {@code PbfSerializer}.
-         * 
+         *
          * @param output The PBF block stream to send serialized data
          */
         public PbfSerializer(BlockOutputStream output) {
@@ -56,7 +64,7 @@ public class PbfWriter implements Closeable {
 
         /**
          * Change the flag of whether to use the dense format.
-         * 
+         *
          * @param useDense The new use dense value.
          */
         public void setUseDense(boolean useDense) {
@@ -72,7 +80,7 @@ public class PbfWriter implements Closeable {
 
             /**
              * Add to the queue.
-             * 
+             *
              * @param item The entity to add
              */
             public void add(T item) {
@@ -100,12 +108,14 @@ public class PbfWriter implements Closeable {
                     return;
                 }
 
-                long lasttimestamp = 0, lastchangeset = 0;
-                int lastuserSid = 0, lastuid = 0;
+                long lasttimestamp = 0;
+                long lastchangeset = 0;
+                int lastuserSid = 0;
+                int lastuid = 0;
                 StringTable stable = getStringTable();
                 for (OsmPrimitive e : entities) {
 
-                    int uid =  e.getUser() == null ? -1 : (int) e.getUser().getId();
+                    int uid = e.getUser() == null ? -1 : (int) e.getUser().getId();
                     int userSid = stable.getIndex(e.getUser() == null ? "" : e.getUser().getName());
                     int timestamp = (int) (e.getTimestamp().getTime() / date_granularity);
                     int version = e.getVersion();
@@ -138,9 +148,10 @@ public class PbfWriter implements Closeable {
                 return b;
             }
         }
-        
+
         private class NodeGroup extends Prim<Node> implements PrimGroupWriterInterface {
 
+            @Override
             public Osmformat.PrimitiveGroup serialize() {
                 if (useDense) {
                     return serializeDense();
@@ -153,13 +164,15 @@ public class PbfWriter implements Closeable {
              * Serialize all nodes in the 'dense' format.
              */
             public Osmformat.PrimitiveGroup serializeDense() {
-                if (contents.size() == 0) {
+                if (contents.isEmpty()) {
                     return null;
                 }
                 Osmformat.PrimitiveGroup.Builder builder = Osmformat.PrimitiveGroup.newBuilder();
                 StringTable stable = getStringTable();
 
-                long lastlat = 0, lastlon = 0, lastid = 0;
+                long lastlat = 0;
+                long lastlon = 0;
+                long lastid = 0;
                 Osmformat.DenseNodes.Builder bi = Osmformat.DenseNodes.newBuilder();
                 boolean doesBlockHaveTags = false;
                 // Does anything in this block have tags?
@@ -201,11 +214,11 @@ public class PbfWriter implements Closeable {
 
             /**
              * Serialize all nodes in the non-dense format.
-             * 
+             *
              * @param parentbuilder Add to this PrimitiveBlock.
              */
             public Osmformat.PrimitiveGroup serializeNonDense() {
-                if (contents.size() == 0) {
+                if (contents.isEmpty()) {
                     return null;
                 }
                 StringTable stable = getStringTable();
@@ -234,8 +247,9 @@ public class PbfWriter implements Closeable {
 
         private class WayGroup extends Prim<Way> implements
                 PrimGroupWriterInterface {
+            @Override
             public Osmformat.PrimitiveGroup serialize() {
-                if (contents.size() == 0) {
+                if (contents.isEmpty()) {
                     return null;
                 }
 
@@ -264,6 +278,7 @@ public class PbfWriter implements Closeable {
         }
 
         private class RelationGroup extends Prim<Relation> implements PrimGroupWriterInterface {
+            @Override
             public void addStringsToStringtable() {
                 StringTable stable = getStringTable();
                 super.addStringsToStringtable();
@@ -274,8 +289,9 @@ public class PbfWriter implements Closeable {
                 }
             }
 
+            @Override
             public Osmformat.PrimitiveGroup serialize() {
-                if (contents.size() == 0) {
+                if (contents.isEmpty()) {
                     return null;
                 }
 
@@ -298,7 +314,7 @@ public class PbfWriter implements Closeable {
                         } else if (j.getType() == OsmPrimitiveType.RELATION) {
                             bi.addTypes(MemberType.RELATION);
                         } else {
-                            assert (false); // Software bug: Unknown entity.
+                            assert false; // Software bug: Unknown entity.
                         }
                         bi.addRolesSid(stable.getIndex(j.getRole()));
                     }
@@ -320,7 +336,7 @@ public class PbfWriter implements Closeable {
         private WayGroup ways;
         private NodeGroup nodes;
         private RelationGroup relations;
-        
+
         private Processor processor = new Processor();
 
         /**
@@ -349,6 +365,10 @@ public class PbfWriter implements Closeable {
                 processBatch();
             }
 
+            /**
+             * Process node.
+             * @param node node
+             */
             public void processNode(Node node) {
                 if (nodes == null) {
                     writeEmptyHeaderIfNeeded();
@@ -361,6 +381,10 @@ public class PbfWriter implements Closeable {
                 }
             }
 
+            /**
+             * Process way.
+             * @param way way
+             */
             public void processWay(Way way) {
                 if (ways == null) {
                     writeEmptyHeaderIfNeeded();
@@ -371,6 +395,10 @@ public class PbfWriter implements Closeable {
                 checkLimit();
             }
 
+            /**
+             * Process relation.
+             * @param relation relation
+             */
             public void processRelation(Relation relation) {
                 if (relations == null) {
                     writeEmptyHeaderIfNeeded();
@@ -403,7 +431,7 @@ public class PbfWriter implements Closeable {
 
         public void processBounds(DataSource entity) {
             Osmformat.HeaderBlock.Builder headerblock = Osmformat.HeaderBlock.newBuilder();
-            
+
             Osmformat.HeaderBBox.Builder bbox = Osmformat.HeaderBBox.newBuilder();
             bbox.setLeft(mapRawDegrees(entity.bounds.getMinLon()));
             bbox.setBottom(mapRawDegrees(entity.bounds.getMinLat()));
@@ -428,7 +456,7 @@ public class PbfWriter implements Closeable {
 
         /**
          * Write the header fields that are always needed.
-         * 
+         *
          * @param headerblock Incomplete builder to complete and write.
          * */
         public void finishHeader(Osmformat.HeaderBlock.Builder headerblock) {
@@ -445,7 +473,7 @@ public class PbfWriter implements Closeable {
             }
             headerWritten = true;
         }
-        
+
         public void process(DataSet ds) {
             processor.processSources(ds.dataSources);
             for (Node n : ds.getNodes()) {
@@ -470,10 +498,18 @@ public class PbfWriter implements Closeable {
         }
     }
 
+    /**
+     * Writes data to an OSM data layer.
+     * @param layer data layer
+     */
     public void writeLayer(OsmDataLayer layer) {
         writeData(layer.data);
     }
 
+    /**
+     * Writes data to a dataset.
+     * @param ds dataset
+     */
     public void writeData(DataSet ds) {
         out.process(ds);
         out.complete();

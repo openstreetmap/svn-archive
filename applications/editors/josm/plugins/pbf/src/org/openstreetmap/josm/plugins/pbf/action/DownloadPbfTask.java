@@ -12,23 +12,23 @@ import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.plugins.pbf.PbfConstants;
 import org.openstreetmap.josm.plugins.pbf.io.PbfServerReader;
 
+/**
+ * Task allowing to download remote PBF files.
+ */
 public class DownloadPbfTask extends DownloadOsmTask implements PbfConstants {
 
-	@Override
-	public Future<?> download(boolean newLayer, Bounds downloadArea,
-			ProgressMonitor progressMonitor) {
-		return null;
-	}
+    @Override
+    public Future<?> download(boolean newLayer, Bounds downloadArea, ProgressMonitor progressMonitor) {
+        return null;
+    }
 
-	@Override
-	public Future<?> loadUrl(boolean newLayer, String url,
-			ProgressMonitor progressMonitor) {
-        downloadTask = new DownloadTask(newLayer,
-                new PbfServerReader(url), progressMonitor);
+    @Override
+    public Future<?> loadUrl(boolean newLayer, String url, ProgressMonitor progressMonitor) {
+        downloadTask = new DownloadTask(newLayer, new PbfServerReader(url), progressMonitor);
         // We need submit instead of execute so we can wait for it to finish and get the error
         // message if necessary. If no one calls getErrorMessage() it just behaves like execute.
         return Main.worker.submit(downloadTask);
-	}
+    }
 
     @Override
     public String[] getPatterns() {

@@ -18,6 +18,7 @@ import org.openstreetmap.josm.data.DataSource;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
+import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.OsmPrimitiveType;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.RelationMemberData;
@@ -31,30 +32,32 @@ import org.openstreetmap.josm.tools.CheckParameterUtil;
 
 import crosby.binary.BinaryParser;
 import crosby.binary.Osmformat;
+import crosby.binary.Osmformat.DenseInfo;
 import crosby.binary.Osmformat.DenseNodes;
 import crosby.binary.Osmformat.HeaderBBox;
 import crosby.binary.Osmformat.HeaderBlock;
 import crosby.binary.Osmformat.Info;
+import crosby.binary.Osmformat.Relation.MemberType;
 import crosby.binary.file.BlockInputStream;
 import crosby.binary.file.FileBlockPosition;
 
 /**
+ * OSM reader for the PBF file format.
  * @author Don-vip
- *
  */
 public class PbfReader extends AbstractReader {
-    
+
     protected class PbfParser extends BinaryParser {
 
-        public IllegalDataException exception = null;
-        
+        private IllegalDataException exception = null;
+        private boolean discourageUpload;
         private double parseRawDegrees(long raw) {
             return raw * .000000001;
         }
-        
+
         @Override
         protected void parse(HeaderBlock header) {
-            
+
             for (String requiredFeature : header.getRequiredFeaturesList()) {
                 switch (requiredFeature) {
                 case "OsmSchema-V0.6":
@@ -66,7 +69,7 @@ public class PbfReader extends AbstractReader {
                     throw new UnsupportedOperationException("Unsupported feature: "+requiredFeature);
                 }
             }
-            
+
             HeaderBBox bbox = header.getBbox();
             if (bbox != null) {
                 double minlat = parseRawDegrees(bbox.getBottom());
@@ -74,8 +77,7 @@ public class PbfReader extends AbstractReader {
                 double maxlat = parseRawDegrees(bbox.getTop());
                 double maxlon = parseRawDegrees(bbox.getRight());
                 Bounds b = new Bounds(minlat, minlon, maxlat, maxlon);
-                if (!b.isCollapsed() && LatLon.isValidLat(minlat) && LatLon.isValidLat(maxlat) 
-                                     && LatLon.isValidLon(minlon) && LatLon.isValidLon(maxlon)) {
+                if (!b.isCollapsed() && areCoordinatesValid(minlat, minlon, maxlat, maxlon)) {
                     ds.dataSources.add(new DataSource(b, header.getSource()));
                 } else {
                     Main.error("Invalid Bounds: "+b);
@@ -83,11 +85,30 @@ public class PbfReader extends AbstractReader {
             }
         }
 
+        private boolean areCoordinatesValid(double minlat, double minlon, double maxlat, double maxlon) {
+            return LatLon.isValidLat(minlat) && LatLon.isValidLat(maxlat)
+                && LatLon.isValidLon(minlon) && LatLon.isValidLon(maxlon);
+        }
+
+        private void setMetadata(OsmPrimitive osm, Info info) throws IllegalDataException {
+            if (info.hasChangeset()) {
+                checkChangesetId(info.getChangeset());
+                osm.setChangesetId((int) info.getChangeset());
+            }
+            if (info.hasUid() && info.hasUserSid()) {
+                osm.setUser(User.createOsmUser(info.getUid(), getStringById(info.getUserSid())));
+            }
+            if (info.hasTimestamp()) {
+                checkTimestamp(info.getTimestamp());
+                osm.setTimestamp(getDate(info));
+            }
+        }
+
         @Override
         public boolean skipBlock(FileBlockPosition block) {
             return exception != null;
         }
-        
+
         protected void checkCoordinates(LatLon coor) throws IllegalDataException {
             if (!coor.isValid()) {
                 throw new IllegalDataException(tr("Invalid coordinates: {0}", coor));
@@ -99,7 +120,7 @@ public class PbfReader extends AbstractReader {
                 throw new IllegalDataException(tr("Invalid changeset id: {0}", id));
             }
         }
-        
+
         protected void checkTimestamp(long timestamp) throws IllegalDataException {
             if (timestamp < 0) {
                 throw new IllegalDataException(tr("Invalid timestamp: {0}", timestamp));
@@ -108,6 +129,8 @@ public class PbfReader extends AbstractReader {
 
         @Override
         protected void parseDense(DenseNodes nodes) {
+            if (!nodes.hasDenseinfo())
+                discourageUpload = true;
             if (exception == null) {
                 try {
                     int keyIndex = 0;
@@ -121,29 +144,39 @@ public class PbfReader extends AbstractReader {
                     long timestamp = 0;
                     for (int i = 0; i < nodes.getIdCount(); i++) {
                         // Id (delta) and version (normal)
-                        Node node = new Node(nodeId+=nodes.getId(i), nodes.getDenseinfo().getVersion(i));
+                        Node node = new Node(nodeId += nodes.getId(i), nodes.hasDenseinfo() ? nodes.getDenseinfo().getVersion(i) : 1);
                         // Lat/Lon (delta)
-                        node.setCoor(new LatLon(parseLat(nodeLat+=nodes.getLat(i)), parseLon(nodeLon+=nodes.getLon(i))).getRoundedToOsmPrecision());
+                        node.setCoor(new LatLon(parseLat(nodeLat += nodes.getLat(i)),
+                                                parseLon(nodeLon += nodes.getLon(i))).getRoundedToOsmPrecision());
                         checkCoordinates(node.getCoor());
-                        // Changeset (delta)
-                        checkChangesetId(changesetId+=nodes.getDenseinfo().getChangeset(i));
-                        node.setChangesetId((int) changesetId);
-                        // User (delta)
-                        node.setUser(User.createOsmUser(uid+=nodes.getDenseinfo().getUid(i), getStringById(suid+=nodes.getDenseinfo().getUserSid(i))));
-                        // Timestamp (delta)
-                        checkTimestamp(timestamp+=nodes.getDenseinfo().getTimestamp(i));
-                        node.setTimestamp(new Date(date_granularity * timestamp));
+                        if (nodes.hasDenseinfo()) {
+                            DenseInfo info = nodes.getDenseinfo();
+                            // Changeset (delta)
+                            if (info.getChangesetCount() > i) {
+                                checkChangesetId(changesetId += info.getChangeset(i));
+                                node.setChangesetId((int) changesetId);
+                            }
+                            // User (delta)
+                            if (info.getUidCount() > i && info.getUserSidCount() > i) {
+                                node.setUser(User.createOsmUser(uid += info.getUid(i),
+                                                 getStringById(suid += info.getUserSid(i))));
+                            }
+                            // Timestamp (delta)
+                            if (info.getTimestampCount() > i) {
+                                checkTimestamp(timestamp += info.getTimestamp(i));
+                                node.setTimestamp(new Date(date_granularity * timestamp));
+                            }
+                        }
                         // A single table contains all keys/values of all nodes.
                         // Each node's tags are encoded in alternating <key_id> <value_id>.
                         // A single stringid of 0 delimit when the tags of a node ends and the tags of the next node begin.
                         Map<String, String> keys = new HashMap<>();
                         while (keyIndex < nodes.getKeysValsCount()) {
-                            int key_id = nodes.getKeysVals(keyIndex++);
-                            if (key_id == 0) {
+                            int keyId = nodes.getKeysVals(keyIndex++);
+                            if (keyId == 0) {
                                 break; // End of current node's tags
                             } else if (keyIndex < nodes.getKeysValsCount()) {
-                                int value_id = nodes.getKeysVals(keyIndex++);
-                                keys.put(getStringById(key_id), getStringById(value_id));
+                                keys.put(getStringById(keyId), getStringById(nodes.getKeysVals(keyIndex++)));
                             } else {
                                 throw new IllegalDataException(tr("Invalid DenseNodes key/values table"));
                             }
@@ -162,17 +195,15 @@ public class PbfReader extends AbstractReader {
             if (exception == null) {
                 try {
                     for (Osmformat.Node n : osmNodes) {
-                    	final Info info = n.getInfo();
-                        final Node node = new Node(n.getId(), info.getVersion());
+                        final Info info = n.getInfo();
+                        if (!info.hasVersion())
+                            discourageUpload = true;
+                        final Node node = new Node(n.getId(), info.hasVersion() ? info.getVersion() : 1);
                         node.setCoor(new LatLon(parseLat(n.getLat()), parseLon(n.getLon())).getRoundedToOsmPrecision());
                         checkCoordinates(node.getCoor());
-                        checkChangesetId(info.getChangeset());
-                        node.setChangesetId((int) info.getChangeset());
-                        node.setUser(User.createOsmUser(info.getUid(), getStringById(info.getUserSid())));
-                        checkTimestamp(info.getTimestamp());
-                        node.setTimestamp(getDate(info));
+                        setMetadata(node, info);
                         Map<String, String> keys = new HashMap<>();
-                        for (int i=0; i<n.getKeysCount(); i++) {
+                        for (int i = 0; i < n.getKeysCount(); i++) {
                             keys.put(getStringById(n.getKeys(i)), getStringById(n.getVals(i)));
                         }
                         node.setKeys(keys);
@@ -183,28 +214,26 @@ public class PbfReader extends AbstractReader {
                 }
             }
         }
-        
+
         @Override
         protected void parseWays(List<Osmformat.Way> osmWays) {
             if (exception == null) {
                 try {
                     for (Osmformat.Way w : osmWays) {
-                    	final Info info = w.getInfo();
-                        final Way way = new Way(w.getId(), info.getVersion());
-                        checkChangesetId(info.getChangeset());
-                        way.setChangesetId((int) info.getChangeset());
-                        way.setUser(User.createOsmUser(info.getUid(), getStringById(info.getUserSid())));
-                        checkTimestamp(info.getTimestamp());
-                        way.setTimestamp(getDate(info));
+                        final Info info = w.getInfo();
+                        if (!info.hasVersion())
+                            discourageUpload = true;
+                        final Way way = new Way(w.getId(), info.hasVersion() ? info.getVersion() : 1);
+                        setMetadata(way, info);
                         Map<String, String> keys = new HashMap<>();
-                        for (int i=0; i<w.getKeysCount(); i++) {
+                        for (int i = 0; i < w.getKeysCount(); i++) {
                             keys.put(getStringById(w.getKeys(i)), getStringById(w.getVals(i)));
                         }
                         way.setKeys(keys);
                         long previousId = 0; // Node ids are delta coded
                         Collection<Long> nodeIds = new ArrayList<>();
                         for (Long id : w.getRefsList()) {
-                            nodeIds.add(previousId+=id);
+                            nodeIds.add(previousId += id);
                         }
                         ways.put(way.getUniqueId(), nodeIds);
                         externalIdMap.put(way.getPrimitiveId(), way);
@@ -214,42 +243,29 @@ public class PbfReader extends AbstractReader {
                 }
             }
         }
-        
+
         @Override
         protected void parseRelations(List<Osmformat.Relation> osmRels) {
             if (exception == null) {
                 try {
                     for (Osmformat.Relation r : osmRels) {
-                    	final Info info = r.getInfo();
-                        final Relation rel = new Relation(r.getId(), info.getVersion());
-                        checkChangesetId(info.getChangeset());
-                        rel.setChangesetId((int) info.getChangeset());
-                        rel.setUser(User.createOsmUser(info.getUid(), getStringById(info.getUserSid())));
-                        checkTimestamp(info.getTimestamp());
-                        rel.setTimestamp(getDate(info));
+                        final Info info = r.getInfo();
+                        if (!info.hasVersion())
+                            discourageUpload = true;
+                        final Relation rel = new Relation(r.getId(), info.hasVersion() ? info.getVersion() : 1);
+                        setMetadata(rel, info);
                         Map<String, String> keys = new HashMap<>();
-                        for (int i=0; i<r.getKeysCount(); i++) {
+                        for (int i = 0; i < r.getKeysCount(); i++) {
                             keys.put(getStringById(r.getKeys(i)), getStringById(r.getVals(i)));
                         }
                         rel.setKeys(keys);
                         long previousId = 0; // Member ids are delta coded
                         Collection<RelationMemberData> members = new ArrayList<>();
-                        for (int i = 0; i<r.getMemidsCount(); i++) {
-                            long id = previousId+=r.getMemids(i);
-                            String role = getStringById(r.getRolesSid(i));
-                            OsmPrimitiveType type = null;
-                            switch (r.getTypes(i)) {
-                                case NODE:
-                                    type = OsmPrimitiveType.NODE;
-                                    break;
-                                case WAY:
-                                    type = OsmPrimitiveType.WAY;
-                                    break;
-                                case RELATION:
-                                    type = OsmPrimitiveType.RELATION;
-                                    break;
-                            }
-                            members.add(new RelationMemberData(role, type, id));
+                        for (int i = 0; i < r.getMemidsCount(); i++) {
+                            members.add(new RelationMemberData(
+                                    getStringById(r.getRolesSid(i)),
+                                    mapOsmType(r.getTypes(i)),
+                                    previousId += r.getMemids(i)));
                         }
                         relations.put(rel.getUniqueId(), members);
                         externalIdMap.put(rel.getPrimitiveId(), rel);
@@ -258,15 +274,32 @@ public class PbfReader extends AbstractReader {
                     exception = e;
                 }
             }
+            if (discourageUpload)
+                ds.setUploadDiscouraged(true);
+        }
+
+        private OsmPrimitiveType mapOsmType(MemberType type) {
+            switch (type) {
+            case NODE:
+                return OsmPrimitiveType.NODE;
+            case WAY:
+                return OsmPrimitiveType.WAY;
+            case RELATION:
+                return OsmPrimitiveType.RELATION;
+            default:
+                return null;
+            }
         }
 
         @Override
         public void complete() {
+            if (discourageUpload)
+                ds.setUploadDiscouraged(true);
         }
     }
 
     private PbfParser parser = new PbfParser();
-    
+
     /**
      * Parse the given input source and return the dataset.
      *
@@ -278,30 +311,28 @@ public class PbfReader extends AbstractReader {
      * @throws IllegalArgumentException thrown if source is null
      */
     public static DataSet parseDataSet(InputStream source, ProgressMonitor progressMonitor) throws IllegalDataException {
-        if (progressMonitor == null) {
-            progressMonitor = NullProgressMonitor.INSTANCE;
-        }
+        ProgressMonitor monitor = progressMonitor == null ? NullProgressMonitor.INSTANCE : progressMonitor;
         CheckParameterUtil.ensureParameterNotNull(source, "source");
 
         PbfReader reader = new PbfReader();
-        
+
         try {
-            progressMonitor.beginTask(tr("Prepare OSM data...", 2));
-            progressMonitor.indeterminateSubTask(tr("Reading OSM data..."));
+            monitor.beginTask(tr("Prepare OSM data...", 2));
+            monitor.indeterminateSubTask(tr("Reading OSM data..."));
 
             reader.parse(source);
-            progressMonitor.worked(1);
+            monitor.worked(1);
 
-            progressMonitor.indeterminateSubTask(tr("Preparing data set..."));
+            monitor.indeterminateSubTask(tr("Preparing data set..."));
             reader.prepareDataSet();
-            progressMonitor.worked(1);
+            monitor.worked(1);
             return reader.getDataSet();
         } catch (IllegalDataException e) {
             throw e;
         } catch (Exception e) {
             throw new IllegalDataException(e);
         } finally {
-            progressMonitor.finishTask();
+            monitor.finishTask();
         }
     }
 

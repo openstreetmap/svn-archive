@@ -14,6 +14,14 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.SwingUtilities;
 
+/**
+ * Dialog that asks the user how to proceed after the first stage of testing
+ * (i.e. if the errors found in the first stage of testing should be fixed
+ * before continuing with the testing).
+ * 
+ * @author darya
+ *
+ */
 public class ProceedDialog extends JPanel {
 
 	private static final long serialVersionUID = 2986537034076698693L;
@@ -43,13 +51,15 @@ public class ProceedDialog extends JPanel {
 		label1.setAlignmentX(Component.LEFT_ALIGNMENT);
 
 		if (true) {
-			JLabel label2 = new JLabel("     " + trn("{0} direction error", "{0} direction errors", numberOfDirectionErrors, numberOfDirectionErrors));
+			JLabel label2 = new JLabel("     " + trn("{0} direction error", "{0} direction errors",
+					numberOfDirectionErrors, numberOfDirectionErrors));
 			panel.add(label2);
 			label2.setAlignmentX(Component.LEFT_ALIGNMENT);
 		}
 
 		if (numberOfRoadTypeErrors != 0) {
-			JLabel label3 = new JLabel("     " + trn("{0} road type error", "{0} road type errors", numberOfRoadTypeErrors, numberOfRoadTypeErrors));
+			JLabel label3 = new JLabel("     " + trn("{0} road type error", "{0} road type errors",
+					numberOfRoadTypeErrors, numberOfRoadTypeErrors));
 			panel.add(label3);
 			label3.setAlignmentX(Component.LEFT_ALIGNMENT);
 		}
@@ -66,7 +76,7 @@ public class ProceedDialog extends JPanel {
 		fixOptionButtonGroup.add(radioButtonFixManually);
 		fixOptionButtonGroup.add(radioButtonDontFix);
 		panel.add(radioButtonFixAutomatically);
-//		panel.add(radioButtonFixManually);
+		// panel.add(radioButtonFixManually);
 		panel.add(radioButtonDontFix);
 		radioButtonFixAutomatically.setAlignmentX(Component.LEFT_ALIGNMENT);
 		radioButtonFixManually.setAlignmentX(Component.LEFT_ALIGNMENT);

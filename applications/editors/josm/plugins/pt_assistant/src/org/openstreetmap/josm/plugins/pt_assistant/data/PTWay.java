@@ -117,27 +117,45 @@ public class PTWay extends RelationMember {
 
 		return endNodes;
 	}
-	
+
+	/**
+	 * Checks if this PTWay contains an unsplit roundabout (i.e. a way that
+	 * touches itself) among its ways
+	 * 
+	 * @return
+	 */
 	public boolean containsUnsplitRoundabout() {
-		
+
 		List<Way> ways = this.getWays();
-		for (Way way: ways) {
+		for (Way way : ways) {
 			if (way.firstNode() == way.lastNode()) {
 				return true;
 			}
 		}
 		return false;
 	}
-	
+
+	/**
+	 * Checks if the first Way of this PTWay is an unsplit roundabout (i.e. a
+	 * way that touches itself)
+	 * 
+	 * @return
+	 */
 	public boolean startsWithUnsplitRoundabout() {
 		if (this.ways.get(0).firstNode() == this.ways.get(0).lastNode()) {
 			return true;
 		}
 		return false;
 	}
-	
+
+	/**
+	 * Checks if the last Way of this PTWay is an unsplit roundabout (i.e. a way
+	 * that touches itself)
+	 * 
+	 * @return
+	 */
 	public boolean endsWithUnsplitRoundabout() {
-		if (this.ways.get(this.ways.size() - 1).firstNode() == this.ways.get(this.ways.size()-1).lastNode()) {
+		if (this.ways.get(this.ways.size() - 1).firstNode() == this.ways.get(this.ways.size() - 1).lastNode()) {
 			return true;
 		}
 		return false;

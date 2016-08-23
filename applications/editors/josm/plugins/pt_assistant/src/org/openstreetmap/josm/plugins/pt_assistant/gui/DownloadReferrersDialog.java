@@ -6,6 +6,11 @@ import javax.swing.JCheckBox;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+/**
+ * Dialog that asks the user whether referrers should be downloaded
+ * @author darya
+ *
+ */
 public class DownloadReferrersDialog extends JPanel {
 
 	private static final long serialVersionUID = 6112230984193215297L;

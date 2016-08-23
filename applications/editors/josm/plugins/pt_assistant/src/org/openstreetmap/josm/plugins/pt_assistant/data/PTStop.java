@@ -11,13 +11,31 @@ import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.OsmPrimitiveType;
 import org.openstreetmap.josm.data.osm.RelationMember;
 
+/**
+ * Model a stop with one or two elements (platform and/or stop_position)
+ * 
+ * @author darya
+ *
+ */
 public class PTStop extends RelationMember {
 
+	/* stop_position element of this stop */
 	private Node stopPosition = null;
+
+	/* platform element of this stop */
 	private OsmPrimitive platform = null;
 
+	/* the name of this stop */
 	private String name = "";
 
+	/**
+	 * Constructor
+	 * 
+	 * @param other
+	 * @throws IllegalArgumentException
+	 *             if the given relation member does not fit to the data model
+	 *             used in the plugin
+	 */
 	public PTStop(RelationMember other) throws IllegalArgumentException {
 
 		super(other);
@@ -110,10 +128,18 @@ public class PTStop extends RelationMember {
 		return this.platform;
 	}
 
+	/**
+	 * Returns the name of this stop
+	 * @return
+	 */
 	protected String getName() {
 		return this.name;
 	}
 
+	/**
+	 * Sets the stop_position for this stop to the given node
+	 * @param newStopPosition
+	 */
 	public void setStopPosition(Node newStopPosition) {
 
 		this.stopPosition = newStopPosition;

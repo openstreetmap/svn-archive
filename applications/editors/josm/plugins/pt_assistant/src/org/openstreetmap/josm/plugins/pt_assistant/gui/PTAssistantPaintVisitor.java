@@ -24,6 +24,12 @@ import org.openstreetmap.josm.plugins.pt_assistant.data.PTWay;
 import org.openstreetmap.josm.plugins.pt_assistant.utils.RouteUtils;
 import org.openstreetmap.josm.tools.Pair;
 
+/**
+ * Visits the primitives to be visualized in the pt_assistant layer
+ * 
+ * @author darya
+ *
+ */
 public class PTAssistantPaintVisitor extends PaintVisitor {
 
 	/** The graphics */
@@ -31,6 +37,12 @@ public class PTAssistantPaintVisitor extends PaintVisitor {
 	/** The MapView */
 	private final MapView mv;
 
+	/**
+	 * Constructor
+	 * 
+	 * @param g
+	 * @param mv
+	 */
 	public PTAssistantPaintVisitor(Graphics g, MapView mv) {
 		super(g, mv);
 		this.g = g;
@@ -140,6 +152,13 @@ public class PTAssistantPaintVisitor extends PaintVisitor {
 
 	}
 
+	/**
+	 * Variation of the visit method that allows a special visualization of
+	 * oneway roads
+	 * 
+	 * @param nodes
+	 * @param oneway
+	 */
 	public void visit(List<Node> nodes, int oneway) {
 		Node lastN = null;
 		for (Node n : nodes) {
@@ -269,6 +288,11 @@ public class PTAssistantPaintVisitor extends PaintVisitor {
 
 	}
 
+	/**
+	 * Draws s stop_position as a blue circle; draws a platform as a blue square
+	 * 
+	 * @param primitive
+	 */
 	protected void drawStop(OsmPrimitive primitive) {
 
 		// find the point to which the stop visualization will be linked:
@@ -286,6 +310,13 @@ public class PTAssistantPaintVisitor extends PaintVisitor {
 
 	}
 
+	/**
+	 * Draws the labels for the stops, which include the ordered position of the
+	 * stop in the route and the ref numbers of other routes that use this stop
+	 * 
+	 * @param primitive
+	 * @param label
+	 */
 	protected void drawStopLabel(OsmPrimitive primitive, String label) {
 
 		// find the point to which the stop visualization will be linked:
@@ -341,6 +372,11 @@ public class PTAssistantPaintVisitor extends PaintVisitor {
 
 	}
 
+	/**
+	 * Compares route ref numbers
+	 * @author darya
+	 *
+	 */
 	private class RefTagComparator implements Comparator<String> {
 
 		@Override
@@ -397,7 +433,7 @@ public class PTAssistantPaintVisitor extends PaintVisitor {
 	}
 
 	/**
-	 * 
+	 * Visualizes the fix variants, assigns colors to them based on their order
 	 * @param fixVariants
 	 */
 	protected void visitFixVariants(HashMap<Character, List<PTWay>> fixVariants,
@@ -537,6 +573,13 @@ public class PTAssistantPaintVisitor extends PaintVisitor {
 		g.fillOval((int) (p2.x - 9), (int) (p2.y - 9), 18, 18);
 	}
 
+	/**
+	 * Visuallizes the letters for each fix variant
+	 * @param letter
+	 * @param color
+	 * @param letterX
+	 * @param letterY
+	 */
 	private void drawFixVariantLetter(String letter, Color color, double letterX, double letterY) {
 		g.setColor(color);
 		Font stringFont = new Font("SansSerif", Font.PLAIN, 50);

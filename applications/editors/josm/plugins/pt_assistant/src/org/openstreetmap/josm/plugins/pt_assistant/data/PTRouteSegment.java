@@ -18,12 +18,28 @@ import org.openstreetmap.josm.data.osm.Way;
 
 public class PTRouteSegment {
 
+	/* first stop of the route segment */
 	private PTStop firstStop;
+	
+	/* last stop of the route segment */
 	private PTStop lastStop;
+	
+	/* ptways that belong to this route segment */
 	private List<PTWay> ptways;
+	
+	/* fix variants available for this route segment */
 	private List<List<PTWay>> fixVariants;
+	
+	/* route relation for which this route segment was created */
 	private Relation relation;
 
+	/**
+	 * Constructor
+	 * @param firstStop first stop of the route segment
+	 * @param lastStop last stop of the route segment
+	 * @param ways ways PTWays that belong to this route segment
+	 * @param relation the route relation for which this route segment is created
+	 */
 	public PTRouteSegment(PTStop firstStop, PTStop lastStop, List<PTWay> ways, Relation relation) {
 		this.firstStop = firstStop;
 		this.lastStop = lastStop;
@@ -33,23 +49,43 @@ public class PTRouteSegment {
 		this.relation = relation;
 	}
 
+	/**
+	 * Returns the PTWays of this route segment
+	 * @return
+	 */
 	public List<PTWay> getPTWays() {
 		return this.ptways;
 	}
 
+	/**
+	 * Sets the PTWays of this route segment to the given list
+	 * @param ptwayList
+	 */
 	public void setPTWays(List<PTWay> ptwayList) {
 		this.ptways = ptwayList;
 		this.fixVariants.clear();
 	}
 
+	/**
+	 * Returns the first stop of this route segment
+	 * @return
+	 */
 	public PTStop getFirstStop() {
 		return this.firstStop;
 	}
-
+	
+	/**
+	 * Returns the last stop of this route segment
+	 * @return
+	 */
 	public PTStop getLastStop() {
 		return this.lastStop;
 	}
 
+	/**
+	 * Returns the first PTWay of this route segment
+	 * @return
+	 */
 	public PTWay getFirstPTWay() {
 		if (ptways.isEmpty()) {
 			return null;
@@ -57,6 +93,10 @@ public class PTRouteSegment {
 		return ptways.get(0);
 	}
 
+	/**
+	 * Returns the last PTWay of this route segment
+	 * @return
+	 */
 	public PTWay getLastPTWay() {
 		if (ptways.isEmpty()) {
 			return null;
@@ -64,6 +104,10 @@ public class PTRouteSegment {
 		return ptways.get(ptways.size() - 1);
 	}
 	
+	/**
+	 * Returns the first way of this route segment
+	 * @return
+	 */
 	public Way getFirstWay() {
 		if (ptways.isEmpty()) {
 			return null;
@@ -71,6 +115,10 @@ public class PTRouteSegment {
 		return ptways.get(0).getWays().get(0);
 	}
 	
+	/**
+	 * Returns the last way of this route segment
+	 * @return
+	 */
 	public Way getLastWay() {
 		if (ptways.isEmpty()) {
 			return null;
@@ -113,10 +161,18 @@ public class PTRouteSegment {
 		this.fixVariants.add(list);
 	}
 
+	/**
+	 * Returns the fix variants stored for this route segment
+	 * @return
+	 */
 	public List<List<PTWay>> getFixVariants() {
 		return this.fixVariants;
 	}
 	
+	/**
+	 * Returns the route relation for which this route segment was created
+	 * @return
+	 */
 	public Relation getRelation() {
 		return this.relation;
 	}

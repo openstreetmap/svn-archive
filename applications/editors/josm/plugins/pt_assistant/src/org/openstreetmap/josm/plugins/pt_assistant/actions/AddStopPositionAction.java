@@ -38,6 +38,9 @@ public class AddStopPositionAction extends JosmAction {
 
 	}
 
+	/**
+	 * Actions that add the new node, set tags and update the map frame.
+	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {
 

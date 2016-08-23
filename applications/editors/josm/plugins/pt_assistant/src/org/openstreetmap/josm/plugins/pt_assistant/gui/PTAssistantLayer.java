@@ -37,6 +37,12 @@ import org.openstreetmap.josm.plugins.pt_assistant.data.PTWay;
 import org.openstreetmap.josm.plugins.pt_assistant.utils.RouteUtils;
 import org.openstreetmap.josm.tools.ImageProvider;
 
+/**
+ * Layer that visualizes the routes in a more convenient way
+ * 
+ * @author darya
+ *
+ */
 public class PTAssistantLayer extends Layer
 		implements SelectionChangedListener, PropertyChangeListener, LayerChangeListener {
 
@@ -60,10 +66,18 @@ public class PTAssistantLayer extends Layer
 		return layer;
 	}
 
+	/**
+	 * Adds a primitive (route) to be displayed in this layer
+	 * 
+	 * @param primitive
+	 */
 	public void addPrimitive(OsmPrimitive primitive) {
 		this.primitives.add(primitive);
 	}
 
+	/**
+	 * Clears all primitives (routes) from being displayed.
+	 */
 	public void clear() {
 		this.primitives.clear();
 	}
@@ -81,7 +95,7 @@ public class PTAssistantLayer extends Layer
 	 */
 	public void addFixVariants(List<List<PTWay>> fixVariants) {
 		HashMap<List<PTWay>, Character> fixVariantLetterMap = new HashMap<>();
-		
+
 		char alphabet = 'A';
 		for (int i = 0; i < 5 && i < fixVariants.size(); i++) {
 			List<PTWay> fixVariant = fixVariants.get(i);
@@ -90,7 +104,7 @@ public class PTAssistantLayer extends Layer
 			alphabet++;
 		}
 
-		for (Character currentFixVariantLetter: this.fixVariants.keySet()) {
+		for (Character currentFixVariantLetter : this.fixVariants.keySet()) {
 			List<PTWay> fixVariant = this.fixVariants.get(currentFixVariantLetter);
 			for (PTWay ptway : fixVariant) {
 				for (Way way : ptway.getWays()) {

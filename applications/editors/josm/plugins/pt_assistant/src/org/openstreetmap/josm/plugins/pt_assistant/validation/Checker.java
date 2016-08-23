@@ -134,7 +134,9 @@ public abstract class Checker {
 	protected static Command fixErrorByZooming(TestError testError) {
 
 		if (testError.getCode() != PTAssistantValidatorTest.ERROR_CODE_STOP_BY_STOP
-				&& testError.getCode() != PTAssistantValidatorTest.ERROR_CODE_DIRECTION) {
+				&& testError.getCode() != PTAssistantValidatorTest.ERROR_CODE_DIRECTION
+				&& testError.getCode() != PTAssistantValidatorTest.ERROR_CODE_CONSTRUCTION
+				&& testError.getCode() != PTAssistantValidatorTest.ERROR_CODE_ROAD_TYPE) {
 			return null;
 		}
 

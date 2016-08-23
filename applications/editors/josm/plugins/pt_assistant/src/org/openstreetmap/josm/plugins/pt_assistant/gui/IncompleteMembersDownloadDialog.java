@@ -6,6 +6,13 @@ import javax.swing.JCheckBox;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+/**
+ * Dialog that asks the user whether the incomplete relation members should be
+ * downloaded.
+ * 
+ * @author darya
+ *
+ */
 public class IncompleteMembersDownloadDialog extends JPanel {
 
 	private static final long serialVersionUID = -4275151182361040329L;
@@ -25,9 +32,10 @@ public class IncompleteMembersDownloadDialog extends JPanel {
 	private int selectedOption;
 
 	public IncompleteMembersDownloadDialog() {
-		
+
 		selectedOption = Integer.MIN_VALUE;
-		message = tr("Route relations have incomplete members.\nThey need to be downloaded to proceed with validation.\nDo you want to download them?");
+		message = tr(
+				"Route relations have incomplete members.\nThey need to be downloaded to proceed with validation.\nDo you want to download them?");
 		checkbox = new JCheckBox(tr("Remember my choice and do not ask me again in this session"));
 		options = new String[2];
 		options[0] = tr("Yes");
@@ -52,11 +60,10 @@ public class IncompleteMembersDownloadDialog extends JPanel {
 			return JOptionPane.NO_OPTION;
 		}
 
-		
-		Object[] params = {message, checkbox};
-		selectedOption = JOptionPane.showOptionDialog(this, params, tr("PT_Assistant Fetch Request"), JOptionPane.YES_NO_OPTION,
-				JOptionPane.QUESTION_MESSAGE, null, options, 0);
-		
+		Object[] params = { message, checkbox };
+		selectedOption = JOptionPane.showOptionDialog(this, params, tr("PT_Assistant Fetch Request"),
+				JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, 0);
+
 		if (checkbox.isSelected()) {
 			if (selectedOption == JOptionPane.YES_OPTION) {
 				askToFetch = ASK_TO_FETCH.DONT_ASK_AND_FETCH;

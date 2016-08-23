@@ -235,6 +235,11 @@ public class RouteUtils {
 		return false;
 	}
 
+	/**
+	 * Checks if this way is suitable for public transport (not only for buses)
+	 * @param way
+	 * @return
+	 */
 	public static boolean isWaySuitableForPublicTransport(Way way) {
 
 		if (isWaySuitableForBuses(way) || way.hasTag("railway", "tram") || way.hasTag("railway", "subway")

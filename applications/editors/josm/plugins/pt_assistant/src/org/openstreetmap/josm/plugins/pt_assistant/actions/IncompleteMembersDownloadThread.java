@@ -13,8 +13,16 @@ import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.gui.io.DownloadPrimitivesWithReferrersTask;
 import org.openstreetmap.josm.plugins.pt_assistant.utils.RouteUtils;
 
+/**
+ * Thread that downloads incomplete relation members while pausing the rest of testing
+ * @author darya
+ *
+ */
 public class IncompleteMembersDownloadThread extends Thread {
 
+	/**
+	 * Default constructor
+	 */
 	public IncompleteMembersDownloadThread() {
 		super();
 

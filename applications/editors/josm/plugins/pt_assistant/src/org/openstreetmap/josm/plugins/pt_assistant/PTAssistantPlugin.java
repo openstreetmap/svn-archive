@@ -31,7 +31,10 @@ public class PTAssistantPlugin extends Plugin {
 	 */
 	private static PTRouteSegment lastFix;
 
+	/* item of the Tools menu for adding stop_positions */
 	private JMenuItem addStopPositionMenu;
+	
+	/* item of the Tools menu for repeating the last fix */
 	private static JMenuItem repeatLastFixMenu;
 
 	/**

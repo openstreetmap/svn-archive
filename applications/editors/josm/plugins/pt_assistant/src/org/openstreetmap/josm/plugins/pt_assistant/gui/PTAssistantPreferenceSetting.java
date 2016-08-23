@@ -13,6 +13,11 @@ import org.openstreetmap.josm.gui.preferences.TabPreferenceSetting;
 import org.openstreetmap.josm.tools.I18n;
 import org.openstreetmap.josm.tools.ImageProvider;
 
+/**
+ * Displays the settings of the pt_assistant plugin under Preferences
+ * @author darya
+ *
+ */
 public class PTAssistantPreferenceSetting implements SubPreferenceSetting {
 
 	private final JCheckBox downloadIncompleteMembers = new JCheckBox(I18n.tr("Download incomplete route relation members"));

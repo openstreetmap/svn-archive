@@ -12,10 +12,19 @@ import org.openstreetmap.josm.plugins.pt_assistant.validation.SegmentChecker;
 import org.openstreetmap.josm.tools.ImageProvider;
 import org.openstreetmap.josm.tools.Shortcut;
 
+/**
+ * Carries out the changes after the Repeat last fix button has been pressed
+ * 
+ * @author darya
+ *
+ */
 public class RepeatLastFixAction extends JosmAction {
 
 	private static final long serialVersionUID = 2681464946469047054L;
 
+	/**
+	 * Default constructor
+	 */
 	public RepeatLastFixAction() {
 		super(tr("Repeat last fix"), new ImageProvider("presets/transport", "bus.svg"), tr("Repeat last fix"),
 				Shortcut.registerShortcut("Repeat last fix", tr("Repeat last fix"), KeyEvent.VK_E, Shortcut.NONE),
@@ -23,6 +32,9 @@ public class RepeatLastFixAction extends JosmAction {
 
 	}
 
+	/**
+	 * Applies the fixes, resets the last fix attribute
+	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {
 

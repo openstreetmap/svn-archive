@@ -53,8 +53,8 @@ public abstract class AbstractTest {
  public static final String PATH_TO_STOP_AREA_NO_PLATFORMS = "test/data/stop-area-no-platform.osm";
  public static final String PATH_TO_STOP_AREA_MANY_PLATFORMS = "test/data/stop-area-many-platforms.osm";
 
+ 
  public static final String PATH_TO_SEGMENT_TEST = "test/data/segment-test.osm";
- public static final String PATH_TO_REPEAT_FIX = "test/data/repeat-fix.osm";
 
   /**
    * Initiates the basic parts of JOSM.

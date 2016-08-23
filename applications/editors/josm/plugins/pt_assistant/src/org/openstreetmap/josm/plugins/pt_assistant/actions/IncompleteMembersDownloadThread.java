@@ -20,7 +20,6 @@ public class IncompleteMembersDownloadThread extends Thread {
 
 	}
 
-
 	@Override
 	public void run() {
 
@@ -29,12 +28,22 @@ public class IncompleteMembersDownloadThread extends Thread {
 
 				ArrayList<PrimitiveId> list = new ArrayList<>();
 
-				// add all route relations that are of public_transport version
-				// 2:
-				Collection<Relation> allRelations = Main.getLayerManager().getEditDataSet().getRelations();
-				for (Relation currentRelation : allRelations) {
-					if (RouteUtils.isTwoDirectionRoute(currentRelation)) {
-						list.add(currentRelation);
+				// if there are selected routes, try adding them first:
+				for (Relation currentSelectedRelation : Main.getLayerManager().getEditDataSet()
+						.getSelectedRelations()) {
+					if (RouteUtils.isTwoDirectionRoute(currentSelectedRelation)) {
+						list.add(currentSelectedRelation);
+					}
+				}
+
+				if (list.isEmpty()) {
+					// add all route relations that are of public_transport
+					// version 2:
+					Collection<Relation> allRelations = Main.getLayerManager().getEditDataSet().getRelations();
+					for (Relation currentRelation : allRelations) {
+						if (RouteUtils.isTwoDirectionRoute(currentRelation)) {
+							list.add(currentRelation);
+						}
 					}
 				}
 
@@ -67,9 +76,7 @@ public class IncompleteMembersDownloadThread extends Thread {
 			}
 
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-
+			// do nothing in case the download was interrupted
 		}
 
 	}

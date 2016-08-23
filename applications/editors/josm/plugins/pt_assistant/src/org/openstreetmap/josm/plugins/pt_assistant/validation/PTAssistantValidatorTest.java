@@ -10,6 +10,7 @@ import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
+import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.SelectCommand;
 import org.openstreetmap.josm.command.SequenceCommand;
@@ -22,7 +23,6 @@ import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.data.validation.Severity;
 import org.openstreetmap.josm.data.validation.Test;
 import org.openstreetmap.josm.data.validation.TestError;
-import org.openstreetmap.josm.gui.Notification;
 import org.openstreetmap.josm.plugins.pt_assistant.PTAssistantPlugin;
 import org.openstreetmap.josm.plugins.pt_assistant.actions.FixTask;
 import org.openstreetmap.josm.plugins.pt_assistant.actions.IncompleteMembersDownloadThread;
@@ -81,8 +81,10 @@ public class PTAssistantValidatorTest extends Test {
 			// check if stop positions are on a way:
 			nodeChecker.performSolitaryStopPositionTest();
 
-			// check if stop positions are in any stop_area relation:
-			nodeChecker.performNodePartOfStopAreaTest();
+			if (Main.pref.getBoolean("pt_assistant.stop-area-tests", true) == true) {
+				// check if stop positions are in any stop_area relation:
+				nodeChecker.performNodePartOfStopAreaTest();
+			}
 
 		}
 
@@ -92,8 +94,11 @@ public class PTAssistantValidatorTest extends Test {
 			// check that platforms are not part of any way:
 			nodeChecker.performPlatformPartOfWayTest();
 
-			// check if platforms are in any stop_area relation:
-			nodeChecker.performNodePartOfStopAreaTest();
+			if (Main.pref.getBoolean("pt_assistant.stop-area-tests", true) == true) {
+				// check if platforms are in any stop_area relation:
+				nodeChecker.performNodePartOfStopAreaTest();
+			}
+
 		}
 
 		this.errors.addAll(nodeChecker.getErrors());
@@ -104,7 +109,7 @@ public class PTAssistantValidatorTest extends Test {
 	public void visit(Relation r) {
 
 		// Do some testing on stop area relations
-		if (StopUtils.isStopArea(r)) {
+		if (Main.pref.getBoolean("pt_assistant.stop-area-tests", true) == true && StopUtils.isStopArea(r)) {
 
 			StopChecker stopChecker = new StopChecker(r, this);
 
@@ -143,17 +148,19 @@ public class PTAssistantValidatorTest extends Test {
 		// Check individual ways using the oneway direction test and the road
 		// type test:
 		WayChecker wayChecker = new WayChecker(r, this);
-		if (!r.hasIncompleteMembers()) {
-			wayChecker.performDirectionTest();
-			wayChecker.performRoadTypeTest();
-		}
+		wayChecker.performDirectionTest();
+		wayChecker.performRoadTypeTest();
 		this.errors.addAll(wayChecker.getErrors());
 
-		if (this.errors.isEmpty()) {
-			proceedWithSorting(r);
-		} else {
-			this.proceedAfterWayCheckerErrors(r);
-		}
+		proceedWithSorting(r);
+
+		// This allows to modify the route before the sorting and
+		// SegmentChecker are carried out:
+		// if (this.errors.isEmpty()) {
+		// proceedWithSorting(r);
+		// } else {
+		// this.proceedAfterWayCheckerErrors(r);
+		// }
 
 	}
 
@@ -219,15 +226,26 @@ public class PTAssistantValidatorTest extends Test {
 	 */
 	private int showIncompleteMembersDownloadDialog() throws InterruptedException {
 
+		if (Main.pref.getBoolean("pt_assistant.download-incomplete", false) == true) {
+			return JOptionPane.YES_OPTION;
+		}
+
+		if (Main.pref.getBoolean("pt_assistant.download-incomplete", false) == false) {
+			return JOptionPane.NO_OPTION;
+		}
+
 		IncompleteMembersDownloadDialog incompleteMembersDownloadDialog = new IncompleteMembersDownloadDialog();
 		return incompleteMembersDownloadDialog.getUserSelection();
 
 	}
 
 	/**
-	 * Gets user input after errors were detected by WayChecker (direction
-	 * errors and road type errors)
+	 * Gets user input after errors were detected by WayChecker. Although this
+	 * method is not used in the current implementation, it can be used to fix
+	 * errors from the previous testing stage and modify the route before the
+	 * second stage of testing is carried out.
 	 */
+	@SuppressWarnings("unused")
 	private void proceedAfterWayCheckerErrors(Relation r) {
 
 		// count errors of each type:
@@ -257,12 +275,11 @@ public class PTAssistantValidatorTest extends Test {
 				SwingUtilities.invokeAndWait(new Runnable() {
 					@Override
 					public void run() {
-						userInput[0] = showProceedDialog(idParameter, roadTypeErrorParameter, roadTypeErrorParameter);
+						userInput[0] = showProceedDialog(idParameter, directionErrorParameter, roadTypeErrorParameter);
 
 					}
 				});
 			} catch (InvocationTargetException | InterruptedException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 
@@ -275,13 +292,11 @@ public class PTAssistantValidatorTest extends Test {
 		}
 
 		if (userInput[0] == 1) {
-			// TODO
 			JOptionPane.showMessageDialog(null, "This is not implemented yet!");
 			return;
 		}
 
 		if (userInput[0] == 2) {
-			// TODO: should the errors be removed from the error list?
 			proceedWithSorting(r);
 		}
 
@@ -291,6 +306,18 @@ public class PTAssistantValidatorTest extends Test {
 	}
 
 	private int showProceedDialog(long id, int numberOfDirectionErrors, int numberOfRoadTypeErrors) {
+
+		if (numberOfDirectionErrors == 0 && numberOfDirectionErrors == 0) {
+			return 2;
+		}
+
+		if (Main.pref.getBoolean("pt_assistant.proceed-without-fix", true) == false) {
+			return 0;
+		}
+
+		if (Main.pref.getBoolean("pt_assistant.proceed-without-fix", true) == true) {
+			return 2;
+		}
 
 		ProceedDialog proceedDialog = new ProceedDialog(id, numberOfDirectionErrors, numberOfRoadTypeErrors);
 		return proceedDialog.getUserSelection();
@@ -321,9 +348,8 @@ public class PTAssistantValidatorTest extends Test {
 
 		if (!routeCheckerErrors.isEmpty()) {
 			// Variant 2
-			// If there is only the sorting error, add it and stop testing.
+			// If there is only the sorting error, add it
 			this.errors.addAll(routeChecker.getErrors());
-			// return;
 		}
 
 		// if (!routeChecker.getHasGap()) {
@@ -336,6 +362,12 @@ public class PTAssistantValidatorTest extends Test {
 
 	}
 
+	/**
+	 * Carries out the stop-by-stop testing which includes building the route
+	 * data model.
+	 * 
+	 * @param r route relation
+	 */
 	private void proceedAfterSorting(Relation r) {
 
 		SegmentChecker segmentChecker = new SegmentChecker(r, this);
@@ -408,7 +440,10 @@ public class PTAssistantValidatorTest extends Test {
 
 		return false;
 	}
-
+	
+	/**
+	 * Fixes the given error
+	 */
 	@Override
 	public Command fixError(TestError testError) {
 
@@ -424,7 +459,7 @@ public class PTAssistantValidatorTest extends Test {
 		List<Command> commands = new ArrayList<>();
 
 		if (testError.getCode() == ERROR_CODE_ROAD_TYPE || testError.getCode() == ERROR_CODE_CONSTRUCTION) {
-			commands.add(WayChecker.fixErrorByRemovingWay(testError));
+			commands.add(WayChecker.fixErrorByZooming(testError));
 		}
 
 		if (testError.getCode() == ERROR_CODE_DIRECTION) {

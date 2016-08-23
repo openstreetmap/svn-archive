@@ -84,7 +84,7 @@ public class NodeChecker extends Checker {
 
 	/**
 	 * Checks if the given stop_position node belongs to any stop_area relation
-	 * 
+	 * @author xamanu
 	 * @param n
 	 */
 	protected void performNodePartOfStopAreaTest() {

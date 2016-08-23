@@ -102,6 +102,15 @@ public class SegmentChecker extends Checker {
 		}
 		correctSegments.add(segment);
 	}
+	
+	/**
+	 * Used for unit tests
+	 * @param error
+	 * @return
+	 */
+	protected static PTRouteSegment getWrongSegment(TestError error) {
+		return wrongSegments.get(error);
+	}
 
 	public void performFirstStopTest() {
 
@@ -907,7 +916,7 @@ public class SegmentChecker extends Checker {
 		wrongSegments.remove(testError);
 		wrongSegment.setPTWays(fix);
 		addCorrectSegment(wrongSegment);
-		PTAssistantPlugin.setLastFix(wrongSegment);
+		PTAssistantPlugin.setLastFixNoGui(wrongSegment);
 
 		// get ways for the fix:
 		List<Way> primitives = new ArrayList<>();
@@ -1013,16 +1022,12 @@ public class SegmentChecker extends Checker {
 	
 	public static void carryOutRepeatLastFix(PTRouteSegment segment) {
 		
-		System.out.println("last fix relation: " + segment.getRelation().getId());
 		List<TestError> wrongSegmentsToRemove = new ArrayList<>();
 		
-		int counter = 0;
 		// find all wrong ways that have the same segment:
 		for (TestError testError: wrongSegments.keySet()) {
 			PTRouteSegment wrongSegment = wrongSegments.get(testError);
 			if (wrongSegment.getFirstWay() == segment.getFirstWay() && wrongSegment.getLastWay() == segment.getLastWay()) {
-				counter++;
-				System.out.println("wrong segment: " + wrongSegment.getRelation().getId());
 				// modify the route:
 				Relation originalRelation = wrongSegment.getRelation();
 				Relation modifiedRelation = new Relation(originalRelation);
@@ -1048,12 +1053,14 @@ public class SegmentChecker extends Checker {
 			wrongSegments.remove(testError);
 		}
 		
-		System.out.println("wrong segments found: " + counter);
-		System.out.println();
-		
-		
-		
-		
+	}
+	
+	/**
+	 * Resets the static list variables (used for unit testing)
+	 */
+	protected static void reset() {
+		correctSegments.clear();
+		wrongSegments.clear();
 	}
 
 }

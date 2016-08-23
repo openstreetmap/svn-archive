@@ -12,12 +12,12 @@ public class IncompleteMembersDownloadDialog extends JPanel {
 
 	// indicates if the user needs to be asked before fetching incomplete
 	// members of a relation.
-	private enum ASK_TO_FETCH {
+	public enum ASK_TO_FETCH {
 		DO_ASK, DONT_ASK_AND_FETCH, DONT_ASK_AND_DONT_FETCH
 	};
 
 	// by default, the user should be asked
-	private static ASK_TO_FETCH askToFetch = ASK_TO_FETCH.DO_ASK;
+	public static ASK_TO_FETCH askToFetch;
 
 	String message;
 	private JCheckBox checkbox;

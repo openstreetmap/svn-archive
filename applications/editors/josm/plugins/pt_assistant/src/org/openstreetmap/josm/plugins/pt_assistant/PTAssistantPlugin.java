@@ -1,8 +1,6 @@
 //License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.pt_assistant;
 
-import static org.openstreetmap.josm.tools.I18n.tr;
-
 import javax.swing.JMenuItem;
 import javax.swing.SwingUtilities;
 
@@ -10,12 +8,13 @@ import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.validation.OsmValidator;
 import org.openstreetmap.josm.gui.MainMenu;
 import org.openstreetmap.josm.gui.MapFrame;
-import org.openstreetmap.josm.gui.Notification;
+import org.openstreetmap.josm.gui.preferences.PreferenceSetting;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
 import org.openstreetmap.josm.plugins.pt_assistant.actions.AddStopPositionAction;
 import org.openstreetmap.josm.plugins.pt_assistant.actions.RepeatLastFixAction;
 import org.openstreetmap.josm.plugins.pt_assistant.data.PTRouteSegment;
+import org.openstreetmap.josm.plugins.pt_assistant.gui.PTAssistantPreferenceSetting;
 import org.openstreetmap.josm.plugins.pt_assistant.validation.PTAssistantValidatorTest;
 
 /**
@@ -67,7 +66,15 @@ public class PTAssistantPlugin extends Plugin {
 			repeatLastFixMenu.setEnabled(false);
 		}
 	}
-	
+
+	/**
+	 * Sets up the pt_assistant tab in JOSM Preferences
+	 */
+	@Override
+	public PreferenceSetting getPreferenceSetting() {
+		return new PTAssistantPreferenceSetting();
+	}
+
 	public static PTRouteSegment getLastFix() {
 		return lastFix;
 	}
@@ -80,13 +87,22 @@ public class PTAssistantPlugin extends Plugin {
 	 */
 	public static void setLastFix(PTRouteSegment segment) {
 		lastFix = segment;
-		
+
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {
 				repeatLastFixMenu.setEnabled(segment != null);
 			}
 		});
+	}
+
+	/**
+	 * Used in unit tests
+	 * 
+	 * @param segment
+	 */
+	public static void setLastFixNoGui(PTRouteSegment segment) {
+		lastFix = segment;
 	}
 
 }

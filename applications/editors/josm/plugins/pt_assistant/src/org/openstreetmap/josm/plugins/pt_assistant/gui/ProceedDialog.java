@@ -18,12 +18,12 @@ public class ProceedDialog extends JPanel {
 
 	private static final long serialVersionUID = 2986537034076698693L;
 
-	private enum ASK_TO_PROCEED {
+	public enum ASK_TO_PROCEED {
 		DO_ASK, DONT_ASK_AND_FIX_AUTOMATICALLY, DONT_ASK_AND_FIX_MANUALLY, DONT_ASK_AND_DONT_FIX
 	};
 
 	// by default, the user should be asked
-	private static ASK_TO_PROCEED askToProceed = ASK_TO_PROCEED.DO_ASK;
+	public static ASK_TO_PROCEED askToProceed;
 
 	private JRadioButton radioButtonFixAutomatically;
 	private JRadioButton radioButtonFixManually;
@@ -42,7 +42,7 @@ public class ProceedDialog extends JPanel {
 		panel.add(label1);
 		label1.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-		if (numberOfDirectionErrors != 0) {
+		if (true) {
 			JLabel label2 = new JLabel("     " + trn("{0} direction error", "{0} direction errors", numberOfDirectionErrors, numberOfDirectionErrors));
 			panel.add(label2);
 			label2.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -66,7 +66,7 @@ public class ProceedDialog extends JPanel {
 		fixOptionButtonGroup.add(radioButtonFixManually);
 		fixOptionButtonGroup.add(radioButtonDontFix);
 		panel.add(radioButtonFixAutomatically);
-		panel.add(radioButtonFixManually);
+//		panel.add(radioButtonFixManually);
 		panel.add(radioButtonDontFix);
 		radioButtonFixAutomatically.setAlignmentX(Component.LEFT_ALIGNMENT);
 		radioButtonFixManually.setAlignmentX(Component.LEFT_ALIGNMENT);

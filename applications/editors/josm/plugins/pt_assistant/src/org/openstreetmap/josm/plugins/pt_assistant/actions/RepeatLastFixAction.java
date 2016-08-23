@@ -15,7 +15,7 @@ import org.openstreetmap.josm.tools.Shortcut;
 public class RepeatLastFixAction extends JosmAction {
 
 	private static final long serialVersionUID = 2681464946469047054L;
-	
+
 	public RepeatLastFixAction() {
 		super(tr("Repeat last fix"), new ImageProvider("presets/transport", "bus.svg"), tr("Repeat last fix"),
 				Shortcut.registerShortcut("Repeat last fix", tr("Repeat last fix"), KeyEvent.VK_E, Shortcut.NONE),
@@ -25,19 +25,15 @@ public class RepeatLastFixAction extends JosmAction {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		
-		System.out.println("in actionPerformed");
-		
+
 		if (!isEnabled() || !Main.isDisplayingMapView()) {
 			return;
 		}
-		
-		System.out.println("performing action");
-		
+
 		SegmentChecker.carryOutRepeatLastFix(PTAssistantPlugin.getLastFix());
-		
+
 		PTAssistantPlugin.setLastFix(null);
-		
+
 	}
 
 }

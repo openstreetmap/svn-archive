@@ -3,3 +3,4 @@
 /.svnignore
 /checkstyle-josm-pointInfo.xml
 /findbugs-josm-pointInfo.xml
+/bin

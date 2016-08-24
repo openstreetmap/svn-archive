@@ -42,85 +42,89 @@ public class FiltersDownloader implements ActionListener {
 
     public static List<FilterInfo> downloadFiltersInfoList() {
 
-        JsonObject jsonRequest = Json
-                .createObjectBuilder()
-                .add("id", new Random().nextInt())
-                .add("method", "wiki.getPageHTML")
-                .add("params",
-                        Json.createArrayBuilder().add("ImageFilters").build())
-                .build();
+//        JsonObject jsonRequest = Json
+//                .createObjectBuilder()
+//                .add("id", new Random().nextInt())
+//                .add("method", "wiki.getPageHTML")
+//                .add("params",
+//                        Json.createArrayBuilder().add("ImageFilters").build())
+//                .build();
 
-        String jsonRequestString = jsonRequest.toString();
+//        String jsonRequestString = jsonRequest.toString();
 
-        URL wikiApi;
-        HttpURLConnection wikiConnection;
+//        URL wikiApi;
+//        HttpURLConnection wikiConnection;
         try {
-            wikiApi = new URL("https://josm.openstreetmap.de/jsonrpc");
-            wikiConnection = (HttpURLConnection) wikiApi.openConnection();
-            wikiConnection.setDoOutput(true);
-            wikiConnection.setDoInput(true);
+//            wikiApi = new URL("https://josm.openstreetmap.de/wiki/ImageFilters");
+//            wikiConnection = (HttpURLConnection) wikiApi.openConnection();
+//            wikiConnection.setDoOutput(true);
+//            wikiConnection.setDoInput(true);
+//
+//            wikiConnection.setRequestProperty("Content-Type",
+//                    "application/json");
+//            wikiConnection.setRequestProperty("Method", "POST");
+//            wikiConnection.connect();
 
-            wikiConnection.setRequestProperty("Content-Type",
-                    "application/json");
-            wikiConnection.setRequestProperty("Method", "POST");
-            wikiConnection.connect();
+//            OutputStream os = wikiConnection.getOutputStream();
+//            os.write(jsonRequestString.getBytes("UTF-8"));
+//            os.close();
 
-            OutputStream os = wikiConnection.getOutputStream();
-            os.write(jsonRequestString.getBytes("UTF-8"));
-            os.close();
+//            int HttpResult = wikiConnection.getResponseCode();
+//            if (HttpResult == HttpURLConnection.HTTP_OK) {
 
-            int HttpResult = wikiConnection.getResponseCode();
-            if (HttpResult == HttpURLConnection.HTTP_OK) {
+//                JsonReader jsonStream = Json
+//                        .createReader(new InputStreamReader(wikiConnection
+//                                .getInputStream(), "utf-8"));
 
-                JsonReader jsonStream = Json
-                        .createReader(new InputStreamReader(wikiConnection
-                                .getInputStream(), "utf-8"));
+//                BufferedReader inReader = new BufferedReader(new InputStreamReader(wikiConnection.getInputStream()));
 
-                JsonObject jsonResponse = jsonStream.readObject();
-                jsonStream.close();
+//                JsonObject jsonResponse = jsonStream.readObject();
+//                jsonStream.close();
+            Document doc = Jsoup.connect("https://josm.openstreetmap.de/wiki/ImageFilters").get();
+            Elements trTagElems = doc.getElementsByTag("tr");
 
-                Elements trTagElems = Jsoup.parse(
-                        jsonResponse.getString("result"))
-                        .getElementsByTag("tr");
-                for (Element element : trTagElems) {
+//                Elements trTagElems = Jsoup.parse(
+//                        jsonResponse.getString("result"))
+//                        .getElementsByTag("tr");
+            for (Element element : trTagElems) {
 
-                    Elements elems = element.getElementsByTag("td");
-                    if (!elems.isEmpty()) {
-                        String name = elems.get(0).text();
-                        String owner = elems.get(1).text();
-                        String description = elems.get(2).text();
+                Elements elems = element.getElementsByTag("td");
+                if (!elems.isEmpty()) {
+                    String name = elems.get(0).text();
+                    String owner = elems.get(1).text();
+                    String description = elems.get(2).text();
 
-                        String link = elems.get(0).getElementsByTag("a")
-                                .attr("href");
+                    String link = elems.get(0).getElementsByTag("a")
+                            .attr("href");
 
-                        JsonObject meta = loadMeta(link);
+                    JsonObject meta = loadMeta(link);
 
-                        String paramName = "rasterfilters."
-                                + meta.getString("name");
+                    String paramName = "rasterfilters."
+                            + meta.getString("name");
 
-                        boolean needToLoad = Main.pref.getBoolean(paramName);
+                    boolean needToLoad = Main.pref.getBoolean(paramName);
 
-                        if (needToLoad) {
-                            JsonArray binaries = meta.getJsonArray("binaries");
-                            filterTitles.add(meta.getString("title"));
-                            for (int i = 0; i < binaries.size(); i++) {
-                                filtersMetaToLoad.add(meta);
-                                loadBinaryToFile(binaries.getString(i));
-                            }
-                        }
-                        FilterInfo newFilterInfo = new FilterInfo(name,
-                                description, meta, needToLoad);
-                        newFilterInfo.setOwner(owner);
-
-                        if (!filtersInfoList.contains(newFilterInfo)) {
-                            filtersInfoList.add(newFilterInfo);
+                    if (needToLoad) {
+                        JsonArray binaries = meta.getJsonArray("binaries");
+                        filterTitles.add(meta.getString("title"));
+                        for (int i = 0; i < binaries.size(); i++) {
+                            filtersMetaToLoad.add(meta);
+                            loadBinaryToFile(binaries.getString(i));
                         }
                     }
-                }
+                    FilterInfo newFilterInfo = new FilterInfo(name,
+                            description, meta, needToLoad);
+                    newFilterInfo.setOwner(owner);
 
-            } else {
-                Main.debug("Error happenned while requesting for the list of filters");
+                    if (!filtersInfoList.contains(newFilterInfo)) {
+                        filtersInfoList.add(newFilterInfo);
+                    }
+                }
             }
+
+//            } else {
+//                Main.debug("Error happenned while requesting for the list of filters");
+//            }
         } catch (IOException e1) {
             // TODO Auto-generated catch block
             e1.printStackTrace();
@@ -140,55 +144,55 @@ public class FiltersDownloader implements ActionListener {
             link = link.substring(m.start());
         }
 
-        JsonObject jsonRequest = Json.createObjectBuilder()
-                .add("id", new Random().nextInt())
-                .add("method", "wiki.getPageHTML")
-                .add("params", Json.createArrayBuilder().add(link).build())
-                .build();
+//        JsonObject jsonRequest = Json.createObjectBuilder()
+//                .add("id", new Random().nextInt())
+//                .add("method", "wiki.getPageHTML")
+//                .add("params", Json.createArrayBuilder().add(link).build())
+//                .build();
 
-        String jsonStringRequest = jsonRequest.toString();
+//        String jsonStringRequest = jsonRequest.toString();
 
         URL wikiApi;
         HttpURLConnection wikiConnection;
         JsonObject meta = null;
 
         try {
-            wikiApi = new URL("https://josm.openstreetmap.de/jsonrpc");
-            wikiConnection = (HttpURLConnection) wikiApi.openConnection();
-            wikiConnection.setDoOutput(true);
-            wikiConnection.setDoInput(true);
+//            wikiApi = new URL("https://josm.openstreetmap.de/jsonrpc");
+//            wikiConnection = (HttpURLConnection) wikiApi.openConnection();
+//            wikiConnection.setDoOutput(true);
+//            wikiConnection.setDoInput(true);
+//
+//            wikiConnection.setRequestProperty("Content-Type",
+//                    "application/json");
+//            wikiConnection.setRequestProperty("Method", "POST");
+//            wikiConnection.connect();
+//
+//            OutputStream os = wikiConnection.getOutputStream();
+//            os.write(jsonStringRequest.getBytes("UTF-8"));
+//            os.close();
+//
+//            int HttpResult = wikiConnection.getResponseCode();
+//            if (HttpResult == HttpURLConnection.HTTP_OK) {
 
-            wikiConnection.setRequestProperty("Content-Type",
-                    "application/json");
-            wikiConnection.setRequestProperty("Method", "POST");
-            wikiConnection.connect();
+//            JsonReader jsonStream = Json
+//                    .createReader(new InputStreamReader(wikiConnection
+//                            .getInputStream(), "UTF-8"));
 
-            OutputStream os = wikiConnection.getOutputStream();
-            os.write(jsonStringRequest.getBytes("UTF-8"));
-            os.close();
+//            JsonObject jsonResponse = jsonStream.readObject();
+//            jsonStream.close();
 
-            int HttpResult = wikiConnection.getResponseCode();
-            if (HttpResult == HttpURLConnection.HTTP_OK) {
+//            String jsonPage = jsonResponse.getString("result");
 
-                JsonReader jsonStream = Json
-                        .createReader(new InputStreamReader(wikiConnection
-                                .getInputStream(), "UTF-8"));
+            Document doc = Jsoup.connect("https://josm.openstreetmap.de/wiki/" + link).get();
+            String json = doc.getElementsByTag("pre").first().text();
 
-                JsonObject jsonResponse = jsonStream.readObject();
-                jsonStream.close();
+            JsonReader reader = Json.createReader(new StringReader(json));
+            meta = reader.readObject();
+            reader.close();
 
-                String jsonPage = jsonResponse.getString("result");
-
-                Document doc = Jsoup.parse(jsonPage, "UTF-8");
-                String json = doc.getElementsByTag("pre").first().text();
-
-                JsonReader reader = Json.createReader(new StringReader(json));
-                meta = reader.readObject();
-                reader.close();
-
-            } else {
-                Main.debug(wikiConnection.getResponseMessage());
-            }
+//            } else {
+//                Main.debug(wikiConnection.getResponseMessage());
+//            }
         } catch (IOException e1) {
             e1.printStackTrace();
         }

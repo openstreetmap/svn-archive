@@ -105,7 +105,7 @@ public class JunctionCheckDialog extends ToggleDialog implements SelectionChange
         checkJunctionButton = new SideButton(new AbstractAction() {
             {
                 putValue(NAME, marktr("Check "));
-                putValue(SHORT_DESCRIPTION, tr("check the subust for junction properties"));
+                putValue(SHORT_DESCRIPTION, tr("check the subset for junction properties"));
                 putValue(SMALL_ICON, ImageProvider.get("dialogs", "junctioncheck"));
             }
             @Override

@@ -1,9 +1,11 @@
 package org.wikipedia;
 
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.coor.LatLon;
+import org.openstreetmap.josm.testutils.JOSMTestRules;
 import org.wikipedia.WikipediaApp.WikipediaEntry;
 import org.wikipedia.WikipediaApp.WikipediaLangArticle;
 
@@ -21,10 +23,12 @@ import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 public class WikipediaAppTest {
-    @Before
-    public void setUp() throws Exception {
-        Main.initApplicationPreferences();
-    }
+
+    /**
+     * Setup test.
+     */
+    @Rule
+    public JOSMTestRules rules = new JOSMTestRules().preferences();
 
     @Test
     public void testMediawikiLocale() throws Exception {

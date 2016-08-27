@@ -10,16 +10,17 @@ import java.util.List;
 import javax.swing.JLabel;
 import javax.swing.JTable;
 
-import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
-import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.testutils.JOSMTestRules;
 
 public class WikidataTagCellRendererTest {
 
-    @Before
-    public void setUp() throws Exception {
-        Main.initApplicationPreferences();
-    }
+    /**
+     * Setup test.
+     */
+    @Rule
+    public JOSMTestRules rules = new JOSMTestRules().preferences();
 
     @Test
     public void testRenderLabel() throws Exception {
@@ -41,5 +42,4 @@ public class WikidataTagCellRendererTest {
                 "<li>Q1741 <span color='gray'>Vienna</span></li>" +
                 "<li>Q278250 <span color='gray'>Völs</span></li></ul>"));
     }
-
 }

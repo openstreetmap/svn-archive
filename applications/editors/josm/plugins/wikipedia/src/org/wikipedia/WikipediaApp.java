@@ -82,7 +82,7 @@ public final class WikipediaApp {
                             if ("wikidata".equals(wikipediaLang)) {
                                 return new WikidataEntry(name, null, latLon, null);
                             } else {
-                                return new WikipediaEntry(wikipediaLang, name, name, latLon);
+                                return new WikipediaEntry(wikipediaLang, name, latLon);
                             }
                         }).collect(Collectors.toList());
                 if ("wikidata".equals(wikipediaLang)) {

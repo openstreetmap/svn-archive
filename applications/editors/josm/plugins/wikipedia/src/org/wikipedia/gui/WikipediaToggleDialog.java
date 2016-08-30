@@ -10,7 +10,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 import javax.swing.AbstractAction;
@@ -78,7 +77,7 @@ public class WikipediaToggleDialog extends ToggleDialog implements ActiveLayerCh
                             bbox.visit(entry.coordinate);
                             Main.map.mapView.zoomTo(bbox);
                         }
-                        final String search = Optional.ofNullable(entry.label).orElse(entry.article).replaceAll("\\(.*\\)", "");
+                        final String search = entry.getSearchText().replaceAll("\\(.*\\)", "");
                         SearchAction.search(search, SearchAction.SearchMode.replace);
                     }
                 }

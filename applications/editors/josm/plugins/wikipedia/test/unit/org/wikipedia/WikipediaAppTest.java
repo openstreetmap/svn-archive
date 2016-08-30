@@ -96,6 +96,7 @@ public class WikipediaAppTest {
         final List<WikipediaEntry> entries = WikipediaApp.getEntriesFromCoordinates("wikidata",
                 new LatLon(47.20, 11.30), new LatLon(47.22, 11.32));
         final long c = entries.stream()
+                .map(WikidataEntry.class::cast)
                 .filter(entry -> "Q865406".equals(entry.article) && "wikidata".equals(entry.lang) && "Birgitzer Alm".equals(entry.label))
                 .count();
         assertEquals(1, c);

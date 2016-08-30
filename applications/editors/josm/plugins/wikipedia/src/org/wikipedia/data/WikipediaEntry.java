@@ -7,7 +7,6 @@ import org.openstreetmap.josm.tools.AlphanumComparator;
 import org.openstreetmap.josm.tools.Utils;
 import org.wikipedia.WikipediaApp;
 
-import java.util.Comparator;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -16,18 +15,16 @@ public class WikipediaEntry implements Comparable<WikipediaEntry> {
 
     public final String lang;
     public final String article;
-    public final String label;
     public final LatLon coordinate;
     private Boolean wiwosmStatus;
 
     public WikipediaEntry(String lang, String article) {
-        this(lang, article, null, null);
+        this(lang, article, null);
     }
 
-    public WikipediaEntry(String lang, String article, String label, LatLon coordinate) {
+    public WikipediaEntry(String lang, String article, LatLon coordinate) {
         this.lang = lang;
         this.article = article;
-        this.label = label;
         this.coordinate = coordinate;
     }
 
@@ -89,6 +86,10 @@ public class WikipediaEntry implements Comparable<WikipediaEntry> {
         return article;
     }
 
+    public String getSearchText() {
+        return article;
+    }
+
     @Override
     public String toString() {
         return article;
@@ -96,10 +97,7 @@ public class WikipediaEntry implements Comparable<WikipediaEntry> {
 
     @Override
     public int compareTo(WikipediaEntry o) {
-        return Comparator
-                .<WikipediaEntry, String>comparing(x -> x.label, AlphanumComparator.getInstance())
-                .thenComparing(x -> x.article, AlphanumComparator.getInstance())
-                .compare(this, o);
+        return AlphanumComparator.getInstance().compare(article, o.article);
     }
 
     @Override

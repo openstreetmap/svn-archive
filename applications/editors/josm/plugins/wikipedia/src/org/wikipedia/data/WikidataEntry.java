@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.wikipedia.data;
 
 import org.openstreetmap.josm.data.coor.LatLon;

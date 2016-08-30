@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.wikipedia.tools;
 
 import java.util.concurrent.ConcurrentHashMap;

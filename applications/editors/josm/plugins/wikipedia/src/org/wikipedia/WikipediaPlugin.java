@@ -1,4 +1,4 @@
-// License: GPL. See LICENSE file for details.
+// License: GPL. For details, see LICENSE file.
 package org.wikipedia;
 
 import org.openstreetmap.josm.Main;

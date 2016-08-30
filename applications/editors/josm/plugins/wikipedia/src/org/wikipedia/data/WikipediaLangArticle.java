@@ -1,7 +1,7 @@
+// License: GPL. For details, see LICENSE file.
 package org.wikipedia.data;
 
 import org.openstreetmap.josm.tools.Utils;
-import org.wikipedia.WikipediaApp;
 
 import java.util.Objects;
 import java.util.regex.Matcher;

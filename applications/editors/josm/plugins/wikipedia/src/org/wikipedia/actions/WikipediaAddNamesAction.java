@@ -1,5 +1,5 @@
 // License: GPL. See LICENSE file for details./*
-package org.wikipedia;
+package org.wikipedia.actions;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
@@ -15,6 +15,8 @@ import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.io.remotecontrol.AddTagsDialog;
+import org.wikipedia.WikipediaApp;
+import org.wikipedia.data.WikipediaLangArticle;
 
 public class WikipediaAddNamesAction extends JosmAction {
 
@@ -26,7 +28,7 @@ public class WikipediaAddNamesAction extends JosmAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        final WikipediaApp.WikipediaLangArticle wp = WikipediaApp.WikipediaLangArticle.parseTag("wikipedia", getWikipediaValue());
+        final WikipediaLangArticle wp = WikipediaLangArticle.parseTag("wikipedia", getWikipediaValue());
         List<String[]> tags = new ArrayList<>();
         WikipediaApp.getInterwikiArticles(wp.lang, wp.article).stream()
                 .filter(this::useWikipediaLangArticle)
@@ -38,14 +40,14 @@ public class WikipediaAddNamesAction extends JosmAction {
         AddTagsDialog.addTags(tags.toArray(new String[tags.size()][]), "Wikipedia", getLayerManager().getEditDataSet().getSelected());
     }
 
-    protected boolean useWikipediaLangArticle(WikipediaApp.WikipediaLangArticle i) {
+    private boolean useWikipediaLangArticle(WikipediaLangArticle i) {
         return (!Main.pref.getBoolean("wikipedia.filter-iso-languages", true)
                 || Arrays.asList(Locale.getISOLanguages()).contains(i.lang))
                 && (!Main.pref.getBoolean("wikipedia.filter-same-names", true)
                 || !i.article.equals(getLayerManager().getEditDataSet().getSelected().iterator().next().get("name")));
     }
 
-    protected String getWikipediaValue() {
+    private String getWikipediaValue() {
         DataSet ds = getLayerManager().getEditDataSet();
         if (ds == null || ds.getSelected() == null || ds.getSelected().size() != 1) {
             return null;

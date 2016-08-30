@@ -1,5 +1,5 @@
 // License: GPL. For details, see LICENSE file.
-package org.wikipedia;
+package org.wikipedia.gui;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
@@ -11,8 +11,9 @@ import java.util.concurrent.TimeUnit;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.ExtendedDialog;
 import org.openstreetmap.josm.gui.util.GuiHelper;
+import org.wikipedia.WikipediaApp;
 
-public final class WikipediaCategorySearchDialog extends ExtendedDialog {
+final class WikipediaCategorySearchDialog extends ExtendedDialog {
 
     private final Selector selector;
     private static final WikipediaCategorySearchDialog INSTANCE = new WikipediaCategorySearchDialog();
@@ -44,7 +45,7 @@ public final class WikipediaCategorySearchDialog extends ExtendedDialog {
         return this;
     }
 
-    public String getCategory() {
+    String getCategory() {
         return selector.getSelectedItem();
     }
 

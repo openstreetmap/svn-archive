@@ -1,4 +1,4 @@
-package org.wikipedia;
+package org.wikipedia.tools;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Future;

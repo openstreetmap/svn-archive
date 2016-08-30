@@ -1,5 +1,5 @@
 // License: GPL. See LICENSE file for details.
-package org.wikipedia;
+package org.wikipedia.gui;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
@@ -41,7 +41,9 @@ import org.openstreetmap.josm.gui.layer.MainLayerManager.ActiveLayerChangeListen
 import org.openstreetmap.josm.tools.ImageProvider;
 import org.openstreetmap.josm.tools.LanguageInfo;
 import org.openstreetmap.josm.tools.OpenBrowser;
-import org.wikipedia.WikipediaApp.WikipediaEntry;
+import org.wikipedia.WikipediaApp;
+import org.wikipedia.actions.FetchWikidataAction;
+import org.wikipedia.data.WikipediaEntry;
 
 public class WikipediaToggleDialog extends ToggleDialog implements ActiveLayerChangeListener, DataSetListenerAdapter.Listener {
 

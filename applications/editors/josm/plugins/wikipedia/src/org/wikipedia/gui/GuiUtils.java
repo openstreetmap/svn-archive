@@ -1,5 +1,5 @@
 // License: GPL. See LICENSE file for details./*
-package org.wikipedia;
+package org.wikipedia.gui;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
@@ -18,11 +18,11 @@ import java.util.stream.Collectors;
 import static org.openstreetmap.josm.tools.I18n.tr;
 import static org.openstreetmap.josm.tools.I18n.trn;
 
-class GuiUtils {
+public class GuiUtils {
 
-    static final String PREF_OVERWRITE = "wikipedia.overwrite-tag";
+    public static final String PREF_OVERWRITE = "wikipedia.overwrite-tag";
 
-    static boolean confirmOverwrite(final String key, final String newValue, final Collection<OsmPrimitive> primitives) {
+    public static boolean confirmOverwrite(final String key, final String newValue, final Collection<OsmPrimitive> primitives) {
         final SortedSet<String> existingValues = primitives.stream()
                 .map(x -> x.get(key))
                 .filter(x -> x != null && !newValue.equals(x))

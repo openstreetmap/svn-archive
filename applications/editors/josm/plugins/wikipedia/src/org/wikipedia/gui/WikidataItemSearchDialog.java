@@ -1,5 +1,5 @@
 // License: GPL. For details, see LICENSE file.
-package org.wikipedia;
+package org.wikipedia.gui;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
@@ -28,6 +28,8 @@ import org.openstreetmap.josm.gui.tagging.ac.AutoCompletingComboBox;
 import org.openstreetmap.josm.gui.tagging.ac.AutoCompletionListItem;
 import org.openstreetmap.josm.gui.util.GuiHelper;
 import org.openstreetmap.josm.tools.GBC;
+import org.wikipedia.WikipediaApp;
+import org.wikipedia.data.WikidataEntry;
 
 public final class WikidataItemSearchDialog extends ExtendedDialog {
 
@@ -36,7 +38,7 @@ public final class WikidataItemSearchDialog extends ExtendedDialog {
     private static final WikidataItemSearchDialog INSTANCE = new WikidataItemSearchDialog();
 
     private WikidataItemSearchDialog() {
-        super(Main.parent, tr("Search Wikidata items"), new String[]{tr("Add Tag"), tr("Cancel")});
+        super(Main.parent, tr("Search Wikidata items"), tr("Add Tag"), tr("Cancel"));
         this.selector = new Selector();
         this.selector.setDblClickListener(e -> buttonAction(0, null));
         this.targetKey = new AutoCompletingComboBox();
@@ -96,7 +98,7 @@ public final class WikidataItemSearchDialog extends ExtendedDialog {
         if (buttonIndex != 0) {
             return;
         }
-        final WikipediaApp.WikidataEntry selected = selector.getSelectedItem();
+        final WikidataEntry selected = selector.getSelectedItem();
         if (selected == null) {
             return;
         }
@@ -105,14 +107,14 @@ public final class WikidataItemSearchDialog extends ExtendedDialog {
         WikipediaToggleDialog.AddWikipediaTagAction.addTag(new Tag(key, value));
     }
 
-    private static class Selector extends WikiSearchTextResultListPanel<WikipediaApp.WikidataEntry> {
+    private static class Selector extends WikiSearchTextResultListPanel<WikidataEntry> {
 
         Selector() {
             super();
             lsResult.setCellRenderer(new DefaultListCellRenderer() {
                 @Override
                 public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-                    final WikipediaApp.WikidataEntry entry = (WikipediaApp.WikidataEntry) value;
+                    final WikidataEntry entry = (WikidataEntry) value;
                     final String labelText = "<html>" + entry.getLabelText();
                     return super.getListCellRendererComponent(list, labelText, index, isSelected, cellHasFocus);
                 }
@@ -123,7 +125,7 @@ public final class WikidataItemSearchDialog extends ExtendedDialog {
         protected void filterItems() {
             final String query = edSearchText.getText();
             debouncer.debounce(getClass(), () -> {
-                final List<WikipediaApp.WikidataEntry> entries = query == null || query.isEmpty()
+                final List<WikidataEntry> entries = query == null || query.isEmpty()
                         ? Collections.emptyList()
                         : WikipediaApp.getWikidataEntriesForQuery(WikipediaToggleDialog.wikipediaLang.get(), query, Locale.getDefault());
                 GuiHelper.runInEDT(() -> lsResultModel.setItems(entries));

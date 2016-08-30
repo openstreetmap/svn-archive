@@ -1,5 +1,5 @@
 // License: GPL. See LICENSE file for details./*
-package org.wikipedia;
+package org.wikipedia.actions;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 import static org.openstreetmap.josm.tools.I18n.trn;
@@ -27,6 +27,9 @@ import org.openstreetmap.josm.gui.PleaseWaitRunnable;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.tools.MultiMap;
 import org.openstreetmap.josm.tools.Utils;
+import org.wikipedia.WikipediaApp;
+import org.wikipedia.data.WikipediaLangArticle;
+import org.wikipedia.gui.GuiUtils;
 
 public class FetchWikidataAction extends JosmAction {
 
@@ -44,11 +47,11 @@ public class FetchWikidataAction extends JosmAction {
         Main.worker.submit(new Fetcher(ds.getSelected()));
     }
 
-    static class Fetcher extends PleaseWaitRunnable {
+    public static class Fetcher extends PleaseWaitRunnable {
         private final Collection<? extends OsmPrimitive> selection;
         private boolean canceled = false;
         private final List<Command> commands = new ArrayList<>();
-        private final Collection<WikipediaApp.WikipediaLangArticle> notFound = new ArrayList<>();
+        private final Collection<WikipediaLangArticle> notFound = new ArrayList<>();
 
         public Fetcher(Collection<? extends OsmPrimitive> selection) {
             super(tr("Fetching Wikidata IDs"));
@@ -78,10 +81,10 @@ public class FetchWikidataAction extends JosmAction {
             }
         }
 
-        protected static Map<String, PrimitivesWithWikipedia> getLanguageToArticlesMap(final Iterable<? extends OsmPrimitive> selection) {
+        static Map<String, PrimitivesWithWikipedia> getLanguageToArticlesMap(final Iterable<? extends OsmPrimitive> selection) {
             final Map<String, PrimitivesWithWikipedia> r = new HashMap<>();
             for (final OsmPrimitive i : selection) {
-                final WikipediaApp.WikipediaLangArticle tag = WikipediaApp.WikipediaLangArticle.parseTag("wikipedia", i.get("wikipedia"));
+                final WikipediaLangArticle tag = WikipediaLangArticle.parseTag("wikipedia", i.get("wikipedia"));
                 if (tag != null) {
                     if (!r.containsKey(tag.lang)) {
                         r.put(tag.lang, new PrimitivesWithWikipedia(tag.lang));
@@ -106,13 +109,13 @@ public class FetchWikidataAction extends JosmAction {
         }
     }
 
-    static class PrimitivesWithWikipedia {
+    private static class PrimitivesWithWikipedia {
         final String lang;
         final MultiMap<String, OsmPrimitive> byArticle = new MultiMap<>();
         final List<Command> commands = new ArrayList<>();
-        final List<WikipediaApp.WikipediaLangArticle> notFound = new ArrayList<>();
+        final List<WikipediaLangArticle> notFound = new ArrayList<>();
 
-        public PrimitivesWithWikipedia(String lang) {
+        PrimitivesWithWikipedia(String lang) {
             this.lang = lang;
         }
 
@@ -120,7 +123,7 @@ public class FetchWikidataAction extends JosmAction {
             byArticle.put(wikipedia, key);
         }
 
-        protected void updateWikidataIds(ProgressMonitor monitor) {
+        void updateWikidataIds(ProgressMonitor monitor) {
             final int size = byArticle.keySet().size();
             monitor.beginTask(trn(
                     "Fetching {0} Wikidata ID for language ''{1}''",
@@ -135,7 +138,7 @@ public class FetchWikidataAction extends JosmAction {
                         commands.add(new ChangePropertyCommand(i.getValue(), "wikidata", wikidata));
                     }
                 } else {
-                    final WikipediaApp.WikipediaLangArticle article = new WikipediaApp.WikipediaLangArticle(lang, wikipedia);
+                    final WikipediaLangArticle article = new WikipediaLangArticle(lang, wikipedia);
                     Main.warn(tr("No Wikidata ID found for: {0}", article));
                     notFound.add(article);
                 }
@@ -150,7 +153,7 @@ public class FetchWikidataAction extends JosmAction {
                     : new SequenceCommand(tr("Add Wikidata for language ''{0}''", lang), commands);
         }
 
-        public List<WikipediaApp.WikipediaLangArticle> getNotFound() {
+        List<WikipediaLangArticle> getNotFound() {
             return notFound;
         }
     }

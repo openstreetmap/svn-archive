@@ -1,4 +1,4 @@
-package org.wikipedia;
+package org.wikipedia.gui;
 
 import java.awt.Component;
 import java.util.ArrayList;
@@ -20,6 +20,8 @@ import javax.swing.table.DefaultTableCellRenderer;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.util.GuiHelper;
 import org.openstreetmap.josm.tools.Utils;
+import org.wikipedia.WikipediaApp;
+import org.wikipedia.data.WikidataEntry;
 
 public class WikidataTagCellRenderer extends DefaultTableCellRenderer {
 
@@ -73,7 +75,7 @@ public class WikidataTagCellRenderer extends DefaultTableCellRenderer {
             if (label == null) {
                 return null;
             }
-            texts.add(WikipediaApp.WikidataEntry.getLabelText(id, label));
+            texts.add(WikidataEntry.getLabelText(id, label));
         }
         component.setText("<html>" + texts.stream().collect(Collectors.joining("; ")));
         component.setToolTipText("<html>" + Utils.joinAsHtmlUnorderedList(texts));

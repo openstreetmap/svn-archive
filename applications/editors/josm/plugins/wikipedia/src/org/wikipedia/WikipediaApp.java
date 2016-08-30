@@ -11,14 +11,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.TreeMap;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -30,14 +28,15 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
-import org.openstreetmap.josm.data.osm.Tag;
 import org.openstreetmap.josm.gui.datatransfer.ClipboardUtils;
-import org.openstreetmap.josm.tools.AlphanumComparator;
-import org.openstreetmap.josm.tools.CheckParameterUtil;
 import org.openstreetmap.josm.tools.HttpClient;
 import org.openstreetmap.josm.tools.Utils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
+import org.wikipedia.data.WikidataEntry;
+import org.wikipedia.data.WikipediaEntry;
+import org.wikipedia.data.WikipediaLangArticle;
+import org.wikipedia.tools.XPath;
 
 public final class WikipediaApp {
 
@@ -55,7 +54,7 @@ public final class WikipediaApp {
         }
     }
 
-    static String getSiteUrl(String wikipediaLang) {
+    public static String getSiteUrl(String wikipediaLang) {
         if ("wikidata".equals(wikipediaLang)) {
             return "https://www.wikidata.org";
         } else {
@@ -63,7 +62,7 @@ public final class WikipediaApp {
         }
     }
 
-    static List<WikipediaEntry> getEntriesFromCoordinates(String wikipediaLang, LatLon min, LatLon max) {
+    public static List<WikipediaEntry> getEntriesFromCoordinates(String wikipediaLang, LatLon min, LatLon max) {
         try {
             // construct url
             final String url = getSiteUrl(wikipediaLang) + "/w/api.php"
@@ -98,7 +97,7 @@ public final class WikipediaApp {
         }
     }
 
-    static List<WikidataEntry> getWikidataEntriesForQuery(final String languageForQuery, final String query, final Locale localeForLabels) {
+    public static List<WikidataEntry> getWikidataEntriesForQuery(final String languageForQuery, final String query, final Locale localeForLabels) {
         try {
             final String url = "https://www.wikidata.org/w/api.php" +
                     "?action=wbsearchentities" +
@@ -119,7 +118,7 @@ public final class WikipediaApp {
         }
     }
 
-    static List<WikipediaEntry> getEntriesFromCategory(String wikipediaLang, String category, int depth) {
+    public static List<WikipediaEntry> getEntriesFromCategory(String wikipediaLang, String category, int depth) {
         try {
             final String url = "https://tools.wmflabs.org/cats-php/"
                     + "?lang=" + wikipediaLang
@@ -137,14 +136,14 @@ public final class WikipediaApp {
         }
     }
 
-    static List<WikipediaEntry> getEntriesFromClipboard(final String wikipediaLang) {
+    public static List<WikipediaEntry> getEntriesFromClipboard(final String wikipediaLang) {
         return Pattern.compile("[\\n\\r]+")
                 .splitAsStream(ClipboardUtils.getClipboardStringContent())
                 .map(x -> new WikipediaEntry(wikipediaLang, x))
                 .collect(Collectors.toList());
     }
 
-    static void updateWIWOSMStatus(String wikipediaLang, List<WikipediaEntry> entries) {
+    public static void updateWIWOSMStatus(String wikipediaLang, List<WikipediaEntry> entries) {
         if (entries.size() > 20) {
             partitionList(entries, 20).forEach(chunk -> updateWIWOSMStatus(wikipediaLang, chunk));
             return;
@@ -178,7 +177,7 @@ public final class WikipediaApp {
         }
     }
 
-    static Stream<String> getWikipediaArticles(final String wikipediaLang, OsmPrimitive p) {
+    public static Stream<String> getWikipediaArticles(final String wikipediaLang, OsmPrimitive p) {
         if ("wikidata".equals(wikipediaLang)) {
             return Stream.of(p.get("wikidata")).filter(Objects::nonNull);
         }
@@ -193,7 +192,7 @@ public final class WikipediaApp {
     /**
      * Returns a map mapping wikipedia articles to wikidata ids.
      */
-    static Map<String, String> getWikidataForArticles(String wikipediaLang, List<String> articles) {
+    public static Map<String, String> getWikidataForArticles(String wikipediaLang, List<String> articles) {
         if (articles.size() > 50) {
             return partitionList(articles, 50).stream()
                     .flatMap(chunk -> getWikidataForArticles(wikipediaLang, chunk).entrySet().stream())
@@ -224,7 +223,7 @@ public final class WikipediaApp {
         }
     }
 
-    static List<String> getCategoriesForPrefix(final String wikipediaLang, final String prefix) {
+    public static List<String> getCategoriesForPrefix(final String wikipediaLang, final String prefix) {
         try {
             final String url = getSiteUrl(wikipediaLang) + "/w/api.php"
                     + "?action=query"
@@ -246,7 +245,7 @@ public final class WikipediaApp {
         }
     }
 
-    static String getLabelForWikidata(String wikidataId, Locale locale, String ... preferredLanguage) {
+    public static String getLabelForWikidata(String wikidataId, Locale locale, String... preferredLanguage) {
         try {
             final List<WikidataEntry> entry = Collections.singletonList(new WikidataEntry(wikidataId, null, null, null));
             return getLabelForWikidata(entry, locale, preferredLanguage).get(0).label;
@@ -309,7 +308,7 @@ public final class WikipediaApp {
                 .orElse(null);
     }
 
-    static Collection<WikipediaLangArticle> getInterwikiArticles(String wikipediaLang, String article) {
+    public static Collection<WikipediaLangArticle> getInterwikiArticles(String wikipediaLang, String article) {
         try {
             final String url = getSiteUrl(wikipediaLang) + "/w/api.php" +
                     "?action=query" +
@@ -331,7 +330,7 @@ public final class WikipediaApp {
         }
     }
 
-    static LatLon getCoordinateForArticle(String wikipediaLang, String article) {
+    public static LatLon getCoordinateForArticle(String wikipediaLang, String article) {
         try {
             final String url = getSiteUrl(wikipediaLang) + "/w/api.php" +
                     "?action=query" +
@@ -350,155 +349,6 @@ public final class WikipediaApp {
         } catch (Exception ex) {
             throw new RuntimeException(ex);
         }
-    }
-
-    static class WikipediaLangArticle {
-
-        final String lang, article;
-
-        public WikipediaLangArticle(String lang, String article) {
-            this.lang = lang;
-            this.article = article;
-        }
-
-        public static WikipediaLangArticle parseFromUrl(String url) {
-            if (url == null) {
-                return null;
-            }
-            // decode URL for nicer value
-            url = Utils.decodeUrl(url);
-            // extract Wikipedia language and
-            final Matcher m = Pattern.compile("(https?:)?//(\\w*)\\.wikipedia\\.org/wiki/(.*)").matcher(url);
-            if (!m.matches()) {
-                return null;
-            }
-            return new WikipediaLangArticle(m.group(2), m.group(3));
-        }
-
-        public static WikipediaLangArticle parseTag(String key, String value) {
-            if (value == null) {
-                return null;
-            } else if (value.startsWith("http")) {
-                //wikipedia=http...
-                return parseFromUrl(value);
-            } else if (value.contains(":")) {
-                //wikipedia=[lang]:[article]
-                //wikipedia:[lang]=[lang]:[article]
-                final String[] item = Utils.decodeUrl(value).split(":", 2);
-                final String article = item[1].replace("_", " ");
-                return new WikipediaLangArticle(item[0], article);
-            } else if (key.startsWith("wikipedia:")) {
-                //wikipedia:[lang]=[lang]:[article]
-                //wikipedia:[lang]=[article]
-                final String lang = key.split(":", 2)[1];
-                final String[] item = Utils.decodeUrl(value).split(":", 2);
-                final String article = item[item.length == 2 ? 1 : 0].replace("_", " ");
-                return new WikipediaLangArticle(lang, article);
-            } else {
-                return null;
-            }
-        }
-
-        @Override
-        public String toString() {
-            return lang + ":" + article;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-            final WikipediaLangArticle that = (WikipediaLangArticle) o;
-            return Objects.equals(lang, that.lang) &&
-                    Objects.equals(article, that.article);
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(lang, article);
-        }
-    }
-
-    static class WikipediaEntry implements Comparable<WikipediaEntry> {
-
-        final String label;
-        final String wikipediaLang, wikipediaArticle;
-        final LatLon coordinate;
-        private Boolean wiwosmStatus;
-
-        WikipediaEntry(String wikipediaLang, String wikipediaArticle) {
-            this(wikipediaLang, wikipediaArticle, null, null);
-        }
-
-        WikipediaEntry(String wikipediaLang, String wikipediaArticle, String label, LatLon coordinate) {
-            this.label = label;
-            this.wikipediaLang = wikipediaLang;
-            this.wikipediaArticle = wikipediaArticle;
-            this.coordinate = coordinate;
-        }
-
-        protected Tag createWikipediaTag() {
-            return new Tag("wikipedia", wikipediaLang + ":" + wikipediaArticle);
-        }
-
-        public void setWiwosmStatus(Boolean wiwosmStatus) {
-            this.wiwosmStatus = wiwosmStatus;
-        }
-
-        public Boolean getWiwosmStatus() {
-            return wiwosmStatus;
-        }
-
-        public String getBrowserUrl() {
-            return getSiteUrl(wikipediaLang) + "/wiki/" + Utils.encodeUrl(wikipediaArticle.replace(" ", "_"));
-        }
-
-        public String getLabelText() {
-            return wikipediaArticle;
-        }
-
-        @Override
-        public String toString() {
-            return wikipediaArticle;
-        }
-
-        @Override
-        public int compareTo(WikipediaEntry o) {
-            return Comparator
-                    .<WikipediaEntry, String>comparing(x -> x.label, AlphanumComparator.getInstance())
-                    .thenComparing(x -> x.wikipediaArticle, AlphanumComparator.getInstance())
-                    .compare(this, o);
-        }
-    }
-
-    static class WikidataEntry extends WikipediaEntry {
-
-        final String description;
-
-        WikidataEntry(String id, String label, LatLon coordinate, String description) {
-            super("wikidata", id, label, coordinate);
-            this.description = description;
-            ensureValidWikidataId(id);
-        }
-
-        @Override
-        protected Tag createWikipediaTag() {
-            return new Tag("wikidata", wikipediaArticle);
-        }
-
-        @Override
-        public String getLabelText() {
-            final String descriptionInParen = description == null ? "" : (" (" + description + ")");
-            return getLabelText(label, wikipediaArticle + descriptionInParen);
-        }
-
-        static String getLabelText(String bold, String gray) {
-            return Utils.escapeReservedCharactersHTML(bold) + " <span color='gray'>" + Utils.escapeReservedCharactersHTML(gray) + "</span>";
-        }
-    }
-
-    static void ensureValidWikidataId(String id) {
-        CheckParameterUtil.ensureThat(WIKIDATA_PATTERN.matcher(id).matches(), "Invalid Wikidata ID given: " + id);
     }
 
     public static <T> List<List<T>> partitionList(final List<T> list, final int size) {

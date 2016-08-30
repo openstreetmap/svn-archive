@@ -1,5 +1,5 @@
 // License: GPL. See LICENSE file for details./*
-package org.wikipedia;
+package org.wikipedia.tools;
 
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;

@@ -1,4 +1,4 @@
-package org.wikipedia;
+package org.wikipedia.gui;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertNotNull;
@@ -13,6 +13,7 @@ import javax.swing.JTable;
 import org.junit.Rule;
 import org.junit.Test;
 import org.openstreetmap.josm.testutils.JOSMTestRules;
+import org.wikipedia.gui.WikidataTagCellRenderer;
 
 public class WikidataTagCellRendererTest {
 

@@ -6,6 +6,12 @@ import org.openstreetmap.josm.gui.MainMenu;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
+import org.wikipedia.actions.FetchWikidataAction;
+import org.wikipedia.actions.WikipediaAddNamesAction;
+import org.wikipedia.actions.WikipediaCopyTemplate;
+import org.wikipedia.gui.WikidataItemSearchDialog;
+import org.wikipedia.gui.WikidataTagCellRenderer;
+import org.wikipedia.gui.WikipediaToggleDialog;
 
 public class WikipediaPlugin extends Plugin {
 

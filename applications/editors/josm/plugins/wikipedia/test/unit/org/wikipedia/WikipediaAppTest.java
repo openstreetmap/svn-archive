@@ -1,13 +1,12 @@
 package org.wikipedia;
 
-import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.testutils.JOSMTestRules;
-import org.wikipedia.WikipediaApp.WikipediaEntry;
-import org.wikipedia.WikipediaApp.WikipediaLangArticle;
+import org.wikipedia.data.WikidataEntry;
+import org.wikipedia.data.WikipediaEntry;
+import org.wikipedia.data.WikipediaLangArticle;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -151,8 +150,8 @@ public class WikipediaAppTest {
 
     @Test
     public void testForQuery() throws Exception {
-        final List<WikipediaApp.WikidataEntry> de = WikipediaApp.getWikidataEntriesForQuery("de", "Österreich", Locale.GERMAN);
-        final List<WikipediaApp.WikidataEntry> en = WikipediaApp.getWikidataEntriesForQuery("de", "Österreich", Locale.ENGLISH);
+        final List<WikidataEntry> de = WikipediaApp.getWikidataEntriesForQuery("de", "Österreich", Locale.GERMAN);
+        final List<WikidataEntry> en = WikipediaApp.getWikidataEntriesForQuery("de", "Österreich", Locale.ENGLISH);
         assertThat(de.get(0).wikipediaArticle, is("Q40"));
         assertThat(de.get(0).wikipediaLang, is("wikidata"));
         assertThat(de.get(0).label, is("Österreich"));
@@ -190,9 +189,9 @@ public class WikipediaAppTest {
         assertThat(WikipediaApp.getLabelForWikidata("Q21849466", new Locale("aa")), is("Leoben - Straßennamen mit Geschichte"));
         // not found -> null
         assertThat(WikipediaApp.getLabelForWikidata("Q" + Long.MAX_VALUE, Locale.ENGLISH), nullValue());
-        final WikipediaApp.WikidataEntry q84 = new WikipediaApp.WikidataEntry("Q84", null, null, null);
-        final WikipediaApp.WikidataEntry q1741 = new WikipediaApp.WikidataEntry("Q1741", null, null, null);
-        final List<WikipediaApp.WikidataEntry> twoLabels = WikipediaApp.getLabelForWikidata(Arrays.asList(q84, q1741), Locale.GERMAN);
+        final WikidataEntry q84 = new WikidataEntry("Q84", null, null, null);
+        final WikidataEntry q1741 = new WikidataEntry("Q1741", null, null, null);
+        final List<WikidataEntry> twoLabels = WikipediaApp.getLabelForWikidata(Arrays.asList(q84, q1741), Locale.GERMAN);
         assertThat(twoLabels.get(0).label, is("London"));
         assertThat(twoLabels.get(1).label, is("Wien"));
     }

@@ -1,4 +1,4 @@
-package org.wikipedia;
+package org.wikipedia.actions;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
@@ -45,6 +45,7 @@ public class WikipediaCopyTemplate {
      * Class to hold copy templates for serialization using {@link Preferences}.
      * Public visibility is needed for reflection used in {@link Preferences#getListOfStructs}.
      */
+    @SuppressWarnings("WeakerAccess")
     public static class CoordCopyTemplateEntry {
         @pref
         public String name;
@@ -67,11 +68,11 @@ public class WikipediaCopyTemplate {
 
         protected final String pattern;
 
-        public CoordCopyTemplate(final CoordCopyTemplateEntry entry) {
+        CoordCopyTemplate(final CoordCopyTemplateEntry entry) {
             this(tr("Copy {0} template", entry.name), entry.id, entry.pattern);
         }
 
-        public CoordCopyTemplate(String name, String toolbarId, String pattern) {
+        CoordCopyTemplate(String name, String toolbarId, String pattern) {
             super(name, "dialogs/wikipedia", null, null, true, toolbarId, true);
             this.pattern = pattern;
         }
@@ -97,7 +98,7 @@ public class WikipediaCopyTemplate {
             updateEnabledState();
         }
 
-        protected Node getSelectedNode() {
+        Node getSelectedNode() {
             DataSet ds = getLayerManager().getEditDataSet();
             if (ds == null) {
                 return null;

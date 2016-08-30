@@ -6,7 +6,6 @@ import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.testutils.JOSMTestRules;
 import org.wikipedia.data.WikidataEntry;
 import org.wikipedia.data.WikipediaEntry;
-import org.wikipedia.data.WikipediaLangArticle;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -51,16 +50,16 @@ public class WikipediaAppTest {
 
     @Test
     public void testGetInterwikiArticles1() {
-        final Collection<WikipediaLangArticle> iw = WikipediaApp.getInterwikiArticles("de", "Österreich");
-        assertThat(iw, hasItem(new WikipediaLangArticle("en", "Austria")));
-        assertThat(iw, hasItem(new WikipediaLangArticle("no", "Østerrike")));
-        assertThat(iw, hasItem(new WikipediaLangArticle("ko", "오스트리아")));
+        final Collection<WikipediaEntry> iw = WikipediaApp.getInterwikiArticles("de", "Österreich");
+        assertThat(iw, hasItem(new WikipediaEntry("en", "Austria")));
+        assertThat(iw, hasItem(new WikipediaEntry("no", "Østerrike")));
+        assertThat(iw, hasItem(new WikipediaEntry("ko", "오스트리아")));
     }
 
     @Test
     public void testGetInterwikiArticles2() {
-        final Collection<WikipediaLangArticle> iw = WikipediaApp.getInterwikiArticles("en", "Ampersand");
-        assertThat(iw, hasItem(new WikipediaLangArticle("fi", "&")));
+        final Collection<WikipediaEntry> iw = WikipediaApp.getInterwikiArticles("en", "Ampersand");
+        assertThat(iw, hasItem(new WikipediaEntry("fi", "&")));
     }
 
     @Test
@@ -75,7 +74,7 @@ public class WikipediaAppTest {
         final List<WikipediaEntry> entries = WikipediaApp.getEntriesFromCoordinates("de",
                 new LatLon(52.5179786, 13.3753321), new LatLon(52.5192215, 13.3768705));
         final long c = entries.stream()
-                .filter(entry -> "Reichstagsgebäude".equals(entry.wikipediaArticle) && "de".equals(entry.wikipediaLang))
+                .filter(entry -> "Reichstagsgebäude".equals(entry.article) && "de".equals(entry.lang))
                 .count();
         assertEquals(1, c);
     }
@@ -84,8 +83,8 @@ public class WikipediaAppTest {
     public void testForQuery() throws Exception {
         final List<WikidataEntry> de = WikipediaApp.getWikidataEntriesForQuery("de", "Österreich", Locale.GERMAN);
         final List<WikidataEntry> en = WikipediaApp.getWikidataEntriesForQuery("de", "Österreich", Locale.ENGLISH);
-        assertThat(de.get(0).wikipediaArticle, is("Q40"));
-        assertThat(de.get(0).wikipediaLang, is("wikidata"));
+        assertThat(de.get(0).article, is("Q40"));
+        assertThat(de.get(0).lang, is("wikidata"));
         assertThat(de.get(0).label, is("Österreich"));
         assertThat(de.get(0).description, is("Staat in Mitteleuropa"));
         assertThat(en.get(0).label, is("Austria"));
@@ -97,7 +96,7 @@ public class WikipediaAppTest {
         final List<WikipediaEntry> entries = WikipediaApp.getEntriesFromCoordinates("wikidata",
                 new LatLon(47.20, 11.30), new LatLon(47.22, 11.32));
         final long c = entries.stream()
-                .filter(entry -> "Q865406".equals(entry.wikipediaArticle) && "wikidata".equals(entry.wikipediaLang) && "Birgitzer Alm".equals(entry.label))
+                .filter(entry -> "Q865406".equals(entry.article) && "wikidata".equals(entry.lang) && "Birgitzer Alm".equals(entry.label))
                 .count();
         assertEquals(1, c);
     }

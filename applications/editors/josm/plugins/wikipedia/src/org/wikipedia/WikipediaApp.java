@@ -35,7 +35,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.wikipedia.data.WikidataEntry;
 import org.wikipedia.data.WikipediaEntry;
-import org.wikipedia.data.WikipediaLangArticle;
 import org.wikipedia.tools.XPath;
 
 public final class WikipediaApp {
@@ -152,7 +151,7 @@ public final class WikipediaApp {
         if (!entries.isEmpty()) {
             final String url = "https://tools.wmflabs.org/wiwosm/osmjson/getGeoJSON.php?action=check&lang=" + wikipediaLang;
             try {
-                final String articles = entries.stream().map(i -> i.wikipediaArticle).collect(Collectors.joining(","));
+                final String articles = entries.stream().map(i -> i.article).collect(Collectors.joining(","));
                 final String requestBody = "articles=" + Utils.encodeUrl(articles);
                 try (final BufferedReader reader = HttpClient.create(new URL(url), "POST").setReasonForRequest("Wikipedia")
                                 .setHeader("Content-Type", "application/x-www-form-urlencoded")
@@ -173,7 +172,7 @@ public final class WikipediaApp {
             }
         }
         for (WikipediaEntry i : entries) {
-            i.setWiwosmStatus(status.get(i.wikipediaArticle));
+            i.setWiwosmStatus(status.get(i.article));
         }
     }
 
@@ -183,7 +182,7 @@ public final class WikipediaApp {
         }
         return Stream
                 .of("wikipedia", "wikipedia:" + wikipediaLang)
-                .map(key -> WikipediaLangArticle.parseTag(key, p.get(key)))
+                .map(key -> WikipediaEntry.parseTag(key, p.get(key)))
                 .filter(Objects::nonNull)
                 .filter(wp -> wikipediaLang.equals(wp.lang))
                 .map(wp -> wp.article);
@@ -266,7 +265,7 @@ public final class WikipediaApp {
             final String url = "https://www.wikidata.org/w/api.php" +
                     "?action=wbgetentities" +
                     "&props=labels|descriptions" +
-                    "&ids=" + entries.stream().map(x -> x.wikipediaArticle).collect(Collectors.joining("|")) +
+                    "&ids=" + entries.stream().map(x -> x.article).collect(Collectors.joining("|")) +
                     "&format=xml";
             final Collection<String> languages = new ArrayList<>();
             if (locale != null) {
@@ -280,12 +279,12 @@ public final class WikipediaApp {
             try (final InputStream in = HttpClient.create(new URL(url)).setReasonForRequest("Wikipedia").connect().getContent()) {
                 final Document xml = newDocumentBuilder().parse(in);
                 for (final WikipediaEntry entry : entries) {
-                    final Node entity = X_PATH.evaluateNode("//entity[@id='" + entry.wikipediaArticle + "']", xml);
+                    final Node entity = X_PATH.evaluateNode("//entity[@id='" + entry.article + "']", xml);
                     if (entity == null) {
                         continue;
                     }
                     r.add(new WikidataEntry(
-                            entry.wikipediaArticle,
+                            entry.article,
                             getFirstField(languages, "label", entity),
                             entry.coordinate,
                             getFirstField(languages, "description", entity)
@@ -308,7 +307,7 @@ public final class WikipediaApp {
                 .orElse(null);
     }
 
-    public static Collection<WikipediaLangArticle> getInterwikiArticles(String wikipediaLang, String article) {
+    public static Collection<WikipediaEntry> getInterwikiArticles(String wikipediaLang, String article) {
         try {
             final String url = getSiteUrl(wikipediaLang) + "/w/api.php" +
                     "?action=query" +
@@ -322,7 +321,7 @@ public final class WikipediaApp {
                         .map(node -> {
                             final String lang = X_PATH.evaluateString("@lang", node);
                             final String name = node.getTextContent();
-                            return new WikipediaLangArticle(lang, name);
+                            return new WikipediaEntry(lang, name);
                         }).collect(Collectors.toList());
             }
         } catch (Exception ex) {

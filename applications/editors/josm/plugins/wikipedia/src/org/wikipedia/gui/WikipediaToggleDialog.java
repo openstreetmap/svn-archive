@@ -78,7 +78,7 @@ public class WikipediaToggleDialog extends ToggleDialog implements ActiveLayerCh
                             bbox.visit(entry.coordinate);
                             Main.map.mapView.zoomTo(bbox);
                         }
-                        final String search = Optional.ofNullable(entry.label).orElse(entry.wikipediaArticle).replaceAll("\\(.*\\)", "");
+                        final String search = Optional.ofNullable(entry.label).orElse(entry.article).replaceAll("\\(.*\\)", "");
                         SearchAction.search(search, SearchAction.SearchMode.replace);
                     }
                 }
@@ -94,7 +94,7 @@ public class WikipediaToggleDialog extends ToggleDialog implements ActiveLayerCh
                     if (entry.getWiwosmStatus() != null && entry.getWiwosmStatus()) {
                         label.setIcon(ImageProvider.getIfAvailable("misc", "grey_check"));
                         label.setToolTipText(/* I18n: WIWOSM server already links Wikipedia article to object/s */ tr("Available via WIWOSM server"));
-                    } else if (articles.contains(entry.wikipediaArticle)) {
+                    } else if (articles.contains(entry.article)) {
                         label.setIcon(ImageProvider.getIfAvailable("misc", "green_check"));
                         label.setToolTipText(/* I18n: object/s from dataset contain link to Wikipedia article */ tr("Available in local dataset"));
                     } else {
@@ -123,7 +123,7 @@ public class WikipediaToggleDialog extends ToggleDialog implements ActiveLayerCh
 
     private String getLanguageOfFirstItem() {
         try {
-            return list.getModel().getElementAt(0).wikipediaLang;
+            return list.getModel().getElementAt(0).lang;
         } catch (ArrayIndexOutOfBoundsException ignore) {
             return wikipediaLang.get();
         }
@@ -175,7 +175,7 @@ public class WikipediaToggleDialog extends ToggleDialog implements ActiveLayerCh
             entries.sort(null);
             publish(entries.toArray(new WikipediaEntry[entries.size()]));
             WikipediaApp.partitionList(entries, 20).forEach(chunk -> {
-                WikipediaApp.updateWIWOSMStatus(chunk.get(0).wikipediaLang, chunk);
+                WikipediaApp.updateWIWOSMStatus(chunk.get(0).lang, chunk);
                 list.repaint();
             });
             return null;
@@ -341,7 +341,7 @@ public class WikipediaToggleDialog extends ToggleDialog implements ActiveLayerCh
             }
             final LatLon latLon = entry.coordinate != null
                     ? entry.coordinate
-                    : WikipediaApp.getCoordinateForArticle(entry.wikipediaLang, entry.wikipediaArticle);
+                    : WikipediaApp.getCoordinateForArticle(entry.lang, entry.article);
             if (latLon == null) {
                 return;
             }

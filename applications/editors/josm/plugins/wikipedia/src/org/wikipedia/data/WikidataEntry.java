@@ -19,13 +19,13 @@ public class WikidataEntry extends WikipediaEntry {
 
     @Override
     public Tag createWikipediaTag() {
-        return new Tag("wikidata", wikipediaArticle);
+        return new Tag("wikidata", article);
     }
 
     @Override
     public String getLabelText() {
         final String descriptionInParen = description == null ? "" : (" (" + description + ")");
-        return getLabelText(label, wikipediaArticle + descriptionInParen);
+        return getLabelText(label, article + descriptionInParen);
     }
 
     public static String getLabelText(String bold, String gray) {

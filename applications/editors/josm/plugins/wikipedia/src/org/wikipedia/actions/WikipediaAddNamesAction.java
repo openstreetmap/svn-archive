@@ -16,7 +16,7 @@ import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.io.remotecontrol.AddTagsDialog;
 import org.wikipedia.WikipediaApp;
-import org.wikipedia.data.WikipediaLangArticle;
+import org.wikipedia.data.WikipediaEntry;
 
 public class WikipediaAddNamesAction extends JosmAction {
 
@@ -28,7 +28,7 @@ public class WikipediaAddNamesAction extends JosmAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        final WikipediaLangArticle wp = WikipediaLangArticle.parseTag("wikipedia", getWikipediaValue());
+        final WikipediaEntry wp = WikipediaEntry.parseTag("wikipedia", getWikipediaValue());
         List<String[]> tags = new ArrayList<>();
         WikipediaApp.getInterwikiArticles(wp.lang, wp.article).stream()
                 .filter(this::useWikipediaLangArticle)
@@ -40,7 +40,7 @@ public class WikipediaAddNamesAction extends JosmAction {
         AddTagsDialog.addTags(tags.toArray(new String[tags.size()][]), "Wikipedia", getLayerManager().getEditDataSet().getSelected());
     }
 
-    private boolean useWikipediaLangArticle(WikipediaLangArticle i) {
+    private boolean useWikipediaLangArticle(WikipediaEntry i) {
         return (!Main.pref.getBoolean("wikipedia.filter-iso-languages", true)
                 || Arrays.asList(Locale.getISOLanguages()).contains(i.lang))
                 && (!Main.pref.getBoolean("wikipedia.filter-same-names", true)

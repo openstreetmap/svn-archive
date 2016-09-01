@@ -3,6 +3,7 @@ package org.openstreetmap.josm.plugins.pt_assistant.data;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.Node;
@@ -33,7 +34,7 @@ public class PTRouteDataManager {
 	 * Stores relation members that could not be created because they are not
 	 * expected in the model for public_transport version 2
 	 */
-	private List<RelationMember> failedMembers = new ArrayList<>();
+	private Set<RelationMember> failedMembers = new HashSet<>();
 
 	public PTRouteDataManager(Relation relation) throws IllegalArgumentException {
 
@@ -44,7 +45,7 @@ public class PTRouteDataManager {
 		this.relation = relation;
 
 		PTStop prev = null; // stores the last created PTStop
-		
+
 		for (RelationMember member : this.relation.getMembers()) {
 
 			if (RouteUtils.isPTStop(member)) {
@@ -63,7 +64,7 @@ public class PTRouteDataManager {
 						if (this.calculateDistanceSq(member, prev) < 0.000001) {
 							stopExists = true;
 						}
-						
+
 					} else {
 
 						// if there is a name, check by name comparison:
@@ -87,9 +88,22 @@ public class PTRouteDataManager {
 					// having >1 stop_position, platform or stop_area.
 				} else {
 					// this PTStop does not exist yet, so create it:
-					PTStop ptstop = new PTStop(member);
-					ptstops.add(ptstop);
-					prev = ptstop;
+
+					try {
+						PTStop ptstop = new PTStop(member);
+						ptstops.add(ptstop);
+						prev = ptstop;
+					} catch (IllegalArgumentException ex) {
+						if (ex.getMessage().equals(
+								"The RelationMember type does not match its role " + member.getMember().getName())) {
+							if (!failedMembers.contains(member)) {
+								failedMembers.add(member);
+							}
+						} else {
+							throw ex;
+						}
+					}
+
 				}
 
 			} else if (RouteUtils.isPTWay(member)) {
@@ -98,9 +112,10 @@ public class PTRouteDataManager {
 				ptways.add(ptway);
 
 			} else {
-			
-				this.failedMembers.add(member);
-				
+				if (!failedMembers.contains(member)) {
+					failedMembers.add(member);
+				}
+
 			}
 
 		}
@@ -182,7 +197,7 @@ public class PTRouteDataManager {
 		return this.ptstops.get(ptstops.size() - 1);
 	}
 
-	public List<RelationMember> getFailedMembers() {
+	public Set<RelationMember> getFailedMembers() {
 		return this.failedMembers;
 	}
 
@@ -398,17 +413,18 @@ public class PTRouteDataManager {
 
 		return null;
 	}
-	
+
 	/**
 	 * Returns the last way of this route
+	 * 
 	 * @return
 	 */
 	public Way getLastWay() {
-		PTWay lastPTWay = this.ptways.get(ptways.size()-1);
+		PTWay lastPTWay = this.ptways.get(ptways.size() - 1);
 		if (lastPTWay == null) {
 			return null;
 		}
-		return lastPTWay.getWays().get(lastPTWay.getWays().size()-1);
+		return lastPTWay.getWays().get(lastPTWay.getWays().size() - 1);
 	}
 
 }

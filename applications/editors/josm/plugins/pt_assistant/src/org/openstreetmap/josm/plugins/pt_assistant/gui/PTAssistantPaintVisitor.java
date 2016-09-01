@@ -302,7 +302,7 @@ public class PTAssistantPaintVisitor extends PaintVisitor {
 
 		g.setColor(Color.BLUE);
 
-		if (primitive.hasTag("public_transport", "stop_position")) {
+		if (primitive.hasTag("public_transport", "stop_position") && p != null) {
 			g.fillOval(p.x - 8, p.y - 8, 16, 16);
 		} else {
 			g.fillRect(p.x - 8, p.y - 8, 16, 16);

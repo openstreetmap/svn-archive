@@ -307,7 +307,7 @@ public class PTAssistantValidatorTest extends Test {
 
 	private int showProceedDialog(long id, int numberOfDirectionErrors, int numberOfRoadTypeErrors) {
 
-		if (numberOfDirectionErrors == 0 && numberOfDirectionErrors == 0) {
+		if (numberOfDirectionErrors == 0 && numberOfRoadTypeErrors == 0) {
 			return 2;
 		}
 
@@ -394,8 +394,12 @@ public class PTAssistantValidatorTest extends Test {
 			segmentChecker.performStopByStopTest();
 			segmentChecker.findFixes();
 		}
-
-		this.errors.addAll(segmentChecker.getErrors());
+		
+		for (TestError error: segmentChecker.getErrors()) {
+			if (error.getCode() != PTAssistantValidatorTest.ERROR_CODE_RELAITON_MEMBER_ROLES) {
+				this.errors.add(error);
+			}
+		}
 	}
 
 	/**

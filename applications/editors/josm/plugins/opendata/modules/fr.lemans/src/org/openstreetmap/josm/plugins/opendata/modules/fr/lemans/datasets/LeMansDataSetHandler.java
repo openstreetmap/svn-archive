@@ -13,19 +13,19 @@ import org.openstreetmap.josm.plugins.opendata.modules.fr.lemans.LeMansConstants
 import org.openstreetmap.josm.tools.Pair;
 
 public abstract class LeMansDataSetHandler extends FrenchDataSetHandler implements LeMansConstants {
-    
+
     private String kmzUuid;
     private String shpUuid;
-    
+
     public LeMansDataSetHandler(String uuid) {
         init(uuid);
     }
-    
+
     public LeMansDataSetHandler(String uuid, String relevantTag) {
         super(relevantTag);
         init(uuid);
     }
-    
+
     public LeMansDataSetHandler(String uuid, boolean relevantUnion, String ... relevantTags) {
         super(relevantUnion, relevantTags);
         init(uuid);
@@ -35,13 +35,12 @@ public abstract class LeMansDataSetHandler extends FrenchDataSetHandler implemen
         this(uuid, false, relevantTags);
     }
 
-    
     public LeMansDataSetHandler(String uuid, boolean relevantUnion, Tag ... relevantTags) {
         super(relevantUnion, relevantTags);
         init(uuid);
     }
 
-    private final void init(String uuid) {
+    private void init(String uuid) {
         try {
             setLicense(License.ODbL);
             if (uuid != null && !uuid.isEmpty()) {
@@ -51,7 +50,7 @@ public abstract class LeMansDataSetHandler extends FrenchDataSetHandler implemen
             e.printStackTrace();
         }
     }
-        
+
     protected final void setKmzShpUuid(String kmzUuid, String shpUuid) {
         this.kmzUuid = kmzUuid;
         this.shpUuid = shpUuid;
@@ -61,7 +60,7 @@ public abstract class LeMansDataSetHandler extends FrenchDataSetHandler implemen
     public String getSource() {
         return SOURCE_LE_MANS;
     }
-    
+
     /*@Override
     public URL getLicenseURL() {
         try {
@@ -76,8 +75,10 @@ public abstract class LeMansDataSetHandler extends FrenchDataSetHandler implemen
     public List<Pair<String, URL>> getDataURLs() {
         List<Pair<String, URL>> result = new ArrayList<>();
         try {
-            if (kmzUuid != null && !kmzUuid.isEmpty()) result.add(new Pair<>(getName() + " (KMZ)", new URL(PORTAL + "download.do?uuid=" + kmzUuid)));
-            if (shpUuid != null && !shpUuid.isEmpty()) result.add(new Pair<>(getName() + " (SHP)", new URL(PORTAL + "download.do?uuid=" + shpUuid)));
+            if (kmzUuid != null && !kmzUuid.isEmpty())
+                result.add(new Pair<>(getName() + " (KMZ)", new URL(PORTAL + "download.do?uuid=" + kmzUuid)));
+            if (shpUuid != null && !shpUuid.isEmpty())
+                result.add(new Pair<>(getName() + " (SHP)", new URL(PORTAL + "download.do?uuid=" + shpUuid)));
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }

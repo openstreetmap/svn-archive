@@ -88,7 +88,7 @@
         </javac>
     </target>
     
-    <target name="xjc_neptune" depends="init, -jaxb_win, -jaxb_nix" unless="jaxb.notRequired">
+    <target name="xjc_neptune" depends="init, -jaxb_before9, -jaxb_after9" unless="jaxb.notRequired">
         <exec executable="${xjc}" failonerror="true">
             <arg value="-d"/>
             <arg value="includes"/>

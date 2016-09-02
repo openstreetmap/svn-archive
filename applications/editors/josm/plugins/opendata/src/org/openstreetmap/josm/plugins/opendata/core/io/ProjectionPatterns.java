@@ -10,33 +10,37 @@ public class ProjectionPatterns {
 
     private final Pattern xPattern;
     private final Pattern yPattern;
+    private final Pattern xyPattern;
     private final Projection projection;
-    
-    public ProjectionPatterns(Pattern xPattern, Pattern yPattern, Projection projection) {
+
+    public ProjectionPatterns(Pattern xPattern, Pattern yPattern, Pattern xyPattern, Projection projection) {
         this.xPattern = xPattern;
         this.yPattern = yPattern;
+        this.xyPattern = xyPattern;
         this.projection = projection;
         OdConstants.PROJECTIONS.add(this);
     }
 
-    public ProjectionPatterns(Pattern xPattern, Pattern yPattern) {
-        this(xPattern, yPattern, null);
-    }
-
     public ProjectionPatterns(String proj, Projection projection) {
-        this(getCoordinatePattern(OdConstants.X_STRING, proj), getCoordinatePattern(OdConstants.Y_STRING, proj), projection);
+        this(getCoordinatePattern(OdConstants.X_STRING, proj),
+             getCoordinatePattern(OdConstants.Y_STRING, proj),
+             getCoordinatePattern(OdConstants.XY_STRING, proj), projection);
     }
 
     public ProjectionPatterns(String proj) {
-        this(getCoordinatePattern(OdConstants.X_STRING, proj), getCoordinatePattern(OdConstants.Y_STRING, proj), null);
+        this(proj, null);
     }
-    
+
     public final Pattern getXPattern() {
         return xPattern;
     }
-    
+
     public final Pattern getYPattern() {
         return yPattern;
+    }
+
+    public final Pattern getXYPattern() {
+        return xyPattern;
     }
 
     public Projection getProjection(String xFieldName, String yFieldName) {
@@ -57,6 +61,6 @@ public class ProjectionPatterns {
 
     @Override
     public String toString() {
-        return "[xPattern=" + xPattern + ", yPattern=" + yPattern + ", projection=" + projection + "]";
+        return "[xPattern=" + xPattern + ", yPattern=" + yPattern + ", xyPattern=" + xyPattern + ", projection=" + projection + ']';
     }
 }

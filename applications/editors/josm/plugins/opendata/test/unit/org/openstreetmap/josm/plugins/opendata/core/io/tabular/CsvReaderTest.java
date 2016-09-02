@@ -55,6 +55,17 @@ public class CsvReaderTest {
     }
 
     /**
+     * Non-regression test for ticket <a href="https://josm.openstreetmap.de/ticket/13508">#13508</a>
+     * @throws IOException if an error occurs during reading
+     */
+    @Test
+    public void testTicket13508() throws IOException, XMLStreamException, FactoryConfigurationError {
+        try (InputStream is = TestUtils.getRegressionDataStream(13508, "arrets-de-bus0.csv")) {
+            NonRegFunctionalTests.testGeneric("#13508", CsvReader.parseDataSet(is, newHandler("EPSG:4326"), null));
+        }
+    }
+
+    /**
      * Non-regression test for ticket <a href="https://josm.openstreetmap.de/ticket/10214">#10214</a>
      * @throws IOException if an error occurs during reading
      */

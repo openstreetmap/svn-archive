@@ -101,12 +101,13 @@ public abstract class OdConstants {
      */
     public static final String X_STRING = "X|LON|LONGI|.*LONGITUDE.*|EASTING";
     public static final String Y_STRING = "Y|LAT|LATI|.*LATITUDE.*|NORTHING";
+    public static final String XY_STRING = "POINT";
 
     // The list of all ProjectionPatterns (filled at each constructor call)
     public static final Collection<ProjectionPatterns> PROJECTIONS = new ArrayList<>();
 
     // CHECKSTYLE.OFF: LineLength
-    public static final ProjectionPatterns PRJ_WGS84 = new ProjectionPatterns("GPS|WGS84|°décimaux", Projections.getProjectionByCode("EPSG:4326"));
+    public static final ProjectionPatterns PRJ_WGS84 = new ProjectionPatterns("GPS|WGS84|°décimaux|GEO", Projections.getProjectionByCode("EPSG:4326"));
     public static final ProjectionPatterns PRJ_LAMBERT_93 = new ProjectionPatterns("LAMB93|L93", Projections.getProjectionByCode("EPSG:2154"));
     public static final ProjectionPatterns PRJ_LAMBERT_CC_9_ZONES = new LambertCC9ZonesProjectionPatterns("LAMBZ|CC(42|43|44|45|46|47|48|49|50)");
 

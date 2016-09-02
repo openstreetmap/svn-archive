@@ -14,6 +14,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.coor.EastNorth;
@@ -30,6 +32,9 @@ public abstract class SpreadSheetReader extends AbstractReader {
 
     private static final NumberFormat formatFrance = NumberFormat.getInstance(Locale.FRANCE);
     private static final NumberFormat formatUK = NumberFormat.getInstance(Locale.UK);
+
+    private static final String COOR = "(\\-?\\d+(?:[\\.,]\\d+)?)";
+    private static final Pattern LATLON_PATTERN = Pattern.compile("^"+COOR+"[,;]?\\s*"+COOR+"$");
 
     protected final SpreadSheetHandler handler;
 
@@ -67,7 +72,7 @@ public abstract class SpreadSheetReader extends AbstractReader {
 
         @Override
         public String toString() {
-            return "CoordinateColumns [proj=" + proj + ", xCol=" + xCol + ", yCol=" + yCol + "]";
+            return "CoordinateColumns [proj=" + proj + ", xCol=" + xCol + ", yCol=" + yCol + ']';
         }
     }
 
@@ -90,7 +95,12 @@ public abstract class SpreadSheetReader extends AbstractReader {
                     projColumns.put(pp, columns = new ArrayList<>());
                 }
                 CoordinateColumns col = columns.isEmpty() ? null : columns.get(columns.size()-1);
-                if (pp.getXPattern().matcher(header[i]).matches()) {
+                if (pp.getXYPattern().matcher(header[i]).matches()) {
+                    CoordinateColumns coorCol = addCoorColIfNeeded(columns, col);
+                    coorCol.xCol = i;
+                    coorCol.yCol = i;
+                    break;
+                } else if (pp.getXPattern().matcher(header[i]).matches()) {
                     addCoorColIfNeeded(columns, col).xCol = i;
                     break;
                 } else if (pp.getYPattern().matcher(header[i]).matches()) {
@@ -183,7 +193,17 @@ public abstract class SpreadSheetReader extends AbstractReader {
                     boolean coordinate = false;
                     for (CoordinateColumns c : columns) {
                         EastNorth en = ens.get(c);
-                        if (i == c.xCol) {
+                        if (i == c.xCol && i == c.yCol) {
+                            Matcher m = LATLON_PATTERN.matcher(fields[i]);
+                            if (m.matches()) {
+                                coordinate = true;
+                                ens.put(c, new EastNorth(parseDouble(m.group(2)), parseDouble(m.group(1))));
+                                if (handler != null) {
+                                    handler.setXCol(i);
+                                    handler.setYCol(i);
+                                }
+                            }
+                        } else if (i == c.xCol) {
                             coordinate = true;
                             ens.put(c, new EastNorth(parseDouble(fields[i]), en.north()));
                             if (handler != null) {

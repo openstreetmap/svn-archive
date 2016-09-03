@@ -1,6 +1,8 @@
 // License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.Splinex;
 
+import org.openstreetmap.josm.Main;
+
 public class SplineHitTest {
     double x, y, dist, distSq;
     //public int chkCnt;
@@ -23,6 +25,9 @@ public class SplineHitTest {
     static final double pixTolerance = 1;
 
     public boolean checkCurve(double x1, double y1, double x2, double y2, double x3, double y3, double x4, double y4) {
+        if (Main.isDebugEnabled()) {
+            Main.debug("checkCurve {0} {1} {2} {3} {4} {5} {6} {7}", x1, y1, x2, y2, x3, y3, x4, y4);
+        }
         //chkCnt++;
         double dx = x4 - x1;
         double dy = y4 - y1;

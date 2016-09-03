@@ -88,7 +88,7 @@ public class TrustOSMplugin extends Plugin {
 
         // create a cipher and attempt to encrypt the data block with our key
         try {
-            Cipher c = Cipher.getInstance("AES");
+            Cipher c = Cipher.getInstance("AES/CBC/NoPadding");
             // create a 192 bit secret key from raw bytes
 
             SecretKey key192 = new SecretKeySpec(new byte[] {0x00, 0x01, 0x02,
@@ -101,7 +101,7 @@ public class TrustOSMplugin extends Plugin {
             c.init(Cipher.ENCRYPT_MODE, key192);
             c.doFinal(data);
         } catch (InvalidKeyException e) {
-            Main.warn("It seems that the Unrestricted Policy Files are not available in this JVM. "+
+            Main.warn(e, "It seems that the Unrestricted Policy Files are not available in this JVM. "+
                       "So high level crypto is not allowed. Problems may occur.");
             installUnrestrictedPolicyFiles();
         } catch (BadPaddingException | IllegalBlockSizeException | NoSuchPaddingException | NoSuchAlgorithmException e) {

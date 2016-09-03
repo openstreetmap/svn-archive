@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.tilusnet.josm.plugins.alignways;
 
@@ -45,14 +45,14 @@ public class AlignWaysWhatsNewPanel extends JPanel {
         btnHelpItem1 = new javax.swing.JButton();
         newItem2 = new javax.swing.JLabel();
 
-        lblWhatsNew.setText("<html><div style=\"font-family: sans-serif; font-weight: bold; font-style: italic;\"><span style=\"font-size: large;\"><span style=\"font-size: x-large;\">" 
-                            + tr("What''s new...") 
+        lblWhatsNew.setText("<html><div style=\"font-family: sans-serif; font-weight: bold; font-style: italic;\"><span style=\"font-size: large;\"><span style=\"font-size: x-large;\">"
+                            + tr("What''s new...")
                             + "</span></div></html>");
 
         icnLogo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/wndialog/alignways64.png"))); // NOI18N
 
         newItem1.setText("<html><div style=\"font-family: sans-serif;\"><ul style=\"margin-left: 20px;\"><li>"
-                         + tr("Added <b>angle preserving</b> aligning mode") 
+                         + tr("Added <b>angle preserving</b> aligning mode")
                          + "</li></ul></div></html>");
 
         btnHelpItem1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/wndialog/extlink10.png"))); // NOI18N
@@ -66,6 +66,7 @@ public class AlignWaysWhatsNewPanel extends JPanel {
         btnHelpItem1.setOpaque(false);
         btnHelpItem1.setPreferredSize(new java.awt.Dimension(69, 25));
         btnHelpItem1.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnHelpItem1ActionPerformed(evt);
             }
@@ -135,14 +136,14 @@ public class AlignWaysWhatsNewPanel extends JPanel {
             Desktop.getDesktop().browse(uri);
           } catch (URISyntaxException ex) {
                 Logger.getLogger(AlignWaysWhatsNewPanel.class.getName()).log(Level.SEVERE, null, ex);
-          } catch (IOException e) { 
+          } catch (IOException e) {
               JOptionPane.showMessageDialog(this, e, tr("Errr..."), JOptionPane.WARNING_MESSAGE);
           }
-        } else { 
+        } else {
              JOptionPane.showMessageDialog(this, tr("Browser not supported."), tr("Errr..."), JOptionPane.WARNING_MESSAGE);
         }
     }
-    
+
     /*** End of Matisse generated code section ***/
 
 }

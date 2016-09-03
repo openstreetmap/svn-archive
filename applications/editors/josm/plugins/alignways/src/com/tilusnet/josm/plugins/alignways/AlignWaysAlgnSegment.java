@@ -25,13 +25,13 @@ import org.openstreetmap.josm.gui.NavigatableComponent;
 
 /**
  * @author tilusnet <tilusnet@gmail.com>
- * 
+ *
  * The segment to be aligned to the reference segment. Actions it can do:
  *         - remember its selected pivot point
  *         - keeps its potential pivot point list up to date
  *         - rotate itself
  *         - paint itself and its selected pivot point
- * 
+ *
  */
 public class AlignWaysAlgnSegment extends AlignWaysSegment {
 
@@ -108,7 +108,7 @@ public class AlignWaysAlgnSegment extends AlignWaysSegment {
     /**
      * Returns the EastNorth of the specified pivot point pp. It always returns
      * up-to-date data from dataset. Assumes segment is not null.
-     * 
+     *
      * @param pp
      *            The pivot location
      */
@@ -176,7 +176,7 @@ public class AlignWaysAlgnSegment extends AlignWaysSegment {
     /**
      * Given a Node (usually an endpoint), it will return a collection of way segments that are adjacently
      * connected to it. The current alignee waysegment is not added to the collection.
-     * 
+     *
      * @param node The Node (endpoint) to analyse.
      * @return The collection of the adjacent waysegments.
      */
@@ -193,7 +193,7 @@ public class AlignWaysAlgnSegment extends AlignWaysSegment {
             double y = p.getY() + (Math.sin(ang) * radius);
             Point pnew = new Point();
             pnew.setLocation(x, y);
-            WaySegment ws = Main.map.mapView.getNearestWaySegment(pnew, OsmPrimitive.isUsablePredicate);
+            WaySegment ws = Main.map.mapView.getNearestWaySegment(pnew, OsmPrimitive::isUsable);
             if (ws != null &&  !ws.equals(this.segment) &&
                     (ws.getFirstNode().equals(node) || ws.getSecondNode().equals(node))) {
                 // We won't want to add a:
@@ -210,7 +210,7 @@ public class AlignWaysAlgnSegment extends AlignWaysSegment {
      * Returns the collection of adjacent way segments to Node node.
      * The node is normally a valid endpoint of the segment.
      * If it isn't, null may be returned.
-     * 
+     *
      * @param node The (endpoint) node.
      * @return Collection of the adjacent way segments.
      */

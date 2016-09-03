@@ -1,5 +1,6 @@
 package com.tilusnet.josm.plugins.alignways.geometry;
 
+import java.util.Objects;
 
 /**
  * @author tilusnet <tilusnet@gmail.com>
@@ -130,39 +131,36 @@ public class AlignWaysGeomLine {
 
     /**
      * Get the Y coordinate on the line of a point with the given X coordinate.
-     * 
-     * @param X The x-coordinate of the given point.
+     *
+     * @param x The x-coordinate of the given point.
      * @return The calculated y-coordinate or Double.NaN if the line is vertical.
      */
-    public Double getYonLine(double X) {
+    public Double getYonLine(double x) {
 
-        Double Y = new Double((-coef_a*X - coef_c)/coef_b);
+        Double y = Double.valueOf((-coef_a*x - coef_c)/coef_b);
 
-        if (Y.isInfinite() || Y.isNaN())
+        if (y.isInfinite() || y.isNaN())
             // Vertical line
             return Double.NaN;
         else
-            return Y;
-
+            return y;
     }
-
 
     /**
      * Get the X coordinate on the line of a point with the given Y coordinate.
-     * 
-     * @param Y The y-coordinate of the given point.
+     *
+     * @param y The y-coordinate of the given point.
      * @return The calculated x-coordinate or Double.NaN if the line is horizontal.
      */
-    public Double getXonLine(double Y) {
+    public Double getXonLine(double y) {
 
-        Double X = new Double((-coef_b*Y - coef_c)/coef_a);
+        Double x = Double.valueOf((-coef_b*y - coef_c)/coef_a);
 
-        if (X.isInfinite() || X.isNaN())
+        if (x.isInfinite() || x.isNaN())
             // Horizontal line
             return Double.NaN;
         else
-            return X;
-
+            return x;
     }
 
     @Override
@@ -183,24 +181,29 @@ public class AlignWaysGeomLine {
             return false;
     }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(coef_a, coef_b, coef_c);
+    }
+
     public boolean isPointOnLine(AlignWaysGeomPoint awPt) {
         // Method:
         // 1. create a new line from awPt and one point of 'this'
         // 2. check getIntersectionStatus of the two lines
         // 3. if status is LINES_OVERLAP, the point os one the line, otherwise not
-        
+
         // Need an arbitrary point on this line; let it be (x, y)
         Double x = 0.0;
         Double y = getYonLine(x);
         if (y.isNaN()) y = 0.0;
-        
+
         AlignWaysGeomLine line2 = new AlignWaysGeomLine(awPt, new AlignWaysGeomPoint(x, y));
         getIntersection(line2);
         if (getIntersectionStatus() == IntersectionStatus.LINES_OVERLAP)
             return true;
         else
             return false;
-        
+
     }
 
 }

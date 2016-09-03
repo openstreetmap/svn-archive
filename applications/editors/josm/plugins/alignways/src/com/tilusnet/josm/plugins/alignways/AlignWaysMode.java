@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.tilusnet.josm.plugins.alignways;
 
@@ -28,7 +28,7 @@ import org.openstreetmap.josm.tools.Shortcut;
 /**
  * @author tilusnet <tilusnet@gmail.com>
  * Handles the state machine and user interaction (mouse clicks).
- * 
+ *
  */
 public class AlignWaysMode extends MapMode /* implements MapViewPaintable */{
 
@@ -208,9 +208,7 @@ public class AlignWaysMode extends MapMode /* implements MapViewPaintable */{
         tipDialog.dispose();
 
         Main.pref.put("alignways.showtips", !atp.isChkBoxSelected());
-
     }
-
 
     private void showWhatsNew() {
 
@@ -225,8 +223,7 @@ public class AlignWaysMode extends MapMode /* implements MapViewPaintable */{
 
         wnDialog.dispose();
 
-        Main.pref.put("alignways.majorver", new Integer(AlignWaysPlugin.AlignWaysMajorVersion).toString());
-
+        Main.pref.put("alignways.majorver", Integer.toString(AlignWaysPlugin.AlignWaysMajorVersion));
     }
 
     @Override

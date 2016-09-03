@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.tilusnet.josm.plugins.alignways;
 
@@ -22,7 +22,7 @@ import org.openstreetmap.josm.gui.layer.MapViewPaintable;
 
 /**
  * @author tilusnet <tilusnet@gmail.com>
- * 
+ *
  */
 public class AlignWaysSegment implements MapViewPaintable {
 
@@ -59,14 +59,11 @@ public class AlignWaysSegment implements MapViewPaintable {
             segmentEndPoints = new HashSet<>();
             segmentEndPoints.add(node1);
             segmentEndPoints.add(node2);
-
         }
     }
 
     protected WaySegment getNearestWaySegment(Point p) {
-
-        return mapview.getNearestWaySegment(p, OsmPrimitive.isUsablePredicate);
-
+        return mapview.getNearestWaySegment(p, OsmPrimitive::isUsable);
     }
 
     public void destroy() {

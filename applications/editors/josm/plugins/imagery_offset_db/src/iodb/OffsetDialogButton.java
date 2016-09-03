@@ -238,7 +238,7 @@ public class OffsetDialogButton extends JButton {
         }
     }
 
-    private class DirectionIcon implements Icon {
+    private static class DirectionIcon implements Icon {
         private static final int SIZE = 10;
 
         private LatLon to;

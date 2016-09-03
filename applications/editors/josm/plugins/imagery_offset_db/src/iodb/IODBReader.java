@@ -175,7 +175,7 @@ public class IODBReader {
      * an offset object. All fields are public to deliver us from tons of getters
      * and setters.
      */
-    private class IOFields {
+    private static class IOFields {
         public int id;
         public LatLon position;
         public Date date;

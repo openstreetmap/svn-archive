@@ -321,7 +321,7 @@ public class OffsetDialog extends JDialog implements ActionListener, ZoomChangeL
     /**
      * Opens a web browser with the wiki page in user's language.
      */
-    class HelpAction extends AbstractAction {
+    static class HelpAction extends AbstractAction {
 
         HelpAction() {
             super(tr("Help"));

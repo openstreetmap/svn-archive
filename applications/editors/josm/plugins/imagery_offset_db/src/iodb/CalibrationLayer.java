@@ -184,7 +184,7 @@ public class CalibrationLayer extends Layer {
     /**
      * A simple icon with a colored rectangle.
      */
-    class SingleColorIcon implements Icon {
+    static class SingleColorIcon implements Icon {
         private Color color;
 
         SingleColorIcon(Color color) {
@@ -212,7 +212,7 @@ public class CalibrationLayer extends Layer {
      * An action that calls {@link AutoScaleAction} which in turn
      * uses {@link #visitBoundingBox} to pan and zoom to the calibration geometry.
      */
-    class ZoomToLayerAction extends AbstractAction {
+    static class ZoomToLayerAction extends AbstractAction {
         ZoomToLayerAction() {
             super(tr("Zoom to {0}", tr("layer"))); // to use translation from AutoScaleAction
             putValue(SMALL_ICON, ImageProvider.get("dialogs/autoscale/layer"));

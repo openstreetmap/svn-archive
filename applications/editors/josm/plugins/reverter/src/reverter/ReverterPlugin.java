@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package reverter;
 
 import javax.swing.JMenu;

@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package reverter;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -49,12 +50,12 @@ import reverter.corehacks.OsmServerChangesetReader;
  */
 public class ChangesetReverter {
 
-    public static enum RevertType {
+    public enum RevertType {
         FULL,
         SELECTION,
         SELECTION_WITH_UNDELETE
     }
-    
+
     public static final Collection<Long> MODERATOR_REDACTION_ACCOUNTS = Collections.unmodifiableCollection(Arrays.asList(
             722137L, // OSMF Redaction Account
             760215L  // pnorman redaction revert
@@ -63,7 +64,7 @@ public class ChangesetReverter {
     public final int changesetId;
     public final Changeset changeset;
     public final RevertType revertType;
-    
+
     private final OsmDataLayer layer; // data layer associated with reverter
     private final DataSet ds; // DataSet associated with reverter
     private final ChangesetDataSet cds; // Current changeset data
@@ -83,12 +84,13 @@ public class ChangesetReverter {
             missing.add(id);
         }
     }
+
     private void addMissingHistoryIds(Iterable<HistoryOsmPrimitive> primitives) {
         for (HistoryOsmPrimitive p : primitives) {
             addIfMissing(p.getPrimitiveId());
             if (p.getType() == OsmPrimitiveType.WAY) {
-                for (long nd : ((HistoryWay)p).getNodes()) {
-                    addIfMissing(new SimplePrimitiveId(nd,OsmPrimitiveType.NODE));
+                for (long nd : ((HistoryWay) p).getNodes()) {
+                    addIfMissing(new SimplePrimitiveId(nd, OsmPrimitiveType.NODE));
                 }
             }
         }
@@ -98,7 +100,7 @@ public class ChangesetReverter {
         for (OsmPrimitive p : primitives) {
             addIfMissing(p);
             if (p.getType() == OsmPrimitiveType.WAY) {
-                for (Node nd : ((Way)p).getNodes()) {
+                for (Node nd : ((Way) p).getNodes()) {
                     addIfMissing(nd);
                 }
             }
@@ -123,10 +125,10 @@ public class ChangesetReverter {
 
     /**
      * creates a reverter for specific changeset and fetches initial data
-     * @param changesetId
-     * @param monitor
-     * @throws OsmTransferException
-     * @throws RevertRedactedChangesetException 
+     * @param changesetId changeset id
+     * @param monitor progress monitor
+     * @throws OsmTransferException if data transfer errors occur
+     * @throws RevertRedactedChangesetException if a redacted changeset is requested
      */
     public ChangesetReverter(int changesetId, RevertType revertType, boolean newLayer, ProgressMonitor monitor)
             throws OsmTransferException, RevertRedactedChangesetException {
@@ -161,7 +163,7 @@ public class ChangesetReverter {
         }
 
         // Build our own lists of created/updated/modified objects for better performance
-        for (Iterator<ChangesetDataSetEntry> it = cds.iterator();it.hasNext();) {
+        for (Iterator<ChangesetDataSetEntry> it = cds.iterator(); it.hasNext();) {
             ChangesetDataSetEntry entry = it.next();
             if (!checkOsmChangeEntry(entry)) continue;
             if (entry.getModificationType() == ChangesetModificationType.CREATED) {
@@ -173,17 +175,21 @@ public class ChangesetReverter {
             } else throw new AssertionError();
         }
     }
+
     public void checkMissingCreated() {
         addMissingHistoryIds(created);
     }
+
     public void checkMissingUpdated() {
         addMissingHistoryIds(updated);
     }
+
     public void checkMissingDeleted() {
         addMissingHistoryIds(deleted);
     }
-    
-    private void readObjectVersion(OsmServerMultiObjectReader rdr, PrimitiveId id, int version, ProgressMonitor progressMonitor) throws OsmTransferException {
+
+    private void readObjectVersion(OsmServerMultiObjectReader rdr, PrimitiveId id, int version, ProgressMonitor progressMonitor)
+            throws OsmTransferException {
         boolean readOK = false;
         while (!readOK && version >= 1) {
             try {
@@ -208,14 +214,14 @@ public class ChangesetReverter {
 
     /**
      * fetch objects that were updated or deleted by changeset
-     * @param progressMonitor
-     * @throws OsmTransferException
+     * @param progressMonitor progress monitor
+     * @throws OsmTransferException if data transfer errors occur
      */
     @SuppressWarnings("unchecked")
     public void downloadObjectsHistory(ProgressMonitor progressMonitor) throws OsmTransferException {
         final OsmServerMultiObjectReader rdr = new OsmServerMultiObjectReader();
 
-        progressMonitor.beginTask(tr("Downloading objects history"),updated.size()+deleted.size()+1);
+        progressMonitor.beginTask(tr("Downloading objects history"), updated.size()+deleted.size()+1);
         try {
             for (HashSet<HistoryOsmPrimitive> collection : Arrays.asList(new HashSet[]{updated, deleted})) {
                 for (HistoryOsmPrimitive entry : collection) {
@@ -279,35 +285,35 @@ public class ChangesetReverter {
     private static Conflict<? extends OsmPrimitive> CreateConflict(OsmPrimitive p, boolean isMyDeleted) {
         switch (p.getType()) {
         case NODE:
-            return new Conflict<>((Node)p,new Node((Node)p), isMyDeleted);
+            return new Conflict<>((Node) p, new Node((Node) p), isMyDeleted);
         case CLOSEDWAY:
         case WAY:
-            return new Conflict<>((Way)p,new Way((Way)p), isMyDeleted);
+            return new Conflict<>((Way) p, new Way((Way) p), isMyDeleted);
         case MULTIPOLYGON:
         case RELATION:
-            return new Conflict<>((Relation)p,new Relation((Relation)p), isMyDeleted);
+            return new Conflict<>((Relation) p, new Relation((Relation) p), isMyDeleted);
         default: throw new AssertionError();
         }
     }
 
-    private boolean hasEqualSemanticAttributes(OsmPrimitive current,HistoryOsmPrimitive history) {
+    private boolean hasEqualSemanticAttributes(OsmPrimitive current, HistoryOsmPrimitive history) {
         if (!current.getKeys().equals(history.getTags())) return false;
         switch (current.getType()) {
         case NODE:
-            LatLon currentCoor = ((Node)current).getCoor();
-            LatLon historyCoor = ((HistoryNode)history).getCoords();
+            LatLon currentCoor = ((Node) current).getCoor();
+            LatLon historyCoor = ((HistoryNode) history).getCoords();
             if (currentCoor == historyCoor || (currentCoor != null && historyCoor != null && currentCoor.equals(historyCoor)))
                 return true;
             // Handle case where a deleted note has been restored to avoid false conflicts (fix #josm8660)
             if (currentCoor != null && historyCoor == null) {
-                LatLon previousCoor = ((Node)nds.getPrimitiveById(history.getPrimitiveId())).getCoor();
+                LatLon previousCoor = ((Node) nds.getPrimitiveById(history.getPrimitiveId())).getCoor();
                 return previousCoor != null && previousCoor.equals(currentCoor);
             }
-            return false; 
+            return false;
         case CLOSEDWAY:
         case WAY:
-            List<Node> currentNodes = ((Way)current).getNodes();
-            List<Long> historyNodes = ((HistoryWay)history).getNodes();
+            List<Node> currentNodes = ((Way) current).getNodes();
+            List<Long> historyNodes = ((HistoryWay) history).getNodes();
             if (currentNodes.size() != historyNodes.size()) return false;
             for (int i = 0; i < currentNodes.size(); i++) {
                 if (currentNodes.get(i).getId() != historyNodes.get(i)) return false;
@@ -316,8 +322,8 @@ public class ChangesetReverter {
         case MULTIPOLYGON:
         case RELATION:
             List<org.openstreetmap.josm.data.osm.RelationMember> currentMembers =
-                ((Relation)current).getMembers();
-            List<RelationMemberData> historyMembers = ((HistoryRelation)history).getMembers();
+                ((Relation) current).getMembers();
+            List<RelationMemberData> historyMembers = ((HistoryRelation) history).getMembers();
             if (currentMembers.size() != historyMembers.size()) return false;
             for (int i = 0; i < currentMembers.size(); i++) {
                 org.openstreetmap.josm.data.osm.RelationMember currentMember =
@@ -325,7 +331,7 @@ public class ChangesetReverter {
                 RelationMemberData historyMember = historyMembers.get(i);
                 if (!currentMember.getRole().equals(historyMember.getRole())) return false;
                 if (!currentMember.getMember().getPrimitiveId().equals(new SimplePrimitiveId(
-                        historyMember.getMemberId(),historyMember.getMemberType()))) return false;
+                        historyMember.getMemberId(), historyMember.getMemberType()))) return false;
             }
             return true;
         default: throw new AssertionError();
@@ -341,7 +347,7 @@ public class ChangesetReverter {
 
         //////////////////////////////////////////////////////////////////////////
         // Create commands to restore/update all affected objects
-        DataSetCommandMerger merger = new DataSetCommandMerger(nds,ds);
+        DataSetCommandMerger merger = new DataSetCommandMerger(nds, ds);
         List<Command> cmds = merger.getCommandList();
 
         //////////////////////////////////////////////////////////////////////////
@@ -367,11 +373,11 @@ public class ChangesetReverter {
         HashSet<OsmPrimitive> conflicted = new HashSet<>();
 
         for (Conflict<? extends OsmPrimitive> conflict : merger.getConflicts()) {
-            cmds.add(new ConflictAddCommand(layer,conflict));
+            cmds.add(new ConflictAddCommand(layer, conflict));
         }
 
         // Check objects versions
-        for (Iterator<ChangesetDataSetEntry> it = cds.iterator();it.hasNext();) {
+        for (Iterator<ChangesetDataSetEntry> it = cds.iterator(); it.hasNext();) {
             ChangesetDataSetEntry entry = it.next();
             if (!checkOsmChangeEntry(entry)) continue;
             HistoryOsmPrimitive hp = entry.getPrimitive();
@@ -384,10 +390,10 @@ public class ChangesetReverter {
                     && (hp.isVisible() || dp.isVisible()) &&
                     /* Don't create conflict if changeset object and dataset object
                      * has same semantic attributes (but different versions) */
-                    !hasEqualSemanticAttributes(dp,hp)
+                    !hasEqualSemanticAttributes(dp, hp)
                     /* Don't create conflict if the object has to be deleted but has already been deleted */
                     && !(toDelete.contains(dp) && dp.isDeleted())) {
-                cmds.add(new ConflictAddCommand(layer,CreateConflict(dp,
+                cmds.add(new ConflictAddCommand(layer, CreateConflict(dp,
                         entry.getModificationType() == ChangesetModificationType.CREATED)));
                 conflicted.add(dp);
             }
@@ -409,7 +415,7 @@ public class ChangesetReverter {
                                * objects created in changeset to be reverted
                                */
                 if (!conflicted.contains(p)) {
-                    cmds.add(new ConflictAddCommand(layer,CreateConflict(p, true)));
+                    cmds.add(new ConflictAddCommand(layer, CreateConflict(p, true)));
                     conflicted.add(p);
                 }
                 it.remove();
@@ -427,24 +433,24 @@ public class ChangesetReverter {
         if (!list.isEmpty()) cmds.add(new DeleteCommand(list));
         return cmds;
     }
-    
+
     public boolean hasMissingObjects() {
         return !missing.isEmpty();
     }
-    
+
     public void fixNodesWithoutCoordinates(ProgressMonitor progressMonitor) throws OsmTransferException {
         for (Node n : nds.getNodes()) {
             if (!n.isDeleted() && n.getCoor() == null) {
                 PrimitiveId id = n.getPrimitiveId();
                 OsmPrimitive p = ds.getPrimitiveById(id);
                 if (p instanceof Node && p.getVersion() > 1) {
-                    LatLon coor = ((Node)p).getCoor();
+                    LatLon coor = ((Node) p).getCoor();
                     if (coor == null) {
                         final OsmServerMultiObjectReader rdr = new OsmServerMultiObjectReader();
                         readObjectVersion(rdr, id, p.getVersion()-1, progressMonitor);
                         Collection<OsmPrimitive> result = rdr.parseOsm(progressMonitor.createSubTaskMonitor(1, true)).allPrimitives();
                         if (!result.isEmpty()) {
-                            coor = ((Node)result.iterator().next()).getCoor();
+                            coor = ((Node) result.iterator().next()).getCoor();
                         }
                     }
                     if (coor != null) {

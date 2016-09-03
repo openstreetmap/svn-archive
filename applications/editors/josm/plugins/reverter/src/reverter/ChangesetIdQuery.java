@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package reverter;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -41,11 +42,11 @@ public class ChangesetIdQuery extends ExtendedDialog {
     private final JRadioButton rbSelection = new JRadioButton(tr("Revert selection only"));
     private final JRadioButton rbSelectionUndelete = new JRadioButton(tr("Revert selection and restore deleted objects"));
     private final JCheckBox cbNewLayer = new JCheckBox(tr("Download as new layer"));
-    
+
     public Collection<Integer> getIdsInReverseOrder() {
         return tcid.getIdsInReverseOrder();
     }
-    
+
     /**
      * Replies true if the user requires to download into a new layer
      *
@@ -63,9 +64,9 @@ public class ChangesetIdQuery extends ExtendedDialog {
     }
 
     public ChangesetIdQuery() {
-        super(Main.parent, tr("Revert changeset"), new String[] {tr("Revert"),tr("Cancel")}, true);
-        contentInsets = new Insets(10,10,10,5);
-        
+        super(Main.parent, tr("Revert changeset"), new String[] {tr("Revert"), tr("Cancel")}, true);
+        contentInsets = new Insets(10, 10, 10, 5);
+
         panel.add(new JLabel(tr("Changeset id:")));
 
         cbId.setEditor(new BasicComboBoxEditor() {
@@ -79,7 +80,7 @@ public class ChangesetIdQuery extends ExtendedDialog {
 
         // forward the enter key stroke to the revert button
         tcid.getKeymap().removeKeyStrokeBinding(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0, false));
-        
+
         panel.add(cbId, GBC.eol().fill(GBC.HORIZONTAL));
 
         bgRevertType.add(rbFull);
@@ -87,7 +88,7 @@ public class ChangesetIdQuery extends ExtendedDialog {
         bgRevertType.add(rbSelectionUndelete);
 
         rbFull.setSelected(true);
-        panel.add(rbFull, GBC.eol().insets(0,10,0,0).fill(GBC.HORIZONTAL));
+        panel.add(rbFull, GBC.eol().insets(0, 10, 0, 0).fill(GBC.HORIZONTAL));
         panel.add(rbSelection, GBC.eol().fill(GBC.HORIZONTAL));
         panel.add(rbSelectionUndelete, GBC.eol().fill(GBC.HORIZONTAL));
 
@@ -101,12 +102,12 @@ public class ChangesetIdQuery extends ExtendedDialog {
         setContent(panel, false);
         setButtonIcons(new String[] {"ok.png", "cancel.png" });
         setDefaultButton(1);
-        
+
         addWindowListener(new InternalWindowListener());
         super.setupDialog();
-        
+
         final DataSet ds = Main.getLayerManager().getEditDataSet();
-        
+
         // Disables "Download in new layer" choice if there is no current data set (i.e no data layer)
         if (ds == null) {
             cbNewLayer.setSelected(true);
@@ -117,23 +118,32 @@ public class ChangesetIdQuery extends ExtendedDialog {
             rbSelection.setEnabled(false);
             rbSelectionUndelete.setEnabled(false);
         }
-        
+
         // Enables/disables the Revert button when a changeset id is correctly set or not
         tcid.getDocument().addDocumentListener(new DocumentListener() {
-            @Override public void removeUpdate(DocumentEvent e) { idChanged(); }
-            @Override public void insertUpdate(DocumentEvent e) { idChanged(); }
-            @Override public void changedUpdate(DocumentEvent e) { idChanged(); }
+            @Override public void removeUpdate(DocumentEvent e) {
+                idChanged();
+            }
+
+            @Override public void insertUpdate(DocumentEvent e) {
+                idChanged();
+            }
+
+            @Override public void changedUpdate(DocumentEvent e) {
+                idChanged();
+            }
+
             private void idChanged() {
                 if (tcid.hasFocus()) {
                     buttons.get(0).setEnabled(tcid.readIds());
                 }
             }
         });
-        
-        if (Main.pref.getBoolean("downloadchangeset.autopaste", true)) { 
+
+        if (Main.pref.getBoolean("downloadchangeset.autopaste", true)) {
             tcid.tryToPasteFromClipboard();
         }
-        
+
         // Initially sets the revert button consistent with text id field contents
         buttons.get(0).setEnabled(tcid.readIds());
     }
@@ -141,24 +151,25 @@ public class ChangesetIdQuery extends ExtendedDialog {
     /**
      * Restore the current history from the preferences
      *
-     * @param cbHistory
+     * @param cbHistory history combobox
      */
     protected void restoreChangesetsHistory(HistoryComboBox cbHistory) {
-        List<String> cmtHistory = new LinkedList<>(Main.pref.getCollection(getClass().getName() + ".changesetsHistory", new LinkedList<String>()));
+        List<String> cmtHistory = new LinkedList<>(
+                Main.pref.getCollection(getClass().getName() + ".changesetsHistory", new LinkedList<String>()));
         // we have to reverse the history, because ComboBoxHistory will reverse it again in addElement()
         Collections.reverse(cmtHistory);
         cbHistory.setPossibleItems(cmtHistory);
     }
-    
+
     /**
      * Remind the current history in the preferences
-     * @param cbHistory
+     * @param cbHistory history combobox
      */
     protected void remindChangesetsHistory(HistoryComboBox cbHistory) {
         cbHistory.addCurrentItemToHistory();
         Main.pref.putCollection(getClass().getName() + ".changesetsHistory", cbHistory.getHistory());
     }
-    
+
     private class InternalWindowListener implements WindowListener {
         @Override public void windowClosed(WindowEvent e) {
             if (e != null && e.getComponent() == ChangesetIdQuery.this && getValue() == 1) {
@@ -168,12 +179,17 @@ public class ChangesetIdQuery extends ExtendedDialog {
                 remindChangesetsHistory(cbId);
             }
         }
-    
+
         @Override public void windowOpened(WindowEvent e) {}
+
         @Override public void windowClosing(WindowEvent e) {}
+
         @Override public void windowIconified(WindowEvent e) {}
+
         @Override public void windowDeiconified(WindowEvent e) {}
+
         @Override public void windowActivated(WindowEvent e) {}
+
         @Override public void windowDeactivated(WindowEvent e) {}
     }
 }

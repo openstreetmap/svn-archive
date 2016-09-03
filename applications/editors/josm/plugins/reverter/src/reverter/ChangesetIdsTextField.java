@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package reverter;
 
 import java.util.Collection;
@@ -39,7 +40,7 @@ public class ChangesetIdsTextField extends AbstractIdTextField<ChangesetIdsTextF
             String value = getComponent().getText();
             try {
                 final StringTokenizer tokenizer = new StringTokenizer(value, ",.+/ \t\n");
-                while(tokenizer.hasMoreTokens()) {
+                while (tokenizer.hasMoreTokens()) {
                     ids.add(Integer.parseInt(tokenizer.nextToken().trim()));
                 }
                 return true;

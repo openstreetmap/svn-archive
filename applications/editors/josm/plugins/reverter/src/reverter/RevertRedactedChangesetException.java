@@ -1,7 +1,8 @@
+// License: GPL. For details, see LICENSE file.
 package reverter;
 
 /**
- * Exception thrown if a changeset created by a modeartor redaction account is being reverted. 
+ * Exception thrown if a changeset created by a modeartor redaction account is being reverted.
  */
 @SuppressWarnings("serial")
 public class RevertRedactedChangesetException extends Exception {

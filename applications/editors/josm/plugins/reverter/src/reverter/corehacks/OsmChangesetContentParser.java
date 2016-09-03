@@ -1,4 +1,4 @@
-// License: GPL. Copyright 2007 by Immanuel Scholz and others
+// License: GPL. For details, see LICENSE file.
 package reverter.corehacks;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -24,8 +24,8 @@ import org.openstreetmap.josm.data.osm.history.HistoryWay;
 import org.openstreetmap.josm.gui.progress.NullProgressMonitor;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.tools.CheckParameterUtil;
-import org.openstreetmap.josm.tools.date.DateUtils;
 import org.openstreetmap.josm.tools.XmlParsingException;
+import org.openstreetmap.josm.tools.date.DateUtils;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.Locator;
@@ -78,7 +78,7 @@ public class OsmChangesetContentParser {
             Long l = 0L;
             try {
                 l = Long.parseLong(v);
-            } catch(NumberFormatException e) {
+            } catch (NumberFormatException e) {
                 throwException(tr("Illegal value for mandatory attribute ''{0}'' of type long. Got ''{1}''.", name, v));
             }
             if (l < 0) {
@@ -103,7 +103,8 @@ public class OsmChangesetContentParser {
             return l;
         }
 */
-        protected Double getAttributeDouble(Attributes attr, String name) throws SAXException{
+
+        protected Double getAttributeDouble(Attributes attr, String name) throws SAXException {
             String v = attr.getValue(name);
             if (v == null) {
                 return null;
@@ -111,13 +112,13 @@ public class OsmChangesetContentParser {
             double d = 0.0;
             try {
                 d = Double.parseDouble(v);
-            } catch(NumberFormatException e) {
+            } catch (NumberFormatException e) {
                 throwException(tr("Illegal value for attribute ''{0}'' of type double. Got ''{1}''.", name, v));
             }
             return d;
         }
 
-        protected String getMandatoryAttributeString(Attributes attr, String name) throws SAXException{
+        protected String getMandatoryAttributeString(Attributes attr, String name) throws SAXException {
             String v = attr.getValue(name);
             if (v == null) {
                 throwException(tr("Missing mandatory attribute ''{0}''.", name));
@@ -132,7 +133,8 @@ public class OsmChangesetContentParser {
             return v;
         }
 */
-        protected boolean getMandatoryAttributeBoolean(Attributes attr, String name) throws SAXException{
+
+        protected boolean getMandatoryAttributeBoolean(Attributes attr, String name) throws SAXException {
             String v = attr.getValue(name);
             if (v == null) {
                 throwException(tr("Missing mandatory attribute ''{0}''.", name));
@@ -144,11 +146,11 @@ public class OsmChangesetContentParser {
             return false;
         }
 
-        protected  HistoryOsmPrimitive createPrimitive(Attributes atts, OsmPrimitiveType type) throws SAXException {
-            long id = getMandatoryAttributeLong(atts,"id");
-            long version = getMandatoryAttributeLong(atts,"version");
-            long changesetId = getMandatoryAttributeLong(atts,"changeset");
-            boolean visible= getMandatoryAttributeBoolean(atts, "visible");
+        protected HistoryOsmPrimitive createPrimitive(Attributes atts, OsmPrimitiveType type) throws SAXException {
+            long id = getMandatoryAttributeLong(atts, "id");
+            long version = getMandatoryAttributeLong(atts, "version");
+            long changesetId = getMandatoryAttributeLong(atts, "changeset");
+            boolean visible = getMandatoryAttributeBoolean(atts, "visible");
             String v = getMandatoryAttributeString(atts, "timestamp");
             Date timestamp = DateUtils.fromString(v);
             HistoryOsmPrimitive primitive = null;
@@ -157,43 +159,44 @@ public class OsmChangesetContentParser {
             if (type.equals(OsmPrimitiveType.NODE)) {
                 Double lat = getAttributeDouble(atts, "lat");
                 Double lon = getAttributeDouble(atts, "lon");
-                LatLon coor = (lat != null && lon != null) ? new LatLon(lat,lon) : null;
+                LatLon coor = (lat != null && lon != null) ? new LatLon(lat, lon) : null;
                 primitive = new HistoryNode(
-                        id,version,visible,User.getAnonymous(),changesetId,timestamp, coor
+                        id, version, visible, User.getAnonymous(), changesetId, timestamp, coor
                 );
 
             } else if (type.equals(OsmPrimitiveType.WAY)) {
                 primitive = new HistoryWay(
-                        id,version,visible,User.getAnonymous(),changesetId,timestamp
+                        id, version, visible, User.getAnonymous(), changesetId, timestamp
                 );
-            }if (type.equals(OsmPrimitiveType.RELATION)) {
+            } else if (type.equals(OsmPrimitiveType.RELATION)) {
                 primitive = new HistoryRelation(
-                        id,version,visible,User.getAnonymous(),changesetId,timestamp
+                        id, version, visible, User.getAnonymous(), changesetId, timestamp
                 );
             }
             return primitive;
         }
 
         protected void startNode(Attributes atts) throws SAXException {
-            currentPrimitive= createPrimitive(atts, OsmPrimitiveType.NODE);
+            currentPrimitive = createPrimitive(atts, OsmPrimitiveType.NODE);
         }
 
         protected void startWay(Attributes atts) throws SAXException {
-            currentPrimitive= createPrimitive(atts, OsmPrimitiveType.WAY);
+            currentPrimitive = createPrimitive(atts, OsmPrimitiveType.WAY);
         }
+
         protected void startRelation(Attributes atts) throws SAXException {
-            currentPrimitive= createPrimitive(atts, OsmPrimitiveType.RELATION);
+            currentPrimitive = createPrimitive(atts, OsmPrimitiveType.RELATION);
         }
 
         protected void handleTag(Attributes atts) throws SAXException {
-            String key= getMandatoryAttributeString(atts, "k");
-            String value= getMandatoryAttributeString(atts, "v");
-            currentPrimitive.put(key,value);
+            String key = getMandatoryAttributeString(atts, "k");
+            String value = getMandatoryAttributeString(atts, "v");
+            currentPrimitive.put(key, value);
         }
 
         protected void handleNodeReference(Attributes atts) throws SAXException {
             long ref = getMandatoryAttributeLong(atts, "ref");
-            ((HistoryWay)currentPrimitive).addNode(ref);
+            ((HistoryWay) currentPrimitive).addNode(ref);
         }
 
         protected void handleMember(Attributes atts) throws SAXException {
@@ -202,12 +205,12 @@ public class OsmChangesetContentParser {
             OsmPrimitiveType type = null;
             try {
                 type = OsmPrimitiveType.fromApiTypeName(v);
-            } catch(IllegalArgumentException e) {
+            } catch (IllegalArgumentException e) {
                 throwException(tr("Illegal value for mandatory attribute ''{0}'' of type OsmPrimitiveType. Got ''{1}''.", "type", v));
             }
             String role = getMandatoryAttributeString(atts, "role");
-            RelationMemberData member = new RelationMemberData(role, type,ref);
-            ((HistoryRelation)currentPrimitive).addMember(member);
+            RelationMemberData member = new RelationMemberData(role, type, ref);
+            ((HistoryRelation) currentPrimitive).addMember(member);
         }
 
         @Override public void startElement(String namespaceURI, String localName, String qName, Attributes atts) throws SAXException {
@@ -232,7 +235,8 @@ public class OsmChangesetContentParser {
             } else if (qName.equals("delete")) {
                 currentModificationType = ChangesetModificationType.DELETED;
             } else {
-                System.err.println(tr("Warning: unsupported start element ''{0}'' in changeset content at position ({1},{2}). Skipping.", qName, locator.getLineNumber(), locator.getColumnNumber()));
+                System.err.println(tr("Warning: unsupported start element ''{0}'' in changeset content at position ({1},{2}). Skipping.",
+                        qName, locator.getLineNumber(), locator.getColumnNumber()));
             }
         }
 
@@ -242,7 +246,8 @@ public class OsmChangesetContentParser {
                     || qName.equals("way")
                     || qName.equals("relation")) {
                 if (currentModificationType == null) {
-                    throwException(tr("Illegal document structure. Found node, way, or relation outside of ''create'', ''modify'', or ''delete''."));
+                    throwException(
+                            tr("Illegal document structure. Found node, way, or relation outside of ''create'', ''modify'', or ''delete''."));
                 }
                 data.put(currentPrimitive, currentModificationType);
             } else if (qName.equals("osmChange")) {
@@ -260,7 +265,8 @@ public class OsmChangesetContentParser {
             } else if (qName.equals("member")) {
                 // do nothing
             } else {
-                System.err.println(tr("Warning: unsupported end element ''{0}'' in changeset content at position ({1},{2}). Skipping.", qName, locator.getLineNumber(), locator.getColumnNumber()));
+                System.err.println(tr("Warning: unsupported end element ''{0}'' in changeset content at position ({1},{2}). Skipping.",
+                        qName, locator.getLineNumber(), locator.getColumnNumber()));
             }
         }
 
@@ -309,13 +315,13 @@ public class OsmChangesetContentParser {
             progressMonitor.beginTask("");
             progressMonitor.indeterminateSubTask(tr("Parsing changeset content ..."));
             SAXParserFactory.newInstance().newSAXParser().parse(source, new Parser());
-        } catch(XmlParsingException e){
+        } catch (XmlParsingException e) {
             throw e;
         } catch (ParserConfigurationException e) {
             throw new XmlParsingException(e);
-        } catch(SAXException e) {
+        } catch (SAXException e) {
             throw new XmlParsingException(e);
-        } catch(IOException e) {
+        } catch (IOException e) {
             throw new XmlParsingException(e);
         } finally {
             progressMonitor.finishTask();

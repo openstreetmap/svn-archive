@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package reverter;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -39,15 +40,15 @@ final class DataSetCommandMerger {
     /**
      * constructor
      */
-    public DataSetCommandMerger(DataSet sourceDataSet, DataSet targetDataSet) {
+    DataSetCommandMerger(DataSet sourceDataSet, DataSet targetDataSet) {
         this.sourceDataSet = sourceDataSet;
         this.targetDataSet = targetDataSet;
         merge();
     }
-    
+
     private void addChangeCommandIfNotEquals(OsmPrimitive target, OsmPrimitive newTarget, boolean nominal) {
         if (!target.hasEqualSemanticAttributes(newTarget)) {
-            cmds.add(new ChangeCommand(target,newTarget));
+            cmds.add(new ChangeCommand(target, newTarget));
             if (nominal) {
                 nominalRevertedPrimitives.add(target);
             }
@@ -65,7 +66,7 @@ final class DataSetCommandMerger {
 
     private void mergePrimitive(OsmPrimitive source, OsmPrimitive target, OsmPrimitive newTarget) {
         newTarget.mergeFrom(source);
-        newTarget.setOsmId(target.getId(), (int)target.getVersion());
+        newTarget.setOsmId(target.getId(), target.getVersion());
         newTarget.setVisible(target.isVisible());
         newTarget.setDeleted(false);
     }
@@ -78,11 +79,11 @@ final class DataSetCommandMerger {
     private void mergeNode(Node source) {
         if (source.isIncomplete()) return;
         if (!source.isVisible()) return;
-        Node target = (Node)getMergeTarget(source);
+        Node target = (Node) getMergeTarget(source);
 
         Node newTarget = new Node(target);
         mergePrimitive(source, target, newTarget);
-        addChangeCommandIfNotEquals(target,newTarget,true);
+        addChangeCommandIfNotEquals(target, newTarget, true);
     }
 
     /**
@@ -96,14 +97,14 @@ final class DataSetCommandMerger {
     private void mergeWay(Way source) throws IllegalStateException {
         if (source.isIncomplete()) return;
         if (!source.isVisible()) return;
-        Way target = (Way)getMergeTarget(source);
+        Way target = (Way) getMergeTarget(source);
 
         // use a set to avoid conflicts being added twice for closed ways, fixes #11811
         Collection<Conflict<OsmPrimitive>> localConflicts = new LinkedHashSet<>();
 
         List<Node> newNodes = new ArrayList<>(source.getNodesCount());
         for (Node sourceNode : source.getNodes()) {
-            Node targetNode = (Node)getMergeTarget(sourceNode);
+            Node targetNode = (Node) getMergeTarget(sourceNode);
             // Target node is not deleted or it will be undeleted when running existing commands
             if (!targetNode.isDeleted() || nominalRevertedPrimitives.contains(targetNode)) {
                 newNodes.add(targetNode);
@@ -123,12 +124,12 @@ final class DataSetCommandMerger {
             for (Conflict<OsmPrimitive> c : localConflicts) {
                 Main.warn("New conflict: "+c);
                 conflicts.add(c);
-                Node targetNode = (Node)c.getTheir();
+                Node targetNode = (Node) c.getTheir();
                 Node undeletedTargetNode = new Node(targetNode);
                 undeletedTargetNode.setDeleted(false);
-                addChangeCommandIfNotEquals(targetNode,undeletedTargetNode,false);
+                addChangeCommandIfNotEquals(targetNode, undeletedTargetNode, false);
             }
-            addChangeCommandIfNotEquals(target,newTarget,true);
+            addChangeCommandIfNotEquals(target, newTarget, true);
         }
     }
 
@@ -151,22 +152,22 @@ final class DataSetCommandMerger {
                 conflicts.add(new Conflict<>(targetMember, sourceMember.getMember(), true));
                 OsmPrimitive undeletedTargetMember;
                 switch(targetMember.getType()) {
-                case NODE: undeletedTargetMember = new Node((Node)targetMember); break;
-                case WAY: undeletedTargetMember = new Way((Way)targetMember); break;
-                case RELATION: undeletedTargetMember = new Relation((Relation)targetMember); break;
+                case NODE: undeletedTargetMember = new Node((Node) targetMember); break;
+                case WAY: undeletedTargetMember = new Way((Way) targetMember); break;
+                case RELATION: undeletedTargetMember = new Relation((Relation) targetMember); break;
                 default: throw new AssertionError();
                 }
                 undeletedTargetMember.setDeleted(false);
-                addChangeCommandIfNotEquals(targetMember,undeletedTargetMember,false);
+                addChangeCommandIfNotEquals(targetMember, undeletedTargetMember, false);
             }
             newMembers.add(new RelationMember(sourceMember.getRole(), targetMember));
         }
         Relation newRelation = new Relation(target);
         mergePrimitive(source, target, newRelation);
         newRelation.setMembers(newMembers);
-        addChangeCommandIfNotEquals(target,newRelation,true);
+        addChangeCommandIfNotEquals(target, newRelation, true);
     }
-    
+
     private void merge() {
         for (Node node: sourceDataSet.getNodes()) {
             mergeNode(node);

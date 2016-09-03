@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package reverter;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -21,7 +22,7 @@ public class OsmServerMultiObjectReader extends OsmServerReader {
         readObject(id.getUniqueId(), version, id.getType(), progressMonitor);
     }
 
-    public void readObject(long id,int version,OsmPrimitiveType type,ProgressMonitor progressMonitor) throws OsmTransferException {
+    public void readObject(long id, int version, OsmPrimitiveType type, ProgressMonitor progressMonitor) throws OsmTransferException {
         StringBuffer sb = new StringBuffer();
         sb.append(type.getAPIName());
         sb.append("/");
@@ -37,11 +38,12 @@ public class OsmServerMultiObjectReader extends OsmServerReader {
             progressMonitor.finishTask();
         }
     }
+
     /**
      * Method to parse downloaded objects
      * @return the data requested
-     * @throws SAXException
-     * @throws IOException
+     * @throws SAXException in case of SAX error
+     * @throws IOException in case of I/O error
      */
     @Override
     public DataSet parseOsm(ProgressMonitor progressMonitor) throws OsmTransferException {

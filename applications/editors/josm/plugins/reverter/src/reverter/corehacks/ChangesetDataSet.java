@@ -5,8 +5,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.openstreetmap.josm.data.osm.PrimitiveId;
 import org.openstreetmap.josm.data.osm.history.HistoryOsmPrimitive;
@@ -17,21 +17,23 @@ import org.openstreetmap.josm.tools.CheckParameterUtil;
  */
 public class ChangesetDataSet {
 
-    public static enum ChangesetModificationType {
+    public enum ChangesetModificationType {
         CREATED,
         UPDATED,
         DELETED
     }
 
-    public static interface ChangesetDataSetEntry {
-        public ChangesetModificationType getModificationType();
-        public HistoryOsmPrimitive getPrimitive();
-        public int getEarliestVersion();
+    public interface ChangesetDataSetEntry {
+        ChangesetModificationType getModificationType();
+
+        HistoryOsmPrimitive getPrimitive();
+
+        int getEarliestVersion();
     }
 
-    final private Map<PrimitiveId, Integer> earliestVersions = new HashMap<>();
-    final private Map<PrimitiveId, HistoryOsmPrimitive> primitives = new HashMap<>();
-    final private Map<PrimitiveId, ChangesetModificationType> modificationTypes = new HashMap<>();
+    private final Map<PrimitiveId, Integer> earliestVersions = new HashMap<>();
+    private final Map<PrimitiveId, HistoryOsmPrimitive> primitives = new HashMap<>();
+    private final Map<PrimitiveId, ChangesetModificationType> modificationTypes = new HashMap<>();
 
     /**
      * Remembers a history primitive with the given modification type
@@ -41,16 +43,16 @@ public class ChangesetDataSet {
      * @throws IllegalArgumentException thrown if primitive is null
      * @throws IllegalArgumentException thrown if cmt is null
      */
-    public void put(HistoryOsmPrimitive primitive, ChangesetModificationType cmt) throws IllegalArgumentException{
-        CheckParameterUtil.ensureParameterNotNull(primitive,"primitive");
-        CheckParameterUtil.ensureParameterNotNull(cmt,"cmt");
+    public void put(HistoryOsmPrimitive primitive, ChangesetModificationType cmt) throws IllegalArgumentException {
+        CheckParameterUtil.ensureParameterNotNull(primitive, "primitive");
+        CheckParameterUtil.ensureParameterNotNull(cmt, "cmt");
         PrimitiveId pid = primitive.getPrimitiveId();
         if (primitives.containsKey(pid)) {
             // Save only latest versions of primitives for reverter
             if (primitive.getVersion() < primitives.get(pid).getVersion()) {
                 Integer earliest = earliestVersions.get(pid);
                 if (earliest == null || primitive.getVersion() < earliest) {
-                    earliestVersions.put(pid, (int)primitive.getVersion());
+                    earliestVersions.put(pid, (int) primitive.getVersion());
                     if (cmt == ChangesetModificationType.CREATED)
                         modificationTypes.put(pid, cmt);
                 }
@@ -60,7 +62,7 @@ public class ChangesetDataSet {
                     cmt = ChangesetModificationType.CREATED;
                 }
                 if (earliestVersions.get(pid) == null) {
-                    earliestVersions.put(pid, (int)primitives.get(pid).getVersion());
+                    earliestVersions.put(pid, (int) primitives.get(pid).getVersion());
                 }
             }
         }
@@ -92,7 +94,7 @@ public class ChangesetDataSet {
 
     public int getEarliestVersion(PrimitiveId id) {
         Integer earliestVersion = earliestVersions.get(id);
-        if (earliestVersion == null) earliestVersion = (int)primitives.get(id).getVersion();
+        if (earliestVersion == null) earliestVersion = (int) primitives.get(id).getVersion();
         return earliestVersion;
     }
 
@@ -143,7 +145,7 @@ public class ChangesetDataSet {
      * @throws IllegalArgumentException thrown if cmt is null
      */
     public Set<HistoryOsmPrimitive> getPrimitivesByModificationType(ChangesetModificationType cmt) throws IllegalArgumentException {
-        CheckParameterUtil.ensureParameterNotNull(cmt,"cmt");
+        CheckParameterUtil.ensureParameterNotNull(cmt, "cmt");
         HashSet<HistoryOsmPrimitive> ret = new HashSet<>();
         for (Entry<PrimitiveId, ChangesetModificationType> entry: modificationTypes.entrySet()) {
             if (entry.getValue().equals(cmt)) {
@@ -171,7 +173,7 @@ public class ChangesetDataSet {
      * dataset
      */
     public HistoryOsmPrimitive getPrimitive(PrimitiveId id) {
-        if (id == null)  return null;
+        if (id == null) return null;
         return primitives.get(id);
     }
 
@@ -184,20 +186,23 @@ public class ChangesetDataSet {
         private final HistoryOsmPrimitive primitive;
         private final int earliestVersion;
 
-        public DefaultChangesetDataSetEntry(ChangesetModificationType modificationType, HistoryOsmPrimitive primitive, int earliestVersion) {
+        DefaultChangesetDataSetEntry(ChangesetModificationType modificationType, HistoryOsmPrimitive primitive, int earliestVersion) {
             this.modificationType = modificationType;
             this.primitive = primitive;
             this.earliestVersion = earliestVersion;
         }
 
+        @Override
         public ChangesetModificationType getModificationType() {
             return modificationType;
         }
 
+        @Override
         public HistoryOsmPrimitive getPrimitive() {
             return primitive;
         }
 
+        @Override
         public int getEarliestVersion() {
             return earliestVersion;
         }
@@ -206,23 +211,26 @@ public class ChangesetDataSet {
     private class DefaultIterator implements Iterator<ChangesetDataSetEntry> {
         private final Iterator<Entry<PrimitiveId, ChangesetModificationType>> typeIterator;
 
-        public DefaultIterator() {
+        DefaultIterator() {
             typeIterator = modificationTypes.entrySet().iterator();
         }
 
+        @Override
         public boolean hasNext() {
             return typeIterator.hasNext();
         }
 
+        @Override
         public ChangesetDataSetEntry next() {
             Entry<PrimitiveId, ChangesetModificationType> next = typeIterator.next();
             ChangesetModificationType type = next.getValue();
             HistoryOsmPrimitive primitive = primitives.get(next.getKey());
             Integer earliestVersion = earliestVersions.get(next.getKey());
-            if (earliestVersion == null) earliestVersion = (int)primitive.getVersion();
+            if (earliestVersion == null) earliestVersion = (int) primitive.getVersion();
             return new DefaultChangesetDataSetEntry(type, primitive, earliestVersion);
         }
 
+        @Override
         public void remove() {
             throw new UnsupportedOperationException();
         }

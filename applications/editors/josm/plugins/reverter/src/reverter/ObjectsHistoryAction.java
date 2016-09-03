@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package reverter;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -12,13 +13,14 @@ import org.openstreetmap.josm.tools.Shortcut;
 public class ObjectsHistoryAction extends JosmAction {
 
     public ObjectsHistoryAction() {
-        super(tr("Objects history"),null,tr("History reverter"),
+        super(tr("Objects history"), null, tr("History reverter"),
             Shortcut.registerShortcut("tool:history",
                 tr("Tool: Display objects history dialog"),
                 KeyEvent.VK_H, Shortcut.ALT_CTRL_SHIFT),
                 true);
         setEnabled(false);
     }
+
     @Override
     public void actionPerformed(ActionEvent arg0) {
         new ObjectsHistoryDialog().setVisible(true);

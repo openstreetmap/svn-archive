@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package reverter;
 
 import org.openstreetmap.josm.Main;
@@ -10,6 +11,7 @@ public class ReverterUploadHook implements UploadHook {
     public ReverterUploadHook(ReverterPlugin plugin) {
         pluginString = "reverter_plugin/" + plugin.getPluginInformation().version;
     }
+
     @Override
     public boolean checkUpload(APIDataSet apiDataSet) {
         if (!ReverterPlugin.reverterUsed) return true;

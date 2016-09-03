@@ -1,6 +1,8 @@
+// License: GPL. For details, see LICENSE file.
 package reverter;
 
 import java.util.Collection;
+
 import javax.swing.Icon;
 
 import org.openstreetmap.josm.command.Command;

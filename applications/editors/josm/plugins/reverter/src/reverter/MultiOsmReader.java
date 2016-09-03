@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package reverter;
 
 import java.io.InputStream;
@@ -23,13 +24,13 @@ public class MultiOsmReader extends OsmReader {
             XMLStreamReader parser = XMLInputFactory.newInstance().createXMLStreamReader(ir);
             setParser(parser);
             parse();
-        } catch(XMLStreamException e) {
+        } catch (XMLStreamException e) {
            throw new IllegalDataException(e);
-        } catch(Exception e) {
+        } catch (Exception e) {
             throw new IllegalDataException(e);
         }
     }
-    
+
     public void processData() throws IllegalDataException {
         prepareDataSet();
     }

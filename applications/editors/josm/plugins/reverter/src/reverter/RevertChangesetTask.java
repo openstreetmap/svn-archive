@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package reverter;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -16,6 +17,7 @@ import org.openstreetmap.josm.gui.progress.PleaseWaitProgressMonitor;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.gui.util.GuiHelper;
 import org.openstreetmap.josm.io.OsmTransferException;
+
 import reverter.ChangesetReverter.RevertType;
 
 public class RevertChangesetTask extends PleaseWaitRunnable {
@@ -29,11 +31,11 @@ public class RevertChangesetTask extends PleaseWaitRunnable {
     public RevertChangesetTask(int changesetId, RevertType revertType) {
         this(changesetId, revertType, false);
     }
-    
+
     public RevertChangesetTask(int changesetId, RevertType revertType, boolean autoConfirmDownload) {
         this(changesetId, revertType, autoConfirmDownload, false);
     }
-    
+
     public RevertChangesetTask(int changesetId, RevertType revertType, boolean autoConfirmDownload, boolean newLayer) {
         super(tr("Reverting..."));
         this.changesetId = changesetId;
@@ -109,7 +111,7 @@ public class RevertChangesetTask extends PleaseWaitRunnable {
         rev.fixNodesWithoutCoordinates(progressMonitor);
         List<Command> cmds = rev.getCommands();
         final Command cmd = new RevertChangesetCommand(tr(revertType == RevertType.FULL ? "Revert changeset #{0}" :
-                "Partially revert changeset #{0}",changesetId),cmds);
+                "Partially revert changeset #{0}", changesetId), cmds);
         int n = 0;
         for (Command c : cmds) {
             if (c instanceof ConflictAddCommand) {

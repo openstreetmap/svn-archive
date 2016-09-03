@@ -1,12 +1,4 @@
-/* Copyright 2014 Malcolm Herring
- *
- * This is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, version 3 of the License.
- *
- * For a copy of the GNU General Public License, see <http://www.gnu.org/licenses/>.
- */
-
+// License: GPL. For details, see LICENSE file.
 package symbols;
 
 import java.awt.BasicStroke;
@@ -24,7 +16,14 @@ import java.awt.geom.RectangularShape;
 import java.awt.geom.RoundRectangle2D;
 import java.util.ArrayList;
 
-public class Symbols {
+/**
+ * @author Malcolm Herring
+ */
+public final class Symbols {
+    private Symbols() {
+        // Hide default constructor for utilities classes
+    }
+
     // CHECKSTYLE.OFF: LineLength
     public static final Color Yland = new Color(0xedbc0c);
     //    public static final Color Bwater = new Color(0x78acd2);

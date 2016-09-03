@@ -1,12 +1,4 @@
-/* Copyright 2014 Malcolm Herring
- *
- * This is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, version 3 of the License.
- *
- * For a copy of the GNU General Public License, see <http://www.gnu.org/licenses/>.
- */
-
+// License: GPL. For details, see LICENSE file.
 package s57;
 
 import java.util.ArrayList;
@@ -19,6 +11,9 @@ import s57.S57obj.Obj;
 import s57.S57osm.KeyVal;
 import s57.S57val.AttVal;
 
+/**
+ * @author Malcolm Herring
+ */
 public class S57map { // S57/OSM map generation methods
     // CHECKSTYLE.OFF: LineLength
 

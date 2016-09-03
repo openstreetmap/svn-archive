@@ -1,31 +1,40 @@
-/* Copyright 2014 Malcolm Herring
- *
- * This is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, version 3 of the License.
- *
- * For a copy of the GNU General Public License, see <http://www.gnu.org/licenses/>.
- */
-
+// License: GPL. For details, see LICENSE file.
 package js57toosm;
 
-import java.io.*;
-import java.util.*;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.PrintStream;
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.Scanner;
 
 import org.apache.commons.lang3.StringEscapeUtils;
 
-import s57.S57obj;
-import s57.S57obj.*;
 import s57.S57att;
-import s57.S57att.*;
-import s57.S57val;
-import s57.S57val.*;
-import s57.S57map;
-import s57.S57map.*;
+import s57.S57att.Att;
 import s57.S57dec;
+import s57.S57map;
+import s57.S57map.AttMap;
+import s57.S57map.Feature;
+import s57.S57map.GeomIterator;
+import s57.S57map.ObjTab;
+import s57.S57map.Pflag;
+import s57.S57map.Prim;
+import s57.S57map.Rflag;
+import s57.S57map.Snode;
+import s57.S57obj;
+import s57.S57obj.Obj;
+import s57.S57val;
+import s57.S57val.AttVal;
 
-public class Js57toosm {
-    
+/**
+ * @author Malcolm Herring
+ */
+public final class Js57toosm {
+    private Js57toosm() {
+        // Hide default constructor for utilities classes
+    }
+
     static FileInputStream in;
     static PrintStream out;
     static S57map map;
@@ -33,7 +42,7 @@ public class Js57toosm {
         typatts.add(Att.OBJNAM); typatts.add(Att.NOBJNM); typatts.add(Att.STATUS); typatts.add(Att.INFORM); typatts.add(Att.NINFOM);
         typatts.add(Att.PEREND); typatts.add(Att.PERSTA); typatts.add(Att.CONDTN); typatts.add(Att.CONRAD); typatts.add(Att.CONVIS);
     }
-    
+
     public static void main(String[] args) throws IOException {
 
         ArrayList<Long> done = new ArrayList<>();
@@ -70,14 +79,15 @@ public class Js57toosm {
             out.close();
             System.exit(-1);
         }
-        
+
         map = new S57map(true);
         S57dec.decodeChart(in, map);
 
         out.format("<?xml version='1.0' encoding='UTF-8'?>%n");
         out.format("<osm version='0.6' upload='false' generator='js57toosm'>%n");
         out.format("<bounds minlat='%.8f' minlon='%.8f' maxlat='%.8f' maxlon='%.8f'/>%n",
-                Math.toDegrees(map.bounds.minlat), Math.toDegrees(map.bounds.minlon), Math.toDegrees(map.bounds.maxlat), Math.toDegrees(map.bounds.maxlon));
+                Math.toDegrees(map.bounds.minlat), Math.toDegrees(map.bounds.minlon),
+                Math.toDegrees(map.bounds.maxlat), Math.toDegrees(map.bounds.maxlon));
 
         for (long id : map.index.keySet()) {
             Feature feature = map.index.get(id);
@@ -90,10 +100,11 @@ public class Js57toosm {
                             Snode node;
                             while ((node = map.nodes.get(ref)) != null) {
                                 if (!done.contains(ref)) {
-                                    out.format("  <node id='%d' lat='%.8f' lon='%.8f' version='1'>%n", -ref, Math.toDegrees(node.lat), Math.toDegrees(node.lon));
+                                    out.format("  <node id='%d' lat='%.8f' lon='%.8f' version='1'>%n",
+                                            -ref, Math.toDegrees(node.lat), Math.toDegrees(node.lon));
                                     out.format("    <tag k='seamark:type' v=\"%s\"/>%n", type);
                                     if ((feature.type == Obj.SOUNDG) && (node.flg == S57map.Nflag.DPTH))
-                                        out.format("    <tag k='seamark:sounding:depth' v='%.1f'/>%n", ((Snode) node).val);
+                                        out.format("    <tag k='seamark:sounding:depth' v='%.1f'/>%n", node.val);
                                     writeAtts(feature);
                                     out.format("  </node>%n");
                                     done.add(ref);
@@ -110,7 +121,8 @@ public class Js57toosm {
             String type = S57obj.stringType(feature.type);
             if (!type.isEmpty() && (types.isEmpty() || types.contains(feature.type))) {
                 if (feature.reln == Rflag.MASTER) {
-                    if ((feature.geom.prim == Pflag.LINE) || ((feature.geom.prim == Pflag.AREA) && (feature.geom.outers == 1) && (feature.geom.inners == 0))) {
+                    if ((feature.geom.prim == Pflag.LINE) ||
+                       ((feature.geom.prim == Pflag.AREA) && (feature.geom.outers == 1) && (feature.geom.inners == 0))) {
                         GeomIterator git = map.new GeomIterator(feature.geom);
                         while (git.hasComp()) {
                             git.nextComp();
@@ -120,7 +132,8 @@ public class Js57toosm {
                                     long ref = git.nextRef();
                                     Snode node = map.nodes.get(ref);
                                     if (!done.contains(ref)) {
-                                        out.format("  <node id='%d' lat='%.8f' lon='%.8f' version='1'/>%n", -ref, Math.toDegrees(node.lat), Math.toDegrees(node.lon));
+                                        out.format("  <node id='%d' lat='%.8f' lon='%.8f' version='1'/>%n",
+                                                -ref, Math.toDegrees(node.lat), Math.toDegrees(node.lon));
                                         done.add(ref);
                                     }
                                 }
@@ -151,7 +164,8 @@ public class Js57toosm {
                                     long ref = git.nextRef();
                                     Snode node = map.nodes.get(ref);
                                     if (!done.contains(ref)) {
-                                        out.format("  <node id='%d' lat='%.8f' lon='%.8f' version='1'/>%n", -ref, Math.toDegrees(node.lat), Math.toDegrees(node.lon));
+                                        out.format("  <node id='%d' lat='%.8f' lon='%.8f' version='1'/>%n",
+                                                -ref, Math.toDegrees(node.lat), Math.toDegrees(node.lon));
                                         done.add(ref);
                                     }
                                 }
@@ -193,7 +207,7 @@ public class Js57toosm {
         out.close();
         System.err.println("Finished");
     }
-    
+
     static void writeAtts(Feature feature) {
         for (Map.Entry<Att, AttVal<?>> item : feature.atts.entrySet()) {
             String attstr = S57att.stringAttribute(item.getKey());
@@ -202,7 +216,8 @@ public class Js57toosm {
                 if (typatts.contains(item.getKey())) {
                     out.format("    <tag k='seamark:%s' v='%s'/>%n", attstr, StringEscapeUtils.escapeXml10(valstr));
                 } else {
-                    out.format("    <tag k='seamark:%s:%s' v='%s'/>%n", S57obj.stringType(feature.type), attstr, StringEscapeUtils.escapeXml10(valstr));
+                    out.format("    <tag k='seamark:%s:%s' v='%s'/>%n",
+                            S57obj.stringType(feature.type), attstr, StringEscapeUtils.escapeXml10(valstr));
                 }
             }
         }
@@ -215,9 +230,11 @@ public class Js57toosm {
                     String valstr = S57val.stringValue(item.getValue(), item.getKey());
                     if (!attstr.isEmpty() && !valstr.isEmpty()) {
                         if ((ix == 0) && (tab.size() == 1)) {
-                            out.format("    <tag k='seamark:%s:%s' v='%s'/>%n", S57obj.stringType(obj), attstr, StringEscapeUtils.escapeXml10(valstr));
+                            out.format("    <tag k='seamark:%s:%s' v='%s'/>%n",
+                                    S57obj.stringType(obj), attstr, StringEscapeUtils.escapeXml10(valstr));
                         } else {
-                            out.format("    <tag k='seamark:%s:%d:%s' v='%s'/>%n", S57obj.stringType(obj), ix + 1, attstr, StringEscapeUtils.escapeXml10(valstr));
+                            out.format("    <tag k='seamark:%s:%d:%s' v='%s'/>%n",
+                                    S57obj.stringType(obj), ix + 1, attstr, StringEscapeUtils.escapeXml10(valstr));
                         }
                     }
                 }

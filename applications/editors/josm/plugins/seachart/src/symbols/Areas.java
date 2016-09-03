@@ -1,12 +1,4 @@
-/* Copyright 2014 Malcolm Herring
- *
- * This is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, version 3 of the License.
- *
- * For a copy of the GNU General Public License, see <http://www.gnu.org/licenses/>.
- */
-
+// License: GPL. For details, see LICENSE file.
 package symbols;
 
 import java.awt.BasicStroke;
@@ -25,7 +17,14 @@ import symbols.Symbols.Handle;
 import symbols.Symbols.Instr;
 import symbols.Symbols.Symbol;
 
-public class Areas {
+/**
+ * @author Malcolm Herring
+ */
+public final class Areas {
+    private Areas() {
+        // Hide default constructor for utilities classes
+    }
+
     // CHECKSTYLE.OFF: LineLength
     public static final Symbol Plane = new Symbol();
     static {

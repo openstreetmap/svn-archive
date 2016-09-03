@@ -1,12 +1,4 @@
-/* Copyright 2015 Malcolm Herring
- *
- * This is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, version 3 of the License.
- *
- * For a copy of the GNU General Public License, see <http://www.gnu.org/licenses/>.
- */
-
+// License: GPL. For details, see LICENSE file.
 package s57;
 
 import java.io.BufferedReader;
@@ -19,7 +11,14 @@ import s57.S57val.CatBUA;
 import s57.S57val.CatROD;
 import s57.S57val.Conv;
 
-public class S57osm { // OSM to S57 Object/Attribute and Object/Primitive conversions
+/**
+ * @author Malcolm Herring
+ */
+public final class S57osm { // OSM to S57 Object/Attribute and Object/Primitive conversions
+    private S57osm() {
+        // Hide default constructor for utilities classes
+    }
+
     // CHECKSTYLE.OFF: LineLength
 
     static class KeyVal<V> {

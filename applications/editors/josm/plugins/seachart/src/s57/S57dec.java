@@ -1,12 +1,4 @@
-/* Copyright 2014 Malcolm Herring
- *
- * This is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, version 3 of the License.
- *
- * For a copy of the GNU General Public License, see <http://www.gnu.org/licenses/>.
- */
-
+// License: GPL. For details, see LICENSE file.
 package s57;
 
 import java.io.FileInputStream;
@@ -16,7 +8,13 @@ import s57.S57dat.S57field;
 import s57.S57dat.S57subf;
 import s57.S57map.Nflag;
 
-public class S57dec { // S57 ENC file input & map conversion
+/**
+ * @author Malcolm Herring
+ */
+public final class S57dec { // S57 ENC file input & map conversion
+    private S57dec() {
+        // Hide default constructor for utilities classes
+    }
     // CHECKSTYLE.OFF: LineLength
 
     public static void decodeChart(FileInputStream in, S57map map) throws IOException {

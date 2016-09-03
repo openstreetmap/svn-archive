@@ -1,12 +1,4 @@
-/* Copyright 2014 Malcolm Herring
- *
- * This is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, version 3 of the License.
- *
- * For a copy of the GNU General Public License, see <http://www.gnu.org/licenses/>.
- */
-
+// License: GPL. For details, see LICENSE file.
 package s57;
 
 import java.io.UnsupportedEncodingException;
@@ -18,7 +10,13 @@ import s57.S57map.Feature;
 import s57.S57map.Pflag;
 import s57.S57obj.Obj;
 
-public class S57dat { // S57 ENC file fields lookup tables & methods
+/**
+ * @author Malcolm Herring
+ */
+public final class S57dat { // S57 ENC file fields lookup tables & methods
+    private S57dat() {
+        // Hide default constructor for utilities classes
+    }
     // CHECKSTYLE.OFF: LineLength
 
     public static class S57conv {

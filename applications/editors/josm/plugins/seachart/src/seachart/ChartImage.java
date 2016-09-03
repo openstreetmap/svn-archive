@@ -1,12 +1,4 @@
-/* Copyright 2014 Malcolm Herring
- *
- * This is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, version 3 of the License.
- *
- * For a copy of the GNU General Public License, see <http://www.gnu.org/licenses/>.
- */
-
+// License: GPL. For details, see LICENSE file.
 package seachart;
 
 import java.awt.Color;
@@ -37,6 +29,9 @@ import s57.S57map.Snode;
 import s57.S57obj.Obj;
 import symbols.Symbols;
 
+/**
+ * @author Malcolm Herring
+ */
 public class ChartImage extends ImageryLayer implements ZoomChangeListener, ChartContext {
 
     double top;

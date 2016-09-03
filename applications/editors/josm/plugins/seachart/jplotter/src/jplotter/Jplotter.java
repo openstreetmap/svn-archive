@@ -1,9 +1,20 @@
+// License: GPL. For details, see LICENSE file.
 package jplotter;
 
-import java.awt.*;
-import javax.swing.*;
+import java.awt.BorderLayout;
+import java.awt.Container;
 
-public class Jplotter {
+import javax.swing.BorderFactory;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+
+/**
+ * @author Malcolm Herring
+ */
+public final class Jplotter {
+    private Jplotter() {
+        // Hide default constructor for utilities classes
+    }
 
     public static void main(String[] args) {
         JFrame frame = new JFrame("Chart Plotter");

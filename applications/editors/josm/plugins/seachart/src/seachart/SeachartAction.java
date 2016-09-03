@@ -1,12 +1,4 @@
-/* Copyright 2014 Malcolm Herring
- *
- * This is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, version 3 of the License.
- *
- * For a copy of the GNU General Public License, see <http://www.gnu.org/licenses/>.
- */
-
+// License: GPL. For details, see LICENSE file.
 package seachart;
 
 import java.awt.event.ActionEvent;
@@ -44,6 +36,9 @@ import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 
 import s57.S57map;
 
+/**
+ * @author Malcolm Herring
+ */
 public class SeachartAction extends JosmAction implements ActiveLayerChangeListener, LayerChangeListener {
     private static String title = "SeaChart";
     private boolean isOpen = false;
@@ -116,6 +111,7 @@ public class SeachartAction extends JosmAction implements ActiveLayerChangeListe
     @Override
     public void actionPerformed(ActionEvent arg0) {
         SwingUtilities.invokeLater(new Runnable() {
+            @Override
             public void run() {
                 if (!isOpen)
                     createChartLayer();

@@ -1,14 +1,12 @@
-/* Copyright 2014 Malcolm Herring
- *
- * This is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, version 3 of the License.
- *
- * For a copy of the GNU General Public License, see <http://www.gnu.org/licenses/>.
- */
-
+// License: GPL. For details, see LICENSE file.
 package jicons;
 
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics2D;
+import java.awt.Rectangle;
+import java.awt.geom.Point2D;
+import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -16,27 +14,29 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics2D;
-import java.awt.Rectangle;
-import java.awt.geom.Point2D;
-import java.awt.image.BufferedImage;
 
 import javax.imageio.ImageIO;
 
+import org.apache.batik.dom.GenericDOMImplementation;
 import org.apache.batik.svggen.SVGGraphics2D;
 import org.apache.batik.svggen.SVGGraphics2DIOException;
-import org.apache.batik.dom.GenericDOMImplementation;
-import org.w3c.dom.Document;
 import org.w3c.dom.DOMImplementation;
+import org.w3c.dom.Document;
 
+import render.ChartContext;
+import render.Renderer;
 import s57.S57map;
-import s57.S57map.*;
-import render.*;
+import s57.S57map.Feature;
+import s57.S57map.Snode;
 
-public class Jicons {
-    
+/**
+ * @author Malcolm Herring
+ */
+public final class Jicons {
+    private Jicons() {
+        // Hide default constructor for utilities classes
+    }
+
     static int x = 0;
     static int y = 0;
     static int w = 0;
@@ -57,13 +57,13 @@ public class Jicons {
         Graphics2D g2;
         boolean inIcons = false;
         boolean inIcon = false;
-        
+
         if (args.length < 2) {
             System.err.println("Usage: java -jar jicons.jar icon_definition_file icons_directory");
             System.exit(-1);
         }
         in = new BufferedReader(new FileReader(args[0]));
-        
+
         context = new Context();
         String ln;
         while ((ln = in.readLine()) != null) {
@@ -187,25 +187,30 @@ public class Jicons {
         System.err.println("Finished");
         System.exit(0);
     }
-    
+
     static class Context implements ChartContext {
-        
+
+        @Override
         public Point2D getPoint(Snode coord) {
             return new Point2D.Double(x, y);
         }
 
+        @Override
         public double mile(Feature feature) {
             return Math.min(w, h);
         }
 
+        @Override
         public boolean clip() {
             return false;
         }
 
+        @Override
         public Color background(S57map map) {
             return new Color(0, true);
         }
 
+        @Override
         public RuleSet ruleset() {
             return RuleSet.ALL;
         }

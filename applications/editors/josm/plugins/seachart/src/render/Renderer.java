@@ -1,12 +1,4 @@
-/* Copyright 2014 Malcolm Herring
- *
- * This is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, version 3 of the License.
- *
- * For a copy of the GNU General Public License, see <http://www.gnu.org/licenses/>.
- */
-
+// License: GPL. For details, see LICENSE file.
 package render;
 
 import java.awt.BasicStroke;
@@ -48,9 +40,16 @@ import symbols.Symbols.Scheme;
 import symbols.Symbols.SubSymbol;
 import symbols.Symbols.Symbol;
 
-public class Renderer {
+/**
+ * @author Malcolm Herring
+ */
+public final class Renderer {
+    private Renderer() {
+        // Hide default constructor for utilities classes
+    }
 
-    public static final double[] symbolScale = {256.0, 128.0, 64.0, 32.0, 16.0, 8.0, 4.0, 2.0, 1.0, 0.61, 0.372, 0.227, 0.138, 0.0843, 0.0514, 0.0313, 0.0191, 0.0117, 0.007 };
+    public static final double[] symbolScale = {
+            256.0, 128.0, 64.0, 32.0, 16.0, 8.0, 4.0, 2.0, 1.0, 0.61, 0.372, 0.227, 0.138, 0.0843, 0.0514, 0.0313, 0.0191, 0.0117, 0.007};
 
     public enum LabelStyle { NONE, RRCT, RECT, ELPS, CIRC, VCLR, PCLR, HCLR }
 
@@ -259,7 +258,8 @@ public class Renderer {
                                 }
                                 if (!gap) {
                                     Symbols.drawSymbol(g2, symbol, sScale, curr.getX(), curr.getY(), new Scheme(col),
-                                            new Delta(Handle.BC, AffineTransform.getRotateInstance(Math.atan2((succ.getY() - curr.getY()), (succ.getX() - curr.getX())) + Math.toRadians(90))));
+                                            new Delta(Handle.BC, AffineTransform.getRotateInstance(
+                                                    Math.atan2((succ.getY() - curr.getY()), (succ.getX() - curr.getX())) + Math.toRadians(90))));
                                 }
                                 if (space > 0)
                                     gap = !gap;
@@ -461,7 +461,8 @@ public class Renderer {
             int sw = 1 + (int) (height/10);
             double po = sw / 2;
             label.add(new Instr(Form.STRK, new BasicStroke(sw, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
-            Path2D.Double p = new Path2D.Double(); p.moveTo(-height*0.2, -ly-po); p.lineTo(height*0.2, -ly-po); p.moveTo(0, -ly-po); p.lineTo(0, -ly-po-(height*0.15));
+            Path2D.Double p = new Path2D.Double(); p.moveTo(-height*0.2, -ly-po);
+            p.lineTo(height*0.2, -ly-po); p.moveTo(0, -ly-po); p.lineTo(0, -ly-po-(height*0.15));
             p.moveTo(-height*0.2, ly+po); p.lineTo((height*0.2), ly+po); p.moveTo(0, ly+po); p.lineTo(0, ly+po+(height*0.15));
             label.add(new Instr(Form.PLIN, p));
             break;
@@ -480,11 +481,20 @@ public class Renderer {
             sw = 1 + (int) (height/10);
             po = sw / 2;
             label.add(new Instr(Form.STRK, new BasicStroke(sw, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
-            p = new Path2D.Double(); p.moveTo(-height*0.2, -ly-po); p.lineTo(height*0.2, -ly-po); p.moveTo(0, -ly-po); p.lineTo(0, -ly-po-(height*0.15));
-            p.moveTo(-height*0.2, ly+po); p.lineTo((height*0.2), ly+po); p.moveTo(0, ly+po); p.lineTo(0, ly+po+(height*0.15));
+            p = new Path2D.Double();
+            p.moveTo(-height*0.2, -ly-po);
+            p.lineTo(height*0.2, -ly-po);
+            p.moveTo(0, -ly-po);
+            p.lineTo(0, -ly-po-(height*0.15));
+            p.moveTo(-height*0.2, ly+po);
+            p.lineTo((height*0.2), ly+po);
+            p.moveTo(0, ly+po);
+            p.lineTo(0, ly+po+(height*0.15));
             label.add(new Instr(Form.PLIN, p));
-            label.add(new Instr(Form.SYMB, new Symbols.SubSymbol(Areas.CableFlash, 1, 0, 0, null, new Delta(Handle.CC, new AffineTransform(0, -1, 1, 0, -width/2, 0)))));
-            label.add(new Instr(Form.SYMB, new Symbols.SubSymbol(Areas.CableFlash, 1, 0, 0, null, new Delta(Handle.CC, new AffineTransform(0, -1, 1, 0, width/2, 0)))));
+            label.add(new Instr(Form.SYMB, new Symbols.SubSymbol(Areas.CableFlash, 1, 0, 0, null,
+                    new Delta(Handle.CC, new AffineTransform(0, -1, 1, 0, -width/2, 0)))));
+            label.add(new Instr(Form.SYMB, new Symbols.SubSymbol(Areas.CableFlash, 1, 0, 0, null,
+                    new Delta(Handle.CC, new AffineTransform(0, -1, 1, 0, width/2, 0)))));
             break;
         case HCLR:
             width += height * 1.5;
@@ -501,8 +511,15 @@ public class Renderer {
             sw = 1 + (int) (height/10);
             double vo = height / 4;
             label.add(new Instr(Form.STRK, new BasicStroke(sw, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
-            p = new Path2D.Double(); p.moveTo(-width*0.4-sw, -ly-vo); p.lineTo(-width*0.4-sw, ly+vo); p.moveTo(-width*0.4-sw, 0); p.lineTo(-width*0.4+sw, 0);
-            p.moveTo(width*0.4+sw, -ly-vo); p.lineTo(width*0.4+sw, ly+vo); p.moveTo(width*0.4-sw, 0); p.lineTo(width*0.4+sw, 0);
+            p = new Path2D.Double();
+            p.moveTo(-width*0.4-sw, -ly-vo);
+            p.lineTo(-width*0.4-sw, ly+vo);
+            p.moveTo(-width*0.4-sw, 0);
+            p.lineTo(-width*0.4+sw, 0);
+            p.moveTo(width*0.4+sw, -ly-vo);
+            p.lineTo(width*0.4+sw, ly+vo);
+            p.moveTo(width*0.4-sw, 0);
+            p.lineTo(width*0.4+sw, 0);
             label.add(new Instr(Form.PLIN, p));
             break;
         default:
@@ -588,25 +605,31 @@ public class Renderer {
             radius /= (Math.pow(2, zoom-15));
         }
         double mid = (((s1 + s2) / 2) + (s1 > s2 ? 180 : 0)) % 360;
-        g2.setStroke(new BasicStroke((float) (3.0 * sScale), BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND, 1, new float[] {20 * (float) sScale, 20 * (float) sScale}, 0));
+        g2.setStroke(new BasicStroke((float) (3.0 * sScale), BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND, 1,
+                new float[] {20 * (float) sScale, 20 * (float) sScale}, 0));
         g2.setPaint(Color.black);
         Point2D.Double centre = (Point2D.Double) context.getPoint(Rules.feature.geom.centre);
         double radial = radius * context.mile(Rules.feature);
         if (dir != null) {
-            g2.draw(new Line2D.Double(centre.x, centre.y, centre.x - radial * Math.sin(Math.toRadians(dir)), centre.y + radial * Math.cos(Math.toRadians(dir))));
+            g2.draw(new Line2D.Double(centre.x, centre.y, centre.x - radial * Math.sin(Math.toRadians(dir)),
+                    centre.y + radial * Math.cos(Math.toRadians(dir))));
         } else {
             if ((s1 != 0.0) || (s2 != 360.0)) {
-                g2.draw(new Line2D.Double(centre.x, centre.y, centre.x - radial * Math.sin(Math.toRadians(s1)), centre.y + radial * Math.cos(Math.toRadians(s1))));
-                g2.draw(new Line2D.Double(centre.x, centre.y, centre.x - radial * Math.sin(Math.toRadians(s2)), centre.y + radial * Math.cos(Math.toRadians(s2))));
+                g2.draw(new Line2D.Double(centre.x, centre.y, centre.x - radial * Math.sin(Math.toRadians(s1)),
+                        centre.y + radial * Math.cos(Math.toRadians(s1))));
+                g2.draw(new Line2D.Double(centre.x, centre.y, centre.x - radial * Math.sin(Math.toRadians(s2)),
+                        centre.y + radial * Math.cos(Math.toRadians(s2))));
             }
         }
         double arcWidth = 10.0 * sScale;
         g2.setStroke(new BasicStroke((float) arcWidth, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 1));
         g2.setPaint(col1);
-        g2.draw(new Arc2D.Double(centre.x - radial, centre.y - radial, 2 * radial, 2 * radial, -(s1 + 90), ((s1 < s2) ? (s1 - s2) : (s1 - s2 - 360)), Arc2D.OPEN));
+        g2.draw(new Arc2D.Double(centre.x - radial, centre.y - radial, 2 * radial, 2 * radial, -(s1 + 90),
+                ((s1 < s2) ? (s1 - s2) : (s1 - s2 - 360)), Arc2D.OPEN));
         if (col2 != null) {
             g2.setPaint(col2);
-            g2.draw(new Arc2D.Double(centre.x - radial + arcWidth, centre.y - radial + arcWidth, 2 * (radial - arcWidth), 2 * (radial - arcWidth), -(s1 + 90), ((s1 < s2) ? (s1 - s2) : (s1 - s2 - 360)), Arc2D.OPEN));
+            g2.draw(new Arc2D.Double(centre.x - radial + arcWidth, centre.y - radial + arcWidth, 2 * (radial - arcWidth),
+                    2 * (radial - arcWidth), -(s1 + 90), ((s1 < s2) ? (s1 - s2) : (s1 - s2 - 360)), Arc2D.OPEN));
         }
         if ((str != null) && (!str.isEmpty())) {
             Font font = new Font("Arial", Font.PLAIN, 40);

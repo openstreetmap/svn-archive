@@ -17,7 +17,7 @@ import s57.S57val.AttVal;
 public class S57map { // S57/OSM map generation methods
     // CHECKSTYLE.OFF: LineLength
 
-    public class MapBounds {
+    public static class MapBounds {
         public double minlat;
         public double minlon;
         public double maxlat;
@@ -38,7 +38,7 @@ public class S57map { // S57/OSM map generation methods
         DPTH    // Sounding nodes
     }
 
-    public class Snode {    // All coordinates in map
+    public static class Snode {    // All coordinates in map
         public double lat;    // Latitude in radians
         public double lon;    // Longitude in radians
         public Nflag flg;        // Role of node
@@ -73,7 +73,7 @@ public class S57map { // S57/OSM map generation methods
         }
     }
 
-    public class Edge {        // A polyline segment
+    public static class Edge {        // A polyline segment
         public long first;    // First CONN node
         public long last;        // Last CONN node
         public ArrayList<Long> nodes; // Inner ANON nodes
@@ -89,7 +89,7 @@ public class S57map { // S57/OSM map generation methods
         UNKN, MASTER, SLAVE
     }
 
-    public class Reln {
+    public static class Reln {
         public long id;
         public Rflag reln;
         public Reln(long i, Rflag r) {
@@ -98,55 +98,55 @@ public class S57map { // S57/OSM map generation methods
         }
     }
 
-    public class RelTab extends ArrayList<Reln> {
+    public static class RelTab extends ArrayList<Reln> {
         public RelTab() {
             super();
         }
     }
 
-    public class ObjTab extends HashMap<Integer, AttMap> {
+    public static class ObjTab extends HashMap<Integer, AttMap> {
         public ObjTab() {
             super();
         }
     }
 
-    public class ObjMap extends EnumMap<Obj, ObjTab> {
+    public static class ObjMap extends EnumMap<Obj, ObjTab> {
         public ObjMap() {
             super(Obj.class);
         }
     }
 
-    public class AttMap extends HashMap<Att, AttVal<?>> {
+    public static class AttMap extends HashMap<Att, AttVal<?>> {
         public AttMap() {
             super();
         }
     }
 
-    public class NodeTab extends HashMap<Long, Snode> {
+    public static class NodeTab extends HashMap<Long, Snode> {
         public NodeTab() {
             super();
         }
     }
 
-    public class EdgeTab extends HashMap<Long, Edge> {
+    public static class EdgeTab extends HashMap<Long, Edge> {
         public EdgeTab() {
             super();
         }
     }
 
-    public class FtrMap extends EnumMap<Obj, ArrayList<Feature>> {
+    public static class FtrMap extends EnumMap<Obj, ArrayList<Feature>> {
         public FtrMap() {
             super(Obj.class);
         }
     }
 
-    public class FtrTab extends HashMap<Long, Feature> {
+    public static class FtrTab extends HashMap<Long, Feature> {
         public FtrTab() {
             super();
         }
     }
 
-    public class Prim {                // Spatial element
+    public static class Prim {                // Spatial element
         public long id;                    // Snode ID for POINTs, Edge ID for LINEs & AREAs)
         public boolean forward;    // Direction of vector used (LINEs & AREAs)
         public boolean outer;        // Exterior/Interior boundary (AREAs)
@@ -172,7 +172,7 @@ public class S57map { // S57/OSM map generation methods
         }
     }
 
-    public class Comp {            // Composite spatial element
+    public static class Comp {            // Composite spatial element
         public long ref;            // ID of Comp
         public int size;            // Number of Prims in this Comp
         public Comp(long r, int s) {
@@ -185,7 +185,7 @@ public class S57map { // S57/OSM map generation methods
         NOSP, POINT, LINE, AREA
     }
 
-    public class Geom {                            // Geometric structure of feature
+    public static class Geom {                            // Geometric structure of feature
         public Pflag prim;                        // Geometry type
         public ArrayList<Prim> elems;    // Ordered list of elements
         public int outers;                        // Number of outers
@@ -205,7 +205,7 @@ public class S57map { // S57/OSM map generation methods
         }
     }
 
-    public class Feature {
+    public static class Feature {
         public long id;                // Ref for this feature
         public Rflag reln;        // Relationship status
         public Geom geom;            // Geometry data

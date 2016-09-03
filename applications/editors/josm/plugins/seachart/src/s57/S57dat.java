@@ -2,6 +2,7 @@
 package s57;
 
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.EnumMap;
@@ -377,7 +378,7 @@ public final class S57dat { // S57 ENC file fields lookup tables & methods
             buf = Arrays.copyOf(buf, (buf.length + 1));
             buf[buf.length-1] = 0x1e;
             int flen = buf.length - offset;
-            index.add(new Index(sfparams.field.toString().getBytes(), flen, offset));
+            index.add(new Index(sfparams.field.toString().getBytes(StandardCharsets.UTF_8), flen, offset));
             maxlen = (flen > maxlen) ? flen : maxlen;
             offset += flen;
         }

@@ -364,7 +364,7 @@ public class Signals extends Rules {
         }
     }
 
-    class Sect {
+    static class Sect {
         int dir;
         LitCHR chr;
         ColCOL col;

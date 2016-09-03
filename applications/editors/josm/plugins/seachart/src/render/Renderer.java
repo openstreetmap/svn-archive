@@ -67,8 +67,8 @@ public final class Renderer {
         sScale = symbolScale[zoom] * factor;
         if (map != null) {
             if (context.clip()) {
-                Point2D tl = context.getPoint(map.new Snode(map.bounds.maxlat, map.bounds.minlon));
-                Point2D br = context.getPoint(map.new Snode(map.bounds.minlat, map.bounds.maxlon));
+                Point2D tl = context.getPoint(new Snode(map.bounds.maxlat, map.bounds.minlon));
+                Point2D br = context.getPoint(new Snode(map.bounds.minlat, map.bounds.maxlon));
                 g2.clip(new Rectangle2D.Double(tl.getX(), tl.getY(), (br.getX() - tl.getX()), (br.getY() - tl.getY())));
             }
             g2.setBackground(context.background(map));

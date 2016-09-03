@@ -314,7 +314,7 @@ public final class S57enc { // S57 ENC file generation
                         objatts.add(new Fparams(S57field.FOID, new Object[] {agen, id, 1}));
                         Object[] attf = new Object[0];
                         Object[] natf = new Object[0];
-                        AttMap atts = map.new AttMap();
+                        AttMap atts = new AttMap();
                         atts.putAll(object.getValue());
                         if (master) {
                             atts.putAll(feature.atts);

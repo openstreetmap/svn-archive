@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import s57.S57att.Att;
+import s57.S57map.Snode;
 import s57.S57obj.Obj;
 import s57.S57val.CatBUA;
 import s57.S57val.CatROD;
@@ -102,10 +103,10 @@ public final class S57osm { // OSM to S57 Object/Attribute and Object/Primitive 
         boolean inNode = false;
         boolean inWay = false;
         boolean inRel = false;
-        map.nodes.put(1L, map.new Snode());
-        map.nodes.put(2L, map.new Snode());
-        map.nodes.put(3L, map.new Snode());
-        map.nodes.put(4L, map.new Snode());
+        map.nodes.put(1L, new Snode());
+        map.nodes.put(2L, new Snode());
+        map.nodes.put(3L, new Snode());
+        map.nodes.put(4L, new Snode());
 
         String ln;
         while ((ln = in.readLine()) != null) {

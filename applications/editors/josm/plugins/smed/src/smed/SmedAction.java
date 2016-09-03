@@ -45,11 +45,13 @@ public class SmedAction extends JosmAction implements SelectionChangedListener {
     @Override
     public void actionPerformed(ActionEvent arg0) {
         SwingUtilities.invokeLater(new Runnable() {
+            @Override
             public void run() {
-                if (!isOpen)
+                if (!isOpen) {
                     createFrame();
-                else
+                } else {
                     editFrame.toFront();
+                }
                 isOpen = true;
             }
         });
@@ -59,6 +61,7 @@ public class SmedAction extends JosmAction implements SelectionChangedListener {
         editFrame = new JFrame(editor);
         editFrame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         editFrame.addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
             public void windowClosing(java.awt.event.WindowEvent e) {
                 closeDialog();
             }
@@ -93,7 +96,7 @@ public class SmedAction extends JosmAction implements SelectionChangedListener {
         selection = newSelection;
 
         for (OsmPrimitive osm : selection) {
-            nextNode = (OsmPrimitive) osm;
+            nextNode = osm;
             if (selection.size() == 1) {
                 if (nextNode.compareTo(node) != 0) {
                     node = nextNode;

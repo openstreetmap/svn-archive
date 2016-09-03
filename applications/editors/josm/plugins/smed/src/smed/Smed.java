@@ -9,12 +9,13 @@ import org.openstreetmap.josm.plugins.PluginInformation;
 public class Smed extends Plugin {
 
     SmedAction dialog = new SmedAction();
-    
+
     public Smed(PluginInformation info) {
         super(info);
         MainMenu.add(Main.main.menu.toolsMenu, dialog);
     }
-    
+
+    @Override
     public void mapFrameInitialized(MapFrame oldFrame, MapFrame newFrame) {
         if (newFrame == null) {
             dialog.closeDialog();

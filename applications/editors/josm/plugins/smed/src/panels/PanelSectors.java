@@ -277,7 +277,7 @@ public class PanelSectors extends JFrame {
         }
     }
 
-    public class ColourCellRenderer extends JPanel implements TableCellRenderer {
+    public static class ColourCellRenderer extends JPanel implements TableCellRenderer {
         private JLabel col1Label;
         private JLabel col2Label;
         public ColourCellRenderer() {

@@ -24,7 +24,7 @@ public class PbfExporterTest {
      * Setup test.
      */
     @Rule
-    public JOSMTestRules rules = new JOSMTestRules().preferences();
+    public JOSMTestRules rules = new JOSMTestRules().preferences().timeout(15000);
 
     /**
      * Non-regression test for <a href="https://josm.openstreetmap.de/ticket/11169">Ticket #11169</a>.

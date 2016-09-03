@@ -3,14 +3,9 @@ package org.openstreetmap.josm.plugins.opendata.core.io.archive;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
 import java.util.Map.Entry;
-
-import javax.xml.bind.JAXBException;
-import javax.xml.stream.FactoryConfigurationError;
-import javax.xml.stream.XMLStreamException;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -32,10 +27,10 @@ public class ZipReaderTest {
 
     /**
      * Test for various zip files reading
-     * @throws IOException if an error occurs during reading
+     * @throws Exception if an error occurs during reading
      */
     @Test
-    public void testReadZipFiles() throws IOException, XMLStreamException, FactoryConfigurationError, JAXBException {
+    public void testReadZipFiles() throws Exception {
         for (Path p : NonRegFunctionalTests.listDataFiles("zip")) {
             File zipfile = p.toFile();
             Main.info("Testing reading file "+zipfile.getPath());

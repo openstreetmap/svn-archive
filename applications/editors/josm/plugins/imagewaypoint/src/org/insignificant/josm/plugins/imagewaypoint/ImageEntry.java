@@ -22,32 +22,33 @@ import org.openstreetmap.josm.tools.ImageProvider;
 
 public final class ImageEntry implements Comparable<ImageEntry> {
     public interface IImageReadyListener {
-    void onImageReady(ImageEntry imageEntry, Image image);
+        void onImageReady(ImageEntry imageEntry, Image image);
     }
 
     private static final class Observer implements ImageObserver {
-    private final ImageEntry imageEntry;
+        private final ImageEntry imageEntry;
 
-    public Observer(final ImageEntry imageEntry) {
-        this.imageEntry = imageEntry;
-    }
-
-    /**
-     * @see java.awt.image.ImageObserver#imageUpdate(java.awt.Image, int,
-     *      int, int, int, int)
-     * @return true if this ImageObserver still wants to be updates about
-     *         image loading progress
-     */
-    public final boolean imageUpdate(final Image image,
-        final int infoflags, final int x, final int y, final int width,
-        final int height) {
-        final boolean complete = ImageObserver.ALLBITS == (infoflags | ImageObserver.ALLBITS);
-        if (complete) {
-        this.imageEntry.imageLoaded(image);
+        public Observer(final ImageEntry imageEntry) {
+            this.imageEntry = imageEntry;
         }
 
-        return !complete;
-    }
+        /**
+         * @see java.awt.image.ImageObserver#imageUpdate(java.awt.Image, int,
+         *      int, int, int, int)
+         * @return true if this ImageObserver still wants to be updates about
+         *         image loading progress
+         */
+        @Override
+        public final boolean imageUpdate(final Image image,
+            final int infoflags, final int x, final int y, final int width,
+            final int height) {
+            final boolean complete = ImageObserver.ALLBITS == (infoflags | ImageObserver.ALLBITS);
+            if (complete) {
+                this.imageEntry.imageLoaded(image);
+            }
+
+            return !complete;
+        }
     }
 
     public static final class Orientation {
@@ -118,6 +119,7 @@ public final class ImageEntry implements Comparable<ImageEntry> {
     this.rotatedImage = null;
     }
 
+    @Override
     public final int compareTo(final ImageEntry image) {
     return this.fileName.compareTo(image.fileName);
     }

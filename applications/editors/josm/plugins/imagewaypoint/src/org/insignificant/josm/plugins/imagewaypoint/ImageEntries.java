@@ -21,6 +21,7 @@ public final class ImageEntries {
             this.imageEntries = imageEntries;
         }
 
+        @Override
         public final void onImageReady(final ImageEntry imageEntry,
             final Image image) {
             this.imageEntries.setCurrentImage(imageEntry, image);

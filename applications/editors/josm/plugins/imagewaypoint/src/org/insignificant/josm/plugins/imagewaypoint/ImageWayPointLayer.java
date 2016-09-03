@@ -51,11 +51,13 @@ public final class ImageWayPointLayer extends Layer {
     }
 
     private static final class ImageChangeListener implements IImageChangeListener {
+        @Override
         public final void onAvailableImageEntriesChanged(
         final ImageEntries entries) {
             Main.map.repaint();
         }
 
+        @Override
         public final void onSelectedImageEntryChanged(final ImageEntries entries) {
             Main.map.repaint();
         }

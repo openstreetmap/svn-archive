@@ -28,6 +28,7 @@ import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.visitor.paint.MapPaintSettings;
 import org.openstreetmap.josm.data.osm.visitor.paint.PaintColors;
+import org.openstreetmap.josm.data.preferences.ColorProperty;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.layer.Layer;
@@ -104,7 +105,7 @@ public class DrawSplineAction extends MapMode implements MapViewPaintable, KeyPr
 
     @Override
     protected void readPreferences() {
-        rubberLineColor = Main.pref.getColor(marktr("helper line"), null);
+        rubberLineColor = new ColorProperty(marktr("helper line"), (Color) null).get();
         if (rubberLineColor == null)
             rubberLineColor = PaintColors.SELECTED.get();
 
@@ -214,7 +215,7 @@ public class DrawSplineAction extends MapMode implements MapViewPaintable, KeyPr
         Node n = null;
         boolean existing = false;
         if (!ctrl) {
-            n = Main.map.mapView.getNearestNode(e.getPoint(), OsmPrimitive.isUsablePredicate);
+            n = Main.map.mapView.getNearestNode(e.getPoint(), OsmPrimitive::isUsable);
             existing = true;
         }
         if (n == null) {
@@ -277,7 +278,7 @@ public class DrawSplineAction extends MapMode implements MapViewPaintable, KeyPr
                 mc.applyVectorTo(en);
         } else {
             if (dragControl) {
-                Main.main.undoRedo.add(spl.new EditSplineCommand(ph.sn));
+                Main.main.undoRedo.add(new Spline.EditSplineCommand(ph.sn));
                 dragControl = false;
             }
             ph.movePoint(en);
@@ -311,7 +312,7 @@ public class DrawSplineAction extends MapMode implements MapViewPaintable, KeyPr
             } else {
                 Node n = null;
                 if (!ctrl)
-                    n = Main.map.mapView.getNearestNode(e.getPoint(), OsmPrimitive.isUsablePredicate);
+                    n = Main.map.mapView.getNearestNode(e.getPoint(), OsmPrimitive::isUsable);
                 if (n == null) {
                     redraw = removeHighlighting();
                     helperEndpoint = e.getPoint();
@@ -395,7 +396,7 @@ public class DrawSplineAction extends MapMode implements MapViewPaintable, KeyPr
         setEnabled(getLayerManager().getEditLayer() != null);
     }
 
-    public class BackSpaceAction extends AbstractAction {
+    public static class BackSpaceAction extends AbstractAction {
         @Override
         public void actionPerformed(ActionEvent e) {
             Main.main.undoRedo.undo();

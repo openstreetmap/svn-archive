@@ -17,6 +17,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 
 import javax.swing.Icon;
 import javax.swing.JOptionPane;
@@ -186,6 +187,11 @@ public class Spline {
                 return false;
             PointHandle o = (PointHandle) other;
             return this.sn == o.sn && this.point == o.point;
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(sn, point);
         }
     }
 
@@ -405,7 +411,7 @@ public class Spline {
         }
     }
 
-    public class EditSplineCommand extends Command {
+    public static class EditSplineCommand extends Command {
         EastNorth cprev;
         EastNorth cnext;
         SNode sn;

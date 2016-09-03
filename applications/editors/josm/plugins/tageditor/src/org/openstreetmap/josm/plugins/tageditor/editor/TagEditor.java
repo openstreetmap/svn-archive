@@ -27,7 +27,7 @@ import org.openstreetmap.josm.plugins.tageditor.ac.IAutoCompletionListListener;
  *       Two buttons allow to highlight and remove a presets respectively.</li>
  *   <li>the main table with the tag names and tag values
  * </ul>
- * 
+ *
  *  This component depends on a couple of other components which have to be
  *  injected with the respective setter methods:
  *  <ul>
@@ -46,7 +46,7 @@ import org.openstreetmap.josm.plugins.tageditor.ac.IAutoCompletionListListener;
  *     AutoCompletionList autoCompletionList = .... // init the autocompletion list
  *     AutoCompletionCache autoCompletionCache = ... // init the auto completion cache
  *     TagEditorModel model = ... // init the tag editor model
- * 
+ *
  *     TagEditor tagEditor = new TagEditor();
  *     tagEditor.setTagEditorModel(model);
  *     tagEditor.setAutoCompletionList(autoCompletionList);
@@ -60,7 +60,7 @@ public class TagEditor extends JPanel implements IAutoCompletionListListener {
     private TagEditorModel tagEditorModel;
     private TagTable tblTagEditor;
     private PresetManager presetManager;
-    
+
      /**
      * builds the panel with the button row
      *
@@ -82,11 +82,11 @@ public class TagEditor extends JPanel implements IAutoCompletionListListener {
         tblTagEditor.addComponentNotStoppingCellEditing(btn);
         return pnl;
     }
-    
+
     public void addComponentNotStoppingCellEditing(Component c) {
         tblTagEditor.addComponentNotStoppingCellEditing(c);
     }
-    
+
     /**
      * builds the GUI
      */
@@ -95,9 +95,9 @@ public class TagEditor extends JPanel implements IAutoCompletionListListener {
 
         DefaultListSelectionModel rowSelectionModel = new DefaultListSelectionModel();
         DefaultListSelectionModel colSelectionModel = new DefaultListSelectionModel();
-        
+
         tagEditorModel = new TagEditorModel(rowSelectionModel,colSelectionModel);
-        
+
         // build the scrollable table for editing tag names and tag values
         //
         tblTagEditor = new TagTable(tagEditorModel, 0);
@@ -128,17 +128,17 @@ public class TagEditor extends JPanel implements IAutoCompletionListListener {
         gc.weighty = 1.0;
         gc.anchor = GridBagConstraints.CENTER;
         pnl.add(pnlTagTable,gc);
-        
+
         return pnl;
     }
-    
+
     /**
      * builds the GUI
-     * 
+     *
      */
     protected void build() {
         setLayout(new BorderLayout());
-        
+
         add(buildTagEditorPanel(), BorderLayout.CENTER);
 
         // build the preset manager which shows a list of applied presets
@@ -162,7 +162,7 @@ public class TagEditor extends JPanel implements IAutoCompletionListListener {
     public TagEditorModel getTagEditorModel() {
         return tagEditorModel;
     }
-    
+
     public void clearSelection() {
         tblTagEditor.getSelectionModel().clearSelection();
     }
@@ -173,7 +173,7 @@ public class TagEditor extends JPanel implements IAutoCompletionListListener {
             editor.stopCellEditing();
         }
     }
-    
+
     public void setAutoCompletionList(AutoCompletionList autoCompletionList) {
         tblTagEditor.setAutoCompletionList(autoCompletionList);
     }
@@ -182,6 +182,7 @@ public class TagEditor extends JPanel implements IAutoCompletionListListener {
         tblTagEditor.setAutoCompletionManager(autocomplete);
     }
 
+    @Override
     public void autoCompletionItemSelected(String item) {
         logger.info("autocompletion item selected ...");
         TagSpecificationAwareTagCellEditor editor = (TagSpecificationAwareTagCellEditor)tblTagEditor.getCellEditor();
@@ -193,7 +194,7 @@ public class TagEditor extends JPanel implements IAutoCompletionListListener {
     public void requestFocusInTopLeftCell() {
         tblTagEditor.requestFocusInCell(0,0);
     }
-    
+
     public TagEditorModel getModel() {
         return tagEditorModel;
     }

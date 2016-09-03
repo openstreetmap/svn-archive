@@ -13,7 +13,6 @@ import org.openstreetmap.josm.gui.tagging.presets.TaggingPreset;
 
 public class NameIconCellRenderer extends JLabel implements TableCellRenderer {
 
-    //private static Logger logger = Logger.getLogger(NameIconCellRenderer.class.getName());
     public static final Color BG_COLOR_SELECTED = new Color(143,170,255);
 
     protected void init() {
@@ -25,6 +24,7 @@ public class NameIconCellRenderer extends JLabel implements TableCellRenderer {
         init();
     }
 
+    @Override
     public Component getTableCellRendererComponent(JTable table, Object value,
             boolean isSelected, boolean hasFocus, int rowIndex, int colIndex) {
 

@@ -1,6 +1,8 @@
 // License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.tageditor.ac;
 
+import static org.openstreetmap.josm.tools.I18n.tr;
+
 import java.awt.Component;
 import java.awt.Font;
 import java.net.URL;
@@ -11,13 +13,13 @@ import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.UIManager;
 import javax.swing.table.TableCellRenderer;
-import org.openstreetmap.josm.gui.tagging.ac.AutoCompletionListItem;
+
 import org.openstreetmap.josm.gui.tagging.ac.AutoCompletionItemPriority;
-import static org.openstreetmap.josm.tools.I18n.tr;
+import org.openstreetmap.josm.gui.tagging.ac.AutoCompletionListItem;
 
 /**
  * This is the table cell renderer for the list of auto completion list items.
- * 
+ *
  */
 public class AutoCompletionListRenderer extends JLabel implements TableCellRenderer {
 
@@ -65,7 +67,7 @@ public class AutoCompletionListRenderer extends JLabel implements TableCellRende
 
     /**
      * prepares the renderer for rendering a specific icon
-     * 
+     *
      * @param item the item to be rendered
      */
     protected void prepareRendererIcon(AutoCompletionListItem item) {
@@ -100,6 +102,7 @@ public class AutoCompletionListRenderer extends JLabel implements TableCellRende
         setForeground(UIManager.getColor("Table.selectionForeground"));
     }
 
+    @Override
     public Component getTableCellRendererComponent(JTable table, Object value,
             boolean isSelected, boolean hasFocus, int row, int column) {
 

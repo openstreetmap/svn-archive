@@ -50,6 +50,7 @@ public class TabularTagSelector extends JPanel {
         pnl.add(btn);
         btn.addActionListener(
                 new ActionListener() {
+                    @Override
                     public void actionPerformed(ActionEvent e) {
                         tfFilter.setText("");
                         tfFilter.requestFocus();
@@ -91,6 +92,7 @@ public class TabularTagSelector extends JPanel {
         //
         tagsTable.unregisterKeyboardAction(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER,0));
         ActionListener enterAction = new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
                 int rowNum = tagsTable.getSelectedRow();
                 if (rowNum >= 0) {
@@ -117,6 +119,7 @@ public class TabularTagSelector extends JPanel {
         pnl.add(btnApply);
         btnApply.addActionListener(
                 new ActionListener() {
+                    @Override
                     public void actionPerformed(ActionEvent arg0) {
                         int row = tagsTable.getSelectedRow();
                         if (row >=0) {
@@ -140,14 +143,17 @@ public class TabularTagSelector extends JPanel {
         //
         tfFilter.getDocument().addDocumentListener(
                 new DocumentListener() {
+                    @Override
                     public void changedUpdate(DocumentEvent arg0) {
                         onUpdate();
                     }
 
+                    @Override
                     public void insertUpdate(DocumentEvent arg0) {
                         onUpdate();
                     }
 
+                    @Override
                     public void removeUpdate(DocumentEvent arg0) {
                         onUpdate();
                     }
@@ -160,6 +166,7 @@ public class TabularTagSelector extends JPanel {
 
         tfFilter.addActionListener(
                 new ActionListener() {
+                    @Override
                     public void actionPerformed(ActionEvent e) {
                         filter(tfFilter.getText());
                     }
@@ -170,24 +177,22 @@ public class TabularTagSelector extends JPanel {
         //
         tagsTable.getSelectionModel().addListSelectionListener(
                 new ListSelectionListener() {
+                    @Override
                     public void valueChanged(ListSelectionEvent e) {
                         btnApply.setEnabled(tagsTable.getSelectedRowCount() != 0);
                     }
                 }
         );
 
-
         // load the set of presets and bind them to the preset table
         //
         tagsTable.getSelectionModel().clearSelection();
         btnApply.setEnabled(false);
-
     }
 
     public TabularTagSelector() {
         build();
     }
-
 
     public void filter(String filter) {
         tagsTable.getSelectionModel().clearSelection();

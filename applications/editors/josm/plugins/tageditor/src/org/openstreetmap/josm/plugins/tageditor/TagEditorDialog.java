@@ -45,7 +45,7 @@ import org.openstreetmap.josm.tools.WindowGeometry;
 
 /**
  * The dialog for editing name/value-pairs (aka <em>tags</em>) associated with {@link OsmPrimitive}s.
- * 
+ *
  */
 @SuppressWarnings("serial")
 public class TagEditorDialog extends JDialog {
@@ -56,7 +56,7 @@ public class TagEditorDialog extends JDialog {
 
     /**
      * Access to the singleton instance
-     * 
+     *
      * @return the singleton instance of the dialog
      */
     static public TagEditorDialog getInstance() {
@@ -90,7 +90,7 @@ public class TagEditorDialog extends JDialog {
 
     protected JPanel buildButtonRow() {
         JPanel pnl = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        
+
         // the ok button
         //
         pnl.add(new JButton(okAction = new OKAction()));
@@ -107,7 +107,7 @@ public class TagEditorDialog extends JDialog {
         // editor model
         //
         tagEditor = new TagEditor();
-        
+
         // create the auto completion list viewer and connect it
         // to the tag editor
         //
@@ -119,23 +119,23 @@ public class TagEditorDialog extends JDialog {
 
         JPanel pnlTagGrid = new JPanel();
         pnlTagGrid.setLayout(new BorderLayout());
-        
-        
+
+
         pnlTagGrid.add(tagEditor, BorderLayout.CENTER);
         pnlTagGrid.add(aclViewer, BorderLayout.EAST);
         pnlTagGrid.setBorder(BorderFactory.createEmptyBorder(5, 0,0,0));
-        
+
         JSplitPane splitPane = new JSplitPane(
                 JSplitPane.HORIZONTAL_SPLIT,
-                tagEditor, 
+                tagEditor,
                 aclViewer
         );
         splitPane.setOneTouchExpandable(false);
-        splitPane.setDividerLocation(600);      
+        splitPane.setDividerLocation(600);
         pnlTagGrid.add(splitPane, BorderLayout.CENTER);
         return pnlTagGrid;
     }
-        
+
     /**
      * build the GUI
      */
@@ -147,7 +147,7 @@ public class TagEditorDialog extends JDialog {
         setModal(true);
         setSize(PREFERRED_SIZE);
         setTitle(tr("JOSM Tag Editor Plugin"));
-        
+
         JPanel pnlTagGrid = buildTagGridPanel();
 
         // create the preset selector
@@ -155,6 +155,7 @@ public class TagEditorDialog extends JDialog {
         TabularPresetSelector presetSelector = new TabularPresetSelector();
         presetSelector.addPresetSelectorListener(
                 new IPresetSelectorListener() {
+                    @Override
                     public void itemSelected(TaggingPreset item) {
                         tagEditor.stopEditing();
                         tagEditor.getModel().applyPreset(item);
@@ -173,6 +174,7 @@ public class TagEditorDialog extends JDialog {
         TabularTagSelector tagSelector = new TabularTagSelector();
         tagSelector.addTagSelectorListener(
                 new ITagSelectorListener() {
+                    @Override
                     public void itemSelected(KeyValuePair pair) {
                         tagEditor.stopEditing();
                         tagEditor.getModel().applyKeyValuePair(pair);
@@ -191,12 +193,12 @@ public class TagEditorDialog extends JDialog {
         tabbedPane.add(pnlPresetSelector, tr("Presets"));
         tabbedPane.add(pnlTagSelector, tr("Tags"));
 
-        
+
         // create split pane
         //
         JSplitPane splitPane = new JSplitPane(
                 JSplitPane.VERTICAL_SPLIT,
-                tabbedPane, 
+                tabbedPane,
                 pnlTagGrid
         );
         splitPane.setOneTouchExpandable(true);
@@ -215,6 +217,7 @@ public class TagEditorDialog extends JDialog {
                 new WindowAdapter() {
                     @Override public void windowActivated(WindowEvent e) {
                         SwingUtilities.invokeLater(new Runnable(){
+                            @Override
                             public void run()
                             {
                                 getModel().ensureOneTag();
@@ -290,6 +293,7 @@ public class TagEditorDialog extends JDialog {
             putValue(SHORT_DESCRIPTION, tr("Abort tag editing and close dialog"));
         }
 
+        @Override
         public void actionPerformed(ActionEvent arg0) {
             setVisible(false);
         }
@@ -304,6 +308,7 @@ public class TagEditorDialog extends JDialog {
             putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke("ctrl ENTER"));
         }
 
+        @Override
         public void actionPerformed(ActionEvent e) {
             run();
         }
@@ -317,6 +322,7 @@ public class TagEditorDialog extends JDialog {
             Main.parent.repaint(); // repaint all - drawing could have been changed
         }
 
+        @Override
         public void propertyChange(PropertyChangeEvent evt) {
             if (! evt.getPropertyName().equals(TagEditorModel.PROP_DIRTY))
                 return;

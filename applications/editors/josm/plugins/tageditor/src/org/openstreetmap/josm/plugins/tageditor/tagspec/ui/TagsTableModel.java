@@ -30,6 +30,7 @@ public class TagsTableModel extends AbstractTableModel {
         Collections.sort(
                 items,
                 new Comparator<KeyValuePair>() {
+                    @Override
                     public int compare(KeyValuePair self,
                             KeyValuePair other) {
                         int ret =self.getKey().compareToIgnoreCase(other.getKey());
@@ -66,14 +67,17 @@ public class TagsTableModel extends AbstractTableModel {
         }
     }
 
+    @Override
     public int getColumnCount() {
         return 2;
     }
 
+    @Override
     public int getRowCount() {
         return visibleItems.size();
     }
 
+    @Override
     public Object getValueAt(int row, int col) {
         KeyValuePair pair = visibleItems.get(row);
         switch(col) {

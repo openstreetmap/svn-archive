@@ -54,6 +54,7 @@ public class TabularPresetSelector extends JPanel {
         pnl.add(btn);
         btn.addActionListener(
                 new ActionListener() {
+                    @Override
                     public void actionPerformed(ActionEvent e) {
                         tfFilter.setText("");
                         tfFilter.requestFocus();
@@ -94,6 +95,7 @@ public class TabularPresetSelector extends JPanel {
         //
         presetsTable.unregisterKeyboardAction(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER,0));
         ActionListener enterAction = new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
                 int rowNum = presetsTable.getSelectedRow();
                 if (rowNum >= 0) {
@@ -119,6 +121,7 @@ public class TabularPresetSelector extends JPanel {
         pnl.add(btnApply);
         btnApply.addActionListener(
                 new ActionListener() {
+                    @Override
                     public void actionPerformed(ActionEvent arg0) {
                         int row = presetsTable.getSelectedRow();
                         if (row >=0) {
@@ -140,14 +143,17 @@ public class TabularPresetSelector extends JPanel {
         //
         tfFilter.getDocument().addDocumentListener(
                 new DocumentListener() {
+                    @Override
                     public void changedUpdate(DocumentEvent arg0) {
                         onUpdate();
                     }
 
+                    @Override
                     public void insertUpdate(DocumentEvent arg0) {
                         onUpdate();
                     }
 
+                    @Override
                     public void removeUpdate(DocumentEvent arg0) {
                         onUpdate();
                     }
@@ -160,6 +166,7 @@ public class TabularPresetSelector extends JPanel {
 
         tfFilter.addActionListener(
                 new ActionListener() {
+                    @Override
                     public void actionPerformed(ActionEvent e) {
                         filter(tfFilter.getText());
                     }
@@ -170,6 +177,7 @@ public class TabularPresetSelector extends JPanel {
         //
         presetsTable.getSelectionModel().addListSelectionListener(
                 new ListSelectionListener() {
+                    @Override
                     public void valueChanged(ListSelectionEvent e) {
                         btnApply.setEnabled(presetsTable.getSelectedRowCount() != 0);
                     }

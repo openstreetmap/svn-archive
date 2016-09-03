@@ -24,11 +24,11 @@ public class TagSpecificationAwareTagCellEditor extends TagCellEditor {
      * initialized with the set of standard key values and the set of current key
      * values from the current JOSM data set. Keys already present in the
      * current tag model are removed from the auto completion list.
-     * 
+     *
      * @param model  the tag editor model
      * @param currentTag  the current tag
      */
-    protected void initAutoCompletionListForKeys(TagEditorModel model, TagModel currentTag) {       
+    protected void initAutoCompletionListForKeys(TagEditorModel model, TagModel currentTag) {
         if (getAutoCompletionList() == null) {
             logger.warning("autoCompletionList is null. Make sure an instance of AutoCompletionList is injected into TableCellEditor.");
             return;
@@ -71,9 +71,10 @@ public class TagSpecificationAwareTagCellEditor extends TagCellEditor {
      * a tag value. In this case the auto completion list is initialized with the
      * set of standard values for a given key and the set of values present in the
      * current data set for the given key.
-     * 
+     *
      * @param forKey the key
      */
+    @Override
     protected void initAutoCompletionListForValues(String forKey) {
 
         if (autoCompletionList == null) {
@@ -82,7 +83,7 @@ public class TagSpecificationAwareTagCellEditor extends TagCellEditor {
         }
         autoCompletionList.clear();
         autocomplete.populateWithTagValues(autoCompletionList, forKey);
-        
+
         AutoCompletionContext context = new AutoCompletionContext();
         try {
             context.initFromJOSMSelection();

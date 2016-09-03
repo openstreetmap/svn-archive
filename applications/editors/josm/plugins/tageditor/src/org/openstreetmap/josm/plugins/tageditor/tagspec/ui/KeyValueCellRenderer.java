@@ -11,8 +11,6 @@ import javax.swing.table.TableCellRenderer;
 
 public class KeyValueCellRenderer extends JLabel implements TableCellRenderer  {
 
-    //private static final Logger logger = Logger.getLogger(KeyValueCellRenderer.class.getName());
-
     protected void init() {
         setFont(new Font("Courier",Font.PLAIN,getFont().getSize()));
         setOpaque(true);
@@ -22,6 +20,7 @@ public class KeyValueCellRenderer extends JLabel implements TableCellRenderer  {
         init();
     }
 
+    @Override
     public Component getTableCellRendererComponent(JTable table, Object value,
             boolean isSelected, boolean hasFocus, int rowIndex, int colIndex) {
 

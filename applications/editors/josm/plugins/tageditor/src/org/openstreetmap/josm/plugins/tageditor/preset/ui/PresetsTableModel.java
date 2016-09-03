@@ -52,14 +52,17 @@ public class PresetsTableModel extends AbstractTableModel  {
         return String.class;
     }
 
+    @Override
     public int getColumnCount() {
         return 2;
     }
 
+    @Override
     public int getRowCount() {
         return visibleItems.size();
     }
 
+    @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
         TaggingPreset item = visibleItems.get(rowIndex);
         switch(columnIndex) {

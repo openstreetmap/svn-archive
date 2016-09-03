@@ -40,7 +40,8 @@ public class PresetManager extends JPanel {
         };
 
         presets.addItemListener(
-                new ItemListener(){
+                new ItemListener() {
+                    @Override
                     public void itemStateChanged(ItemEvent e) {
                         syncWidgetStates();
                     }
@@ -52,7 +53,8 @@ public class PresetManager extends JPanel {
 
         btnHighlight = new JButton(tr("Highlight"));
         btnHighlight.addActionListener(
-                new ActionListener()  {
+                new ActionListener() {
+                    @Override
                     public void actionPerformed(ActionEvent arg0) {
                         highlightCurrentPreset();
                     }
@@ -64,6 +66,7 @@ public class PresetManager extends JPanel {
         btnRemove = new JButton(tr("Remove"));
         btnRemove.addActionListener(
                 new ActionListener()  {
+                    @Override
                     public void actionPerformed(ActionEvent arg0) {
                         removeCurrentPreset();
                     }

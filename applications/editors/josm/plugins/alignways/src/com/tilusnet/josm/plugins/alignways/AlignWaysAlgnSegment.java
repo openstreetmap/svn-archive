@@ -113,18 +113,24 @@ public class AlignWaysAlgnSegment extends AlignWaysSegment {
      *            The pivot location
      */
     private EastNorth getPivotCoord(PivotLocations pp) {
-        switch (pp) {
-        case NONE:
-            return null;
-        case NODE1:
-            return segment.way.getNode(segment.lowerIndex).getEastNorth();
-        case NODE2:
-            return segment.way.getNode(segment.lowerIndex + 1).getEastNorth();
-        case CENTRE:
-            return getPivotCoord(PivotLocations.NODE1).getCenter(
-                    getPivotCoord(PivotLocations.NODE2));
-        default:
-            // Should never happen
+        try {
+            EastNorth n1;
+            EastNorth n2;
+            switch (pp) {
+            case NODE1:
+                return segment.way.getNode(segment.lowerIndex).getEastNorth();
+            case NODE2:
+                return segment.way.getNode(segment.lowerIndex + 1).getEastNorth();
+            case CENTRE:
+                n1 = getPivotCoord(PivotLocations.NODE1);
+                n2 = getPivotCoord(PivotLocations.NODE2);
+                return n1 != null && n2 != null ? n1.getCenter(n2) : null;
+            case NONE:
+            default:
+                return null;
+            }
+        } catch (IndexOutOfBoundsException e) {
+            Main.error(e);
             return null;
         }
     }

@@ -13,6 +13,7 @@ import java.awt.geom.Line2D;
 import java.util.Collection;
 import java.util.HashSet;
 
+import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
@@ -53,12 +54,16 @@ public class AlignWaysSegment implements MapViewPaintable {
 
     void setSegmentEndpoints(WaySegment segment) {
         if (segment != null) {
-            Node node1 = segment.way.getNode(segment.lowerIndex);
-            Node node2 = segment.way.getNode(segment.lowerIndex + 1);
+            try {
+                Node node1 = segment.way.getNode(segment.lowerIndex);
+                Node node2 = segment.way.getNode(segment.lowerIndex + 1);
 
-            segmentEndPoints = new HashSet<>();
-            segmentEndPoints.add(node1);
-            segmentEndPoints.add(node2);
+                segmentEndPoints = new HashSet<>();
+                segmentEndPoints.add(node1);
+                segmentEndPoints.add(node2);
+            } catch (IndexOutOfBoundsException e) {
+                Main.error(e);
+            }
         }
     }
 
@@ -96,11 +101,14 @@ public class AlignWaysSegment implements MapViewPaintable {
     }
 
     protected void drawSegment(Graphics2D g, MapView mv) {
-        Node n1 = segment.way.getNode(segment.lowerIndex);
-        Node n2 = segment.way.getNode(segment.lowerIndex + 1);
+        try {
+            Node n1 = segment.way.getNode(segment.lowerIndex);
+            Node n2 = segment.way.getNode(segment.lowerIndex + 1);
 
-        Line2D newline = new Line2D.Double(mv.getPoint(n1), mv.getPoint(n2));
-        g.draw(newline);
+            g.draw(new Line2D.Double(mv.getPoint(n1), mv.getPoint(n2)));
+        } catch (IndexOutOfBoundsException e) {
+            Main.error(e);
+        }
     }
 
      @Override

@@ -29,9 +29,9 @@ class EngineSound {
             stop();
 
         AudioFormat output_format =
-            new AudioFormat(S_RATE, 16, 1, true, true);
+                new AudioFormat(S_RATE, 16, 1, true, true);
         DataLine.Info info =
-            new DataLine.Info(SourceDataLine.class, output_format);
+                new DataLine.Info(SourceDataLine.class, output_format);
 
         /* Get the data line, open it and initialise the device */
         try {
@@ -108,6 +108,7 @@ class EngineSound {
     protected static final double volume = 0.3;
 
     protected class audio_task extends TimerTask {
+        @Override
         public void run() {
             if (output == null)
                 return;
@@ -126,7 +127,7 @@ class EngineSound {
             double freq = (rpm - 0.1) * 160.0;
             int wavelen = (int) (S_RATE / freq);
             int bufferlen = MIN_BUFFER - (MIN_BUFFER % wavelen) +
-                wavelen;
+                    wavelen;
             int value = (int) (0x7fff * volume);
 
             bufferlen *= 2;
@@ -146,7 +147,7 @@ class EngineSound {
             }
 
             frames_written +=
-                output.write(buffer, 0, bufferlen) / 2;
+                    output.write(buffer, 0, bufferlen) / 2;
 
             reschedule(frames_current);
         }
@@ -157,7 +158,7 @@ class EngineSound {
          * currently playing buffer as possible (aim at
          * about half into the last frame).  */
         long delay = (frames_written - frames - MIN_BUFFER / 2) *
-            1000 / S_RATE;
+                1000 / S_RATE;
         if (delay < 0)
             delay = 0;
         tick.schedule(new audio_task(), delay);

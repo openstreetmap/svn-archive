@@ -98,6 +98,7 @@ public class GameWindow extends JFrame implements ActionListener {
         protected Collection<WayPoint> segment;
         protected Collection<Collection<WayPoint>> trackSegs;
 
+        @Override
         public void actionPerformed(ActionEvent e) {
             /* We should count the satellites here, see if we
              * have a fix and add any distortions.  */
@@ -127,7 +128,7 @@ public class GameWindow extends JFrame implements ActionListener {
 
             GpxData data = new GpxData();
             data.tracks.add(new ImmutableGpxTrack(trackSegs,
-                        new HashMap<String, Object>()));
+                    new HashMap<String, Object>()));
 
             ground_view.parent.getLayerManager().addLayer(
                     new GpxLayer(data, "Car GPS trace"));
@@ -163,70 +164,70 @@ public class GameWindow extends JFrame implements ActionListener {
     protected static final ImageIcon car[] = new ImageIcon[] {
             new ImageIcon(Toolkit.getDefaultToolkit().createImage(
                     WMSRacer.class.getResource(
-                        "/images/car0-l.png"))),
+                            "/images/car0-l.png"))),
             new ImageIcon(Toolkit.getDefaultToolkit().createImage(
                     WMSRacer.class.getResource(
-                        "/images/car0.png"))),
+                            "/images/car0.png"))),
             new ImageIcon(Toolkit.getDefaultToolkit().createImage(
                     WMSRacer.class.getResource(
-                        "/images/car0-r.png"))),
+                            "/images/car0-r.png"))),
             new ImageIcon(Toolkit.getDefaultToolkit().createImage(
                     WMSRacer.class.getResource(
-                        "/images/car1-l.png"))),
+                            "/images/car1-l.png"))),
             new ImageIcon(Toolkit.getDefaultToolkit().createImage(
                     WMSRacer.class.getResource(
-                        "/images/car1.png"))),
+                            "/images/car1.png"))),
             new ImageIcon(Toolkit.getDefaultToolkit().createImage(
                     WMSRacer.class.getResource(
-                        "/images/car1-r.png"))),
+                            "/images/car1-r.png"))),
     };
     protected static final ImageIcon bg[] = new ImageIcon[] {
             new ImageIcon(Toolkit.getDefaultToolkit().createImage(
                     WMSRacer.class.getResource(
-                        "/images/bg0.png"))),
+                            "/images/bg0.png"))),
     };
     protected static final ImageIcon skyline[] = new ImageIcon[] {
             new ImageIcon(Toolkit.getDefaultToolkit().createImage(
                     WMSRacer.class.getResource(
-                        "/images/horizon.png"))),
+                            "/images/horizon.png"))),
     };
     protected static final ImageIcon cactus[] = new ImageIcon[] {
             new ImageIcon(Toolkit.getDefaultToolkit().createImage(
                     WMSRacer.class.getResource(
-                        "/images/cactus0.png"))),
+                            "/images/cactus0.png"))),
             new ImageIcon(Toolkit.getDefaultToolkit().createImage(
                     WMSRacer.class.getResource(
-                        "/images/cactus1.png"))),
+                            "/images/cactus1.png"))),
             new ImageIcon(Toolkit.getDefaultToolkit().createImage(
                     WMSRacer.class.getResource(
-                        "/images/cactus2.png"))),
+                            "/images/cactus2.png"))),
     };
     protected static final ImageIcon cloud[] = new ImageIcon[] {
             new ImageIcon(Toolkit.getDefaultToolkit().createImage(
                     WMSRacer.class.getResource(
-                        "/images/cloud0.png"))),
+                            "/images/cloud0.png"))),
             new ImageIcon(Toolkit.getDefaultToolkit().createImage(
                     WMSRacer.class.getResource(
-                        "/images/cloud1.png"))),
+                            "/images/cloud1.png"))),
             new ImageIcon(Toolkit.getDefaultToolkit().createImage(
                     WMSRacer.class.getResource(
-                        "/images/cloud2.png"))),
+                            "/images/cloud2.png"))),
             new ImageIcon(Toolkit.getDefaultToolkit().createImage(
                     WMSRacer.class.getResource(
-                        "/images/cloud3.png"))),
+                            "/images/cloud3.png"))),
             new ImageIcon(Toolkit.getDefaultToolkit().createImage(
                     WMSRacer.class.getResource(
-                        "/images/cloud4.png"))),
+                            "/images/cloud4.png"))),
     };
     protected static final ImageIcon aircraft[] = new ImageIcon[] {
             new ImageIcon(Toolkit.getDefaultToolkit().createImage(
                     WMSRacer.class.getResource(
-                        "/images/aircraft0.png"))),
+                            "/images/aircraft0.png"))),
     };
     protected static final ImageIcon loading = new ImageIcon(
             Toolkit.getDefaultToolkit().createImage(
                     WMSRacer.class.getResource(
-                        "/images/loading.png")));
+                            "/images/loading.png")));
     protected static Toolkit s = Toolkit.getDefaultToolkit();
     protected int current_bg = 0;
     protected int current_car = 0;
@@ -241,7 +242,7 @@ public class GameWindow extends JFrame implements ActionListener {
     protected double wheelangle = 0.0;
     protected double speed = 0.0;
     protected boolean key_down[] = new boolean[] {
-        false, false, false, false, };
+            false, false, false, false, };
 
     protected void move() {
         /* Left */
@@ -261,82 +262,82 @@ public class GameWindow extends JFrame implements ActionListener {
         /* Up */
         if (key_down[2])
             speed += speed >= 0.0 ? 1.0 / (2.0 + speed) : 0.5;
-        /* Down */
-        if (key_down[3]) {
-            if (speed >= 0.5) /* Brake (TODO: sound) */
-                speed -= 0.5;
-            else if (speed >= 0.01) /* Brake (TODO: sound) */
-                speed = 0.0;
-            else /* Reverse */
-                speed -= 0.5 / (4.0 - speed);
-        }
-
-        speed *= 0.97;
-        car_engine.set_speed(speed);
-
-        if (speed > -0.1 && speed < 0.1)
-            speed = 0;
-
-        heading += wheelangle * speed;
-
-        boolean chop = false;
-        double newlat = lat + Math.cos(heading) * speed * ele * 0.2;
-        double newlon = lon + Math.sin(heading) * speed * ele * 0.2;
-        for (EastNorth pos : cacti) {
-            double alat = Math.abs(pos.north() - newlat);
-            double alon = Math.abs(pos.east() - newlon);
-            if (alat + alon < ele * 1.0) {
-                if (Math.abs(speed) < 2.0) {
-                    if (speed > 0.0)
-                        speed = -0.5;
-                    else
-                        speed = 0.3;
-                    newlat = lat;
-                    newlon = lon;
-                    break;
-                }
-
-                chop = true;
-                splashframe = 0;
-                splashcactus = pos;
-                todelete.add(pos);
+            /* Down */
+            if (key_down[3]) {
+                if (speed >= 0.5) /* Brake (TODO: sound) */
+                    speed -= 0.5;
+                else if (speed >= 0.01) /* Brake (TODO: sound) */
+                    speed = 0.0;
+                else /* Reverse */
+                    speed -= 0.5 / (4.0 - speed);
             }
-        }
 
-        lat = newlat;
-        lon = newlon;
+            speed *= 0.97;
+            car_engine.set_speed(speed);
 
-        /* Seed a new cactus if we're moving.
-         * TODO: hook into data layers and avoid putting the cactus on
-         * the road!
-         */
-        if (cacti_on && Math.random() * 30.0 < speed) {
-            double left_x = maxdist * (width - centre) / height;
-            double right_x = maxdist * (0 - centre) / height;
-            double x = left_x + Math.random() * (right_x - left_x);
-            double clat = lat + (maxdist - cardist) *
-                Math.cos(heading) - x * Math.sin(heading);
-            double clon = lon + (maxdist - cardist) *
-                Math.sin(heading) + x * Math.cos(heading);
+            if (speed > -0.1 && speed < 0.1)
+                speed = 0;
 
-            cacti.add(new EastNorth(clon, clat));
-            chop = true;
-        }
+            heading += wheelangle * speed;
 
-        /* Chop down any cactus far enough that it can't
-         * be seen.  ``If a cactus falls in a forest and
-         * there is nobody around did it make a sound?''
-         */
-        if (chop) {
+            boolean chop = false;
+            double newlat = lat + Math.cos(heading) * speed * ele * 0.2;
+            double newlon = lon + Math.sin(heading) * speed * ele * 0.2;
             for (EastNorth pos : cacti) {
-                double alat = Math.abs(pos.north() - lat);
-                double alon = Math.abs(pos.east() - lon);
-                if (alat + alon > 2 * maxdist)
+                double alat = Math.abs(pos.north() - newlat);
+                double alon = Math.abs(pos.east() - newlon);
+                if (alat + alon < ele * 1.0) {
+                    if (Math.abs(speed) < 2.0) {
+                        if (speed > 0.0)
+                            speed = -0.5;
+                        else
+                            speed = 0.3;
+                        newlat = lat;
+                        newlon = lon;
+                        break;
+                    }
+
+                    chop = true;
+                    splashframe = 0;
+                    splashcactus = pos;
                     todelete.add(pos);
+                }
             }
-            cacti.removeAll(todelete);
-            todelete = new ArrayList<>();
-        }
+
+            lat = newlat;
+            lon = newlon;
+
+            /* Seed a new cactus if we're moving.
+             * TODO: hook into data layers and avoid putting the cactus on
+             * the road!
+             */
+            if (cacti_on && Math.random() * 30.0 < speed) {
+                double left_x = maxdist * (width - centre) / height;
+                double right_x = maxdist * (0 - centre) / height;
+                double x = left_x + Math.random() * (right_x - left_x);
+                double clat = lat + (maxdist - cardist) *
+                        Math.cos(heading) - x * Math.sin(heading);
+                double clon = lon + (maxdist - cardist) *
+                        Math.sin(heading) + x * Math.cos(heading);
+
+                cacti.add(new EastNorth(clon, clat));
+                chop = true;
+            }
+
+            /* Chop down any cactus far enough that it can't
+             * be seen.  ``If a cactus falls in a forest and
+             * there is nobody around did it make a sound?''
+             */
+            if (chop) {
+                for (EastNorth pos : cacti) {
+                    double alat = Math.abs(pos.north() - lat);
+                    double alon = Math.abs(pos.east() - lon);
+                    if (alat + alon > 2 * maxdist)
+                        todelete.add(pos);
+                }
+                cacti.removeAll(todelete);
+                todelete = new ArrayList<>();
+            }
     }
 
     int frame;
@@ -378,13 +379,13 @@ public class GameWindow extends JFrame implements ActionListener {
         double left_x = maxdist * (width - centre) / height;
         double right_x = maxdist * (0 - centre) / height;
         double e_lat[] = new double[] {
-            lat + (maxdist - cardist) * cos - left_x * sin,
-            lat + (maxdist - cardist) * cos - right_x * sin,
-            lat - cardist * cos, };
+                lat + (maxdist - cardist) * cos - left_x * sin,
+                lat + (maxdist - cardist) * cos - right_x * sin,
+                lat - cardist * cos, };
         double e_lon[] = new double[] {
-            lon + (maxdist - cardist) * sin + left_x * cos,
-            lon + (maxdist - cardist) * sin + right_x * cos,
-            lon - cardist * sin, };
+                lon + (maxdist - cardist) * sin + left_x * cos,
+                lon + (maxdist - cardist) * sin + right_x * cos,
+                lon - cardist * sin, };
         ground_view.setProjectionBounds(new ProjectionBounds(
                 new EastNorth(min3(e_lon), min3(e_lat)),
                 new EastNorth(max3(e_lon), max3(e_lat))));
@@ -402,7 +403,7 @@ public class GameWindow extends JFrame implements ActionListener {
                     null == wms.findImage(new EastNorth(
                             e_lon[0], e_lat[0])));
         }
-        */
+         */
         /* Request the image from ground layer */
         ground.paint(ground_view.graphics, ground_view, null);
 
@@ -449,7 +450,7 @@ public class GameWindow extends JFrame implements ActionListener {
         if (Math.random() < 0.5) {
             int t = 0;
             int x = (int) (300 + Math.random() * (sw - 500 -
-                        aircraft[t].getIconWidth()));
+                    aircraft[t].getIconWidth()));
             sky.drawImage(aircraft[t].getImage(), x, 0, this);
         }
     }
@@ -473,7 +474,7 @@ public class GameWindow extends JFrame implements ActionListener {
                     hx + hw, 66, this);
     }
 
-    protected class sprite_pos implements Comparable<sprite_pos> {
+    protected static class sprite_pos implements Comparable<sprite_pos> {
         double dist;
 
         int x, y, sx, sy;
@@ -482,6 +483,7 @@ public class GameWindow extends JFrame implements ActionListener {
         public sprite_pos() {
         }
 
+        @Override
         public int compareTo(sprite_pos x) {
             return (int) ((x.dist - this.dist) * 1000000.0);
         }
@@ -558,7 +560,7 @@ public class GameWindow extends JFrame implements ActionListener {
                 splashframe = -1;
 
             int type = (((int) (splashcactus.north() *
-                            10000000.0) & 31) % 3);
+                    10000000.0) & 31) % 3);
             int sx = cactus[type].getIconWidth();
             int sy = cactus[type].getIconHeight();
             Image image = cactus[type].getImage();
@@ -628,6 +630,7 @@ public class GameWindow extends JFrame implements ActionListener {
      * potential threading issues.
      */
     protected Timer timer;
+    @Override
     public void actionPerformed(ActionEvent e) {
         move();
         screen_repaint();

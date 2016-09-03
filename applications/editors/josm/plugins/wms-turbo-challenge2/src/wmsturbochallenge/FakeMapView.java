@@ -42,7 +42,7 @@ class FakeMapView extends MapView {
 
         ProjectionBounds parent_bounds = parent.getProjectionBounds();
         max_east_west =
-            parent_bounds.maxEast - parent_bounds.minEast;
+                parent_bounds.maxEast - parent_bounds.minEast;
     }
 
     public void setProjectionBounds(ProjectionBounds bounds) {
@@ -60,21 +60,21 @@ class FakeMapView extends MapView {
             EastNorth parent_center = parent.getCenter();
             parent.zoomTo(new ProjectionBounds(
                     new EastNorth(
-                        parent_center.east() -
-                        max_east_west / 2,
-                        parent_center.north()),
+                            parent_center.east() -
+                            max_east_west / 2,
+                            parent_center.north()),
                     new EastNorth(
-                        parent_center.east() +
-                        max_east_west / 2,
-                        parent_center.north())));
+                            parent_center.east() +
+                            max_east_west / 2,
+                            parent_center.north())));
 
             /* Request again because NavigatableContent adds
              * a border just to be sure.
              */
             ProjectionBounds new_bounds =
-                parent.getProjectionBounds();
+                    parent.getProjectionBounds();
             max_east_west =
-                new_bounds.maxEast - new_bounds.minEast;
+                    new_bounds.maxEast - new_bounds.minEast;
         }
 
         Point vmin = getPoint(bounds.getMin());
@@ -99,10 +99,12 @@ class FakeMapView extends MapView {
         graphics.setClip(0, 0, w, h);
     }
 
+    @Override
     public ProjectionBounds getProjectionBounds() {
         return view_bounds;
     }
 
+    @Override
     public Point getPoint(EastNorth p) {
         double x = p.east() - view_bounds.minEast;
         double y = view_bounds.maxNorth - p.north();
@@ -112,20 +114,23 @@ class FakeMapView extends MapView {
         return new Point((int) x, (int) y);
     }
 
+    @Override
     public EastNorth getEastNorth(int x, int y) {
         return new EastNorth(
-            view_bounds.minEast + x * this.scale,
-            view_bounds.minNorth - y * this.scale);
+                view_bounds.minEast + x * this.scale,
+                view_bounds.minNorth - y * this.scale);
     }
 
     public boolean isVisible(int x, int y) {
         return true;
     }
 
+    @Override
     public Graphics getGraphics() {
         return graphics;
     }
 
+    @Override
     public void repaint() {
     }
 }

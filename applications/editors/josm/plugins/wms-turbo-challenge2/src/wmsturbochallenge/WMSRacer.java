@@ -38,7 +38,7 @@ public class WMSRacer extends Plugin implements LayerChangeListener, ActiveLayer
     /* Rather than add an action or main menu entry we should add
      * an entry in the new layer's context menus in layerAdded
      * but there doesn't seem to be any way to do that :( */
-    protected class DriveAction extends JosmAction {
+    protected static class DriveAction extends JosmAction {
         public MapFrame frame = null;
         public Layer currentLayer = null;
         protected Layer groundLayer = null;

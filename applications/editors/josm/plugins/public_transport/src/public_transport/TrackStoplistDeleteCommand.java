@@ -11,7 +11,7 @@ import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 
 public class TrackStoplistDeleteCommand extends Command {
-    private class NodeTimeName {
+    private static class NodeTimeName {
         NodeTimeName(Node node, String time, String name, TransText shelter) {
             this.node = node;
             this.time = time;
@@ -47,7 +47,7 @@ public class TrackStoplistDeleteCommand extends Command {
             }
         } else {
             for (int i = 0; i < stoplistTM.getRowCount(); ++i)
-                workingLines.add(new Integer(i));
+                workingLines.add(Integer.valueOf(i));
         }
     }
 

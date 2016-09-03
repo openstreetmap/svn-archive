@@ -29,7 +29,7 @@ public class TrackStoplistDetachCommand extends Command {
                 consideredLines.add(selectedLines[i]);
         } else {
             for (int i = 0; i < stoplistTM.getRowCount(); ++i)
-                consideredLines.add(new Integer(i));
+                consideredLines.add(Integer.valueOf(i));
         }
 
         // keep only lines where a node can be added

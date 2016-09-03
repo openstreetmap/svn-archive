@@ -280,7 +280,7 @@ public class StopImporterAction extends JosmAction {
                 consideredLines.add(selectedLines[i]);
         } else {
             for (int i = 0; i < table.getRowCount(); ++i)
-                consideredLines.add(new Integer(i));
+                consideredLines.add(Integer.valueOf(i));
         }
         return consideredLines;
     }
@@ -391,7 +391,7 @@ public class StopImporterAction extends JosmAction {
         };
     }
 
-    private class FocusWaypointNameAction extends AbstractAction {
+    private static class FocusWaypointNameAction extends AbstractAction {
         @Override
         public void actionPerformed(ActionEvent e) {
             JTable table = dialog.getWaypointsTable();
@@ -411,7 +411,7 @@ public class StopImporterAction extends JosmAction {
         }
     }
 
-    private class FocusWaypointShelterAction extends AbstractAction {
+    private static class FocusWaypointShelterAction extends AbstractAction {
         private String defaultShelter = null;
 
         public FocusWaypointShelterAction(String defaultShelter) {
@@ -437,7 +437,7 @@ public class StopImporterAction extends JosmAction {
         }
     }
 
-    private class FocusTrackStoplistNameAction extends AbstractAction {
+    private static class FocusTrackStoplistNameAction extends AbstractAction {
         @Override
         public void actionPerformed(ActionEvent e) {
             JTable table = dialog.getStoplistTable();
@@ -457,7 +457,7 @@ public class StopImporterAction extends JosmAction {
         }
     }
 
-    private class FocusTrackStoplistShelterAction extends AbstractAction {
+    private static class FocusTrackStoplistShelterAction extends AbstractAction {
         private String defaultShelter = null;
 
         public FocusTrackStoplistShelterAction(String defaultShelter) {

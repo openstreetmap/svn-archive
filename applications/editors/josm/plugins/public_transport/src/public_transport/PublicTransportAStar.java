@@ -1,6 +1,7 @@
 package public_transport;
 
 import java.util.Iterator;
+import java.util.Objects;
 import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.Vector;
@@ -29,6 +30,11 @@ public class PublicTransportAStar extends AStarAlgorithm {
             if ((NodeVertex) o == null)
                 return false;
             return node.equals(((NodeVertex) o).node);
+        }
+        
+        @Override
+        public int hashCode() {
+            return Objects.hashCode(node);
         }
 
         public Node node;

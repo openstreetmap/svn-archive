@@ -39,7 +39,7 @@ public class TrackStoplistSortCommand extends Command {
                 workingLines.add(selectedLines[i]);
         } else {
             for (int i = 0; i < stoplistTM.getRowCount(); ++i)
-                workingLines.add(new Integer(i));
+                workingLines.add(Integer.valueOf(i));
         }
     }
 
@@ -90,7 +90,7 @@ public class TrackStoplistSortCommand extends Command {
         return tr("Public Transport: sort track stop list");
     }
 
-    private class NodeSortEntry implements Comparable<NodeSortEntry> {
+    private static class NodeSortEntry implements Comparable<NodeSortEntry> {
         public Node node = null;
 
         public String time = null;

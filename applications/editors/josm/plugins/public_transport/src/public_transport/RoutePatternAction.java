@@ -56,7 +56,7 @@ public class RoutePatternAction extends JosmAction {
 
     public static int STOPLIST_ROLE_COLUMN = 2;
 
-    private class RoutesLSL implements ListSelectionListener {
+    private static class RoutesLSL implements ListSelectionListener {
         RoutePatternAction root = null;
 
         public RoutesLSL(RoutePatternAction rpa) {
@@ -69,7 +69,7 @@ public class RoutePatternAction extends JosmAction {
         }
     }
 
-    private class RouteReference implements Comparable<RouteReference> {
+    private static class RouteReference implements Comparable<RouteReference> {
         Relation route;
 
         public RouteReference(Relation route) {
@@ -140,7 +140,7 @@ public class RoutePatternAction extends JosmAction {
         }
     }
 
-    private class TagTableModel extends DefaultTableModel implements TableModelListener {
+    private static class TagTableModel extends DefaultTableModel implements TableModelListener {
         Relation relation = null;
 
         TreeSet<String> blacklist = null;
@@ -215,7 +215,7 @@ public class RoutePatternAction extends JosmAction {
         }
     }
 
-    private class CustomCellEditorTable extends JTable {
+    private static class CustomCellEditorTable extends JTable {
         TreeMap<Integer, TableCellEditor> col1 = null;
 
         TreeMap<Integer, TableCellEditor> col2 = null;
@@ -229,9 +229,9 @@ public class RoutePatternAction extends JosmAction {
         public TableCellEditor getCellEditor(int row, int column) {
             TableCellEditor editor = null;
             if (column == 0)
-                editor = col1.get(new Integer(row));
+                editor = col1.get(Integer.valueOf(row));
             else
-                editor = col2.get(new Integer(row));
+                editor = col2.get(Integer.valueOf(row));
             if (editor == null)
                 return new DefaultCellEditor(new JTextField());
             else
@@ -240,13 +240,13 @@ public class RoutePatternAction extends JosmAction {
 
         public void setCellEditor(int row, int column, TableCellEditor editor) {
             if (column == 0)
-                col1.put(new Integer(row), editor);
+                col1.put(Integer.valueOf(row), editor);
             else
-                col2.put(new Integer(row), editor);
+                col2.put(Integer.valueOf(row), editor);
         }
     }
 
-    private class StoplistTableModel extends DefaultTableModel {
+    private static class StoplistTableModel extends DefaultTableModel {
 
         public Vector<Node> nodes = new Vector<>();
 
@@ -277,7 +277,7 @@ public class RoutePatternAction extends JosmAction {
             if (curName != null) {
                 buf[0] = curName;
             } else {
-                buf[0] = tr("[ID] {0}", (new Long(node.getId())).toString());
+                buf[0] = tr("[ID] {0}", (Long.valueOf(node.getId())).toString());
             }
             String curRef = node.get("ref");
             if (curRef != null) {
@@ -310,7 +310,7 @@ public class RoutePatternAction extends JosmAction {
         }
     }
 
-    private class SegmentMetric {
+    private static class SegmentMetric {
         public double aLat, aLon;
 
         public double length;
@@ -346,7 +346,7 @@ public class RoutePatternAction extends JosmAction {
         }
     }
 
-    private class StopReference implements Comparable<StopReference> {
+    private static class StopReference implements Comparable<StopReference> {
         public int index = 0;
 
         public double pos = 0;

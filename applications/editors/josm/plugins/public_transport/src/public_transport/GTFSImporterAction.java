@@ -6,8 +6,9 @@ import java.awt.event.ActionEvent;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.text.DecimalFormat;
 import java.text.Format;
 import java.util.Iterator;
@@ -147,10 +148,7 @@ public class GTFSImporterAction extends JosmAction {
     }
 
     private void importData(final File file) {
-        try {
-            FileReader is = new FileReader(file);
-            final BufferedReader r = new BufferedReader(is);
-
+        try (BufferedReader r = Files.newBufferedReader(file.toPath(), StandardCharsets.UTF_8)) {
             if (data == null)
                 data = new Vector<>();
             else
@@ -259,7 +257,7 @@ public class GTFSImporterAction extends JosmAction {
                 consideredLines.add(selectedLines[i]);
         } else {
             for (int i = 0; i < table.getRowCount(); ++i)
-                consideredLines.add(new Integer(i));
+                consideredLines.add(Integer.valueOf(i));
         }
         return consideredLines;
     }

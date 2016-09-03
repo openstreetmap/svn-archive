@@ -56,7 +56,7 @@ public class ItineraryTableModel extends DefaultTableModel implements TableModel
         else if (curName != null)
             buf[0] = curName;
         else
-            buf[0] = tr("[ID] {0}", (new Long(way.getId())).toString());
+            buf[0] = tr("[ID] {0}", (Long.valueOf(way.getId())).toString());
         buf[1] = role;
         if (insPos == -1) {
             ways.addElement(way);

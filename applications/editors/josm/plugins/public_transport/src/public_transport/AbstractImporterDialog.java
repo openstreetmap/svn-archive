@@ -138,7 +138,7 @@ public abstract class AbstractImporterDialog<T extends JosmAction> {
     }
 
     public static double parseTime(String s) {
-        if ((s.charAt(2) != ':') || (s.charAt(2) != ':') || (s.length() < 8))
+        if ((s.charAt(2) != ':') || (s.charAt(5) != ':') || (s.length() < 8))
             return -1;
         int hour = Integer.parseInt(s.substring(0, 2));
         int minute = Integer.parseInt(s.substring(3, 5));

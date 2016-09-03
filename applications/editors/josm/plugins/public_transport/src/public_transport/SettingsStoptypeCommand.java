@@ -12,7 +12,7 @@ import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 
 public class SettingsStoptypeCommand extends Command {
-    private class HighwayRailway {
+    private static class HighwayRailway {
         public HighwayRailway(Node node) {
             this.node = node;
             highway = node.get("highway");

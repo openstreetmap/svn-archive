@@ -11,18 +11,18 @@ import java.util.zip.ZipInputStream;
 import org.jopendocument.io.SaxContentUnmarshaller;
 import org.jopendocument.model.OpenDocument;
 import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.tools.Utils;
 import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
-import org.xml.sax.helpers.XMLReaderFactory;
 
 public class OdsDocument extends OpenDocument {
 
     public OdsDocument(InputStream in) {
         loadFrom(in);
     }
-    
+
     private InputSource getEntryInputSource(ZipInputStream zis) throws IOException {
-        int n = -1;
+        int n;
         final byte[] buffer = new byte[4096];
         final ByteArrayOutputStream baos = new ByteArrayOutputStream();
         while ((n = zis.read(buffer, 0, buffer.length)) != -1) {
@@ -36,11 +36,11 @@ public class OdsDocument extends OpenDocument {
 
         try {
             final ZipInputStream zis = new ZipInputStream(in);
-            final XMLReader rdr = XMLReaderFactory.createXMLReader();
-            
-            ZipEntry entry = null;
+            final XMLReader rdr = Utils.newSafeSAXParser().getXMLReader();
+
+            ZipEntry entry;
             boolean contentParsed = false;
-            
+
             while (!contentParsed && (entry = zis.getNextEntry()) != null) {
                 if (entry.getName().equals("content.xml")) {
                     rdr.setContentHandler(contentHandler);
@@ -49,11 +49,11 @@ public class OdsDocument extends OpenDocument {
                     contentParsed = true;
                 }
             }
-            
-        } catch (final Exception e) {
-            e.printStackTrace();
+
+        } catch (Exception e) {
+            Main.error(e);
         }
-        
+
         init(contentHandler.getBody());
     }
 }

@@ -10,16 +10,16 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Observable;
 import java.util.Set;
 
 import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.gui.util.ChangeNotifier;
 import org.openstreetmap.josm.plugins.opendata.OdPlugin;
 import org.openstreetmap.josm.plugins.opendata.core.OdConstants;
 import org.openstreetmap.josm.plugins.opendata.core.modules.ModuleException;
 import org.openstreetmap.josm.plugins.opendata.core.modules.ModuleInformation;
 
-public class ModulePreferencesModel extends Observable {
+public class ModulePreferencesModel extends ChangeNotifier {
     private final ArrayList<ModuleInformation> availableModules = new ArrayList<>();
     private final ArrayList<ModuleInformation> displayedModules = new ArrayList<>();
     private final HashMap<ModuleInformation, Boolean> selectedModulesMap = new HashMap<>();
@@ -50,8 +50,7 @@ public class ModulePreferencesModel extends Observable {
             }
         }
         filterExpression = filter;
-        clearChanged();
-        notifyObservers();
+        fireStateChanged();
     }
 
     public void setAvailableModules(Collection<ModuleInformation> available) {
@@ -70,8 +69,7 @@ public class ModulePreferencesModel extends Observable {
                 }
             }
         }
-        clearChanged();
-        notifyObservers();
+        fireStateChanged();
     }
 
     protected void updateAvailableModule(ModuleInformation other) {
@@ -105,8 +103,7 @@ public class ModulePreferencesModel extends Observable {
                 }
             }
         }
-        clearChanged();
-        notifyObservers();
+        fireStateChanged();
     }
 
     /**

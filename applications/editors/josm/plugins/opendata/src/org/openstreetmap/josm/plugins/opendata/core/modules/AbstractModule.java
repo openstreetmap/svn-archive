@@ -105,9 +105,9 @@ public abstract class AbstractModule implements Module {
         for (Class<? extends AbstractDataSetHandler> handlerClass : handlers) {
             if (handlerClass != null) {
                 try {
-                    result.add(handlerClass.newInstance());
-                } catch (InstantiationException | IllegalAccessException t) {
-                    Main.error("Cannot instantiate "+handlerClass+" because of "+t.getClass().getName()+": "+t.getMessage());
+                    result.add(handlerClass.getConstructor().newInstance());
+                } catch (ReflectiveOperationException | IllegalArgumentException | SecurityException t) {
+                    Main.error(t, "Cannot instantiate "+handlerClass+" because of "+t.getClass().getName());
                 }
             }
         }

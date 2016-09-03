@@ -57,6 +57,7 @@ class LakewalkerAction extends JosmAction implements MouseListener {
         setEnabled(true);
     }
 
+    @Override
     public void actionPerformed(ActionEvent e) {
         if (Main.map == null || Main.map.mapView == null || active)
             return;
@@ -82,11 +83,7 @@ class LakewalkerAction extends JosmAction implements MouseListener {
                 File[] wmsCache = wmsCacheDir.listFiles();
 
                 // sort files by date (most recent first)
-                Arrays.sort(wmsCache, new Comparator<File>() {
-                    public int compare(File f1, File f2) {
-                        return (int) (f2.lastModified()-f1.lastModified());
-                    }
-                });
+                Arrays.sort(wmsCache, Comparator.comparingLong(File::lastModified));
 
                 // delete aged or oversized, keep newest. Once size/age limit was reached delete all older files
                 long folderSize = 0;
@@ -295,6 +292,7 @@ class LakewalkerAction extends JosmAction implements MouseListener {
         cancel = true;
     }
 
+    @Override
     public void mouseClicked(MouseEvent e) {
         if (active) {
             active = false;
@@ -304,15 +302,19 @@ class LakewalkerAction extends JosmAction implements MouseListener {
         }
     }
 
+    @Override
     public void mouseEntered(MouseEvent e) {
     }
 
+    @Override
     public void mouseExited(MouseEvent e) {
     }
 
+    @Override
     public void mousePressed(MouseEvent e) {
     }
 
+    @Override
     public void mouseReleased(MouseEvent e) {
     }
 }

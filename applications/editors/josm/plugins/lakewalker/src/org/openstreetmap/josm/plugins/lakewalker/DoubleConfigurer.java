@@ -11,7 +11,7 @@ public class DoubleConfigurer extends StringConfigurer {
     }
 
     public DoubleConfigurer(String key, String name) {
-        this(key, name, new Double(0));
+        this(key, name, 0d);
     }
 
     public DoubleConfigurer(String key, String name, Double val) {

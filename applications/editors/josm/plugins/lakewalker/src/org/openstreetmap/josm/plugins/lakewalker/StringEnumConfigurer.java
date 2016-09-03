@@ -49,6 +49,7 @@ public class StringEnumConfigurer extends Configurer {
             box.setMaximumSize(new Dimension(box.getMaximumSize().width, box.getPreferredSize().height));
             setValue(value);
             box.addActionListener(new ActionListener() {
+                @Override
                 public void actionPerformed(ActionEvent e) {
                     noUpdate = true;
                     setValue(box.getSelectedIndex());

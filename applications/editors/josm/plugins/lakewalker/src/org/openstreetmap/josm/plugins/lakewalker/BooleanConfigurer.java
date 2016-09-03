@@ -64,6 +64,7 @@ public class BooleanConfigurer extends Configurer {
             box = new javax.swing.JCheckBox(getName());
             box.setSelected(booleanValue().booleanValue());
             box.addItemListener(new java.awt.event.ItemListener() {
+                @Override
                 public void itemStateChanged(java.awt.event.ItemEvent e) {
                     setValue(box.isSelected());
                 }

@@ -72,7 +72,9 @@ public class LakewalkerPreferences extends DefaultTabPreferenceSetting {
         super("lakewalker.png", I18n.tr("Lakewalker Plugin Preferences"), tr("A plugin to trace water bodies on Landsat imagery."));
     }
 
+    @Override
     public void addGui(PreferenceTabbedPane gui) {
+        //CHECKSTYLE.OFF: LineLength
         maxSegsConfig.setToolTipText(tr("Maximum number of segments allowed in each generated way. Default 250."));
         maxNodesConfig.setToolTipText(tr("Maximum number of nodes to generate before bailing out (before simplifying lines). Default 50000."));
         thresholdConfig.setToolTipText(tr("Maximum gray value to accept as water (based on Landsat IR-1 data). Can be in the range 0-255. Default 90."));
@@ -87,6 +89,7 @@ public class LakewalkerPreferences extends DefaultTabPreferenceSetting {
         maxCacheSizeConfig.setToolTipText(tr("Maximum size of each cache directory in bytes. Default is 300MB"));
         maxCacheAgeConfig.setToolTipText(tr("Maximum age of each cached file in days. Default is 100"));
         sourceConfig.setToolTipText(tr("Data source text. Default is Landsat."));
+        //CHECKSTYLE.ON: LineLength
 
         /*String description =*/ tr("A plugin to trace water bodies on Landsat imagery.");
         JPanel prefPanel = gui.createPreferenceTab(this);
@@ -147,6 +150,7 @@ public class LakewalkerPreferences extends DefaultTabPreferenceSetting {
     /*
     * Save entered preference values on OK button
     */
+    @Override
     public boolean ok() {
         Main.pref.put(PREF_MAX_SEG, maxSegsConfig.getValueString());
         Main.pref.put(PREF_MAX_NODES, maxNodesConfig.getValueString());

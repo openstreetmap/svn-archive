@@ -14,7 +14,6 @@
 
     <property name="josm"                   location="../../core/dist/josm-custom.jar"/>
     <property name="josm.test.build.dir"    location="../../core/test/build"/>
-    <property name="groovy.jar"             location="../00_core_tools/groovy-all-2.4.7.jar"/>
     <property name="error_prone_ant.jar"    location="../00_core_tools/error_prone_ant-2.0.12.jar"/>
     <property name="checkstyle.jar"         location="../00_core_tools/checkstyle/checkstyle-7.1-all.jar"/>
     <property name="findbugs-ant.jar"       location="../00_core_tools/findbugs/findbugs-ant.jar"/>
@@ -437,7 +436,6 @@
         <pathelement path="${josm.test.build.dir}/unit"/>
         <pathelement path="${josm}"/>
         <pathelement path="${plugin.jar}"/>
-        <pathelement path="${groovy.jar}"/>
         <pathelement path="${annotations.jar}"/>
     </path>
     <macrodef name="init-test-preferences">
@@ -464,18 +462,15 @@
         <delete dir="../00_core_test_config/unit-josm.home/cache" failonerror="false"/>
     </target>
     <target name="test-compile" depends="test-init,dist" if="test.present">
-        <taskdef name="groovyc" classname="org.codehaus.groovy.ant.Groovyc" classpath="${groovy.jar}"/>
         <sequential>
-            <groovyc srcdir="${plugin.test.dir}/unit" destdir="${plugin.test.dir}/build/unit" encoding="UTF-8">
+            <javac debug="on" srcdir="${plugin.test.dir}/unit" destdir="${plugin.test.dir}/build/unit" encoding="UTF-8">
                 <classpath>
                     <fileset refid="plugin.requires.jars"/>
                     <path refid="test.classpath"/>
                 </classpath>
-                <javac debug="on" encoding="UTF-8">
-                    <compilerarg value="-Xlint:all"/>
-                    <compilerarg value="-Xlint:-serial"/>
-                </javac>
-            </groovyc>
+				<compilerarg value="-Xlint:all"/>
+				<compilerarg value="-Xlint:-serial"/>
+            </javac>
         </sequential>
     </target>
     <target name="test" depends="dist, test-clean, test-compile" if="test.present"

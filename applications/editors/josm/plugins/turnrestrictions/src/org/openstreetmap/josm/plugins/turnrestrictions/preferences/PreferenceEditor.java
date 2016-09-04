@@ -119,7 +119,7 @@ public class PreferenceEditor extends DefaultTabPreferenceSetting {
     /**
      * Launches an external browser with the sponsors home page
      */
-    class SkobblerUrlLauncher extends MouseAdapter implements HyperlinkListener {
+    static class SkobblerUrlLauncher extends MouseAdapter implements HyperlinkListener {
         protected void launchBrowser() {
             OpenBrowser.displayUrl("http://www.skobbler.de");
         }

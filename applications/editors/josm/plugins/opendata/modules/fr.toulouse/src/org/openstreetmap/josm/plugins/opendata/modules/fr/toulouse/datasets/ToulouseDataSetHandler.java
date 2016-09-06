@@ -44,7 +44,8 @@ public abstract class ToulouseDataSetHandler extends FrenchDataSetHandler implem
     public static final DataSetCategory CAT_CITOYENNETE = new DataSetCategory("Citoyenneté", "presets/townhall.png");
     public static final DataSetCategory CAT_CULTURE = new DataSetCategory("Culture", "presets/arts_centre.png");
     public static final DataSetCategory CAT_ENFANCE = new DataSetCategory("Enfance", "presets/kindergarten.png");
-    public static final DataSetCategory CAT_ENVIRONNEMENT = new DataSetCategory("Environnement", "styles/standard/service/recycling/recycling_container.svg");
+    public static final DataSetCategory CAT_ENVIRONNEMENT = new DataSetCategory("Environnement",
+            "styles/standard/service/recycling/recycling_container.svg");
     public static final DataSetCategory CAT_PATRIMOINE = new DataSetCategory("Patrimoine", "presets/ruins.png");
     public static final DataSetCategory CAT_SERVICES = new DataSetCategory("Services", "styles/standard/vehicle/services.png");
     public static final DataSetCategory CAT_SPORT = new DataSetCategory("Sport", "styles/standard/sport/soccer.png");
@@ -84,7 +85,7 @@ public abstract class ToulouseDataSetHandler extends FrenchDataSetHandler implem
         this(portalId, false, relevantTags);
     }*/
 
-    private final void init(int portalId) {
+    private void init(int portalId) {
         try {
             setLicense(new ToulouseLicense());
             if (portalId > 0) {
@@ -140,16 +141,16 @@ public abstract class ToulouseDataSetHandler extends FrenchDataSetHandler implem
         @Override
         public void actionPerformed(ActionEvent e) {
             final String baseName = OdPlugin.getInstance().getDialog().getDataLayer().getName();
-            final DataSet baseDs = getCurrentDataSet();
+            final DataSet baseDs = Main.getLayerManager().getEditDataSet();
             for (OsmPrimitive boundary : getBoundaries()) {
                 DataSet data = new DataSet();
                 for (OsmPrimitive p : NodeWayUtils.selectAllInside(Collections.singleton(boundary), baseDs)) {
                     if (p instanceof Node) {
-                        data.addPrimitive(new Node((Node)p));
+                        data.addPrimitive(new Node((Node) p));
                     } else if (p instanceof Way) {
-                        data.addPrimitive(new Way((Way)p));
+                        data.addPrimitive(new Way((Way) p));
                     } else if (p instanceof Relation) {
-                        data.addPrimitive(new Relation((Relation)p));
+                        data.addPrimitive(new Relation((Relation) p));
                     }
                 }
                 if (!data.allPrimitives().isEmpty()) {
@@ -164,28 +165,36 @@ public abstract class ToulouseDataSetHandler extends FrenchDataSetHandler implem
                 }
             }
         }
+
         @Override
         public void dataChanged(DataChangedEvent event) {
             setEnabled(!getBoundaries().isEmpty());
         }
+
         @Override
         public void primitivesAdded(PrimitivesAddedEvent event) {
         }
+
         @Override
         public void primitivesRemoved(PrimitivesRemovedEvent event) {
         }
+
         @Override
         public void tagsChanged(TagsChangedEvent event) {
         }
+
         @Override
         public void nodeMoved(NodeMovedEvent event) {
         }
+
         @Override
         public void wayNodesChanged(WayNodesChangedEvent event) {
         }
+
         @Override
         public void relationMembersChanged(RelationMembersChangedEvent event) {
         }
+
         @Override
         public void otherDatasetChange(AbstractDatasetChangedEvent event) {
         }
@@ -195,6 +204,7 @@ public abstract class ToulouseDataSetHandler extends FrenchDataSetHandler implem
         public SplitByMunicipality() {
             super(marktr("Split by municipality"), tr("Split this data by municipality (admin_level=8)."));
         }
+
         @Override
         protected Collection<Relation> getBoundaries() {
             return ToulouseModule.getMunicipalities();
@@ -205,6 +215,7 @@ public abstract class ToulouseDataSetHandler extends FrenchDataSetHandler implem
         public SplitBySector() {
             super(marktr("Split by sector"), tr("Split this data by sector (admin_level=10)."));
         }
+
         @Override
         protected Collection<Relation> getBoundaries() {
             return ToulouseModule.getSectors();
@@ -215,6 +226,7 @@ public abstract class ToulouseDataSetHandler extends FrenchDataSetHandler implem
         public SplitByNeighbourhood() {
             super(marktr("Split by neighbourhood"), tr("Split this data by neighbourhood (admin_level=11)."));
         }
+
         @Override
         protected Collection<Relation> getBoundaries() {
             return ToulouseModule.getNeighbourhoods();

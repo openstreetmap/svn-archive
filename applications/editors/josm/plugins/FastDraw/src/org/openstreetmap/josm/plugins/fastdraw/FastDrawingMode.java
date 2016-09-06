@@ -161,10 +161,10 @@ class FastDrawingMode extends MapMode implements MapViewPaintable, KeyPressRelea
         Point p1, p2;
         LatLon pp1, pp2;
         p1 = line.getPoint(pts.get(0));
-        g.setColor(settings.COLOR_FIXED);
+        g.setColor(settings.COLOR_FIXED.get());
         g.fillOval(p1.x - bigDotSize/2, p1.y - bigDotSize/2, bigDotSize, bigDotSize);
         Color lineColor, initLineColor;
-        initLineColor = line.wasSimplified() ? settings.COLOR_SIMPLIFIED : settings.COLOR_NORMAL;
+        initLineColor = line.wasSimplified() ? settings.COLOR_SIMPLIFIED.get() : settings.COLOR_NORMAL.get();
         lineColor = initLineColor;
         int rp, dp;
         dp = line.wasSimplified() ? settings.bigDotSize : settings.dotSize; rp = dp/2;
@@ -179,10 +179,10 @@ class FastDrawingMode extends MapMode implements MapViewPaintable, KeyPressRelea
                 pp2 = it2.next();
                 p2 = line.getPoint(pp2);
                 if (shift && highlightedFragmentStart == pp1 && nearestPointIndex < 0) {
-                    lineColor = settings.COLOR_SELECTEDFRAGMENT;
+                    lineColor = settings.COLOR_SELECTEDFRAGMENT.get();
                 }
                 if (!shift && line.isLastPoint(i)) {
-                    lineColor = settings.COLOR_EDITEDFRAGMENT;
+                    lineColor = settings.COLOR_EDITEDFRAGMENT.get();
                 }
                 g.setColor(lineColor);
                 g.drawLine(p1.x, p1.y, p2.x, p2.y);
@@ -197,21 +197,21 @@ class FastDrawingMode extends MapMode implements MapViewPaintable, KeyPressRelea
                         if (shift) {
                             // highlight node to delete
                             g.setStroke(settings.deleteStroke);
-                            g.setColor(settings.COLOR_DELETE);
+                            g.setColor(settings.COLOR_DELETE.get());
                             g.drawLine(p2.x - 5, p2.y - 5, p2.x + 5, p2.y + 5);
                             g.drawLine(p2.x - 5, p2.y + 5, p2.x + 5, p2.y - 5);
                             g.setStroke(settings.normalStroke);
                         } else if (ctrl) {
                             // highlight node to toggle fixation
                             g.setStroke(settings.deleteStroke);
-                            g.setColor(line.isFixed(pp2) ? settings.COLOR_NORMAL : settings.COLOR_FIXED);
+                            g.setColor(line.isFixed(pp2) ? settings.COLOR_NORMAL.get() : settings.COLOR_FIXED.get());
                             g.fillOval(p2.x - bigDotSize/2-2, p2.y - bigDotSize/2-2, bigDotSize+4, bigDotSize+4);
                             g.setStroke(settings.normalStroke);
                         }
                     }
                 }
             }
-            g.setColor(settings.COLOR_FIXED);
+            g.setColor(settings.COLOR_FIXED.get());
             for (Point p: fixedPoints) {
                 g.fillOval(p.x - bigDotSize/2, p.y - bigDotSize/2, bigDotSize, bigDotSize);
             }

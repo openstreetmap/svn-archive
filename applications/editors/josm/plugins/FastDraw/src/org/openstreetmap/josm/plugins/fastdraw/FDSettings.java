@@ -8,15 +8,16 @@ import java.awt.Stroke;
 import java.io.IOException;
 
 import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.data.preferences.ColorProperty;
 import org.openstreetmap.josm.gui.util.GuiHelper;
 
 public class FDSettings {
-    public Color COLOR_FIXED;
-    public Color COLOR_NORMAL;
-    public Color COLOR_DELETE;
-    public Color COLOR_SELECTEDFRAGMENT;
-    public Color COLOR_EDITEDFRAGMENT;
-    public Color COLOR_SIMPLIFIED;
+    public ColorProperty COLOR_FIXED = new ColorProperty("fastdraw.color.delete", Color.red);
+    public ColorProperty COLOR_NORMAL = new ColorProperty("fastdraw.color.edit", Color.orange);
+    public ColorProperty COLOR_DELETE = new ColorProperty("fastdraw.color.fixed", Color.green);
+    public ColorProperty COLOR_SELECTEDFRAGMENT = new ColorProperty("fastdraw.color.normal", Color.red);
+    public ColorProperty COLOR_EDITEDFRAGMENT = new ColorProperty("fastdraw.color.select", Color.blue);
+    public ColorProperty COLOR_SIMPLIFIED = new ColorProperty("fastdraw.color.simplified", Color.orange);
 
     public double maxDist;
     public double epsilonMult;
@@ -50,13 +51,6 @@ public class FDSettings {
     public int bigDotSize;
 
     public void loadPrefs() {
-        COLOR_DELETE = Main.pref.getColor("fastdraw.color.delete", Color.red);
-        COLOR_EDITEDFRAGMENT = Main.pref.getColor("fastdraw.color.edit", Color.orange);
-        COLOR_FIXED = Main.pref.getColor("fastdraw.color.fixed", Color.green);
-        COLOR_NORMAL = Main.pref.getColor("fastdraw.color.normal", Color.red);
-        COLOR_SELECTEDFRAGMENT = Main.pref.getColor("fastdraw.color.select", Color.blue);
-        COLOR_SIMPLIFIED = Main.pref.getColor("fastdraw.color.simplified", Color.orange);
-
         normalStroke = GuiHelper.getCustomizedStroke(Main.pref.get("fastdraw.stroke.normal", "2"));
         deleteStroke = GuiHelper.getCustomizedStroke(Main.pref.get("fastdraw.stroke.delete", "3"));
         simplifiedStroke = GuiHelper.getCustomizedStroke(Main.pref.get("fastdraw.stroke.simplified", "2"));

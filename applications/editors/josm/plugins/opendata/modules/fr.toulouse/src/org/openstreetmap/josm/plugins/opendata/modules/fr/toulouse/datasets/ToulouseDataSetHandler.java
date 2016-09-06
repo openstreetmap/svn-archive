@@ -161,7 +161,7 @@ public abstract class ToulouseDataSetHandler extends FrenchDataSetHandler implem
                     if (name == null || name.isEmpty()) {
                         name = boundary.get("description");
                     }
-                    Main.main.addLayer(new OdDataLayer(data, baseName+"/"+name, null, ToulouseDataSetHandler.this));
+                    Main.getLayerManager().addLayer(new OdDataLayer(data, baseName+"/"+name, null, ToulouseDataSetHandler.this));
                 }
             }
         }

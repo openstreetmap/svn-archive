@@ -74,8 +74,8 @@ fr.toulouse.jar;http://svn.openstreetmap.org/applications/editors/josm/plugins/o
 	Module-Description: Toulouse
 	Author: Don-vip
 	Module-Icon: images/data.fr.toulouse_24.png
-	Module-Version: 32932
+	Module-Version: 32934
 	Created-By: 1.8.0_102-b14 (Oracle Corporation)
 	Manifest-Version: 1.0
-	Module-Date: 2016-09-06T23:01:56.967270Z
+	Module-Date: 2016-09-06T23:19:40.267095Z
 	Module-Link: https://wiki.openstreetmap.org/wiki/Toulouse/ToulouseMetropoleData

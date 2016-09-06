@@ -93,7 +93,6 @@ class FastDrawingMode extends MapMode implements MapViewPaintable, KeyPressRelea
 
     @Override
     public void enterMode() {
-        if (!isEnabled()) return;
         super.enterMode();
         lineWasSaved = false;
         settings = new FDSettings();

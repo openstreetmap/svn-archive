@@ -30,6 +30,7 @@ import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.data.preferences.ColorProperty;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.layer.Layer;
@@ -130,7 +131,7 @@ public class DrawBuildingAction extends MapMode implements MapViewPaintable, Sel
             Main.map.selectSelectTool(false);
             return;
         }
-        selectedColor = Main.pref.getColor(marktr("selected"), selectedColor);
+        selectedColor = new ColorProperty(marktr("selected"), selectedColor).get();
         currCursor = cursorCrosshair;
         Main.map.mapView.addMouseListener(this);
         Main.map.mapView.addMouseMotionListener(this);

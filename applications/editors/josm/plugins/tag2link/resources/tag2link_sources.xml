@@ -34,6 +34,10 @@
             <link name="Send Email" href="mailto:%v%" />
         </rule>
         <rule>
+            <condition k="source" v="(http:|https:).*"/>
+            <link name="View website" href="%v%" />
+        </rule>
+        <rule>
             <condition k="image" v="(http:|https:).*"/>
             <link name="View image" href="%v%" />
         </rule>

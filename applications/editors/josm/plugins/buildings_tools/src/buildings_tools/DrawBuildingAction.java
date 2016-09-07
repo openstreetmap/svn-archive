@@ -198,7 +198,7 @@ public class DrawBuildingAction extends MapMode implements MapViewPaintable, Sel
         if (ctrl) {
             n = null;
         } else {
-            n = Main.map.mapView.getNearestNode(mousePos, OsmPrimitive.isUsablePredicate);
+            n = Main.map.mapView.getNearestNode(mousePos, OsmPrimitive::isUsable);
         }
         if (n == null) {
             return latlon2eastNorth(Main.map.mapView.getLatLon(mousePos.x, mousePos.y));
@@ -275,7 +275,7 @@ public class DrawBuildingAction extends MapMode implements MapViewPaintable, Sel
         mousePos = e.getPoint();
         drawStartPos = mousePos;
 
-        Node n = Main.map.mapView.getNearestNode(mousePos, OsmPrimitive.isUsablePredicate);
+        Node n = Main.map.mapView.getNearestNode(mousePos, OsmPrimitive::isUsable);
         if (n == null) {
             building.setBase(latlon2eastNorth(Main.map.mapView.getLatLon(mousePos.x, mousePos.y)));
         } else {
@@ -361,7 +361,7 @@ public class DrawBuildingAction extends MapMode implements MapViewPaintable, Sel
             return;
         Node n = null;
         if (!ctrl)
-            n = Main.map.mapView.getNearestNode(mousePos, OsmPrimitive.isUsablePredicate);
+            n = Main.map.mapView.getNearestNode(mousePos, OsmPrimitive::isUsable);
         if (n != null) {
             setCursor(cursorJoinNode);
         } else {

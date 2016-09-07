@@ -18,25 +18,24 @@ package org.openstreetmap.josm.plugins.tag2link.action;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.event.ActionEvent;
-import java.io.FileOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStreamWriter;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.plugins.tag2link.Tag2LinkConstants;
 import org.openstreetmap.josm.plugins.tag2link.data.Link;
 import org.openstreetmap.josm.plugins.tag2link.data.LinkPost;
+import org.openstreetmap.josm.tools.HttpClient;
 import org.openstreetmap.josm.tools.OpenBrowser;
 
 /**
  * Action allowing to open a general link.
  * @author Don-vip
- *
  */
 @SuppressWarnings("serial")
 public class OpenLinkAction extends JosmAction implements Tag2LinkConstants {
@@ -57,13 +56,6 @@ public class OpenLinkAction extends JosmAction implements Tag2LinkConstants {
         if (link instanceof LinkPost) {
             try {
                 LinkPost lp = (LinkPost) link;
-                System.out.println("Sending POST request to "+lp.url);
-                HttpURLConnection conn = (HttpURLConnection) new URL(lp.url).openConnection();
-                conn.setDoOutput(true);
-                conn.setRequestMethod("POST");
-                for (String header : lp.headers.keySet()) {
-                    conn.setRequestProperty(header, lp.headers.get(header));
-                }
                 String data = "";
                 for (String param : lp.params.keySet()) {
                     if (!data.isEmpty()) {
@@ -71,19 +63,11 @@ public class OpenLinkAction extends JosmAction implements Tag2LinkConstants {
                     }
                     data += param+"="+lp.params.get(param);
                 }
-                try (OutputStreamWriter osw = new OutputStreamWriter(conn.getOutputStream())) {
-                    osw.write(data);
-                    osw.flush();
-                }
                 
                 String filename = "output.pdf";// FIXME: should work for PDF files only (not even tested)
-                try (FileOutputStream fos = new FileOutputStream(filename);
-                     InputStream is = conn.getInputStream()) {
-                    byte[] buffer = new byte[2048];
-                    int n = -1;
-                    while ((n = is.read(buffer)) > -1) {
-                        fos.write(buffer, 0, n);
-                    }
+                try (InputStream is = HttpClient.create(new URL(lp.url), "POST").setHeaders(lp.headers)
+                        .setRequestBody(data.getBytes(StandardCharsets.UTF_8)).connect().getContent()) {
+                    Files.copy(is, new File(filename).toPath());
                 }
                 
                 Main.info("Opening "+filename);
@@ -91,9 +75,6 @@ public class OpenLinkAction extends JosmAction implements Tag2LinkConstants {
                 if (result != null) {
                     Main.error(result);
                 }
-                
-            } catch (MalformedURLException ex) {
-                Main.error(ex);
             } catch (IOException ex) {
                 Main.error(ex);
             }

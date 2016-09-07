@@ -176,9 +176,9 @@ public class MeasurementDialog extends ToggleDialog implements SelectionChangedL
         double radius = 0.0;
         Node lastNode = null;
         // Don't mix up way and nodes computation (fix #6872). Priority given to ways
-        ways = new SubclassFilteredCollection<>(newSelection, OsmPrimitive.wayPredicate);
+        ways = new SubclassFilteredCollection<>(newSelection, Way.class::isInstance);
         if (ways.isEmpty()) {
-            nodes = new SubclassFilteredCollection<>(newSelection, OsmPrimitive.nodePredicate);
+            nodes = new SubclassFilteredCollection<>(newSelection, Node.class::isInstance);
             for (Node n : nodes) {
                 if (n.getCoor() != null) {
                     if (lastNode == null) {

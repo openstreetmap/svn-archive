@@ -466,7 +466,6 @@ class FastDrawingMode extends MapMode implements MapViewPaintable, KeyPressRelea
                     if (!answer) break;
                 }
                 newDrawing(); // stop drawing
-                exitMode();
                 Main.map.selectSelectTool(false);
             }
             break;
@@ -600,7 +599,6 @@ class FastDrawingMode extends MapMode implements MapViewPaintable, KeyPressRelea
         newDrawing(); // stop drawing
         if (autoExit) {
             // Select this way and switch drawing mode off
-            exitMode();
             getLayerManager().getEditDataSet().setSelected(w);
             Main.map.selectSelectTool(false);
         }

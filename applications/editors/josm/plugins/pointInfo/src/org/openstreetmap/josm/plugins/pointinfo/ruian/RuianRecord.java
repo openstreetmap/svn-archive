@@ -670,59 +670,59 @@ class RuianRecord {
         r.append("<html><body bgcolor=\"white\" color=\"black\" ><table><tr><td>");
         r.append("<br/>");
         if (m_objekt_ruian_id > 0) {
-            r.append("<i><u>Informace o budově</u></i><br/>");
-            r.append("<b>RUIAN id: </b>"+ m_objekt_ruian_id +"&nbsp;&nbsp;<a href="+ url_stavebni_objekt + m_objekt_ruian_id +">"
-                    + icon_ext_link + "</a>");
-            r.append("&nbsp;&nbsp;<a href=file://tags.copy/building>"+ icon_copy_tags +"</a>");
-            r.append("&nbsp;&nbsp;<a href=" + url_ruian_error + m_objekt_ruian_id + ">"+ icon_ruian_error +"</a><br/>");
+            r.append("<i><u>Informace o budově</u></i><br/>")
+             .append("<b>RUIAN id: </b>"+ m_objekt_ruian_id +"&nbsp;&nbsp;<a href="+ url_stavebni_objekt + m_objekt_ruian_id +">"
+                    + icon_ext_link + "</a>")
+             .append("&nbsp;&nbsp;<a href=file://tags.copy/building>"+ icon_copy_tags +"</a>")
+             .append("&nbsp;&nbsp;<a href=" + url_ruian_error + m_objekt_ruian_id + ">"+ icon_ruian_error +"</a><br/>");
             if (m_adresni_mista.size() == 0) r.append("<b>Budova: </b> bez č.p./č.e<br/>");
             else if (m_adresni_mista.get(0).getCisloTyp().equals("Číslo popisné")) r.append("<b>Budova: </b>s číslem popisným<br/>");
             else r.append("<b>Budova: </b>s číslem evidenčním<br/>");
             if (m_objekt_podlazi > 0) r.append("<b>Počet podlaží: </b>" + m_objekt_podlazi + "<br/>");
             if (m_objekt_byty > 0) r.append("<b>Počet bytů: </b>" + m_objekt_byty + "<br/>");
-            r.append("<b>Způsob využití: </b>" + m_objekt_zpusob_vyuziti + "<br/>");
-            r.append("<b>Datum dokončení: </b>" + m_objekt_dokonceni + "<br/>");
-            r.append("<b>Platí od: </b>" + m_objekt_plati_od + "<br/>");
+            r.append("<b>Způsob využití: </b>" + m_objekt_zpusob_vyuziti + "<br/>")
+             .append("<b>Datum dokončení: </b>" + m_objekt_dokonceni + "<br/>")
+             .append("<b>Platí od: </b>" + m_objekt_plati_od + "<br/>");
 
             if (m_adresni_mista.size() > 1) {
                 r.append("<i><u>Informace o adrese</u></i><br/>");
                 // More address places
                 int i = 0;
-                r.append("<br/>");
-                r.append("<b>" + m_adresni_mista.get(i).getCisloTyp() + "</b> (více adres)<b>: </b>"
-                        + m_adresni_mista.get(i).getCisloDomovni() + "<br/>");
-                r.append("<b>Část obce: </b>" + m_adresni_mista.get(i).getCastObce());
-                r.append("&nbsp;&nbsp;<a href="+ url_mistni_cast + m_adresni_mista.get(i).getCastObceID() +">" + icon_ext_link + "</a><br/>");
+                r.append("<br/>")
+                 .append("<b>" + m_adresni_mista.get(i).getCisloTyp() + "</b> (více adres)<b>: </b>"
+                        + m_adresni_mista.get(i).getCisloDomovni() + "<br/>")
+                 .append("<b>Část obce: </b>" + m_adresni_mista.get(i).getCastObce())
+                 .append("&nbsp;&nbsp;<a href="+ url_mistni_cast + m_adresni_mista.get(i).getCastObceID() +">" + icon_ext_link + "</a><br/>");
                 if (m_adresni_mista.get(i).getMestskaCast().length() > 0) {
-                    r.append("<b>Městská část: </b>" + m_adresni_mista.get(i).getMestskaCast());
-                    r.append("&nbsp;&nbsp;<a href="+ url_mestska_cast + m_adresni_mista.get(i).getMestskaCastID() +">"
+                    r.append("<b>Městská část: </b>" + m_adresni_mista.get(i).getMestskaCast())
+                     .append("&nbsp;&nbsp;<a href="+ url_mestska_cast + m_adresni_mista.get(i).getMestskaCastID() +">"
                             + icon_ext_link + "</a><br/>");
                 }
-                r.append("<b>Obec: </b>" + m_adresni_mista.get(i).getObec());
-                r.append("&nbsp;&nbsp;<a href="+ url_obec + m_adresni_mista.get(i).getObecID() +">" + icon_ext_link + "</a><br/>");
-                r.append("<b>Okres: </b>" + m_adresni_mista.get(i).getOkres());
-                r.append("&nbsp;&nbsp;<a href="+ url_okres + m_adresni_mista.get(i).getOkresID() +">" + icon_ext_link + "</a><br/>");
-                r.append("<b>Kraj: </b>" + m_adresni_mista.get(i).getKraj());
-                r.append("&nbsp;&nbsp;<a href="+ url_kraj + m_adresni_mista.get(i).getKrajID() +">" + icon_ext_link + "</a><br/>");
+                r.append("<b>Obec: </b>" + m_adresni_mista.get(i).getObec())
+                 .append("&nbsp;&nbsp;<a href="+ url_obec + m_adresni_mista.get(i).getObecID() +">" + icon_ext_link + "</a><br/>")
+                 .append("<b>Okres: </b>" + m_adresni_mista.get(i).getOkres())
+                 .append("&nbsp;&nbsp;<a href="+ url_okres + m_adresni_mista.get(i).getOkresID() +">" + icon_ext_link + "</a><br/>")
+                 .append("<b>Kraj: </b>" + m_adresni_mista.get(i).getKraj())
+                 .append("&nbsp;&nbsp;<a href="+ url_kraj + m_adresni_mista.get(i).getKrajID() +">" + icon_ext_link + "</a><br/>");
 
             } else if (m_adresni_mista.size() == 1
                     && (m_adresni_mista.get(0).getCisloDomovni() == null || m_adresni_mista.get(0).getCisloDomovni().isEmpty())) {
                 // Without building number
                 int i = 0;
-                r.append("<br/>");
-                r.append("<i><u>Informace o adrese</u></i><br/>");
-                r.append("<b>Budova: </b>" + m_adresni_mista.get(i).getCisloTyp() + "<br/>");
+                r.append("<br/>")
+                 .append("<i><u>Informace o adrese</u></i><br/>")
+                 .append("<b>Budova: </b>" + m_adresni_mista.get(i).getCisloTyp() + "<br/>");
                 if (m_adresni_mista.get(i).getMestskaCast().length() > 0) {
-                    r.append("<b>Městská část: </b>" + m_adresni_mista.get(i).getMestskaCast());
-                    r.append("&nbsp;&nbsp;<a href="+ url_mestska_cast + m_adresni_mista.get(i).getMestskaCastID() +">"
+                    r.append("<b>Městská část: </b>" + m_adresni_mista.get(i).getMestskaCast())
+                     .append("&nbsp;&nbsp;<a href="+ url_mestska_cast + m_adresni_mista.get(i).getMestskaCastID() +">"
                             + icon_ext_link + "</a><br/>");
                 }
-                r.append("<b>Obec: </b>" + m_adresni_mista.get(i).getObec());
-                r.append("&nbsp;&nbsp;<a href="+ url_obec + m_adresni_mista.get(i).getObecID() +">" + icon_ext_link + "</a><br/>");
-                r.append("<b>Okres: </b>" + m_adresni_mista.get(i).getOkres());
-                r.append("&nbsp;&nbsp;<a href="+ url_okres + m_adresni_mista.get(i).getOkresID() +">" + icon_ext_link + "</a><br/>");
-                r.append("<b>Kraj: </b>" + m_adresni_mista.get(i).getKraj());
-                r.append("&nbsp;&nbsp;<a href="+ url_kraj + m_adresni_mista.get(i).getKrajID() +">" + icon_ext_link + "</a><br/>");
+                r.append("<b>Obec: </b>" + m_adresni_mista.get(i).getObec())
+                 .append("&nbsp;&nbsp;<a href="+ url_obec + m_adresni_mista.get(i).getObecID() +">" + icon_ext_link + "</a><br/>")
+                 .append("<b>Okres: </b>" + m_adresni_mista.get(i).getOkres())
+                 .append("&nbsp;&nbsp;<a href="+ url_okres + m_adresni_mista.get(i).getOkresID() +">" + icon_ext_link + "</a><br/>")
+                 .append("<b>Kraj: </b>" + m_adresni_mista.get(i).getKraj())
+                 .append("&nbsp;&nbsp;<a href="+ url_kraj + m_adresni_mista.get(i).getKrajID() +">" + icon_ext_link + "</a><br/>");
 
             } else if (m_adresni_mista.size() == 1) {
                 // Only one address place
@@ -733,34 +733,34 @@ class RuianRecord {
                     x = "/" + m_adresni_mista.get(i).getCisloOrientacni();
                     x_name = "/orientační";
                 }
-                r.append("<br/>");
-                r.append("<i><u>Informace o adrese</u></i><br/>");
-                r.append("<b>RUIAN id: </b>"+ m_adresni_mista.get(i).getRuianID() +"&nbsp;&nbsp;<a href="+ url_adresni_misto
-                        + m_adresni_mista.get(i).getRuianID() +">" + icon_ext_link + "</a>");
-                r.append("&nbsp;&nbsp;<a href=file://tags.copy/address:"+i+">"+ icon_copy_tags +"</a>");
-                r.append("&nbsp;&nbsp;<a href=file://tags.create/address:"+i+">"+ icon_create_addr +"</a>");
-                r.append("&nbsp;&nbsp;<a href=file://tags.create-on-place/address:"+i+">"+ icon_create_addr_ruian +"</a><br/>");
-                r.append("<b>" + m_adresni_mista.get(i).getCisloTyp() + x_name + ": </b>" + m_adresni_mista.get(i).getCisloDomovni() + x);
-                r.append("<br/>");
+                r.append("<br/>")
+                 .append("<i><u>Informace o adrese</u></i><br/>")
+                 .append("<b>RUIAN id: </b>"+ m_adresni_mista.get(i).getRuianID() +"&nbsp;&nbsp;<a href="+ url_adresni_misto
+                        + m_adresni_mista.get(i).getRuianID() +">" + icon_ext_link + "</a>")
+                 .append("&nbsp;&nbsp;<a href=file://tags.copy/address:"+i+">"+ icon_copy_tags +"</a>")
+                 .append("&nbsp;&nbsp;<a href=file://tags.create/address:"+i+">"+ icon_create_addr +"</a>")
+                 .append("&nbsp;&nbsp;<a href=file://tags.create-on-place/address:"+i+">"+ icon_create_addr_ruian +"</a><br/>")
+                 .append("<b>" + m_adresni_mista.get(i).getCisloTyp() + x_name + ": </b>" + m_adresni_mista.get(i).getCisloDomovni() + x)
+                 .append("<br/>");
                 if (!m_adresni_mista.get(i).getUlice().isEmpty()) {
-                    r.append("<b>Ulice: </b>" + m_adresni_mista.get(i).getUlice());
-                    r.append("&nbsp;&nbsp;<a href="+ url_ulice + m_adresni_mista.get(i).getUliceID() +">" + icon_ext_link + "</a><br/>");
+                    r.append("<b>Ulice: </b>" + m_adresni_mista.get(i).getUlice())
+                     .append("&nbsp;&nbsp;<a href="+ url_ulice + m_adresni_mista.get(i).getUliceID() +">" + icon_ext_link + "</a><br/>");
                 }
-                r.append("<b>Část obce: </b>" + m_adresni_mista.get(i).getCastObce());
-                r.append("&nbsp;&nbsp;<a href="+ url_mistni_cast + m_adresni_mista.get(i).getCastObceID() +">" + icon_ext_link + "</a><br/>");
+                r.append("<b>Část obce: </b>" + m_adresni_mista.get(i).getCastObce())
+                 .append("&nbsp;&nbsp;<a href="+ url_mistni_cast + m_adresni_mista.get(i).getCastObceID() +">" + icon_ext_link + "</a><br/>");
                 if (m_adresni_mista.get(i).getMestskaCast().length() > 0) {
-                    r.append("<b>Městská část: </b>" + m_adresni_mista.get(i).getMestskaCast());
-                    r.append("&nbsp;&nbsp;<a href="+ url_mestska_cast + m_adresni_mista.get(i).getMestskaCastID() +">"
+                    r.append("<b>Městská část: </b>" + m_adresni_mista.get(i).getMestskaCast())
+                     .append("&nbsp;&nbsp;<a href="+ url_mestska_cast + m_adresni_mista.get(i).getMestskaCastID() +">"
                             + icon_ext_link + "</a><br/>");
                 }
-                r.append("<b>Obec: </b>" + m_adresni_mista.get(i).getObec());
-                r.append("&nbsp;&nbsp;<a href="+ url_obec + m_adresni_mista.get(i).getObecID() +">" + icon_ext_link + "</a><br/>");
-                r.append("<b>Okres: </b>" + m_adresni_mista.get(i).getOkres());
-                r.append("&nbsp;&nbsp;<a href="+ url_okres + m_adresni_mista.get(i).getOkresID() +">" + icon_ext_link + "</a><br/>");
-                r.append("<b>Kraj: </b>" + m_adresni_mista.get(i).getKraj());
-                r.append("&nbsp;&nbsp;<a href="+ url_kraj + m_adresni_mista.get(i).getKrajID() +">" + icon_ext_link + "</a><br/>");
-                r.append("<b>PSČ: </b>" + m_adresni_mista.get(i).getPsc());
-                r.append("&nbsp;&nbsp;<a href="+ url_cpost + m_adresni_mista.get(i).getPsc() +">" + icon_ext_link + "</a><br/>");
+                r.append("<b>Obec: </b>" + m_adresni_mista.get(i).getObec())
+                 .append("&nbsp;&nbsp;<a href="+ url_obec + m_adresni_mista.get(i).getObecID() +">" + icon_ext_link + "</a><br/>")
+                 .append("<b>Okres: </b>" + m_adresni_mista.get(i).getOkres())
+                 .append("&nbsp;&nbsp;<a href="+ url_okres + m_adresni_mista.get(i).getOkresID() +">" + icon_ext_link + "</a><br/>")
+                 .append("<b>Kraj: </b>" + m_adresni_mista.get(i).getKraj())
+                 .append("&nbsp;&nbsp;<a href="+ url_kraj + m_adresni_mista.get(i).getKrajID() +">" + icon_ext_link + "</a><br/>")
+                 .append("<b>PSČ: </b>" + m_adresni_mista.get(i).getPsc())
+                 .append("&nbsp;&nbsp;<a href="+ url_cpost + m_adresni_mista.get(i).getPsc() +">" + icon_ext_link + "</a><br/>");
 
             }
             r.append("<br/>");
@@ -768,17 +768,17 @@ class RuianRecord {
 
         // Reported errors
         if (m_objekt_ruian_id > 0 && !m_err_user.isEmpty()) {
-            r.append("<i><u>Nahlášený problém</u></i>");
-            r.append("&nbsp;&nbsp;<a href=" + url_ruian_error + m_objekt_ruian_id + ">"+ icon_ext_link +"</a><br/>");
-            r.append("<b>Nahlásil: </b>" + m_err_user);
-            r.append("<br/>");
-            r.append("<b>Dne: </b>" + m_err_date);
-            r.append("<br/>");
-            r.append("<b>Typ problému: </b>" + m_err_type);
-            r.append("<br/>");
+            r.append("<i><u>Nahlášený problém</u></i>")
+             .append("&nbsp;&nbsp;<a href=" + url_ruian_error + m_objekt_ruian_id + ">"+ icon_ext_link +"</a><br/>")
+             .append("<b>Nahlásil: </b>" + m_err_user)
+             .append("<br/>")
+             .append("<b>Dne: </b>" + m_err_date)
+             .append("<br/>")
+             .append("<b>Typ problému: </b>" + m_err_type)
+             .append("<br/>");
             if (!m_err_note.isEmpty()) {
-                r.append("<b>Poznámka: </b>" + m_err_note);
-                r.append("<br/>");
+                r.append("<b>Poznámka: </b>" + m_err_note)
+                 .append("<br/>");
             }
             r.append("<br/>");
         }
@@ -795,55 +795,55 @@ class RuianRecord {
                 if (!m_adresni_mista.get(i).getCisloOrientacni().isEmpty()) {
                     r.append("/" + m_adresni_mista.get(i).getCisloOrientacni());
                 }
-                r.append("&nbsp;&nbsp;<a href="+ url_adresni_misto + m_adresni_mista.get(i).getRuianID() + ">"+ icon_ext_link +"</a> ");
-                r.append("&nbsp;&nbsp;<a href=file://tags.copy/address:"+i+">"+ icon_copy_tags +"</a>");
-                r.append("&nbsp;&nbsp;<a href=file://tags.create/address:"+i+">"+ icon_create_addr +"</a>");
-                r.append("&nbsp;&nbsp;<a href=file://tags.create-on-place/address:"+i+">"+ icon_create_addr_ruian +"</a>");
-                r.append("<br/>");
+                r.append("&nbsp;&nbsp;<a href="+ url_adresni_misto + m_adresni_mista.get(i).getRuianID() + ">"+ icon_ext_link +"</a> ")
+                 .append("&nbsp;&nbsp;<a href=file://tags.copy/address:"+i+">"+ icon_copy_tags +"</a>")
+                 .append("&nbsp;&nbsp;<a href=file://tags.create/address:"+i+">"+ icon_create_addr +"</a>")
+                 .append("&nbsp;&nbsp;<a href=file://tags.create-on-place/address:"+i+">"+ icon_create_addr_ruian +"</a>")
+                 .append("<br/>");
             }
             r.append("<br/>");
         }
 
         // Land
         if (m_parcela_ruian_id > 0) {
-            r.append("<i><u>Informace o pozemku</u></i>");
-            r.append("<br/>");
-            r.append("<b>RUIAN id: </b>"+ m_parcela_ruian_id +"&nbsp;&nbsp;<a href="+ url_parcela + m_parcela_ruian_id +">"
-                    + icon_ext_link + "</a><br/>");
-            //         r.append("&nbsp;&nbsp;<a href=file://tags.copy/parcel>"+ icon_copy_tags +"</a>");
-            r.append("<b>Druh pozemku: </b>" + m_parcela_druh_pozemku +"<br/>");
+            r.append("<i><u>Informace o pozemku</u></i>")
+             .append("<br/>")
+             .append("<b>RUIAN id: </b>"+ m_parcela_ruian_id +"&nbsp;&nbsp;<a href="+ url_parcela + m_parcela_ruian_id +">"
+                    + icon_ext_link + "</a><br/>")
+            // .append("&nbsp;&nbsp;<a href=file://tags.copy/parcel>"+ icon_copy_tags +"</a>")
+             .append("<b>Druh pozemku: </b>" + m_parcela_druh_pozemku +"<br/>");
             if (m_parcela_zpusob_vyuziti != "") r.append("<b>Způsob využití: </b>" + m_parcela_zpusob_vyuziti +"<br/>");
-            r.append("<b>Platí od: </b>" + m_parcela_plati_od +"<br/>");
-            r.append("<br/>");
+            r.append("<b>Platí od: </b>" + m_parcela_plati_od +"<br/>")
+             .append("<br/>");
         }
 
         // Street
         if (m_ulice_ruian_id > 0) {
-            r.append("<i><u>Informace o ulici</u></i><br/>");
-            r.append("<b>RUIAN id: </b>"+ m_ulice_ruian_id +"&nbsp;&nbsp;<a href="+ url_ulice + m_ulice_ruian_id +">" + icon_ext_link + "</a>");
-            r.append("&nbsp;&nbsp;<a href=file://tags.copy/street>"+ icon_copy_tags +"</a><br/>");
-            r.append("<b>Jméno: </b>" + m_ulice_jmeno +"<br/>");
-            r.append("<br/>");
+            r.append("<i><u>Informace o ulici</u></i><br/>")
+             .append("<b>RUIAN id: </b>"+ m_ulice_ruian_id +"&nbsp;&nbsp;<a href="+ url_ulice + m_ulice_ruian_id +">" + icon_ext_link + "</a>")
+             .append("&nbsp;&nbsp;<a href=file://tags.copy/street>"+ icon_copy_tags +"</a><br/>")
+             .append("<b>Jméno: </b>" + m_ulice_jmeno +"<br/>")
+             .append("<br/>");
         }
 
         // Cadastral area
         if (m_katastr_ruian_id > 0) {
-            r.append("<b>Katastrální území: </b>" + m_katastr_nazev);
-            r.append("&nbsp;&nbsp;<a href="+ url_katastralni_uzemi + m_katastr_ruian_id +">" + icon_ext_link + "</a><br/>");
-            r.append("<b>Obec: </b>" + m_katastr_obec);
-            r.append("&nbsp;&nbsp;<a href="+ url_obec + m_katastr_obec_kod +">" + icon_ext_link + "</a><br/>");
-            r.append("<b>Okres: </b>" + m_katastr_okres);
-            r.append("&nbsp;&nbsp;<a href="+ url_okres + m_katastr_okres_kod +">" + icon_ext_link + "</a><br/>");
-            r.append("<b>Kraj: </b>" + m_katastr_kraj);
-            r.append("&nbsp;&nbsp;<a href="+url_kraj + m_katastr_kraj_kod +">" + icon_ext_link + "</a><br/>");
-            r.append("<br/>");
+            r.append("<b>Katastrální území: </b>" + m_katastr_nazev)
+             .append("&nbsp;&nbsp;<a href="+ url_katastralni_uzemi + m_katastr_ruian_id +">" + icon_ext_link + "</a><br/>")
+             .append("<b>Obec: </b>" + m_katastr_obec)
+             .append("&nbsp;&nbsp;<a href="+ url_obec + m_katastr_obec_kod +">" + icon_ext_link + "</a><br/>")
+             .append("<b>Okres: </b>" + m_katastr_okres)
+             .append("&nbsp;&nbsp;<a href="+ url_okres + m_katastr_okres_kod +">" + icon_ext_link + "</a><br/>")
+             .append("<b>Kraj: </b>" + m_katastr_kraj)
+             .append("&nbsp;&nbsp;<a href="+url_kraj + m_katastr_kraj_kod +">" + icon_ext_link + "</a><br/>")
+             .append("<br/>");
         }
 
         // Near address places
         if (!m_adresni_mista.isEmpty() && m_objekt_ruian_id == 0) {
             String x, x_name;
-            r.append("<i><u>Adresní místa v okolí</u></i><br/>");
-            r.append("<table>");
+            r.append("<i><u>Adresní místa v okolí</u></i><br/>")
+             .append("<table>");
             for (int i = 0; i < m_adresni_mista.size(); i++) {
                 x = "";
                 x_name = "";
@@ -857,27 +857,27 @@ class RuianRecord {
                 }
                 r.append("<tr><td bgcolor=#e5e5ff>");
                 if (!m_adresni_mista.get(i).getUlice().isEmpty()) {
-                    r.append(m_adresni_mista.get(i).getVzdalenost());
-                    r.append("</td><td valign=\"top\"  bgcolor=#e5e5ff>");
-                    r.append(m_adresni_mista.get(i).getUlice() + " " + x);
-                    r.append("<br/><u>" + m_adresni_mista.get(i).getObec() + "</u>");
-                    r.append("</td><td valign=\"top\"  bgcolor=#e5e5ff>");
-                    r.append("<a href="+ url_adresni_misto + m_adresni_mista.get(i).getRuianID() + ">"+ icon_ext_link +"</a>");
-                    r.append("&nbsp;&nbsp;<a href=file://tags.copy/address:"+i+">"+ icon_copy_tags +"</a>");
-                    r.append("&nbsp;&nbsp;<a href=file://tags.create/address:"+i+">"+ icon_create_addr +"</a>");
-                    r.append("&nbsp;&nbsp;<a href=file://tags.create-on-place/address:"+i+">"+ icon_create_addr_ruian +"</a>");
+                    r.append(m_adresni_mista.get(i).getVzdalenost())
+                     .append("</td><td valign=\"top\"  bgcolor=#e5e5ff>")
+                     .append(m_adresni_mista.get(i).getUlice() + " " + x)
+                     .append("<br/><u>" + m_adresni_mista.get(i).getObec() + "</u>")
+                     .append("</td><td valign=\"top\"  bgcolor=#e5e5ff>")
+                     .append("<a href="+ url_adresni_misto + m_adresni_mista.get(i).getRuianID() + ">"+ icon_ext_link +"</a>")
+                     .append("&nbsp;&nbsp;<a href=file://tags.copy/address:"+i+">"+ icon_copy_tags +"</a>")
+                     .append("&nbsp;&nbsp;<a href=file://tags.create/address:"+i+">"+ icon_create_addr +"</a>")
+                     .append("&nbsp;&nbsp;<a href=file://tags.create-on-place/address:"+i+">"+ icon_create_addr_ruian +"</a>");
                 } else {
-                    r.append(m_adresni_mista.get(i).getVzdalenost());
-                    r.append("</td><td valign=\"top\"  bgcolor=#e5e5ff>");
-                    r.append(m_adresni_mista.get(i).getCastObce() + " " + x + "&nbsp;");
+                    r.append(m_adresni_mista.get(i).getVzdalenost())
+                     .append("</td><td valign=\"top\"  bgcolor=#e5e5ff>")
+                     .append(m_adresni_mista.get(i).getCastObce() + " " + x + "&nbsp;");
                     if (!m_adresni_mista.get(i).getCastObce().equals(m_adresni_mista.get(i).getObec())) {
                         r.append("<br/><u>" + m_adresni_mista.get(i).getObec() + "</u>");
                     }
-                    r.append("</td><td valign=\"top\"  bgcolor=#e5e5ff>");
-                    r.append("<a href="+ url_adresni_misto + m_adresni_mista.get(i).getRuianID() + ">"+ icon_ext_link +"</a>");
-                    r.append("&nbsp;&nbsp;<a href=file://tags.copy/address:"+i+">"+ icon_copy_tags +"</a>");
-                    r.append("&nbsp;&nbsp;<a href=file://tags.create/address:"+i+">"+ icon_create_addr +"</a>");
-                    r.append("&nbsp;&nbsp;<a href=file://tags.create-on-place/address:"+i+">"+ icon_create_addr_ruian +"</a>");
+                    r.append("</td><td valign=\"top\"  bgcolor=#e5e5ff>")
+                     .append("<a href="+ url_adresni_misto + m_adresni_mista.get(i).getRuianID() + ">"+ icon_ext_link +"</a>")
+                     .append("&nbsp;&nbsp;<a href=file://tags.copy/address:"+i+">"+ icon_copy_tags +"</a>")
+                     .append("&nbsp;&nbsp;<a href=file://tags.create/address:"+i+">"+ icon_create_addr +"</a>")
+                     .append("&nbsp;&nbsp;<a href=file://tags.create-on-place/address:"+i+">"+ icon_create_addr_ruian +"</a>");
                 }
                 r.append("</td></tr>");
             }
@@ -885,28 +885,28 @@ class RuianRecord {
         }
 
         if (!m_so_bez_geometrie.isEmpty()) {
-            r.append("<i><u>Budovy bez geometrie v okolí</u></i><br/>");
-            r.append("<table>");
+            r.append("<i><u>Budovy bez geometrie v okolí</u></i><br/>")
+             .append("<table>");
             for (int i = 0; i < m_so_bez_geometrie.size(); i++) {
-                r.append("<tr><td bgcolor=#e5e5ff>");
-                r.append(m_so_bez_geometrie.get(i).getVzdalenost());
-                r.append("</td><td valign=\"top\"  bgcolor=#e5e5ff>");
-                r.append(m_so_bez_geometrie.get(i).getRuianID());
+                r.append("<tr><td bgcolor=#e5e5ff>")
+                 .append(m_so_bez_geometrie.get(i).getVzdalenost())
+                 .append("</td><td valign=\"top\"  bgcolor=#e5e5ff>")
+                 .append(m_so_bez_geometrie.get(i).getRuianID());
                 if (m_so_bez_geometrie.get(i).getZpusobVyuziti().length() > 0) {
                     r.append(" - " + m_so_bez_geometrie.get(i).getZpusobVyuziti());
                 }
-                r.append("</td><td valign=\"top\"  bgcolor=#e5e5ff>");
-                r.append("&nbsp;&nbsp;<a href="+ url_stavebni_objekt + m_so_bez_geometrie.get(i).getRuianID() + ">"+ icon_ext_link +"</a> ");
-                r.append("&nbsp;&nbsp;<a href=file://tags.copy/ghost:"+i+">"+ icon_copy_tags +"</a></br>");
-                r.append("</td></tr>");
+                r.append("</td><td valign=\"top\"  bgcolor=#e5e5ff>")
+                 .append("&nbsp;&nbsp;<a href="+ url_stavebni_objekt + m_so_bez_geometrie.get(i).getRuianID() + ">"+ icon_ext_link +"</a> ")
+                 .append("&nbsp;&nbsp;<a href=file://tags.copy/ghost:"+i+">"+ icon_copy_tags +"</a></br>")
+                 .append("</td></tr>");
             }
-            r.append("</table><br/>");
-            r.append("<br/>");
+            r.append("</table><br/>")
+             .append("<br/>");
         }
 
-        r.append("<hr/>");
-        r.append("<center><i><small>Zdroj: <a href=\"http://www.ruian.cz/\">" + m_source + "</a></small></i></center>");
-        r.append("</td></tr></table></body></html>");
+        r.append("<hr/>")
+         .append("<center><i><small>Zdroj: <a href=\"http://www.ruian.cz/\">" + m_source + "</a></small></i></center>")
+         .append("</td></tr></table></body></html>");
 
         return r.toString();
     }

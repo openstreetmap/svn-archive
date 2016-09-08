@@ -65,7 +65,7 @@ public class PresetManager extends JPanel {
 
         btnRemove = new JButton(tr("Remove"));
         btnRemove.addActionListener(
-                new ActionListener()  {
+                new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent arg0) {
                         removeCurrentPreset();
@@ -83,8 +83,8 @@ public class PresetManager extends JPanel {
     }
 
     protected void removeCurrentPreset() {
-        TaggingPreset item= (TaggingPreset)presets.getSelectedItem();
-        if (item != null && model !=null) {
+        TaggingPreset item = (TaggingPreset) presets.getSelectedItem();
+        if (item != null && model != null) {
             model.removeAppliedPreset(item);
         }
     }

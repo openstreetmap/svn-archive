@@ -9,7 +9,7 @@ import javax.swing.table.AbstractTableModel;
 
 import org.openstreetmap.josm.gui.tagging.presets.TaggingPreset;
 
-public class PresetsTableModel extends AbstractTableModel  {
+public class PresetsTableModel extends AbstractTableModel {
 
     //private static final Logger logger = Logger.getLogger(PresetsTableModel.class.getName());
 
@@ -38,7 +38,7 @@ public class PresetsTableModel extends AbstractTableModel  {
 
     @Override
     public void addTableModelListener(TableModelListener l) {
-        synchronized(listeners) {
+        synchronized (listeners) {
             if (l == null)
                 return;
             if (!listeners.contains(l)) {
@@ -98,18 +98,18 @@ public class PresetsTableModel extends AbstractTableModel  {
     }
 
     public void filter(String filter) {
-        synchronized(this) {
+        synchronized (this) {
             if (filter == null || filter.trim().equals("")) {
                 visibleItems.clear();
-                for(TaggingPreset item: items) {
+                for (TaggingPreset item: items) {
                     visibleItems.add(item);
                 }
             } else {
                 visibleItems.clear();
                 filter = filter.toLowerCase();
-                for(TaggingPreset item: items) {
+                for (TaggingPreset item: items) {
                     if ((item.getName() != null && item.getName().toLowerCase().trim().contains(filter))
-                            || (item.group != null && item.group.getName() != null && item.group.getName().toLowerCase().trim().contains(filter))) {
+                     || (item.group != null && item.group.getName() != null && item.group.getName().toLowerCase().trim().contains(filter))) {
                         visibleItems.add(item);
                     }
                 }

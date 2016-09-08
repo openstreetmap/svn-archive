@@ -16,7 +16,7 @@ import org.openstreetmap.josm.plugins.tageditor.tagspec.TagSpecifications;
 
 public class TagsTableModel extends AbstractTableModel {
 
-    static private Logger logger = Logger.getLogger(TagsTableModel.class.getName());
+    private static Logger logger = Logger.getLogger(TagsTableModel.class.getName());
 
     private ArrayList<KeyValuePair> items = null;
     private ArrayList<KeyValuePair> visibleItems = null;
@@ -33,7 +33,7 @@ public class TagsTableModel extends AbstractTableModel {
                     @Override
                     public int compare(KeyValuePair self,
                             KeyValuePair other) {
-                        int ret =self.getKey().compareToIgnoreCase(other.getKey());
+                        int ret = self.getKey().compareToIgnoreCase(other.getKey());
 
                         if (ret == 0)
                             return self.getValue().compareToIgnoreCase(other.getValue());
@@ -55,14 +55,14 @@ public class TagsTableModel extends AbstractTableModel {
 
         try {
             spec = TagSpecifications.getInstance();
-        } catch(Exception e) {
+        } catch (Exception e) {
             logger.log(Level.SEVERE, "failed to init TagTableModel. Exception:" + e);
             return;
         }
 
         items = spec.asList();
         sort();
-        for(KeyValuePair item : items) {
+        for (KeyValuePair item : items) {
             visibleItems.add(item);
         }
     }
@@ -85,23 +85,23 @@ public class TagsTableModel extends AbstractTableModel {
         case 1: return pair.getValue();
         default:
             /* should not happen */
-            throw new IllegalArgumentException(tr("unexpected column number {0}",col));
+            throw new IllegalArgumentException(tr("unexpected column number {0}", col));
         }
     }
 
     public void filter(String filter) {
-        synchronized(this) {
+        synchronized (this) {
             if (filter == null || filter.trim().equals("")) {
                 visibleItems.clear();
-                for(KeyValuePair pair: items) {
+                for (KeyValuePair pair: items) {
                     visibleItems.add(pair);
                 }
             } else {
                 visibleItems.clear();
                 filter = filter.toLowerCase();
-                for(KeyValuePair pair: items) {
+                for (KeyValuePair pair: items) {
                     if (pair.getKey().toLowerCase().trim().startsWith(filter)
-                            ||  pair.getValue().toLowerCase().trim().startsWith(filter)) {
+                            || pair.getValue().toLowerCase().trim().startsWith(filter)) {
                         visibleItems.add(pair);
                     }
                 }

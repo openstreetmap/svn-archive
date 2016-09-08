@@ -15,14 +15,14 @@ import org.openstreetmap.josm.tools.Shortcut;
 
 public class LaunchAction extends JosmAction implements SelectionChangedListener {
 
-    public LaunchAction()  {
+    public LaunchAction() {
         super(
                 tr("Edit tags"),
-                (String)null, //TODO: set "tag-editor" and add /images/tag-editor.png to distrib
+                (String) null, //TODO: set "tag-editor" and add /images/tag-editor.png to distrib
                 tr("Launches the tag editor dialog"),
                 Shortcut.registerShortcut("edit:launchtageditor", tr("Launches the tag editor dialog"),
-                        KeyEvent.VK_1,Shortcut.ALT_SHIFT)
-                , true, "tageditor/launch", true);
+                        KeyEvent.VK_1, Shortcut.ALT_SHIFT),
+                true, "tageditor/launch", true);
 
         DataSet.addSelectionListener(this);
         setEnabled(false);
@@ -46,6 +46,6 @@ public class LaunchAction extends JosmAction implements SelectionChangedListener
 
     @Override
     public void selectionChanged(Collection<? extends OsmPrimitive> newSelection) {
-        setEnabled(newSelection != null && newSelection.size() >0);
+        setEnabled(newSelection != null && newSelection.size() > 0);
     }
 }

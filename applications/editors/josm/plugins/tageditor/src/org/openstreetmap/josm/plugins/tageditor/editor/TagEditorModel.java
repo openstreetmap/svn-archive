@@ -19,36 +19,36 @@ import org.openstreetmap.josm.plugins.tageditor.preset.AdvancedTag;
 import org.openstreetmap.josm.plugins.tageditor.tagspec.KeyValuePair;
 
 @SuppressWarnings("serial")
-public class TagEditorModel extends org.openstreetmap.josm.gui.tagging.TagEditorModel  {
+public class TagEditorModel extends org.openstreetmap.josm.gui.tagging.TagEditorModel {
     //static private final Logger logger = Logger.getLogger(TagEditorModel.class.getName());
-    
+
     private DefaultComboBoxModel<TaggingPreset> appliedPresets = null;
 
     /**
      * constructor
      */
-    public TagEditorModel(DefaultListSelectionModel rowSelectionModel, DefaultListSelectionModel colSelectionModel){
+    public TagEditorModel(DefaultListSelectionModel rowSelectionModel, DefaultListSelectionModel colSelectionModel) {
         super(rowSelectionModel, colSelectionModel);
         appliedPresets = new DefaultComboBoxModel<>();
     }
 
     /**
      * applies the tags defined for a preset item to the tag model.
-     * 
+     *
      * Mandatory tags are added to the list of currently edited tags.
      * Optional tags are not added.
      * The model remembers the currently applied presets.
-     * 
+     *
      * @param item  the preset item. Must not be null.
      * @exception IllegalArgumentException thrown, if item is null
-     * 
+     *
      */
     public void applyPreset(TaggingPreset item) {
         if (item == null)
             throw new IllegalArgumentException("argument 'item' must not be null");
         // check whether item is already applied
         //
-        for(int i=0; i < appliedPresets.getSize(); i++) {
+        for (int i = 0; i < appliedPresets.getSize(); i++) {
             if (appliedPresets.getElementAt(i).equals(item))
                 // abort - preset already applied
                 return;
@@ -56,10 +56,10 @@ public class TagEditorModel extends org.openstreetmap.josm.gui.tagging.TagEditor
 
         // apply the tags proposed by the preset
         //
-        for(AdvancedTag tag : AdvancedTag.forTaggingPreset(item)) {
+        for (AdvancedTag tag : AdvancedTag.forTaggingPreset(item)) {
             if (!tag.isOptional()) {
                 if (!includesTag(tag.getKey())) {
-                    TagModel tagModel = new TagModel(tag.getKey(),tag.getValue());
+                    TagModel tagModel = new TagModel(tag.getKey(), tag.getValue());
                     prepend(tagModel);
                 } else {
                     TagModel tagModel = get(tag.getKey());
@@ -84,7 +84,7 @@ public class TagEditorModel extends org.openstreetmap.josm.gui.tagging.TagEditor
 
     /**
      * applies a tag given by a {@see KeyValuePair} to the model
-     * 
+     *
      * @param pair the key value pair
      */
     public void applyKeyValuePair(KeyValuePair pair) {
@@ -97,7 +97,6 @@ public class TagEditorModel extends org.openstreetmap.josm.gui.tagging.TagEditor
         }
         fireTableDataChanged();
     }
-
 
     public DefaultComboBoxModel<TaggingPreset> getAppliedPresetsModel() {
         return appliedPresets;
@@ -139,11 +138,11 @@ public class TagEditorModel extends org.openstreetmap.josm.gui.tagging.TagEditor
     public void highlightCurrentPreset() {
         fireTableDataChanged();
     }
-    
+
     /**
      * updates the tags of the primitives in the current selection with the
      * values in the current tag model
-     * 
+     *
      */
     public void updateJOSMSelection() {
         ArrayList<Command> commands = new ArrayList<>();
@@ -151,7 +150,7 @@ public class TagEditorModel extends org.openstreetmap.josm.gui.tagging.TagEditor
         if (selection == null)
             return;
         for (TagModel tag : tags) {
-            Command command = createUpdateTagCommand(selection,tag);
+            Command command = createUpdateTagCommand(selection, tag);
             if (command != null) {
                 commands.add(command);
             }
@@ -169,7 +168,7 @@ public class TagEditorModel extends org.openstreetmap.josm.gui.tagging.TagEditor
         // executes the commands and adds them to the undo/redo chains
         Main.main.undoRedo.add(command);
     }
-    
+
     /**
      * initializes the model with the tags in the current JOSM selection
      */
@@ -179,7 +178,7 @@ public class TagEditorModel extends org.openstreetmap.josm.gui.tagging.TagEditor
         for (OsmPrimitive element : selection) {
             for (String key : element.keySet()) {
                 String value = element.get(key);
-                add(key,value);
+                add(key, value);
             }
         }
         sort();

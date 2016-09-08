@@ -23,8 +23,8 @@ import org.openstreetmap.josm.gui.tagging.ac.AutoCompletionListItem;
  */
 public class AutoCompletionListRenderer extends JLabel implements TableCellRenderer {
 
-    static public final String RES_OSM_ICON = "/resources/osm.png";
-    static public final String RES_SELECTION_ICON = "/resources/selection.png";
+    public static final String RES_OSM_ICON = "/resources/osm.png";
+    public static final String RES_SELECTION_ICON = "/resources/selection.png";
 
     /** the icon used to decorate items of priority
      *  {@link AutoCompletionItemPriority#IS_IN_STANDARD}
@@ -110,7 +110,7 @@ public class AutoCompletionListRenderer extends JLabel implements TableCellRende
         // set icon and text
         //
         if (value instanceof AutoCompletionListItem) {
-            AutoCompletionListItem item = (AutoCompletionListItem)value;
+            AutoCompletionListItem item = (AutoCompletionListItem) value;
             prepareRendererIcon(item);
             setText(item.getValue());
             setToolTipText(item.getValue());

@@ -73,12 +73,12 @@ public class TagEditor extends JPanel implements IAutoCompletionListListener {
         // add action
         JButton btn;
         pnl.add(btn = new JButton(tblTagEditor.getAddAction()));
-        btn.setMargin(new Insets(0,0,0,0));
+        btn.setMargin(new Insets(0, 0, 0, 0));
         tblTagEditor.addComponentNotStoppingCellEditing(btn);
 
         // delete action
         pnl.add(btn = new JButton(tblTagEditor.getDeleteAction()));
-        btn.setMargin(new Insets(0,0,0,0));
+        btn.setMargin(new Insets(0, 0, 0, 0));
         tblTagEditor.addComponentNotStoppingCellEditing(btn);
         return pnl;
     }
@@ -96,7 +96,7 @@ public class TagEditor extends JPanel implements IAutoCompletionListListener {
         DefaultListSelectionModel rowSelectionModel = new DefaultListSelectionModel();
         DefaultListSelectionModel colSelectionModel = new DefaultListSelectionModel();
 
-        tagEditorModel = new TagEditorModel(rowSelectionModel,colSelectionModel);
+        tagEditorModel = new TagEditorModel(rowSelectionModel, colSelectionModel);
 
         // build the scrollable table for editing tag names and tag values
         //
@@ -118,7 +118,7 @@ public class TagEditor extends JPanel implements IAutoCompletionListListener {
         gc.weightx = 0.0;
         gc.weighty = 1.0;
         gc.anchor = GridBagConstraints.NORTHWEST;
-        pnl.add(buildButtonsPanel(),gc);
+        pnl.add(buildButtonsPanel(), gc);
 
         // -- the panel with the editor table
         //
@@ -127,7 +127,7 @@ public class TagEditor extends JPanel implements IAutoCompletionListListener {
         gc.weightx = 1.0;
         gc.weighty = 1.0;
         gc.anchor = GridBagConstraints.CENTER;
-        pnl.add(pnlTagTable,gc);
+        pnl.add(pnlTagTable, gc);
 
         return pnl;
     }
@@ -185,14 +185,14 @@ public class TagEditor extends JPanel implements IAutoCompletionListListener {
     @Override
     public void autoCompletionItemSelected(String item) {
         logger.info("autocompletion item selected ...");
-        TagSpecificationAwareTagCellEditor editor = (TagSpecificationAwareTagCellEditor)tblTagEditor.getCellEditor();
+        TagSpecificationAwareTagCellEditor editor = (TagSpecificationAwareTagCellEditor) tblTagEditor.getCellEditor();
         if (editor != null) {
             editor.autoCompletionItemSelected(item);
         }
     }
 
     public void requestFocusInTopLeftCell() {
-        tblTagEditor.requestFocusInCell(0,0);
+        tblTagEditor.requestFocusInCell(0, 0);
     }
 
     public TagEditorModel getModel() {

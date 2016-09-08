@@ -52,14 +52,14 @@ public class TagEditorDialog extends JDialog {
     //static private final Logger logger = Logger.getLogger(TagEditorDialog.class.getName());
 
     /** the unique instance */
-    static private  TagEditorDialog instance = null;
+    private static TagEditorDialog instance = null;
 
     /**
      * Access to the singleton instance
      *
      * @return the singleton instance of the dialog
      */
-    static public TagEditorDialog getInstance() {
+    public static TagEditorDialog getInstance() {
         if (instance == null) {
             instance = new TagEditorDialog();
         }
@@ -67,7 +67,7 @@ public class TagEditorDialog extends JDialog {
     }
 
     /** default preferred size */
-    static public final Dimension PREFERRED_SIZE = new Dimension(700, 500);
+    public static final Dimension PREFERRED_SIZE = new Dimension(700, 500);
 
     /** the properties table */
     private TagEditor tagEditor = null;
@@ -98,7 +98,7 @@ public class TagEditorDialog extends JDialog {
 
         // the cancel button
         //
-        pnl.add(new JButton(cancelAction  = new CancelAction()));
+        pnl.add(new JButton(cancelAction = new CancelAction()));
         return pnl;
     }
 
@@ -123,7 +123,7 @@ public class TagEditorDialog extends JDialog {
 
         pnlTagGrid.add(tagEditor, BorderLayout.CENTER);
         pnlTagGrid.add(aclViewer, BorderLayout.EAST);
-        pnlTagGrid.setBorder(BorderFactory.createEmptyBorder(5, 0,0,0));
+        pnlTagGrid.setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
 
         JSplitPane splitPane = new JSplitPane(
                 JSplitPane.HORIZONTAL_SPLIT,
@@ -166,8 +166,8 @@ public class TagEditorDialog extends JDialog {
 
         JPanel pnlPresetSelector = new JPanel();
         pnlPresetSelector.setLayout(new BorderLayout());
-        pnlPresetSelector.add(presetSelector,BorderLayout.CENTER);
-        pnlPresetSelector.setBorder(BorderFactory.createEmptyBorder(0,0,5,0 ));
+        pnlPresetSelector.add(presetSelector, BorderLayout.CENTER);
+        pnlPresetSelector.setBorder(BorderFactory.createEmptyBorder(0, 0, 5, 0));
 
         // create the tag selector
         //
@@ -184,8 +184,8 @@ public class TagEditorDialog extends JDialog {
         );
         JPanel pnlTagSelector = new JPanel();
         pnlTagSelector.setLayout(new BorderLayout());
-        pnlTagSelector.add(tagSelector,BorderLayout.CENTER);
-        pnlTagSelector.setBorder(BorderFactory.createEmptyBorder(0,0,5,0    ));
+        pnlTagSelector.add(tagSelector, BorderLayout.CENTER);
+        pnlTagSelector.setBorder(BorderFactory.createEmptyBorder(0, 0, 5, 0));
 
         // create the tabbed pane
         //
@@ -208,7 +208,7 @@ public class TagEditorDialog extends JDialog {
         presetSelector.setMinimumSize(minimumSize);
         pnlTagGrid.setMinimumSize(minimumSize);
 
-        getContentPane().add(splitPane,BorderLayout.CENTER);
+        getContentPane().add(splitPane, BorderLayout.CENTER);
 
         getContentPane().add(buildButtonRow(), BorderLayout.SOUTH);
 
@@ -216,10 +216,9 @@ public class TagEditorDialog extends JDialog {
         addWindowListener(
                 new WindowAdapter() {
                     @Override public void windowActivated(WindowEvent e) {
-                        SwingUtilities.invokeLater(new Runnable(){
+                        SwingUtilities.invokeLater(new Runnable() {
                             @Override
-                            public void run()
-                            {
+                            public void run() {
                                 getModel().ensureOneTag();
                                 tagEditor.clearSelection();
                                 tagEditor.requestFocusInTopLeftCell();
@@ -232,10 +231,12 @@ public class TagEditorDialog extends JDialog {
         // makes sure that 'Ctrl-Enter' in the properties table
         // and in the aclViewer is handled by okAction
         //
-        getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put((KeyStroke)cancelAction.getValue(Action.ACCELERATOR_KEY), okAction.getValue(AbstractAction.NAME));
+        getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
+                (KeyStroke) cancelAction.getValue(Action.ACCELERATOR_KEY), okAction.getValue(AbstractAction.NAME));
         getRootPane().getActionMap().put(cancelAction.getValue(Action.NAME), cancelAction);
 
-        getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put((KeyStroke)okAction.getValue(Action.ACCELERATOR_KEY), okAction.getValue(AbstractAction.NAME));
+        getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
+                (KeyStroke) okAction.getValue(Action.ACCELERATOR_KEY), okAction.getValue(AbstractAction.NAME));
         getRootPane().getActionMap().put(okAction.getValue(Action.NAME), okAction);
 
 
@@ -286,10 +287,10 @@ public class TagEditorDialog extends JDialog {
     }
 
     class CancelAction extends AbstractAction {
-        public CancelAction() {
+        CancelAction() {
             putValue(NAME, tr("Cancel"));
             putValue(SMALL_ICON, ImageProvider.get("cancel"));
-            putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE,0));
+            putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0));
             putValue(SHORT_DESCRIPTION, tr("Abort tag editing and close dialog"));
         }
 
@@ -301,7 +302,7 @@ public class TagEditorDialog extends JDialog {
 
     class OKAction extends AbstractAction implements PropertyChangeListener {
 
-        public OKAction() {
+        OKAction() {
             putValue(NAME, tr("OK"));
             putValue(SMALL_ICON, ImageProvider.get("ok"));
             putValue(SHORT_DESCRIPTION, tr("Apply edited tags and close dialog"));
@@ -324,11 +325,11 @@ public class TagEditorDialog extends JDialog {
 
         @Override
         public void propertyChange(PropertyChangeEvent evt) {
-            if (! evt.getPropertyName().equals(TagEditorModel.PROP_DIRTY))
+            if (!evt.getPropertyName().equals(TagEditorModel.PROP_DIRTY))
                 return;
-            if (! evt.getNewValue().getClass().equals(Boolean.class))
+            if (!evt.getNewValue().getClass().equals(Boolean.class))
                 return;
-            boolean dirty = (Boolean)evt.getNewValue();
+            boolean dirty = (Boolean) evt.getNewValue();
             setEnabled(dirty);
         }
     }

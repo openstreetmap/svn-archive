@@ -45,7 +45,7 @@ public class TabularTagSelector extends JPanel {
         pnl.setLayout(new FlowLayout(FlowLayout.LEFT));
         tfFilter = new JTextField(20);
         pnl.add(lbl);
-        pnl.add(tfFilter,BorderLayout.CENTER);
+        pnl.add(tfFilter, BorderLayout.CENTER);
         JButton btn = new JButton(tr("Clear"));
         pnl.add(btn);
         btn.addActionListener(
@@ -62,7 +62,7 @@ public class TabularTagSelector extends JPanel {
 
     protected JScrollPane buildPresetGrid() {
 
-        tagsTable = new TagsTable(new TagsTableModel(),new TagsTableColumnModel());
+        tagsTable = new TagsTable(new TagsTableModel(), new TagsTableColumnModel());
         getModel().initFromTagSpecifications();
 
         scrollPane = new JScrollPane(tagsTable);
@@ -90,7 +90,7 @@ public class TabularTagSelector extends JPanel {
 
         // replace Enter action. apply the current preset on enter
         //
-        tagsTable.unregisterKeyboardAction(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER,0));
+        tagsTable.unregisterKeyboardAction(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0));
         ActionListener enterAction = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -105,7 +105,7 @@ public class TabularTagSelector extends JPanel {
         tagsTable.registerKeyboardAction(
                 enterAction,
                 "Enter",
-                KeyStroke.getKeyStroke(KeyEvent.VK_ENTER,0),
+                KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0),
                 JComponent.WHEN_FOCUSED
         );
 
@@ -122,7 +122,7 @@ public class TabularTagSelector extends JPanel {
                     @Override
                     public void actionPerformed(ActionEvent arg0) {
                         int row = tagsTable.getSelectedRow();
-                        if (row >=0) {
+                        if (row >= 0) {
                             KeyValuePair item = getModel().getVisibleItem(row);
                             fireItemSelected(item);
                         }
@@ -208,7 +208,7 @@ public class TabularTagSelector extends JPanel {
         // and error I ended up with the following lines.
         //
         Component c = tagsTable;
-        while(c != null) {
+        while (c != null) {
             c.doLayout();
             c.repaint();
             c = c.getParent();
@@ -216,20 +216,19 @@ public class TabularTagSelector extends JPanel {
     }
 
     protected TagsTableModel getModel() {
-        return (TagsTableModel)tagsTable.getModel();
+        return (TagsTableModel) tagsTable.getModel();
     }
 
-
     public void addTagSelectorListener(ITagSelectorListener listener) {
-        synchronized(this.listeners) {
-            if (listener != null && ! listeners.contains(listener)) {
+        synchronized (this.listeners) {
+            if (listener != null && !listeners.contains(listener)) {
                 listeners.add(listener);
             }
         }
     }
 
     public void removeTagSelectorListener(ITagSelectorListener listener) {
-        synchronized(this.listeners) {
+        synchronized (this.listeners) {
             if (listener != null) {
                 listeners.remove(listener);
             }
@@ -237,8 +236,8 @@ public class TabularTagSelector extends JPanel {
     }
 
     protected void fireItemSelected(KeyValuePair pair) {
-        synchronized(this.listeners) {
-            for(ITagSelectorListener listener: listeners) {
+        synchronized (this.listeners) {
+            for (ITagSelectorListener listener: listeners) {
                 listener.itemSelected(pair);
             }
         }

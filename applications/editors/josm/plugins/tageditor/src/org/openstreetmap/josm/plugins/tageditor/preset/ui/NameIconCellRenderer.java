@@ -13,11 +13,11 @@ import org.openstreetmap.josm.gui.tagging.presets.TaggingPreset;
 
 public class NameIconCellRenderer extends JLabel implements TableCellRenderer {
 
-    public static final Color BG_COLOR_SELECTED = new Color(143,170,255);
+    public static final Color BG_COLOR_SELECTED = new Color(143, 170, 255);
 
     protected void init() {
         setOpaque(true);
-        setFont(new Font("SansSerif",Font.PLAIN,10));
+        setFont(new Font("SansSerif", Font.PLAIN, 10));
     }
 
     public NameIconCellRenderer() {
@@ -30,7 +30,7 @@ public class NameIconCellRenderer extends JLabel implements TableCellRenderer {
 
         if (isSelected) {
             setBackground(BG_COLOR_SELECTED);
-        } else  {
+        } else {
             setBackground(Color.WHITE);
         }
         TaggingPreset provider = (TaggingPreset) value;

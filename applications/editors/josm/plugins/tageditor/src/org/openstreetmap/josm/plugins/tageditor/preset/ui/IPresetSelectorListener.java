@@ -5,5 +5,5 @@ import org.openstreetmap.josm.gui.tagging.presets.TaggingPreset;
 
 public interface IPresetSelectorListener {
 
-    public void itemSelected(TaggingPreset item);
+    void itemSelected(TaggingPreset item);
 }

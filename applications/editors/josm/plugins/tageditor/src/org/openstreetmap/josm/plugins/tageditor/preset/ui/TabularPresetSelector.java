@@ -38,7 +38,7 @@ import org.openstreetmap.josm.gui.tagging.presets.TaggingPresets;
 public class TabularPresetSelector extends JPanel {
 
     private PresetsTable presetsTable = null;
-    private JTextField   tfFilter = null;
+    private JTextField tfFilter = null;
     private final ArrayList<IPresetSelectorListener> listeners = new ArrayList<>();
     private JScrollPane scrollPane;
     private JButton btnApply;
@@ -49,7 +49,7 @@ public class TabularPresetSelector extends JPanel {
         pnl.setLayout(new FlowLayout(FlowLayout.LEFT));
         tfFilter = new JTextField(20);
         pnl.add(lbl);
-        pnl.add(tfFilter,BorderLayout.CENTER);
+        pnl.add(tfFilter, BorderLayout.CENTER);
         JButton btn = new JButton(tr("Clear"));
         pnl.add(btn);
         btn.addActionListener(
@@ -66,7 +66,7 @@ public class TabularPresetSelector extends JPanel {
 
     protected JScrollPane buildPresetGrid() {
 
-        presetsTable = new PresetsTable(new PresetsTableModel(),new PresetsTableColumnModel());
+        presetsTable = new PresetsTable(new PresetsTableModel(), new PresetsTableColumnModel());
 
         scrollPane = new JScrollPane(presetsTable);
 
@@ -93,7 +93,7 @@ public class TabularPresetSelector extends JPanel {
 
         // replace Enter action. apply the current preset on enter
         //
-        presetsTable.unregisterKeyboardAction(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER,0));
+        presetsTable.unregisterKeyboardAction(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0));
         ActionListener enterAction = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -107,7 +107,7 @@ public class TabularPresetSelector extends JPanel {
         presetsTable.registerKeyboardAction(
                 enterAction,
                 "Enter",
-                KeyStroke.getKeyStroke(KeyEvent.VK_ENTER,0),
+                KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0),
                 JComponent.WHEN_FOCUSED
         );
 
@@ -124,7 +124,7 @@ public class TabularPresetSelector extends JPanel {
                     @Override
                     public void actionPerformed(ActionEvent arg0) {
                         int row = presetsTable.getSelectedRow();
-                        if (row >=0) {
+                        if (row >= 0) {
                             fireItemSelected(getModel().getVisibleItem(row));
                         }
                     }
@@ -192,7 +192,7 @@ public class TabularPresetSelector extends JPanel {
     }
 
     public void bindTo(Collection<TaggingPreset> presets) {
-        PresetsTableModel model = (PresetsTableModel)presetsTable.getModel();
+        PresetsTableModel model = (PresetsTableModel) presetsTable.getModel();
         model.setPresets(presets);
     }
 
@@ -201,15 +201,15 @@ public class TabularPresetSelector extends JPanel {
     }
 
     public void addPresetSelectorListener(IPresetSelectorListener listener) {
-        synchronized(this.listeners) {
-            if (listener != null && ! listeners.contains(listener)) {
+        synchronized (this.listeners) {
+            if (listener != null && !listeners.contains(listener)) {
                 listeners.add(listener);
             }
         }
     }
 
     public void removePresetSelectorListener(IPresetSelectorListener listener) {
-        synchronized(this.listeners) {
+        synchronized (this.listeners) {
             if (listener != null) {
                 listeners.remove(listener);
             }
@@ -217,8 +217,8 @@ public class TabularPresetSelector extends JPanel {
     }
 
     protected void fireItemSelected(TaggingPreset item) {
-        synchronized(this.listeners) {
-            for(IPresetSelectorListener listener: listeners) {
+        synchronized (this.listeners) {
+            for (IPresetSelectorListener listener: listeners) {
                 listener.itemSelected(item);
             }
         }
@@ -248,7 +248,7 @@ public class TabularPresetSelector extends JPanel {
         // and error I ended up with the following lines.
         //
         Component c = presetsTable;
-        while(c != null) {
+        while (c != null) {
             c.doLayout();
             c.repaint();
             c = c.getParent();
@@ -256,11 +256,12 @@ public class TabularPresetSelector extends JPanel {
     }
 
     protected PresetsTableModel getModel() {
-        return (PresetsTableModel)presetsTable.getModel();
+        return (PresetsTableModel) presetsTable.getModel();
     }
 
     public void installKeyAction(Action a) {
-        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put((KeyStroke)a.getValue(AbstractAction.ACCELERATOR_KEY), a.getValue(AbstractAction.NAME));
+        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
+                (KeyStroke) a.getValue(AbstractAction.ACCELERATOR_KEY), a.getValue(AbstractAction.NAME));
         getActionMap().put(a.getValue(AbstractAction.NAME), a);
     }
 }

@@ -64,7 +64,7 @@ public class TagSpecification {
 
     /**
      * sets the list of lables for this tag specification
-     * 
+     *
      * @param lables  the list of lables; must not be null
      * @exception IllegalArgumentException thrown, if lables is null
      */
@@ -80,11 +80,11 @@ public class TagSpecification {
     /**
      * Adds a label to the list of label for this tag specification. The label
      * is only added if i
-     * 
+     *
      * @param lable the lalbe to add; must not be null
      * @exception IllegalArgumentException thrown, if lable is null
      */
-    public void addLable(LabelSpecification lable) throws IllegalArgumentException  {
+    public void addLable(LabelSpecification lable) throws IllegalArgumentException {
         if (lable == null)
             throw new IllegalArgumentException("argument 'lable' must not be null");
         if (!this.lables.contains(lable)) {
@@ -110,30 +110,39 @@ public class TagSpecification {
     public String getKey() {
         return key;
     }
+
     public void setKey(String key) {
         this.key = key;
     }
+
     public String getType() {
         return type;
     }
+
     public void setType(String type) {
         this.type = type;
     }
+
     public boolean isApplicableToNode() {
         return applicableToNode;
     }
+
     public void setApplicableToNode(boolean applicableToNode) {
         this.applicableToNode = applicableToNode;
     }
+
     public boolean isApplicableToWay() {
         return applicableToWay;
     }
+
     public void setApplicableToWay(boolean applicableToWay) {
         this.applicableToWay = applicableToWay;
     }
+
     public boolean isApplicableToRelation() {
         return applicableToRelation;
     }
+
     public void setApplicableToRelation(boolean applicableToRelation) {
         this.applicableToRelation = applicableToRelation;
     }

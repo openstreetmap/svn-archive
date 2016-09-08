@@ -21,10 +21,10 @@ import org.openstreetmap.josm.plugins.tageditor.preset.AdvancedTag;
  * This is the table cell renderer for cells for the table of tags
  * in the tag editor dialog.
  */
-public class TagTableCellRenderer extends JLabel implements TableCellRenderer  {
+public class TagTableCellRenderer extends JLabel implements TableCellRenderer {
 
     //private static Logger logger = Logger.getLogger(TagTableCellRenderer.class.getName());
-    public static final Color BG_COLOR_HIGHLIGHTED = new Color(255,255,204);
+    public static final Color BG_COLOR_HIGHLIGHTED = new Color(255, 255, 204);
 
     private Font fontStandard = null;
     private Font fontItalic = null;
@@ -33,7 +33,7 @@ public class TagTableCellRenderer extends JLabel implements TableCellRenderer  {
         fontStandard = getFont();
         fontItalic = fontStandard.deriveFont(Font.ITALIC);
         setOpaque(true);
-        setBorder(new EmptyBorder(5,5,5,5));
+        setBorder(new EmptyBorder(5, 5, 5, 5));
     }
 
     /**
@@ -57,7 +57,7 @@ public class TagTableCellRenderer extends JLabel implements TableCellRenderer  {
             setText("");
         } else if (tag.getValueCount() == 1) {
             setText(tag.getValues().get(0));
-        } else if (tag.getValueCount() >  1) {
+        } else if (tag.getValueCount() > 1) {
             setText(tr("multiple"));
             setFont(fontItalic);
         }
@@ -73,7 +73,7 @@ public class TagTableCellRenderer extends JLabel implements TableCellRenderer  {
     }
 
     protected TagEditorModel getModel(JTable table) {
-        return (TagEditorModel)table.getModel();
+        return (TagEditorModel) table.getModel();
     }
 
     protected boolean belongsToSelectedPreset(TagModel tagModel, TagEditorModel model) {
@@ -87,12 +87,12 @@ public class TagTableCellRenderer extends JLabel implements TableCellRenderer  {
 
         // no current preset selected?
         //
-        TaggingPreset item = (TaggingPreset)model.getAppliedPresetsModel().getSelectedItem();
+        TaggingPreset item = (TaggingPreset) model.getAppliedPresetsModel().getSelectedItem();
         if (item == null) {
             return false;
         }
 
-        for(AdvancedTag tag: AdvancedTag.forTaggingPreset(item)) {
+        for (AdvancedTag tag: AdvancedTag.forTaggingPreset(item)) {
             if (tag.getValue() == null) {
                 if (tagModel.getName().equals(tag.getKey())) {
                     return true;
@@ -117,7 +117,7 @@ public class TagTableCellRenderer extends JLabel implements TableCellRenderer  {
      * @param model the tag editor model
      */
     protected void renderColor(TagModel tagModel, TagEditorModel model, boolean isSelected) {
-        if (isSelected){
+        if (isSelected) {
             setBackground(UIManager.getColor("Table.selectionBackground"));
             setForeground(UIManager.getColor("Table.selectionForeground"));
         } else {
@@ -146,12 +146,12 @@ public class TagTableCellRenderer extends JLabel implements TableCellRenderer  {
             boolean isSelected, boolean hasFocus, int rowIndex, int vColIndex) {
 
         resetRenderer();
-        TagModel tagModel  = (TagModel)value;
+        TagModel tagModel = (TagModel) value;
         switch(vColIndex) {
             case 0: renderTagName(tagModel); break;
             case 1: renderTagValue(tagModel); break;
         }
-        renderColor(tagModel, (TagEditorModel)table.getModel(),isSelected);
+        renderColor(tagModel, (TagEditorModel) table.getModel(), isSelected);
         if (hasFocus && isSelected) {
             if (table.getSelectedColumnCount() == 1 && table.getSelectedRowCount() == 1) {
                 if (table.getEditorComponent() != null) {

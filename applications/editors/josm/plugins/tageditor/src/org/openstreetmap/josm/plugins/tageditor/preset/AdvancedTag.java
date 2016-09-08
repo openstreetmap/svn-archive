@@ -47,13 +47,13 @@ public class AdvancedTag extends Tag {
     public void setOptional(boolean optional) {
         this.optional = optional;
     }
-    
+
     public static Collection<AdvancedTag> forTaggingPreset(TaggingPreset preset) {
         Collection<AdvancedTag> result = new ArrayList<>();
         boolean isOptional = false;
         for (TaggingPresetItem item : preset.data) {
             if (item instanceof KeyedItem) {
-                KeyedItem ki = (KeyedItem)item;
+                KeyedItem ki = (KeyedItem) item;
                 for (String value : ki.getValues()) {
                     AdvancedTag tag = new AdvancedTag(ki.key, value);
                     tag.setOptional(isOptional);

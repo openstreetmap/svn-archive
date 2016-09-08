@@ -4,21 +4,20 @@ package org.openstreetmap.josm.plugins.tageditor.tagspec;
 public class KeyValuePair {
     private String key = new String("");
     private String value = new String("");
-    
+
     public KeyValuePair() {}
-    
+
     public KeyValuePair(String key, String value) {
         setKey(key);
         setValue(value);
     }
 
-    
     public String getKey() {
         return key;
     }
 
     public void setKey(String key) {
-        this.key = key == null? ""  :key;
+        this.key = key == null ? "" : key;
     }
 
     public String getValue() {

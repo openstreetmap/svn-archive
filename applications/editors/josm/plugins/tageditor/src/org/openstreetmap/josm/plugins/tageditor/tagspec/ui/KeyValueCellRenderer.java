@@ -9,10 +9,10 @@ import javax.swing.JTable;
 import javax.swing.UIManager;
 import javax.swing.table.TableCellRenderer;
 
-public class KeyValueCellRenderer extends JLabel implements TableCellRenderer  {
+public class KeyValueCellRenderer extends JLabel implements TableCellRenderer {
 
     protected void init() {
-        setFont(new Font("Courier",Font.PLAIN,getFont().getSize()));
+        setFont(new Font("Courier", Font.PLAIN, getFont().getSize()));
         setOpaque(true);
     }
 
@@ -27,11 +27,11 @@ public class KeyValueCellRenderer extends JLabel implements TableCellRenderer  {
         if (isSelected) {
             setBackground(UIManager.getColor("Table.selectionBackground"));
             setForeground(UIManager.getColor("Table.selectionForeground"));
-        } else  {
+        } else {
             setBackground(UIManager.getColor("Table.background"));
             setForeground(UIManager.getColor("Table.foreground"));
         }
-        setText((String)value);
+        setText((String) value);
         setIcon(null);
         return this;
     }

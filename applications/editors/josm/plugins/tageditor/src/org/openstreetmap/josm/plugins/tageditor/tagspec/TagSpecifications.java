@@ -34,22 +34,22 @@ import org.xml.sax.helpers.XMLReaderFactory;
  */
 public class TagSpecifications {
 
-    final static public String ATTR_KEY = "key";
-    final static public String ATTR_TYPE = "type";
-    final static public String ATTR_FOR_NODE = "for-node";
-    final static public String ATTR_FOR_WAY = "for-way";
-    final static public String ATTR_FOR_RELATION = "for-relation";
-    final static public String ATTR_VALUE = "value";
+    public static final String ATTR_KEY = "key";
+    public static final String ATTR_TYPE = "type";
+    public static final String ATTR_FOR_NODE = "for-node";
+    public static final String ATTR_FOR_WAY = "for-way";
+    public static final String ATTR_FOR_RELATION = "for-relation";
+    public static final String ATTR_VALUE = "value";
 
-    final static public String ELEM_ROOT = "osm-tag-definitions";
-    final static public String ELEM_TAG = "tag";
-    final static public String ELEM_LABEL = "label";
+    public static final String ELEM_ROOT = "osm-tag-definitions";
+    public static final String ELEM_TAG = "tag";
+    public static final String ELEM_LABEL = "label";
 
-    final static public String DTD = "osm-tag-definitions.dtd";
+    public static final String DTD = "osm-tag-definitions.dtd";
 
 
     /** the default name of the resource file with the  tag specifications */
-    static public final String RES_NAME_TAG_SPECIFICATIONS = "/resources/osm-tag-definitions.xml";
+    public static final String RES_NAME_TAG_SPECIFICATIONS = "/resources/osm-tag-definitions.xml";
 
     /** the logger object */
     private static Logger logger = Logger.getLogger(TagSpecification.class.getName());
@@ -66,7 +66,7 @@ public class TagSpecifications {
      * @return the list of {@link TagSpecification}s
      * @throws Exception thrown, if an exception occurs
      */
-    static public void loadFromResources() throws Exception  {
+    public static void loadFromResources() throws Exception {
         InputStream in = TagSpecifications.class.getResourceAsStream(RES_NAME_TAG_SPECIFICATIONS);
         if (in == null) {
             logger.log(Level.SEVERE, "failed to create input stream for resource '" + RES_NAME_TAG_SPECIFICATIONS + "'");
@@ -79,7 +79,7 @@ public class TagSpecifications {
         }
     }
 
-    static public TagSpecifications getInstance() throws Exception {
+    public static TagSpecifications getInstance() throws Exception {
         if (instance == null) {
             loadFromResources();
         }
@@ -186,11 +186,11 @@ public class TagSpecifications {
         /**  the current tag specification. Not null, while parsing the content
          * between &lt;tag&gt; ... &lt;/tag&gt;
          */
-        private TagSpecification currentTagSpecification  = null;
+        private TagSpecification currentTagSpecification = null;
 
         @Override
         public void endDocument() throws SAXException {
-            logger.log(Level.FINE,"END");
+            logger.log(Level.FINE, "END");
         }
 
         @Override
@@ -205,7 +205,7 @@ public class TagSpecifications {
 
         @Override
         public void startDocument() throws SAXException {
-            logger.log(Level.FINE,"START");
+            logger.log(Level.FINE, "START");
         }
 
         /**
@@ -229,7 +229,7 @@ public class TagSpecifications {
          * handles a start element with name <code>osm-tag-definitions</code>
          *
          * @param atts  the XML attributes
-         * @throws SAXException
+         * @throws SAXException if any SAX error occurs
          */
         protected void startElementOsmTagDefinitions(Attributes atts) throws SAXException {
             tagSpecifications = new ArrayList<>();
@@ -238,7 +238,7 @@ public class TagSpecifications {
         /**
          * handles an end element with name <code>osm-tag-specifications</code>
          *
-         * @throws SAXException
+         * @throws SAXException if any SAX error occurs
          */
         protected void endElementOsmTagDefinitions() throws SAXException {
             // do nothing
@@ -248,11 +248,11 @@ public class TagSpecifications {
          * handles a start element with name <code>tag</code>
          *
          * @param atts the XML attributes of the element
-         * @throws SAXException
+         * @throws SAXException if any SAX error occurs
          */
         protected void startElementTag(Attributes atts) throws SAXException {
             currentTagSpecification = new TagSpecification();
-            for (int i=0; i< atts.getLength(); i++) {
+            for (int i = 0; i < atts.getLength(); i++) {
                 String name = atts.getQName(i);
                 String value = atts.getValue(i);
 
@@ -271,26 +271,24 @@ public class TagSpecifications {
             }
         }
 
-
         /**
          * handles an end element with name <code>tag</code>
-         * @throws SAXException
+         * @throws SAXException if any SAX error occurs
          */
         protected void endElementTag() throws SAXException {
             tagSpecifications.add(currentTagSpecification);
             currentTagSpecification = null;
-
         }
 
         /**
          * handles a start element with name <code>label</code>
          *
          * @param atts the XML attributes
-         * @throws SAXException
+         * @throws SAXException if any SAX error occurs
          */
         protected void startElementLabel(Attributes atts) throws SAXException {
             LabelSpecification ls = new LabelSpecification();
-            for (int i=0; i< atts.getLength(); i++) {
+            for (int i = 0; i < atts.getLength(); i++) {
                 String name = atts.getQName(i);
                 String value = atts.getValue(i);
 
@@ -311,7 +309,7 @@ public class TagSpecifications {
         /**
          * handles an end element with name <code>label</code>
          *
-         * @throws SAXException
+         * @throws SAXException if any SAX error occurs
          */
         protected void endElementLabel() throws SAXException {
             // do nothing
@@ -352,7 +350,7 @@ public class TagSpecifications {
     static class ResourceEntityResolver implements EntityResolver {
 
         @Override
-		public InputSource resolveEntity(String publicId, String systemId) throws SAXException, IOException {
+        public InputSource resolveEntity(String publicId, String systemId) throws SAXException, IOException {
             if (systemId != null && systemId.endsWith(DTD)) {
                 InputStream stream = TagSpecifications.class.getResourceAsStream("/resources/"+DTD);
                 if (stream == null) {
@@ -365,7 +363,7 @@ public class TagSpecifications {
         }
     }
 
-    public static void main(String args[]) throws Exception{
+    public static void main(String[] args) throws Exception {
         TagSpecifications.loadFromResources();
     }
 }

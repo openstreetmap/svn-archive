@@ -1,7 +1,6 @@
 // License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.tageditor.editor;
 
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.openstreetmap.josm.gui.tagging.TagCellEditor;
@@ -15,10 +14,10 @@ public class TagSpecificationAwareTagCellEditor extends TagCellEditor {
     private static final Logger logger = Logger.getLogger(TagCellEditor.class.getName());
 
     public TagSpecificationAwareTagCellEditor() {
-		super(0);
-	}
+        super(0);
+    }
 
-	/**
+    /**
      * initializes  the auto completion list when the table cell editor starts
      * to edit the key of a tag. In this case the auto completion list is
      * initialized with the set of standard key values and the set of current key
@@ -38,11 +37,11 @@ public class TagSpecificationAwareTagCellEditor extends TagCellEditor {
 
         // add the list of standard keys
         //
-        try {
-            //autoCompletionList.add(TagSpecifications.getInstance().getKeysForAutoCompletion(context));
-        } catch(Exception e) {
+        /*try {
+            autoCompletionList.add(TagSpecifications.getInstance().getKeysForAutoCompletion(context));
+        } catch (Exception e) {
             logger.log(Level.WARNING, "failed to initialize auto completion list with standard keys.", e);
-        }
+        }*/
 
         // add the list of keys in the current data set
         //
@@ -51,7 +50,7 @@ public class TagSpecificationAwareTagCellEditor extends TagCellEditor {
         try {
             context.initFromJOSMSelection();
             autoCompletionList.add(TagSpecifications.getInstance().getKeysForAutoCompletion(context));
-        } catch(Exception e) {
+        } catch (Exception e) {
             System.out.println("Warning: failed to initialize auto completion list with tag specification keys. Exception was: " + e.toString());
             e.printStackTrace();
         }
@@ -59,7 +58,7 @@ public class TagSpecificationAwareTagCellEditor extends TagCellEditor {
         // remove the keys already present in the current tag model
         //
         for (String key : model.getKeys()) {
-            if (! key.equals(currentTag.getName())) {
+            if (!key.equals(currentTag.getName())) {
                 autoCompletionList.remove(key);
             }
         }
@@ -88,8 +87,9 @@ public class TagSpecificationAwareTagCellEditor extends TagCellEditor {
         try {
             context.initFromJOSMSelection();
             autoCompletionList.add(TagSpecifications.getInstance().getLabelsForAutoCompletion(forKey, context));
-        } catch(Exception e) {
-            System.out.println("Warning: failed to initialize auto completion list with tag specification values. Exception was: " + e.toString());
+        } catch (Exception e) {
+            System.out.println(
+                    "Warning: failed to initialize auto completion list with tag specification values. Exception was: " + e.toString());
             e.printStackTrace();
         }
 

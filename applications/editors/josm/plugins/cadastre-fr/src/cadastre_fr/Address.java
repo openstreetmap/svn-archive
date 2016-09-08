@@ -93,7 +93,9 @@ public class Address extends MapMode {
     public Address(MapFrame mapFrame) {
         super(tr("Add address"), "buildings",
                 tr("Helping tool for tag address"),
+                // CHECKSTYLE.OFF: LineLength
                 Shortcut.registerShortcut("mapmode:cadastre-fr-buildings", tr("Mode: {0}", tr("CadastreFR - Buildings")), KeyEvent.VK_E, Shortcut.DIRECT),
+                // CHECKSTYLE.ON: LineLength
                 mapFrame, getCursor());
     }
 
@@ -129,7 +131,7 @@ public class Address extends MapMode {
         Point mousePos = e.getPoint();
         List<Way> mouseOnExistingWays = new ArrayList<>();
         List<Way> mouseOnExistingBuildingWays = new ArrayList<>();
-        Node currentMouseNode = mv.getNearestNode(mousePos, OsmPrimitive.isSelectablePredicate);
+        Node currentMouseNode = mv.getNearestNode(mousePos, OsmPrimitive::isSelectable);
         if (currentMouseNode != null) {
             // click on existing node
             setNewSelection(currentMouseNode);
@@ -183,7 +185,7 @@ public class Address extends MapMode {
                 }
             }
         } else {
-            List<WaySegment> wss = mv.getNearestWaySegments(mousePos, OsmPrimitive.isSelectablePredicate);
+            List<WaySegment> wss = mv.getNearestWaySegments(mousePos, OsmPrimitive::isSelectable);
             for (WaySegment ws : wss) {
                 if (ws.way.get(tagHighway) != null && ws.way.get(tagHighwayName) != null)
                     mouseOnExistingWays.add(ws.way);
@@ -297,7 +299,7 @@ public class Address extends MapMode {
         // DrawAction.mouseReleased() but without key modifiers
         Node n = new Node(Main.map.mapView.getLatLon(e.getX(), e.getY()));
         cmds.add(new AddCommand(n));
-        List<WaySegment> wss = Main.map.mapView.getNearestWaySegments(e.getPoint(), OsmPrimitive.isSelectablePredicate);
+        List<WaySegment> wss = Main.map.mapView.getNearestWaySegments(e.getPoint(), OsmPrimitive::isSelectable);
         Map<Way, List<Integer>> insertPoints = new HashMap<>();
         for (WaySegment ws : wss) {
             List<Integer> is;

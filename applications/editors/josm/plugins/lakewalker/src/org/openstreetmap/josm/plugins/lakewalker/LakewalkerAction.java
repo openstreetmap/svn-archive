@@ -137,9 +137,8 @@ class LakewalkerAction extends JosmAction implements MouseListener {
                 @Override protected void realRun() throws SAXException {
                     progressMonitor.subTask(tr("checking cache..."));
                     cleanupCache();
-                    processnodelist(pos, topLeft, botRight, waylen, maxnode, threshold,
-                            epsilon, resolution, tilesize, startdir, wmslayer,
-                            progressMonitor.createSubTaskMonitor(ProgressMonitor.ALL_TICKS, false));
+                    processnodelist(new Lakewalker(waylen, maxnode, threshold, epsilon, resolution, tilesize, startdir, wmslayer),
+                            pos, topLeft, botRight, epsilon, progressMonitor.createSubTaskMonitor(ProgressMonitor.ALL_TICKS, false));
                 }
 
                 @Override protected void finish() {
@@ -149,25 +148,22 @@ class LakewalkerAction extends JosmAction implements MouseListener {
                     LakewalkerAction.this.cancel();
                 }
             };
-            Thread executeThread = new Thread(lakewalkerTask);
-            executeThread.start();
+            new Thread(lakewalkerTask).start();
         } catch (Exception ex) {
-          System.out.println("Exception caught: " + ex.getMessage());
+            Main.error(ex);
         }
     }
 
-    private void processnodelist(LatLon pos, LatLon topLeft, LatLon botRight, int waylen, int maxnode, int threshold,
-            double epsilon, int resolution, int tilesize, String startdir, String wmslayer, ProgressMonitor progressMonitor) {
+    private void processnodelist(Lakewalker lw, LatLon pos, LatLon topLeft, LatLon botRight, double epsilon, ProgressMonitor progressMonitor) {
         progressMonitor.beginTask(null, 3);
         try {
             ArrayList<double[]> nodelist = new ArrayList<>();
 
-            Lakewalker lw = new Lakewalker(waylen, maxnode, threshold, epsilon, resolution, tilesize, startdir, wmslayer);
             try {
                 nodelist = lw.trace(pos.lat(), pos.lon(), topLeft.lon(), botRight.lon(), topLeft.lat(), botRight.lat(),
                         progressMonitor.createSubTaskMonitor(1, false));
             } catch (LakewalkerException e) {
-                System.out.println(e.getMessage());
+                Main.error(e);
             }
 
             System.out.println(nodelist.size()+" nodes generated");

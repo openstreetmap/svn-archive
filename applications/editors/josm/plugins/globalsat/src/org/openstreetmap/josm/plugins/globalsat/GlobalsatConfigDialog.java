@@ -9,9 +9,9 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 
+import javax.swing.AbstractButton;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.JCheckBox;
@@ -32,6 +32,10 @@ import org.openstreetmap.josm.Main;
 public class GlobalsatConfigDialog extends JPanel {
 
     public class IntegerTextField extends JTextField {
+
+        IntegerTextField() {
+            setHorizontalAlignment(JTextField.RIGHT);
+        }
 
         static final String badchars = "-`~!@#$%^&*()_+=\\|\"':;?/>.<, ";
 
@@ -74,28 +78,18 @@ public class GlobalsatConfigDialog extends JPanel {
     public GlobalsatConfigDialog(Dg100Config config) {
         conf = config;
         GridBagConstraints c = new GridBagConstraints();
-        System.out.println("read config " + config);
 
         Dimension xx = aSeconds.getPreferredSize();
         aSeconds.setPreferredSize(new Dimension((int) xx.getWidth() + 50, (int) xx.getHeight()));
-        aSeconds.setHorizontalAlignment(JTextField.RIGHT);
         aMeters.setPreferredSize(new Dimension((int) xx.getWidth() + 50, (int) xx.getHeight()));
-        aMeters.setHorizontalAlignment(JTextField.RIGHT);
         bSeconds.setPreferredSize(new Dimension((int) xx.getWidth() + 50, (int) xx.getHeight()));
-        bSeconds.setHorizontalAlignment(JTextField.RIGHT);
         bMeters.setPreferredSize(new Dimension((int) xx.getWidth() + 50, (int) xx.getHeight()));
-        bMeters.setHorizontalAlignment(JTextField.RIGHT);
         cSeconds.setPreferredSize(new Dimension((int) xx.getWidth() + 50, (int) xx.getHeight()));
-        cSeconds.setHorizontalAlignment(JTextField.RIGHT);
         cMeters.setPreferredSize(new Dimension((int) xx.getWidth() + 50, (int) xx.getHeight()));
-        cMeters.setHorizontalAlignment(JTextField.RIGHT);
 
         setLayout(new GridBagLayout());
 
-        ButtonGroup logFormat = new ButtonGroup();
-        logFormat.add(formatPosOnly);
-        logFormat.add(formatPosTDS);
-        logFormat.add(formatPosTDSA);
+        createButtonGroup(formatPosOnly, formatPosTDS, formatPosTDSA);
 
         JPanel logPanel = new JPanel();
         logPanel.setLayout(new BoxLayout(logPanel, BoxLayout.PAGE_AXIS));
@@ -124,7 +118,6 @@ public class GlobalsatConfigDialog extends JPanel {
         add(disableLogSpeed, c);
 
         minLogSpeed = new IntegerTextField();
-        minLogSpeed.setHorizontalAlignment(JTextField.RIGHT);
         c.insets = new Insets(4, 4, 0, 4);
         c.gridwidth = 1;
         c.weightx = 1.5;
@@ -133,12 +126,7 @@ public class GlobalsatConfigDialog extends JPanel {
         c.gridy = 1;
         add(minLogSpeed, c);
 
-        disableLogSpeed.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(java.awt.event.ActionEvent e) {
-                    minLogSpeed.setEnabled(disableLogSpeed.isSelected());
-                }
-            });
+        disableLogSpeed.addActionListener(e -> minLogSpeed.setEnabled(disableLogSpeed.isSelected()));
 
         disableLogDist = new JCheckBox(tr("Disable data logging if distance falls below"));
         c.insets = new Insets(0, 4, 4, 4);
@@ -150,7 +138,6 @@ public class GlobalsatConfigDialog extends JPanel {
         add(disableLogDist, c);
 
         minLogDist = new IntegerTextField();
-        minLogDist.setHorizontalAlignment(JTextField.RIGHT);
         c.insets = new Insets(0, 4, 4, 4);
         c.gridwidth = 1;
         c.weightx = 1.5;
@@ -161,12 +148,7 @@ public class GlobalsatConfigDialog extends JPanel {
         Dimension x = minLogDist.getPreferredSize();
         minLogDist.setPreferredSize(new Dimension((int) x.getWidth() + 50, (int) x.getHeight()));
 
-        disableLogDist.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(java.awt.event.ActionEvent e) {
-                    minLogDist.setEnabled(disableLogDist.isSelected());
-                }
-            });
+        disableLogDist.addActionListener(e -> minLogDist.setEnabled(disableLogDist.isSelected()));
 
         disableLogDist.setSelected(conf.getDisableLogDist());
         disableLogSpeed.setSelected(conf.getDisableLogSpeed());
@@ -176,9 +158,7 @@ public class GlobalsatConfigDialog extends JPanel {
         minLogSpeed.setText("" + conf.getSpeedThres());
         minLogDist.setText("" + conf.getDistThres());
 
-        ButtonGroup group = new ButtonGroup();
-        group.add(aTime);
-        group.add(aDist);
+        createButtonGroup(aTime, aDist);
 
         c.insets = new Insets(4, 4, 0, 4);
         c.gridwidth = 1;
@@ -202,9 +182,7 @@ public class GlobalsatConfigDialog extends JPanel {
         c.gridy = 4;
         add(aMeters, c);
 
-        group = new ButtonGroup();
-        group.add(bTime);
-        group.add(bDist);
+        createButtonGroup(bTime, bDist);
 
         c.insets = new Insets(4, 4, 0, 4);
         c.gridwidth = 1;
@@ -228,9 +206,7 @@ public class GlobalsatConfigDialog extends JPanel {
         c.gridy = 6;
         add(bMeters, c);
 
-        group = new ButtonGroup();
-        group.add(cTime);
-        group.add(cDist);
+        createButtonGroup(cTime, cDist);
 
         c.insets = new Insets(4, 4, 0, 4);
         c.gridwidth = 1;
@@ -254,10 +230,6 @@ public class GlobalsatConfigDialog extends JPanel {
         c.gridy = 8;
         add(cMeters, c);
 
-        //        add(new JLabel(tr("Memory Usage:")));
-        //        add(memUsage);
-        //add ID textbox
-
         switch(conf.getLogFormat()) {
         case 0:
             formatPosOnly.setSelected(true);
@@ -272,29 +244,9 @@ public class GlobalsatConfigDialog extends JPanel {
             JOptionPane.showMessageDialog(Main.parent, tr("Unknown logFormat"));
         }
 
-        if (conf.getSwATimeOrDist() == 0) {
-            aTime.setSelected(true);
-            aDist.setSelected(false);
-        } else {
-            aTime.setSelected(false);
-            aDist.setSelected(true);
-        }
-
-        if (conf.getSwBTimeOrDist() == 0) {
-            bTime.setSelected(true);
-            bDist.setSelected(false);
-        } else {
-            bTime.setSelected(false);
-            bDist.setSelected(true);
-        }
-
-        if (conf.getSwCTimeOrDist() == 0) {
-            cTime.setSelected(true);
-            cDist.setSelected(false);
-        } else {
-            cTime.setSelected(false);
-            cDist.setSelected(true);
-        }
+        enableTimeDistRadioButton(conf.getSwATimeOrDist(), aTime, aDist);
+        enableTimeDistRadioButton(conf.getSwBTimeOrDist(), bTime, bDist);
+        enableTimeDistRadioButton(conf.getSwCTimeOrDist(), cTime, cDist);
 
         aSeconds.setText("" + conf.getSwATime() / 1000);
         aMeters.setText("" + conf.getSwADist());
@@ -304,6 +256,24 @@ public class GlobalsatConfigDialog extends JPanel {
 
         cSeconds.setText("" + conf.getSwCTime() / 1000);
         cMeters.setText("" + conf.getSwCDist());
+    }
+
+    private static ButtonGroup createButtonGroup(AbstractButton ... buttons) {
+        ButtonGroup group = new ButtonGroup();
+        for (AbstractButton b : buttons) {
+            group.add(b);
+        }
+        return group;
+    }
+
+    private static void enableTimeDistRadioButton(int timeOrDist, AbstractButton time, AbstractButton dist) {
+        if (timeOrDist == 0) {
+            time.setSelected(true);
+            dist.setSelected(false);
+        } else {
+            time.setSelected(false);
+            dist.setSelected(true);
+        }
     }
 
     /**

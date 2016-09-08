@@ -56,7 +56,7 @@ while(<>)
         }
         $lastnode = $nodes->{$1};
     }
-    elsif ((/^\s*<\/way/))
+    elsif (defined($hw) && (/^\s*<\/way/))
     {
         printf "   <d length='%f'/>\n", $waylen;
         $waysum->{$hw} += $waylen;

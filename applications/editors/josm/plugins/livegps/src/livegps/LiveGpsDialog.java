@@ -63,6 +63,7 @@ public class LiveGpsDialog extends ToggleDialog implements PropertyChangeListene
         createLayout(panel, true, null);
     }
 
+    @Override
     public void propertyChange(PropertyChangeEvent evt) {
         if (!isVisible())
             return;

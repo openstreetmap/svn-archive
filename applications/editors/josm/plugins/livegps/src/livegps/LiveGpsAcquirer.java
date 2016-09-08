@@ -10,6 +10,7 @@ import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -207,7 +208,7 @@ public class LiveGpsAcquirer implements Runnable {
          */
         gpsdSocket.getOutputStream().write(new byte[] { 'w', 13, 10 });
 
-        gpsdReader = new BufferedReader(new InputStreamReader(gpsdSocket.getInputStream()));
+        gpsdReader = new BufferedReader(new InputStreamReader(gpsdSocket.getInputStream(), StandardCharsets.UTF_8));
         line = gpsdReader.readLine();
         if (line == null)
             return;
@@ -230,13 +231,13 @@ public class LiveGpsAcquirer implements Runnable {
         }
 
         if (JSONProtocol == true) {
-            JsonObject Watch = Json.createObjectBuilder()
+            JsonObject watch = Json.createObjectBuilder()
                     .add("enable", true)
                     .add("json", true)
                     .build();
 
-            String Request = "?WATCH=" + Watch.toString() + ";\n";
-            gpsdSocket.getOutputStream().write(Request.getBytes());
+            String request = "?WATCH=" + watch.toString() + ";\n";
+            gpsdSocket.getOutputStream().write(request.getBytes(StandardCharsets.UTF_8));
 
             connected = true;
             fireGpsStatusChangeEvent(LiveGpsStatus.GpsStatus.CONNECTED, tr("Connected"));

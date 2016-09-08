@@ -20,6 +20,8 @@ import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.gpx.GpxData;
 import org.openstreetmap.josm.data.gpx.GpxTrack;
 import org.openstreetmap.josm.data.gpx.WayPoint;
+import org.openstreetmap.josm.data.preferences.CachingProperty;
+import org.openstreetmap.josm.data.preferences.ColorProperty;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.layer.GpxLayer;
 
@@ -27,6 +29,9 @@ public class LiveGpsLayer extends GpxLayer implements PropertyChangeListener {
     public static final String LAYER_NAME = tr("LiveGPS layer");
     public static final String C_LIVEGPS_COLOR_POSITION = "color.livegps.position";
     public static final String C_LIVEGPS_COLOR_POSITION_ESTIMATE = "color.livegps.position_estimate";
+
+    private static final CachingProperty<Color> COLOR_POSITION = new ColorProperty(C_LIVEGPS_COLOR_POSITION_ESTIMATE, Color.RED).cached();
+    private static final CachingProperty<Color> COLOR_POSITION_ESTIMATE = new ColorProperty(C_LIVEGPS_COLOR_POSITION_ESTIMATE, Color.CYAN).cached();
 
     private static final int DEFAULT_REFRESH_INTERVAL = 250;
     private static final int DEFAULT_CENTER_INTERVAL = 5000;
@@ -121,7 +126,7 @@ public class LiveGpsLayer extends GpxLayer implements PropertyChangeListener {
          * In case of deep zoom draw also a thin DOP oval.
          */
     
-        g.setColor(Main.pref.getColor(C_LIVEGPS_COLOR_POSITION_ESTIMATE, Color.CYAN));
+        g.setColor(COLOR_POSITION_ESTIMATE.get());
         int w, h;
         double ppm = 100 / mv.getDist100Pixel();    /* pixels per metre */
     
@@ -147,7 +152,7 @@ public class LiveGpsLayer extends GpxLayer implements PropertyChangeListener {
         float csin240 = (float )Math.sin(Math.toRadians(course + 240));
         float ccos240 = (float )Math.cos(Math.toRadians(course + 240));
     
-        g.setColor(Main.pref.getColor(C_LIVEGPS_COLOR_POSITION, Color.RED));
+        g.setColor(COLOR_POSITION.get());
     
         for (int i = 0; i < TriaThick; i++, TriaHeight--, TriaWidth--) {
     
@@ -165,6 +170,7 @@ public class LiveGpsLayer extends GpxLayer implements PropertyChangeListener {
 
     }
 
+    @Override
     public void propertyChange(PropertyChangeEvent evt) {
         if (!isVisible()) {
             return;

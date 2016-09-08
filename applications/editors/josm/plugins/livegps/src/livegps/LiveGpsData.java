@@ -137,9 +137,10 @@ public class LiveGpsData {
         return this.epx;
     }
 
+    @Override
     public String toString() {
         return getClass().getSimpleName() + "[fix=" + fix + ", lat=" + latLon.lat()
-        + ", long=" + latLon.lon() + ", speed=" + speed + ", course=" + course + "]";
+        + ", long=" + latLon.lon() + ", speed=" + speed + ", course=" + course + ']';
     }
 
     /**
@@ -194,8 +195,7 @@ public class LiveGpsData {
     public Way getWay() {
         if(way == null && Main.map != null && Main.map.mapView != null) {
             Point xy = Main.map.mapView.getPoint(getLatLon());
-            way = Main.map.mapView.getNearestWay(xy,
-                OsmPrimitive.isUsablePredicate);
+            way = Main.map.mapView.getNearestWay(xy, OsmPrimitive::isUsable);
         }
         return way;
     }

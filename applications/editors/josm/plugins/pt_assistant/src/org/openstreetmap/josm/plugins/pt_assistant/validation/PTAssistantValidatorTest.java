@@ -108,10 +108,6 @@ public class PTAssistantValidatorTest extends Test {
 	@Override
 	public void visit(Relation r) {
 
-		if (!RouteUtils.isTwoDirectionRoute(r)) {
-			return;
-		}
-
 		// Download incomplete members. If the download does not work, return
 		// and do not do any testing.
 		if (r.hasIncompleteMembers()) {
@@ -145,6 +141,10 @@ public class PTAssistantValidatorTest extends Test {
 			this.errors.addAll(stopChecker.getErrors());
 		}
 
+		if (!RouteUtils.isTwoDirectionRoute(r)) {
+			return;
+		}
+		
 		// Check individual ways using the oneway direction test and the road
 		// type test:
 		WayChecker wayChecker = new WayChecker(r, this);

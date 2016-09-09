@@ -108,6 +108,24 @@ public class PTAssistantValidatorTest extends Test {
 	@Override
 	public void visit(Relation r) {
 
+		if (!RouteUtils.isTwoDirectionRoute(r)) {
+			return;
+		}
+
+		// Download incomplete members. If the download does not work, return
+		// and do not do any testing.
+		if (r.hasIncompleteMembers()) {
+
+			boolean downloadSuccessful = this.downloadIncompleteMembers();
+			if (!downloadSuccessful) {
+				return;
+			}
+		}
+
+		if (r.hasIncompleteMembers()) {
+			return;
+		}
+		
 		// Do some testing on stop area relations
 		if (Main.pref.getBoolean("pt_assistant.stop-area-tests", true) == true && StopUtils.isStopArea(r)) {
 
@@ -125,24 +143,6 @@ public class PTAssistantValidatorTest extends Test {
 
 			// Attach thrown errors
 			this.errors.addAll(stopChecker.getErrors());
-		}
-
-		if (!RouteUtils.isTwoDirectionRoute(r)) {
-			return;
-		}
-
-		// Download incomplete members. If the download does not work, return
-		// and do not do any testing.
-		if (r.hasIncompleteMembers()) {
-
-			boolean downloadSuccessful = this.downloadIncompleteMembers();
-			if (!downloadSuccessful) {
-				return;
-			}
-		}
-
-		if (r.hasIncompleteMembers()) {
-			return;
 		}
 
 		// Check individual ways using the oneway direction test and the road

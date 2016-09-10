@@ -12,27 +12,24 @@ import org.openstreetmap.josm.data.osm.Relation;
  * This class is the container for all street segments with the same name. Every street
  * consists at least of one segment.
  *
- * @author Oliver Wieland <oliver.wieland@online.de>
+ * @author Oliver Wieland &lt;oliver.wieland@online.de&gt;
  */
 public class OSMStreet extends OSMEntityBase {
     private List<IOSMEntity> children;
     private List<OSMAddress> addresses;
 
-    /**
-     * @param osmPrimitive
-     */
     public OSMStreet(OsmPrimitive osmPrimitive) {
         super(osmPrimitive);
     }
 
     @Override
-	public List<IOSMEntity> getChildren() {
+    public List<IOSMEntity> getChildren() {
         return children;
     }
 
     /**
      * Adds a street segment to the street node.
-     * @param segment
+     * @param segment street segment
      */
     public void addStreetSegment(OSMStreetSegment segment) {
         lazyCreateChildren();
@@ -88,7 +85,7 @@ public class OSMStreet extends OSMEntityBase {
 
     /**
      * Gets the number of addresses associated with this street.
-     * @return
+     * @return number of addresses associated with this street
      */
     public int getNumberOfAddresses() {
         if (addresses == null) return 0;
@@ -98,7 +95,7 @@ public class OSMStreet extends OSMEntityBase {
 
     /**
      * Gets the number of street segments of this street.
-     * @return
+     * @return number of street segments of this street
      */
     public int getNumberOfSegments() {
         if (children == null) return 0;
@@ -115,7 +112,7 @@ public class OSMStreet extends OSMEntityBase {
     /**
      * Gets the road type(s) of this street. If the street has different types,
      * they are separated by comma.
-     * @return
+     * @return road type(s) of this street
      */
     public String getType() {
         List<String> types = new ArrayList<>();
@@ -123,7 +120,7 @@ public class OSMStreet extends OSMEntityBase {
         for (IOSMEntity seg : getChildren()) {
             OsmPrimitive osmPrim = seg.getOsmObject();
             if (TagUtils.hasHighwayTag(osmPrim)) {
-                String val = osmPrim.get(TagUtils.HIGHWAY_TAG);
+                String val = osmPrim.get(TagConstants.HIGHWAY_TAG);
                 if (!types.contains(val)) {
                     types.add(val);
                 }

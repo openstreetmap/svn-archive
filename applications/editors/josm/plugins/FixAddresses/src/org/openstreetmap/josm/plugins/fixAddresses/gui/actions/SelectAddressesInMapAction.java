@@ -14,7 +14,7 @@ import org.openstreetmap.josm.plugins.fixAddresses.gui.AddressEditSelectionEvent
 
 /**
  *
- * @author Oliver Wieland <oliver.wieland@online.de>
+ * @author Oliver Wieland &lt;oliver.wieland@online.de>
  *
  */
 @SuppressWarnings("serial")
@@ -56,7 +56,7 @@ public class SelectAddressesInMapAction extends AbstractAddressEditAction {
 
     /**
      * Internal helper to select the given addresses in the map.
-     * @param addrToSel
+     * @param addrToSel addresses
      */
     private void internalSelectAddresses(List<OSMAddress> addrToSel) {
         if (addrToSel == null) return;

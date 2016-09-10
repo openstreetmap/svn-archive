@@ -13,14 +13,13 @@ import org.openstreetmap.josm.plugins.fixAddresses.OSMAddress;
 /**
  * Provides a table model to show unresolved addresses.
  *
- * @author Oliver Wieland <oliver.wieland@online.de>
+ * @author Oliver Wieland &lt;oliver.wieland@online.de&gt;
  *
  */
-
 public class UnresolvedAddressesTableModel extends AddressEditTableModel {
 
     private static final int NUMBER_OF_COLUMNS = 5;
-    private static final String[] COLUMN_NAMES = new String[] { tr("Street"),
+    private static final String[] COLUMN_NAMES = new String[] {tr("Street"),
             tr("Number"), trc("address", "City" /* fix #8140 */), tr("Postcode"), tr("Name") };
 
     private static final Class<?>[] COLUMN_CLASSES = new Class<?>[] {
@@ -32,9 +31,6 @@ public class UnresolvedAddressesTableModel extends AddressEditTableModel {
      */
     private static final long serialVersionUID = 424009321818130586L;
 
-    /**
-     * @param addressContainer
-     */
     public UnresolvedAddressesTableModel(AddressEditContainer addressContainer) {
         super(addressContainer);
     }
@@ -129,7 +125,7 @@ public class UnresolvedAddressesTableModel extends AddressEditTableModel {
      */
     static class UnresolvedAddressModelSorter extends ColumnSorter<OSMAddress> {
 
-        public UnresolvedAddressModelSorter(int column, boolean asc) {
+        UnresolvedAddressModelSorter(int column, boolean asc) {
             super(column, asc);
         }
 

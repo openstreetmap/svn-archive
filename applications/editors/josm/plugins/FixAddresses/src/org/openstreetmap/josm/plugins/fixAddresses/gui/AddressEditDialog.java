@@ -69,23 +69,18 @@ public class AddressEditDialog extends JDialog implements ActionListener, ListSe
         AddressActions.getConvertToRelationAction(),
         AddressActions.getConvertAllToRelationAction()
     };
-    
+
     private JLabel streetLabel;
     private JLabel unresolvedAddressesLabel;
     private JMapViewer mapViewer;
 
-
-    /**
-     * @param arg0
-     * @throws HeadlessException
-     */
-    public AddressEditDialog(AddressEditContainer addressEditContainer) throws HeadlessException  {
+    public AddressEditDialog(AddressEditContainer addressEditContainer) throws HeadlessException {
         super(JOptionPane.getFrameForComponent(Main.parent), tr("Fix unresolved addresses"), false);
 
         this.editContainer = addressEditContainer;
         this.editContainer.addChangedListener(this);
         setLayout(new BorderLayout());
-        setSize(1024,600);
+        setSize(1024, 600);
         setLocationRelativeTo(null);
 
         if (addressEditContainer != null) {
@@ -145,12 +140,11 @@ public class AddressEditDialog extends JDialog implements ActionListener, ListSe
             JPanel headerPanel2 = new JPanel(new GridLayout(1, 4));
             headerPanel2.setMinimumSize(new Dimension(100, 30));
             headerPanel2.add(unresolvedAddressesLabel);
-            unresolvedPanel.add(headerPanel2 , BorderLayout.NORTH);
+            unresolvedPanel.add(headerPanel2, BorderLayout.NORTH);
             unresolvedPanel.setMinimumSize(new Dimension(500, 200));
 
-
             try {
-                JPanel unresolvedButtons = new JPanel(new GridLayout(2,5, 5, 5));
+                JPanel unresolvedButtons = new JPanel(new GridLayout(2, 5, 5, 5));
                 SideButton assign = new SideButton(AddressActions.getResolveAction());
                 unresolvedButtons.add(assign);
 
@@ -213,7 +207,7 @@ public class AddressEditDialog extends JDialog implements ActionListener, ListSe
             actions[i].setContainer(addressEditContainer);
         }
 
-        JPanel buttonPanel = new JPanel(new GridLayout(1,10));
+        JPanel buttonPanel = new JPanel(new GridLayout(1, 10));
         JButton ok = new JButton(OK_COMMAND, ImageProvider.getIfAvailable(null, "ok"));
         ok.addActionListener(this);
         JButton selectAndClose = new JButton(SELECT_AND_CLOSE);
@@ -235,12 +229,12 @@ public class AddressEditDialog extends JDialog implements ActionListener, ListSe
      * @param fmtString The format string having a string and a numeric placeholder.
      * @param title The title of the header.
      * @param n The number to show in the header.
-     * @return
+     * @return created header label
      */
     private JLabel createHeaderLabel(String fmtString, String title, int n) {
         JLabel label = new JLabel(String.format(fmtString, title, n));
         label.setFont(label.getFont().deriveFont(Font.BOLD, label.getFont().getSize() + 2));
-        label.setBorder(new EmptyBorder(5,2,4,5));
+        label.setBorder(new EmptyBorder(5, 2, 4, 5));
         return label;
     }
 
@@ -346,7 +340,7 @@ public class AddressEditDialog extends JDialog implements ActionListener, ListSe
      * It searches the street table for the streets which matches best matching to the
      * street name given in the address.
      *
-     * @author Oliver Wieland <oliver.wieland@online.de>
+     * @author Oliver Wieland &lt;oliver.wieland@online.de>
      */
     class IncompleteAddressListener implements ListSelectionListener {
 
@@ -382,7 +376,7 @@ public class AddressEditDialog extends JDialog implements ActionListener, ListSe
      * The class that is interested in processing a jumpToEntry
      * event implements this interface, and the object created
      * with that class is registered with a component using the
-     * component's <code>addJumpToEntryListener<code> method. When
+     * component's {@code addJumpToEntryListener} method. When
      * the jumpToEntry event occurs, that object's appropriate
      * method is invoked.
      *
@@ -395,26 +389,21 @@ public class AddressEditDialog extends JDialog implements ActionListener, ListSe
          * Instantiates a new jump-to-entry listener.
          * @param column the column of the table to use for the comparison
          */
-        public JumpToEntryListener(int column) {
-            super();
+        JumpToEntryListener(int column) {
             this.column = column;
         }
 
         @Override
         public void keyPressed(KeyEvent arg0) {
-            // TODO Auto-generated method stub
-
         }
 
         @Override
         public void keyReleased(KeyEvent arg0) {
-            // TODO Auto-generated method stub
-
         }
 
         @Override
         public void keyTyped(KeyEvent arg0) {
-            JTable table  = (JTable) arg0.getSource();
+            JTable table = (JTable) arg0.getSource();
 
             if (table == null) return;
 

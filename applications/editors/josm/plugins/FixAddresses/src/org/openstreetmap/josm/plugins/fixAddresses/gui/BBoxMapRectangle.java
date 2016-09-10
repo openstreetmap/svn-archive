@@ -11,9 +11,6 @@ import org.openstreetmap.josm.data.osm.BBox;
 public class BBoxMapRectangle extends MapRectangleImpl {
     private BBox bbox;
 
-    /**
-     * @param bbox
-     */
     public BBoxMapRectangle(BBox bbox) {
         super(null, null);
         this.bbox = bbox;

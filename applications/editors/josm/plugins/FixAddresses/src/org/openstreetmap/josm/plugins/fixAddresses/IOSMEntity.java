@@ -9,53 +9,52 @@ import org.openstreetmap.josm.data.osm.OsmPrimitive;
 /**
  * Base interface for all node entities. A node entity is a lightweight wrapper
  * around OSM objects in order to ease up some tasks like tag handling.
- * @author Oliver Wieland <oliver.wieland@online.de>
- *
+ * @author Oliver Wieland &lt;oliver.wieland@online.de&gt;
  */
 public interface IOSMEntity extends Comparable<IOSMEntity> {
     /**
      * Gets the underlying OSM object.
-     * @return
+     * @return the underlying OSM object
      */
-    public OsmPrimitive getOsmObject();
+    OsmPrimitive getOsmObject();
 
     /**
      * Checks if underlying OSM object has a name.
-     * @return
+     * @return {@code true} if underlying OSM object has a name
      */
-    public boolean hasName();
+    boolean hasName();
 
     /**
      * Gets the name of the entity node.
-     * @return
+     * @return the name of the entity node
      */
-    public String getName();
+    String getName();
 
     /**
      * Gets the children of the entity node.
-     * @return
+     * @return the children of the entity node
      */
-    public List<IOSMEntity> getChildren();
+    List<IOSMEntity> getChildren();
 
     /**
      * Gets the coordinate of the node. If the underlying object is a
      * node, it just returns the node coordinate. For ways and areas, this
      * method returns the coordinate of the center (balance point).
-     * @return
+     * @return the coordinate of the node
      */
-    public LatLon getCoor();
+    LatLon getCoor();
 
     /**
      * Adds a command listener.
-     * @param listener
+     * @param listener command listener
      */
-    public void addCommandListener(ICommandListener listener);
+    void addCommandListener(ICommandListener listener);
 
     /**
      * Removes a command listener.
-     * @param listener
+     * @param listener command listener
      */
-    public void removeCommandListener(ICommandListener listener);
+    void removeCommandListener(ICommandListener listener);
 
     /**
      * Collects problems and possible solutions.
@@ -63,7 +62,7 @@ public interface IOSMEntity extends Comparable<IOSMEntity> {
      * @param trashHeap the trash heap to ask for possible solutions
      * @param visitor the problem visitor
      */
-    public void visit(IAllKnowingTrashHeap trashHeap, IProblemVisitor visitor);
+    void visit(IAllKnowingTrashHeap trashHeap, IProblemVisitor visitor);
 
     @Override
     int compareTo(IOSMEntity o);

@@ -35,7 +35,7 @@ public class GuessedValueHandler implements Visitor {
     public GuessedValueHandler(String tag) {
         this(tag, null, DEFAULT_MAX_DIST);
     }
-    
+
     /**
      * Instantiates a new guessed value handler without node.
      *
@@ -45,7 +45,7 @@ public class GuessedValueHandler implements Visitor {
     public GuessedValueHandler(String tag, double maxDist) {
         this(tag, null, maxDist);
     }
-    
+
     /**
      * Instantiates a new guessed value handler.
      *
@@ -74,10 +74,10 @@ public class GuessedValueHandler implements Visitor {
         if (maxDist < 1.0) { // clip value
             maxDist = 1.0;
         }
-        
+
         this.tag = tag;
         this.maxDist = maxDist;
-        setAddressNode(aNode);        
+        setAddressNode(aNode);
     }
 
     /**
@@ -88,18 +88,18 @@ public class GuessedValueHandler implements Visitor {
     protected OSMAddress getAddressNode() {
         return aNode;
     }
-    
+
 
     /**
      * Sets the address node to make the guess for.
-     * @param aNode
+     * @param aNode address node
      */
-    public void setAddressNode(OSMAddress aNode) {        
+    public void setAddressNode(OSMAddress aNode) {
         this.aNode = aNode;
         // reset search results
         minDist = Double.MAX_VALUE;
         srcNode = null;
-        currentValue = null;        
+        currentValue = null;
     }
 
     /**
@@ -139,8 +139,8 @@ public class GuessedValueHandler implements Visitor {
     public String getCurrentValue() {
         return currentValue;
     }
-    
-    
+
+
     /**
      * Gets the node/way which has been selected for the guess.
      * @return The source node or null; if no appropriate source primitive has been found
@@ -161,7 +161,7 @@ public class GuessedValueHandler implements Visitor {
     @Override
     public void visit(Node n) {
         assert aNode != null;
-        
+
         if (n.hasKey(tag)) {
             double dist = n.getCoor().greatCircleDistance(aNode.getCoor());
             if (dist < minDist && dist < maxDist) {
@@ -175,7 +175,7 @@ public class GuessedValueHandler implements Visitor {
     @Override
     public void visit(Way w) {
         assert aNode != null;
-        
+
         if (w.hasKey(tag)) {
             double dist = OsmUtils.getMinimumDistanceToWay(aNode.getCoor(), w);
             if (dist < minDist && dist < maxDist) {

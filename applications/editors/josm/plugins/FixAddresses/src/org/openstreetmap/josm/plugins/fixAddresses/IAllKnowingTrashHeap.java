@@ -12,7 +12,7 @@ public interface IAllKnowingTrashHeap {
      * @param maxEntries the maximum number of matches.
      * @return the closest street names
      */
-    public List<String> getClosestStreetNames(String name, int maxEntries);
+    List<String> getClosestStreetNames(String name, int maxEntries);
 
     /**
      * Gets the closest street name to the given name.
@@ -20,7 +20,7 @@ public interface IAllKnowingTrashHeap {
      * @param name the name of the street to find a match for.
      * @return the closest street name
      */
-    public String getClosestStreetName(String name);
+    String getClosestStreetName(String name);
 
     /**
      * Checks if the given street name is valid.
@@ -28,5 +28,5 @@ public interface IAllKnowingTrashHeap {
      * @param name the name of the street to check.
      * @return true, if street name is valid; otherwise false.
      */
-    public boolean isValidStreetName(String name);
+    boolean isValidStreetName(String name);
 }

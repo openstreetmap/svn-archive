@@ -12,16 +12,16 @@ import org.openstreetmap.josm.gui.preferences.PreferenceSetting;
 import org.openstreetmap.josm.gui.preferences.PreferenceSettingFactory;
 import org.openstreetmap.josm.gui.preferences.PreferenceTabbedPane;
 
-public class FixAddressesPreferences extends DefaultTabPreferenceSetting {
+public final class FixAddressesPreferences extends DefaultTabPreferenceSetting {
     private static final String FIX_ADDRESSES_IGNORE_POST_CODE_KEY = "fixAddresses.ignorePostCode";
     private static final String FIX_ADDRESSES_SELECT_GUESSED_OBJECTS_KEY = "fixAddresses.selectGuessedObjects";
-    
+
     private JCheckBox cbSelectGuessedObjects = new JCheckBox(tr("Include objects used for guesses"));
     private JCheckBox cbIgnorePostCode = new JCheckBox();
 
     /**
      * Internal factory class. Call <code>FixAddressesPreferences.Factory().createPreferenceSetting()</code> to
-     * create the preference setting instance. 
+     * create the preference setting instance.
      */
     public static class Factory implements PreferenceSettingFactory {
         @Override
@@ -29,14 +29,14 @@ public class FixAddressesPreferences extends DefaultTabPreferenceSetting {
             return new FixAddressesPreferences();
         }
     }
-    
+
     /**
      * Internal constructor.
      */
     private FixAddressesPreferences() {
         loadFromPrefs();
     }
-    
+
     /**
      * Loads the (initial) preference settings.
      */
@@ -44,7 +44,7 @@ public class FixAddressesPreferences extends DefaultTabPreferenceSetting {
         setSelectGuessedObjects(Main.pref.getBoolean(FIX_ADDRESSES_SELECT_GUESSED_OBJECTS_KEY, false));
         setIgnorePostCode(Main.pref.getBoolean(FIX_ADDRESSES_IGNORE_POST_CODE_KEY, false));
     }
-    
+
     /**
      * Save the preference settings.
      */
@@ -91,7 +91,7 @@ public class FixAddressesPreferences extends DefaultTabPreferenceSetting {
     /**
      * Checks if invalid post codes should be ignored. If yes, post codes are neither
      * checked for existence nor for correctness.
-     * @return
+     * @return {@code true} if invalid post codes should be ignored
      */
     public boolean isIgnorePostCode() {
         return cbIgnorePostCode.isSelected();

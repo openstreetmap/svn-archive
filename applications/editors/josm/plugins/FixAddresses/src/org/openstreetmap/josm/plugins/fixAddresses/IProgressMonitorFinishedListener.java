@@ -2,5 +2,5 @@
 package org.openstreetmap.josm.plugins.fixAddresses;
 
 public interface IProgressMonitorFinishedListener {
-    public void finished();
+    void finished();
 }

@@ -11,10 +11,9 @@ import org.openstreetmap.josm.plugins.fixAddresses.gui.AddressEditSelectionEvent
 /**
  * Assigns one or more selected addresses to a street, i. e. the name of the street is
  * used as value for the addr:street tag.
- * @author Oliver Wieland <oliver.wieland@online.de>
- *
+ * @author Oliver Wieland &lt;oliver.wieland@online.de>
  */
-public class AssignAddressToStreetAction extends AbstractAddressEditAction  {
+public class AssignAddressToStreetAction extends AbstractAddressEditAction {
 
     /**
      * Instantiates a new "assign address to street" action.
@@ -61,6 +60,4 @@ public class AssignAddressToStreetAction extends AbstractAddressEditAction  {
     public void addressEditActionPerformed(AddressEditContainer container) {
         // we only accept a selection: nothing to do here
     }
-
-
 }

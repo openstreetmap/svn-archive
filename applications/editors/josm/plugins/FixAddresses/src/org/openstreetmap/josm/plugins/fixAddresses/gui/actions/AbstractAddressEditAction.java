@@ -25,9 +25,8 @@ import org.openstreetmap.josm.plugins.fixAddresses.gui.AddressEditSelectionEvent
  * Most actions will work in both cases, so it is recommended to have one single method which
  * accepts a list of addresses or streets and executes the tasks to be done by this action.
  *
- * @author Oliver Wieland <oliver.wieland@online.de>
+ * @author Oliver Wieland &lt;oliver.wieland@online.de&gt;
  */
-
 @SuppressWarnings("serial")
 public abstract class AbstractAddressEditAction extends JosmAction implements IAddressEditContainerListener, ICommandListener {
     private AddressEditSelectionEvent event;
@@ -35,19 +34,12 @@ public abstract class AbstractAddressEditAction extends JosmAction implements IA
     protected List<Command> commands;
     private String txName;
 
-    /**
-     * @param name
-     * @param icon
-     */
     public AbstractAddressEditAction(String name, String iconName, String tooltip, String toolbar) {
         super(name, iconName, tooltip, null, true, toolbar, true);
 
         setEnabled(false);
     }
 
-    /**
-     * @param name
-     */
     public AbstractAddressEditAction(String name) {
         this(name, null, "", null);
     }
@@ -119,26 +111,24 @@ public abstract class AbstractAddressEditAction extends JosmAction implements IA
     /**
      * Updates 'enabled' state depending on the given address container object.
      * @param container The address container (maybe null).
-     * @return
      */
     protected abstract void updateEnabledState(AddressEditContainer container);
 
     /**
      * Updates 'enabled' state depending on the current selection.
      * @param container The selection event.
-     * @return
      */
     protected abstract void updateEnabledState(AddressEditSelectionEvent event);
 
     /**
      * Redirected action handler for doing actions on a address selection.
-     * @param ev
+     * @param ev selection event
      */
     public abstract void addressEditActionPerformed(AddressEditSelectionEvent ev);
 
     /**
      * Redirected action handler for doing actions on an address container.
-     * @param ev
+     * @param container address container
      */
     public abstract void addressEditActionPerformed(AddressEditContainer container);
 

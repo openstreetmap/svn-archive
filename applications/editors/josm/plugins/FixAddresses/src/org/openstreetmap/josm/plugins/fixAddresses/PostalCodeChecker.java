@@ -9,11 +9,15 @@ import org.openstreetmap.josm.tools.CheckParameterUtil;
 /**
  * The Class PostcodeChecker.
  */
-public class PostalCodeChecker {
+public final class PostalCodeChecker {
     private static HashMap<String, String> postalCodePatternMap = new HashMap<>();
 
     static {
         fillMap();
+    }
+
+    private PostalCodeChecker() {
+        // Hide default constructor for utilities classes
     }
 
     /**

@@ -98,7 +98,7 @@ public class AddressProblem implements IProblem {
 
     @Override
     public void removeSolution(ISolution solution) {
-        if (solutions == null ) throw new RuntimeException("Solution list is null");
+        if (solutions == null) throw new RuntimeException("Solution list is null");
         if (solutions.size() == 0) throw new RuntimeException("Solution list is empty");
 
         CheckParameterUtil.ensureParameterNotNull(solution, "solution");
@@ -109,5 +109,4 @@ public class AddressProblem implements IProblem {
     public IOSMEntity getSource() {
         return source;
     }
-
 }

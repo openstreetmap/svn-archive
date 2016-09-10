@@ -28,13 +28,13 @@ public class GuessAddressRunnable extends PleaseWaitRunnable {
     private boolean isRunning = false;
     private boolean canceled;
 
-    private GuessedValueHandler[] wayGuessers = new GuessedValueHandler[]{new GuessStreetValueHandler(TagUtils.ADDR_STREET_TAG)};
+    private GuessedValueHandler[] wayGuessers = new GuessedValueHandler[]{new GuessStreetValueHandler(TagConstants.ADDR_STREET_TAG)};
     private GuessedValueHandler[] nodeGuessers = new GuessedValueHandler[]{
-            new GuessedValueHandler(TagUtils.ADDR_POSTCODE_TAG, 500.0),
-            new GuessedValueHandler(TagUtils.ADDR_CITY_TAG, 5000.0),
-            new GuessedValueHandler(TagUtils.ADDR_STATE_TAG, 5000.0),
-            new GuessedValueHandler(TagUtils.ADDR_COUNTRY_TAG, 5000.0),
-            new GuessedValueHandler(TagUtils.ADDR_CITY_TAG, 2000.0)
+            new GuessedValueHandler(TagConstants.ADDR_POSTCODE_TAG, 500.0),
+            new GuessedValueHandler(TagConstants.ADDR_CITY_TAG, 5000.0),
+            new GuessedValueHandler(TagConstants.ADDR_STATE_TAG, 5000.0),
+            new GuessedValueHandler(TagConstants.ADDR_COUNTRY_TAG, 5000.0),
+            new GuessedValueHandler(TagConstants.ADDR_CITY_TAG, 2000.0)
     };
 
     /**
@@ -68,6 +68,7 @@ public class GuessAddressRunnable extends PleaseWaitRunnable {
     public List<OSMAddress> getAddressesToGuess() {
         return addressesToGuess;
     }
+
     /**
      * @return the isRunning
      */
@@ -193,13 +194,12 @@ public class GuessAddressRunnable extends PleaseWaitRunnable {
         }
     }
 
-    // TODO: Put in separate file
     private static class GuessStreetValueHandler extends GuessedValueHandler {
-        public GuessStreetValueHandler(String tag) {
+        GuessStreetValueHandler(String tag) {
             this(tag, null);
         }
 
-        public GuessStreetValueHandler(String tag, OSMAddress aNode) {
+        GuessStreetValueHandler(String tag, OSMAddress aNode) {
             super(tag, aNode, 200.0);
         }
 
@@ -221,9 +221,6 @@ public class GuessAddressRunnable extends PleaseWaitRunnable {
                         minDist = dist;
                         currentValue = newVal;
                         srcNode = w;
-                        //aNode.setGuessedValue(getTag(), currentValue, w);
-                    } else {
-                        //System.out.println(String.format("Skipped %s: %4.2f m", TagUtils.getNameValue(w), dist));
                     }
                 }
             }

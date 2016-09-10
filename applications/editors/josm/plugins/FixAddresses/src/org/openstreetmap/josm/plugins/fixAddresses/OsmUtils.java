@@ -16,11 +16,10 @@ import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
 import org.openstreetmap.josm.tools.CheckParameterUtil;
 import org.openstreetmap.josm.tools.Pair;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class OsmUtils provides some utilities not provided by the OSM data framework.
  */
-public class OsmUtils {
+public final class OsmUtils {
 
     /**
      * Instantiates a new osm utils.
@@ -38,10 +37,11 @@ public class OsmUtils {
      * @return the minimum distance between the given coordinate and the way
      */
     public static double getMinimumDistanceToWay(LatLon coor, Way w) {
-        if (coor == null || w == null) return Double.POSITIVE_INFINITY;
+        if (coor == null || w == null)
+            return Double.POSITIVE_INFINITY;
 
         double minDist = Double.MAX_VALUE;
-        List<Pair<Node,Node>> x = w.getNodePairs(true);
+        List<Pair<Node, Node>> x = w.getNodePairs(true);
 
         for (Pair<Node, Node> pair : x) {
             LatLon ap = pair.a.getCoor();
@@ -125,7 +125,7 @@ public class OsmUtils {
                             String streetName = TagUtils.getNameValue(street);
                             if (!StringUtils.isNullOrEmpty(streetName)) {
                                 // street name found -> set property
-                                address.setDerivedValue(TagUtils.ADDR_STREET_TAG, streetName);
+                                address.setDerivedValue(TagConstants.ADDR_STREET_TAG, streetName);
                                 hasValuesFromRel = true;
                                 break;
                             } // else: Street has no name: Ooops
@@ -135,15 +135,15 @@ public class OsmUtils {
 
                 // Check for other address properties
                 if (TagUtils.hasAddrCityTag(r)) { // city
-                    address.setDerivedValue(TagUtils.ADDR_CITY_TAG, TagUtils.getAddrCityValue(r));
+                    address.setDerivedValue(TagConstants.ADDR_CITY_TAG, TagUtils.getAddrCityValue(r));
                     hasValuesFromRel = true;
                 }
                 if (TagUtils.hasAddrCountryTag(r)) { // country
-                    address.setDerivedValue(TagUtils.ADDR_COUNTRY_TAG, TagUtils.getAddrCountryValue(r));
+                    address.setDerivedValue(TagConstants.ADDR_COUNTRY_TAG, TagUtils.getAddrCountryValue(r));
                     hasValuesFromRel = true;
                 }
                 if (TagUtils.hasAddrPostcodeTag(r)) { // postcode
-                    address.setDerivedValue(TagUtils.ADDR_POSTCODE_TAG, TagUtils.getAddrPostcodeValue(r));
+                    address.setDerivedValue(TagConstants.ADDR_POSTCODE_TAG, TagUtils.getAddrPostcodeValue(r));
                     hasValuesFromRel = true;
                 }
             }
@@ -166,11 +166,11 @@ public class OsmUtils {
             if (osm instanceof Way) {
                 Way w = (Way) osm;
                 if (TagUtils.hasAddrInterpolationTag(w)) {
-                    applyDerivedValue(address, w, TagUtils.ADDR_POSTCODE_TAG);
-                    applyDerivedValue(address, w, TagUtils.ADDR_CITY_TAG);
-                    applyDerivedValue(address, w, TagUtils.ADDR_COUNTRY_TAG);
-                    applyDerivedValue(address, w, TagUtils.ADDR_STREET_TAG);
-                    applyDerivedValue(address, w, TagUtils.ADDR_STATE_TAG);
+                    applyDerivedValue(address, w, TagConstants.ADDR_POSTCODE_TAG);
+                    applyDerivedValue(address, w, TagConstants.ADDR_CITY_TAG);
+                    applyDerivedValue(address, w, TagConstants.ADDR_COUNTRY_TAG);
+                    applyDerivedValue(address, w, TagConstants.ADDR_STREET_TAG);
+                    applyDerivedValue(address, w, TagConstants.ADDR_STATE_TAG);
                     return true;
                 }
             }

@@ -4,12 +4,12 @@ package org.openstreetmap.josm.plugins.fixAddresses;
 public interface IAddressEditContainerListener {
     /**
      * Notifies clients that the container has been changed.
-     * @param container
+     * @param container container
      */
-    public void containerChanged(AddressEditContainer container);
+    void containerChanged(AddressEditContainer container);
 
     /**
      * Notifies clients that an entity has been changed.
      */
-    public void entityChanged(IOSMEntity node);
+    void entityChanged(IOSMEntity node);
 }

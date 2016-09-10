@@ -10,7 +10,7 @@ import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.plugins.fixAddresses.AddressEditContainer;
 import org.openstreetmap.josm.plugins.fixAddresses.OSMAddress;
 import org.openstreetmap.josm.plugins.fixAddresses.OSMStreet;
-import org.openstreetmap.josm.plugins.fixAddresses.TagUtils;
+import org.openstreetmap.josm.plugins.fixAddresses.TagConstants;
 import org.openstreetmap.josm.plugins.fixAddresses.gui.AddressEditSelectionEvent;
 
 @SuppressWarnings("serial")
@@ -55,15 +55,15 @@ public class ConvertToRelationAction extends AbstractAddressEditAction {
         // Create the relation
         Relation r = new Relation();
         commands.add(new AddCommand(r));
-        commands.add(new ChangePropertyCommand(r, TagUtils.NAME_TAG, streetNode.getName()));
-        commands.add(new ChangePropertyCommand(r, TagUtils.RELATION_TYPE, TagUtils.ASSOCIATEDSTREET_RELATION_TYPE));
+        commands.add(new ChangePropertyCommand(r, TagConstants.NAME_TAG, streetNode.getName()));
+        commands.add(new ChangePropertyCommand(r, TagConstants.RELATION_TYPE, TagConstants.ASSOCIATEDSTREET_RELATION_TYPE));
         // add street with role 'street'
-        r.addMember(new RelationMember(TagUtils.STREET_RELATION_ROLE, streetNode.getOsmObject()));
+        r.addMember(new RelationMember(TagConstants.STREET_RELATION_ROLE, streetNode.getOsmObject()));
 
         // add address members
         for (OSMAddress addrNode : streetNode.getAddresses()) {
             beginObjectTransaction(addrNode);
-            r.addMember(new RelationMember(TagUtils.HOUSE_RELATION_ROLE, addrNode.getOsmObject()));
+            r.addMember(new RelationMember(TagConstants.HOUSE_RELATION_ROLE, addrNode.getOsmObject()));
             addrNode.setStreetName(null); // remove street name
             finishObjectTransaction(addrNode);
         }

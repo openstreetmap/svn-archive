@@ -32,9 +32,6 @@ public class OSMEntityBase implements IOSMEntity, Comparable<IOSMEntity> {
 
     protected OsmPrimitive osmObject;
 
-    /**
-     * @param osmObject
-     */
     public OSMEntityBase(OsmPrimitive osmObject) {
         super();
         this.osmObject = osmObject;
@@ -50,7 +47,7 @@ public class OSMEntityBase implements IOSMEntity, Comparable<IOSMEntity> {
 
     /**
      * Adds a change listener.
-     * @param listener
+     * @param listener change listener
      */
     public static void addChangedListener(IAddressEditContainerListener listener) {
         CheckParameterUtil.ensureParameterNotNull(listener, "listener");
@@ -59,7 +56,7 @@ public class OSMEntityBase implements IOSMEntity, Comparable<IOSMEntity> {
 
     /**
      * Removes a change listener.
-     * @param listener
+     * @param listener change listener
      */
     public static void removeChangedListener(IAddressEditContainerListener listener) {
         CheckParameterUtil.ensureParameterNotNull(listener, "listener");
@@ -78,20 +75,20 @@ public class OSMEntityBase implements IOSMEntity, Comparable<IOSMEntity> {
 
     /**
      * Adds a command listener.
-     * @param listener
+     * @param listener command listener
      */
     @Override
-	public void addCommandListener(ICommandListener listener) {
+    public void addCommandListener(ICommandListener listener) {
         CheckParameterUtil.ensureParameterNotNull(listener, "listener");
         cmdListeners.add(listener);
     }
 
     /**
      * Removes a command listener.
-     * @param listener
+     * @param listener command listener
      */
     @Override
-	public void removeCommandListener(ICommandListener listener) {
+    public void removeCommandListener(ICommandListener listener) {
         CheckParameterUtil.ensureParameterNotNull(listener, "listener");
         cmdListeners.remove(listener);
     }
@@ -114,7 +111,7 @@ public class OSMEntityBase implements IOSMEntity, Comparable<IOSMEntity> {
     }
 
     @Override
-	public OsmPrimitive getOsmObject() {
+    public OsmPrimitive getOsmObject() {
         return osmObject;
     }
 
@@ -130,7 +127,7 @@ public class OSMEntityBase implements IOSMEntity, Comparable<IOSMEntity> {
      */
     public String getName() {
         if (TagUtils.hasNameTag(osmObject)) {
-            return  TagUtils.getNameValue(osmObject);
+            return TagUtils.getNameValue(osmObject);
         }
         return "";
     }
@@ -201,7 +198,7 @@ public class OSMEntityBase implements IOSMEntity, Comparable<IOSMEntity> {
         if (osm == null) return null;
 
         if (osm instanceof Node) {
-            return ((Node)osm).getCoor();
+            return ((Node) osm).getCoor();
         // way: return center
         } else if (osm instanceof Way) {
             Way w = (Way) osm;

@@ -18,7 +18,7 @@ import org.openstreetmap.josm.tools.Shortcut;
  * Action to find and fix addresses without (valid) streets. It launches an dialog
  * instance of {@link AddressEditDialog}.
  *
- * @author Oliver Wieland <oliver.wieland@online.de>
+ * @author Oliver Wieland &lt;oliver.wieland@online.de>
  */
 @SuppressWarnings("serial")
 public class FixUnresolvedStreetsAction extends JosmAction implements SelectionChangedListener {
@@ -75,18 +75,16 @@ public class FixUnresolvedStreetsAction extends JosmAction implements SelectionC
 
         for (String tag : addrVisitor.getTags()) {
             String methodName = createMethodName(tag);
-            System.out
-            .println(String
-                    .format(
-                            "/** Check if OSM primitive has a tag '%s'.\n * @param osmPrimitive The OSM entity to check.*/\npublic static boolean has%sTag(OsmPrimitive osmPrimitive) {\n return osmPrimitive != null ? osmPrimitive.hasKey(%s_TAG) : false;\n}\n",
-                            tag, methodName, tag.toUpperCase()
-                            .replaceAll(":", "_")));
-            System.out
-            .println(String
-                    .format(
-                            "/** Gets the value of tag '%s'.\n * @param osmPrimitive The OSM entity to check.*/\npublic static String get%sValue(OsmPrimitive osmPrimitive) {\n return osmPrimitive != null ? osmPrimitive.get(%s_TAG) : null;\n}\n",
-                            tag, methodName, tag.toUpperCase()
-                            .replaceAll(":", "_")));
+            // CHECKSTYLE.OFF: LineLength
+            System.out.println(String.format(
+                "/** Check if OSM primitive has a tag '%s'.\n * @param osmPrimitive The OSM entity to check.*/\npublic static boolean has%sTag(OsmPrimitive osmPrimitive) {\n return osmPrimitive != null ? osmPrimitive.hasKey(%s_TAG) : false;\n}\n",
+                tag, methodName, tag.toUpperCase()
+                .replaceAll(":", "_")));
+            System.out.println(String.format(
+                "/** Gets the value of tag '%s'.\n * @param osmPrimitive The OSM entity to check.*/\npublic static String get%sValue(OsmPrimitive osmPrimitive) {\n return osmPrimitive != null ? osmPrimitive.get(%s_TAG) : null;\n}\n",
+                tag, methodName, tag.toUpperCase()
+                .replaceAll(":", "_")));
+            // CHECKSTYLE.ON: LineLength
         }
 
         for (String tag : addrVisitor.getTags()) {
@@ -101,8 +99,7 @@ public class FixUnresolvedStreetsAction extends JosmAction implements SelectionC
             String tags = tag.toUpperCase().replaceAll(":", "_");
             String values = value.toUpperCase().replaceAll(":", "_");
             System.out.println(String.format(
-                    "public static final String %s_%s_VALUE = \"%s\";", tags, values
-                    , value));
+                    "public static final String %s_%s_VALUE = \"%s\";", tags, values, value));
         }
     }
 

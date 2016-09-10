@@ -6,13 +6,17 @@ import java.util.HashMap;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.Way;
 
-public class OsmFactory {
+public final class OsmFactory {
     private static HashMap<String, OSMAddress> addressCache = new HashMap<>();
+
+    private OsmFactory() {
+        // Hide default constructor for utilities classes
+    }
 
     /**
      * Creates an address node from an OSM node, if possible.
-     * @param node
-     * @return
+     * @param node OSM node
+     * @return created address
      */
     public static OSMAddress createNode(Node node) {
         if (TagUtils.isAddress(node)) {
@@ -33,7 +37,7 @@ public class OsmFactory {
 
     /**
      * Creates an node entity from an OSM way, if possible.
-     * @param way
+     * @param way OSM way
      * @return The new node instance or null; if given way is inappropriate.
      */
     public static IOSMEntity createNodeFromWay(Way way) {
@@ -42,7 +46,7 @@ public class OsmFactory {
         }
 
         // Check for building with address
-        if (way.isClosed() && TagUtils.hasBuildingTag(way)  && TagUtils.isAddress(way)) {
+        if (way.isClosed() && TagUtils.hasBuildingTag(way) && TagUtils.isAddress(way)) {
             String aid = "" + way.getId();
 
             OSMAddress aNode = lookup(aid);

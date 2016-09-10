@@ -20,11 +20,11 @@ import org.openstreetmap.josm.plugins.fixAddresses.gui.AddressEditTableModel;
 
 /**
  * Applies the guessed values for a set of addresses.
- * @author Oliver Wieland <oliver.wieland@online.de>
+ * @author Oliver Wieland &lt;oliver.wieland@online.de>
  *
  */
 @SuppressWarnings("serial")
-public class ApplyAllGuessesAction extends AbstractAddressEditAction implements MouseListener{
+public class ApplyAllGuessesAction extends AbstractAddressEditAction implements MouseListener {
     private String tag;
     /**
      * Instantiates a new "apply all guesses" action.
@@ -101,9 +101,9 @@ public class ApplyAllGuessesAction extends AbstractAddressEditAction implements 
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        JTable table = (JTable)e.getSource();
+        JTable table = (JTable) e.getSource();
         Point p = e.getPoint();
-        if(e.getClickCount() == 2) {
+        if (e.getClickCount() == 2) {
             AddressEditTableModel model = (AddressEditTableModel) table.getModel();
             if (model != null) {
                 int row = table.rowAtPoint(p);

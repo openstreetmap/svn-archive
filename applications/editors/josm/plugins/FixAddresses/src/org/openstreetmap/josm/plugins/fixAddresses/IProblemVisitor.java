@@ -7,10 +7,10 @@ public interface IProblemVisitor {
      *
      * @param problem the problem to add
      */
-    public void addProblem(IProblem problem);
+    void addProblem(IProblem problem);
 
     /**
      * Removes the problems of the given source.
      */
-    public void removeProblemsOfSource(IOSMEntity entity);
+    void removeProblemsOfSource(IOSMEntity entity);
 }

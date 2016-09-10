@@ -3,7 +3,12 @@ package org.openstreetmap.josm.plugins.fixAddresses;
 
 import java.util.List;
 
-public class StringUtils {
+public final class StringUtils {
+
+    private StringUtils() {
+        // Hide default constructor for utilities classes
+    }
+
     /**
      * Checks, if a string is either null or empty.
      *
@@ -58,7 +63,8 @@ public class StringUtils {
             for (j = n - 1; j >= 0; j--) {
                 /*
                  * if (i >= m || j >= n) { l[i][j] = 0; } else
-                 */if (a.charAt(i) == b.charAt(j)) {
+                 */
+                if (a.charAt(i) == b.charAt(j)) {
                     l[i][j] = 1 + l[i + 1][j + 1];
                 } else {
                     l[i][j] = Math.max(l[i + 1][j], l[i][j + 1]);
@@ -73,7 +79,7 @@ public class StringUtils {
      *
      * @param a The first string.
      * @param b The second string.
-     * @return
+     * @return the longest common substring of a and b
      */
     public static String getLongestCommonSubstring(String a, String b) {
         if (StringUtils.isNullOrEmpty(a))
@@ -101,7 +107,6 @@ public class StringUtils {
             }
         }
 
-        l = null;
         return sb.toString();
     }
 
@@ -125,12 +130,11 @@ public class StringUtils {
         int lNeedle = needle.length();
         for (String curString : haystack) {
             int ll = lcsLength(needle, curString);
-            double ratio = ll / (double)lNeedle;
+            double ratio = ll / (double) lNeedle;
             if (ratio > maxRatio) {
                 maxRatio = ratio;
                 bestMatch = curString;
             }
-
         }
 
         return bestMatch;

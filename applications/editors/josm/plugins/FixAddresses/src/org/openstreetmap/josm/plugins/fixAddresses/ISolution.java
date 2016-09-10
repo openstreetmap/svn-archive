@@ -10,24 +10,24 @@ public interface ISolution {
      *
      * @return the description
      */
-    public String getDescription();
+    String getDescription();
 
     /**
      * Gets the action to execute for solving the problem.
      *
      * @return the action
      */
-    public JosmAction getAction();
+    JosmAction getAction();
 
     /**
      * Gets the solution type.
      *
      * @return the type
      */
-    public SolutionType getType();
+    SolutionType getType();
 
     /**
      * Executes one or more actions to solve a problem.
      */
-    public void solve();
+    void solve();
 }

@@ -8,15 +8,15 @@ import java.util.List;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.plugins.fixAddresses.AddressEditContainer;
 import org.openstreetmap.josm.plugins.fixAddresses.GuessAddressRunnable;
-import org.openstreetmap.josm.plugins.fixAddresses.OSMAddress;
 import org.openstreetmap.josm.plugins.fixAddresses.IProgressMonitorFinishedListener;
+import org.openstreetmap.josm.plugins.fixAddresses.OSMAddress;
 import org.openstreetmap.josm.plugins.fixAddresses.gui.AddressEditSelectionEvent;
 
 /**
  * Guesses address tags by picking the closest street node with a name. The same is done
  * with city, post code, state,... However, I strongly encourage you to check the result.
  *
- * @author Oliver Wieland <oliver.wieland@online.de>
+ * @author Oliver Wieland &lt;oliver.wieland@online.de>
  */
 @SuppressWarnings("serial")
 public class GuessAddressDataAction extends AbstractAddressEditAction implements IProgressMonitorFinishedListener {
@@ -57,10 +57,10 @@ public class GuessAddressDataAction extends AbstractAddressEditAction implements
 
     /**
      * Internal method to start several threads guessing tag values for the given list of addresses.
-     * @param addrNodes
      */
     private void internalGuessAddresses(List<OSMAddress> nodes) {
-        if (nodes == null) return;
+        if (nodes == null)
+            return;
 
         // Launch address guessing thread
         GuessAddressRunnable aft = new GuessAddressRunnable(nodes, tr("Guessing address values"));

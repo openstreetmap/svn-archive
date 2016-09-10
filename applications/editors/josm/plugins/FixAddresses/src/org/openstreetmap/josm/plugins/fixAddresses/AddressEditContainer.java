@@ -39,7 +39,7 @@ import org.openstreetmap.josm.tools.CheckParameterUtil;
  * {@see AbstractAddressEditAction}
  * {@see AddressEditTableModel}
  *
- * @author Oliver Wieland <oliver.wieland@online.de>
+ * @author Oliver Wieland &lt;oliver.wieland@online.de>
  *
  */
 public class AddressEditContainer implements Visitor, DataSetListener, IAddressEditContainerListener, IProblemVisitor, IAllKnowingTrashHeap {
@@ -95,7 +95,7 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 
     /**
      * Adds a change listener.
-     * @param listener
+     * @param listener change listener
      */
     public void addChangedListener(IAddressEditContainerListener listener) {
         listeners.add(listener);
@@ -103,7 +103,7 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 
     /**
      * Removes a change listener.
-     * @param listener
+     * @param listener change listener
      */
     public void removeChangedListener(IAddressEditContainerListener listener) {
         listeners.remove(listener);
@@ -304,8 +304,8 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
     }
 
     /**
-     * Gets the dictionary contains the collected streets.
-     * @return
+     * Gets the dictionary containing the collected streets.
+     * @return dictionary containing the collected streets
      */
     public HashMap<String, OSMStreet> getStreetDict() {
         return streetDict;
@@ -342,7 +342,7 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 
     /**
      * Gets all addresses without valid street.
-     * @return
+     * @return all addresses without valid street
      */
     public List<OSMAddress> getUnresolvedItems() {
         return unresolvedAddresses;
@@ -350,7 +350,7 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 
     /**
      * Gets the tags used in the data layer.
-     * @return
+     * @return the tags used in the data layer
      */
     public HashSet<String> getTags() {
         return tags;
@@ -365,7 +365,7 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 
     /**
      * Gets the number of streets in the container.
-     * @return
+     * @return the number of streets in the container
      */
     public int getNumberOfStreets() {
         return streetDict != null ? streetDict.size() : 0;
@@ -373,7 +373,7 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 
     /**
      * Get the number of incomplete addresses.
-     * @return
+     * @return the number of incomplete addresses
      */
     public int getNumberOfIncompleteAddresses() {
         return incompleteAddresses != null ? incompleteAddresses.size() : 0;
@@ -381,7 +381,7 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 
     /**
      * Gets the number of unresolved addresses.
-     * @return
+     * @return the number of unresolved addresses
      */
     public int getNumberOfUnresolvedAddresses() {
         return unresolvedAddresses != null ? unresolvedAddresses.size() : 0;
@@ -398,7 +398,7 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 
     /**
      * Gets the number of guessed tags.
-     * @return
+     * @return the number of guessed tags
      */
     public int getNumberOfGuesses() {
         int sum = 0;
@@ -413,7 +413,7 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 
     /**
      * Gets all (incomplete and/or unresolved) address nodes to fix.
-     * @return
+     * @return all (incomplete and/or unresolved) address nodes to fix
      */
     public List<OSMAddress> getAllAddressesToFix() {
         List<OSMAddress> all = new ArrayList<>(incompleteAddresses);
@@ -443,7 +443,7 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 
     /**
      * Tries to assign an address to a street.
-     * @param aNode
+     * @param aNode address
      */
     private boolean assignAddressToStreet(OSMAddress aNode) {
         String streetName = aNode.getStreetName();
@@ -715,7 +715,7 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
          * @param name Name of the street.
          * @param score Score of the street (length of longest common substring)
          */
-        public StreetScore(String name, int score) {
+        StreetScore(String name, int score) {
             super();
             this.name = name;
             this.score = score;

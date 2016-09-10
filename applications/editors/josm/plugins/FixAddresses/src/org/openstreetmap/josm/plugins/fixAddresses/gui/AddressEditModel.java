@@ -21,10 +21,6 @@ public class AddressEditModel {
     private DefaultMutableTreeNode unresolvedRoot;
     private DefaultMutableTreeNode incompleteRoot;
 
-    /**
-     * @param streets
-     * @param unresolvedAddresses
-     */
     public AddressEditModel(List<OSMStreet> streets,
             List<OSMAddress> unresolvedAddresses) {
         super();
@@ -69,7 +65,7 @@ public class AddressEditModel {
 
     /**
      * Gets the tree node containing all unresolved addresses.
-     * @return
+     * @return tree node containing all unresolved addresses
      */
     public TreeNode getUnresolvedAddressesTree() {
         if (unresolvedAddresses == null) return new DefaultMutableTreeNode(tr("(No data)"));
@@ -88,7 +84,7 @@ public class AddressEditModel {
 
     /**
      * Gets the tree node containing all incomplete addresses.
-     * @return
+     * @return tree node containing all incomplete addresses
      */
     public TreeNode getIncompleteAddressesTree() {
         if (incompleteAddresses == null) return new DefaultMutableTreeNode(tr("(No data)"));

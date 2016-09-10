@@ -36,10 +36,10 @@ public abstract class AddressEditTableModel extends DefaultTableModel implements
             fireTableDataChanged(); // update model
         } else {
             SwingUtilities.invokeLater(new Runnable() {
-                
+
                 @Override
                 public void run() {
-                    fireTableDataChanged(); // update model                    
+                    fireTableDataChanged(); // update model
                 }
             });
         }
@@ -54,22 +54,20 @@ public abstract class AddressEditTableModel extends DefaultTableModel implements
     }
 
     /**
-     * Gets the node entity for the given row or null; if row contains no
-     * entity.
+     * Gets the node entity for the given row or null; if row contains no entity.
      *
      * @param row
      *            The row to get the entity object for.
-     * @return
+     * @return the node entity for the given row or null; if row contains no entity
      */
     public abstract IOSMEntity getEntityOfRow(int row);
 
     /**
-     * Gets the row for the given node entity or -1; if the model does not
-     * contain the entity.
+     * Gets the row for the given node entity or -1; if the model does not contain the entity.
      *
      * @param entity
      *            The entity to get the row for.
-     * @return
+     * @return the row for the given node entity or -1; if the model does not contain the entity
      */
     public abstract int getRowOfEntity(IOSMEntity entity);
 
@@ -89,7 +87,7 @@ public abstract class AddressEditTableModel extends DefaultTableModel implements
      * The class that is interested in processing a column
      * event implements this interface, and the object created
      * with that class is registered with a component using the
-     * component's <code>addColumnListener<code> method. When
+     * component's {@code addColumnListener} method. When
      * the column event occurs, that object's appropriate
      * method is invoked.
      *
@@ -103,7 +101,7 @@ public abstract class AddressEditTableModel extends DefaultTableModel implements
          *
          * @param t the t
          */
-        public ColumnListener(JTable t) {
+        ColumnListener(JTable t) {
             table = t;
         }
 
@@ -141,7 +139,7 @@ public abstract class AddressEditTableModel extends DefaultTableModel implements
     /**
      * Internal base class to sort items by different columns.
      */
-    protected static abstract class ColumnSorter<E> implements Comparator<E> {
+    protected abstract static class ColumnSorter<E> implements Comparator<E> {
         private int column;
         private boolean ascending;
 

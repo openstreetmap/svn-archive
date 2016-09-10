@@ -10,5 +10,5 @@ public interface ICommandListener {
      * @param entity The entity which created/used the command.
      * @param command The command instance to process by the enclosing command listener.
      */
-    public void commandIssued(IOSMEntity entity, Command command);
+    void commandIssued(IOSMEntity entity, Command command);
 }

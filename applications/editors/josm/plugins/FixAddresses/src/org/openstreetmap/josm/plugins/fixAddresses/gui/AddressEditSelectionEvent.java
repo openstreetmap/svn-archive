@@ -32,7 +32,8 @@ public class AddressEditSelectionEvent extends ActionEvent {
      * @param incomplete The incomplete addresses table component.
      * @param container The address container instance holding the entities for streets and addresses.
      */
-    public AddressEditSelectionEvent(Object source, JTable selStreet, JTable unresolvedAddresses, JTable incompleteAddresses, AddressEditContainer container) {
+    public AddressEditSelectionEvent(Object source, JTable selStreet, JTable unresolvedAddresses, JTable incompleteAddresses,
+            AddressEditContainer container) {
         super(source, -1, "");
         this.streetTable = selStreet;
         this.unresolvedAddressTable = unresolvedAddresses;
@@ -42,7 +43,7 @@ public class AddressEditSelectionEvent extends ActionEvent {
 
     /**
      * Gets the street table component.
-     * @return
+     * @return the street table component
      */
     public JTable getStreetTable() {
         return streetTable;
@@ -50,7 +51,7 @@ public class AddressEditSelectionEvent extends ActionEvent {
 
     /**
      * Gets the 'unresolved addresses' table component.
-     * @return
+     * @return the 'unresolved addresses' table component
      */
     public JTable getUnresolvedAddressTable() {
         return unresolvedAddressTable;
@@ -74,7 +75,7 @@ public class AddressEditSelectionEvent extends ActionEvent {
 
     /**
      * Gets the selected street of the street table.
-     * @return
+     * @return the selected street of the street table
      */
     public OSMStreet getSelectedStreet() {
         if (streetTable != null && addressContainer != null && addressContainer.getStreetList() != null) {
@@ -143,7 +144,7 @@ public class AddressEditSelectionEvent extends ActionEvent {
 
     /**
      * Gets the list containing the selected items of the 'unresolved addresses ' table.
-     * @return
+     * @return the list containing the selected items of the 'unresolved addresses ' table
      */
     public List<OSMAddress> getSelectedUnresolvedAddresses() {
         if (unresolvedAddressTable != null &&

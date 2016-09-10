@@ -10,7 +10,7 @@ import org.openstreetmap.josm.plugins.fixAddresses.AddressEditContainer;
 import org.openstreetmap.josm.plugins.fixAddresses.IOSMEntity;
 import org.openstreetmap.josm.plugins.fixAddresses.OSMAddress;
 
-public class IncompleteAddressesTableModel extends AddressEditTableModel  {
+public class IncompleteAddressesTableModel extends AddressEditTableModel {
     /**
      *
      */
@@ -18,8 +18,9 @@ public class IncompleteAddressesTableModel extends AddressEditTableModel  {
 
     // TODO: Add "state" column, if required
     private static final int NUMBER_OF_COLUMNS = 5;
-    private static final String[] COLUMN_NAMES = new String[]{tr("Country"), trc("address", "City" /* fix #8140 */), tr("Postcode"), tr("Street"), tr("Number")};
-    private static final Class<?>[] COLUMN_CLASSES = new Class<?>[]{
+    private static final String[] COLUMN_NAMES = new String[] {
+            tr("Country"), trc("address", "City" /* fix #8140 */), tr("Postcode"), tr("Street"), tr("Number")};
+    private static final Class<?>[] COLUMN_CLASSES = new Class<?>[] {
         String.class, String.class, String.class, String.class, String.class, String.class};
 
 
@@ -124,7 +125,7 @@ public class IncompleteAddressesTableModel extends AddressEditTableModel  {
          * @param column the column to sort
          * @param asc sort ascending
          */
-        public IncompleteAddressModelSorter(int column, boolean asc) {
+        IncompleteAddressModelSorter(int column, boolean asc) {
             super(column, asc);
         }
 
@@ -134,19 +135,19 @@ public class IncompleteAddressesTableModel extends AddressEditTableModel  {
 
             switch (getColumn()) {
             case 0:
-                cc=arg0.getCountry().compareTo(arg1.getCountry());
+                cc = arg0.getCountry().compareTo(arg1.getCountry());
                 break;
             case 1:
-                cc=arg0.getCity().compareTo(arg1.getCity());
+                cc = arg0.getCity().compareTo(arg1.getCity());
                 break;
             case 2:
-                cc=arg0.getPostalCode().compareTo(arg1.getPostalCode());
+                cc = arg0.getPostalCode().compareTo(arg1.getPostalCode());
                 break;
             case 3:
-                cc= arg0.getStreetName().compareTo(arg1.getStreetName());
+                cc = arg0.getStreetName().compareTo(arg1.getStreetName());
                 break;
             case 4:
-                cc=arg0.getHouseNumber().compareTo(arg1.getHouseNumber());
+                cc = arg0.getHouseNumber().compareTo(arg1.getHouseNumber());
                 break;
             default:
                 throw new RuntimeException("Invalid column index: " + getColumn());
@@ -159,6 +160,4 @@ public class IncompleteAddressesTableModel extends AddressEditTableModel  {
             return cc;
         }
     }
-
-
 }

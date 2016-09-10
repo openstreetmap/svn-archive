@@ -14,16 +14,13 @@ public class StreetTableModel extends AddressEditTableModel {
     private static final int NUMBER_OF_COLUMNS = 3;
     private static final String[] COLUMN_NAMES = new String[]{tr("Type"), tr("Name"), tr("Addresses")};
     private static final Class<?>[] COLUMN_CLASSES = new Class<?>[]{String.class, String.class, Integer.class};
-    /**
-     * @param addressContainer
-     */
+
     public StreetTableModel(AddressEditContainer addressContainer) {
         super(addressContainer);
     }
 
     @Override
     public int getColumnCount() {
-        // TODO Auto-generated method stub
         return NUMBER_OF_COLUMNS;
     }
 
@@ -106,7 +103,7 @@ public class StreetTableModel extends AddressEditTableModel {
      */
     static class StreetModelSorter extends ColumnSorter<OSMStreet> {
 
-        public StreetModelSorter(int column, boolean asc) {
+        StreetModelSorter(int column, boolean asc) {
             super(column, asc);
         }
 

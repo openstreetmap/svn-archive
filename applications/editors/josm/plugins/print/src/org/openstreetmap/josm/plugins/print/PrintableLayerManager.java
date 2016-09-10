@@ -16,13 +16,6 @@ public class PrintableLayerManager extends MainLayerManager {
     private static final MainLayerManager layerManager = Main.getLayerManager();
 
     @Override
-    @Deprecated
-    public synchronized void addActiveLayerChangeListener(ActiveLayerChangeListener listener,
-            boolean initialFire) {
-        layerManager.addActiveLayerChangeListener(listener, initialFire);
-    }
-
-    @Override
     public synchronized void removeActiveLayerChangeListener(ActiveLayerChangeListener listener) {
         layerManager.removeActiveLayerChangeListener(listener);
     }

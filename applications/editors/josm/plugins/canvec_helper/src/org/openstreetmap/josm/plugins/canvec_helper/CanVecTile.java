@@ -1,30 +1,26 @@
-// License: GPL
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.canvec_helper;
 
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.List;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
-import java.util.regex.Pattern;
-import java.util.regex.Matcher;
-
-import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.data.Bounds;
-
-import java.awt.Point;
-
-import org.openstreetmap.josm.data.coor.LatLon;
-import org.openstreetmap.josm.gui.MapView;
-import org.openstreetmap.josm.io.IllegalDataException;
-import org.openstreetmap.josm.io.CachedFile;
-
 import java.awt.Graphics2D;
+import java.awt.Point;
 import java.awt.Polygon;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 
+import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.data.Bounds;
+import org.openstreetmap.josm.data.coor.LatLon;
+import org.openstreetmap.josm.gui.MapView;
+import org.openstreetmap.josm.io.CachedFile;
+import org.openstreetmap.josm.io.IllegalDataException;
 import org.openstreetmap.josm.io.OsmImporter;
 import org.openstreetmap.josm.io.OsmImporter.OsmImporterData;
 
@@ -33,13 +29,13 @@ class CanVecTile {
     boolean canDownload = false;
     private List<String> subTileIds = new ArrayList<>();
     private boolean zipScanned = false;
-    
+
     private List<CanVecTile> subTiles = new ArrayList<>();
     private boolean subTilesMade = false;
 
     private List<String> index;
     private int depth;
-    
+
     private int corda;
     private int cordc;
     private boolean valid = false;
@@ -48,20 +44,22 @@ class CanVecTile {
     private Bounds bounds;
     String tileid;
     CanVecTile(String tileid, CanvecLayer layer) {
-        String parta,partb,partc,partd;
-        parta = tileid.substring(0,3);
+        String parta, partb, partc, partd;
+        parta = tileid.substring(0, 3);
         partb = tileid.substring(3, 4);
         partc = tileid.substring(4, 6);
         partd = tileid.substring(6);
-        int a,c;
+        int a, c;
         a = Integer.parseInt(parta);
         c = Integer.parseInt(partc);
-        realInit(a,partb,c,partd,layer,new ArrayList<String>());
+        realInit(a, partb, c, partd, layer, new ArrayList<String>());
     }
-    CanVecTile(int a,String b,int c,String d,CanvecLayer layer, List<String> index) {
-        realInit(a,b,c,d,layer,index);
+
+    CanVecTile(int a, String b, int c, String d, CanvecLayer layer, List<String> index) {
+        realInit(a, b, c, d, layer, index);
     }
-    private void realInit(int a,String b,int c,String d,CanvecLayer layer, List<String> index) {
+
+    private void realInit(int a, String b, int c, String d, CanvecLayer layer, List<String> index) {
         this.index = index;
         this.layer = layer;
         corda = a;
@@ -80,7 +78,7 @@ class CanVecTile {
             }
             zeroPointLat = 40 + 4 * row;
             zeroPointLon = -56 - 8 * column;
-        
+
             // size of each grid
             if (row <= 6) {
                 // each is 4x8 degrees, broken into a 4x4 grid
@@ -99,8 +97,8 @@ class CanVecTile {
         int grid2;
         if (b.isEmpty()) grid2 = 0;
         else grid2 = b.charAt(0) - 64;
-        int[] rows1 = { 0, 0,0,0,0, 1,1,1,1, 2,2,2,2, 3,3,3,3 };
-        int[] cols1 = { 0, 3,2,1,0, 0,1,2,3, 3,2,1,0, 0,1,2,3 };
+        int[] rows1 = {0, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3};
+        int[] cols1 = {0, 3, 2, 1, 0, 0, 1, 2, 3, 3, 2, 1, 0, 0, 1, 2, 3};
         lat2 = zeroPointLat + (latSpan/4)*rows1[grid2];
         lon2 = zeroPointLon + (lonSpan/4)*cols1[grid2];
 
@@ -110,9 +108,9 @@ class CanVecTile {
             depth = 2;
         }
 
-        int[] rows3 = { 0, 0,0,0,0, 1,1,1,1, 2,2,2,2, 3,3,3,3 };
+        int[] rows3 = {0, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3};
         lat2 = lat2 + (latSpan/4)*rows3[c];
-        int[] cols3 = { 0, 3,2,1,0, 0,1,2,3, 3,2,1,0, 0,1,2,3 };
+        int[] cols3 = {0, 3, 2, 1, 0, 0, 1, 2, 3, 3, 2, 1, 0, 0, 1, 2, 3};
         lon2 = lon2 + (lonSpan/4)*cols3[c];
 
         if (c != 0) {
@@ -120,7 +118,7 @@ class CanVecTile {
             lonSpan = lonSpan / 4;
             depth = 3;
         }
-        
+
         if (!cordd.isEmpty()) {
             depth = 4;
             String[] foo = cordd.split("\\.");
@@ -152,27 +150,31 @@ class CanVecTile {
             }
         }
 
-        bounds = new Bounds(lat2,lon2,lat2+latSpan,lon2+lonSpan);
-        if (cordb.isEmpty()) this.tileid = String.format("%03d",corda);
-        else if (cordc == 0) this.tileid = String.format("%03d%s",corda,cordb);
-        else if (cordd.isEmpty()) this.tileid = String.format("%03d%s%02d",corda,cordb,cordc);
-        else this.tileid = String.format("%03d%s%02d%s",corda,cordb,cordc,cordd);
+        bounds = new Bounds(lat2, lon2, lat2+latSpan, lon2+lonSpan);
+        if (cordb.isEmpty()) this.tileid = String.format("%03d", corda);
+        else if (cordc == 0) this.tileid = String.format("%03d%s", corda, cordb);
+        else if (cordd.isEmpty()) this.tileid = String.format("%03d%s%02d", corda, cordb, cordc);
+        else this.tileid = String.format("%03d%s%02d%s", corda, cordb, cordc, cordd);
         valid = true;
     }
+
     boolean isValid() {
         return valid;
     }
+
     String getTileId() {
         return this.tileid;
     }
+
     boolean isVisible(Bounds view) {
         return view.intersects(bounds);
     }
+
     Point[] getCorners(MapView mv) {
         LatLon min = bounds.getMin();
         LatLon max = bounds.getMax();
-        LatLon x1 = new LatLon(min.lat(),max.lon());
-        LatLon x2 = new LatLon(max.lat(),min.lon());
+        LatLon x1 = new LatLon(min.lat(), max.lon());
+        LatLon x2 = new LatLon(max.lat(), min.lon());
         return new Point[] {
             mv.getPoint(min), // south west
             mv.getPoint(x1),
@@ -180,9 +182,11 @@ class CanVecTile {
             mv.getPoint(x2) // north west
             };
     }
+
     public String getDownloadUrl() {
-        return String.format("http://ftp2.cits.rncan.gc.ca/OSM/pub/%1$03d/%2$s/%1$03d%2$s%3$02d.zip",corda,cordb,cordc);
+        return String.format("http://ftp2.cits.rncan.gc.ca/OSM/pub/%1$03d/%2$s/%1$03d%2$s%3$02d.zip", corda, cordb, cordc);
     }
+
     private ZipFile openZip() throws IOException {
         File downloadPath = new File(layer.plugin.getPluginDir() + File.separator);
         if (!downloadPath.mkdir() && Main.isDebugEnabled()) {
@@ -191,6 +195,7 @@ class CanVecTile {
         CachedFile tileZip = new CachedFile(getDownloadUrl()).setDestDir(downloadPath.toString());
         return new ZipFile(tileZip.getFile());
     }
+
     void downloadSelf() {
         if (zipScanned) return;
         ZipFile zipFile;
@@ -206,12 +211,13 @@ class CanVecTile {
             if ("Metadata.txt".equals(entry.getName())) continue;
             subTileIds.add(entry.getName());
             zipScanned = true;
-            CanVecTile finalTile = new CanVecTile(entry.getName(),layer);
+            CanVecTile finalTile = new CanVecTile(entry.getName(), layer);
             if (finalTile.isValid()) {
                 subTiles.add(finalTile);
             }
         }
     }
+
     void loadRawOsm() {
         ZipFile zipFile;
         try {
@@ -233,6 +239,7 @@ class CanVecTile {
             return;
         }
     }
+
     private void makeSubTiles(int layer) {
         List<String> buffer = new ArrayList<>();
         Pattern p;
@@ -251,13 +258,13 @@ class CanVecTile {
                 } else if (lastCell.isEmpty()) {
                     buffer.add(m.group(0));
                 } else {
-                    subTiles.add(new CanVecTile(corda,lastCell,0,"",this.layer,buffer));
+                    subTiles.add(new CanVecTile(corda, lastCell, 0, "", this.layer, buffer));
                     buffer = new ArrayList<>();
                     buffer.add(m.group(0));
                 }
                 lastCell = cell;
             }
-            subTiles.add(new CanVecTile(corda,lastCell,0,"",this.layer,buffer));
+            subTiles.add(new CanVecTile(corda, lastCell, 0, "", this.layer, buffer));
             break;
         case 2:
             p = Pattern.compile("\\d\\d\\d[A-Z](\\d\\d).*");
@@ -272,17 +279,18 @@ class CanVecTile {
                 } else if (lastCell2 == -1) {
                     buffer.add(m.group(0));
                 } else {
-                    subTiles.add(new CanVecTile(corda,cordb,lastCell2,"",this.layer,buffer));
+                    subTiles.add(new CanVecTile(corda, cordb, lastCell2, "", this.layer, buffer));
                     buffer = new ArrayList<>();
                     buffer.add(m.group(0));
                 }
                 lastCell2 = cell;
             }
-            if (lastCell2 != -1) subTiles.add(new CanVecTile(corda,cordb,lastCell2,"",this.layer,buffer));
+            if (lastCell2 != -1) subTiles.add(new CanVecTile(corda, cordb, lastCell2, "", this.layer, buffer));
             break;
         }
         subTilesMade = true;
     }
+
     void paint(Graphics2D g, MapView mv, Bounds bounds, int maxZoom) {
         boolean showSubTiles = false;
         if (!isVisible(bounds)) return;
@@ -309,15 +317,15 @@ class CanVecTile {
         if (showSubTiles && (depth < maxZoom)) {
             for (int i = 0; i < subTiles.size(); i++) {
                 CanVecTile tile = subTiles.get(i);
-                tile.paint(g,mv,bounds,maxZoom);
+                tile.paint(g, mv, bounds, maxZoom);
             }
         } else {
             Point[] corners = getCorners(mv);
-            int[] xs = { corners[0].x, corners[1].x, corners[2].x, corners[3].x };
-            int[] ys = { corners[0].y, corners[1].y, corners[2].y, corners[3].y };
-            Polygon shape = new Polygon(xs,ys,4);
+            int[] xs = {corners[0].x, corners[1].x, corners[2].x, corners[3].x };
+            int[] ys = {corners[0].y, corners[1].y, corners[2].y, corners[3].y };
+            Polygon shape = new Polygon(xs, ys, 4);
             g.draw(shape);
-            g.drawString(getTileId(),corners[0].x,corners[0].y);
+            g.drawString(getTileId(), corners[0].x, corners[0].y);
         }
     }
 }

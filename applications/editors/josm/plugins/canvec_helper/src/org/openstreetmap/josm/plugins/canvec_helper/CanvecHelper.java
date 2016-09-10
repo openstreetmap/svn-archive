@@ -1,4 +1,4 @@
-// License: GPL
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.canvec_helper;
 
 import org.openstreetmap.josm.Main;

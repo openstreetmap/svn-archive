@@ -1,4 +1,4 @@
-// License: GPL
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.canvec_helper;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -43,7 +43,7 @@ class CanvecLayer extends Layer {
     List<CanVecTile> downloadable = new ArrayList<>();
     List<CanVecTile> openable = new ArrayList<>();
 
-    CanvecLayer(String name, CanvecHelper self){
+    CanvecLayer(String name, CanvecHelper self) {
         super(name);
         plugin = self;
         this.setBackgroundLayer(true);
@@ -64,7 +64,7 @@ class CanvecLayer extends Layer {
                     if (cell == lastCell) {
                         list.add(m.group(0));
                     } else if (lastCell != -1) {
-                        CanVecTile tile = new CanVecTile(lastCell,"",0,"",this,list);
+                        CanVecTile tile = new CanVecTile(lastCell, "", 0, "", this, list);
                         if (tile.isValid()) tiles.add(tile);
                         list = new ArrayList<>();
                         list.add(m.group(0));
@@ -74,7 +74,7 @@ class CanvecLayer extends Layer {
                     Main.warn("bad line '" + line + "'\n");
                 }
             }
-            CanVecTile tile = new CanVecTile(lastCell,"",0,"",this,list);
+            CanVecTile tile = new CanVecTile(lastCell, "", 0, "", this, list);
             if (tile.isValid()) tiles.add(tile);
 
             if (Main.isDebugEnabled()) {
@@ -86,6 +86,7 @@ class CanvecLayer extends Layer {
             Main.error(e);
         }
     }
+
     @Override
     public Action[] getMenuEntries() {
         return new Action[]{
@@ -97,49 +98,58 @@ class CanvecLayer extends Layer {
             new DownloadCanvecAction(this),
             new OpenOsmAction(this)};
     }
-    private static class MaxZoomAction extends AbstractAction implements LayerAction {
+
+    private static final class MaxZoomAction extends AbstractAction implements LayerAction {
         private final CanvecLayer parent;
         private MaxZoomAction(CanvecLayer parent) {
             this.parent = parent;
         }
+
         @Override
         public void actionPerformed(ActionEvent e) {
             // Do nothing
         }
+
         @Override
         public boolean supportLayers(List<Layer> layers) {
             return false;
         }
+
         @Override
         public Component createMenuComponent() {
             JMenu maxZoomMenu = new JMenu("max zoom");
-            maxZoomMenu.add(new JMenuItem(new SetMaxZoom(parent,1)));
-            maxZoomMenu.add(new JMenuItem(new SetMaxZoom(parent,2)));
-            maxZoomMenu.add(new JMenuItem(new SetMaxZoom(parent,3)));
-            maxZoomMenu.add(new JMenuItem(new SetMaxZoom(parent,4)));
+            maxZoomMenu.add(new JMenuItem(new SetMaxZoom(parent, 1)));
+            maxZoomMenu.add(new JMenuItem(new SetMaxZoom(parent, 2)));
+            maxZoomMenu.add(new JMenuItem(new SetMaxZoom(parent, 3)));
+            maxZoomMenu.add(new JMenuItem(new SetMaxZoom(parent, 4)));
             return maxZoomMenu;
         }
     }
-    private static class AllowDownload extends AbstractAction {
+
+    private static final class AllowDownload extends AbstractAction {
         private final CanVecTile tile;
         private AllowDownload(CanVecTile tile) {
             super(tile.tileid);
             this.tile = tile;
         }
+
         @Override
         public void actionPerformed(ActionEvent arg0) {
             tile.canDownload = true;
         }
     }
-    private class OpenOsmAction extends AbstractAction implements LayerAction {
+
+    private final class OpenOsmAction extends AbstractAction implements LayerAction {
         private CanvecLayer layer;
         private OpenOsmAction(CanvecLayer layer) {
             this.layer = layer;
         }
+
         @Override
         public void actionPerformed(ActionEvent e) {
             // Do nothing
         }
+
         @Override
         public Component createMenuComponent() {
             JMenu openOsm = new JMenu("Open tile");
@@ -148,35 +158,42 @@ class CanvecLayer extends Layer {
             }
             return openOsm;
         }
+
         @Override
         public boolean supportLayers(List<Layer> layers) {
             return false;
         }
     }
-    private static class DoOpenOsm extends AbstractAction {
+
+    private static final class DoOpenOsm extends AbstractAction {
         private final CanVecTile tile;
         private DoOpenOsm(CanVecTile tile) {
             super(tile.tileid);
             this.tile = tile;
         }
+
         @Override
         public void actionPerformed(ActionEvent e) {
             tile.loadRawOsm();
         }
     }
-    private class DownloadCanvecAction extends AbstractAction implements LayerAction {
+
+    private final class DownloadCanvecAction extends AbstractAction implements LayerAction {
         private CanvecLayer parent;
         private DownloadCanvecAction(CanvecLayer parent) {
             this.parent = parent;
         }
+
         @Override
         public void actionPerformed(ActionEvent e) {
             // Do nothing
         }
+
         @Override
         public boolean supportLayers(List<Layer> layers) {
             return false;
         }
+
         @Override
         public Component createMenuComponent() {
             JMenu downloadCanvec = new JMenu("Download zip's");
@@ -186,33 +203,41 @@ class CanvecLayer extends Layer {
             return downloadCanvec;
         }
     }
+
     void setMaxZoom(int maxZoom) {
         this.maxZoom = maxZoom;
     }
+
     @Override
     public Object getInfoComponent() {
         return getToolTipText();
     }
+
     @Override
     public String getToolTipText() {
         return tr("canvec tile helper");
     }
+
     @Override
     public void visitBoundingBox(BoundingXYVisitor v) {
         // Do nothing
     }
+
     @Override
     public boolean isMergable(Layer other) {
         return false;
     }
+
     @Override
     public void mergeFrom(Layer from) {
         // Do nothing
     }
+
     @Override
     public Icon getIcon() {
         return layerIcon;
     }
+
     @Override
     public void paint(Graphics2D g, MapView mv, Bounds bounds) {
         downloadable = new ArrayList<>();
@@ -221,7 +246,7 @@ class CanvecLayer extends Layer {
         g.setColor(Color.red);
         for (int i = 0; i < tiles.size(); i++) {
             CanVecTile tile = tiles.get(i);
-            tile.paint(g,mv,bounds,maxZoom);
+            tile.paint(g, mv, bounds, maxZoom);
         }
     }
 }

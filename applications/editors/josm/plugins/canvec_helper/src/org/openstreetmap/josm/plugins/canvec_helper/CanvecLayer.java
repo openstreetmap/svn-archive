@@ -139,7 +139,7 @@ class CanvecLayer extends Layer {
         }
     }
 
-    private final class OpenOsmAction extends AbstractAction implements LayerAction {
+    private static final class OpenOsmAction extends AbstractAction implements LayerAction {
         private CanvecLayer layer;
         private OpenOsmAction(CanvecLayer layer) {
             this.layer = layer;
@@ -178,7 +178,7 @@ class CanvecLayer extends Layer {
         }
     }
 
-    private final class DownloadCanvecAction extends AbstractAction implements LayerAction {
+    private static final class DownloadCanvecAction extends AbstractAction implements LayerAction {
         private CanvecLayer parent;
         private DownloadCanvecAction(CanvecLayer parent) {
             this.parent = parent;

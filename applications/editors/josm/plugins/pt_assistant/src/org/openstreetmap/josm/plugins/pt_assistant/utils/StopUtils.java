@@ -6,7 +6,7 @@ import org.openstreetmap.josm.data.osm.Relation;
 /**
  * Utils class for stop areas
  * 
- * @author 
+ * @author
  *
  */
 public class StopUtils {
@@ -15,7 +15,6 @@ public class StopUtils {
 		// private constructor for util classes
 	}
 
-	
 	/**
 	 * Checks if a given relation is a stop_area.
 	 * 
@@ -34,7 +33,7 @@ public class StopUtils {
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Checks if a given object is a stop_position.
 	 * 
@@ -53,7 +52,7 @@ public class StopUtils {
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Checks if a given object is a platform.
 	 * 
@@ -67,13 +66,13 @@ public class StopUtils {
 			return false;
 		}
 
-		if (rm.hasTag("public_transport", "platform")) {
+		if (rm.hasTag("public_transport", "platform") || rm.hasTag("highway", "bus_stop")
+				|| rm.hasTag("highway", "platform") || rm.hasTag("railway", "platform")) {
 			return true;
 		}
 		return false;
 	}
 
-	
 	/**
 	 * Checks if a given object is part of an stop area relation
 	 * 
@@ -88,7 +87,7 @@ public class StopUtils {
 				return true;
 			}
 		}
-	return false;
+		return false;
 	}
-	
+
 }

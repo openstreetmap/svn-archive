@@ -122,6 +122,7 @@ public class PTAssistantValidatorTest extends Test {
 			return;
 		}
 		
+		
 		// Do some testing on stop area relations
 		if (Main.pref.getBoolean("pt_assistant.stop-area-tests", true) == true && StopUtils.isStopArea(r)) {
 
@@ -140,6 +141,7 @@ public class PTAssistantValidatorTest extends Test {
 			// Attach thrown errors
 			this.errors.addAll(stopChecker.getErrors());
 		}
+		
 
 		if (!RouteUtils.isTwoDirectionRoute(r)) {
 			return;

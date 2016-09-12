@@ -615,14 +615,6 @@ public final class S57att { // S57 Attribute lookup tables & methods
         return Att.UNKATT;
     }
 
-    public static Integer encodeAttribute(String attribute) { // Convert SCM attribute enumeration to S57 attribute code
-        if (AttS57.containsKey(attribute))
-            return AttS57.get(attribute);
-        else if (AttIENC.containsKey(attribute))
-            return AttIENC.get(attribute);
-        return 0;
-    }
-
     public static Integer encodeAttribute(Att attribute) { // Convert SCM attribute enumeration to S57 attribute code
         return AttS57.get(attribute) != 0 ? AttS57.get(attribute) : AttIENC.get(attribute);
     }

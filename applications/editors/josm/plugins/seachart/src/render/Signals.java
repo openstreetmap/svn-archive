@@ -437,8 +437,8 @@ public class Signals extends Rules {
                                         srad = (Double) satts.get(Att.LITRAD).val;
                                     }
                                     if (srad == radius) {
-                                        ArrayList<CatLIT> scats = (satts.containsKey(Att.CATLIT)) ?
-                                                (ArrayList<CatLIT>) satts.get(Att.CATLIT).val : new ArrayList<>();
+                                        ArrayList<CatLIT> scats = (ArrayList<CatLIT>) ((satts.containsKey(Att.CATLIT)) ?
+                                                (ArrayList<CatLIT>) satts.get(Att.CATLIT).val : new ArrayList<>());
                                         if (scats.contains(CatLIT.LIT_DIR)) {
                                             if (satts.containsKey(Att.ORIENT)) {
                                                 sdir = (Double) satts.get(Att.ORIENT).val;

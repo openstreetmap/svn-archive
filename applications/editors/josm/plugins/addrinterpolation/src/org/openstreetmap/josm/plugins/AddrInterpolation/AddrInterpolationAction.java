@@ -1,5 +1,4 @@
-// License: GPL. Copyright 2009 by Mike Nice and others
-// Connects from JOSM menu action to Plugin
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.AddrInterpolation;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -15,12 +14,11 @@ import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.tools.Shortcut;
 
-
 @SuppressWarnings("serial")
-public  class AddrInterpolationAction extends JosmAction implements
+public class AddrInterpolationAction extends JosmAction implements
 SelectionChangedListener {
 
-    public AddrInterpolationAction(){
+    public AddrInterpolationAction() {
         super(tr("Address Interpolation"), "AddrInterpolation", tr("Handy Address Interpolation Functions"),
                 Shortcut.registerShortcut("tools:AddressInterpolation", tr("Tool: {0}", tr("Address Interpolation")),
                         KeyEvent.VK_Z, Shortcut.ALT_CTRL), false);
@@ -42,9 +40,5 @@ SelectionChangedListener {
             }
         }
         setEnabled(false);
-
     }
-
 }
-
-

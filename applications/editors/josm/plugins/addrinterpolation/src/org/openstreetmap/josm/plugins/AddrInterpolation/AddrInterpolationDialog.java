@@ -1,6 +1,4 @@
-// License: GPL. Copyright 2009 by Mike Nice and others
-
-// Main plugin logic
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.AddrInterpolation;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -58,7 +56,7 @@ import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.gui.widgets.UrlLabel;
 import org.openstreetmap.josm.tools.ImageProvider;
 
-public class AddrInterpolationDialog extends JDialog implements ActionListener  {
+public class AddrInterpolationDialog extends JDialog implements ActionListener {
 
     private Way selectedStreet = null;
     private Way addrInterpolationWay = null;
@@ -75,9 +73,9 @@ public class AddrInterpolationDialog extends JDialog implements ActionListener  
     private static boolean lastConvertToHousenumber = false;
 
     // Edit controls
-    private EscapeDialog dialog=null;
+    private EscapeDialog dialog = null;
     private JRadioButton streetNameButton = null;
-    private JRadioButton streetRelationButton  = null;
+    private JRadioButton streetRelationButton = null;
     private JTextField startTextField = null;
     private JTextField endTextField = null;
     private JTextField incrementTextField = null;
@@ -94,14 +92,14 @@ public class AddrInterpolationDialog extends JDialog implements ActionListener  
 
     // NOTE: The following 2 arrays must match in number of elements and position
     // Tag values for map (Except that 'Numeric' is replaced by actual # on map)
-    String[] addrInterpolationTags = { "odd", "even", "all", "alphabetic", "Numeric" };
-    String[] addrInterpolationStrings = { tr("Odd"), tr("Even"), tr("All"), tr("Alphabetic"), tr("Numeric") }; // Translatable names for display
+    String[] addrInterpolationTags = {"odd", "even", "all", "alphabetic", "Numeric"};
+    String[] addrInterpolationStrings = {tr("Odd"), tr("Even"), tr("All"), tr("Alphabetic"), tr("Numeric") }; // Translatable names for display
     private final int NumericIndex = 4;
     private JComboBox<String> addrInterpolationList = null;
 
     // NOTE: The following 2 arrays must match in number of elements and position
-    String[] addrInclusionTags = { "actual", "estimate", "potential" }; // Tag values for map
-    String[] addrInclusionStrings = { tr("Actual"), tr("Estimate"), tr("Potential") }; // Translatable names for display
+    String[] addrInclusionTags = {"actual", "estimate", "potential" }; // Tag values for map
+    String[] addrInclusionStrings = {tr("Actual"), tr("Estimate"), tr("Potential") }; // Translatable names for display
     private JComboBox<String> addrInclusionList = null;
 
     // For tracking edit changes as group for undo
@@ -123,19 +121,16 @@ public class AddrInterpolationDialog extends JDialog implements ActionListener  
         dialog = new EscapeDialog((Frame) Main.parent, name, true);
 
         dialog.add(editControlsPane);
-        dialog.setSize(new Dimension(300,500));
-        dialog.setLocation(new Point(100,300));
+        dialog.setSize(new Dimension(300, 500));
+        dialog.setLocation(new Point(100, 300));
 
         // Listen for windowOpened event to set focus
-        dialog.addWindowListener( new WindowAdapter()
-        {
+        dialog.addWindowListener(new WindowAdapter() {
             @Override
-            public void windowOpened( WindowEvent e )
-            {
+            public void windowOpened(WindowEvent e) {
                 if (addrInterpolationWay != null) {
                     startTextField.requestFocus();
-                }
-                else {
+                } else {
                     cityTextField.requestFocus();
                 }
             }
@@ -162,7 +157,7 @@ public class AddrInterpolationDialog extends JDialog implements ActionListener  
 
         editControlsPane.setLayout(gridbag);
 
-        editControlsPane.setBorder(BorderFactory.createEmptyBorder(15,15,15,15));
+        editControlsPane.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
 
         String streetName = selectedStreet.get("name");
         String streetRelation = FindRelation();
@@ -173,7 +168,7 @@ public class AddrInterpolationDialog extends JDialog implements ActionListener  
         streetRelationButton = new JRadioButton(tr("Relation: {0}", streetRelation));
         if (associatedStreetRelation == null) {
             streetNameButton.setSelected(true);
-        }else {
+        } else {
             streetRelationButton.setSelected(true);
         }
 
@@ -216,7 +211,7 @@ public class AddrInterpolationDialog extends JDialog implements ActionListener  
 
         JLabel[] textLabels = {startLabel, endLabel, numberingLabel, incrementLabel, inclusionLabel};
         Component[] editFields = {startTextField, endTextField, addrInterpolationList, incrementTextField, addrInclusionList};
-        AddEditControlRows(textLabels, editFields,  editControlsPane);
+        AddEditControlRows(textLabels, editFields, editControlsPane);
 
         cbConvertToHouseNumbers = new Checkbox(tr("Convert way to individual house numbers."), null, lastConvertToHousenumber);
         // cbConvertToHouseNumbers.setSelected(lastConvertToHousenumber);
@@ -258,7 +253,7 @@ public class AddrInterpolationDialog extends JDialog implements ActionListener  
         // it can auto-detect method based on entered numbers.
         addrInterpolationList.addFocusListener(new FocusAdapter() {
             @Override
-            public void focusGained(FocusEvent fe){
+            public void focusGained(FocusEvent fe) {
                 if (!interpolationMethodSet) {
                     if (AutoDetectInterpolationMethod()) {
                         interpolationMethodSet = true;  // Don't auto detect over a previous choice
@@ -270,7 +265,7 @@ public class AddrInterpolationDialog extends JDialog implements ActionListener  
         // Watch when Interpolation Method combo box is changed so that
         // Numeric increment box can be enabled or disabled.
         addrInterpolationList.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e){
+            public void actionPerformed(ActionEvent e) {
                 int selectedIndex = addrInterpolationList.getSelectedIndex();
                 incrementTextField.setEnabled(selectedIndex == NumericIndex); // Enable or disable numeric field
             }
@@ -280,12 +275,12 @@ public class AddrInterpolationDialog extends JDialog implements ActionListener  
 
         if (houseNumberNodes.size() > 0) {
             JLabel houseNumberNodeNote = new JLabel(tr("Will associate {0} additional house number nodes",
-                    houseNumberNodes.size() ));
+                    houseNumberNodes.size()));
             editControlsPane.add(houseNumberNodeNote, c);
         }
 
         editControlsPane.add(new UrlLabel("http://wiki.openstreetmap.org/wiki/JOSM/Plugins/AddrInterpolation",
-                tr("More information about this feature"),2), c);
+                tr("More information about this feature"), 2), c);
 
         c.gridx = 0;
         c.gridwidth = 1; //next-to-last
@@ -319,7 +314,7 @@ public class AddrInterpolationDialog extends JDialog implements ActionListener  
 
         String startValueString = ReadTextField(startTextField);
         String endValueString = ReadTextField(endTextField);
-        if ( (startValueString == null) || (endValueString== null) ) {
+        if ((startValueString == null) || (endValueString == null)) {
             // Not all values entered yet
             return false;
         }
@@ -328,21 +323,19 @@ public class AddrInterpolationDialog extends JDialog implements ActionListener  
 
         if (isLong(startValueString) && isLong(endValueString)) {
             // Have 2 numeric values
-            long startValue = Long.parseLong( startValueString );
-            long endValue = Long.parseLong( endValueString );
+            long startValue = Long.parseLong(startValueString);
+            long endValue = Long.parseLong(endValueString);
 
             if (isEven(startValue)) {
                 if (isEven(endValue)) {
                     SelectInterpolationMethod("even");
-                }
-                else {
+                } else {
                     SelectInterpolationMethod("all");
                 }
             } else {
                 if (!isEven(endValue)) {
                     SelectInterpolationMethod("odd");
-                }
-                else {
+                } else {
                     SelectInterpolationMethod("all");
                 }
             }
@@ -351,15 +344,15 @@ public class AddrInterpolationDialog extends JDialog implements ActionListener  
             char startingChar = startValueString.charAt(startValueString.length()-1);
             char endingChar = endValueString.charAt(endValueString.length()-1);
 
-            if ( (!IsNumeric("" + startingChar)) &&  (!IsNumeric("" + endingChar)) ) {
+            if ((!IsNumeric("" + startingChar)) && (!IsNumeric("" + endingChar))) {
                 // Both end with alpha
                 SelectInterpolationMethod("alphabetic");
                 return true;
             }
 
-            if ( (IsNumeric("" + startingChar)) &&  (!IsNumeric("" + endingChar)) ) {
+            if ((IsNumeric("" + startingChar)) && (!IsNumeric("" + endingChar))) {
                 endingChar = Character.toUpperCase(endingChar);
-                if ( (endingChar >= 'A') && (endingChar <= 'Z') ) {
+                if ((endingChar >= 'A') && (endingChar <= 'Z')) {
                     // First is a number, last is Latin alpha
                     SelectInterpolationMethod("alphabetic");
                     return true;
@@ -380,10 +373,9 @@ public class AddrInterpolationDialog extends JDialog implements ActionListener  
             currentIndex = addrInterpolationTags.length-1;
             incrementTextField.setText(currentMethod);
             incrementTextField.setEnabled(true);
-        }
-        else {
+        } else {
             // Must scan OSM key values because combo box is already loaded with translated strings
-            for (int i=0; i<addrInterpolationTags.length; i++) {
+            for (int i = 0; i < addrInterpolationTags.length; i++) {
                 if (addrInterpolationTags[i].equals(currentMethod)) {
                     currentIndex = i;
                     break;
@@ -398,7 +390,7 @@ public class AddrInterpolationDialog extends JDialog implements ActionListener  
     private void SelectInclusion(String currentMethod) {
         int currentIndex = 0;
         // Must scan OSM key values because combo box is already loaded with translated strings
-        for (int i=0; i<addrInclusionTags.length; i++) {
+        for (int i = 0; i < addrInclusionTags.length; i++) {
             if (addrInclusionTags[i].equals(currentMethod)) {
                 currentIndex = i;
                 break;
@@ -415,7 +407,7 @@ public class AddrInterpolationDialog extends JDialog implements ActionListener  
 
         editControlsPane.setLayout(gridbag);
 
-        editControlsPane.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
+        editControlsPane.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
         JLabel[] optionalTextLabels = {new JLabel(tr("City:")),
                 new JLabel(tr("State:")),
@@ -432,7 +424,7 @@ public class AddrInterpolationDialog extends JDialog implements ActionListener  
         countryTextField.addKeyListener(new KeyAdapter() {
             @Override
             public void keyTyped(KeyEvent e) {
-                JTextField jtextfield = (JTextField)e.getSource();
+                JTextField jtextfield = (JTextField) e.getSource();
                 String text = jtextfield.getText();
                 int length = text.length();
                 if (length == jtextfield.getColumns()) {
@@ -443,14 +435,14 @@ public class AddrInterpolationDialog extends JDialog implements ActionListener  
                 } else {
                     // Accept key; convert to upper case
                     if (!e.isActionKey()) {
-                        e.setKeyChar(Character.toUpperCase(e.getKeyChar()) );
+                        e.setKeyChar(Character.toUpperCase(e.getKeyChar()));
                     }
                 }
             }
         });
 
         Component[] optionalEditFields = {cityTextField, stateTextField, postCodeTextField, countryTextField, fullTextField};
-        AddEditControlRows(optionalTextLabels, optionalEditFields,  editControlsPane);
+        AddEditControlRows(optionalTextLabels, optionalEditFields, editControlsPane);
 
         JPanel optionPanel = new JPanel(new BorderLayout());
         Border groupBox = BorderFactory.createEtchedBorder();
@@ -542,7 +534,7 @@ public class AddrInterpolationDialog extends JDialog implements ActionListener  
                 if (relationType != null) {
                     if (relationType.equals("associatedStreet")) {
                         for (RelationMember relationMember : relation.getMembers()) {
-                            if (relationMember.isWay()){
+                            if (relationMember.isWay()) {
                                 Way way = (Way) relationMember.getMember();
                                 // System.out.println("Name: " + way.get("name") );
                                 if (way == selectedStreet) {
@@ -551,16 +543,15 @@ public class AddrInterpolationDialog extends JDialog implements ActionListener  
 
                                     String streetName = "";
                                     if (relation.getKeys().containsKey("name")) {
-                                        streetName =  relation.get("name");
+                                        streetName = relation.get("name");
                                     } else {
                                         // Relation is unnamed - use street name
-                                        streetName =  selectedStreet.get("name");
+                                        streetName = selectedStreet.get("name");
                                     }
                                     relationDescription += " (" + streetName + ")";
                                     return relationDescription;
                                 }
                             }
-
                         }
                     }
                 }
@@ -589,8 +580,7 @@ public class AddrInterpolationDialog extends JDialog implements ActionListener  
                 if (way.getKeys().containsKey("name")) {
                     namedWayCount++;
                     this.selectedStreet = way;
-                }
-                else {
+                } else {
                     unNamedWayCount++;
                     this.addrInterpolationWay = way;
                 }
@@ -599,7 +589,7 @@ public class AddrInterpolationDialog extends JDialog implements ActionListener  
             // Get additional nodes with addr:housenumber tags:
             //   Either selected or in the middle of the Address Interpolation way
             //     Do not include end points of Address Interpolation way in this set yet.
-            houseNumberNodes  = new ArrayList<>();
+            houseNumberNodes = new ArrayList<>();
             // Check selected nodes
             for (OsmPrimitive osm : currentDataSet.getSelectedNodes()) {
                 Node node = (Node) osm;
@@ -611,7 +601,7 @@ public class AddrInterpolationDialog extends JDialog implements ActionListener  
             if (addrInterpolationWay != null) {
                 // Check nodes in middle of address interpolation way
                 if (addrInterpolationWay.getNodesCount() > 2) {
-                    for (int i=1; i<(addrInterpolationWay.getNodesCount()-2); i++) {
+                    for (int i = 1; i < (addrInterpolationWay.getNodesCount()-2); i++) {
                         Node testNode = addrInterpolationWay.getNode(i);
                         if (testNode.getKeys().containsKey("addr:housenumber")) {
                             houseNumberNodes.add(testNode);
@@ -681,7 +671,7 @@ public class AddrInterpolationDialog extends JDialog implements ActionListener  
             if (ValidateAndSave()) {
                 dialog.dispose();
             }
-        } else  if ("cancel".equals(e.getActionCommand())) {
+        } else if ("cancel".equals(e.getActionCommand())) {
             dialog.dispose();
         }
     }
@@ -693,8 +683,7 @@ public class AddrInterpolationDialog extends JDialog implements ActionListener  
     private String BaseAlpha(String strValue) {
         if (strValue.length() > 0) {
             return strValue.substring(0, strValue.length()-1);
-        }
-        else {
+        } else {
             return "";
         }
     }
@@ -702,28 +691,23 @@ public class AddrInterpolationDialog extends JDialog implements ActionListener  
     private char LastChar(String strValue) {
         if (strValue.length() > 0) {
             return strValue.charAt(strValue.length()-1);
-        }
-        else {
+        } else {
             return 0;
         }
     }
 
     // Test for valid positive long int
-    private boolean isLong( String input ) {
-        try
-        {
-            Long val = Long.parseLong( input );
+    private boolean isLong(String input) {
+        try {
+            Long val = Long.parseLong(input);
             return (val > 0);
-        }
-        catch( Exception e)
-        {
+        } catch (Exception e) {
             return false;
         }
     }
 
-    private boolean isEven( Long input )
-    {
-        return ((input %2) == 0);
+    private boolean isEven(Long input) {
+        return ((input % 2) == 0);
     }
 
     private static Pattern p = Pattern.compile("^[0-9]+$");
@@ -736,11 +720,11 @@ public class AddrInterpolationDialog extends JDialog implements ActionListener  
 
 
         String baseAlpha = BaseAlpha(endValueString);
-        int nSegments  =endNodeIndex - startNodeIndex;
+        int nSegments = endNodeIndex - startNodeIndex;
 
         double[] segmentLengths = new double[nSegments];
         // Total length of address interpolation way section
-        double totalLength= CalculateSegmentLengths(startNodeIndex, endNodeIndex, segmentLengths);
+        double totalLength = CalculateSegmentLengths(startNodeIndex, endNodeIndex, segmentLengths);
 
 
         int nHouses = endingChar - startingChar-1;  // # of house number nodes to create
@@ -750,7 +734,7 @@ public class AddrInterpolationDialog extends JDialog implements ActionListener  
 
             Node lastHouseNode = addrInterpolationWay.getNode(startNodeIndex);
             int currentSegment = 0; // Segment being used to place new house # node
-            char currentChar= startingChar;
+            char currentChar = startingChar;
             while (nHouses > 0) {
                 double distanceNeeded = houseSpacing;
 
@@ -768,7 +752,7 @@ public class AddrInterpolationDialog extends JDialog implements ActionListener  
 
                 Node newHouseNumberNode = new Node(newHouseNumberPosition);
                 currentChar++;
-                if ( (currentChar >'Z') && (currentChar <'a')) {
+                if ((currentChar > 'Z') && (currentChar < 'a')) {
                     // Wraparound past uppercase Z: go directly to lower case a
                     currentChar = 'a';
 
@@ -783,7 +767,7 @@ public class AddrInterpolationDialog extends JDialog implements ActionListener  
 
 
                 segmentLengths[currentSegment] -= distanceNeeded; // Track amount used
-                nHouses -- ;
+                nHouses--;
             }
         }
     }
@@ -799,14 +783,14 @@ public class AddrInterpolationDialog extends JDialog implements ActionListener  
 
         // Search for possible anchors from the 2nd node to 2nd from last, interpolating between each anchor
         int startIndex = 0; // Index into first interpolation zone of address interpolation way
-        for (int i=1; i<addrInterpolationWay.getNodesCount()-1; i++) {
+        for (int i = 1; i < addrInterpolationWay.getNodesCount()-1; i++) {
             Node testNode = addrInterpolationWay.getNode(i);
             String endNodeNumber = testNode.get("addr:housenumber");
             if (endNodeNumber != null) {
                 // This is a potential anchor node
                 if (endNodeNumber != "") {
                     char anchorChar = LastChar(endNodeNumber);
-                    if ( (anchorChar >startingChar) && (anchorChar < endingChar) ) {
+                    if ((anchorChar > startingChar) && (anchorChar < endingChar)) {
                         // Lies within the expected range
                         InterpolateAlphaSection(startIndex, i, endNodeNumber, startingChar, anchorChar);
 
@@ -824,13 +808,13 @@ public class AddrInterpolationDialog extends JDialog implements ActionListener  
         InterpolateAlphaSection(startIndex, addrInterpolationWay.getNodesCount()-1, endValueString, startingChar, endingChar);
     }
 
-    private double CalculateSegmentLengths(int startNodeIndex, int endNodeIndex, double segmentLengths[]) {
+    private double CalculateSegmentLengths(int startNodeIndex, int endNodeIndex, double[] segmentLengths) {
         Node fromNode = addrInterpolationWay.getNode(startNodeIndex);
         double totalLength = 0.0;
         int nSegments = segmentLengths.length;
         for (int segment = 0; segment < nSegments; segment++) {
             Node toNode = addrInterpolationWay.getNode(startNodeIndex + 1 + segment);
-            segmentLengths[segment]= fromNode.getCoor().greatCircleDistance(toNode.getCoor());
+            segmentLengths[segment] = fromNode.getCoor().greatCircleDistance(toNode.getCoor());
             totalLength += segmentLengths[segment];
 
             fromNode = toNode;
@@ -842,14 +826,14 @@ public class AddrInterpolationDialog extends JDialog implements ActionListener  
             long startingAddr, long endingAddr,
             long increment) {
 
-        int nSegments  =endNodeIndex - startNodeIndex;
+        int nSegments = endNodeIndex - startNodeIndex;
 
         double[] segmentLengths = new double[nSegments];
 
         // Total length of address interpolation way section
-        double totalLength= CalculateSegmentLengths(startNodeIndex, endNodeIndex, segmentLengths);
+        double totalLength = CalculateSegmentLengths(startNodeIndex, endNodeIndex, segmentLengths);
 
-        int nHouses = (int)((endingAddr - startingAddr) / increment) -1;
+        int nHouses = (int) ((endingAddr - startingAddr) / increment) -1;
         if (nHouses > 0) {
 
             double houseSpacing = totalLength / (nHouses+1);
@@ -884,27 +868,27 @@ public class AddrInterpolationDialog extends JDialog implements ActionListener  
                 lastHouseNode = newHouseNumberNode;
 
                 segmentLengths[currentSegment] -= distanceNeeded; // Track amount used
-                nHouses -- ;
+                nHouses--;
             }
         }
     }
 
     private void CreateNumericInterpolation(String startValueString, String endValueString, long increment) {
 
-        long startingAddr = Long.parseLong( startValueString );
-        long endingAddr = Long.parseLong( endValueString );
+        long startingAddr = Long.parseLong(startValueString);
+        long endingAddr = Long.parseLong(endValueString);
 
         // Search for possible anchors from the 2nd node to 2nd from last, interpolating between each anchor
         int startIndex = 0; // Index into first interpolation zone of address interpolation way
-        for (int i=1; i<addrInterpolationWay.getNodesCount()-1; i++) {
+        for (int i = 1; i < addrInterpolationWay.getNodesCount()-1; i++) {
             Node testNode = addrInterpolationWay.getNode(i);
             String strEndNodeNumber = testNode.get("addr:housenumber");
             if (strEndNodeNumber != null) {
                 // This is a potential anchor node
                 if (isLong(strEndNodeNumber)) {
 
-                    long anchorAddrNumber = Long.parseLong( strEndNodeNumber );
-                    if ( (anchorAddrNumber >startingAddr) && (anchorAddrNumber < endingAddr) ) {
+                    long anchorAddrNumber = Long.parseLong(strEndNodeNumber);
+                    if ((anchorAddrNumber > startingAddr) && (anchorAddrNumber < endingAddr)) {
                         // Lies within the expected range
                         InterpolateNumericSection(startIndex, i, startingAddr, anchorAddrNumber, increment);
 
@@ -953,7 +937,7 @@ public class AddrInterpolationDialog extends JDialog implements ActionListener  
         commandGroup.add(new DeleteCommand(addrInterpolationWay));
 
         // Remove untagged nodes
-        for (int i=1; i<addrInterpolationWay.getNodesCount()-1; i++) {
+        for (int i = 1; i < addrInterpolationWay.getNodesCount()-1; i++) {
             Node testNode = addrInterpolationWay.getNode(i);
             if (!testNode.hasKeys()) {
                 commandGroup.add(new DeleteCommand(testNode));
@@ -976,10 +960,10 @@ public class AddrInterpolationDialog extends JDialog implements ActionListener  
 
         String selectedMethod = GetInterpolationMethod();
         if (addrInterpolationWay != null) {
-            Long startAddr=0L, endAddr=0L;
+            Long startAddr = 0L, endAddr = 0L;
             if (!selectedMethod.equals("alphabetic")) {
                 Long[] addrArray = {startAddr, endAddr};
-                if (!ValidAddressNumbers(startValueString, endValueString, addrArray )) {
+                if (!ValidAddressNumbers(startValueString, endValueString, addrArray)) {
                     return false;
                 }
                 startAddr = addrArray[0];
@@ -1008,7 +992,7 @@ public class AddrInterpolationDialog extends JDialog implements ActionListener  
                 }
             }
             if (!errorMessage.equals("")) {
-                JOptionPane.showMessageDialog(Main.parent, errorMessage, tr("Error"),   JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(Main.parent, errorMessage, tr("Error"), JOptionPane.ERROR_MESSAGE);
                 return false;
             }
         }
@@ -1016,7 +1000,7 @@ public class AddrInterpolationDialog extends JDialog implements ActionListener  
         if (country != null) {
             if (country.length() != 2) {
                 JOptionPane.showMessageDialog(Main.parent,
-                        tr("Country code must be 2 letters"), tr("Error"),  JOptionPane.ERROR_MESSAGE);
+                        tr("Country code must be 2 letters"), tr("Error"), JOptionPane.ERROR_MESSAGE);
                 return false;
             }
         }
@@ -1085,7 +1069,7 @@ public class AddrInterpolationDialog extends JDialog implements ActionListener  
             if (streetRelationButton.isSelected()) {
                 AddToRelation(associatedStreetRelation, node, "house");
             }
-            if ((city != null) || (streetNameButton.isSelected()) ) {
+            if ((city != null) || (streetNameButton.isSelected())) {
                 // Include street unconditionally if adding nodes only or city name specified
                 commandGroup.add(new ChangePropertyCommand(node, "addr:street", streetName));
             }
@@ -1101,7 +1085,6 @@ public class AddrInterpolationDialog extends JDialog implements ActionListener  
             commandGroup.add(new ChangeCommand(associatedStreetRelation, editedRelation));
         }
 
-
         Main.main.undoRedo.add(new SequenceCommand(tr("Address Interpolation"), commandGroup));
         Main.map.repaint();
 
@@ -1114,11 +1097,11 @@ public class AddrInterpolationDialog extends JDialog implements ActionListener  
             return false;
         }
         long testIncrement = Long.parseLong(incrementString);
-        if ( (testIncrement <=0) || (testIncrement > endingAddr ) ) {
+        if ((testIncrement <= 0) || (testIncrement > endingAddr)) {
             return false;
         }
 
-        if ( ((endingAddr - startingAddr) % testIncrement) != 0) {
+        if (((endingAddr - startingAddr) % testIncrement) != 0) {
             return false;
         }
         return true;
@@ -1149,7 +1132,7 @@ public class AddrInterpolationDialog extends JDialog implements ActionListener  
 
     // Test if relation contains specified member
     //   If not already present, it is added
-    private void AddToRelation(Relation relation,   OsmPrimitive testMember, String role) {
+    private void AddToRelation(Relation relation, OsmPrimitive testMember, String role) {
         boolean isFound = false;
         for (RelationMember relationMember : relation.getMembers()) {
 
@@ -1173,7 +1156,7 @@ public class AddrInterpolationDialog extends JDialog implements ActionListener  
     //   Return empty error message if OK
     private String ValidateAlphaAddress(String startValueString,
             String endValueString) {
-        String errorMessage="";
+        String errorMessage = "";
 
         if (startValueString.equals("") || endValueString.equals("")) {
             errorMessage = tr("Please enter valid number for starting and ending address");
@@ -1183,20 +1166,19 @@ public class AddrInterpolationDialog extends JDialog implements ActionListener  
 
 
             boolean isOk = false;
-            if ( (IsNumeric("" + startingChar)) &&  (!IsNumeric("" + endingChar)) ) {
+            if ((IsNumeric("" + startingChar)) && (!IsNumeric("" + endingChar))) {
                 endingChar = Character.toUpperCase(endingChar);
-                if ( (endingChar >= 'A') && (endingChar <= 'Z') ) {
+                if ((endingChar >= 'A') && (endingChar <= 'Z')) {
                     // First is a number, last is Latin alpha
                     isOk = true;
                 }
-            } else if ( (!IsNumeric("" + startingChar)) && (!IsNumeric("" + endingChar)) ) {
+            } else if ((!IsNumeric("" + startingChar)) && (!IsNumeric("" + endingChar))) {
                 // Both are alpha
                 isOk = true;
             }
             if (!isOk) {
                 errorMessage = tr("Alphabetic address must end with a letter");
             }
-
 
             // if a number is included, validate that it is the same number
             if (endValueString.length() > 1) {
@@ -1234,8 +1216,8 @@ public class AddrInterpolationDialog extends JDialog implements ActionListener  
             errorMessage = tr("Please enter valid number for ending address");
         }
         if (errorMessage.equals("")) {
-            addrArray[0] = Long.parseLong( startValueString );
-            addrArray[1] = Long.parseLong( endValueString );
+            addrArray[0] = Long.parseLong(startValueString);
+            addrArray[1] = Long.parseLong(endValueString);
 
             if (addrArray[1] <= addrArray[0]) {
                 errorMessage = tr("Starting address number must be less than ending address number");
@@ -1246,7 +1228,7 @@ public class AddrInterpolationDialog extends JDialog implements ActionListener  
             return true;
 
         } else {
-            JOptionPane.showMessageDialog(Main.parent, errorMessage, tr("Error"),   JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(Main.parent, errorMessage, tr("Error"), JOptionPane.ERROR_MESSAGE);
             return false;
         }
     }

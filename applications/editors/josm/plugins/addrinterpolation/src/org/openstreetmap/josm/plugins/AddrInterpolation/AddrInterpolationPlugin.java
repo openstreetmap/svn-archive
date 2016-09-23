@@ -1,6 +1,5 @@
-// License: GPL. Copyright 2009 by Mike Nice and others
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.AddrInterpolation;
-
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.MainMenu;

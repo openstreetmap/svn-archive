@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package poly;
 
 import java.io.BufferedWriter;
@@ -34,19 +35,19 @@ public class PolyExporter extends OsmExporter {
     }
 
     @Override
-    public void exportData( File file, Layer layer ) throws IOException {
-        if( layer instanceof OsmDataLayer ) {
+    public void exportData(File file, Layer layer) throws IOException {
+        if (layer instanceof OsmDataLayer) {
             try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), "UTF8"))) {
-                DataSet ds = ((OsmDataLayer)layer).data;
+                DataSet ds = ((OsmDataLayer) layer).data;
                 Map<Way, Boolean> ways = new TreeMap<>();
                 String polygonName = file.getName();
-                if( polygonName.indexOf('.') > 0 )
+                if (polygonName.indexOf('.') > 0)
                     polygonName = polygonName.substring(0, polygonName.indexOf('.'));
-                for( Way w : ds.getWays() ) {
-                    if( w.isClosed() ) {
+                for (Way w : ds.getWays()) {
+                    if (w.isClosed()) {
                         boolean outer = isOuter(w);
                         ways.put(w, outer);
-                        if( w.hasKey("name") )
+                        if (w.hasKey("name"))
                             polygonName = w.get("name").replace("\n", " ");
                     }
                 }
@@ -55,12 +56,12 @@ public class PolyExporter extends OsmExporter {
                 int counter = 1;
                 writer.write(polygonName);
                 writer.newLine();
-                for( Way w : ways.keySet() ) {
-                    if( !ways.get(w) )
+                for (Way w : ways.keySet()) {
+                    if (!ways.get(w))
                         writer.write('!');
                     writer.write(String.valueOf(counter++));
                     writer.newLine();
-                    for( Node n : w.getNodes() ) {
+                    for (Node n : w.getNodes()) {
                         writer.write(String.format(Locale.ENGLISH, "   %f   %f", n.getCoor().lon(), n.getCoor().lat()));
                         writer.newLine();
                     }
@@ -73,11 +74,11 @@ public class PolyExporter extends OsmExporter {
         }
     }
 
-    private boolean isOuter( Way w ) {
-        for( OsmPrimitive p : w.getReferrers() ) {
-            if( p instanceof Relation && ((Relation)p).isMultipolygon() ) {
-                for( RelationMember m : ((Relation)p).getMembers() ) {
-                    if( m.refersTo(w) && "inner".equals(m.getRole()) ) {
+    private boolean isOuter(Way w) {
+        for (OsmPrimitive p : w.getReferrers()) {
+            if (p instanceof Relation && ((Relation) p).isMultipolygon()) {
+                for (RelationMember m : ((Relation) p).getMembers()) {
+                    if (m.refersTo(w) && "inner".equals(m.getRole())) {
                         return false;
                     }
                 }
@@ -86,18 +87,19 @@ public class PolyExporter extends OsmExporter {
         return true;
     }
 
-    private Map<Way, Boolean> sortOuterInner( Map<Way, Boolean> ways ) {
+    private Map<Way, Boolean> sortOuterInner(Map<Way, Boolean> ways) {
         LinkedHashMap<Way, Boolean> result = new LinkedHashMap<>(ways.size());
         List<Way> inner = new ArrayList<>();
-        for( Way w : ways.keySet() ) {
+        for (Way w : ways.keySet()) {
             Boolean outer = ways.get(w);
-            if( outer )
+            if (outer)
                 result.put(w, outer);
             else
                 inner.add(w);
         }
-        for( Way w : inner )
+        for (Way w : inner) {
             result.put(w, Boolean.FALSE);
+        }
         return result;
     }
 }

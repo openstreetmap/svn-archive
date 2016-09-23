@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package poly;
 
 import java.util.concurrent.Future;
@@ -18,12 +19,12 @@ import org.openstreetmap.josm.io.OsmTransferException;
 public class DownloadPolyTask extends DownloadOsmTask {
 
     @Override
-    public Future<?> download( boolean newLayer, Bounds downloadArea, ProgressMonitor progressMonitor ) {
+    public Future<?> download(boolean newLayer, Bounds downloadArea, ProgressMonitor progressMonitor) {
         return null;
     }
 
     @Override
-    public Future<?> loadUrl( boolean new_layer, String url, ProgressMonitor progressMonitor ) {
+    public Future<?> loadUrl(boolean new_layer, String url, ProgressMonitor progressMonitor) {
         downloadTask = new DownloadTask(new_layer, new ServerPolyReader(url), progressMonitor);
         return Main.worker.submit(downloadTask);
     }
@@ -41,16 +42,16 @@ public class DownloadPolyTask extends DownloadOsmTask {
     public class ServerPolyReader extends OsmServerReader {
         private String url;
 
-        public ServerPolyReader( String url ) {
+        public ServerPolyReader(String url) {
             this.url = url;
         }
 
         @Override
-        public DataSet parseOsm( ProgressMonitor progressMonitor ) throws OsmTransferException {
+        public DataSet parseOsm(ProgressMonitor progressMonitor) throws OsmTransferException {
             try {
                 progressMonitor.beginTask(tr("Contacting Server...", 10));
                 return new PolyImporter().parseDataSet(url);
-            } catch( Exception e ) {
+            } catch (Exception e) {
                 throw new OsmTransferException(e);
             } finally {
                 progressMonitor.finishTask();

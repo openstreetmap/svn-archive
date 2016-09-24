@@ -18,7 +18,6 @@ public class SingleSegmentGpxTrack extends WithAttributes implements GpxTrack {
         this.trackSegment = trackSegment;
     }
 
-
     @Override
     public Map<String, Object> getAttributes() {
         return attr;
@@ -43,5 +42,4 @@ public class SingleSegmentGpxTrack extends WithAttributes implements GpxTrack {
     public int getUpdateCount() {
         return trackSegment.getUpdateCount();
     }
-
 }

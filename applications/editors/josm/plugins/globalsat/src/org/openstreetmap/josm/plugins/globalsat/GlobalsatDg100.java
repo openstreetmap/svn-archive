@@ -22,7 +22,7 @@ import org.kaintoch.gps.globalsat.dg100.GpsRec;
 import org.kaintoch.gps.globalsat.dg100.Response;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.gpx.GpxData;
-import org.openstreetmap.josm.data.gpx.ImmutableGpxTrackSegment;
+import org.openstreetmap.josm.data.gpx.ImmutableGpxTrack;
 import org.openstreetmap.josm.data.gpx.WayPoint;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 
@@ -165,7 +165,7 @@ public class GlobalsatDg100 {
                     last = r;
                     progressMonitor.worked(1);
                 }
-                result.tracks.add(new SingleSegmentGpxTrack(new ImmutableGpxTrackSegment(seg), Collections.<String, Object>emptyMap()));
+                result.tracks.add(new ImmutableGpxTrack(Collections.singleton(seg), Collections.<String, Object>emptyMap()));
             }
             return result;
         } finally {

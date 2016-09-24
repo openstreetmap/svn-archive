@@ -21,7 +21,7 @@ import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.ExtensionFileFilter;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.gpx.GpxData;
-import org.openstreetmap.josm.data.gpx.ImmutableGpxTrackSegment;
+import org.openstreetmap.josm.data.gpx.ImmutableGpxTrack;
 import org.openstreetmap.josm.data.gpx.WayPoint;
 import org.openstreetmap.josm.gui.layer.GpxLayer;
 import org.openstreetmap.josm.gui.layer.markerlayer.MarkerLayer;
@@ -77,7 +77,7 @@ public class TangoGPS extends FileImporter {
             failure = failure - imported;
             if(imported > 0) {
                 GpxData data = new GpxData();
-                data.tracks.add(new SingleSegmentGpxTrack(new ImmutableGpxTrackSegment(currentTrackSeg), Collections.<String, Object>emptyMap()));
+                data.tracks.add(new ImmutableGpxTrack(Collections.singleton(currentTrackSeg), Collections.<String, Object>emptyMap()));
                 data.recalculateBounds();
                 data.storageFile = file;
                 GpxLayer gpxLayer = new GpxLayer(data, file.getName());

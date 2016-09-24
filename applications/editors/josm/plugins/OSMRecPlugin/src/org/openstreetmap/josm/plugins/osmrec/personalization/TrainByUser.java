@@ -3,19 +3,13 @@ package org.openstreetmap.josm.plugins.osmrec.personalization;
 
 import static java.util.concurrent.TimeUnit.NANOSECONDS;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import java.io.PrintStream;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -25,11 +19,8 @@ import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.swing.SwingWorker;
-
-import org.openstreetmap.josm.plugins.osmrec.container.OSMRelation;
 import org.openstreetmap.josm.plugins.osmrec.container.OSMWay;
-import org.openstreetmap.josm.plugins.osmrec.extractor.Analyzer;
+import org.openstreetmap.josm.plugins.osmrec.core.AbstractTrainWorker;
 import org.openstreetmap.josm.plugins.osmrec.extractor.LanguageDetector;
 import org.openstreetmap.josm.plugins.osmrec.features.ClassFeatures;
 import org.openstreetmap.josm.plugins.osmrec.features.GeometryFeatures;
@@ -38,7 +29,6 @@ import org.openstreetmap.josm.plugins.osmrec.features.RelationFeatures;
 import org.openstreetmap.josm.plugins.osmrec.features.TextualFeatures;
 import org.openstreetmap.josm.plugins.osmrec.parsers.Mapper;
 import org.openstreetmap.josm.plugins.osmrec.parsers.Ontology;
-import org.openstreetmap.josm.plugins.osmrec.parsers.TextualStatistics;
 
 import de.bwaldvogel.liblinear.FeatureNode;
 import de.bwaldvogel.liblinear.Linear;
@@ -52,71 +42,15 @@ import de.bwaldvogel.liblinear.SolverType;
  *
  *  @author imis-nkarag
  */
-public class TrainByUser extends SwingWorker<Void, Void> implements ActionListener {
+public class TrainByUser extends AbstractTrainWorker {
 
-    private final String inputFilePath;
-    private static Map<String, String> mappings;
-    private static Map<String, Integer> mapperWithIDs;
-    private static List<OSMWay> wayList;
-    private static List<OSMRelation> relationList;
-
-    private static Map<String, List<String>> indirectClasses;
-    private static Map<String, Integer> indirectClassesWithIDs;
-    private static List<String> namesList;
-    private int numberOfTrainingInstances;
-    private final String modelDirectoryPath;
-    private final File modelDirectory;
-    private static double score1 = 0;
-    private static double score5 = 0;
-    private static double score10 = 0;
-    private static double foldScore1 = 0;
-    private static double foldScore5 = 0;
-    private static double foldScore10 = 0;
-    private static double bestScore = 0;
-    private final boolean validateFlag;
-    private final double cParameterFromUser;
-    private double bestConfParam;
-    private final int topK;
-    private final int frequency;
-    private final boolean topKIsSelected;
-    private String textualListFilePath;
-    private static final boolean USE_CLASS_FEATURES = false;
-    private static final boolean USE_RELATION_FEATURES = false;
-    private static final boolean USE_TEXTUAL_FEATURES = true;
-    private static int numberOfFeatures;
-    private static LanguageDetector languageDetector;
     private final String username;
-    private final String inputFileName;
 
     public TrainByUser(String inputFilePath, String username, boolean validateFlag, double cParameterFromUser,
             int topK, int frequency, boolean topKIsSelected, LanguageDetector languageDetector, List<OSMWay> wayList) {
-        TrainByUser.languageDetector = languageDetector;
-        this.inputFilePath = inputFilePath;
+        super(inputFilePath, validateFlag, cParameterFromUser, topK, frequency, topKIsSelected, languageDetector);
         this.username = username;
-        this.validateFlag = validateFlag;
-        this.cParameterFromUser = cParameterFromUser;
-        this.topK = topK;
-        this.frequency = frequency;
-        this.topKIsSelected = topKIsSelected;
-        System.out.println("find parent directory, create osmrec dir for models: " + new File(inputFilePath).getParentFile());
-
-        if (System.getProperty("os.name").contains("ux")) {
-            inputFileName = inputFilePath.substring(inputFilePath.lastIndexOf("/"));
-        } else {
-            inputFileName = inputFilePath.substring(inputFilePath.lastIndexOf("\\"));
-        }
-
-        modelDirectoryPath = new File(inputFilePath).getParentFile() + "/OSMRec_models";
-
-        modelDirectory = new File(modelDirectoryPath);
-
-        if (!modelDirectory.exists()) {
-            modelDirectory.mkdir();
-            System.out.println("model directory created!");
-        } else {
-            System.out.println("directory already exists!");
-        }
-        TrainByUser.wayList = wayList;
+        AbstractTrainWorker.wayList = wayList;
     }
 
     @Override
@@ -152,52 +86,8 @@ public class TrainByUser extends SwingWorker<Void, Void> implements ActionListen
         return null;
     }
 
-    private void extractTextualList() {
-        System.out.println("Running analysis..");
-        //provide top-K
-        //Keep the top-K most frequent terms
-        //Keep terms with frequency higher than N
-        //Use the remaining terms as training features
-
-        Analyzer anal = new Analyzer(inputFilePath, languageDetector);
-        anal.runAnalysis();
-
-        textualListFilePath = modelDirectory.getAbsolutePath()+"/textualList.txt";
-        File textualFile = new File(textualListFilePath); //decide path of models
-        if (textualFile.exists()) {
-            textualFile.delete();
-        }
-        try {
-            textualFile.createNewFile();
-        } catch (IOException ex) {
-            Logger.getLogger(TrainByUser.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        //writeTextualListToFile(textualFilePath, anal.getTopKMostFrequent(15));
-        List<Map.Entry<String, Integer>> textualList;
-        if (topKIsSelected) {
-            textualList = anal.getTopKMostFrequent(topK);
-            System.out.println(textualList);
-        } else {
-            textualList = anal.getWithFrequency(frequency);
-            System.out.println(textualList);
-        }
-
-        writeTextualListToFile(textualListFilePath, textualList);
-        System.out.println("textual list saved at location:\n" + textualListFilePath);
-        //write list to file and let parser do the loading from the names file
-
-        //method read default list
-        //method extract textual list - > the list will be already in memory, so the names parser doesn t have to be called
-        if (USE_CLASS_FEATURES) {
-            numberOfFeatures = 1422 + 105 + textualList.size();
-        } else {
-            numberOfFeatures = 105 + textualList.size();
-        }
-    }
-
     private void parseFiles() {
-        InputStream tagsToClassesMapping = TrainByUser.class.getResourceAsStream("/resources/files/Map");
+        InputStream tagsToClassesMapping = getClass().getResourceAsStream("/resources/files/Map");
 
         Mapper mapper = new Mapper();
         try {
@@ -208,7 +98,7 @@ public class TrainByUser extends SwingWorker<Void, Void> implements ActionListen
         mappings = mapper.getMappings();
         mapperWithIDs = mapper.getMappingsWithIDs();
 
-        InputStream ontologyStream = TrainByUser.class.getResourceAsStream("/resources/files/owl.xml");
+        InputStream ontologyStream = getClass().getResourceAsStream("/resources/files/owl.xml");
         Ontology ontology = new Ontology(ontologyStream);
 
         ontology.parseOntology();
@@ -216,19 +106,15 @@ public class TrainByUser extends SwingWorker<Void, Void> implements ActionListen
         indirectClasses = ontology.getIndirectClasses();
         indirectClassesWithIDs = ontology.getIndirectClassesIDs();
 
-        //InputStream textualFileStream = TrainWorker.class.getResourceAsStream("/resources/files/names");
         InputStream textualFileStream = null;
         try {
             textualFileStream = new FileInputStream(new File(textualListFilePath));
         } catch (FileNotFoundException ex) {
-            Logger.getLogger(TrainByUser.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, null, ex);
         }
 
         readTextualFromDefaultList(textualFileStream);
 
-        //osmParser.parseDocument();
-        //relationList = osmParser.getRelationList();
-        //wayList = osmParser.getWayList();
         numberOfTrainingInstances = wayList.size();
         System.out.println("number of instances: " + numberOfTrainingInstances);
         System.out.println("end of parsing files.");
@@ -237,7 +123,7 @@ public class TrainByUser extends SwingWorker<Void, Void> implements ActionListen
         }
     }
 
-    private void validateLoop() {
+    public void validateLoop() {
         Double[] confParams = new Double[] {
                 Math.pow(2, -10), Math.pow(2, -10), Math.pow(2, -5), Math.pow(2, -3), Math.pow(2, -1), Math.pow(2, 0)};
 
@@ -294,7 +180,7 @@ public class TrainByUser extends SwingWorker<Void, Void> implements ActionListen
         System.out.println("best c param= " + bestC + ", score: " + bestScore/5);
     }
 
-    private void crossValidateFold(int a, int b, int c, int d, boolean skip, double param) {
+    public void crossValidateFold(int a, int b, int c, int d, boolean skip, double param) {
         System.out.println("Starting cross validation");
         int testSize = wayList.size()/5;
 
@@ -417,12 +303,13 @@ public class TrainByUser extends SwingWorker<Void, Void> implements ActionListen
             modelFile.delete();
         }
         try {
-            //System.out.println("file created");
             model.save(modelFile);
-            //System.out.println("saved");
+            System.out.println("model saved at: " + modelFile);
         } catch (IOException ex) {
-            Logger.getLogger(TrainByUser.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, null, ex);
         }
+
+        //end of evaluation training
 
         //test set
         List<OSMWay> testList = new ArrayList<>();
@@ -437,7 +324,7 @@ public class TrainByUser extends SwingWorker<Void, Void> implements ActionListen
         try {
             model = Model.load(modelFile);
         } catch (IOException ex) {
-            Logger.getLogger(TrainByUser.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, null, ex);
         }
         int modelLabelSize = model.getLabels().length;
         int[] labels = model.getLabels();
@@ -510,12 +397,6 @@ public class TrainByUser extends SwingWorker<Void, Void> implements ActionListen
             }
 
             Arrays.sort(scores);
-            //System.out.println("max value: " + scores[scores.length-1] + " second max: " + scores[scores.length-2]);
-            //System.out.println("ask this index from labels: " + scoresValues.get(scores[scores.length-1]));
-            //System.out.println("got from labels: " +  labels[scoresValues.get(scores[scores.length-1])]);
-            //System.out.println("next prediction: " +  labels[scoresValues.get(scores[scores.length-2])]);
-            //System.out.println("way labels: " + way.getClassIDs());
-            //System.out.println("test prediction: " + prediction);
             if (way.getClassIDs().contains(labels[scoresValues.get(scores[scores.length-1])])) {
                 succededInstances++;
             }
@@ -572,7 +453,6 @@ public class TrainByUser extends SwingWorker<Void, Void> implements ActionListen
         }
         //set classes for each osm instance
         int sizeToBeAddedToArray = 0; //this will be used to proper init the features array, adding the multiple vectors size
-
         for (OSMWay way : wayList) {
             OSMClassification classifyInstances = new OSMClassification();
             classifyInstances.calculateClasses(way, mappings, mapperWithIDs, indirectClasses, indirectClassesWithIDs);
@@ -583,7 +463,6 @@ public class TrainByUser extends SwingWorker<Void, Void> implements ActionListen
                 sizeToBeAddedToArray = sizeToBeAddedToArray + way.getClassIDs().size()-1;
             }
         }
-        //System.out.println("end classify instances");
         double C = param;
         double eps = 0.001;
         double[] GROUPS_ARRAY2 = new double[wayListSizeWithoutUnclassified+sizeToBeAddedToArray];
@@ -686,10 +565,10 @@ public class TrainByUser extends SwingWorker<Void, Void> implements ActionListen
         try {
             model.save(modelFile);
             model.save(customModelFile);
-            System.out.println("model saved at: " + modelFile);
+            System.out.println("best model saved at: " + modelFile);
             System.out.println("custom model saved at: " + customModelFile);
         } catch (IOException ex) {
-            Logger.getLogger(TrainByUser.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -814,37 +693,7 @@ public class TrainByUser extends SwingWorker<Void, Void> implements ActionListen
             System.out.println("model with classes saved at: " + modelFile);
             System.out.println("custom model with classes saved at: " + customModelFile);
         } catch (IOException ex) {
-            Logger.getLogger(TrainByUser.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
-    private static void clearDataset() {
-        for (OSMWay way : wayList) {
-            way.getFeatureNodeList().clear();
-        }
-    }
-
-    private void readTextualFromDefaultList(InputStream textualFileStream) {
-
-        TextualStatistics textualStatistics = new TextualStatistics();
-        textualStatistics.parseTextualList(textualFileStream);
-        namesList = textualStatistics.getTextualList();
-
-    }
-
-    private static void writeTextualListToFile(String filePath, List<Map.Entry<String, Integer>> textualList) {
-        try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(filePath, true), "UTF-8"))) {
-            for (Map.Entry<String, Integer> entry : textualList) {
-                writer.write(entry.getKey());
-                writer.newLine();
-                System.out.println(entry.getKey());
-            }
-        } catch (UnsupportedEncodingException ex) {
-            Logger.getLogger(TrainByUser.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(TrainByUser.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(TrainByUser.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -857,10 +706,5 @@ public class TrainByUser extends SwingWorker<Void, Void> implements ActionListen
         } catch (InterruptedException | ExecutionException ignore) {
             System.out.println("Exception: " + ignore);
         }
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent ae) {
-        //cancel button, end process after clearing Dataset
     }
 }

@@ -3,19 +3,13 @@ package org.openstreetmap.josm.plugins.osmrec.core;
 
 import static java.util.concurrent.TimeUnit.NANOSECONDS;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import java.io.PrintStream;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -25,11 +19,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.swing.SwingWorker;
-
-import org.openstreetmap.josm.plugins.osmrec.container.OSMRelation;
 import org.openstreetmap.josm.plugins.osmrec.container.OSMWay;
-import org.openstreetmap.josm.plugins.osmrec.extractor.Analyzer;
 import org.openstreetmap.josm.plugins.osmrec.extractor.LanguageDetector;
 import org.openstreetmap.josm.plugins.osmrec.features.ClassFeatures;
 import org.openstreetmap.josm.plugins.osmrec.features.GeometryFeatures;
@@ -39,7 +29,6 @@ import org.openstreetmap.josm.plugins.osmrec.features.TextualFeatures;
 import org.openstreetmap.josm.plugins.osmrec.parsers.Mapper;
 import org.openstreetmap.josm.plugins.osmrec.parsers.OSMParser;
 import org.openstreetmap.josm.plugins.osmrec.parsers.Ontology;
-import org.openstreetmap.josm.plugins.osmrec.parsers.TextualStatistics;
 
 import de.bwaldvogel.liblinear.FeatureNode;
 import de.bwaldvogel.liblinear.Linear;
@@ -53,69 +42,13 @@ import de.bwaldvogel.liblinear.SolverType;
  *
  * @author imis-nkarag
  */
-public class TrainWorker extends SwingWorker<Void, Void> implements ActionListener {
+public class TrainWorker extends AbstractTrainWorker {
 
-    private final String inputFilePath;
-    private static Map<String, String> mappings;
-    private static Map<String, Integer> mapperWithIDs;
-
-    private static List<OSMWay> wayList;
-    private static List<OSMRelation> relationList;
-
-    private static Map<String, List<String>> indirectClasses;
-    private static Map<String, Integer> indirectClassesWithIDs;
-    private static List<String> namesList;
-    private int numberOfTrainingInstances;
-    private final String modelDirectoryPath;
-    private final File modelDirectory;
-    private static double score1 = 0;
-    private static double score5 = 0;
-    private static double score10 = 0;
-    private static double foldScore1 = 0;
-    private static double foldScore5 = 0;
-    private static double foldScore10 = 0;
-    private static double bestScore = 0;
     private int trainProgress = 0;
-    private final boolean validateFlag;
-    private final double cParameterFromUser;
-    private double bestConfParam;
-    private final int topK;
-    private final int frequency;
-    private final boolean topKIsSelected;
-    private String textualListFilePath;
-
-    private static final boolean USE_CLASS_FEATURES = false;
-    private static final boolean USE_RELATION_FEATURES = false;
-    private static final boolean USE_TEXTUAL_FEATURES = true;
-    private static int numberOfFeatures;
-    private static LanguageDetector languageDetector;
-    private final String inputFileName;
 
     public TrainWorker(String inputFilePath, boolean validateFlag, double cParameterFromUser,
             int topK, int frequency, boolean topKIsSelected, LanguageDetector languageDetector) {
-        TrainWorker.languageDetector = languageDetector;
-        this.inputFilePath = inputFilePath;
-        this.validateFlag = validateFlag;
-        this.cParameterFromUser = cParameterFromUser;
-        this.topK = topK;
-        this.frequency = frequency;
-        this.topKIsSelected = topKIsSelected;
-        if (System.getProperty("os.name").contains("ux")) {
-            inputFileName = inputFilePath.substring(inputFilePath.lastIndexOf("/"));
-        } else {
-            inputFileName = inputFilePath.substring(inputFilePath.lastIndexOf("\\"));
-        }
-        System.out.println("find parent directory, create osmrec dir for models: " + new File(inputFilePath).getParentFile());
-        modelDirectoryPath = new File(inputFilePath).getParentFile() + "/OSMRec_models";
-
-        modelDirectory = new File(modelDirectoryPath);
-
-        if (!modelDirectory.exists()) {
-            modelDirectory.mkdir();
-            System.out.println("model directory created!");
-        } else {
-            System.out.println("directory already exists!");
-        }
+        super(inputFilePath, validateFlag, cParameterFromUser, topK, frequency, topKIsSelected, languageDetector);
     }
 
     @Override
@@ -139,49 +72,8 @@ public class TrainWorker extends SwingWorker<Void, Void> implements ActionListen
         return null;
     }
 
-    private void extractTextualList() {
-        System.out.println("Running analysis..");
-        //provide top-K
-        //Keep the top-K most frequent terms
-        //Keep terms with frequency higher than N
-        //Use the remaining terms as training features
-
-        Analyzer anal = new Analyzer(inputFilePath, languageDetector);
-        anal.runAnalysis();
-
-        textualListFilePath = modelDirectory.getAbsolutePath()+"/textualList.txt";
-        File textualFile = new File(textualListFilePath); //decide path of models
-        if (textualFile.exists()) {
-            textualFile.delete();
-        }
-        try {
-            textualFile.createNewFile();
-        } catch (IOException ex) {
-            Logger.getLogger(TrainWorker.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        List<Map.Entry<String, Integer>> textualList;
-        if (topKIsSelected) {
-            textualList = anal.getTopKMostFrequent(topK);
-        } else {
-            textualList = anal.getWithFrequency(frequency);
-        }
-
-        writeTextualListToFile(textualListFilePath, textualList);
-        System.out.println("textual list saved at location:\n" + textualListFilePath);
-        //write list to file and let parser do the loading from the names file
-
-        //method read default list
-        //method extract textual list - > the list will be already in memory, so the names parser doesn t have to be called
-        if (USE_CLASS_FEATURES) {
-            numberOfFeatures = 1422 + 105 + textualList.size(); //105 is number of geometry features
-        } else {
-            numberOfFeatures = 105 + textualList.size();
-        }
-    }
-
     private void parseFiles() {
-        InputStream tagsToClassesMapping = TrainWorker.class.getResourceAsStream("/resources/files/Map");
+        InputStream tagsToClassesMapping = getClass().getResourceAsStream("/resources/files/Map");
 
         Mapper mapper = new Mapper();
         try {
@@ -192,7 +84,7 @@ public class TrainWorker extends SwingWorker<Void, Void> implements ActionListen
         mappings = mapper.getMappings();
         mapperWithIDs = mapper.getMappingsWithIDs();
 
-        InputStream ontologyStream = TrainWorker.class.getResourceAsStream("/resources/files/owl.xml");
+        InputStream ontologyStream = getClass().getResourceAsStream("/resources/files/owl.xml");
         Ontology ontology = new Ontology(ontologyStream);
 
         ontology.parseOntology();
@@ -204,25 +96,23 @@ public class TrainWorker extends SwingWorker<Void, Void> implements ActionListen
         try {
             textualFileStream = new FileInputStream(new File(textualListFilePath));
         } catch (FileNotFoundException ex) {
-            Logger.getLogger(TrainWorker.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, null, ex);
         }
 
         readTextualFromDefaultList(textualFileStream);
 
         OSMParser osmParser = new OSMParser(inputFilePath);
-
         osmParser.parseDocument();
         relationList = osmParser.getRelationList();
         wayList = osmParser.getWayList();
         numberOfTrainingInstances = osmParser.getWayList().size();
         System.out.println("number of instances: " + numberOfTrainingInstances);
         System.out.println("end of parsing files.");
-
     }
 
     public void validateLoop() {
-        Double[] confParams = new Double[] {Math.pow(2, -3), Math.pow(2, 1),
-                Math.pow(2, -10), Math.pow(2, -10), Math.pow(2, -5), Math.pow(2, -3)};
+        Double[] confParams = new Double[] {
+                Math.pow(2, -3), Math.pow(2, 1), Math.pow(2, -10), Math.pow(2, -10), Math.pow(2, -5), Math.pow(2, -3)};
 
         double bestC = Math.pow(2, -10);
 
@@ -258,10 +148,8 @@ public class TrainWorker extends SwingWorker<Void, Void> implements ActionListen
             foldScore10 = foldScore10 + score10;
             clearDataset();
             System.out.println("fold4");
-            //crossValidateFold(0, 5, 1, 2, true, param);
             crossValidateFold(0, 5, 2, 3, true, param);
             setProgress(4*((5*(trainProgress++))/confParams.length));
-            //System.out.println((5*trainProgress)/confParams.length);
 
             foldScore1 = foldScore1 + score1;
             foldScore5 = foldScore5 + score5;
@@ -376,7 +264,6 @@ public class TrainWorker extends SwingWorker<Void, Void> implements ActionListen
         //(geometry 105 + textual        //3797; // number of features //the largest index of all features //3811;//3812 //1812 with classes
         problem.x = trainingSetWithUnknown2; // feature nodes
         problem.y = GROUPS_ARRAY2; // target values
-        //SolverType solver = SolverType.MCSVM_CS; //Cramer and Singer for multiclass classification - equivalent of SVMlight
         SolverType solver2 = SolverType.getById(2); //2 -- L2-regularized L2-loss support vector classification (primal)
 
         Parameter parameter = new Parameter(solver2, C, eps);
@@ -413,7 +300,7 @@ public class TrainWorker extends SwingWorker<Void, Void> implements ActionListen
             model.save(modelFile);
             System.out.println("model saved at: " + modelFile);
         } catch (IOException ex) {
-            Logger.getLogger(TrainWorker.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, null, ex);
         }
 
         //end of evaluation training
@@ -431,7 +318,7 @@ public class TrainWorker extends SwingWorker<Void, Void> implements ActionListen
         try {
             model = Model.load(modelFile);
         } catch (IOException ex) {
-            Logger.getLogger(TrainWorker.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, null, ex);
         }
         int modelLabelSize = model.getLabels().length;
         int[] labels = model.getLabels();
@@ -553,7 +440,6 @@ public class TrainWorker extends SwingWorker<Void, Void> implements ActionListen
 
         int wayListSizeWithoutUnclassified = wayList.size();
         System.out.println("trainList size: " + wayListSizeWithoutUnclassified);
-
         //set classes for each osm instance
         int sizeToBeAddedToArray = 0; //this will be used to proper init the features array, adding the multiple vectors size
         if (trainProgress > 11) {
@@ -656,9 +542,11 @@ public class TrainWorker extends SwingWorker<Void, Void> implements ActionListen
 
         File customModelFile;
         if (topKIsSelected) {
-            customModelFile = new File(modelDirectory.getAbsolutePath()+"/" + inputFileName + "_model_c" + param + "_topK" + topK + ".0");
+            customModelFile = new File(modelDirectory.getAbsolutePath()+"/" +
+                    inputFileName + "_model_c" + param + "_topK" + topK + ".0");
         } else {
-            customModelFile = new File(modelDirectory.getAbsolutePath()+"/" + inputFileName + "_model_c" + param + "_maxF" + frequency + ".0");
+            customModelFile = new File(modelDirectory.getAbsolutePath()+"/" +
+                    inputFileName + "_model_c" + param + "_maxF" + frequency + ".0");
         }
 
 
@@ -670,13 +558,12 @@ public class TrainWorker extends SwingWorker<Void, Void> implements ActionListen
         }
 
         try {
-            //System.out.println("file created");
             model.save(modelFile);
             model.save(customModelFile);
             System.out.println("best model saved at: " + modelFile);
             System.out.println("custom model saved at: " + customModelFile);
         } catch (IOException ex) {
-            Logger.getLogger(TrainWorker.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -781,9 +668,11 @@ public class TrainWorker extends SwingWorker<Void, Void> implements ActionListen
 
         File customModelFile;
         if (topKIsSelected) {
-            customModelFile = new File(modelDirectory.getAbsolutePath()+"/" + inputFileName + "_model" + "_c" + param + "_topK" + topK + ".1");
+            customModelFile = new File(modelDirectory.getAbsolutePath()+"/" +
+                    inputFileName + "_model" + "_c" + param + "_topK" + topK + ".1");
         } else {
-            customModelFile = new File(modelDirectory.getAbsolutePath()+"/" + inputFileName + "_model_c" + param + "_maxF" + frequency + ".1");
+            customModelFile = new File(modelDirectory.getAbsolutePath()+"/" +
+                    inputFileName + "_model_c" + param + "_maxF" + frequency + ".1");
         }
 
         if (customModelFile.exists()) {
@@ -798,23 +687,10 @@ public class TrainWorker extends SwingWorker<Void, Void> implements ActionListen
             model.save(modelFile);
             model.save(customModelFile);
             System.out.println("model with classes saved at: " + modelFile);
-            System.out.println("custom model with classes saved at: " + modelFile);
+            System.out.println("custom model with classes saved at: " + customModelFile);
         } catch (IOException ex) {
-            Logger.getLogger(TrainWorker.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, null, ex);
         }
-    }
-
-    private static void clearDataset() {
-        for (OSMWay way : wayList) {
-            way.getFeatureNodeList().clear();
-        }
-    }
-
-    private void readTextualFromDefaultList(InputStream textualFileStream) {
-
-        TextualStatistics textualStatistics = new TextualStatistics();
-        textualStatistics.parseTextualList(textualFileStream);
-        namesList = textualStatistics.getTextualList();
     }
 
     @Override
@@ -824,26 +700,6 @@ public class TrainWorker extends SwingWorker<Void, Void> implements ActionListen
             setProgress(100);
         } catch (InterruptedException | ExecutionException ignore) {
             System.out.println("Exception: " + ignore);
-        }
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent ae) {
-        //cancel button, end process after clearing Dataset
-    }
-
-    private static void writeTextualListToFile(String filePath, List<Map.Entry<String, Integer>> textualList) {
-        try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(filePath, true), "UTF-8"))) {
-            for (Map.Entry<String, Integer> entry : textualList) {
-                writer.write(entry.getKey());
-                writer.newLine();
-            }
-        } catch (UnsupportedEncodingException ex) {
-            Logger.getLogger(TrainWorker.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(TrainWorker.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(TrainWorker.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 }

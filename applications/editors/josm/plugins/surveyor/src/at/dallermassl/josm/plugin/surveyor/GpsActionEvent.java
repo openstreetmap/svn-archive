@@ -1,7 +1,4 @@
-/**
- * Copyright by Christof Dallermassl
- * This program is free software and licensed under GPL.
- */
+// License: GPL. For details, see LICENSE file.
 package at.dallermassl.josm.plugin.surveyor;
 
 import java.awt.event.ActionEvent;
@@ -16,17 +13,10 @@ public class GpsActionEvent extends ActionEvent {
     private static final long serialVersionUID = 2674961758007055637L;
     private LatLon coordinates;
 
-
-    /**
-     * @param e
-     * @param latitude
-     * @param longitude
-     */
     public GpsActionEvent(ActionEvent e, double latitude, double longitude) {
         super(e.getSource(), e.getID(), e.getActionCommand(), e.getWhen(), e.getModifiers());
         coordinates = new LatLon(latitude, longitude);
     }
-
 
     /**
      * @return the coordinates
@@ -34,7 +24,4 @@ public class GpsActionEvent extends ActionEvent {
     public LatLon getCoordinates() {
         return this.coordinates;
     }
-
-
-
 }

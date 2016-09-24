@@ -1,7 +1,4 @@
-/**
- * Copyright by Christof Dallermassl
- * This program is free software and licensed under GPL.
- */
+// License: GPL. For details, see LICENSE file.
 package at.dallermassl.josm.plugin.surveyor;
 
 import java.awt.event.ActionEvent;
@@ -34,20 +31,12 @@ public class MetaAction extends AbstractAction {
     public MetaAction() {
     }
 
-    /**
-     * @param name
-     */
     public MetaAction(String name) {
         super(name);
     }
 
-    /**
-     * @param name
-     * @param icon
-     */
     public MetaAction(String name, Icon icon) {
         super(name, icon);
-        // TODO Auto-generated constructor stub
     }
 
     /**
@@ -95,21 +84,18 @@ public class MetaAction extends AbstractAction {
         } else {
             System.out.println("Surveyor: no gps data available!");
             // TEST for offline test only:
-            if(Main.pref.getBoolean("surveyor.debug")) {
+            if (Main.pref.getBoolean("surveyor.debug")) {
                 for (SurveyorActionDescription action : actions) {
                     action.actionPerformed(new GpsActionEvent(e, 0, 0));
                 }
             }
         }
         JFrame frame = SurveyorPlugin.getSurveyorFrame();
-        if(frame != null && frame.isVisible()) {
+        if (frame != null && frame.isVisible()) {
             frame.toFront();
         }
     }
 
-    /**
-     * @param gpsDataSource
-     */
     public void setGpsDataSource(GpsDataSource gpsDataSource) {
         this.gpsDataSource = gpsDataSource;
     }

@@ -1,7 +1,4 @@
-/**
- * Copyright by Christof Dallermassl
- * This program is free software and licensed under GPL.
- */
+// License: GPL. For details, see LICENSE file.
 package at.dallermassl.josm.plugin.surveyor;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -43,7 +40,7 @@ public class SurveyorComponent extends JComponent implements PropertyChangeListe
     private int height = 0;
     private JLabel streetLabel;
     private JPanel buttonPanel;
-    private Set<String>hotKeys;
+    private Set<String> hotKeys;
 
     public SurveyorComponent() {
         super();
@@ -83,7 +80,7 @@ public class SurveyorComponent extends JComponent implements PropertyChangeListe
      */
     public void setWidth(String widthString) {
         width = Integer.parseInt(widthString);
-        if(width > 0 && height > 0) {
+        if (width > 0 && height > 0) {
             super.setPreferredSize(new Dimension(width, height));
         }
     }
@@ -94,7 +91,7 @@ public class SurveyorComponent extends JComponent implements PropertyChangeListe
      */
     public void setHeight(String heightString) {
         height = Integer.parseInt(heightString);
-        if(width > 0 && height > 0) {
+        if (width > 0 && height > 0) {
             super.setPreferredSize(new Dimension(width, height));
         }
     }
@@ -104,10 +101,11 @@ public class SurveyorComponent extends JComponent implements PropertyChangeListe
     }
 
     public void addButton(ButtonDescription description) {
-        if(description.getHotkey() != "" &&  hotKeys.contains(description.getHotkey())) {
-            JOptionPane.showMessageDialog(Main.parent, tr("Duplicate hotkey for button ''{0}'' - button will be ignored!",description.getLabel()));
+        if (description.getHotkey() != "" && hotKeys.contains(description.getHotkey())) {
+            JOptionPane.showMessageDialog(Main.parent, 
+                    tr("Duplicate hotkey for button ''{0}'' - button will be ignored!", description.getLabel()));
         } else {
-            if(rows == 0 && columns == 0) {
+            if (rows == 0 && columns == 0) {
                 setColumns("4");
             }
             description.setGpsDataSource(this);
@@ -128,23 +126,23 @@ public class SurveyorComponent extends JComponent implements PropertyChangeListe
         SurveyorComponent surveyorComponent = null;
         try {
             parser.start(in);
-        } catch(SAXException e) {
+        } catch (SAXException e) {
             e.printStackTrace();
         }
         List<SurveyorActionDescription> actions = new ArrayList<>();
-        while(parser.hasNext()) {
+        while (parser.hasNext()) {
             Object object = parser.next();
             if (object instanceof SurveyorComponent) {
                 System.out.println("SurveyorComponent " + object);
                 surveyorComponent = (SurveyorComponent) object;
             } else if (object instanceof ButtonDescription) {
                 System.out.println("ButtonDescription " + object);
-                ((ButtonDescription)object).setActions(actions);
-                surveyorComponent.addButton(((ButtonDescription)object));
+                ((ButtonDescription) object).setActions(actions);
+                surveyorComponent.addButton(((ButtonDescription) object));
                 actions.clear();
             } else if (object instanceof SurveyorActionDescription) {
                 System.out.println("SurveyorActionDescription " + object);
-                actions.add((SurveyorActionDescription)object);
+                actions.add((SurveyorActionDescription) object);
             } else {
                 System.err.println("unknown " + object);
             }
@@ -159,11 +157,10 @@ public class SurveyorComponent extends JComponent implements PropertyChangeListe
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        if("gpsdata".equals(evt.getPropertyName())) {
+        if ("gpsdata".equals(evt.getPropertyName())) {
             gpsData = (LiveGpsData) evt.getNewValue();
             streetLabel.setText(tr("Way: ") + gpsData.getWayInfo());
         }
-
     }
 
     @Override

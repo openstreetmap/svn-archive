@@ -1,7 +1,4 @@
-/**
- * Copyright by Christof Dallermassl
- * This program is free software and licensed under GPL.
- */
+// License: GPL. For details, see LICENSE file.
 package at.dallermassl.josm.plugin.surveyor.action;
 
 import org.openstreetmap.josm.data.coor.LatLon;

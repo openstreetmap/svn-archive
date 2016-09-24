@@ -1,7 +1,4 @@
-/**
- * Copyright by Christof Dallermassl
- * This program is free software and licensed under GPL.
- */
+// License: GPL. For details, see LICENSE file.
 package at.dallermassl.josm.plugin.surveyor;
 
 import java.io.IOException;
@@ -9,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.dinopolis.util.io.Tokenizer;
+import org.openstreetmap.josm.Main;
 
 /**
  * @author cdaller
@@ -19,34 +17,24 @@ public class SurveyorActionDescription {
     private List<String> params;
     private SurveyorAction action;
 
-
     /**
      * Default Constructor
      */
     public SurveyorActionDescription() {
         super();
     }
-    /**
-     * @param actionClass
-     * @param params
-     */
+    
     public SurveyorActionDescription(String actionClass) {
         super();
         this.actionClass = actionClass;
     }
-    /**
-     * @param actionClass
-     * @param params
-     */
+    
     public SurveyorActionDescription(String actionClass, List<String> params) {
         super();
         this.actionClass = actionClass;
         this.params = params;
     }
-    /**
-     * @param actionClass
-     * @param params
-     */
+    
     public SurveyorActionDescription(String actionClass, String[] params) {
         super();
         this.actionClass = actionClass;
@@ -55,24 +43,28 @@ public class SurveyorActionDescription {
             this.params.add(params[index]);
         }
     }
+    
     /**
      * @return the actionClass
      */
     public String getActionClass() {
         return this.actionClass;
     }
+    
     /**
      * @param actionClass the actionClass to set
      */
     public void setActionClass(String actionClass) {
         this.actionClass = actionClass;
     }
+    
     /**
      * @return the params
      */
     public List<String> getParameterList() {
         return this.params;
     }
+    
     /**
      * @param params the params to set
      */
@@ -81,7 +73,7 @@ public class SurveyorActionDescription {
     }
 
     public void actionPerformed(GpsActionEvent e) {
-        if(action == null) {
+        if (action == null) {
             action = SurveyorActionFactory.getInstance(actionClass);
             action.setParameters(getParameterList());
         }
@@ -105,6 +97,7 @@ public class SurveyorActionDescription {
         try {
             params = tokenizer.nextLine();
         } catch (IOException ignore) {
+            Main.debug(ignore);
         }
     }
 

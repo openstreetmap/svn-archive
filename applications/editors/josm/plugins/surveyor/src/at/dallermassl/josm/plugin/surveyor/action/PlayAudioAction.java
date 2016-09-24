@@ -1,7 +1,4 @@
-/**
- * Copyright by Christof Dallermassl
- * This program is free software and licensed under GPL.
- */
+// License: GPL. For details, see LICENSE file.
 package at.dallermassl.josm.plugin.surveyor.action;
 
 import java.io.BufferedInputStream;
@@ -37,7 +34,7 @@ public class PlayAudioAction extends AbstractSurveyorAction {
         Main.worker.execute(new Runnable() {
             public void run() {
                 try {
-                    if(audioSource == null) {
+                    if (audioSource == null) {
                         audioSource = getParameters().get(0);
                     }
                     InputStream in = new BufferedInputStream(ResourceLoader.getInputStream(audioSource));
@@ -60,7 +57,7 @@ public class PlayAudioAction extends AbstractSurveyorAction {
 
                     // Create the clip
                     DataLine.Info info = new DataLine.Info(
-                        Clip.class, stream.getFormat(), ((int)stream.getFrameLength()*format.getFrameSize()));
+                        Clip.class, stream.getFormat(), ((int) stream.getFrameLength()*format.getFrameSize()));
                     Clip clip = (Clip) AudioSystem.getLine(info);
 
                     // This method does not return until the audio file is completely loaded

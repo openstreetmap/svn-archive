@@ -1,7 +1,4 @@
-/**
- * Copyright by Christof Dallermassl
- * This program is free software and licensed under GPL.
- */
+// License: GPL. For details, see LICENSE file.
 package at.dallermassl.josm.plugin.surveyor.action;
 
 import java.util.List;
@@ -25,7 +22,7 @@ public class TaggingPresetAction implements SurveyorAction {
 
     @Override
     public void actionPerformed(GpsActionEvent event) {
-        if(preset == null) {
+        if (preset == null) {
             return;
         }
         LatLon coordinates = event.getCoordinates();
@@ -46,7 +43,7 @@ public class TaggingPresetAction implements SurveyorAction {
 
     @Override
     public void setParameters(List<String> parameters) {
-        if(parameters.size() == 0) {
+        if (parameters.size() == 0) {
             throw new IllegalArgumentException("No annotation preset name given!");
         }
         presetName = parameters.get(0);

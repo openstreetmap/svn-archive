@@ -1,7 +1,4 @@
-/**
- * Copyright by Christof Dallermassl
- * This program is free software and licensed under GPL.
- */
+// License: GPL. For details, see LICENSE file.
 package at.dallermassl.josm.plugin.surveyor.util;
 
 import java.io.FileInputStream;
@@ -13,7 +10,7 @@ import java.net.URL;
  * @author cdaller
  *
  */
-public class ResourceLoader {
+public final class ResourceLoader {
 
     private ResourceLoader() {
 
@@ -28,7 +25,7 @@ public class ResourceLoader {
      * @throws IOException if an error occurs on opening the url, or if the file is not found.
      */
     @SuppressWarnings("resource")
-	public static InputStream getInputStream(String source) throws IOException {
+    public static InputStream getInputStream(String source) throws IOException {
         InputStream in = null;
         if (source.startsWith("http://") || source.startsWith("https://") || source.startsWith("ftp://") || source.startsWith("file:")) {
             in = new URL(source).openStream();

@@ -1,7 +1,4 @@
-/**
- * Copyright by Christof Dallermassl
- * This program is free software and licensed under GPL.
- */
+// License: GPL. For details, see LICENSE file.
 package at.dallermassl.josm.plugin.surveyor;
 
 import java.util.List;
@@ -16,11 +13,11 @@ public interface SurveyorAction {
      * Action callback indicating that the action should do something.
      * @param event the event.
      */
-    public void actionPerformed(GpsActionEvent event);
+    void actionPerformed(GpsActionEvent event);
 
     /**
      * Sets the parameters for the action execution.
      * @param parameters the parameters.
      */
-    public void setParameters(List<String> parameters);
+    void setParameters(List<String> parameters);
 }

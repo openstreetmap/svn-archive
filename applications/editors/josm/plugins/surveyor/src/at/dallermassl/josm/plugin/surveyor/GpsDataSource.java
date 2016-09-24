@@ -1,7 +1,4 @@
-/**
- * Copyright by Christof Dallermassl
- * This program is free software and licensed under GPL.
- */
+// License: GPL. For details, see LICENSE file.
 package at.dallermassl.josm.plugin.surveyor;
 
 import livegps.LiveGpsData;
@@ -15,6 +12,5 @@ public interface GpsDataSource {
      * Returns gps data.
      * @return gps data.
      */
-    public LiveGpsData getGpsData();
-
+    LiveGpsData getGpsData();
 }

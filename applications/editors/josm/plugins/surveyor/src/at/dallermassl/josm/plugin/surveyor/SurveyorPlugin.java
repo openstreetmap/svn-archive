@@ -1,7 +1,4 @@
-/**
- * Copyright by Christof Dallermassl
- * This program is free software and licensed under GPL.
- */
+// License: GPL. For details, see LICENSE file.
 package at.dallermassl.josm.plugin.surveyor;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -16,6 +13,8 @@ import org.openstreetmap.josm.gui.MainMenu;
 import org.openstreetmap.josm.plugins.PluginHandler;
 import org.openstreetmap.josm.plugins.PluginInformation;
 
+// CHECKSTYLE.OFF: HideUtilityClassConstructorCheck
+
 /**
  * Plugin that uses live gps data and a button panel to add nodes/waypoints etc at the current
  * position.
@@ -25,18 +24,19 @@ import org.openstreetmap.josm.plugins.PluginInformation;
  * @author cdaller
  *
  */
-public class SurveyorPlugin {
+public final class SurveyorPlugin {
 
     private static JFrame surveyorFrame;
     public static final String PREF_KEY_STREET_NAME_FONT_SIZE = "surveyor.way.fontsize";
-
+    
     /**
-     *
+     * Constructs a new {@code SurveyorPlugin}.
+     * @param info plugin information
      */
     public SurveyorPlugin(PluginInformation info) {
 
         LiveGpsPlugin gpsPlugin = (LiveGpsPlugin) PluginHandler.getPlugin("livegps");
-        if(gpsPlugin == null)
+        if (gpsPlugin == null)
             throw new IllegalStateException(tr("SurveyorPlugin needs LiveGpsPlugin, but could not find it!"));
 
         JMenu m = gpsPlugin.getLgpsMenu();
@@ -63,4 +63,5 @@ public class SurveyorPlugin {
         SurveyorPlugin.surveyorFrame = surveyorFrame;
     }
 
+    // CHECKSTYLE.ON: HideUtilityClassConstructorCheck
 }

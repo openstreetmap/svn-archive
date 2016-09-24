@@ -1,7 +1,4 @@
-/**
- * Copyright by Christof Dallermassl
- * This program is free software and licensed under GPL.
- */
+// License: GPL. For details, see LICENSE file.
 package at.dallermassl.josm.plugin.surveyor;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -41,11 +38,11 @@ public class AutoSaveAction extends JosmAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() instanceof AbstractButton) {
-            autoSave = ((AbstractButton)e.getSource()).isSelected();
+            autoSave = ((AbstractButton) e.getSource()).isSelected();
         }
 
-        if(autoSave) {
-            if(gpsDataTimer == null) {
+        if (autoSave) {
+            if (gpsDataTimer == null) {
                 gpsDataTimer = new Timer();
             }
             TimerTask task;

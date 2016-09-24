@@ -1,7 +1,4 @@
-/**
- * Copyright by Christof Dallermassl
- * This program is free software and licensed under GPL.
- */
+// License: GPL. For details, see LICENSE file.
 package at.dallermassl.josm.plugin.surveyor;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -43,7 +40,7 @@ public class AutoSaveEditLayerTimerTask extends TimerTask {
             // write to temporary file, on success, rename tmp file to target file:
             File tmpFile = new File(file.getAbsoluteFile()+".tmp");
             System.out.println("AutoSaving osm data to file " + file.getAbsolutePath());
-            synchronized(SurveyorLock.class) {
+            synchronized (SurveyorLock.class) {
                 OsmWriter w = OsmWriterFactory.createOsmWriter(new PrintWriter(new FileOutputStream(tmpFile)), false, dataset.getVersion());
                 w.header();
                 w.writeDataSources(dataset);

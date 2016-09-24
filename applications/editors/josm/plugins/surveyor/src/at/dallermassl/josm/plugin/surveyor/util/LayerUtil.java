@@ -1,6 +1,4 @@
-/**
- *
- */
+// License: GPL. For details, see LICENSE file.
 package at.dallermassl.josm.plugin.surveyor.util;
 
 import org.openstreetmap.josm.Main;
@@ -10,8 +8,12 @@ import org.openstreetmap.josm.gui.layer.Layer;
  * @author cdaller
  *
  */
-public class LayerUtil {
+public final class LayerUtil {
 
+    private LayerUtil() {
+        // Hide default contructir for utilities classes
+    }
+    
     /**
      * Returns the layer with the given name and type from the map view or <code>null</code>.
      * @param <LayerType> the type of the layer.
@@ -22,9 +24,9 @@ public class LayerUtil {
     @SuppressWarnings("unchecked")
     public static <LayerType extends Layer> LayerType findGpsLayer(String layerName, Class<LayerType> layerType) {
         Layer result = null;
-        if(Main.map != null && Main.map.mapView != null) {
-            for(Layer layer : Main.getLayerManager().getLayers()) {
-                if(layerName.equals(layer.getName()) && layerType.isAssignableFrom(layer.getClass())) {
+        if (Main.map != null && Main.map.mapView != null) {
+            for (Layer layer : Main.getLayerManager().getLayers()) {
+                if (layerName.equals(layer.getName()) && layerType.isAssignableFrom(layer.getClass())) {
                     result = layer;
                     break;
                 }

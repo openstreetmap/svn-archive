@@ -1,7 +1,4 @@
-/**
- * Copyright by Christof Dallermassl
- * This program is free software and licensed under GPL.
- */
+// License: GPL. For details, see LICENSE file.
 package at.dallermassl.josm.plugin.surveyor;
 
 import java.util.HashMap;
@@ -16,23 +13,23 @@ import java.util.Map;
  * @author cdaller
  *
  */
-public class SurveyorActionFactory {
-    private static Map<String, SurveyorAction>actionCache = new HashMap<>();
+public final class SurveyorActionFactory {
+    private static Map<String, SurveyorAction> actionCache = new HashMap<>();
     public static final String DEFAULT_PACKAGE = SurveyorActionFactory.class.getPackage().getName() + ".action";
 
-    /**
-     * @param actionClass
-     * @return
-     */
+    private SurveyorActionFactory() {
+        // Hide default contructir for utilities classes
+    }
+    
     public static SurveyorAction getInstance(String actionClass) {
         try {
             SurveyorAction action = actionCache.get(actionClass);
-            if(action == null) {
+            if (action == null) {
                 try {
-                    action = (SurveyorAction)Class.forName(actionClass).newInstance();
+                    action = (SurveyorAction) Class.forName(actionClass).newInstance();
                 } catch (ClassNotFoundException e) {
                     actionClass = DEFAULT_PACKAGE + "." + actionClass;
-                    action = (SurveyorAction)Class.forName(actionClass).newInstance();
+                    action = (SurveyorAction) Class.forName(actionClass).newInstance();
                 }
                 actionCache.put(actionClass, action);
             }

@@ -1,7 +1,4 @@
-/**
- * Copyright by Christof Dallermassl
- * This program is free software and licensed under GPL.
- */
+// License: GPL. For details, see LICENSE file.
 package at.dallermassl.josm.plugin.surveyor.action.gui;
 
 import java.awt.Component;
@@ -28,16 +25,11 @@ public class DialogClosingThread extends Thread implements KeyListener, Document
 
     /**
      * Using the given dialog and the default timeout.
-     * @param dialog
      */
     public DialogClosingThread(JDialog dialog) {
         this(dialog, DEFAULT_TIMEOUT);
     }
 
-    /**
-     * @param dialog
-     * @param timeout
-     */
     public DialogClosingThread(JDialog dialog, long timeout) {
         super();
         this.dialog = dialog;
@@ -48,12 +40,14 @@ public class DialogClosingThread extends Thread implements KeyListener, Document
     @Override
     public void run() {
         String title = dialog.getTitle();
-        while(loopCount > 0) {
+        while (loopCount > 0) {
             dialog.setTitle(title + " (" + loopCount + "sec)");
             --loopCount;
             try {
                 sleep(1000);
-            } catch(InterruptedException ignore) {}
+            } catch (InterruptedException ignore) {
+                Main.debug(ignore);
+            }
         }
 
         dialog.setVisible(false);
@@ -82,13 +76,10 @@ public class DialogClosingThread extends Thread implements KeyListener, Document
         Main.debug("keytyped: " + e.getKeyCode());
     }
 
-    /**
-     * @param optionPane
-     */
     public void observe(Container container) {
-        for(Component component : container.getComponents()) {
-            if(component instanceof JTextField) {
-                observe((JTextField)component);
+        for (Component component : container.getComponents()) {
+            if (component instanceof JTextField) {
+                observe((JTextField) component);
             } else {
                 observe(component);
             }

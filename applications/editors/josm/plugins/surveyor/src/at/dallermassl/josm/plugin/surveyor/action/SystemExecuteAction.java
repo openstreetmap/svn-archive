@@ -1,7 +1,4 @@
-/**
- * Copyright by Christof Dallermassl
- * This program is free software and licensed under GPL.
- */
+// License: GPL. For details, see LICENSE file.
 package at.dallermassl.josm.plugin.surveyor.action;
 
 import java.io.BufferedReader;
@@ -37,7 +34,7 @@ public class SystemExecuteAction extends AbstractSurveyorAction {
                     String line;
 
                     while ((line = br.readLine()) != null) {
-                        Main.info(getClass().getSimpleName() + ": " +  line);
+                        Main.info(getClass().getSimpleName() + ": " + line);
                     }
 
                     Main.info(getClass().getSimpleName() + "Program terminated!");

@@ -1,7 +1,4 @@
-/**
- * Copyright by Christof Dallermassl
- * This program is free software and licensed under GPL.
- */
+// License: GPL. For details, see LICENSE file.
 package at.dallermassl.josm.plugin.surveyor.action;
 
 import java.awt.Toolkit;
@@ -24,11 +21,12 @@ public class BeepAction implements SurveyorAction {
         // run as a separate thread
         Main.worker.execute(new Runnable() {
             public void run() {
-                for(int index = 0; index < beepNumber; ++index) {
+                for (int index = 0; index < beepNumber; ++index) {
                     Toolkit.getDefaultToolkit().beep();
                     try {
                         Thread.sleep(200);
                     } catch (InterruptedException ignore) {
+                        Main.debug(ignore);
                     }
                 }
             }
@@ -39,9 +37,9 @@ public class BeepAction implements SurveyorAction {
     public void setParameters(List<String> parameters) {
         try {
             beepNumber = Integer.parseInt(parameters.get(0));
-        } catch(NumberFormatException e) {
+        } catch (NumberFormatException e) {
             // print but recover
-            e.printStackTrace();
+            Main.warn(e);
         }
     }
 }

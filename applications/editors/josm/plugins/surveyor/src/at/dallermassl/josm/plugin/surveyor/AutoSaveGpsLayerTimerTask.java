@@ -1,7 +1,4 @@
-/**
- * Copyright by Christof Dallermassl
- * This program is free software and licensed under GPL.
- */
+// License: GPL. For details, see LICENSE file.
 package at.dallermassl.josm.plugin.surveyor;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -57,7 +54,7 @@ public class AutoSaveGpsLayerTimerTask extends TimerTask {
 
         try {
             GpxLayer gpsLayer = LayerUtil.findGpsLayer(gpsLayerName, GpxLayer.class);
-            if(gpsLayer == null) {
+            if (gpsLayer == null) {
                 return;
             }
             // write to temporary file, on success, rename tmp file to target file:
@@ -68,7 +65,7 @@ public class AutoSaveGpsLayerTimerTask extends TimerTask {
             // @see LiveGpsLayer
             PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(tmpFile)));
             try (GpxWriter gpxWriter = new GpxWriter(out)) {
-            	gpxWriter.write(gpsLayer.data);
+                gpxWriter.write(gpsLayer.data);
             }
             tmpFile.renameTo(file);
         } catch (IOException ioExc) {

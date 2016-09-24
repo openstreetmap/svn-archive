@@ -1,7 +1,4 @@
-/**
- * Copyright by Christof Dallermassl
- * This program is free software and licensed under GPL.
- */
+// License: GPL. For details, see LICENSE file.
 package at.dallermassl.josm.plugin.surveyor.action;
 
 import java.util.ArrayList;
@@ -43,7 +40,7 @@ public class SetNodeAction implements SurveyorAction {
         String value;
         for (String keyValuePair : parameters) {
             pos = keyValuePair.indexOf('=');
-            if(pos > 0) {
+            if (pos > 0) {
                 key = keyValuePair.substring(0, pos);
                 value = keyValuePair.substring(pos + 1);
                 keyValues.add(new Pair<>(key, value));
@@ -58,13 +55,12 @@ public class SetNodeAction implements SurveyorAction {
         LatLon coordinates = event.getCoordinates();
         //System.out.println(getClass().getSimpleName() + " KOORD: " + coordinates.lat() + ", " + coordinates.lon() + " params: " + keyValues);
         Node node = new Node(coordinates);
-        for(Pair<String, String> entry : keyValues) {
+        for (Pair<String, String> entry : keyValues) {
             node.put(entry.a, entry.b);
         }
-        synchronized(SurveyorLock.class) {
+        synchronized (SurveyorLock.class) {
             DataSet ds = Main.getLayerManager().getEditDataSet();
-            if(ds != null)
-            {
+            if (ds != null) {
                 ds.addPrimitive(node);
                 ds.setSelected(node);
             }

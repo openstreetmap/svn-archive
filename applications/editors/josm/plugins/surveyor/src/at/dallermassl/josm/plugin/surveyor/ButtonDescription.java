@@ -1,7 +1,4 @@
-/**
- * Copyright by Christof Dallermassl
- * This program is free software and licensed under GPL.
- */
+// License: GPL. For details, see LICENSE file.
 package at.dallermassl.josm.plugin.surveyor;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -48,8 +45,8 @@ public class ButtonDescription {
     public ButtonDescription() {
         super();
     }
+    
     /**
-     * @param hotkey
      * @param actions a list of actions to be performed.
      * @param type if <code>null</code> {@link ButtonType#SINGLE} is used.
      */
@@ -58,7 +55,6 @@ public class ButtonDescription {
     }
 
     /**
-     * @param hotkey
      * @param actions a list of actions to be performed.
      * @param type if <code>null</code> {@link ButtonType#SINGLE} is used.
      */
@@ -78,7 +74,6 @@ public class ButtonDescription {
     }
 
     /**
-     * @param hotkey
      * @param actions a list of actions to be performed.
      * @param type if <code>null</code> {@link ButtonType#SINGLE} is used.
      */
@@ -87,7 +82,7 @@ public class ButtonDescription {
         this.label = label;
         this.hotkey = hotkey;
         this.iconName = iconName;
-        if(type == null) {
+        if (type == null) {
             this.type = ButtonType.SINGLE;
         } else {
             this.type = type;
@@ -101,24 +96,28 @@ public class ButtonDescription {
     public List<SurveyorActionDescription> getActions() {
         return this.actions;
     }
+    
     /**
      * @param actions the actions to set
      */
     public void setActions(List<SurveyorActionDescription> actions) {
         this.actions = actions;
     }
+    
     /**
      * @return the hotkey
      */
     public String getHotkey() {
         return this.hotkey;
     }
+    
     /**
      * @param hotkey the hotkey to set
      */
     public void setHotkey(String hotkey) {
         this.hotkey = hotkey;
     }
+    
     /**
      * @return the label
      */
@@ -152,6 +151,7 @@ public class ButtonDescription {
             System.err.println("Unknown button type '" + type + "' given. Allowed values are " + Arrays.toString(ButtonType.values()));
         }
     }
+    
     /**
      * @param type the type to set
      */
@@ -161,7 +161,6 @@ public class ButtonDescription {
 
     /**
      * Sets the name of the icon.
-     * @param icon
      */
     public void setIcon(String icon) {
         this.iconName = icon;
@@ -175,20 +174,20 @@ public class ButtonDescription {
 
         String actionName = tr(getLabel()) + " (" + hotkey + ")";
 
-        Icon icon = ImageProvider.getIfAvailable(null,iconName);
+        Icon icon = ImageProvider.getIfAvailable(null, iconName);
         if (icon == null)
-            icon = ImageProvider.getIfAvailable("markers",iconName);
+            icon = ImageProvider.getIfAvailable("markers", iconName);
         if (icon == null)
-            icon = ImageProvider.getIfAvailable("symbols",iconName);
+            icon = ImageProvider.getIfAvailable("symbols", iconName);
         if (icon == null)
-            icon = ImageProvider.getIfAvailable("nodes",iconName);
+            icon = ImageProvider.getIfAvailable("nodes", iconName);
 
         MetaAction action = new MetaAction(actionName, icon);
         action.setActions(actions);
         action.setGpsDataSource(gpsDataSource);
 
         AbstractButton button;
-        if(type == ButtonType.TOGGLE) {
+        if (type == ButtonType.TOGGLE) {
             button = new JToggleButton(action);
             connectActionAndButton(action, button);
         } else {
@@ -222,14 +221,17 @@ public class ButtonDescription {
     private static class SelectionStateAdapter implements PropertyChangeListener, ItemListener {
         private Action action;
         private AbstractButton button;
-        public SelectionStateAdapter(Action theAction, AbstractButton theButton) {
+        
+        SelectionStateAdapter(Action theAction, AbstractButton theButton) {
             action = theAction;
             button = theButton;
         }
+        
         protected void configure() {
             action.addPropertyChangeListener(this);
             button.addItemListener(this);
         }
+        
         public void itemStateChanged(ItemEvent e) {
             boolean value = e.getStateChange() == ItemEvent.SELECTED;
             Boolean valueObj = Boolean.valueOf(value);
@@ -237,8 +239,8 @@ public class ButtonDescription {
         }
 
         public void propertyChange(PropertyChangeEvent evt) {
-            if(evt.getPropertyName().equals(ActionConstants.SELECTED_KEY)) {
-                Boolean newSelectedState = (Boolean)evt.getNewValue();
+            if (evt.getPropertyName().equals(ActionConstants.SELECTED_KEY)) {
+                Boolean newSelectedState = (Boolean) evt.getNewValue();
                 button.setSelected(newSelectedState.booleanValue());
             }
         }

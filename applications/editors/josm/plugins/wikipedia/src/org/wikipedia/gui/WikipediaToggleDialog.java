@@ -70,7 +70,7 @@ public class WikipediaToggleDialog extends ToggleDialog implements ActiveLayerCh
 
                 @Override
                 public void mouseClicked(MouseEvent e) {
-                    if (e.getClickCount() == 2 && getSelectedValue() != null) {
+                    if (e.getClickCount() == 2 && getSelectedValue() != null && Main.getLayerManager().getEditDataSet() != null) {
                         final WikipediaEntry entry = getSelectedValue();
                         if (entry.coordinate != null) {
                             BoundingXYVisitor bbox = new BoundingXYVisitor();

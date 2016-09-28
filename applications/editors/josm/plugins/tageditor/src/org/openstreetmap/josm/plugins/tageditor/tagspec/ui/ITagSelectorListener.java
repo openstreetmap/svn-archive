@@ -1,8 +1,8 @@
 // License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.tageditor.tagspec.ui;
 
-import org.openstreetmap.josm.plugins.tageditor.tagspec.KeyValuePair;
+import org.openstreetmap.josm.data.osm.Tag;
 
 public interface ITagSelectorListener {
-    void itemSelected(KeyValuePair pair);
+    void itemSelected(Tag pair);
 }

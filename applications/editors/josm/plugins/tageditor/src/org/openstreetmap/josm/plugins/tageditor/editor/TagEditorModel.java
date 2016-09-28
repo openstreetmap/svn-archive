@@ -13,10 +13,10 @@ import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.SequenceCommand;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.data.osm.Tag;
 import org.openstreetmap.josm.gui.tagging.TagModel;
 import org.openstreetmap.josm.gui.tagging.presets.TaggingPreset;
 import org.openstreetmap.josm.plugins.tageditor.preset.AdvancedTag;
-import org.openstreetmap.josm.plugins.tageditor.tagspec.KeyValuePair;
 
 @SuppressWarnings("serial")
 public class TagEditorModel extends org.openstreetmap.josm.gui.tagging.TagEditorModel {
@@ -83,11 +83,11 @@ public class TagEditorModel extends org.openstreetmap.josm.gui.tagging.TagEditor
 
 
     /**
-     * applies a tag given by a {@see KeyValuePair} to the model
+     * applies a tag given by a {@see Tag} to the model
      *
      * @param pair the key value pair
      */
-    public void applyKeyValuePair(KeyValuePair pair) {
+    public void applyKeyValuePair(Tag pair) {
         TagModel tagModel = get(pair.getKey());
         if (tagModel == null) {
             tagModel = new TagModel(pair.getKey(), pair.getValue());

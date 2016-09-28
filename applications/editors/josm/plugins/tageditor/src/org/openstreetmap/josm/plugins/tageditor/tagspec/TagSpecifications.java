@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.openstreetmap.josm.data.osm.Tag;
 import org.openstreetmap.josm.gui.tagging.ac.AutoCompletionItemPriority;
 import org.openstreetmap.josm.gui.tagging.ac.AutoCompletionListItem;
 import org.openstreetmap.josm.plugins.tageditor.ac.AutoCompletionContext;
@@ -162,12 +163,12 @@ public class TagSpecifications {
      *
      * @return the list
      */
-    public ArrayList<KeyValuePair> asList() {
-        ArrayList<KeyValuePair> entries = new ArrayList<>();
+    public ArrayList<Tag> asList() {
+        ArrayList<Tag> entries = new ArrayList<>();
 
         for (TagSpecification s : tagSpecifications) {
             for (LabelSpecification l : s.getLables()) {
-                entries.add(new KeyValuePair(s.getKey(), l.getValue()));
+                entries.add(new Tag(s.getKey(), l.getValue()));
             }
         }
         return entries;

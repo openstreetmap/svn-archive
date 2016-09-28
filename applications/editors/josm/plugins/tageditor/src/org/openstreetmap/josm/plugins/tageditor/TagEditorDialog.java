@@ -29,6 +29,7 @@ import javax.swing.SwingUtilities;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.data.osm.Tag;
 import org.openstreetmap.josm.gui.tagging.ac.AutoCompletionList;
 import org.openstreetmap.josm.gui.tagging.ac.AutoCompletionManager;
 import org.openstreetmap.josm.gui.tagging.presets.TaggingPreset;
@@ -37,7 +38,6 @@ import org.openstreetmap.josm.plugins.tageditor.editor.TagEditor;
 import org.openstreetmap.josm.plugins.tageditor.editor.TagEditorModel;
 import org.openstreetmap.josm.plugins.tageditor.preset.ui.IPresetSelectorListener;
 import org.openstreetmap.josm.plugins.tageditor.preset.ui.TabularPresetSelector;
-import org.openstreetmap.josm.plugins.tageditor.tagspec.KeyValuePair;
 import org.openstreetmap.josm.plugins.tageditor.tagspec.ui.ITagSelectorListener;
 import org.openstreetmap.josm.plugins.tageditor.tagspec.ui.TabularTagSelector;
 import org.openstreetmap.josm.tools.ImageProvider;
@@ -175,7 +175,7 @@ public class TagEditorDialog extends JDialog {
         tagSelector.addTagSelectorListener(
                 new ITagSelectorListener() {
                     @Override
-                    public void itemSelected(KeyValuePair pair) {
+                    public void itemSelected(Tag pair) {
                         tagEditor.stopEditing();
                         tagEditor.getModel().applyKeyValuePair(pair);
                         tagEditor.requestFocusInTopLeftCell();

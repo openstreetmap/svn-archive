@@ -29,7 +29,7 @@ import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import org.openstreetmap.josm.plugins.tageditor.tagspec.KeyValuePair;
+import org.openstreetmap.josm.data.osm.Tag;
 
 public class TabularTagSelector extends JPanel {
 
@@ -96,7 +96,7 @@ public class TabularTagSelector extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 int rowNum = tagsTable.getSelectedRow();
                 if (rowNum >= 0) {
-                    KeyValuePair item = getModel().getVisibleItem(rowNum);
+                    Tag item = getModel().getVisibleItem(rowNum);
                     fireItemSelected(item);
                 }
             }
@@ -123,7 +123,7 @@ public class TabularTagSelector extends JPanel {
                     public void actionPerformed(ActionEvent arg0) {
                         int row = tagsTable.getSelectedRow();
                         if (row >= 0) {
-                            KeyValuePair item = getModel().getVisibleItem(row);
+                            Tag item = getModel().getVisibleItem(row);
                             fireItemSelected(item);
                         }
                     }
@@ -235,7 +235,7 @@ public class TabularTagSelector extends JPanel {
         }
     }
 
-    protected void fireItemSelected(KeyValuePair pair) {
+    protected void fireItemSelected(Tag pair) {
         synchronized (this.listeners) {
             for (ITagSelectorListener listener: listeners) {
                 listener.itemSelected(pair);
@@ -248,7 +248,7 @@ public class TabularTagSelector extends JPanel {
         public void mouseClicked(MouseEvent e) {
             if (e.getClickCount() == 2) {
                 int rowNum = tagsTable.rowAtPoint(e.getPoint());
-                KeyValuePair pair = getModel().getVisibleItem(rowNum);
+                Tag pair = getModel().getVisibleItem(rowNum);
                 fireItemSelected(pair);
             }
         }

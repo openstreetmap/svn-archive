@@ -11,15 +11,15 @@ import java.util.logging.Logger;
 
 import javax.swing.table.AbstractTableModel;
 
-import org.openstreetmap.josm.plugins.tageditor.tagspec.KeyValuePair;
+import org.openstreetmap.josm.data.osm.Tag;
 import org.openstreetmap.josm.plugins.tageditor.tagspec.TagSpecifications;
 
 public class TagsTableModel extends AbstractTableModel {
 
     private static Logger logger = Logger.getLogger(TagsTableModel.class.getName());
 
-    private ArrayList<KeyValuePair> items = null;
-    private ArrayList<KeyValuePair> visibleItems = null;
+    private ArrayList<Tag> items = null;
+    private ArrayList<Tag> visibleItems = null;
 
     public TagsTableModel() {
         items = new ArrayList<>();
@@ -29,10 +29,9 @@ public class TagsTableModel extends AbstractTableModel {
     protected void sort() {
         Collections.sort(
                 items,
-                new Comparator<KeyValuePair>() {
+                new Comparator<Tag>() {
                     @Override
-                    public int compare(KeyValuePair self,
-                            KeyValuePair other) {
+                    public int compare(Tag self, Tag other) {
                         int ret = self.getKey().compareToIgnoreCase(other.getKey());
 
                         if (ret == 0)
@@ -62,7 +61,7 @@ public class TagsTableModel extends AbstractTableModel {
 
         items = spec.asList();
         sort();
-        for (KeyValuePair item : items) {
+        for (Tag item : items) {
             visibleItems.add(item);
         }
     }
@@ -79,7 +78,7 @@ public class TagsTableModel extends AbstractTableModel {
 
     @Override
     public Object getValueAt(int row, int col) {
-        KeyValuePair pair = visibleItems.get(row);
+        Tag pair = visibleItems.get(row);
         switch(col) {
         case 0: return pair.getKey();
         case 1: return pair.getValue();
@@ -93,13 +92,13 @@ public class TagsTableModel extends AbstractTableModel {
         synchronized (this) {
             if (filter == null || filter.trim().equals("")) {
                 visibleItems.clear();
-                for (KeyValuePair pair: items) {
+                for (Tag pair: items) {
                     visibleItems.add(pair);
                 }
             } else {
                 visibleItems.clear();
                 filter = filter.toLowerCase();
-                for (KeyValuePair pair: items) {
+                for (Tag pair: items) {
                     if (pair.getKey().toLowerCase().trim().startsWith(filter)
                             || pair.getValue().toLowerCase().trim().startsWith(filter)) {
                         visibleItems.add(pair);
@@ -116,7 +115,7 @@ public class TagsTableModel extends AbstractTableModel {
         return false;
     }
 
-    public KeyValuePair getVisibleItem(int row) {
+    public Tag getVisibleItem(int row) {
         if (row < 0 || row >= visibleItems.size())
             throw new IndexOutOfBoundsException("row is out of bound: row=" + row);
         return visibleItems.get(row);

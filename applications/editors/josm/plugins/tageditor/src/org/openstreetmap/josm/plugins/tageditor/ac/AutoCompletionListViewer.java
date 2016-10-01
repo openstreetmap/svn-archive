@@ -31,7 +31,7 @@ public class AutoCompletionListViewer extends JPanel {
     private AutoCompletionList autoCompletionList = null;
 
     /** the listeners */
-    private ArrayList<IAutoCompletionListListener> listener = null;
+    private final ArrayList<IAutoCompletionListListener> listener = new ArrayList<>();
 
     /**
      * creates the GUI
@@ -93,7 +93,6 @@ public class AutoCompletionListViewer extends JPanel {
     public AutoCompletionListViewer(AutoCompletionList list) {
         this.autoCompletionList = list;
         createGUI();
-        listener = new ArrayList<>();
     }
 
     /**
@@ -102,7 +101,6 @@ public class AutoCompletionListViewer extends JPanel {
     public AutoCompletionListViewer() {
         this.autoCompletionList = null;
         createGUI();
-        listener = new ArrayList<>();
     }
 
     /**

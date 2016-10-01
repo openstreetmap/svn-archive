@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -73,7 +74,7 @@ public class TagSpecifications {
             logger.log(Level.SEVERE, "failed to create input stream for resource '" + RES_NAME_TAG_SPECIFICATIONS + "'");
             return;
         }
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(in))) {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8))) {
             TagSpecifications spec = new TagSpecifications();
             spec.load(reader);
             instance = spec;

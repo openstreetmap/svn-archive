@@ -1,6 +1,4 @@
-/**
- * This plugin leverages JOSM to import files.
- */
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.dataimport;
 
 import java.io.IOException;
@@ -20,7 +18,7 @@ public class DataImportPlugin extends Plugin {
      * Add new File import filter into open dialog
      * @param info plugin information
      */
-    public DataImportPlugin(PluginInformation info) throws IOException{
+    public DataImportPlugin(PluginInformation info) throws IOException {
         super(info);
 
         ExtensionFileFilter.addImporter(new TangoGPS());

@@ -46,15 +46,14 @@ import org.openstreetmap.josm.plugins.dataimport.io.tcx.TrainingCenterDatabaseT;
  * <p>
  * The Garmin TCX Schema file can be downloaded from: <a
  * href="http://www.garmin.com/xmlschemas/TrainingCenterDatabasev2.xsd">http://www.garmin.com/xmlschemas/TrainingCenterDatabasev2.xsd</a>
- * The command used to generate the code is: <code>
- * xjc.bat -p org.openstreetmap.josm.io.tcx TrainingCenterDatabasev2.xsd -d <path to the src folder of JOSM>
- * </code>
+ * The command used to generate the code is:
+ * {@code xjc.bat -p org.openstreetmap.josm.io.tcx TrainingCenterDatabasev2.xsd -d <path to the src folder of JOSM>}
  * <p>
  * Note: if you get an exception that JAXB 2.1 is not supported on your system, you will have to add the jaxb-api.jar
  * to the endorsed directory (create it if necessary) of your JRE. Usually it is something like this:
- * \<program files>\Java\jre<java version>\lib\endorsed
+ * {@code \<program files>\Java\jre<java version>\lib\endorsed}
  *
- * @author adrian <as@nitegate.de>
+ * @author adrian &lt;as@nitegate.de&gt;
  *
  */
 public class Tcx extends FileImporter {
@@ -63,14 +62,10 @@ public class Tcx extends FileImporter {
 
     private GpxData gpxData;
 
-
     public Tcx() {
-        super(new ExtensionFileFilter("tcx", "tcx",tr("TCX Files (*.tcx)")));
+        super(new ExtensionFileFilter("tcx", "tcx", tr("TCX Files (*.tcx)")));
     }
 
-    /**
-     * @param tcxFile
-     */
     @Override
     public void importData(File tcxFile, ProgressMonitor progressMonitor) throws IOException {
         parseFile(tcxFile);
@@ -79,11 +74,9 @@ public class Tcx extends FileImporter {
         gpxData.storageFile = tcxFile;
         GpxLayer gpxLayer = new GpxLayer(gpxData, tcxFile.getName());
         Main.getLayerManager().addLayer(gpxLayer);
-        if (Main.pref.getBoolean("marker.makeautomarkers", true))
-        {
+        if (Main.pref.getBoolean("marker.makeautomarkers", true)) {
             MarkerLayer ml = new MarkerLayer(gpxData, tr("Markers from {0}", tcxFile.getName()), tcxFile, gpxLayer);
-            if (ml.data.size() > 0)
-            {
+            if (ml.data.size() > 0) {
                 Main.getLayerManager().addLayer(ml);
             }
         }
@@ -97,7 +90,7 @@ public class Tcx extends FileImporter {
             JAXBContext jc = JAXBContext
                     .newInstance(TrainingCenterDatabaseT.class);
             Unmarshaller unmarshaller = jc.createUnmarshaller();
-            JAXBElement<TrainingCenterDatabaseT> element = (JAXBElement<TrainingCenterDatabaseT>)unmarshaller
+            JAXBElement<TrainingCenterDatabaseT> element = (JAXBElement<TrainingCenterDatabaseT>) unmarshaller
                     .unmarshal(tcxFile);
 
             TrainingCenterDatabaseT tcd = element.getValue();
@@ -144,9 +137,6 @@ public class Tcx extends FileImporter {
         return waypt;
     }
 
-    /**
-     * @param tcd
-     */
     private void parseDataFromActivities(TrainingCenterDatabaseT tcd) {
         int lap = 0;
         if ((tcd.getActivities() != null)
@@ -187,9 +177,6 @@ public class Tcx extends FileImporter {
         }
     }
 
-    /**
-     * @param tcd
-     */
     private void parseDataFromCourses(TrainingCenterDatabaseT tcd) {
         if ((tcd.getCourses() != null)
                 && (tcd.getCourses().getCourse() != null)) {

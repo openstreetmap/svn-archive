@@ -1,6 +1,4 @@
-/**
- *
- */
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.dataimport.io;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -35,14 +33,14 @@ import org.openstreetmap.josm.io.FileImporter;
 public class TangoGPS extends FileImporter {
 
     public TangoGPS() {
-        super(new ExtensionFileFilter("log", "log",tr("TangoGPS Files (*.log)")));
+        super(new ExtensionFileFilter("log", "log", tr("TangoGPS Files (*.log)")));
     }
 
     /**
      * @author cbrill
      * This function imports data from file and adds trackpoints to a layer.
      * Read a log file from TangoGPS. These are simple text files in the
-     * form: <lat>,<lon>,<elevation>,<speed>,<course>,<hdop>,<datetime>
+     * form: {@code <lat>,<lon>,<elevation>,<speed>,<course>,<hdop>,<datetime>}
      */
     @Override
     public void importData(File file, ProgressMonitor progressMonitor) throws IOException {
@@ -75,7 +73,7 @@ public class TangoGPS extends FileImporter {
                 }
             }
             failure = failure - imported;
-            if(imported > 0) {
+            if (imported > 0) {
                 GpxData data = new GpxData();
                 data.tracks.add(new ImmutableGpxTrack(Collections.singleton(currentTrackSeg), Collections.<String, Object>emptyMap()));
                 data.recalculateBounds();
@@ -89,7 +87,7 @@ public class TangoGPS extends FileImporter {
                     }
                 }
             }
-            showInfobox(imported,failure);
+            showInfobox(imported, failure);
         }
     }
 
@@ -103,7 +101,7 @@ public class TangoGPS extends FileImporter {
         return new LatLon(parseCoord(lineElements[0]), parseCoord(lineElements[1]));
     }
 
-    private void showInfobox(int success,int failure) {
+    private void showInfobox(int success, int failure) {
         String msg = tr("Coordinates imported: ") + success + " " + tr("Format errors: ") + failure + "\n";
         if (success > 0) {
             JOptionPane.showMessageDialog(Main.parent, msg, tr("TangoGPS import success"), JOptionPane.INFORMATION_MESSAGE);

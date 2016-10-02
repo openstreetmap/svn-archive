@@ -512,6 +512,7 @@
                                                                          org/kaintoch/**/*.java,
                                                                          org/marvinproject/**/*.java,
                                                                          org/netbeans/**/*.java,
+																		 org/openstreetmap/josm/plugins/dataimport/io/tcx/**/*.java,
 																		 org/openstreetmap/josm/plugins/ohe/parser/**/*.java,
 																		 org/openstreetmap/josm/plugins/roadsigns/javacc/**/*.java,
                                                                          org/osgeo/**/*.java,

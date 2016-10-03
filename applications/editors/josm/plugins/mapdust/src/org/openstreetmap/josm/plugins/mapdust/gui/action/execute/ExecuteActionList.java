@@ -27,22 +27,18 @@
  */
 package org.openstreetmap.josm.plugins.mapdust.gui.action.execute;
 
-
 import static org.openstreetmap.josm.tools.I18n.tr;
+
 import java.awt.event.ActionEvent;
-import java.util.ArrayList;
-import java.util.Iterator;
+
 import javax.swing.JOptionPane;
 import javax.swing.JToggleButton;
+
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.plugins.mapdust.gui.MapdustActionUploader;
 import org.openstreetmap.josm.plugins.mapdust.gui.MapdustActionUploaderException;
 import org.openstreetmap.josm.plugins.mapdust.gui.MapdustGUI;
-import org.openstreetmap.josm.plugins.mapdust.gui.observer.MapdustUpdateObservable;
-import org.openstreetmap.josm.plugins.mapdust.gui.observer.MapdustUpdateObserver;
 import org.openstreetmap.josm.plugins.mapdust.gui.value.MapdustPluginState;
-import org.openstreetmap.josm.plugins.mapdust.service.value.MapdustBugFilter;
-
 
 /**
  * Uploads the <code>MapdustAction</code> objects from the action list to the
@@ -52,15 +48,10 @@ import org.openstreetmap.josm.plugins.mapdust.service.value.MapdustBugFilter;
  * @author Bea
  *
  */
-public class ExecuteActionList extends MapdustExecuteAction implements
-        MapdustUpdateObservable {
-
-    /** List of MapdustRefreshObserver objects */
-    private final ArrayList<MapdustUpdateObserver> observers =
-            new ArrayList<>();
+public class ExecuteActionList extends MapdustExecuteActionObservable {
 
     /**
-     * Builds a <code>ExceuteActionList</code> object
+     * Builds a <code>ExecuteActionList</code> object
      *
      * @param mapdustGUI The <code>MapdustGUI</code> object
      */
@@ -91,37 +82,5 @@ public class ExecuteActionList extends MapdustExecuteAction implements
         }
     }
 
-    /**
-     * Adds a new MapDust refresh observer to the list of observers.
-     *
-     * @param observer The <code>MapdustRefreshObserver</code> object
-     */
-    @Override
-    public void addObserver(MapdustUpdateObserver observer) {
-        if (!this.observers.contains(observer)) {
-            this.observers.add(observer);
-        }
-    }
-
-    /**
-     * Removes the MapDust refresh observer object from the list of observers.
-     *
-     * @param observer The <code>MapdustRefreshObserver</code> object
-     */
-    @Override
-    public void removeObserver(MapdustUpdateObserver observer) {
-        this.observers.remove(observer);
-    }
-
-    /**
-     * Notifies the observers observing this action.
-     */
-    @Override
-    public void notifyObservers(MapdustBugFilter filter, boolean first) {
-        Iterator<MapdustUpdateObserver> elements = this.observers.iterator();
-        while (elements.hasNext()) {
-            (elements.next()).update(filter, false);
-        }
-    }
 
 }

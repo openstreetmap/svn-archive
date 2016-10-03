@@ -31,19 +31,15 @@
  */
 package org.openstreetmap.josm.plugins.mapdust.gui.action.execute;
 
-
 import java.awt.event.ActionEvent;
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
+
 import javax.swing.JButton;
+
 import org.openstreetmap.josm.plugins.mapdust.gui.MapdustGUI;
 import org.openstreetmap.josm.plugins.mapdust.gui.component.dialog.FilterBugDialog;
-import org.openstreetmap.josm.plugins.mapdust.gui.observer.MapdustUpdateObservable;
-import org.openstreetmap.josm.plugins.mapdust.gui.observer.MapdustUpdateObserver;
 import org.openstreetmap.josm.plugins.mapdust.service.value.MapdustBugFilter;
 import org.openstreetmap.josm.plugins.mapdust.service.value.MapdustRelevance;
-
 
 /**
  * Filters the MapDust bugs from the given area based on the selected filters.
@@ -51,15 +47,10 @@ import org.openstreetmap.josm.plugins.mapdust.service.value.MapdustRelevance;
  *
  * @author Bea
  */
-public class ExecuteFilterBug extends MapdustExecuteAction implements
-        MapdustUpdateObservable {
+public class ExecuteFilterBug extends MapdustExecuteActionObservable {
 
     /** The serial version UID */
     private static final long serialVersionUID = -2724396161610512502L;
-
-    /** The list MapDustBug filter observers */
-    private final ArrayList<MapdustUpdateObserver> observers =
-            new ArrayList<>();
 
     /**
      * Builds a <code>ExecuteFilterBug</code> object.
@@ -108,41 +99,4 @@ public class ExecuteFilterBug extends MapdustExecuteAction implements
             }
         }
     }
-
-    /**
-     * Adds a new MapDust bug filter observer to the list of observers.
-     *
-     * @param observer The <code>MapdustBugFilterObserver</code> object
-     */
-    @Override
-    public void addObserver(MapdustUpdateObserver observer) {
-        if (!this.observers.contains(observer)) {
-            this.observers.add(observer);
-        }
-    }
-
-    /**
-     * Removes the MapDust bug filter observer object from the list of
-     * observers.
-     *
-     * @param observer The <code>MapdustBugFilterObserver</code> object
-     */
-    @Override
-    public void removeObserver(MapdustUpdateObserver observer) {
-        this.observers.remove(observer);
-    }
-
-    /**
-     * Notifies the observers observing this action.
-     *
-     * @param filter The <code>MapdustBugFilter</code> object
-     */
-    @Override
-    public void notifyObservers(MapdustBugFilter filter, boolean first) {
-        Iterator<MapdustUpdateObserver> elements = this.observers.iterator();
-        while (elements.hasNext()) {
-            (elements.next()).update(filter, false);
-        }
-    }
-
 }

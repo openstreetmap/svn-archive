@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.ImportImagePlugin;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -65,9 +66,6 @@ public class ImageLayer extends Layer {
 
     /**
      * Constructor
-     *
-     * @param file
-     * @throws IOException
      */
     public ImageLayer(File file) throws IOException {
         super(file.getName());
@@ -79,9 +77,6 @@ public class ImageLayer extends Layer {
 
     /**
      * create spatial referenced image.
-     *
-     * @return
-     * @throws IOException
      */
     private Image createImage() throws IOException {
 
@@ -96,16 +91,18 @@ public class ImageLayer extends Layer {
             coverage = PluginOperations.reprojectCoverage(coverage, CRS.decode(Main.getProjection().toCode()));
 
         } catch (FactoryException e) {
-            logger.error("Error while creating GridCoverage:",e);
+            logger.error("Error while creating GridCoverage:", e);
             throw new IOException(e.getMessage());
         } catch (Exception e) {
-            if(e.getMessage().contains("No projection file found"))
-            {
-                ExtendedDialog ex = new ExtendedDialog(Main.parent, tr("Warning"), new String[] {tr("Default image projection"), tr("JOSM''s current projection"), tr("Cancel")});
+            if (e.getMessage().contains("No projection file found")) {
+                ExtendedDialog ex = new ExtendedDialog(Main.parent, tr("Warning"), 
+                    new String[] {tr("Default image projection"), tr("JOSM''s current projection"), tr("Cancel")});
+                // CHECKSTYLE.OFF: LineLength
                 ex.setContent(tr("No projection file (.prj) found.<br>"
-                        + "You can choose the default image projection ({0}) or JOSM''s current editor projection ({1}) as original image projection.<br>"
-                        + "(It can be changed later from the right click menu of the image layer.)", 
-                        ImportImagePlugin.pluginProps.getProperty("default_crs_srid"), Main.getProjection().toCode()));
+                    + "You can choose the default image projection ({0}) or JOSM''s current editor projection ({1}) as original image projection.<br>"
+                    + "(It can be changed later from the right click menu of the image layer.)", 
+                    ImportImagePlugin.pluginProps.getProperty("default_crs_srid"), Main.getProjection().toCode()));
+                // CHECKSTYLE.ON: LineLength
                 ex.showDialog();
                 int val = ex.getValue();
                 if (val == 3) {
@@ -127,13 +124,11 @@ public class ImageLayer extends Layer {
                         coverage = PluginOperations.reprojectCoverage(coverage, CRS.decode(Main.getProjection().toCode()));
                     }
                 } catch (Exception e1) {
-                    logger.error("Error while creating GridCoverage:",e1);
+                    logger.error("Error while creating GridCoverage:", e1);
                     throw new IOException(e1);
                 }
-            }
-            else
-            {
-                logger.error("Error while creating GridCoverage:",e);
+            } else {
+                logger.error("Error while creating GridCoverage:", e);
                 throw new IOException(e);
             }
 
@@ -266,10 +261,8 @@ public class ImageLayer extends Layer {
 
     @Override
     public String getToolTipText() {
-        // TODO Auto-generated method stub
         return this.getName();
     }
-
 
     public File getImageFile() {
         return imageFile;
@@ -282,19 +275,13 @@ public class ImageLayer extends Layer {
     /**
      * loads the image and reprojects it using a transformation
      * calculated by the new reference system.
-     *
-     * @param newRefSys
-     * @throws IOException
-     * @throws FactoryException
-     * @throws NoSuchAuthorityCodeException
      */
-    void resample(CoordinateReferenceSystem refSys) throws IOException, NoSuchAuthorityCodeException, FactoryException
-    {
+    void resample(CoordinateReferenceSystem refSys) throws IOException, NoSuchAuthorityCodeException, FactoryException {
         logger.debug("resample");
-        GridCoverage2D coverage =  PluginOperations.createGridFromFile(this.imageFile, refSys, true);
+        GridCoverage2D coverage = PluginOperations.createGridFromFile(this.imageFile, refSys, true);
         coverage = PluginOperations.reprojectCoverage(coverage, CRS.decode(Main.getProjection().toCode()));
         this.bbox = coverage.getEnvelope2D();
-        this.image = ((PlanarImage)coverage.getRenderedImage()).getAsBufferedImage();
+        this.image = ((PlanarImage) coverage.getRenderedImage()).getAsBufferedImage();
 
         upperLeft = new EastNorth(coverage.getEnvelope2D().x, coverage
                 .getEnvelope2D().y
@@ -311,19 +298,17 @@ public class ImageLayer extends Layer {
      * Action that creates a dialog GUI element with properties of a layer.
      *
      */
-    public class LayerPropertiesAction extends AbstractAction
-    {
+    public class LayerPropertiesAction extends AbstractAction {
         public ImageLayer imageLayer;
 
-        public LayerPropertiesAction(ImageLayer imageLayer){
+        public LayerPropertiesAction(ImageLayer imageLayer) {
             super(tr("Layer Properties"));
             this.imageLayer = imageLayer;
         }
 
         public void actionPerformed(ActionEvent arg0) {
-
             LayerPropertiesDialog layerProps = new LayerPropertiesDialog(imageLayer, PluginOperations.crsDescriptions);
-            layerProps.setLocation(Main.parent.getWidth() / 4 , Main.parent.getHeight() / 4);
+            layerProps.setLocation(Main.parent.getWidth() / 4, Main.parent.getHeight() / 4);
             layerProps.setVisible(true);
         }
     }

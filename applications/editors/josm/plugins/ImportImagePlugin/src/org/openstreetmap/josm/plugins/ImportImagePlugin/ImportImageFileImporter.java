@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.ImportImagePlugin;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -39,7 +40,7 @@ public class ImportImageFileImporter extends FileImporter {
 
     @Override
     public void importData(List<File> files, ProgressMonitor progressMonitor) throws IOException, IllegalDataException {
-        if (null == files || files.isEmpty())  return;
+        if (null == files || files.isEmpty()) return;
 
         for (File file: files) {
             if (file.isDirectory()) continue;

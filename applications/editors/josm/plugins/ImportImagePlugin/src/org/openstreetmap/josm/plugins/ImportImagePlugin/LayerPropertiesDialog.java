@@ -1,4 +1,6 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.ImportImagePlugin;
+
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -41,7 +43,7 @@ import org.openstreetmap.josm.Main;
  * @author Christoph Beekmans, Fabian Kowitz, Anna Robaszkiewicz, Oliver Kuhn, Martin Ulitzny
  *
  */
-public class LayerPropertiesDialog extends JFrame{
+public class LayerPropertiesDialog extends JFrame {
 
     private Vector<String> supportedCRS;
     private ImageLayer imageLayer;
@@ -193,19 +195,19 @@ public class LayerPropertiesDialog extends JFrame{
             lowerRightValueLabel = new JLabel();
             lowerRightValueLabel.setBounds(new Rectangle(210, 315, 134, 16));
             lowerRightValueLabel.setHorizontalAlignment(SwingConstants.RIGHT);
-            lowerRightValueLabel.setText((float)imageLayer.getBbox().getMinX() + ", " + (float)imageLayer.getBbox().getMaxY());
+            lowerRightValueLabel.setText((float) imageLayer.getBbox().getMinX() + ", " + (float) imageLayer.getBbox().getMaxY());
             lowerLeftValueLabel = new JLabel();
             lowerLeftValueLabel.setBounds(new Rectangle(30, 315, 133, 16));
             lowerLeftValueLabel.setHorizontalAlignment(SwingConstants.LEFT);
-            lowerLeftValueLabel.setText((float)imageLayer.getBbox().getMinX() + ", " + (float)imageLayer.getBbox().getMinY());
+            lowerLeftValueLabel.setText((float) imageLayer.getBbox().getMinX() + ", " + (float) imageLayer.getBbox().getMinY());
             upperRightValueLabel = new JLabel();
             upperRightValueLabel.setBounds(new Rectangle(210, 255, 138, 16));
             upperRightValueLabel.setHorizontalAlignment(SwingConstants.RIGHT);
-            upperRightValueLabel.setText((float)imageLayer.getBbox().getMaxX() + ", " + (float)imageLayer.getBbox().getMaxY());
+            upperRightValueLabel.setText((float) imageLayer.getBbox().getMaxX() + ", " + (float) imageLayer.getBbox().getMaxY());
             upperLeftValueLabel = new JLabel();
             upperLeftValueLabel.setBounds(new Rectangle(30, 255, 133, 16));
             upperLeftValueLabel.setHorizontalAlignment(SwingConstants.LEFT);
-            upperLeftValueLabel.setText((float)imageLayer.getBbox().getMaxX() + ", " + (float)imageLayer.getBbox().getMinY());
+            upperLeftValueLabel.setText((float) imageLayer.getBbox().getMaxX() + ", " + (float) imageLayer.getBbox().getMinY());
             lowerRightLabel = new JLabel();
             lowerRightLabel.setBounds(new Rectangle(287, 344, 74, 16));
             lowerRightLabel.setText("Lower Right");
@@ -231,6 +233,7 @@ public class LayerPropertiesDialog extends JFrame{
             try {
                 crsDescription = imageLayer.getBbox().getCoordinateReferenceSystem().getIdentifiers().iterator().next().toString();
             } catch (Exception e) {
+                Main.debug(e);
             }
             crsValueLabel.setText(crsDescription + "(" + imageLayer.getBbox().getCoordinateReferenceSystem().getName().toString() + ")");
 
@@ -293,6 +296,7 @@ public class LayerPropertiesDialog extends JFrame{
             try {
                 crsDescription = imageLayer.getSourceRefSys().getIdentifiers().iterator().next().toString();
             } catch (Exception e) {
+                Main.debug(e);
             }
             currentCRSValueLabel.setText(crsDescription);
 
@@ -350,8 +354,7 @@ public class LayerPropertiesDialog extends JFrame{
             okButton.setText("OK");
             okButton.addActionListener(new java.awt.event.ActionListener() {
                 @Override
-				public void actionPerformed(java.awt.event.ActionEvent e) {
-
+        public void actionPerformed(java.awt.event.ActionEvent e) {
                     setVisible(false);
                     dispose();
                 }
@@ -372,7 +375,7 @@ public class LayerPropertiesDialog extends JFrame{
             searchField.setToolTipText("Enter keywords or EPSG codes");
             searchField.addKeyListener(new java.awt.event.KeyAdapter() {
                 @Override
-				public void keyTyped(java.awt.event.KeyEvent e) {
+                public void keyTyped(java.awt.event.KeyEvent e) {
 
                     for (Iterator<String> iterator = supportedCRS.iterator(); iterator.hasNext();) {
                         String type = iterator.next();
@@ -428,16 +431,15 @@ public class LayerPropertiesDialog extends JFrame{
             useDefaultCRSButton.setText("Apply Default");
             useDefaultCRSButton.addActionListener(new java.awt.event.ActionListener() {
                 @Override
-				public void actionPerformed(java.awt.event.ActionEvent e) {
-
+        public void actionPerformed(java.awt.event.ActionEvent e) {
                     try {
 
                         setCursor(new Cursor(Cursor.WAIT_CURSOR));
-                        if(PluginOperations.defaultSourceCRS != null){
+                        if (PluginOperations.defaultSourceCRS != null) {
                             imageLayer.resample(PluginOperations.defaultSourceCRS);
-                        }else
-                        {
-                            JOptionPane.showMessageDialog(getContentPane(), "<html>No default reference system available.<br>Please select one from the list</html>");
+                        } else {
+                            JOptionPane.showMessageDialog(getContentPane(), 
+                                    "<html>No default reference system available.<br>Please select one from the list</html>");
                         }
 
                     } catch (NoSuchAuthorityCodeException e1) {
@@ -449,8 +451,7 @@ public class LayerPropertiesDialog extends JFrame{
                     } catch (IOException e2) {
                         // TODO Auto-generated catch block
                         e2.printStackTrace();
-                    }
-                    finally{
+                    } finally {
                         setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
                     }
                 }
@@ -473,7 +474,7 @@ public class LayerPropertiesDialog extends JFrame{
             applySelectedCRSButton.setText("<html>Apply<br>Selection</html>");
             applySelectedCRSButton.addActionListener(new java.awt.event.ActionListener() {
                 @Override
-				public void actionPerformed(java.awt.event.ActionEvent e) {
+        public void actionPerformed(java.awt.event.ActionEvent e) {
 
                     String selection = crsJList.getSelectedValue();
                     String code = selection.substring(selection.indexOf("[-") + 2, selection.indexOf("-]"));
@@ -495,12 +496,9 @@ public class LayerPropertiesDialog extends JFrame{
                     } catch (IOException e2) {
                         // TODO Auto-generated catch block
                         e2.printStackTrace();
-                    }
-                    finally{
+                    } finally {
                         setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
                     }
-
-
                 }
             });
         }
@@ -520,9 +518,9 @@ public class LayerPropertiesDialog extends JFrame{
             setSelectedCRSAsDefaultButton
                     .addActionListener(new java.awt.event.ActionListener() {
                         @Override
-						public void actionPerformed(java.awt.event.ActionEvent e) {
+                        public void actionPerformed(java.awt.event.ActionEvent e) {
 
-                            if(crsJList.getSelectedValue() != null){
+                            if (crsJList.getSelectedValue() != null) {
                                 String selection = crsJList.getSelectedValue();
                                 String code = selection.substring(selection.indexOf("[-") + 2, selection.indexOf("-]"));
 
@@ -530,10 +528,11 @@ public class LayerPropertiesDialog extends JFrame{
                                     PluginOperations.defaultSourceCRS = CRS.decode(code, eastingFirstCheckBox.isSelected());
                                     PluginOperations.defaultSourceCRSDescription = selection;
 
-                                    ImportImagePlugin.pluginProps.setProperty("default_crs_eastingfirst", "" + eastingFirstCheckBox.isSelected());
+                                    ImportImagePlugin.pluginProps.setProperty("default_crs_eastingfirst", 
+                                            "" + eastingFirstCheckBox.isSelected());
                                     ImportImagePlugin.pluginProps.setProperty("default_crs_srid", code);
                                     try (FileWriter fileWriter = new FileWriter(new File(ImportImagePlugin.PLUGINPROPERTIES_PATH))) {
-                                    	ImportImagePlugin.pluginProps.store(fileWriter, null);
+                                        ImportImagePlugin.pluginProps.store(fileWriter, null);
                                     }
 
                                     defaultCRSLabel.setText(selection);
@@ -564,17 +563,14 @@ public class LayerPropertiesDialog extends JFrame{
         return eastingFirstCheckBox;
     }
 
-
-
     /**
      * Listener setting text in the search field if selection has changed.
      *
      */
     class ListSelectionHandler implements ListSelectionListener {
         @Override
-		public void valueChanged(ListSelectionEvent e) {
-            if(e.getValueIsAdjusting())
-            {
+        public void valueChanged(ListSelectionEvent e) {
+            if (e.getValueIsAdjusting()) {
                 searchField.setText(supportedCRS.get(e.getLastIndex()));
                 searchField.setEditable(true);
             }

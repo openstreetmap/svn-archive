@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.ImportImagePlugin;
 
 import static org.openstreetmap.josm.tools.I18n.marktr;
@@ -28,7 +29,7 @@ public class LoadImageAction extends JosmAction {
      * Constructor...
      */
     public LoadImageAction() {
-        super(tr("Import image"), (String)null, tr("Import georeferenced image"), null, true, "importimage/loadimage", true);
+        super(tr("Import image"), (String) null, tr("Import georeferenced image"), null, true, "importimage/loadimage", true);
     }
 
     @Override

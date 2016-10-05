@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.ImportImagePlugin;
 
 import java.io.File;
@@ -28,7 +29,7 @@ import org.openstreetmap.josm.tools.Utils;
  * @author Christoph Beekmans, Fabian Kowitz, Anna Robaszkiewicz, Oliver Kuhn, Martin Ulitzny
  *
  */
-public class ImportImagePlugin extends Plugin{
+public class ImportImagePlugin extends Plugin {
 
     private static Logger logger;
 
@@ -42,11 +43,15 @@ public class ImportImagePlugin extends Plugin{
     static Properties pluginProps;
 
     // path constants
-    static final String PLUGIN_DIR = Main.pref.getPluginsDirectory().getAbsolutePath() + "/ImportImagePlugin/";
-    static final String PLUGINPROPERTIES_PATH = Main.pref.getPluginsDirectory().getAbsolutePath() + "/ImportImagePlugin/pluginProperties.properties";
-    static final String PLUGINLIBRARIES_DIR = Main.pref.getPluginsDirectory().getAbsolutePath() + "/ImportImagePlugin/lib/";
+    static final String PLUGIN_DIR = 
+            Main.pref.getPluginsDirectory().getAbsolutePath() + "/ImportImagePlugin/";
+    static final String PLUGINPROPERTIES_PATH = 
+            Main.pref.getPluginsDirectory().getAbsolutePath() + "/ImportImagePlugin/pluginProperties.properties";
+    static final String PLUGINLIBRARIES_DIR = 
+            Main.pref.getPluginsDirectory().getAbsolutePath() + "/ImportImagePlugin/lib/";
     static final String PLUGINPROPERTIES_FILENAME = "pluginProperties.properties";
-    static final String LOGGING_PROPERTIES_FILEPATH = Main.pref.getPluginsDirectory().getAbsolutePath() + "/ImportImagePlugin/log4j.properties/";
+    static final String LOGGING_PROPERTIES_FILEPATH = 
+            Main.pref.getPluginsDirectory().getAbsolutePath() + "/ImportImagePlugin/log4j.properties/";
 
     public Properties getPluginProps() {
         return pluginProps;
@@ -55,10 +60,9 @@ public class ImportImagePlugin extends Plugin{
     /**
      * constructor
      *
-     * @param info
      * @throws IOException if any I/O error occurs
      */
-    public ImportImagePlugin(PluginInformation info) throws IOException{
+    public ImportImagePlugin(PluginInformation info) throws IOException {
         super(info);
 
         try {
@@ -72,8 +76,7 @@ public class ImportImagePlugin extends Plugin{
             checkInstallation();
 
             // If resources are available load properties from plugin directory
-            if(pluginProps == null || pluginProps.isEmpty())
-            {
+            if (pluginProps == null || pluginProps.isEmpty()) {
                 pluginProps = new Properties();
                 pluginProps.load(new File(PLUGINPROPERTIES_PATH).toURI().toURL().openStream());
                 logger.debug("Plugin properties loaded");
@@ -102,14 +105,11 @@ public class ImportImagePlugin extends Plugin{
     /**
      * Checks whether plugin resources are available.
      * If not, start install procedure.
-     *
-     * @throws IOException
      */
-    private void checkInstallation() throws IOException
-    {
+    private void checkInstallation() throws IOException {
         // check plugin resource state
         boolean isInstalled = true;
-        if(!new File(PLUGINPROPERTIES_PATH).exists()
+        if (!new File(PLUGINPROPERTIES_PATH).exists()
                 || !new File(PLUGIN_DIR).exists()
                 || !new File(PLUGINLIBRARIES_DIR).exists())
             isInstalled = false;
@@ -122,33 +122,33 @@ public class ImportImagePlugin extends Plugin{
 
             // check if plugin directory exist
             File pluginDir = new File(PLUGIN_DIR);
-            if(!pluginDir.exists()){
+            if (!pluginDir.exists()) {
                 Utils.mkDirs(pluginDir);
             }
 
             // check if "lib" directory exist
             File libDir = new File(PLUGINLIBRARIES_DIR);
-            if(!libDir.exists()){
+            if (!libDir.exists()) {
                 Utils.mkDirs(libDir);
             }
 
             // create local properties file
             if (pluginProps == null || pluginProps.isEmpty()) {
                 try (FileWriter fw = new FileWriter(new File(PLUGINPROPERTIES_PATH))) {
-	                URL propertiesURL = pluginClassLoader.getResource("resources/" + PLUGINPROPERTIES_FILENAME);
-	                pluginProps = new Properties();
-	                pluginProps.load(propertiesURL.openStream());
-	                pluginProps.store(fw, null);
+                    URL propertiesURL = pluginClassLoader.getResource("resources/" + PLUGINPROPERTIES_FILENAME);
+                    pluginProps = new Properties();
+                    pluginProps.load(propertiesURL.openStream());
+                    pluginProps.store(fw, null);
                 }
                 logger.debug("Plugin properties loaded");
             }
 
             if (!new File(LOGGING_PROPERTIES_FILEPATH).exists()) {
                 try (FileWriter fw = new FileWriter(new File(LOGGING_PROPERTIES_FILEPATH))) {
-	                URL propertiesURL = pluginClassLoader.getResource("resources/log4j.properties");
-	                Properties loggingProps = new Properties();
-	                loggingProps.load(propertiesURL.openStream());
-	                loggingProps.store(fw, null);
+                    URL propertiesURL = pluginClassLoader.getResource("resources/log4j.properties");
+                    Properties loggingProps = new Properties();
+                    loggingProps.load(propertiesURL.openStream());
+                    loggingProps.store(fw, null);
                 }
                 logger.debug("Logging properties created");
             }
@@ -159,8 +159,6 @@ public class ImportImagePlugin extends Plugin{
 
     /**
      * Initialize logger using plugin classloader.
-     *
-     * @param cl
      */
     private void initializeLogger(ClassLoader cl) {
 
@@ -206,15 +204,11 @@ public class ImportImagePlugin extends Plugin{
 
     /**
      * get a plugin-specific classloader.
-     *
-     * @return
-     * @throws MalformedURLException
      */
-    private ClassLoader createPluginClassLoader() throws MalformedURLException
-    {
+    private ClassLoader createPluginClassLoader() throws MalformedURLException {
         ClassLoader loader = null;
         loader = URLClassLoader.newInstance(
-                new URL[] { new File(Main.pref.getPluginsDirectory().getAbsolutePath() + "/ImportImagePlugin.jar").toURI().toURL()},
+                new URL[] {new File(Main.pref.getPluginsDirectory().getAbsolutePath() + "/ImportImagePlugin.jar").toURI().toURL()},
                 ImportImagePlugin.class.getClassLoader()
                 );
 

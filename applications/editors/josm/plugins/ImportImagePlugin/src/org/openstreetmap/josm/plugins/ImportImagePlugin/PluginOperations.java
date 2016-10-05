@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.ImportImagePlugin;
 
 import java.awt.geom.Rectangle2D;
@@ -38,7 +39,7 @@ import org.opengis.util.InternationalString;
  * @author Christoph Beekmans, Fabian Kowitz, Anna Robaszkiewicz, Oliver Kuhn, Martin Ulitzny
  *
  */
-public class PluginOperations {
+public final class PluginOperations {
 
     private static final Logger logger = Logger.getLogger(PluginOperations.class);
 
@@ -50,24 +51,20 @@ public class PluginOperations {
     // description of 'defaultSourceCRS'
     static String defaultSourceCRSDescription;
 
-
-
-    public static enum SUPPORTEDIMAGETYPES {
+    public enum SUPPORTEDIMAGETYPES {
         tiff, tif, jpg, jpeg, bmp, png
     }
 
-    public static enum POSTFIXES_WORLDFILE {
+    public enum POSTFIXES_WORLDFILE {
         wld, jgw, jpgw, pgw, pngw, tfw, tifw, bpw, bmpw,
-    };
+    }
+    
+    private PluginOperations() {
+        // Hide default constructor for utilities classes
+    }
 
     /**
      * Reprojects a GridCoverage to a given CRS.
-     *
-     * @param coverage
-     * @param targetCrs
-     * @return destination
-     * @throws FactoryException
-     * @throws NoSuchAuthorityCodeException
      */
     public static GridCoverage2D reprojectCoverage(GridCoverage2D coverage,
             CoordinateReferenceSystem targetCrs) throws NoSuchAuthorityCodeException, FactoryException {
@@ -91,11 +88,6 @@ public class PluginOperations {
 
     /**
      * Creates a org.geotools.coverage.grid.GridCoverage2D from a given file.
-     *
-     * @param file
-     * @return
-     * @throws IOException
-     * @throws Exception
      */
     public static GridCoverage2D createGridFromFile(File file, CoordinateReferenceSystem refSys, boolean failIfNoPrjFile) throws IOException {
 
@@ -110,15 +102,14 @@ public class PluginOperations {
         fileNameWithoutExt = file.getAbsolutePath().substring(0, dotPos);
 
         /*------- switch for file type -----------*/
-        if (extension.equalsIgnoreCase(".tif") || extension.equalsIgnoreCase(".tiff"))
-        {
+        if (extension.equalsIgnoreCase(".tif") || extension.equalsIgnoreCase(".tiff")) {
 
             // try to read GeoTIFF:
             try {
                 coverage = readGeoTiff(file, refSys);
                 return coverage;
             } catch (DataSourceException dse) {
-                if (!dse.getMessage().contains("Coordinate Reference System is not available")){
+                if (!dse.getMessage().contains("Coordinate Reference System is not available")) {
                     dse.printStackTrace();
                 }
             } catch (FactoryException facte) {
@@ -132,7 +123,7 @@ public class PluginOperations {
             WorldFileReader tfwReader = null;
             for (int i = 0; i < postfixes.length; i++) {
                 File prjFile = new File(fileNameWithoutExt + "." + postfixes[i]);
-                if (prjFile.exists()){
+                if (prjFile.exists()) {
                     tfwReader = new WorldFileReader(prjFile);
                 }
             }
@@ -161,19 +152,16 @@ public class PluginOperations {
             double lowerLeft_x = tfwReader.getXULC();
             double lowerLeft_y = tfwReader.getYULC() - height;
             Envelope2D bbox = new Envelope2D(null, new Rectangle2D.Double(lowerLeft_x, lowerLeft_y, width, height));
-
             coverage = createGridCoverage(img, bbox, refSys);
-        }
-        //
-        else if (extension.equalsIgnoreCase(".jpg")
-                || extension.equalsIgnoreCase(".jpeg"))
-        {
+
+        } else if (extension.equalsIgnoreCase(".jpg")
+                || extension.equalsIgnoreCase(".jpeg")) {
             String[] postfixes = {"wld", "jgw", "jpgw"};
             // try to read Worldfile:
             WorldFileReader tfwReader = null;
             for (int i = 0; i < postfixes.length; i++) {
                 File prjFile = new File(fileNameWithoutExt + "." + postfixes[i]);
-                if (prjFile.exists()){
+                if (prjFile.exists()) {
                     tfwReader = new WorldFileReader(prjFile);
                 }
             }
@@ -196,17 +184,15 @@ public class PluginOperations {
             double lowerLeft_x = tfwReader.getXULC();
             double lowerLeft_y = tfwReader.getYULC() - height;
             Envelope2D bbox = new Envelope2D(null, new Rectangle2D.Double(lowerLeft_x, lowerLeft_y, width, height));
-
             coverage = createGridCoverage(img, bbox, refSys);
-        }
-        else if(extension.equalsIgnoreCase(".bmp"))
-        {
+
+        } else if (extension.equalsIgnoreCase(".bmp")) {
             String[] postfixes = {"wld", "bmpw", "bpw"};
             // try to read Worldfile:
             WorldFileReader tfwReader = null;
             for (int i = 0; i < postfixes.length; i++) {
                 File prjFile = new File(fileNameWithoutExt + "." + postfixes[i]);
-                if (prjFile.exists()){
+                if (prjFile.exists()) {
                     tfwReader = new WorldFileReader(prjFile);
                 }
             }
@@ -229,22 +215,20 @@ public class PluginOperations {
             double lowerLeft_x = tfwReader.getXULC();
             double lowerLeft_y = tfwReader.getYULC() - height;
             Envelope2D bbox = new Envelope2D(null, new Rectangle2D.Double(lowerLeft_x, lowerLeft_y, width, height));
-
             coverage = createGridCoverage(img, bbox, refSys);
-        }
-        else if(extension.equalsIgnoreCase(".png"))
-        {
+
+        } else if (extension.equalsIgnoreCase(".png")) {
 
             String[] postfixes = {"wld", "pgw", "pngw"};
             // try to read Worldfile:
             WorldFileReader tfwReader = null;
             for (int i = 0; i < postfixes.length; i++) {
                 File prjFile = new File(fileNameWithoutExt + "." + postfixes[i]);
-                if (prjFile.exists()){
+                if (prjFile.exists()) {
                     tfwReader = new WorldFileReader(prjFile);
                 }
             }
-            if(tfwReader == null) throw new IOException("No Worldfile found.");
+            if (tfwReader == null) throw new IOException("No Worldfile found.");
 
             if (refSys == null) {
                 // if no crs is delivered try to read projection file:
@@ -263,10 +247,9 @@ public class PluginOperations {
             double lowerLeft_x = tfwReader.getXULC();
             double lowerLeft_y = tfwReader.getYULC() - height;
             Envelope2D bbox = new Envelope2D(null, new Rectangle2D.Double(lowerLeft_x, lowerLeft_y, width, height));
-
             coverage = createGridCoverage(img, bbox, refSys);
-        }
-        else{
+
+        } else {
             throw new IOException("Image type not supported. Supported formats are: \n" +
                     Arrays.toString(SUPPORTEDIMAGETYPES.values()));
         }
@@ -278,14 +261,9 @@ public class PluginOperations {
      * Searches for a projection file (.prj) with the same name of 'file'
      * tries to parse it.
      *
-     *
      * @param file image file, not the real world file (will be searched)
-     * @return
-     * @throws IOException
      */
-    public static CoordinateReferenceSystem readPrjFile(File file) throws IOException
-    {
-
+    public static CoordinateReferenceSystem readPrjFile(File file) throws IOException {
         CoordinateReferenceSystem refSys = null;
 
         String prjFilename = null;
@@ -299,7 +277,7 @@ public class PluginOperations {
         try (BufferedReader br = new BufferedReader(new FileReader(prjFile))) {
             StringBuilder sb = new StringBuilder();
             String content = null;
-            while((content = br.readLine()) != null) {
+            while ((content = br.readLine()) != null) {
                 sb.append(content);
             }
             refSys = CRS.parseWKT(sb.toString().trim());
@@ -312,14 +290,8 @@ public class PluginOperations {
 
     /**
      * Method for external use.
-     *
-     * @param img
-     * @param bbox
-     * @param crs
-     * @return
      */
-    public static GridCoverage2D createGridCoverage(BufferedImage img, Envelope2D bbox, CoordinateReferenceSystem crs)
-    {
+    public static GridCoverage2D createGridCoverage(BufferedImage img, Envelope2D bbox, CoordinateReferenceSystem crs) {
         bbox.setCoordinateReferenceSystem(crs);
         return new GridCoverageFactory().create("", img, bbox);
     }
@@ -327,18 +299,12 @@ public class PluginOperations {
     /**
      * Method for reading a GeoTIFF file.
      *
-     * @param file
      * @param refSys if delivered, the coverage will be forced to use this crs
-     * @return
-     * @throws IOException
-     * @throws FactoryException
      */
-    public static GridCoverage2D readGeoTiff(File file, CoordinateReferenceSystem refSys) throws IOException, FactoryException
-    {
+    public static GridCoverage2D readGeoTiff(File file, CoordinateReferenceSystem refSys) throws IOException, FactoryException {
         GridCoverage2D coverage = null;
         Hints hints = new Hints(Hints.FORCE_LONGITUDE_FIRST_AXIS_ORDER, true);
-        if(refSys != null)
-        {
+        if (refSys != null) {
             hints.put(Hints.DEFAULT_COORDINATE_REFERENCE_SYSTEM, refSys);
         }
         // don't use the EPSG-Factory because of wrong behaviour
@@ -353,12 +319,8 @@ public class PluginOperations {
 
     /**
      * Loads CRS data from an EPSG database and creates descriptions for each one.
-     *
-     * @param pluginProps
-     * @throws Exception
      */
-    public static void loadCRSData(Properties pluginProps)
-    {
+    public static void loadCRSData(Properties pluginProps) {
         String defaultcrsString = pluginProps.getProperty("default_crs_srid");
 
         crsDescriptions = new Vector<>();
@@ -374,7 +336,7 @@ public class PluginOperations {
                 InternationalString desc = fac.getDescriptionText("EPSG:" + string);
                 String description = desc.toString() + " [-EPSG:" + string + "-]";
                 crsDescriptions.add(description);
-                if(defaultcrsString != null && defaultcrsString.equalsIgnoreCase("EPSG:" + string)){
+                if (defaultcrsString != null && defaultcrsString.equalsIgnoreCase("EPSG:" + string)) {
                     boolean isEastingFirst = Boolean.valueOf(pluginProps.getProperty("default_crs_eastingfirst"));
                     defaultSourceCRS = CRS.decode("EPSG:" + string, isEastingFirst);
                     defaultSourceCRSDescription = description;

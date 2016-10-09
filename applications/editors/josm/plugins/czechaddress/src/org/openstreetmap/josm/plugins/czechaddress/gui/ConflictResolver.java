@@ -356,8 +356,9 @@ public final class ConflictResolver extends ExtendedDialog {
                 ListDataEvent evt = new ListDataEvent(this,
                         ListDataEvent.INTERVAL_ADDED,
                         -index-1, -index-1);
-                for (ListDataListener listener : listeners)
+                for (ListDataListener listener : listeners) {
                     listener.intervalAdded(evt);
+                }
 
                 if (mainField.getSelectedItem() == null)
                     mainField.setSelectedIndex(-index-1);
@@ -375,8 +376,9 @@ public final class ConflictResolver extends ExtendedDialog {
                 ListDataEvent evt = new ListDataEvent(this,
                         ListDataEvent.INTERVAL_ADDED,
                         -index-1 + elements.size(), -index-1 + elements.size());
-                for (ListDataListener listener : listeners)
+                for (ListDataListener listener : listeners) {
                     listener.intervalAdded(evt);
+                }
 
                 if (mainField.getSelectedItem() == null)
                     mainField.setSelectedIndex(-index-1);
@@ -398,8 +400,9 @@ public final class ConflictResolver extends ExtendedDialog {
                 ListDataEvent evt = new ListDataEvent(this,
                         ListDataEvent.INTERVAL_REMOVED,
                         index, index);
-                for (ListDataListener listener : listeners)
+                for (ListDataListener listener : listeners) {
                     listener.intervalRemoved(evt);
+                }
             }
         }
 
@@ -418,8 +421,9 @@ public final class ConflictResolver extends ExtendedDialog {
                 ListDataEvent evt = new ListDataEvent(this,
                         ListDataEvent.INTERVAL_REMOVED,
                         index + elements.size(), index + elements.size());
-                for (ListDataListener listener : listeners)
+                for (ListDataListener listener : listeners) {
                     listener.intervalRemoved(evt);
+                }
             }
         }
 /*

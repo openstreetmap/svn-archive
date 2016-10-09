@@ -22,13 +22,13 @@ import org.openstreetmap.josm.tools.ImageProvider;
  * @author Radomír Černoch, radomir.cernoch@gmail.com
  */
 public abstract class UniversalRenderer {
-    private static final ImageIcon iconAdd    = ImageProvider.get("actions", "add.png");
-    private static final ImageIcon iconEdit   = ImageProvider.get("actions", "edit.png");
+    private static final ImageIcon iconAdd = ImageProvider.get("actions", "add.png");
+    private static final ImageIcon iconEdit = ImageProvider.get("actions", "edit.png");
     private static final ImageIcon iconRemove = ImageProvider.get("actions", "remove.png");
 
-    private static final ImageIcon nodeIcon      = ImageProvider.get("data/node.png");
-    private static final ImageIcon wayIcon       = ImageProvider.get("data/way.png");
-    private static final ImageIcon relationIcon  = ImageProvider.get("data/relation.png");
+    private static final ImageIcon nodeIcon = ImageProvider.get("data/node.png");
+    private static final ImageIcon wayIcon = ImageProvider.get("data/way.png");
+    private static final ImageIcon relationIcon = ImageProvider.get("data/relation.png");
 
     private static final ImageIcon envelopeNormIcon = ImageProvider.get("envelope-closed-small.png");
     private static final ImageIcon envelopeStarIcon = ImageProvider.get("envelope-closed-star-small.png");
@@ -36,9 +36,9 @@ public abstract class UniversalRenderer {
 
     public static ImageIcon getIcon(Object value) {
 
-             if (value instanceof AddKeyValueProposal)    return iconAdd;
+             if (value instanceof AddKeyValueProposal) return iconAdd;
         else if (value instanceof KeyValueChangeProposal) return iconEdit;
-        else if (value instanceof RemoveKeyProposal)      return iconRemove;
+        else if (value instanceof RemoveKeyProposal) return iconRemove;
 
         if (value instanceof House) {
             House house = (House) value;

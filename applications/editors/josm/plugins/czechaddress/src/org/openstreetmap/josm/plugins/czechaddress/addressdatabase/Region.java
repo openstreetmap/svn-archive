@@ -27,8 +27,9 @@ public class Region extends ElementWithStreets {
      */
     public void setViToCis(ArrayList<ViToCi> municipalities) {
         this.vitocis = municipalities;
-        for (ViToCi obec : municipalities)
+        for (ViToCi obec : municipalities) {
             obec.setParent(this);
+        }
     }
 
     /**
@@ -44,9 +45,10 @@ public class Region extends ElementWithStreets {
 
         viToCiName = viToCiName.toUpperCase();
 
-        for (ViToCi vitoci : vitocis)
+        for (ViToCi vitoci : vitocis) {
             if (vitoci.getName().toUpperCase().equals(name))
                 return vitoci;
+        }
 
         return null;
     }

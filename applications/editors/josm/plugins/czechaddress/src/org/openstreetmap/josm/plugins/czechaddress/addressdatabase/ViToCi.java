@@ -32,8 +32,9 @@ public class ViToCi extends ElementWithStreets {
      * Adds new suburbs to this municipality.
      */
     public void addSuburbs(List<Suburb> suburbsToAdd) {
-        for (Suburb suburbToAdd : suburbsToAdd)
+        for (Suburb suburbToAdd : suburbsToAdd) {
             addSuburb(suburbToAdd);
+        }
     }
 
     /**
@@ -49,9 +50,10 @@ public class ViToCi extends ElementWithStreets {
 
         suburbName = suburbName.toUpperCase();
 
-        for (Suburb suburb : suburbs)
+        for (Suburb suburb : suburbs) {
             if (suburb.getName().toUpperCase().equals(suburbName))
                 return suburb;
+        }
 
         return null;
     }
@@ -59,16 +61,18 @@ public class ViToCi extends ElementWithStreets {
     @Override
     public List<Street> getAllStreets() {
         List<Street> result = super.getAllStreets();
-        for (Suburb suburb : suburbs)
+        for (Suburb suburb : suburbs) {
             result.addAll(suburb.getAllStreets());
+        }
         return result;
     }
 
     @Override
     public List<House> getAllHouses() {
         List<House> result = super.getAllHouses();
-        for (Suburb suburb : suburbs)
+        for (Suburb suburb : suburbs) {
             result.addAll(suburb.getAllHouses());
+        }
         return result;
     }
 }

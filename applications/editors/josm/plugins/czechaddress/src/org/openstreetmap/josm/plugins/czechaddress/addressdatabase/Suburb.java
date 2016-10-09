@@ -16,9 +16,10 @@ public class Suburb extends ElementWithStreets {
     }
 
     public static boolean isMatchable(OsmPrimitive prim) {
-        for (String key : prim.keySet())
+        for (String key : prim.keySet()) {
             if (key.equals(PrimUtils.KEY_PLACE))
                 return true;
+        }
         return false;
     }
 }

@@ -42,17 +42,20 @@ public final class SelectionMonitor implements SelectionChangedListener {
 
         synchronized (r) {
             r.openTransaction();
-            for (OsmPrimitive selectedPrim :newSelection)
+            for (OsmPrimitive selectedPrim :newSelection) {
                 if (House.isMatchable(selectedPrim) || Street.isMatchable(selectedPrim))
                     r.update(selectedPrim);
-            for (OsmPrimitive selectedPrim :lastSelection)
+            }
+            for (OsmPrimitive selectedPrim :lastSelection) {
                 if (House.isMatchable(selectedPrim) || Street.isMatchable(selectedPrim))
                     r.update(selectedPrim);
+            }
             r.closeTransaction();
         }
 
         lastSelection.clear();
-        for (OsmPrimitive prim : newSelection)
+        for (OsmPrimitive prim : newSelection) {
             lastSelection.add(prim);
+        }
     }
 }

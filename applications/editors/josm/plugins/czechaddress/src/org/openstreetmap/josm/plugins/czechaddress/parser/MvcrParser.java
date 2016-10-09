@@ -51,7 +51,7 @@ public class MvcrParser extends XMLParser {
             if ((cp == null) && (co == null))
                 return;
 
-            ElementWithHouses    topElem = curStreet;
+            ElementWithHouses topElem = curStreet;
             if (topElem == null) topElem = curSuburb;
             if (topElem == null) topElem = curViToCi;
             if (topElem == null) topElem = curRegion;
@@ -70,7 +70,7 @@ public class MvcrParser extends XMLParser {
                 return;
             }
 
-            ElementWithStreets   topElem = curSuburb;
+            ElementWithStreets topElem = curSuburb;
             if (topElem == null) topElem = curViToCi;
             if (topElem == null) topElem = curRegion;
 
@@ -242,11 +242,12 @@ public class MvcrParser extends XMLParser {
          * a reasonable amount of time (one year?), because this is a
          * non-systematic solution.
          */
-        for (String oldUrl : OLD_URLS)
+        for (String oldUrl : OLD_URLS) {
             if (Main.pref.get(URL_PREFERENCES_KEY, URL_DEFAULT).equals(oldUrl)) {
                 Main.pref.put(URL_PREFERENCES_KEY, URL_DEFAULT);
                 break;
             }
+        }
 
         return Main.pref.get(URL_PREFERENCES_KEY, URL_DEFAULT);
     }

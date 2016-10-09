@@ -35,7 +35,8 @@ public abstract class HalfCookedListModel<E> implements ListModel<E> {
         ListDataEvent evt = new ListDataEvent(this,
                 ListDataEvent.CONTENTS_CHANGED, 0, getSize()-1);
 
-        for (ListDataListener l : listeners)
+        for (ListDataListener l : listeners) {
             l.contentsChanged(evt);
+        }
     }
 }

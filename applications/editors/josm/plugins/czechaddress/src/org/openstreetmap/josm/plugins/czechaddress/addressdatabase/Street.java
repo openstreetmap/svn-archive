@@ -15,7 +15,7 @@ import org.openstreetmap.josm.plugins.czechaddress.proposal.Proposal;
  *
  * @author Radomír Černoch radomir.cernoch@gmail.com
  */
-public class Street extends ElementWithHouses  {
+public class Street extends ElementWithHouses {
 
     public Street(String name) {
         super(name);

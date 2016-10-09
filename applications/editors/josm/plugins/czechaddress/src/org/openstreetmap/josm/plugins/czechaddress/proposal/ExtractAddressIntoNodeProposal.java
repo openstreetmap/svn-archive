@@ -60,12 +60,14 @@ public class ExtractAddressIntoNodeProposal extends Proposal {
 
         Node addrNode = new Node(visitor.getBounds().getCenter());
 
-        for (String key : way.keySet())
+        for (String key : way.keySet()) {
             if (key.startsWith("addr"))
                 addrNode.put(key, way.get(key));
+        }
 
-        for (String key : addrNode.keySet())
+        for (String key : addrNode.keySet()) {
            way.remove(key);
+        }
 
         Main.getLayerManager().getEditDataSet().addPrimitive(addrNode);
     }

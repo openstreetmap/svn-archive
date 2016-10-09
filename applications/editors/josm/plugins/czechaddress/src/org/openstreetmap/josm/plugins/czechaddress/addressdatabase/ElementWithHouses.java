@@ -32,8 +32,9 @@ public abstract class ElementWithHouses extends AddressElement {
      * Inserts houses into this element.
      */
     public void addHouses(List<House> housesToAdd) {
-        for (House houseToAdd : housesToAdd)
+        for (House houseToAdd : housesToAdd) {
             addHouse(houseToAdd);
+        }
     }
 
     /**
@@ -41,8 +42,9 @@ public abstract class ElementWithHouses extends AddressElement {
      */
     public void setHouses(List<House> houses) {
         this.houses = houses;
-        for (House house : this.houses)
+        for (House house : this.houses) {
             house.setParent(this);
+        }
     }
 
     /**

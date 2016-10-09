@@ -12,6 +12,7 @@ import org.openstreetmap.josm.data.osm.OsmPrimitive;
  */
 public class PrimUtils {
 
+    // CHECKSTYLE.OFF: SingleSpaceSeparator
     public static final String KEY_HIGHWAY      = "highway";
     public static final String KEY_PLACE        = "place";
 
@@ -23,7 +24,7 @@ public class PrimUtils {
     public static final String KEY_ADDR_COUNTRY = "addr:country";
     public static final String KEY_IS_IN        = "is_in";
     public static final String KEY_NAME         = "name";
-
+    // CHECKSTYLE.ON: SingleSpaceSeparator
 
     private static final String[] keysToCompare = new String[]
         {KEY_PLACE, KEY_NAME, KEY_ADDR_COUNTRY, KEY_ADDR_CITY, KEY_IS_IN,
@@ -56,4 +57,7 @@ public class PrimUtils {
         }
     };
 
+    private PrimUtils() {
+        // Hide default constructor for utilities classes
+    }
 }

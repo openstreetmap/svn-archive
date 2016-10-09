@@ -52,7 +52,8 @@ public abstract class HalfCookedTreeModel implements TreeModel {
     public void notifyAllListeners() {
         TreeModelEvent evt = new TreeModelEvent(this, new Object[] {root});
 
-        for (TreeModelListener l : listeneres)
+        for (TreeModelListener l : listeneres) {
             l.treeNodesChanged(evt);
+        }
     }
 }

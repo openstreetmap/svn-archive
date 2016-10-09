@@ -224,9 +224,10 @@ public class House extends AddressElement {
      * Determies whether the given primitive can be matched to a House.
      */
     public static boolean isMatchable(OsmPrimitive prim) {
-        for (String key : prim.keySet())
+        for (String key : prim.keySet()) {
             if (key.startsWith("addr:"))
                 return true;
+        }
         return false;
     }
 

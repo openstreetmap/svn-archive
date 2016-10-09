@@ -82,8 +82,9 @@ public class ProposalContainer implements ListModel<Proposal>, Comparable<Propos
                 proposals.size()-1,
                 proposals.size()-1);
 
-        for (ListDataListener l : listeners)
+        for (ListDataListener l : listeners) {
             l.contentsChanged(evt);
+        }
     }
 
     /**
@@ -101,8 +102,9 @@ public class ProposalContainer implements ListModel<Proposal>, Comparable<Propos
                 ListDataEvent.INTERVAL_ADDED,
                 index1, index2);
 
-        for (ListDataListener l : listeners)
+        for (ListDataListener l : listeners) {
             l.contentsChanged(evt);
+        }
     }
 
 
@@ -123,8 +125,9 @@ public class ProposalContainer implements ListModel<Proposal>, Comparable<Propos
                 ListDataEvent.INTERVAL_REMOVED,
                 index, index);
 
-        for (ListDataListener l : listeners)
+        for (ListDataListener l : listeners) {
             l.contentsChanged(evt);
+        }
     }
 
     /**
@@ -138,8 +141,9 @@ public class ProposalContainer implements ListModel<Proposal>, Comparable<Propos
                 this, ListDataEvent.CONTENTS_CHANGED,
                 0, proposals.size()-1);
 
-        for (ListDataListener l : listeners)
+        for (ListDataListener l : listeners) {
             l.contentsChanged(evt);
+        }
     }
 
     /**
@@ -160,16 +164,18 @@ public class ProposalContainer implements ListModel<Proposal>, Comparable<Propos
 
         proposals.clear();
 
-        for (ListDataListener l : listeners)
+        for (ListDataListener l : listeners) {
             l.contentsChanged(evt);
+        }
     }
 
     /**
      * Applies all stored {@link Proposal}s to the target {@link OsmPrimitive}.
      */
     public void applyAll() {
-        for (Proposal proposal : proposals)
+        for (Proposal proposal : proposals) {
             proposal.apply(target);
+        }
     }
 
 //==============================================================================

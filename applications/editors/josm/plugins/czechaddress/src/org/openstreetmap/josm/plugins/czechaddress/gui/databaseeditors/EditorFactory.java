@@ -37,8 +37,9 @@ public abstract class EditorFactory {
             synchronized (r) {
                 r.openTransaction();
                 street.setName(dialog.getStreetName());
-                for (House house : street.getHouses())
+                for (House house : street.getHouses()) {
                     r.update(house);
+                }
                 r.update(street);
                 r.closeTransaction();
             }

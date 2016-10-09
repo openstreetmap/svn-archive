@@ -8,6 +8,7 @@ import java.util.Map;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
+import javax.swing.GroupLayout;
 import javax.swing.Timer;
 
 import org.openstreetmap.josm.Main;
@@ -40,7 +41,7 @@ import org.openstreetmap.josm.plugins.czechaddress.proposal.ProposalContainer;
  */
 public class PointManipulatorDialog extends ExtendedDialog implements StatusListener {
 
-    private Timer  updateMatchesTimer = null;
+    private Timer updateMatchesTimer = null;
     private Action updateMatchesAction;
     private ProposalContainer proposalContainer;
 
@@ -276,20 +277,20 @@ public class PointManipulatorDialog extends ExtendedDialog implements StatusList
         mainPanelLayout.setVerticalGroup(
             mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(mainPanelLayout.createSequentialGroup()
-                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(locationEdit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(mainPanelLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                    .addComponent(locationEdit, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel5)
                     .addComponent(changeLocationButton))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(alternateNumberEdit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(mainPanelLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                    .addComponent(alternateNumberEdit, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel1))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(mainPanelLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel6)
-                    .addComponent(matchesComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(matchesComboBox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 153, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, GroupLayout.DEFAULT_SIZE, 153, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(statusLabel))
         );
@@ -312,8 +313,9 @@ public class PointManipulatorDialog extends ExtendedDialog implements StatusList
 
     private void proposalListKeyReleased(java.awt.event.KeyEvent evt) { //GEN-FIRST:event_proposalListKeyReleased
         if (evt.getKeyCode() == KeyEvent.VK_DELETE) {
-            for (Object o : proposalList.getSelectedValuesList())
+            for (Object o : proposalList.getSelectedValuesList()) {
                 proposalContainer.removeProposal((Proposal) o);
+            }
         }
     } //GEN-LAST:event_proposalListKeyReleased
 

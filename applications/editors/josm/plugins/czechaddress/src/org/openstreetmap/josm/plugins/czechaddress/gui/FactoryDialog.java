@@ -118,19 +118,21 @@ public final class FactoryDialog extends ToggleDialog
 
     public void setSelectedHouse(House house) {
 
-        for (int i = 0; i < streetModel.getSize(); i++)
+        for (int i = 0; i < streetModel.getSize(); i++) {
             if (streetModel.getElementAt(i) == house.getParent()) {
                 streetComboBox.setSelectedIndex(i);
                 streetComboBox.repaint();
                 break;
             }
+        }
 
-        for (int i = 0; i < houseModel.getSize(); i++)
+        for (int i = 0; i < houseModel.getSize(); i++) {
             if (houseModel.getElementAt(i) == house) {
                 houseList.setSelectedIndex(i);
                 houseList.ensureIndexIsVisible(i);
                 break;
             }
+        }
     }
 
     public House getSelectedHouse() {
@@ -232,11 +234,12 @@ public final class FactoryDialog extends ToggleDialog
         }
 
         Street selectedStreet = null;
-        for (Street street : CzechAddressPlugin.getLocation().getStreets())
+        for (Street street : CzechAddressPlugin.getLocation().getStreets()) {
             if (street.getName().toUpperCase().equals(streetName.toUpperCase())) {
                 selectedStreet = street;
                 break;
             }
+        }
 
         if (selectedStreet == null) return;
         streetComboBox.setSelectedItem(selectedStreet);

@@ -84,8 +84,9 @@ public final class Reasoner {
 
         transactionOpened = false;
 
-        for (ReasonerListener listener : listeners)
+        for (ReasonerListener listener : listeners) {
             listener.resonerReseted();
+        }
     }
 
     /**
@@ -128,7 +129,7 @@ public final class Reasoner {
         assert transactionOpened;
 
         Set<AddressElement> elemChanges = new HashSet<>();
-        Set<OsmPrimitive>   primChanges = new HashSet<>();
+        Set<OsmPrimitive> primChanges = new HashSet<>();
 
         for (OsmPrimitive prim : primToUpdate) {
             AddressElement bestMatch = getStrictlyBest(prim);
@@ -171,13 +172,15 @@ public final class Reasoner {
         transactionOpened = false;
 
         for (ReasonerListener listener : listeners) {
-            for (AddressElement elem : elemToUpdate)
+            for (AddressElement elem : elemToUpdate) {
                 if (elem != null)
                     listener.elementChanged(elem);
+            }
 
-            for (OsmPrimitive prim : primToUpdate)
+            for (OsmPrimitive prim : primToUpdate) {
                 if (prim != null)
                     listener.primitiveChanged(prim);
+            }
         }
 
         primToUpdate.clear();
@@ -209,8 +212,9 @@ public final class Reasoner {
             primToUpdate.add(prim);
         }
 
-        for (AddressElement elem : elemMatchIndex.keySet())
+        for (AddressElement elem : elemMatchIndex.keySet()) {
             reconsider(prim, elem);
+        }
     }
 
     /**
@@ -237,8 +241,9 @@ public final class Reasoner {
             elemToUpdate.add(elem);
         }
 
-        for (OsmPrimitive prim : primMatchIndex.keySet())
+        for (OsmPrimitive prim : primMatchIndex.keySet()) {
             reconsider(prim, elem);
+        }
     }
 
     /**
@@ -628,9 +633,10 @@ public final class Reasoner {
      */
     public Set<AddressElement> getUnassignedElements() {
         Set<AddressElement> result = new HashSet<>();
-        for (AddressElement elem : elemMatchIndex.keySet())
+        for (AddressElement elem : elemMatchIndex.keySet()) {
             if (translate(elem) == null)
                 result.add(elem);
+        }
         return result;
     }
 
@@ -639,9 +645,10 @@ public final class Reasoner {
      */
     public Set<OsmPrimitive> getUnassignedPrimitives() {
         Set<OsmPrimitive> result = new HashSet<>();
-        for (OsmPrimitive prim : primMatchIndex.keySet())
+        for (OsmPrimitive prim : primMatchIndex.keySet()) {
             if (translate(prim) == null)
                 result.add(prim);
+        }
         return result;
     }
 

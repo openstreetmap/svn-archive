@@ -73,10 +73,12 @@ public abstract class ProposalFactory {
         if (current == null)
             return new AddKeyValueProposal(key, target);
 
-        for (String itemRaw : current.split(","))
-            for (String itemSplitted : itemRaw.split(";"))
+        for (String itemRaw : current.split(",")) {
+            for (String itemSplitted : itemRaw.split(";")) {
                 if (itemSplitted.trim().equals(target.trim()))
                     return null;
+            }
+        }
 
         return new KeyValueChangeProposal(
                      key, current,

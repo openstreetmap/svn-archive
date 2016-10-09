@@ -80,7 +80,7 @@ public final class LocationSelector extends ExtendedDialog {
      */
     private void initLocationHints() {
         boolean assertions = false;
-        assert  assertions = true;
+        assert assertions = true;
 
         OsmPrimitive bestFit = null;
         double bestLen = 0;
@@ -150,9 +150,10 @@ public final class LocationSelector extends ExtendedDialog {
                         if (obec.getName().equalsIgnoreCase(bestFit.get("name"))) {
                             hlRegions.add(oblast);
                             hlViToCis.add(obec);
-                            for (Suburb castObce : obec.getSuburbs())
+                            for (Suburb castObce : obec.getSuburbs()) {
                                 if (castObce.getName().equalsIgnoreCase(bestFit.get("name")))
                                     hlSuburbs.add(castObce);
+                            }
                         }
                     } else {
                         for (Suburb castObce : obec.getSuburbs()) {
@@ -175,7 +176,7 @@ public final class LocationSelector extends ExtendedDialog {
     private <E> int reshuffleListItems(DefaultComboBoxModel<E> list, final ArrayList<AddressElement> hlList) {
         int curHlIndex = 0;
 
-        for (int i = 0; i < list.getSize(); i++)
+        for (int i = 0; i < list.getSize(); i++) {
             for (int j = 0; j < hlList.size(); j++) {
                 E t = list.getElementAt(i);
                 if (t == hlList.get(j)) {
@@ -184,6 +185,7 @@ public final class LocationSelector extends ExtendedDialog {
                     break;
                 }
             }
+        }
 
         return curHlIndex;
     }
@@ -314,8 +316,9 @@ public final class LocationSelector extends ExtendedDialog {
 
         if (obec.getSuburbs().size() > 0) {
             ElementWithStreets[] suburbs = new ElementWithStreets[obec.getSuburbs().size() + 1];
-            for (int i = 0; i < obec.getSuburbs().size(); i++)
+            for (int i = 0; i < obec.getSuburbs().size(); i++) {
                 suburbs[i] = obec.getSuburbs().get(i);
+            }
             suburbs[obec.getSuburbs().size()] = obec;
             DefaultComboBoxModel<ElementWithStreets> suburbsList = new DefaultComboBoxModel<>(suburbs);
             suburbHlIndex = reshuffleListItems(suburbsList, hlSuburbs);

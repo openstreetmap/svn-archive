@@ -123,8 +123,9 @@ public class ProposalDatabase implements TreeModel {
      * Applies all {@link Proposal}s in all {@link ProposalContainer}s.
      */
     public void applyAll() {
-        for (ProposalContainer a : changeSet)
+        for (ProposalContainer a : changeSet) {
             a.applyAll();
+        }
     }
 
 //==============================================================================
@@ -212,8 +213,9 @@ public class ProposalDatabase implements TreeModel {
             changeSet.remove(path.getPathComponent(1));
 
             TreeModelEvent event = new TreeModelEvent(this, path);
-            for (TreeModelListener l : listeners)
+            for (TreeModelListener l : listeners) {
                 l.treeNodesRemoved(event);
+            }
             return;
         }
 
@@ -224,8 +226,9 @@ public class ProposalDatabase implements TreeModel {
             ac.getProposals().remove(path.getPathComponent(2));
 
             TreeModelEvent event = new TreeModelEvent(this, path);
-            for (TreeModelListener l : listeners)
+            for (TreeModelListener l : listeners) {
                 l.treeNodesRemoved(event);
+            }
             return;
         }
 

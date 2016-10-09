@@ -198,7 +198,7 @@ public abstract class AddressElement implements Comparable<AddressElement> {
      */
     public static int matchField(String elemValue, String primValue) {
 
-        if (elemValue == null) return  0;
+        if (elemValue == null) return 0;
         if (primValue == null) return -1;
 
         return (primValue.trim().toUpperCase().equals(
@@ -272,7 +272,7 @@ public abstract class AddressElement implements Comparable<AddressElement> {
         // If some are 1, some -1 --> CONFLICT
         switch (minVal * maxVal) {
             case -1 : return Reasoner.MATCH_CONFLICT;
-            case  0 : return Reasoner.MATCH_PARTIAL;
+            case 0 : return Reasoner.MATCH_PARTIAL;
             case +1 : return Reasoner.MATCH_ROCKSOLID;
         }
 

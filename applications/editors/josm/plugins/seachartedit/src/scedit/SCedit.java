@@ -16,7 +16,7 @@ import org.openstreetmap.josm.plugins.PluginInformation;
 
 public class SCedit extends Plugin {
 
-	public SCedit(PluginInformation info) {
+    public SCedit(PluginInformation info) {
         super(info);
         MainMenu.add(Main.main.menu.toolsMenu, new SCeditAction());
     }

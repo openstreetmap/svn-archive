@@ -370,7 +370,8 @@ public final class TerracerAction extends JosmAction {
             // assemble new quadrilateral, closed ways
             for (int i = 0; i < nb; ++i) {
                 final Way terr;
-                if (i > 0 || keepOutline) {
+                boolean createNewWay = i > 0 || keepOutline;
+                if (createNewWay) {
                     terr = new Way();
                     // add the tags of the outline to each building (e.g. source=*)
                     TagCollection.from(outline).applyTo(terr);
@@ -385,12 +386,14 @@ public final class TerracerAction extends JosmAction {
                 terr.addNode(newNodes[1][i]);
                 terr.addNode(newNodes[0][i]);
 
-                ways.add(addressBuilding(terr, street, streetName, associatedStreet, housenumbers, i,
-                        from != null ? Integer.toString(from + i * step) : null, buildingValue));
+                addressBuilding(terr, street, streetName, associatedStreet, housenumbers, i,
+                        from != null ? Integer.toString(from + i * step) : null, buildingValue);
 
-                if (i > 0 || keepOutline) {
+                if (createNewWay) {
+                    ways.add(terr);
                     this.commands.add(new AddCommand(terr));
                 } else {
+                    ways.add(outline);
                     this.commands.add(new ChangeCommand(outline, terr));
                 }
             }
@@ -407,7 +410,8 @@ public final class TerracerAction extends JosmAction {
             }
         } else {
             // Single building, just add the address details
-            ways.add(addressBuilding(outline, street, streetName, associatedStreet, housenumbers, 0, start, buildingValue));
+            addressBuilding(outline, street, streetName, associatedStreet, housenumbers, 0, start, buildingValue);
+            ways.add(outline);
         }
 
         // Remove the address nodes since their tags have been incorporated into the terraces.
@@ -507,7 +511,7 @@ public final class TerracerAction extends JosmAction {
      * @return {@code outline}
      * @throws UserCancelException
      */
-    private Way addressBuilding(Way outline, Way street, String streetName, Relation associatedStreet,
+    private void addressBuilding(Way outline, Way street, String streetName, Relation associatedStreet,
             List<Node> housenumbers, int i, String defaultNumber, String buildingValue) throws UserCancelException {
         Node houseNum = (housenumbers != null && i >= 0 && i < housenumbers.size()) ? housenumbers.get(i) : null;
         boolean buildingAdded = false;
@@ -540,7 +544,6 @@ public final class TerracerAction extends JosmAction {
                 this.commands.add(new ChangePropertyCommand(outline, "addr:street", streetName.trim()));
             }
         }
-        return outline;
     }
 
     /**

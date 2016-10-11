@@ -10,7 +10,7 @@ import org.openstreetmap.josm.data.osm.OsmPrimitive;
  *
  * @author Radomír Černoch, radomir.cernoch@gmail.com
  */
-public class PrimUtils {
+public final class PrimUtils {
 
     // CHECKSTYLE.OFF: SingleSpaceSeparator
     public static final String KEY_HIGHWAY      = "highway";

@@ -200,7 +200,7 @@
     <src name="MemorialGenWeb" country-code="FR">
         <rule>
             <condition k="ref:(FR:)?MemorialGenWeb" v="[0-9]+" />
-            <link name="View %name% sheet of memorial" href="http://www.memorial-genweb.org/~memorial2/html/fr/resultcommune.php?idsource=%v%" />
+            <link name="View %name% sheet of memorial" href="http://www.memorialgenweb.org/memorial3/html/fr/resultcommune.php?idsource=%v%" />
         </rule>
     </src>
 

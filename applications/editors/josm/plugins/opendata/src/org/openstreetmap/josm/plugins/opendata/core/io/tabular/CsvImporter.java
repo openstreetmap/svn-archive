@@ -34,7 +34,7 @@ public class CsvImporter extends AbstractImporter {
             throws IllegalDataException {
         try {
             return CsvReader.parseDataSet(in, handler, instance);
-        } catch (IOException e) {
+        } catch (IOException | IllegalArgumentException e) {
             throw new IllegalDataException(e);
         }
     }

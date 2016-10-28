@@ -1,4 +1,5 @@
-org.geotools.resources.coverage.FilterFunction_isCoverageorg.geotools.filter.AreaFunction
+org.geotools.resources.coverage.FilterFunction_isCoverage
+org.geotools.filter.AreaFunction
 org.geotools.filter.LengthFunction
 org.geotools.filter.function.CategorizeFunction
 org.geotools.filter.function.ClassifyFunction

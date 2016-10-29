@@ -5,6 +5,7 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/JOSM"/>
 	<classpathentry exported="true" kind="lib" path="lib/commons-beanutils-1.9.2-noclassprop.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/commons-pool-1.5.4.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/GeographicLib-Java-1.44.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/gt-api-16.0.jar">
 		<attributes>
 			<attribute name="javadoc_location" value="http://docs.geotools.org/stable/javadocs/"/>

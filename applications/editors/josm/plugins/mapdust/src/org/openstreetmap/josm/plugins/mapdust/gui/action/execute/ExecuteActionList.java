@@ -81,6 +81,4 @@ public class ExecuteActionList extends MapdustExecuteActionObservable {
             notifyObservers(null, false);
         }
     }
-
-
 }

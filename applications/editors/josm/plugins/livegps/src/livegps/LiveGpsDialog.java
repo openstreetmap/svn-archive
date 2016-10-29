@@ -1,6 +1,4 @@
-/**
- *
- */
+// License: Public Domain. For details, see LICENSE file.
 package livegps;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -68,13 +66,13 @@ public class LiveGpsDialog extends ToggleDialog implements PropertyChangeListene
         if (!isVisible())
             return;
 
-        if("gpsdata".equals(evt.getPropertyName())) {
+        if ("gpsdata".equals(evt.getPropertyName())) {
             data = (LiveGpsData) evt.getNewValue();
 
             SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                if(data.isFix()) {
+                if (data.isFix()) {
                     panel.setBackground(Color.WHITE);
                     latLabel.setText(data.getLatitude() + "deg");
                     longLabel.setText(data.getLongitude() + "deg");
@@ -83,7 +81,7 @@ public class LiveGpsDialog extends ToggleDialog implements PropertyChangeListene
                     courseLabel.setText(data.getCourse() + "deg");
 
                     String wayString = data.getWayInfo();
-                    if(wayString.length() > 0) {
+                    if (!wayString.isEmpty()) {
                         wayLabel.setText(wayString);
                     } else {
                         wayLabel.setText(tr("unknown"));
@@ -103,7 +101,7 @@ public class LiveGpsDialog extends ToggleDialog implements PropertyChangeListene
             @Override
             public void run() {
                 statusLabel.setText(status.getStatusMessage());
-                if(status.getStatus() != LiveGpsStatus.GpsStatus.CONNECTED) {
+                if (status.getStatus() != LiveGpsStatus.GpsStatus.CONNECTED) {
                     panel.setBackground(Color.RED);
                 } else {
                     panel.setBackground(Color.WHITE);

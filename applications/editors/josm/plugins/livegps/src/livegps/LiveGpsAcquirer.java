@@ -1,3 +1,4 @@
+// License: Public Domain. For details, see LICENSE file.
 package livegps;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -131,7 +132,7 @@ public class LiveGpsAcquirer implements Runnable {
                     try {
                         Thread.sleep(1000);
                     } catch (InterruptedException ignore) {
-                        
+
                     }
                 }
             }
@@ -160,14 +161,16 @@ public class LiveGpsAcquirer implements Runnable {
                 fireGpsDataChangeEvent(oldGpsData, gpsData);
                 oldGpsData = gpsData;
             } catch (IOException iox) {
-                Main.warn("LiveGps: lost connection to gpsd");
+                Main.warn(iox, "LiveGps: lost connection to gpsd");
                 fireGpsStatusChangeEvent(
                         LiveGpsStatus.GpsStatus.CONNECTION_FAILED,
                         tr("Connection Failed"));
                 disconnect();
                 try {
                     Thread.sleep(1000);
-                } catch (InterruptedException ignore) {} 
+                } catch (InterruptedException ignore) {
+                    Main.trace(ignore);
+                }
                 // send warning to layer
             }
         }
@@ -245,7 +248,7 @@ public class LiveGpsAcquirer implements Runnable {
     }
 
     private void disconnect() {
-        assert(gpsdSocket != null);
+        assert gpsdSocket != null;
 
         connected = false;
 
@@ -323,7 +326,9 @@ public class LiveGpsAcquirer implements Runnable {
                     try {
                         speed = Float.parseFloat(status[9]);
                         course = Float.parseFloat(status[8]);
-                    } catch (NumberFormatException nex) {}
+                    } catch (NumberFormatException nex) {
+                        Main.debug(nex);
+                    }
                     return new LiveGpsData(lat, lon, course, speed);
                 }
                 break;

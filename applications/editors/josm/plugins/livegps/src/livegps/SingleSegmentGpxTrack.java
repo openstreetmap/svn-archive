@@ -1,3 +1,4 @@
+// License: Public Domain. For details, see LICENSE file.
 package livegps;
 
 import java.util.Collection;

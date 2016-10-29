@@ -1,3 +1,4 @@
+// License: Public Domain. For details, see LICENSE file.
 package livegps;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -5,8 +6,8 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
-import java.awt.geom.Point2D;
 import java.awt.Rectangle;
+import java.awt.geom.Point2D;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.text.SimpleDateFormat;
@@ -114,34 +115,34 @@ public class LiveGpsLayer extends GpxLayer implements PropertyChangeListener {
 
         if (lastPoint == null)
             return;
-    
+
         Point screen = mv.getPoint(lastPoint.getCoor());
-    
+
         int TriaHeight = Main.pref.getInteger(C_CURSOR_H, 20);
         int TriaWidth = Main.pref.getInteger(C_CURSOR_W, 10);
         int TriaThick = Main.pref.getInteger(C_CURSOR_T, 4);
-    
+
         /*
          * Draw a bold triangle.
          * In case of deep zoom draw also a thin DOP oval.
          */
-    
+
         g.setColor(COLOR_POSITION_ESTIMATE.get());
         int w, h;
         double ppm = 100 / mv.getDist100Pixel();    /* pixels per metre */
-    
+
         w = (int )Math.round(lastData.getEpx() * ppm);
         h = (int )Math.round(lastData.getEpy() * ppm);
-    
+
         if (w > TriaWidth || h > TriaWidth) {
             int xo, yo;
-    
+
             yo = screen.y - Math.round(h/2);
             xo = screen.x - Math.round(w/2);
-    
+
             g.drawOval(xo, yo, w, h);
         }
-    
+
         int[] x = new int[4];
         int[] y = new int[4];
         float course = lastData.getCourse();
@@ -151,11 +152,11 @@ public class LiveGpsLayer extends GpxLayer implements PropertyChangeListener {
         float ccos120 = (float )Math.cos(Math.toRadians(course + 120));
         float csin240 = (float )Math.sin(Math.toRadians(course + 240));
         float ccos240 = (float )Math.cos(Math.toRadians(course + 240));
-    
+
         g.setColor(COLOR_POSITION.get());
-    
+
         for (int i = 0; i < TriaThick; i++, TriaHeight--, TriaWidth--) {
-    
+
             x[0] = screen.x + Math.round(TriaHeight * csin);
             y[0] = screen.y - Math.round(TriaHeight * ccos);
             x[1] = screen.x + Math.round(TriaWidth * csin120);
@@ -164,7 +165,7 @@ public class LiveGpsLayer extends GpxLayer implements PropertyChangeListener {
             y[2] = screen.y;
             x[3] = screen.x + Math.round(TriaWidth * csin240);
             y[3] = screen.y - Math.round(TriaWidth * ccos240);
-    
+
             g.drawPolygon(x, y, 4);
         }
 

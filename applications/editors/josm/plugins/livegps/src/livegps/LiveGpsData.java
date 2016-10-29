@@ -1,6 +1,4 @@
-/**
- *
- */
+// License: Public Domain. For details, see LICENSE file.
 package livegps;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -150,34 +148,34 @@ public class LiveGpsData {
      * @return the name of the way that is closest to the current coordinates.
      */
     public String getWayInfo() {
-        if(wayString == null) {
+        if (wayString == null) {
             Way way = getWay();
-            if(way != null) {
+            if (way != null) {
                 StringBuilder builder = new StringBuilder();
                 String tmp = way.get("name");
-                if(tmp != null) {
+                if (tmp != null) {
                     builder.append(tmp);
                 } else {
                     builder.append(tr("no name"));
                 }
                 tmp = way.get("ref");
-                if(tmp != null) {
+                if (tmp != null) {
                     builder.append(" (").append(tmp).append(")");
                 }
                 tmp = way.get("highway");
-                if(tmp != null) {
+                if (tmp != null) {
                     builder.append(" {").append(tmp).append("}");
                 }
                 String type = "";
                 tmp = way.get("tunnel");
-                if(tmp != null) {
+                if (tmp != null) {
                     type = type + "T";
                 }
                 tmp = way.get("bridge");
-                if(tmp != null) {
+                if (tmp != null) {
                     type = type + "B";
                 }
-                if(type.length() > 0) {
+                if (type.length() > 0) {
                     builder.append(" [").append(type).append("]");
                 }
                 wayString = builder.toString();
@@ -193,7 +191,7 @@ public class LiveGpsData {
      * @return the closest way to this position.
      */
     public Way getWay() {
-        if(way == null && Main.map != null && Main.map.mapView != null) {
+        if (way == null && Main.map != null && Main.map.mapView != null) {
             Point xy = Main.map.mapView.getPoint(getLatLon());
             way = Main.map.mapView.getNearestWay(xy, OsmPrimitive::isUsable);
         }

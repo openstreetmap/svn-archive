@@ -1,3 +1,4 @@
+// License: Public Domain. For details, see LICENSE file.
 package livegps;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -116,18 +117,18 @@ public class LiveGpsPlugin extends Plugin implements LayerChangeListener {
         super(info);
         MainMenu menu = Main.main.menu;
         lgpsmenu = menu.gpsMenu;
-        if (lgpsmenu.getItemCount()>0) {
+        if (lgpsmenu.getItemCount() > 0) {
             lgpsmenu.addSeparator();
         }
-            
+
         JosmAction captureAction = new CaptureAction();
         lgpscapture = new JCheckBoxMenuItem(captureAction);
         lgpsmenu.add(lgpscapture);
         lgpscapture.setAccelerator(captureAction.getShortcut().getKeyStroke());
-        
+
         JosmAction centerAction = new CenterAction();
         MainMenu.add(lgpsmenu, centerAction);
-        
+
         JosmAction autoCenterAction = new AutoCenterAction();
         lgpsautocenter = new JCheckBoxMenuItem(autoCenterAction);
         lgpsmenu.add(lgpsautocenter);
@@ -161,7 +162,7 @@ public class LiveGpsPlugin extends Plugin implements LayerChangeListener {
      * @param enable if <code>true</code> tracking is started.
      */
     public void enableTracking(boolean enable) {
-    
+
         if (enable && !enabled) {
             assert (acquirer == null);
             assert (acquirerThread == null);
@@ -198,28 +199,28 @@ public class LiveGpsPlugin extends Plugin implements LayerChangeListener {
         }
     }
 
-    /** 
-     * Add a listener for gps events. 
-     * @param listener the listener. 
-     */ 
-    public void addPropertyChangeListener(PropertyChangeListener listener) { 
-        assert(!listenerQueue.contains(listener));
+    /**
+     * Add a listener for gps events.
+     * @param listener the listener.
+     */
+    public void addPropertyChangeListener(PropertyChangeListener listener) {
+        assert !listenerQueue.contains(listener);
 
-        listenerQueue.add(listener); 
+        listenerQueue.add(listener);
         if (acquirer != null)
-            acquirer.addPropertyChangeListener(listener); 
-    } 
+            acquirer.addPropertyChangeListener(listener);
+    }
 
-    /** 
-     * Remove a listener for gps events. 
-     * @param listener the listener. 
-     */ 
-    public void removePropertyChangeListener(PropertyChangeListener listener) { 
-        assert(listenerQueue.contains(listener));
+    /**
+     * Remove a listener for gps events.
+     * @param listener the listener.
+     */
+    public void removePropertyChangeListener(PropertyChangeListener listener) {
+        assert listenerQueue.contains(listener);
 
-        listenerQueue.remove(listener); 
-        if (acquirer != null) 
-            acquirer.removePropertyChangeListener(listener); 
+        listenerQueue.remove(listener);
+        if (acquirer != null)
+            acquirer.removePropertyChangeListener(listener);
     }
 
     @Override

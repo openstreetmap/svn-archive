@@ -124,6 +124,9 @@
 		<Class name="~org.jsoup.*" />
 	</Match>
 	<Match>
+		<Class name="~org.kabeja.*" />
+	</Match>
+	<Match>
 		<Class name="~org.kaintoch.*" />
 	</Match>
 	<Match>

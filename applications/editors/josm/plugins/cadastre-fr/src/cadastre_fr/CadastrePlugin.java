@@ -198,6 +198,17 @@ public class CadastrePlugin extends Plugin {
     public CadastrePlugin(PluginInformation info) {
         super(info);
         Main.info("Pluging cadastre-fr v"+VERSION+" started...");
+        initCacheDir();
+
+        refreshConfiguration();
+
+        UploadAction.registerUploadHook(new CheckSourceUploadHook());
+
+        registerSessionLayerExporter(WMSLayer.class, CadastreSessionExporter.class);
+        registerSessionLayerImporter("cadastre-fr", CadastreSessionImporter.class);
+    }
+
+    private static void initCacheDir() {
         if (Main.pref.get("cadastrewms.cacheDir").isEmpty()) {
             cacheDir = new File(Main.pref.getCacheDirectory(), "cadastrewms").getAbsolutePath();
         } else {
@@ -206,13 +217,6 @@ public class CadastrePlugin extends Plugin {
         if (cacheDir.charAt(cacheDir.length()-1) != File.separatorChar)
             cacheDir += File.separatorChar;
         Main.info("current cache directory: "+cacheDir);
-
-        refreshConfiguration();
-
-        UploadAction.registerUploadHook(new CheckSourceUploadHook());
-
-        registerSessionLayerExporter(WMSLayer.class, CadastreSessionExporter.class);
-        registerSessionLayerImporter("cadastre-fr", CadastreSessionImporter.class);
     }
 
     public static void refreshMenu() {
@@ -356,7 +360,7 @@ public class CadastrePlugin extends Plugin {
         for (int i = 0; i < cadastreJMenu.getItemCount(); i++) {
             JMenuItem item = cadastreJMenu.getItem(i);
             if (item != null)
-                if (item.getText().equals(MenuActionGrabPlanImage.name) /*||
+                if (item.getText().equals(MenuActionGrabPlanImage.NAME) /*||
                     item.getText().equals(MenuActionGrab.name) ||
                     item.getText().equals(MenuActionBoundaries.name) ||
                     item.getText().equals(MenuActionBuildings.name)*/) {

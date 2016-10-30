@@ -11,13 +11,17 @@ import org.openstreetmap.josm.actions.JosmAction;
 
 public class MenuActionRefineGeoRef extends JosmAction {
 
-    public static String name = marktr("Refine georeferencing");
+    public static final String NAME = marktr("Refine georeferencing");
 
     private WMSLayer wmsLayer;
     private RasterImageGeoreferencer rasterImageGeoreferencer;
 
+    /**
+     * Constructs a new {@code MenuActionRefineGeoRef}.
+     * @param wmsLayer WMS layer
+     */
     public MenuActionRefineGeoRef(WMSLayer wmsLayer) {
-        super(tr(name), null, tr("Improve georeferencing (only raster images)"), null, false);
+        super(tr(NAME), null, tr("Improve georeferencing (only raster images)"), null, false);
         this.wmsLayer = wmsLayer;
         rasterImageGeoreferencer = new RasterImageGeoreferencer();
     }

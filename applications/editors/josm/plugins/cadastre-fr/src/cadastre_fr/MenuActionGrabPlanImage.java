@@ -19,14 +19,17 @@ public class MenuActionGrabPlanImage extends JosmAction implements Runnable {
      */
     private static final long serialVersionUID = 1L;
 
-    public static String name = marktr("Georeference an image");
+    public static final String NAME = marktr("Georeference an image");
 
     private DownloadWMSPlanImage downloadWMSPlanImage;
     private WMSLayer wmsLayer;
     private RasterImageGeoreferencer rasterImageGeoreferencer;
 
+    /**
+     * Constructs a new {@code MenuActionGrabPlanImage}.
+     */
     public MenuActionGrabPlanImage() {
-        super(tr(name), "cadastre_small", tr("Grab non-georeferenced image"), null, false, "cadastrefr/grabplanimage", true);
+        super(tr(NAME), "cadastre_small", tr("Grab non-georeferenced image"), null, false, "cadastrefr/grabplanimage", true);
         rasterImageGeoreferencer = new RasterImageGeoreferencer();
     }
 

@@ -13,10 +13,13 @@ import org.openstreetmap.josm.gui.preferences.PreferenceDialog;
 public class MenuActionOpenPreferences extends JosmAction {
     private static final long serialVersionUID = 1L;
 
-    public static String name = marktr("Preferences");
+    public static final String NAME = marktr("Preferences");
 
+    /**
+     * Constructs a new {@code MenuActionOpenPreferences}.
+     */
     public MenuActionOpenPreferences() {
-        super(tr(name), "cadastre_small", tr("Open Cadastre Preferences"), null, false, "cadastrefr/openpreferences", true);
+        super(tr(NAME), "cadastre_small", tr("Open Cadastre Preferences"), null, false, "cadastrefr/openpreferences", true);
     }
 
     @Override

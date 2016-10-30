@@ -167,9 +167,9 @@ public class RasterImageGeoreferencer implements MouseListener {
   * Use point org1 as anchor for scale, then move org1 to dst1, then rotate org2 on dst2
   * around org1/dst1 anchor
   * @param org1 first point at original coordinate system (the grabbed image)
-  * @param org2 second point "
+  * @param org2 second point
   * @param dst1 first point at final destination coordinate system (the real east/north coordinate system)
-  * @param dst2 second point "
+  * @param dst2 second point
   */
  private void affineTransform(EastNorth org1, EastNorth org2, EastNorth dst1, EastNorth dst2) {
      // handle an NPE case I'm not able to reproduce
@@ -187,12 +187,9 @@ public class RasterImageGeoreferencer implements MouseListener {
      double dx = dst1.getX() - org1.getX();
      double dy = dst1.getY() - org1.getY();
      wmsLayer.getImage(0).shear(dx, dy);
-     org1 = org1.add(dx, dy); // org1=dst1 now
-     org2 = org2.add(dx, dy);
-     // rotate : org1(=dst1 now) is anchor for rotation and scale
+     // rotate : dst1 is anchor for rotation and scale
      wmsLayer.getImage(0).rotate(dst1, angle);
-     org2 = org2.rotate(dst1, angle);
-     // scale image from anchor org1(=dst1 now)
+     // scale image from anchor dst1
      wmsLayer.getImage(0).scale(dst1, proportion);
  }
 

@@ -202,7 +202,7 @@ public class DownloadSVGTask extends PleaseWaitRunnable {
             if (file.exists())
                 file.delete();
             try (BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(file, true));
-                 InputStreamReader isr = new InputStreamReader(is);
+                 InputStreamReader isr = new InputStreamReader(is, StandardCharsets.UTF_8);
                  BufferedReader br = new BufferedReader(isr)) {
                 String line;
                 while (null != (line = br.readLine())) {

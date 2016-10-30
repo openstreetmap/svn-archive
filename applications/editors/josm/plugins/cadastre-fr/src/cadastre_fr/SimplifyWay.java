@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.data.projection.Ellipsoid;
 
 /**
  * Imported from plugin UtilsPlugin
@@ -33,7 +34,7 @@ public class SimplifyWay {
         }
     }
 
-    /*
+    /**
      * Takes an interval [from,to] and adds nodes from (from,to) to ns.
      * (from and to are indices of wnew.nodes.)
      */
@@ -44,7 +45,7 @@ public class SimplifyWay {
         double xtemax = 0;
         for (int i = from + 1; i < to; i++) {
             Node n = wnew.getNode(i);
-            double xte = Math.abs(EARTH_RAD
+            double xte = Math.abs(Ellipsoid.WGS84.a
                     * xtd(fromN.getCoor().lat() * Math.PI / 180, fromN.getCoor().lon() * Math.PI / 180, toN.getCoor().lat() * Math.PI
                             / 180, toN.getCoor().lon() * Math.PI / 180, n.getCoor().lat() * Math.PI / 180, n.getCoor().lon() * Math.PI
                             / 180));
@@ -60,8 +61,6 @@ public class SimplifyWay {
             simplifyWayRange(wnew, imax, to, ns, thr);
         }
     }
-
-    public static double EARTH_RAD = 6378137.0;
 
     /* From Aviaton Formulary v1.3
      * http://williams.best.vwh.net/avform.htm

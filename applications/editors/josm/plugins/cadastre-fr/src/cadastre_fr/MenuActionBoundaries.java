@@ -11,14 +11,17 @@ import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 
 public class MenuActionBoundaries extends JosmAction {
-    
-    public static String name = "Administrative boundary";
+
+    public static final String NAME = "Administrative boundary";
 
     private static final long serialVersionUID = 1L;
     private WMSLayer wmsLayer = null;
-   
+
+    /**
+     * Constructs a new {@code MenuActionBoundaries}.
+     */
     public MenuActionBoundaries() {
-        super(tr(name), "cadastre_small", tr("Extract commune boundary"), null, false);
+        super(tr(NAME), "cadastre_small", tr("Extract commune boundary"), null, false);
     }
 
     @Override
@@ -34,5 +37,4 @@ public class MenuActionBoundaries extends JosmAction {
             DownloadSVGTask.download(wmsLayer);
         }
     }
-
 }

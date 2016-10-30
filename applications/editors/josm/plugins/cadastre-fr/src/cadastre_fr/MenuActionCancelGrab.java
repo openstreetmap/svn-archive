@@ -11,12 +11,16 @@ import org.openstreetmap.josm.actions.JosmAction;
 @SuppressWarnings("serial")
 public class MenuActionCancelGrab extends JosmAction {
 
-    public static String name = marktr("Cancel current grab");
+    public static final String NAME = marktr("Cancel current grab");
 
     private WMSLayer wmsLayer;
-    
+
+    /**
+     * Constructs a new {@code MenuActionCancelGrab}.
+     * @param wmsLayer WMS layer
+     */
     public MenuActionCancelGrab(WMSLayer wmsLayer) {
-        super(tr(name), null, tr("Cancel current grab (only vector images)"), null, false);
+        super(tr(NAME), null, tr("Cancel current grab (only vector images)"), null, false);
         this.wmsLayer = wmsLayer;
     }
 

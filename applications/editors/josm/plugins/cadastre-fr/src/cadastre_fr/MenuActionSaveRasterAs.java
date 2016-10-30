@@ -8,6 +8,7 @@ import java.awt.event.ActionEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.Locale;
 
 import javax.imageio.ImageIO;
 import javax.swing.JFileChooser;
@@ -28,7 +29,7 @@ import org.openstreetmap.josm.actions.JosmAction;
 
 public class MenuActionSaveRasterAs extends JosmAction {
 
-    public static String name = marktr("Save image as...");
+    public static final String NAME = marktr("Save image as...");
 
     private static final long serialVersionUID = 1L;
 
@@ -40,7 +41,7 @@ public class MenuActionSaveRasterAs extends JosmAction {
             if (file.isDirectory()) {
                 return true;
             }
-            return file.getName().toLowerCase().endsWith(".png");
+            return file.getName().toLowerCase(Locale.ENGLISH).endsWith(".png");
         }
 
         @Override
@@ -55,7 +56,7 @@ public class MenuActionSaveRasterAs extends JosmAction {
             if (file.isDirectory()) {
                 return true;
             }
-            return file.getName().toLowerCase().endsWith(".tif");
+            return file.getName().toLowerCase(Locale.ENGLISH).endsWith(".tif");
         }
 
         @Override
@@ -67,8 +68,12 @@ public class MenuActionSaveRasterAs extends JosmAction {
     FiltreTiff filtreTiff = new FiltreTiff();
     FiltrePng filtrePng = new FiltrePng();
 
+    /**
+     * Constructs a new {@code MenuActionSaveRasterAs}.
+     * @param wmsLayer WMS layer
+     */
     public MenuActionSaveRasterAs(WMSLayer wmsLayer) {
-        super(tr(name), "save", tr("Export image (only raster images)"), null, false);
+        super(tr(NAME), "save", tr("Export image (only raster images)"), null, false);
         this.wmsLayer = wmsLayer;
     }
 
@@ -125,8 +130,7 @@ public class MenuActionSaveRasterAs extends JosmAction {
                     gtwriter.dispose();
                     coverage.dispose(true);
                 } catch (Exception e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
+                    Main.error(e);
                 }
             }
         }

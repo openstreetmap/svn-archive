@@ -34,7 +34,9 @@ public abstract class SpreadSheetReader extends AbstractReader {
     private static final NumberFormat formatUK = NumberFormat.getInstance(Locale.UK);
 
     private static final String COOR = "(\\-?\\d+(?:[\\.,]\\d+)?)";
-    private static final Pattern LATLON_PATTERN = Pattern.compile("^"+COOR+"[,;]?\\s*"+COOR+"$");
+    // Lat/lon pattern with optional altitude and precision
+    private static final Pattern LATLON_PATTERN = Pattern.compile(
+            "^"+COOR+"[,;\\s]\\s*"+COOR+"(?:[,;\\s]\\s*"+COOR+"(?:[,;\\s]\\s*"+COOR+")?)?$");
 
     protected final SpreadSheetHandler handler;
 
@@ -219,7 +221,9 @@ public abstract class SpreadSheetReader extends AbstractReader {
                     }
                     if (!coordinate) {
                         if (!fields[i].isEmpty()) {
-                            nodes.values().iterator().next().put(header[i], fields[i]);
+                            for (Node n : nodes.values()) {
+                                n.put(header[i], fields[i]);
+                            }
                         }
                     }
                 } catch (ParseException e) {
@@ -231,7 +235,7 @@ public abstract class SpreadSheetReader extends AbstractReader {
                 Node n = nodes.get(c);
                 EastNorth en = ens.get(c);
                 if (en.isValid()) {
-                    n.setCoor(c.proj != null && !handlerOK ? c.proj.eastNorth2latlon(en) : handler.getCoor(en, fields));
+                    n.setCoor(c.proj != null && !handlerOK ? c.proj.eastNorth2latlon(en) : handler != null ? handler.getCoor(en, fields) : null);
                 } else {
                     Main.warn("Skipping line "+lineNumber+" because no valid coordinates have been found at columns "+c);
                 }

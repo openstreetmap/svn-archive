@@ -5,9 +5,7 @@ import java.awt.Component;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.xml.stream.XMLInputFactory;
@@ -150,18 +148,19 @@ public class GmlReader extends GeographicReader {
 
     private void parseFeatureMember(Component parent) throws XMLStreamException, GeoCrsException, FactoryException,
     UserCancelException, GeoMathTransformException, MismatchedDimensionException, TransformException {
-        List<OsmPrimitive> list = new ArrayList<>();
         Way way = null;
         Node node = null;
-        Map<String, String> tags = new HashMap<>();
+        Map<String, StringBuilder> tags = new HashMap<>();
+        OsmPrimitive prim = null;
+        String key = null;
         while (parser.hasNext()) {
             int event = parser.next();
             if (event == XMLStreamConstants.START_ELEMENT) {
                 if (isElement(GML_LINE_STRING)) {
-                    list.add(way = createWay());
+                    prim = way = createWay();
                     parseSrs(parent);
                 } else if (isElement(GML_LINEAR_RING)) {
-                    list.add(way = createWay());
+                    prim = way = createWay();
                 } else if (isElement(GML_POINT)) {
                     parseSrs(parent);
                 } else if (isElement(GML_SURFACE)) {
@@ -173,22 +172,39 @@ public class GmlReader extends GeographicReader {
                         node = createOrGetNode(p, dim > 2 && !tab[i+2].equals("0") ? tab[i+2] : null);
                         if (way != null) {
                             way.addNode(node);
+                        } else {
+                            prim = node;
                         }
                     }
                 } else if (isElement(GML_COORDINATES)) {
                     String[] tab = parser.getElementText().trim().split(",");
                     Point p = geometryFactory.createPoint(new Coordinate(Double.valueOf(tab[0]), Double.valueOf(tab[1])));
-                    list.add(node = createOrGetNode(p));
+                    node = createOrGetNode(p);
+                    if (way == null) {
+                        prim = node;
+                    }
+                } else {
+                    key = parser.getLocalName();
+                    if (key.startsWith("ogr:")) {
+                        key = key.substring("ogr:".length());
+                    }
                 }
             } else if (event == XMLStreamConstants.END_ELEMENT) {
                 if (isElement(GML_FEATURE_MEMBER)) {
                     break;
                 }
+            } else if (event == XMLStreamConstants.CHARACTERS && key != null) {
+                StringBuilder sb = tags.get(key);
+                if (sb == null) {
+                    sb = new StringBuilder();
+                    tags.put(key, sb);
+                }
+                sb.append(parser.getTextCharacters(), parser.getTextStart(), parser.getTextLength());
             }
         }
-        for (OsmPrimitive p : list) {
-            for (String key : tags.keySet()) {
-                p.put(key, tags.get(key));
+        if (prim != null) {
+            for (String k : tags.keySet()) {
+                prim.put(k, tags.get(k).toString());
             }
         }
     }

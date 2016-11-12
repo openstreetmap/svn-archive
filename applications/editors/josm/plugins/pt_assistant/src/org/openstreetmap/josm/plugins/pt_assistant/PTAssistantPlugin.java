@@ -1,4 +1,4 @@
-//License: GPL. For details, see LICENSE file.
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.pt_assistant;
 
 import javax.swing.JMenuItem;
@@ -21,91 +21,91 @@ import org.openstreetmap.josm.plugins.pt_assistant.validation.PTAssistantValidat
  * This is the main class of the PTAssistant plugin.
  *
  * @author darya / Darya Golovko
- * 
+ *
  */
 public class PTAssistantPlugin extends Plugin {
 
-	/*
-	 * last fix that was can be re-applied to all similar route segments, can be
-	 * null if unavailable
-	 */
-	private static PTRouteSegment lastFix;
+    /*
+     * last fix that was can be re-applied to all similar route segments, can be
+     * null if unavailable
+     */
+    private static PTRouteSegment lastFix;
 
-	/* item of the Tools menu for adding stop_positions */
-	private JMenuItem addStopPositionMenu;
-	
-	/* item of the Tools menu for repeating the last fix */
-	private static JMenuItem repeatLastFixMenu;
+    /* item of the Tools menu for adding stop_positions */
+    private JMenuItem addStopPositionMenu;
 
-	/**
-	 * Main constructor.
-	 *
-	 * @param info
-	 *            Required information of the plugin. Obtained from the jar
-	 *            file.
-	 */
-	public PTAssistantPlugin(PluginInformation info) {
-		super(info);
+    /* item of the Tools menu for repeating the last fix */
+    private static JMenuItem repeatLastFixMenu;
 
-		OsmValidator.addTest(PTAssistantValidatorTest.class);
+    /**
+     * Main constructor.
+     *
+     * @param info
+     *            Required information of the plugin. Obtained from the jar
+     *            file.
+     */
+    public PTAssistantPlugin(PluginInformation info) {
+        super(info);
 
-		AddStopPositionAction addStopPositionAction = new AddStopPositionAction();
-		addStopPositionMenu = MainMenu.add(Main.main.menu.toolsMenu, addStopPositionAction, false);
-		RepeatLastFixAction repeatLastFixAction = new RepeatLastFixAction();
-		repeatLastFixMenu = MainMenu.add(Main.main.menu.toolsMenu, repeatLastFixAction, false);
+        OsmValidator.addTest(PTAssistantValidatorTest.class);
 
-	}
+        AddStopPositionAction addStopPositionAction = new AddStopPositionAction();
+        addStopPositionMenu = MainMenu.add(Main.main.menu.toolsMenu, addStopPositionAction, false);
+        RepeatLastFixAction repeatLastFixAction = new RepeatLastFixAction();
+        repeatLastFixMenu = MainMenu.add(Main.main.menu.toolsMenu, repeatLastFixAction, false);
 
-	/**
-	 * Called when the JOSM map frame is created or destroyed.
-	 */
-	@Override
-	public void mapFrameInitialized(MapFrame oldFrame, MapFrame newFrame) {
-		if (oldFrame == null && newFrame != null) {
-			addStopPositionMenu.setEnabled(true);
-			repeatLastFixMenu.setEnabled(false);
-		} else if (oldFrame != null && newFrame == null) {
-			addStopPositionMenu.setEnabled(false);
-			repeatLastFixMenu.setEnabled(false);
-		}
-	}
+    }
 
-	/**
-	 * Sets up the pt_assistant tab in JOSM Preferences
-	 */
-	@Override
-	public PreferenceSetting getPreferenceSetting() {
-		return new PTAssistantPreferenceSetting();
-	}
+    /**
+     * Called when the JOSM map frame is created or destroyed.
+     */
+    @Override
+    public void mapFrameInitialized(MapFrame oldFrame, MapFrame newFrame) {
+        if (oldFrame == null && newFrame != null) {
+            addStopPositionMenu.setEnabled(true);
+            repeatLastFixMenu.setEnabled(false);
+        } else if (oldFrame != null && newFrame == null) {
+            addStopPositionMenu.setEnabled(false);
+            repeatLastFixMenu.setEnabled(false);
+        }
+    }
 
-	public static PTRouteSegment getLastFix() {
-		return lastFix;
-	}
+    /**
+     * Sets up the pt_assistant tab in JOSM Preferences
+     */
+    @Override
+    public PreferenceSetting getPreferenceSetting() {
+        return new PTAssistantPreferenceSetting();
+    }
 
-	/**
-	 * Remembers the last fix and enables/disables the Repeat last fix menu
-	 * 
-	 * @param segment
-	 *            The last fix, call be null to disable the Repeat last fix menu
-	 */
-	public static void setLastFix(PTRouteSegment segment) {
-		lastFix = segment;
+    public static PTRouteSegment getLastFix() {
+        return lastFix;
+    }
 
-		SwingUtilities.invokeLater(new Runnable() {
-			@Override
-			public void run() {
-				repeatLastFixMenu.setEnabled(segment != null);
-			}
-		});
-	}
+    /**
+     * Remembers the last fix and enables/disables the Repeat last fix menu
+     *
+     * @param segment
+     *            The last fix, call be null to disable the Repeat last fix menu
+     */
+    public static void setLastFix(PTRouteSegment segment) {
+        lastFix = segment;
 
-	/**
-	 * Used in unit tests
-	 * 
-	 * @param segment
-	 */
-	public static void setLastFixNoGui(PTRouteSegment segment) {
-		lastFix = segment;
-	}
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                repeatLastFixMenu.setEnabled(segment != null);
+            }
+        });
+    }
+
+    /**
+     * Used in unit tests
+     *
+     * @param segment route segment
+     */
+    public static void setLastFixNoGui(PTRouteSegment segment) {
+        lastFix = segment;
+    }
 
 }

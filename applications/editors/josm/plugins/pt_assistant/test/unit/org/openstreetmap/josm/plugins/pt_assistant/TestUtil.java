@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.pt_assistant;
 
 import static org.junit.Assert.assertEquals;
@@ -33,7 +34,7 @@ public final class TestUtil {
    *
    * That is needed e.g. to use {@link MapillaryLayer#getInstance()}
    */
-  public static final synchronized void initPlugin() {
+  public static synchronized void initPlugin() {
     if (!isInitialized) {
       System.setProperty("josm.home", "test/data/preferences");
       Main.pref.enableSaveOnPut(false);

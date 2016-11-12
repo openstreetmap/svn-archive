@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.pt_assistant.validation;
 
 import static org.junit.Assert.assertEquals;
@@ -18,45 +19,45 @@ import org.openstreetmap.josm.plugins.pt_assistant.ImportUtils;
 
 public class DirecionTestTest extends AbstractTest {
 
-	@Test
-	public void testOnewayTrue() {
+    @Test
+    public void testOnewayTrue() {
 
-		File file = new File(AbstractTest.PATH_TO_ONEWAY_WRONG_DIRECTION);
-		DataSet ds = ImportUtils.importOsmFile(file, "testLayer");
+        File file = new File(AbstractTest.PATH_TO_ONEWAY_WRONG_DIRECTION);
+        DataSet ds = ImportUtils.importOsmFile(file, "testLayer");
 
-		PTAssistantValidatorTest test = new PTAssistantValidatorTest();
+        PTAssistantValidatorTest test = new PTAssistantValidatorTest();
 
-		List<TestError> errors = new ArrayList<>();
+        List<TestError> errors = new ArrayList<>();
 
-		for (Relation r : ds.getRelations()) {
-			WayChecker wayChecker = new WayChecker(r, test);
-			wayChecker.performDirectionTest();
-			errors.addAll(wayChecker.getErrors());
-		}
+        for (Relation r : ds.getRelations()) {
+            WayChecker wayChecker = new WayChecker(r, test);
+            wayChecker.performDirectionTest();
+            errors.addAll(wayChecker.getErrors());
+        }
 
-		assertEquals(errors.size(), 2);
-		int onewayErrorCaught = 0;
-		for (TestError e : errors) {
-			if (e.getCode() == PTAssistantValidatorTest.ERROR_CODE_DIRECTION) {
-				onewayErrorCaught++;
-			}
-		}
+        assertEquals(errors.size(), 2);
+        int onewayErrorCaught = 0;
+        for (TestError e : errors) {
+            if (e.getCode() == PTAssistantValidatorTest.ERROR_CODE_DIRECTION) {
+                onewayErrorCaught++;
+            }
+        }
 
-		assertEquals(onewayErrorCaught, 2);
+        assertEquals(onewayErrorCaught, 2);
 
-		boolean detectedErrorsAreCorrect = true;
-		for (TestError e : errors) {
-			if (e.getCode() == PTAssistantValidatorTest.ERROR_CODE_DIRECTION) {
-				@SuppressWarnings("unchecked")
-				Collection<OsmPrimitive> highlighted = (Collection<OsmPrimitive>) e.getHighlighted();
-				for (OsmPrimitive highlightedPrimitive: highlighted) {
-					if (highlightedPrimitive.getId() != 225732678 && highlightedPrimitive.getId() != 24215210) {
-						detectedErrorsAreCorrect = false;
-					}
-				}
-			}
-		}
+        boolean detectedErrorsAreCorrect = true;
+        for (TestError e : errors) {
+            if (e.getCode() == PTAssistantValidatorTest.ERROR_CODE_DIRECTION) {
+                @SuppressWarnings("unchecked")
+                Collection<OsmPrimitive> highlighted = (Collection<OsmPrimitive>) e.getHighlighted();
+                for (OsmPrimitive highlightedPrimitive: highlighted) {
+                    if (highlightedPrimitive.getId() != 225732678 && highlightedPrimitive.getId() != 24215210) {
+                        detectedErrorsAreCorrect = false;
+                    }
+                }
+            }
+        }
 
-		assertTrue(detectedErrorsAreCorrect);
-	}
+        assertTrue(detectedErrorsAreCorrect);
+    }
 }

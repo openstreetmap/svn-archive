@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.pt_assistant.validation;
 
 import static org.junit.Assert.assertEquals;
@@ -19,16 +20,16 @@ public class SortingTestTest extends AbstractTest {
     public void sortingTestBeforeFile() {
         File file = new File(AbstractTest.PATH_TO_DL131_BEFORE);
         DataSet ds = ImportUtils.importOsmFile(file, "testLayer");
-        
+
         PTAssistantValidatorTest test = new PTAssistantValidatorTest();
 
         List<TestError> errors = new ArrayList<>();
-        
+
         for (Relation r: ds.getRelations()) {
-        	RouteChecker routeChecker = new RouteChecker(r, test);
-        	routeChecker.performSortingTest();
-        	errors.addAll(routeChecker.getErrors());
-        	
+            RouteChecker routeChecker = new RouteChecker(r, test);
+            routeChecker.performSortingTest();
+            errors.addAll(routeChecker.getErrors());
+
         }
 
         assertEquals(errors.size(), 1);
@@ -40,16 +41,16 @@ public class SortingTestTest extends AbstractTest {
     public void sortingTestAfterFile() {
         File file = new File(AbstractTest.PATH_TO_DL131_AFTER);
         DataSet ds = ImportUtils.importOsmFile(file, "testLayer");
-        
+
         PTAssistantValidatorTest test = new PTAssistantValidatorTest();
 
         List<TestError> errors = new ArrayList<>();
-        
+
         for (Relation r: ds.getRelations()) {
-        	RouteChecker routeChecker = new RouteChecker(r, test);
-        	routeChecker.performSortingTest();
-        	errors.addAll(routeChecker.getErrors());
-        	
+            RouteChecker routeChecker = new RouteChecker(r, test);
+            routeChecker.performSortingTest();
+            errors.addAll(routeChecker.getErrors());
+
         }
 
 
@@ -79,15 +80,15 @@ public class SortingTestTest extends AbstractTest {
     public void overshootTestAfterFile() {
         File file = new File(AbstractTest.PATH_TO_DL286_AFTER);
         DataSet ds = ImportUtils.importOsmFile(file, "testLayer");
-        
+
         PTAssistantValidatorTest test = new PTAssistantValidatorTest();
 
         List<TestError> errors = new ArrayList<>();
-        
+
         for (Relation r: ds.getRelations()) {
-        	RouteChecker routeChecker = new RouteChecker(r, test);
-        	routeChecker.performSortingTest();
-        	errors.addAll(routeChecker.getErrors());
+            RouteChecker routeChecker = new RouteChecker(r, test);
+            routeChecker.performSortingTest();
+            errors.addAll(routeChecker.getErrors());
         }
 
         assertEquals(errors.size(), 0);

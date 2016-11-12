@@ -1,8 +1,5 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.pt_assistant;
-
-/**
- * This class provides functionality used by multiple test classes of pt_assistant plugin. 
- */
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -17,8 +14,11 @@ import org.openstreetmap.josm.io.IllegalDataException;
 import org.openstreetmap.josm.io.OsmImporter;
 import org.openstreetmap.josm.io.OsmImporter.OsmImporterData;
 
-public class ImportUtils {
-    
+/**
+ * This class provides functionality used by multiple test classes of pt_assistant plugin.
+ */
+public final class ImportUtils {
+
     private ImportUtils() {
         // private constructor for utils classes
     }
@@ -41,11 +41,7 @@ public class ImportUtils {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-        
+
         return null;
-
     }
-
-
-
 }

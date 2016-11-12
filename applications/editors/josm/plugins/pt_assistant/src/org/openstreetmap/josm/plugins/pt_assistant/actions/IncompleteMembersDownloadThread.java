@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.pt_assistant.actions;
 
 import java.util.ArrayList;
@@ -20,72 +21,73 @@ import org.openstreetmap.josm.plugins.pt_assistant.utils.RouteUtils;
  */
 public class IncompleteMembersDownloadThread extends Thread {
 
-	/**
-	 * Default constructor
-	 */
-	public IncompleteMembersDownloadThread() {
-		super();
+    /**
+     * Default constructor
+     */
+    public IncompleteMembersDownloadThread() {
+        super();
 
-	}
+    }
 
-	@Override
-	public void run() {
+    @Override
+    public void run() {
 
-		try {
-			synchronized (this) {
+        try {
+            synchronized (this) {
 
-				ArrayList<PrimitiveId> list = new ArrayList<>();
+                ArrayList<PrimitiveId> list = new ArrayList<>();
 
-				// if there are selected routes, try adding them first:
-				for (Relation currentSelectedRelation : Main.getLayerManager().getEditDataSet()
-						.getSelectedRelations()) {
-					if (RouteUtils.isTwoDirectionRoute(currentSelectedRelation)) {
-						list.add(currentSelectedRelation);
-					}
-				}
+                // if there are selected routes, try adding them first:
+                for (Relation currentSelectedRelation : Main.getLayerManager().getEditDataSet()
+                        .getSelectedRelations()) {
+                    if (RouteUtils.isTwoDirectionRoute(currentSelectedRelation)) {
+                        list.add(currentSelectedRelation);
+                    }
+                }
 
-				if (list.isEmpty()) {
-					// add all route relations that are of public_transport
-					// version 2:
-					Collection<Relation> allRelations = Main.getLayerManager().getEditDataSet().getRelations();
-					for (Relation currentRelation : allRelations) {
-						if (RouteUtils.isTwoDirectionRoute(currentRelation)) {
-							list.add(currentRelation);
-						}
-					}
-				}
+                if (list.isEmpty()) {
+                    // add all route relations that are of public_transport
+                    // version 2:
+                    Collection<Relation> allRelations = Main.getLayerManager().getEditDataSet().getRelations();
+                    for (Relation currentRelation : allRelations) {
+                        if (RouteUtils.isTwoDirectionRoute(currentRelation)) {
+                            list.add(currentRelation);
+                        }
+                    }
+                }
 
-				// add all stop_positions:
-				Collection<Node> allNodes = Main.getLayerManager().getEditDataSet().getNodes();
-				for (Node currentNode : allNodes) {
-					if (currentNode.hasTag("public_transport", "stop_position")) {
-						List<OsmPrimitive> referrers = currentNode.getReferrers();
-						boolean parentWayExists = false;
-						for (OsmPrimitive referrer : referrers) {
-							if (referrer.getType().equals(OsmPrimitiveType.WAY)) {
-								parentWayExists = true;
-								break;
-							}
-						}
-						if (!parentWayExists) {
-							list.add(currentNode);
+                // add all stop_positions:
+                Collection<Node> allNodes = Main.getLayerManager().getEditDataSet().getNodes();
+                for (Node currentNode : allNodes) {
+                    if (currentNode.hasTag("public_transport", "stop_position")) {
+                        List<OsmPrimitive> referrers = currentNode.getReferrers();
+                        boolean parentWayExists = false;
+                        for (OsmPrimitive referrer : referrers) {
+                            if (referrer.getType().equals(OsmPrimitiveType.WAY)) {
+                                parentWayExists = true;
+                                break;
+                            }
+                        }
+                        if (!parentWayExists) {
+                            list.add(currentNode);
 
-						}
+                        }
 
-					}
-				}
+                    }
+                }
 
-				DownloadPrimitivesWithReferrersTask task = new DownloadPrimitivesWithReferrersTask(false, list, false,
-						true, null, null);
-				Thread t = new Thread(task);
-				t.start();
-				t.join();
+                DownloadPrimitivesWithReferrersTask task = new DownloadPrimitivesWithReferrersTask(false, list, false,
+                        true, null, null);
+                Thread t = new Thread(task);
+                t.start();
+                t.join();
 
-			}
+            }
 
-		} catch (InterruptedException e) {
-			// do nothing in case the download was interrupted
-		}
+        } catch (InterruptedException e) {
+            // do nothing in case the download was interrupted
+            Main.trace(e);
+        }
 
-	}
+    }
 }

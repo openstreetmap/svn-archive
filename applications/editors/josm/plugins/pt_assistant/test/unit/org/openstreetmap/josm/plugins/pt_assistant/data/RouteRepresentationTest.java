@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.pt_assistant.data;
 
 import static org.junit.Assert.assertEquals;
@@ -14,15 +15,15 @@ import org.openstreetmap.josm.plugins.pt_assistant.AbstractTest;
 /**
  * Tests if the representation of a route relation is created correctly in the
  * pt_assistant plugin
- * 
+ *
  * @author darya
  *
  */
 public class RouteRepresentationTest extends AbstractTest {
-    
+
     @Test
     public void correctRouteTest() {
-        
+
         /*-
          * Create a [correct] route which has:
          * stop1 (stop_position)
@@ -35,13 +36,13 @@ public class RouteRepresentationTest extends AbstractTest {
          * stop4 (platform, Node)
          * way4 (Way)
          * stop5 (platform_exit_only, Relation)
-         * 
+         *
          */
-        
+
         ArrayList<RelationMember> members = new ArrayList<>();
-        
+
         // Create stops:
-        Node n1 = new Node(); 
+        Node n1 = new Node();
         n1.put("name", "Stop1");
         n1.put("public_transport", "stop_position");
         RelationMember rm1 = new RelationMember("stop", n1);
@@ -71,7 +72,7 @@ public class RouteRepresentationTest extends AbstractTest {
         n5.put("highway", "platform");
         RelationMember rm6 = new RelationMember("platform_exit_only", n5);
         members.add(rm6);
-                
+
         // Create ways:
         Way w2 = new Way();
         RelationMember rm7 = new RelationMember("", w2);
@@ -91,26 +92,26 @@ public class RouteRepresentationTest extends AbstractTest {
         Way w7 = new Way();
         RelationMember rm10 = new RelationMember("", w7);
         members.add(rm10);
-        
+
         Relation route = new Relation();
         route.setMembers(members);
-        
+
         PTRouteDataManager manager = new PTRouteDataManager(route);
-    
+
         assertEquals(manager.getPTStopCount(), 5);
         assertEquals(manager.getPTWayCount(), 4);
-        
+
     }
-    
+
     @Test
     public void nestedRelationTest() {
-        
+
         // Same as above, but the nested Relation has a Node (only ways are allowed)
-        
+
         ArrayList<RelationMember> members = new ArrayList<>();
-        
+
         // Create stops:
-        Node n1 = new Node(); 
+        Node n1 = new Node();
         n1.put("name", "Stop1");
         n1.put("public_transport", "stop_position");
         RelationMember rm1 = new RelationMember("stop", n1);
@@ -140,7 +141,7 @@ public class RouteRepresentationTest extends AbstractTest {
         n5.put("highway", "platform");
         RelationMember rm6 = new RelationMember("platform_exit_only", n5);
         members.add(rm6);
-                
+
         // Create ways:
         Way w2 = new Way();
         RelationMember rm7 = new RelationMember("", w2);
@@ -160,17 +161,15 @@ public class RouteRepresentationTest extends AbstractTest {
         Way w7 = new Way();
         RelationMember rm10 = new RelationMember("", w7);
         members.add(rm10);
-        
-        
+
+
         Relation route = new Relation();
         route.setMembers(members);
-        
+
         PTRouteDataManager manager = new PTRouteDataManager(route);
-        
+
         assertEquals(manager.getFailedMembers().size(), 1);
         assertEquals(manager.getPTStopCount(), 5);
         assertEquals(manager.getPTWayCount(), 3);
-        
     }
-    
 }

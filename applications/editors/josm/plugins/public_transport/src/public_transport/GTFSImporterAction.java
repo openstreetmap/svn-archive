@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package public_transport;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -97,8 +98,8 @@ public class GTFSImporterAction extends JosmAction {
             importData(fc.getSelectedFile());
 
             refreshData();
-        }
-/*    else if ("stopImporter.settingsGPSTimeStart".equals(event.getActionCommand()))
+
+/*    } else if ("stopImporter.settingsGPSTimeStart".equals(event.getActionCommand()))
     {
       if ((!inEvent) && (dialog.gpsTimeStartValid()) && (currentTrack != null))
     Main.main.undoRedo.add(new TrackStoplistRelocateCommand(this));
@@ -130,8 +131,8 @@ public class GTFSImporterAction extends JosmAction {
     {
       Main.main.undoRedo.add(new TrackStoplistDetachCommand(this));
       dialog.getStoplistTable().clearSelection();
-    }*/
-        else if ("gtfsImporter.gtfsStopsAdd".equals(event.getActionCommand()))
+    */
+        } else if ("gtfsImporter.gtfsStopsAdd".equals(event.getActionCommand()))
             Main.main.undoRedo.add(new GTFSAddCommand(this));
         else if ("gtfsImporter.gtfsStopsDelete".equals(event.getActionCommand()))
             Main.main.undoRedo.add(new GTFSDeleteCommand(this));
@@ -154,8 +155,9 @@ public class GTFSImporterAction extends JosmAction {
             else
                 data.clear();
 
-            while (r.ready())
+            while (r.ready()) {
                 data.add(r.readLine());
+            }
         } catch (FileNotFoundException e) {
             Main.error(e);
             JOptionPane.showMessageDialog(null, tr("File \"{0}\" does not exist", file.getName()));
@@ -253,11 +255,13 @@ public class GTFSImporterAction extends JosmAction {
         int[] selectedLines = table.getSelectedRows();
         Vector<Integer> consideredLines = new Vector<>();
         if (selectedLines.length > 0) {
-            for (int i = 0; i < selectedLines.length; ++i)
+            for (int i = 0; i < selectedLines.length; ++i) {
                 consideredLines.add(selectedLines[i]);
+            }
         } else {
-            for (int i = 0; i < table.getRowCount(); ++i)
+            for (int i = 0; i < table.getRowCount(); ++i) {
                 consideredLines.add(Integer.valueOf(i));
+            }
         }
         return consideredLines;
     }
@@ -277,7 +281,7 @@ public class GTFSImporterAction extends JosmAction {
     }
 
     /**
-     * shows the nodes that correspond to the marked lines in the table. 
+     * shows the nodes that correspond to the marked lines in the table.
      * If no lines are marked in the table, show all nodes from the vector
      */
     public static void showNodesFromTable(JTable table, Vector<Node> nodes) {
@@ -295,11 +299,11 @@ public class GTFSImporterAction extends JosmAction {
     }
 
     /**
-     * marks the nodes that correspond to the marked lines in the table. 
+     * marks the nodes that correspond to the marked lines in the table.
      * If no lines are marked in the table, mark all nodes from the vector
      */
     public static void markNodesFromTable(JTable table, Vector<Node> nodes) {
-        OsmPrimitive[] osmp = { null };
+        OsmPrimitive[] osmp = {null};
         DataSet ds = Main.getLayerManager().getEditDataSet();
         ds.setSelected(osmp);
         Vector<Integer> consideredLines = getConsideredLines(table);

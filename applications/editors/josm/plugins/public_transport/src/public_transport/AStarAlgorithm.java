@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package public_transport;
 
 import java.util.Iterator;
@@ -10,18 +11,18 @@ public abstract class AStarAlgorithm {
     // The following abstract functions and subclasses must be overridden by a class using
     // AStarAlgorithm.
 
-    public static abstract class Vertex implements Comparable<Vertex> {
+    public abstract static class Vertex implements Comparable<Vertex> {
         @Override
         public abstract int compareTo(Vertex v);
-    };
+    }
 
-    public static abstract class Edge {
+    public abstract static class Edge {
         public abstract Vertex getBegin();
 
         public abstract Vertex getEnd();
 
         public abstract double getLength();
-    };
+    }
 
     public abstract Vector<Edge> getNeighbors(Vertex vertex);
 
@@ -102,8 +103,9 @@ public abstract class AStarAlgorithm {
         }
 
         Vector<Edge> result = new Vector<>();
-        for (int i = backwards.size() - 1; i >= 0; --i)
+        for (int i = backwards.size() - 1; i >= 0; --i) {
             result.add(backwards.elementAt(i));
+        }
         return result;
     }
 

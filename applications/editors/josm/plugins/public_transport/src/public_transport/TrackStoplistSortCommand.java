@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package public_transport;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -35,11 +36,13 @@ public class TrackStoplistSortCommand extends Command {
         // use either selected lines or all lines if no line is selected
         int[] selectedLines = controller.getDialog().getStoplistTable().getSelectedRows();
         if (selectedLines.length > 0) {
-            for (int i = 0; i < selectedLines.length; ++i)
+            for (int i = 0; i < selectedLines.length; ++i) {
                 workingLines.add(selectedLines[i]);
+            }
         } else {
-            for (int i = 0; i < stoplistTM.getRowCount(); ++i)
+            for (int i = 0; i < stoplistTM.getRowCount(); ++i) {
                 workingLines.add(Integer.valueOf(i));
+            }
         }
     }
 
@@ -101,7 +104,7 @@ public class TrackStoplistSortCommand extends Command {
 
         public double startTime = 0;
 
-        public NodeSortEntry(Node node, String time, String name, TransText shelter,
+        NodeSortEntry(Node node, String time, String name, TransText shelter,
                 double startTime) {
             this.node = node;
             this.time = time;

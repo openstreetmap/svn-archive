@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package public_transport;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -198,8 +199,9 @@ public class StopImporterAction extends JosmAction {
             Collections.sort(trackRefs);
 
             Iterator<TrackReference> iter = trackRefs.iterator();
-            while (iter.hasNext())
+            while (iter.hasNext()) {
                 tracksListModel.addElement(iter.next());
+            }
 
             waypointTM = new WaypointTableModel(this);
             Iterator<WayPoint> waypointIter = data.waypoints.iterator();
@@ -276,11 +278,13 @@ public class StopImporterAction extends JosmAction {
         int[] selectedLines = table.getSelectedRows();
         Vector<Integer> consideredLines = new Vector<>();
         if (selectedLines.length > 0) {
-            for (int i = 0; i < selectedLines.length; ++i)
+            for (int i = 0; i < selectedLines.length; ++i) {
                 consideredLines.add(selectedLines[i]);
+            }
         } else {
-            for (int i = 0; i < table.getRowCount(); ++i)
+            for (int i = 0; i < table.getRowCount(); ++i) {
                 consideredLines.add(Integer.valueOf(i));
+            }
         }
         return consideredLines;
     }
@@ -320,7 +324,7 @@ public class StopImporterAction extends JosmAction {
      * marks the nodes that correspond to the marked lines in the table. If no lines are marked in the table, mark all nodes from the vector
      */
     public static void markNodesFromTable(JTable table, Vector<Node> nodes) {
-        OsmPrimitive[] osmp = { null };
+        OsmPrimitive[] osmp = {null};
         DataSet ds = Main.getLayerManager().getEditDataSet();
         ds.setSelected(osmp);
         Vector<Integer> consideredLines = getConsideredLines(table);
@@ -414,7 +418,7 @@ public class StopImporterAction extends JosmAction {
     private static class FocusWaypointShelterAction extends AbstractAction {
         private String defaultShelter = null;
 
-        public FocusWaypointShelterAction(String defaultShelter) {
+        FocusWaypointShelterAction(String defaultShelter) {
             this.defaultShelter = defaultShelter;
         }
 
@@ -460,7 +464,7 @@ public class StopImporterAction extends JosmAction {
     private static class FocusTrackStoplistShelterAction extends AbstractAction {
         private String defaultShelter = null;
 
-        public FocusTrackStoplistShelterAction(String defaultShelter) {
+        FocusTrackStoplistShelterAction(String defaultShelter) {
             this.defaultShelter = defaultShelter;
         }
 

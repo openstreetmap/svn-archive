@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package public_transport;
 
 import static org.openstreetmap.josm.tools.I18n.marktr;
@@ -19,8 +20,12 @@ import org.openstreetmap.josm.actions.JosmAction;
  */
 public abstract class AbstractImporterDialog<T extends JosmAction> {
 
-    private static final String[] stoptypes = new String[] { marktr("bus"), marktr("tram"),
-            marktr("light_rail"), marktr("subway"), marktr("rail") };
+    private static final String[] stoptypes = new String[] {
+            marktr("bus"),
+            marktr("tram"),
+            marktr("light_rail"),
+            marktr("subway"),
+            marktr("rail") };
 
     private final JDialog jDialog;
 
@@ -44,8 +49,9 @@ public abstract class AbstractImporterDialog<T extends JosmAction> {
 
         cbStoptype = new JComboBox<>();
         cbStoptype.setEditable(false);
-        for (String type : stoptypes)
+        for (String type : stoptypes) {
             cbStoptype.addItem(new TransText(type));
+        }
         cbStoptype.setActionCommand(actionPrefix + ".settingsStoptype");
         cbStoptype.addActionListener(controller);
 

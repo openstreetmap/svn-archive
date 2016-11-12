@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package public_transport;
 
 import java.util.Iterator;
@@ -31,7 +32,7 @@ public class PublicTransportAStar extends AStarAlgorithm {
                 return false;
             return node.equals(((NodeVertex) o).node);
         }
-        
+
         @Override
         public int hashCode() {
             return Objects.hashCode(node);
@@ -67,9 +68,9 @@ public class PublicTransportAStar extends AStarAlgorithm {
             }
 
             double totalDistance = 0;
-            for (int i = min; i < max; ++i)
-                totalDistance += way.getNode(i).getCoor()
-                        .greatCircleDistance(way.getNode(i + 1).getCoor());
+            for (int i = min; i < max; ++i) {
+                totalDistance += way.getNode(i).getCoor().greatCircleDistance(way.getNode(i + 1).getCoor());
+            }
             return totalDistance;
         }
 
@@ -139,4 +140,4 @@ public class PublicTransportAStar extends AStarAlgorithm {
         return ((NodeVertex) super.end).node.getCoor()
                 .greatCircleDistance(nodeVertex.node.getCoor());
     }
-};
+}

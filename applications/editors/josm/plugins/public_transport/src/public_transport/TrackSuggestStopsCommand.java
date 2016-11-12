@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package public_transport;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -72,8 +73,9 @@ public class TrackSuggestStopsCommand extends Command {
         Iterator<GpxTrackSegment> siter = segments.iterator();
         while (siter.hasNext()) {
             Iterator<WayPoint> witer = siter.next().getWayPoints().iterator();
-            while (witer.hasNext())
+            while (witer.hasNext()) {
                 wayPoints.add(witer.next());
+            }
         }
         Vector<Double> wayPointsDist = new Vector<>(wayPoints.size());
 

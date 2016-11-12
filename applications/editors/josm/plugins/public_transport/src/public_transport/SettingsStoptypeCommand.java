@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package public_transport;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -13,7 +14,7 @@ import org.openstreetmap.josm.data.osm.OsmPrimitive;
 
 public class SettingsStoptypeCommand extends Command {
     private static class HighwayRailway {
-        public HighwayRailway(Node node) {
+        HighwayRailway(Node node) {
             this.node = node;
             highway = node.get("highway");
             railway = node.get("railway");

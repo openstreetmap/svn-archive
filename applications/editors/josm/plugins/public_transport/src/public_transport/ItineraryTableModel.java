@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package public_transport;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -47,7 +48,7 @@ public class ItineraryTableModel extends DefaultTableModel implements TableModel
     }
 
     public void insertRow(int insPos, Way way, String role) {
-        String[] buf = { "", "" };
+        String[] buf = {"", ""};
         String curName = way.get("name");
         if (way.isIncomplete())
             buf[0] = tr("[incomplete]");
@@ -98,7 +99,7 @@ public class ItineraryTableModel extends DefaultTableModel implements TableModel
                 removeRow(i - 1);
                 --i;
             } else if ((i > 0) && gapRequired && (ways.elementAt(i - 1) != null)) {
-                String[] buf = { "", "" };
+                String[] buf = {"", ""};
                 buf[0] = tr("[gap]");
                 insertRow(i, buf);
                 ++i;

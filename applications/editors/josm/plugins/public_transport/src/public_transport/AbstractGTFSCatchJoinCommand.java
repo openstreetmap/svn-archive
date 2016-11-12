@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package public_transport;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -23,7 +24,7 @@ public abstract class AbstractGTFSCatchJoinCommand extends Command {
     private GTFSStopTableModel gtfsStopTM = null;
 
     private String type = null;
-    
+
     private final boolean isCatch;
 
     public AbstractGTFSCatchJoinCommand(GTFSImporterAction controller, boolean isCatch) {

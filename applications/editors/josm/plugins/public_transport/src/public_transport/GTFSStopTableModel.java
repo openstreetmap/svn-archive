@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package public_transport;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -18,9 +19,9 @@ import org.openstreetmap.josm.data.osm.Node;
 public class GTFSStopTableModel extends DefaultTableModel implements TableModelListener {
     private GTFSImporterAction controller = null;
 
-    public Vector<Node> nodes = new Vector<Node>();
+    public Vector<Node> nodes = new Vector<>();
 
-    public Vector<LatLon> coors = new Vector<LatLon>();
+    public Vector<LatLon> coors = new Vector<>();
 
     private int idCol = -1;
 
@@ -98,9 +99,10 @@ public class GTFSStopTableModel extends DefaultTableModel implements TableModelL
         insertRow(-1, s, existingStops);
     }
 
-    /*
-     * tokenizes a line as follows: any comma outside a pair of double quotation marks is taken as field separator. In particular, neither \" nor \,
-     * have a special meaning. Returns the position of the next field separator, if any. Otherwise it returns -1. s - the string to tokenize. startPos
+    /**
+     * tokenizes a line as follows: any comma outside a pair of double quotation marks is taken as field separator.
+     * In particular, neither \" nor \, have a special meaning. Returns the position of the next field separator, if any.
+     * Otherwise it returns -1. s - the string to tokenize. startPos
      * - the position of the last field separator plus 1 or the value 0.
      */
     private int tokenize(String s, int startPos) {
@@ -129,7 +131,7 @@ public class GTFSStopTableModel extends DefaultTableModel implements TableModelL
     }
 
     public void insertRow(int insPos, String s, Vector<Node> existingStops) {
-        String[] buf = { "", "", tr("pending") };
+        String[] buf = {"", "", tr("pending")};
         int pos = tokenize(s, 0);
         int oldPos = 0;
         int i = 0;

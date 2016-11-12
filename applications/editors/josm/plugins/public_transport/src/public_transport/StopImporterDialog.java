@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package public_transport;
 
 import static org.openstreetmap.josm.tools.I18n.marktr;
@@ -67,7 +68,7 @@ public class StopImporterDialog extends AbstractImporterDialog<StopImporterActio
         DefaultListModel<TrackReference> tracksListModel = controller.getTracksListModel();
         tracksList = new JList<>(tracksListModel);
         JScrollPane rpListSP = new JScrollPane(tracksList);
-        String[] data = { "1", "2", "3", "4", "5", "6" };
+        String[] data = {"1", "2", "3", "4", "5", "6"};
         tracksListModel.copyInto(data);
         tracksList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         tracksList.addListSelectionListener(new TracksLSL(controller));
@@ -536,7 +537,7 @@ public class StopImporterDialog extends AbstractImporterDialog<StopImporterActio
     private class TracksLSL implements ListSelectionListener {
         StopImporterAction root = null;
 
-        public TracksLSL(StopImporterAction sia) {
+        TracksLSL(StopImporterAction sia) {
             root = sia;
         }
 
@@ -548,5 +549,5 @@ public class StopImporterDialog extends AbstractImporterDialog<StopImporterActio
             else
                 root.tracksSelectionChanged(-1);
         }
-    };
+    }
 }

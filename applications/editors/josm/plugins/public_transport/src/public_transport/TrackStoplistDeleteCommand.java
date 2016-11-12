@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package public_transport;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -46,8 +47,9 @@ public class TrackStoplistDeleteCommand extends Command {
                 workingLines.add(selectedLines[i]);
             }
         } else {
-            for (int i = 0; i < stoplistTM.getRowCount(); ++i)
+            for (int i = 0; i < stoplistTM.getRowCount(); ++i) {
                 workingLines.add(Integer.valueOf(i));
+            }
         }
     }
 
@@ -90,4 +92,4 @@ public class TrackStoplistDeleteCommand extends Command {
     public String getDescriptionText() {
         return tr("Public Transport: Delete track stop");
     }
-};
+}

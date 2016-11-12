@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package public_transport;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -26,11 +27,13 @@ public class WaypointsEnableCommand extends Command {
         int[] selectedLines = controller.getDialog().getWaypointsTable().getSelectedRows();
         Vector<Integer> consideredLines = new Vector<>();
         if (selectedLines.length > 0) {
-            for (int i = 0; i < selectedLines.length; ++i)
+            for (int i = 0; i < selectedLines.length; ++i) {
                 consideredLines.add(selectedLines[i]);
+            }
         } else {
-            for (int i = 0; i < waypointTM.getRowCount(); ++i)
+            for (int i = 0; i < waypointTM.getRowCount(); ++i) {
                 consideredLines.add(Integer.valueOf(i));
+            }
         }
 
         // keep only lines where a node can be added

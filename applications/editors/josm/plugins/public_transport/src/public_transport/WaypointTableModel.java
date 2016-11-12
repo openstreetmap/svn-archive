@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package public_transport;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -61,7 +62,7 @@ public class WaypointTableModel extends DefaultTableModel implements TableModelL
 
         Node node = controller.createNode(wp.getCoor(), name);
 
-        Object[] buf = { time, name, new TransText(null) };
+        Object[] buf = {time, name, new TransText(null)};
         if (insPos == -1) {
             nodes.addElement(node);
             coors.addElement(wp.getCoor());

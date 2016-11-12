@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package public_transport;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -92,7 +93,7 @@ public class TrackStoplistTableModel extends DefaultTableModel {
     }
 
     public void insertRow(int insPos, Node node, String time, String name, TransText shelter) {
-        Object[] buf = { time, name, shelter };
+        Object[] buf = {time, name, shelter};
         if (insPos == -1) {
             nodes.addElement(node);
             times.addElement(time);

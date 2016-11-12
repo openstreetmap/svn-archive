@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package public_transport;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -59,84 +60,13 @@ public class RoutePatternAction extends JosmAction {
     private static class RoutesLSL implements ListSelectionListener {
         RoutePatternAction root = null;
 
-        public RoutesLSL(RoutePatternAction rpa) {
+        RoutesLSL(RoutePatternAction rpa) {
             root = rpa;
         }
 
         @Override
         public void valueChanged(ListSelectionEvent e) {
             root.routesSelectionChanged();
-        }
-    }
-
-    private static class RouteReference implements Comparable<RouteReference> {
-        Relation route;
-
-        public RouteReference(Relation route) {
-            this.route = route;
-        }
-
-        @Override
-        public int compareTo(RouteReference rr) {
-            if (route.get("route") != null) {
-                if (rr.route.get("route") == null)
-                    return -1;
-                int result = route.get("route").compareTo(rr.route.get("route"));
-                if (result != 0)
-                    return result;
-            } else if (rr.route.get("route") != null)
-                return 1;
-            if (route.get("ref") != null) {
-                if (rr.route.get("ref") == null)
-                    return -1;
-                int result = route.get("ref").compareTo(rr.route.get("ref"));
-                if (result != 0)
-                    return result;
-            } else if (rr.route.get("ref") != null)
-                return 1;
-            if (route.get("to") != null) {
-                if (rr.route.get("to") == null)
-                    return -1;
-                int result = route.get("to").compareTo(rr.route.get("to"));
-                if (result != 0)
-                    return result;
-            } else if (rr.route.get("to") != null)
-                return 1;
-            if (route.get("direction") != null) {
-                if (rr.route.get("direction") == null)
-                    return -1;
-                int result = route.get("direction").compareTo(rr.route.get("direction"));
-                if (result != 0)
-                    return result;
-            } else if (rr.route.get("direction") != null)
-                return 1;
-            if (route.getId() < rr.route.getId())
-                return -1;
-            else if (route.getId() > rr.route.getId())
-                return 1;
-            return 0;
-        }
-
-        @Override
-        public String toString() {
-            String buf = route.get("route");
-            if ((route.get("ref") != null) && (route.get("ref") != "")) {
-                buf += " " + route.get("ref");
-            }
-            if ((route.get("loc_ref") != null) && (route.get("loc_ref") != "")) {
-                buf += " [" + route.get("loc_ref") + "]";
-            }
-
-            if ((route.get("to") != null) && (route.get("to") != "")) {
-                buf += ": " + route.get("to");
-            } else if ((route.get("direction") != null) && (route.get("direction") != "")) {
-                buf += " " + route.get("ref") + ": " + route.get("direction");
-            } else {
-                buf += " " + route.get("ref");
-            }
-            buf += tr(" [ID] {0}", Long.toString(route.getId()));
-
-            return buf;
         }
     }
 
@@ -147,7 +77,7 @@ public class RoutePatternAction extends JosmAction {
 
         boolean hasFixedKeys = true;
 
-        public TagTableModel(boolean hasFixedKeys) {
+        TagTableModel(boolean hasFixedKeys) {
             this.hasFixedKeys = hasFixedKeys;
         }
 
@@ -220,7 +150,7 @@ public class RoutePatternAction extends JosmAction {
 
         TreeMap<Integer, TableCellEditor> col2 = null;
 
-        public CustomCellEditorTable() {
+        CustomCellEditorTable() {
             col1 = new TreeMap<>();
             col2 = new TreeMap<>();
         }
@@ -272,7 +202,7 @@ public class RoutePatternAction extends JosmAction {
         }
 
         public void insertRow(int insPos, Node node, String role, double distance) {
-            String[] buf = { "", "", "", "" };
+            String[] buf = {"", "", "", ""};
             String curName = node.get("name");
             if (curName != null) {
                 buf[0] = curName;
@@ -319,7 +249,7 @@ public class RoutePatternAction extends JosmAction {
 
         public double distance;
 
-        public SegmentMetric(double fromLat, double fromLon, double toLat, double toLon,
+        SegmentMetric(double fromLat, double fromLon, double toLat, double toLon,
                 double distance) {
             this.distance = distance;
 
@@ -343,43 +273,6 @@ public class RoutePatternAction extends JosmAction {
             // Prepare lon direction to reduce the number of necessary multiplications
             d2 = d2 * Math.cos(fromLat * Math.PI / 180.0);
             o2 = o2 * Math.cos(fromLat * Math.PI / 180.0);
-        }
-    }
-
-    private static class StopReference implements Comparable<StopReference> {
-        public int index = 0;
-
-        public double pos = 0;
-
-        public double distance = 0;
-
-        public String name = "";
-
-        public String role = "";
-
-        public Node node;
-
-        public StopReference(int inIndex, double inPos, double inDistance, String inName,
-                String inRole, Node inNode) {
-            index = inIndex;
-            pos = inPos;
-            distance = inDistance;
-            name = inName;
-            role = inRole;
-            node = inNode;
-        }
-
-        @Override
-        public int compareTo(StopReference sr) {
-            if (this.index < sr.index)
-                return -1;
-            if (this.index > sr.index)
-                return 1;
-            if (this.pos < sr.pos)
-                return -1;
-            if (this.pos > sr.pos)
-                return 1;
-            return 0;
         }
     }
 
@@ -479,7 +372,7 @@ public class RoutePatternAction extends JosmAction {
             relsListModel = new DefaultListModel<>();
             relsList = new JList<>(relsListModel);
             JScrollPane rpListSP = new JScrollPane(relsList);
-            String[] data = { "1", "2", "3", "4", "5", "6" };
+            String[] data = {"1", "2", "3", "4", "5", "6"};
             relsListModel.copyInto(data);
             relsList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
             relsList.addListSelectionListener(new RoutesLSL(this));
@@ -1140,10 +1033,12 @@ public class RoutePatternAction extends JosmAction {
             }
 
             currentRoute.setMembers(null);
-            for (int i = itemsToReflect.size() - 1; i >= 0; --i)
+            for (int i = itemsToReflect.size() - 1; i >= 0; --i) {
                 currentRoute.addMember(itemsToReflect.elementAt(i));
-            for (int i = 0; i < otherItems.size(); ++i)
+            }
+            for (int i = 0; i < otherItems.size(); ++i) {
                 currentRoute.addMember(otherItems.elementAt(i));
+            }
 
             refreshData();
 
@@ -1154,7 +1049,8 @@ public class RoutePatternAction extends JosmAction {
 
             // Temp
             /*
-             * if (firstNode != null) { Vector< AStarAlgorithm.Edge > path = new PublicTransportAStar(firstNode, lastNode).shortestPath(); Iterator<
+             * if (firstNode != null) {
+             * Vector< AStarAlgorithm.Edge > path = new PublicTransportAStar(firstNode, lastNode).shortestPath(); Iterator<
              * AStarAlgorithm.Edge > iter = path.iterator(); while (iter.hasNext()) { PublicTransportAStar.PartialWayEdge edge =
              * (PublicTransportAStar.PartialWayEdge)iter.next(); System.out.print(edge.way.getUniqueId()); System.out.print("\t");
              * System.out.print(edge.beginIndex); System.out.print("\t"); System.out.print(edge.endIndex); System.out.print("\n"); } }
@@ -1206,7 +1102,7 @@ public class RoutePatternAction extends JosmAction {
             box.enlargeBoundingBox();
             Main.map.mapView.zoomTo(box);
         } else if ("routePattern.itineraryMark".equals(event.getActionCommand())) {
-            OsmPrimitive[] osmp = { null };
+            OsmPrimitive[] osmp = {null};
             Main.getLayerManager().getEditDataSet().setSelected(osmp);
             markedWays.clear();
             if (itineraryTable.getSelectedRowCount() > 0) {
@@ -1265,8 +1161,9 @@ public class RoutePatternAction extends JosmAction {
 
             if ((insPos > 0) && (insPos < itineraryData.getRowCount())) {
                 while ((insPos < itineraryData.getRowCount())
-                        && (itineraryData.ways.elementAt(insPos) == null))
+                        && (itineraryData.ways.elementAt(insPos) == null)) {
                     ++insPos;
+                }
                 itineraryTable.removeRowSelectionInterval(0, itineraryData.getRowCount() - 1);
                 if (insPos < itineraryData.getRowCount())
                     itineraryTable.addRowSelectionInterval(insPos, insPos);
@@ -1435,7 +1332,7 @@ public class RoutePatternAction extends JosmAction {
             box.enlargeBoundingBox();
             Main.map.mapView.zoomTo(box);
         } else if ("routePattern.stoplistMark".equals(event.getActionCommand())) {
-            OsmPrimitive[] osmp = { null };
+            OsmPrimitive[] osmp = {null};
             Main.getLayerManager().getEditDataSet().setSelected(osmp);
             markedNodes.clear();
             if (stoplistTable.getSelectedRowCount() > 0) {
@@ -1496,8 +1393,9 @@ public class RoutePatternAction extends JosmAction {
 
             if ((insPos > 0) && (insPos < stoplistData.getRowCount())) {
                 while ((insPos < stoplistData.getRowCount())
-                        && (stoplistData.nodes.elementAt(insPos) == null))
+                        && (stoplistData.nodes.elementAt(insPos) == null)) {
                     ++insPos;
+                }
                 stoplistTable.removeRowSelectionInterval(0, stoplistData.getRowCount() - 1);
                 if (insPos < stoplistData.getRowCount())
                     stoplistTable.addRowSelectionInterval(insPos, insPos);
@@ -1725,8 +1623,9 @@ public class RoutePatternAction extends JosmAction {
             Collections.sort(relRefs);
 
             Iterator<RouteReference> iter = relRefs.iterator();
-            while (iter.hasNext())
+            while (iter.hasNext()) {
                 relsListModel.addElement(iter.next());
+            }
         } else {
             JOptionPane.showMessageDialog(null,
                     tr("There exists no dataset."

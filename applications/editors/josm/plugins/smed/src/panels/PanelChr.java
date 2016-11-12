@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package panels;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -32,20 +33,20 @@ public class PanelChr extends JPanel {
     public JLabel col2Label = new JLabel();
     public JLabel charLabel = new JLabel();
     public JTextField charBox = new JTextField();
-    public JToggleButton noneButton = new JToggleButton(new ImageIcon(getClass().getResource("/images/NoCharButton.png")));
-    public JToggleButton fixedButton = new JToggleButton(new ImageIcon(getClass().getResource("/images/FixedButton.png")));
-    public JToggleButton flashButton = new JToggleButton(new ImageIcon(getClass().getResource("/images/FlashButton.png")));
-    public JToggleButton longFlashButton = new JToggleButton(new ImageIcon(getClass().getResource("/images/LongFlashButton.png")));
-    public JToggleButton quickButton = new JToggleButton(new ImageIcon(getClass().getResource("/images/QuickButton.png")));
-    public JToggleButton veryQuickButton = new JToggleButton(new ImageIcon(getClass().getResource("/images/VeryQuickButton.png")));
-    public JToggleButton ultraQuickButton = new JToggleButton(new ImageIcon(getClass().getResource("/images/UltraQuickButton.png")));
-    public JToggleButton interruptedQuickButton = new JToggleButton(new ImageIcon(getClass().getResource("/images/InterruptedQuickButton.png")));
-    public JToggleButton interruptedVeryQuickButton = new JToggleButton(new ImageIcon(getClass().getResource("/images/InterruptedVeryQuickButton.png")));
-    public JToggleButton interruptedUltraQuickButton = new JToggleButton(new ImageIcon(getClass().getResource("/images/InterruptedUltraQuickButton.png")));
-    public JToggleButton isophasedButton = new JToggleButton(new ImageIcon(getClass().getResource("/images/IsophasedButton.png")));
-    public JToggleButton occultingButton = new JToggleButton(new ImageIcon(getClass().getResource("/images/OccultingButton.png")));
-    public JToggleButton morseButton = new JToggleButton(new ImageIcon(getClass().getResource("/images/MorseButton.png")));
-    public JToggleButton alternatingButton = new JToggleButton(new ImageIcon(getClass().getResource("/images/AlternatingButton.png")));
+    public JToggleButton noneButton = newJToggleButton("/images/NoCharButton.png");
+    public JToggleButton fixedButton = newJToggleButton("/images/FixedButton.png");
+    public JToggleButton flashButton = newJToggleButton("/images/FlashButton.png");
+    public JToggleButton longFlashButton = newJToggleButton("/images/LongFlashButton.png");
+    public JToggleButton quickButton = newJToggleButton("/images/QuickButton.png");
+    public JToggleButton veryQuickButton = newJToggleButton("/images/VeryQuickButton.png");
+    public JToggleButton ultraQuickButton = newJToggleButton("/images/UltraQuickButton.png");
+    public JToggleButton interruptedQuickButton = newJToggleButton("/images/InterruptedQuickButton.png");
+    public JToggleButton interruptedVeryQuickButton = newJToggleButton("/images/InterruptedVeryQuickButton.png");
+    public JToggleButton interruptedUltraQuickButton = newJToggleButton("/images/InterruptedUltraQuickButton.png");
+    public JToggleButton isophasedButton = newJToggleButton("/images/IsophasedButton.png");
+    public JToggleButton occultingButton = newJToggleButton("/images/OccultingButton.png");
+    public JToggleButton morseButton = newJToggleButton("/images/MorseButton.png");
+    public JToggleButton alternatingButton = newJToggleButton("/images/AlternatingButton.png");
     private EnumMap<Chr, JToggleButton> buttons = new EnumMap<>(Chr.class);
     private ActionListener alCharButton = new ActionListener() {
         @Override
@@ -87,9 +88,11 @@ public class PanelChr extends JPanel {
             }
         }
     };
+
     private FocusListener flCharBox = new FocusListener() {
         @Override
         public void focusGained(FocusEvent e) {}
+
         @Override
         public void focusLost(FocusEvent e) {
             String str = charBox.getText();
@@ -153,8 +156,12 @@ public class PanelChr extends JPanel {
         charBox.addFocusListener(flCharBox);
     }
 
+    private static JToggleButton newJToggleButton(String buttonIcon) {
+        return new JToggleButton(new ImageIcon(PanelChr.class.getResource(buttonIcon)));
+    }
+
     public void syncPanel() {
-        String str = (String)SmedAction.panelMain.mark.getLightAtt(Att.CHR, 0);
+        String str = (String) SmedAction.panelMain.mark.getLightAtt(Att.CHR, 0);
         charBox.setText(str);
         EnumSet<Chr> set = EnumSet.noneOf(Chr.class);
         for (EnumSet<Chr> map : SeaMark.ChrMAP.keySet()) {

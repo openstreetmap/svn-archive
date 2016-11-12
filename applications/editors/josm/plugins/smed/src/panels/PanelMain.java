@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package panels;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -45,6 +46,7 @@ public class PanelMain extends JPanel {
         public void focusLost(FocusEvent e) {
             mark.setName(nameBox.getText());
         }
+
         @Override
         public void focusGained(FocusEvent e) {
         }

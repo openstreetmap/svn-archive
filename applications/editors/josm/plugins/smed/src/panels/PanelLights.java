@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package panels;
 
 import java.awt.Rectangle;
@@ -490,7 +491,8 @@ public class PanelLights extends JPanel {
         chLabel.setVisible(false);
         chBox.setVisible(false);
         chBox.setText(SmedAction.panelMain.mark.getChannel());
-        if ((SmedAction.panelMain.mark.getObject() == Obj.LNDMRK) && ((SmedAction.panelMain.mark.getCategory() != Cat.NOCAT) || (SmedAction.panelMain.mark.getFunc() != Fnc.UNKFNC))) {
+        if ((SmedAction.panelMain.mark.getObject() == Obj.LNDMRK)
+                && ((SmedAction.panelMain.mark.getCategory() != Cat.NOCAT) || (SmedAction.panelMain.mark.getFunc() != Fnc.UNKFNC))) {
             functionLabel.setVisible(true);
             categoryLabel.setVisible(true);
             functionBox.setVisible(true);

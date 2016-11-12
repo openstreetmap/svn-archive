@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package panels;
 
 import java.awt.Rectangle;
@@ -310,7 +311,8 @@ public class PanelChan extends JPanel {
         topmarkButton.setBorderPainted(dlg.panelMain.mark.getTopmark() != Top.NOTOP);
         topmarkButton.setSelected(dlg.panelMain.mark.getTopmark() != Top.NOTOP);
         topmarkButton.setVisible(dlg.panelMain.mark.testValid());
-        Boolean lit = (dlg.panelMain.mark.getLightAtt(Att.COL, 0) != Col.UNKCOL) && !((String)dlg.panelMain.mark.getLightAtt(Att.CHR, 0)).isEmpty();
+        Boolean lit = (dlg.panelMain.mark.getLightAtt(Att.COL, 0) != Col.UNKCOL)
+                && !((String) dlg.panelMain.mark.getLightAtt(Att.CHR, 0)).isEmpty();
         lightButton.setBorderPainted(lit);
         lightButton.setSelected(lit);
         lightButton.setVisible(dlg.panelMain.mark.testValid());

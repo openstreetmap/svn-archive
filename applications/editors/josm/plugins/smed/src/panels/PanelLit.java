@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package panels;
 
 import java.awt.Rectangle;
@@ -121,7 +122,8 @@ public class PanelLit extends JPanel {
                 orientationBox.setVisible(true);
                 multipleLabel.setVisible(false);
                 multipleBox.setVisible(false);
-            } else if ((SmedAction.panelMain.mark.getLightAtt(Att.LIT, 0) == Lit.VERT) || (SmedAction.panelMain.mark.getLightAtt(Att.LIT, 0) == Lit.HORIZ)) {
+            } else if ((SmedAction.panelMain.mark.getLightAtt(Att.LIT, 0) == Lit.VERT)
+                    || (SmedAction.panelMain.mark.getLightAtt(Att.LIT, 0) == Lit.HORIZ)) {
                 SmedAction.panelMain.mark.setLightAtt(Att.ORT, 0, "");
                 orientationBox.setText("");
                 orientationLabel.setVisible(false);
@@ -315,15 +317,16 @@ public class PanelLit extends JPanel {
         orientationBox.setVisible(false);
         multipleLabel.setVisible(false);
         multipleBox.setVisible(false);
-        groupBox.setText((String)SmedAction.panelMain.mark.getLightAtt(Att.GRP, 0));
-        periodBox.setText((String)SmedAction.panelMain.mark.getLightAtt(Att.PER, 0));
-        sequenceBox.setText((String)SmedAction.panelMain.mark.getLightAtt(Att.SEQ, 0));
-        heightBox.setText((String)SmedAction.panelMain.mark.getLightAtt(Att.HGT, 0));
-        rangeBox.setText((String)SmedAction.panelMain.mark.getLightAtt(Att.RNG, 0));
-        orientationBox.setText((String)SmedAction.panelMain.mark.getLightAtt(Att.ORT, 0));
+        groupBox.setText((String) SmedAction.panelMain.mark.getLightAtt(Att.GRP, 0));
+        periodBox.setText((String) SmedAction.panelMain.mark.getLightAtt(Att.PER, 0));
+        sequenceBox.setText((String) SmedAction.panelMain.mark.getLightAtt(Att.SEQ, 0));
+        heightBox.setText((String) SmedAction.panelMain.mark.getLightAtt(Att.HGT, 0));
+        rangeBox.setText((String) SmedAction.panelMain.mark.getLightAtt(Att.RNG, 0));
+        orientationBox.setText((String) SmedAction.panelMain.mark.getLightAtt(Att.ORT, 0));
         orientationBox.setVisible(SmedAction.panelMain.mark.getLightAtt(Att.LIT, 0) == Lit.DIR);
-        multipleBox.setText((String)SmedAction.panelMain.mark.getLightAtt(Att.MLT, 0));
-        multipleBox.setVisible((SmedAction.panelMain.mark.getLightAtt(Att.LIT, 0) == Lit.VERT) || (SmedAction.panelMain.mark.getLightAtt(Att.LIT, 0) == Lit.HORIZ));
+        multipleBox.setText((String) SmedAction.panelMain.mark.getLightAtt(Att.MLT, 0));
+        multipleBox.setVisible((SmedAction.panelMain.mark.getLightAtt(Att.LIT, 0) == Lit.VERT)
+                || (SmedAction.panelMain.mark.getLightAtt(Att.LIT, 0) == Lit.HORIZ));
         for (Vis vis : visibilities.keySet()) {
             int item = visibilities.get(vis);
             if (SmedAction.panelMain.mark.getLightAtt(Att.VIS, 0) == vis) {

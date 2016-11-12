@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package panels;
 
 import java.awt.Rectangle;
@@ -234,7 +235,8 @@ public class PanelHaz extends JPanel {
         topmarkButton.setBorderPainted(SmedAction.panelMain.mark.getTopmark() != Top.NOTOP);
         topmarkButton.setSelected(SmedAction.panelMain.mark.getTopmark() != Top.NOTOP);
         topmarkButton.setVisible(SmedAction.panelMain.mark.testValid());
-        Boolean lit = (SmedAction.panelMain.mark.getLightAtt(Att.COL, 0) != Col.UNKCOL) && !((String)SmedAction.panelMain.mark.getLightAtt(Att.CHR, 0)).isEmpty();
+        Boolean lit = (SmedAction.panelMain.mark.getLightAtt(Att.COL, 0) != Col.UNKCOL)
+                && !((String) SmedAction.panelMain.mark.getLightAtt(Att.CHR, 0)).isEmpty();
         lightButton.setBorderPainted(lit);
         lightButton.setSelected(lit);
         lightButton.setVisible(SmedAction.panelMain.mark.testValid());

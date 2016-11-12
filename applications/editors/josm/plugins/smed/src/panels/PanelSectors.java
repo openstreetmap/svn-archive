@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package panels;
 
 import java.awt.BorderLayout;
@@ -129,12 +130,12 @@ public class PanelSectors extends JFrame {
 
     private class SectorTable extends AbstractTableModel {
 
-        private String[] headings = { Messages.getString("Sector"), Messages.getString("Colour"), Messages.getString("Character"),
+        private String[] headings = {Messages.getString("Sector"), Messages.getString("Colour"), Messages.getString("Character"),
                 Messages.getString("Group"), Messages.getString("Sequence"), Messages.getString("Period"), Messages.getString("Directional"),
                 Messages.getString("Start"), Messages.getString("End"), Messages.getString("Radius"), Messages.getString("Height"),
                 Messages.getString("Range"), Messages.getString("Visibility"), Messages.getString("Exhibition") };
 
-        public SectorTable() {
+        SectorTable() {
         }
 
         @Override
@@ -181,7 +182,7 @@ public class PanelSectors extends JFrame {
                 else
                     return row;
             case 1:
-                if (((String)SmedAction.panelMain.mark.getLightAtt(Att.CHR, row)).contains("Al")) {
+                if (((String) SmedAction.panelMain.mark.getLightAtt(Att.CHR, row)).contains("Al")) {
                     if (SmedAction.panelMain.mark.getLightAtt(Att.COL, row) == Col.UNKCOL)
                         return Col.UNKCOL;
                     else
@@ -212,7 +213,7 @@ public class PanelSectors extends JFrame {
                 for (Col colour : colours.keySet()) {
                     ImageIcon img = colours.get(colour);
                     if (img == value)
-                        if (((String)SmedAction.panelMain.mark.getLightAtt(Att.CHR, row)).contains("Al")) {
+                        if (((String) SmedAction.panelMain.mark.getLightAtt(Att.CHR, row)).contains("Al")) {
                             if (((colour == Col.UNKCOL) && (SmedAction.panelMain.mark.getLightAtt(Att.ALT, row) == Col.UNKCOL))
                                     || (SmedAction.panelMain.mark.getLightAtt(Att.COL, row) == Col.UNKCOL)) {
                                 SmedAction.panelMain.mark.setLightAtt(Att.COL, row, colour);
@@ -271,7 +272,7 @@ public class PanelSectors extends JFrame {
     }
 
     static class CentreRenderer extends DefaultTableCellRenderer {
-        public CentreRenderer() {
+        CentreRenderer() {
             super();
             setHorizontalAlignment(SwingConstants.CENTER);
         }
@@ -290,9 +291,11 @@ public class PanelSectors extends JFrame {
             col2Label.setOpaque(true);
             add(col2Label);
         }
+
         @Override
-        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int rowIndex, int vColIndex) {
-            if (!((String)SmedAction.panelMain.mark.getLightAtt(Att.CHR, rowIndex)).contains("Al")) {
+        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus,
+                int rowIndex, int vColIndex) {
+            if (!((String) SmedAction.panelMain.mark.getLightAtt(Att.CHR, rowIndex)).contains("Al")) {
                 col2Label.setBackground(SeaMark.ColMAP.get(SmedAction.panelMain.mark.getLightAtt(Att.COL, rowIndex)));
             } else {
                 col2Label.setBackground(SeaMark.ColMAP.get(SmedAction.panelMain.mark.getLightAtt(Att.ALT, rowIndex)));

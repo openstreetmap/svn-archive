@@ -114,7 +114,7 @@ public class KeyTreeTableModel extends AbstractTreeTableModel {
         return root;
     }
 
-    public class SignatureTreeNode {
+    public static class SignatureTreeNode {
         private PGPSignature s;
         private final List<SignatureTreeNode> children = new ArrayList<>();
         private final SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd:hh.mm.ss");

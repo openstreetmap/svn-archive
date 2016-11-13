@@ -33,7 +33,6 @@ public class DownloadSignedOsmDataTask extends PleaseWaitRunnable {
 
     /**
      * Download the given OSMPrimitives to the given layer
-     * 
      */
     public DownloadSignedOsmDataTask(Collection<OsmPrimitive> missing, OsmDataLayer curLayer) {
         super(tr("Download signed data"));
@@ -91,13 +90,11 @@ public class DownloadSignedOsmDataTask extends PleaseWaitRunnable {
             }
 
             SwingUtilities.invokeLater(
-                    new Runnable() {
-                        public void run() {
-                            curLayer.mergeFrom(dataSet);
-                            curLayer.onPostDownloadFromServer();
-                            AutoScaleAction.zoomTo(dataSet.allPrimitives());
-                            updateReferences(dataSet);
-                        }
+                    () -> {
+                        curLayer.mergeFrom(dataSet);
+                        curLayer.onPostDownloadFromServer();
+                        AutoScaleAction.zoomTo(dataSet.allPrimitives());
+                        updateReferences(dataSet);
                     }
            );
 

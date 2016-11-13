@@ -109,6 +109,7 @@ public class SigReader {
                         case NODE: osm = new Node(uid); break;
                         case WAY: osm = new Way(uid); break;
                         case RELATION: osm = new Relation(uid); break;
+                        default: throw new IllegalArgumentException(t.toString());
                         }
                         missingData.add(osm);
                     }

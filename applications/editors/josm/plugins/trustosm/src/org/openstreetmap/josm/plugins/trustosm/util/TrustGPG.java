@@ -15,6 +15,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
@@ -28,6 +29,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Random;
 import java.util.Vector;
 import java.util.regex.Matcher;
@@ -466,7 +468,7 @@ public class TrustGPG {
         p.add(new JLabel(tr("Please give a tolerance in meters")), GBC.eol());
 
         JFormattedTextField meters = new JFormattedTextField(NumberFormat.getNumberInstance());
-        meters.setValue(new Double(10));
+        meters.setValue(Double.valueOf(10));
         meters.setColumns(5);
 
         p.add(meters, GBC.std());
@@ -623,8 +625,8 @@ public class TrustGPG {
             userid = (String) iter.next();
         }
 
-        String fingerprint = new String(Hex.encode(key.getFingerprint())).toUpperCase();
-        String keyid = "0x"+Long.toHexString(key.getKeyID()).substring(8).toUpperCase();
+        String fingerprint = new String(Hex.encode(key.getFingerprint()), StandardCharsets.UTF_8).toUpperCase(Locale.ENGLISH);
+        String keyid = "0x"+Long.toHexString(key.getKeyID()).substring(8).toUpperCase(Locale.ENGLISH);
 
         String algorithm = "";
         int algo = key.getAlgorithm();

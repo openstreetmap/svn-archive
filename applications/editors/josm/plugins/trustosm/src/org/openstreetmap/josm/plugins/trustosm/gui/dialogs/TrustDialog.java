@@ -589,15 +589,16 @@ public class TrustDialog extends ToggleDialog implements SelectionChangedListene
 
                     byte status = sigsAvailable && trust.getTagSigs().containsKey(key) ?
                             trust.getTagSigs().get(key).getStatus() : TrustSignatures.SIG_UNKNOWN;
-                    Byte oldstatus = rowStatus.containsKey(key) ? rowStatus.get(key) : new Byte(TrustSignatures.SIG_VALID);
-                    Byte sigstatus = new Byte(status);
+                    Byte oldstatus = rowStatus.containsKey(key) ? rowStatus.get(key) : Byte.valueOf(TrustSignatures.SIG_VALID);
+                    Byte sigstatus = Byte.valueOf(status);
                     Byte newstatus;
-                    if (sigstatus.equals(new Byte(TrustSignatures.SIG_BROKEN)) || oldstatus.equals(new Byte(TrustSignatures.SIG_BROKEN))) {
-                        newstatus = new Byte(TrustSignatures.SIG_BROKEN);
-                    } else if (sigstatus.equals(new Byte(TrustSignatures.SIG_UNKNOWN))
-                            || oldstatus.equals(new Byte(TrustSignatures.SIG_UNKNOWN))) {
-                        newstatus = new Byte(TrustSignatures.SIG_UNKNOWN);
-                    } else newstatus = new Byte(TrustSignatures.SIG_VALID);
+                    if (sigstatus.equals(Byte.valueOf(TrustSignatures.SIG_BROKEN))
+                            || oldstatus.equals(Byte.valueOf(TrustSignatures.SIG_BROKEN))) {
+                        newstatus = Byte.valueOf(TrustSignatures.SIG_BROKEN);
+                    } else if (sigstatus.equals(Byte.valueOf(TrustSignatures.SIG_UNKNOWN))
+                            || oldstatus.equals(Byte.valueOf(TrustSignatures.SIG_UNKNOWN))) {
+                        newstatus = Byte.valueOf(TrustSignatures.SIG_UNKNOWN);
+                    } else newstatus = Byte.valueOf(TrustSignatures.SIG_VALID);
 
                     rowStatus.put(key, newstatus);
                     if (valueCount.containsKey(key)) {

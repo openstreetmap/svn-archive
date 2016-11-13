@@ -82,6 +82,7 @@
             <compilerarg value="-Xlint:deprecation"/>
             <compilerarg value="-Xlint:unchecked"/>
             <compilerarg value="-Xep:ReferenceEquality:OFF" compiler="com.google.errorprone.ErrorProneAntCompilerAdapter"/>
+            <compilerarg value="-Xep:InsecureCryptoUsage:OFF" compiler="com.google.errorprone.ErrorProneAntCompilerAdapter"/>
             <compilerarg line="-Xmaxwarns 1000"/>
             <classpath refid="plugin.classpath"/>
         </javac>

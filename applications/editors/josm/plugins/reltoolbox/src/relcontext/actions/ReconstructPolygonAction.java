@@ -22,6 +22,7 @@ import org.openstreetmap.josm.command.ChangeCommand;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.DeleteCommand;
 import org.openstreetmap.josm.command.SequenceCommand;
+import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.osm.MultipolygonBuilder;
 import org.openstreetmap.josm.data.osm.MultipolygonBuilder.JoinedPolygon;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
@@ -56,6 +57,7 @@ public class ReconstructPolygonAction extends AbstractAction implements ChosenRe
     @Override
     public void actionPerformed(ActionEvent e) {
         Relation r = rel.get();
+        boolean relationReused = false;
         List<Way> ways = new ArrayList<>();
         boolean wont = false;
         for (RelationMember m : r.getMembers()) {
@@ -78,23 +80,62 @@ public class ReconstructPolygonAction extends AbstractAction implements ChosenRe
             return;
         }
 
-        if (!mpc.innerWays.isEmpty()) {
-            JOptionPane.showMessageDialog(Main.parent,
-                    tr("Reconstruction of polygons can be done only from outer ways"), tr("Reconstruct polygon"), JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-
         rel.clear();
-        List<Way> newSelection = new ArrayList<>();
+        List<OsmPrimitive> newSelection = new ArrayList<>();
         List<Command> commands = new ArrayList<>();
-        Command c = DeleteCommand.delete(Main.getLayerManager().getEditLayer(), Collections.singleton(r), true, true);
-        if (c == null)
+        Command relationDeleteCommand = DeleteCommand.delete(Main.getLayerManager().getEditLayer(), Collections.singleton(r), true, true);
+        if (relationDeleteCommand == null)
             return;
-        commands.add(c);
 
         for (JoinedPolygon p : mpc.outerWays) {
+
+            ArrayList<JoinedPolygon> myInnerWays = new ArrayList<JoinedPolygon>();
+            for (JoinedPolygon i : mpc.innerWays) {
+                // if the first point of any inner ring is contained in this
+                // outer ring, then this inner ring belongs to us. This 
+                // assumption only works if multipolygons have valid geometries
+                EastNorth en = i.ways.get(0).firstNode().getEastNorth();
+                if (p.area.contains(en.east(), en.north())) {
+                    myInnerWays.add(i);
+                }
+            }
+
+            if (!myInnerWays.isEmpty()) {
+                // this ring has inner rings, so we leave a multipolygon in 
+                // place and don't reconstruct the rings. 
+                Relation n = null;
+                if (relationReused) {
+                    n = new Relation();
+                    n.setKeys(r.getKeys());
+                } else {
+                    n = new Relation(r);
+                    n.setMembers(null);
+                }
+                for (Way w : p.ways) {
+                    n.addMember(new RelationMember("outer", w));
+                }
+                for (JoinedPolygon i : myInnerWays) {
+                    for (Way w : i.ways) {
+                        n.addMember(new RelationMember("inner", w));
+                    }
+                }
+                if (relationReused) {
+                    commands.add(new AddCommand(n));
+                } else {
+                    relationReused = true;
+                    commands.add(new ChangeCommand(r, n));
+                }
+                newSelection.add(n);
+                continue;
+            }
+
             // move all tags from relation and common tags from ways
+            // start with all tags from first way but only if area tags are 
+            // present
             Map<String, String> tags = p.ways.get(0).getKeys();
+            if (!p.ways.get(0).hasAreaTags()) {
+                tags.clear();
+            }
             List<OsmPrimitive> relations = p.ways.get(0).getReferrers();
             Set<String> noTags = new HashSet<>(r.keySet());
             for (int i = 1; i < p.ways.size(); i++) {
@@ -149,6 +190,11 @@ public class ReconstructPolygonAction extends AbstractAction implements ChosenRe
             commands.add(candidateWay == null ? new AddCommand(result) : new ChangeCommand(candidateWay, result));
         }
 
+        // only delete the relation if it hasn't been re-used
+        if (!relationReused) {
+            commands.add(relationDeleteCommand);
+        }
+
         Main.main.undoRedo.add(new SequenceCommand(tr("Reconstruct polygons from relation {0}",
                 r.getDisplayName(DefaultNameFormatter.getInstance())), commands));
         Main.getLayerManager().getEditDataSet().setSelected(newSelection);
@@ -163,10 +209,6 @@ public class ReconstructPolygonAction extends AbstractAction implements ChosenRe
         if (newRelation == null || !"multipolygon".equals(newRelation.get("type")) || newRelation.getMembersCount() == 0)
             return false;
         else {
-            for (RelationMember m : newRelation.getMembers()) {
-                if ("inner".equals(m.getRole()))
-                    return false;
-            }
             return true;
         }
     }

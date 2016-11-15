@@ -504,7 +504,8 @@
     <target name="checkstyle">
         <taskdef resource="com/puppycrawl/tools/checkstyle/ant/checkstyle-ant-task.properties" classpath="${checkstyle.jar}"/>
         <checkstyle config="../00_core_tools/checkstyle/josm_checks.xml">
-            <fileset dir="${basedir}/src" includes="**/*.java" excludes="com/google/**/*.java,
+            <fileset dir="${basedir}/src" includes="**/*.java" excludes="boofcv/**/*.java,
+                                                                         com/google/**/*.java,
                                                                          crosby/**/*.java,
                                                                          edu/princeton/**/*.java,
                                                                          net/boplicity/**/*.java,

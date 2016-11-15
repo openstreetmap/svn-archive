@@ -1,26 +1,4 @@
-/*
- *      PrintableMapView.java
- *      
- *      Copyright 2011 Kai Pastor
- *      
- *      This program is free software; you can redistribute it and/or modify
- *      it under the terms of the GNU General Public License as published by
- *      the Free Software Foundation; either version 2 of the License, or
- *      (at your option) any later version.
- *      
- *      This program is distributed in the hope that it will be useful,
- *      but WITHOUT ANY WARRANTY; without even the implied warranty of
- *      MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *      GNU General Public License for more details.
- *      
- *      You should have received a copy of the GNU General Public License
- *      along with this program; if not, write to the Free Software
- *      Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
- *      MA 02110-1301, USA.
- *      
- *      
- */
-
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.print;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -54,21 +32,21 @@ import org.openstreetmap.josm.gui.layer.Layer;
 /**
  * The PrintableMapView class implements a "Printable" perspective on
  * the main MapView.
- * 
+ * @author Kai Pastor
  */
 public class PrintableMapView extends MapView implements Printable {
-    
+
     /**
      * A fixed map scale if greater than zero.
      */
     protected int fixedMapScale = 0;
-    
+
     /**
      * The factor for scaling the printing graphics to the desired
      * resolution
      */
     protected double g2dFactor;
-    
+
     /**
      * The font size for text added by PrintableMapView
      */
@@ -80,18 +58,18 @@ public class PrintableMapView extends MapView implements Printable {
     public PrintableMapView() {
         /* Initialize MapView with a dummy parent */
         super(new PrintableLayerManager(), new JPanel(), null);
-        
-        /* Disable MapView's ComponentLister, 
+
+        /* Disable MapView's ComponentLister,
          * as it will interfere with the main MapView. */
-        ComponentListener listeners[] = getComponentListeners();
-        for (int i=0; i<listeners.length; i++) {
+        ComponentListener[] listeners = getComponentListeners();
+        for (int i = 0; i < listeners.length; i++) {
             removeComponentListener(listeners[i]);
         }
     }
 
     /**
      * Set a fixed map scale 1 : "scale"
-     * 
+     *
      * @param scale the fixed map scale
      */
     public void setFixedMapScale(int scale) {
@@ -101,7 +79,7 @@ public class PrintableMapView extends MapView implements Printable {
 
     /**
      * Unset the fixed map scale
-     * 
+     *
      * The map scaling will be chosen automatically such that the
      * main windows map view fits on the page format.
      */
@@ -110,9 +88,9 @@ public class PrintableMapView extends MapView implements Printable {
         rezoomToFixedScale();
     }
 
-    /** 
+    /**
      * Get the map scale that will be used for rendering
-     */     
+     */
     public int getMapScale() {
         if (fixedMapScale > 0 || g2dFactor == 0.0) {
             return fixedMapScale;
@@ -126,17 +104,17 @@ public class PrintableMapView extends MapView implements Printable {
     /**
      * Initialize the PrintableMapView for a particular combination of
      * main MapView, PageFormat and target resolution
-     * 
+     *
      * @param pageformat the size and orientation of the page being drawn
      */
     public void initialize(PageFormat pageFormat) {
         int resolution = Main.pref.getInteger("print.resolution.dpi", PrintPlugin.DEF_RESOLUTION_DPI);
         g2dFactor = 72.0/resolution;
-        setSize((int)(pageFormat.getImageableWidth()/g2dFactor),(int)(pageFormat.getImageableHeight()/g2dFactor));
+        setSize((int) (pageFormat.getImageableWidth()/g2dFactor), (int) (pageFormat.getImageableHeight()/g2dFactor));
     }
-    
+
     /**
-     * Resizes this component. 
+     * Resizes this component.
      */
     @Override
     public void setSize(int width, int height) {
@@ -147,9 +125,9 @@ public class PrintableMapView extends MapView implements Printable {
             rezoomToFixedScale();
         }
     }
-            
+
     /**
-     * Resizes this component. 
+     * Resizes this component.
      */
     @Override
     public void setSize(Dimension newSize) {
@@ -175,17 +153,17 @@ public class PrintableMapView extends MapView implements Printable {
 
     /**
      * Render a page for the printer
-     * 
+     *
      * Implements java.awt.print.Printable.
      *
      * @param g the context into which the page is drawn
      * @param pageFormat the size and orientation of the page being drawn
-     * @param page the zero based index of the page to be drawn 
-     * 
+     * @param page the zero based index of the page to be drawn
+     *
      * @return PAGE_EXISTS for page==0 or NO_SUCH_PAGE for page>0
-     * 
+     *
      * @throws PrinterException thrown when the print job is terminated
-     * 
+     *
      */
     @Override
     public int print(Graphics g, PageFormat pageFormat, int page) throws
@@ -196,31 +174,31 @@ public class PrintableMapView extends MapView implements Printable {
 
         initialize(pageFormat);
 
-        Graphics2D g2d = (Graphics2D)g;
+        Graphics2D g2d = (Graphics2D) g;
         g2d.translate(pageFormat.getImageableX(), pageFormat.getImageableY());
         paintMap(g2d, pageFormat);
         paintMapScale(g2d, pageFormat);
         paintMapAttribution(g2d, pageFormat);
         return PAGE_EXISTS;
     }
-    
-    /** 
+
+    /**
      * Paint the map
-     * 
+     *
      * This implementation is derived from MapView's paint and
      * from other JOSM core components.
-     * 
+     *
      * @param g2d the graphics context to use for painting
      * @param pageFormat the size and orientation of the page being drawn
      */
     public void paintMap(Graphics2D g2d, PageFormat pageFormat) {
         AffineTransform at = g2d.getTransform();
         g2d.scale(g2dFactor, g2dFactor);
-        
+
         Bounds box = getRealBounds();
         for (Layer l : getLayerManager().getVisibleLayersInZOrder()) {
             if (l.getOpacity() < 1) {
-                g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,(float)l.getOpacity()));
+                g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, (float) l.getOpacity()));
             }
             l.paint(g2d, this, box);
             g2d.setPaintMode();
@@ -229,10 +207,10 @@ public class PrintableMapView extends MapView implements Printable {
         g2d.setTransform(at);
     }
 
-    /** 
+    /**
      * Paint a linear scale and a lexical scale
-     * 
-     * This implementation is derived from JOSM's MapScaler, 
+     *
+     * This implementation is derived from JOSM's MapScaler,
      * NavigatableComponent and SystemOfMeasurement.
      *
      * @param g2d the graphics context to use for painting
@@ -252,11 +230,9 @@ public class PrintableMapView extends MapView implements Printable {
         double distScale = 1.0;
         if (distMantissa <= 2.5) {
             distScale = 2.5 / distMantissa;
-        }
-        else if (distMantissa <= 4.0) {
+        } else if (distMantissa <= 4.0) {
             distScale = 5.0 / distMantissa;
-        }
-        else {
+        } else {
             distScale = 10.0 / distMantissa;
         }
 
@@ -268,34 +244,36 @@ public class PrintableMapView extends MapView implements Printable {
 
         /* offset from the left paper border to the left end of the bar */
         Rectangle2D bound = g2d.getFontMetrics().getStringBounds("0", g2d);
-        int xLeft = (int)(bound.getWidth()/2);
-        
+        int xLeft = (int) (bound.getWidth()/2);
+
         /* offset from the left paper border to the right label */
         String rightLabel = som.getDistText(dist100px * distScale);
         bound = g2d.getFontMetrics().getStringBounds(rightLabel, g2d);
         int xRight = xLeft+(int) Math.max(0.95*x, x-bound.getWidth()/2);
-        
+
+        // CHECKSTYLE.OFF: SingleSpaceSeparator
         int h        = FONT_SIZE / 2; // raster, height of the bar
         int yLexical = 3 * h;         // baseline of the lexical scale
         int yBar     = 4 * h;         // top of the bar
         int yLabel   = 8 * h;         // baseline of the labels
-        int w  = (int)(distScale * 100.0);  // length of the bar
-        int ws = (int)(distScale * 20.0);   // length of a segment
-        
+        int w  = (int) (distScale * 100.0);  // length of the bar
+        int ws = (int) (distScale * 20.0);   // length of a segment
+        // CHECKSTYLE.ON: SingleSpaceSeparator
+
         /* white background */
         g2d.setColor(Color.WHITE);
         g2d.fillRect(xLeft-1, yBar-1, w+2, h+2);
-        
+
         /* black foreground */
         g2d.setColor(Color.BLACK);
         g2d.drawRect(xLeft, yBar, w, h);
         g2d.fillRect(xLeft, yBar, ws, h);
-        g2d.fillRect(xLeft+(int)(distScale * 40.0), yBar, ws, h);
+        g2d.fillRect(xLeft+(int) (distScale * 40.0), yBar, ws, h);
         g2d.fillRect(xLeft+w-ws, yBar, ws, h);
         g2d.setFont(labelFont);
         paintText(g2d, "0", 0, yLabel);
         paintText(g2d, rightLabel, xRight, yLabel);
-        
+
         /* lexical scale */
         int mapScale = getMapScale();
         String lexicalScale = tr("Scale") + " 1 : " + mapScale;
@@ -303,49 +281,49 @@ public class PrintableMapView extends MapView implements Printable {
         Font scaleFront = new Font("Arial", Font.BOLD, FONT_SIZE);
         g2d.setFont(scaleFront);
         bound = g2d.getFontMetrics().getStringBounds(lexicalScale, g2d);
-        int xLexical = Math.max(0, xLeft + (w - (int)bound.getWidth()) / 2);
+        int xLexical = Math.max(0, xLeft + (w - (int) bound.getWidth()) / 2);
         paintText(g2d, lexicalScale, xLexical, yLexical);
     }
-    
-    /** 
+
+    /**
      * Paint an attribution text
-     * 
+     *
      * @param g2d the graphics context to use for painting
      * @param pageFormat the size and orientation of the page being drawn
      */
     public void paintMapAttribution(Graphics2D g2d, PageFormat pageFormat) {
         String text = Main.pref.get("print.attribution", AbstractOsmTileSource.DEFAULT_OSM_ATTRIBUTION);
-        
+
         if (text == null) {
             return;
         }
-            
+
         Font attributionFont = new Font("Arial", Font.PLAIN, FONT_SIZE * 8 / 10);
         g2d.setFont(attributionFont);
 
         text += "\n";
         int y = FONT_SIZE * 3 / 2;
         int from = 0;
-        int to = text.indexOf("\n", from);
+        int to = text.indexOf('\n', from);
         while (to >= from) {
             String line = text.substring(from, to);
 
             Rectangle2D bound = g2d.getFontMetrics().getStringBounds(line, g2d);
-            int x = (int)((pageFormat.getImageableWidth() - bound.getWidth()) - FONT_SIZE/2);
-            
+            int x = (int) ((pageFormat.getImageableWidth() - bound.getWidth()) - FONT_SIZE/2);
+
             paintText(g2d, line, x, y);
 
-            y   += FONT_SIZE * 5 / 4;
+            y += FONT_SIZE * 5 / 4;
             from = to + 1;
-            to   = text.indexOf("\n", from);
+            to = text.indexOf('\n', from);
         }
     }
-    
+
     /**
      * Paint a text.
-     * 
+     *
      * This method will not only draw the letters but also a background which improves redability.
-     * 
+     *
      * @param g2d the graphics context to use for painting
      * @param text the text to be drawn
      * @param x the x coordinate

@@ -1,26 +1,4 @@
-/*
- *      PrintPlugin.java
- *      
- *      Copyright 2011 Kai Pastor
- *      
- *      This program is free software; you can redistribute it and/or modify
- *      it under the terms of the GNU General Public License as published by
- *      the Free Software Foundation; either version 2 of the License, or
- *      (at your option) any later version.
- *      
- *      This program is distributed in the hope that it will be useful,
- *      but WITHOUT ANY WARRANTY; without even the implied warranty of
- *      MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *      GNU General Public License for more details.
- *      
- *      You should have received a copy of the GNU General Public License
- *      along with this program; if not, write to the Free Software
- *      Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
- *      MA 02110-1301, USA.
- *      
- *      
- */
-
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.print;
 
 import javax.swing.JMenu;
@@ -33,8 +11,9 @@ import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
 
 /**
- * The PrintPlugin class implements the interface JOSM needs to 
+ * The PrintPlugin class implements the interface JOSM needs to
  * load extension.
+ * @author Kai Pastor
  */
 public class PrintPlugin extends Plugin {
 
@@ -83,7 +62,7 @@ public class PrintPlugin extends Plugin {
     }
 
     /**
-     * Enables/disables the print action in the GUI 
+     * Enables/disables the print action in the GUI
      * when a MapFrame gets shown or removed.
      *
      * @param oldFrame ignored.
@@ -97,12 +76,12 @@ public class PrintPlugin extends Plugin {
 
     /**
      * Temporary adjust the preferences for map printing
-     * 
-     * This will adjust some preferences such that elements which are 
-     * not useful on paper will not be printed. This includes the 
-     * following markup: downloaded area; node markers for connection, 
+     *
+     * This will adjust some preferences such that elements which are
+     * not useful on paper will not be printed. This includes the
+     * following markup: downloaded area; node markers for connection,
      * selected, unselected, tagged state.
-     * 
+     *
      * Changes will be undone by restorePrefs().
      */
     public static void adjustPrefs() {
@@ -116,12 +95,12 @@ public class PrintPlugin extends Plugin {
             adjustPref("mappaint.node.virtual-size", 0);
         }
     }
-    
+
     /**
      * Adjust a single preference.
-     * 
+     *
      * Saves the existing value for later restorePref.
-     * 
+     *
      * @param key the preference key
      * @param the temporary new int value
      */
@@ -131,12 +110,12 @@ public class PrintPlugin extends Plugin {
         }
         Main.pref.putInteger(key, value);
     }
-    
+
     /**
      * Adjust a single preference.
-     * 
+     *
      * Saves the existing value for later restorePref.
-     * 
+     *
      * @param key the preference key
      * @param the temporary new boolean value
      */
@@ -146,12 +125,12 @@ public class PrintPlugin extends Plugin {
         }
         Main.pref.put(key, value);
     }
-    
+
     /**
      * Adjust a single preference.
-     * 
+     *
      * Saves the existing value for later restorePref.
-     * 
+     *
      * @param key the preference key
      * @param the temporary new String value
      */
@@ -161,7 +140,7 @@ public class PrintPlugin extends Plugin {
         }
         Main.pref.put(key, value);
     }
-    
+
     /**
      * Undo temporary adjustments to the preferences made by adjustPrefs().
      */
@@ -177,10 +156,10 @@ public class PrintPlugin extends Plugin {
             //Main.main.map.mapView.repaint();
         }
     }
-    
+
     /**
      * Restore a single preference previously saved by adjustPref()
-     * 
+     *
      * @param key the preference key to be restored
      */
     protected static void restorePref(String key) {

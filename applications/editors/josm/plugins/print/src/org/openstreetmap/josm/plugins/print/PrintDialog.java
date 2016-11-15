@@ -1,26 +1,4 @@
-/*
- *      PrintDialog.java
- *      
- *      Copyright 2011 Kai Pastor
- *      
- *      This program is free software; you can redistribute it and/or modify
- *      it under the terms of the GNU General Public License as published by
- *      the Free Software Foundation; either version 2 of the License, or
- *      (at your option) any later version.
- *      
- *      This program is distributed in the hope that it will be useful,
- *      but WITHOUT ANY WARRANTY; without even the implied warranty of
- *      MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *      GNU General Public License for more details.
- *      
- *      You should have received a copy of the GNU General Public License
- *      along with this program; if not, write to the Free Software
- *      Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
- *      MA 02110-1301, USA.
- *      
- *      
- */
-
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.print;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -83,6 +61,7 @@ import org.openstreetmap.josm.tools.WindowGeometry;
 
 /**
  * A print dialog with preview
+ * @author Kai Pastor
  */
 public class PrintDialog extends JDialog implements ActionListener {
 
@@ -90,12 +69,12 @@ public class PrintDialog extends JDialog implements ActionListener {
      * The printer name
      */
     protected JTextField printerField;
-    
+
     /**
      * The media format name
      */
     protected JTextField paperField;
-    
+
     /**
      * The media orientation
      */
@@ -105,40 +84,40 @@ public class PrintDialog extends JDialog implements ActionListener {
      * The preview toggle checkbox
      */
     protected JCheckBox previewCheckBox;
-    
+
     /**
      * The resolution in dpi for printing/preview
      */
     protected SpinnerNumberModel resolutionModel;
-    
+
     /**
      * The map scale
      */
     protected SpinnerNumberModel scaleModel;
-    
+
     /**
      * The page preview
      */
     protected PrintPreview printPreview;
-    
+
     /**
      * The map view for preview an printing
      */
     protected PrintableMapView mapView;
-    
+
     /**
      * The printer job
      */
     protected transient PrinterJob job;
-    
+
     /**
      * The custom printer job attributes
      */
     transient PrintRequestAttributeSet attrs = new HashPrintRequestAttributeSet();
-    
-    /** 
+
+    /**
      * Create a new print dialog
-     * 
+     *
      * @param parent the parent component
      */
     public PrintDialog(Component parent) {
@@ -153,12 +132,12 @@ public class PrintDialog extends JDialog implements ActionListener {
         pack();
         setMaximumSize(Toolkit.getDefaultToolkit().getScreenSize());
     }
-    
+
     /**
      * Show or hide the dialog
-     * 
+     *
      * Set the dialog size to reasonable values.
-     * 
+     *
      * @param visible a flag indication the visibility of the dialog
      */
     @Override
@@ -180,7 +159,7 @@ public class PrintDialog extends JDialog implements ActionListener {
             ).applySafe(this);
         } else if (isShowing()) { // Avoid IllegalComponentStateException like in #8775
             new WindowGeometry(this).remember(getClass().getName() + ".geometry");
-            Main.pref.put("print.preview.enabled",previewCheckBox.isSelected());
+            Main.pref.put("print.preview.enabled", previewCheckBox.isSelected());
         }
         super.setVisible(visible);
     }
@@ -190,15 +169,15 @@ public class PrintDialog extends JDialog implements ActionListener {
      */
     public void build() {
         setLayout(new GridBagLayout());
-        final GBC std = GBC.std().insets(0,5,5,0);
+        final GBC std = GBC.std().insets(0, 5, 5, 0);
         std.fill = GBC.HORIZONTAL;
-        final GBC twoColumns   = GBC.std().insets(0,5,5,0).span(2);
+        final GBC twoColumns = GBC.std().insets(0, 5, 5, 0).span(2);
         twoColumns.fill = GBC.HORIZONTAL;
-        final GBC threeColumns = GBC.std().insets(0,5,5,0).span(3);
+        final GBC threeColumns = GBC.std().insets(0, 5, 5, 0).span(3);
         threeColumns.fill = GBC.HORIZONTAL;
-        
+
         JLabel caption;
-        
+
         int row = 0;
         caption = new JLabel(tr("Printer")+":");
         add(caption, twoColumns.grid(2, row));
@@ -227,8 +206,8 @@ public class PrintDialog extends JDialog implements ActionListener {
         add(printerButton, threeColumns.grid(2, row));
 
         row++;
-        add(GBC.glue(5,10), GBC.std(1,row).fill(GBC.VERTICAL));
-        
+        add(GBC.glue(5, 10), GBC.std(1, row).fill(GBC.VERTICAL));
+
         row++;
         caption = new JLabel(tr("Scale")+":");
         add(caption, std.grid(2, row));
@@ -246,7 +225,7 @@ public class PrintDialog extends JDialog implements ActionListener {
                     public void run() {
                         try {
                             scaleField.commitEdit();
-                            Main.pref.put("print.map-scale",scaleModel.getNumber().toString());
+                            Main.pref.put("print.map-scale", scaleModel.getNumber().toString());
                             mapView.setFixedMapScale(scaleModel.getNumber().intValue());
                             printPreview.repaint();
                         } catch (ParseException pe) {
@@ -265,7 +244,7 @@ public class PrintDialog extends JDialog implements ActionListener {
         add(caption, std.grid(GBC.RELATIVE, row));
         resolutionModel = new SpinnerNumberModel(
           Main.pref.getInteger("print.resolution.dpi", PrintPlugin.DEF_RESOLUTION_DPI),
-          30, 1200, 10 );
+          30, 1200, 10);
         final JSpinner resolutionField = new JSpinner(resolutionModel);
         resolutionField.addChangeListener(new ChangeListener() {
             @Override
@@ -275,7 +254,7 @@ public class PrintDialog extends JDialog implements ActionListener {
                     public void run() {
                         try {
                             resolutionField.commitEdit();
-                            Main.pref.put("print.resolution.dpi",resolutionModel.getNumber().toString());
+                            Main.pref.put("print.resolution.dpi", resolutionModel.getNumber().toString());
                             printPreview.repaint();
                         } catch (ParseException pe) {
                             Main.error(pe);
@@ -285,7 +264,7 @@ public class PrintDialog extends JDialog implements ActionListener {
             }
         });
         add(resolutionField, std.grid(GBC.RELATIVE, row));
-        
+
         row++;
         caption = new JLabel(tr("Map information")+":");
         add(caption, threeColumns.grid(2, row));
@@ -306,24 +285,26 @@ public class PrintDialog extends JDialog implements ActionListener {
                     }
                 });
             }
+
             @Override
             public void removeUpdate(DocumentEvent evt) {
                 this.insertUpdate(evt);
             }
+
             @Override
             public void changedUpdate(DocumentEvent evt) {
                 // NOP
             }
         });
         JScrollPane attributionPane = new JScrollPane(attributionText);
-        add(attributionPane, GBC.std().insets(0,5,5,0).span(3).fill(GBC.BOTH).weight(0.0,1.0).grid(2, row));
+        add(attributionPane, GBC.std().insets(0, 5, 5, 0).span(3).fill(GBC.BOTH).weight(0.0, 1.0).grid(2, row));
 
         row++;
-        add(GBC.glue(5,10), GBC.std(1,row).fill(GBC.VERTICAL));
-        
+        add(GBC.glue(5, 10), GBC.std(1, row).fill(GBC.VERTICAL));
+
         row++;
         previewCheckBox = new JCheckBox(tr("Map Preview"));
-        previewCheckBox.setSelected(Main.pref.getBoolean("print.preview.enabled",false));
+        previewCheckBox.setSelected(Main.pref.getBoolean("print.preview.enabled", false));
         previewCheckBox.setActionCommand("toggle-preview");
         previewCheckBox.addActionListener(this);
         add(previewCheckBox, threeColumns.grid(2, row));
@@ -339,27 +320,27 @@ public class PrintDialog extends JDialog implements ActionListener {
         zoomOutButton.setActionCommand("zoom-out");
         zoomOutButton.addActionListener(this);
         add(zoomOutButton, threeColumns.grid(2, row));
-        
+
         row++;
         JButton zoomToPageButton = new JButton(tr("Zoom To Page"));
         zoomToPageButton.setActionCommand("zoom-to-page");
         zoomToPageButton.addActionListener(this);
         add(zoomToPageButton, threeColumns.grid(2, row));
-        
+
         row++;
         JButton zoomToActualSize = new JButton(tr("Zoom To Actual Size"));
         zoomToActualSize.setActionCommand("zoom-to-actual-size");
         zoomToActualSize.addActionListener(this);
         add(zoomToActualSize, threeColumns.grid(2, row));
-        
+
         printPreview = new PrintPreview();
         if (previewCheckBox.isSelected()) {
             printPreview.setPrintable(mapView);
         }
-        JScrollPane previewPane = new JScrollPane(printPreview, 
+        JScrollPane previewPane = new JScrollPane(printPreview,
                 JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-        previewPane.setPreferredSize(Main.main != null ? Main.map.mapView.getSize() : new Dimension(210,297));
-        add(previewPane, GBC.std(0,0).span(1, GBC.RELATIVE).fill().weight(5.0,5.0));
+        previewPane.setPreferredSize(Main.main != null ? Main.map.mapView.getSize() : new Dimension(210, 297));
+        add(previewPane, GBC.std(0, 0).span(1, GBC.RELATIVE).fill().weight(5.0, 5.0));
 
         row++;
         JPanel actionPanel = new JPanel();
@@ -371,9 +352,9 @@ public class PrintDialog extends JDialog implements ActionListener {
         cancelButton.setActionCommand("cancel");
         cancelButton.addActionListener(this);
         actionPanel.add(cancelButton);
-        add(actionPanel, GBC.std(0,row).insets(5,5,5,5).span(GBC.REMAINDER).fill(GBC.HORIZONTAL));
+        add(actionPanel, GBC.std(0, row).insets(5, 5, 5, 5).span(GBC.REMAINDER).fill(GBC.HORIZONTAL));
     }
-    
+
     /**
      * Update the dialog fields from the underlying model
      */
@@ -385,38 +366,38 @@ public class PrintDialog extends JDialog implements ActionListener {
             orientationField.setText("-");
         } else {
             printerField.setText(service.getName());
-            if (! attrs.containsKey(Media.class)) {
+            if (!attrs.containsKey(Media.class)) {
                 attrs.add((Attribute) service.getDefaultAttributeValue(Media.class));
-            } 
+            }
             if (attrs.containsKey(Media.class)) {
                 paperField.setText(attrs.get(Media.class).toString());
             }
 
-            if (! attrs.containsKey(OrientationRequested.class)) {
+            if (!attrs.containsKey(OrientationRequested.class)) {
                 attrs.add((Attribute) service.getDefaultAttributeValue(OrientationRequested.class));
             }
             if (attrs.containsKey(OrientationRequested.class)) {
                 orientationField.setText(attrs.get(OrientationRequested.class).toString());
             }
 
-            if (! attrs.containsKey(MediaPrintableArea.class)) {
+            if (!attrs.containsKey(MediaPrintableArea.class)) {
                 PageFormat pf = job.defaultPage();
                 attrs.add(new MediaPrintableArea(
-                  (float)pf.getImageableX()/72f,
-                  (float)pf.getImageableY()/72f,
-                  (float)pf.getImageableWidth()/72f,
-                  (float)pf.getImageableHeight()/72f,
-                  MediaPrintableArea.INCH) );
+                  (float) pf.getImageableX()/72f,
+                  (float) pf.getImageableY()/72f,
+                  (float) pf.getImageableWidth()/72f,
+                  (float) pf.getImageableHeight()/72f,
+                  MediaPrintableArea.INCH));
             }
-            
+
             PageFormat pf = job.getPageFormat(attrs);
             printPreview.setPageFormat(pf);
         }
     }
-    
+
     /**
      * Handle user input
-     * 
+     *
      * @param e an ActionEvent with one of the known commands
      */
     @Override
@@ -469,29 +450,29 @@ public class PrintDialog extends JDialog implements ActionListener {
     }
 
     protected void savePrintSettings() {
-        // Save only one printer service attribute: printer name 
+        // Save only one printer service attribute: printer name
         PrintService service = job.getPrintService();
         if (service != null) {
             Collection<Collection<String>> serviceAttributes = new ArrayList<>();
             for (Attribute a : service.getAttributes().toArray()) {
                 if ("printer-name".equals(a.getName()) && a instanceof TextSyntax) {
-                    serviceAttributes.add(marshallPrintSetting(a, TextSyntax.class, ((TextSyntax)a).getValue()));
+                    serviceAttributes.add(marshallPrintSetting(a, TextSyntax.class, ((TextSyntax) a).getValue()));
                 }
             }
             Main.pref.putArray("print.settings.service-attributes", serviceAttributes);
         }
-        
+
         // Save all request attributes
         Collection<String> ignoredAttributes = Arrays.asList("media-printable-area");
         Collection<Collection<String>> requestAttributes = new ArrayList<>();
         for (Attribute a : attrs.toArray()) {
             Collection<String> setting = null;
             if (a instanceof TextSyntax) {
-                setting = marshallPrintSetting(a, TextSyntax.class, ((TextSyntax)a).getValue());
+                setting = marshallPrintSetting(a, TextSyntax.class, ((TextSyntax) a).getValue());
             } else if (a instanceof EnumSyntax) {
-                setting = marshallPrintSetting(a, EnumSyntax.class, Integer.toString(((EnumSyntax)a).getValue()));
+                setting = marshallPrintSetting(a, EnumSyntax.class, Integer.toString(((EnumSyntax) a).getValue()));
             } else if (a instanceof IntegerSyntax) {
-                setting = marshallPrintSetting(a, IntegerSyntax.class, Integer.toString(((IntegerSyntax)a).getValue()));
+                setting = marshallPrintSetting(a, IntegerSyntax.class, Integer.toString(((IntegerSyntax) a).getValue()));
             } else if (!ignoredAttributes.contains(a.getName())) {
                 // TODO: Add support for DateTimeSyntax, SetOfIntegerSyntax, ResolutionSyntax if needed
                 Main.warn("Print request attribute not supported: "+a.getName() +": "+a.getCategory()+" - "+a.toString());
@@ -502,15 +483,15 @@ public class PrintDialog extends JDialog implements ActionListener {
         }
         Main.pref.putArray("print.settings.request-attributes", requestAttributes);
     }
-    
+
     protected Collection<String> marshallPrintSetting(Attribute a, Class<?> syntaxClass, String value) {
         return new ArrayList<>(Arrays.asList(a.getCategory().getName(), a.getClass().getName(), syntaxClass.getName(), value));
     }
-    
+
     @SuppressWarnings("unchecked")
-    protected Attribute unmarshallPrintSetting(Collection<String> setting) throws 
+    protected Attribute unmarshallPrintSetting(Collection<String> setting) throws
         ClassNotFoundException, NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
-        
+
         if (setting == null || setting.size() != 4) {
             throw new IllegalArgumentException("Invalid setting: "+setting);
         }

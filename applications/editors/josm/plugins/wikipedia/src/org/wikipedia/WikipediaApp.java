@@ -215,7 +215,9 @@ public final class WikipediaApp {
                 X_PATH.evaluateNodes("//entity", xml).forEach(node -> {
                     final String wikidata = X_PATH.evaluateString("./@id", node);
                     final String wikipedia = X_PATH.evaluateString("./sitelinks/sitelink/@title", node);
-                    r.put(wikipedia, wikidata);
+                    if (WIKIDATA_PATTERN.matcher(wikidata).matches()) { // non existing entries result in negative integers
+                        r.put(wikipedia, wikidata);
+                    }
                 });
             }
             return r;

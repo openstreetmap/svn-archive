@@ -7,7 +7,6 @@ import org.openstreetmap.josm.testutils.JOSMTestRules;
 import org.wikipedia.data.WikidataEntry;
 import org.wikipedia.data.WikipediaEntry;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -115,7 +114,7 @@ public class WikipediaAppTest {
         assertThat(map.get("Vienna"), is("Q1741"));
         assertThat(map.get("Völs, Tyrol"), is("Q278250"));
         assertThat(map.get("a-non-existing-article"), nullValue());
-        assertThat(map.size(), is(4));
+        assertThat(map.size(), is(3));
     }
 
     @Test
@@ -123,6 +122,10 @@ public class WikipediaAppTest {
         final Map<String, String> map = WikipediaApp.getWikidataForArticles("en",
                 Stream.iterate("London", x -> x).limit(100).collect(Collectors.toList()));
         assertThat(map, is(Collections.singletonMap("London", "Q84")));
+        final List<String> articles = IntStream.range(0, 200)
+                .mapToObj(i -> "a-non-existing-article-" + i)
+                .collect(Collectors.toList());
+        assertTrue(WikipediaApp.getWikidataForArticles("en", articles).isEmpty());
     }
 
     @Test

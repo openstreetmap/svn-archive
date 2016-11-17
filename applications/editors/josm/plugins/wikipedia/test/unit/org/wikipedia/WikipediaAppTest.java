@@ -7,11 +7,16 @@ import org.openstreetmap.josm.testutils.JOSMTestRules;
 import org.wikipedia.data.WikidataEntry;
 import org.wikipedia.data.WikipediaEntry;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.CoreMatchers.is;
@@ -111,6 +116,13 @@ public class WikipediaAppTest {
         assertThat(map.get("Völs, Tyrol"), is("Q278250"));
         assertThat(map.get("a-non-existing-article"), nullValue());
         assertThat(map.size(), is(4));
+    }
+
+    @Test
+    public void testTicket13991() throws Exception {
+        final Map<String, String> map = WikipediaApp.getWikidataForArticles("en",
+                Stream.iterate("London", x -> x).limit(100).collect(Collectors.toList()));
+        assertThat(map, is(Collections.singletonMap("London", "Q84")));
     }
 
     @Test

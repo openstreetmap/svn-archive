@@ -17,6 +17,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.TreeMap;
+import java.util.TreeSet;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -193,7 +194,8 @@ public final class WikipediaApp {
      */
     public static Map<String, String> getWikidataForArticles(String wikipediaLang, List<String> articles) {
         if (articles.size() > 50) {
-            return partitionList(articles, 50).stream()
+            final List<String> withoutDuplicates = new ArrayList<>(new TreeSet<>(articles));
+            return partitionList(withoutDuplicates, 50).stream()
                     .flatMap(chunk -> getWikidataForArticles(wikipediaLang, chunk).entrySet().stream())
                     .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
         } else if (articles.isEmpty()) {

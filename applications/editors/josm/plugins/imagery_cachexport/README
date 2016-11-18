@@ -1,0 +1,29 @@
+README 
+======
+
+The Imagery Cache Export plugin exports the images from the internal imagery layer store into the file system.
+
+Author: holgermappt
+License: GPL v2 or later
+
+Image imageryexport.png is a combination of save_as.png scaled to 16x16 and imagery_small.png.  Both are from JOSM core, GPL v2 or later.
+
+Cache Key Rules
+---------------
+* Images in the cache are accessed with a key.
+* The key is composed of: <tile source name> + ":" + <tile ID>
+  * see TMSCachedTileLoaderJob.getCacheKey()
+* <tile source name> is the layer name with colons replaced by underscores.
+  The layer name is localized.
+* <tile ID> depends on the layer type:
+  * TMS: <imagery URL> + "/" + <zoom> + "/" + <x> + "/" + <y>
+  * WMS, WMTS: <tile URL> + <projection>
+
+Key examples:
+  TMS:
+    Bing aerial imagery:http://www.bing.com/maps/14/8816/5480
+    Mapbox Satellitenbild:http://{switch:a,b,c}.tiles.mapbox.com/v4/openstreetmap.map-inh7ifmo/{zoom}/{x}/{y}.png?access_token=abc/14/8816/5479
+  WMS:
+    SDFE Overflade Skyggekort (40 cm):http://kortforsyningen.kms.dk/dhm?login=OpenStreetMapDK2015&password=Gall4Peters&FORMAT=image/png&VERSION=1.1.1&SERVICE=WMS&REQUEST=GetMap&Layers=dhm_overflade_skyggekort&STYLES=&SRS=EPSG:3857&WIDTH=512&HEIGHT=512&BBOX=1037096.6940108,7514066.1667892,1056664.5724108,7533634.0451892EPSG:3857
+  WMTS:
+    Geoportal 2_ Luftbild WMTS:http://mapy.geoportal.gov.pl/wss/service/WMTS/guest/wmts/ORTO?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=ORTOFOTOMAPA&STYLE=default&FORMAT=image/jpeg&tileMatrixSet=EPSG:4326&tileMatrix=EPSG:4326:13&tileRow=4861&tileCol=18765EPSG:4326

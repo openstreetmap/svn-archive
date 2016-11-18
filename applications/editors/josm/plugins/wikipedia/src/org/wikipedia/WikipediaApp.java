@@ -69,6 +69,14 @@ public final class WikipediaApp {
         }
     }
 
+    private static HttpClient.Response connect(String url) throws IOException {
+        final HttpClient.Response response = HttpClient.create(new URL(url)).setReasonForRequest("Wikipedia").connect();
+        if (response.getResponseCode() != 200) {
+            throw new IOException("Server responded with HTTP " + response.getResponseCode());
+        }
+        return response;
+    }
+
     public List<WikipediaEntry> getEntriesFromCoordinates(LatLon min, LatLon max) {
         try {
             // construct url
@@ -79,7 +87,7 @@ public final class WikipediaApp {
                     + "&gslimit=500"
                     + "&gsbbox=" + max.lat() + "|" + min.lon() + "|" + min.lat() + "|" + max.lon();
             // parse XML document
-            try (final InputStream in = HttpClient.create(new URL(url)).setReasonForRequest("Wikipedia").connect().getContent()) {
+            try (final InputStream in = connect(url).getContent()) {
                 final Document doc = newDocumentBuilder().parse(in);
                 final List<WikipediaEntry> entries = X_PATH.evaluateNodes("//gs", doc).stream()
                         .map(node -> {
@@ -113,7 +121,7 @@ public final class WikipediaApp {
                     "&search=" + Utils.encodeUrl(query) +
                     "&limit=50" +
                     "&format=xml";
-            try (final InputStream in = HttpClient.create(new URL(url)).setReasonForRequest("Wikipedia").connect().getContent()) {
+            try (final InputStream in = connect(url).getContent()) {
                 final Document xml = newDocumentBuilder().parse(in);
                 final List<WikidataEntry> r = X_PATH.evaluateNodes("//entity", xml).stream()
                         .map(node -> new WikidataEntry(X_PATH.evaluateString("@id", node), null, null, null))
@@ -132,8 +140,7 @@ public final class WikipediaApp {
                     + "&depth=" + depth
                     + "&cat=" + Utils.encodeUrl(category);
 
-            try (final BufferedReader reader = HttpClient.create(new URL(url)).setReasonForRequest("Wikipedia")
-                    .connect().getContentReader()) {
+            try (final BufferedReader reader = connect(url).getContentReader()) {
                 return reader.lines()
                         .map(line -> new WikipediaEntry(wikipediaLang, line.trim().replace("_", " ")))
                         .collect(Collectors.toList());
@@ -238,7 +245,7 @@ public final class WikipediaApp {
                     "&format=xml" +
                     "&titles=" + articles.stream().map(Utils::encodeUrl).collect(Collectors.joining("|"));
             final Map<String, String> r = new TreeMap<>();
-            try (final InputStream in = HttpClient.create(new URL(url)).setReasonForRequest("Wikipedia").connect().getContent()) {
+            try (final InputStream in = connect(url).getContent()) {
                 final Document xml = newDocumentBuilder().parse(in);
                 X_PATH.evaluateNodes("//entity", xml).forEach(node -> {
                     final String wikidata = X_PATH.evaluateString("./@id", node);
@@ -264,7 +271,7 @@ public final class WikipediaApp {
                     + "&pslimit=50"
                     + "&pssearch=" + Utils.encodeUrl(prefix);
             // parse XML document
-            try (final InputStream in = HttpClient.create(new URL(url)).setReasonForRequest("Wikipedia").connect().getContent()) {
+            try (final InputStream in = connect(url).getContent()) {
                 final Document doc = newDocumentBuilder().parse(in);
                 return X_PATH.evaluateNodes("//ps/@title", doc).stream()
                         .map(Node::getNodeValue)
@@ -308,7 +315,7 @@ public final class WikipediaApp {
             languages.add("en");
             languages.add(null);
             final List<WikidataEntry> r = new ArrayList<>(entries.size());
-            try (final InputStream in = HttpClient.create(new URL(url)).setReasonForRequest("Wikipedia").connect().getContent()) {
+            try (final InputStream in = connect(url).getContent()) {
                 final Document xml = newDocumentBuilder().parse(in);
                 for (final WikipediaEntry entry : entries) {
                     final Node entity = X_PATH.evaluateNode("//entity[@id='" + entry.article + "']", xml);
@@ -347,7 +354,7 @@ public final class WikipediaApp {
                     "&titles=" + Utils.encodeUrl(article) +
                     "&lllimit=500" +
                     "&format=xml";
-            try (final InputStream in = HttpClient.create(new URL(url)).setReasonForRequest("Wikipedia").connect().getContent()) {
+            try (final InputStream in = connect(url).getContent()) {
                 final Document xml = newDocumentBuilder().parse(in);
                 return X_PATH.evaluateNodes("//ll", xml).stream()
                         .map(node -> {
@@ -368,7 +375,7 @@ public final class WikipediaApp {
                     "&prop=coordinates" +
                     "&titles=" + Utils.encodeUrl(article) +
                     "&format=xml";
-            try (final InputStream in = HttpClient.create(new URL(url)).setReasonForRequest("Wikipedia").connect().getContent()) {
+            try (final InputStream in = connect(url).getContent()) {
                 final Document xml = newDocumentBuilder().parse(in);
                 final Node node = X_PATH.evaluateNode("//coordinates/co", xml);
                 if (node == null) {

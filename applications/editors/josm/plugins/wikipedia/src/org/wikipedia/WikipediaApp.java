@@ -17,7 +17,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.TreeMap;
-import java.util.TreeSet;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Function;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -193,12 +194,33 @@ public final class WikipediaApp {
      * Returns a map mapping wikipedia articles to wikidata ids.
      */
     public static Map<String, String> getWikidataForArticles(String wikipediaLang, List<String> articles) {
-        if (articles.size() > 50) {
-            final List<String> withoutDuplicates = new ArrayList<>(new TreeSet<>(articles));
-            return partitionList(withoutDuplicates, 50).stream()
-                    .flatMap(chunk -> getWikidataForArticles(wikipediaLang, chunk).entrySet().stream())
-                    .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
-        } else if (articles.isEmpty()) {
+        return articles.stream()
+                .distinct()
+                .collect(Collectors.groupingBy(new Function<String, Integer>() {
+                    final AtomicInteger group = new AtomicInteger();
+                    final AtomicInteger count = new AtomicInteger();
+                    final AtomicInteger length = new AtomicInteger();
+
+                    @Override
+                    public Integer apply(String o) {
+                        // max. 50 titles, max. 2048 of URL encoded title chars (to avoid HTTP 414)
+                        if (count.incrementAndGet() > 50 || length.addAndGet(Utils.encodeUrl(o).length()) > 2048) {
+                            count.set(0);
+                            length.set(0);
+                            return group.incrementAndGet();
+                        } else {
+                            return group.get();
+                        }
+                    }
+                }))
+                .values()
+                .stream()
+                .flatMap(chunk -> getWikidataForArticles0(wikipediaLang, chunk).entrySet().stream())
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+    }
+
+    private static Map<String, String> getWikidataForArticles0(String wikipediaLang, List<String> articles) {
+        if (articles.isEmpty()) {
             return Collections.emptyMap();
         }
         try {

@@ -79,7 +79,7 @@ public class WikipediaEntry implements Comparable<WikipediaEntry> {
     }
 
     public String getBrowserUrl() {
-        return WikipediaApp.getSiteUrl(lang) + "/wiki/" + Utils.encodeUrl(article.replace(" ", "_"));
+        return WikipediaApp.forLanguage(lang).getSiteUrl() + "/wiki/" + Utils.encodeUrl(article.replace(" ", "_"));
     }
 
     public String getLabelText() {

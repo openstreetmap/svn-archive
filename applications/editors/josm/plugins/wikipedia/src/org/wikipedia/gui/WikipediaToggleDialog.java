@@ -112,7 +112,7 @@ public class WikipediaToggleDialog extends ToggleDialog implements ActiveLayerCh
 
     private void updateTitle() {
         final String lang = getLanguageOfFirstItem();
-        final String host = WikipediaApp.getSiteUrl(lang).split("/+")[1];
+        final String host = WikipediaApp.forLanguage(lang).getSiteUrl().split("/+")[1];
         if (titleContext == null) {
             setTitle(host);
         } else {
@@ -154,8 +154,8 @@ public class WikipediaToggleDialog extends ToggleDialog implements ActiveLayerCh
 
                     @Override
                     List<WikipediaEntry> getEntries() {
-                        return WikipediaApp.getEntriesFromCoordinates(
-                                wikidata ? "wikidata" : wikipediaLang.get(), min, max);
+                        return WikipediaApp.forLanguage(wikidata ? "wikidata" : wikipediaLang.get())
+                                .getEntriesFromCoordinates(min, max);
                     }
                 }.execute();
             } catch (Exception ex) {
@@ -174,7 +174,7 @@ public class WikipediaToggleDialog extends ToggleDialog implements ActiveLayerCh
             entries.sort(null);
             publish(entries.toArray(new WikipediaEntry[entries.size()]));
             WikipediaApp.partitionList(entries, 20).forEach(chunk -> {
-                WikipediaApp.updateWIWOSMStatus(chunk.get(0).lang, chunk);
+                WikipediaApp.forLanguage(chunk.get(0).lang).updateWIWOSMStatus(chunk);
                 list.repaint();
             });
             return null;
@@ -216,8 +216,8 @@ public class WikipediaToggleDialog extends ToggleDialog implements ActiveLayerCh
             new UpdateWikipediaArticlesSwingWorker() {
                 @Override
                 List<WikipediaEntry> getEntries() {
-                    return WikipediaApp.getEntriesFromCategory(
-                            wikipediaLang.get(), category, Main.pref.getInteger("wikipedia.depth", 3));
+                    return WikipediaApp.forLanguage(wikipediaLang.get())
+                            .getEntriesFromCategory(category, Main.pref.getInteger("wikipedia.depth", 3));
                 }
             }.execute();
         }
@@ -340,7 +340,7 @@ public class WikipediaToggleDialog extends ToggleDialog implements ActiveLayerCh
             }
             final LatLon latLon = entry.coordinate != null
                     ? entry.coordinate
-                    : WikipediaApp.getCoordinateForArticle(entry.lang, entry.article);
+                    : WikipediaApp.forLanguage(entry.lang).getCoordinateForArticle(entry.article);
             if (latLon == null) {
                 return;
             }
@@ -353,7 +353,7 @@ public class WikipediaToggleDialog extends ToggleDialog implements ActiveLayerCh
         articles.clear();
         if (Main.main != null && Main.getLayerManager().getEditDataSet() != null) {
             Main.getLayerManager().getEditDataSet().allPrimitives().stream()
-                    .flatMap(p -> WikipediaApp.getWikipediaArticles(language, p))
+                    .flatMap(p -> WikipediaApp.forLanguage(language).getWikipediaArticles(p))
                     .forEach(articles::add);
         }
     }

@@ -128,7 +128,7 @@ public class FetchWikidataAction extends JosmAction {
             monitor.beginTask(trn(
                     "Fetching {0} Wikidata ID for language ''{1}''",
                     "Fetching {0} Wikidata IDs for language ''{1}''", size, size, lang));
-            final Map<String, String> wikidataByWikipedia = WikipediaApp.getWikidataForArticles(lang, new ArrayList<>(byArticle.keySet()));
+            final Map<String, String> wikidataByWikipedia = WikipediaApp.forLanguage(lang).getWikidataForArticles(byArticle.keySet());
             ConditionalOptionPaneUtil.startBulkOperation(GuiUtils.PREF_OVERWRITE);
             for (Map.Entry<String, Set<OsmPrimitive>> i : byArticle.entrySet()) {
                 final String wikipedia = i.getKey();

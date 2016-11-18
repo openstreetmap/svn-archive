@@ -57,7 +57,7 @@ final class WikipediaCategorySearchDialog extends ExtendedDialog {
             debouncer.debounce(getClass(), () -> {
                 final List<String> entries = query == null || query.isEmpty()
                         ? Collections.emptyList()
-                        : WikipediaApp.getCategoriesForPrefix(WikipediaToggleDialog.wikipediaLang.get(), query);
+                        : WikipediaApp.forLanguage(WikipediaToggleDialog.wikipediaLang.get()).getCategoriesForPrefix(query);
                 GuiHelper.runInEDT(() -> lsResultModel.setItems(entries));
             }, 200, TimeUnit.MILLISECONDS);
         }

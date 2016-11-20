@@ -1,10 +1,4 @@
-/**
- * Terracer: A JOSM Plugin for terraced houses.
- *
- * Copyright 2009 CloudMade Ltd.
- *
- * Released under the GPLv2, see LICENSE file for details.
- */
+// License: GPL. For details, see LICENSE file.
 package terracer;
 
 import org.openstreetmap.josm.Main;
@@ -15,7 +9,7 @@ import org.openstreetmap.josm.plugins.PluginInformation;
 /**
  * Plugin interface implementation for Terracer.
  *
- * @author zere
+ * @author zere - Copyright 2009 CloudMade Ltd
  */
 public class TerracerPlugin extends Plugin {
     public TerracerPlugin(PluginInformation info) {

@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package terracer;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -99,7 +100,7 @@ public class ReverseTerraceAction extends JosmAction {
                 if (!visitedNodes.contains(n)) {
                     for (OsmPrimitive prim : n.getReferrers()) {
                         if (prim.keySet().contains("building") && prim instanceof Way) {
-                            front.add((Way)prim);
+                            front.add((Way) prim);
                         }
                     }
                     visitedNodes.add(n);

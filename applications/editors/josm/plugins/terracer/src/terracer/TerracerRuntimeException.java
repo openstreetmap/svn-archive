@@ -1,16 +1,10 @@
-/**
- * Terracer: A JOSM Plugin for terraced houses.
- *
- * Copyright 2009 CloudMade Ltd.
- *
- * Released under the GPLv2, see LICENSE file for details.
- */
+// License: GPL. For details, see LICENSE file.
 package terracer;
 
 /**
  * The Class TerracerRuntimeException indicates errors from the Terracer Plugin.
  *
- * @author casualwalker
+ * @author casualwalker - Copyright 2009 CloudMade Ltd
  */
 public class TerracerRuntimeException extends RuntimeException {
 
@@ -21,24 +15,14 @@ public class TerracerRuntimeException extends RuntimeException {
         super();
     }
 
-    /**
-     * @param message
-     * @param cause
-     */
     public TerracerRuntimeException(String message, Throwable cause) {
         super(message, cause);
     }
 
-    /**
-     * @param message
-     */
     public TerracerRuntimeException(String message) {
         super(message);
     }
 
-    /**
-     * @param cause
-     */
     public TerracerRuntimeException(Throwable cause) {
         super(cause);
     }

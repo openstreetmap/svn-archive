@@ -1,10 +1,4 @@
-/**
- * Terracer: A JOSM Plugin for terraced houses.
- *
- * Copyright 2009 CloudMade Ltd.
- *
- * Released under the GPLv2, see LICENSE file for details.
- */
+// License: GPL. For details, see LICENSE file.
 package terracer;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -59,7 +53,7 @@ import org.openstreetmap.josm.tools.UserCancelException;
  * why it couldn't be extended to work with other shapes too. The
  * algorithm employed is naive, but it works in the simple case.
  *
- * @author zere
+ * @author zere - Copyright 2009 CloudMade Ltd
  */
 public final class TerracerAction extends JosmAction {
 
@@ -80,7 +74,7 @@ public final class TerracerAction extends JosmAction {
                         Shortcut.SHIFT), true);
     }
 
-    protected static final Set<Relation> findAssociatedStreets(Collection<OsmPrimitive> objects) {
+    protected static Set<Relation> findAssociatedStreets(Collection<OsmPrimitive> objects) {
         Set<Relation> result = new HashSet<>();
         if (objects != null) {
             for (OsmPrimitive c : objects) {
@@ -220,9 +214,10 @@ public final class TerracerAction extends JosmAction {
             // Special case of one outline and one address node.
             // Don't open the dialog
             try {
-                terraceBuilding(outline, init, street, associatedStreet, 0, null, null, 0, housenumbers, streetname, associatedStreet != null, false, "yes");
+                terraceBuilding(outline, init, street, associatedStreet, 0, null, null, 0, 
+                        housenumbers, streetname, associatedStreet != null, false, "yes");
             } catch (UserCancelException ex) {
-                // Ignore
+                Main.trace(ex);
             } finally {
                 this.commands.clear();
                 this.commands = null;
@@ -269,8 +264,7 @@ public final class TerracerAction extends JosmAction {
                     Integer node2Int = Integer.valueOf(mat.group(1));
                     // If the numbers are the same, the rest has to make the decision,
                     // e.g. when comparing 23, 23a and 23b.
-                    if (node1Int.equals(node2Int))
-                    {
+                    if (node1Int.equals(node2Int)) {
                       String node2Rest = mat.group(2);
                       return node1Rest.compareTo(node2Rest);
                     }
@@ -294,7 +288,7 @@ public final class TerracerAction extends JosmAction {
      * @param outline The closed, quadrilateral way to terrace.
      * @param init The node that hints at which side to start the numbering
      * @param street The street, the buildings belong to (may be null)
-     * @param associatedStreet
+     * @param associatedStreet associated street relation
      * @param segments The number of segments to generate
      * @param start Starting housenumber
      * @param end Ending housenumber
@@ -307,7 +301,7 @@ public final class TerracerAction extends JosmAction {
      *        existing relation
      * @param keepOutline If the outline way should be kept
      * @param buildingValue The value for {@code building} key to add
-     * @throws UserCancelException
+     * @throws UserCancelException if user cancels the operation
      */
     public void terraceBuilding(final Way outline, Node init, Way street, Relation associatedStreet, Integer segments,
                 String start, String end, int step, List<Node> housenumbers, String streetName, boolean handleRelations,
@@ -402,9 +396,10 @@ public final class TerracerAction extends JosmAction {
                 // Delete outline nodes having no tags and referrers but the outline itself
                 List<Node> nodes = outline.getNodes();
                 ArrayList<Node> nodesToDelete = new ArrayList<>();
-                for (Node n : nodes)
+                for (Node n : nodes) {
                     if (!n.hasKeys() && n.getReferrers().size() == 1 && !reusedNodes.contains(n))
                         nodesToDelete.add(n);
+                }
                 if (!nodesToDelete.isEmpty())
                     this.commands.add(DeleteCommand.delete(Main.getLayerManager().getEditLayer(), nodesToDelete));
             }
@@ -492,7 +487,7 @@ public final class TerracerAction extends JosmAction {
                             }
                         }
                     } catch (UserCancelException e) {
-                        // Ignore
+                        Main.trace(e);
                     }
                 }
                 return result;
@@ -509,7 +504,7 @@ public final class TerracerAction extends JosmAction {
      * @param associatedStreet The associated street. Used to determine if addr:street should be set or not.
      * @param buildingValue The value for {@code building} key to add
      * @return {@code outline}
-     * @throws UserCancelException
+     * @throws UserCancelException if user cancels the operation
      */
     private void addressBuilding(Way outline, Way street, String streetName, Relation associatedStreet,
             List<Node> housenumbers, int i, String defaultNumber, String buildingValue) throws UserCancelException {
@@ -559,9 +554,9 @@ public final class TerracerAction extends JosmAction {
      * @return A node at a distance l along w from the first point.
      */
     private Node interpolateAlong(Way w, double l) {
-        List<Pair<Node,Node>> pairs = w.getNodePairs(false);
+        List<Pair<Node, Node>> pairs = w.getNodePairs(false);
         for (int i = 0; i < pairs.size(); ++i) {
-            Pair<Node,Node> p = pairs.get(i);
+            Pair<Node, Node> p = pairs.get(i);
             final double seg_length = p.a.getCoor().greatCircleDistance(p.b.getCoor());
             if (l <= seg_length || i == pairs.size() - 1) {
                 // be generous on the last segment (numerical roudoff can lead to a small overshoot)
@@ -697,7 +692,7 @@ public final class TerracerAction extends JosmAction {
             public double x;
             public int i;
 
-            public SortWithIndex(double a, int b) {
+            SortWithIndex(double a, int b) {
                 x = a;
                 i = b;
             }

@@ -1,10 +1,4 @@
-/**
- * Terracer: A JOSM Plugin for terraced houses.
- *
- * Copyright 2009 CloudMade Ltd.
- *
- * Released under the GPLv2, see LICENSE file for details.
- */
+// License: GPL. For details, see LICENSE file.
 package terracer;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -44,23 +38,23 @@ import org.openstreetmap.josm.tools.WindowGeometry;
  *  This dialog is concerned with the layout, all logic goes into the
  *  HouseNumberinputHandler class.
  *
- * @author casualwalker
+ * @author casualwalker - Copyright 2009 CloudMade Ltd
  */
 public class HouseNumberInputDialog extends ExtendedDialog {
     /*
-    final static String MIN_NUMBER = "plugin.terracer.lowest_number";
-    final static String MAX_NUMBER = "plugin.terracer.highest_number";
-    final static String INTERPOLATION = "plugin.terracer.interpolation_mode";
+    static final String MIN_NUMBER = "plugin.terracer.lowest_number";
+    static final String MAX_NUMBER = "plugin.terracer.highest_number";
+    static final String INTERPOLATION = "plugin.terracer.interpolation_mode";
     */
-    final static String DEFAULT_SEGMENTS = "plugins.terracer.segments";
-    final static String HANDLE_RELATION = "plugins.terracer.handle_relation";
-    final static String KEEP_OUTLINE = "plugins.terracer.keep_outline";
-    final static String INTERPOLATION = "plugins.terracer.interpolation";
+    static final String DEFAULT_SEGMENTS = "plugins.terracer.segments";
+    static final String HANDLE_RELATION = "plugins.terracer.handle_relation";
+    static final String KEEP_OUTLINE = "plugins.terracer.keep_outline";
+    static final String INTERPOLATION = "plugins.terracer.interpolation";
 
-    //final private Way street;
-    final private String streetName;
-    final private String buildingType;
-    final private boolean relationExists;
+    //private final Way street;
+    private final String streetName;
+    private final String buildingType;
+    private final boolean relationExists;
     final ArrayList<Node> housenumbers;
 
     protected static final String DEFAULT_MESSAGE = tr("Enter housenumbers or amount of segments");
@@ -96,10 +90,11 @@ public class HouseNumberInputDialog extends ExtendedDialog {
      * @param relationExists If the buildings can be added to an existing relation or not.
      * @param housenumbers a list of house numbers in this outline (may be empty)
      */
-    public HouseNumberInputDialog(HouseNumberInputHandler handler, Way street, String streetName, String buildingType, boolean relationExists, ArrayList<Node> housenumbers) {
+    public HouseNumberInputDialog(HouseNumberInputHandler handler, Way street, String streetName,
+            String buildingType, boolean relationExists, ArrayList<Node> housenumbers) {
         super(Main.parent,
                 tr("Terrace a house"),
-                new String[] { tr("OK"), tr("Cancel")},
+                new String[] {tr("OK"), tr("Cancel")},
                 true
         );
         this.inputHandler = handler;
@@ -189,26 +184,26 @@ public class HouseNumberInputDialog extends ExtendedDialog {
             c.gridwidth = GridBagConstraints.REMAINDER;
             inputPanel.add(messageLabel, c);
 
-            inputPanel.add(loLabel, GBC.std().insets(3,3,0,0));
-            inputPanel.add(getLo(), GBC.eol().fill(GBC.HORIZONTAL).insets(5,3,0,0));
-            inputPanel.add(hiLabel, GBC.std().insets(3,3,0,0));
-            inputPanel.add(getHi(), GBC.eol().fill(GBC.HORIZONTAL).insets(5,3,0,0));
-            inputPanel.add(numbersLabel, GBC.std().insets(3,3,0,0));
-            inputPanel.add(getNumbers(), GBC.eol().fill(GBC.HORIZONTAL).insets(5,3,0,0));
-            inputPanel.add(interpolationLabel, GBC.std().insets(3,3,0,0));
-            inputPanel.add(getInterpolation(), GBC.eol().insets(5,3,0,0));
-            inputPanel.add(segmentsLabel, GBC.std().insets(3,3,0,0));
-            inputPanel.add(getSegments(), GBC.eol().fill(GBC.HORIZONTAL).insets(5,3,0,0));
+            inputPanel.add(loLabel, GBC.std().insets(3, 3, 0, 0));
+            inputPanel.add(getLo(), GBC.eol().fill(GBC.HORIZONTAL).insets(5, 3, 0, 0));
+            inputPanel.add(hiLabel, GBC.std().insets(3, 3, 0, 0));
+            inputPanel.add(getHi(), GBC.eol().fill(GBC.HORIZONTAL).insets(5, 3, 0, 0));
+            inputPanel.add(numbersLabel, GBC.std().insets(3, 3, 0, 0));
+            inputPanel.add(getNumbers(), GBC.eol().fill(GBC.HORIZONTAL).insets(5, 3, 0, 0));
+            inputPanel.add(interpolationLabel, GBC.std().insets(3, 3, 0, 0));
+            inputPanel.add(getInterpolation(), GBC.eol().insets(5, 3, 0, 0));
+            inputPanel.add(segmentsLabel, GBC.std().insets(3, 3, 0, 0));
+            inputPanel.add(getSegments(), GBC.eol().fill(GBC.HORIZONTAL).insets(5, 3, 0, 0));
             if (streetName == null) {
-                inputPanel.add(streetLabel, GBC.std().insets(3,3,0,0));
-                inputPanel.add(getStreet(), GBC.eol().insets(5,3,0,0));
+                inputPanel.add(streetLabel, GBC.std().insets(3, 3, 0, 0));
+                inputPanel.add(getStreet(), GBC.eol().insets(5, 3, 0, 0));
             } else {
-                inputPanel.add(new JLabel(tr("Street name: ")+"\""+streetName+"\""), GBC.eol().insets(3,3,0,0));
+                inputPanel.add(new JLabel(tr("Street name: ")+"\""+streetName+"\""), GBC.eol().insets(3, 3, 0, 0));
             }
-            inputPanel.add(buildingLabel, GBC.std().insets(3,3,0,0));
-            inputPanel.add(getBuilding(), GBC.eol().insets(5,3,0,0));
-            inputPanel.add(handleRelationCheckBox, GBC.eol().insets(3,3,0,0));
-            inputPanel.add(keepOutlineCheckBox, GBC.eol().insets(3,3,0,0));
+            inputPanel.add(buildingLabel, GBC.std().insets(3, 3, 0, 0));
+            inputPanel.add(getBuilding(), GBC.eol().insets(5, 3, 0, 0));
+            inputPanel.add(handleRelationCheckBox, GBC.eol().insets(3, 3, 0, 0));
+            inputPanel.add(keepOutlineCheckBox, GBC.eol().insets(3, 3, 0, 0));
 
             if (numbers.isVisible()) {
                 loLabel.setVisible(false);
@@ -274,10 +269,10 @@ public class HouseNumberInputDialog extends ExtendedDialog {
             StringBuilder s = new StringBuilder(256);
             if (it.hasNext()) {
                 s.append(it.next().get("addr:housenumber"));
-                while (it.hasNext())
+                while (it.hasNext()) {
                     s.append(';').append(it.next().get("addr:housenumber"));
-            }
-            else {
+                }
+            } else {
                 numbersLabel.setVisible(false);
                 numbers.setVisible(false);
             }

@@ -23,31 +23,14 @@ public class LiveGpsData {
     private String wayString;
     private Way way;
 
-    /**
-     * @param latitude
-     * @param longitude
-     * @param course
-     * @param speed
-     * @param haveFix
-     */
     public LiveGpsData(double latitude, double longitude, float course, float speed) {
-        super();
         this.fix = true;
         this.latLon = new LatLon(latitude, longitude);
         this.course = course;
         this.speed = speed;
     }
-    /**
-     * @param latitude
-     * @param longitude
-     * @param course
-     * @param speed
-     * @param haveFix
-     * @param epx
-     * @param epy
-     */
+
     public LiveGpsData(double latitude, double longitude, float course, float speed, float epx, float epy) {
-        super();
         this.fix = true;
         this.latLon = new LatLon(latitude, longitude);
         this.course = course;
@@ -62,42 +45,49 @@ public class LiveGpsData {
     public float getCourse() {
         return this.course;
     }
+
     /**
      * @param course the course to set
      */
     public void setCourse(float course) {
         this.course = course;
     }
+
     /**
      * @return the haveFix
      */
     public boolean isFix() {
         return this.fix;
     }
+
     /**
      * @param haveFix the haveFix to set
      */
     public void setFix(boolean haveFix) {
         this.fix = haveFix;
     }
+
     /**
      * @return the latitude
      */
     public double getLatitude() {
         return this.latLon.lat();
     }
+
     /**
      * @return the longitude
      */
     public double getLongitude() {
         return this.latLon.lon();
     }
+
     /**
      * @return the speed in metres per second!
      */
     public float getSpeed() {
         return this.speed;
     }
+
     /**
      * @param speed the speed to set
      */
@@ -112,9 +102,6 @@ public class LiveGpsData {
         return this.latLon;
     }
 
-    /**
-     * @param latLon
-     */
     public void setLatLon(LatLon latLon) {
         this.latLon = latLon;
     }

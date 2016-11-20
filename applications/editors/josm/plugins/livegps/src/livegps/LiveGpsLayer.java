@@ -31,8 +31,10 @@ public class LiveGpsLayer extends GpxLayer implements PropertyChangeListener {
     public static final String C_LIVEGPS_COLOR_POSITION = "color.livegps.position";
     public static final String C_LIVEGPS_COLOR_POSITION_ESTIMATE = "color.livegps.position_estimate";
 
-    private static final CachingProperty<Color> COLOR_POSITION = new ColorProperty(C_LIVEGPS_COLOR_POSITION_ESTIMATE, Color.RED).cached();
-    private static final CachingProperty<Color> COLOR_POSITION_ESTIMATE = new ColorProperty(C_LIVEGPS_COLOR_POSITION_ESTIMATE, Color.CYAN).cached();
+    private static final CachingProperty<Color> COLOR_POSITION =
+            new ColorProperty(C_LIVEGPS_COLOR_POSITION_ESTIMATE, Color.RED).cached();
+    private static final CachingProperty<Color> COLOR_POSITION_ESTIMATE =
+            new ColorProperty(C_LIVEGPS_COLOR_POSITION_ESTIMATE, Color.CYAN).cached();
 
     private static final int DEFAULT_REFRESH_INTERVAL = 250;
     private static final int DEFAULT_CENTER_INTERVAL = 5000;
@@ -97,7 +99,7 @@ public class LiveGpsLayer extends GpxLayer implements PropertyChangeListener {
         Date date = new Date();
         long current = date.getTime();
 
-        rv.grow(-(int)(rv.getHeight() * centerFactor), -(int)(rv.getWidth() * centerFactor));
+        rv.grow(-(int) (rv.getHeight() * centerFactor), -(int) (rv.getWidth() * centerFactor));
 
         if (!rv.contains(P) || (centerInterval > 0 && current - lastCenter >= centerInterval)) {
             Main.map.mapView.zoomTo(Pos);
@@ -131,8 +133,8 @@ public class LiveGpsLayer extends GpxLayer implements PropertyChangeListener {
         int w, h;
         double ppm = 100 / mv.getDist100Pixel();    /* pixels per metre */
 
-        w = (int )Math.round(lastData.getEpx() * ppm);
-        h = (int )Math.round(lastData.getEpy() * ppm);
+        w = (int) Math.round(lastData.getEpx() * ppm);
+        h = (int) Math.round(lastData.getEpy() * ppm);
 
         if (w > TriaWidth || h > TriaWidth) {
             int xo, yo;
@@ -146,12 +148,12 @@ public class LiveGpsLayer extends GpxLayer implements PropertyChangeListener {
         int[] x = new int[4];
         int[] y = new int[4];
         float course = lastData.getCourse();
-        float csin = (float )Math.sin(Math.toRadians(course));
-        float ccos = (float )Math.cos(Math.toRadians(course));
-        float csin120 = (float )Math.sin(Math.toRadians(course + 120));
-        float ccos120 = (float )Math.cos(Math.toRadians(course + 120));
-        float csin240 = (float )Math.sin(Math.toRadians(course + 240));
-        float ccos240 = (float )Math.cos(Math.toRadians(course + 240));
+        float csin = (float) Math.sin(Math.toRadians(course));
+        float ccos = (float) Math.cos(Math.toRadians(course));
+        float csin120 = (float) Math.sin(Math.toRadians(course + 120));
+        float ccos120 = (float) Math.cos(Math.toRadians(course + 120));
+        float csin240 = (float) Math.sin(Math.toRadians(course + 240));
+        float ccos240 = (float) Math.cos(Math.toRadians(course + 240));
 
         g.setColor(COLOR_POSITION.get());
 
@@ -222,7 +224,7 @@ public class LiveGpsLayer extends GpxLayer implements PropertyChangeListener {
 
             Main.pref.putInteger(C_REFRESH_INTERVAL, refreshInterval);
             Main.pref.putInteger(C_CENTER_INTERVAL, centerInterval);
-        Main.pref.putInteger(C_CENTER_FACTOR, (int )centerFactor);
+        Main.pref.putInteger(C_CENTER_FACTOR, (int) centerFactor);
 
         /*
          * Do one time conversion of factor: user value means "how big is inner rectangle

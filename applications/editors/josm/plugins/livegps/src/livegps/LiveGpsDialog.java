@@ -33,19 +33,12 @@ public class LiveGpsDialog extends ToggleDialog implements PropertyChangeListene
     private LiveGpsStatus status;
     private LiveGpsData data;
 
-    /**
-     * @param name
-     * @param iconName
-     * @param tooltip
-     * @param shortcut
-     * @param preferredHeight
-     */
     public LiveGpsDialog(final MapFrame mapFrame) {
         super(tr("Live GPS"), "livegps", tr("Show GPS data."),
         Shortcut.registerShortcut("subwindow:livegps", tr("Toggle: {0}", tr("Live GPS")),
         KeyEvent.VK_G, Shortcut.ALT_CTRL_SHIFT), 100);
         panel = new JPanel();
-        panel.setLayout(new GridLayout(6,2));
+        panel.setLayout(new GridLayout(6, 2));
         panel.add(new JLabel(tr("Status")));
         panel.add(statusLabel = new JLabel());
         panel.add(new JLabel(tr("Way Info")));
@@ -93,7 +86,7 @@ public class LiveGpsDialog extends ToggleDialog implements PropertyChangeListene
                     courseLabel.setText("");
                     panel.setBackground(Color.RED);
                 }
-            }});
+            } });
         } else if ("gpsstatus".equals(evt.getPropertyName())) {
             status = (LiveGpsStatus) evt.getNewValue();
 
@@ -106,7 +99,7 @@ public class LiveGpsDialog extends ToggleDialog implements PropertyChangeListene
                 } else {
                     panel.setBackground(Color.WHITE);
                 }
-            }});
+            } });
         }
     }
 }

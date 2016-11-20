@@ -179,8 +179,9 @@ public class LiveGpsPlugin extends Plugin implements LayerChangeListener {
 
             acquirer.addPropertyChangeListener(lgpslayer);
             acquirer.addPropertyChangeListener(lgpsdialog);
-            for (PropertyChangeListener listener : listenerQueue)
+            for (PropertyChangeListener listener : listenerQueue) {
                 acquirer.addPropertyChangeListener(listener);
+            }
 
             acquirerThread.start();
 

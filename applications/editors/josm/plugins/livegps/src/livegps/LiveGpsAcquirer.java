@@ -128,11 +128,11 @@ public class LiveGpsAcquirer implements Runnable {
                 try {
                     connect();
                 } catch (IOException iox) {
-                    fireGpsStatusChangeEvent( LiveGpsStatus.GpsStatus.CONNECTION_FAILED, tr("Connection Failed"));
+                    fireGpsStatusChangeEvent(LiveGpsStatus.GpsStatus.CONNECTION_FAILED, tr("Connection Failed"));
                     try {
                         Thread.sleep(1000);
                     } catch (InterruptedException ignore) {
-
+                        Main.trace(ignore);
                     }
                 }
             }
@@ -190,7 +190,7 @@ public class LiveGpsAcquirer implements Runnable {
         String line, type, release;
 
         Main.info("LiveGps: trying to connect to gpsd at " + gpsdHost + ":" + gpsdPort);
-        fireGpsStatusChangeEvent( LiveGpsStatus.GpsStatus.CONNECTING, tr("Connecting"));
+        fireGpsStatusChangeEvent(LiveGpsStatus.GpsStatus.CONNECTING, tr("Connecting"));
 
         InetAddress[] addrs = InetAddress.getAllByName(gpsdHost);
         for (int i = 0; i < addrs.length && gpsdSocket == null; i++) {
@@ -209,7 +209,7 @@ public class LiveGpsAcquirer implements Runnable {
         /*
          * First emit the "w" symbol. The older version will activate, the newer one will ignore it.
          */
-        gpsdSocket.getOutputStream().write(new byte[] { 'w', 13, 10 });
+        gpsdSocket.getOutputStream().write(new byte[] {'w', 13, 10});
 
         gpsdReader = new BufferedReader(new InputStreamReader(gpsdSocket.getInputStream(), StandardCharsets.UTF_8));
         line = gpsdReader.readLine();
@@ -286,19 +286,19 @@ public class LiveGpsAcquirer implements Runnable {
         JsonNumber trackJson = report.getJsonNumber("track");
 
         if (speedJson != null)
-            speed = (float )speedJson.doubleValue();
+            speed = (float) speedJson.doubleValue();
         if (trackJson != null)
-            course = (float )trackJson.doubleValue();
+            course = (float) trackJson.doubleValue();
         if (epxJson != null)
-            epx = (float )epxJson.doubleValue();
+            epx = (float) epxJson.doubleValue();
         if (epyJson != null)
-            epy = (float )epyJson.doubleValue();
+            epy = (float) epyJson.doubleValue();
 
         return new LiveGpsData(lat, lon, course, speed, epx, epy);
     }
 
     private LiveGpsData ParseOld(String line) {
-        String words[];
+        String[] words;
         double lat = 0;
         double lon = 0;
         float speed = 0;

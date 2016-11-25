@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.turnlanes.gui;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -25,25 +26,25 @@ import org.openstreetmap.josm.plugins.turnlanes.model.Validator;
 
 class ValidationPanel extends JPanel {
     private static final long serialVersionUID = -1585778734201458665L;
-    
+
     private static final String[] COLUMN_NAMES = {
         tr("Description"), tr("Type"), tr("Quick-Fix")
     };
-    
+
     private final Action refreshAction = new JosmAction(tr("Refresh"), "dialogs/refresh",
         tr("Revalidate all turnlanes-relations."), null, false) {
         private static final long serialVersionUID = -8110599654128234810L;
-        
+
         @Override
         public void actionPerformed(ActionEvent e) {
             setIssues(new Validator().validate(Main.getLayerManager().getEditDataSet()));
         }
     };
-    
+
     private final Action fixAction = new JosmAction(tr("Fix"), "dialogs/fix", tr("Automatically fixes the issue."), null,
         false) {
         private static final long serialVersionUID = -8110599654128234810L;
-        
+
         @Override
         public void actionPerformed(ActionEvent e) {
             if (selected.getQuickFix().perform()) {
@@ -53,11 +54,11 @@ class ValidationPanel extends JPanel {
             }
         }
     };
-    
+
     private final Action selectAction = new JosmAction(tr("Select"), "dialogs/select",
         tr("Selects the offending relation."), null, false) {
         private static final long serialVersionUID = -8110599654128234810L;
-        
+
         @Override
         public void actionPerformed(ActionEvent e) {
             if (selected.getRelation() == null) {
@@ -67,53 +68,54 @@ class ValidationPanel extends JPanel {
             }
         }
     };
-    
+
     private final SideButton refreshButton = new SideButton(refreshAction);
     private final SideButton fixButton = new SideButton(fixAction);
     private final SideButton selectButton = new SideButton(selectAction);
-    
+
     private final DefaultTableModel issueModel = new DefaultTableModel(COLUMN_NAMES, 0);
     private final List<Issue> issues = new ArrayList<>();
     private final JTable issueTable = new JTable(issueModel) {
         private static final long serialVersionUID = 6323348290180585298L;
-        
+
+        @Override
         public boolean isCellEditable(int row, int column) {
             return false;
-        };
+        }
     };
-    
+
     private Issue selected;
-    
-    public ValidationPanel() {
+
+    ValidationPanel() {
         super(new BorderLayout(4, 4));
-        
+
         final JPanel buttonPanel = new JPanel(new GridLayout(1, 3, 4, 4));
-        
+
         buttonPanel.add(refreshButton);
         buttonPanel.add(fixButton);
         buttonPanel.add(selectButton);
-        
+
         add(buttonPanel, BorderLayout.NORTH);
         add(new JScrollPane(issueTable), BorderLayout.CENTER);
-        
+
         issueTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         issueTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent e) {
                 final int i = issueTable.getSelectedRow();
                 final Issue issue = i >= 0 ? issues.get(i) : null;
-                
+
                 setSelected(issue);
             }
         });
-        
+
         setSelected(null);
     }
-    
+
     private void setIssues(List<Issue> issues) {
         issueModel.setRowCount(0);
         this.issues.clear();
-        
+
         for (Issue i : issues) {
             final String[] row = {
                 i.getDescription(), //
@@ -124,10 +126,10 @@ class ValidationPanel extends JPanel {
             this.issues.add(i);
         }
     }
-    
+
     private void setSelected(Issue selected) {
         this.selected = selected;
-        
+
         if (selected == null) {
             fixButton.setEnabled(false);
             selectButton.setEnabled(false);

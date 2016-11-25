@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.turnlanes.gui;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -41,12 +42,12 @@ import org.openstreetmap.josm.plugins.turnlanes.model.ModelContainer;
 public class TurnLanesDialog extends ToggleDialog implements ActiveLayerChangeListener, SelectionChangedListener {
     private class EditAction extends JosmAction {
         private static final long serialVersionUID = 4114119073563457706L;
-        
-        public EditAction() {
+
+        EditAction() {
             super(tr("Edit"), "dialogs/edit", tr("Edit turn relations and lane lengths for selected node."), null,
                     false);
         }
-        
+
         @Override
         public void actionPerformed(ActionEvent e) {
             final CardLayout cl = (CardLayout) body.getLayout();
@@ -56,15 +57,15 @@ public class TurnLanesDialog extends ToggleDialog implements ActiveLayerChangeLi
             refresh();
         }
     }
-    
+
     private class ValidateAction extends JosmAction {
         private static final long serialVersionUID = 7510740945725851427L;
-        
-        public ValidateAction() {
+
+        ValidateAction() {
             super(tr("Validate"), "dialogs/validator", tr("Validate turn- and lane-length-relations for consistency."),
                     null, false);
         }
-        
+
         @Override
         public void actionPerformed(ActionEvent e) {
             final CardLayout cl = (CardLayout) body.getLayout();
@@ -73,99 +74,99 @@ public class TurnLanesDialog extends ToggleDialog implements ActiveLayerChangeLi
             validateButton.setSelected(true);
         }
     }
-    
+
     private final DataSetListener dataSetListener = new DataSetListener() {
         @Override
         public void wayNodesChanged(WayNodesChangedEvent event) {
             refresh();
         }
-        
+
         @Override
         public void tagsChanged(TagsChangedEvent event) {
             refresh();
-            
+
         }
-        
+
         @Override
         public void relationMembersChanged(RelationMembersChangedEvent event) {
             refresh();
         }
-        
+
         @Override
         public void primitivesRemoved(PrimitivesRemovedEvent event) {
             refresh();
         }
-        
+
         @Override
         public void primitivesAdded(PrimitivesAddedEvent event) {
             refresh();
         }
-        
+
         @Override
         public void otherDatasetChange(AbstractDatasetChangedEvent event) {
             refresh();
         }
-        
+
         @Override
         public void nodeMoved(NodeMovedEvent event) {
             refresh();
         }
-        
+
         @Override
         public void dataChanged(DataChangedEvent event) {
             refresh();
         }
-        
+
         private void refresh() {
             if (editing) {
                 junctionPane.refresh();
             }
         }
     };
-    
+
     private final JosmAction editAction = new EditAction();
     private final JosmAction validateAction = new ValidateAction();
-    
+
     private static final long serialVersionUID = -1998375221636611358L;
-    
+
     private static final String CARD_EDIT = "EDIT";
     private static final String CARD_VALIDATE = "VALIDATE";
-    
+
     private final JPanel body = new JPanel();
     private final JunctionPane junctionPane = new JunctionPane(GuiContainer.empty());
-    
+
     private final JToggleButton editButton = new JToggleButton(editAction);
     private final JToggleButton validateButton = new JToggleButton(validateAction);
-    
+
     private final Set<OsmPrimitive> selected = new HashSet<>();
-    
+
     private boolean editing = true;
     private boolean wasShowing = false;
-    
+
     public TurnLanesDialog() {
         super(tr("Turn Lanes"), "turnlanes.png", tr("Edit turn lanes"), null, 200);
-        
+
         Main.getLayerManager().addActiveLayerChangeListener(this);
         DataSet.addSelectionListener(this);
-        
+
         final JPanel buttonPanel = new JPanel(new GridLayout(1, 2, 4, 4));
         final ButtonGroup group = new ButtonGroup();
         group.add(editButton);
         group.add(validateButton);
         buttonPanel.add(editButton);
         buttonPanel.add(validateButton);
-        
+
         body.setLayout(new CardLayout(4, 4));
-        
+
         add(buttonPanel, BorderLayout.SOUTH);
         add(body, BorderLayout.CENTER);
-        
+
         body.add(junctionPane, CARD_EDIT);
         body.add(new ValidationPanel(), CARD_VALIDATE);
-        
+
         editButton.doClick();
     }
-    
+
     @Override
     protected void stateChanged() {
         if (isShowing && !wasShowing) {
@@ -173,16 +174,16 @@ public class TurnLanesDialog extends ToggleDialog implements ActiveLayerChangeLi
         }
         wasShowing = isShowing;
     }
-    
+
     void refresh() {
         if (isShowing && editing) {
             final Collection<OsmPrimitive> s = Collections.unmodifiableCollection(selected);
             final List<Node> nodes = OsmPrimitive.getFilteredList(s, Node.class);
             final List<Way> ways = OsmPrimitive.getFilteredList(s, Way.class);
-            
+
             final ModelContainer mc = nodes.isEmpty() ? ModelContainer.empty() : ModelContainer
                     .createEmpty(nodes, ways);
-            
+
             junctionPane.setJunction(new GuiContainer(mc));
         }
     }

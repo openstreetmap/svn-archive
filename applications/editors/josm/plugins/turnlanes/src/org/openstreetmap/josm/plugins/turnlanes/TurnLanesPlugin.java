@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.turnlanes;
 
 import org.openstreetmap.josm.gui.MapFrame;

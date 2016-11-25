@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.insignificant.josm.plugins.imagewaypoint;
 
 import java.awt.Image;
@@ -17,12 +18,12 @@ public final class ImageEntries {
         IImageReadyListener {
         private final ImageEntries imageEntries;
 
-        public ImageReadyListener(final ImageEntries imageEntries) {
+        ImageReadyListener(final ImageEntries imageEntries) {
             this.imageEntries = imageEntries;
         }
 
         @Override
-        public final void onImageReady(final ImageEntry imageEntry,
+        public void onImageReady(final ImageEntry imageEntry,
             final Image image) {
             this.imageEntries.setCurrentImage(imageEntry, image);
         }
@@ -48,19 +49,19 @@ public final class ImageEntries {
         this.currentImage = null;
     }
 
-    public static final ImageEntries getInstance() {
+    public static ImageEntries getInstance() {
         return ImageEntries.INSTANCE;
     }
 
-    public final void addListener(final IImageChangeListener listener) {
+    public void addListener(final IImageChangeListener listener) {
         this.listeners.add(listener);
     }
 
-    public final void removeListener(final IImageChangeListener listener) {
+    public void removeListener(final IImageChangeListener listener) {
         this.listeners.remove(listener);
     }
 
-    public final void add(final File[] imageFiles) {
+    public void add(final File[] imageFiles) {
         if (null != imageFiles) {
             for (int index = 0; index < imageFiles.length; index++) {
             this.images.add(new ImageEntry(imageFiles[index]));
@@ -69,7 +70,7 @@ public final class ImageEntries {
         }
     }
 
-    public final void associateAllLayers() {
+    public void associateAllLayers() {
         for (int index = 0; index < this.images.size(); index++) {
             this.images.get(index).setWayPoint(null);
         }
@@ -91,7 +92,7 @@ public final class ImageEntries {
         }
     }
 
-    private final void doAssociateLayer(final GpxLayer gpxLayer) {
+    private void doAssociateLayer(final GpxLayer gpxLayer) {
         if (null != gpxLayer && null != gpxLayer.data
         && !gpxLayer.data.fromServer) {
             for (WayPoint wayPoint : gpxLayer.data.waypoints) {
@@ -108,17 +109,16 @@ public final class ImageEntries {
         }
     }
 
-    private final List<String> getTextContentsFromWayPoint(
-    final WayPoint wayPoint) {
-    final List<String> texts = new ArrayList<>();
-    for(String s : new String[]{"name", "cmt", "desc"})
-    {
-        String t = wayPoint.getString(s);
-        if(null != t && 0 < t.length())
-            texts.add(t);
-    }
+    private List<String> getTextContentsFromWayPoint(
+        final WayPoint wayPoint) {
+        final List<String> texts = new ArrayList<>();
+        for (String s : new String[]{"name", "cmt", "desc"}) {
+            String t = wayPoint.getString(s);
+            if (null != t && 0 < t.length())
+                texts.add(t);
+        }
 
-    return texts;
+        return texts;
     }
 
     // private final String getFileNameFromWayPointAttribute(
@@ -131,7 +131,7 @@ public final class ImageEntries {
     // .endsWith(".gif")) ? attributeValue : null;
     // }
 
-    private final ImageEntry findImageEntryWithFileName(final String fileName) {
+    private ImageEntry findImageEntryWithFileName(final String fileName) {
         ImageEntry foundimage = null;
 
         for (int index = 0; index < this.images.size() && null == foundimage; index++) {
@@ -145,8 +145,7 @@ public final class ImageEntries {
         return foundimage;
     }
 
-    private final void setCurrentImage(final ImageEntry imageEntry,
-    final Image image) {
+    private void setCurrentImage(final ImageEntry imageEntry, final Image image) {
         if (imageEntry == this.currentImageEntry) {
             this.currentImage = image;
         }
@@ -156,43 +155,43 @@ public final class ImageEntries {
         }
     }
 
-    public final ImageEntry[] getImages() {
+    public ImageEntry[] getImages() {
         return this.locatedImages.toArray(new ImageEntry[this.locatedImages.size()]);
     }
 
-    public final ImageEntry getCurrentImageEntry() {
+    public ImageEntry getCurrentImageEntry() {
         return this.currentImageEntry;
     }
 
-    public final Image getCurrentImage() {
+    public Image getCurrentImage() {
         return this.currentImage;
     }
 
-    public final boolean hasNext() {
+    public boolean hasNext() {
         return null != this.currentImageEntry
         && this.locatedImages.indexOf(this.currentImageEntry) < this.locatedImages.size() - 1;
     }
 
-    public final boolean hasPrevious() {
+    public boolean hasPrevious() {
         return null != this.currentImageEntry
         && this.locatedImages.indexOf(this.currentImageEntry) > 0;
     }
 
-    public final void next() {
+    public void next() {
         if (null != this.currentImageEntry
         && this.locatedImages.indexOf(this.currentImageEntry) < this.locatedImages.size() - 1) {
             this.setCurrentImageEntry(this.locatedImages.get(this.locatedImages.indexOf(this.currentImageEntry) + 1));
         }
     }
 
-    public final void previous() {
+    public void previous() {
         if (null != this.currentImageEntry
         && this.locatedImages.indexOf(this.currentImageEntry) > 0) {
             this.setCurrentImageEntry(this.locatedImages.get(this.locatedImages.indexOf(this.currentImageEntry) - 1));
         }
     }
 
-    public final void rotateCurrentImageLeft() {
+    public void rotateCurrentImageLeft() {
         if (null != this.currentImageEntry) {
             this.currentImageEntry.setOrientation(this.currentImageEntry.getOrientation()
             .rotateLeft());
@@ -201,7 +200,7 @@ public final class ImageEntries {
         this.setCurrentImageEntry(this.currentImageEntry);
     }
 
-    public final void rotateCurrentImageRight() {
+    public void rotateCurrentImageRight() {
         if (null != this.currentImageEntry) {
             this.currentImageEntry.setOrientation(this.currentImageEntry.getOrientation()
             .rotateRight());
@@ -210,7 +209,7 @@ public final class ImageEntries {
         this.setCurrentImageEntry(this.currentImageEntry);
     }
 
-    public final void setCurrentImageEntry(final ImageEntry imageEntry) {
+    public void setCurrentImageEntry(final ImageEntry imageEntry) {
         if (null == imageEntry || this.locatedImages.contains(imageEntry)) {
             if (null != this.currentImageEntry)
                 this.currentImageEntry.flush();
@@ -218,10 +217,11 @@ public final class ImageEntries {
             this.currentImageEntry = imageEntry;
             this.currentImage = null;
 
-            for (IImageChangeListener listener : this.listeners)
+            for (IImageChangeListener listener : this.listeners) {
                 listener.onSelectedImageEntryChanged(this);
+            }
 
-            if(imageEntry != null) // now try to get the image
+            if (imageEntry != null) // now try to get the image
                 this.currentImageEntry.requestImage(this.listener);
         }
     }

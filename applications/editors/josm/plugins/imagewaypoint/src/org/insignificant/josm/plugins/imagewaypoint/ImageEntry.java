@@ -1,6 +1,4 @@
-/**
- *
- */
+// License: GPL. For details, see LICENSE file.
 package org.insignificant.josm.plugins.imagewaypoint;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -28,7 +26,7 @@ public final class ImageEntry implements Comparable<ImageEntry> {
     private static final class Observer implements ImageObserver {
         private final ImageEntry imageEntry;
 
-        public Observer(final ImageEntry imageEntry) {
+        Observer(final ImageEntry imageEntry) {
             this.imageEntry = imageEntry;
         }
 
@@ -39,7 +37,7 @@ public final class ImageEntry implements Comparable<ImageEntry> {
          *         image loading progress
          */
         @Override
-        public final boolean imageUpdate(final Image image,
+        public boolean imageUpdate(final Image image,
             final int infoflags, final int x, final int y, final int width,
             final int height) {
             final boolean complete = ImageObserver.ALLBITS == (infoflags | ImageObserver.ALLBITS);
@@ -71,7 +69,7 @@ public final class ImageEntry implements Comparable<ImageEntry> {
         Orientation.orientations[index] = this;
     }
 
-    public final Orientation rotateRight() {
+    public Orientation rotateRight() {
         if (this.index < Orientation.orientations.length - 1) {
         return Orientation.orientations[this.index + 1];
         } else {
@@ -79,7 +77,7 @@ public final class ImageEntry implements Comparable<ImageEntry> {
         }
     }
 
-    public final Orientation rotateLeft() {
+    public Orientation rotateLeft() {
         if (this.index == 0) {
         return Orientation.orientations[Orientation.orientations.length - 1];
         } else {
@@ -120,78 +118,78 @@ public final class ImageEntry implements Comparable<ImageEntry> {
     }
 
     @Override
-    public final int compareTo(final ImageEntry image) {
-    return this.fileName.compareTo(image.fileName);
+    public int compareTo(final ImageEntry image) {
+        return this.fileName.compareTo(image.fileName);
     }
 
-    public final String getFileName() {
-    return fileName;
+    public String getFileName() {
+        return fileName;
     }
 
-    public final WayPoint getWayPoint() {
-    return wayPoint;
+    public WayPoint getWayPoint() {
+        return wayPoint;
     }
 
-    public final void setWayPoint(final WayPoint wayPoint) {
-    this.wayPoint = wayPoint;
+    public void setWayPoint(final WayPoint wayPoint) {
+        this.wayPoint = wayPoint;
     }
 
-    public final Orientation getOrientation() {
-    return orientation;
+    public Orientation getOrientation() {
+        return orientation;
     }
 
-    public final void setOrientation(final Orientation orientation) {
-    this.orientation = orientation;
-    this.normalImage = null;
-    this.rotatedImage = null;
-    }
-
-    public final Rectangle getBounds(final MapView mapView) {
-    final Rectangle bounds;
-
-    if (null == this.wayPoint) {
-        bounds = null;
-    } else {
-        final Point point = mapView.getPoint(this.getWayPoint().getCoor());
-        bounds = new Rectangle(point.x - ImageEntry.ICON_WIDTH,
-        point.y - ImageEntry.ICON_HEIGHT,
-        ImageEntry.ICON_WIDTH,
-        ImageEntry.ICON_WIDTH);
-    }
-
-    return bounds;
-    }
-
-    public final void requestImage(final IImageReadyListener imageReadyListener) {
-    this.listener = imageReadyListener;
-
-    if (null == this.rotatedImage) {
-        final Image image = Toolkit.getDefaultToolkit()
-        .getImage(this.filePath);
-        if (Toolkit.getDefaultToolkit().prepareImage(image,
-        -1,
-        -1,
-        this.observer)) {
-        this.imageLoaded(image);
-        }
-    } else if (null != this.listener) {
-        this.listener.onImageReady(this, this.rotatedImage);
-    }
-    }
-
-    public final void flush() {
-    if (null != this.normalImage) {
-        this.normalImage.flush();
+    public void setOrientation(final Orientation orientation) {
+        this.orientation = orientation;
         this.normalImage = null;
-    }
-
-    if (null != this.rotatedImage) {
-        this.rotatedImage.flush();
         this.rotatedImage = null;
     }
+
+    public Rectangle getBounds(final MapView mapView) {
+        final Rectangle bounds;
+
+        if (null == this.wayPoint) {
+            bounds = null;
+        } else {
+            final Point point = mapView.getPoint(this.getWayPoint().getCoor());
+            bounds = new Rectangle(point.x - ImageEntry.ICON_WIDTH,
+            point.y - ImageEntry.ICON_HEIGHT,
+            ImageEntry.ICON_WIDTH,
+            ImageEntry.ICON_WIDTH);
+        }
+
+        return bounds;
     }
 
-    private final void imageLoaded(final Image image) {
+    public void requestImage(final IImageReadyListener imageReadyListener) {
+        this.listener = imageReadyListener;
+
+        if (null == this.rotatedImage) {
+            final Image image = Toolkit.getDefaultToolkit()
+            .getImage(this.filePath);
+            if (Toolkit.getDefaultToolkit().prepareImage(image,
+            -1,
+            -1,
+            this.observer)) {
+            this.imageLoaded(image);
+            }
+        } else if (null != this.listener) {
+            this.listener.onImageReady(this, this.rotatedImage);
+        }
+    }
+
+    public void flush() {
+        if (null != this.normalImage) {
+            this.normalImage.flush();
+            this.normalImage = null;
+        }
+
+        if (null != this.rotatedImage) {
+            this.rotatedImage.flush();
+            this.rotatedImage = null;
+        }
+    }
+
+    private void imageLoaded(final Image image) {
     if (Orientation.NORMAL == this.getOrientation()) {
         this.rotatedImage = image;
     } else {

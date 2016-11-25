@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.insignificant.josm.plugins.imagewaypoint;
 
 import java.io.File;
@@ -20,7 +21,7 @@ import org.openstreetmap.josm.plugins.PluginInformation;
 public final class ImageWayPointPlugin extends org.openstreetmap.josm.plugins.Plugin {
     private final class ImageWaypointImporter extends FileImporter {
 
-        public ImageWaypointImporter() {
+        ImageWaypointImporter() {
             super(new ExtensionFileFilter("jpg,jpeg,png,gif", "jpg", "Image files [by ImageWayPoint plugin] (*.jpg, *.jpeg, *.png, *.gif)"));
         }
 
@@ -37,7 +38,7 @@ public final class ImageWayPointPlugin extends org.openstreetmap.josm.plugins.Pl
         @Override
         public void importData(List<File> files, ProgressMonitor progressMonitor) throws IOException, IllegalDataException {
             if (null != files && !files.isEmpty()) {
-            
+
                 // recursively find all files
                 final List<File> allFiles = new ArrayList<>();
                 addFiles(allFiles, files.toArray(new File[0]));
@@ -71,12 +72,11 @@ public final class ImageWayPointPlugin extends org.openstreetmap.josm.plugins.Pl
      */
     public ImageWayPointPlugin(PluginInformation info) {
         super(info);
-	ExtensionFileFilter.addImporter(new ImageWaypointImporter());
+        ExtensionFileFilter.addImporter(new ImageWaypointImporter());
     }
 
     @Override
-    public final void mapFrameInitialized(final MapFrame oldFrame,
-    final MapFrame newFrame) {
+    public void mapFrameInitialized(final MapFrame oldFrame, final MapFrame newFrame) {
         if (newFrame != null) {
             newFrame.addToggleDialog(ImageWayPointDialog.getInstance()
             .getDisplayComponent());

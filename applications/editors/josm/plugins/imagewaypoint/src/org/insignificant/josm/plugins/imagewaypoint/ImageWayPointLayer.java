@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.insignificant.josm.plugins.imagewaypoint;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -22,12 +23,12 @@ public final class ImageWayPointLayer extends Layer {
     private static final class ImageWayPointMouseListener extends MouseAdapter {
         private final ImageWayPointLayer layer;
 
-        public ImageWayPointMouseListener(final ImageWayPointLayer layer) {
+        ImageWayPointMouseListener(final ImageWayPointLayer layer) {
             this.layer = layer;
         }
 
         @Override
-        public final void mouseClicked(final MouseEvent event) {
+        public void mouseClicked(final MouseEvent event) {
             if (MouseEvent.BUTTON1 == event.getButton() && this.layer.isVisible()) {
                 final ImageEntry[] images = ImageEntries.getInstance()
                     .getImages();
@@ -52,13 +53,12 @@ public final class ImageWayPointLayer extends Layer {
 
     private static final class ImageChangeListener implements IImageChangeListener {
         @Override
-        public final void onAvailableImageEntriesChanged(
-        final ImageEntries entries) {
+        public void onAvailableImageEntriesChanged(final ImageEntries entries) {
             Main.map.repaint();
         }
 
         @Override
-        public final void onSelectedImageEntryChanged(final ImageEntries entries) {
+        public void onSelectedImageEntryChanged(final ImageEntries entries) {
             Main.map.repaint();
         }
     }
@@ -79,39 +79,39 @@ public final class ImageWayPointLayer extends Layer {
     }
 
     @Override
-    public final Icon getIcon() {
+    public Icon getIcon() {
         return ImageProvider.get("dialogs/imagewaypoint");
     }
 
     @Override
-    public final Object getInfoComponent() {
+    public Object getInfoComponent() {
         return null;
     }
 
     @Override
-    public final Action[] getMenuEntries() {
+    public Action[] getMenuEntries() {
         return new Action[0];
     }
 
     @Override
-    public final String getToolTipText() {
+    public String getToolTipText() {
         // TODO
         return "";
     }
 
     @Override
-    public final boolean isMergable(final Layer other) {
+    public boolean isMergable(final Layer other) {
         // TODO
         return false;
     }
 
     @Override
-    public final void mergeFrom(final Layer from) {
+    public void mergeFrom(final Layer from) {
         // TODO not supported yet
     }
 
     @Override
-    public final void paint(final Graphics2D graphics, final MapView mapView, Bounds box) {
+    public void paint(final Graphics2D graphics, final MapView mapView, Bounds box) {
         final ImageEntry[] images = ImageEntries.getInstance().getImages();
 
         if (null != images) {
@@ -138,7 +138,7 @@ public final class ImageWayPointLayer extends Layer {
     }
 
     @Override
-    public final void visitBoundingBox(final BoundingXYVisitor visitor) {
+    public void visitBoundingBox(final BoundingXYVisitor visitor) {
         final ImageEntry[] images = ImageEntries.getInstance().getImages();
 
         if (null != images) {
@@ -152,7 +152,7 @@ public final class ImageWayPointLayer extends Layer {
     }
 
     @Override
-    public final void destroy() {
+    public void destroy() {
         super.destroy();
 
         Main.map.mapView.removeMouseListener(this.layerMouseListener);

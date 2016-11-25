@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.insignificant.josm.plugins.imagewaypoint;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -25,12 +26,12 @@ public final class ImageWayPointDialog {
 
         private Image image;
 
-        public ImageComponent() {
+        ImageComponent() {
             this.image = null;
         }
 
         @Override
-        public final void paint(final Graphics g) {
+        public void paint(final Graphics g) {
             if (null == this.image || 0 >= this.image.getWidth(null)
                 || 0 >= this.image.getHeight(null)) {
             g.setColor(Color.white);
@@ -70,7 +71,7 @@ public final class ImageWayPointDialog {
             }
         }
 
-        public final void setImage(final Image image) {
+        public void setImage(final Image image) {
             this.image = image;
             this.repaint();
         }
@@ -80,19 +81,19 @@ public final class ImageWayPointDialog {
         IImageChangeListener {
         private final ImageWayPointDialog dialog;
 
-        public ImageChangeListener(final ImageWayPointDialog dialog) {
+        ImageChangeListener(final ImageWayPointDialog dialog) {
             this.dialog = dialog;
         }
 
         @Override
-        public final void onAvailableImageEntriesChanged(
+        public void onAvailableImageEntriesChanged(
             final ImageEntries entries) {
             this.dialog.imageDisplay.setImage(entries.getCurrentImage());
             this.dialog.updateUI();
         }
 
         @Override
-        public final void onSelectedImageEntryChanged(final ImageEntries entries) {
+        public void onSelectedImageEntryChanged(final ImageEntries entries) {
             this.dialog.imageDisplay.setImage(entries.getCurrentImage());
             this.dialog.updateUI();
         }
@@ -100,66 +101,66 @@ public final class ImageWayPointDialog {
 
     private static final class PreviousAction extends JosmAction {
 
-    public PreviousAction() {
-        super(tr("Previous"),
-        null,
-        tr("Previous image"),
-        null,
-        false);
-    }
-
-    @Override
-    public final void actionPerformed(final ActionEvent actionEvent) {
-        if (ImageEntries.getInstance().hasPrevious()) {
-        ImageEntries.getInstance().previous();
+        PreviousAction() {
+            super(tr("Previous"),
+            null,
+            tr("Previous image"),
+            null,
+            false);
         }
-    }
+
+        @Override
+        public void actionPerformed(final ActionEvent actionEvent) {
+            if (ImageEntries.getInstance().hasPrevious()) {
+                ImageEntries.getInstance().previous();
+            }
+        }
     }
 
     private static final class NextAction extends JosmAction {
 
-    public NextAction() {
-        super(tr("Next"), null, tr("Next image"), null, false);
-    }
-
-    @Override
-    public final void actionPerformed(final ActionEvent actionEvent) {
-        if (ImageEntries.getInstance().hasNext()) {
-        ImageEntries.getInstance().next();
+        NextAction() {
+            super(tr("Next"), null, tr("Next image"), null, false);
         }
-    }
+
+        @Override
+        public void actionPerformed(final ActionEvent actionEvent) {
+            if (ImageEntries.getInstance().hasNext()) {
+                ImageEntries.getInstance().next();
+            }
+        }
     }
 
     private static final class RotateLeftAction extends JosmAction {
 
-    public RotateLeftAction() {
-        super(tr("Rotate left"),
-        null,
-        tr("Rotate image left"),
-        null,
-        false);
-    }
+        RotateLeftAction() {
+            super(tr("Rotate left"),
+            null,
+            tr("Rotate image left"),
+            null,
+            false);
+        }
 
-    @Override
-    public final void actionPerformed(final ActionEvent actionEvent) {
-        ImageEntries.getInstance().rotateCurrentImageLeft();
-    }
+        @Override
+        public void actionPerformed(final ActionEvent actionEvent) {
+            ImageEntries.getInstance().rotateCurrentImageLeft();
+        }
     }
 
     private static final class RotateRightAction extends JosmAction {
 
-    public RotateRightAction() {
-        super(tr("Rotate right"),
-        null,
-        tr("Rotate image right"),
-        null,
-        false);
-    }
+        RotateRightAction() {
+            super(tr("Rotate right"),
+            null,
+            tr("Rotate image right"),
+            null,
+            false);
+        }
 
-    @Override
-    public final void actionPerformed(final ActionEvent actionEvent) {
-        ImageEntries.getInstance().rotateCurrentImageRight();
-    }
+        @Override
+        public void actionPerformed(final ActionEvent actionEvent) {
+            ImageEntries.getInstance().rotateCurrentImageRight();
+        }
     }
 
     private static final ImageWayPointDialog INSTANCE = new ImageWayPointDialog();
@@ -211,24 +212,24 @@ public final class ImageWayPointDialog {
     dialog.add(mainPanel);
     }
 
-    private final void updateUI() {
-    this.previousAction.setEnabled(ImageEntries.getInstance().hasPrevious());
-    this.nextAction.setEnabled(ImageEntries.getInstance().hasNext());
-    this.rotateLeftAction.setEnabled(null != ImageEntries.getInstance()
-        .getCurrentImageEntry());
-    this.rotateRightAction.setEnabled(null != ImageEntries.getInstance()
-        .getCurrentImageEntry());
+    private void updateUI() {
+        this.previousAction.setEnabled(ImageEntries.getInstance().hasPrevious());
+        this.nextAction.setEnabled(ImageEntries.getInstance().hasNext());
+        this.rotateLeftAction.setEnabled(null != ImageEntries.getInstance()
+            .getCurrentImageEntry());
+        this.rotateRightAction.setEnabled(null != ImageEntries.getInstance()
+            .getCurrentImageEntry());
 
-    if (null != Main.map) {
-        Main.map.repaint();
-    }
+        if (null != Main.map) {
+            Main.map.repaint();
+        }
     }
 
     public static ImageWayPointDialog getInstance() {
-    return ImageWayPointDialog.INSTANCE;
+        return ImageWayPointDialog.INSTANCE;
     }
 
-    public final ToggleDialog getDisplayComponent() {
-    return this.dialog;
+    public ToggleDialog getDisplayComponent() {
+        return this.dialog;
     }
 }

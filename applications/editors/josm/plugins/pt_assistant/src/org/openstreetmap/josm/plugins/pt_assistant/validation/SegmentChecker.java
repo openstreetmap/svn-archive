@@ -25,6 +25,7 @@ import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.data.validation.Severity;
 import org.openstreetmap.josm.data.validation.Test;
 import org.openstreetmap.josm.data.validation.TestError;
+import org.openstreetmap.josm.data.validation.TestError.Builder;
 import org.openstreetmap.josm.gui.Notification;
 import org.openstreetmap.josm.gui.dialogs.relation.GenericRelationEditor;
 import org.openstreetmap.josm.gui.dialogs.relation.RelationEditor;
@@ -69,8 +70,11 @@ public class SegmentChecker extends Checker {
             primitives.add(relation);
             List<OsmPrimitive> highlighted = new ArrayList<>(1);
             highlighted.add(rm.getMember());
-            TestError e = new TestError(this.test, Severity.WARNING, tr("PT: Relation member roles do not match tags"),
-                    PTAssistantValidatorTest.ERROR_CODE_RELAITON_MEMBER_ROLES, primitives, highlighted);
+            Builder builder = TestError.builder(this.test, Severity.WARNING, PTAssistantValidatorTest.ERROR_CODE_RELAITON_MEMBER_ROLES);
+            builder.message(tr("PT: Relation member roles do not match tags"));
+            builder.primitives(primitives);
+            builder.highlight(highlighted);
+            TestError e = builder.build();
             this.errors.add(e);
         }
 
@@ -161,9 +165,11 @@ public class SegmentChecker extends Checker {
                 primitives.add(relation);
                 List<OsmPrimitive> highlighted = new ArrayList<>(1);
                 highlighted.add(endStop.getPlatform());
-                TestError e = new TestError(this.test, Severity.WARNING,
-                        tr("PT: Route should start and end with a stop_position"),
-                        PTAssistantValidatorTest.ERROR_CODE_END_STOP, primitives, highlighted);
+                Builder builder = TestError.builder(this.test, Severity.WARNING, PTAssistantValidatorTest.ERROR_CODE_END_STOP);
+                builder.message(tr("PT: Route should start and end with a stop_position"));
+                builder.primitives(primitives);
+                builder.highlight(highlighted);
+                TestError e = builder.build();
                 this.errors.add(e);
                 return;
             }
@@ -180,8 +186,11 @@ public class SegmentChecker extends Checker {
                 List<OsmPrimitive> highlighted = new ArrayList<>();
                 highlighted.addAll(stopPositionsOfThisRoute);
 
-                TestError e = new TestError(this.test, Severity.WARNING, tr("PT: First or last way needs to be split"),
-                        PTAssistantValidatorTest.ERROR_CODE_SPLIT_WAY, primitives, highlighted);
+                Builder builder = TestError.builder(this.test, Severity.WARNING, PTAssistantValidatorTest.ERROR_CODE_SPLIT_WAY);
+                builder.message(tr("PT: First or last way needs to be split"));
+                builder.primitives(primitives);
+                builder.highlight(highlighted);
+                TestError e = builder.build();
                 this.errors.add(e);
             }
 
@@ -196,8 +205,11 @@ public class SegmentChecker extends Checker {
                 primitives.add(relation);
                 List<OsmPrimitive> highlighted = new ArrayList<>();
                 highlighted.add(endStop.getStopPosition());
-                TestError e = new TestError(this.test, Severity.WARNING, tr("PT: First or last way needs to be split"),
-                        PTAssistantValidatorTest.ERROR_CODE_SPLIT_WAY, primitives, highlighted);
+                Builder builder = TestError.builder(this.test, Severity.WARNING, PTAssistantValidatorTest.ERROR_CODE_SPLIT_WAY);
+                builder.message(tr("PT: First or last way needs to be split"));
+                builder.primitives(primitives);
+                builder.highlight(highlighted);
+                TestError e = builder.build();
                 this.errors.add(e);
             }
         }
@@ -283,8 +295,11 @@ public class SegmentChecker extends Checker {
                     primitives.add(relation);
                     List<OsmPrimitive> highlighted = new ArrayList<>();
                     highlighted.add(startWay);
-                    TestError e = new TestError(this.test, Severity.WARNING, tr("PT: Problem in the route segment"),
-                            PTAssistantValidatorTest.ERROR_CODE_STOP_BY_STOP, primitives, highlighted);
+                    Builder builder = TestError.builder(this.test, Severity.WARNING, PTAssistantValidatorTest.ERROR_CODE_STOP_BY_STOP);
+                    builder.message(tr("PT: Problem in the route segment"));
+                    builder.primitives(primitives);
+                    builder.highlight(highlighted);
+                    TestError e = builder.build();
                     this.errors.add(e);
                     PTRouteSegment routeSegment = new PTRouteSegment(startStop, endStop, segmentWays, relation);
                     wrongSegments.put(e, routeSegment);
@@ -320,8 +335,11 @@ public class SegmentChecker extends Checker {
             stopPrimitive = stop.getStopPosition();
         }
         highlighted.add(stopPrimitive);
-        TestError e = new TestError(this.test, Severity.WARNING, tr("PT: Stop not served"),
-                PTAssistantValidatorTest.ERROR_CODE_STOP_NOT_SERVED, primitives, highlighted);
+        Builder builder = TestError.builder(this.test, Severity.WARNING, PTAssistantValidatorTest.ERROR_CODE_STOP_NOT_SERVED);
+        builder.message(tr("PT: Stop not served"));
+        builder.primitives(primitives);
+        builder.highlight(highlighted);
+        TestError e = builder.build();
         this.errors.add(e);
     }
 
@@ -443,8 +461,11 @@ public class SegmentChecker extends Checker {
                     primitives.add(relation);
                     List<OsmPrimitive> highlighted = new ArrayList<>();
                     highlighted.addAll(current.getWays());
-                    TestError e = new TestError(this.test, Severity.WARNING, tr("PT: Problem in the route segment"),
-                            PTAssistantValidatorTest.ERROR_CODE_STOP_BY_STOP, primitives, highlighted);
+                    Builder builder = TestError.builder(this.test, Severity.WARNING, PTAssistantValidatorTest.ERROR_CODE_STOP_BY_STOP);
+                    builder.message(tr("PT: Problem in the route segment"));
+                    builder.primitives(primitives);
+                    builder.highlight(highlighted);
+                    TestError e = builder.build();
                     this.errors.add(e);
                     return false;
                 }
@@ -463,9 +484,12 @@ public class SegmentChecker extends Checker {
                     List<OsmPrimitive> highlighted = new ArrayList<>();
 
                     highlighted.addAll(current.getWays());
-
-                    TestError e = new TestError(this.test, Severity.WARNING, tr("PT: Problem in the route segment"),
-                            PTAssistantValidatorTest.ERROR_CODE_STOP_BY_STOP, primitives, highlighted);
+                    
+                    Builder builder = TestError.builder(this.test, Severity.WARNING, PTAssistantValidatorTest.ERROR_CODE_STOP_BY_STOP);
+                    builder.message(tr("PT: Problem in the route segment"));
+                    builder.primitives(primitives);
+                    builder.highlight(highlighted);
+                    TestError e = builder.build();
                     this.errors.add(e);
                     return false;
 
@@ -842,17 +866,15 @@ public class SegmentChecker extends Checker {
 
         // prepare the variables for the key listener:
         final TestError testErrorParameter = testError;
-
-        // add the key listener:
+        
+//        // add the key listener:
         Main.map.mapView.requestFocus();
-        Main.map.mapView.addKeyListener(new KeyListener() {
-
-            @Override
+        Main.map.mapView.addKeyListener(new KeyListener() { 
+        	
             public void keyTyped(KeyEvent e) {
-                // TODO Auto-generated method stub
+                 //TODO Auto-generated method stub
             }
 
-            @Override
             public void keyPressed(KeyEvent e) {
                 Character typedKey = e.getKeyChar();
                 Character typedKeyUpperCase = typedKey.toString().toUpperCase().toCharArray()[0];
@@ -868,7 +890,6 @@ public class SegmentChecker extends Checker {
                 }
             }
 
-            @Override
             public void keyReleased(KeyEvent e) {
                 // TODO Auto-generated method stub
             }
@@ -938,7 +959,7 @@ public class SegmentChecker extends Checker {
         editor.setVisible(true);
 
     }
-
+		
     /**
      * Carries out the fix (i.e. modifies the route) when there is only one fix
      * variant.
@@ -962,7 +983,7 @@ public class SegmentChecker extends Checker {
                 }
             });
         }
-
+		
         // wait:
         synchronized (SegmentChecker.class) {
             try {

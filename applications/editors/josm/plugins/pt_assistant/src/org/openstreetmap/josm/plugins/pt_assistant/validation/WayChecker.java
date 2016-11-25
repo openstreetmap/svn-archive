@@ -20,6 +20,7 @@ import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.data.validation.Severity;
 import org.openstreetmap.josm.data.validation.Test;
 import org.openstreetmap.josm.data.validation.TestError;
+import org.openstreetmap.josm.data.validation.TestError.Builder;
 import org.openstreetmap.josm.plugins.pt_assistant.utils.RouteUtils;
 
 /**
@@ -113,9 +114,11 @@ public class WayChecker extends Checker {
                     primitives.add(relation);
                     List<Way> highlighted = new ArrayList<>(1);
                     highlighted.add(way);
-                    TestError e = new TestError(this.test, Severity.WARNING,
-                            tr("PT: Route type does not match the type of the road it passes on"),
-                            PTAssistantValidatorTest.ERROR_CODE_ROAD_TYPE, primitives, highlighted);
+                    Builder builder = TestError.builder(this.test, Severity.WARNING, PTAssistantValidatorTest.ERROR_CODE_ROAD_TYPE);
+                    builder.message(tr("PT: Route type does not match the type of the road it passes on"));
+                    builder.primitives(primitives);
+                    builder.highlight(highlighted);
+                    TestError e = builder.build();
                     errors.add(e);
 
                 }
@@ -125,8 +128,11 @@ public class WayChecker extends Checker {
                     primitives.add(relation);
                     List<Way> highlighted = new ArrayList<>(1);
                     highlighted.add(way);
-                    TestError e = new TestError(this.test, Severity.WARNING, tr("PT: Road is under construction"),
-                            PTAssistantValidatorTest.ERROR_CODE_CONSTRUCTION, primitives, highlighted);
+                    Builder builder = TestError.builder(this.test, Severity.WARNING, PTAssistantValidatorTest.ERROR_CODE_CONSTRUCTION);
+                    builder.message(tr("PT: Road is under construction"));
+                    builder.primitives(primitives);
+                    builder.highlight(highlighted);
+                    TestError e = builder.build();
                     errors.add(e);
                 }
             }
@@ -212,9 +218,11 @@ public class WayChecker extends Checker {
         }
 
         for (Set<Way> currentSet : listOfSets) {
-            TestError e = new TestError(this.test, Severity.WARNING,
-                    tr("PT: Route passes a oneway road in the wrong direction"),
-                    PTAssistantValidatorTest.ERROR_CODE_DIRECTION, primitives, currentSet);
+            Builder builder = TestError.builder(this.test, Severity.WARNING, PTAssistantValidatorTest.ERROR_CODE_DIRECTION);
+            builder.message(tr("PT: Route passes a oneway road in the wrong direction"));
+            builder.primitives(primitives);
+            builder.highlight(currentSet);
+            TestError e = builder.build();
             this.errors.add(e);
         }
 

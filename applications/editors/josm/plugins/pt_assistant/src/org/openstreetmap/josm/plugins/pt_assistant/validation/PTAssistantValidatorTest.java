@@ -24,6 +24,7 @@ import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.data.validation.Severity;
 import org.openstreetmap.josm.data.validation.Test;
 import org.openstreetmap.josm.data.validation.TestError;
+import org.openstreetmap.josm.data.validation.TestError.Builder;
 import org.openstreetmap.josm.plugins.pt_assistant.PTAssistantPlugin;
 import org.openstreetmap.josm.plugins.pt_assistant.actions.FixTask;
 import org.openstreetmap.josm.plugins.pt_assistant.actions.IncompleteMembersDownloadThread;
@@ -549,8 +550,11 @@ public class PTAssistantValidatorTest extends Test {
     private void performDummyTest(Relation r) {
         List<Relation> primitives = new ArrayList<>(1);
         primitives.add(r);
+        Builder builder = TestError.builder(this, Severity.WARNING, ERROR_CODE_DIRECTION);
+        builder.message(tr("PT: dummy test warning"));
+        builder.primitives(primitives);
         errors.add(
-                new TestError(this, Severity.WARNING, tr("PT: dummy test warning"), ERROR_CODE_DIRECTION, primitives));
+                builder.build());
     }
 
 }

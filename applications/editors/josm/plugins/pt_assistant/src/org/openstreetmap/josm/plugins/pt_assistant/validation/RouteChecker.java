@@ -16,6 +16,7 @@ import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.data.validation.Severity;
 import org.openstreetmap.josm.data.validation.Test;
 import org.openstreetmap.josm.data.validation.TestError;
+import org.openstreetmap.josm.data.validation.TestError.Builder;
 import org.openstreetmap.josm.gui.dialogs.relation.sort.RelationSorter;
 import org.openstreetmap.josm.gui.dialogs.relation.sort.WayConnectionType;
 import org.openstreetmap.josm.gui.dialogs.relation.sort.WayConnectionTypeCalculator;
@@ -63,9 +64,10 @@ public class RouteChecker extends Checker {
             sortedMembers = sorter.sortMembers(waysToCheck);
 
             if (!hasGap(sortedMembers)) {
-                TestError e = new TestError(this.test, Severity.WARNING,
-                        tr("PT: Route contains a gap that can be fixed by sorting"),
-                        PTAssistantValidatorTest.ERROR_CODE_SORTING, relation);
+                Builder builder = TestError.builder(this.test, Severity.WARNING, PTAssistantValidatorTest.ERROR_CODE_SORTING);
+                builder.message(tr("PT: Route contains a gap that can be fixed by sorting"));
+                builder.primitives(relation);
+                TestError e = builder.build();
                 this.errors.add(e);
 
             }

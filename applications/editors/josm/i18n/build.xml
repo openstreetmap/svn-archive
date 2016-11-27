@@ -101,7 +101,7 @@
         <antcall target="buildplugins"/>
     </target>
     <target name="buildplugins" depends="init">
-        <foreach param="path" target="plugintrans">
+        <foreach param="path" target="plugintrans" parallel="true" maxThreads="8">
             <path>
                 <dirset dir="${plugin.dir}" includes="*" excludes="00_*" />
             </path>

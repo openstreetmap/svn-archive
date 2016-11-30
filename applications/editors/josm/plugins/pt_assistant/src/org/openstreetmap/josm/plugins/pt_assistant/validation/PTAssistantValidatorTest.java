@@ -7,6 +7,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map.Entry;
 
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
@@ -38,6 +39,7 @@ import org.openstreetmap.josm.plugins.pt_assistant.gui.ProceedDialog;
 import org.openstreetmap.josm.plugins.pt_assistant.utils.RouteUtils;
 import org.openstreetmap.josm.plugins.pt_assistant.utils.StopToWayAssigner;
 import org.openstreetmap.josm.plugins.pt_assistant.utils.StopUtils;
+import org.openstreetmap.josm.tools.Utils;
 
 public class PTAssistantValidatorTest extends Test {
 
@@ -404,6 +406,33 @@ public class PTAssistantValidatorTest extends Test {
                 this.errors.add(error);
             }
         }
+    }
+    
+    /**
+     * Overrides the superclass method
+     */
+    public void startTest() {
+    	super.startTest(progressMonitor);
+    	SegmentChecker.reset();
+    }
+    
+    /**
+     * Method is called after all primitives has been visited, overrides the method of the superclass.
+     */
+    public void endTest() {
+    	
+    	// modify the error messages for the stop-by-stop test:
+    	SegmentChecker.modifyStopByStopErrorMessages();
+    	
+    	// add the stop-by-stop errors with modified messages:
+    	for (Entry<Builder, PTRouteSegment> entry: SegmentChecker.wrongSegmentBuilders.entrySet()) {    		
+    		TestError error = entry.getKey().build();
+    		SegmentChecker.wrongSegments.put(error, entry.getValue());
+    		this.errors.add(error);
+    	}
+    	
+    	super.endTest();
+
     }
 
     /**

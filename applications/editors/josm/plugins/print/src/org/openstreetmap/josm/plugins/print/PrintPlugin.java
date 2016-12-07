@@ -44,7 +44,7 @@ public class PrintPlugin extends Plugin {
         int pos = fileMenu.getItemCount();
         do {
             pos--;
-        } while (fileMenu != null && fileMenu.getItem(pos) != null && pos > 2);
+        } while (fileMenu != null && pos > 2 && fileMenu.getItem(pos) != null);
 
         PrintAction printAction = new PrintAction();
         printMenu = fileMenu.insert(printAction, pos);

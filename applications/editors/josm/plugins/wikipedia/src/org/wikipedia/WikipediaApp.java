@@ -20,6 +20,7 @@ import java.util.TreeMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 import java.util.regex.Pattern;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -228,11 +229,32 @@ public final class WikipediaApp {
                 }))
                 .values()
                 .stream()
-                .flatMap(chunk -> getWikidataForArticles0(chunk).entrySet().stream())
+                .flatMap(chunk -> resolveWikidataItems(chunk).entrySet().stream())
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 
-    private Map<String, String> getWikidataForArticles0(List<String> articles) {
+    /**
+     * Get Wikidata IDs. For any unknown IDs, resolve them (normalize and get redirects),
+     * and try getting Wikidata IDs again
+     */
+    private Map<String, String> resolveWikidataItems(Collection<String> articles) {
+        final Map<String, String> result = getWikidataForArticles0(articles);
+        final List<String> unresolved = articles.stream()
+                .filter(title -> !result.containsKey(title))
+                .collect(Collectors.toList());
+        if (!unresolved.isEmpty()) {
+            final Map<String, String> redirects = resolveRedirectsForArticles(unresolved);
+            final Map<String, String> result2 = getWikidataForArticles0(redirects.values());
+            redirects.forEach((original, resolved) -> {
+                if (result2.containsKey(resolved)) {
+                    result.put(original, result2.get(resolved));
+                }
+            });
+        }
+        return result;
+    }
+
+    private Map<String, String> getWikidataForArticles0(Collection<String> articles) {
         if (articles.isEmpty()) {
             return Collections.emptyMap();
         }
@@ -256,6 +278,44 @@ public final class WikipediaApp {
                 });
             }
             return r;
+        } catch (Exception ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
+    /**
+     * Given a list of wikipedia titles, returns a map of corresponding normalized title names,
+     * or if the title is a redirect page, the result is the redirect target.
+     */
+    private Map<String, String> resolveRedirectsForArticles(Collection<String> articles) {
+        try {
+            final String url = getSiteUrl() + "/w/api.php" +
+                    "?action=query" +
+                    "&redirects" +
+                    "&format=xml" +
+                    "&titles=" + articles.stream().map(Utils::encodeUrl).collect(Collectors.joining("|"));
+            try (final InputStream in = connect(url).getContent()) {
+                final Document xml = newDocumentBuilder().parse(in);
+
+                // Add both redirects and normalization results to the same map
+                final Collector<Node, ?, Map<String, String>> fromToCollector = Collectors.toMap(
+                        node -> X_PATH.evaluateString("./@from", node),
+                        node -> X_PATH.evaluateString("./@to", node)
+                );
+                final Map<String, String> normalized = X_PATH.evaluateNodes("//normalized/n", xml)
+                        .stream()
+                        .collect(fromToCollector);
+                final Map<String, String> redirects = X_PATH.evaluateNodes("//redirects/r", xml)
+                        .stream()
+                        .collect(fromToCollector);
+                // We should only return those keys that were originally requested, excluding titles that are both normalized and redirected
+                return articles.stream()
+                        .collect(Collectors.toMap(Function.identity(), title -> {
+                                    final String normalizedTitle = normalized.getOrDefault(title, title);
+                                    return redirects.getOrDefault(normalizedTitle, normalizedTitle);
+                                }
+                        ));
+            }
         } catch (Exception ex) {
             throw new RuntimeException(ex);
         }

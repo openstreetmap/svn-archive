@@ -118,6 +118,15 @@ public class WikipediaAppTest {
     }
 
     @Test
+    public void testGetWikidataForArticlesResolveRedirects() throws Exception {
+        final Map<String, String> map = WikipediaApp.forLanguage("en")
+                .getWikidataForArticles(Arrays.asList("einstein", "USA"));
+        assertThat(map.get("einstein"), is("Q937"));
+        assertThat(map.get("USA"), is("Q30"));
+        assertThat(map.size(), is(2));
+    }
+
+    @Test
     public void testTicket13991() throws Exception {
         final Map<String, String> map = WikipediaApp.forLanguage("en")
                 .getWikidataForArticles(Stream.iterate("London", x -> x).limit(100).collect(Collectors.toList()));

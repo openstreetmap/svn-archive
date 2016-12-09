@@ -46,17 +46,19 @@ public class PrintPlugin extends Plugin {
             pos--;
         } while (fileMenu != null && pos > 2 && fileMenu.getItem(pos) != null);
 
-        PrintAction printAction = new PrintAction();
-        printMenu = fileMenu.insert(printAction, pos);
-        printMenu.setEnabled(false);
-        printMenu.setVisible(true);
+        if (pos > 0) {
+            PrintAction printAction = new PrintAction();
+            printMenu = fileMenu.insert(printAction, pos);
+            printMenu.setEnabled(false);
+            printMenu.setVisible(true);
 
-        KeyStroke ks = printAction.getShortcut().getKeyStroke();
-        if (ks != null) {
-            printMenu.setAccelerator(ks);
+            KeyStroke ks = printAction.getShortcut().getKeyStroke();
+            if (ks != null) {
+                printMenu.setAccelerator(ks);
+            }
+
+            fileMenu.insertSeparator(pos);
         }
-
-        fileMenu.insertSeparator(pos);
 
         restorePrefs(); // Recover after crash if necessary
     }

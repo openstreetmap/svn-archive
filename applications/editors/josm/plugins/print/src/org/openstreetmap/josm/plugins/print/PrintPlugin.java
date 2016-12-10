@@ -73,7 +73,9 @@ public class PrintPlugin extends Plugin {
      */
     @Override
     public void mapFrameInitialized(MapFrame oldFrame, MapFrame newFrame) {
-        printMenu.setEnabled(newFrame != null);
+        if (printMenu != null) {
+            printMenu.setEnabled(newFrame != null);
+        }
     }
 
     /**

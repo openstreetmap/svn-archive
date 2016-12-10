@@ -10,7 +10,6 @@ import java.util.List;
 
 import org.junit.Test;
 import org.openstreetmap.josm.data.osm.DataSet;
-import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.data.validation.TestError;
@@ -38,9 +37,7 @@ public class RoadTypeTestTest extends AbstractTest {
 
         for (TestError e: errors) {
             assertEquals(e.getCode(), PTAssistantValidatorTest.ERROR_CODE_ROAD_TYPE);
-            @SuppressWarnings("unchecked")
-            List<OsmPrimitive> highlighted = (List<OsmPrimitive>) e.getHighlighted();
-            Way way = (Way) highlighted.get(0);
+            Way way = (Way) e.getHighlighted().iterator().next();
             assertTrue(way.getId() == 8169083 || way.getId() == 8034569);
         }
     }

@@ -359,13 +359,15 @@ public class WayChecker extends Checker {
 
         List<Way> resultList = new ArrayList<>();
 
-        List<OsmPrimitive> nodeReferrers = node.getReferrers();
+        if (node != null) {
+            List<OsmPrimitive> nodeReferrers = node.getReferrers();
 
-        for (OsmPrimitive referrer : nodeReferrers) {
-            if (referrer.getType().equals(OsmPrimitiveType.WAY)) {
-                Way neighborWay = (Way) referrer;
-                if (neighborWay != way && containsWay(neighborWay)) {
-                    resultList.add(neighborWay);
+            for (OsmPrimitive referrer : nodeReferrers) {
+                if (referrer.getType().equals(OsmPrimitiveType.WAY)) {
+                    Way neighborWay = (Way) referrer;
+                    if (neighborWay != way && containsWay(neighborWay)) {
+                        resultList.add(neighborWay);
+                    }
                 }
             }
         }

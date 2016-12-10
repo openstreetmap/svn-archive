@@ -130,9 +130,14 @@ public class SeachartAction extends JosmAction implements ActiveLayerChangeListe
 
     public void closeChartLayer() {
         if (isOpen) {
+        	try {
             Main.getLayerManager().removeActiveLayerChangeListener(this);
             Main.getLayerManager().removeLayerChangeListener(this);
             Main.getLayerManager().removeLayer(rendering);
+        	} catch (Exception e) {
+        		// Assume that this can't be serious?
+        		System.err.println(e);
+        	}
         }
         isOpen = false;
     }

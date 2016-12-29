@@ -295,11 +295,9 @@ public class SegmentChecker extends Checker {
 
 			Node firstNode = findFirstNodeOfRouteSegmentInDirectionOfTravel(segmentWays.get(0));
 
-			// get last added TestErrorBuilder:
-
 			if (firstNode == null) {
 				// check if this error has just been reported:
-				if (wrongSegmentBuilders.isEmpty() && lastCreatedBuilderHighlighted.size() == 1
+				if (wrongSegmentBuilders.isEmpty() && lastCreatedBuilderHighlighted != null && lastCreatedBuilderHighlighted.size() == 1
 						&& lastCreatedBuilderHighlighted.get(0) == startWay) {
 					// do nothing, this error has already been reported in
 					// the previous route segment

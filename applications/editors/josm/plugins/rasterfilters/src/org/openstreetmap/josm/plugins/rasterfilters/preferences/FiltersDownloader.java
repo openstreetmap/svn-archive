@@ -99,25 +99,27 @@ public class FiltersDownloader implements ActionListener {
 
                     JsonObject meta = loadMeta(link);
 
-                    String paramName = "rasterfilters."
-                            + meta.getString("name");
-
-                    boolean needToLoad = Main.pref.getBoolean(paramName);
-
-                    if (needToLoad) {
-                        JsonArray binaries = meta.getJsonArray("binaries");
-                        filterTitles.add(meta.getString("title"));
-                        for (int i = 0; i < binaries.size(); i++) {
-                            filtersMetaToLoad.add(meta);
-                            loadBinaryToFile(binaries.getString(i));
+                    if (meta != null) {
+                        String paramName = "rasterfilters."
+                                + meta.getString("name");
+    
+                        boolean needToLoad = Main.pref.getBoolean(paramName);
+    
+                        if (needToLoad) {
+                            JsonArray binaries = meta.getJsonArray("binaries");
+                            filterTitles.add(meta.getString("title"));
+                            for (int i = 0; i < binaries.size(); i++) {
+                                filtersMetaToLoad.add(meta);
+                                loadBinaryToFile(binaries.getString(i));
+                            }
                         }
-                    }
-                    FilterInfo newFilterInfo = new FilterInfo(name,
-                            description, meta, needToLoad);
-                    newFilterInfo.setOwner(owner);
-
-                    if (!filtersInfoList.contains(newFilterInfo)) {
-                        filtersInfoList.add(newFilterInfo);
+                        FilterInfo newFilterInfo = new FilterInfo(name,
+                                description, meta, needToLoad);
+                        newFilterInfo.setOwner(owner);
+    
+                        if (!filtersInfoList.contains(newFilterInfo)) {
+                            filtersInfoList.add(newFilterInfo);
+                        }
                     }
                 }
             }

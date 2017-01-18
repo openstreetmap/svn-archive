@@ -14,8 +14,10 @@ import java.awt.print.PageFormat;
 import java.awt.print.PrinterAbortException;
 import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -57,6 +59,7 @@ import javax.swing.event.DocumentListener;
 import org.openstreetmap.gui.jmapviewer.tilesources.AbstractOsmTileSource;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.tools.GBC;
+import org.openstreetmap.josm.tools.Utils;
 import org.openstreetmap.josm.tools.WindowGeometry;
 
 /**
@@ -489,7 +492,7 @@ public class PrintDialog extends JDialog implements ActionListener {
     }
 
     @SuppressWarnings("unchecked")
-    protected Attribute unmarshallPrintSetting(Collection<String> setting) throws
+    static Attribute unmarshallPrintSetting(Collection<String> setting) throws
         ClassNotFoundException, NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
 
         if (setting == null || setting.size() != 4) {
@@ -504,6 +507,7 @@ public class PrintDialog extends JDialog implements ActionListener {
             return realClass.getConstructor(String.class, Locale.class).newInstance(value, null);
         } else if (syntax.equals(EnumSyntax.class)) {
             int intValue = Integer.parseInt(value);
+            // First method - access static enum fields by reflection for classes that do not implement getEnumValueTable
             for (Field f : realClass.getFields()) {
                 if (Modifier.isStatic(f.getModifiers()) && category.isAssignableFrom(f.getType())) {
                     EnumSyntax es = (EnumSyntax) f.get(null);
@@ -512,7 +516,17 @@ public class PrintDialog extends JDialog implements ActionListener {
                     }
                 }
             }
-            throw new IllegalArgumentException("Invalid enum: "+realClass+" - "+value);
+            // Second method - get instance from getEnumValueTable by reflection
+            try {
+                Method getEnumValueTable = realClass.getDeclaredMethod("getEnumValueTable");
+                Constructor<? extends Attribute> constructor = realClass.getDeclaredConstructor(int.class);
+                Utils.setObjectsAccessible(getEnumValueTable, constructor);
+                Attribute fakeInstance = constructor.newInstance(Integer.MAX_VALUE);
+                EnumSyntax[] enumTable = (EnumSyntax[]) getEnumValueTable.invoke(fakeInstance);
+                return (Attribute) enumTable[intValue];
+            } catch (ReflectiveOperationException | ArrayIndexOutOfBoundsException e) {
+                throw new IllegalArgumentException("Invalid enum: "+realClass+" - "+value, e);
+            }
         } else if (syntax.equals(IntegerSyntax.class)) {
             return realClass.getConstructor(int.class).newInstance(Integer.parseInt(value));
         } else {

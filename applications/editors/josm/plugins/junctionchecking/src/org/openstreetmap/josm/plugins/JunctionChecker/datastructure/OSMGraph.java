@@ -33,7 +33,7 @@ public class OSMGraph extends Graph {
     }
 
     public void removeWay(OSMWay way) {
-        ways.remove(way);
+        while (ways.values().remove(way));
     }
 
     public OSMNode[] getNodes() {
@@ -50,7 +50,7 @@ public class OSMGraph extends Graph {
     }
 
     public OSMRelation getRelation(int id) {
-        return relations.get(id);
+        return relations.get(Long.valueOf(id));
     }
 
     public HashMap<Long, OSMRelation> getRelationsAshashmap() {
@@ -84,7 +84,7 @@ public class OSMGraph extends Graph {
     }
 
     public ArrayList<Long> getIDsfromWay(int id) {
-        OSMWay w = ways.get(id);
+        OSMWay w = ways.get(Long.valueOf(id));
         ArrayList<Long> ids = new ArrayList<>();
         ids.add(w.getToNode().getId());
         ids.add(w.getFromNode().getId());

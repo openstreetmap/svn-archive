@@ -124,7 +124,7 @@ public class JunctionChecker {
         for (int i = 0; i < junctioncandidates.size(); i++) {
             for (int j = 0; j < junctioncandidates.size(); j++) {
                 if (junctioncandidates.get(i).containsAll(junctioncandidates.get(j))) {
-                    junctions.removeAll(junctioncandidates.get(i));
+                    junctions.remove(junctioncandidates.get(i));
                 }
             }
         }

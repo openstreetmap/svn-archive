@@ -52,7 +52,7 @@ public class OSMRelation extends OSMEntity {
      * Klasse dient zum Verwalten eines Member-Objektes. Muß ein Objekt vom Typ OSMEntitysein.
      * @author  joerg
      */
-    class Member {
+    static class Member {
 
         private OSMEntity member;
         private String role;

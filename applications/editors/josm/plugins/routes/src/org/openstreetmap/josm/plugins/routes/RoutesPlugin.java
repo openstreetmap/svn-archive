@@ -80,16 +80,13 @@ public class RoutesPlugin extends Plugin implements LayerChangeListener {
 
     private void checkLayers() {
         if (Main.map != null && Main.map.mapView != null) {
-            for (Layer layer:Main.getLayerManager().getLayers()) {
+            for (Layer layer : Main.getLayerManager().getLayers()) {
                 if (layer instanceof OsmDataLayer) {
                     if (!isShown) {
                         isShown = true;
-                        SwingUtilities.invokeLater(new Runnable() {
-                            @Override
-                            public void run() {
-                                for (RouteLayer routeLayer:routeLayers) {
-                                    Main.getLayerManager().addLayer(routeLayer);
-                                }
+                        SwingUtilities.invokeLater(() -> {
+                            for (RouteLayer routeLayer : routeLayers) {
+                                Main.getLayerManager().addLayer(routeLayer);
                             }
                         });
                     }
@@ -98,10 +95,9 @@ public class RoutesPlugin extends Plugin implements LayerChangeListener {
             }
             if (isShown) {
                 isShown = false;
-                SwingUtilities.invokeLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        for (RouteLayer routeLayer:routeLayers) {
+                SwingUtilities.invokeLater(() -> {
+                    for (RouteLayer routeLayer : routeLayers) {
+                        if (Main.getLayerManager().containsLayer(routeLayer)) {
                             Main.getLayerManager().removeLayer(routeLayer);
                         }
                     }

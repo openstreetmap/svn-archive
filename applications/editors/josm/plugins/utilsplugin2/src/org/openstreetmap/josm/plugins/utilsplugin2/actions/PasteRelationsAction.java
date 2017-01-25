@@ -113,6 +113,9 @@ public class PasteRelationsAction extends JosmAction {
                     && ClipboardUtils.getClipboard().isDataFlavorAvailable(PrimitiveTransferData.DATA_FLAVOR));
         } catch (IllegalStateException e) {
             Main.warn(e);
+        } catch (NullPointerException e) {
+            // JDK-6322854: On Linux/X11, NPE can happen for unknown reasons, on all versions of Java
+            Main.error(e);
         }
     }
 }

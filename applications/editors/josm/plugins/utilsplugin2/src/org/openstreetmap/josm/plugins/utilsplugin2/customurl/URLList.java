@@ -87,12 +87,12 @@ public final class URLList {
         PrintWriter fw = null;
         try {
             f.getParentFile().mkdirs();
-            fw = new PrintWriter(f);
+            fw = new PrintWriter(f, "UTF-8");
             for (String s : items) {
                 fw.println(s);
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            Main.error(e);
         } finally {
             try {
                 if (fw != null)

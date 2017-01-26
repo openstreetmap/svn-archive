@@ -29,7 +29,8 @@ Plugin could be easy extend to show another data source.
  * Shows data about building, addresses, streets,  parcels and cadastral area from Czech RUIAN registry (http://wiki.openstreetmap.org/wiki/RUIAN)
 
  * Additional actions are available :
-    * [![](https://raw.githubusercontent.com/mkyral/josm-pointInfo/master/images/dialogs/open-external-link.png)] Open on external site
+    * [![](https://raw.githubusercontent.com/mkyral/josm-pointInfo/master/images/dialogs/open-external-link.png)] Open external site
+    * [![](https://raw.githubusercontent.com/mkyral/josm-pointInfo/master/images/dialogs/open-external-link-kn.png)] Open external site (Katastr nemovitostí)
     * [![](https://raw.githubusercontent.com/mkyral/josm-pointInfo/master/images/dialogs/copy-tags.png)] Copy tags to clipboard
     * [![](https://raw.githubusercontent.com/mkyral/josm-pointInfo/master/images/dialogs/create-addr.png)] Create an address point on position where was clicked
     * [![](https://raw.githubusercontent.com/mkyral/josm-pointInfo/master/images/dialogs/create-addr-ruian.png)] Create an address point on position defined in RUIAN

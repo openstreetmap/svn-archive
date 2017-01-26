@@ -2,7 +2,7 @@
 <project name="pointInfo" default="dist" basedir=".">
 
     <!-- enter the SVN commit message -->
-    <property name="commit.message" value="PointInfo: Fix breakage caused by API cleaning."/>
+    <property name="commit.message" value="PointInfo: Add link to direct access to CUZK:KN info."/>
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
     <property name="plugin.main.version" value="10604"/>
 
@@ -12,7 +12,7 @@
     <!-- Configure these properties (replace "..." accordingly).
          See https://josm.openstreetmap.de/wiki/DevelopersGuide/DevelopingPlugins
     -->
-    <property name="plugin.author" value="Marian Kyral"/>
+    <property name="plugin.author" value="Marián Kyral"/>
     <property name="plugin.class" value="org.openstreetmap.josm.plugins.pointinfo.PointInfoPlugin"/>
     <property name="plugin.description" value="Shows an additional information about point on map. There is only a Czech RUIAN module available at this moment."/>
     <property name="plugin.icon" value="images/mapmode/info-sml.png"/>

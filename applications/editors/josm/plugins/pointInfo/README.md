@@ -1,4 +1,4 @@
-![](http://www.kyralovi.cz/tmp/josm/pointInfo_20140327.png)
+![](http://www.kyralovi.cz/tmp/josm/pointInfo_20170128.png)
 
 ---
 

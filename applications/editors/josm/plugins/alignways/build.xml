@@ -13,6 +13,7 @@
     <property name="plugin.description" value="Makes a pair of selected way segments parallel by rotating one of them around a chosen pivot."/>
     <property name="plugin.icon" value="images/alignways.png"/>
     <property name="plugin.link" value="https://wiki.openstreetmap.org/wiki/JOSM/Plugins/AlignWayS"/>
+    <property name="plugin.canloadatruntime" value="true"/>
 
     <!-- ** include targets that all plugins have in common ** -->
     <import file="../build-common.xml"/>

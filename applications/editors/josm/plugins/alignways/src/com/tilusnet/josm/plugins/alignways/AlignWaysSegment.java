@@ -12,6 +12,7 @@ import java.awt.Point;
 import java.awt.geom.Line2D;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Objects;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.Bounds;
@@ -113,35 +114,21 @@ public class AlignWaysSegment implements MapViewPaintable {
 
      @Override
      public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((segment == null) ? 0 : segment.hashCode());
-        result = prime * result
-                + ((segmentColor == null) ? 0 : segmentColor.hashCode());
-        return result;
+        if (segment == null) {
+            return System.identityHashCode(this);
+        }
+
+        // hashCode and equals should be consistent during the lifetime of this segment,
+        // otherwise the temporary mapview overlay will not be properly removed on destroy()
+        return segment.hashCode();
      }
 
-     @Override
-     public boolean equals(Object obj) {
-         if (this == obj)
-             return true;
-         if (obj == null)
-             return false;
-         if (!(obj instanceof AlignWaysSegment))
-             return false;
-         AlignWaysSegment other = (AlignWaysSegment) obj;
-         if (segment == null) {
-             if (other.segment != null)
-                 return false;
-         } else if (!segment.equals(other.segment))
-             return false;
-         /* Segment colour is ignored in comparison
-        if (segmentColor == null) {
-            if (other.segmentColor != null)
-                return false;
-        } else if (!segmentColor.equals(other.segmentColor))
-            return false;
-          */
-         return true;
-     }
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof AlignWaysSegment)) return false;
+        AlignWaysSegment that = (AlignWaysSegment) o;
+        return Objects.equals(segment, that.segment);
+    }
+
 }

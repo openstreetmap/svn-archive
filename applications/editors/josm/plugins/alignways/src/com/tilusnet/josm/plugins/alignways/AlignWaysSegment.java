@@ -9,6 +9,7 @@ import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.RenderingHints;
 import java.awt.geom.Line2D;
 import java.util.Collection;
 import java.util.HashSet;
@@ -18,6 +19,7 @@ import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.data.osm.WaySegment;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.layer.MapViewPaintable;
@@ -56,12 +58,9 @@ public class AlignWaysSegment implements MapViewPaintable {
     void setSegmentEndpoints(WaySegment segment) {
         if (segment != null) {
             try {
-                Node node1 = segment.way.getNode(segment.lowerIndex);
-                Node node2 = segment.way.getNode(segment.lowerIndex + 1);
-
                 segmentEndPoints = new HashSet<>();
-                segmentEndPoints.add(node1);
-                segmentEndPoints.add(node2);
+                segmentEndPoints.add(segment.getFirstNode());
+                segmentEndPoints.add(segment.getSecondNode());
             } catch (IndexOutOfBoundsException e) {
                 Main.error(e);
             }
@@ -88,28 +87,41 @@ public class AlignWaysSegment implements MapViewPaintable {
 
     @Override
     public void paint(Graphics2D g, MapView mv, Bounds bbox) {
+        // Note: segment should never be null here, and its nodes should never be missing.
+        // If they are, it's a bug, possibly related to tracking of DataSet deletions.
+        if (segment.way.getNodesCount() <= segment.lowerIndex + 1) {
+            Main.warn("Not drawing AlignWays highlighting segment: underlying nodes disappeared");
+            return;
+        }
+
         highlightSegment(segmentColor, g, mv);
     }
 
     protected void highlightSegment(Color c, Graphics2D g, MapView mv) {
-        if (segment.way.getNodesCount() == 0) {
-            return;
-        }
-
         g.setColor(c);
         g.setStroke(new BasicStroke(6, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
+        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         drawSegment(g, mv);
     }
 
     protected void drawSegment(Graphics2D g, MapView mv) {
         try {
-            Node n1 = segment.way.getNode(segment.lowerIndex);
-            Node n2 = segment.way.getNode(segment.lowerIndex + 1);
+            Node n1 = segment.getFirstNode();
+            Node n2 = segment.getSecondNode();
 
             g.draw(new Line2D.Double(mv.getPoint(n1), mv.getPoint(n2)));
         } catch (IndexOutOfBoundsException e) {
             Main.error(e);
         }
+    }
+
+    protected boolean containsPrimitive(OsmPrimitive primitive) {
+        if (segment == null)
+            return false;
+
+        return (primitive instanceof Way && segment.way.equals(primitive)) ||
+                (primitive instanceof Node && segmentEndPoints.contains(primitive));
+
     }
 
      @Override

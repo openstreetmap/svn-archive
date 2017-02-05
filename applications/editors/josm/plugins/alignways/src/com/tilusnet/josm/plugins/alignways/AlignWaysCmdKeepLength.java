@@ -9,6 +9,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Collections;
 
 import javax.swing.Icon;
 import javax.swing.JOptionPane;
@@ -91,15 +92,11 @@ public class AlignWaysCmdKeepLength extends Command {
         this.pivot = algnSeg.getCurrPivotCoord();
         this.displaceableNodes = algnSeg.getSegmentEndPoints();
 
-        EastNorth enRefNode1 = refWS.way.getNode(refWS.lowerIndex)
-                .getEastNorth();
-        EastNorth enRefNode2 = refWS.way.getNode(refWS.lowerIndex + 1)
-                .getEastNorth();
+        EastNorth enRefNode1 = refWS.getFirstNode().getEastNorth();
+        EastNorth enRefNode2 = refWS.getSecondNode().getEastNorth();
 
-        EastNorth enAlgnNode1 = algnWS.way.getNode(algnWS.lowerIndex)
-                .getEastNorth();
-        EastNorth enAlgnNode2 = algnWS.way.getNode(algnWS.lowerIndex + 1)
-                .getEastNorth();
+        EastNorth enAlgnNode1 = algnWS.getFirstNode().getEastNorth();
+        EastNorth enAlgnNode2 = algnWS.getSecondNode().getEastNorth();
 
         // Calculate the rotation angle
         double refAngle = Math.atan2(enRefNode1.north() - enRefNode2.north(),
@@ -202,6 +199,13 @@ public class AlignWaysCmdKeepLength extends Command {
         for (OsmPrimitive osm : displaceableNodes) {
             modified.add(osm);
         }
+    }
+
+    @Override
+    public Collection<? extends OsmPrimitive> getParticipatingPrimitives() {
+        Collection<OsmPrimitive> prims = new HashSet<>(displaceableNodes);
+        prims.add(algnSeg.getSegment().way);
+        return Collections.unmodifiableCollection(prims);
     }
 
     @Override

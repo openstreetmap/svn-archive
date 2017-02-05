@@ -10,6 +10,7 @@ import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Objects;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -116,10 +117,10 @@ public class AlignWaysDialog extends ToggleDialog implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (e.getActionCommand() == "awOptKeepLen") {
+        if (Objects.equals(e.getActionCommand(), "awOptKeepLen")) {
             awOpt = AligningModeOption.ALGN_OPT_KEEP_LENGTH;
             infoText.setText(tr("<html>Aligns the way segment to the reference so that its length is preserved.</html>"));
-        } else if (e.getActionCommand() == "awOptKeepAng") {
+        } else if (Objects.equals(e.getActionCommand(), "awOptKeepAng")) {
             awOpt = AligningModeOption.ALGN_OPT_KEEP_ANGLE;
             infoText.setText(tr("<html>Aligns the way segment to the reference so that the angles of its adjacent segments are preserved.<br/>" +
                     "The length of the aligned segment is likely to change as result.</html>"));
@@ -135,7 +136,7 @@ public class AlignWaysDialog extends ToggleDialog implements ActionListener {
 
 
     /**
-     * @param action If set to true, the dialog will show the mode options, otherwise it will show some instructions
+     * @param activeMode If set to true, the dialog will show the mode options, otherwise it will show some instructions
      */
     public void activate(boolean activeMode) {
 

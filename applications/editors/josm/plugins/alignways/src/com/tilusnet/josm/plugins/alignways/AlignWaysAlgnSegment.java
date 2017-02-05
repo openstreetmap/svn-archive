@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Shape;
+import java.awt.RenderingHints;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
 import java.util.ArrayList;
@@ -37,7 +38,7 @@ public class AlignWaysAlgnSegment extends AlignWaysSegment {
 
     private enum PivotLocations {
         NONE, NODE1, NODE2, CENTRE
-    };
+    }
 
     private PivotLocations currPivot;
     Map<PivotLocations, EastNorth> pivotList = new EnumMap<>(
@@ -118,9 +119,9 @@ public class AlignWaysAlgnSegment extends AlignWaysSegment {
             EastNorth n2;
             switch (pp) {
             case NODE1:
-                return segment.way.getNode(segment.lowerIndex).getEastNorth();
+                return segment.getFirstNode().getEastNorth();
             case NODE2:
-                return segment.way.getNode(segment.lowerIndex + 1).getEastNorth();
+                return segment.getSecondNode().getEastNorth();
             case CENTRE:
                 n1 = getPivotCoord(PivotLocations.NODE1);
                 n2 = getPivotCoord(PivotLocations.NODE2);
@@ -226,8 +227,14 @@ public class AlignWaysAlgnSegment extends AlignWaysSegment {
 
     @Override
     public void paint(Graphics2D g, MapView mv, Bounds bbox) {
-        // Note: segment should never be null here
         super.paint(g, mv, bbox);
+
+        // Note: segment should never be null here, and its nodes should never be missing.
+        // If they are, it's a bug, possibly related to tracking of DataSet deletions.
+        if (segment.way.getNodesCount() <= segment.lowerIndex + 1) {
+            Main.warn("Not drawing AlignWays pivot points: underlying nodes disappeared");
+            return;
+        }
 
         // Ensure consistency
         updatePivotsEndpoints();
@@ -246,6 +253,7 @@ public class AlignWaysAlgnSegment extends AlignWaysSegment {
     private void highlightPivot(Graphics2D g, MapView mv, EastNorth pivot) {
         g.setColor(pivotColor);
         g.setStroke(new BasicStroke());
+        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
         Shape pvCentrePoint = new Ellipse2D.Double(
                 mv.getPoint(pivot).getX() - 5.0f,
@@ -271,6 +279,8 @@ public class AlignWaysAlgnSegment extends AlignWaysSegment {
 
         g.setColor(crossColor);
         g.setStroke(new BasicStroke());
+        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
         g.draw(crossV);
         g.draw(crossH);
 

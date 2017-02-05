@@ -20,9 +20,19 @@ import javax.swing.JOptionPane;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.mapmode.MapMode;
 import org.openstreetmap.josm.data.osm.DataSet;
+import org.openstreetmap.josm.data.osm.event.AbstractDatasetChangedEvent;
+import org.openstreetmap.josm.data.osm.event.DataChangedEvent;
+import org.openstreetmap.josm.data.osm.event.DataSetListener;
+import org.openstreetmap.josm.data.osm.event.NodeMovedEvent;
+import org.openstreetmap.josm.data.osm.event.PrimitivesAddedEvent;
+import org.openstreetmap.josm.data.osm.event.PrimitivesRemovedEvent;
+import org.openstreetmap.josm.data.osm.event.RelationMembersChangedEvent;
+import org.openstreetmap.josm.data.osm.event.TagsChangedEvent;
+import org.openstreetmap.josm.data.osm.event.WayNodesChangedEvent;
 import org.openstreetmap.josm.gui.IconToggleButton;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.gui.layer.Layer;
+import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import org.openstreetmap.josm.tools.Shortcut;
 
 /**
@@ -30,7 +40,7 @@ import org.openstreetmap.josm.tools.Shortcut;
  * Handles the state machine and user interaction (mouse clicks).
  *
  */
-public class AlignWaysMode extends MapMode /* implements MapViewPaintable */{
+public class AlignWaysMode extends MapMode implements DataSetListener {
 
     private static final long serialVersionUID = -1090955708412011141L;
     private final AlignWaysState noneSelected;
@@ -77,6 +87,9 @@ public class AlignWaysMode extends MapMode /* implements MapViewPaintable */{
 
         awSegs = AlignWaysSegmentMgr.getInstance(Main.map.mapView);
         Main.map.mapView.addMouseListener(this);
+        DataSet ds = Main.getLayerManager().getEditDataSet();
+        if (ds != null)
+            ds.addDataSetListener(this);
         setCurrentState(noneSelected);
     }
 
@@ -94,6 +107,9 @@ public class AlignWaysMode extends MapMode /* implements MapViewPaintable */{
 
         setCurrentState(noneSelected);
         Main.map.mapView.removeMouseListener(this);
+        DataSet ds = Main.getLayerManager().getEditDataSet();
+        if (ds != null)
+            ds.removeDataSetListener(this);
         AlignWaysPlugin.getAwAction().setEnabled(false);
     }
 
@@ -127,26 +143,43 @@ public class AlignWaysMode extends MapMode /* implements MapViewPaintable */{
             }
         }
 
-        // Activate the Align Ways button if we have enough selections
-        if (currentState == bothSelected) {
-            AlignWaysPlugin.getAwAction().setEnabled(true);
-        } else {
-            AlignWaysPlugin.getAwAction().setEnabled(false);
-        }
         Main.map.mapView.repaint();
     }
 
     /**
-     * @param currentState
-     *            One of the AlignWays states
+     * Sets the current state based on the selected segments.
+     * @param mgr AlignWays segment manager singleton
+     */
+    public void setCurrentState(AlignWaysSegmentMgr mgr) {
+
+        boolean algnSelected = mgr.getAlgnSeg() != null;
+        boolean refSelected = mgr.getRefSeg() != null;
+
+        if (algnSelected && refSelected)
+            setCurrentState(getBothSelected());
+        else if (algnSelected)
+            setCurrentState(getAligneeSelected());
+        else if (refSelected)
+            setCurrentState(getReferenceSelected());
+        else
+            setCurrentState(getNoneSelected());
+    }
+
+    /**
+     * Sets the current state.
+     * @param currentState One of the AlignWays states
      */
     public void setCurrentState(AlignWaysState currentState) {
         this.currentState = currentState;
         currentState.setHelpText();
 
+        // Activate the Align Ways button if we have enough selections
+        AlignWaysPlugin.getAwAction().setEnabled(currentState == bothSelected);
+
         if (currentState == noneSelected) {
             awSegs.cleanupWays();
-            // TODO getCurrentDataSet may return null when the editable layer had
+
+            // getEditDataSet() may return null when the editable layer had
             // already been removed by JOSM. This happens e.g. when the user closes
             // JOSM while AlignWays mode is still active.
             DataSet ds = getLayerManager().getEditDataSet();
@@ -182,13 +215,6 @@ public class AlignWaysMode extends MapMode /* implements MapViewPaintable */{
      */
     public AlignWaysState getBothSelected() {
         return bothSelected;
-    }
-
-    /**
-     * @return the current state
-     */
-    public AlignWaysState getCurrentState() {
-        return currentState;
     }
 
     private void showTips() {
@@ -228,9 +254,53 @@ public class AlignWaysMode extends MapMode /* implements MapViewPaintable */{
 
     @Override
     public boolean layerIsSupported(Layer l) {
-        if (l == null)
-            return false;
-        else
-            return true;
+        return l instanceof OsmDataLayer;
+    }
+
+    @Override
+    protected void updateEnabledState() {
+        setEnabled(getLayerManager().getEditLayer() != null);
+    }
+
+    /* --------------- *
+     * DataSetListener *
+     * --------------- */
+
+    @Override
+    public void primitivesAdded(PrimitivesAddedEvent event) {
+    }
+
+    @Override
+    public void primitivesRemoved(PrimitivesRemovedEvent event) {
+        awSegs = AlignWaysSegmentMgr.getInstance(Main.map.mapView);
+
+        // Check whether any of the removed primitives were part of a highlighted alignee or reference segment.
+        // If so: remove the affected segment and update the state accordingly.
+        if (awSegs.primitivesRemoved(event.getPrimitives()))
+            setCurrentState(awSegs);
+    }
+
+    @Override
+    public void tagsChanged(TagsChangedEvent event) {
+    }
+
+    @Override
+    public void nodeMoved(NodeMovedEvent event) {
+    }
+
+    @Override
+    public void wayNodesChanged(WayNodesChangedEvent event) {
+    }
+
+    @Override
+    public void relationMembersChanged(RelationMembersChangedEvent event) {
+    }
+
+    @Override
+    public void otherDatasetChange(AbstractDatasetChangedEvent event) {
+    }
+
+    @Override
+    public void dataChanged(DataChangedEvent event) {
     }
 }

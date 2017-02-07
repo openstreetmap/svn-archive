@@ -32,7 +32,7 @@ public class LiveGpsLayer extends GpxLayer implements PropertyChangeListener {
     public static final String C_LIVEGPS_COLOR_POSITION_ESTIMATE = "color.livegps.position_estimate";
 
     private static final CachingProperty<Color> COLOR_POSITION =
-            new ColorProperty(C_LIVEGPS_COLOR_POSITION_ESTIMATE, Color.RED).cached();
+            new ColorProperty(C_LIVEGPS_COLOR_POSITION, Color.RED).cached();
     private static final CachingProperty<Color> COLOR_POSITION_ESTIMATE =
             new ColorProperty(C_LIVEGPS_COLOR_POSITION_ESTIMATE, Color.CYAN).cached();
 

@@ -27,7 +27,6 @@ import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.visitor.paint.MapPaintSettings;
-import org.openstreetmap.josm.data.osm.visitor.paint.PaintColors;
 import org.openstreetmap.josm.data.preferences.ColorProperty;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.gui.MapView;
@@ -105,10 +104,7 @@ public class DrawSplineAction extends MapMode implements MapViewPaintable, KeyPr
 
     @Override
     protected void readPreferences() {
-        rubberLineColor = new ColorProperty(marktr("helper line"), (Color) null).get();
-        if (rubberLineColor == null)
-            rubberLineColor = PaintColors.SELECTED.get();
-
+        rubberLineColor = new ColorProperty(marktr("helper line"), Color.RED).get();
         initialMoveDelay = Main.pref.getInteger("edit.initial-move-", 200);
         initialMoveThreshold = Main.pref.getInteger("edit.initial-move-threshold", 5);
         initialMoveThreshold *= initialMoveThreshold;

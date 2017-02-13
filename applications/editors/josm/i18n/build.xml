@@ -7,6 +7,7 @@
     <property name="maps.srcfile" value="http://josm.openstreetmap.de/maps"/>
     <property name="wiki.srcfile" value="http://josm.openstreetmap.de/josmfile?mode=en"/>
     <property name="surveyor.srcfile" value="${plugin.dir}/surveyor/resources/surveyor.xml"/>
+    <property name="tag2link.srcfile" value="${plugin.dir}/tag2link/resources/tag2link_sources.xml"/>
     <property name="i18n.build.dir" value="build"/>
     <property name="i18n.install.dir" value="${josm.build.dir}/data"/>
     <property name="i18n_data.install.dir" value="${josm.build.dir}/data_nodist/trans"/>
@@ -31,6 +32,9 @@
         </exec>
         <exec executable="perl" failonerror="true" logError="true" output="${i18n.build.dir}/trans_surveyor.java">
             <arg line="convsurveyor.pl ${surveyor.srcfile}"/>
+        </exec>
+        <exec executable="perl" failonerror="true" logError="true" output="${i18n.build.dir}/trans_tag2link.java">
+            <arg line="convtag2link.pl ${tag2link.srcfile}"/>
         </exec>
         <exec executable="perl" failonerror="true" logError="true" output="${i18n.build.dir}/trans_plugins.java">
             <arg line="convplugins.pl ${plugin.dir}/*/build.xml"/>
@@ -84,6 +88,7 @@
         <gettext-extract keysFile="plugins.raw.pot" poDirectory="${i18n.build.dir}" keywords="-k -ktrc:1c,2 -kmarktrc:1c,2 -ktr -kmarktr -ktrn:1,2 -ktrnc:1c,2,3">
             <fileset dir="${plugin.dir}" includes="**/*.java"/>
             <fileset dir="${i18n.build.dir}" includes="trans_surveyor.java"/>
+            <fileset dir="${i18n.build.dir}" includes="trans_tag2link.java"/>
         </gettext-extract>
         <copy todir="${po.build.dir}">
             <fileset dir="po" includes="core.pot"/>
@@ -135,7 +140,7 @@
         <gettext-extract keysFile="josm.pot" poDirectory="${po.build.dir}/plugin_${dir}" keywords="-k -ktrc:1c,2 -kmarktrc:1c,2 -ktr -kmarktr -ktrn:1,2 -ktrnc:1c,2,3">
             <fileset dir="${plugin.dir}/${dir}" includes="**/*.java"/>
             <fileset dir="${po.build.dir}/plugin_${dir}" includes="trans_*.java"/>
-            <fileset dir="${i18n.build.dir}" includes="trans_${dir}.java"/>
+            <fileset dir="${i18n.build.dir}" includes="trans_${dir}.java"/> <!-- include plugin specific translation -->
         </gettext-extract>
         <if>
             <available file="${po.build.dir}/plugin_${dir}/josm.pot"/>

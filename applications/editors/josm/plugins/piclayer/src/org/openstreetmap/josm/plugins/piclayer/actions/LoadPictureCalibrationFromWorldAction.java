@@ -18,7 +18,7 @@ public class LoadPictureCalibrationFromWorldAction extends JosmAction {
     private PicLayerAbstract layer;
 
     public LoadPictureCalibrationFromWorldAction(PicLayerAbstract layer) {
-        super(tr("Load World File Calibration..."), null, tr("Loads calibration data from a world file"), null, false);
+        super(tr("Import World File Calibration..."), null, tr("Loads calibration data from a world file"), null, false);
 
         this.layer = layer;
     }

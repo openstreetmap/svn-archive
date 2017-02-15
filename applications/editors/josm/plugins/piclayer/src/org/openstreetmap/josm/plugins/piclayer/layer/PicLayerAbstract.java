@@ -55,6 +55,7 @@ import org.openstreetmap.josm.plugins.piclayer.actions.LoadPictureCalibrationAct
 import org.openstreetmap.josm.plugins.piclayer.actions.LoadPictureCalibrationFromWorldAction;
 import org.openstreetmap.josm.plugins.piclayer.actions.ResetCalibrationAction;
 import org.openstreetmap.josm.plugins.piclayer.actions.SavePictureCalibrationAction;
+import org.openstreetmap.josm.plugins.piclayer.actions.SavePictureCalibrationToWorldAction;
 import org.openstreetmap.josm.plugins.piclayer.transform.PictureTransform;
 
 /**
@@ -211,6 +212,8 @@ public abstract class PicLayerAbstract extends Layer {
                 SeparatorLayerAction.INSTANCE,
                 new SavePictureCalibrationAction(this),
                 new LoadPictureCalibrationAction(this),
+                SeparatorLayerAction.INSTANCE,
+                new SavePictureCalibrationToWorldAction(this),
                 new LoadPictureCalibrationFromWorldAction(this),
                 SeparatorLayerAction.INSTANCE,
                 new RenameLayerAction(null, this),
@@ -495,6 +498,34 @@ public abstract class PicLayerAbstract extends Layer {
             initialImageScale = 1;
             Main.map.mapView.repaint();
         }
+    }
+
+    public void saveWorldFile(double[] values) {
+        double[] matrix = new double[6];
+        transformer.getTransform().getMatrix(matrix);
+        double a00 = matrix[0], a01 = matrix[2], a02 = matrix[4];
+        double a10 = matrix[1], a11 = matrix[3], a12 = matrix[5];
+        int w = image.getWidth(null);
+        int h = image.getHeight(null);
+        EastNorth imagePosition = transformer.getImagePosition();
+        // piclayer calibration stores 9 parameters
+        // worldfile has 6 parameters
+        // only 6 parameters needed, so write it in a way that
+        // eliminates the 3 redundant parameters
+        double qx = initialImageScale / 100 / getMetersPerEasting(imagePosition);
+        double qy = -initialImageScale / 100 / getMetersPerNorthing(imagePosition);
+        double sx = qx * a00;
+        double sy = qy * a11;
+        double rx = qx * a01;
+        double ry = qy * a10;
+        double dx = imagePosition.getX() + qx * a02 - sx * w / 2 - rx * h / 2;
+        double dy = imagePosition.getY() + qy * a12 - ry * w / 2 - sy * h / 2;
+        values[0] = sx;
+        values[1] = ry;
+        values[2] = rx;
+        values[3] = sy;
+        values[4] = dx;
+        values[5] = dy;
     }
 
     public Point2D transformPoint(Point p) throws NoninvertibleTransformException {

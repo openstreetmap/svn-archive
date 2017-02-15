@@ -233,9 +233,9 @@ public class SourcesReader implements Tag2LinkConstants {
                     }
                 }
             }
-            link = new LinkPost(name, href, headers, params);
+            link = new LinkPost(tr(name), href, headers, params);
         } else {
-            link = new Link(name, href);
+            link = new Link(tr(name), href);
             jumpToEnd();
         }
         return link;

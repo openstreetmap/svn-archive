@@ -47,7 +47,7 @@ public class OpenLinkAction extends JosmAction implements Tag2LinkConstants {
      * @param link The link to open
      */
     public OpenLinkAction(Link link) {
-        super(tr(link.name), ICON_24, tr("Launch browser with information about the selected object"), null, false);
+        super(link.name, ICON_24, tr("Launch browser with information about the selected object"), null, false);
         this.link = link;
     }
 

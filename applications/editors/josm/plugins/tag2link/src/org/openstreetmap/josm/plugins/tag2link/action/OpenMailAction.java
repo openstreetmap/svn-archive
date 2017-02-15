@@ -40,7 +40,7 @@ public class OpenMailAction extends JosmAction implements Tag2LinkConstants {
      * @param link The link to open
      */
     public OpenMailAction(Link link) {
-        super(tr(link.name), MAIL_ICON_24, tr("Launch your default software for sending an email to the selected contact address"), null, false);
+        super(link.name, MAIL_ICON_24, tr("Launch your default software for sending an email to the selected contact address"), null, false);
         this.url = link.url;
     }
 

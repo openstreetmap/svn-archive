@@ -22,23 +22,32 @@ package org.openstreetmap.josm.plugins.piclayer.actions.transform;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
+import java.awt.event.MouseEvent;
+
+import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.MapFrame;
+import org.openstreetmap.josm.plugins.piclayer.actions.GenericPicTransformAction;
+import org.openstreetmap.josm.tools.ImageProvider;
 
 /**
  * This class handles the input during scaling the picture.
  */
 @SuppressWarnings("serial")
-public class ScaleXPictureAction extends ScalePictureActionAbstract {
+public class ScaleXPictureAction extends GenericPicTransformAction {
 
     /**
      * Constructor
      */
     public ScaleXPictureAction(MapFrame frame) {
-        super(tr("PicLayer scale X"), tr("Scaled by X"), "scale_x", tr("Drag to scale the picture in the X Axis"), frame);
+        super(tr("PicLayer scale X"), tr("Scaled by X"), "scale_x", tr("Drag to scale the picture in the X Axis"), frame, ImageProvider.getCursor("crosshair", null));
     }
 
     @Override
-    public void doTheScale(double scale) {
-        currentLayer.scalePictureBy(scale, 1.0);
+    protected void doAction(MouseEvent e) {
+        double centerX = Main.map.mapView.getWidth()/2;
+        double dx0 = Math.max(Math.abs(prevMousePoint.getX() - centerX), 10);
+        double dx = Math.abs(e.getX() - centerX);
+        double scaleX = Math.max(dx / dx0, 0.9);
+        currentLayer.scalePictureBy(scaleX, 1.0);
     }
 }

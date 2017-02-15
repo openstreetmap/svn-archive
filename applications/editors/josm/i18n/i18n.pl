@@ -276,9 +276,13 @@ sub checkstring
   my $fmte;
   my $fmte1 = "";
   my $trt = $tr; $trt =~ s/'[{}]'//g;
-  while($trt =~ /\{(.*?)\}/g) {push @fmt,$1}; $fmt = join("_", sort @fmt); @fmt = ();
+  while($trt =~ /\{(.*?)\}/g) {push @fmt,$1};
+  while($trt =~ /\%([a-z]+)\%/g) {push @fmt,$1};
+  $fmt = join("_", sort @fmt); @fmt = ();
   my $ent = $en; $ent =~ s/'[{}]'//g;
-  while($ent =~ /\{(.*?)\}/g) {push @fmt,$1}; $fmte = join("_", sort @fmt); @fmt = ();
+  while($ent =~ /\{(.*?)\}/g) {push @fmt,$1};
+  while($ent =~ /\%([a-z]+)\%/g) {push @fmt,$1};
+  $fmte = join("_", sort @fmt); @fmt = ();
   if($en1)
   {
      my $en1t = $en1; $en1t =~ s/'[{}]'//g;

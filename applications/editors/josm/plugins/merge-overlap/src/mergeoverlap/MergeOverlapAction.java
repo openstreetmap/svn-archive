@@ -1,6 +1,6 @@
 package mergeoverlap;
 
-import static org.openstreetmap.josm.gui.conflict.tags.TagConflictResolutionUtil.combineTigerTags;
+import static org.openstreetmap.josm.gui.conflict.tags.TagConflictResolutionUtil.applyAutomaticTagConflictResolution;
 import static org.openstreetmap.josm.gui.conflict.tags.TagConflictResolutionUtil.completeTagCollectionForEditing;
 import static org.openstreetmap.josm.gui.conflict.tags.TagConflictResolutionUtil.normalizeTagCollectionBeforeEditing;
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -543,7 +543,7 @@ public class MergeOverlapAction extends JosmAction {
         modifiedTargetWay.setNodes(path);
 
         TagCollection completeWayTags = new TagCollection(wayTags);
-        combineTigerTags(completeWayTags);
+        applyAutomaticTagConflictResolution(completeWayTags);
         normalizeTagCollectionBeforeEditing(completeWayTags, ways);
         TagCollection tagsToEdit = new TagCollection(completeWayTags);
         completeTagCollectionForEditing(tagsToEdit);

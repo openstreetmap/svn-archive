@@ -66,8 +66,8 @@ public class MyRelationMemberConflictResolverModel extends RelationMemberConflic
      */
     public void populate(Collection<Relation> relations, Collection<Way> memberWays, Map<Way, Way> oldWays) {
         decisions.clear();
-        relations = relations == null ? new LinkedList<Relation>() : relations;
-        memberWays = memberWays == null ? new LinkedList<Way>() : memberWays;
+        relations = relations == null ? new LinkedList<>() : relations;
+        memberWays = memberWays == null ? new LinkedList<>() : memberWays;
         for (Relation r : relations) {
             for (Way w : memberWays) {
                 populate(r, w, oldWays);

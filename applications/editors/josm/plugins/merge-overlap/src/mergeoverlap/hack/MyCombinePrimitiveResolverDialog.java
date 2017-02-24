@@ -53,17 +53,21 @@ public class MyCombinePrimitiveResolverDialog extends CombinePrimitiveResolverDi
     private static MyCombinePrimitiveResolverDialog instance;
 
     /**
+     * Constructs a new {@code MyCombinePrimitiveResolverDialog}.
+     * @param parent The parent component in which this dialog will be displayed.
+     */
+    public MyCombinePrimitiveResolverDialog(Component parent) {
+        super(parent);
+    }
+
+    /**
      * Replies the unique instance of the dialog
      *
      * @return the unique instance of the dialog
      */
     public static MyCombinePrimitiveResolverDialog getInstance() {
         if (instance == null) {
-            GuiHelper.runInEDTAndWait(new Runnable() {
-                @Override public void run() {
-                    instance = new MyCombinePrimitiveResolverDialog(Main.parent);
-                }
-            });
+            GuiHelper.runInEDTAndWait(() -> instance = new MyCombinePrimitiveResolverDialog(Main.parent));
         }
         return instance;
     }
@@ -85,14 +89,6 @@ public class MyCombinePrimitiveResolverDialog extends CombinePrimitiveResolverDi
                 }
             }
         };
-    }
-
-    /**
-     * Constructs a new {@code MyCombinePrimitiveResolverDialog}.
-     * @param parent The parent component in which this dialog will be displayed.
-     */
-    public MyCombinePrimitiveResolverDialog(Component parent) {
-        super(parent);
     }
 
     /**

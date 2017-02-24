@@ -51,6 +51,11 @@ import org.openstreetmap.josm.tools.UserCancelException;
  */
 public class MergeOverlapAction extends JosmAction {
 
+    Map<Way, List<Relation>> relations = new HashMap<>();
+    Map<Way, Way> oldWays = new HashMap<>();
+    Map<Relation, Relation> newRelations = new HashMap<>();
+    Set<Way> deletes = new HashSet<>();
+
     /**
      * Constructs a new {@code MergeOverlapAction}.
      */
@@ -60,11 +65,6 @@ public class MergeOverlapAction extends JosmAction {
                 Shortcut.registerShortcut("tools:mergeoverlap",tr("Tool: {0}", tr("Merge overlap")), KeyEvent.VK_O,
                 Shortcut.ALT_CTRL), true);
     }
-
-    Map<Way, List<Relation>> relations = new HashMap<>();
-    Map<Way, Way> oldWays = new HashMap<>();
-    Map<Relation, Relation> newRelations = new HashMap<>();
-    Set<Way> deletes = new HashSet<>();
 
     /**
      * The action button has been clicked

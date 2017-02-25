@@ -24,7 +24,7 @@ public class MifReaderTest {
      * Setup test.
      */
     @Rule
-    public JOSMTestRules rules = new JOSMTestRules().preferences();
+    public JOSMTestRules rules = new JOSMTestRules().preferences().projection();
 
     private static AbstractDataSetHandler newHandler(final String epsgCode) {
         AbstractDataSetHandler handler = new AbstractDataSetHandler() {

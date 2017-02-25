@@ -25,7 +25,7 @@ public class KmlReaderTest {
      * Setup test.
      */
     @Rule
-    public JOSMTestRules rules = new JOSMTestRules().preferences();
+    public JOSMTestRules rules = new JOSMTestRules().preferences().projection();
 
     /**
      * Unit test of {@link KmlReader#COLOR_PATTERN}
@@ -42,7 +42,7 @@ public class KmlReaderTest {
         assertFalse(KmlReader.COLOR_PATTERN.matcher("red").matches());
         assertFalse(KmlReader.COLOR_PATTERN.matcher("yellow").matches());
     }
-    
+
     /**
      * Non-regression test for ticket <a href="https://josm.openstreetmap.de/ticket/12694">#12694</a>
      * @throws IOException if an error occurs during reading

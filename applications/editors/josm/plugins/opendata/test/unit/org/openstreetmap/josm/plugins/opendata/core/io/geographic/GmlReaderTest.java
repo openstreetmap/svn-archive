@@ -27,7 +27,7 @@ public class GmlReaderTest {
      * Setup test.
      */
     @Rule
-    public JOSMTestRules rules = new JOSMTestRules().preferences().timeout(60000);
+    public JOSMTestRules rules = new JOSMTestRules().preferences().projection().timeout(60000);
 
     /**
      * Non-regression test for ticket <a href="https://josm.openstreetmap.de/ticket/11624">#11624</a>

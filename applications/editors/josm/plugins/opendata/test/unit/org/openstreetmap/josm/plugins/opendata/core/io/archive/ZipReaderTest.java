@@ -23,7 +23,7 @@ public class ZipReaderTest {
      * Setup test.
      */
     @Rule
-    public JOSMTestRules rules = new JOSMTestRules().preferences().noTimeout();
+    public JOSMTestRules rules = new JOSMTestRules().preferences().projection().noTimeout();
 
     /**
      * Test for various zip files reading

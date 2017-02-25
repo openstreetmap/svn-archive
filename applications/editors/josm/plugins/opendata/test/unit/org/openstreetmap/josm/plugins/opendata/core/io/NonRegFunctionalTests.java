@@ -23,7 +23,7 @@ import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.tools.CheckParameterUtil;
 
 public abstract class NonRegFunctionalTests {
-    
+
     /**
      * Non-regression generic test.
      */
@@ -37,6 +37,7 @@ public abstract class NonRegFunctionalTests {
             LatLon latlon = n.getCoor();
             assertTrue("Node without coordinate found for "+context, latlon != null);
             assertTrue("Node with invalid coordinate ("+latlon+") found for "+context, latlon.isValid());
+            assertFalse("Node with outside world coordinate ("+latlon+") found for "+context, latlon.isOutSideWorld());
         }
         // and no empty ways
         for (Way w : ds.getWays()) {
@@ -47,7 +48,7 @@ public abstract class NonRegFunctionalTests {
             assertTrue("Empty relation found for "+context, r.getMembersCount() > 0);
         }
     }
-    
+
     /**
      * Non-regression test for ticket <a href="https://josm.openstreetmap.de/ticket/10214">#10214</a>
      */
@@ -64,7 +65,7 @@ public abstract class NonRegFunctionalTests {
         }
         assertTrue(found);
     }
-    
+
     /**
      * Lists all datasets files matching given extension.
      * @param ext file extension to search for
@@ -76,7 +77,7 @@ public abstract class NonRegFunctionalTests {
         addTree(Paths.get(TestUtils.getTestDataRoot()+"datasets"), result, ext.toLowerCase());
         return result;
     }
-    
+
     static void addTree(Path directory, Collection<Path> all, String ext) throws IOException {
         try (DirectoryStream<Path> ds = Files.newDirectoryStream(directory)) {
             for (Path child : ds) {

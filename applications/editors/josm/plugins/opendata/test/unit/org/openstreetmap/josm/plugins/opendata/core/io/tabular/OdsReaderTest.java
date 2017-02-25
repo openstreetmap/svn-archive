@@ -22,7 +22,7 @@ public class OdsReaderTest {
      * Setup test.
      */
     @Rule
-    public JOSMTestRules rules = new JOSMTestRules().preferences();
+    public JOSMTestRules rules = new JOSMTestRules().preferences().projection();
 
     /**
      * Non-regression test for ticket <a href="https://josm.openstreetmap.de/ticket/13821">#13821</a>

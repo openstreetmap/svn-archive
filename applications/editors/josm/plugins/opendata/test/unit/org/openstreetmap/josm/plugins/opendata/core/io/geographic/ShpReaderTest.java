@@ -1,7 +1,9 @@
 // License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.opendata.core.io.geographic;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -11,9 +13,11 @@ import java.io.InputStream;
 import javax.xml.stream.FactoryConfigurationError;
 import javax.xml.stream.XMLStreamException;
 
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.openstreetmap.josm.TestUtils;
+import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.plugins.opendata.core.io.NonRegFunctionalTests;
 import org.openstreetmap.josm.testutils.JOSMTestRules;
@@ -27,7 +31,7 @@ public class ShpReaderTest {
      * Setup test.
      */
     @Rule
-    public JOSMTestRules rules = new JOSMTestRules().preferences().timeout(60000);
+    public JOSMTestRules rules = new JOSMTestRules().preferences().projection().timeout(60000);
 
     /**
      * Non-regression test for ticket <a href="https://josm.openstreetmap.de/ticket/12714">#12714</a>
@@ -39,6 +43,24 @@ public class ShpReaderTest {
         try (InputStream is = new FileInputStream(file)) {
             for (Node n : ShpReader.parseDataSet(is, file, null, null).getNodes()) {
                 assertNotNull(n.toString(), n.getCoor());
+            }
+        }
+    }
+
+    /**
+     * Non-regression test for ticket <a href="https://josm.openstreetmap.de/ticket/11761">#11761</a>
+     * @throws IOException if an error occurs during reading
+     */
+    @Test
+    @Ignore("work in progress")
+    public void testTicket11761() throws IOException, XMLStreamException, FactoryConfigurationError {
+        File file = new File(TestUtils.getRegressionDataFile(11761, "HAR.shp"));
+        try (InputStream is = new FileInputStream(file)) {
+            for (Node n : ShpReader.parseDataSet(is, file, null, null).getNodes()) {
+                assertNotNull(n.toString(), n.getCoor());
+                assertFalse(n.toString(), LatLon.ZERO.equals(n.getCoor()));
+                assertFalse(n.toString(), n.getCoor().isOutSideWorld());
+                assertTrue(n.toString(), n.getCoor().isValid());
             }
         }
     }

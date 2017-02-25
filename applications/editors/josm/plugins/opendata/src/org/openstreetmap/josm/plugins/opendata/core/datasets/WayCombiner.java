@@ -1,7 +1,7 @@
 // License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.opendata.core.datasets;
 
-import static org.openstreetmap.josm.gui.conflict.tags.TagConflictResolutionUtil.combineTigerTags;
+import static org.openstreetmap.josm.gui.conflict.tags.TagConflictResolutionUtil.applyAutomaticTagConflictResolution;
 import static org.openstreetmap.josm.gui.conflict.tags.TagConflictResolutionUtil.completeTagCollectionForEditing;
 import static org.openstreetmap.josm.gui.conflict.tags.TagConflictResolutionUtil.normalizeTagCollectionBeforeEditing;
 
@@ -125,7 +125,7 @@ public final class WayCombiner {
         modifiedTargetWay.setNodes(path);
 
         TagCollection completeWayTags = new TagCollection(wayTags);
-        combineTigerTags(completeWayTags);
+        applyAutomaticTagConflictResolution(completeWayTags);
         normalizeTagCollectionBeforeEditing(completeWayTags, ways);
         TagCollection tagsToEdit = new TagCollection(completeWayTags);
         completeTagCollectionForEditing(tagsToEdit);

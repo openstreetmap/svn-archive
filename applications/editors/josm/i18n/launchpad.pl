@@ -8,7 +8,8 @@ my ($user, $pwd);
 
 # Three ways to handle login data:
   # Enter data directly in these two lines (Be careful witn svn checkin later!)
-  # create a file "launchpad.pl_credits" containing the two lines with proper values
+  # create a file "launchpad.pl_credits" or ~/.josm_i18n_launchpad.pl_credits
+  # containing the two lines with proper values
   # leave credits empty and enter them on runtime
 $user = '';
 $pwd = '';
@@ -287,6 +288,11 @@ sub getcredits
         require Term::ReadKey;
         local undef $/;
         if(open FILE, "launchpad.pl_credits")
+        {
+            eval <FILE>;
+            close FILE;
+        }
+        if(open FILE, "$ENV{HOME}/.josm_i18n_launchpad.pl_credits")
         {
             eval <FILE>;
             close FILE;

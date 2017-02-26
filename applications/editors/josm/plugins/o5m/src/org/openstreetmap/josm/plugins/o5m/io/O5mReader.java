@@ -220,7 +220,7 @@ public class O5mReader extends AbstractReader {
             Bounds b = new Bounds(minlat, minlon, maxlat, maxlon);
             if (!b.isCollapsed() && LatLon.isValidLat(minlat) && LatLon.isValidLat(maxlat) 
                                  && LatLon.isValidLon(minlon) && LatLon.isValidLon(maxlon)) {
-                ds.dataSources.add(new DataSource(b, header));
+                ds.addDataSource(new DataSource(b, header));
             } else {
                 Main.error("Invalid Bounds: "+b);
             }

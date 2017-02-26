@@ -294,7 +294,7 @@ public class WayDownloaderPlugin extends Plugin {
     }
 
     private boolean isDownloaded(Node node) {
-        for (DataSource datasource : Main.getLayerManager().getEditDataSet().dataSources) {
+        for (DataSource datasource : Main.getLayerManager().getEditDataSet().getDataSources()) {
             Bounds bounds = datasource.bounds;
             if (bounds != null && bounds.contains(node.getCoor())) return true;
         }

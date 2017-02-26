@@ -292,7 +292,7 @@ sub getcredits
             eval <FILE>;
             close FILE;
         }
-        if(open FILE, "$ENV{HOME}/.josm_i18n_launchpad.pl_credits")
+        elsif(open FILE, "$ENV{HOME}/.josm_i18n_launchpad.pl_credits")
         {
             eval <FILE>;
             close FILE;

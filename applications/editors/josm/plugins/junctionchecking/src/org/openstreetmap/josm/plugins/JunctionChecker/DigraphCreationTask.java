@@ -100,7 +100,7 @@ public class DigraphCreationTask extends PleaseWaitRunnable {
         while (itrel.hasNext()) {
             graph.addRelation(itrel.next());
         }
-        Iterator<DataSource> itdata = Main.getLayerManager().getEditDataSet().dataSources.iterator();
+        Iterator<DataSource> itdata = Main.getLayerManager().getEditDataSet().getDataSources().iterator();
         while (itdata.hasNext()) {
             Bounds b = itdata.next().bounds;
             graph.setBbbottom(b.getMin().getY());

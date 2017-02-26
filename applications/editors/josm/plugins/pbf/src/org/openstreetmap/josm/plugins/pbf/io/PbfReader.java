@@ -78,7 +78,7 @@ public class PbfReader extends AbstractReader {
                 double maxlon = parseRawDegrees(bbox.getRight());
                 Bounds b = new Bounds(minlat, minlon, maxlat, maxlon);
                 if (!b.isCollapsed() && areCoordinatesValid(minlat, minlon, maxlat, maxlon)) {
-                    ds.dataSources.add(new DataSource(b, header.getSource()));
+                    ds.addDataSource(new DataSource(b, header.getSource()));
                 } else {
                     Main.error("Invalid Bounds: "+b);
                 }

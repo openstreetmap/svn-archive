@@ -483,7 +483,7 @@ public class PbfWriter implements Closeable {
         }
 
         public void process(DataSet ds) {
-            processor.processSources(ds.dataSources);
+            processor.processSources(ds.getDataSources());
             Comparator<OsmPrimitive> cmp = Comparator.comparingLong(OsmPrimitive::getUniqueId);
             ds.getNodes().stream().sorted(cmp).filter(n -> n.isLatLonKnown()).forEach(processor::processNode);
             ds.getWays().stream().sorted(cmp).filter(w -> w.getNodesCount() > 0).forEach(processor::processWay);

@@ -78,7 +78,9 @@ public class LakewalkerPreferences extends DefaultTabPreferenceSetting {
         maxSegsConfig.setToolTipText(tr("Maximum number of segments allowed in each generated way. Default 250."));
         maxNodesConfig.setToolTipText(tr("Maximum number of nodes to generate before bailing out (before simplifying lines). Default 50000."));
         thresholdConfig.setToolTipText(tr("Maximum gray value to accept as water (based on Landsat IR-1 data). Can be in the range 0-255. Default 90."));
-        epsilonConfig.setToolTipText(tr("Accuracy of Douglas-Peucker line simplification, measured in degrees.<br>Lower values give more nodes, and more accurate lines. Default 0.0003."));
+        epsilonConfig.setToolTipText("<html>" +
+            tr("Accuracy of Douglas-Peucker line simplification, measured in degrees.<br>Lower values give more nodes, and more accurate lines. Default 0.0003.")
+            + "</html>");
         landsatResConfig.setToolTipText(tr("Resolution of Landsat tiles, measured in pixels per degree. Default 4000."));
         landsatSizeConfig.setToolTipText(tr("Size of one landsat tile, measured in pixels. Default 2000."));
         eastOffsetConfig.setToolTipText(tr("Offset all points in East direction (degrees). Default 0."));

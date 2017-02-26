@@ -164,7 +164,7 @@ public class GTFSStopTableModel extends DefaultTableModel implements TableModelL
         DataSet ds = Main.getLayerManager().getEditDataSet();
         if (ds != null) {
             boolean inside = false;
-            Iterator<DataSource> iter = ds.dataSources.iterator();
+            Iterator<DataSource> iter = ds.getDataSources().iterator();
             while (iter.hasNext()) {
                 if (iter.next().bounds.contains(coor)) {
                     inside = true;

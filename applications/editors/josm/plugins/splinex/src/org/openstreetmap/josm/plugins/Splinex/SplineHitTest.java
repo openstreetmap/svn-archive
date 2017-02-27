@@ -25,6 +25,9 @@ public class SplineHitTest {
     static final double pixTolerance = 1;
 
     public boolean checkCurve(double x1, double y1, double x2, double y2, double x3, double y3, double x4, double y4) {
+        return checkCurve(x1, y1, x2, y2, x3, y3, x4, y4, 32);
+    }
+    public boolean checkCurve(double x1, double y1, double x2, double y2, double x3, double y3, double x4, double y4, int depth) {
         if (Main.isDebugEnabled()) {
             Main.debug("checkCurve {0} {1} {2} {3} {4} {5} {6} {7}", x1, y1, x2, y2, x3, y3, x4, y4);
         }
@@ -76,7 +79,9 @@ public class SplineHitTest {
         double y1234 = (y123 + y234) / 2;
         if (checkPoint(x1234, y1234))
             return true;
-        return checkCurve(x1, y1, x12, y12, x123, y123, x1234, y1234)
-            || checkCurve(x1234, y1234, x234, y234, x34, y34, x4, y4);
+        if (depth <= 0)
+            return false;
+        return checkCurve(x1, y1, x12, y12, x123, y123, x1234, y1234, depth - 1)
+            || checkCurve(x1234, y1234, x234, y234, x34, y34, x4, y4, depth - 1);
     }
 }

@@ -153,6 +153,8 @@ public class Command {
         case IMAGERYOFFSET:
             if (obj instanceof String) return true;
             break;
+        default:
+            break;
         }
         return false;
     }

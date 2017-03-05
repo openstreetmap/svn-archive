@@ -67,6 +67,8 @@ public class Parameter {
         case IMAGERYOFFSET:
             out = String.valueOf(value);
             break;
+        default:
+            break;
         }
         return out;
     }

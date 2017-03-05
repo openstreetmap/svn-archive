@@ -79,104 +79,11 @@ public class CommandLine extends Plugin {
         commandSymbol = ": ";
         history = new History(100);
         historyField = new DisableShortcutsOnFocusGainedTextField();
-        textField = new DisableShortcutsOnFocusGainedTextField() {
-            @Override
-            protected void processKeyEvent(KeyEvent e) {
-                if (e.getID() == KeyEvent.KEY_PRESSED) {
-                    int code = e.getKeyCode();
-                    if (code == KeyEvent.VK_ENTER) {
-                        String commandText = textField.getText().substring(prefix.length());
-                        switch (mode) {
-                        case IDLE:
-                            if (commandText.isEmpty()) {
-                                commandText = history.getLastItem();
-                            } else {
-                                history.addItem(commandText);
-                            }
-                            Command command = findCommand(commandText, true);
-                            if (command != null) {
-                                startCommand(command);
-                            } else {
-                                setMode(Mode.IDLE);
-                            }
-                            break;
-                        case SELECTION:
-                            if (currentMapFrame.mapMode instanceof WayAction
-                             || currentMapFrame.mapMode instanceof NodeAction
-                             || currentMapFrame.mapMode instanceof RelationAction
-                             || currentMapFrame.mapMode instanceof AnyAction) {
-                                Collection<OsmPrimitive> selected = Main.getLayerManager().getEditDataSet().getSelected();
-                                if (selected.size() > 0)
-                                    loadParameter(selected, true);
-                            } else {
-                                loadParameter(commandText, currentCommand.parameters.get(currentCommand.currentParameterNum).maxInstances == 1);
-                            }
-                            break;
-                        case ADJUSTMENT:
-                            break;
-                        }
-                        e.consume();
-                    } else if (code == KeyEvent.VK_UP) {
-                        textField.setText(prefix + history.getPrevItem());
-                        e.consume();
-                    } else if (code == KeyEvent.VK_DOWN) {
-                        textField.setText(prefix + history.getNextItem());
-                        e.consume();
-                    } else if (code == KeyEvent.VK_BACK_SPACE || code == KeyEvent.VK_LEFT) {
-                        if (textField.getCaretPosition() <= prefix.length())
-                            e.consume();
-                    } else if (code == KeyEvent.VK_HOME) {
-                        setCaretPosition(prefix.length());
-                        e.consume();
-                    } else if (code == KeyEvent.VK_ESCAPE) {
-                        if (textField.getText().length() == prefix.length() && mode == Mode.IDLE)
-                            deactivate();
-                        else
-                            endInput();
-                        e.consume();
-                    } else if (code == KeyEvent.VK_DELETE || code == KeyEvent.VK_RIGHT || code == KeyEvent.VK_END) {
-                    } else {
-                        e.consume();
-                    }
-                    if (textField.getCaretPosition() < prefix.length() ||
-                            (textField.getSelectionStart() < prefix.length() && textField.getSelectionStart() > 0))
-                        e.consume();
-                }
-                if (e.getID() == KeyEvent.KEY_TYPED)
-                    if (textField.getCaretPosition() < prefix.length() ||
-                            (textField.getSelectionStart() < prefix.length() && textField.getSelectionStart() > 0))
-                        e.consume();
-                super.processKeyEvent(e);
-                if (textField.getText().length() < prefix.length()) { // Safe
-                    setMode(mode);
-                }
-                if (e.getID() == KeyEvent.KEY_TYPED) {
-                    if (e.getKeyChar() > 'A' && e.getKeyChar() < 'z') {
-                        Command command = findCommand(textField.getText().substring(prefix.length()), false);
-                        if (command != null) {
-                            int currentPos = textField.getSelectionStart() == 0 ? textField.getCaretPosition() : textField.getSelectionStart();
-                            textField.setText(prefix + command.name);
-                            textField.setCaretPosition(currentPos);
-                            textField.select(currentPos, prefix.length() + command.name.length());
-                        }
-                    }
-                }
-            }
-
-            @Override
-            protected void processMouseEvent(MouseEvent e) {
-                super.processMouseEvent(e);
-                if (e.getButton() == MouseEvent.BUTTON1 && e.getID() == MouseEvent.MOUSE_RELEASED) {
-                    if (textField.getSelectionStart() > 0 && textField.getSelectionStart() < prefix.length())
-                        textField.setSelectionStart(prefix.length());
-                    else if (textField.getCaretPosition() < prefix.length())
-                        textField.setCaretPosition(prefix.length());
-                }
-            }
-        };
+        textField = new CommandTextField();
 
         if (Main.main.menu != null) {
-            commandMenu = Main.main.menu.addMenu("Commands", tr("Commands"), KeyEvent.VK_O, Main.main.menu.getDefaultMenuPos(), ht("/Plugin/CommandLine"));
+            commandMenu = Main.main.menu.addMenu("Commands", tr("Commands"), KeyEvent.VK_O,
+                    Main.main.menu.getDefaultMenuPos(), ht("/Plugin/CommandLine"));
             MainMenu.add(commandMenu, new CommandLineAction(this));
         }
         loadCommands();
@@ -365,10 +272,11 @@ public class CommandLine extends Plugin {
                         }
                     }
                 }
-                ImageryInfo info = ((ImageryLayer) layer).getInfo();
-                String url = info.getUrl();
-                String itype = info.getImageryType().getTypeString();
-                loadParameter((url.equals("") ? itype : url), true);
+                if (layer != null) {
+                    ImageryInfo info = ((ImageryLayer) layer).getInfo();
+                    String url = info.getUrl();
+                    loadParameter(url.isEmpty() ? info.getImageryType().getTypeString() : url, true);
+                }
                 action = new DummyAction(currentMapFrame, this);
                 break;
             case IMAGERYOFFSET:
@@ -457,6 +365,103 @@ public class CommandLine extends Plugin {
         }
     }
 
+    private final class CommandTextField extends DisableShortcutsOnFocusGainedTextField {
+        @Override
+        protected void processKeyEvent(KeyEvent e) {
+            if (e.getID() == KeyEvent.KEY_PRESSED) {
+                int code = e.getKeyCode();
+                if (code == KeyEvent.VK_ENTER) {
+                    String commandText = textField.getText().substring(prefix.length());
+                    switch (mode) {
+                    case IDLE:
+                        if (commandText.isEmpty()) {
+                            commandText = history.getLastItem();
+                        } else {
+                            history.addItem(commandText);
+                        }
+                        Command command = findCommand(commandText, true);
+                        if (command != null) {
+                            startCommand(command);
+                        } else {
+                            setMode(Mode.IDLE);
+                        }
+                        break;
+                    case SELECTION:
+                        if (currentMapFrame.mapMode instanceof WayAction
+                         || currentMapFrame.mapMode instanceof NodeAction
+                         || currentMapFrame.mapMode instanceof RelationAction
+                         || currentMapFrame.mapMode instanceof AnyAction) {
+                            Collection<OsmPrimitive> selected = Main.getLayerManager().getEditDataSet().getSelected();
+                            if (!selected.isEmpty())
+                                loadParameter(selected, true);
+                        } else {
+                            loadParameter(commandText, currentCommand.parameters.get(currentCommand.currentParameterNum).maxInstances == 1);
+                        }
+                        break;
+                    case ADJUSTMENT:
+                    default:
+                        break;
+                    }
+                    e.consume();
+                } else if (code == KeyEvent.VK_UP) {
+                    textField.setText(prefix + history.getPrevItem());
+                    e.consume();
+                } else if (code == KeyEvent.VK_DOWN) {
+                    textField.setText(prefix + history.getNextItem());
+                    e.consume();
+                } else if (code == KeyEvent.VK_BACK_SPACE || code == KeyEvent.VK_LEFT) {
+                    if (textField.getCaretPosition() <= prefix.length())
+                        e.consume();
+                } else if (code == KeyEvent.VK_HOME) {
+                    setCaretPosition(prefix.length());
+                    e.consume();
+                } else if (code == KeyEvent.VK_ESCAPE) {
+                    if (textField.getText().length() == prefix.length() && mode == Mode.IDLE)
+                        deactivate();
+                    else
+                        endInput();
+                    e.consume();
+                } else if (code == KeyEvent.VK_DELETE || code == KeyEvent.VK_RIGHT || code == KeyEvent.VK_END) {
+                } else {
+                    e.consume();
+                }
+                if (textField.getCaretPosition() < prefix.length() ||
+                        (textField.getSelectionStart() < prefix.length() && textField.getSelectionStart() > 0))
+                    e.consume();
+            }
+            if (e.getID() == KeyEvent.KEY_TYPED)
+                if (textField.getCaretPosition() < prefix.length() ||
+                        (textField.getSelectionStart() < prefix.length() && textField.getSelectionStart() > 0))
+                    e.consume();
+            super.processKeyEvent(e);
+            if (textField.getText().length() < prefix.length()) { // Safe
+                setMode(mode);
+            }
+            if (e.getID() == KeyEvent.KEY_TYPED) {
+                if (e.getKeyChar() > 'A' && e.getKeyChar() < 'z') {
+                    Command command = findCommand(textField.getText().substring(prefix.length()), false);
+                    if (command != null) {
+                        int currentPos = textField.getSelectionStart() == 0 ? textField.getCaretPosition() : textField.getSelectionStart();
+                        textField.setText(prefix + command.name);
+                        textField.setCaretPosition(currentPos);
+                        textField.select(currentPos, prefix.length() + command.name.length());
+                    }
+                }
+            }
+        }
+
+        @Override
+        protected void processMouseEvent(MouseEvent e) {
+            super.processMouseEvent(e);
+            if (e.getButton() == MouseEvent.BUTTON1 && e.getID() == MouseEvent.MOUSE_RELEASED) {
+                if (textField.getSelectionStart() > 0 && textField.getSelectionStart() < prefix.length())
+                    textField.setSelectionStart(prefix.length());
+                else if (textField.getCaretPosition() < prefix.length())
+                    textField.setCaretPosition(prefix.length());
+            }
+        }
+    }
+
     private static class ToolProcess {
         public Process process;
         public volatile boolean running;
@@ -507,94 +512,88 @@ public class CommandLine extends Plugin {
         tp.running = true;
 
         // redirect child process's stderr to JOSM stderr
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    byte[] buffer = new byte[1024];
-                    InputStream errStream = tp.process.getErrorStream();
-                    int len;
-                    while ((len = errStream.read(buffer)) > 0) {
-                        synchronized (debugstr) {
-                            debugstr.append(new String(buffer, 0, len, StandardCharsets.UTF_8));
-                        }
-                        System.err.write(buffer, 0, len);
+        new Thread(() -> {
+            try {
+                byte[] buffer = new byte[1024];
+                InputStream errStream = tp.process.getErrorStream();
+                int len;
+                while ((len = errStream.read(buffer)) > 0) {
+                    synchronized (debugstr) {
+                        debugstr.append(new String(buffer, 0, len, StandardCharsets.UTF_8));
                     }
-                } catch (IOException e) {
-                    Main.warn(e);
+                    System.err.write(buffer, 0, len);
                 }
+            } catch (IOException e) {
+                Main.warn(e);
             }
         }).start();
 
         // Write stdin stream
-        Thread osmWriteThread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                BBox bbox = null;
-                final OutputStream outputStream = tp.process.getOutputStream();
-                PrintWriter printWriter = null;
-                try {
-                    printWriter = new PrintWriter(new OutputStreamWriter(outputStream, StandardCharsets.UTF_8));
-                } catch (Exception e) {
-                    Main.error(e);
-                }
-                final OsmWriter osmWriter = OsmWriterFactory.createOsmWriter(printWriter, true, null);
-                Collection<OsmPrimitive> refObjects = currentCommand.getDepsObjects();
-                Collection<OsmPrimitive> pObjects;
+        Thread osmWriteThread = new Thread(() -> {
+            BBox bbox = null;
+            final OutputStream outputStream = tp.process.getOutputStream();
+            PrintWriter printWriter = null;
+            try {
+                printWriter = new PrintWriter(new OutputStreamWriter(outputStream, StandardCharsets.UTF_8));
+            } catch (Exception e1) {
+                Main.error(e1);
+            }
+            final OsmWriter osmWriter = OsmWriterFactory.createOsmWriter(printWriter, true, null);
+            Collection<OsmPrimitive> refObjects = currentCommand.getDepsObjects();
+            Collection<OsmPrimitive> pObjects;
+            osmWriter.header();
+            Collection<OsmPrimitive> contents = new ArrayList<>();
+            for (OsmPrimitive primitive1 : refObjects) {
+                contents.add(primitive1);
+                if (bbox == null)
+                    bbox = new BBox(primitive1.getBBox());
+                else
+                    bbox.addPrimitive(primitive1, 0.0);
+            }
+            osmWriter.writeNodes(new SubclassFilteredCollection<OsmPrimitive, Node>(contents, Node.class::isInstance));
+            osmWriter.writeWays(new SubclassFilteredCollection<OsmPrimitive, Way>(contents, Way.class::isInstance));
+            osmWriter.writeRelations(new SubclassFilteredCollection<OsmPrimitive, Relation>(contents, Relation.class::isInstance));
+            osmWriter.footer();
+            osmWriter.flush();
+
+            for (Parameter parameter : parameters) {
+                if (!parameter.isOsm())
+                    continue;
+                contents = new ArrayList<>();
                 osmWriter.header();
-                Collection<OsmPrimitive> contents = new ArrayList<>();
-                for (OsmPrimitive primitive : refObjects) {
-                    contents.add(primitive);
+                pObjects = parameter.getParameterObjects();
+                for (OsmPrimitive primitive2 : pObjects) {
+                    contents.add(primitive2);
                     if (bbox == null)
-                        bbox = new BBox(primitive.getBBox());
+                        bbox = new BBox(primitive2.getBBox());
                     else
-                        bbox.addPrimitive(primitive, 0.0);
+                        bbox.addPrimitive(primitive2, 0.0);
                 }
                 osmWriter.writeNodes(new SubclassFilteredCollection<OsmPrimitive, Node>(contents, Node.class::isInstance));
                 osmWriter.writeWays(new SubclassFilteredCollection<OsmPrimitive, Way>(contents, Way.class::isInstance));
                 osmWriter.writeRelations(new SubclassFilteredCollection<OsmPrimitive, Relation>(contents, Relation.class::isInstance));
                 osmWriter.footer();
                 osmWriter.flush();
+            }
 
-                for (Parameter parameter : parameters) {
-                    if (!parameter.isOsm())
-                        continue;
-                    contents = new ArrayList<>();
-                    osmWriter.header();
-                    pObjects = parameter.getParameterObjects();
-                    for (OsmPrimitive primitive : pObjects) {
-                        contents.add(primitive);
-                        if (bbox == null)
-                            bbox = new BBox(primitive.getBBox());
-                        else
-                            bbox.addPrimitive(primitive, 0.0);
+            if (tracks) {
+                try (GpxWriter gpxWriter = new GpxWriter(printWriter)) {
+                    GpxFilter gpxFilter = new GpxFilter();
+                    gpxFilter.initBboxFilter(bbox);
+                    List<GpxLayer> gpxLayers = Main.getLayerManager().getLayersOfType(GpxLayer.class);
+                    for (GpxLayer gpxLayer : gpxLayers) {
+                        gpxFilter.addGpxData(gpxLayer.data);
                     }
-                    osmWriter.writeNodes(new SubclassFilteredCollection<OsmPrimitive, Node>(contents, Node.class::isInstance));
-                    osmWriter.writeWays(new SubclassFilteredCollection<OsmPrimitive, Way>(contents, Way.class::isInstance));
-                    osmWriter.writeRelations(new SubclassFilteredCollection<OsmPrimitive, Relation>(contents, Relation.class::isInstance));
-                    osmWriter.footer();
-                    osmWriter.flush();
+                    gpxWriter.write(gpxFilter.getGpxData());
+                } catch (IOException e2) {
+                    Main.warn(e2);
                 }
-
-                if (tracks) {
-                    try (GpxWriter gpxWriter = new GpxWriter(printWriter)) {
-                        GpxFilter gpxFilter = new GpxFilter();
-                        gpxFilter.initBboxFilter(bbox);
-                        List<GpxLayer> gpxLayers = Main.getLayerManager().getLayersOfType(GpxLayer.class);
-                        for (GpxLayer gpxLayer : gpxLayers) {
-                            gpxFilter.addGpxData(gpxLayer.data);
-                        }
-                        gpxWriter.write(gpxFilter.getGpxData());
-                    } catch (IOException e) {
-                        Main.warn(e);
-                    }
-                }
-                Utils.close(osmWriter);
-                synchronized (syncObj) {
-                    if (currentCommand.asynchronous) {
-                        tp.running = false;
-                        syncObj.notifyAll();
-                    }
+            }
+            Utils.close(osmWriter);
+            synchronized (syncObj) {
+                if (currentCommand.asynchronous) {
+                    tp.running = false;
+                    syncObj.notifyAll();
                 }
             }
         });

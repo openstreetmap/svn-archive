@@ -77,6 +77,8 @@ public class ImplicationXMLReader {
                 }
                 break;
 
+            default:
+                break;
         }
 
         //all valid paths end with return; reaching this indicates an invalid tag
@@ -127,9 +129,12 @@ public class ImplicationXMLReader {
                     return;
                 }
                 break;
+
+            default:
+                break;
         }
 
-        //all vaild paths end with return; reaching this indicates an invalid tag
+        //all valid paths end with return; reaching this indicates an invalid tag
         throw new SAXException(tr("Invalid closing xml tag </{0}> in state {1}", name, state));
     }
 

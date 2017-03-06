@@ -60,6 +60,8 @@ public class DistanceBetweenStops extends JosmAction {
             case FORWARD:
                 routeNodes.addAll(link.linkPrev ? nodes.subList(1, nodes.size()) : nodes);
                 break;
+            default:
+                break;
             }
         }
 

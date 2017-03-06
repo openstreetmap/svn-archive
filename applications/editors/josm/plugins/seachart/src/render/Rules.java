@@ -1204,14 +1204,11 @@ public class Rules {
 
     private static void obstructions() {
         if ((Renderer.zoom >= 12) && (feature.type == Obj.OBSTRN)) {
-            switch ((CatOBS) getAttEnum(feature.type, Att.CATOBS)) {
-            case OBS_BOOM:
+            if (getAttEnum(feature.type, Att.CATOBS) == CatOBS.OBS_BOOM) {
                 Renderer.lineVector(new LineStyle(Color.black, 5, new float[] {20, 20}, null));
                 if (Renderer.zoom >= 15) {
                     Renderer.lineText("Boom", new Font("Arial", Font.PLAIN, 80), Color.black, -20);
                 }
-            default:
-                break;
             }
         }
         if ((Renderer.zoom >= 14) && (feature.type == Obj.UWTROC)) {

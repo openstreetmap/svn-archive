@@ -68,6 +68,8 @@ public class PanelPort extends JPanel {
                         SmedAction.panelMain.mark.addObjColour(Col.RED);
                         SmedAction.panelMain.mark.addObjColour(Col.WHITE);
                         break;
+                    default:
+                        break;
                     }
                 } else {
                     SmedAction.panelMain.mark.setObjPattern(Pat.HSTRP);
@@ -87,6 +89,8 @@ public class PanelPort extends JPanel {
                         SmedAction.panelMain.mark.addObjColour(Col.GREEN);
                         SmedAction.panelMain.mark.addObjColour(Col.RED);
                         SmedAction.panelMain.mark.addObjColour(Col.GREEN);
+                        break;
+                    default:
                         break;
                     }
                 }

@@ -58,6 +58,8 @@ public class PanelPat extends JPanel {
             case CROSS:
                 panelCol.trimStack(2);
                 break;
+            default:
+                break;
             }
         }
     };

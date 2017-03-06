@@ -1387,10 +1387,13 @@ public class SeaMark extends JPanel {
             if (getCategory() != Cat.NOCAT) {
                 tmp = true;
             }
+            break;
         case LNDMRK:
             if ((getCategory() != Cat.NOCAT) || (getFunc() != Fnc.UNKFNC)) {
                 tmp = true;
             }
+            break;
+        default:
             break;
         }
         if (tmp) {
@@ -1742,6 +1745,8 @@ public class SeaMark extends JPanel {
                         }
                     }
                     break;
+                default:
+                    break;
                 }
             }
         }
@@ -2079,6 +2084,8 @@ public class SeaMark extends JPanel {
                     imgStr += "Perch_Starboard";
                 }
                 break;
+            default:
+                break;
             }
             colStr = imgStr;
             lblStr = "";
@@ -2135,6 +2142,8 @@ public class SeaMark extends JPanel {
                 case PINK:
                     colStr += "_Pink";
                     lblStr += "Pk";
+                    break;
+                default:
                     break;
                 }
             }
@@ -2241,7 +2250,12 @@ public class SeaMark extends JPanel {
                     case MRBT:
                         imgStr += "Spire";
                         break;
+                    default:
+                        break;
                     }
+                    break;
+                default:
+                    break;
                 }
                 break;
             case LITHSE:
@@ -2286,6 +2300,8 @@ public class SeaMark extends JPanel {
                 case MOR_BUOY:
                     imgStr += "Sphere";
                     break;
+                default:
+                    break;
                 }
                 break;
             case BOYINB:
@@ -2304,6 +2320,8 @@ public class SeaMark extends JPanel {
             case RADSTA:
                 imgStr += "Signal_Station";
                 g2.drawImage(new ImageIcon(getClass().getResource("/images/Radar_Station.png")).getImage(), 7, -15, null);
+                break;
+            default:
                 break;
             }
             if (!imgStr.equals("/images/")) {
@@ -2346,6 +2364,8 @@ public class SeaMark extends JPanel {
             case SPHERES2:
                 imgStr += "Isol";
                 break;
+            default:
+                break;
             }
             colStr = imgStr;
             for (Col col : topmarkColour) {
@@ -2376,6 +2396,8 @@ public class SeaMark extends JPanel {
                     break;
                 case BLACK:
                     colStr += "_Black";
+                    break;
+                default:
                     break;
                 }
             }
@@ -2408,6 +2430,8 @@ public class SeaMark extends JPanel {
             case BEACON:
                 imgStr += "_Beacon";
                 colStr += "_Beacon";
+                break;
+            default:
                 break;
             }
             colStr += ".png";
@@ -2550,6 +2574,8 @@ public class SeaMark extends JPanel {
             case VIOLET:
                 c += ".Vi";
                 break;
+            default:
+                break;
             }
             switch ((Col) getLightAtt(Att.ALT, 0)) {
             case WHITE:
@@ -2576,6 +2602,8 @@ public class SeaMark extends JPanel {
             case VIOLET:
                 c += "Vi";
                 break;
+            default:
+                break;
             }
             tmp = (String) getLightAtt(Att.MLT, 0);
             if (!tmp.isEmpty()) {
@@ -2588,6 +2616,8 @@ public class SeaMark extends JPanel {
                     break;
                 case HORIZ:
                     c += "(Horiz)";
+                    break;
+                default:
                     break;
                 }
             }
@@ -2623,6 +2653,8 @@ public class SeaMark extends JPanel {
                     break;
                 case EXPLOS:
                     str = "Explos";
+                    break;
+                default:
                     break;
                 }
             }
@@ -2724,6 +2756,8 @@ public class SeaMark extends JPanel {
                         break;
                     case C:
                         Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:" + objStr + ":system", "other"));
+                        break;
+                    default:
                         break;
                     }
                 }

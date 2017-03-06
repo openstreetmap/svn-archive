@@ -348,6 +348,8 @@ public class PanelMain extends JPanel {
                 panelLights.setVisible(true);
                 panelLights.syncPanel();
                 break;
+            default:
+                break;
             }
             panelMore.syncPanel();
             panelTop.syncPanel();

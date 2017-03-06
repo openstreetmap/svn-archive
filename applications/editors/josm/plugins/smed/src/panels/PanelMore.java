@@ -151,6 +151,8 @@ public class PanelMore extends JPanel {
                     dlg.panelMain.mark.addObjColour(Col.GREEN);
                     dlg.panelMain.mark.setObjPattern(Pat.HSTRP);
                     break;
+                default:
+                    break;
                 }
                 regionAButton.setBorderPainted(true);
             } else {
@@ -179,6 +181,8 @@ public class PanelMore extends JPanel {
                     dlg.panelMain.mark.addObjColour(Col.RED);
                     dlg.panelMain.mark.setObjPattern(Pat.HSTRP);
                     break;
+                default:
+                    break;
                 }
                 regionBButton.setBorderPainted(true);
             } else {
@@ -206,6 +210,8 @@ public class PanelMore extends JPanel {
                     dlg.panelMain.mark.addObjColour(Col.WHITE);
                     dlg.panelMain.mark.addObjColour(Col.GREEN);
                     dlg.panelMain.mark.addObjColour(Col.WHITE);
+                    break;
+                default:
                     break;
                 }
                 regionCButton.setBorderPainted(true);

@@ -155,6 +155,8 @@ public class PanelChan extends JPanel {
                                 dlg.panelMain.mark.setTopColour(Col.RED);
                             }
                             break;
+                        default:
+                            break;
                         }
                         break;
                     case LAM_STBD:
@@ -179,7 +181,11 @@ public class PanelChan extends JPanel {
                                 dlg.panelMain.mark.setTopColour(Col.GREEN);
                             }
                             break;
+                        default:
+                            break;
                         }
+                        break;
+                    default:
                         break;
                     }
                 }
@@ -214,6 +220,8 @@ public class PanelChan extends JPanel {
                         case B:
                             dlg.panelMain.mark.setLightAtt(Att.COL, 0, Col.GREEN);
                             break;
+                        default:
+                            break;
                         }
                         break;
                     case LAM_STBD:
@@ -226,7 +234,11 @@ public class PanelChan extends JPanel {
                         case B:
                             dlg.panelMain.mark.setLightAtt(Att.COL, 0, Col.RED);
                             break;
+                        default:
+                            break;
                         }
+                        break;
+                    default:
                         break;
                     }
                 }

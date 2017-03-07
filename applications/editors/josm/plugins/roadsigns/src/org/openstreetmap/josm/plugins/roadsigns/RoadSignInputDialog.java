@@ -197,7 +197,7 @@ class RoadSignInputDialog extends ExtendedDialog {
             Node model = (Node) decoder.readObject();
             multiSplitPane.getMultiSplitLayout().setModel(model);
             multiSplitPane.getMultiSplitLayout().setFloatingDividers(false);
-        } catch (IOException ex) {
+        } catch (IOException | ArrayIndexOutOfBoundsException ex) {
             // (COLUMN
             //    (ROW weight=0.3 (LEAF name=upperleft weight=1.0) upperright)
             //    (ROW weight=0.5 (LEAF name=middleleft weight=0.5) (LEAF name=middleright weight=0.5))

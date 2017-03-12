@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
+import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.plugins.ohe.ClockSystem;
 import org.openstreetmap.josm.plugins.ohe.OpeningTimeUtils;
 import org.openstreetmap.josm.plugins.ohe.parser.OpeningTimeCompiler;
@@ -32,7 +33,7 @@ public class OheEditor extends JPanel implements MouseListener, MouseMotionListe
             if (OheEditor.this.isEnabled()) {
                 g.setColor(Color.WHITE);
                 g.fillRect(0, 0, getWidth(), getHeight());
-                
+
                 // draw the time from 12PM to 00AM in a different color
                 if (dialog.getHourMode() == ClockSystem.TWELVE_HOURS) {
                     g.setColor(new Color(255, 255, 218));
@@ -134,7 +135,7 @@ public class OheEditor extends JPanel implements MouseListener, MouseMotionListe
             public void paintComponent(Graphics g) {
                 g.setColor(Color.WHITE);
                 g.fillRect(0, 0, getWidth(), getHeight());
-                
+
                 // draw the time from 12PM to 00AM in a different color
                 if (dialog.getHourMode() == ClockSystem.TWELVE_HOURS) {
                     g.setColor(new Color(255, 255, 218));
@@ -185,6 +186,7 @@ public class OheEditor extends JPanel implements MouseListener, MouseMotionListe
         try {
             time = dialog.getTime();
         } catch (Exception exc) {
+            Main.warn(exc, "Disable opening hours editor:");
             setEnabled(false);
             return;
         }

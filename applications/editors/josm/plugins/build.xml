@@ -14,7 +14,8 @@
                                             utilsplugin2/build.xml
                                             log4j/build.xml
                                             apache-commons/build.xml
-                                            apache-http/build.xml"/>
+                                            apache-http/build.xml
+											austriaaddresshelper/build.xml"/>
     <macrodef name="iterate">
         <attribute name="target"/>
         <sequential>

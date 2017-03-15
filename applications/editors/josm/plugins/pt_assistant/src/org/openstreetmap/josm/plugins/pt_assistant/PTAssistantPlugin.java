@@ -6,6 +6,7 @@ import javax.swing.SwingUtilities;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.validation.OsmValidator;
+import org.openstreetmap.josm.gui.IconToggleButton;
 import org.openstreetmap.josm.gui.MainMenu;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.gui.preferences.PreferenceSetting;
@@ -31,9 +32,6 @@ public class PTAssistantPlugin extends Plugin {
      */
     private static PTRouteSegment lastFix;
 
-    /* item of the Tools menu for adding stop_positions */
-    private JMenuItem addStopPositionMenu;
-
     /* item of the Tools menu for repeating the last fix */
     private static JMenuItem repeatLastFixMenu;
 
@@ -49,11 +47,8 @@ public class PTAssistantPlugin extends Plugin {
 
         OsmValidator.addTest(PTAssistantValidatorTest.class);
 
-        AddStopPositionAction addStopPositionAction = new AddStopPositionAction();
-        addStopPositionMenu = MainMenu.add(Main.main.menu.toolsMenu, addStopPositionAction, false);
         RepeatLastFixAction repeatLastFixAction = new RepeatLastFixAction();
         repeatLastFixMenu = MainMenu.add(Main.main.menu.toolsMenu, repeatLastFixAction, false);
-
     }
 
     /**
@@ -62,10 +57,9 @@ public class PTAssistantPlugin extends Plugin {
     @Override
     public void mapFrameInitialized(MapFrame oldFrame, MapFrame newFrame) {
         if (oldFrame == null && newFrame != null) {
-            addStopPositionMenu.setEnabled(true);
             repeatLastFixMenu.setEnabled(false);
+            Main.map.addMapMode(new IconToggleButton(new AddStopPositionAction(Main.map)));
         } else if (oldFrame != null && newFrame == null) {
-            addStopPositionMenu.setEnabled(false);
             repeatLastFixMenu.setEnabled(false);
         }
     }

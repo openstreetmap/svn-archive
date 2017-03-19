@@ -18,8 +18,12 @@
 /* Landuse type used in multipolygons */ trc("landuse", "meadow");
 /* Landuse type used in multipolygons */ trc("landuse", "farmland");
 /* Landuse type used in multipolygons */ trc("landuse", "residential");
+/* Landuse type used in multipolygons */ trc("landuse", "greenfield");
+/* Landuse type used in multipolygons */ trc("landuse", "village_green");
+/* Landuse type used in multipolygons */ trc("landuse", "greenfield");
 /* Landuse type used in multipolygons */ trc("natural", "scrub");
 /* Landuse type used in multipolygons */ trc("natural", "wood");
+/* Landuse type used in multipolygons */ trc("natural", "grassland");
 /* relation type */ trc("Relation type", "associatedStreet");
 /* relation type */ trc("Relation type", "boundary");
 /* relation type */ trc("Relation type", "bridge");

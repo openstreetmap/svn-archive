@@ -251,7 +251,7 @@ public class Rules {
     }
 
     public static void rules() {
-        // CHECKSTYLE.OFF: NeedBraces
+    	try {
         if ((Renderer.context.ruleset() == RuleSet.ALL) || (Renderer.context.ruleset() == RuleSet.BASE)) {
             if (testObject(Obj.LNDARE)) for (Feature f : objects) if (testFeature(f)) areas();
             if (testObject(Obj.BUAARE)) for (Feature f : objects) if (testFeature(f)) areas();
@@ -346,7 +346,9 @@ public class Rules {
             if (testObject(Obj.BCNSAW)) for (Feature f : objects) if (testFeature(f)) beacons();
             if (testObject(Obj.BCNSPP)) for (Feature f : objects) if (testFeature(f)) beacons();
         }
-        // CHECKSTYLE.ON: NeedBraces
+    	} catch (Exception e) {
+    		return;	// Just skip this pass
+    	}
     }
 
     private static void areas() {

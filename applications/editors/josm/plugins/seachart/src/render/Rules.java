@@ -6,6 +6,7 @@ import java.awt.Font;
 import java.awt.geom.AffineTransform;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.ConcurrentModificationException;
 import java.util.EnumMap;
 import java.util.HashMap;
 
@@ -250,7 +251,7 @@ public class Rules {
         return ((feature = f).reln == Rflag.MASTER);
     }
 
-    public static void rules() {
+    public static boolean rules() {
     	try {
         if ((Renderer.context.ruleset() == RuleSet.ALL) || (Renderer.context.ruleset() == RuleSet.BASE)) {
             if (testObject(Obj.LNDARE)) for (Feature f : objects) if (testFeature(f)) areas();
@@ -346,9 +347,12 @@ public class Rules {
             if (testObject(Obj.BCNSAW)) for (Feature f : objects) if (testFeature(f)) beacons();
             if (testObject(Obj.BCNSPP)) for (Feature f : objects) if (testFeature(f)) beacons();
         }
+    	} catch (ConcurrentModificationException e) {
+    		return false;
     	} catch (Exception e) {
-    		return;	// Just skip this pass
+    		return true;
     	}
+    	return true;
     }
 
     private static void areas() {

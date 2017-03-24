@@ -74,6 +74,33 @@ public final class Beacons {
         FogSignal.add(new Instr(Form.EARC, new Arc2D.Double(-65.0, -65.0, 130.0, 130.0, 190.0, 50.0, Arc2D.OPEN)));
     }
 
+    public static final Symbol Lattice = new Symbol();
+    static {
+      Symbol colours = new Symbol();
+      Path2D.Double p = new Path2D.Double(); p.moveTo(-20.0, 0.0); p.lineTo(-15.0, -70.0); p.lineTo(15.0, -70.0); p.lineTo(20.0, 0.0); p.lineTo(10.0, 0.0); p.curveTo(10.0, -13.3, -10.0, -13.3, -10.0, 0.0); p.closePath();
+      colours.add(new Instr(Form.P1, p));
+      p = new Path2D.Double(); p.moveTo(-20.0, 0.0); p.lineTo(-17.5, -35.0); p.lineTo(17.5, -35.0); p.lineTo(20.0, 0.0); p.lineTo(10.0, 0.0); p.curveTo(10.0, -13.3, -10.0, -13.3, -10.0, 0.0); p.closePath();
+      colours.add(new Instr(Form.H2, p));
+      p = new Path2D.Double(); p.moveTo(-18.3, -23.3); p.lineTo(-16.7, -46.7); p.lineTo(16.7, -46.7); p.lineTo(18.3, -23.3); p.closePath();
+      colours.add(new Instr(Form.H3, p));
+      p = new Path2D.Double(); p.moveTo(-17.5, -35.0); p.lineTo(-16.25, -52.5); p.lineTo(16.25, -52.5); p.lineTo(17.5, -35.0); p.closePath();
+      colours.add(new Instr(Form.H4, p));
+      p = new Path2D.Double(); p.moveTo(-18.75, -17.5); p.lineTo(-17.5, -35.0); p.lineTo(17.5, -35.0); p.lineTo(18.75, -17.5); p.closePath();
+      colours.add(new Instr(Form.H5, p));
+      p = new Path2D.Double(); p.moveTo(0.0, -70.0); p.lineTo(15.0, -70.0); p.lineTo(20.0, 0.0); p.lineTo(10.0, 0.0); p.quadTo(10.0, -10.0, 0.0, -10.0); p.closePath();
+      colours.add(new Instr(Form.V2, p));
+      Lattice.add(new Instr(Form.COLR, colours));
+      Lattice.add(new Instr(Form.STRK, new BasicStroke(4, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND)));
+      Lattice.add(new Instr(Form.FILL, Color.black));
+      Lattice.add(new Instr(Form.ELPS, new Ellipse2D.Double(-10, -10, 20, 20)));
+      Lattice.add(new Instr(Form.LINE, new Line2D.Double(-30, 0, -10, 0)));
+      Lattice.add(new Instr(Form.LINE, new Line2D.Double(10, 0, 30, 0)));
+      p = new Path2D.Double(); p.moveTo(-20.0, 0.0); p.lineTo(-15.0, -70.0); p.lineTo(15.0, -70.0); p.lineTo(20.0, 0.0);
+      p.moveTo(-19.0, -7.0); p.lineTo(17.5, -27.0); p.moveTo(19.0, -7.0); p.lineTo(-17.5, -27.0);
+      p.moveTo(-15.0, -65.0); p.lineTo(16.0, -45.0); p.moveTo(15.0, -65.0); p.lineTo(-16.0, -45.0);
+      Lattice.add(new Instr(Form.PLIN, p));
+    }
+
     public static final Symbol LightFlare = new Symbol();
     static {
         LightFlare.add(new Instr(Form.BBOX, new Rectangle2D.Double(-20, -100, 40, 100)));
@@ -202,7 +229,7 @@ public final class Beacons {
     public static final EnumMap<BcnSHP, Symbol> Shapes = new EnumMap<>(BcnSHP.class);
     static {
         Shapes.put(BcnSHP.BCN_UNKN, Beacons.Beacon); Shapes.put(BcnSHP.BCN_STAK, Beacons.Stake); Shapes.put(BcnSHP.BCN_TOWR, Beacons.Tower);
-        Shapes.put(BcnSHP.BCN_LATT, Beacons.Beacon); Shapes.put(BcnSHP.BCN_PILE, Beacons.Beacon); Shapes.put(BcnSHP.BCN_POLE, Beacons.Stake);
+        Shapes.put(BcnSHP.BCN_LATT, Beacons.Lattice); Shapes.put(BcnSHP.BCN_PILE, Beacons.Beacon); Shapes.put(BcnSHP.BCN_POLE, Beacons.Stake);
         Shapes.put(BcnSHP.BCN_CARN, Beacons.Cairn); Shapes.put(BcnSHP.BCN_BUOY, Beacons.Beacon); Shapes.put(BcnSHP.BCN_POST, Beacons.Stake);
         Shapes.put(BcnSHP.BCN_PRCH, Beacons.Stake);
     }

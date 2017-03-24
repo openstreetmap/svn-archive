@@ -13,6 +13,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.CombineWayAction.NodeGraph;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.corrector.ReverseWayTagCorrector;
@@ -130,7 +131,7 @@ public final class WayCombiner {
         TagCollection tagsToEdit = new TagCollection(completeWayTags);
         completeTagCollectionForEditing(tagsToEdit);
 
-        CombinePrimitiveResolverDialog dialog = CombinePrimitiveResolverDialog.getInstance();
+        CombinePrimitiveResolverDialog dialog = new CombinePrimitiveResolverDialog(Main.parent);
         dialog.getTagConflictResolverModel().populate(tagsToEdit, completeWayTags.getKeysWithMultipleValues());
         dialog.setTargetPrimitive(targetWay);
         Set<Relation> parentRelations = OsmPrimitive.getParentRelations(ways);

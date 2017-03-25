@@ -327,7 +327,7 @@ public final class Topmarks {
         TopSquare.add(new Instr(Form.COLR, colours));
         TopSquare.add(new Instr(Form.STRK, new BasicStroke(2, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
         TopSquare.add(new Instr(Form.FILL, Color.black));
-        p = new Path2D.Double(); p.moveTo(-13.0, -1.0); p.lineTo(-13.0, -27.0); p.lineTo(13.0, -27.0); p.lineTo(13.0, -1.0); p.closePath();
+        p = new Path2D.Double(); p.moveTo(-10.0, -1.0); p.lineTo(-10.0, -21.0); p.lineTo(12.0, -21.0); p.lineTo(10.0, -1.0); p.closePath();
         TopSquare.add(new Instr(Form.PLIN, p));
     }
 
@@ -335,12 +335,20 @@ public final class Topmarks {
     static {
         TopRectangleH.add(new Instr(Form.BBOX, new Rectangle2D.Double(-20, -80, 40, 80)));
         Symbol colours = new Symbol();
-        Path2D.Double p = new Path2D.Double(); p.moveTo(-20.0, -1.0); p.lineTo(-20.0, -27.0); p.lineTo(20.0, -27.0); p.lineTo(20.0, -1.0); p.closePath();
+        Path2D.Double p = new Path2D.Double(); p.moveTo(-14.0, -1.0); p.lineTo(-14.0, -23.0); p.lineTo(14.0, -23.0); p.lineTo(14.0, -1.0); p.closePath();
         colours.add(new Instr(Form.P1, p));
+        p = new Path2D.Double(); p.moveTo(-14.0, -1.0); p.lineTo(-14.0, -12.0); p.lineTo(14.0, -12.0); p.lineTo(14.0, -1.0); p.closePath();
+        colours.add(new Instr(Form.H2, p));
+        p = new Path2D.Double(); p.moveTo(-14.0, -16.0); p.lineTo(-14.0, -8.0); p.lineTo(14.0, -8.0); p.lineTo(14.0, -16.0); p.closePath();
+        colours.add(new Instr(Form.H3, p));
+        p = new Path2D.Double(); p.moveTo(0.0, -1.0); p.lineTo(0.0, -23.0); p.lineTo(14.0, -23.0); p.lineTo(14.0, -1.0); p.closePath();
+        colours.add(new Instr(Form.V2, p));
+        p = new Path2D.Double(); p.moveTo(-5.0, -1.0); p.lineTo(-5.0, -23.0); p.lineTo(5.0, -23.0); p.lineTo(5.0, -1.0); p.closePath();
+        colours.add(new Instr(Form.V3, p));
         TopRectangleH.add(new Instr(Form.COLR, colours));
         TopRectangleH.add(new Instr(Form.STRK, new BasicStroke(2, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
         TopRectangleH.add(new Instr(Form.FILL, Color.black));
-        p = new Path2D.Double(); p.moveTo(-20.0, -1.0); p.lineTo(-20.0, -27.0); p.lineTo(20.0, -27.0); p.lineTo(20.0, -1.0); p.closePath();
+        p = new Path2D.Double(); p.moveTo(-14.0, -1.0); p.lineTo(-14.0, -23.0); p.lineTo(14.0, -23.0); p.lineTo(14.0, -1.0); p.closePath();
         TopRectangleH.add(new Instr(Form.PLIN, p));
     }
 
@@ -348,12 +356,20 @@ public final class Topmarks {
     static {
         TopRectangleV.add(new Instr(Form.BBOX, new Rectangle2D.Double(-20, -80, 40, 80)));
         Symbol colours = new Symbol();
-        Path2D.Double p = new Path2D.Double(); p.moveTo(-13.0, -1.0); p.lineTo(-13.0, -41.0); p.lineTo(13.0, -41.0); p.lineTo(13.0, -1.0); p.closePath();
+        Path2D.Double p = new Path2D.Double(); p.moveTo(-11.0, -1.0); p.lineTo(-11.0, -29.0); p.lineTo(11.0, -29.0); p.lineTo(11.0, -1.0); p.closePath();
         colours.add(new Instr(Form.P1, p));
+        p = new Path2D.Double(); p.moveTo(-11.0, -1.0); p.lineTo(-11.0, -15.0); p.lineTo(11.0, -15.0); p.lineTo(11.0, -1.0); p.closePath();
+        colours.add(new Instr(Form.H2, p));
+        p = new Path2D.Double(); p.moveTo(-11.0, -10.0); p.lineTo(-11.0, -20.0); p.lineTo(11.0, -20.0); p.lineTo(11.0, -10.0); p.closePath();
+        colours.add(new Instr(Form.H3, p));
+        p = new Path2D.Double(); p.moveTo(0.0, -1.0); p.lineTo(0.0, -29.0); p.lineTo(11.0, -29.0); p.lineTo(11.0, -1.0); p.closePath();
+        colours.add(new Instr(Form.V2, p));
+        p = new Path2D.Double(); p.moveTo(-4.0, -1.0); p.lineTo(-4.0, -29.0); p.lineTo(4.0, -29.0); p.lineTo(4.0, -1.0); p.closePath();
+        colours.add(new Instr(Form.V3, p));
         TopRectangleV.add(new Instr(Form.COLR, colours));
         TopRectangleV.add(new Instr(Form.STRK, new BasicStroke(2, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
         TopRectangleV.add(new Instr(Form.FILL, Color.black));
-        p = new Path2D.Double(); p.moveTo(-13.0, -1.0); p.lineTo(-13.0, -41.0); p.lineTo(13.0, -41.0); p.lineTo(13.0, -1.0); p.closePath();
+        p = new Path2D.Double(); p.moveTo(-11.0, -1.0); p.lineTo(-11.0, -29.0); p.lineTo(11.0, -29.0); p.lineTo(11.0, -1.0); p.closePath();
         TopRectangleV.add(new Instr(Form.PLIN, p));
     }
 

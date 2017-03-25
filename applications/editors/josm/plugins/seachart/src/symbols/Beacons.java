@@ -96,8 +96,8 @@ public final class Beacons {
       Lattice.add(new Instr(Form.LINE, new Line2D.Double(-30, 0, -10, 0)));
       Lattice.add(new Instr(Form.LINE, new Line2D.Double(10, 0, 30, 0)));
       p = new Path2D.Double(); p.moveTo(-20.0, 0.0); p.lineTo(-15.0, -70.0); p.lineTo(15.0, -70.0); p.lineTo(20.0, 0.0);
-      p.moveTo(-19.0, -7.0); p.lineTo(17.5, -27.0); p.moveTo(19.0, -7.0); p.lineTo(-17.5, -27.0);
-      p.moveTo(-15.0, -65.0); p.lineTo(16.0, -45.0); p.moveTo(15.0, -65.0); p.lineTo(-16.0, -45.0);
+      p.moveTo(-19.0, -7.0); p.lineTo(17.5, -33.0); p.moveTo(19.0, -7.0); p.lineTo(-17.5, -33.0);
+      p.moveTo(-15.0, -65.0); p.lineTo(18.0, -40.0); p.moveTo(15.0, -65.0); p.lineTo(-18.0, -40.0);
       Lattice.add(new Instr(Form.PLIN, p));
     }
 

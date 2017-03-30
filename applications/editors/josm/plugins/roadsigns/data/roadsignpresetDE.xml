@@ -33,16 +33,16 @@ Positive Werte stehen für einen Anstieg in Richtung des ways und negative Werte
     </sign>
 
     <sign ref="DE:237" name="Bicycle path" de.name="Radweg">
-        <tag key="highway" value="path"/>
-        <tag key="bicycle" value="official"/>
+        <tag key="highway" value="cycleway"/>
+        <tag key="bicycle" value="designated"/>
         <tag key="access" value="" ident="mode"/>
         <supplementary id="DE:1020-13"/> <!-- Inlineskaten frei -->
         <supplementary id="DE:1022-11"/> <!-- Mofas frei -->
     </sign>
 
     <sign ref="DE:238" name="Bridle path" de.name="Reitweg">
-        <tag key="highway" value="path"/>
-        <tag key="horse" value="official"/>
+        <tag key="highway" value="bridleway"/>
+        <tag key="horse" value="designated"/>
         <tag key="access" value="" ident="mode"/>
         <supplementary id="DE:1022-10"/> <!-- Radfahrer frei -->
         <supplementary id="DE:1026-36"/> <!-- Landwirtschaftlicher Verkehr frei -->
@@ -52,8 +52,8 @@ Positive Werte stehen für einen Anstieg in Richtung des ways und negative Werte
     </sign>
 
     <sign ref="DE:239" name="Pedestrian path" de.name="Gehweg">
-        <tag key="highway" value="path"/>
-        <tag key="foot" value="official"/>
+        <tag key="highway" value="footway"/>
+        <tag key="foot" value="designated"/>
         <tag key="access" value="" ident="mode"/>
         <supplementary id="DE:1020-13"/> <!-- Inlineskaten frei -->
         <supplementary id="DE:1022-10"/> <!-- Radfahrer frei -->
@@ -62,8 +62,8 @@ Positive Werte stehen für einen Anstieg in Richtung des ways und negative Werte
 
     <sign ref="DE:240" name="Pedestrian &amp; bicycle path" de.name="Gemeinsamer Geh- und Radweg">
         <tag key="highway" value="path"/>
-        <tag key="foot" value="official"/>
-        <tag key="bicycle" value="official"/>
+        <tag key="foot" value="designated"/>
+        <tag key="bicycle" value="designated"/>
         <tag key="access" value="" ident="mode"/>
         <supplementary id="DE:1020-13"/> <!-- Inlineskaten frei -->
         <supplementary id="DE:1022-11"/> <!-- Mofas frei -->
@@ -71,8 +71,8 @@ Positive Werte stehen für einen Anstieg in Richtung des ways und negative Werte
 
     <sign ref="DE:241" name="Split pedestrian &amp; bicycle path" de.name="Getrennter Rad- und Gehweg">
         <tag key="highway" value="path"/>
-        <tag key="foot" value="official"/>
-        <tag key="bicycle" value="official"/>
+        <tag key="foot" value="designated"/>
+        <tag key="bicycle" value="designated"/>
         <tag key="segregated" value="yes"/>
         <tag key="access" value="" ident="mode"/>
         <supplementary id="DE:1020-13"/> <!-- Inlineskaten frei -->
@@ -95,7 +95,7 @@ Positive Werte stehen für einen Anstieg in Richtung des ways und negative Werte
     <sign ref="DE:244" name="Bicycle road" de.name="Fahrradstraße">
         <!-- highway=* -->
         <tag key="bicycle_road" value="yes"/>
-        <tag key="bicycle" value="official"/>
+        <tag key="bicycle" value="designated"/>
         <tag key="vehicle" value="no" ident="mode"/>
         <tag key="maxspeed" value="30"/> <!-- FIXME: no override but min. value -->
         <tag key="source:maxspeed" value="DE:bicycle_road"/>

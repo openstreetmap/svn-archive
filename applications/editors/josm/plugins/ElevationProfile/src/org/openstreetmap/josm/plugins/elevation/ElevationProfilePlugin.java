@@ -47,7 +47,7 @@ public class ElevationProfilePlugin extends Plugin {
         super.mapFrameInitialized(oldFrame, newFrame);
 
         if (newFrame != null) {
-            ElevationMapMode eleMode = new ElevationMapMode("Elevation profile", newFrame);
+            ElevationMapMode eleMode = new ElevationMapMode("Elevation profile");
             newFrame.addMapMode(new IconToggleButton(eleMode));
             ElevationProfileDialog eleProfileDlg = new ElevationProfileDialog();
             eleProfileDlg.addModelListener(eleMode);

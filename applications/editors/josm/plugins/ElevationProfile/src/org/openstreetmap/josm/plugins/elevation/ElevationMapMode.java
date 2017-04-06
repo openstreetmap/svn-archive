@@ -6,7 +6,6 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 import java.awt.Cursor;
 
 import org.openstreetmap.josm.actions.mapmode.MapMode;
-import org.openstreetmap.josm.gui.MapFrame;
 
 /**
  * @author Oliver Wieland &lt;oliver.wieland@online.de&gt;
@@ -18,11 +17,10 @@ public class ElevationMapMode extends MapMode implements IElevationModelListener
      */
     private static final long serialVersionUID = -1011179566962655639L;
 
-    public ElevationMapMode(String name, MapFrame mapFrame) {
+    public ElevationMapMode(String name) {
         super(name,
                 "elevation.png",
                 tr("Shows elevation profile"),
-                mapFrame,
                 Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
     }
 

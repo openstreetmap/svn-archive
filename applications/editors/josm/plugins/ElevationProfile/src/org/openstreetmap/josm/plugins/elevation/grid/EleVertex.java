@@ -162,17 +162,16 @@ public class EleVertex {
      * @return the ele
      */
     public double getEle() {
-
         return avrgEle;
     }
 
     @Override
     public String toString() {
         return "EleVertex [avrgEle=" + avrgEle + ", area=" + area + ", points="
-                + Arrays.toString(points) + "]";
+                + Arrays.toString(points) + ']';
     }
 
-    class TriangleEdge implements Comparable<TriangleEdge> {
+    static class TriangleEdge implements Comparable<TriangleEdge> {
         private final int i;
         private final int j;
         private final double dist;

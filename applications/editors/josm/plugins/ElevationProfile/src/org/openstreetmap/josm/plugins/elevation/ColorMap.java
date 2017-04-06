@@ -154,7 +154,7 @@ public final class ColorMap {
         map.colorList = new ArrayList<>();
         map.name = name;
         for (int i = 0; i < ele.length; i++) {
-            map.colorList.add(map.new ColorMapEntry(colors[i], ele[i]));
+            map.colorList.add(new ColorMapEntry(colors[i], ele[i]));
         }
 
         // sort by elevation
@@ -164,7 +164,7 @@ public final class ColorMap {
         return map;
     }
 
-    class ColorMapEntry implements Comparable<ColorMapEntry> {
+    static class ColorMapEntry implements Comparable<ColorMapEntry> {
         private final int ele; // limit
         private final Color color;
 

@@ -15,6 +15,7 @@ import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.gui.Notification;
 import org.openstreetmap.josm.tools.Shortcut;
+import org.openstreetmap.josm.tools.SubclassFilteredCollection;
 
 /**
  * Extends current selection by selecting nodes on all touched ways
@@ -35,6 +36,7 @@ public class SelectAllInsideAction extends JosmAction {
 
         if (!insideSelected.isEmpty()) {
             ds.addSelected(insideSelected);
+            ds.setSelected(new SubclassFilteredCollection<>(ds.getSelected(), OsmPrimitive::isSelectable));
         } else {
             new Notification(
                     tr("Nothing found. Please select some closed ways or multipolygons to find all primitives inside them!"))

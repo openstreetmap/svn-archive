@@ -45,11 +45,6 @@ public class ElevationGridTileLoader implements TileLoader {
             }
 
             @Override
-            public Tile getTile() {
-                return tile;
-            }
-
-            @Override
             public void submit() {
                 run();
             }
@@ -57,7 +52,6 @@ public class ElevationGridTileLoader implements TileLoader {
             @Override
             public void submit(boolean force) {
                 submit();
-
             }
         };
     }

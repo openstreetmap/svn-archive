@@ -3,6 +3,8 @@ package org.openstreetmap.hot.sds;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.UploadAction;
@@ -27,11 +29,11 @@ import org.openstreetmap.josm.plugins.PluginInformation;
  */
 public class SeparateDataStorePlugin extends Plugin {
 
-    public HashMap<Long, IPrimitive> originalNodes = new HashMap<>();
-    public HashMap<Long, IPrimitive> originalWays = new HashMap<>();
-    public HashMap<Long, IPrimitive> originalRelations = new HashMap<>();
+    public final Map<Long, IPrimitive> originalNodes = new HashMap<>();
+    public final Map<Long, IPrimitive> originalWays = new HashMap<>();
+    public final Map<Long, IPrimitive> originalRelations = new HashMap<>();
 
-    public ArrayList<QueueItem> uploadQueue = new ArrayList<>();
+    public List<QueueItem> uploadQueue = new ArrayList<>();
 
     private PrimitiveVisitor learnVisitor = new PrimitiveVisitor() {
         @Override
@@ -51,9 +53,9 @@ public class SeparateDataStorePlugin extends Plugin {
     };
 
     static class QueueItem {
-        public IPrimitive primitive;
-        public HashMap<String, String> tags;
-        public boolean sdsOnly;
+        public final IPrimitive primitive;
+        public final Map<String, String> tags;
+        public final boolean sdsOnly;
         public boolean processed;
         QueueItem(IPrimitive p, HashMap<String, String> t, boolean s) {
             primitive = p;
@@ -68,19 +70,17 @@ public class SeparateDataStorePlugin extends Plugin {
      */
     public SeparateDataStorePlugin(PluginInformation info) {
         super(info);
-        System.out.println("initializing SDS plugin");
 
-        // this lets us see what JOSM load from the server, and augment it with our data:
+        // this lets us see what JOSM load from the server, and augment it with our data
         OsmReader.registerPostprocessor(new ReadPostprocessor(this));
 
-        // this makes sure that our data is never written to the OSM server on a low level;
-        OsmWriterFactory.theFactory = new SdsOsmWriterFactory(this);
+        // this makes sure that our data is never written to the OSM server on a low level
+        OsmWriterFactory.setDefaultFactory(new SdsOsmWriterFactory(this));
 
-        // this lets us see what JOSM is planning to upload, and prepare our own uploads
-        // accordingly
+        // this lets us see what JOSM is planning to upload, and prepare our own uploads accordingly
         UploadAction.registerUploadHook(new DetermineSdsModificationsUploadHook(this));
 
-        // this lets us perform our own uploads after JOSM has succeeded:
+        // this lets us perform our own uploads after JOSM has succeeded
         OsmServerWriter.registerPostprocessor(new WritePostprocessor(this));
 
         // add menu
@@ -140,6 +140,4 @@ public class SeparateDataStorePlugin extends Plugin {
     public PreferenceSetting getPreferenceSetting() {
         return new SdsPluginPreferences();
     }
-
 }
-

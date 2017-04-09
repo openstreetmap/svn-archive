@@ -7,8 +7,6 @@ import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.geom.Point2D;
 import java.awt.geom.Point2D.Double;
-import java.util.Collection;
-import java.util.Collections;
 
 import javax.swing.Action;
 
@@ -148,10 +146,5 @@ public class ChartImage extends ImageryLayer implements ZoomChangeListener, Char
     @Override
     public RuleSet ruleset() {
         return RuleSet.ALL;
-    }
-
-    @Override
-    public Collection<String> getNativeProjections() {
-        return Collections.singletonList("EPSG:3857");
     }
 }

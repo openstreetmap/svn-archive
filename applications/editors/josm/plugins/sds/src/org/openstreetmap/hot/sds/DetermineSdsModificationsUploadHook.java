@@ -59,14 +59,18 @@ public class DetermineSdsModificationsUploadHook implements UploadHook {
            // process tags of new object
            for (String key : upd.keySet()) {
                allKeys.add(key);
-               if (!specialTags && isSpecialKey(key)) specialTags = true;
+               if (!specialTags && isSpecialKey(key))
+                   specialTags = true;
            }
 
            // process tags of old object
            IPrimitive old = plugin.getOriginalPrimitive(upd);
-           for (String key : old.keySet()) {
-               allKeys.add(key);
-              if (!specialTags && isSpecialKey(key)) specialTags = true;
+           if (old != null) {
+               for (String key : old.keySet()) {
+                   allKeys.add(key);
+                   if (!specialTags && isSpecialKey(key))
+                       specialTags = true;
+               }
            }
 
            // if neither has special tags, done with this object.

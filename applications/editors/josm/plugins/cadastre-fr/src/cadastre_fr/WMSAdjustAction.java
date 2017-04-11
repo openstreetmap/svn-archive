@@ -17,7 +17,6 @@ import javax.swing.JOptionPane;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.mapmode.MapMode;
 import org.openstreetmap.josm.data.coor.EastNorth;
-import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.tools.ImageProvider;
 
@@ -33,9 +32,12 @@ public class WMSAdjustAction extends MapMode implements
     private static Mode mode = null;
     private static EastNorth[] croppedRaster = new EastNorth[5];;
 
-    public WMSAdjustAction(MapFrame mapFrame) {
+    /**
+     * Constructs a new {@code WMSAdjustAction} map mode.
+     */
+    public WMSAdjustAction() {
         super(tr("Adjust WMS"), "adjustxywms",
-                        tr("Adjust the position of the WMS layer (saved for raster images only)"), mapFrame,
+                        tr("Adjust the position of the WMS layer (saved for raster images only)"),
                         ImageProvider.getCursor("normal", "move"));
     }
 
@@ -49,9 +51,10 @@ public class WMSAdjustAction extends MapMode implements
                 rasterMoved = false;
                 modifiedLayer.adjustModeEnabled = true;
             } else {
-//                JOptionPane.showMessageDialog(Main.parent,tr("This mode works only if active layer is\n"
-//                        +"a cadastre layer"));
-                exitMode();
+                // This mode works only if active layer is a cadastre layer
+                if (Boolean.TRUE.equals(getValue("active"))) {
+                    exitMode();
+                }
                 Main.map.selectMapMode((MapMode) Main.map.getDefaultButtonAction());
             }
         }

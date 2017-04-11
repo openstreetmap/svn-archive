@@ -55,7 +55,6 @@ import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.data.osm.WaySegment;
-import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.tools.GBC;
 import org.openstreetmap.josm.tools.ImageProvider;
@@ -90,13 +89,16 @@ public class Address extends MapMode {
     private boolean shift;
     private boolean ctrl;
 
-    public Address(MapFrame mapFrame) {
+    /**
+     * Constructs a new {@code Address} map mode.
+     */
+    public Address() {
         super(tr("Add address"), "buildings",
                 tr("Helping tool for tag address"),
                 // CHECKSTYLE.OFF: LineLength
                 Shortcut.registerShortcut("mapmode:cadastre-fr-buildings", tr("Mode: {0}", tr("CadastreFR - Buildings")), KeyEvent.VK_E, Shortcut.DIRECT),
                 // CHECKSTYLE.ON: LineLength
-                mapFrame, getCursor());
+                getCursor());
     }
 
     @Override public void enterMode() {
@@ -113,7 +115,6 @@ public class Address extends MapMode {
             super.exitMode();
             Main.map.mapView.removeMouseListener(this);
         }
-//        dialog.setVisible(false);
         // kill the window completely to fix an issue on some linux distro and full screen mode.
         if (dialog != null) {
             dialog.dispose();
@@ -509,7 +510,9 @@ public class Address extends MapMode {
         dialog.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent arg) {
-                exitMode();
+                if (Boolean.TRUE.equals(getValue("active"))) {
+                    exitMode();
+                }
                 Main.map.selectMapMode((MapMode) Main.map.getDefaultButtonAction());
             }
         });

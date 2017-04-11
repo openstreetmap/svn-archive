@@ -375,8 +375,8 @@ public class CadastrePlugin extends Plugin {
         if (cadastreJMenu != null) {
             if (oldFrame == null && newFrame != null) {
                 setEnabledAll(true);
-                Main.map.addMapMode(new IconToggleButton(new WMSAdjustAction(Main.map)));
-                Main.map.addMapMode(new IconToggleButton(new Address(Main.map)));
+                Main.map.addMapMode(new IconToggleButton(new WMSAdjustAction()));
+                Main.map.addMapMode(new IconToggleButton(new Address()));
             } else if (oldFrame != null && newFrame == null) {
                 setEnabledAll(false);
                 //Lambert.layoutZone = -1;

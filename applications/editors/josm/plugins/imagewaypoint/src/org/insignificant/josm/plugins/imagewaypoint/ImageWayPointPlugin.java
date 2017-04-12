@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.ExtensionFileFilter;
@@ -56,12 +57,7 @@ public final class ImageWayPointPlugin extends org.openstreetmap.josm.plugins.Pl
                     }
                 }
                 if (!foundImageWayPointLayer) {
-                    GuiHelper.runInEDT(new Runnable() {
-                        @Override
-                        public void run() {
-                            new ImageWayPointLayer();
-                        }
-                    });
+                    GuiHelper.runInEDT(ImageWayPointLayer::new);
                 }
             }
         }
@@ -78,8 +74,7 @@ public final class ImageWayPointPlugin extends org.openstreetmap.josm.plugins.Pl
     @Override
     public void mapFrameInitialized(final MapFrame oldFrame, final MapFrame newFrame) {
         if (newFrame != null) {
-            newFrame.addToggleDialog(ImageWayPointDialog.getInstance()
-            .getDisplayComponent());
+            newFrame.addToggleDialog(new ImageWayPointDialog());
         } else {
             ImageEntries.getInstance().setCurrentImageEntry(null);
         }
@@ -89,9 +84,9 @@ public final class ImageWayPointPlugin extends org.openstreetmap.josm.plugins.Pl
         for (int index = 0; index < selectedFiles.length; index++) {
             final File selectedFile = selectedFiles[index];
             if (selectedFile.isDirectory())
-              this.addFiles(allFiles, selectedFile.listFiles());
-            else if (selectedFile.getName().toLowerCase().endsWith(".jpg"))
-              allFiles.add(selectedFile);
+                this.addFiles(allFiles, selectedFile.listFiles());
+            else if (selectedFile.getName().toLowerCase(Locale.ENGLISH).endsWith(".jpg"))
+                allFiles.add(selectedFile);
         }
     }
 }

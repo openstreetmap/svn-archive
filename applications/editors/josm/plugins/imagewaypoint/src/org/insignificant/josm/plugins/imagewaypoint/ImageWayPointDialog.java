@@ -18,9 +18,7 @@ import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.dialogs.ToggleDialog;
 import org.openstreetmap.josm.tools.Shortcut;
 
-public final class ImageWayPointDialog {
-    private static final ImageWayPointDialog INSTANCE = new ImageWayPointDialog();
-    private final ToggleDialog dialog;
+public final class ImageWayPointDialog extends ToggleDialog {
     final ImageComponent imageDisplay;
     private final Action previousAction;
     private final Action nextAction;
@@ -29,13 +27,10 @@ public final class ImageWayPointDialog {
 
     private final IImageChangeListener listener;
 
-    private ImageWayPointDialog() {
-        this.dialog = new ToggleDialog(tr("WayPoint Image"),
-            "imagewaypoint",
-            tr("Display non-geotagged photos"),
+    public ImageWayPointDialog() {
+        super(tr("WayPoint Image"), "imagewaypoint", tr("Display non-geotagged photos"),
             Shortcut.registerShortcut("subwindow:imagewaypoint", tr("Toggle: {0}", tr("WayPoint Image")),
-            KeyEvent.VK_Y, Shortcut.ALT_SHIFT),
-            200);
+            KeyEvent.VK_Y, Shortcut.ALT_SHIFT), 200);
 
         this.previousAction = new PreviousAction();
         this.nextAction = new NextAction();
@@ -64,28 +59,18 @@ public final class ImageWayPointDialog {
         this.listener = new ImageChangeListener(this);
         ImageEntries.getInstance().addListener(this.listener);
 
-        this.updateUI();
-        dialog.add(mainPanel);
+        this.updateGUI();
+        add(mainPanel);
     }
 
-    void updateUI() {
+    void updateGUI() {
         this.previousAction.setEnabled(ImageEntries.getInstance().hasPrevious());
         this.nextAction.setEnabled(ImageEntries.getInstance().hasNext());
-        this.rotateLeftAction.setEnabled(null != ImageEntries.getInstance()
-            .getCurrentImageEntry());
-        this.rotateRightAction.setEnabled(null != ImageEntries.getInstance()
-            .getCurrentImageEntry());
+        this.rotateLeftAction.setEnabled(null != ImageEntries.getInstance().getCurrentImageEntry());
+        this.rotateRightAction.setEnabled(null != ImageEntries.getInstance().getCurrentImageEntry());
 
         if (null != Main.map) {
             Main.map.repaint();
         }
-    }
-
-    public static ImageWayPointDialog getInstance() {
-        return ImageWayPointDialog.INSTANCE;
-    }
-
-    public ToggleDialog getDisplayComponent() {
-        return this.dialog;
     }
 }

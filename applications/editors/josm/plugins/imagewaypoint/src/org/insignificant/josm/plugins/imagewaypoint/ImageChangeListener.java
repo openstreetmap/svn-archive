@@ -13,12 +13,12 @@ final class ImageChangeListener implements
     public void onAvailableImageEntriesChanged(
         final ImageEntries entries) {
         this.dialog.imageDisplay.setImage(entries.getCurrentImage());
-        this.dialog.updateUI();
+        this.dialog.updateGUI();
     }
 
     @Override
     public void onSelectedImageEntryChanged(final ImageEntries entries) {
         this.dialog.imageDisplay.setImage(entries.getCurrentImage());
-        this.dialog.updateUI();
+        this.dialog.updateGUI();
     }
 }

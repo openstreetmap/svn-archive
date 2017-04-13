@@ -92,8 +92,11 @@ public class MapdustGUI extends ToggleDialog implements MapdustActionObserver,
     /** The <code>JPanel</code> */
     private JPanel mainPanel;
 
-    /** Specifies if the MapDust data was or not down-loaded */
-    private boolean downloaded = false;
+    /** Specifies if the MapDust data was or not downloaded */
+    private boolean downloaded;
+
+    /** Remembers if the dialog has been destroyed */
+    private boolean destroyed;
 
     /**
      * Builds a <code>MapdustGUi</code> based on the given parameters.
@@ -151,7 +154,10 @@ public class MapdustGUI extends ToggleDialog implements MapdustActionObserver,
         }
         downloaded = false;
         button.setSelected(false);
-        super.destroy();
+        if (!destroyed) {
+            super.destroy();
+            destroyed = true;
+        }
     }
 
     @Override

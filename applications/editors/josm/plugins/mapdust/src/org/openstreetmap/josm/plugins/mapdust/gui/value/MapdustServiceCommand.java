@@ -44,15 +44,10 @@ public enum MapdustServiceCommand {
     CHANGE_BUG_STATUS("changeBugStatus", "Modify Bug status");
 
     /** The key */
-    private String key;
+    private final String key;
 
     /** The value */
-    private String value;
-
-    /**
-     * Builds a new <code>MapdustServiceCommand</code> object
-     */
-    MapdustServiceCommand() {}
+    private final String value;
 
     /**
      * Builds a new <code>MapdustServiceCommand</code> object
@@ -78,5 +73,4 @@ public enum MapdustServiceCommand {
     public String getValue() {
         return value;
     }
-
 }

@@ -72,13 +72,13 @@ public enum MapdustResponseStatusCode {
     Status602(400, 602, "There is no skobbler user with thw igven ID.");
 
     /** The code of the error */
-    private Integer statusCode;
+    private final Integer statusCode;
 
     /** The Mapdust API code */
-    private Integer apiCode;
+    private final Integer apiCode;
 
     /** The description of the response code */
-    private String description;
+    private final String description;
 
     /**
      * Builds a new <code>BillingServiceResponseCode</code>

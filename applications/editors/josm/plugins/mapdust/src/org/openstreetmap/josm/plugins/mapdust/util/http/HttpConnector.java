@@ -37,6 +37,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 import org.openstreetmap.josm.Main;
@@ -163,7 +164,7 @@ public class HttpConnector {
                 /* 3: write content */
                 if (sbEncodeParameters.length() > 0) {
                     try (OutputStreamWriter out =
-                            new OutputStreamWriter(connection.getOutputStream())) {
+                            new OutputStreamWriter(connection.getOutputStream(), StandardCharsets.UTF_8)) {
                         out.write(sbEncodeParameters.toString());
                     }
                 }
@@ -206,7 +207,7 @@ public class HttpConnector {
      */
     protected String readContent(Object obj) throws IOException {
         String result = "";
-        InputStreamReader in = new InputStreamReader((InputStream) obj);
+        InputStreamReader in = new InputStreamReader((InputStream) obj, StandardCharsets.UTF_8);
         BufferedReader buff = new BufferedReader(in);
         String line = "";
         while ((line = buff.readLine()) != null) {

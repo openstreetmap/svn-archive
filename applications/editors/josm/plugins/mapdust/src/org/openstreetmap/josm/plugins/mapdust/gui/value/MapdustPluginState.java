@@ -43,7 +43,7 @@ public enum MapdustPluginState {
     OFFLINE("offline");
 
     /** The value of the state */
-    private String value;
+    private final String value;
 
     /**
      * Builds a new <code>ActivationStatus</code> with the given value

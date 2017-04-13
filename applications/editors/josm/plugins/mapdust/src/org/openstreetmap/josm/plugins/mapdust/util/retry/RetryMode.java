@@ -47,7 +47,7 @@ public enum RetryMode {
     TIMED("TIMED");
 
     /** The name of the retry mode*/
-    private String name;
+    private final String name;
 
     /**
      * Builds a <code>RetryMode</code> object

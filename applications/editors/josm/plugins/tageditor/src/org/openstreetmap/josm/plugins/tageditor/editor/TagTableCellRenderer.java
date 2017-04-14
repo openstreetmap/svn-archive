@@ -37,8 +37,7 @@ public class TagTableCellRenderer extends JLabel implements TableCellRenderer {
     }
 
     /**
-     * renders the name of a tag in the second column of
-     * the table
+     * renders the name of a tag in the second column of the table
      *
      * @param tag  the tag
      */
@@ -47,8 +46,7 @@ public class TagTableCellRenderer extends JLabel implements TableCellRenderer {
     }
 
     /**
-     * renders the value of a a tag in the third column of
-     * the table
+     * renders the value of a a tag in the third column of the table
      *
      * @param tag  the  tag
      */

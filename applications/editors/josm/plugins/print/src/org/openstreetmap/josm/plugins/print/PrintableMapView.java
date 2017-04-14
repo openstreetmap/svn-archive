@@ -20,8 +20,6 @@ import java.awt.print.PageFormat;
 import java.awt.print.Printable;
 import java.awt.print.PrinterException;
 
-import javax.swing.JPanel;
-
 import org.openstreetmap.gui.jmapviewer.tilesources.AbstractOsmTileSource;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.Bounds;
@@ -57,7 +55,7 @@ public class PrintableMapView extends MapView implements Printable {
      */
     public PrintableMapView() {
         /* Initialize MapView with a dummy parent */
-        super(new PrintableLayerManager(), new JPanel(), null);
+        super(new PrintableLayerManager(), null);
 
         /* Disable MapView's ComponentLister,
          * as it will interfere with the main MapView. */

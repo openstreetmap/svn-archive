@@ -231,8 +231,8 @@ public class PrintDialog extends JDialog implements ActionListener {
                             Main.pref.put("print.map-scale", scaleModel.getNumber().toString());
                             mapView.setFixedMapScale(scaleModel.getNumber().intValue());
                             printPreview.repaint();
-                        } catch (ParseException pe) {
-                            Main.error(pe);
+                        } catch (ParseException e) {
+                            Main.error(e);
                         }
                     }
                 });
@@ -259,8 +259,8 @@ public class PrintDialog extends JDialog implements ActionListener {
                             resolutionField.commitEdit();
                             Main.pref.put("print.resolution.dpi", resolutionModel.getNumber().toString());
                             printPreview.repaint();
-                        } catch (ParseException pe) {
-                            Main.error(pe);
+                        } catch (ParseException e) {
+                            Main.error(e);
                         }
                     }
                 });

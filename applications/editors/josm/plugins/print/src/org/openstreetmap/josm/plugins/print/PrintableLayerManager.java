@@ -104,8 +104,8 @@ public class PrintableLayerManager extends MainLayerManager {
     }
 
     @Override
-    public synchronized void addLayerChangeListener(LayerChangeListener listener, boolean fireAdd) {
-        layerManager.addLayerChangeListener(listener, fireAdd);
+    public synchronized void addAndFireLayerChangeListener(LayerChangeListener listener) {
+        layerManager.addAndFireLayerChangeListener(listener);
     }
 
     @Override
@@ -114,8 +114,7 @@ public class PrintableLayerManager extends MainLayerManager {
     }
 
     @Override
-    public synchronized void removeLayerChangeListener(LayerChangeListener listener,
-            boolean fireRemove) {
-        layerManager.removeLayerChangeListener(listener, fireRemove);
+    public synchronized void removeAndFireLayerChangeListener(LayerChangeListener listener) {
+        layerManager.removeAndFireLayerChangeListener(listener);
     }
 }

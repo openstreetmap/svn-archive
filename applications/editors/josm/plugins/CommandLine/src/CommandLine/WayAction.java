@@ -6,12 +6,11 @@ import java.awt.Point;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Way;
-import org.openstreetmap.josm.gui.MapFrame;
 
 public class WayAction extends AbstractOsmAction<Way> {
 
-    public WayAction(MapFrame mapFrame, CommandLine parentPlugin) {
-        super(mapFrame, parentPlugin, "joinway");
+    public WayAction(CommandLine parentPlugin) {
+        super(parentPlugin, "joinway");
     }
 
     @Override

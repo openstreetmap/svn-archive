@@ -23,7 +23,7 @@ import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
-import org.openstreetmap.josm.gui.MapFrame;
+import org.openstreetmap.josm.data.preferences.ColorProperty;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.gui.layer.MapViewPaintable;
@@ -44,10 +44,10 @@ public class LengthAction extends MapMode implements MapViewPaintable, AWTEventL
     private Node nearestNode;
     private boolean drawing;
 
-    public LengthAction(MapFrame mapFrame, CommandLine parentPlugin) {
-        super(null, "addsegment.png", null, mapFrame, ImageProvider.getCursor("crosshair", null));
+    public LengthAction(CommandLine parentPlugin) {
+        super(null, "addsegment.png", null, ImageProvider.getCursor("crosshair", null));
         this.parentPlugin = parentPlugin;
-        selectedColor = Main.pref.getColor(marktr("selected"), Color.red);
+        selectedColor = new ColorProperty(marktr("selected"), Color.red).get();
         cursorCrosshair = ImageProvider.getCursor("crosshair", null);
         cursorJoinNode = ImageProvider.getCursor("crosshair", "joinnode");
         currentCursor = cursorCrosshair;

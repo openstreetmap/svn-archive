@@ -7,14 +7,13 @@ import java.awt.event.KeyEvent;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.mapmode.MapMode;
-import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.tools.ImageProvider;
 
 public class RelationAction extends MapMode implements AWTEventListener {
     private final CommandLine parentPlugin;
 
-    public RelationAction(MapFrame mapFrame, CommandLine parentPlugin) {
-        super(null, "addsegment.png", null, mapFrame, ImageProvider.getCursor("normal", null));
+    public RelationAction(CommandLine parentPlugin) {
+        super(null, "addsegment.png", null, ImageProvider.getCursor("normal", null));
         this.parentPlugin = parentPlugin;
     }
 

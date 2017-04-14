@@ -20,7 +20,6 @@ import org.openstreetmap.josm.actions.mapmode.MapMode;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
-import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.tools.ImageProvider;
 
 public class PointAction extends MapMode implements AWTEventListener {
@@ -33,8 +32,8 @@ public class PointAction extends MapMode implements AWTEventListener {
     private final ArrayList<String> pointList;
     private boolean isCtrlDown;
 
-    public PointAction(MapFrame mapFrame, CommandLine parentPlugin) {
-        super(null, "addsegment.png", null, mapFrame, ImageProvider.getCursor("crosshair", null));
+    public PointAction(CommandLine parentPlugin) {
+        super(null, "addsegment.png", null, ImageProvider.getCursor("crosshair", null));
         this.parentPlugin = parentPlugin;
         cursorCrosshair = ImageProvider.getCursor("crosshair", null);
         cursorJoinNode = ImageProvider.getCursor("crosshair", "joinnode");

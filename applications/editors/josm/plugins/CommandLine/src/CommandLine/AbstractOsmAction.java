@@ -14,7 +14,6 @@ import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.mapmode.MapMode;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
-import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.tools.ImageProvider;
 
 public abstract class AbstractOsmAction<T extends OsmPrimitive> extends MapMode implements AWTEventListener {
@@ -26,8 +25,8 @@ public abstract class AbstractOsmAction<T extends OsmPrimitive> extends MapMode 
     private T nearestPrimitive;
     private boolean isCtrlDown;
 
-    protected AbstractOsmAction(MapFrame mapFrame, CommandLine parentPlugin, String activeCursorIcon) {
-        super(null, "addsegment.png", null, mapFrame, ImageProvider.getCursor("normal", "selection"));
+    protected AbstractOsmAction(CommandLine parentPlugin, String activeCursorIcon) {
+        super(null, "addsegment.png", null, ImageProvider.getCursor("normal", "selection"));
         this.parentPlugin = parentPlugin;
         cursorNormal = ImageProvider.getCursor("normal", "selection");
         cursorActive = ImageProvider.getCursor("normal", activeCursorIcon);

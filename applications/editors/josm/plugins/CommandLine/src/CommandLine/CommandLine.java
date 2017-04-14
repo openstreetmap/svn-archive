@@ -238,26 +238,26 @@ public class CommandLine extends Plugin {
             MapMode action = null;
             switch (currentType) {
             case POINT:
-                action = new PointAction(currentMapFrame, this);
+                action = new PointAction(this);
                 break;
             case WAY:
-                action = new WayAction(currentMapFrame, this);
+                action = new WayAction(this);
                 break;
             case NODE:
-                action = new NodeAction(currentMapFrame, this);
+                action = new NodeAction(this);
                 break;
             case RELATION:
-                action = new RelationAction(currentMapFrame, this);
+                action = new RelationAction(this);
                 break;
             case ANY:
-                action = new AnyAction(currentMapFrame, this);
+                action = new AnyAction(this);
                 break;
             case LENGTH:
-                action = new LengthAction(currentMapFrame, this);
+                action = new LengthAction(this);
                 break;
             case USERNAME:
                 loadParameter(Main.pref.get("osm-server.username", null), true);
-                action = new DummyAction(currentMapFrame, this);
+                action = new DummyAction(this);
                 break;
             case IMAGERYURL:
                 Layer layer = Main.getLayerManager().getActiveLayer();
@@ -277,7 +277,7 @@ public class CommandLine extends Plugin {
                     String url = info.getUrl();
                     loadParameter(url.isEmpty() ? info.getImageryType().getTypeString() : url, true);
                 }
-                action = new DummyAction(currentMapFrame, this);
+                action = new DummyAction(this);
                 break;
             case IMAGERYOFFSET:
                 Layer olayer = Main.getLayerManager().getActiveLayer();
@@ -293,10 +293,10 @@ public class CommandLine extends Plugin {
                     }
                 }
                 loadParameter((String.valueOf(((ImageryLayer) olayer).getDx()) + "," + String.valueOf(((ImageryLayer) olayer).getDy())), true);
-                action = new DummyAction(currentMapFrame, this);
+                action = new DummyAction(this);
                 break;
             default:
-                action = new DummyAction(currentMapFrame, this);
+                action = new DummyAction(this);
                 break;
             }
             currentMapFrame.selectMapMode(action);

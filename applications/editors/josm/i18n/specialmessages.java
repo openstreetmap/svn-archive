@@ -32,6 +32,7 @@
 /* Landuse type used in multipolygons */ trc("natural", "heath");
 /* Amenity used in multipolygons */ trc("amenity", "fire_station");
 /* Leisure used in multipolygons */ trc("leisure", "park");
+/* Leisure used in multipolygons */ trc("leisure", "track");
 /* relation type */ trc("Relation type", "associatedStreet");
 /* relation type */ trc("Relation type", "boundary");
 /* relation type */ trc("Relation type", "bridge");

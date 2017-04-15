@@ -17,6 +17,7 @@ import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.DataSource;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.DataSet;
+import org.openstreetmap.josm.data.osm.DataSet.UploadPolicy;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.OsmPrimitiveType;
@@ -275,7 +276,7 @@ public class PbfReader extends AbstractReader {
                 }
             }
             if (discourageUpload)
-                ds.setUploadDiscouraged(true);
+                ds.setUploadPolicy(UploadPolicy.DISCOURAGED);
         }
 
         private OsmPrimitiveType mapOsmType(MemberType type) {
@@ -294,7 +295,7 @@ public class PbfReader extends AbstractReader {
         @Override
         public void complete() {
             if (discourageUpload)
-                ds.setUploadDiscouraged(true);
+                ds.setUploadPolicy(UploadPolicy.DISCOURAGED);
         }
     }
 
@@ -313,20 +314,23 @@ public class PbfReader extends AbstractReader {
     public static DataSet parseDataSet(InputStream source, ProgressMonitor progressMonitor) throws IllegalDataException {
         ProgressMonitor monitor = progressMonitor == null ? NullProgressMonitor.INSTANCE : progressMonitor;
         CheckParameterUtil.ensureParameterNotNull(source, "source");
+        return new PbfReader().doParseDataSet(source, monitor);
+    }
 
-        PbfReader reader = new PbfReader();
-
+    @Override
+    protected DataSet doParseDataSet(InputStream source, ProgressMonitor monitor)
+            throws IllegalDataException {
         try {
             monitor.beginTask(tr("Prepare OSM data...", 2));
             monitor.indeterminateSubTask(tr("Reading OSM data..."));
 
-            reader.parse(source);
+            parse(source);
             monitor.worked(1);
 
             monitor.indeterminateSubTask(tr("Preparing data set..."));
-            reader.prepareDataSet();
+            prepareDataSet();
             monitor.worked(1);
-            return reader.getDataSet();
+            return getDataSet();
         } catch (IllegalDataException e) {
             throw e;
         } catch (Exception e) {

@@ -3,11 +3,14 @@ package org.openstreetmap.josm.plugins.pbf;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.ExtensionFileFilter;
+import org.openstreetmap.josm.io.OverpassDownloadReader;
+import org.openstreetmap.josm.io.OverpassDownloadReader.OverpassOutpoutFormat;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
 import org.openstreetmap.josm.plugins.pbf.action.DownloadPbfTask;
 import org.openstreetmap.josm.plugins.pbf.io.PbfExporter;
 import org.openstreetmap.josm.plugins.pbf.io.PbfImporter;
+import org.openstreetmap.josm.plugins.pbf.io.PbfReader;
 
 /**
  * PBF plugin.
@@ -27,5 +30,7 @@ public class PbfPlugin extends Plugin {
         ExtensionFileFilter.addExporter(new PbfExporter());
         // Allow JOSM to download remote *.osm.pbf files
         Main.main.menu.openLocation.addDownloadTaskClass(DownloadPbfTask.class);
+        // Alow JOSM to download PBF data from Overpass API
+        OverpassDownloadReader.registerOverpassOutpoutFormatReader(OverpassOutpoutFormat.PBF, PbfReader.class);
     }
 }

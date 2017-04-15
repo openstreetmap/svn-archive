@@ -24,13 +24,12 @@ import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.RelationMemberData;
 import org.openstreetmap.josm.data.osm.User;
 import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.data.osm.DataSet.UploadPolicy;
 import org.openstreetmap.josm.gui.progress.NullProgressMonitor;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.io.AbstractReader;
 import org.openstreetmap.josm.io.IllegalDataException;
 import org.openstreetmap.josm.tools.CheckParameterUtil;
-
-
 
 /**
  * @author GerdP
@@ -131,7 +130,7 @@ public class O5mReader extends AbstractReader {
                     throw new IOException(tr("wrong header byte ") + Integer.toHexString(start));
                 readFile();
                 if (discourageUpload)
-                    ds.setUploadDiscouraged(true);
+                    ds.setUploadPolicy(UploadPolicy.DISCOURAGED);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -715,20 +714,23 @@ public class O5mReader extends AbstractReader {
             progressMonitor = NullProgressMonitor.INSTANCE;
         }
         CheckParameterUtil.ensureParameterNotNull(source, "source");
+        return new O5mReader(source).doParseDataSet(source, progressMonitor);
+    }
 
-        O5mReader reader = new O5mReader(source);
-        
+    @Override
+    protected DataSet doParseDataSet(InputStream source, ProgressMonitor progressMonitor)
+            throws IllegalDataException {
         try {
             progressMonitor.beginTask(tr("Prepare OSM data...", 2));
             progressMonitor.indeterminateSubTask(tr("Reading OSM data..."));
 
-            reader.parse();
+            parse();
             progressMonitor.worked(1);
 
             progressMonitor.indeterminateSubTask(tr("Preparing data set..."));
-            reader.prepareDataSet();
+            prepareDataSet();
             progressMonitor.worked(1);
-            return reader.getDataSet();
+            return getDataSet();
         } catch (IllegalDataException e) {
             throw e;
         } catch (Exception e) {
@@ -737,5 +739,4 @@ public class O5mReader extends AbstractReader {
             progressMonitor.finishTask();
         }
     }
-
 }

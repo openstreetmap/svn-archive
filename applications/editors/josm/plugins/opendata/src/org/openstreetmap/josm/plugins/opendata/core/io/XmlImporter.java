@@ -7,8 +7,6 @@ import java.io.File;
 import java.io.InputStream;
 import java.net.URL;
 
-import javax.xml.bind.JAXBException;
-
 import org.openstreetmap.josm.actions.ExtensionFileFilter;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
@@ -23,7 +21,7 @@ public class XmlImporter extends AbstractImporter {
     public XmlImporter() {
         super(XML_FILE_FILTER);
     }
-    
+
     @Override
     public boolean acceptFile(File pathname) {
         if (super.acceptFile(pathname)) {
@@ -39,10 +37,6 @@ public class XmlImporter extends AbstractImporter {
     @Override
     protected DataSet parseDataSet(InputStream in, ProgressMonitor instance)
             throws IllegalDataException {
-        try {
-            return NeptuneReader.parseDataSet(in, handler, instance);
-        } catch (JAXBException e) {
-            throw new IllegalDataException(e);
-        }
+        return NeptuneReader.parseDataSet(in, handler, instance);
     }
 }

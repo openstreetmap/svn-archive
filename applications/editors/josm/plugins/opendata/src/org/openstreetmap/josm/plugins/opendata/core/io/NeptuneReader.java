@@ -31,6 +31,7 @@ import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.io.AbstractReader;
+import org.openstreetmap.josm.io.IllegalDataException;
 import org.openstreetmap.josm.plugins.opendata.core.datasets.AbstractDataSetHandler;
 import org.openstreetmap.josm.plugins.opendata.core.datasets.fr.FrenchConstants;
 import org.xml.sax.SAXException;
@@ -111,14 +112,14 @@ public class NeptuneReader extends AbstractReader implements FrenchConstants {
                 Main.error("Reason: " + e.getLocalizedMessage());
             }
         } catch (IOException e) {
-            Main.error(e.getMessage());
+            Main.error(e);
         }
 
         return false;
     }
 
-    public static DataSet parseDataSet(InputStream in, AbstractDataSetHandler handler, ProgressMonitor instance) throws JAXBException {
-        return new NeptuneReader().parse(in, instance);
+    public static DataSet parseDataSet(InputStream in, AbstractDataSetHandler handler, ProgressMonitor instance) throws IllegalDataException {
+        return new NeptuneReader().doParseDataSet(in, instance);
     }
 
     protected static final <T> T unmarshal(Class<T> docClass, InputStream inputStream) throws JAXBException {
@@ -242,8 +243,13 @@ public class NeptuneReader extends AbstractReader implements FrenchConstants {
         return ll.lat() == 0.0 && ll.lon() == 0.0;
     }
 
-    private DataSet parse(InputStream in, ProgressMonitor instance) throws JAXBException {
-        root = unmarshal(ChouettePTNetworkType.class, in);
+    @Override
+    protected DataSet doParseDataSet(InputStream in, ProgressMonitor instance) throws IllegalDataException {
+        try {
+            root = unmarshal(ChouettePTNetworkType.class, in);
+        } catch (JAXBException e) {
+            throw new IllegalDataException(e);
+        }
 
         Relation network = createNetwork(root.getPTNetwork());
 

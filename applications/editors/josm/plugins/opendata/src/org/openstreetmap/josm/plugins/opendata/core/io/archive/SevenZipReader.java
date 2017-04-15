@@ -13,7 +13,6 @@ import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.Map;
 
-import javax.xml.bind.JAXBException;
 import javax.xml.stream.FactoryConfigurationError;
 import javax.xml.stream.XMLStreamException;
 
@@ -26,6 +25,7 @@ import org.j7zip.SevenZip.Archive.SevenZip.Handler;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
+import org.openstreetmap.josm.io.IllegalDataException;
 import org.openstreetmap.josm.plugins.opendata.core.datasets.AbstractDataSetHandler;
 import org.openstreetmap.josm.plugins.opendata.core.util.OdUtils;
 
@@ -53,12 +53,12 @@ public class SevenZipReader extends ArchiveReader {
     }
 
     public static DataSet parseDataSet(InputStream in, AbstractDataSetHandler handler, ProgressMonitor instance, boolean promptUser)
-            throws IOException, XMLStreamException, FactoryConfigurationError, JAXBException {
+            throws IOException, XMLStreamException, FactoryConfigurationError, IllegalDataException {
         return new SevenZipReader(in, handler, promptUser).parseDoc(instance);
     }
 
     public static Map<File, DataSet> parseDataSets(InputStream in, AbstractDataSetHandler handler, ProgressMonitor instance, boolean promptUser)
-            throws IOException, XMLStreamException, FactoryConfigurationError, JAXBException {
+            throws IOException, XMLStreamException, FactoryConfigurationError, IllegalDataException {
         return new SevenZipReader(in, handler, promptUser).parseDocs(instance);
     }
 

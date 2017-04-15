@@ -42,7 +42,7 @@ public abstract class OverpassApi {
         private final String value;
     }
 
-    public static final String union(String ... queries) {
+    public static final String union(String... queries) {
         String result = "<union>\n";
         for (String query : queries) {
             if (query != null) {
@@ -53,7 +53,7 @@ public abstract class OverpassApi {
         return result;
     }
 
-    public static final String query(String bbox, OaQueryType type, String ... conditions) {
+    public static final String query(String bbox, OaQueryType type, String... conditions) {
         String result = "<query type=\""+type+"\" >\n";
         if (bbox != null) {
             result += "<bbox-query "+bbox+"/>\n";
@@ -71,7 +71,7 @@ public abstract class OverpassApi {
         return "<recurse type=\""+type+"\" into=\""+into+"\"/>\n";
     }
 
-    public static final String recurse(OaRecurseType ... types) {
+    public static final String recurse(OaRecurseType... types) {
         String result = "";
         for (OaRecurseType type : types) {
             result += "<recurse type=\""+type+"\"/>\n";

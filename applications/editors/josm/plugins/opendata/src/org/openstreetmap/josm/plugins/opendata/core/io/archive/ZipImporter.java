@@ -4,7 +4,11 @@ package org.openstreetmap.josm.plugins.opendata.core.io.archive;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
+
+import javax.xml.stream.FactoryConfigurationError;
+import javax.xml.stream.XMLStreamException;
 
 import org.openstreetmap.josm.actions.ExtensionFileFilter;
 import org.openstreetmap.josm.data.osm.DataSet;
@@ -27,7 +31,7 @@ public class ZipImporter extends AbstractImporter {
             throws IllegalDataException {
         try {
             return ZipReader.parseDataSet(in, handler, instance, true);
-        } catch (Exception e) {
+        } catch (IOException | XMLStreamException | FactoryConfigurationError e) {
             throw new IllegalDataException(e);
         }
     }

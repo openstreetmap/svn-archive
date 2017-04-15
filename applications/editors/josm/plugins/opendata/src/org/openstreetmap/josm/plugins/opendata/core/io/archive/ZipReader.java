@@ -13,13 +13,13 @@ import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-import javax.xml.bind.JAXBException;
 import javax.xml.stream.FactoryConfigurationError;
 import javax.xml.stream.XMLStreamException;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
+import org.openstreetmap.josm.io.IllegalDataException;
 import org.openstreetmap.josm.plugins.opendata.core.datasets.AbstractDataSetHandler;
 
 public class ZipReader extends ArchiveReader {
@@ -34,12 +34,12 @@ public class ZipReader extends ArchiveReader {
     }
 
     public static DataSet parseDataSet(InputStream in, AbstractDataSetHandler handler, ProgressMonitor instance, boolean promptUser)
-            throws IOException, XMLStreamException, FactoryConfigurationError, JAXBException {
+            throws IOException, XMLStreamException, FactoryConfigurationError, IllegalDataException {
         return new ZipReader(in, handler, promptUser).parseDoc(instance);
     }
 
     public static Map<File, DataSet> parseDataSets(InputStream in, AbstractDataSetHandler handler, ProgressMonitor instance, boolean promptUser)
-            throws IOException, XMLStreamException, FactoryConfigurationError, JAXBException {
+            throws IOException, XMLStreamException, FactoryConfigurationError, IllegalDataException {
         return new ZipReader(in, handler, promptUser).parseDocs(instance);
     }
 

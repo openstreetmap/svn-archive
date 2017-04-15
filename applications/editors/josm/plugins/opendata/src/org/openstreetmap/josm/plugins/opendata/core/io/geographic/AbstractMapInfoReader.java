@@ -4,6 +4,7 @@ package org.openstreetmap.josm.plugins.opendata.core.io.geographic;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.nio.charset.IllegalCharsetNameException;
 import java.nio.charset.UnsupportedCharsetException;
@@ -12,7 +13,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.data.osm.DataSet;
+import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.io.AbstractReader;
+import org.openstreetmap.josm.io.IllegalDataException;
 import org.openstreetmap.josm.plugins.opendata.core.OdConstants;
 
 public abstract class AbstractMapInfoReader extends AbstractReader {
@@ -37,6 +41,12 @@ public abstract class AbstractMapInfoReader extends AbstractReader {
     // Columns
     protected int numcolumns = -1;
     protected List<String> columns;
+
+    @Override
+    protected DataSet doParseDataSet(InputStream source,
+            ProgressMonitor progressMonitor) throws IllegalDataException {
+        return null;
+    }
 
     protected final File getDataFile(File headerFile, String extension) {
         String filename = headerFile.getName().substring(0, headerFile.getName().lastIndexOf('.'));

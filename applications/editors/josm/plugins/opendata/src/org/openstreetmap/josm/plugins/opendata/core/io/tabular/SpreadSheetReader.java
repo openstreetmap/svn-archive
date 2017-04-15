@@ -24,6 +24,7 @@ import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.projection.Projection;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.io.AbstractReader;
+import org.openstreetmap.josm.io.IllegalDataException;
 import org.openstreetmap.josm.plugins.opendata.core.OdConstants;
 import org.openstreetmap.josm.plugins.opendata.core.gui.ChooserLauncher;
 import org.openstreetmap.josm.plugins.opendata.core.io.ProjectionPatterns;
@@ -83,6 +84,12 @@ public abstract class SpreadSheetReader extends AbstractReader {
             columns.add(col = new CoordinateColumns());
         }
         return col;
+    }
+
+    @Override
+    protected DataSet doParseDataSet(InputStream source,
+            ProgressMonitor progressMonitor) throws IllegalDataException {
+        return null;
     }
 
     public DataSet doParse(String[] header, ProgressMonitor progressMonitor) throws IOException {

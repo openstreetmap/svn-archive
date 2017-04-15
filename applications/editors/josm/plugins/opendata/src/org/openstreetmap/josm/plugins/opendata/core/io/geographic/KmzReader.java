@@ -15,6 +15,7 @@ import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.io.AbstractReader;
+import org.openstreetmap.josm.io.IllegalDataException;
 
 public class KmzReader extends AbstractReader {
 
@@ -27,6 +28,12 @@ public class KmzReader extends AbstractReader {
     public static DataSet parseDataSet(InputStream in, ProgressMonitor instance)
             throws IOException, XMLStreamException, FactoryConfigurationError {
         return new KmzReader(new ZipInputStream(in)).parseDoc(instance);
+    }
+
+    @Override
+    protected DataSet doParseDataSet(InputStream source,
+            ProgressMonitor progressMonitor) throws IllegalDataException {
+        return null;
     }
 
     private DataSet parseDoc(ProgressMonitor instance) throws IOException, XMLStreamException, FactoryConfigurationError {

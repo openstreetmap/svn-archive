@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -12,7 +13,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.xml.bind.JAXBException;
 import javax.xml.stream.FactoryConfigurationError;
 import javax.xml.stream.XMLStreamException;
 
@@ -20,6 +20,7 @@ import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.io.AbstractReader;
+import org.openstreetmap.josm.io.IllegalDataException;
 import org.openstreetmap.josm.plugins.opendata.OdPlugin;
 import org.openstreetmap.josm.plugins.opendata.core.OdConstants;
 import org.openstreetmap.josm.plugins.opendata.core.datasets.AbstractDataSetHandler;
@@ -56,7 +57,7 @@ public abstract class ArchiveReader extends AbstractReader {
         return file;
     }
 
-    protected abstract void extractArchive(final File temp, final List<File> candidates) throws IOException, FileNotFoundException;
+    protected abstract void extractArchive(File temp, List<File> candidates) throws IOException, FileNotFoundException;
 
     protected abstract String getTaskMessage();
 
@@ -85,7 +86,7 @@ public abstract class ArchiveReader extends AbstractReader {
     }
 
     public Map<File, DataSet> parseDocs(final ProgressMonitor progressMonitor)
-            throws IOException, XMLStreamException, FactoryConfigurationError, JAXBException {
+            throws IOException, XMLStreamException, FactoryConfigurationError, IllegalDataException {
         Map<File, DataSet> result = new HashMap<>();
         File temp = OdUtils.createTempDir();
         try {
@@ -106,7 +107,7 @@ public abstract class ArchiveReader extends AbstractReader {
     }
 
     public DataSet parseDoc(final ProgressMonitor progressMonitor)
-            throws IOException, XMLStreamException, FactoryConfigurationError, JAXBException {
+            throws IOException, XMLStreamException, FactoryConfigurationError, IllegalDataException {
         File temp = OdUtils.createTempDir();
 
         try {
@@ -132,8 +133,13 @@ public abstract class ArchiveReader extends AbstractReader {
         return ds;
     }
 
+    @Override
+    protected DataSet doParseDataSet(InputStream source, ProgressMonitor progressMonitor) throws IllegalDataException {
+        return null;
+    }
+
     protected DataSet getDataForFile(File f, final ProgressMonitor progressMonitor)
-            throws FileNotFoundException, IOException, XMLStreamException, FactoryConfigurationError, JAXBException {
+            throws FileNotFoundException, IOException, XMLStreamException, FactoryConfigurationError, IllegalDataException {
         if (f == null) {
             return null;
         } else if (!f.exists()) {

@@ -25,6 +25,7 @@ import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.io.AbstractReader;
+import org.openstreetmap.josm.io.IllegalDataException;
 import org.openstreetmap.josm.io.UTFInputStreamReader;
 import org.openstreetmap.josm.plugins.opendata.core.OdConstants;
 import org.openstreetmap.josm.plugins.opendata.core.io.ProjectionPatterns;
@@ -59,6 +60,12 @@ public class KmlReader extends AbstractReader {
         InputStreamReader ir = UTFInputStreamReader.create(in);
         XMLStreamReader parser = XMLInputFactory.newInstance().createXMLStreamReader(ir);
         return new KmlReader(parser).parseDoc();
+    }
+
+    @Override
+    protected DataSet doParseDataSet(InputStream source,
+            ProgressMonitor progressMonitor) throws IllegalDataException {
+        return null;
     }
 
     private DataSet parseDoc() throws XMLStreamException {

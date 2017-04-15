@@ -28,7 +28,7 @@ public abstract class OdConstants {
     /**
      * Preferences
      */
-/*    public static final String PREF_COORDINATES = "opendata.coordinates";
+    /*    public static final String PREF_COORDINATES = "opendata.coordinates";
     public static final String VALUE_CC9ZONES = "cc9zones";
     public static final String VALUE_WGS84 = "wgs84";*/
 

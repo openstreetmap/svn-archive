@@ -33,8 +33,8 @@ public class JunctionCheckerMapMode extends MapMode implements ActiveLayerChange
 
     private static final long serialVersionUID = 3442408951505263850L;
 
-    public JunctionCheckerMapMode(MapFrame mapFrame, String name, String desc) {
-        super(name, "junctionchecker.png", desc, mapFrame, Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
+    public JunctionCheckerMapMode(String name, String desc) {
+        super(name, "junctionchecker.png", desc, Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
     }
 
     @Override public void enterMode() {

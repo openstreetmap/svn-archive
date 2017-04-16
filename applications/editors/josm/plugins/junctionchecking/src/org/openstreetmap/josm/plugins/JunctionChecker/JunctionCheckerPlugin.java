@@ -42,7 +42,7 @@ public class JunctionCheckerPlugin extends Plugin implements LayerChangeListener
 
     public JunctionCheckerPlugin(PluginInformation info) {
         super(info);
-        jcMapMode = new JunctionCheckerMapMode(Main.map, "junctionchecking", tr("construct channel digraph and search for junctions"));
+        jcMapMode = new JunctionCheckerMapMode("junctionchecking", tr("construct channel digraph and search for junctions"));
         relationproducer = new RelationProducer(this);
         cXMLReaderMK = new ColorSchemeXMLReader(COLORSCHEMEFILTERFILE);
     }

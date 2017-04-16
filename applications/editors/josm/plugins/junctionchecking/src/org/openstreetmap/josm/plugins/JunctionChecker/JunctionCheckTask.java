@@ -54,7 +54,7 @@ public class JunctionCheckTask extends PleaseWaitRunnable {
         if (jc.isSmallerJunction()) {
             showjunction();
             JOptionPane.showMessageDialog(Main.parent,
-                    tr("The marked channels contains a junctioncandidate (white). To test this candidat mark these channel and press the \"Check\" button again."));
+                tr("The marked channels contains a junctioncandidate (white). To test this candidat mark these channel and press the \"Check\" button again."));
         } else if (jc.getCheck()) {
             showjunction();
             JOptionPane.showMessageDialog(Main.parent, tr("The marked channels are a {0}-ways junction", n));

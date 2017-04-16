@@ -55,8 +55,14 @@ public class DigraphCreationTask extends PleaseWaitRunnable {
     @Override
     protected void finish() {
         if (canceled) {
-            Main.getLayerManager().removeLayer(plugin.getChannelDigraphLayer());
-            return;
+            removeDigraphLayer();
+        }
+    }
+
+    private void removeDigraphLayer() {
+        ChannelDiGraphLayer layer = plugin.getChannelDigraphLayer();
+        if (Main.getLayerManager().containsLayer(layer)) {
+            Main.getLayerManager().removeLayer(layer);
         }
     }
 
@@ -69,7 +75,7 @@ public class DigraphCreationTask extends PleaseWaitRunnable {
             JOptionPane.showMessageDialog(Main.parent, tr("this layer is no osm data layer"));
             return;
         }
-        Main.getLayerManager().removeLayer(plugin.getChannelDigraphLayer());
+        removeDigraphLayer();
         int tickscounter = 4;
         if (sealGraph) {
             tickscounter++;

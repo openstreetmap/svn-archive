@@ -11,8 +11,6 @@ import java.awt.Polygon;
 import java.awt.Shape;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Line2D;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 
 import javax.swing.Action;
 import javax.swing.Icon;
@@ -23,10 +21,6 @@ import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.layer.Layer;
-import org.openstreetmap.josm.gui.layer.LayerManager.LayerAddEvent;
-import org.openstreetmap.josm.gui.layer.LayerManager.LayerChangeListener;
-import org.openstreetmap.josm.gui.layer.LayerManager.LayerOrderChangeEvent;
-import org.openstreetmap.josm.gui.layer.LayerManager.LayerRemoveEvent;
 import org.openstreetmap.josm.plugins.JunctionChecker.datastructure.Channel;
 import org.openstreetmap.josm.plugins.JunctionChecker.datastructure.ChannelDiGraph;
 import org.openstreetmap.josm.plugins.JunctionChecker.datastructure.OSMNode;
@@ -37,7 +31,7 @@ import org.openstreetmap.josm.tools.ImageProvider;
  * Diese Klasse enthält Teile der Klasse graphviewLayer des graphview Plugins
  *
  */
-public class ChannelDiGraphLayer extends Layer implements LayerChangeListener, PropertyChangeListener {
+public class ChannelDiGraphLayer extends Layer {
 
     private ChannelDiGraph digraph;
     private static final int POINTSIZE = 5; //original 3
@@ -64,7 +58,6 @@ public class ChannelDiGraphLayer extends Layer implements LayerChangeListener, P
 
     public ChannelDiGraphLayer(ColorSchemeXMLReader cXMLReader) {
         super("ChannelDiGraphLayer");
-        Main.getLayerManager().addLayerChangeListener(this);
         this.cXMLReader = cXMLReader;
         initColors();
     }
@@ -186,30 +179,11 @@ public class ChannelDiGraphLayer extends Layer implements LayerChangeListener, P
         this.digraph = digraph;
     }
 
-    @Override
-    public void layerOrderChanged(LayerOrderChangeEvent e) {
-    }
-
-    @Override
-    public void layerAdded(LayerAddEvent e) {
-    }
-
-    @Override
-    public void layerRemoving(LayerRemoveEvent e) {
-        if (e.getRemovedLayer() == this) {
-            Main.getLayerManager().removeLayerChangeListener(this);
-        }
-    }
-
     public ChannelDiGraph getDigraph() {
         return digraph;
     }
 
     public void setDigraph(ChannelDiGraph digraph) {
         this.digraph = digraph;
-    }
-
-    @Override
-    public void propertyChange(PropertyChangeEvent evt) {
     }
 }

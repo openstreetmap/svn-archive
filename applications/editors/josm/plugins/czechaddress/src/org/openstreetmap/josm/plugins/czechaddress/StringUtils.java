@@ -133,8 +133,8 @@ public abstract class StringUtils {
         char ch = last;
         for (int i = 0; i < charr.length; i++) {
             ch = charr[i];
-            if ((last >= 'a') && (last <= 'ž') ||
-                    (last >= 'A') && (last <= 'Ž'))
+            if ((last >= 'a' && last <= 'ž') ||
+                    (last >= 'A' && last <= 'Ž'))
                 ch = Character.toLowerCase(ch);
             else
                 ch = Character.toTitleCase(ch);

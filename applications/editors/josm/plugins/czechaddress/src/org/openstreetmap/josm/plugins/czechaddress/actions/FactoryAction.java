@@ -33,14 +33,13 @@ public class FactoryAction extends MapMode {
     /**
      * Default constructor, which sets the title, shortcut, ...
      */
-    public FactoryAction(MapFrame frame) {
+    public FactoryAction() {
         super("Sputit továrnu na adresy",
               "envelope-cursor.png",
               "Vytváří adresní body jedním kliknutím",
               Shortcut.registerShortcut("mapmode:clickaddress",
                   "Sputit továrnu na adresy",
                   KeyEvent.VK_K, Shortcut.ALT_SHIFT),
-              frame,
               ImageProvider.getCursor("crosshair", "envelope-star-small"));
     }
 

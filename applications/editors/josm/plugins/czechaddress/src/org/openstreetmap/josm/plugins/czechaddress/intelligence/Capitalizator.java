@@ -58,7 +58,7 @@ public class Capitalizator {
         }
     }
 
-    private class StreetMatcher implements Callable<OsmPrimitive> {
+    private static class StreetMatcher implements Callable<OsmPrimitive> {
 
         private AddressElement elem;
         private Collection<OsmPrimitive> prims;

@@ -2,6 +2,7 @@
 package org.openstreetmap.josm.plugins.czechaddress.addressdatabase;
 
 import java.util.List;
+import java.util.Objects;
 
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
@@ -146,11 +147,16 @@ public abstract class AddressElement implements Comparable<AddressElement> {
      * does not match or {@code null} is given as a parameter.
      * {@code true} otherwise.
      */
-    public boolean equals(AddressElement elem) {
-        if (elem == null)
-            return false;
-        else
-            return name.equals(elem.name) && this.parent == elem.parent;
+    @Override
+    public boolean equals(Object elem) {
+        return this == elem || (elem instanceof AddressElement
+                && name.equals(((AddressElement) elem).name)
+                && parent == ((AddressElement) elem).parent);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, parent);
     }
 
     /**

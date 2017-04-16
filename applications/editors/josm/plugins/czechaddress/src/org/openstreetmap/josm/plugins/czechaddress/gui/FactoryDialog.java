@@ -387,7 +387,7 @@ public final class FactoryDialog extends ToggleDialog
 
 //==============================================================================
 
-    private class StreetListRenderer extends DefaultListCellRenderer {
+    private static class StreetListRenderer extends DefaultListCellRenderer {
         @Override
         public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
             Component c = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
@@ -407,7 +407,7 @@ public final class FactoryDialog extends ToggleDialog
 
 //==============================================================================
 
-    private class HouseListRenderer extends DefaultListCellRenderer {
+    private static class HouseListRenderer extends DefaultListCellRenderer {
 
         Font plainFont = null;
         Font boldFont = null;
@@ -445,7 +445,7 @@ public final class FactoryDialog extends ToggleDialog
 
 //==============================================================================
 
-    private class AllStreetProvider extends ElementWithHouses {
+    private static class AllStreetProvider extends ElementWithHouses {
         AllStreetProvider() {
             super("všechny domy");
         }

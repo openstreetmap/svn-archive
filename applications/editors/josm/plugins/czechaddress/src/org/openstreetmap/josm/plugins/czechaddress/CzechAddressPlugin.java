@@ -133,7 +133,7 @@ public class CzechAddressPlugin extends Plugin implements StatusListener {
             return;
 
         newFrame.addToggleDialog(FactoryDialog.getInstance());
-        newFrame.addMapMode(new IconToggleButton(new FactoryAction(newFrame)));
+        newFrame.addMapMode(new IconToggleButton(new FactoryAction()));
     }
 
     public static void initReasoner() {

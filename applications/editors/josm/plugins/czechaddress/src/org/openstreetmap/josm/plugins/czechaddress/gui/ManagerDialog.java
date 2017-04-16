@@ -83,7 +83,7 @@ public class ManagerDialog extends ExtendedDialog {
         return streetModel.getRowCount();
     }
 
-    private class DatabaseModel extends HalfCookedTreeModel {
+    private static class DatabaseModel extends HalfCookedTreeModel {
 
         @Override
         public Object getRoot() {
@@ -375,7 +375,7 @@ public class ManagerDialog extends ExtendedDialog {
     private javax.swing.JTabbedPane tabbedPane;
     // End of variables declaration//GEN-END:variables
 
-    private class AddressElementRenderer extends DefaultTableCellRenderer {
+    private static class AddressElementRenderer extends DefaultTableCellRenderer {
 
         AddressElementRenderer() {}
 
@@ -388,7 +388,7 @@ public class ManagerDialog extends ExtendedDialog {
         }
     }
 
-    private class RenameModel<Element> implements TableModel {
+    private static class RenameModel<Element> implements TableModel {
 
         List<Element> elems = new ArrayList<>();
         List<String> names = new ArrayList<>();

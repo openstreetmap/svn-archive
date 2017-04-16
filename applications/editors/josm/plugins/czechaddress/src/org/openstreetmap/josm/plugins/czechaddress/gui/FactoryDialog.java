@@ -89,6 +89,12 @@ public final class FactoryDialog extends ToggleDialog
     }
 
     @Override
+    public void destroy() {
+        super.destroy();
+        singleton = null;
+    }
+
+    @Override
     public void pluginStatusChanged(int message) {
 
         if (message == MESSAGE_DATABASE_LOADED) {

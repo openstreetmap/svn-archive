@@ -3,7 +3,6 @@ package org.openstreetmap.josm.plugins.gpsblam;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.IconToggleButton;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.plugins.Plugin;
@@ -16,26 +15,21 @@ import org.openstreetmap.josm.plugins.PluginInformation;
  */
 public class GPSBlamPlugin extends Plugin {
 
-    private final IconToggleButton btn;
-    private final GPSBlamMode mode;
-
     /**
      * Constructs a new {@code GPSBlamPlugin}.
      * @param info plugin info
      */
     public GPSBlamPlugin(PluginInformation info) {
         super(info);
-        mode = new GPSBlamMode("gpsblam", tr("select gpx points and \"blam!\", find centre and direction of spread"));
-
-        btn = new IconToggleButton(mode);
-        btn.setVisible(true);
     }
 
     @Override
     public void mapFrameInitialized(MapFrame oldFrame, MapFrame newFrame) {
-        mode.setFrame(newFrame);
-        if (oldFrame == null && newFrame != null && Main.map != null) {
-            Main.map.addMapMode(btn);
+        if (oldFrame == null && newFrame != null) {
+            GPSBlamMode mode = new GPSBlamMode("gpsblam", tr("select gpx points and \"blam!\", find centre and direction of spread"));
+            IconToggleButton btn = new IconToggleButton(mode);
+            btn.setVisible(true);
+            newFrame.addMapMode(btn);
         }
     }
 }

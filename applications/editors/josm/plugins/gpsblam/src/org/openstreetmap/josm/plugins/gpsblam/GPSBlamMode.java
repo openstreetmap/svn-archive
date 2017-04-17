@@ -23,7 +23,6 @@ import java.awt.geom.Path2D;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.mapmode.MapMode;
-import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.gui.layer.LayerManager.LayerAddEvent;
 import org.openstreetmap.josm.gui.layer.LayerManager.LayerChangeListener;
 import org.openstreetmap.josm.gui.layer.LayerManager.LayerOrderChangeEvent;
@@ -32,7 +31,6 @@ import org.openstreetmap.josm.gui.layer.LayerManager.LayerRemoveEvent;
 class GPSBlamMode extends MapMode implements LayerChangeListener, MouseWheelListener, AWTEventListener {
 
     Point pointPressed;
-    MapFrame frame;
     private Point oldP2;
     int radius;
     MouseWheelListener[] mapViewWheelListeners;
@@ -145,8 +143,8 @@ class GPSBlamMode extends MapMode implements LayerChangeListener, MouseWheelList
     }
 
     private void xorDrawBox(Point p1, Point p2, int radius){
-        if (frame != null) {
-            Graphics2D g = (Graphics2D)Main.map.mapView.getGraphics();
+        if (Main.map != null) {
+            Graphics2D g = (Graphics2D) Main.map.mapView.getGraphics();
             g.setXORMode(Color.BLACK);
             g.setColor(Color.WHITE);
             // AA+XOR broken in some versions of Java
@@ -187,17 +185,13 @@ class GPSBlamMode extends MapMode implements LayerChangeListener, MouseWheelList
     }
 
     private void paintBox(Point p2, int newRadius) {
-        if (frame != null) {
+        if (Main.map != null) {
             if (oldP2 != null) {
                 xorDrawBox(pointPressed, oldP2, radius); // clear old box
             }
             xorDrawBox(pointPressed, p2, newRadius); // draw new box
             oldP2 = p2;
         }
-    }
-
-    public void setFrame(MapFrame mapFrame) {
-        frame = mapFrame;
     }
 
     @Override
@@ -214,7 +208,7 @@ class GPSBlamMode extends MapMode implements LayerChangeListener, MouseWheelList
     public void layerRemoving(LayerRemoveEvent e) {
         if (e.getRemovedLayer() instanceof GPSBlamLayer) {
             currentBlamLayer = null;
-            if(Main.map.mapMode instanceof GPSBlamMode)
+            if (Main.map.mapMode instanceof GPSBlamMode)
                 Main.map.selectSelectTool(false);
         }
     }

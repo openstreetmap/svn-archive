@@ -64,6 +64,11 @@ public class UndeleteAction extends JosmAction {
 
                         History h = HistoryDataSet.getInstance().getHistory(id, type);
 
+                        if (h == null) {
+                            Main.warn("Cannot find history for " + type + " " + id);
+                            return;
+                        }
+
                         HistoryOsmPrimitive hPrimitive1 = h.getLatest();
                         HistoryOsmPrimitive hPrimitive2;
 
@@ -116,7 +121,6 @@ public class UndeleteAction extends JosmAction {
                                 hPrimitive2 = h.getByVersion(h.getNumVersions() - 1);
 
                                 Relation rel = new Relation(id, (int) hPrimitive1.getVersion());
-
                                 HistoryRelation hRel = (HistoryRelation) hPrimitive2;
 
                                 if (hRel != null) {
@@ -141,10 +145,8 @@ public class UndeleteAction extends JosmAction {
                                         }
                                         members.add(new RelationMember(m.getRole(), p));
                                     }
-
                                     rel.setMembers(members);
                                 }
-
                                 primitive = rel;
                             }
 
@@ -165,12 +167,7 @@ public class UndeleteAction extends JosmAction {
                                   : OsmPrimitiveType.RELATION.equals(type)
                                   ? tr("Unable to undelete relation {0}. Object has likely been redacted", id)
                                   : null;
-                                GuiHelper.runInEDT(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        new Notification(msg).setIcon(JOptionPane.WARNING_MESSAGE).show();
-                                    }
-                                });
+                                GuiHelper.runInEDT(() -> new Notification(msg).setIcon(JOptionPane.WARNING_MESSAGE).show());
                                 Main.warn(msg);
                             }
                         }
@@ -186,12 +183,7 @@ public class UndeleteAction extends JosmAction {
                 ((Way) parent).setNodes(nodes);
                 Main.map.repaint();
             }
-            GuiHelper.runInEDT(new Runnable() {
-                @Override
-                public void run() {
-                    AutoScaleAction.zoomTo(layer.data.allNonDeletedPrimitives());
-                }
-            });
+            GuiHelper.runInEDT(() -> AutoScaleAction.zoomTo(layer.data.allNonDeletedPrimitives()));
         }
     }
 

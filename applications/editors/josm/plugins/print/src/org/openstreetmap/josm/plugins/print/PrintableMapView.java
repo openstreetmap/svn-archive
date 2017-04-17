@@ -26,6 +26,9 @@ import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.SystemOfMeasurement;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.layer.Layer;
+import org.openstreetmap.josm.gui.layer.LayerManager.LayerAddEvent;
+import org.openstreetmap.josm.gui.layer.LayerManager.LayerOrderChangeEvent;
+import org.openstreetmap.josm.gui.layer.LayerManager.LayerRemoveEvent;
 
 /**
  * The PrintableMapView class implements a "Printable" perspective on
@@ -40,8 +43,7 @@ public class PrintableMapView extends MapView implements Printable {
     protected int fixedMapScale = 0;
 
     /**
-     * The factor for scaling the printing graphics to the desired
-     * resolution
+     * The factor for scaling the printing graphics to the desired resolution
      */
     protected double g2dFactor;
 
@@ -218,14 +220,12 @@ public class PrintableMapView extends MapView implements Printable {
         SystemOfMeasurement som = SystemOfMeasurement.getSystemOfMeasurement();
         double dist100px = getDist100Pixel() / g2dFactor;
         double dist = dist100px / som.aValue;
-        //String unit  = som.aName;
         if (!Main.pref.getBoolean("system_of_measurement.use_only_lower_unit", false) && dist > som.bValue / som.aValue) {
             dist = dist100px / som.bValue;
-            //unit  = som.bName;
         }
         long distExponent = (long) Math.floor(Math.log(dist) / Math.log(10));
         double distMantissa = dist / Math.pow(10, distExponent);
-        double distScale = 1.0;
+        double distScale;
         if (distMantissa <= 2.5) {
             distScale = 2.5 / distMantissa;
         } else if (distMantissa <= 4.0) {
@@ -344,5 +344,20 @@ public class PrintableMapView extends MapView implements Printable {
         g2d.drawString(text, 0, 0);
 
         g2d.setTransform(ax);
+    }
+
+    @Override
+    public void layerAdded(LayerAddEvent e) {
+        // Don't mess with global stuff done by MapView
+    }
+
+    @Override
+    public void layerRemoving(LayerRemoveEvent e) {
+        // Don't mess with global stuff done by MapView
+    }
+
+    @Override
+    public void layerOrderChanged(LayerOrderChangeEvent e) {
+        // Don't mess with global stuff done by MapView
     }
 }

@@ -23,6 +23,7 @@ import java.beans.PropertyChangeListener;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -437,7 +438,7 @@ public class RelContextDialog extends ToggleDialog implements ActiveLayerChangeL
 
         ClassLoader classLoader = RelContextDialog.class.getClassLoader();
         try (InputStream possibleRolesStream = classLoader.getResourceAsStream(POSSIBLE_ROLES_FILE);
-                BufferedReader r = new BufferedReader(new InputStreamReader(possibleRolesStream));
+                BufferedReader r = new BufferedReader(new InputStreamReader(possibleRolesStream, StandardCharsets.UTF_8));
                 ) {
             while (r.ready()) {
                 String line = r.readLine();
@@ -529,7 +530,7 @@ public class RelContextDialog extends ToggleDialog implements ActiveLayerChangeL
         }
     }
 
-    private class ChosenRelationPopupMenu extends JPopupMenu {
+    private static class ChosenRelationPopupMenu extends JPopupMenu {
         ChosenRelationPopupMenu(ChosenRelation chosenRelation) {
             add(new SelectMembersAction(chosenRelation));
             add(new SelectRelationAction(chosenRelation));
@@ -577,7 +578,7 @@ public class RelContextDialog extends ToggleDialog implements ActiveLayerChangeL
         }
     }
 
-    private class MultipolygonSettingsPopup extends JPopupMenu implements ActionListener {
+    private static class MultipolygonSettingsPopup extends JPopupMenu implements ActionListener {
         MultipolygonSettingsPopup() {
             addMenuItem("boundary", tr("Create administrative boundary relations"));
             addMenuItem("boundaryways", tr("Add tags boundary and admin_level to boundary relation ways"));

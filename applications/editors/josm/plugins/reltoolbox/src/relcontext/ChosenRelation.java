@@ -149,37 +149,40 @@ public class ChosenRelation implements ActiveLayerChangeListener, MapViewPaintab
         g.setColor(Color.yellow);
         g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.3f * opacity));
 
-        drawRelations(g, mv, bbox, chosenRelation);
+        drawRelations(g, mv, bbox, chosenRelation, new HashSet<>());
 
         g.setComposite(oldComposite);
         g.setStroke(oldStroke);
     }
 
-    private void drawRelations(Graphics2D g, MapView mv, Bounds bbox, Relation rel) {
-        for (OsmPrimitive element : rel.getMemberPrimitives()) {
-            if (element.getType() == OsmPrimitiveType.NODE) {
-                Node node = (Node) element;
-                Point center = mv.getPoint(node);
-                g.drawOval(center.x - 4, center.y - 4, 9, 9);
-            } else if (element.getType() == OsmPrimitiveType.WAY) {
-                Way way = (Way) element;
-                if (way.getNodesCount() >= 2) {
-                    GeneralPath b = new GeneralPath();
-                    Point p = mv.getPoint(way.getNode(0));
-                    b.moveTo(p.x, p.y);
-                    for (int i = 1; i < way.getNodesCount(); i++) {
-                        p = mv.getPoint(way.getNode(i));
-                        b.lineTo(p.x, p.y);
+    private void drawRelations(Graphics2D g, MapView mv, Bounds bbox, Relation rel, Set<Relation> visitedRelations) {
+        if (!visitedRelations.contains(rel)) {
+            visitedRelations.add(rel);
+            for (OsmPrimitive element : rel.getMemberPrimitives()) {
+                if (element.getType() == OsmPrimitiveType.NODE) {
+                    Node node = (Node) element;
+                    Point center = mv.getPoint(node);
+                    g.drawOval(center.x - 4, center.y - 4, 9, 9);
+                } else if (element.getType() == OsmPrimitiveType.WAY) {
+                    Way way = (Way) element;
+                    if (way.getNodesCount() >= 2) {
+                        GeneralPath b = new GeneralPath();
+                        Point p = mv.getPoint(way.getNode(0));
+                        b.moveTo(p.x, p.y);
+                        for (int i = 1; i < way.getNodesCount(); i++) {
+                            p = mv.getPoint(way.getNode(i));
+                            b.lineTo(p.x, p.y);
+                        }
+                        g.draw(b);
                     }
-                    g.draw(b);
+                } else if (element.getType() == OsmPrimitiveType.RELATION) {
+                    Color oldColor = g.getColor();
+                    g.setColor(Color.magenta);
+                    drawRelations(g, mv, bbox, (Relation) element, visitedRelations);
+                    g.setColor(oldColor);
                 }
-            } else if (element.getType() == OsmPrimitiveType.RELATION) {
-                Color oldColor = g.getColor();
-                g.setColor(Color.magenta);
-                drawRelations(g, mv, bbox, (Relation) element);
-                g.setColor(oldColor);
+                // todo: closedway, multipolygon - ?
             }
-            // todo: closedway, multipolygon - ?
         }
     }
 

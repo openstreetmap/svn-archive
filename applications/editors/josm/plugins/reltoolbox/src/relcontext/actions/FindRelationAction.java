@@ -201,7 +201,7 @@ public class FindRelationAction extends JosmAction {
     /**
      * I admit, some of it was copypasted from {@link org.openstreetmap.josm.gui.dialogs.RelationListDialog.RelationListModel}.
      */
-    protected class FindRelationListModel extends AbstractListModel<Relation> {
+    protected static class FindRelationListModel extends AbstractListModel<Relation> {
         private final ArrayList<Relation> relations = new ArrayList<>();
         private DefaultListSelectionModel selectionModel;
 

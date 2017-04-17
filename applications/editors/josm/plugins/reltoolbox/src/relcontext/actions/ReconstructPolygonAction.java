@@ -89,10 +89,10 @@ public class ReconstructPolygonAction extends AbstractAction implements ChosenRe
 
         for (JoinedPolygon p : mpc.outerWays) {
 
-            ArrayList<JoinedPolygon> myInnerWays = new ArrayList<JoinedPolygon>();
+            ArrayList<JoinedPolygon> myInnerWays = new ArrayList<>();
             for (JoinedPolygon i : mpc.innerWays) {
                 // if the first point of any inner ring is contained in this
-                // outer ring, then this inner ring belongs to us. This 
+                // outer ring, then this inner ring belongs to us. This
                 // assumption only works if multipolygons have valid geometries
                 EastNorth en = i.ways.get(0).firstNode().getEastNorth();
                 if (p.area.contains(en.east(), en.north())) {
@@ -101,8 +101,8 @@ public class ReconstructPolygonAction extends AbstractAction implements ChosenRe
             }
 
             if (!myInnerWays.isEmpty()) {
-                // this ring has inner rings, so we leave a multipolygon in 
-                // place and don't reconstruct the rings. 
+                // this ring has inner rings, so we leave a multipolygon in
+                // place and don't reconstruct the rings.
                 Relation n = null;
                 if (relationReused) {
                     n = new Relation();
@@ -130,8 +130,7 @@ public class ReconstructPolygonAction extends AbstractAction implements ChosenRe
             }
 
             // move all tags from relation and common tags from ways
-            // start with all tags from first way but only if area tags are 
-            // present
+            // start with all tags from first way but only if area tags are present
             Map<String, String> tags = p.ways.get(0).getKeys();
             if (!p.ways.get(0).hasAreaTags()) {
                 tags.clear();
@@ -208,8 +207,7 @@ public class ReconstructPolygonAction extends AbstractAction implements ChosenRe
     private boolean isSuitableRelation(Relation newRelation) {
         if (newRelation == null || !"multipolygon".equals(newRelation.get("type")) || newRelation.getMembersCount() == 0)
             return false;
-        else {
+        else
             return true;
-        }
     }
 }

@@ -25,7 +25,7 @@ public class GPSBlamPlugin extends Plugin {
      */
     public GPSBlamPlugin(PluginInformation info) {
         super(info);
-        mode = new GPSBlamMode(Main.map, "gpsblam", tr("select gpx points and \"blam!\", find centre and direction of spread"));
+        mode = new GPSBlamMode("gpsblam", tr("select gpx points and \"blam!\", find centre and direction of spread"));
 
         btn = new IconToggleButton(mode);
         btn.setVisible(true);

@@ -38,8 +38,8 @@ class GPSBlamMode extends MapMode implements LayerChangeListener, MouseWheelList
     MouseWheelListener[] mapViewWheelListeners;
     GPSBlamLayer currentBlamLayer;
 
-    GPSBlamMode(MapFrame mapFrame, String name, String desc) {
-        super(name, "gpsblam_mode.png", desc, mapFrame, Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
+    GPSBlamMode(String name, String desc) {
+        super(name, "gpsblam_mode.png", desc, Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
         radius = 10;
     }
 

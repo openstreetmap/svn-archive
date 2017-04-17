@@ -5,7 +5,6 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.GridBagLayout;
-import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -34,38 +33,29 @@ import org.openstreetmap.josm.tools.GBC;
 import org.openstreetmap.josm.tools.ImageProvider;
 import org.openstreetmap.josm.tools.Shortcut;
 
-
 public class ImageryAdjustMapMode extends MapMode implements MouseListener, MouseMotionListener, MapFrame.MapModeChangeListener{
     boolean mouseDown;
     EastNorth prevEastNorth;
     private ImageryLayer adjustingLayer;
     private MapMode oldMapMode;
-
     
-    public ImageryAdjustMapMode(MapFrame mapFrame) {
+    public ImageryAdjustMapMode() {
         super(tr("Adjust imagery"), "adjustimg",
                 tr("Adjust the position of the selected imagery layer"), 
                 Shortcut.registerShortcut("imageryadjust:adjustmode", tr("Mode: {0}", tr("Adjust imagery")),
                 KeyEvent.VK_Y, Shortcut.ALT_CTRL),
-                mapFrame,
                 ImageProvider.getCursor("normal", "move"));
         MapFrame.addMapModeChangeListener(this);
     }
     
     private List<? extends Layer> getVisibleLayers() {
-        List<? extends Layer> all = new ArrayList<Layer>(Main.getLayerManager().getLayersOfType(ImageryLayer.class));
+        List<? extends Layer> all = new ArrayList<>(Main.getLayerManager().getLayersOfType(ImageryLayer.class));
         Iterator<? extends Layer> it = all.iterator();
         while (it.hasNext()) {
             if (!it.next().isVisible()) it.remove();
         }
         return all;
     }
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        super.actionPerformed(e);
-    }
-    
     
     TimedKeyReleaseListener listener;
             
@@ -92,14 +82,21 @@ public class ImageryAdjustMapMode extends MapMode implements MouseListener, Mous
                 @Override
                 protected void doKeyReleaseEvent(KeyEvent evt) {
                     if (releaseEvent.getKeyCode() == getShortcut().getKeyStroke().getKeyCode()) {
-                    if (oldMapMode!=null && !(oldMapMode instanceof ImageryAdjustMapMode))
-                    Main.map.selectMapMode(oldMapMode);
+                        if (oldMapMode!=null && !(oldMapMode instanceof ImageryAdjustMapMode)) {
+                            Main.map.selectMapMode(oldMapMode);
+                        }
+                    }
                 }
-            }
+
+                @Override
+                protected void doKeyPressEvent(KeyEvent evt) {
+                    // Do nothing ?
+                }
         };
     }
 
-    @Override public void exitMode() {
+    @Override
+    public void exitMode() {
         super.exitMode();
         Main.map.mapView.removeMouseListener(this);
         Main.map.mapView.removeMouseMotionListener(this);
@@ -107,7 +104,8 @@ public class ImageryAdjustMapMode extends MapMode implements MouseListener, Mous
         listener.stop();
     }
 
-    @Override public void mousePressed(MouseEvent e) {
+    @Override
+    public void mousePressed(MouseEvent e) {
         if (e.getButton() != MouseEvent.BUTTON1)
             return;
         
@@ -123,10 +121,12 @@ public class ImageryAdjustMapMode extends MapMode implements MouseListener, Mous
         if (adjustingLayer == null || prevEastNorth == null) return;
         EastNorth eastNorth=
             Main.map.mapView.getEastNorth(e.getX(),e.getY());
+        /* FIXME if this is needed. Comment from JOSM core when displace method has been deprecated:
+        // moved to AbstractTileSourceLayer/TileSourceDisplaySettings. Remains until all actions migrate.
         adjustingLayer.displace(
                 eastNorth.east()-prevEastNorth.east(),
                 eastNorth.north()-prevEastNorth.north()
-        );
+        );*/
         prevEastNorth = eastNorth;
         Main.map.mapView.repaint();
     }
@@ -181,7 +181,7 @@ public class ImageryAdjustMapMode extends MapMode implements MouseListener, Mous
      * @return  the selected layer; null, if no layer was selected
      */
     protected Layer askAdjustLayer(List<? extends Layer> adjustableLayers) {
-        if (adjustableLayers.size()==0) return null;
+        if (adjustableLayers.isEmpty()) return null;
         if (adjustableLayers.size()==1) return adjustableLayers.get(0);
         JComboBox<Layer> layerList = new JComboBox<>();
         layerList.setRenderer(new LayerListCellRenderer());
@@ -204,13 +204,11 @@ public class ImageryAdjustMapMode extends MapMode implements MouseListener, Mous
         int decision = diag.getValue();
         if (decision != 1)
             return null;
-        Layer adjustLayer = (Layer) layerList.getSelectedItem();
-        return adjustLayer;
+        return (Layer) layerList.getSelectedItem();
     }
 
     /**
      * Displays a warning message if there are no imagery layers to adjust
-     *
      */
     protected void warnNoImageryLayers() {
         JOptionPane.showMessageDialog(
@@ -223,20 +221,16 @@ public class ImageryAdjustMapMode extends MapMode implements MouseListener, Mous
 
     /**
      * Replies true if there is at least one imagery layer
-     *
      * @return true if there is at least one imagery layer
      */
     protected boolean hasImageryLayersToAdjust() {
         if (Main.map == null) return false;
         if (Main.map.mapView == null) return false;
-        boolean b = ! Main.getLayerManager().getLayersOfType(ImageryLayer.class).isEmpty();
-        return b;
+        return ! Main.getLayerManager().getLayersOfType(ImageryLayer.class).isEmpty();
     }
 
     @Override
     protected void updateEnabledState() {
-        
         setEnabled(hasImageryLayersToAdjust());
-        //setEnabled(hasImageryLayersToAdjust());
     }
 }

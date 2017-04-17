@@ -3,32 +3,30 @@ package imageryadjust;
 import java.awt.AWTEvent;
 import java.awt.Toolkit;
 import java.awt.event.AWTEventListener;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.util.TreeSet;
 import javax.swing.Timer;
 
-public class TimedKeyReleaseListener implements AWTEventListener {
+import org.openstreetmap.josm.Main;
+
+public abstract class TimedKeyReleaseListener implements AWTEventListener {
     private final TreeSet<Integer> set = new TreeSet<>();
     private Timer timer;
     protected KeyEvent releaseEvent;
     
     public TimedKeyReleaseListener() {
-        timer = new Timer(0, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent ae) {
-                 timer.stop();
-                 if (set.remove(releaseEvent.getKeyCode())) {
-                  doKeyReleaseEvent(releaseEvent);
-                 }
-            }
+        timer = new Timer(0, ae -> {
+             timer.stop();
+             if (set.remove(releaseEvent.getKeyCode())) {
+                 doKeyReleaseEvent(releaseEvent);
+             }
         });
         
         try {
             Toolkit.getDefaultToolkit().addAWTEventListener(this,
                     AWTEvent.KEY_EVENT_MASK);
         } catch (SecurityException ex) {
+            Main.error(ex);
         }
     }
 
@@ -58,12 +56,11 @@ public class TimedKeyReleaseListener implements AWTEventListener {
         try {
             Toolkit.getDefaultToolkit().removeAWTEventListener(this);
         } catch (SecurityException ex) {
+            Main.error(ex);
         }
     }
     
-    protected void doKeyReleaseEvent(KeyEvent evt) {
-    }
+    protected abstract void doKeyReleaseEvent(KeyEvent evt);
 
-    protected void doKeyPressEvent(KeyEvent evt) {
-    }
+    protected abstract void doKeyPressEvent(KeyEvent evt);
 }

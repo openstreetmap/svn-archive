@@ -101,7 +101,9 @@ public class ImageryAdjustMapMode extends MapMode implements MouseListener, Mous
         Main.map.mapView.removeMouseListener(this);
         Main.map.mapView.removeMouseMotionListener(this);
         adjustingLayer = null;
-        listener.stop();
+        if (listener != null) {
+            listener.stop();
+        }
     }
 
     @Override

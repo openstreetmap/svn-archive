@@ -1,14 +1,19 @@
 package org.openstreetmap.josm.plugins.rasterfilters.model;
 
-import org.openstreetmap.josm.plugins.rasterfilters.values.*;
+import java.awt.Color;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.json.Json;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
-import java.awt.*;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Map.Entry;
+
+import org.openstreetmap.josm.plugins.rasterfilters.values.BooleanValue;
+import org.openstreetmap.josm.plugins.rasterfilters.values.ColorValue;
+import org.openstreetmap.josm.plugins.rasterfilters.values.SelectValue;
+import org.openstreetmap.josm.plugins.rasterfilters.values.SliderValue;
+import org.openstreetmap.josm.plugins.rasterfilters.values.Value;
 
 /**
  * Filter state's model which stores all parameters of

@@ -1,24 +1,42 @@
 package org.openstreetmap.josm.plugins.rasterfilters.preferences;
 
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
-import org.openstreetmap.josm.Main;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.StringReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.net.URLConnection;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonObject;
 import javax.json.JsonReader;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.*;
-import java.net.*;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+import org.openstreetmap.josm.Main;
 
 /**
  * This class is responsible for downloading jars which contains
@@ -102,9 +120,9 @@ public class FiltersDownloader implements ActionListener {
                     if (meta != null) {
                         String paramName = "rasterfilters."
                                 + meta.getString("name");
-    
+
                         boolean needToLoad = Main.pref.getBoolean(paramName);
-    
+
                         if (needToLoad) {
                             JsonArray binaries = meta.getJsonArray("binaries");
                             filterTitles.add(meta.getString("title"));
@@ -116,7 +134,7 @@ public class FiltersDownloader implements ActionListener {
                         FilterInfo newFilterInfo = new FilterInfo(name,
                                 description, meta, needToLoad);
                         newFilterInfo.setOwner(owner);
-    
+
                         if (!filtersInfoList.contains(newFilterInfo)) {
                             filtersInfoList.add(newFilterInfo);
                         }

@@ -1,5 +1,14 @@
 package org.openstreetmap.josm.plugins.rasterfilters.actions;
 
+import java.awt.Component;
+import java.awt.event.ActionEvent;
+import java.net.MalformedURLException;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.swing.AbstractAction;
+import javax.swing.JMenuItem;
+
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.layer.ImageryLayer;
 import org.openstreetmap.josm.gui.layer.Layer;
@@ -7,33 +16,24 @@ import org.openstreetmap.josm.gui.layer.Layer.LayerAction;
 import org.openstreetmap.josm.plugins.rasterfilters.gui.FiltersDialog;
 import org.openstreetmap.josm.tools.ImageProvider;
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.net.MalformedURLException;
-import java.util.ArrayList;
-import java.util.List;
-
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 /**
  * The action that is called when user click on 'Choose filters' button
- * <p>
- * and sets image on that button
  *
  * @author Nipel-Crumple
  */
-public final class ShowLayerFiltersDialog extends AbstractAction implements LayerAction {
+public final class ShowFiltersDialogAction extends AbstractAction implements LayerAction {
 
     private List<FiltersDialog> dialogs = new ArrayList<>();
 
     /**
-     * Constructs a new {@code ShowLayerFiltersDialog}.
+     * Constructs a new {@code ShowFiltersDialogAction}.
      */
-    public ShowLayerFiltersDialog() {
+    public ShowFiltersDialogAction() {
         putValue(NAME, tr("Filters"));
         putValue(SHORT_DESCRIPTION, tr("Choose Filter"));
-        putValue(SMALL_ICON, ImageProvider.get("josm_filters_48.png"));
+        putValue("ImageResource", new ImageProvider("josm_filters_48.png").getResource());
     }
 
     public void addFiltersDialog(FiltersDialog dialog) {
@@ -54,7 +54,7 @@ public final class ShowLayerFiltersDialog extends AbstractAction implements Laye
 
                 if (temp.getLayer().equals(layer)) {
                     try {
-                        temp.createAndShowGUI();
+                        temp.createAndShowGui();
                     } catch (MalformedURLException e1) {
                         e1.printStackTrace();
                     }
@@ -62,6 +62,8 @@ public final class ShowLayerFiltersDialog extends AbstractAction implements Laye
                 }
 
             }
+        } else {
+            Main.debug("The layer is not the instance of " + ImageryLayer.class.getCanonicalName());
         }
     }
 

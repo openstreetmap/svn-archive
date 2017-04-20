@@ -1,5 +1,8 @@
 package org.openstreetmap.josm.plugins.rasterfilters.values;
 
+/**
+ * @author Nipel-Crumple
+ */
 public class ColorValue<Color> implements Value<Color> {
 
     private Color value;

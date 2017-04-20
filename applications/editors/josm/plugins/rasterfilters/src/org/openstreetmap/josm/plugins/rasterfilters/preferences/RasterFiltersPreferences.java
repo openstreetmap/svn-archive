@@ -1,21 +1,26 @@
 package org.openstreetmap.josm.plugins.rasterfilters.preferences;
 
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.util.List;
+
+import javax.json.JsonObject;
+import javax.swing.JButton;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.border.EmptyBorder;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
+import javax.swing.table.AbstractTableModel;
+import javax.swing.table.TableModel;
+
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.preferences.PreferenceTabbedPane;
 import org.openstreetmap.josm.gui.preferences.SubPreferenceSetting;
 import org.openstreetmap.josm.gui.preferences.TabPreferenceSetting;
 import org.openstreetmap.josm.gui.preferences.map.MapPreference;
 import org.openstreetmap.josm.tools.GBC;
-
-import javax.json.JsonObject;
-import javax.swing.*;
-import javax.swing.border.EmptyBorder;
-import javax.swing.event.TableModelEvent;
-import javax.swing.event.TableModelListener;
-import javax.swing.table.AbstractTableModel;
-import javax.swing.table.TableModel;
-import java.awt.*;
-import java.util.List;
 
 /**
  * This class draws subtab 'Image Filters' in the Preferences menu.
@@ -108,7 +113,7 @@ public class RasterFiltersPreferences implements SubPreferenceSetting {
         List<FilterInfo> filtersInfoList;
         Object[][] data;
 
-        public FiltersTableModel() {
+        FiltersTableModel() {
 
             filtersInfoList = FiltersDownloader.downloadFiltersInfoList();
             data = new Object[filtersInfoList.size()][4];
@@ -189,12 +194,7 @@ class FilterInfo {
     private boolean needToDownload;
     private String owner;
 
-    public FilterInfo() {
-
-    }
-
-    public FilterInfo(String name, String description, JsonObject meta,
-                      boolean needToDownload) {
+    FilterInfo(String name, String description, JsonObject meta, boolean needToDownload) {
         this.setName(name);
         this.setDescription(description);
         this.meta = meta;
@@ -249,14 +249,7 @@ class FilterInfo {
 
     @Override
     public boolean equals(Object o) {
-        if (o instanceof FilterInfo) {
-            if (name.equals(((FilterInfo) o).getName()) &&
-                    meta.equals(((FilterInfo) o).getMeta()) &&
-                    description.equals(((FilterInfo) o).getDescription())) {
-                return true;
-            }
-        }
-
-        return false;
+        return (o instanceof FilterInfo) && name.equals(((FilterInfo) o).getName())
+                && meta.equals(((FilterInfo) o).getMeta()) && description.equals(((FilterInfo) o).getDescription());
     }
 }

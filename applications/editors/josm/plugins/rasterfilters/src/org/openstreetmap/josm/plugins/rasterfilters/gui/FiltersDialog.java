@@ -1,18 +1,29 @@
 package org.openstreetmap.josm.plugins.rasterfilters.gui;
 
-import org.openstreetmap.josm.gui.layer.ImageryLayer;
-import org.openstreetmap.josm.gui.layer.Layer;
-import org.openstreetmap.josm.plugins.rasterfilters.model.FiltersManager;
-import org.openstreetmap.josm.plugins.rasterfilters.preferences.FiltersDownloader;
-
-import javax.swing.*;
-import javax.swing.border.EmptyBorder;
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.MalformedURLException;
 import java.util.HashSet;
 import java.util.Set;
+
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.border.EmptyBorder;
+
+import org.openstreetmap.josm.gui.layer.ImageryLayer;
+import org.openstreetmap.josm.gui.layer.Layer;
+import org.openstreetmap.josm.plugins.rasterfilters.model.FiltersManager;
+import org.openstreetmap.josm.plugins.rasterfilters.preferences.FiltersDownloader;
 
 /**
  * This filters is responsible for creating filter's dialog where user can
@@ -70,7 +81,7 @@ public class FiltersDialog {
         parent.repaint();
     }
 
-    public JFrame createAndShowGUI() throws MalformedURLException {
+    public JFrame createAndShowGui() throws MalformedURLException {
         listModel.removeAllElements();
 
         Set<String> filterTitles = FiltersDownloader.filterTitles;
@@ -166,8 +177,7 @@ public class FiltersDialog {
             frame.setVisible(true);
         }
 
-        if (FiltersDownloader.filterTitles.isEmpty()
-                || listModel.getSize() == 0) {
+        if (FiltersDownloader.filterTitles.isEmpty() || listModel.getSize() == 0) {
             addButton.setEnabled(false);
             filterChooser.setEnabled(false);
         } else {

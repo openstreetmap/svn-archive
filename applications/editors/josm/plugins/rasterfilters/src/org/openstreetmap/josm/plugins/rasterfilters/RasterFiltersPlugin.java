@@ -1,5 +1,11 @@
 package org.openstreetmap.josm.plugins.rasterfilters;
 
+import java.awt.Container;
+import java.io.File;
+import java.io.IOException;
+
+import javax.swing.JPanel;
+
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.gui.SideButton;
@@ -14,27 +20,22 @@ import org.openstreetmap.josm.gui.layer.MainLayerManager.ActiveLayerChangeListen
 import org.openstreetmap.josm.gui.preferences.PreferenceSetting;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
-import org.openstreetmap.josm.plugins.rasterfilters.actions.ShowLayerFiltersDialog;
+import org.openstreetmap.josm.plugins.rasterfilters.actions.ShowFiltersDialogAction;
 import org.openstreetmap.josm.plugins.rasterfilters.gui.FiltersDialog;
 import org.openstreetmap.josm.plugins.rasterfilters.preferences.FiltersDownloader;
 import org.openstreetmap.josm.plugins.rasterfilters.preferences.RasterFiltersPreferences;
 
-import javax.swing.*;
-import java.awt.*;
-import java.io.File;
-import java.io.IOException;
 
 /**
  * Main Plugin class. This class embed new plugin button for adding filter and
  * subtab in Preferences menu
  *
  * @author Nipel-Crumple
- *
  */
 public class RasterFiltersPlugin extends Plugin implements LayerChangeListener, ActiveLayerChangeListener {
 
     private SideButton filterButton;
-    private ShowLayerFiltersDialog action;
+    private ShowFiltersDialogAction action;
     private PreferenceSetting setting;
 
     public RasterFiltersPlugin(PluginInformation info) {
@@ -85,7 +86,7 @@ public class RasterFiltersPlugin extends Plugin implements LayerChangeListener, 
             FiltersDownloader.initFilters();
 
             if (action == null) {
-                action = new ShowLayerFiltersDialog();
+                action = new ShowFiltersDialogAction();
             }
 
             if (e.getAddedLayer() instanceof ImageryLayer) {
@@ -121,8 +122,9 @@ public class RasterFiltersPlugin extends Plugin implements LayerChangeListener, 
 
         if (Main.getLayerManager().getLayers().isEmpty()) {
             Container container = filterButton.getParent();
-            if (container != null)
+            if (container != null) {
                 container.remove(filterButton);
+            }
 
             FiltersDownloader.destroyFilters();
             filterButton = null;

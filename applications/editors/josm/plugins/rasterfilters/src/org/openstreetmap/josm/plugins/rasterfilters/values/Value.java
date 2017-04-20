@@ -8,13 +8,13 @@ import org.openstreetmap.josm.plugins.rasterfilters.model.FilterStateModel;
  * @param <T> generic class of the value
  * @author Nipel-Crumple
  */
-public interface Value<T extends Object> {
+public interface Value<T> {
 
-    public T getValue();
+    T getValue();
 
-    public void setValue(T value);
+    void setValue(T value);
 
-    public String getParameterName();
+    String getParameterName();
 
-    public void setParameterName(String name);
+    void setParameterName(String name);
 }

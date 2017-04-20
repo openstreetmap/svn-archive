@@ -1,19 +1,35 @@
 package org.openstreetmap.josm.plugins.rasterfilters.gui;
 
-import com.bric.swing.ColorPicker;
-import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.plugins.rasterfilters.model.FiltersManager;
-
-import javax.json.JsonArray;
-import javax.json.JsonObject;
-import javax.swing.*;
-import javax.swing.border.Border;
-import javax.swing.border.EmptyBorder;
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemListener;
 import java.rmi.server.UID;
 import java.util.Hashtable;
+
+import javax.json.JsonArray;
+import javax.json.JsonObject;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JSlider;
+import javax.swing.border.Border;
+import javax.swing.border.EmptyBorder;
+
+import com.bric.swing.ColorPicker;
+import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.plugins.rasterfilters.model.FiltersManager;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
@@ -229,8 +245,8 @@ public class FilterPanel extends JPanel {
             int initValue = json.getInt("default");
 
             Main.debug("Slider is integer\n");
-            Main.debug("minValue: " + String.valueOf(minValue) +
-                    "maxValue: " + String.valueOf(maxValue));
+            Main.debug("minValue: " + String.valueOf(minValue)
+                    + "maxValue: " + String.valueOf(maxValue));
             try {
                 slider = new JSlider(JSlider.HORIZONTAL, minValue, maxValue,
                         initValue);
@@ -252,8 +268,8 @@ public class FilterPanel extends JPanel {
             // every value is supplied by 10 to be integer for slider
             double minValueDouble = array.getJsonNumber(0).doubleValue();
             double maxValueDouble = array.getJsonNumber(1).doubleValue();
-            Main.debug("DminValue: " + String.valueOf(minValueDouble) +
-                    "DmaxValue: " + String.valueOf(maxValueDouble));
+            Main.debug("DminValue: " + String.valueOf(minValueDouble)
+                    + "DmaxValue: " + String.valueOf(maxValueDouble));
 
             int minValue = (int) (minValueDouble * 100);
             int maxValue = (int) (maxValueDouble * 100);

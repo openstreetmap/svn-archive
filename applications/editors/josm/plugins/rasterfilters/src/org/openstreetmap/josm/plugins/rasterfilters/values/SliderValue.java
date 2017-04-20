@@ -1,5 +1,8 @@
 package org.openstreetmap.josm.plugins.rasterfilters.values;
 
+/**
+ * @author Nipel-Crumple
+ */
 public class SliderValue<Number> implements Value<Number> {
 
     private String parameterName;
@@ -28,12 +31,9 @@ public class SliderValue<Number> implements Value<Number> {
     @Override
     public void setParameterName(String name) {
         this.parameterName = name;
-        ;
     }
 
     public boolean isDouble() {
-        if (value instanceof Double)
-            return true;
-        return false;
+        return value instanceof Double;
     }
 }

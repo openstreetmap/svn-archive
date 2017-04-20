@@ -10,6 +10,6 @@ import java.rmi.server.UID;
  */
 public interface StateChangeListener {
 
-    public void filterStateChanged(UID filterId, FilterStateModel filterState);
+    void filterStateChanged(UID filterId, FilterStateModel filterState);
 
 }

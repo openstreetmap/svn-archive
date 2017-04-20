@@ -1,5 +1,8 @@
 package org.openstreetmap.josm.plugins.rasterfilters.values;
 
+/**
+ * @author Nipel-Crumple
+ */
 public class SelectValue<T> implements Value<T> {
 
     private T selectedItem;

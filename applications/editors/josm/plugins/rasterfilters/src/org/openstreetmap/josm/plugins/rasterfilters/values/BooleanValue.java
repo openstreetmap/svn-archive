@@ -1,5 +1,8 @@
 package org.openstreetmap.josm.plugins.rasterfilters.values;
 
+/**
+ * @author Nipel-Crumple
+ */
 public class BooleanValue implements Value<Boolean> {
 
     private Boolean value;

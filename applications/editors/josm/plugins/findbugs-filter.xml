@@ -81,6 +81,9 @@
     <Match>
         <Class name="~net.boplicity.*" />
     </Match>
+    <Match>
+        <Class name="~net.sf.*" />
+    </Match>
 	<Match>
 		<Class name="~oauth.signpost.*" />
 	</Match>

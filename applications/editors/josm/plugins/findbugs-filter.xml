@@ -163,7 +163,10 @@
 		<Class name="~org.tartarus.*" />
 	</Match>
     <Match>
-        <Class name="~org.w3._2001.xmlschema.*" />
+        <Class name="~org.w3.*" />
+    </Match>
+    <Match>
+        <Class name="~org.w3c.*" />
     </Match>
     <Match>
         <Class name="~org.xmlpull.*" />

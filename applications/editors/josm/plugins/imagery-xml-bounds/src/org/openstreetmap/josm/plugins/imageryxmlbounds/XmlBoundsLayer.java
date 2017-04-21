@@ -21,6 +21,7 @@ import org.openstreetmap.josm.gui.layer.LayerManager.LayerRemoveEvent;
 import org.openstreetmap.josm.gui.layer.MainLayerManager.ActiveLayerChangeEvent;
 import org.openstreetmap.josm.gui.layer.MainLayerManager.ActiveLayerChangeListener;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
+import org.openstreetmap.josm.tools.ImageProvider;
 import org.openstreetmap.josm.plugins.imageryxmlbounds.actions.BoundsLayerSaveAction;
 import org.openstreetmap.josm.plugins.imageryxmlbounds.actions.BoundsLayerSaveAsAction;
 import org.openstreetmap.josm.plugins.imageryxmlbounds.actions.ShowBoundsAction;
@@ -94,7 +95,7 @@ public class XmlBoundsLayer extends OsmDataLayer implements LayerChangeListener,
 
     @Override
     public Icon getIcon() {
-        return XML_ICON_16;
+        return ImageProvider.get("xml_24.png");
     }
 
     @Override

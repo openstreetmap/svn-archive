@@ -19,6 +19,7 @@ import org.openstreetmap.josm.gui.util.GuiHelper;
 import org.openstreetmap.josm.plugins.imageryxmlbounds.XmlBoundsConstants;
 import org.openstreetmap.josm.plugins.imageryxmlbounds.XmlBoundsLayer;
 import org.openstreetmap.josm.plugins.imageryxmlbounds.data.XmlBoundsConverter;
+import org.openstreetmap.josm.tools.ImageProvider;
 
 /**
  * Edit bounds for selected defaults.
@@ -40,11 +41,7 @@ public class EditEntriesAction extends JosmAction implements XmlBoundsConstants,
     public EditEntriesAction(JTable defaultTable, ImageryDefaultLayerTableModel defaultModel) {
         putValue(SHORT_DESCRIPTION, tr("edit bounds for selected defaults"));
         putValue(NAME, ACTION_NAME);
-        try {
-            putValue(SMALL_ICON, XML_ICON_24);
-        } catch (Exception ex) {
-            Main.error(ex);
-        }
+        new ImageProvider("xml_24.png").getResource().attachImageIcon(this, true);
         this.defaultModel = defaultModel;
         this.defaultTable = defaultTable;
         this.defaultTable.getSelectionModel().addListSelectionListener(this);

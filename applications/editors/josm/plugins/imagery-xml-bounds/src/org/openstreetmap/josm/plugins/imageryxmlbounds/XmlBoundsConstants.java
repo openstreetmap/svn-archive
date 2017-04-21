@@ -6,7 +6,6 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 import javax.swing.ImageIcon;
 
 import org.openstreetmap.josm.actions.ExtensionFileFilter;
-import org.openstreetmap.josm.tools.ImageProvider;
 
 /**
  * Main constants of JOSM Imagery XML Bounds plugin.
@@ -14,11 +13,6 @@ import org.openstreetmap.josm.tools.ImageProvider;
  *
  */
 public interface XmlBoundsConstants {
-
-    /**
-     * Plugin version.
-     */
-    public static final String PLUGIN_VERSION = "1.3";
 
     /**
      * XML namespace for JOSM Imagery schema.
@@ -41,6 +35,10 @@ public interface XmlBoundsConstants {
     public static final String XML_TYPE = "type";
     /** XML url tag */
     public static final String XML_URL = "url";
+    /** XML id tag */
+    public static final String XML_ID = "id";
+    /** XML date tag */
+    public static final String XML_DATE = "date";
     /** XML default tag */
     public static final String XML_DEFAULT = "default";
     /** XML eula tag */
@@ -77,6 +75,8 @@ public interface XmlBoundsConstants {
     public static final String KEY_NAME = XML_NAME;
     public static final String KEY_TYPE = PREFIX + XML_TYPE;
     public static final String KEY_URL = PREFIX + XML_URL;
+    public static final String KEY_ID = PREFIX + XML_ID;
+    public static final String KEY_DATE = PREFIX + XML_DATE;
     public static final String KEY_DEFAULT = PREFIX + XML_DEFAULT;
     public static final String KEY_EULA = PREFIX + XML_EULA;
     public static final String KEY_ATTR_TEXT = PREFIX + XML_ATTR_TEXT;
@@ -105,14 +105,4 @@ public interface XmlBoundsConstants {
      */
     public static final ExtensionFileFilter FILE_FILTER = new ExtensionFileFilter(
             EXTENSION, EXTENSION, tr("Imagery XML Files") + " (*."+EXTENSION+")");
-
-    /**
-     * Plugin 16x16 icon.
-     */
-    public static ImageIcon XML_ICON_16 = ImageProvider.get("xml_16.png");
-
-    /**
-     * Plugin 24x24 icon.
-     */
-    public static ImageIcon XML_ICON_24 = ImageProvider.get("xml_24.png");
 }

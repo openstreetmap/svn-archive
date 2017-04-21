@@ -4,6 +4,9 @@ package org.openstreetmap.josm.plugins.imageryxmlbounds.actions;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.event.ActionEvent;
+import java.io.InputStream;
+import java.lang.Exception;
+import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
@@ -14,6 +17,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 
 import javax.swing.AbstractAction;
@@ -27,6 +31,7 @@ import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import org.openstreetmap.josm.plugins.imageryxmlbounds.XmlBoundsConstants;
+import org.openstreetmap.josm.tools.ImageProvider;
 
 /**
  *
@@ -35,7 +40,7 @@ import org.openstreetmap.josm.plugins.imageryxmlbounds.XmlBoundsConstants;
  */
 public class ComputeBoundsAction extends AbstractAction implements XmlBoundsConstants {
 
-    protected static final DecimalFormat DF = new DecimalFormat("#0.0000000", new DecimalFormatSymbols(Locale.UK));
+    protected static final DecimalFormat DF = new DecimalFormat("#0.#######", new DecimalFormatSymbols(Locale.UK));
 
     protected static final String ACTION_NAME = tr("XML Imagery Bounds");
 
@@ -44,6 +49,7 @@ public class ComputeBoundsAction extends AbstractAction implements XmlBoundsCons
     private final Set<Relation> multipolygons;
     private final Set<Way> closedWays;
 
+    static { DF.setRoundingMode(RoundingMode.CEILING); }
     /**
      * Constructs a new {@code ComputeBoundsAction}.
      */
@@ -61,11 +67,7 @@ public class ComputeBoundsAction extends AbstractAction implements XmlBoundsCons
 
         putValue(SHORT_DESCRIPTION, tr("Generate Imagery XML bounds for the selection"));
         putValue(NAME, ACTION_NAME);
-        try {
-            putValue(SMALL_ICON, XML_ICON_24);
-        } catch (Exception e) {
-            Main.error(e);
-        }
+        new ImageProvider("xml_24.png").getResource().attachImageIcon(this, true);
         setEnabled(false);
 
         if (layer != null) {
@@ -185,9 +187,16 @@ public class ComputeBoundsAction extends AbstractAction implements XmlBoundsCons
     }
 
     protected static final String getImagery(String ... entries) {
+        String version = "UNKNOWN";
+        try {
+            Properties p = new Properties();
+            p.load(ComputeBoundsAction.class.getResourceAsStream("/REVISION"));
+            version = p.getProperty("Revision");
+        } catch(Exception e) {
+        }
         StringBuilder result = new StringBuilder();
         result.append("<?xml version=\"1.0\" encoding=\"").append(ENCODING).append("\" ?>\n");
-        result.append("<!-- Generated with JOSM Imagery XML Plugin version ").append(PLUGIN_VERSION).append(" -->\n");
+        result.append("<!-- Generated with JOSM Imagery XML Plugin version ").append(version).append(" -->\n");
         result.append("<imagery xmlns=\"").append(XML_NAMESPACE).append("\">\n");
         for (String entry : entries) {
             result.append(entry).append("\n");
@@ -199,7 +208,8 @@ public class ComputeBoundsAction extends AbstractAction implements XmlBoundsCons
     protected static final String getEntry(OsmPrimitive p, String bounds) {
         return getEntry(p.get(KEY_NAME), p.get(KEY_TYPE), p.get(KEY_DEFAULT), p.get(KEY_URL), bounds, p.get(KEY_PROJECTIONS),
                 p.get(KEY_LOGO_URL), p.get(KEY_EULA), p.get(KEY_ATTR_TEXT), p.get(KEY_ATTR_URL),  p.get(KEY_TERMS_TEXT),
-                p.get(KEY_TERMS_URL), p.get(KEY_COUNTRY_CODE), p.get(KEY_MAX_ZOOM), p.get(KEY_MIN_ZOOM));
+                p.get(KEY_TERMS_URL), p.get(KEY_COUNTRY_CODE), p.get(KEY_MAX_ZOOM), p.get(KEY_MIN_ZOOM), p.get(KEY_ID),
+                p.get(KEY_DATE));
     }
 
     protected static final boolean isSet(String tag) {
@@ -208,7 +218,7 @@ public class ComputeBoundsAction extends AbstractAction implements XmlBoundsCons
 
     protected static final String getEntry(String name, String type, String def, String url, String bounds, String projections,
             String logoURL, String eula, String attributionText, String attributionUrl, String termsText, String termsUrl,
-            String countryCode, String maxZoom, String minZoom) {
+            String countryCode, String maxZoom, String minZoom, String id, String date) {
         StringBuilder result = new StringBuilder();
         result.append("    <entry>\n"+
         EIGHT_SP + simpleTag(XML_NAME, name) + "\n"+
@@ -233,6 +243,12 @@ public class ComputeBoundsAction extends AbstractAction implements XmlBoundsCons
         }
         if (isSet(def) && "true".equals(def)) {
             result.append(EIGHT_SP + simpleTag(XML_DEFAULT, def) + "\n");
+        }
+        if (isSet(id)) {
+            result.append(EIGHT_SP + simpleTag(XML_ID, id, false) + "\n");
+        }
+        if (isSet(date)) {
+            result.append(EIGHT_SP + simpleTag(XML_DATE, date, false) + "\n");
         }
         if (isSet(eula)) {
             result.append(EIGHT_SP + mandatoryTag(XML_EULA, encodeUrl(eula), false) + "\n");

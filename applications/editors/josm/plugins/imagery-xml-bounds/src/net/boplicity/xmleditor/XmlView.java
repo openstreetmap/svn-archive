@@ -17,6 +17,7 @@ package net.boplicity.xmleditor;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.SortedMap;
@@ -62,8 +63,6 @@ public class XmlView extends PlainView {
         patternColors.put(Pattern.compile(TAG_CDATA), Color.GRAY);
         patternColors.put(Pattern.compile(TAG_ATTRIBUTE_PATTERN), new Color(
                 127, 0, 127));
-        patternColors.put(Pattern.compile(TAG_END_PATTERN), new Color(63, 127,
-                127));
         patternColors.put(Pattern.compile(TAG_ATTRIBUTE_VALUE), new Color(42,
                 0, 255));
         patternColors.put(Pattern.compile(TAG_COMMENT), Color.BLUE);
@@ -101,6 +100,17 @@ public class XmlView extends PlainView {
             while (matcher.find()) {
                 startMap.put(matcher.start(1), matcher.end());
                 colorMap.put(matcher.start(1), entry.getValue());
+            }
+        }
+        /* Fix end tag duplication for CDATA and comments */
+        Matcher matcher = Pattern.compile(TAG_END_PATTERN).matcher(text);
+        Color c = new Color(63, 127, 127);
+        Collection<Integer> ends = startMap.values();
+
+        while (matcher.find()) {
+            if(!ends.contains(matcher.end())) {
+                startMap.put(matcher.start(1), matcher.end());
+                colorMap.put(matcher.start(1), c);
             }
         }
 

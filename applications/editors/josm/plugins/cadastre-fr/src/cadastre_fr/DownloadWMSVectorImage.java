@@ -31,7 +31,7 @@ public class DownloadWMSVectorImage extends PleaseWaitRunnable {
         errorMessage = null;
         try {
             if (wmsLayer.grabber.getWmsInterface().retrieveInterface(wmsLayer)) {
-                if (wmsLayer.getImages().isEmpty()) {
+                if (!wmsLayer.hasImages()) {
                     // first time we grab an image for this layer
                     if (CacheControl.cacheEnabled) {
                         if (wmsLayer.grabThread.getCacheControl().loadCacheIfExist()) {
@@ -53,9 +53,10 @@ public class DownloadWMSVectorImage extends PleaseWaitRunnable {
                 }
                 // grab new images from wms server into active layer
                 wmsLayer.grab(bounds);
-            } else if (wmsLayer.getImages().size() == 0)
+            } else if (!wmsLayer.hasImages()) {
               // failed to contact WMS of find this commune. Remove layer if empty.
               Main.getLayerManager().removeLayer(wmsLayer);
+            }
         } catch (DuplicateLayerException e) {
             // we tried to grab onto a duplicated layer (removed)
             Main.warn("removed a duplicated layer");

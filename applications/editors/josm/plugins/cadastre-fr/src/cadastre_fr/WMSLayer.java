@@ -706,6 +706,10 @@ public class WMSLayer extends Layer implements ImageObserver {
         return this.images;
     }
 
+    public boolean hasImages() {
+        return images != null && !images.isEmpty();
+    }
+
     public void addImage(GeorefImage img) {
         imagesLock.lock();
         this.images.add(img);

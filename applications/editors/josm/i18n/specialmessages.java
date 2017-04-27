@@ -34,6 +34,7 @@
 /* Amenity used in multipolygons */ trc("amenity", "fire_station");
 /* Leisure used in multipolygons */ trc("leisure", "park");
 /* Leisure used in multipolygons */ trc("leisure", "track");
+/* Building used in multipolygons */ trc("building", "industrial");
 /* relation type */ trc("Relation type", "associatedStreet");
 /* relation type */ trc("Relation type", "boundary");
 /* relation type */ trc("Relation type", "bridge");

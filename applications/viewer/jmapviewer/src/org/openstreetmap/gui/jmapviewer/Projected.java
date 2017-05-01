@@ -15,6 +15,11 @@ import org.openstreetmap.gui.jmapviewer.interfaces.IProjected;
 public class Projected implements IProjected {
     private transient Point2D.Double data;
 
+    /**
+     * Constructs a new {@code Projected}.
+     * @param east easting
+     * @param north northing
+     */
     public Projected(double east, double north) {
         data = new Point2D.Double(east, north);
     }

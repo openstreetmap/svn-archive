@@ -90,7 +90,7 @@ public class TMSTileSource extends AbstractTMSTileSource {
     public TileXY projectedToTileXY(IProjected p, int zoom) {
         double mercatorWidth = 2 * Math.PI * OsmMercator.EARTH_RADIUS;
         double f = mercatorWidth * getTileSize() / osmMercator.getMaxPixels(zoom);
-        return new TileXY((p.getEast() + mercatorWidth / 2) / f , (-p.getNorth() + mercatorWidth / 2) / f);
+        return new TileXY((p.getEast() + mercatorWidth / 2) / f, (-p.getNorth() + mercatorWidth / 2) / f);
     }
 
     @Override

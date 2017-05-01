@@ -66,10 +66,7 @@ public class Projected implements IProjected {
             return false;
         }
         final Projected other = (Projected) obj;
-        if (!Objects.equals(this.data, other.data)) {
-            return false;
-        }
-        return true;
+        return Objects.equals(this.data, other.data);
     }
 }
 

@@ -45,9 +45,22 @@ public final class WikipediaApp {
     public static final Pattern WIKIDATA_PATTERN = Pattern.compile("Q\\d+");
     private static final XPath X_PATH = XPath.getInstance();
     private final String wikipediaLang;
+    private final String siteId;
 
     private WikipediaApp(final String wikipediaLang) {
+
+        // FIXME: the proper way to get any wiki's site id is through an API call:
+        // https://zh-yue.wikipedia.org/w/api.php?action=query&meta=siteinfo&siprop=general
+        // use "wikiid" value. The value may be cached as it will never change
+        String siteId = wikipediaLang.replace('-', '_');
+        switch (siteId) {
+            case "be_tarask":
+                siteId = "be_x_old";
+                break;
+        }
+
         this.wikipediaLang = wikipediaLang;
+        this.siteId = siteId + "wiki";
     }
 
     public static WikipediaApp forLanguage(final String wikipediaLang) {
@@ -262,8 +275,8 @@ public final class WikipediaApp {
             final String url = "https://www.wikidata.org/w/api.php" +
                     "?action=wbgetentities" +
                     "&props=sitelinks" +
-                    "&sites=" + wikipediaLang + "wiki" +
-                    "&sitefilter=" + wikipediaLang + "wiki" +
+                    "&sites=" + siteId +
+                    "&sitefilter=" + siteId +
                     "&format=xml" +
                     "&titles=" + articles.stream().map(Utils::encodeUrl).collect(Collectors.joining("|"));
             final Map<String, String> r = new TreeMap<>();

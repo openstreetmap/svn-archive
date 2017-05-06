@@ -28,7 +28,6 @@ import org.openstreetmap.josm.plugins.routes.xml.RoutesXMLLayer;
 public class RoutesPlugin extends Plugin implements LayerChangeListener {
 
     private final List<RouteLayer> routeLayers = new ArrayList<>();
-    private boolean isShown;
 
     public RoutesPlugin(PluginInformation info) {
         super(info);
@@ -69,51 +68,42 @@ public class RoutesPlugin extends Plugin implements LayerChangeListener {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        //new RelationEditMode(Main.map);
-        //Main.main.addLayer(new RouteLayer("Hiking trails"));
     }
 
     public void activeLayerChange(Layer oldLayer, Layer newLayer) {
         // Do nothing
     }
 
-    private void checkLayers() {
-        if (Main.map != null && Main.map.mapView != null) {
-            for (Layer layer : Main.getLayerManager().getLayers()) {
-                if (layer instanceof OsmDataLayer) {
-                    if (!isShown) {
-                        isShown = true;
-                        SwingUtilities.invokeLater(() -> {
-                            for (RouteLayer routeLayer : routeLayers) {
-                                Main.getLayerManager().addLayer(routeLayer);
-                            }
-                        });
-                    }
-                    return;
+    @Override
+    public void layerAdded(LayerAddEvent e) {
+        Layer layer = e.getAddedLayer();
+        if (layer instanceof OsmDataLayer) {
+            for (RouteLayer routeLayer : routeLayers) {
+                if (!Main.getLayerManager().containsLayer(routeLayer)) {
+                    SwingUtilities.invokeLater(() -> {
+                        Main.getLayerManager().addLayer(routeLayer);
+                    });
                 }
-            }
-            if (isShown) {
-                isShown = false;
-                SwingUtilities.invokeLater(() -> {
-                    for (RouteLayer routeLayer : routeLayers) {
-                        if (Main.getLayerManager().containsLayer(routeLayer)) {
-                            Main.getLayerManager().removeLayer(routeLayer);
-                        }
-                    }
-                });
             }
         }
     }
 
     @Override
-    public void layerAdded(LayerAddEvent e) {
-        checkLayers();
-    }
-
-    @Override
     public void layerRemoving(LayerRemoveEvent e) {
-        checkLayers();
+        for (Layer layer : e.getSource().getLayers()) {
+            if (layer instanceof OsmDataLayer)  {
+                return; /* at least one OSM layer left, do nothing */
+            }
+        }
+        if(!e.isLastLayer()) {
+            SwingUtilities.invokeLater(() -> {
+                for (RouteLayer routeLayer : routeLayers) {
+                    if (Main.getLayerManager().containsLayer(routeLayer)) {
+                        Main.getLayerManager().removeLayer(routeLayer);
+                    }
+                }
+            });
+        }
     }
 
     @Override

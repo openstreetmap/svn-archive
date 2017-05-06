@@ -153,4 +153,8 @@ public class RouteLayer extends Layer implements DataSetListenerAdapter.Listener
         datasetChanged = true;
     }
 
+    @Override
+    public synchronized void destroy() {
+        /* layer is reused, don't destroy it at all */
+    }
 }

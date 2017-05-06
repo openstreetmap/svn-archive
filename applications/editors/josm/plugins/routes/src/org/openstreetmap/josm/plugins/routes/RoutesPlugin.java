@@ -79,9 +79,9 @@ public class RoutesPlugin extends Plugin implements LayerChangeListener {
         Layer layer = e.getAddedLayer();
         if (layer instanceof OsmDataLayer) {
             for (RouteLayer routeLayer : routeLayers) {
-                if (!Main.getLayerManager().containsLayer(routeLayer)) {
+                if (!e.getSource().containsLayer(routeLayer)) {
                     SwingUtilities.invokeLater(() -> {
-                        Main.getLayerManager().addLayer(routeLayer);
+                        e.getSource().addLayer(routeLayer);
                     });
                 }
             }
@@ -98,8 +98,8 @@ public class RoutesPlugin extends Plugin implements LayerChangeListener {
         if(!e.isLastLayer()) {
             SwingUtilities.invokeLater(() -> {
                 for (RouteLayer routeLayer : routeLayers) {
-                    if (Main.getLayerManager().containsLayer(routeLayer)) {
-                        Main.getLayerManager().removeLayer(routeLayer);
+                    if (e.getSource().containsLayer(routeLayer)) {
+                        e.getSource().removeLayer(routeLayer);
                     }
                 }
             });

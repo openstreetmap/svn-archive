@@ -22,6 +22,7 @@ import java.awt.Composite;
 import java.awt.Graphics2D;
 import java.awt.Shape;
 import java.awt.Stroke;
+import java.awt.geom.AffineTransform;
 import java.awt.geom.Area;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
@@ -726,15 +727,18 @@ class RoadGui {
         lines.append(innerPath.getIterator(), false);
         g2d.draw(lines);
 
-        // g2d.setColor(new Color(32, 128, 192));
-        g2d.setColor(Color.WHITE);
-        g2d.setStroke(dashedStroke);
-        for (Path p : linePaths) {
-            lines.reset();
-            lines.append(p.getIterator(), false);
-            g2d.draw(lines);
+        AffineTransform at = g2d.getTransform();
+        // Draw dashed lines only if the affine transform supports it (see #14757)
+        if (!Double.isNaN(at.getTranslateX()) && !Double.isNaN(at.getTranslateY())) {
+            g2d.setColor(Color.WHITE);
+            g2d.setStroke(dashedStroke);
+            for (Path p : linePaths) {
+                lines.reset();
+                lines.append(p.getIterator(), false);
+                g2d.draw(lines);
+            }
+            g2d.setStroke(regularStroke);
         }
-        g2d.setStroke(regularStroke);
 
         // g2d.setColor(new Color(32, 128, 192));
         // lines.reset();

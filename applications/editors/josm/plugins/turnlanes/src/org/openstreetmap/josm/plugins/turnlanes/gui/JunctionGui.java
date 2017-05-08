@@ -178,7 +178,7 @@ class JunctionGui {
         }
     }
 
-    private final class Corner {
+    private static final class Corner {
         final double x1;
         final double y1;
 

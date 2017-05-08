@@ -45,6 +45,7 @@ import org.openstreetmap.josm.actions.search.SearchAction;
 import org.openstreetmap.josm.data.SelectionChangedListener;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.OsmPrimitiveType;
+import org.openstreetmap.josm.data.preferences.ColorProperty;
 import org.openstreetmap.josm.gui.ExtendedDialog;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import org.openstreetmap.josm.gui.tagging.ac.AutoCompletingTextField;
@@ -352,9 +353,8 @@ public class MultiTagDialog extends ExtendedDialog implements SelectionChangedLi
     }
 
     class ColoredRenderer extends DefaultTableCellRenderer {
-        private final Color highlightColor =
-                Main.pref.getColor(marktr("Multitag Background: highlight"),
-                        new Color(255, 255, 200));
+        private final Color highlightColor = new ColorProperty(
+                marktr("Multitag Background: highlight"), new Color(255, 255, 200)).get();
         @Override
         public Component getTableCellRendererComponent(JTable table, Object value, boolean
                 isSelected, boolean hasFocus, int row, int column) {

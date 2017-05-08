@@ -16,6 +16,7 @@ import javax.swing.JOptionPane;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.actions.SelectByInternalPointAction;
+import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Way;
@@ -38,52 +39,54 @@ public class SelectBoundaryAction extends JosmAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        Set<Way> selectedWays = OsmPrimitive.getFilteredSet(getLayerManager().getEditDataSet().getSelected(), Way.class);
-        Set<Node> selectedNodes = OsmPrimitive.getFilteredSet(getLayerManager().getEditDataSet().getSelected(), Node.class);
+        DataSet ds = getLayerManager().getEditDataSet();
+        if (ds != null) {
+            Collection<Way> selectedWays = ds.getSelectedWays();
+            Collection<Node> selectedNodes = ds.getSelectedNodes();
 
-        Set<Way> newWays = new HashSet<>();
+            Set<Way> newWays = new HashSet<>();
 
-        Way w = null;
+            Way w = null;
 
-        if (selectedWays.isEmpty()) {
-            if (selectedNodes.size() == 1) {
-                for (OsmPrimitive p : selectedNodes.iterator().next().getReferrers()) {
-                    if (p instanceof Way && p.isSelectable()) {
-                        w = (Way) p;
-                        break;
+            if (selectedWays.isEmpty()) {
+                if (selectedNodes.size() == 1) {
+                    for (OsmPrimitive p : selectedNodes.iterator().next().getReferrers()) {
+                        if (p instanceof Way && p.isSelectable()) {
+                            w = (Way) p;
+                            break;
+                        }
                     }
+                } else {
+                    Point p = Main.map.mapView.getMousePosition();
+                    SelectByInternalPointAction.performSelection(Main.map.mapView.getEastNorth(p.x, p.y), false, false);
+                    return;
                 }
-            } else {
-                Point p = Main.map.mapView.getMousePosition();
-                SelectByInternalPointAction.performSelection(Main.map.mapView.getEastNorth(p.x, p.y), false, false);
-                return;
+            } else if (selectedWays.size() == 1) {
+                w = selectedWays.iterator().next();
+            } else if (selectedWays.contains(lastUsedStartingWay)) {
+                w = lastUsedStartingWay; //repeated call for selected way
+                lastUsedLeft = !lastUsedLeft;
             }
-        } else if (selectedWays.size() == 1) {
-            w = selectedWays.iterator().next();
-        } else if (selectedWays.contains(lastUsedStartingWay)) {
-            w = lastUsedStartingWay; //repeated call for selected way
-            lastUsedLeft = !lastUsedLeft;
-        }
 
+            if (w == null) return; //no starting way found
+            if (!w.isSelectable()) return;
+            if (w.isClosed()) return;
+            if (w.getNodesCount() < 2) return;
 
-        if (w == null) return; //no starting way found
-        if (!w.isSelectable()) return;
-        if (w.isClosed()) return;
-        if (w.getNodesCount() < 2) return;
+            newWays.add(w);
+            lastUsedStartingWay = w;
 
-        newWays.add(w);
-        lastUsedStartingWay = w;
+            // try going left at each turn
+            if (!NodeWayUtils.addAreaBoundary(w, newWays, lastUsedLeft)) {
+                NodeWayUtils.addAreaBoundary(w, newWays, !lastUsedLeft); // try going right at each turn
+            }
 
-        // try going left at each turn
-        if (!NodeWayUtils.addAreaBoundary(w, newWays, lastUsedLeft)) {
-            NodeWayUtils.addAreaBoundary(w, newWays, !lastUsedLeft); // try going right at each turn
-        }
-
-        if (!newWays.isEmpty()) {
-            getLayerManager().getEditDataSet().setSelected(newWays);
-        } else {
-            new Notification(tr("Nothing found. Please select way that is a part of some polygon formed by connected ways"))
-            .setIcon(JOptionPane.WARNING_MESSAGE).show();
+            if (!newWays.isEmpty()) {
+                ds.setSelected(newWays);
+            } else {
+                new Notification(tr("Nothing found. Please select way that is a part of some polygon formed by connected ways"))
+                .setIcon(JOptionPane.WARNING_MESSAGE).show();
+            }
         }
     }
 
@@ -94,9 +97,6 @@ public class SelectBoundaryAction extends JosmAction {
 
     @Override
     protected void updateEnabledState(Collection<? extends OsmPrimitive> selection) {
-        if (selection == null) {
-            return;
-        }
-        setEnabled(true);
+        setEnabled(selection != null && !selection.isEmpty());
     }
 }

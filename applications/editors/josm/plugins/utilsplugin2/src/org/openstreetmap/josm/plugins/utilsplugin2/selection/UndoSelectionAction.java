@@ -35,43 +35,40 @@ public class UndoSelectionAction extends JosmAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         DataSet ds = getLayerManager().getEditDataSet();
-        LinkedList<Collection<? extends OsmPrimitive>> history = ds.getSelectionHistory();
-        if (history == null || history.isEmpty()) return; // empty history
-        int num = history.size();
+        if (ds != null) {
+            LinkedList<Collection<? extends OsmPrimitive>> history = ds.getSelectionHistory();
+            if (history == null || history.isEmpty()) return; // empty history
+            int num = history.size();
 
-        Collection<OsmPrimitive> selection = ds.getSelected();
+            Collection<OsmPrimitive> selection = ds.getSelected();
 
-        if (selection != null && selection.hashCode() != myAutomaticSelectionHash) {
-            // manual selection or another pluging selection noticed
-            index = history.indexOf(lastSel);
-            // first is selected, next list is previous selection
+            if (selection != null && selection.hashCode() != myAutomaticSelectionHash) {
+                // manual selection or another pluging selection noticed
+                index = history.indexOf(lastSel);
+                // first is selected, next list is previous selection
+            }
+            int k = 0;
+            Set<OsmPrimitive> newsel = new HashSet<>();
+            do {
+                if (index+1 < history.size()) index++; else index = 0;
+                Collection<? extends OsmPrimitive> histsel = history.get(index);
+                // remove deleted entities from selection
+                newsel.clear();
+                newsel.addAll(histsel);
+                newsel.retainAll(ds.allNonDeletedPrimitives());
+                if (!newsel.isEmpty()) break;
+                k++;
+            } while (k < num);
+
+            ds.setSelected(newsel);
+            lastSel = ds.getSelected();
+            myAutomaticSelectionHash = lastSel.hashCode();
+            // remember last automatic selection
         }
-        int k = 0;
-        Set<OsmPrimitive> newsel = new HashSet<>();
-        do {
-            if (index+1 < history.size()) index++; else index = 0;
-            Collection<? extends OsmPrimitive> histsel = history.get(index);
-            // remove deleted entities from selection
-            newsel.clear();
-            newsel.addAll(histsel);
-            newsel.retainAll(ds.allNonDeletedPrimitives());
-            if (newsel.size() > 0) break;
-            k++;
-        } while (k < num);
-
-        ds.setSelected(newsel);
-        lastSel = ds.getSelected();
-        myAutomaticSelectionHash = lastSel.hashCode();
-        // remeber last automatic selection
     }
 
     @Override
     protected void updateEnabledState() {
-        updateEnabledStateOnCurrentSelection();
-    }
-
-    @Override
-    protected void updateEnabledState(Collection<? extends OsmPrimitive> selection) {
-        setEnabled(true);
+        setEnabled(getLayerManager().getEditDataSet() != null);
     }
 }

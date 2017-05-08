@@ -37,50 +37,46 @@ public class SelectModWaysAction extends JosmAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         DataSet ds = getLayerManager().getEditDataSet();
-        Collection<OsmPrimitive> selection = ds.getSelected();
-        Set<Node> selectedNodes = OsmPrimitive.getFilteredSet(selection, Node.class);
-        ds.clearSelection(selectedNodes);
-        Command cmd;
+        if (ds != null) {
+            Collection<OsmPrimitive> selection = ds.getSelected();
+            ds.clearSelection(OsmPrimitive.getFilteredSet(selection, Node.class));
+            Command cmd;
 
-        if (Main.main.undoRedo.commands == null) return;
-        int num = Main.main.undoRedo.commands.size();
-        if (num == 0) return;
-        int k = 0, idx;
-        if (selection != null && !selection.isEmpty() && selection.hashCode() == lastHash) {
-            // we are selecting next command in history if nothing is selected
-            idx = Main.main.undoRedo.commands.indexOf(lastCmd);
-        } else {
-            idx = num;
+            if (Main.main.undoRedo.commands == null) return;
+            int num = Main.main.undoRedo.commands.size();
+            if (num == 0) return;
+            int k = 0, idx;
+            if (selection != null && !selection.isEmpty() && selection.hashCode() == lastHash) {
+                // we are selecting next command in history if nothing is selected
+                idx = Main.main.undoRedo.commands.indexOf(lastCmd);
+            } else {
+                idx = num;
+            }
+
+            Set<Way> ways = new HashSet<>(10);
+            do {  //  select next history element
+                if (idx > 0) idx--; else idx = num-1;
+                cmd = Main.main.undoRedo.commands.get(idx);
+                Collection<? extends OsmPrimitive> pp = cmd.getParticipatingPrimitives();
+                ways.clear();
+                for (OsmPrimitive p : pp) {  // find all affected ways
+                    if (p instanceof Way && !p.isDeleted()) ways.add((Way) p);
+                }
+                if (!ways.isEmpty() && !ds.getSelected().containsAll(ways)) {
+                    ds.setSelected(ways);
+                    lastCmd = cmd; // remember last used command and last selection
+                    lastHash = ds.getSelected().hashCode();
+                    return;
+                }
+                k++;
+            } while (k < num); // try to find previous command if this affects nothing
+            lastCmd = null;
+            lastHash = 0;
         }
-
-        Set<Way> ways = new HashSet<>(10);
-        do {  //  select next history element
-            if (idx > 0) idx--; else idx = num-1;
-            cmd = Main.main.undoRedo.commands.get(idx);
-            Collection<? extends OsmPrimitive> pp = cmd.getParticipatingPrimitives();
-            ways.clear();
-            for (OsmPrimitive p : pp) {  // find all affected ways
-                if (p instanceof Way && !p.isDeleted()) ways.add((Way) p);
-            }
-            if (!ways.isEmpty() && !ds.getSelected().containsAll(ways)) {
-                ds.setSelected(ways);
-                lastCmd = cmd; // remember last used command and last selection
-                lastHash = ds.getSelected().hashCode();
-                return;
-            }
-            k++;
-        } while (k < num); // try to find previous command if this affects nothing
-        lastCmd = null;
-        lastHash = 0;
     }
 
     @Override
     protected void updateEnabledState() {
-        updateEnabledStateOnCurrentSelection();
-    }
-
-    @Override
-    protected void updateEnabledState(Collection<? extends OsmPrimitive> selection) {
-        setEnabled(true);
+        setEnabled(getLayerManager().getEditDataSet() != null);
     }
 }

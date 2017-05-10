@@ -510,9 +510,6 @@ public class Address extends MapMode {
         dialog.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent arg) {
-                if (Boolean.TRUE.equals(getValue("active"))) {
-                    exitMode();
-                }
                 Main.map.selectMapMode((MapMode) Main.map.getDefaultButtonAction());
             }
         });

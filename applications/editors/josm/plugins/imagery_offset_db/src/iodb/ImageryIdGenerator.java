@@ -63,8 +63,8 @@ public final class ImageryIdGenerator {
             // WMS: if this is WMS, remove all parameters except map and layers
             if (isWMS && removeWMSParams.contains(kv[0]))
                 continue;
-            // TMS: skip parameters with variable values
-            if (kv.length > 1 && kv[1].indexOf('{') >= 0 && kv[1].indexOf('}') > 0)
+            // TMS: skip parameters with variable values and Mapbox's access token
+            if ((kv.length > 1 && kv[1].indexOf('{') >= 0 && kv[1].indexOf('}') > 0) || kv[0].equals("access_token"))
                 continue;
             qparams.put(kv[0].toLowerCase(), kv.length > 1 ? kv[1] : null);
         }

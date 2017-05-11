@@ -430,7 +430,7 @@ public class PhotoPropertyEditor {
         private LatLon getLatLon() {
             LatLon latLon;
             try {
-                latLon = LatLonDialog.parseLatLon(coords.getText());
+                latLon = LatLon.parse(coords.getText());
                 if (!latLon.isValid()) {
                     latLon = null;
                 }
@@ -452,7 +452,7 @@ public class PhotoPropertyEditor {
             LatLon latLon;
             final String coordsText = coords.getText();
             try {
-                latLon = LatLonDialog.parseLatLon(coordsText);
+                latLon = LatLon.parse(coordsText);
             } catch (IllegalArgumentException exn) {
                 latLon = null;
             }

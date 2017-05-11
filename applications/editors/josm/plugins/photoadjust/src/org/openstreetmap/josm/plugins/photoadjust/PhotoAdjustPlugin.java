@@ -77,7 +77,7 @@ public class PhotoAdjustPlugin extends Plugin implements ActiveLayerChangeListen
     public void mapFrameInitialized(MapFrame oldFrame, MapFrame newFrame) {
         if (oldFrame == null && newFrame != null) {
             Main.getLayerManager().addAndFireActiveLayerChangeListener(this);
-            PhotoAdjustMapMode adjustMode = new PhotoAdjustMapMode(newFrame, worker);
+            PhotoAdjustMapMode adjustMode = new PhotoAdjustMapMode(worker);
             adjustMode.installMapMode(newFrame);
         } else {
             Main.getLayerManager().removeActiveLayerChangeListener(this);

@@ -45,14 +45,14 @@ public class PhotoAdjustMapMode extends MapMode implements LayerChangeListener, 
     /** True if one existing GeoImageLayer is to be ignored. */
     private boolean ignoreOneGILayer = false;
 
-    public PhotoAdjustMapMode(MapFrame mapFrame, PhotoAdjustWorker worker) {
+    public PhotoAdjustMapMode(PhotoAdjustWorker worker) {
         super(tr("Adjust photos"), "photoadjust.png",
               tr("Move and position photos"),
               // It is almost impossible to find an unused shortcut.
               Shortcut.registerShortcut("mapmode:photoadjust",
                                         tr("Mode: {0}", tr("Adjust photos")),
                                         KeyEvent.CHAR_UNDEFINED, Shortcut.NONE),
-              mapFrame, Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+              Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
         GeoImageLayer.registerSupportedMapMode(this);
         initAdapters();
         this.worker = worker;

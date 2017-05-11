@@ -36,7 +36,7 @@ public final class NameManagerUtils {
      * @return the top {@link Window} of the JOSM application.
      */
     public static Window getTopWindow() {
-        Component component = Main.panel;
+        Component component = Main.parent;
         if (component != null) {
             while (component.getParent() != null) {
                 component = component.getParent();

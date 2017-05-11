@@ -12,7 +12,6 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
@@ -108,15 +107,12 @@ public final class NameManagerDialog extends JDialog {
         JMenuBar menuBar = new JMenuBar();
         JMenu aboutMenu = new JMenu(tr("About"));
         JMenuItem aboutAppButton = new JMenuItem(tr("About Plugin"));
-        aboutAppButton.addActionListener(new ActionListener() {
-
-            public void actionPerformed(ActionEvent arg0) {
-                String newline = System.getProperty("line.separator");
-                JOptionPane.showMessageDialog(NameManagerDialog.this, "Authors:" + newline + "Rafal Jachowicz, Marek Strassenburg-Kleciak"
-                        + newline + "Consultant:" + newline + "Stefanie Otte" + newline + "Powered by:" + newline
-                        + "Harman Becker Automotive Systems GmbH" + newline + "Neusoft Technology Solutions GmbH", tr("About"),
-                        JOptionPane.INFORMATION_MESSAGE);
-            }
+        aboutAppButton.addActionListener(e -> {
+            String newline = System.getProperty("line.separator");
+            JOptionPane.showMessageDialog(NameManagerDialog.this, "Authors:" + newline + "Rafal Jachowicz, Marek Strassenburg-Kleciak"
+                    + newline + "Consultant:" + newline + "Stefanie Otte" + newline + "Powered by:" + newline
+                    + "Harman Becker Automotive Systems GmbH" + newline + "Neusoft Technology Solutions GmbH", tr("About"),
+                    JOptionPane.INFORMATION_MESSAGE);
         });
         aboutMenu.add(aboutAppButton);
         menuBar.add(aboutMenu);
@@ -282,47 +278,45 @@ public final class NameManagerDialog extends JDialog {
                 level6.setEnabled(true);
             }
         }
-        country.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                String countryName = (String) country.getSelectedItem();
-                if (CountryDataMemory.getCountryCache().containsKey(countryName)) {
-                    Country countryItem = CountryDataMemory.getCountryCache().get(countryName);
-                    labelLevel1.setText("  " + countryItem.getLevel1());
-                    if ("  n/a".equals(labelLevel1.getText())) {
-                        level1.setEnabled(false);
-                    } else {
-                        level1.setEnabled(true);
-                    }
-                    labelLevel2.setText("  " + countryItem.getLevel2());
-                    if ("  n/a".equals(labelLevel2.getText())) {
-                        level2.setEnabled(false);
-                    } else {
-                        level2.setEnabled(true);
-                    }
-                    labelLevel3.setText("  " + countryItem.getLevel3());
-                    if ("  n/a".equals(labelLevel3.getText())) {
-                        level3.setEnabled(false);
-                    } else {
-                        level3.setEnabled(true);
-                    }
-                    labelLevel4.setText("  " + countryItem.getLevel4());
-                    if ("  n/a".equals(labelLevel4.getText())) {
-                        level4.setEnabled(false);
-                    } else {
-                        level4.setEnabled(true);
-                    }
-                    labelLevel5.setText("  " + countryItem.getLevel5());
-                    if ("  n/a".equals(labelLevel5.getText())) {
-                        level5.setEnabled(false);
-                    } else {
-                        level5.setEnabled(true);
-                    }
-                    labelLevel6.setText("  " + countryItem.getLevel6());
-                    if ("  n/a".equals(labelLevel6.getText())) {
-                        level6.setEnabled(false);
-                    } else {
-                        level6.setEnabled(true);
-                    }
+        country.addActionListener(e -> {
+            String countryName1 = (String) country.getSelectedItem();
+            if (CountryDataMemory.getCountryCache().containsKey(countryName1)) {
+                Country countryItem = CountryDataMemory.getCountryCache().get(countryName1);
+                labelLevel1.setText("  " + countryItem.getLevel1());
+                if ("  n/a".equals(labelLevel1.getText())) {
+                    level1.setEnabled(false);
+                } else {
+                    level1.setEnabled(true);
+                }
+                labelLevel2.setText("  " + countryItem.getLevel2());
+                if ("  n/a".equals(labelLevel2.getText())) {
+                    level2.setEnabled(false);
+                } else {
+                    level2.setEnabled(true);
+                }
+                labelLevel3.setText("  " + countryItem.getLevel3());
+                if ("  n/a".equals(labelLevel3.getText())) {
+                    level3.setEnabled(false);
+                } else {
+                    level3.setEnabled(true);
+                }
+                labelLevel4.setText("  " + countryItem.getLevel4());
+                if ("  n/a".equals(labelLevel4.getText())) {
+                    level4.setEnabled(false);
+                } else {
+                    level4.setEnabled(true);
+                }
+                labelLevel5.setText("  " + countryItem.getLevel5());
+                if ("  n/a".equals(labelLevel5.getText())) {
+                    level5.setEnabled(false);
+                } else {
+                    level5.setEnabled(true);
+                }
+                labelLevel6.setText("  " + countryItem.getLevel6());
+                if ("  n/a".equals(labelLevel6.getText())) {
+                    level6.setEnabled(false);
+                } else {
+                    level6.setEnabled(true);
                 }
             }
         });
@@ -390,7 +384,8 @@ public final class NameManagerDialog extends JDialog {
             }
         }
 
-        public void actionPerformed(ActionEvent arg0) {
+        @Override
+        public void actionPerformed(ActionEvent e) {
             if (selectedWay != null && waysInsideSelectedArea != null && !waysInsideSelectedArea.isEmpty()) {
                 if (tabPanel.getSelectedIndex() == 0) {
                     for (Way way : waysInsideSelectedArea) {
@@ -416,6 +411,7 @@ public final class NameManagerDialog extends JDialog {
             }
         }
 
+        @Override
         public void actionPerformed(ActionEvent arg0) {
             if (selectedWay != null && waysInsideSelectedArea != null && !waysInsideSelectedArea.isEmpty()) {
                 if (tabPanel.getSelectedIndex() == 1) {
@@ -443,6 +439,7 @@ public final class NameManagerDialog extends JDialog {
             }
         }
 
+        @Override
         public void actionPerformed(ActionEvent arg0) {
             setVisible(false);
         }
@@ -460,6 +457,7 @@ public final class NameManagerDialog extends JDialog {
             }
         }
 
+        @Override
         public void actionPerformed(ActionEvent arg0) {
             if (selectedWay != null && waysInsideSelectedArea != null && !waysInsideSelectedArea.isEmpty()) {
                 String countryName = (String) country.getSelectedItem();

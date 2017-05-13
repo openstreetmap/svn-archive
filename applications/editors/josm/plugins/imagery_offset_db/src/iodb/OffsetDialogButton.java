@@ -27,7 +27,7 @@ import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.projection.Projection;
-import org.openstreetmap.josm.gui.layer.ImageryLayer;
+import org.openstreetmap.josm.gui.layer.AbstractTileSourceLayer;
 import org.openstreetmap.josm.tools.ImageProvider;
 
 /**
@@ -126,8 +126,9 @@ public class OffsetDialogButton extends JButton {
      * @see #getLengthAndDirection(iodb.ImageryOffset, double, double)
      */
     private double[] getLengthAndDirection(ImageryOffset offset) {
-        ImageryLayer layer = ImageryOffsetTools.getTopImageryLayer();
-        double[] dxy = layer == null ? new double[] {0.0, 0.0} : new double[] {layer.getDx(), layer.getDy()};
+        AbstractTileSourceLayer layer = ImageryOffsetTools.getTopImageryLayer();
+        double[] dxy = layer == null ? new double[] {0.0, 0.0} :
+                new double[] {layer.getDisplaySettings().getDx(), layer.getDisplaySettings().getDy()};
         return getLengthAndDirection(offset, dxy[0], dxy[1]);
     }
 

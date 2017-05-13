@@ -2,9 +2,13 @@
 package iodb;
 
 import java.util.Map;
+import org.openstreetmap.josm.Main;
 
 import org.openstreetmap.josm.data.coor.CoordinateFormat;
+import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.coor.LatLon;
+import org.openstreetmap.josm.data.imagery.OffsetBookmark;
+import org.openstreetmap.josm.data.projection.Projection;
 
 /**
  * An imagery offset. Contains imagery identifier, zoom bracket and a location

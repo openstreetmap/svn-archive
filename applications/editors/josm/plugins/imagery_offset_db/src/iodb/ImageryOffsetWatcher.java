@@ -13,9 +13,10 @@ import java.util.TreeMap;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.coor.LatLon;
+import org.openstreetmap.josm.data.imagery.OffsetBookmark;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.NavigatableComponent.ZoomChangeListener;
-import org.openstreetmap.josm.gui.layer.ImageryLayer;
+import org.openstreetmap.josm.gui.layer.AbstractTileSourceLayer;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.gui.layer.LayerManager.LayerAddEvent;
 import org.openstreetmap.josm.gui.layer.LayerManager.LayerChangeListener;
@@ -23,6 +24,7 @@ import org.openstreetmap.josm.gui.layer.LayerManager.LayerOrderChangeEvent;
 import org.openstreetmap.josm.gui.layer.LayerManager.LayerRemoveEvent;
 import org.openstreetmap.josm.gui.layer.MainLayerManager.ActiveLayerChangeEvent;
 import org.openstreetmap.josm.gui.layer.MainLayerManager.ActiveLayerChangeListener;
+import org.openstreetmap.josm.gui.layer.imagery.TileSourceDisplaySettings;
 import org.openstreetmap.josm.tools.Destroyable;
 
 /**
@@ -112,19 +114,20 @@ public final class ImageryOffsetWatcher implements ZoomChangeListener, LayerChan
             setOffsetGood(true);
             return;
         }
-        ImageryLayer layer = ImageryOffsetTools.getTopImageryLayer();
+        AbstractTileSourceLayer layer = ImageryOffsetTools.getTopImageryLayer();
         if (layer == null) {
             setOffsetGood(true);
             return;
         }
+        TileSourceDisplaySettings displaySettings = layer.getDisplaySettings();
         LatLon center = ImageryOffsetTools.getMapCenter();
         Integer hash = layer.hashCode();
         ImageryLayerData data = layers.get(hash);
         if (data == null) {
             // create entry for this layer and mark as needing alignment
             data = new ImageryLayerData();
-            data.lastDx = layer.getDx();
-            data.lastDy = layer.getDy();
+            data.lastDx = displaySettings.getDx();
+            data.lastDy = displaySettings.getDy();
             boolean r = false;
             if (Math.abs(data.lastDx) + Math.abs(data.lastDy) > THRESHOLD) {
                 data.lastChecked = center;
@@ -134,10 +137,10 @@ public final class ImageryOffsetWatcher implements ZoomChangeListener, LayerChan
             setOffsetGood(r);
         } else {
             // now, we have a returning layer.
-            if (Math.abs(data.lastDx - layer.getDx()) + Math.abs(data.lastDy - layer.getDy()) > THRESHOLD) {
+            if (Math.abs(data.lastDx - displaySettings.getDx()) + Math.abs(data.lastDy - displaySettings.getDy()) > THRESHOLD) {
                 // offset has changed, record the current position
-                data.lastDx = layer.getDx();
-                data.lastDy = layer.getDy();
+                data.lastDx = displaySettings.getDx();
+                data.lastDy = displaySettings.getDy();
                 data.lastChecked = center;
                 storeLayerOffset(layer);
                 setOffsetGood(true);
@@ -153,21 +156,22 @@ public final class ImageryOffsetWatcher implements ZoomChangeListener, LayerChan
      * whether it has changed an offset, the currect imagery alignment is ok.
      */
     public void markGood() {
-        ImageryLayer layer = ImageryOffsetTools.getTopImageryLayer();
+        AbstractTileSourceLayer layer = ImageryOffsetTools.getTopImageryLayer();
         if (layer != null) {
+            TileSourceDisplaySettings displaySettings = layer.getDisplaySettings();
             LatLon center = ImageryOffsetTools.getMapCenter();
             Integer hash = layer.hashCode();
             ImageryLayerData data = layers.get(hash);
             if (data == null) {
                 // create entry for this layer and mark as good
                 data = new ImageryLayerData();
-                data.lastDx = layer.getDx();
-                data.lastDy = layer.getDy();
+                data.lastDx = displaySettings.getDx();
+                data.lastDy = displaySettings.getDy();
                 data.lastChecked = center;
                 layers.put(hash, data);
             } else {
-                data.lastDx = layer.getDx();
-                data.lastDy = layer.getDy();
+                data.lastDx = displaySettings.getDx();
+                data.lastDy = displaySettings.getDy();
                 data.lastChecked = center;
             }
             storeLayerOffset(layer);
@@ -198,8 +202,8 @@ public final class ImageryOffsetWatcher implements ZoomChangeListener, LayerChan
     @Override
     public void layerAdded(LayerAddEvent e) {
         Layer newLayer = e.getAddedLayer();
-        if (newLayer instanceof ImageryLayer)
-            loadLayerOffset((ImageryLayer) newLayer);
+        if (newLayer instanceof AbstractTileSourceLayer)
+            loadLayerOffset((AbstractTileSourceLayer) newLayer);
         checkOffset();
     }
 
@@ -217,7 +221,7 @@ public final class ImageryOffsetWatcher implements ZoomChangeListener, LayerChan
      * collection of ':'-separated strings: imagery_id:lat:lon:dx:dy. No need for
      * projections: nobody uses them anyway.
      */
-    private void storeLayerOffset(ImageryLayer layer) {
+    private void storeLayerOffset(AbstractTileSourceLayer layer) {
         String id = ImageryOffsetTools.getImageryID(layer);
         if (!Main.pref.getBoolean("iodb.remember.offsets", true) || id == null)
             return;
@@ -228,14 +232,15 @@ public final class ImageryOffsetWatcher implements ZoomChangeListener, LayerChan
                 iter.remove();
         }
         LatLon center = ImageryOffsetTools.getMapCenter();
-        offsets.add(id + ":" + center.lat() + ":" + center.lon() + ":" + layer.getDx() + ":" + layer.getDy());
+        offsets.add(id + ":" + center.lat() + ":" + center.lon() + ":" +
+                layer.getDisplaySettings().getDx() + ":" + layer.getDisplaySettings().getDy());
         Main.pref.putCollection("iodb.stored.offsets", offsets);
     }
 
     /**
      * Loads the current imagery layer offset from preferences.
      */
-    private void loadLayerOffset(ImageryLayer layer) {
+    private void loadLayerOffset(AbstractTileSourceLayer layer) {
         String id = ImageryOffsetTools.getImageryID(layer);
         if (!Main.pref.getBoolean("iodb.remember.offsets", true) || id == null)
             return;
@@ -248,13 +253,15 @@ public final class ImageryOffsetWatcher implements ZoomChangeListener, LayerChan
                     for (int i = 0; i < 4; i++) {
                         dparts[i] = Double.parseDouble(parts[i+1]);
                     }
-                } catch (Exception e) {
+                } catch (NumberFormatException e) {
                     continue;
                 }
                 LatLon lastPos = new LatLon(dparts[0], dparts[1]);
                 if (lastPos.greatCircleDistance(ImageryOffsetTools.getMapCenter()) < Math.max(maxDistance, 3.0) * 1000) {
                     // apply offset
-                    layer.setOffset(dparts[2], dparts[3]);
+                    OffsetBookmark bookmark = new OffsetBookmark(Main.getProjection().toCode(),
+                            layer.getName(), "Restored", dparts[2], dparts[3]);
+                    layer.getDisplaySettings().setOffsetBookmark(bookmark);
                     return;
                 }
             }

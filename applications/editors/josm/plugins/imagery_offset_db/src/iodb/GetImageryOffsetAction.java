@@ -5,6 +5,7 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -19,9 +20,10 @@ import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.data.coor.CoordinateFormat;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.projection.Projection;
-import org.openstreetmap.josm.gui.layer.ImageryLayer;
+import org.openstreetmap.josm.gui.layer.AbstractTileSourceLayer;
 import org.openstreetmap.josm.tools.ImageProvider;
 import org.openstreetmap.josm.tools.Shortcut;
+import org.xml.sax.SAXException;
 
 /**
  * Download a list of imagery offsets for the current position, let user choose which one to use.
@@ -55,7 +57,7 @@ public class GetImageryOffsetAction extends JosmAction implements ImageryOffsetW
             return;
         Projection proj = Main.map.mapView.getProjection();
         LatLon center = proj.eastNorth2latlon(Main.map.mapView.getCenter());
-        ImageryLayer layer = ImageryOffsetTools.getTopImageryLayer();
+        AbstractTileSourceLayer layer = ImageryOffsetTools.getTopImageryLayer();
         String imagery = ImageryOffsetTools.getImageryID(layer);
         if (imagery == null)
             return;
@@ -73,7 +75,7 @@ public class GetImageryOffsetAction extends JosmAction implements ImageryOffsetW
         boolean state = true;
         if (Main.map == null || Main.map.mapView == null || !Main.map.isVisible())
             state = false;
-        ImageryLayer layer = ImageryOffsetTools.getTopImageryLayer();
+        AbstractTileSourceLayer layer = ImageryOffsetTools.getTopImageryLayer();
         if (ImageryOffsetTools.getImageryID(layer) == null)
             state = false;
         setEnabled(state);
@@ -127,7 +129,7 @@ public class GetImageryOffsetAction extends JosmAction implements ImageryOffsetW
          * @param layer The topmost imagery layer.
          * @param imagery Imagery ID for the layer.
          */
-        DownloadOffsetsTask(LatLon center, ImageryLayer layer, String imagery) {
+        DownloadOffsetsTask(LatLon center, AbstractTileSourceLayer layer, String imagery) {
             super(null, tr("Loading imagery offsets..."));
             try {
                 String query = "get?lat=" + center.latToString(CoordinateFormat.DECIMAL_DEGREES)
@@ -161,7 +163,7 @@ public class GetImageryOffsetAction extends JosmAction implements ImageryOffsetW
             offsets = null;
             try {
                 offsets = new IODBReader(inp).parse();
-            } catch (Exception e) {
+            } catch (IOException | SAXException e) {
                 throw new UploadException(tr("Error processing XML response: {0}", e.getMessage()));
             }
         }

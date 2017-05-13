@@ -39,7 +39,7 @@ import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.gui.JosmUserIdentityManager;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.NavigatableComponent.ZoomChangeListener;
-import org.openstreetmap.josm.gui.layer.ImageryLayer;
+import org.openstreetmap.josm.gui.layer.AbstractTileSourceLayer;
 import org.openstreetmap.josm.gui.layer.MapViewPaintable;
 import org.openstreetmap.josm.tools.HttpClient;
 import org.openstreetmap.josm.tools.ImageProvider;
@@ -269,7 +269,7 @@ public class OffsetDialog extends JDialog implements ActionListener, ZoomChangeL
      */
     public void applyOffset() {
         if (selectedOffset instanceof ImageryOffset) {
-            ImageryLayer layer = ImageryOffsetTools.getTopImageryLayer();
+            AbstractTileSourceLayer layer = ImageryOffsetTools.getTopImageryLayer();
             ImageryOffsetTools.applyLayerOffset(layer, (ImageryOffset) selectedOffset);
             ImageryOffsetWatcher.getInstance().markGood();
             Main.map.repaint();

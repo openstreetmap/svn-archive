@@ -19,7 +19,7 @@ import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.gui.JosmUserIdentityManager;
-import org.openstreetmap.josm.gui.layer.ImageryLayer;
+import org.openstreetmap.josm.gui.layer.AbstractTileSourceLayer;
 
 /**
  * Upload the current imagery offset or an calibration geometry information.
@@ -51,7 +51,7 @@ public class StoreImageryOffsetAction extends JosmAction {
         if (Main.map == null || Main.map.mapView == null)
             return;
 
-        ImageryLayer layer = ImageryOffsetTools.getTopImageryLayer();
+        AbstractTileSourceLayer layer = ImageryOffsetTools.getTopImageryLayer();
         if (layer == null)
             return;
 
@@ -90,7 +90,7 @@ public class StoreImageryOffsetAction extends JosmAction {
         ImageryOffsetBase offsetObj;
         if (calibration == null) {
             // register imagery offset
-            if (Math.abs(layer.getDx()) < 1e-8 && Math.abs(layer.getDy()) < 1e-8) {
+            if (Math.abs(layer.getDisplaySettings().getDx()) < 1e-8 && Math.abs(layer.getDisplaySettings().getDy()) < 1e-8) {
                 if (JOptionPane.showConfirmDialog(Main.parent,
                         tr("The topmost imagery layer has no offset. Are you sure you want to upload this?"),
                         ImageryOffsetTools.DIALOG_TITLE, JOptionPane.YES_NO_OPTION) != JOptionPane.YES_OPTION)

@@ -1,14 +1,16 @@
-boundary: admin_centre, label, subarea
-route: forward, backward, stop, platform, stop_exit_only, stop_entry_only, platform_exit_only, platform_entry_only
+associatedStreet: street, house
+boundary: admin_centre, label, subarea, outer, inner
+bridge: across, outline, edge, on_bridge
+building: outline, part, contains, label, entrance, address, ridge, edge
+destination_sign: to, from, intersection, sign
+enforcement: device, from, to, force
+provides_feature: target, address, entrance, parking
 public_transport: stop, platform
 restriction: from, to, via, location_hint
-enforcement: device, from, to, force
-destination_sign: to, from, intersection, sign
+route: route, forward, backward, north, south, east, west, stop, link, stop, forward:stop, backward:stop, platform, guidepost, stop_exit_only, stop_entry_only, platform_exit_only, platform_entry_only
 site: perimeter, entrance, label
-bridge: across, under, outline, edge
-tunnel: through, outline, edge
-surveillance: camera, extent, visible, hidden
+sled: sled, alternative, walk
 street: street, address, house, associated
-collection: member, street, river, railway, address, associated
-associatedStreet: street, house
-lane_restriction: from, to, via
+surveillance: camera, extent, visible, hidden
+tunnel: through, outline, edge, in_tunnel
+waterway: main_stream, side_stream, spring

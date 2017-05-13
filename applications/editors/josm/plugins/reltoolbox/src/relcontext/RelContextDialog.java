@@ -442,9 +442,10 @@ public class RelContextDialog extends ToggleDialog implements ActiveLayerChangeL
                 ) {
             while (r.ready()) {
                 String line = r.readLine();
-                StringTokenizer t = new StringTokenizer(line, " ,;:\"");
-                if (t.hasMoreTokens()) {
-                    String type = t.nextToken();
+                String[] typeAndRoles = line.split(":", 2);
+                if (typeAndRoles.length == 2 && typeAndRoles[1].length() > 0) {
+                    String type = typeAndRoles[0].trim();
+                    StringTokenizer t = new StringTokenizer(typeAndRoles[1], " ,;\"");
                     List<String> roles = new ArrayList<>();
                     while (t.hasMoreTokens()) {
                         roles.add(t.nextToken());

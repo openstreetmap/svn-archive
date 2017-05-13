@@ -81,9 +81,9 @@ public class MultipolygonFixer extends RelationFixer {
             RelationMember m = r.getMember(i);
             if (m.isWay()) {
                 String role = null;
-                if (outerWays.contains(m.getMember())) {
+                if (outerWays.contains((Way)m.getMember())) {
                     role = "outer";
-                } else if (innerWays.contains(m.getMember())) {
+                } else if (innerWays.contains((Way)m.getMember())) {
                     role = "inner";
                 }
                 if (role != null && !role.equals(m.getRole())) {

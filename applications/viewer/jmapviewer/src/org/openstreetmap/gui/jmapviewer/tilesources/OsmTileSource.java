@@ -70,7 +70,8 @@ public class OsmTileSource {
     /**
      * The "Transport Map" OSM tile source.
      *
-     * Template for thunderforest.com
+     * Template for thunderforest.com.
+     * Requires registration of an API key (see {@link #API_KEY}).
      */
     public static class TransportMap extends AbstractOsmTileSource {
 
@@ -103,7 +104,7 @@ public class OsmTileSource {
 
         @Override
         public String getTileUrl(int zoom, int tilex, int tiley) throws IOException {
-            return this.getBaseUrl() + getTilePath(zoom, tilex, tiley); // + "?apikey=" + API_KEY;
+            return this.getBaseUrl() + getTilePath(zoom, tilex, tiley) + "?apikey=" + API_KEY;
         }
 
         @Override

@@ -26,6 +26,7 @@ import org.openstreetmap.josm.data.validation.Severity;
 import org.openstreetmap.josm.data.validation.Test;
 import org.openstreetmap.josm.data.validation.TestError;
 import org.openstreetmap.josm.data.validation.TestError.Builder;
+import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.plugins.pt_assistant.PTAssistantPlugin;
 import org.openstreetmap.josm.plugins.pt_assistant.actions.FixTask;
 import org.openstreetmap.josm.plugins.pt_assistant.actions.IncompleteMembersDownloadThread;
@@ -39,7 +40,6 @@ import org.openstreetmap.josm.plugins.pt_assistant.gui.ProceedDialog;
 import org.openstreetmap.josm.plugins.pt_assistant.utils.RouteUtils;
 import org.openstreetmap.josm.plugins.pt_assistant.utils.StopToWayAssigner;
 import org.openstreetmap.josm.plugins.pt_assistant.utils.StopUtils;
-import org.openstreetmap.josm.tools.Utils;
 
 public class PTAssistantValidatorTest extends Test {
 
@@ -409,12 +409,21 @@ public class PTAssistantValidatorTest extends Test {
 		}
 	}
 
+	@Override
+	public void startTest(ProgressMonitor progressMonitor) {
+		super.startTest(progressMonitor);
+
+		// reset the static collections in SegmentChecker:
+		SegmentChecker.reset();
+	}
+
 	/**
 	 * Method is called after all primitives has been visited, overrides the
 	 * method of the superclass.
 	 */
+	@Override
 	public void endTest() {
-		
+
 		// modify the error messages for the stop-by-stop test:
 		SegmentChecker.modifyStopByStopErrorMessages();
 
@@ -424,9 +433,6 @@ public class PTAssistantValidatorTest extends Test {
 			SegmentChecker.wrongSegments.put(error, entry.getValue());
 			this.errors.add(error);
 		}
-		
-		// reset the static collections in SegmentChecker:
-		SegmentChecker.reset();
 
 		super.endTest();
 

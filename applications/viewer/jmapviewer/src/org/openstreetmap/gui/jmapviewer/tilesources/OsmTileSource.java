@@ -71,11 +71,8 @@ public class OsmTileSource {
      * The "Transport Map" OSM tile source.
      *
      * Template for thunderforest.com.
-     * Requires registration of an API key (see {@link #API_KEY}).
      */
-    public static class TransportMap extends AbstractOsmTileSource {
-
-        private static final String API_KEY = "API_KEY_HERE";
+    public abstract static class TransportMap extends AbstractOsmTileSource {
 
         private static final String PATTERN = "https://%s.tile.thunderforest.com/transport";
 
@@ -89,6 +86,14 @@ public class OsmTileSource {
         public TransportMap() {
             super("OSM Transport Map", PATTERN, "osmtransportmap");
         }
+
+        /**
+         * Get the thunderforest API key.
+         *
+         * Needs to be registered at their web site.
+         * @return the API key
+         */
+        protected abstract String getApiKey();
 
         @Override
         public String getBaseUrl() {
@@ -104,7 +109,7 @@ public class OsmTileSource {
 
         @Override
         public String getTileUrl(int zoom, int tilex, int tiley) throws IOException {
-            return this.getBaseUrl() + getTilePath(zoom, tilex, tiley) + "?apikey=" + API_KEY;
+            return this.getBaseUrl() + getTilePath(zoom, tilex, tiley) + "?apikey=" + getApiKey();
         }
 
         @Override

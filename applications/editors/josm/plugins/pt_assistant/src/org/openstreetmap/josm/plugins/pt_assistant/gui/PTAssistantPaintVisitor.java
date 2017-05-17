@@ -4,6 +4,7 @@ package org.openstreetmap.josm.plugins.pt_assistant.gui;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -45,7 +46,7 @@ public class PTAssistantPaintVisitor extends PaintVisitor {
      * @param mv map view
      */
     public PTAssistantPaintVisitor(Graphics g, MapView mv) {
-        super(g, mv);
+        super((Graphics2D) g, mv);
         this.g = g;
         this.mv = mv;
     }

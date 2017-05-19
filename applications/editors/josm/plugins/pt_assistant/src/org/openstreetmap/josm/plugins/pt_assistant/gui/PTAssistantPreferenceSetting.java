@@ -38,7 +38,7 @@ public class PTAssistantPreferenceSetting implements SubPreferenceSetting {
         mainPanel.add(stopArea);
 
         downloadIncompleteMembers.setSelected(Main.pref.getBoolean("pt_assistant.download-incomplete", false));
-        stopArea.setSelected(Main.pref.getBoolean("pt_assistant.stop-area-tests", true));
+        stopArea.setSelected(Main.pref.getBoolean("pt_assistant.stop-area-tests", false));
 
         synchronized (gui.getDisplayPreference().getTabPane()) {
             gui.getValidatorPreference().addSubTab(this, "PT_Assistant", new JScrollPane(mainPanel));

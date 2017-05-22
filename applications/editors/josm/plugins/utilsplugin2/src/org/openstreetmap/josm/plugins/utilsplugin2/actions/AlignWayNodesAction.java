@@ -10,6 +10,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.swing.JOptionPane;
 
@@ -143,7 +144,7 @@ public class AlignWayNodesAction extends JosmAction {
 
     private Set<Way> findCommonWays(Set<Node> nodes) {
         Set<Way> ways = null;
-        for (Node n : nodes) {
+        for (Node n : nodes.stream().filter(n -> n.getDataSet() != null).collect(Collectors.toList())) {
             List<Way> referrers = OsmPrimitive.getFilteredList(n.getReferrers(), Way.class);
             if (ways == null)
                 ways = new HashSet<>(referrers);

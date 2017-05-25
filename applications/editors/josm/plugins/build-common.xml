@@ -10,7 +10,7 @@
 ** Paths are relative to the build.xml that imports this template.
 **
 -->
-<project name="plugin_common" basedir="." xmlns:jacoco="antlib:org.jacoco.ant">
+<project name="plugin_common" basedir="." xmlns:jacoco="antlib:org.jacoco.ant" xmlns:if="ant:if">
 
     <property name="josm"                   location="../../core/dist/josm-custom.jar"/>
     <property name="josm.test.build.dir"    location="../../core/test/build"/>

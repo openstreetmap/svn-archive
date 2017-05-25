@@ -76,7 +76,7 @@ public class OsmTileSource {
 
         private static final String PATTERN = "https://%s.tile.thunderforest.com/transport";
 
-        private static final String[] SERVER = { "a", "b", "c" };
+        private static final String[] SERVER = {"a", "b", "c"};
 
         private int serverNum;
 

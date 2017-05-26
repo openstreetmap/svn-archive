@@ -18,6 +18,7 @@ import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginHandler;
 import org.openstreetmap.josm.plugins.PluginInformation;
+import org.openstreetmap.josm.tools.Logging;
 
 import com.sun.media.jai.imageioimpl.ImageReadWriteSpi;
 
@@ -79,7 +80,9 @@ public class GeoToolsPlugin extends Plugin {
             @SuppressWarnings("unchecked")
             Iterator<IIOServiceProvider> riter = ServiceLoader.load((Class<IIOServiceProvider>) categories.next(), loader).iterator();
             while (riter.hasNext()) {
-                ioRegistry.registerServiceProvider(riter.next());
+                IIOServiceProvider provider = riter.next();
+                Logging.debug("Registering " + provider.getClass());
+                ioRegistry.registerServiceProvider(provider);
             }
         }
     }

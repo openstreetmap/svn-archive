@@ -6,57 +6,57 @@
 	<classpathentry exported="true" kind="lib" path="lib/commons-beanutils-1.9.2-noclassprop.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/commons-pool-1.5.4.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/GeographicLib-Java-1.44.jar"/>
-	<classpathentry kind="lib" path="lib/gt-api-17.1.jar">
+	<classpathentry kind="lib" path="lib/gt-api-18-SNAPSHOT.jar">
 		<attributes>
 			<attribute name="javadoc_location" value="http://docs.geotools.org/stable/javadocs/"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="lib/gt-coverage-17.1.jar">
+	<classpathentry kind="lib" path="lib/gt-coverage-18-SNAPSHOT.jar">
 		<attributes>
 			<attribute name="javadoc_location" value="http://docs.geotools.org/stable/javadocs/"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="lib/gt-data-17.1.jar">
+	<classpathentry kind="lib" path="lib/gt-data-18-SNAPSHOT.jar">
 		<attributes>
 			<attribute name="javadoc_location" value="http://docs.geotools.org/stable/javadocs/"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="lib/gt-epsg-extension-17.1.jar">
+	<classpathentry kind="lib" path="lib/gt-epsg-extension-18-SNAPSHOT.jar">
 		<attributes>
 			<attribute name="javadoc_location" value="http://docs.geotools.org/stable/javadocs/"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="lib/gt-epsg-hsql-17.1.jar">
+	<classpathentry kind="lib" path="lib/gt-epsg-hsql-18-SNAPSHOT.jar">
 		<attributes>
 			<attribute name="javadoc_location" value="http://docs.geotools.org/stable/javadocs/"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="lib/gt-geotiff-17.1.jar">
+	<classpathentry kind="lib" path="lib/gt-geotiff-18-SNAPSHOT.jar">
 		<attributes>
 			<attribute name="javadoc_location" value="http://docs.geotools.org/stable/javadocs/"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="lib/gt-main-17.1.jar">
+	<classpathentry kind="lib" path="lib/gt-main-18-SNAPSHOT.jar">
 		<attributes>
 			<attribute name="javadoc_location" value="http://docs.geotools.org/stable/javadocs/"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="lib/gt-metadata-17.1.jar">
+	<classpathentry kind="lib" path="lib/gt-metadata-18-SNAPSHOT.jar">
 		<attributes>
 			<attribute name="javadoc_location" value="http://docs.geotools.org/stable/javadocs/"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="lib/gt-opengis-17.1.jar">
+	<classpathentry kind="lib" path="lib/gt-opengis-18-SNAPSHOT.jar">
 		<attributes>
 			<attribute name="javadoc_location" value="http://docs.geotools.org/stable/javadocs/"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="lib/gt-referencing-17.1.jar">
+	<classpathentry kind="lib" path="lib/gt-referencing-18-SNAPSHOT.jar">
 		<attributes>
 			<attribute name="javadoc_location" value="http://docs.geotools.org/stable/javadocs/"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="lib/gt-shapefile-17.1.jar">
+	<classpathentry kind="lib" path="lib/gt-shapefile-18-SNAPSHOT.jar">
 		<attributes>
 			<attribute name="javadoc_location" value="http://docs.geotools.org/stable/javadocs/"/>
 		</attributes>

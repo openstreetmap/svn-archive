@@ -1,17 +1,5 @@
 /*
  * GPLv2 or 3, Copyright (c) 2010  Andrzej Zaborowski
- *
- * Implements a fake MapView that we can pass to WMSLayer's .paint,
- * this will give us two things:
- *  # We'll be able to tell WMSLayer.paint() what area we want it
- *    to download (it ignores the "bounds" parameter) and override
- *    isVisible and friends as needed, and
- *  # We'll receive notifications from Grabber when we need to
- *    repaint (and call WMSLayer's .paint again) because the
- *    Grabber downloaded some or all of the tiles that we asked
- *    WMSLayer for and WMSLayer created the Grabber passing it
- *    our MapView.  Otherwise we wouldn't be able to tell when
- *    this happened and could only guess.
  */
 package wmsturbochallenge;
 
@@ -24,6 +12,19 @@ import org.openstreetmap.josm.data.ProjectionBounds;
 import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.gui.MapView;
 
+/**
+ * Implements a fake MapView that we can pass to WMSLayer's .paint,
+ * this will give us two things:
+ *  # We'll be able to tell WMSLayer.paint() what area we want it
+ *    to download (it ignores the "bounds" parameter) and override
+ *    isVisible and friends as needed, and
+ *  # We'll receive notifications from Grabber when we need to
+ *    repaint (and call WMSLayer's .paint again) because the
+ *    Grabber downloaded some or all of the tiles that we asked
+ *    WMSLayer for and WMSLayer created the Grabber passing it
+ *    our MapView.  Otherwise we wouldn't be able to tell when
+ *    this happened and could only guess.
+ */
 class FakeMapView extends MapView {
     public ProjectionBounds view_bounds;
     public MapView parent;
@@ -35,8 +36,9 @@ class FakeMapView extends MapView {
     public double scale;
     public double max_east_west;
 
-    public FakeMapView(MapView parent, double scale) {
-        super(null, null, null); //TODO MapView constructor contains registering listeners and other code, that probably shouldn't be called in fake map view
+    FakeMapView(MapView parent, double scale) {
+        // TODO: MapView constructor contains registering listeners and other code, that probably shouldn't be called in fake map view
+        super(null, null, null);
         this.parent = parent;
         this.scale = scale;
 

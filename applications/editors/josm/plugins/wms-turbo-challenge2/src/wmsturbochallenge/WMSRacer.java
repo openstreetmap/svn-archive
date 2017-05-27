@@ -1,7 +1,5 @@
 /*
  * GPLv2 or 3, Copyright (c) 2010  Andrzej Zaborowski
- *
- * This is the main class for the game plugin.
  */
 package wmsturbochallenge;
 
@@ -25,6 +23,9 @@ import org.openstreetmap.josm.gui.layer.MainLayerManager.ActiveLayerChangeListen
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
 
+/**
+ * This is the main class for the game plugin.
+ */
 public class WMSRacer extends Plugin implements LayerChangeListener, ActiveLayerChangeListener {
     public WMSRacer(PluginInformation info) {
         super(info);
@@ -85,12 +86,13 @@ public class WMSRacer extends Plugin implements LayerChangeListener, ActiveLayer
              * like that or rendering in "stripes" at different
              * horizontal scanlines (lines equidistant from
              * camera eye)) */
-            for (Layer l : frame.mapView.getLayerManager().getLayers())
+            for (Layer l : frame.mapView.getLayerManager().getLayers()) {
                 if (l.isBackgroundLayer()) {
                     groundLayer = l;
                     setEnabled(true);
                     return;
                 }
+            }
 
             groundLayer = null;
             setEnabled(false);

@@ -1,9 +1,5 @@
 /*
  * GPLv2 or 3, Copyright (c) 2010  Andrzej Zaborowski
- *
- * This class simulates a car engine.  What does a car engine do?  It
- * makes a pc-speaker-like buzz.  The PC Speaker could only emit
- * a (nearly) square wave and we simulate it here for maximum realism.
  */
 package wmsturbochallenge;
 
@@ -15,8 +11,13 @@ import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.DataLine;
 import javax.sound.sampled.SourceDataLine;
 
+/**
+ * This class simulates a car engine.  What does a car engine do?  It
+ * makes a pc-speaker-like buzz.  The PC Speaker could only emit
+ * a (nearly) square wave and we simulate it here for maximum realism.
+ */
 class EngineSound {
-    public EngineSound() {
+    EngineSound() {
         rpm = 0.0;
     }
 
@@ -78,11 +79,11 @@ class EngineSound {
 
         if (accel > 0.0 && rpm > 1.0 + n * 0.2 && speed > 0.0) {
             rpm = 0.3 + n * 0.2;
-            n ++;
+            n++;
         } else if (accel < 0.0 && rpm < 0.3) {
             if (n > 0) {
                 rpm = 0.7 + n * 0.1;
-                n --;
+                n--;
             } else
                 rpm = 0.2;
         }
@@ -132,16 +133,16 @@ class EngineSound {
 
             bufferlen *= 2;
             byte[] buffer = new byte[bufferlen];
-            for (int b = 0; b < bufferlen; ) {
+            for (int b = 0; b < bufferlen;) {
                 int j;
-                for (j = wavelen / 2; j > 0; j --) {
-                    buffer[b ++] = (byte) (value >> 8);
-                    buffer[b ++] = (byte) (value & 0xff);
+                for (j = wavelen / 2; j > 0; j--) {
+                    buffer[b++] = (byte) (value >> 8);
+                    buffer[b++] = (byte) (value & 0xff);
                 }
                 value = 0x10000 - value;
-                for (j = wavelen - wavelen / 2; j > 0; j --) {
-                    buffer[b ++] = (byte) (value >> 8);
-                    buffer[b ++] = (byte) (value & 0xff);
+                for (j = wavelen - wavelen / 2; j > 0; j--) {
+                    buffer[b++] = (byte) (value >> 8);
+                    buffer[b++] = (byte) (value & 0xff);
                 }
                 value = 0x10000 - value;
             }

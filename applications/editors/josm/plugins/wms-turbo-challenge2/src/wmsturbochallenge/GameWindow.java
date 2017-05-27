@@ -1,7 +1,5 @@
 /*
  * GPLv2 or 3, Copyright (c) 2010  Andrzej Zaborowski
- *
- * This implements the game logic.
  */
 package wmsturbochallenge;
 
@@ -37,6 +35,9 @@ import org.openstreetmap.josm.data.gpx.WayPoint;
 import org.openstreetmap.josm.gui.layer.GpxLayer;
 import org.openstreetmap.josm.gui.layer.Layer;
 
+/**
+ * This implements the game logic.
+ */
 public class GameWindow extends JFrame implements ActionListener {
     public GameWindow(Layer ground) {
         setTitle(tr("The Ultimate WMS Super-speed Turbo Challenge II"));
@@ -47,8 +48,9 @@ public class GameWindow extends JFrame implements ActionListener {
         setResizable(false);
 
         while (s.getScreenSize().width < width * scale ||
-                s.getScreenSize().height < height * scale)
-            scale --;
+                s.getScreenSize().height < height * scale) {
+            scale--;
+        }
         add(panel);
 
         setVisible(true);
@@ -78,8 +80,9 @@ public class GameWindow extends JFrame implements ActionListener {
         car_engine = new EngineSound();
         car_engine.start();
 
-        for (int i = 0; i < maxsprites; i ++)
+        for (int i = 0; i < maxsprites; i++) {
             sprites[i] = new sprite_pos();
+        }
 
         generate_sky();
     }
@@ -119,8 +122,9 @@ public class GameWindow extends JFrame implements ActionListener {
 
         public void save_trace() {
             int len = 0;
-            for (Collection<WayPoint> seg : trackSegs)
+            for (Collection<WayPoint> seg : trackSegs) {
                 len += seg.size();
+            }
 
             /* Don't save traces shorter than 5s */
             if (len <= 5)
@@ -342,6 +346,7 @@ public class GameWindow extends JFrame implements ActionListener {
 
     int frame;
     boolean downloading = false;
+
     protected void screen_repaint() {
         /* Draw background first */
         sky_paint();
@@ -350,10 +355,11 @@ public class GameWindow extends JFrame implements ActionListener {
         ground_paint();
 
         /* Messages */
-        frame ++;
-        if ((frame & 8) == 0 && downloading)
+        frame++;
+        if ((frame & 8) == 0 && downloading) {
             screen.drawImage(loading.getImage(), centre -
                     loading.getIconWidth() / 2, 50, this);
+        }
 
         /* Sprites */
         sprites_paint();
@@ -407,14 +413,14 @@ public class GameWindow extends JFrame implements ActionListener {
         /* Request the image from ground layer */
         ground.paint(ground_view.graphics, ground_view, null);
 
-        for (int y = (int) (height * horizon + 0.1); y < height; y ++) {
+        for (int y = (int) (height * horizon + 0.1); y < height; y++) {
             /* Assume a 60 deg vertical Field of View when
              * calculating the distance at given pixel.  */
             double dist = ele / (1.0 * y / height - 0.6);
             double lat_off = lat + (dist - cardist) * cos;
             double lon_off = lon + (dist - cardist) * sin;
 
-            for (int x = 0; x < width; x ++) {
+            for (int x = 0; x < width; x++) {
                 double p_x = dist * (x - centre) / height;
 
                 EastNorth en = new EastNorth(
@@ -438,7 +444,7 @@ public class GameWindow extends JFrame implements ActionListener {
         sky = sky_image.getGraphics();
 
         int n = (int) (Math.random() * sw * 0.03);
-        for (int i = 0; i < n; i ++) {
+        for (int i = 0; i < n; i++) {
             int t = (int) (Math.random() * 5.0);
             int x = (int) (Math.random() *
                     (sw - cloud[t].getIconWidth()));
@@ -489,14 +495,14 @@ public class GameWindow extends JFrame implements ActionListener {
         }
     }
 
-    /* sizes decides how many zoom levels the sprites have.  We
+    /** sizes decides how many zoom levels the sprites have.  We
      * could do just normal scalling according to distance but
      * that's not what old games did, they had prescaled sprites
      * for the different distances and you could see the feature
      * grow discretely as you approached it.  */
-    protected final static int sizes = 8;
+    protected static final int sizes = 8;
 
-    protected final static int maxsprites = 32;
+    protected static final int maxsprites = 32;
     protected sprite_pos sprites[] = new sprite_pos[maxsprites];
 
     protected void sprites_paint() {
@@ -536,7 +542,7 @@ public class GameWindow extends JFrame implements ActionListener {
             int sx = cactus[type].getIconWidth();
             int sy = cactus[type].getIconHeight();
 
-            sprite_pos pos = sprites[i ++];
+            sprite_pos pos = sprites[i++];
             pos.dist = dist;
             pos.sprite = cactus[type].getImage();
             pos.sx = (int) (sx * cardist * 0.7 / dist);
@@ -547,7 +553,7 @@ public class GameWindow extends JFrame implements ActionListener {
 
         Arrays.sort(sprites, 0, i);
         for (sprite_pos sprite : sprites)
-            if (i --> 0)
+            if (i-- > 0)
                 screen.drawImage(sprite.sprite,
                         sprite.x, sprite.y,
                         sprite.sx, sprite.sy, this);
@@ -555,7 +561,7 @@ public class GameWindow extends JFrame implements ActionListener {
                 break;
 
         if (splashframe >= 0) {
-            splashframe ++;
+            splashframe++;
             if (splashframe >= 8)
                 splashframe = -1;
 
@@ -565,7 +571,7 @@ public class GameWindow extends JFrame implements ActionListener {
             int sy = cactus[type].getIconHeight();
             Image image = cactus[type].getImage();
 
-            for (i = 0; i < 50; i ++) {
+            for (i = 0; i < 50; i++) {
                 int x = (int) (Math.random() * sx);
                 int y = (int) (Math.random() * sy);
                 int w = (int) (Math.random() * 20);
@@ -583,6 +589,7 @@ public class GameWindow extends JFrame implements ActionListener {
     }
 
     public boolean no_super_repaint = false;
+
     protected class GamePanel extends JPanel {
         public GamePanel() {
             setBackground(Color.BLACK);
@@ -606,6 +613,7 @@ public class GameWindow extends JFrame implements ActionListener {
             Toolkit.getDefaultToolkit().sync();
         }
     }
+
     JPanel panel = new GamePanel();
 
     protected void quit() {
@@ -630,6 +638,7 @@ public class GameWindow extends JFrame implements ActionListener {
      * potential threading issues.
      */
     protected Timer timer;
+
     @Override
     public void actionPerformed(ActionEvent e) {
         move();
@@ -680,7 +689,7 @@ public class GameWindow extends JFrame implements ActionListener {
 
             /* Switch vehicle */
             if (key == KeyEvent.VK_V)
-                if (current_car ++>= 1)
+                if (current_car++ >= 1)
                     current_car = 0;
         }
 
@@ -701,5 +710,6 @@ public class GameWindow extends JFrame implements ActionListener {
                 key_down[3] = false;
         }
     }
+
     protected FakeMapView ground_view;
 }

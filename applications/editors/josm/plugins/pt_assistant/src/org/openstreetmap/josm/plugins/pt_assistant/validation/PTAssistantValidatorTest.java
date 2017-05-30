@@ -35,7 +35,7 @@ import org.openstreetmap.josm.plugins.pt_assistant.data.PTRouteSegment;
 import org.openstreetmap.josm.plugins.pt_assistant.data.PTStop;
 import org.openstreetmap.josm.plugins.pt_assistant.data.PTWay;
 import org.openstreetmap.josm.plugins.pt_assistant.gui.IncompleteMembersDownloadDialog;
-import org.openstreetmap.josm.plugins.pt_assistant.gui.PTAssistantLayer;
+import org.openstreetmap.josm.plugins.pt_assistant.gui.PTAssistantLayerManager;
 import org.openstreetmap.josm.plugins.pt_assistant.gui.ProceedDialog;
 import org.openstreetmap.josm.plugins.pt_assistant.utils.RouteUtils;
 import org.openstreetmap.josm.plugins.pt_assistant.utils.StopToWayAssigner;
@@ -59,14 +59,11 @@ public class PTAssistantValidatorTest extends Test {
 	public static final int ERROR_CODE_STOP_AREA_NO_PLATFORM = 3763;
 	public static final int ERROR_CODE_STOP_AREA_COMPARE_RELATIONS = 3764;
 
-	private PTAssistantLayer layer;
-
 	public PTAssistantValidatorTest() {
 		super(tr("Public Transport Assistant tests"),
 				tr("Check if route relations are compatible with public transport version 2"));
 
-		layer = PTAssistantLayer.getLayer();
-		DataSet.addSelectionListener(layer);
+		DataSet.addSelectionListener(PTAssistantLayerManager.PTLM);
 
 	}
 
@@ -490,7 +487,7 @@ public class PTAssistantValidatorTest extends Test {
 		// repaint the relation in the pt_assistant layer:
 		if (testError.getPrimitives().iterator().next().getType().equals(OsmPrimitiveType.RELATION)) {
 			Relation relationToBeFixed = (Relation) testError.getPrimitives().iterator().next();
-			this.layer.repaint(relationToBeFixed);
+			PTAssistantLayerManager.PTLM.getLayer().repaint(relationToBeFixed);
 		}
 
 		// reset the last fix:
@@ -567,15 +564,15 @@ public class PTAssistantValidatorTest extends Test {
 	}
 
 	public void addFixVariants(List<List<PTWay>> fixVariants) {
-		layer.addFixVariants(fixVariants);
+		PTAssistantLayerManager.PTLM.getLayer().addFixVariants(fixVariants);
 	}
 
 	public void clearFixVariants() {
-		layer.clearFixVariants();
+		PTAssistantLayerManager.PTLM.getLayer().clearFixVariants();
 	}
 
 	public List<PTWay> getFixVariant(Character c) {
-		return layer.getFixVariant(c);
+		return PTAssistantLayerManager.PTLM.getLayer().getFixVariant(c);
 	}
 
 	@SuppressWarnings("unused")

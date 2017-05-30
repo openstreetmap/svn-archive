@@ -20,7 +20,7 @@ import org.openstreetmap.josm.data.validation.TestError;
 import org.openstreetmap.josm.gui.dialogs.relation.GenericRelationEditor;
 import org.openstreetmap.josm.gui.dialogs.relation.RelationEditor;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
-import org.openstreetmap.josm.plugins.pt_assistant.gui.PTAssistantLayer;
+import org.openstreetmap.josm.plugins.pt_assistant.gui.PTAssistantLayerManager;
 import org.openstreetmap.josm.plugins.pt_assistant.utils.RouteUtils;
 
 /**
@@ -196,7 +196,7 @@ public abstract class Checker {
         editor.setVisible(true);
 
         // make the current relation purple in the pt_assistant layer:
-        PTAssistantLayer.getLayer().repaint(r);
+        PTAssistantLayerManager.PTLM.getLayer().repaint(r);
 
     }
 

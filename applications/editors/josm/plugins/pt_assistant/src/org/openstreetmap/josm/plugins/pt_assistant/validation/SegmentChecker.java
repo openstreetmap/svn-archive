@@ -36,7 +36,7 @@ import org.openstreetmap.josm.plugins.pt_assistant.data.PTRouteDataManager;
 import org.openstreetmap.josm.plugins.pt_assistant.data.PTRouteSegment;
 import org.openstreetmap.josm.plugins.pt_assistant.data.PTStop;
 import org.openstreetmap.josm.plugins.pt_assistant.data.PTWay;
-import org.openstreetmap.josm.plugins.pt_assistant.gui.PTAssistantLayer;
+import org.openstreetmap.josm.plugins.pt_assistant.gui.PTAssistantLayerManager;
 import org.openstreetmap.josm.plugins.pt_assistant.utils.StopToWayAssigner;
 
 /**
@@ -113,7 +113,7 @@ public class SegmentChecker extends Checker {
 
 	/**
 	 * Used for unit tests
-	 * 
+	 *
 	 * @param error
 	 *            test error
 	 * @return wrong route segment
@@ -636,7 +636,7 @@ public class SegmentChecker extends Checker {
 	}
 
 	/**
-	 * Finds fixes using sorting and removal. 
+	 * Finds fixes using sorting and removal.
 	 */
 	protected void findFixes() {
 
@@ -896,7 +896,7 @@ public class SegmentChecker extends Checker {
 		// display the fix variants:
 		final PTAssistantValidatorTest test = (PTAssistantValidatorTest) testError.getTester();
 		test.addFixVariants(fixVariants);
-		PTAssistantLayer.getLayer().repaint((Relation) testError.getPrimitives().iterator().next());
+		PTAssistantLayerManager.PTLM.getLayer().repaint((Relation) testError.getPrimitives().iterator().next());
 
 		// prepare the variables for the key listener:
 		final TestError testErrorParameter = testError;
@@ -905,10 +905,12 @@ public class SegmentChecker extends Checker {
 		Main.map.mapView.requestFocus();
 		Main.map.mapView.addKeyListener(new KeyListener() {
 
+			@Override
 			public void keyTyped(KeyEvent e) {
 				// TODO Auto-generated method stub
 			}
 
+			@Override
 			public void keyPressed(KeyEvent e) {
 				Character typedKey = e.getKeyChar();
 				Character typedKeyUpperCase = typedKey.toString().toUpperCase().toCharArray()[0];
@@ -924,6 +926,7 @@ public class SegmentChecker extends Checker {
 				}
 			}
 
+			@Override
 			public void keyReleased(KeyEvent e) {
 				// TODO Auto-generated method stub
 			}

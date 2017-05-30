@@ -7,7 +7,7 @@ import java.awt.KeyboardFocusManager;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -17,9 +17,7 @@ import javax.swing.Icon;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.RenameLayerAction;
 import org.openstreetmap.josm.data.Bounds;
-import org.openstreetmap.josm.data.SelectionChangedListener;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
-import org.openstreetmap.josm.data.osm.OsmPrimitiveType;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
@@ -45,26 +43,18 @@ import org.openstreetmap.josm.tools.ImageProvider;
  *
  */
 public final class PTAssistantLayer extends Layer
-        implements SelectionChangedListener, PropertyChangeListener, LayerChangeListener {
+        implements PropertyChangeListener, LayerChangeListener {
 
-    private static PTAssistantLayer layer;
     private List<OsmPrimitive> primitives = new ArrayList<>();
     private PTAssistantPaintVisitor paintVisitor;
     private HashMap<Character, List<PTWay>> fixVariants = new HashMap<>();
     private HashMap<Way, List<Character>> wayColoring = new HashMap<>();
 
-    private PTAssistantLayer() {
+    public PTAssistantLayer() {
         super("pt_assistant layer");
         KeyboardFocusManager.getCurrentKeyboardFocusManager().addPropertyChangeListener(this);
         Main.getLayerManager().addLayerChangeListener(this);
-        layer = this;
-    }
-
-    public static PTAssistantLayer getLayer() {
-        if (layer == null) {
-            new PTAssistantLayer();
-        }
-        return layer;
+        Main.getLayerManager().addLayer(this);
     }
 
     /**
@@ -134,6 +124,12 @@ public final class PTAssistantLayer extends Layer
         return this.fixVariants.get(Character.toUpperCase(c));
     }
 
+    public void setPrimitives(List<OsmPrimitive> primitives)
+    {
+    	this.primitives.clear();
+    	this.primitives.addAll(primitives);
+    }
+
     @Override
     public void paint(final Graphics2D g, final MapView mv, Bounds bounds) {
 
@@ -192,34 +188,6 @@ public final class PTAssistantLayer extends Layer
     }
 
     /**
-     * Listens to a selection change
-     */
-    @Override
-    public void selectionChanged(Collection<? extends OsmPrimitive> newSelection) {
-
-        ArrayList<Relation> routes = new ArrayList<>();
-
-        for (OsmPrimitive primitive : newSelection) {
-            if (primitive.getType().equals(OsmPrimitiveType.RELATION)) {
-                Relation relation = (Relation) primitive;
-                if (RouteUtils.isTwoDirectionRoute(relation)) {
-                    routes.add(relation);
-                }
-
-            }
-        }
-
-        if (!routes.isEmpty()) {
-            this.primitives.clear();
-            this.primitives.addAll(routes);
-            if (!Main.getLayerManager().containsLayer(this)) {
-                Main.getLayerManager().addLayer(this);
-            }
-        }
-
-    }
-
-    /**
      * Listens to a focus change, sets the primitives attribute to the route
      * relation in the top Relation Editor and repaints the map
      */
@@ -238,11 +206,9 @@ public final class PTAssistantLayer extends Layer
                 Relation relation = editor.getRelation();
 
                 if (RouteUtils.isTwoDirectionRoute(relation)) {
-
                     this.repaint(relation);
 
                 }
-
             }
         }
     }
@@ -295,5 +261,17 @@ public final class PTAssistantLayer extends Layer
             Main.map.mapView.repaint();
         }
 
+        if (event.getRemovedLayer() instanceof OsmDataLayer && event.getSource().getLayersOfType(OsmDataLayer.class).size() < 1)
+            event.scheduleRemoval(Collections.singleton(this));
+
+        if(event.getRemovedLayer() == this)
+        	PTAssistantLayerManager.PTLM.resetLayer();
+    }
+
+    @Override
+    public synchronized void destroy() {
+    	KeyboardFocusManager.getCurrentKeyboardFocusManager().removePropertyChangeListener(this);
+        Main.getLayerManager().removeLayerChangeListener(this);
+    	super.destroy();
     }
 }

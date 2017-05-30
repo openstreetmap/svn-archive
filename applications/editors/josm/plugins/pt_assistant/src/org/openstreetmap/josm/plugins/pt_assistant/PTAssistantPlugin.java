@@ -58,7 +58,7 @@ public class PTAssistantPlugin extends Plugin {
     public void mapFrameInitialized(MapFrame oldFrame, MapFrame newFrame) {
         if (oldFrame == null && newFrame != null) {
             repeatLastFixMenu.setEnabled(false);
-            Main.map.addMapMode(new IconToggleButton(new AddStopPositionAction(Main.map)));
+            Main.map.addMapMode(new IconToggleButton(new AddStopPositionAction()));
         } else if (oldFrame != null && newFrame == null) {
             repeatLastFixMenu.setEnabled(false);
         }

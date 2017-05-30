@@ -19,7 +19,6 @@ import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.WaySegment;
-import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.tools.ImageProvider;
 import org.openstreetmap.josm.tools.Shortcut;
 
@@ -36,14 +35,13 @@ public class AddStopPositionAction extends MapMode {
     private final Cursor cursorJoinNode;
     private final Cursor cursorJoinWay;
 
-	public AddStopPositionAction(MapFrame mapFrame) {
+	public AddStopPositionAction() {
 		super(tr("Add stop position"),
 				"bus",
 				tr("Add stop position"),
 				Shortcut.registerShortcut("mapmode:stop_position",
                         tr("Mode: {0}", tr("Add stop position")),
                         KeyEvent.VK_T, Shortcut.DIRECT),
-				mapFrame,
 				getCursor());
 
 		cursorJoinNode = ImageProvider.getCursor("crosshair", "joinnode");

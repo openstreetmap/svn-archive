@@ -5,21 +5,30 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.Component;
 import java.awt.GraphicsEnvironment;
+import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
+import javax.json.JsonArray;
+import javax.json.JsonObject;
+import javax.json.JsonReader;
+import javax.json.spi.JsonProvider;
 import javax.swing.Icon;
 import javax.swing.JOptionPane;
 
 import org.geotools.factory.Hints;
 import org.geotools.geometry.jts.JTS;
+import org.geotools.metadata.iso.citation.Citations;
 import org.geotools.referencing.AbstractIdentifiedObject;
 import org.geotools.referencing.CRS;
+import org.geotools.referencing.NamedIdentifier;
 import org.geotools.referencing.crs.AbstractCRS;
 import org.geotools.referencing.crs.AbstractDerivedCRS;
 import org.geotools.referencing.crs.AbstractSingleCRS;
@@ -53,6 +62,7 @@ import org.openstreetmap.josm.tools.ImageOverlay;
 import org.openstreetmap.josm.tools.ImageProvider;
 import org.openstreetmap.josm.tools.ImageProvider.ImageSizes;
 import org.openstreetmap.josm.tools.UserCancelException;
+import org.openstreetmap.josm.tools.Utils;
 
 import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.Point;
@@ -77,6 +87,8 @@ public abstract class GeographicReader extends AbstractReader {
 
     protected CoordinateReferenceSystem crs;
     protected MathTransform transform;
+
+    private static final Map<String, Integer> esriWkid = new TreeMap<>();
 
     public GeographicReader(GeographicHandler handler, GeographicHandler[] defaultHandlers) {
         this.nodes = new HashMap<>();
@@ -286,9 +298,56 @@ public abstract class GeographicReader extends AbstractReader {
         return result;
     }
 
+    private static void loadEsriWkid() throws IOException {
+        Main.info("Loading ESRI WKID database...");
+        try (InputStream in = GeographicReader.class.getResourceAsStream(OdConstants.ESRI_WKID);
+            JsonReader json = JsonProvider.provider().createReader(in)) {
+            JsonObject root = json.readObject();
+            JsonArray wkids = root.getJsonArray("wkids");
+            JsonArray labels = root.getJsonArray("labels");
+            if (wkids.size() != labels.size()) {
+                throw new IllegalStateException();
+            }
+            for (int i = 0; i < wkids.size(); i++) {
+                esriWkid.put(labels.getString(i), wkids.getInt(i));
+            }
+        }
+        Main.info("ESRI WKID database loaded");
+    }
+
+    private static Integer getEpsgCodeFromEsriWkid(String wkid) {
+        if (esriWkid.isEmpty()) {
+            try {
+                loadEsriWkid();
+            } catch (IOException e) {
+                Main.error(e);
+            }
+        }
+        return esriWkid.get(wkid);
+    }
+
     protected void findMathTransform(Component parent, boolean findSimiliarCrs)
             throws FactoryException, UserCancelException, GeoMathTransformException {
         try {
+            // Geotools relies on Authority identifiers to find suitable transformations
+            // but this information is optional in WKT and not defined in ESRI WKID database, so often missing in real-world files
+            if (crs instanceof AbstractIdentifiedObject && crs.getIdentifiers().isEmpty()) {
+                // If no identifier, attempt to find one in embedded ESRI database
+                String wkid = crs.getName().getCode();
+                if (wkid != null) {
+                    Integer epsgCode = getEpsgCodeFromEsriWkid(wkid);
+                    if (epsgCode != null) {
+                        try {
+                            Field f = AbstractIdentifiedObject.class.getDeclaredField("identifiers");
+                            Utils.setObjectsAccessible(f);
+                            f.set(crs, Collections.singleton(new NamedIdentifier(Citations.fromName("EPSG"), epsgCode.toString())));
+                        } catch (ReflectiveOperationException | SecurityException e) {
+                            Main.error(e);
+                        }
+                    }
+                }
+            }
+            // Find math transformation
             transform = CRS.findMathTransform(crs, wgs84);
         } catch (OperationNotFoundException e) {
             Main.info(crs.getName()+": "+e.getMessage()); // Bursa wolf parameters required.

@@ -123,4 +123,5 @@ public abstract class OdConstants {
      */
     public static final String RESOURCE_PATH = "/resources/org/openstreetmap/josm/plugins/opendata/core/resources/";
     public static final String DICTIONARY_FR = RESOURCE_PATH+"dictionary.fr.csv";
+    public static final String ESRI_WKID = RESOURCE_PATH+"wkid.json";
 }

@@ -5,7 +5,6 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
-import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
 import java.util.Collection;
@@ -27,7 +26,10 @@ import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
 import org.openstreetmap.josm.data.osm.visitor.paint.StyledMapRenderer;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.layer.Layer;
-import org.openstreetmap.josm.gui.mappaint.styleelement.LabelCompositionStrategy;
+import org.openstreetmap.josm.gui.mappaint.Cascade;
+import org.openstreetmap.josm.gui.mappaint.Environment;
+import org.openstreetmap.josm.gui.mappaint.MultiCascade;
+import org.openstreetmap.josm.gui.mappaint.StyleKeys;
 import org.openstreetmap.josm.gui.mappaint.styleelement.TextLabel;
 import org.openstreetmap.josm.tools.ColorHelper;
 import org.openstreetmap.josm.tools.ImageProvider;
@@ -50,6 +52,7 @@ public class PublicTransportLayer extends Layer {
             return;
         }
         final StyledMapRenderer renderer = new StyledMapRenderer(g, mv, false);
+        renderer.getSettings(false);
 
         final Collection<Relation> selectedRelations = mv.getLayerManager().getEditLayer().data.getSelectedRelations();
         final MultiMap<Pair<Node, Node>, String> segmentRefs = new MultiMap<>();
@@ -86,14 +89,21 @@ public class PublicTransportLayer extends Layer {
     }
 
     protected void drawRefLabels(StyledMapRenderer renderer, MultiMap<Pair<Node, Node>, String> segmentRefs) {
+        Environment env = new Environment();
+        env.mc = new MultiCascade();
+        Cascade c = env.mc.getOrCreateCascade("default");
+        c.put(StyleKeys.FONT_FAMILY, "SansSerif");
+        c.put(StyleKeys.FONT_SIZE, 16);
+        Color color = new Color(0x80FFFFFF, true);
+
         for (Pair<Node, Node> nodePair : segmentRefs.keySet()) {
             final String label = Utils.join(tr(", "), new TreeSet<>(segmentRefs.get(nodePair)));
-            final TextLabel text = new TextLabel(new LabelCompositionStrategy.StaticLabelCompositionStrategy(label),
-                    new Font("SansSerif", Font.PLAIN, 16), 0, 0, new Color(0x80FFFFFF, true), 0f, null);
+            c.put(StyleKeys.TEXT, label);
+            final TextLabel text = TextLabel.create(env, color, false);
             final Way way = new Way();
             way.addNode(nodePair.a);
             way.addNode(nodePair.b);
-            renderer.drawTextOnPath(way, text);
+            renderer.drawText(way, text);
         }
     }
 

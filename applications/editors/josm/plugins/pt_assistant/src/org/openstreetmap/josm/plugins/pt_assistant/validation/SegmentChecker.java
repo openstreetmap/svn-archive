@@ -1009,6 +1009,16 @@ public class SegmentChecker extends Checker {
 	 *            fix
 	 */
 	private static Command carryOutSingleFix(TestError testError, List<PTWay> fix) {
+
+		// wait:
+		synchronized (SegmentChecker.class) {
+			try {
+				SegmentChecker.class.wait(1500);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+
 		// Zoom to the problematic ways:
 		final Collection<OsmPrimitive> waysToZoom = new ArrayList<>();
 		for (Object highlightedPrimitive : testError.getHighlighted()) {
@@ -1030,7 +1040,6 @@ public class SegmentChecker extends Checker {
 			try {
 				SegmentChecker.class.wait(1500);
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}

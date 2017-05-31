@@ -17,7 +17,6 @@ import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.data.validation.Test;
 import org.openstreetmap.josm.data.validation.TestError;
-import org.openstreetmap.josm.gui.dialogs.relation.GenericRelationEditor;
 import org.openstreetmap.josm.gui.dialogs.relation.RelationEditor;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import org.openstreetmap.josm.plugins.pt_assistant.gui.PTAssistantLayerManager;
@@ -132,7 +131,8 @@ public abstract class Checker {
         if (testError.getCode() != PTAssistantValidatorTest.ERROR_CODE_STOP_BY_STOP
                 && testError.getCode() != PTAssistantValidatorTest.ERROR_CODE_DIRECTION
                 && testError.getCode() != PTAssistantValidatorTest.ERROR_CODE_CONSTRUCTION
-                && testError.getCode() != PTAssistantValidatorTest.ERROR_CODE_ROAD_TYPE) {
+                && testError.getCode() != PTAssistantValidatorTest.ERROR_CODE_ROAD_TYPE
+                && testError.getCode() != PTAssistantValidatorTest.ERROR_CODE_END_STOP) {
             return null;
         }
 
@@ -154,7 +154,6 @@ public abstract class Checker {
                 final Collection<OsmPrimitive> zoomParameter = primitivesToZoom;
 
                 if (SwingUtilities.isEventDispatchThread()) {
-
                     showRelationEditorAndZoom(layerParameter, relationParameter, zoomParameter);
 
                 } else {
@@ -162,20 +161,15 @@ public abstract class Checker {
                     SwingUtilities.invokeLater(new Runnable() {
                         @Override
                         public void run() {
-
                             showRelationEditorAndZoom(layerParameter, relationParameter, zoomParameter);
-
                         }
                     });
-
                 }
-
                 return command;
             }
         }
 
         return null;
-
     }
 
     private static void showRelationEditorAndZoom(OsmDataLayer layer, Relation r, Collection<OsmPrimitive> primitives) {
@@ -189,7 +183,7 @@ public abstract class Checker {
         r.setMembers(sortedRelationMembers);
 
         // create editor:
-        GenericRelationEditor editor = (GenericRelationEditor) RelationEditor.getEditor(layer, r,
+        RelationEditor editor = RelationEditor.getEditor(layer, r,
                 r.getMembersFor(primitives));
 
         // open editor:

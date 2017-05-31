@@ -464,10 +464,12 @@ public class PTAssistantValidatorTest extends Test {
 	 */
 	@Override
 	public boolean isFixable(TestError testError) {
-		if (testError.getCode() == ERROR_CODE_DIRECTION || testError.getCode() == ERROR_CODE_ROAD_TYPE
-				|| testError.getCode() == ERROR_CODE_CONSTRUCTION || testError.getCode() == ERROR_CODE_SORTING
-				|| testError.getCode() == PTAssistantValidatorTest.ERROR_CODE_SOLITARY_STOP_POSITION
-				|| testError.getCode() == PTAssistantValidatorTest.ERROR_CODE_PLATFORM_PART_OF_HIGHWAY) {
+		if (testError.getCode() == ERROR_CODE_DIRECTION
+				|| testError.getCode() == ERROR_CODE_ROAD_TYPE
+				|| testError.getCode() == ERROR_CODE_CONSTRUCTION
+				|| testError.getCode() == ERROR_CODE_SORTING
+				|| testError.getCode() == ERROR_CODE_END_STOP
+				|| testError.getCode() == ERROR_CODE_PLATFORM_PART_OF_HIGHWAY) {
 			return true;
 		}
 
@@ -495,13 +497,11 @@ public class PTAssistantValidatorTest extends Test {
 
 		List<Command> commands = new ArrayList<>();
 
-		if (testError.getCode() == ERROR_CODE_ROAD_TYPE || testError.getCode() == ERROR_CODE_CONSTRUCTION) {
+		if (testError.getCode() == ERROR_CODE_ROAD_TYPE
+				|| testError.getCode() == ERROR_CODE_CONSTRUCTION
+				|| testError.getCode() == ERROR_CODE_DIRECTION
+				|| testError.getCode() == ERROR_CODE_END_STOP) {
 			commands.add(WayChecker.fixErrorByZooming(testError));
-		}
-
-		if (testError.getCode() == ERROR_CODE_DIRECTION) {
-			commands.add(WayChecker.fixErrorByZooming(testError));
-
 		}
 
 		if (testError.getCode() == ERROR_CODE_SORTING) {

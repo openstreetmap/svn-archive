@@ -82,7 +82,7 @@ public class PTAssistantValidatorTest extends Test {
 			// check if stop positions are on a way:
 			nodeChecker.performSolitaryStopPositionTest();
 
-			if (Main.pref.getBoolean("pt_assistant.stop-area-tests", true) == true) {
+			if (Main.pref.getBoolean("pt_assistant.stop-area-tests", false) == true) {
 				// check if stop positions are in any stop_area relation:
 				nodeChecker.performNodePartOfStopAreaTest();
 			}
@@ -95,7 +95,7 @@ public class PTAssistantValidatorTest extends Test {
 			// check that platforms are not part of any way:
 			nodeChecker.performPlatformPartOfWayTest();
 
-			if (Main.pref.getBoolean("pt_assistant.stop-area-tests", true) == true) {
+			if (Main.pref.getBoolean("pt_assistant.stop-area-tests", false) == true) {
 				// check if platforms are in any stop_area relation:
 				nodeChecker.performNodePartOfStopAreaTest();
 			}
@@ -124,7 +124,7 @@ public class PTAssistantValidatorTest extends Test {
 		}
 
 		// Do some testing on stop area relations
-		if (Main.pref.getBoolean("pt_assistant.stop-area-tests", true) == true && StopUtils.isStopArea(r)) {
+		if (Main.pref.getBoolean("pt_assistant.stop-area-tests", false) == true && StopUtils.isStopArea(r)) {
 
 			StopChecker stopChecker = new StopChecker(r, this);
 

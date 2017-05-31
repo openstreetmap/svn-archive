@@ -49,7 +49,7 @@ public class PTAssistantValidatorTest extends Test {
 	public static final int ERROR_CODE_DIRECTION = 3731;
 	public static final int ERROR_CODE_END_STOP = 3741;
 	public static final int ERROR_CODE_SPLIT_WAY = 3742;
-	public static final int ERROR_CODE_RELAITON_MEMBER_ROLES = 3743;
+	public static final int ERROR_CODE_RELATION_MEMBER_ROLES = 3743;
 	public static final int ERROR_CODE_SOLITARY_STOP_POSITION = 3751;
 	public static final int ERROR_CODE_PLATFORM_PART_OF_HIGHWAY = 3752;
 	public static final int ERROR_CODE_STOP_NOT_SERVED = 3753;
@@ -400,7 +400,7 @@ public class PTAssistantValidatorTest extends Test {
 		}
 
 		for (TestError error : segmentChecker.getErrors()) {
-			if (error.getCode() != PTAssistantValidatorTest.ERROR_CODE_RELAITON_MEMBER_ROLES) {
+			if (error.getCode() != PTAssistantValidatorTest.ERROR_CODE_RELATION_MEMBER_ROLES) {
 				this.errors.add(error);
 			}
 		}

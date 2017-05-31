@@ -73,7 +73,7 @@ public class SegmentChecker extends Checker {
 			List<OsmPrimitive> highlighted = new ArrayList<>(1);
 			highlighted.add(rm.getMember());
 			Builder builder = TestError.builder(this.test, Severity.WARNING,
-					PTAssistantValidatorTest.ERROR_CODE_RELAITON_MEMBER_ROLES);
+					PTAssistantValidatorTest.ERROR_CODE_RELATION_MEMBER_ROLES);
 			builder.message(tr("PT: Relation member roles do not match tags"));
 			builder.primitives(primitives);
 			builder.highlight(highlighted);

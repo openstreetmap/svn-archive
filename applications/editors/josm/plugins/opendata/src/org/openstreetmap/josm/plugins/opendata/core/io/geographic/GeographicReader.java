@@ -298,9 +298,18 @@ public abstract class GeographicReader extends AbstractReader {
         return result;
     }
 
+    private static InputStream getEsriWkidStream() {
+        InputStream in = GeographicReader.class.getResourceAsStream(OdConstants.ESRI_WKID);
+        if (in == null) {
+            // Setup different for unit tests
+            in = GeographicReader.class.getResourceAsStream(OdConstants.ESRI_WKID.replaceFirst("/resources", ""));
+        }
+        return in;
+    }
+
     private static void loadEsriWkid() throws IOException {
         Main.info("Loading ESRI WKID database...");
-        try (InputStream in = GeographicReader.class.getResourceAsStream(OdConstants.ESRI_WKID);
+        try (InputStream in = getEsriWkidStream();
             JsonReader json = JsonProvider.provider().createReader(in)) {
             JsonObject root = json.readObject();
             JsonArray wkids = root.getJsonArray("wkids");

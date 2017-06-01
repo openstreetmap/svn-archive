@@ -32,6 +32,7 @@ import org.openstreetmap.josm.gui.layer.LayerManager.LayerOrderChangeEvent;
 import org.openstreetmap.josm.gui.layer.LayerManager.LayerRemoveEvent;
 import org.openstreetmap.josm.gui.layer.LayerPositionStrategy;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
+import org.openstreetmap.josm.plugins.pt_assistant.PTAssistantPlugin;
 import org.openstreetmap.josm.plugins.pt_assistant.data.PTWay;
 import org.openstreetmap.josm.plugins.pt_assistant.utils.RouteUtils;
 import org.openstreetmap.josm.tools.ImageProvider;
@@ -264,8 +265,10 @@ public final class PTAssistantLayer extends Layer
         if (event.getRemovedLayer() instanceof OsmDataLayer && event.getSource().getLayersOfType(OsmDataLayer.class).size() < 1)
             event.scheduleRemoval(Collections.singleton(this));
 
-        if(event.getRemovedLayer() == this)
+        if(event.getRemovedLayer() == this) {
         	PTAssistantLayerManager.PTLM.resetLayer();
+        	PTAssistantPlugin.clearHighlightedRelations();
+        }
     }
 
     @Override

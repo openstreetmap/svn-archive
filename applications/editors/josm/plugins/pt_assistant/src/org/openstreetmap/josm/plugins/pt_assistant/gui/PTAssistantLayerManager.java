@@ -7,6 +7,7 @@ import org.openstreetmap.josm.data.SelectionChangedListener;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.OsmPrimitiveType;
 import org.openstreetmap.josm.data.osm.Relation;
+import org.openstreetmap.josm.plugins.pt_assistant.PTAssistantPlugin;
 import org.openstreetmap.josm.plugins.pt_assistant.utils.RouteUtils;
 
 public class PTAssistantLayerManager implements SelectionChangedListener{
@@ -39,13 +40,14 @@ public class PTAssistantLayerManager implements SelectionChangedListener{
                 if (RouteUtils.isTwoDirectionRoute((Relation) primitive)) {
                     routes.add(primitive);
                 }
-
             }
         }
 
         if (!routes.isEmpty()) {
         	getLayer().setPrimitives(routes);
+        	PTAssistantPlugin.clearHighlightedRelations();
+        	for(OsmPrimitive primitive : routes)
+        		PTAssistantPlugin.addHighlightedRelation((Relation) primitive);
         }
-
     }
 }

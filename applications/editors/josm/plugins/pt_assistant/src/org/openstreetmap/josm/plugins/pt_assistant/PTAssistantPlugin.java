@@ -1,10 +1,14 @@
 // License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.pt_assistant;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.swing.JMenuItem;
 import javax.swing.SwingUtilities;
 
 import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.validation.OsmValidator;
 import org.openstreetmap.josm.gui.IconToggleButton;
 import org.openstreetmap.josm.gui.MainMenu;
@@ -13,6 +17,7 @@ import org.openstreetmap.josm.gui.preferences.PreferenceSetting;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
 import org.openstreetmap.josm.plugins.pt_assistant.actions.AddStopPositionAction;
+import org.openstreetmap.josm.plugins.pt_assistant.actions.EditHighlightedRelationsAction;
 import org.openstreetmap.josm.plugins.pt_assistant.actions.RepeatLastFixAction;
 import org.openstreetmap.josm.plugins.pt_assistant.data.PTRouteSegment;
 import org.openstreetmap.josm.plugins.pt_assistant.gui.PTAssistantPreferenceSetting;
@@ -32,8 +37,14 @@ public class PTAssistantPlugin extends Plugin {
      */
     private static PTRouteSegment lastFix;
 
+    /* list of relation currently highlighted by the layer */
+    private static List<Relation> highlightedRelations;
+
     /* item of the Tools menu for repeating the last fix */
     private static JMenuItem repeatLastFixMenu;
+
+    /* edit the currently highlighted relations */
+    private static JMenuItem editHighlightedRelationsMenu;
 
     /**
      * Main constructor.
@@ -47,8 +58,11 @@ public class PTAssistantPlugin extends Plugin {
 
         OsmValidator.addTest(PTAssistantValidatorTest.class);
 
+        highlightedRelations = new ArrayList<>();
         RepeatLastFixAction repeatLastFixAction = new RepeatLastFixAction();
+        EditHighlightedRelationsAction editHighlightedRelationsAction = new EditHighlightedRelationsAction();
         repeatLastFixMenu = MainMenu.add(Main.main.menu.toolsMenu, repeatLastFixAction, false);
+        editHighlightedRelationsMenu = MainMenu.add(Main.main.menu.toolsMenu, editHighlightedRelationsAction, false);
     }
 
     /**
@@ -58,9 +72,11 @@ public class PTAssistantPlugin extends Plugin {
     public void mapFrameInitialized(MapFrame oldFrame, MapFrame newFrame) {
         if (oldFrame == null && newFrame != null) {
             repeatLastFixMenu.setEnabled(false);
+            editHighlightedRelationsMenu.setEnabled(false);
             Main.map.addMapMode(new IconToggleButton(new AddStopPositionAction()));
         } else if (oldFrame != null && newFrame == null) {
             repeatLastFixMenu.setEnabled(false);
+            editHighlightedRelationsMenu.setEnabled(false);
         }
     }
 
@@ -102,4 +118,30 @@ public class PTAssistantPlugin extends Plugin {
         lastFix = segment;
     }
 
+	public static List<Relation> getHighlightedRelations() {
+		return new ArrayList<>(highlightedRelations);
+	}
+
+	public static void addHighlightedRelation(Relation highlightedRelation) {
+		highlightedRelations.add(highlightedRelation);
+		if(!editHighlightedRelationsMenu.isEnabled()) {
+			SwingUtilities.invokeLater(new Runnable() {
+	            @Override
+	            public void run() {
+	            	editHighlightedRelationsMenu.setEnabled(true);
+	            }
+	        });
+		}
+
+	}
+
+	public static void clearHighlightedRelations() {
+		highlightedRelations.clear();
+		SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+            	editHighlightedRelationsMenu.setEnabled(false);
+            }
+        });
+	}
 }

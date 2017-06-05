@@ -17,6 +17,7 @@ import org.openstreetmap.josm.gui.preferences.PreferenceSetting;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
 import org.openstreetmap.josm.plugins.pt_assistant.actions.AddStopPositionAction;
+import org.openstreetmap.josm.plugins.pt_assistant.actions.EdgeSelectionAction;
 import org.openstreetmap.josm.plugins.pt_assistant.actions.EditHighlightedRelationsAction;
 import org.openstreetmap.josm.plugins.pt_assistant.actions.RepeatLastFixAction;
 import org.openstreetmap.josm.plugins.pt_assistant.data.PTRouteSegment;
@@ -74,6 +75,7 @@ public class PTAssistantPlugin extends Plugin {
             repeatLastFixMenu.setEnabled(false);
             editHighlightedRelationsMenu.setEnabled(false);
             Main.map.addMapMode(new IconToggleButton(new AddStopPositionAction()));
+            Main.map.addMapMode(new IconToggleButton(new EdgeSelectionAction()));
         } else if (oldFrame != null && newFrame == null) {
             repeatLastFixMenu.setEnabled(false);
             editHighlightedRelationsMenu.setEnabled(false);

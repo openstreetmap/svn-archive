@@ -19,6 +19,7 @@ import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.gui.MainMenu;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
+import org.openstreetmap.josm.tools.JosmRuntimeException;
 import org.openstreetmap.josm.tools.Utils;
 
 /**
@@ -36,22 +37,18 @@ public class ImportImagePlugin extends Plugin {
     JMenu mainmenu = null;
     JosmAction loadFileAction = null;
 
-    // custom Classloader
-    static ClassLoader pluginClassLoader;
+    // custom Classloader to load resources from the main JAR
+    static ClassLoader pluginClassLoader = createPluginClassLoader();
 
     // plugin proerties
     static Properties pluginProps;
 
     // path constants
-    static final String PLUGIN_DIR = 
-            Main.pref.getPluginsDirectory().getAbsolutePath() + "/ImportImagePlugin/";
-    static final String PLUGINPROPERTIES_PATH = 
-            Main.pref.getPluginsDirectory().getAbsolutePath() + "/ImportImagePlugin/pluginProperties.properties";
-    static final String PLUGINLIBRARIES_DIR = 
-            Main.pref.getPluginsDirectory().getAbsolutePath() + "/ImportImagePlugin/lib/";
+    static final String PLUGIN_DIR = Main.pref.getPluginsDirectory().getAbsolutePath() + "/ImportImagePlugin/";
     static final String PLUGINPROPERTIES_FILENAME = "pluginProperties.properties";
-    static final String LOGGING_PROPERTIES_FILEPATH = 
-            Main.pref.getPluginsDirectory().getAbsolutePath() + "/ImportImagePlugin/log4j.properties/";
+    static final String PLUGINPROPERTIES_PATH = PLUGIN_DIR + PLUGINPROPERTIES_FILENAME;
+    static final String PLUGINLIBRARIES_DIR = PLUGIN_DIR + "lib/";
+    static final String LOGGING_PROPERTIES_FILEPATH = PLUGIN_DIR + "log4j.properties/";
 
     public Properties getPluginProps() {
         return pluginProps;
@@ -66,9 +63,6 @@ public class ImportImagePlugin extends Plugin {
         super(info);
 
         try {
-            // First create custom ClassLoader to load resources from the main JAR
-            pluginClassLoader = createPluginClassLoader();
-
             // Initialize logger
             initializeLogger(pluginClassLoader);
 
@@ -205,14 +199,14 @@ public class ImportImagePlugin extends Plugin {
     /**
      * get a plugin-specific classloader.
      */
-    private ClassLoader createPluginClassLoader() throws MalformedURLException {
-        ClassLoader loader = null;
-        loader = URLClassLoader.newInstance(
-                new URL[] {new File(Main.pref.getPluginsDirectory().getAbsolutePath() + "/ImportImagePlugin.jar").toURI().toURL()},
-                ImportImagePlugin.class.getClassLoader()
-                );
-
-        return loader;
+    private static ClassLoader createPluginClassLoader() {
+        try {
+            return URLClassLoader.newInstance(
+                    new URL[] {new File(Main.pref.getPluginsDirectory().getAbsolutePath() + "/ImportImagePlugin.jar").toURI().toURL()},
+                    ImportImagePlugin.class.getClassLoader()
+                    );
+        } catch (MalformedURLException e) {
+            throw new JosmRuntimeException(e);
+        }
     }
-
 }

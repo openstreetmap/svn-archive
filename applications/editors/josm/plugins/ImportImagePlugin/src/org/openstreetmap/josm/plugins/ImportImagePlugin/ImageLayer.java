@@ -4,11 +4,13 @@ package org.openstreetmap.josm.plugins.ImportImagePlugin;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.Graphics2D;
+import java.awt.GraphicsEnvironment;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 
 import javax.media.jai.PlanarImage;
 import javax.swing.AbstractAction;
@@ -72,7 +74,10 @@ public class ImageLayer extends Layer {
 
         this.imageFile = file;
         this.image = (BufferedImage) createImage();
-        layericon = new ImageIcon(ImportImagePlugin.pluginClassLoader.getResource("images/layericon.png"));
+        URL iconURL = ImportImagePlugin.pluginClassLoader.getResource("images/layericon.png");
+        if (iconURL != null) {
+            layericon = new ImageIcon(iconURL);
+        }
     }
 
     /**
@@ -95,19 +100,21 @@ public class ImageLayer extends Layer {
             throw new IOException(e.getMessage());
         } catch (Exception e) {
             if (e.getMessage().contains("No projection file found")) {
-                ExtendedDialog ex = new ExtendedDialog(Main.parent, tr("Warning"), 
-                    new String[] {tr("Default image projection"), tr("JOSM''s current projection"), tr("Cancel")});
-                // CHECKSTYLE.OFF: LineLength
-                ex.setContent(tr("No projection file (.prj) found.<br>"
-                    + "You can choose the default image projection ({0}) or JOSM''s current editor projection ({1}) as original image projection.<br>"
-                    + "(It can be changed later from the right click menu of the image layer.)", 
-                    ImportImagePlugin.pluginProps.getProperty("default_crs_srid"), Main.getProjection().toCode()));
-                // CHECKSTYLE.ON: LineLength
-                ex.showDialog();
-                int val = ex.getValue();
-                if (val == 3) {
-                    logger.debug("No projection and user declined un-projected use");
-                    throw new LayerCreationCanceledException();
+                int val = 2;
+                if (!GraphicsEnvironment.isHeadless()) {
+                    ExtendedDialog ex = new ExtendedDialog(Main.parent, tr("Warning"), 
+                        new String[] {tr("Default image projection"), tr("JOSM''s current projection"), tr("Cancel")});
+                    // CHECKSTYLE.OFF: LineLength
+                    ex.setContent(tr("No projection file (.prj) found.<br>"
+                        + "You can choose the default image projection ({0}) or JOSM''s current editor projection ({1}) as original image projection.<br>"
+                        + "(It can be changed later from the right click menu of the image layer.)", 
+                        ImportImagePlugin.pluginProps.getProperty("default_crs_srid"), Main.getProjection().toCode()));
+                    // CHECKSTYLE.ON: LineLength
+                    val = ex.showDialog().getValue();
+                    if (val == 3) {
+                        logger.debug("No projection and user declined un-projected use");
+                        throw new LayerCreationCanceledException();
+                    }
                 }
                 CoordinateReferenceSystem src = null;
                 try {
@@ -298,7 +305,7 @@ public class ImageLayer extends Layer {
      * Action that creates a dialog GUI element with properties of a layer.
      *
      */
-    public class LayerPropertiesAction extends AbstractAction {
+    public static class LayerPropertiesAction extends AbstractAction {
         public ImageLayer imageLayer;
 
         public LayerPropertiesAction(ImageLayer imageLayer) {
@@ -306,6 +313,7 @@ public class ImageLayer extends Layer {
             this.imageLayer = imageLayer;
         }
 
+        @Override
         public void actionPerformed(ActionEvent arg0) {
             LayerPropertiesDialog layerProps = new LayerPropertiesDialog(imageLayer, PluginOperations.crsDescriptions);
             layerProps.setLocation(Main.parent.getWidth() / 4, Main.parent.getHeight() / 4);
@@ -316,7 +324,7 @@ public class ImageLayer extends Layer {
     /**
      * Exception which represents that the layer creation has been canceled by the user.
      */
-    class LayerCreationCanceledException extends IOException{
+    static class LayerCreationCanceledException extends IOException{
     }
 
     public CoordinateReferenceSystem getSourceRefSys() {

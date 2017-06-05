@@ -70,7 +70,7 @@ public class UndeleteAction extends JosmAction {
                         }
 
                         HistoryOsmPrimitive hPrimitive1 = h.getLatest();
-                        HistoryOsmPrimitive hPrimitive2;
+                        HistoryOsmPrimitive hPrimitive2 = null;
 
                         boolean visible = hPrimitive1.isVisible();
 
@@ -81,11 +81,15 @@ public class UndeleteAction extends JosmAction {
 
                             primitive = layer.data.getPrimitiveById(id, type);
                         } else {
+                            // We search n-1 version with redaction robustness
+                            int idx = 1;
+                            int n = h.getNumVersions();
+                            while (hPrimitive2 == null && idx < n) {
+                                hPrimitive2 =  h.getByVersion(n - idx++);
+                            }
                             if (type.equals(OsmPrimitiveType.NODE)) {
                                 // We get version and user from the latest version,
                                 // coordinates and tags from n-1 version
-                                hPrimitive2 = h.getByVersion(h.getNumVersions() - 1);
-
                                 Node node = new Node(id, (int) hPrimitive1.getVersion());
 
                                 HistoryNode hNode = (HistoryNode) hPrimitive2;
@@ -98,7 +102,6 @@ public class UndeleteAction extends JosmAction {
                                 // We get version and user from the latest version,
                                 // nodes and tags from n-1 version
                                 hPrimitive1 = h.getLatest();
-                                hPrimitive2 = h.getByVersion(h.getNumVersions() - 1);
 
                                 Way way = new Way(id, (int) hPrimitive1.getVersion());
 
@@ -118,7 +121,6 @@ public class UndeleteAction extends JosmAction {
                             } else {
                                 primitive = new Relation();
                                 hPrimitive1 = h.getLatest();
-                                hPrimitive2 = h.getByVersion(h.getNumVersions() - 1);
 
                                 Relation rel = new Relation(id, (int) hPrimitive1.getVersion());
                                 HistoryRelation hRel = (HistoryRelation) hPrimitive2;

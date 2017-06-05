@@ -41,7 +41,7 @@ public class AddStopPositionAction extends MapMode {
 				tr("Add stop position"),
 				Shortcut.registerShortcut("mapmode:stop_position",
                         tr("Mode: {0}", tr("Add stop position")),
-                        KeyEvent.VK_R, Shortcut.CTRL_SHIFT),
+                        KeyEvent.VK_K, Shortcut.CTRL_SHIFT),
 				getCursor());
 
 		cursorJoinNode = ImageProvider.getCursor("crosshair", "joinnode");

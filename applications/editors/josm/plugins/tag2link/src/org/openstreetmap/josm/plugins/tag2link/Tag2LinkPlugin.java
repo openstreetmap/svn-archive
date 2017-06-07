@@ -26,22 +26,8 @@ import org.openstreetmap.josm.plugins.tag2link.listeners.SelectionPopupListener;
 /**
  * Main class of tag2link plugin.
  * @author Don-vip
- * History:
- * 0.3d 15-Aug-2012 Add ref:(FR:)?FINESS and osm.fr link for ref:(FR:)?INSEE (josm#7961)
- * 0.3c 22-Dec-2011 Add contact namespace for website
- * 0.3b 29-Oct-2011 Add UAI support
- * 0.3a 29-Oct-2011 Add Country-code prefix, IGN support + not-yet-tested POST requests support
- * 0.2d 24-Oct-2011 Icon for Mail action
- * 0.2c 24-Oct-2011 Another MHS rule
- * 0.2b 24-Oct-2011 UNESCO WHC rule working
- * 0.2a 23-Oct-2011 add Mail support + initial work on UNESCO WHC
- * 0.1c 23-Oct-2011 add MHS rule (French heritage)
- * 0.1b 22-Oct-2011 add CEF rule (French christian churches)
- * 0.1  22-Oct-2011 first working prototype
  */
 public class Tag2LinkPlugin extends Plugin {
-
-    // private Tag2LinkPreferenceSetting preferenceSetting; TODO
 
     private SelectionPopupListener selectionPopupListener;
     private MembershipPopupListener membershipPopupListener;
@@ -54,21 +40,9 @@ public class Tag2LinkPlugin extends Plugin {
      */
     public Tag2LinkPlugin(PluginInformation info) {
         super(info);
-        // this.preferenceSetting = new Tag2LinkPreferenceSetting();
         Tag2LinkRuleChecker.init();
     }
 
-    /* (non-Javadoc)
-     * @see org.openstreetmap.josm.plugins.Plugin#getPreferenceSetting()
-     */
-//    @Override
-//    public PreferenceSetting getPreferenceSetting() {
-//        return this.preferenceSetting;
-//    }
-
-    /* (non-Javadoc)
-     * @see org.openstreetmap.josm.plugins.Plugin#mapFrameInitialized(org.openstreetmap.josm.gui.MapFrame, org.openstreetmap.josm.gui.MapFrame)
-     */
     @Override
     public void mapFrameInitialized(MapFrame oldFrame, MapFrame newFrame) {
         if (newFrame != null) {

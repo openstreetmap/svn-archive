@@ -56,6 +56,10 @@
             <condition k="wikidata" />
             <link name="View Wikidata page" href="https://www.wikidata.org/wiki/%v%" />
         </rule>
+        <rule>
+            <condition k="species"/>
+            <link name="View Wikispecies page" href="https://species.wikimedia.org/wiki/%v%" />
+        </rule>
     </src>
 
     <src name="WHC">
@@ -179,7 +183,7 @@
     <src name="NAF" country-code="FR">
         <rule>
             <condition k="ref:FR:NAF" v="[A-Z0-9-]{5}" />
-            <link name="View explanation of %name% code" href="http://www.rouen.cci.fr/outils/ape/Naf_liste.asp?param=2&amp;code=%v%" />
+            <link name="View INSEE explanation of %name% code" href="http://recherche-naf.insee.fr/SIRENET_ClassesNaf/%v%.htm" />
         </rule>
     </src>
 

@@ -41,7 +41,6 @@ public class VideoPlayer extends JFrame implements WindowListener, VideosObserve
     private JButton play, back, forward;
     private JToggleButton loop, mute;
     private JSlider speed;
-//    private DateFormat videoTimeFormat;
     private VideoEngine videoengine;
     private long jumpLength;
     private long loopLength;
@@ -52,7 +51,6 @@ public class VideoPlayer extends JFrame implements WindowListener, VideosObserve
 
     public VideoPlayer(DateFormat videoTimeFormat) throws HeadlessException {
         super();
-//        this.videoTimeFormat=videoTimeFormat;
         //setup playback notifications
         videoengine = new VideoEngine(this);
         videoengine.addObserver(this);
@@ -160,9 +158,9 @@ public class VideoPlayer extends JFrame implements WindowListener, VideosObserve
         speed.setPaintTicks(true);
         speed.setOrientation(Adjustable.VERTICAL);
         Hashtable<Integer, JLabel> labelTable = new Hashtable<>();
-        labelTable.put(new Integer(100), new JLabel("1x"));
-        labelTable.put(new Integer(50), new JLabel("-2x"));
-        labelTable.put(new Integer(200), new JLabel("2x"));
+        labelTable.put(100, new JLabel("1x"));
+        labelTable.put(50, new JLabel("-2x"));
+        labelTable.put(200, new JLabel("2x"));
         speed.setLabelTable(labelTable);
         speed.setPaintLabels(true);
     }

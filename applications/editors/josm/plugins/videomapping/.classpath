@@ -5,9 +5,9 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/JOSM"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/JOSM-jna"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/JOSM-log4j"/>
-	<classpathentry kind="lib" path="lib/vlcj-3.10.0.jar" sourcepath="lib/vlcj-3.10.0-sources.jar">
+	<classpathentry kind="lib" path="lib/vlcj-3.10.1.jar" sourcepath="lib/vlcj-3.10.1-sources.jar">
 		<attributes>
-			<attribute name="javadoc_location" value="jar:platform:/resource/JOSM-videomapping/lib/vlcj-3.10.0-javadoc.jar!/"/>
+			<attribute name="javadoc_location" value="jar:platform:/resource/JOSM-videomapping/lib/vlcj-3.10.1-javadoc.jar!/"/>
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="output" path="bin"/>

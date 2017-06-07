@@ -275,11 +275,7 @@ public class VideoEngine implements MediaPlayerEventListener {
 
     @Override
     public void backward(MediaPlayer arg0) { }
-/*
-    public void buffering(MediaPlayer arg0) {
 
-    }
-*/
     @Override
     public void error(MediaPlayer arg0) { }
 
@@ -291,7 +287,7 @@ public class VideoEngine implements MediaPlayerEventListener {
 
     @Override
     public void lengthChanged(MediaPlayer arg0, long arg1) { }
-/*
+    /*
     public void mediaChanged(MediaPlayer arg0) {
 
     }

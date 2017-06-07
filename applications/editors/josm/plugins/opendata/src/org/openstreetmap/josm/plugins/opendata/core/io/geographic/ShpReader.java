@@ -213,7 +213,6 @@ public class ShpReader extends GeographicReader {
 
                 FeatureSource<?, ?> featureSource = dataStore.getFeatureSource(typeName);
                 FeatureCollection<?, ?> collection = featureSource.getFeatures();
-                FeatureIterator<?> iterator = collection.features();
 
                 if (instance != null) {
                     instance.beginTask(tr("Loading shapefile ({0} features)", collection.size()), collection.size());
@@ -223,7 +222,7 @@ public class ShpReader extends GeographicReader {
 
                 Component parent = instance != null ? instance.getWindowParent() : Main.parent;
 
-                try {
+                try (FeatureIterator<?> iterator = collection.features()) {
                     while (iterator.hasNext()) {
                         n++;
                         try {
@@ -242,7 +241,6 @@ public class ShpReader extends GeographicReader {
                         }
                     }
                 } finally {
-                    iterator.close();
                     nodes.clear();
                     if (instance != null) {
                         instance.setCustomText(null);
@@ -250,10 +248,10 @@ public class ShpReader extends GeographicReader {
                 }
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            Main.error(e);
             throw e;
         } catch (Exception e) {
-            e.printStackTrace();
+            Main.error(e);
             throw new IOException(e);
         }
         return ds;

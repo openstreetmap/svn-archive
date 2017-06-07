@@ -54,7 +54,7 @@ public class NewLayerFromFileAction extends JosmAction {
     /**
      * Provides filtering of only image files.
      */
-    private class ImageFileFilter extends FileFilter {
+    private static class ImageFileFilter extends FileFilter {
 
         private String[] supportedExtensions;
 

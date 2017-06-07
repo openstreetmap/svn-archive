@@ -78,7 +78,7 @@ public abstract class GenericPicTransformAction extends MapMode implements Mouse
             doAction(e);
             prevMousePoint = new Point(e.getPoint());
             prevEastNorth = Main.map.mapView.getEastNorth(e.getX(), e.getY());
-            Main.map.mapView.repaint();
+            currentLayer.invalidate();
         }
     }
 
@@ -101,7 +101,7 @@ public abstract class GenericPicTransformAction extends MapMode implements Mouse
         Layer active = Main.getLayerManager().getActiveLayer();
         if (active instanceof PicLayerAbstract) {
             ((PicLayerAbstract) active).setDrawPoints(value);
+            active.invalidate();
         }
-        Main.map.mapView.repaint();
     }
 }

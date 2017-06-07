@@ -461,7 +461,7 @@ public abstract class PicLayerAbstract extends Layer {
         transformer.getTransform().concatenate(transform);
 
         // Refresh
-        Main.map.mapView.repaint();
+        invalidate();
     }
 
     public void loadWorldfile(InputStream is) throws IOException {
@@ -496,7 +496,7 @@ public abstract class PicLayerAbstract extends Layer {
             tr.shear(shearx, sheary);
 
             initialImageScale = 1;
-            Main.map.mapView.repaint();
+            invalidate();
         }
     }
 

@@ -35,14 +35,14 @@ public class TransformCommand extends Command {
     @Override
     public boolean executeCommand() {
         placeTransform(afterTransform);
-        Main.map.mapView.repaint();
+        layer.invalidate();
         return true;
     }
 
     @Override
     public void undoCommand() {
         placeTransform(beforeTransform);
-        Main.map.mapView.repaint();
+        layer.invalidate();
     }
 
     private void placeTransform(PictureTransform transform) {

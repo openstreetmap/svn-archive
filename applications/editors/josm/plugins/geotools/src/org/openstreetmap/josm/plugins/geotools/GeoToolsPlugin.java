@@ -16,7 +16,6 @@ import org.opengis.referencing.FactoryException;
 import org.opengis.referencing.NoSuchAuthorityCodeException;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.plugins.Plugin;
-import org.openstreetmap.josm.plugins.PluginHandler;
 import org.openstreetmap.josm.plugins.PluginInformation;
 import org.openstreetmap.josm.tools.Logging;
 
@@ -73,7 +72,7 @@ public class GeoToolsPlugin extends Plugin {
 
         // Manual registering because plugin jar is not on application classpath
         IIORegistry ioRegistry = IIORegistry.getDefaultInstance();
-        ClassLoader loader = PluginHandler.getPluginClassLoader();
+        ClassLoader loader = GeoToolsPlugin.class.getClassLoader();
 
         Iterator<Class<?>> categories = ioRegistry.getCategories();
         while (categories.hasNext()) {

@@ -329,7 +329,8 @@ public class SegmentChecker extends Checker {
 				List<Relation> primitives = new ArrayList<>(1);
 				primitives.add(relation);
 				List<OsmPrimitive> highlighted = new ArrayList<>();
-				highlighted.addAll(wronglySortedPtway.getWays());
+				highlighted.add(startStop.getStopPosition());
+				highlighted.add(endStop.getStopPosition());
 				Builder builder = TestError.builder(this.test, Severity.WARNING,
 						PTAssistantValidatorTest.ERROR_CODE_STOP_BY_STOP);
 				builder.primitives(primitives);
@@ -663,8 +664,8 @@ public class SegmentChecker extends Checker {
 			PTRouteSegment wrongSegment = entry.getValue();
 			List<PTRouteSegment> correctSegmentsForThisError = new ArrayList<>();
 			for (PTRouteSegment segment : correctSegments) {
-				if (wrongSegment.getFirstWay().getId() == segment.getFirstWay().getId()
-						&& wrongSegment.getLastWay().getId() == segment.getLastWay().getId()) {
+				if (wrongSegment.getFirstWay().getUniqueId() == segment.getFirstWay().getUniqueId()
+						&& wrongSegment.getLastWay().getUniqueId() == segment.getLastWay().getUniqueId()) {
 					correctSegmentsForThisError.add(segment);
 				}
 			}
@@ -793,8 +794,8 @@ public class SegmentChecker extends Checker {
 		// 1) try to fix by using the correct segment:
 		List<PTRouteSegment> correctSegmentsForThisError = new ArrayList<>();
 		for (PTRouteSegment segment : correctSegments) {
-			if (wrongSegment.getFirstWay().getId() == segment.getFirstWay().getId()
-					&& wrongSegment.getLastWay().getId() == segment.getLastWay().getId()) {
+			if (wrongSegment.getFirstWay().getUniqueId() == segment.getFirstWay().getUniqueId()
+					&& wrongSegment.getLastWay().getUniqueId() == segment.getLastWay().getUniqueId()) {
 				correctSegmentsForThisError.add(segment);
 			}
 		}

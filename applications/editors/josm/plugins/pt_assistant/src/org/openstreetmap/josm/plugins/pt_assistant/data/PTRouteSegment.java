@@ -148,7 +148,7 @@ public class PTRouteSegment {
             boolean listsEqual = (thisWays.size() == otherWays.size());
             if (listsEqual) {
                 for (int i = 0; i < thisWays.size(); i++) {
-                    if (thisWays.get(i).getId() != otherWays.get(i).getId()) {
+                    if (thisWays.get(i).getUniqueId() != otherWays.get(i).getUniqueId()) {
                         listsEqual = false;
                         break;
                     }
@@ -186,6 +186,9 @@ public class PTRouteSegment {
      */
     public boolean equalsRouteSegment(PTRouteSegment other) {
 
+//    	if(!firstStop.equalsStop(firstStop) || !lastStop.equalsStop(other.lastStop))
+//    		return false;
+
         List<Way> thisWays = new ArrayList<>();
         for (PTWay ptway : this.ptways) {
             thisWays.addAll(ptway.getWays());
@@ -200,7 +203,7 @@ public class PTRouteSegment {
         }
 
         for (int i = 0; i < thisWays.size(); i++) {
-            if (thisWays.get(i).getId() != otherWays.get(i).getId()) {
+            if (thisWays.get(i).getUniqueId() != otherWays.get(i).getUniqueId()) {
                 return false;
             }
         }

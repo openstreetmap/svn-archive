@@ -37,7 +37,7 @@ public class DataSetUpdaterTest {
     @Test
     public void testTicket11166() throws Exception {
         File file = new File(TestUtils.getRegressionDataFile(11166, "raba760dissJosm.zip"));
-        try (InputStream is =   new FileInputStream(file)) {
+        try (InputStream is = new FileInputStream(file)) {
             Predicate<? super Way> p = w -> w.getNodesCount() >= 0.9 * OsmApi.getOsmApi().getCapabilities().getMaxWayNodes();
             DataSet ds = ZipReader.parseDataSet(is, null, null, false);
             assertTrue(ds.getWays().stream().filter(p).findAny().isPresent());

@@ -17,6 +17,7 @@ import org.openstreetmap.josm.actions.mapmode.MapMode;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.plugins.pt_assistant.utils.RouteUtils;
 import org.openstreetmap.josm.tools.ImageProvider;
 import org.openstreetmap.josm.tools.Shortcut;
 
@@ -43,29 +44,32 @@ public class EdgeSelectionAction extends MapMode implements MouseListener, Mouse
 	}
 
     /*
-     * given a way, it looks at both directions until it finds a
-     * crossway (parents.size > 2) or until the end of the
-     * edge (parens.size = 1)
+     * given a way, it looks at both directions for good candidates to be added
+     * to the edge
      */
-    private List<Way> getEdgeFromWay(Way initial)
+    private List<Way> getEdgeFromWay(Way initial, String modeOfTravel)
     {
     	List<Way> edge = new ArrayList<>();
+    	if(!isWaySuitableForMode(initial, modeOfTravel))
+    		return edge;
 
     	Way curr = initial;
     	while(true) {
-    		List<Way> parents = curr.firstNode(true).getParentWays();
-    		if(parents.size() != 2)
+    		List<Way> options = curr.firstNode(true).getParentWays();
+    		options.remove(curr);
+    		curr = chooseBestWay(options, modeOfTravel);
+    		if(curr == null || edge.contains(curr))
     			break;
-    		curr = parents.get(0) == curr ? parents.get(1) : parents.get(0);
     		edge.add(curr);
     	}
 
     	curr = initial;
     	while(true) {
-    		List<Way> parents = curr.lastNode(true).getParentWays();
-    		if(parents.size() != 2)
+    		List<Way> options = curr.lastNode(true).getParentWays();
+    		options.remove(curr);
+    		curr = chooseBestWay(options, modeOfTravel);
+    		if(curr == null || edge.contains(curr))
     			break;
-    		curr = parents.get(0) == curr ? parents.get(1) : parents.get(0);
     		edge.add(curr);
     	}
 
@@ -73,13 +77,53 @@ public class EdgeSelectionAction extends MapMode implements MouseListener, Mouse
     	return edge;
     }
 
-    @Override
+    private Boolean isWaySuitableForMode(Way toCheck, String modeOfTravel)
+    {
+    	if("bus".equals(modeOfTravel))
+    		return RouteUtils.isWaySuitableForBuses(toCheck);
+
+    	return RouteUtils.isWaySuitableForPublicTransport(toCheck);
+    }
+
+    /*
+     *
+     */
+    private Way chooseBestWay(List<Way> ways, String modeOfTravel)
+    {
+    	ways.removeIf(w -> !isWaySuitableForMode(w, modeOfTravel));
+    	if(ways.isEmpty())
+    		return null;
+    	if(ways.size() == 1)
+    		return ways.get(0);
+
+    	Way theChoosenOne = null;
+
+    	if("bus".equals(modeOfTravel))
+    	{
+
+    	}
+    	if("tram".equals(modeOfTravel))
+    	{
+
+    	}
+
+    	return theChoosenOne;
+    }
+
+    private String getModeOfTravel() {
+    	//find a way to get the currently opened relation editor and get the
+    	//from there the current type of route
+		return "bus";
+	}
+
+	@Override
     public void mouseClicked(MouseEvent e) {
 
 		DataSet ds = Main.getLayerManager().getEditLayer().data;
     	Way initial = Main.map.mapView.getNearestWay(e.getPoint(), OsmPrimitive::isUsable);
-    	if(initial != null)
-    		ds.setSelected(getEdgeFromWay(initial));
+    	if(initial != null){
+    		ds.setSelected(getEdgeFromWay(initial, getModeOfTravel()));
+    	}
     	else
     		ds.clearSelection();
     }
@@ -98,7 +142,7 @@ public class EdgeSelectionAction extends MapMode implements MouseListener, Mouse
     	}
     	else {
     		Main.map.mapView.setCursor(waySelectCursor);
-    		highlighted.addAll(getEdgeFromWay(initial));
+    		highlighted.addAll(getEdgeFromWay(initial, getModeOfTravel()));
     	}
 
     	for(Way way : highlighted)

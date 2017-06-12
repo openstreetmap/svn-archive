@@ -39,7 +39,7 @@ public class PTAssistantPlugin extends Plugin {
     private static PTRouteSegment lastFix;
 
     /* list of relation currently highlighted by the layer */
-    private static List<Relation> highlightedRelations;
+    private static List<Relation> highlightedRelations = new ArrayList<>();
 
     /* item of the Tools menu for repeating the last fix */
     private static JMenuItem repeatLastFixMenu;
@@ -59,7 +59,6 @@ public class PTAssistantPlugin extends Plugin {
 
         OsmValidator.addTest(PTAssistantValidatorTest.class);
 
-        highlightedRelations = new ArrayList<>();
         RepeatLastFixAction repeatLastFixAction = new RepeatLastFixAction();
         EditHighlightedRelationsAction editHighlightedRelationsAction = new EditHighlightedRelationsAction();
         repeatLastFixMenu = MainMenu.add(Main.main.menu.toolsMenu, repeatLastFixAction, false);
@@ -102,13 +101,8 @@ public class PTAssistantPlugin extends Plugin {
      */
     public static void setLastFix(PTRouteSegment segment) {
         lastFix = segment;
-
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                repeatLastFixMenu.setEnabled(segment != null);
-            }
-        });
+        SwingUtilities.invokeLater(() ->
+        	repeatLastFixMenu.setEnabled(segment != null));
     }
 
     /**
@@ -127,23 +121,14 @@ public class PTAssistantPlugin extends Plugin {
 	public static void addHighlightedRelation(Relation highlightedRelation) {
 		highlightedRelations.add(highlightedRelation);
 		if(!editHighlightedRelationsMenu.isEnabled()) {
-			SwingUtilities.invokeLater(new Runnable() {
-	            @Override
-	            public void run() {
-	            	editHighlightedRelationsMenu.setEnabled(true);
-	            }
-	        });
+			SwingUtilities.invokeLater(() ->
+				editHighlightedRelationsMenu.setEnabled(true));
 		}
-
 	}
 
 	public static void clearHighlightedRelations() {
 		highlightedRelations.clear();
-		SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-            	editHighlightedRelationsMenu.setEnabled(false);
-            }
-        });
+		SwingUtilities.invokeLater(() ->
+            	editHighlightedRelationsMenu.setEnabled(false));
 	}
 }

@@ -90,7 +90,7 @@ public class JunctionCheckDialog extends ToggleDialog {
             {
                 putValue(NAME, marktr("Create"));
                 putValue(SHORT_DESCRIPTION, tr("create the channel digraph"));
-                putValue(SMALL_ICON, ImageProvider.get("dialogs", "digraphcreation"));
+                new ImageProvider("dialogs", "digraphcreation").getResource().attachImageIcon(this, true);
             }
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -103,7 +103,7 @@ public class JunctionCheckDialog extends ToggleDialog {
             {
                 putValue(NAME, marktr("Check "));
                 putValue(SHORT_DESCRIPTION, tr("check the subset for junction properties"));
-                putValue(SMALL_ICON, ImageProvider.get("dialogs", "junctioncheck"));
+                new ImageProvider("dialogs", "junctioncheck").getResource().attachImageIcon(this, true);
             }
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -116,7 +116,7 @@ public class JunctionCheckDialog extends ToggleDialog {
             {
                 putValue(NAME, marktr("Search "));
                 putValue(SHORT_DESCRIPTION, tr("search for junctions in the channel subset"));
-                putValue(SMALL_ICON, ImageProvider.get("dialogs", "junctionsearch"));
+                new ImageProvider("dialogs", "junctionsearch").getResource().attachImageIcon(this, true);
             }
             @Override
             public void actionPerformed(ActionEvent e) {

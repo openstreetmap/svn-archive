@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.util.Objects;
 
 import javax.imageio.ImageIO;
 
@@ -45,10 +46,10 @@ public class GeorefImage implements Serializable, ImageObserver, Cloneable {
     private double pixelPerNorth;
 
     public GeorefImage(BufferedImage img, EastNorth min, EastNorth max, WMSLayer wmsLayer) {
-        image = img;
+        image = Objects.requireNonNull(img);
 
-        this.min = min;
-        this.max = max;
+        this.min = Objects.requireNonNull(min);
+        this.max = Objects.requireNonNull(max);
         this.orgRaster[0] = min;
         this.orgRaster[1] = new EastNorth(min.east(), max.north());
         this.orgRaster[2] = max;

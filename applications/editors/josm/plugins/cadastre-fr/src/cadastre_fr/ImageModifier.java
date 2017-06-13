@@ -7,6 +7,7 @@ import java.awt.image.BufferedImage;
 import java.awt.image.ColorConvertOp;
 import java.awt.image.DataBuffer;
 import java.awt.image.IndexColorModel;
+import java.util.Objects;
 
 public abstract class ImageModifier {
     /**
@@ -16,7 +17,7 @@ public abstract class ImageModifier {
 
     protected int parcelColor = Color.RED.getRGB();
 
-    public BufferedImage bufferedImage;
+    protected BufferedImage bufferedImage;
 
     public static int[] cRoofColors = new int[] {-197380, -592138};
     public static int[] cBuilingFootColors = new int[] {-256};
@@ -159,4 +160,19 @@ public abstract class ImageModifier {
         return (img.getRGB(x, y) == -1);
     }
 
+    /**
+     * Returns the buffered image.
+     * @return the buffered image
+     */
+    public final BufferedImage getBufferedImage() {
+        return bufferedImage;
+    }
+
+    /**
+     * Sets the buffered image.
+     * @param bufferedImage the buffered image
+     */
+    protected final void setBufferedImage(BufferedImage bufferedImage) {
+        this.bufferedImage = Objects.requireNonNull(bufferedImage);
+    }
 }

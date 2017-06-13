@@ -23,7 +23,7 @@ public class VectorImageModifier extends ImageModifier {
     }
 
     public VectorImageModifier(BufferedImage bi, boolean monocolor) {
-        bufferedImage = bi;
+        setBufferedImage(bi);
         if (Main.pref.getBoolean("cadastrewms.backgroundTransparent"))
             makeTransparent();
         else if (Main.pref.getBoolean("cadastrewms.alterColors"))
@@ -31,7 +31,7 @@ public class VectorImageModifier extends ImageModifier {
         if (Main.pref.getBoolean("cadastrewms.invertGrey"))
             invertGrey();
         if (monocolor)
-            bufferedImage = convert8(convert4(bufferedImage));
+            setBufferedImage(convert8(convert4(bufferedImage)));
     }
 
     /**
@@ -106,7 +106,7 @@ public class VectorImageModifier extends ImageModifier {
             cadastreBackground = 0x00ffffff;
             IndexColorModel icm2 = new IndexColorModel(colorModel.getPixelSize(), size, reds, greens, blues,
                     backgroundPixel);
-            bufferedImage = new BufferedImage(icm2, raster, bufferedImage.isAlphaPremultiplied(), null);
+            setBufferedImage(new BufferedImage(icm2, raster, bufferedImage.isAlphaPremultiplied(), null));
         }
         return;
     }

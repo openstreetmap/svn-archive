@@ -31,12 +31,14 @@ public class CadastreGrabber {
             else
                 url = getURLVector(lambertMin, lambertMax);
             BufferedImage img = grab(url);
+            if (img == null)
+                throw new OsmTransferException(url.toString());
             ImageModifier imageModified;
             if (wmsLayer.isRaster())
                 imageModified = new RasterImageModifier(img);
             else
                 imageModified = new VectorImageModifier(img, false);
-            return new GeorefImage(imageModified.bufferedImage, lambertMin, lambertMax, wmsLayer);
+            return new GeorefImage(imageModified.getBufferedImage(), lambertMin, lambertMax, wmsLayer);
         } catch (MalformedURLException e) {
             throw (IOException) new IOException(tr("CadastreGrabber: Illegal url.")).initCause(e);
         }

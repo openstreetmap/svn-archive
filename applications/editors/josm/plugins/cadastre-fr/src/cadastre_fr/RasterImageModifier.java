@@ -17,7 +17,7 @@ public class RasterImageModifier extends ImageModifier {
     private boolean transparencyEnabled = false;
 
     public RasterImageModifier(BufferedImage bi) {
-        bufferedImage = bi;
+        setBufferedImage(bi);
         transparencyEnabled = Main.pref.getBoolean("cadastrewms.backgroundTransparent");
         if (transparencyEnabled)
             makeTransparent();
@@ -83,7 +83,7 @@ public class RasterImageModifier extends ImageModifier {
                     bi.setRGB(x, y, maskedColor.getRGB());
                 }
             }
-            bufferedImage = bi;
+            setBufferedImage(bi);
         }
         return;
     }

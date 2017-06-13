@@ -20,6 +20,7 @@ import org.openstreetmap.josm.plugins.pt_assistant.actions.AddStopPositionAction
 import org.openstreetmap.josm.plugins.pt_assistant.actions.EdgeSelectionAction;
 import org.openstreetmap.josm.plugins.pt_assistant.actions.EditHighlightedRelationsAction;
 import org.openstreetmap.josm.plugins.pt_assistant.actions.RepeatLastFixAction;
+import org.openstreetmap.josm.plugins.pt_assistant.actions.SplitRoundaboutAction;
 import org.openstreetmap.josm.plugins.pt_assistant.data.PTRouteSegment;
 import org.openstreetmap.josm.plugins.pt_assistant.gui.PTAssistantPreferenceSetting;
 import org.openstreetmap.josm.plugins.pt_assistant.validation.PTAssistantValidatorTest;
@@ -61,8 +62,9 @@ public class PTAssistantPlugin extends Plugin {
 
         RepeatLastFixAction repeatLastFixAction = new RepeatLastFixAction();
         EditHighlightedRelationsAction editHighlightedRelationsAction = new EditHighlightedRelationsAction();
-        repeatLastFixMenu = MainMenu.add(Main.main.menu.toolsMenu, repeatLastFixAction, false);
-        editHighlightedRelationsMenu = MainMenu.add(Main.main.menu.toolsMenu, editHighlightedRelationsAction, false);
+        repeatLastFixMenu = MainMenu.add(Main.main.menu.toolsMenu, repeatLastFixAction);
+        editHighlightedRelationsMenu = MainMenu.add(Main.main.menu.toolsMenu, editHighlightedRelationsAction);
+        MainMenu.add(Main.main.menu.toolsMenu, new SplitRoundaboutAction());
     }
 
     /**

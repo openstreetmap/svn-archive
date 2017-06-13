@@ -10,6 +10,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.KeyEvent;
+import java.util.Objects;
 
 import javax.swing.AbstractButton;
 import javax.swing.BoxLayout;
@@ -76,7 +77,7 @@ public class GlobalsatConfigDialog extends JPanel {
     private Dg100Config conf;
 
     public GlobalsatConfigDialog(Dg100Config config) {
-        conf = config;
+        conf = Objects.requireNonNull(config);
         GridBagConstraints c = new GridBagConstraints();
 
         Dimension xx = aSeconds.getPreferredSize();

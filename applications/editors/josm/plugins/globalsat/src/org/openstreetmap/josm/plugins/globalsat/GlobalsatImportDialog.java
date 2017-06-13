@@ -19,6 +19,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.ListCellRenderer;
 
+import org.kaintoch.gps.globalsat.dg100.Dg100Config;
 import org.openstreetmap.josm.Main;
 
 import gnu.io.CommPortIdentifier;
@@ -97,22 +98,25 @@ public class GlobalsatImportDialog extends JPanel {
         configBtn.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(java.awt.event.ActionEvent e) {
-                    System.out.println("configureing the device");
+                    System.out.println("configuring the device");
                     try {
-
-                        GlobalsatConfigDialog dialog = new GlobalsatConfigDialog(GlobalsatPlugin.dg100().getConfig());
-                        JOptionPane pane = new JOptionPane(dialog, JOptionPane.PLAIN_MESSAGE, JOptionPane.OK_CANCEL_OPTION);
-                        JDialog dlg = pane.createDialog(Main.parent, tr("Configure Device"));
-                        dlg.setVisible(true);
-                        if (((Integer) pane.getValue()) == JOptionPane.OK_OPTION) {
-                            GlobalsatPlugin.dg100().setConfig(dialog.getConfig());
+                        Dg100Config conf = GlobalsatPlugin.dg100().getConfig();
+                        if (conf != null) {
+                            GlobalsatConfigDialog dialog = new GlobalsatConfigDialog(conf);
+                            JOptionPane pane = new JOptionPane(dialog, JOptionPane.PLAIN_MESSAGE, JOptionPane.OK_CANCEL_OPTION);
+                            JDialog dlg = pane.createDialog(Main.parent, tr("Configure Device"));
+                            dlg.setVisible(true);
+                            if (((Integer) pane.getValue()) == JOptionPane.OK_OPTION) {
+                                GlobalsatPlugin.dg100().setConfig(dialog.getConfig());
+                            }
+                            dlg.dispose();
+                        } else {
+                            JOptionPane.showMessageDialog(Main.parent, tr("Connection Error."), tr("Connection Error."), JOptionPane.ERROR);
                         }
-                        dlg.dispose();
-
                     } catch (GlobalsatDg100.ConnectionException ex) {
                         JOptionPane.showMessageDialog(Main.parent, tr("Connection Error.") + " " + ex.toString());
                     }
-                    System.out.println("configureing the device finised");
+                    System.out.println("configuring the device finished");
                 }
             });
         configBtn.setToolTipText(tr("configure the connected DG100"));

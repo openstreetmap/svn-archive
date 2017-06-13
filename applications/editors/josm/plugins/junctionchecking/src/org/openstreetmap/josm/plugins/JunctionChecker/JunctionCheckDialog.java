@@ -8,7 +8,6 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.util.Arrays;
-import java.util.Collection;
 
 import javax.swing.AbstractAction;
 import javax.swing.BoxLayout;
@@ -20,8 +19,6 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.border.TitledBorder;
 
 import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.data.SelectionChangedListener;
-import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.gui.SideButton;
 import org.openstreetmap.josm.gui.dialogs.ToggleDialog;
 import org.openstreetmap.josm.gui.util.GuiHelper;
@@ -31,7 +28,7 @@ import org.openstreetmap.josm.tools.Shortcut;
 /**
  * @author  joerg
  */
-public class JunctionCheckDialog extends ToggleDialog implements SelectionChangedListener {
+public class JunctionCheckDialog extends ToggleDialog {
 
     private final JunctionCheckerPlugin plugin;
     /** Serializable ID */
@@ -158,10 +155,5 @@ public class JunctionCheckDialog extends ToggleDialog implements SelectionChange
                 sccCB.setEnabled(activate);
             }
         });
-    }
-
-    @Override
-    public void selectionChanged(Collection<? extends OsmPrimitive> newSelection) {
-
     }
 }

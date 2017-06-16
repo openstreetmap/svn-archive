@@ -36,6 +36,7 @@ public abstract class AbstractTest {
 
  public static final String PATH_TO_PLATFORM_AS_WAY = "test/data/route-with-platform-as-way.osm";
 
+ public static final String PATH_TO_ROUNDABOUT = "test/data/roundabout.osm";
  public static final String PATH_TO_ROUNDABOUT_ONEWAY = "test/data/duesseldorf_roundabout.osm";
 
  public static final String PATH_TO_ROAD_TYPE_ERROR = "test/data/road-type.osm";
@@ -53,7 +54,6 @@ public abstract class AbstractTest {
  public static final String PATH_TO_STOP_AREA_MANY_STOPS = "test/data/stop-area-many-stops.osm";
  public static final String PATH_TO_STOP_AREA_NO_PLATFORMS = "test/data/stop-area-no-platform.osm";
  public static final String PATH_TO_STOP_AREA_MANY_PLATFORMS = "test/data/stop-area-many-platforms.osm";
-
 
  public static final String PATH_TO_SEGMENT_TEST = "test/data/segment-test.osm";
 

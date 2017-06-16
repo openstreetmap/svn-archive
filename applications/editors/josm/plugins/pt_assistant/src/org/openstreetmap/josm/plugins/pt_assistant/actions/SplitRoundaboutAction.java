@@ -3,10 +3,13 @@ package org.openstreetmap.josm.plugins.pt_assistant.actions;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.event.ActionEvent;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
@@ -32,7 +35,6 @@ import org.openstreetmap.josm.plugins.pt_assistant.utils.RouteUtils;
 public class SplitRoundaboutAction extends JosmAction {
 
 	private static final String actionName = "Split Roundabout";
-
 	private static final long serialVersionUID = 8912249304286025356L;
 
 	public SplitRoundaboutAction() {
@@ -41,6 +43,7 @@ public class SplitRoundaboutAction extends JosmAction {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
+
 		Way roundabout = (Way) getLayerManager().getEditDataSet().getSelected().iterator().next();
 
 		//download the bbox around the roundabout
@@ -69,12 +72,11 @@ public class SplitRoundaboutAction extends JosmAction {
 	private void continueAfterDownload(Way roundabout)
 	{
 		//make the roundabout round, if requested
-		int result = JOptionPane.showOptionDialog(Main.parent,
+		if(Main.pref.getBoolean("pt_assistant.roundabout-splitter.alignalways") ||
+				JOptionPane.YES_OPTION == JOptionPane.showOptionDialog(Main.parent,
 				tr("Do you want to make the roundabout round?"), tr("Roundabout round"),
 				JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE,
-				null, null, null);
-
-		if(result == JOptionPane.YES_OPTION) {
+				null, null, null)) {
 			new AlignInCircleAction().actionPerformed(null);
 		}
 
@@ -85,9 +87,14 @@ public class SplitRoundaboutAction extends JosmAction {
 		List<Node> splitNodes = getSplitNodes(roundabout);
 		getLayerManager().getEditDataSet().setSelected(splitNodes);
 		new SplitWayAction().actionPerformed(null);
-		Collection<OsmPrimitive> splitWays = getLayerManager().getEditDataSet().getSelected();
+		Collection<Way> splitWays = getLayerManager().getEditDataSet().getSelectedWays();
 
         //update the relations.
+		updateRelations(savedPositions, splitNodes, splitWays);
+	}
+
+	public void updateRelations(Map<Relation, Integer> savedPositions,
+			List<Node> splitNodes, Collection<Way> splitWays) {
 		savedPositions.forEach((r, i) -> {
 			Way previous = r.getMember(i-1).getWay();
 			Way subsequent = r.getMember(i).getWay();
@@ -136,8 +143,10 @@ public class SplitRoundaboutAction extends JosmAction {
 
 	//split only on the nodes which might be the
 	//entry or exit point for some public transport route
-	private List<Node> getSplitNodes(Way roundabout) {
-		List<Node> splitNodes = roundabout.getNodes();
+	public List<Node> getSplitNodes(Way roundabout) {
+		Set<Node> noDuplicateSplitNodes = new HashSet<>(roundabout.getNodes());
+		List<Node> splitNodes = new ArrayList<>(noDuplicateSplitNodes);
+
 		splitNodes.removeIf(n -> {
 			List<Way> parents = n.getParentWays();
 			if(parents.size() == 1)
@@ -158,7 +167,7 @@ public class SplitRoundaboutAction extends JosmAction {
 
 	//save the position of the roundabout inside each public transport route
 	//it is contained in
-	private Map<Relation, Integer> getSavedPositions(Way roundabout) {
+	public Map<Relation, Integer> getSavedPositions(Way roundabout) {
 
 		Map<Relation, Integer> savedPositions = new HashMap<>();
 		List <OsmPrimitive> referrers = roundabout.getReferrers();

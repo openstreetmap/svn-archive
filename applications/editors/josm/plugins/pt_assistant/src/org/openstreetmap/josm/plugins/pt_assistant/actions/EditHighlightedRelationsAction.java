@@ -24,12 +24,14 @@ public class EditHighlightedRelationsAction extends JosmAction {
 
     private static final long serialVersionUID = 2681464946469047054L;
 
+    private static final String actionName = "Edit Highlighted Relation";
+
     /**
      * Default constructor
      */
     public EditHighlightedRelationsAction() {
-        super(tr("Edit Highlighted Relation"), new ImageProvider("dialogs", "edit"), tr("Edit Highlighted Relation"),
-                Shortcut.registerShortcut("Edit Highlighted Relation", tr("Edit Highlighted Relation"),
+        super(tr(actionName), new ImageProvider("dialogs", "edit"), tr(actionName),
+                Shortcut.registerShortcut("Edit Highlighted Relation", tr(actionName),
                 		KeyEvent.VK_K, Shortcut.ALT),
                 false, "editHighlightedRelations", false);
     }
@@ -40,7 +42,8 @@ public class EditHighlightedRelationsAction extends JosmAction {
     @Override
     public void actionPerformed(ActionEvent e) {
     	for(Relation relation : PTAssistantPlugin.getHighlightedRelations()) {
-    		RelationEditor editor = RelationEditor.getEditor(Main.getLayerManager().getEditLayer(), relation, null);
+    		RelationEditor editor = RelationEditor.getEditor(
+    				Main.getLayerManager().getEditLayer(), relation, null);
             editor.setVisible(true);
     	}
     }

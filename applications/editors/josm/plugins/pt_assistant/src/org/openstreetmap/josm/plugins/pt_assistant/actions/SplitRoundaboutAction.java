@@ -79,6 +79,87 @@ public class SplitRoundaboutAction extends JosmAction {
 		}
 
 		//save the position of the roundabout inside each relation
+		Map<Relation, Integer> savedPositions = getSavedPositions(roundabout);
+
+        //split the roundabout on the designed nodes
+		List<Node> splitNodes = getSplitNodes(roundabout);
+		getLayerManager().getEditDataSet().setSelected(splitNodes);
+		new SplitWayAction().actionPerformed(null);
+		Collection<OsmPrimitive> splitWays = getLayerManager().getEditDataSet().getSelected();
+
+        //update the relations.
+		savedPositions.forEach((r, i) -> {
+			Way previous = r.getMember(i-1).getWay();
+			Way subsequent = r.getMember(i).getWay();
+			Node entryNode;
+			Node exitNode;
+
+			//checking if the previous way enters the roundabout and the
+			//subsequent exits it
+			if(splitNodes.contains(previous.lastNode()))
+				entryNode = previous.lastNode();
+			else if(splitNodes.contains(previous.firstNode()))
+				entryNode = previous.firstNode();
+			else
+				entryNode = null;
+
+			if(splitNodes.contains(subsequent.firstNode()))
+				exitNode = subsequent.firstNode();
+			else if (splitNodes.contains(subsequent.lastNode()))
+				exitNode = subsequent.lastNode();
+			else
+				exitNode = null;
+
+			//if not, exit
+			if(entryNode == null || exitNode == null)
+				return;
+
+			//starting from the entry node, add split ways until the
+			//exit node is reached
+			List<Way> parents = entryNode.getParentWays();
+			parents.removeIf(w -> !w.firstNode().equals(entryNode));
+			parents.removeIf(w -> w.equals(previous));
+
+			Way curr = parents.get(0);
+			int j = 0;
+
+			while(!curr.lastNode().equals(exitNode)) {
+				r.addMember(i + j++, new RelationMember(null, curr));
+				parents = curr.lastNode().getParentWays();
+				parents.remove(curr);
+				parents.removeIf(w -> !splitWays.contains(w));
+				curr = parents.get(0);
+			}
+			r.addMember(i + j++, new RelationMember(null, curr));
+		});
+	}
+
+	//split only on the nodes which might be the
+	//entry or exit point for some public transport route
+	private List<Node> getSplitNodes(Way roundabout) {
+		List<Node> splitNodes = roundabout.getNodes();
+		splitNodes.removeIf(n -> {
+			List<Way> parents = n.getParentWays();
+			if(parents.size() == 1)
+				return true;
+			parents.remove(roundabout);
+			for(Way parent: parents) {
+				for(OsmPrimitive prim : parent.getReferrers()) {
+					if(prim.getType() == OsmPrimitiveType.RELATION &&
+							RouteUtils.isTwoDirectionRoute((Relation) prim))
+						return false;
+				}
+			}
+
+			return true;
+		});
+		return splitNodes;
+	}
+
+	//save the position of the roundabout inside each public transport route
+	//it is contained in
+	private Map<Relation, Integer> getSavedPositions(Way roundabout) {
+
 		Map<Relation, Integer> savedPositions = new HashMap<>();
 		List <OsmPrimitive> referrers = roundabout.getReferrers();
 		referrers.removeIf(r -> r.getType() != OsmPrimitiveType.RELATION
@@ -94,38 +175,7 @@ public class SplitRoundaboutAction extends JosmAction {
 			}
 		}
 
-        //split the roundabout
-		List<Node> splitNodes = roundabout.getNodes();
-		splitNodes.removeIf(n -> n.getParentWays().size() != 2);
-		getLayerManager().getEditDataSet().setSelected(splitNodes);
-		new SplitWayAction().actionPerformed(null);
-		Collection<OsmPrimitive> splittedWays = getLayerManager().getEditDataSet().getSelected();
-
-        //update the relations
-		savedPositions.forEach((r, i) -> {
-			Way previous = r.getMember(i-1).getWay();
-			Way next = r.getMember(i).getWay();
-			if(splitNodes.contains(previous.lastNode()) && splitNodes.contains(next.firstNode())) {
-				//lucky case: the ways were in order and the whole left by
-				//removing the roundabout can be easily filled with the splitted
-				//segment(s) that has as the first and last node the two just checked
-
-				List<Way> parents = previous.lastNode().getParentWays();
-				parents.removeIf(w -> !w.firstNode().equals(previous.lastNode()));
-
-				Way curr = parents.get(0);
-				int j = 0;
-
-				while(!curr.lastNode().equals(next.firstNode())) {
-					r.addMember(i + j++, new RelationMember(null, curr));
-					parents = curr.lastNode().getParentWays();
-					parents.remove(curr);
-					parents.removeIf(w -> !splittedWays.contains(w));
-					curr = parents.get(0);
-				}
-				r.addMember(i + j++, new RelationMember(null, curr));
-			}
-		});
+		return savedPositions;
 	}
 
 	@Override

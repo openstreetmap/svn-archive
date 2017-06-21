@@ -40,16 +40,13 @@ public final class RouteUtils {
         if (!r.hasKey("route") || !r.hasTag("public_transport:version", "2")) {
             return false;
         }
-        if (r.hasTag("route", "bus") || r.hasTag("route", "trolleybus") || r.hasTag("route", "share_taxi")
-                || r.hasTag("route", "tram") || r.hasTag("route", "light_rail") || r.hasTag("route", "subway")
-                || r.hasTag("route", "train")) {
 
-            if (!r.hasTag("bus", "on_demand")) {
-                return true;
-            }
+        String [] acceptedRouteTags = new String[] {
+        		"bus", "trolleybus", "share_taxi",
+                "tram", "light_rail", "subway", "train"};
 
-        }
-        return false;
+        return r.hasTag("route", acceptedRouteTags)
+             && !r.hasTag("bus", "on_demand");
     }
 
     /**
@@ -62,20 +59,14 @@ public final class RouteUtils {
      */
     public static boolean isPTStop(RelationMember rm) {
 
-
         if (rm.getType().equals(OsmPrimitiveType.NODE)) {
                 return true;
         }
 
-        if (rm.getType().equals(OsmPrimitiveType.WAY)) {
-            if (rm.getWay().hasTag("public_transport", "platform") || rm.getWay().hasTag("highway", "platform")
-                    || rm.getWay().hasTag("railway", "platform")) {
-                return true;
-            }
-        }
-
-        return false;
-
+        return (rm.getType().equals(OsmPrimitiveType.WAY))
+            && (rm.getWay().hasTag("public_transport", "platform")
+            		|| rm.getWay().hasTag("highway", "platform")
+                    || rm.getWay().hasTag("railway", "platform"));
     }
 
     /**
@@ -95,11 +86,9 @@ public final class RouteUtils {
         }
 
         if (rm.getType().equals(OsmPrimitiveType.WAY)) {
-            if (rm.getWay().hasTag("public_transport", "platform") || rm.getWay().hasTag("highway", "platform")
-                    || rm.getWay().hasTag("railway", "platform")) {
-                return false;
-            }
-            return true;
+            return !(rm.getWay().hasTag("public_transport", "platform")
+            		|| rm.getWay().hasTag("highway", "platform")
+                    || rm.getWay().hasTag("railway", "platform"));
         }
 
         Relation nestedRelation = rm.getRelation();
@@ -124,24 +113,25 @@ public final class RouteUtils {
      */
     public static int isOnewayForPublicTransport(Way way) {
 
-        if (OsmUtils.isTrue(way.get("oneway")) || OsmUtils.isReversed(way.get("oneway"))
-                || way.hasTag("junction", "roundabout") || way.hasTag("highway", "motorway")) {
+        if (OsmUtils.isTrue(way.get("oneway"))
+        		|| OsmUtils.isReversed(way.get("oneway"))
+                || way.hasTag("junction", "roundabout")
+                || way.hasTag("highway", "motorway")) {
 
-            if (!way.hasTag("busway", "lane") && !way.hasTag("busway:left", "lane")
-                    && !way.hasTag("busway:right", "lane") && !way.hasTag("oneway:bus", "no")
-                    && !way.hasTag("busway", "opposite_lane") && !way.hasTag("oneway:psv", "no")
+            if (!way.hasTag("busway", "lane")
+                    && !way.hasTag("busway", "opposite_lane")
+            		&& !way.hasTag("busway:left", "lane")
+                    && !way.hasTag("busway:right", "lane")
+                    && !way.hasTag("oneway:bus", "no")
+                    && !way.hasTag("oneway:psv", "no")
                     && !way.hasTag("trolley_wire", "backward")) {
 
                 if (OsmUtils.isReversed(way.get("oneway"))) {
                     return -1;
                 }
-
                 return 1;
-
             }
-
         }
-
         return 0;
     }
 
@@ -163,12 +153,10 @@ public final class RouteUtils {
         Node w2FirstNode = w2.firstNode();
         Node w2LastNode = w2.lastNode();
 
-        if (w1FirstNode == w2FirstNode || w1FirstNode == w2LastNode || w1LastNode == w2FirstNode
-                || w1LastNode == w2LastNode) {
-            return true;
-        }
-
-        return false;
+        return w1FirstNode == w2FirstNode
+        		|| w1FirstNode == w2LastNode
+        		|| w1LastNode == w2FirstNode
+                || w1LastNode == w2LastNode;
     }
 
     /**
@@ -205,20 +193,24 @@ public final class RouteUtils {
      * @return true if the way is suitable for buses, false otherwise.
      */
     public static boolean isWaySuitableForBuses(Way way) {
-        if (way.hasTag("highway", "motorway") || way.hasTag("highway", "trunk") || way.hasTag("highway", "primary")
-                || way.hasTag("highway", "secondary") || way.hasTag("highway", "tertiary")
-                || way.hasTag("highway", "unclassified") || way.hasTag("highway", "road")
-                || way.hasTag("highway", "residential") || way.hasTag("highway", "service")
-                || way.hasTag("highway", "motorway_link") || way.hasTag("highway", "trunk_link")
-                || way.hasTag("highway", "primary_link") || way.hasTag("highway", "secondary_link")
-                || way.hasTag("highway", "tertiary_link") || way.hasTag("highway", "living_street")
-                || way.hasTag("highway", "bus_guideway") || way.hasTag("highway", "road")
-                || way.hasTag("cycleway", "share_busway") || way.hasTag("cycleway", "shared_lane")) {
+
+    	String [] acceptedHighwayTags = new String [] {
+    			"motorway", "trunk", "primary", "secondary", "tertiary",
+                "unclassified" , "road", "residential", "service",
+                "motorway_link", "trunk_link", "primary_link", "secondary_link",
+                "tertiary_link", "living_street", "bus_guideway", "road"};
+
+    	if(way.hasTag("highway", acceptedHighwayTags)
+                || way.hasTag("cycleway", "share_busway")
+                || way.hasTag("cycleway", "shared_lane")) {
             return true;
         }
 
-        if (way.hasTag("highway", "pedestrian") && (way.hasTag("bus", "yes") || way.hasTag("psv", "yes")
-                || way.hasTag("bus", "designated") || way.hasTag("psv", "designated"))) {
+        if (way.hasTag("highway", "pedestrian")
+        		&& (way.hasTag("bus", "yes")
+        				|| way.hasTag("psv", "yes")
+        				|| way.hasTag("bus", "designated")
+        				|| way.hasTag("psv", "designated"))) {
             return true;
         }
 
@@ -232,14 +224,10 @@ public final class RouteUtils {
      */
     public static boolean isWaySuitableForPublicTransport(Way way) {
 
-        if (isWaySuitableForBuses(way) || way.hasTag("railway", "tram") || way.hasTag("railway", "subway")
-                || way.hasTag("railway", "subway") || way.hasTag("railway", "light_rail")
-                || way.hasTag("railway", "rail")) {
-            return true;
-        }
+    	String [] acceptedRailwayTags = new String [] {
+    			"tram", "subway", "light_rail", "rail"};
 
-        return false;
-
+        return isWaySuitableForBuses(way)
+        		|| way.hasTag("railway", acceptedRailwayTags);
     }
-
 }

@@ -42,7 +42,7 @@ public class RouteChecker extends Checker {
 
     }
 
-    protected void performSortingTest() {
+   protected void performSortingTest() {
 
         final List<RelationMember> waysToCheck = new ArrayList<>();
         for (RelationMember rm : relation.getMembers()) {
@@ -56,28 +56,35 @@ public class RouteChecker extends Checker {
             return;
         }
 
-        if (hasGap(waysToCheck)) {
+        int numOfGaps = countGaps(waysToCheck);
+
+        if (numOfGaps > 0) {
 
             this.hasGap = true;
 
             RelationSorter sorter = new RelationSorter();
             sortedMembers = sorter.sortMembers(waysToCheck);
 
-            if (!hasGap(sortedMembers)) {
+            int numOfGapsAfterSort = countGaps(sortedMembers);
+
+            if (numOfGapsAfterSort == 0) {
                 Builder builder = TestError.builder(this.test, Severity.WARNING, PTAssistantValidatorTest.ERROR_CODE_SORTING);
                 builder.message(tr("PT: Route contains a gap that can be fixed by sorting"));
                 builder.primitives(relation);
                 TestError e = builder.build();
                 this.errors.add(e);
-
+            } else if(numOfGapsAfterSort < numOfGaps) {
+                Builder builder = TestError.builder(this.test, Severity.WARNING, PTAssistantValidatorTest.ERROR_CODE_PARTIAL_SORTING);
+                builder.message(tr("PT: Route gaps can decrease by sorting members. Further validations will be required"));
+                builder.primitives(relation);
+                TestError e = builder.build();
+                this.errors.add(e);
             }
-
         }
-
     }
 
     /**
-     * Checks if there is a gap for a given list of ways. It does not check if
+     * Counts how many gaps there are for a given list of ways. It does not check if
      * the way actually stands for a public transport platform - that should be
      * checked beforehand.
      *
@@ -85,20 +92,21 @@ public class RouteChecker extends Checker {
      * @return true if has gap (in the sense of continuity of ways in the
      *         Relation Editor), false otherwise
      */
-    private boolean hasGap(List<RelationMember> waysToCheck) {
-        WayConnectionTypeCalculator connectionTypeCalculator = new WayConnectionTypeCalculator();
+    private int countGaps(List<RelationMember> waysToCheck) {
+    	int numberOfGaps = 0;
+
+    	WayConnectionTypeCalculator connectionTypeCalculator = new WayConnectionTypeCalculator();
         final List<WayConnectionType> links = connectionTypeCalculator.updateLinks(waysToCheck);
         for (int i = 0; i < links.size(); i++) {
             final WayConnectionType link = links.get(i);
-            final boolean hasError = !(i == 0 || link.linkPrev) || !(i == links.size() - 1 || link.linkNext)
-                    || link.direction == null || WayConnectionType.Direction.NONE.equals(link.direction);
-            if (hasError) {
-                return true;
-
+            if(!(i == 0 || link.linkPrev) || !(i == links.size() - 1 || link.linkNext)
+                    || link.direction == null || WayConnectionType.Direction.NONE.equals(link.direction)) {
+            	numberOfGaps++;
+            	i++;
             }
         }
 
-        return false;
+        return numberOfGaps;
     }
 
     public List<RelationMember> getSortedMembers() {
@@ -114,7 +122,8 @@ public class RouteChecker extends Checker {
     }
 
     protected static Command fixSortingError(TestError testError) {
-        if (testError.getCode() != PTAssistantValidatorTest.ERROR_CODE_SORTING) {
+        if (testError.getCode() != PTAssistantValidatorTest.ERROR_CODE_SORTING
+        		&& testError.getCode() != PTAssistantValidatorTest.ERROR_CODE_PARTIAL_SORTING) {
             return null;
         }
 
@@ -128,15 +137,14 @@ public class RouteChecker extends Checker {
         final List<RelationMember> ways = new ArrayList<>();
         for (RelationMember member : members) {
             if (RouteUtils.isPTWay(member)) {
-                if (member.getRole().equals("")) {
+                if ("".equals(member.getRole())) {
                     ways.add(member);
                 } else {
                     RelationMember modifiedMember = new RelationMember("", member.getWay());
                     ways.add(modifiedMember);
                 }
-
             } else { // stops:
-                if (member.getRole().equals("stop_positon")) {
+                if ("stop_positon".equals(member.getRole())) {
                     // it is not expected that stop_positions could
                     // be relations
                     if (member.getType().equals(OsmPrimitiveType.NODE)) {
@@ -149,7 +157,6 @@ public class RouteChecker extends Checker {
                 } else { // if it is not a stop_position:
                     stops.add(member);
                 }
-
             }
         }
 
@@ -168,10 +175,6 @@ public class RouteChecker extends Checker {
         }
         sortedRelation.setMembers(sortedRelationMembers);
 
-        ChangeCommand changeCommand = new ChangeCommand(originalRelation, sortedRelation);
-
-        return changeCommand;
-
+        return new ChangeCommand(originalRelation, sortedRelation);
     }
-
 }

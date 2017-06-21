@@ -44,6 +44,7 @@ import org.openstreetmap.josm.plugins.pt_assistant.utils.StopUtils;
 public class PTAssistantValidatorTest extends Test {
 
 	public static final int ERROR_CODE_SORTING = 3711;
+	public static final int ERROR_CODE_PARTIAL_SORTING = 3712;
 	public static final int ERROR_CODE_ROAD_TYPE = 3721;
 	public static final int ERROR_CODE_CONSTRUCTION = 3722;
 	public static final int ERROR_CODE_DIRECTION = 3731;
@@ -389,7 +390,8 @@ public class PTAssistantValidatorTest extends Test {
 
 		boolean sortingErrorFound = false;
 		for (TestError error : this.errors) {
-			if (error.getCode() == ERROR_CODE_SORTING) {
+			if (error.getCode() == ERROR_CODE_SORTING
+					|| error.getCode() == ERROR_CODE_PARTIAL_SORTING) {
 				sortingErrorFound = true;
 				break;
 			}
@@ -468,6 +470,7 @@ public class PTAssistantValidatorTest extends Test {
 				|| testError.getCode() == ERROR_CODE_ROAD_TYPE
 				|| testError.getCode() == ERROR_CODE_CONSTRUCTION
 				|| testError.getCode() == ERROR_CODE_SORTING
+				|| testError.getCode() == ERROR_CODE_PARTIAL_SORTING
 				|| testError.getCode() == ERROR_CODE_END_STOP
 				|| testError.getCode() == ERROR_CODE_PLATFORM_PART_OF_HIGHWAY) {
 			return true;
@@ -504,7 +507,8 @@ public class PTAssistantValidatorTest extends Test {
 			commands.add(WayChecker.fixErrorByZooming(testError));
 		}
 
-		if (testError.getCode() == ERROR_CODE_SORTING) {
+		if (testError.getCode() == ERROR_CODE_SORTING
+				|| testError.getCode() == ERROR_CODE_PARTIAL_SORTING) {
 			commands.add(RouteChecker.fixSortingError(testError));
 		}
 

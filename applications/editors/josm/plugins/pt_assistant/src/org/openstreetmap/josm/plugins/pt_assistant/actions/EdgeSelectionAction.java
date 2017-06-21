@@ -5,8 +5,6 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 import java.awt.Cursor;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -21,7 +19,7 @@ import org.openstreetmap.josm.plugins.pt_assistant.utils.RouteUtils;
 import org.openstreetmap.josm.tools.ImageProvider;
 import org.openstreetmap.josm.tools.Shortcut;
 
-public class EdgeSelectionAction extends MapMode implements MouseListener, MouseMotionListener  {
+public class EdgeSelectionAction extends MapMode {
 
 	private Set<Way> highlighted;
 	private Cursor selectionCursor;

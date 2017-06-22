@@ -15,19 +15,19 @@ import org.openstreetmap.josm.tools.ImageProvider;
 import org.openstreetmap.josm.tools.Shortcut;
 
 /**
- * Gives the user the possibility to edit the current highlighted relation without selecting it again
+ * Gives the user the possibility to edit the current highlighted relation
+ * without selecting it again
  *
  * @author giacomo
  *
  */
 public class EditHighlightedRelationsAction extends JosmAction {
 
+    private static final String actionName = "Edit Highlighted Relation";
     private static final long serialVersionUID = 2681464946469047054L;
 
-    private static final String actionName = "Edit Highlighted Relation";
-
     /**
-     * Default constructor
+     * Creates a new EditHighlightedRelationsAction
      */
     public EditHighlightedRelationsAction() {
         super(tr(actionName), new ImageProvider("dialogs", "edit"), tr(actionName),
@@ -36,9 +36,6 @@ public class EditHighlightedRelationsAction extends JosmAction {
                 false, "editHighlightedRelations", false);
     }
 
-    /**
-     * Applies the fixes, resets the last fix attribute
-     */
     @Override
     public void actionPerformed(ActionEvent e) {
     	for(Relation relation : PTAssistantPlugin.getHighlightedRelations()) {

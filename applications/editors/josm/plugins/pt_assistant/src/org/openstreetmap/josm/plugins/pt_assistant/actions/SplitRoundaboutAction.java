@@ -31,13 +31,24 @@ import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.plugins.pt_assistant.utils.RouteUtils;
 
-/*
+/**
+ * This action allows the user to split a selected roundabout.
+ * The action will look for ways going in and out of the roudabout
+ * which also are member of a public transport route. Having found
+ * those, the roundabout will be split on the common points between
+ * the ways and it. The routes will be fixed by connecting the entry
+ * point to the exit point of the roundabout.
+ *
+ *	@author giacomo
  */
 public class SplitRoundaboutAction extends JosmAction {
 
 	private static final String actionName = "Split Roundabout";
 	private static final long serialVersionUID = 8912249304286025356L;
 
+	/**
+	 * Creates a new SplitRoundaboutAction
+	 */
 	public SplitRoundaboutAction() {
 		super(actionName, "icons/splitroundabout", actionName, null, true);
 	}

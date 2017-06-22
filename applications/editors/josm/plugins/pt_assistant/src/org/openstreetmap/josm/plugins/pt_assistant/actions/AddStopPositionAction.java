@@ -23,12 +23,16 @@ import org.openstreetmap.josm.data.osm.WaySegment;
 import org.openstreetmap.josm.tools.ImageProvider;
 import org.openstreetmap.josm.tools.Shortcut;
 
-/*
+/**
  * The AddStopPositionAction is a mapmode that allows users to add
  * new stop_positions or to convert already existing nodes.
+ *
+ * @author giacomo
  */
 @SuppressWarnings("serial")
 public class AddStopPositionAction extends MapMode {
+
+	private static final String mapModeName = "Add stop position";
 
 	private transient Set<OsmPrimitive> newHighlights = new HashSet<>();
 	private transient Set<OsmPrimitive> oldHighlights = new HashSet<>();
@@ -36,12 +40,13 @@ public class AddStopPositionAction extends MapMode {
     private final Cursor cursorJoinNode;
     private final Cursor cursorJoinWay;
 
+    /**
+     * Creates a new AddStopPositionAction
+     */
 	public AddStopPositionAction() {
-		super(tr("Add stop position"),
-				"bus",
-				tr("Add stop position"),
+		super(tr(mapModeName), "bus", tr(mapModeName),
 				Shortcut.registerShortcut("mapmode:stop_position",
-                        tr("Mode: {0}", tr("Add stop position")),
+                        tr("Mode: {0}", tr(mapModeName)),
                         KeyEvent.VK_K, Shortcut.CTRL_SHIFT),
 				getCursor());
 
@@ -166,5 +171,4 @@ public class AddStopPositionAction extends MapMode {
     	oldHighlights.addAll(newHighlights);
     	newHighlights.clear();
     }
-
 }

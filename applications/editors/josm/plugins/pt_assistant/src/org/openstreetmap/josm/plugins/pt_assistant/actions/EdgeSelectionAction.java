@@ -20,20 +20,27 @@ import org.openstreetmap.josm.plugins.pt_assistant.utils.RouteUtils;
 import org.openstreetmap.josm.tools.ImageProvider;
 import org.openstreetmap.josm.tools.Shortcut;
 
+/**
+ * The action allows to select a set of consecutive ways at once in order to
+ * speed up the mapper. The selected ways are going to be coherent to the
+ * current route the mapper is working on.
+ *
+ * @author giacomo
+ */
 public class EdgeSelectionAction extends MapMode {
 
-	private Set<Way> highlighted;
+	private static final String mapModeName = "Edge Selection";
+	private static final long serialVersionUID = 2414977774504904238L;
+
+	private transient  Set<Way> highlighted;
+
 	private Cursor selectionCursor;
 	private Cursor waySelectCursor;
 
-	private static final long serialVersionUID = 2414977774504904238L;
-
 	public EdgeSelectionAction() {
-		super(tr("Edge Selection"),
-				"edgeSelection",
-				tr("Edge Selection"),
+		super(tr(mapModeName), "edgeSelection", tr(mapModeName),
 				Shortcut.registerShortcut("mapmode:edge_selection",
-                        tr("Mode: {0}", tr("Edge Selection")),
+                        tr("Mode: {0}", tr(mapModeName)),
                         KeyEvent.VK_K, Shortcut.CTRL),
 				ImageProvider.getCursor("normal", "selection"));
 		highlighted = new HashSet<>();
@@ -46,8 +53,7 @@ public class EdgeSelectionAction extends MapMode {
      * given a way, it looks at both directions for good candidates to be added
      * to the edge
      */
-    private List<Way> getEdgeFromWay(Way initial, String modeOfTravel)
-    {
+    private List<Way> getEdgeFromWay(Way initial, String modeOfTravel) {
     	List<Way> edge = new ArrayList<>();
     	if(!isWaySuitableForMode(initial, modeOfTravel))
     		return edge;
@@ -76,8 +82,7 @@ public class EdgeSelectionAction extends MapMode {
     	return edge;
     }
 
-    private Boolean isWaySuitableForMode(Way toCheck, String modeOfTravel)
-    {
+    private Boolean isWaySuitableForMode(Way toCheck, String modeOfTravel) {
     	if("bus".equals(modeOfTravel))
     		return RouteUtils.isWaySuitableForBuses(toCheck);
 
@@ -87,8 +92,7 @@ public class EdgeSelectionAction extends MapMode {
     /*
      *
      */
-    private Way chooseBestWay(List<Way> ways, String modeOfTravel)
-    {
+    private Way chooseBestWay(List<Way> ways, String modeOfTravel) {
     	ways.removeIf(w -> !isWaySuitableForMode(w, modeOfTravel));
     	if(ways.isEmpty())
     		return null;

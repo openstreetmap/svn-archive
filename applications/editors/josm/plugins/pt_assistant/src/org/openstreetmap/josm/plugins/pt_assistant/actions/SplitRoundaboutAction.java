@@ -39,178 +39,178 @@ import org.openstreetmap.josm.plugins.pt_assistant.utils.RouteUtils;
  * the ways and it. The routes will be fixed by connecting the entry
  * point to the exit point of the roundabout.
  *
- *	@author giacomo
+ * @author giacomo
  */
 public class SplitRoundaboutAction extends JosmAction {
 
-	private static final String actionName = "Split Roundabout";
-	private static final long serialVersionUID = 8912249304286025356L;
+    private static final String actionName = "Split Roundabout";
+    private static final long serialVersionUID = 8912249304286025356L;
 
-	/**
-	 * Creates a new SplitRoundaboutAction
-	 */
-	public SplitRoundaboutAction() {
-		super(actionName, "icons/splitroundabout", actionName, null, true);
-	}
+    /**
+     * Creates a new SplitRoundaboutAction
+     */
+    public SplitRoundaboutAction() {
+        super(actionName, "icons/splitroundabout", actionName, null, true);
+    }
 
-	@Override
-	public void actionPerformed(ActionEvent e) {
+    @Override
+    public void actionPerformed(ActionEvent e) {
 
-		Way roundabout = (Way) getLayerManager().getEditDataSet().getSelected().iterator().next();
+        Way roundabout = (Way) getLayerManager().getEditDataSet().getSelected().iterator().next();
 
-		//download the bbox around the roundabout
-		DownloadOsmTask task = new DownloadOsmTask();
+        //download the bbox around the roundabout
+        DownloadOsmTask task = new DownloadOsmTask();
         task.setZoomAfterDownload(true);
         BBox rbbox = roundabout.getBBox();
         double latOffset = (rbbox.getTopLeftLat() - rbbox.getBottomRightLat()) / 10;
         double lonOffset = (rbbox.getBottomRightLon() - rbbox.getTopLeftLon()) / 10;
         Bounds area = new Bounds(
-        		rbbox.getBottomRightLat() - latOffset,
-        		rbbox.getTopLeftLon() - lonOffset,
-        		rbbox.getTopLeftLat() + latOffset,
-        		rbbox.getBottomRightLon() + lonOffset);
+                rbbox.getBottomRightLat() - latOffset,
+                rbbox.getTopLeftLon() - lonOffset,
+                rbbox.getTopLeftLat() + latOffset,
+                rbbox.getBottomRightLon() + lonOffset);
         Future<?> future = task.download(false, area, null);
         Main.worker.submit(() -> {
-        	try {
-				future.get();
-				continueAfterDownload(roundabout);
-			} catch (InterruptedException | ExecutionException e1) {
-			 	Main.error(e1);
-				return;
-			}
+            try {
+                future.get();
+                continueAfterDownload(roundabout);
+            } catch (InterruptedException | ExecutionException e1) {
+                 Main.error(e1);
+                return;
+            }
         });
-	}
+    }
 
-	private void continueAfterDownload(Way roundabout)
-	{
-		//make the roundabout round, if requested
-		if(Main.pref.getBoolean("pt_assistant.roundabout-splitter.alignalways") ||
-				JOptionPane.YES_OPTION == JOptionPane.showOptionDialog(Main.parent,
-				tr("Do you want to make the roundabout round?"), tr("Roundabout round"),
-				JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE,
-				null, null, null)) {
-			new AlignInCircleAction().actionPerformed(null);
-		}
+    private void continueAfterDownload(Way roundabout)
+    {
+        //make the roundabout round, if requested
+        if(Main.pref.getBoolean("pt_assistant.roundabout-splitter.alignalways") ||
+                JOptionPane.YES_OPTION == JOptionPane.showOptionDialog(Main.parent,
+                tr("Do you want to make the roundabout round?"), tr("Roundabout round"),
+                JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE,
+                null, null, null)) {
+            new AlignInCircleAction().actionPerformed(null);
+        }
 
-		//save the position of the roundabout inside each relation
-		Map<Relation, Integer> savedPositions = getSavedPositions(roundabout);
+        //save the position of the roundabout inside each relation
+        Map<Relation, Integer> savedPositions = getSavedPositions(roundabout);
 
         //split the roundabout on the designed nodes
-		List<Node> splitNodes = getSplitNodes(roundabout);
-		getLayerManager().getEditDataSet().setSelected(splitNodes);
-		new SplitWayAction().actionPerformed(null);
-		Collection<Way> splitWays = getLayerManager().getEditDataSet().getSelectedWays();
+        List<Node> splitNodes = getSplitNodes(roundabout);
+        getLayerManager().getEditDataSet().setSelected(splitNodes);
+        new SplitWayAction().actionPerformed(null);
+        Collection<Way> splitWays = getLayerManager().getEditDataSet().getSelectedWays();
 
         //update the relations.
-		updateRelations(savedPositions, splitNodes, splitWays);
-	}
+        updateRelations(savedPositions, splitNodes, splitWays);
+    }
 
-	public void updateRelations(Map<Relation, Integer> savedPositions,
-			List<Node> splitNodes, Collection<Way> splitWays) {
-		savedPositions.forEach((r, i) -> {
-			Way previous = r.getMember(i-1).getWay();
-			Way subsequent = r.getMember(i).getWay();
-			Node entryNode;
-			Node exitNode;
+    public void updateRelations(Map<Relation, Integer> savedPositions,
+            List<Node> splitNodes, Collection<Way> splitWays) {
+        savedPositions.forEach((r, i) -> {
+            Way previous = r.getMember(i-1).getWay();
+            Way subsequent = r.getMember(i).getWay();
+            Node entryNode;
+            Node exitNode;
 
-			//checking if the previous way enters the roundabout and the
-			//subsequent exits it
-			if(splitNodes.contains(previous.lastNode()))
-				entryNode = previous.lastNode();
-			else if(splitNodes.contains(previous.firstNode()))
-				entryNode = previous.firstNode();
-			else
-				entryNode = null;
+            //checking if the previous way enters the roundabout and the
+            //subsequent exits it
+            if(splitNodes.contains(previous.lastNode()))
+                entryNode = previous.lastNode();
+            else if(splitNodes.contains(previous.firstNode()))
+                entryNode = previous.firstNode();
+            else
+                entryNode = null;
 
-			if(splitNodes.contains(subsequent.firstNode()))
-				exitNode = subsequent.firstNode();
-			else if (splitNodes.contains(subsequent.lastNode()))
-				exitNode = subsequent.lastNode();
-			else
-				exitNode = null;
+            if(splitNodes.contains(subsequent.firstNode()))
+                exitNode = subsequent.firstNode();
+            else if (splitNodes.contains(subsequent.lastNode()))
+                exitNode = subsequent.lastNode();
+            else
+                exitNode = null;
 
-			//if not, exit
-			if(entryNode == null || exitNode == null)
-				return;
+            //if not, exit
+            if(entryNode == null || exitNode == null)
+                return;
 
-			//starting from the entry node, add split ways until the
-			//exit node is reached
-			List<Way> parents = entryNode.getParentWays();
-			parents.removeIf(w -> !w.firstNode().equals(entryNode));
-			parents.removeIf(w -> w.equals(previous));
+            //starting from the entry node, add split ways until the
+            //exit node is reached
+            List<Way> parents = entryNode.getParentWays();
+            parents.removeIf(w -> !w.firstNode().equals(entryNode));
+            parents.removeIf(w -> w.equals(previous));
 
-			Way curr = parents.get(0);
-			int j = 0;
+            Way curr = parents.get(0);
+            int j = 0;
 
-			while(!curr.lastNode().equals(exitNode)) {
-				r.addMember(i + j++, new RelationMember(null, curr));
-				parents = curr.lastNode().getParentWays();
-				parents.remove(curr);
-				parents.removeIf(w -> !splitWays.contains(w));
-				curr = parents.get(0);
-			}
-			r.addMember(i + j++, new RelationMember(null, curr));
-		});
-	}
+            while(!curr.lastNode().equals(exitNode)) {
+                r.addMember(i + j++, new RelationMember(null, curr));
+                parents = curr.lastNode().getParentWays();
+                parents.remove(curr);
+                parents.removeIf(w -> !splitWays.contains(w));
+                curr = parents.get(0);
+            }
+            r.addMember(i + j++, new RelationMember(null, curr));
+        });
+    }
 
-	//split only on the nodes which might be the
-	//entry or exit point for some public transport route
-	public List<Node> getSplitNodes(Way roundabout) {
-		Set<Node> noDuplicateSplitNodes = new HashSet<>(roundabout.getNodes());
-		List<Node> splitNodes = new ArrayList<>(noDuplicateSplitNodes);
+    //split only on the nodes which might be the
+    //entry or exit point for some public transport route
+    public List<Node> getSplitNodes(Way roundabout) {
+        Set<Node> noDuplicateSplitNodes = new HashSet<>(roundabout.getNodes());
+        List<Node> splitNodes = new ArrayList<>(noDuplicateSplitNodes);
 
-		splitNodes.removeIf(n -> {
-			List<Way> parents = n.getParentWays();
-			if(parents.size() == 1)
-				return true;
-			parents.remove(roundabout);
-			for(Way parent: parents) {
-				for(OsmPrimitive prim : parent.getReferrers()) {
-					if(prim.getType() == OsmPrimitiveType.RELATION &&
-							RouteUtils.isTwoDirectionRoute((Relation) prim))
-						return false;
-				}
-			}
+        splitNodes.removeIf(n -> {
+            List<Way> parents = n.getParentWays();
+            if(parents.size() == 1)
+                return true;
+            parents.remove(roundabout);
+            for(Way parent: parents) {
+                for(OsmPrimitive prim : parent.getReferrers()) {
+                    if(prim.getType() == OsmPrimitiveType.RELATION &&
+                            RouteUtils.isTwoDirectionRoute((Relation) prim))
+                        return false;
+                }
+            }
 
-			return true;
-		});
-		return splitNodes;
-	}
+            return true;
+        });
+        return splitNodes;
+    }
 
-	//save the position of the roundabout inside each public transport route
-	//it is contained in
-	public Map<Relation, Integer> getSavedPositions(Way roundabout) {
+    //save the position of the roundabout inside each public transport route
+    //it is contained in
+    public Map<Relation, Integer> getSavedPositions(Way roundabout) {
 
-		Map<Relation, Integer> savedPositions = new HashMap<>();
-		List <OsmPrimitive> referrers = roundabout.getReferrers();
-		referrers.removeIf(r -> r.getType() != OsmPrimitiveType.RELATION
-				|| !RouteUtils.isTwoDirectionRoute((Relation) r));
-		for(OsmPrimitive currPrim : referrers) {
-			Relation curr = (Relation) currPrim;
-			for(int j = 0; j < curr.getMembersCount(); j++) {
-				if(curr.getMember(j).getUniqueId() == roundabout.getUniqueId()) {
-					savedPositions.put(curr, j);
-					curr.removeMember(j);
-					break;
-				}
-			}
-		}
-
-		return savedPositions;
-	}
-
-	@Override
-	protected void updateEnabledState(
-			Collection<? extends OsmPrimitive> selection) {
-        setEnabled(false);
-		if (selection == null || selection.size() != 1)
-            return;
-		OsmPrimitive selected = selection.iterator().next();
-	    if(selected.getType() != OsmPrimitiveType.WAY)
-        	return;
-        if(((Way)selected).isClosed() && selected.hasTag("junction", "roundabout")) {
-        	setEnabled(true);
-        	return;
+        Map<Relation, Integer> savedPositions = new HashMap<>();
+        List <OsmPrimitive> referrers = roundabout.getReferrers();
+        referrers.removeIf(r -> r.getType() != OsmPrimitiveType.RELATION
+                || !RouteUtils.isTwoDirectionRoute((Relation) r));
+        for(OsmPrimitive currPrim : referrers) {
+            Relation curr = (Relation) currPrim;
+            for(int j = 0; j < curr.getMembersCount(); j++) {
+                if(curr.getMember(j).getUniqueId() == roundabout.getUniqueId()) {
+                    savedPositions.put(curr, j);
+                    curr.removeMember(j);
+                    break;
+                }
+            }
         }
-	}
+
+        return savedPositions;
+    }
+
+    @Override
+    protected void updateEnabledState(
+            Collection<? extends OsmPrimitive> selection) {
+        setEnabled(false);
+        if (selection == null || selection.size() != 1)
+            return;
+        OsmPrimitive selected = selection.iterator().next();
+        if(selected.getType() != OsmPrimitiveType.WAY)
+            return;
+        if(((Way)selected).isClosed() && selected.hasTag("junction", "roundabout")) {
+            setEnabled(true);
+            return;
+        }
+    }
 }

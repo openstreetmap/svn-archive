@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.pt_assistant.actions;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -49,12 +50,10 @@ public class AddStopPositionAction extends MapMode {
 	}
 
     private static Cursor getCursor() {
-        try {
-            return ImageProvider.getCursor("crosshair", "bus");
-        } catch (Exception e) {
-            Main.error(e);
-        }
-        return Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR);
+    	Cursor cursor = ImageProvider.getCursor("crosshair", "bus");
+    	if(cursor == null)
+    		cursor = Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR);
+    	return cursor;
     }
 
     @Override
@@ -72,7 +71,7 @@ public class AddStopPositionAction extends MapMode {
     }
 
     @Override
-    public void mouseMoved (MouseEvent e) {
+    public void mouseMoved(MouseEvent e) {
 
     	//while the mouse is moving, surroundings are checked
     	//if anything is found, it will be highlighted.
@@ -87,7 +86,7 @@ public class AddStopPositionAction extends MapMode {
     		List<WaySegment> wss =
     				Main.map.mapView.getNearestWaySegments(e.getPoint(), OsmPrimitive::isSelectable);
 
-    		if(wss.size() > 0) {
+    		if(!wss.isEmpty()) {
 	    		for(WaySegment ws : wss) {
 	    			newHighlights.add(ws.way);
 	    		}
@@ -100,7 +99,7 @@ public class AddStopPositionAction extends MapMode {
     }
 
     @Override
-    public void mouseClicked (MouseEvent e) {
+    public void mouseClicked(MouseEvent e) {
 
     	Boolean newNode = false;
     	Node newStopPos;
@@ -149,22 +148,23 @@ public class AddStopPositionAction extends MapMode {
 	//turn off what has been highlighted on last mouse move and highlight what has to be highlighted now
     private void updateHighlights()
     {
-    	if(oldHighlights.size() > 0 || newHighlights.size() > 0) {
-
-    		for(OsmPrimitive osm : oldHighlights) {
-        		osm.setHighlighted(false);
-        	}
-
-        	for(OsmPrimitive osm : newHighlights) {
-        		osm.setHighlighted(true);
-        	}
-
-    		Main.getLayerManager().getEditLayer().invalidate();
-
-        	oldHighlights.clear();
-        	oldHighlights.addAll(newHighlights);
-        	newHighlights.clear();
+    	if(oldHighlights.isEmpty() && newHighlights.isEmpty()) {
+    		return;
     	}
+
+		for(OsmPrimitive osm : oldHighlights) {
+    		osm.setHighlighted(false);
+    	}
+
+    	for(OsmPrimitive osm : newHighlights) {
+    		osm.setHighlighted(true);
+    	}
+
+		Main.getLayerManager().getEditLayer().invalidate();
+
+    	oldHighlights.clear();
+    	oldHighlights.addAll(newHighlights);
+    	newHighlights.clear();
     }
 
 }

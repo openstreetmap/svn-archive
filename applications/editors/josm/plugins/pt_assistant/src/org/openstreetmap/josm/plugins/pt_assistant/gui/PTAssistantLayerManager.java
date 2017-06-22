@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.pt_assistant.gui;
 
 import java.util.ArrayList;
@@ -10,10 +11,10 @@ import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.plugins.pt_assistant.PTAssistantPlugin;
 import org.openstreetmap.josm.plugins.pt_assistant.utils.RouteUtils;
 
-public class PTAssistantLayerManager implements SelectionChangedListener{
+public class PTAssistantLayerManager implements SelectionChangedListener {
 
-	public static PTAssistantLayerManager PTLM = new PTAssistantLayerManager();
-    private PTAssistantLayer layer;
+	public final static PTAssistantLayerManager PTLM = new PTAssistantLayerManager();
+	private PTAssistantLayer layer;
 
     public PTAssistantLayer getLayer() {
         if (layer == null) {
@@ -22,8 +23,7 @@ public class PTAssistantLayerManager implements SelectionChangedListener{
         return layer;
     }
 
-    public void resetLayer()
-    {
+    public void resetLayer() {
     	layer = null;
     }
 
@@ -36,10 +36,9 @@ public class PTAssistantLayerManager implements SelectionChangedListener{
         ArrayList<OsmPrimitive> routes = new ArrayList<>();
 
         for (OsmPrimitive primitive : newSelection) {
-            if (primitive.getType().equals(OsmPrimitiveType.RELATION)) {
-                if (RouteUtils.isTwoDirectionRoute((Relation) primitive)) {
+            if (primitive.getType().equals(OsmPrimitiveType.RELATION)
+            		&& RouteUtils.isTwoDirectionRoute((Relation) primitive)) {
                     routes.add(primitive);
-                }
             }
         }
 

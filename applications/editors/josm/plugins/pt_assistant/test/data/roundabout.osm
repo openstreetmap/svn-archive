@@ -3,6 +3,64 @@
   <bounds minlat='44.5138001' minlon='11.2669264' maxlat='44.5146872' maxlon='11.2686287' origin='CGImap 0.6.0 (7564 thorn-03.openstreetmap.org)' />
   <bounds minlat='44.5332306' minlon='11.304646' maxlat='44.5340627' maxlon='11.3062432' origin='CGImap 0.6.0 (6173 thorn-01.openstreetmap.org)' />
   <bounds minlat='44.5163899' minlon='11.292683' maxlat='44.5170618' maxlon='11.2939724' origin='CGImap 0.6.0 (17818 thorn-01.openstreetmap.org)' />
+  <node id='-33366' action='modify' lat='44.51580482382' lon='11.27400520274' />
+  <node id='-33368' action='modify' lat='44.51585348183' lon='11.27400834786' />
+  <node id='-33370' action='modify' lat='44.51591488142' lon='11.2740106863' />
+  <node id='-33372' action='modify' lat='44.51597269638' lon='11.27400613888'>
+    <tag k='name' v='nentry1-1' />
+  </node>
+  <node id='-33374' action='modify' lat='44.51617596609' lon='11.27394915048'>
+    <tag k='name' v='nentry1-2' />
+  </node>
+  <node id='-33376' action='modify' lat='44.51616580606' lon='11.27390429158' />
+  <node id='-33378' action='modify' lat='44.51614596976' lon='11.27386632505'>
+    <tag k='name' v='nentry3' />
+  </node>
+  <node id='-33380' action='modify' lat='44.51611853145' lon='11.27383922098'>
+    <tag k='name' v='nexit2-1' />
+  </node>
+  <node id='-33382' action='modify' lat='44.51607263223' lon='11.27382465414'>
+    <tag k='name' v='nentry2-2' />
+  </node>
+  <node id='-33384' action='modify' lat='44.51602707289' lon='11.27383986598' />
+  <node id='-33386' action='modify' lat='44.51599092016' lon='11.27388161688'>
+    <tag k='name' v='nexit3' />
+  </node>
+  <node id='-33388' action='modify' lat='44.5159715354' lon='11.27394140565'>
+    <tag k='name' v='nexit1-2' />
+  </node>
+  <node id='-33390' action='modify' lat='44.51599342131' lon='11.27406318588' />
+  <node id='-33392' action='modify' lat='44.51602959601' lon='11.27410224215'>
+    <tag k='name' v='nexit2-2' />
+  </node>
+  <node id='-33394' action='modify' lat='44.51607390916' lon='11.2741157542'>
+    <tag k='name' v='nentry2-1' />
+  </node>
+  <node id='-33396' action='modify' lat='44.5161182879' lon='11.27410135232' />
+  <node id='-33398' action='modify' lat='44.51615399505' lon='11.27406168769' />
+  <node id='-33400' action='modify' lat='44.51617415248' lon='11.27400440082'>
+    <tag k='name' v='nexit1-1' />
+  </node>
+  <node id='-33402' action='modify' lat='44.51622919031' lon='11.2740126815' />
+  <node id='-33404' action='modify' lat='44.51628734499' lon='11.27401289328' />
+  <node id='-33406' action='modify' lat='44.51628728362' lon='11.27395396983' />
+  <node id='-33408' action='modify' lat='44.51623145663' lon='11.27395084803' />
+  <node id='-33410' action='modify' lat='44.51591151791' lon='11.27392804314' />
+  <node id='-33412' action='modify' lat='44.51584593388' lon='11.27392714153' />
+  <node id='-33414' action='modify' lat='44.51580633132' lon='11.27392468203' />
+  <node id='-33416' action='modify' lat='44.51607563657' lon='11.27430684936' />
+  <node id='-33418' action='modify' lat='44.51607884646' lon='11.2742138158' />
+  <node id='-33420' action='modify' lat='44.51611629528' lon='11.2737711561' />
+  <node id='-33422' action='modify' lat='44.51611308539' lon='11.27366911929' />
+  <node id='-33424' action='modify' lat='44.51604674746' lon='11.27367812253' />
+  <node id='-33426' action='modify' lat='44.51604995736' lon='11.27375465014' />
+  <node id='-33428' action='modify' lat='44.516028558' lon='11.27420481255' />
+  <node id='-33430' action='modify' lat='44.51602427815' lon='11.27430234774' />
+  <node id='-33432' action='modify' lat='44.51628204393' lon='11.273706037' />
+  <node id='-33434' action='modify' lat='44.51619129335' lon='11.27379781873' />
+  <node id='-33436' action='modify' lat='44.51595481762' lon='11.27382229386' />
+  <node id='-33438' action='modify' lat='44.5159234038' lon='11.27377701487' />
+  <node id='-33440' action='modify' lat='44.51586842956' lon='11.27368400938' />
   <node id='254635775' timestamp='2008-03-29T14:34:19Z' uid='20229' user='spezzi64' version='1' changeset='418502' lat='44.5106507' lon='11.2743674' />
   <node id='254636492' timestamp='2012-04-08T19:15:05Z' uid='188477' user='lerks' version='2' changeset='11229572' lat='44.5111921' lon='11.2745685' />
   <node id='254636493' timestamp='2012-04-08T19:15:05Z' uid='188477' user='lerks' version='2' changeset='11229572' lat='44.5111998' lon='11.2744226' />
@@ -1280,6 +1338,134 @@
   <node id='4869942889' action='delete' timestamp='2017-05-22T13:55:39Z' uid='2457192' user='Loppi' version='1' changeset='48889488' lat='44.51459135517' lon='11.28109313851' />
   <node id='4869942890' action='delete' timestamp='2017-05-22T13:55:39Z' uid='2457192' user='Loppi' version='1' changeset='48889488' lat='44.51458745388' lon='11.28100313851' />
   <node id='4869942891' action='modify' timestamp='2017-05-22T13:55:39Z' uid='2457192' user='Loppi' version='1' changeset='48889488' lat='44.51477561602' lon='11.28100523851' />
+  <way id='-34580' action='modify'>
+    <nd ref='-33366' />
+    <nd ref='-33368' />
+    <tag k='highway' v='primary' />
+  </way>
+  <way id='-34582' action='modify'>
+    <nd ref='-33368' />
+    <nd ref='-33370' />
+    <nd ref='-33372' />
+    <tag k='highway' v='primary' />
+    <tag k='name' v='entry1-1' />
+  </way>
+  <way id='-34584' action='modify'>
+    <nd ref='-33374' />
+    <nd ref='-33376' />
+    <nd ref='-33378' />
+    <nd ref='-33380' />
+    <nd ref='-33382' />
+    <nd ref='-33384' />
+    <nd ref='-33386' />
+    <nd ref='-33388' />
+    <nd ref='-33372' />
+    <nd ref='-33390' />
+    <nd ref='-33392' />
+    <nd ref='-33394' />
+    <nd ref='-33396' />
+    <nd ref='-33398' />
+    <nd ref='-33400' />
+    <nd ref='-33374' />
+    <tag k='highway' v='primary' />
+    <tag k='junction' v='roundabout' />
+    <tag k='name' v='r4' />
+  </way>
+  <way id='-34586' action='modify'>
+    <nd ref='-33400' />
+    <nd ref='-33402' />
+    <nd ref='-33404' />
+    <tag k='highway' v='primary' />
+    <tag k='name' v='exit1-1' />
+  </way>
+  <way id='-34588' action='modify'>
+    <nd ref='-33404' />
+    <nd ref='-33406' />
+    <tag k='highway' v='primary' />
+  </way>
+  <way id='-34590' action='modify'>
+    <nd ref='-33406' />
+    <nd ref='-33408' />
+    <nd ref='-33374' />
+    <tag k='highway' v='primary' />
+    <tag k='name' v='entry1-2' />
+  </way>
+  <way id='-34592' action='modify'>
+    <nd ref='-33388' />
+    <nd ref='-33410' />
+    <tag k='highway' v='primary' />
+    <tag k='name' v='exit1-2' />
+  </way>
+  <way id='-34594' action='modify'>
+    <nd ref='-33410' />
+    <nd ref='-33412' />
+    <nd ref='-33414' />
+    <tag k='highway' v='primary' />
+  </way>
+  <way id='-34596' action='modify'>
+    <nd ref='-33416' />
+    <nd ref='-33418' />
+    <tag k='highway' v='primary' />
+  </way>
+  <way id='-34598' action='modify'>
+    <nd ref='-33418' />
+    <nd ref='-33394' />
+    <tag k='highway' v='primary' />
+    <tag k='name' v='entry2-1' />
+  </way>
+  <way id='-34600' action='modify'>
+    <nd ref='-33380' />
+    <nd ref='-33420' />
+    <nd ref='-33422' />
+    <tag k='highway' v='primary' />
+    <tag k='name' v='exit2-1' />
+  </way>
+  <way id='-34602' action='modify'>
+    <nd ref='-33422' />
+    <nd ref='-33424' />
+    <tag k='highway' v='primary' />
+  </way>
+  <way id='-34604' action='modify'>
+    <nd ref='-33424' />
+    <nd ref='-33426' />
+    <nd ref='-33382' />
+    <tag k='highway' v='primary' />
+    <tag k='name' v='entry2-2' />
+  </way>
+  <way id='-34606' action='modify'>
+    <nd ref='-33392' />
+    <nd ref='-33428' />
+    <tag k='highway' v='primary' />
+    <tag k='name' v='exit2-2' />
+  </way>
+  <way id='-34608' action='modify'>
+    <nd ref='-33428' />
+    <nd ref='-33430' />
+    <tag k='highway' v='primary' />
+  </way>
+  <way id='-34610' action='modify'>
+    <nd ref='-33432' />
+    <nd ref='-33434' />
+    <tag k='highway' v='primary' />
+  </way>
+  <way id='-34612' action='modify'>
+    <nd ref='-33434' />
+    <nd ref='-33378' />
+    <tag k='highway' v='primary' />
+    <tag k='name' v='entry3' />
+  </way>
+  <way id='-34614' action='modify'>
+    <nd ref='-33386' />
+    <nd ref='-33436' />
+    <nd ref='-33438' />
+    <tag k='highway' v='primary' />
+    <tag k='name' v='exit3' />
+  </way>
+  <way id='-34616' action='modify'>
+    <nd ref='-33438' />
+    <nd ref='-33440' />
+    <tag k='highway' v='primary' />
+  </way>
   <way id='23512811' timestamp='2015-07-24T23:15:22Z' uid='217070' user='Davlak' version='18' changeset='32862169'>
     <nd ref='254636638' />
     <nd ref='254636492' />
@@ -1912,97 +2098,47 @@
   <way id='495218485' action='delete' timestamp='2017-05-22T13:55:40Z' uid='2457192' user='Loppi' version='1' changeset='48889488'>
     <tag k='landuse' v='grass' />
   </way>
-  <relation id='3494744' timestamp='2017-03-23T18:05:26Z' uid='339581' user='nyuriks' version='121' changeset='47103524'>
-    <member type='way' ref='294951973' role='' />
-    <member type='way' ref='262051642' role='' />
-    <member type='way' ref='262543035' role='' />
-    <member type='way' ref='262170924' role='' />
-    <member type='way' ref='263052191' role='' />
-    <member type='way' ref='260422007' role='' />
-    <member type='way' ref='262721981' role='' />
-    <member type='way' ref='262868515' role='' />
-    <member type='way' ref='263210728' role='' />
-    <member type='way' ref='263318250' role='' />
-    <member type='way' ref='263461724' role='' />
-    <member type='way' ref='263510604' role='' />
-    <member type='way' ref='263531696' role='' />
-    <member type='way' ref='263587822' role='' />
-    <member type='way' ref='263591680' role='' />
-    <member type='way' ref='263592613' role='' />
-    <member type='way' ref='263623773' role='' />
-    <member type='way' ref='263625152' role='' />
-    <member type='way' ref='263665160' role='' />
-    <member type='way' ref='263744031' role='' />
-    <member type='way' ref='264284186' role='' />
-    <member type='way' ref='264450937' role='' />
-    <member type='way' ref='264550308' role='' />
-    <member type='way' ref='264940865' role='' />
-    <member type='way' ref='264946783' role='' />
-    <member type='way' ref='264948095' role='' />
-    <member type='way' ref='265001332' role='' />
-    <member type='way' ref='265038317' role='' />
-    <member type='way' ref='265043150' role='' />
-    <member type='way' ref='265073327' role='' />
-    <member type='way' ref='265359177' role='' />
-    <member type='relation' ref='3497980' role='' />
-    <member type='relation' ref='3500659' role='' />
-    <member type='relation' ref='3503470' role='' />
-    <member type='relation' ref='3511205' role='' />
-    <member type='relation' ref='3511206' role='' />
-    <member type='relation' ref='3510853' role='' />
-    <member type='relation' ref='3515482' role='' />
-    <member type='relation' ref='3515483' role='' />
-    <member type='relation' ref='3518435' role='' />
-    <member type='relation' ref='3521346' role='' />
-    <member type='relation' ref='3522658' role='' />
-    <member type='relation' ref='3524206' role='' />
-    <member type='relation' ref='3524695' role='' />
-    <member type='relation' ref='3527653' role='' />
-    <member type='relation' ref='3502111' role='' />
-    <member type='relation' ref='3520374' role='' />
-    <member type='relation' ref='3536343' role='' />
-    <member type='relation' ref='3536313' role='' />
-    <member type='relation' ref='3533000' role='' />
-    <member type='relation' ref='3536041' role='' />
-    <member type='relation' ref='3537738' role='' />
-    <member type='relation' ref='3537966' role='' />
-    <member type='relation' ref='3542735' role='' />
-    <member type='relation' ref='3542737' role='' />
-    <member type='relation' ref='3540182' role='' />
-    <member type='relation' ref='3548332' role='' />
-    <member type='relation' ref='3548872' role='' />
-    <member type='relation' ref='3559907' role='' />
-    <member type='relation' ref='3562103' role='' />
-    <member type='relation' ref='3562426' role='' />
-    <member type='relation' ref='3562535' role='' />
-    <member type='relation' ref='3565893' role='' />
-    <member type='relation' ref='3566431' role='' />
-    <member type='way' ref='375134601' role='' />
-    <member type='way' ref='265387877' role='' />
-    <member type='way' ref='375111785' role='' />
-    <member type='way' ref='265409435' role='' />
-    <member type='way' ref='265421585' role='' />
-    <member type='way' ref='265427998' role='' />
-    <member type='way' ref='265550313' role='' />
-    <member type='relation' ref='3568349' role='' />
-    <member type='way' ref='265561143' role='' />
-    <member type='way' ref='265562148' role='' />
-    <member type='way' ref='265569858' role='' />
-    <member type='relation' ref='3568452' role='' />
-    <member type='way' ref='265587741' role='' />
-    <member type='way' ref='265592267' role='' />
-    <member type='way' ref='347745790' role='' />
-    <member type='way' ref='294376691' role='' />
-    <member type='way' ref='265600432' role='' />
-    <member type='way' ref='265613756' role='' />
-    <member type='way' ref='265631809' role='' />
-    <member type='relation' ref='3569420' role='' />
-    <member type='relation' ref='3569500' role='' />
-    <member type='relation' ref='3569653' role='' />
-    <member type='relation' ref='3570648' role='' />
-    <member type='relation' ref='3571543' role='' />
-    <member type='relation' ref='3503470' role='' />
-    <member type='relation' ref='3579698' role='' />
+  <relation id='-34689' action='modify'>
+    <member type='way' ref='-34580' role='' />
+    <member type='way' ref='-34582' role='' />
+    <member type='way' ref='-34584' role='' />
+    <member type='way' ref='-34586' role='' />
+    <member type='way' ref='-34588' role='' />
+    <member type='way' ref='-34590' role='' />
+    <member type='way' ref='-34584' role='' />
+    <member type='way' ref='-34592' role='' />
+    <member type='way' ref='-34594' role='' />
+    <tag k='name' v='1' />
+    <tag k='public_transport:version' v='2' />
+    <tag k='route' v='bus' />
+    <tag k='type' v='route' />
+  </relation>
+  <relation id='-34691' action='modify'>
+    <member type='way' ref='-34596' role='' />
+    <member type='way' ref='-34598' role='' />
+    <member type='way' ref='-34584' role='' />
+    <member type='way' ref='-34600' role='' />
+    <member type='way' ref='-34602' role='' />
+    <member type='way' ref='-34604' role='' />
+    <member type='way' ref='-34584' role='' />
+    <member type='way' ref='-34606' role='' />
+    <member type='way' ref='-34608' role='' />
+    <tag k='name' v='2' />
+    <tag k='public_transport:version' v='2' />
+    <tag k='route' v='bus' />
+    <tag k='type' v='route' />
+  </relation>
+  <relation id='-34693' action='modify'>
+    <member type='way' ref='-34610' role='' />
+    <member type='way' ref='-34612' role='' />
+    <member type='way' ref='-34584' role='' />
+    <member type='way' ref='-34614' role='' />
+    <member type='way' ref='-34616' role='' />
+    <tag k='public_transport:version' v='2' />
+    <tag k='route' v='bus' />
+    <tag k='type' v='route' />
+  </relation>
+  <relation id='3494744' action='delete' timestamp='2017-03-23T18:05:26Z' uid='339581' user='nyuriks' version='121' changeset='47103524'>
     <tag k='alt_name' v='Natura 2000 Emilia Romagna' />
     <tag k='name' v='Parchi Aree protette Natura 2000 Emilia Romagna' />
     <tag k='operator' v='Natura 2000' />
@@ -2011,50 +2147,7 @@
     <tag k='wikidata' v='Q503021' />
     <tag k='wikipedia' v='it:Natura 2000' />
   </relation>
-  <relation id='3510569' timestamp='2017-03-23T18:05:27Z' uid='339581' user='nyuriks' version='45' changeset='47103524'>
-    <member type='way' ref='263461724' role='' />
-    <member type='way' ref='262051642' role='' />
-    <member type='way' ref='262721981' role='' />
-    <member type='way' ref='262868515' role='' />
-    <member type='way' ref='260422007' role='' />
-    <member type='way' ref='263623773' role='' />
-    <member type='way' ref='263625152' role='' />
-    <member type='way' ref='263744031' role='' />
-    <member type='way' ref='264284186' role='' />
-    <member type='way' ref='264450937' role='' />
-    <member type='way' ref='264550308' role='' />
-    <member type='way' ref='264940865' role='' />
-    <member type='way' ref='264946783' role='' />
-    <member type='way' ref='264948095' role='' />
-    <member type='relation' ref='3500659' role='' />
-    <member type='relation' ref='3511206' role='' />
-    <member type='relation' ref='3511205' role='' />
-    <member type='relation' ref='3510853' role='' />
-    <member type='relation' ref='3515482' role='' />
-    <member type='relation' ref='3515483' role='' />
-    <member type='relation' ref='3537738' role='' />
-    <member type='relation' ref='3522658' role='' />
-    <member type='relation' ref='3518435' role='' />
-    <member type='relation' ref='3542735' role='' />
-    <member type='relation' ref='3542737' role='' />
-    <member type='relation' ref='3540182' role='' />
-    <member type='relation' ref='3548332' role='' />
-    <member type='relation' ref='3548872' role='' />
-    <member type='relation' ref='3559907' role='' />
-    <member type='way' ref='265001332' role='' />
-    <member type='way' ref='265038317' role='' />
-    <member type='way' ref='265043150' role='' />
-    <member type='relation' ref='3562103' role='' />
-    <member type='way' ref='265073327' role='' />
-    <member type='relation' ref='3562426' role='' />
-    <member type='relation' ref='3562535' role='' />
-    <member type='way' ref='265359177' role='' />
-    <member type='relation' ref='3565893' role='' />
-    <member type='way' ref='266074918' role='' />
-    <member type='relation' ref='3574678' role='' />
-    <member type='relation' ref='3579698' role='' />
-    <member type='way' ref='266573184' role='' />
-    <member type='relation' ref='3579847' role='' />
+  <relation id='3510569' action='delete' timestamp='2017-03-23T18:05:27Z' uid='339581' user='nyuriks' version='45' changeset='47103524'>
     <tag k='name' v='Parchi regionali Provincia Bologna' />
     <tag k='operator' v='Natura 2000' />
     <tag k='type' v='site' />
@@ -2062,8 +2155,7 @@
     <tag k='wikidata' v='Q503021' />
     <tag k='wikipedia' v='it:Natura 2000' />
   </relation>
-  <relation id='3542735' action='modify' timestamp='2017-01-04T00:43:15Z' uid='339581' user='nyuriks' version='5' changeset='44886932'>
-    <member type='way' ref='263746207' role='outer' />
+  <relation id='3542735' action='delete' timestamp='2017-01-04T00:43:15Z' uid='339581' user='nyuriks' version='5' changeset='44886932'>
     <tag k='WDPA_ID:ref' v='555528771' />
     <tag k='allocation:it' v='Il sito è localizzato nella periferia Nord della conurbazione bolognese e comprende un tratto di circa 2 km del fiume Reno, con le relative golene, che inizia circa 500 metri a Nord dell’Autostrada' />
     <tag k='boundary' v='protected_area' />
@@ -2992,34 +3084,19 @@
     <tag k='type' v='route' />
     <tag k='via' v='Rigosa' />
   </relation>
-  <relation id='6741375' timestamp='2016-11-26T10:46:14Z' uid='362997' user='Virgile1994' version='1' changeset='43961143'>
-    <member type='node' ref='280693382' role='stop' />
-    <member type='way' ref='455938776' role='platform' />
-    <member type='node' ref='4523145490' role='' />
+  <relation id='6741375' action='delete' timestamp='2016-11-26T10:46:14Z' uid='362997' user='Virgile1994' version='1' changeset='43961143'>
     <tag k='name' v='Ariosto' />
     <tag k='network' v='TPER' />
     <tag k='public_transport' v='stop_area' />
     <tag k='type' v='public_transport' />
   </relation>
-  <relation id='6741377' timestamp='2016-11-26T10:46:15Z' uid='362997' user='Virgile1994' version='1' changeset='43961143'>
-    <member type='node' ref='3464979206' role='stop' />
-    <member type='way' ref='455938807' role='platform' />
-    <member type='node' ref='4523145524' role='' />
-    <member type='node' ref='3464967730' role='stop' />
-    <member type='way' ref='455938805' role='platform' />
-    <member type='node' ref='4523145521' role='' />
+  <relation id='6741377' action='delete' timestamp='2016-11-26T10:46:15Z' uid='362997' user='Virgile1994' version='1' changeset='43961143'>
     <tag k='name' v='Triumvirato' />
     <tag k='network' v='TPER' />
     <tag k='public_transport' v='stop_area' />
     <tag k='type' v='public_transport' />
   </relation>
-  <relation id='6741378' timestamp='2016-11-26T10:46:15Z' uid='362997' user='Virgile1994' version='1' changeset='43961143'>
-    <member type='node' ref='2975209406' role='stop' />
-    <member type='way' ref='455938811' role='platform' />
-    <member type='node' ref='4523145528' role='' />
-    <member type='node' ref='2975202792' role='stop' />
-    <member type='way' ref='455938809' role='platform' />
-    <member type='node' ref='4523145527' role='' />
+  <relation id='6741378' action='delete' timestamp='2016-11-26T10:46:15Z' uid='362997' user='Virgile1994' version='1' changeset='43961143'>
     <tag k='name' v='Acquedotto Triumvirato' />
     <tag k='network' v='TPER' />
     <tag k='public_transport' v='stop_area' />

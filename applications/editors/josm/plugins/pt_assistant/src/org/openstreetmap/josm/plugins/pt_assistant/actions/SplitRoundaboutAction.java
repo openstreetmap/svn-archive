@@ -6,6 +6,7 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -20,6 +21,7 @@ import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.AlignInCircleAction;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.actions.SplitWayAction;
+import org.openstreetmap.josm.actions.SplitWayAction.SplitWayResult;
 import org.openstreetmap.josm.actions.downloadtasks.DownloadOsmTask;
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.osm.BBox;
@@ -30,6 +32,7 @@ import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.plugins.pt_assistant.utils.RouteUtils;
+import org.openstreetmap.josm.tools.Pair;
 
 /**
  * This action allows the user to split a selected roundabout.
@@ -93,64 +96,79 @@ public class SplitRoundaboutAction extends JosmAction {
         }
 
         //save the position of the roundabout inside each relation
-        Map<Relation, Integer> savedPositions = getSavedPositions(roundabout);
+        Map<Relation, List<Integer>> savedPositions = getSavedPositions(roundabout);
 
         //split the roundabout on the designed nodes
         List<Node> splitNodes = getSplitNodes(roundabout);
-        getLayerManager().getEditDataSet().setSelected(splitNodes);
-        new SplitWayAction().actionPerformed(null);
-        Collection<Way> splitWays = getLayerManager().getEditDataSet().getSelectedWays();
+        SplitWayResult result = SplitWayAction.split(getLayerManager().getEditLayer(),
+        		roundabout, splitNodes, Collections.emptyList());
+        result.getCommand().executeCommand();
+        Collection<Way> splitWays = result.getNewWays();
+        splitWays.add(result.getOriginalWay());
 
         //update the relations.
         updateRelations(savedPositions, splitNodes, splitWays);
     }
 
-    public void updateRelations(Map<Relation, Integer> savedPositions,
+    public void updateRelations(Map<Relation, List<Integer>> savedPositions,
             List<Node> splitNodes, Collection<Way> splitWays) {
-        savedPositions.forEach((r, i) -> {
-            Way previous = r.getMember(i-1).getWay();
-            Way subsequent = r.getMember(i).getWay();
-            Node entryNode;
-            Node exitNode;
+    	Map<Relation, Integer> memberOffset = new HashMap<>();
+        savedPositions.forEach((r, positions) ->
+        	positions.forEach(i -> {
 
-            //checking if the previous way enters the roundabout and the
-            //subsequent exits it
-            if(splitNodes.contains(previous.lastNode()))
-                entryNode = previous.lastNode();
-            else if(splitNodes.contains(previous.firstNode()))
-                entryNode = previous.firstNode();
-            else
-                entryNode = null;
+	            if(!memberOffset.containsKey(r))
+	            	memberOffset.put(r, 0);
+	            int offset = memberOffset.get(r);
 
-            if(splitNodes.contains(subsequent.firstNode()))
-                exitNode = subsequent.firstNode();
-            else if (splitNodes.contains(subsequent.lastNode()))
-                exitNode = subsequent.lastNode();
-            else
-                exitNode = null;
+	            Pair<Way, Way> entryExitWays= getEntryExitWays(r, i + offset);
+	            Way entryWay = entryExitWays.a;
+	            Way exitWay = entryExitWays.b;
 
-            //if not, exit
-            if(entryNode == null || exitNode == null)
-                return;
+	            //get the entry and exit nodes, exit if not found
+	            Node entryNode = getNodeInCommon(splitNodes, entryWay);
+	            Node exitNode = getNodeInCommon(splitNodes, exitWay);
 
-            //starting from the entry node, add split ways until the
-            //exit node is reached
-            List<Way> parents = entryNode.getParentWays();
-            parents.removeIf(w -> !w.firstNode().equals(entryNode));
-            parents.removeIf(w -> w.equals(previous));
+	            if(entryNode == null || exitNode == null)
+	                return;
 
-            Way curr = parents.get(0);
-            int j = 0;
+	            //starting from the entry node, add split ways until the
+	            //exit node is reached
+	            List<Way> parents = entryNode.getParentWays();
+	            parents.removeIf(w -> !w.firstNode().equals(entryNode));
+	            parents.removeIf(w -> w.equals(entryWay));
 
-            while(!curr.lastNode().equals(exitNode)) {
-                r.addMember(i + j++, new RelationMember(null, curr));
-                parents = curr.lastNode().getParentWays();
-                parents.remove(curr);
-                parents.removeIf(w -> !splitWays.contains(w));
-                curr = parents.get(0);
-            }
-            r.addMember(i + j++, new RelationMember(null, curr));
-        });
+	            Way curr = parents.get(0);
+
+	            while(!curr.lastNode().equals(exitNode)) {
+	                r.addMember(i + offset++, new RelationMember(null, curr));
+	                parents = curr.lastNode().getParentWays();
+	                parents.remove(curr);
+	                parents.removeIf(w -> !splitWays.contains(w));
+	                curr = parents.get(0);
+	            }
+	            r.addMember(i + offset++, new RelationMember(null, curr));
+	            memberOffset.put(r, offset);
+        	}));
+    }
+
+    private Node getNodeInCommon(List<Node> nodes, Way way) {
+        if(nodes.contains(way.lastNode()))
+            return way.lastNode();
+        else if(nodes.contains(way.firstNode()))
+            return way.firstNode();
+
+        return null;
+    }
+
+    //given a relation and the position where the roundabout was, it returns
+    //the entry and exit ways of that occurrence of the roundabout
+    private Pair<Way, Way> getEntryExitWays(Relation r, Integer position) {
+
+    	//the ways returned are the one exactly before and after the roundabout
+    	Pair<Way, Way> ret = new Pair<>(null, null);
+    	ret.a = r.getMember(position-1).getWay();
+    	ret.b = r.getMember(position).getWay();
+    	return ret;
     }
 
     //split only on the nodes which might be the
@@ -179,21 +197,26 @@ public class SplitRoundaboutAction extends JosmAction {
 
     //save the position of the roundabout inside each public transport route
     //it is contained in
-    public Map<Relation, Integer> getSavedPositions(Way roundabout) {
+    public Map<Relation, List<Integer>> getSavedPositions(Way roundabout) {
 
-        Map<Relation, Integer> savedPositions = new HashMap<>();
+        Map<Relation, List<Integer>> savedPositions = new HashMap<>();
         List <OsmPrimitive> referrers = roundabout.getReferrers();
         referrers.removeIf(r -> r.getType() != OsmPrimitiveType.RELATION
                 || !RouteUtils.isTwoDirectionRoute((Relation) r));
+
         for(OsmPrimitive currPrim : referrers) {
             Relation curr = (Relation) currPrim;
             for(int j = 0; j < curr.getMembersCount(); j++) {
                 if(curr.getMember(j).getUniqueId() == roundabout.getUniqueId()) {
-                    savedPositions.put(curr, j);
-                    curr.removeMember(j);
-                    break;
+                    if(!savedPositions.containsKey(curr))
+                    	savedPositions.put(curr, new ArrayList<>());
+                	List<Integer> positions = savedPositions.get(curr);
+                	positions.add(j - positions.size());
                 }
             }
+
+            if(savedPositions.containsKey(curr))
+            	curr.removeMembersFor(roundabout);
         }
 
         return savedPositions;

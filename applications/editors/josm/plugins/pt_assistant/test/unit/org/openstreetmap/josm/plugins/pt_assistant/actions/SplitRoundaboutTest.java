@@ -40,7 +40,7 @@ public class SplitRoundaboutTest extends AbstractTest {
     private DataSet ds;
     private OsmDataLayer layer;
     private SplitRoundaboutAction action;
-    private Way r1, r2, r3;
+    private Way r1, r2, r3, r4;
 
     @Before
     public void init() throws FileNotFoundException, IllegalDataException {
@@ -53,23 +53,26 @@ public class SplitRoundaboutTest extends AbstractTest {
         r1 = (Way) ds.getPrimitiveById(new SimplePrimitiveId(293302077L, OsmPrimitiveType.WAY));
         r2 = (Way) ds.getPrimitiveById(new SimplePrimitiveId(205833435L, OsmPrimitiveType.WAY));
         r3 = (Way) ds.getPrimitiveById(new SimplePrimitiveId(25739002L, OsmPrimitiveType.WAY));
+        r4 = (Way) ds.getPrimitives(p -> p.hasTag("name", "r4")).iterator().next();
     }
 
     private Collection<Way> splitWay(Way w) {
-        Map<Relation, Integer> savedPositions = action.getSavedPositions(w);
+        Map<Relation, List<Integer>> savedPositions = action.getSavedPositions(w);
         List<Node> splitNodes = action.getSplitNodes(w);
-        assertEquals(4, splitNodes.size());
         SplitWayResult result = SplitWayAction.split(layer, w, splitNodes, Collections.emptyList());
         result.getCommand().executeCommand();
         Collection<Way> splitWays = result.getNewWays();
+        splitWays.add(result.getOriginalWay());
         action.updateRelations(savedPositions, splitNodes, splitWays);
         return splitWays;
     }
 
     @Test
     public void test1() {
-        splitWay(r1).forEach(w -> {
-                if (w.firstNode().getUniqueId() == 267843779L && w.lastNode().getUniqueId() == 2968718407L)
+    	Collection<Way> sw1 = splitWay(r1);
+    	assertEquals(4, sw1.size());
+        sw1.forEach(w -> {
+            if (w.firstNode().getUniqueId() == 267843779L && w.lastNode().getUniqueId() == 2968718407L)
                 assertEquals(w.getReferrers().size(), 5);
             else if (w.firstNode().getUniqueId() == 2968718407L && w.lastNode().getUniqueId() == 2383688231L)
                 assertEquals(w.getReferrers().size(), 0);
@@ -84,7 +87,9 @@ public class SplitRoundaboutTest extends AbstractTest {
 
     @Test
     public void test2() {
-        splitWay(r2).forEach(w -> {
+    	Collection<Way> sw2 = splitWay(r2);
+    	assertEquals(4, sw2.size());
+        sw2.forEach(w -> {
             if(w.firstNode().getUniqueId() == 2158181809L && w.lastNode().getUniqueId() == 2158181798L)
                 assertEquals(w.getReferrers().size(), 8);
             else if (w.firstNode().getUniqueId() == 2158181798L && w.lastNode().getUniqueId() == 2158181789L)
@@ -100,7 +105,9 @@ public class SplitRoundaboutTest extends AbstractTest {
 
     @Test
     public void test3() {
-        splitWay(r3).forEach(w -> {
+    	Collection<Way> sw3 = splitWay(r3);
+    	assertEquals(4, sw3.size());
+        sw3.forEach(w -> {
             if(w.firstNode().getUniqueId() == 280697532L && w.lastNode().getUniqueId() == 280697452L)
                 assertEquals(w.getReferrers().size(), 0);
             else if (w.firstNode().getUniqueId() == 280697452L && w.lastNode().getUniqueId() == 280697591L)
@@ -109,6 +116,47 @@ public class SplitRoundaboutTest extends AbstractTest {
                 assertEquals(w.getReferrers().size(), 0);
             else if (w.firstNode().getUniqueId() == 280697534L && w.lastNode().getUniqueId() == 280697532L)
                 assertEquals(w.getReferrers().size(), 1);
+            else
+                fail();
+        });
+    }
+
+    @Test
+    public void test4() {
+    	Collection<Way> sw4 = splitWay(r4);
+    	assertEquals(10, sw4.size());
+    	Node entry11 = (Node) ds.getPrimitives(p -> p.hasTag("name", "nentry1-1")).iterator().next();
+    	Node exit11 = (Node) ds.getPrimitives(p -> p.hasTag("name", "nexit1-1")).iterator().next();
+    	Node entry12 = (Node) ds.getPrimitives(p -> p.hasTag("name", "nentry1-2")).iterator().next();
+    	Node exit12 = (Node) ds.getPrimitives(p -> p.hasTag("name", "nexit1-2")).iterator().next();
+    	Node entry21 = (Node) ds.getPrimitives(p -> p.hasTag("name", "nentry2-1")).iterator().next();
+    	Node exit21 = (Node) ds.getPrimitives(p -> p.hasTag("name", "nexit2-1")).iterator().next();
+    	Node entry22 = (Node) ds.getPrimitives(p -> p.hasTag("name", "nentry2-2")).iterator().next();
+    	Node exit22 = (Node) ds.getPrimitives(p -> p.hasTag("name", "nexit2-2")).iterator().next();
+    	Node entry3 = (Node) ds.getPrimitives(p -> p.hasTag("name", "nentry3")).iterator().next();
+    	Node exit3 = (Node) ds.getPrimitives(p -> p.hasTag("name", "nexit3")).iterator().next();
+
+        sw4.forEach(w -> {
+            if(w.firstNode().equals(entry11) && w.lastNode().equals(exit22))
+                assertEquals(2, w.getReferrers().size());
+            else if(w.firstNode().equals(exit22) && w.lastNode().equals(entry21))
+                assertEquals(1, w.getReferrers().size());
+            else if(w.firstNode().equals(entry21) && w.lastNode().equals(exit11))
+                assertEquals(2, w.getReferrers().size());
+            else if(w.firstNode().equals(exit11) && w.lastNode().equals(entry12))
+                assertEquals(1, w.getReferrers().size());
+            else if(w.firstNode().equals(entry12) && w.lastNode().equals(entry3))
+                assertEquals(2, w.getReferrers().size());
+            else if(w.firstNode().equals(entry3) && w.lastNode().equals(exit21))
+                assertEquals(3, w.getReferrers().size());
+            else if(w.firstNode().equals(exit21) && w.lastNode().equals(entry22))
+                assertEquals(2, w.getReferrers().size());
+            else if(w.firstNode().equals(entry22) && w.lastNode().equals(exit3))
+                assertEquals(3, w.getReferrers().size());
+            else if(w.firstNode().equals(exit3) && w.lastNode().equals(exit12))
+                assertEquals(2, w.getReferrers().size());
+            else if(w.firstNode().equals(exit12) && w.lastNode().equals(entry11))
+                assertEquals(1, w.getReferrers().size());
             else
                 fail();
         });

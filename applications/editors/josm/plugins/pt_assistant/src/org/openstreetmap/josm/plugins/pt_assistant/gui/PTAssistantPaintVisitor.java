@@ -345,7 +345,7 @@ public class PTAssistantPaintVisitor extends PaintVisitor {
         for (OsmPrimitive parent : primitive.getReferrers()) {
             if (parent.getType().equals(OsmPrimitiveType.RELATION)) {
                 Relation relation = (Relation) parent;
-                if (RouteUtils.isTwoDirectionRoute(relation) && relation.get("ref") != null
+                if (RouteUtils.isVersionTwoPTRoute(relation) && relation.get("ref") != null
                         && !relation.get("ref").equals("")) {
 
                     boolean stringFound = false;

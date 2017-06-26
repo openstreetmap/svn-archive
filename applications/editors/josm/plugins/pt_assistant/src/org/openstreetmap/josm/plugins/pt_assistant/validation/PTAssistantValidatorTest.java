@@ -143,7 +143,7 @@ public class PTAssistantValidatorTest extends Test {
 			this.errors.addAll(stopChecker.getErrors());
 		}
 
-		if (!RouteUtils.isTwoDirectionRoute(r)) {
+		if (!RouteUtils.isVersionTwoPTRoute(r)) {
 			return;
 		}
 

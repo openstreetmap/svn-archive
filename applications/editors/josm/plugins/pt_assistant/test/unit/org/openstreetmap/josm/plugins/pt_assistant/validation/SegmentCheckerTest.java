@@ -25,7 +25,7 @@ public class SegmentCheckerTest extends AbstractTest {
         Relation route = null;
 
         for (Relation r: ds.getRelations()) {
-            if (RouteUtils.isTwoDirectionRoute(r)) {
+            if (RouteUtils.isVersionTwoPTRoute(r)) {
                 route = r;
                 break;
             }

@@ -40,7 +40,7 @@ public class IncompleteMembersDownloadThread extends Thread {
                 // if there are selected routes, try adding them first:
                 for (Relation currentSelectedRelation : Main.getLayerManager().getEditDataSet()
                         .getSelectedRelations()) {
-                    if (RouteUtils.isTwoDirectionRoute(currentSelectedRelation)) {
+                    if (RouteUtils.isVersionTwoPTRoute(currentSelectedRelation)) {
                         list.add(currentSelectedRelation);
                     }
                 }
@@ -50,7 +50,7 @@ public class IncompleteMembersDownloadThread extends Thread {
                     // version 2:
                     Collection<Relation> allRelations = Main.getLayerManager().getEditDataSet().getRelations();
                     for (Relation currentRelation : allRelations) {
-                        if (RouteUtils.isTwoDirectionRoute(currentRelation)) {
+                        if (RouteUtils.isVersionTwoPTRoute(currentRelation)) {
                             list.add(currentRelation);
                         }
                     }

@@ -206,7 +206,7 @@ public final class PTAssistantLayer extends Layer
                 GenericRelationEditor editor = (GenericRelationEditor) evt.getNewValue();
                 Relation relation = editor.getRelation();
 
-                if (RouteUtils.isTwoDirectionRoute(relation)) {
+                if (RouteUtils.isVersionTwoPTRoute(relation)) {
                     this.repaint(relation);
 
                 }

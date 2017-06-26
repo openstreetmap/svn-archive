@@ -37,8 +37,8 @@ public class PTAssistantLayerManager implements SelectionChangedListener {
 
         for (OsmPrimitive primitive : newSelection) {
             if (primitive.getType().equals(OsmPrimitiveType.RELATION)
-            		&& RouteUtils.isTwoDirectionRoute((Relation) primitive)) {
-                    routes.add(primitive);
+            		&& RouteUtils.isVersionTwoPTRoute((Relation) primitive)) {
+            	routes.add(primitive);
             }
         }
 

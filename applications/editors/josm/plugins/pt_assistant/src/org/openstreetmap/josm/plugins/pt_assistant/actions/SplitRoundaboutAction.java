@@ -112,43 +112,43 @@ public class SplitRoundaboutAction extends JosmAction {
 
     public void updateRelations(Map<Relation, List<Integer>> savedPositions,
             List<Node> splitNodes, Collection<Way> splitWays) {
-    	Map<Relation, Integer> memberOffset = new HashMap<>();
+        Map<Relation, Integer> memberOffset = new HashMap<>();
         savedPositions.forEach((r, positions) ->
-        	positions.forEach(i -> {
+            positions.forEach(i -> {
 
-	            if(!memberOffset.containsKey(r))
-	            	memberOffset.put(r, 0);
-	            int offset = memberOffset.get(r);
+                if(!memberOffset.containsKey(r))
+                    memberOffset.put(r, 0);
+                int offset = memberOffset.get(r);
 
-	            Pair<Way, Way> entryExitWays= getEntryExitWays(r, i + offset);
-	            Way entryWay = entryExitWays.a;
-	            Way exitWay = entryExitWays.b;
+                Pair<Way, Way> entryExitWays= getEntryExitWays(r, i + offset);
+                Way entryWay = entryExitWays.a;
+                Way exitWay = entryExitWays.b;
 
-	            //get the entry and exit nodes, exit if not found
-	            Node entryNode = getNodeInCommon(splitNodes, entryWay);
-	            Node exitNode = getNodeInCommon(splitNodes, exitWay);
+                //get the entry and exit nodes, exit if not found
+                Node entryNode = getNodeInCommon(splitNodes, entryWay);
+                Node exitNode = getNodeInCommon(splitNodes, exitWay);
 
-	            if(entryNode == null || exitNode == null)
-	                return;
+                if(entryNode == null || exitNode == null)
+                    return;
 
-	            //starting from the entry node, add split ways until the
-	            //exit node is reached
-	            List<Way> parents = entryNode.getParentWays();
-	            parents.removeIf(w -> !w.firstNode().equals(entryNode));
-	            parents.removeIf(w -> w.equals(entryWay));
+                //starting from the entry node, add split ways until the
+                //exit node is reached
+                List<Way> parents = entryNode.getParentWays();
+                parents.removeIf(w -> !w.firstNode().equals(entryNode));
+                parents.removeIf(w -> w.equals(entryWay));
 
-	            Way curr = parents.get(0);
+                Way curr = parents.get(0);
 
-	            while(!curr.lastNode().equals(exitNode)) {
-	                r.addMember(i + offset++, new RelationMember(null, curr));
-	                parents = curr.lastNode().getParentWays();
-	                parents.remove(curr);
-	                parents.removeIf(w -> !splitWays.contains(w));
-	                curr = parents.get(0);
-	            }
-	            r.addMember(i + offset++, new RelationMember(null, curr));
-	            memberOffset.put(r, offset);
-        	}));
+                while(!curr.lastNode().equals(exitNode)) {
+                    r.addMember(i + offset++, new RelationMember(null, curr));
+                    parents = curr.lastNode().getParentWays();
+                    parents.remove(curr);
+                    parents.removeIf(w -> !splitWays.contains(w));
+                    curr = parents.get(0);
+                }
+                r.addMember(i + offset++, new RelationMember(null, curr));
+                memberOffset.put(r, offset);
+            }));
     }
 
     private Node getNodeInCommon(List<Node> nodes, Way way) {
@@ -164,11 +164,11 @@ public class SplitRoundaboutAction extends JosmAction {
     //the entry and exit ways of that occurrence of the roundabout
     private Pair<Way, Way> getEntryExitWays(Relation r, Integer position) {
 
-    	//the ways returned are the one exactly before and after the roundabout
-    	Pair<Way, Way> ret = new Pair<>(null, null);
-    	ret.a = r.getMember(position-1).getWay();
-    	ret.b = r.getMember(position).getWay();
-    	return ret;
+        //the ways returned are the one exactly before and after the roundabout
+        Pair<Way, Way> ret = new Pair<>(null, null);
+        ret.a = r.getMember(position-1).getWay();
+        ret.b = r.getMember(position).getWay();
+        return ret;
     }
 
     //split only on the nodes which might be the
@@ -185,7 +185,7 @@ public class SplitRoundaboutAction extends JosmAction {
             for(Way parent: parents) {
                 for(OsmPrimitive prim : parent.getReferrers()) {
                     if(prim.getType() == OsmPrimitiveType.RELATION &&
-                            RouteUtils.isTwoDirectionRoute((Relation) prim))
+                            RouteUtils.isPTRoute((Relation) prim))
                         return false;
                 }
             }
@@ -202,21 +202,21 @@ public class SplitRoundaboutAction extends JosmAction {
         Map<Relation, List<Integer>> savedPositions = new HashMap<>();
         List <OsmPrimitive> referrers = roundabout.getReferrers();
         referrers.removeIf(r -> r.getType() != OsmPrimitiveType.RELATION
-                || !RouteUtils.isTwoDirectionRoute((Relation) r));
+                || !RouteUtils.isPTRoute((Relation) r));
 
         for(OsmPrimitive currPrim : referrers) {
             Relation curr = (Relation) currPrim;
             for(int j = 0; j < curr.getMembersCount(); j++) {
                 if(curr.getMember(j).getUniqueId() == roundabout.getUniqueId()) {
                     if(!savedPositions.containsKey(curr))
-                    	savedPositions.put(curr, new ArrayList<>());
-                	List<Integer> positions = savedPositions.get(curr);
-                	positions.add(j - positions.size());
+                        savedPositions.put(curr, new ArrayList<>());
+                    List<Integer> positions = savedPositions.get(curr);
+                    positions.add(j - positions.size());
                 }
             }
 
             if(savedPositions.containsKey(curr))
-            	curr.removeMembersFor(roundabout);
+                curr.removeMembersFor(roundabout);
         }
 
         return savedPositions;
@@ -231,7 +231,9 @@ public class SplitRoundaboutAction extends JosmAction {
         OsmPrimitive selected = selection.iterator().next();
         if(selected.getType() != OsmPrimitiveType.WAY)
             return;
-        if(((Way)selected).isClosed() && selected.hasTag("junction", "roundabout")) {
+        if(((Way)selected).isClosed()
+                && (selected.hasTag("junction", "roundabout")
+                        || selected.hasTag("oneway", "yes"))) {
             setEnabled(true);
             return;
         }

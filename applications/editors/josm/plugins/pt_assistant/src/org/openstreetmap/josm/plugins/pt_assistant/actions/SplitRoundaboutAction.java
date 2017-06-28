@@ -90,8 +90,7 @@ public class SplitRoundaboutAction extends JosmAction {
         });
     }
 
-    private void continueAfterDownload(Way roundabout)
-    {
+    private void continueAfterDownload(Way roundabout) {
         //make the roundabout round, if requested
         if(Main.pref.getBoolean("pt_assistant.roundabout-splitter.alignalways") ||
                 JOptionPane.YES_OPTION == JOptionPane.showOptionDialog(Main.parent,

@@ -32,7 +32,7 @@ public class EdgeSelectionAction extends MapMode {
     private static final String mapModeName = "Edge Selection";
     private static final long serialVersionUID = 2414977774504904238L;
 
-    private transient  Set<Way> highlighted;
+    private transient Set<Way> highlighted;
 
     private Cursor selectionCursor;
     private Cursor waySelectCursor;

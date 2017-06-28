@@ -13,7 +13,7 @@ import org.openstreetmap.josm.plugins.pt_assistant.utils.RouteUtils;
 
 public class PTAssistantLayerManager implements SelectionChangedListener {
 
-    public final static PTAssistantLayerManager PTLM = new PTAssistantLayerManager();
+    public static final PTAssistantLayerManager PTLM = new PTAssistantLayerManager();
     private PTAssistantLayer layer;
 
     public PTAssistantLayer getLayer() {

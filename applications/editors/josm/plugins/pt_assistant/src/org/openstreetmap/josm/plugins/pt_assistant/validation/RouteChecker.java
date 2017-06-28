@@ -99,8 +99,11 @@ public class RouteChecker extends Checker {
         final List<WayConnectionType> links = connectionTypeCalculator.updateLinks(waysToCheck);
         for (int i = 0; i < links.size(); i++) {
             final WayConnectionType link = links.get(i);
-            if(!(i == 0 || link.linkPrev) || !(i == links.size() - 1 || link.linkNext)
-                    || link.direction == null || WayConnectionType.Direction.NONE.equals(link.direction)) {
+            if(!(i == 0 || link.linkPrev)
+                    || !(i == links.size() - 1
+                    || link.linkNext)
+                    || link.direction == null
+                    || WayConnectionType.Direction.NONE.equals(link.direction)) {
                 numberOfGaps++;
                 i++;
             }

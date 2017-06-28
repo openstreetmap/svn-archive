@@ -262,7 +262,8 @@ public final class PTAssistantLayer extends Layer
             Main.map.mapView.repaint();
         }
 
-        if (event.getRemovedLayer() instanceof OsmDataLayer && event.getSource().getLayersOfType(OsmDataLayer.class).size() < 1)
+        if (event.getRemovedLayer() instanceof OsmDataLayer
+                && event.getSource().getLayersOfType(OsmDataLayer.class).isEmpty())
             event.scheduleRemoval(Collections.singleton(this));
 
         if(event.getRemovedLayer() == this) {

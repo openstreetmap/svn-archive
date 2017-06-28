@@ -64,7 +64,7 @@ public final class RouteUtils {
             return false;
         }
 
-        String [] acceptedRouteTags = new String[] {
+        String[] acceptedRouteTags = new String[] {
                 "bus", "trolleybus", "share_taxi",
                 "tram", "light_rail", "subway", "train"};
 
@@ -216,9 +216,9 @@ public final class RouteUtils {
      */
     public static boolean isWaySuitableForBuses(Way way) {
 
-        String [] acceptedHighwayTags = new String [] {
+        String[] acceptedHighwayTags = new String[] {
                 "motorway", "trunk", "primary", "secondary", "tertiary",
-                "unclassified" , "road", "residential", "service",
+                "unclassified", "road", "residential", "service",
                 "motorway_link", "trunk_link", "primary_link", "secondary_link",
                 "tertiary_link", "living_street", "bus_guideway", "road"};
 
@@ -240,7 +240,7 @@ public final class RouteUtils {
      */
     public static boolean isWaySuitableForPublicTransport(Way way) {
 
-        String [] acceptedRailwayTags = new String [] {
+        String[] acceptedRailwayTags = new String[] {
                 "tram", "subway", "light_rail", "rail"};
 
         return isWaySuitableForBuses(way)

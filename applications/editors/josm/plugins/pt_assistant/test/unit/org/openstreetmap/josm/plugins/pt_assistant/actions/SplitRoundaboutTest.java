@@ -58,12 +58,13 @@ public class SplitRoundaboutTest extends AbstractTest {
 
     private Collection<Way> splitWay(Way w) {
         Map<Relation, List<Integer>> savedPositions = action.getSavedPositions(w);
+        action.getRemoveRoundaboutFromRelationsCommand(w).executeCommand();
         List<Node> splitNodes = action.getSplitNodes(w);
         SplitWayResult result = SplitWayAction.split(layer, w, splitNodes, Collections.emptyList());
         result.getCommand().executeCommand();
         Collection<Way> splitWays = result.getNewWays();
         splitWays.add(result.getOriginalWay());
-        action.updateRelations(savedPositions, splitNodes, splitWays);
+        action.getUpdateRelationsCommand(savedPositions, splitNodes, splitWays).executeCommand();
         return splitWays;
     }
 
@@ -73,13 +74,13 @@ public class SplitRoundaboutTest extends AbstractTest {
     	assertEquals(4, sw1.size());
         sw1.forEach(w -> {
             if (w.firstNode().getUniqueId() == 267843779L && w.lastNode().getUniqueId() == 2968718407L)
-                assertEquals(w.getReferrers().size(), 5);
+                assertEquals(5, w.getReferrers().size());
             else if (w.firstNode().getUniqueId() == 2968718407L && w.lastNode().getUniqueId() == 2383688231L)
-                assertEquals(w.getReferrers().size(), 0);
+                assertEquals(0, w.getReferrers().size());
             else if (w.firstNode().getUniqueId() == 2383688231L && w.lastNode().getUniqueId() == 267843741L)
-                assertEquals(w.getReferrers().size(), 5);
+                assertEquals(5, w.getReferrers().size());
             else if (w.firstNode().getUniqueId() == 267843741L && w.lastNode().getUniqueId() == 267843779L)
-                assertEquals(w.getReferrers().size(), 0);
+                assertEquals(0, w.getReferrers().size());
             else
                 fail();
         });
@@ -91,13 +92,13 @@ public class SplitRoundaboutTest extends AbstractTest {
     	assertEquals(4, sw2.size());
         sw2.forEach(w -> {
             if(w.firstNode().getUniqueId() == 2158181809L && w.lastNode().getUniqueId() == 2158181798L)
-                assertEquals(w.getReferrers().size(), 8);
+                assertEquals(8, w.getReferrers().size());
             else if (w.firstNode().getUniqueId() == 2158181798L && w.lastNode().getUniqueId() == 2158181789L)
-                assertEquals(w.getReferrers().size(), 0);
+                assertEquals(0, w.getReferrers().size());
             else if (w.firstNode().getUniqueId() == 2158181789L && w.lastNode().getUniqueId() == 2158181803L)
-                assertEquals(w.getReferrers().size(), 8);
+                assertEquals(8, w.getReferrers().size());
             else if (w.firstNode().getUniqueId() == 2158181803L && w.lastNode().getUniqueId() == 2158181809L)
-                assertEquals(w.getReferrers().size(), 0);
+                assertEquals(0, w.getReferrers().size());
             else
                 fail();
         });
@@ -109,13 +110,13 @@ public class SplitRoundaboutTest extends AbstractTest {
     	assertEquals(4, sw3.size());
         sw3.forEach(w -> {
             if(w.firstNode().getUniqueId() == 280697532L && w.lastNode().getUniqueId() == 280697452L)
-                assertEquals(w.getReferrers().size(), 0);
+                assertEquals(0, w.getReferrers().size());
             else if (w.firstNode().getUniqueId() == 280697452L && w.lastNode().getUniqueId() == 280697591L)
-                assertEquals(w.getReferrers().size(), 2);
+                assertEquals(2, w.getReferrers().size());
             else if (w.firstNode().getUniqueId() == 280697591L && w.lastNode().getUniqueId() == 280697534L)
-                assertEquals(w.getReferrers().size(), 0);
+                assertEquals(0, w.getReferrers().size());
             else if (w.firstNode().getUniqueId() == 280697534L && w.lastNode().getUniqueId() == 280697532L)
-                assertEquals(w.getReferrers().size(), 1);
+                assertEquals(1, w.getReferrers().size());
             else
                 fail();
         });

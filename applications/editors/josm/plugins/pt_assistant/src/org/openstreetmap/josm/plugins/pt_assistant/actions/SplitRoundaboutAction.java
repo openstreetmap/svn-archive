@@ -23,6 +23,9 @@ import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.actions.SplitWayAction;
 import org.openstreetmap.josm.actions.SplitWayAction.SplitWayResult;
 import org.openstreetmap.josm.actions.downloadtasks.DownloadOsmTask;
+import org.openstreetmap.josm.command.ChangeCommand;
+import org.openstreetmap.josm.command.Command;
+import org.openstreetmap.josm.command.SequenceCommand;
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.osm.BBox;
 import org.openstreetmap.josm.data.osm.Node;
@@ -46,14 +49,14 @@ import org.openstreetmap.josm.tools.Pair;
  */
 public class SplitRoundaboutAction extends JosmAction {
 
-    private static final String actionName = "Split Roundabout";
+    private static final String ACTION_NAME = "Split Roundabout";
     private static final long serialVersionUID = 8912249304286025356L;
 
     /**
      * Creates a new SplitRoundaboutAction
      */
     public SplitRoundaboutAction() {
-        super(actionName, "icons/splitroundabout", actionName, null, true);
+        super(ACTION_NAME, "icons/splitroundabout", ACTION_NAME, null, true);
     }
 
     @Override
@@ -98,29 +101,53 @@ public class SplitRoundaboutAction extends JosmAction {
         //save the position of the roundabout inside each relation
         Map<Relation, List<Integer>> savedPositions = getSavedPositions(roundabout);
 
+        //remove the roundabout from each relation
+        Main.main.undoRedo.add(getRemoveRoundaboutFromRelationsCommand(roundabout));
+
         //split the roundabout on the designed nodes
         List<Node> splitNodes = getSplitNodes(roundabout);
         SplitWayResult result = SplitWayAction.split(getLayerManager().getEditLayer(),
         		roundabout, splitNodes, Collections.emptyList());
-        result.getCommand().executeCommand();
+        Main.main.undoRedo.add(result.getCommand());
         Collection<Way> splitWays = result.getNewWays();
         splitWays.add(result.getOriginalWay());
 
         //update the relations.
-        updateRelations(savedPositions, splitNodes, splitWays);
+        Main.main.undoRedo.add(getUpdateRelationsCommand(savedPositions, splitNodes, splitWays));
     }
 
-    public void updateRelations(Map<Relation, List<Integer>> savedPositions,
+    public Command getUpdateRelationsCommand(Map<Relation,
+            List<Integer>> savedPositions,
             List<Node> splitNodes, Collection<Way> splitWays) {
+
+        Map<Relation, Relation> changingRelations =
+                updateRelations(savedPositions, splitNodes, splitWays);
+
+        List<Command> commands = new ArrayList<>();
+        changingRelations.forEach((oldR, newR) ->
+            commands.add(new ChangeCommand(oldR, newR)));
+
+        return new SequenceCommand("Updating Relations for SplitRoundabout", commands);
+    }
+
+    private Map<Relation, Relation> updateRelations(Map<Relation,
+            List<Integer>> savedPositions,
+            List<Node> splitNodes, Collection<Way> splitWays) {
+        Map<Relation, Relation> changingRelation = new HashMap<>();
         Map<Relation, Integer> memberOffset = new HashMap<>();
         savedPositions.forEach((r, positions) ->
             positions.forEach(i -> {
+
+                if(!changingRelation.containsKey(r))
+                    changingRelation.put(r, new Relation(r));
+
+                Relation c = changingRelation.get(r);
 
                 if(!memberOffset.containsKey(r))
                     memberOffset.put(r, 0);
                 int offset = memberOffset.get(r);
 
-                Pair<Way, Way> entryExitWays= getEntryExitWays(r, i + offset);
+                Pair<Way, Way> entryExitWays= getEntryExitWays(c, i + offset);
                 Way entryWay = entryExitWays.a;
                 Way exitWay = entryExitWays.b;
 
@@ -140,15 +167,16 @@ public class SplitRoundaboutAction extends JosmAction {
                 Way curr = parents.get(0);
 
                 while(!curr.lastNode().equals(exitNode)) {
-                    r.addMember(i + offset++, new RelationMember(null, curr));
+                    c.addMember(i + offset++, new RelationMember(null, curr));
                     parents = curr.lastNode().getParentWays();
                     parents.remove(curr);
                     parents.removeIf(w -> !splitWays.contains(w));
                     curr = parents.get(0);
                 }
-                r.addMember(i + offset++, new RelationMember(null, curr));
+                c.addMember(i + offset++, new RelationMember(null, curr));
                 memberOffset.put(r, offset);
             }));
+        return changingRelation;
     }
 
     private Node getNodeInCommon(List<Node> nodes, Way way) {
@@ -183,9 +211,9 @@ public class SplitRoundaboutAction extends JosmAction {
                 return true;
             parents.remove(roundabout);
             for(Way parent: parents) {
-                for(OsmPrimitive prim : parent.getReferrers()) {
-                    if(prim.getType() == OsmPrimitiveType.RELATION &&
-                            RouteUtils.isPTRoute((Relation) prim))
+                for(Relation r : OsmPrimitive.getFilteredList(
+                        parent.getReferrers(), Relation.class)) {
+                    if(RouteUtils.isPTRoute(r))
                         return false;
                 }
             }
@@ -195,17 +223,31 @@ public class SplitRoundaboutAction extends JosmAction {
         return splitNodes;
     }
 
+    public Command getRemoveRoundaboutFromRelationsCommand(Way roundabout) {
+        List <Relation> referrers = OsmPrimitive.getFilteredList(
+                roundabout.getReferrers(), Relation.class);
+        referrers.removeIf(r -> !RouteUtils.isPTRoute(r));
+
+        List<Command> commands = new ArrayList<>();
+        referrers.forEach(r -> {
+            Relation c = new Relation(r);
+            c.removeMembersFor(roundabout);
+            commands.add(new ChangeCommand(r, c));
+        });
+
+        return new SequenceCommand("Remove roundabout from relations", commands);
+    }
+
     //save the position of the roundabout inside each public transport route
     //it is contained in
     public Map<Relation, List<Integer>> getSavedPositions(Way roundabout) {
 
         Map<Relation, List<Integer>> savedPositions = new HashMap<>();
-        List <OsmPrimitive> referrers = roundabout.getReferrers();
-        referrers.removeIf(r -> r.getType() != OsmPrimitiveType.RELATION
-                || !RouteUtils.isPTRoute((Relation) r));
+        List <Relation> referrers = OsmPrimitive.getFilteredList(
+                roundabout.getReferrers(), Relation.class);
+        referrers.removeIf(r -> !RouteUtils.isPTRoute(r));
 
-        for(OsmPrimitive currPrim : referrers) {
-            Relation curr = (Relation) currPrim;
+        for(Relation curr : referrers) {
             for(int j = 0; j < curr.getMembersCount(); j++) {
                 if(curr.getMember(j).getUniqueId() == roundabout.getUniqueId()) {
                     if(!savedPositions.containsKey(curr))
@@ -214,9 +256,6 @@ public class SplitRoundaboutAction extends JosmAction {
                     positions.add(j - positions.size());
                 }
             }
-
-            if(savedPositions.containsKey(curr))
-                curr.removeMembersFor(roundabout);
         }
 
         return savedPositions;

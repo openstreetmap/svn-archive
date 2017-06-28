@@ -186,8 +186,8 @@ public class PTRouteSegment {
      */
     public boolean equalsRouteSegment(PTRouteSegment other) {
 
-//    	if(!firstStop.equalsStop(firstStop) || !lastStop.equalsStop(other.lastStop))
-//    		return false;
+//      if(!firstStop.equalsStop(firstStop) || !lastStop.equalsStop(other.lastStop))
+//          return false;
 
         List<Way> thisWays = new ArrayList<>();
         for (PTWay ptway : this.ptways) {

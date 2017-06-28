@@ -127,8 +127,8 @@ public final class PTAssistantLayer extends Layer
 
     public void setPrimitives(List<OsmPrimitive> primitives)
     {
-    	this.primitives.clear();
-    	this.primitives.addAll(primitives);
+        this.primitives.clear();
+        this.primitives.addAll(primitives);
     }
 
     @Override
@@ -266,15 +266,15 @@ public final class PTAssistantLayer extends Layer
             event.scheduleRemoval(Collections.singleton(this));
 
         if(event.getRemovedLayer() == this) {
-        	PTAssistantLayerManager.PTLM.resetLayer();
-        	PTAssistantPlugin.clearHighlightedRelations();
+            PTAssistantLayerManager.PTLM.resetLayer();
+            PTAssistantPlugin.clearHighlightedRelations();
         }
     }
 
     @Override
     public synchronized void destroy() {
-    	KeyboardFocusManager.getCurrentKeyboardFocusManager().removePropertyChangeListener(this);
+        KeyboardFocusManager.getCurrentKeyboardFocusManager().removePropertyChangeListener(this);
         Main.getLayerManager().removeLayerChangeListener(this);
-    	super.destroy();
+        super.destroy();
     }
 }

@@ -13,8 +13,8 @@ import org.openstreetmap.josm.plugins.pt_assistant.utils.RouteUtils;
 
 public class PTAssistantLayerManager implements SelectionChangedListener {
 
-	public final static PTAssistantLayerManager PTLM = new PTAssistantLayerManager();
-	private PTAssistantLayer layer;
+    public final static PTAssistantLayerManager PTLM = new PTAssistantLayerManager();
+    private PTAssistantLayer layer;
 
     public PTAssistantLayer getLayer() {
         if (layer == null) {
@@ -24,7 +24,7 @@ public class PTAssistantLayerManager implements SelectionChangedListener {
     }
 
     public void resetLayer() {
-    	layer = null;
+        layer = null;
     }
 
     /**
@@ -37,16 +37,16 @@ public class PTAssistantLayerManager implements SelectionChangedListener {
 
         for (OsmPrimitive primitive : newSelection) {
             if (primitive.getType().equals(OsmPrimitiveType.RELATION)
-            		&& RouteUtils.isVersionTwoPTRoute((Relation) primitive)) {
-            	routes.add(primitive);
+                    && RouteUtils.isVersionTwoPTRoute((Relation) primitive)) {
+                routes.add(primitive);
             }
         }
 
         if (!routes.isEmpty()) {
-        	getLayer().setPrimitives(routes);
-        	PTAssistantPlugin.clearHighlightedRelations();
-        	for(OsmPrimitive primitive : routes)
-        		PTAssistantPlugin.addHighlightedRelation((Relation) primitive);
+            getLayer().setPrimitives(routes);
+            PTAssistantPlugin.clearHighlightedRelations();
+            for(OsmPrimitive primitive : routes)
+                PTAssistantPlugin.addHighlightedRelation((Relation) primitive);
         }
     }
 }

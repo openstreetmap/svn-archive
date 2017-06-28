@@ -93,16 +93,16 @@ public class RouteChecker extends Checker {
      *         Relation Editor), false otherwise
      */
     private int countGaps(List<RelationMember> waysToCheck) {
-    	int numberOfGaps = 0;
+        int numberOfGaps = 0;
 
-    	WayConnectionTypeCalculator connectionTypeCalculator = new WayConnectionTypeCalculator();
+        WayConnectionTypeCalculator connectionTypeCalculator = new WayConnectionTypeCalculator();
         final List<WayConnectionType> links = connectionTypeCalculator.updateLinks(waysToCheck);
         for (int i = 0; i < links.size(); i++) {
             final WayConnectionType link = links.get(i);
             if(!(i == 0 || link.linkPrev) || !(i == links.size() - 1 || link.linkNext)
                     || link.direction == null || WayConnectionType.Direction.NONE.equals(link.direction)) {
-            	numberOfGaps++;
-            	i++;
+                numberOfGaps++;
+                i++;
             }
         }
 
@@ -123,7 +123,7 @@ public class RouteChecker extends Checker {
 
     protected static Command fixSortingError(TestError testError) {
         if (testError.getCode() != PTAssistantValidatorTest.ERROR_CODE_SORTING
-        		&& testError.getCode() != PTAssistantValidatorTest.ERROR_CODE_PARTIAL_SORTING) {
+                && testError.getCode() != PTAssistantValidatorTest.ERROR_CODE_PARTIAL_SORTING) {
             return null;
         }
 

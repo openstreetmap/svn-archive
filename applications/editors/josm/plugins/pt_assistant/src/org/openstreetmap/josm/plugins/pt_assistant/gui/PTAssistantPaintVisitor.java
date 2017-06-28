@@ -285,13 +285,13 @@ public class PTAssistantPaintVisitor extends PaintVisitor {
      */
     @Override
     protected void drawNode(Node n, Color color) {
-		if (mv == null || g == null) {
-			return;
-		}
+        if (mv == null || g == null) {
+            ;
+        }
         Point p = mv.getPoint(n);
-		if (p == null) {
-			return;
-		}
+        if (p == null) {
+            return;
+        }
         g.setColor(color);
         g.drawOval(p.x - 5, p.y - 5, 10, 10);
 

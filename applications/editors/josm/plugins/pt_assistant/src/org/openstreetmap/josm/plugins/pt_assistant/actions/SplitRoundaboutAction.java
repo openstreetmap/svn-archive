@@ -110,7 +110,7 @@ public class SplitRoundaboutAction extends JosmAction {
         //split the roundabout on the designed nodes
         List<Node> splitNodes = getSplitNodes(roundabout);
         SplitWayResult result = SplitWayAction.split(getLayerManager().getEditLayer(),
-        		roundabout, splitNodes, Collections.emptyList());
+                roundabout, splitNodes, Collections.emptyList());
         Main.main.undoRedo.add(result.getCommand());
         Collection<Way> splitWays = result.getNewWays();
         splitWays.add(result.getOriginalWay());

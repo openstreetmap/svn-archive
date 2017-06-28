@@ -32,10 +32,10 @@ import org.openstreetmap.josm.tools.Shortcut;
 @SuppressWarnings("serial")
 public class AddStopPositionAction extends MapMode {
 
-	private static final String mapModeName = "Add stop position";
+    private static final String mapModeName = "Add stop position";
 
-	private transient Set<OsmPrimitive> newHighlights = new HashSet<>();
-	private transient Set<OsmPrimitive> oldHighlights = new HashSet<>();
+    private transient Set<OsmPrimitive> newHighlights = new HashSet<>();
+    private transient Set<OsmPrimitive> oldHighlights = new HashSet<>();
 
     private final Cursor cursorJoinNode;
     private final Cursor cursorJoinWay;
@@ -43,22 +43,22 @@ public class AddStopPositionAction extends MapMode {
     /**
      * Creates a new AddStopPositionAction
      */
-	public AddStopPositionAction() {
-		super(tr(mapModeName), "bus", tr(mapModeName),
-				Shortcut.registerShortcut("mapmode:stop_position",
+    public AddStopPositionAction() {
+        super(tr(mapModeName), "bus", tr(mapModeName),
+                Shortcut.registerShortcut("mapmode:stop_position",
                         tr("Mode: {0}", tr(mapModeName)),
                         KeyEvent.VK_K, Shortcut.CTRL_SHIFT),
-				getCursor());
+                getCursor());
 
-		cursorJoinNode = ImageProvider.getCursor("crosshair", "joinnode");
+        cursorJoinNode = ImageProvider.getCursor("crosshair", "joinnode");
         cursorJoinWay = ImageProvider.getCursor("crosshair", "joinway");
-	}
+    }
 
     private static Cursor getCursor() {
-    	Cursor cursor = ImageProvider.getCursor("crosshair", "bus");
-    	if(cursor == null)
-    		cursor = Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR);
-    	return cursor;
+        Cursor cursor = ImageProvider.getCursor("crosshair", "bus");
+        if(cursor == null)
+            cursor = Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR);
+        return cursor;
     }
 
     @Override
@@ -78,65 +78,65 @@ public class AddStopPositionAction extends MapMode {
     @Override
     public void mouseMoved(MouseEvent e) {
 
-    	//while the mouse is moving, surroundings are checked
-    	//if anything is found, it will be highlighted.
-    	//priority is given to nodes
-    	Cursor newCurs = getCursor();
+        //while the mouse is moving, surroundings are checked
+        //if anything is found, it will be highlighted.
+        //priority is given to nodes
+        Cursor newCurs = getCursor();
 
-    	Node n = Main.map.mapView.getNearestNode(e.getPoint(), OsmPrimitive::isUsable);
-    	if(n != null) {
-    		newHighlights.add(n);
-    		newCurs = cursorJoinNode;
-    	} else {
-    		List<WaySegment> wss =
-    				Main.map.mapView.getNearestWaySegments(e.getPoint(), OsmPrimitive::isSelectable);
+        Node n = Main.map.mapView.getNearestNode(e.getPoint(), OsmPrimitive::isUsable);
+        if(n != null) {
+            newHighlights.add(n);
+            newCurs = cursorJoinNode;
+        } else {
+            List<WaySegment> wss =
+                    Main.map.mapView.getNearestWaySegments(e.getPoint(), OsmPrimitive::isSelectable);
 
-    		if(!wss.isEmpty()) {
-	    		for(WaySegment ws : wss) {
-	    			newHighlights.add(ws.way);
-	    		}
-	    		newCurs = cursorJoinWay;
-    		}
-		}
+            if(!wss.isEmpty()) {
+                for(WaySegment ws : wss) {
+                    newHighlights.add(ws.way);
+                }
+                newCurs = cursorJoinWay;
+            }
+        }
 
-    	Main.map.mapView.setCursor(newCurs);
-    	updateHighlights();
+        Main.map.mapView.setCursor(newCurs);
+        updateHighlights();
     }
 
     @Override
     public void mouseClicked(MouseEvent e) {
 
-    	Boolean newNode = false;
-    	Node newStopPos;
+        Boolean newNode = false;
+        Node newStopPos;
 
-    	//check if the user as selected an existing node, or a new one
-    	Node n = Main.map.mapView.getNearestNode(e.getPoint(), OsmPrimitive::isUsable);
+        //check if the user as selected an existing node, or a new one
+        Node n = Main.map.mapView.getNearestNode(e.getPoint(), OsmPrimitive::isUsable);
         if (n == null) {
-        	newNode = true;
-        	newStopPos = new Node(Main.map.mapView.getLatLon(e.getX(), e.getY()));
+            newNode = true;
+            newStopPos = new Node(Main.map.mapView.getLatLon(e.getX(), e.getY()));
         } else {
-        	newStopPos = new Node(n);
+            newStopPos = new Node(n);
             clearNodeTags(newStopPos);
         }
 
         //add the tags of the stop position
-    	newStopPos.put("bus", "yes");
-    	newStopPos.put("public_transport", "stop_position");
+        newStopPos.put("bus", "yes");
+        newStopPos.put("public_transport", "stop_position");
 
-    	if(newNode) {
-    		Main.main.undoRedo.add(new AddCommand(newStopPos));
-    	} else {
-    		Main.main.undoRedo.add(new ChangeCommand(n, newStopPos));
-    	}
+        if(newNode) {
+            Main.main.undoRedo.add(new AddCommand(newStopPos));
+        } else {
+            Main.main.undoRedo.add(new ChangeCommand(n, newStopPos));
+        }
 
-    	DataSet ds = Main.getLayerManager().getEditLayer().data;
-    	ds.setSelected(newStopPos);
+        DataSet ds = Main.getLayerManager().getEditLayer().data;
+        ds.setSelected(newStopPos);
 
-    	//join the node to the way only if the node is new
-    	if(newNode) {
-	        JoinNodeWayAction joinNodeWayAction = JoinNodeWayAction.createJoinNodeToWayAction();
-	        joinNodeWayAction.actionPerformed(null);
-    	}
+        //join the node to the way only if the node is new
+        if(newNode) {
+            JoinNodeWayAction joinNodeWayAction = JoinNodeWayAction.createJoinNodeToWayAction();
+            joinNodeWayAction.actionPerformed(null);
+        }
 
         // split the way in any case
         SplitWayAction splitWayAction = new SplitWayAction();
@@ -144,31 +144,31 @@ public class AddStopPositionAction extends MapMode {
     }
 
     private void clearNodeTags(Node newStopPos) {
-		for(String key : newStopPos.keySet()) {
-			newStopPos.put(key, null);
-		}
+        for(String key : newStopPos.keySet()) {
+            newStopPos.put(key, null);
+        }
 
-	}
+    }
 
-	//turn off what has been highlighted on last mouse move and highlight what has to be highlighted now
+    //turn off what has been highlighted on last mouse move and highlight what has to be highlighted now
     private void updateHighlights()
     {
-    	if(oldHighlights.isEmpty() && newHighlights.isEmpty()) {
-    		return;
-    	}
+        if(oldHighlights.isEmpty() && newHighlights.isEmpty()) {
+            return;
+        }
 
-		for(OsmPrimitive osm : oldHighlights) {
-    		osm.setHighlighted(false);
-    	}
+        for(OsmPrimitive osm : oldHighlights) {
+            osm.setHighlighted(false);
+        }
 
-    	for(OsmPrimitive osm : newHighlights) {
-    		osm.setHighlighted(true);
-    	}
+        for(OsmPrimitive osm : newHighlights) {
+            osm.setHighlighted(true);
+        }
 
-		Main.getLayerManager().getEditLayer().invalidate();
+        Main.getLayerManager().getEditLayer().invalidate();
 
-    	oldHighlights.clear();
-    	oldHighlights.addAll(newHighlights);
-    	newHighlights.clear();
+        oldHighlights.clear();
+        oldHighlights.addAll(newHighlights);
+        newHighlights.clear();
     }
 }

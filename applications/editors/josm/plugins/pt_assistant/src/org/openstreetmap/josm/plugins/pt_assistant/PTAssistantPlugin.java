@@ -104,7 +104,7 @@ public class PTAssistantPlugin extends Plugin {
     public static void setLastFix(PTRouteSegment segment) {
         lastFix = segment;
         SwingUtilities.invokeLater(() ->
-        	repeatLastFixMenu.setEnabled(segment != null));
+        repeatLastFixMenu.setEnabled(segment != null));
     }
 
     /**
@@ -116,21 +116,21 @@ public class PTAssistantPlugin extends Plugin {
         lastFix = segment;
     }
 
-	public static List<Relation> getHighlightedRelations() {
-		return new ArrayList<>(highlightedRelations);
-	}
+    public static List<Relation> getHighlightedRelations() {
+        return new ArrayList<>(highlightedRelations);
+    }
 
-	public static void addHighlightedRelation(Relation highlightedRelation) {
-		highlightedRelations.add(highlightedRelation);
-		if(!editHighlightedRelationsMenu.isEnabled()) {
-			SwingUtilities.invokeLater(() ->
-				editHighlightedRelationsMenu.setEnabled(true));
-		}
-	}
+    public static void addHighlightedRelation(Relation highlightedRelation) {
+        highlightedRelations.add(highlightedRelation);
+        if(!editHighlightedRelationsMenu.isEnabled()) {
+            SwingUtilities.invokeLater(() ->
+            editHighlightedRelationsMenu.setEnabled(true));
+        }
+    }
 
-	public static void clearHighlightedRelations() {
-		highlightedRelations.clear();
-		SwingUtilities.invokeLater(() ->
-            	editHighlightedRelationsMenu.setEnabled(false));
-	}
+    public static void clearHighlightedRelations() {
+        highlightedRelations.clear();
+        SwingUtilities.invokeLater(() ->
+        editHighlightedRelationsMenu.setEnabled(false));
+    }
 }

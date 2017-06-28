@@ -18,7 +18,7 @@ import org.openstreetmap.josm.data.osm.Way;
  */
 public final class RouteUtils {
 
-	private final static String ptVersionTag = "public_transport:version";
+    private final static String ptVersionTag = "public_transport:version";
     private RouteUtils() {
         // private constructor for util classes
     }

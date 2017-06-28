@@ -70,8 +70,8 @@ public class SplitRoundaboutTest extends AbstractTest {
 
     @Test
     public void test1() {
-    	Collection<Way> sw1 = splitWay(r1);
-    	assertEquals(4, sw1.size());
+        Collection<Way> sw1 = splitWay(r1);
+        assertEquals(4, sw1.size());
         sw1.forEach(w -> {
             if (w.firstNode().getUniqueId() == 267843779L && w.lastNode().getUniqueId() == 2968718407L)
                 assertEquals(5, w.getReferrers().size());
@@ -88,8 +88,8 @@ public class SplitRoundaboutTest extends AbstractTest {
 
     @Test
     public void test2() {
-    	Collection<Way> sw2 = splitWay(r2);
-    	assertEquals(4, sw2.size());
+        Collection<Way> sw2 = splitWay(r2);
+        assertEquals(4, sw2.size());
         sw2.forEach(w -> {
             if(w.firstNode().getUniqueId() == 2158181809L && w.lastNode().getUniqueId() == 2158181798L)
                 assertEquals(8, w.getReferrers().size());
@@ -106,8 +106,8 @@ public class SplitRoundaboutTest extends AbstractTest {
 
     @Test
     public void test3() {
-    	Collection<Way> sw3 = splitWay(r3);
-    	assertEquals(4, sw3.size());
+        Collection<Way> sw3 = splitWay(r3);
+        assertEquals(4, sw3.size());
         sw3.forEach(w -> {
             if(w.firstNode().getUniqueId() == 280697532L && w.lastNode().getUniqueId() == 280697452L)
                 assertEquals(0, w.getReferrers().size());
@@ -124,18 +124,18 @@ public class SplitRoundaboutTest extends AbstractTest {
 
     @Test
     public void test4() {
-    	Collection<Way> sw4 = splitWay(r4);
-    	assertEquals(10, sw4.size());
-    	Node entry11 = (Node) ds.getPrimitives(p -> p.hasTag("name", "nentry1-1")).iterator().next();
-    	Node exit11 = (Node) ds.getPrimitives(p -> p.hasTag("name", "nexit1-1")).iterator().next();
-    	Node entry12 = (Node) ds.getPrimitives(p -> p.hasTag("name", "nentry1-2")).iterator().next();
-    	Node exit12 = (Node) ds.getPrimitives(p -> p.hasTag("name", "nexit1-2")).iterator().next();
-    	Node entry21 = (Node) ds.getPrimitives(p -> p.hasTag("name", "nentry2-1")).iterator().next();
-    	Node exit21 = (Node) ds.getPrimitives(p -> p.hasTag("name", "nexit2-1")).iterator().next();
-    	Node entry22 = (Node) ds.getPrimitives(p -> p.hasTag("name", "nentry2-2")).iterator().next();
-    	Node exit22 = (Node) ds.getPrimitives(p -> p.hasTag("name", "nexit2-2")).iterator().next();
-    	Node entry3 = (Node) ds.getPrimitives(p -> p.hasTag("name", "nentry3")).iterator().next();
-    	Node exit3 = (Node) ds.getPrimitives(p -> p.hasTag("name", "nexit3")).iterator().next();
+        Collection<Way> sw4 = splitWay(r4);
+        assertEquals(10, sw4.size());
+        Node entry11 = (Node) ds.getPrimitives(p -> p.hasTag("name", "nentry1-1")).iterator().next();
+        Node exit11 = (Node) ds.getPrimitives(p -> p.hasTag("name", "nexit1-1")).iterator().next();
+        Node entry12 = (Node) ds.getPrimitives(p -> p.hasTag("name", "nentry1-2")).iterator().next();
+        Node exit12 = (Node) ds.getPrimitives(p -> p.hasTag("name", "nexit1-2")).iterator().next();
+        Node entry21 = (Node) ds.getPrimitives(p -> p.hasTag("name", "nentry2-1")).iterator().next();
+        Node exit21 = (Node) ds.getPrimitives(p -> p.hasTag("name", "nexit2-1")).iterator().next();
+        Node entry22 = (Node) ds.getPrimitives(p -> p.hasTag("name", "nentry2-2")).iterator().next();
+        Node exit22 = (Node) ds.getPrimitives(p -> p.hasTag("name", "nexit2-2")).iterator().next();
+        Node entry3 = (Node) ds.getPrimitives(p -> p.hasTag("name", "nentry3")).iterator().next();
+        Node exit3 = (Node) ds.getPrimitives(p -> p.hasTag("name", "nexit3")).iterator().next();
 
         sw4.forEach(w -> {
             if(w.firstNode().equals(entry11) && w.lastNode().equals(exit22))

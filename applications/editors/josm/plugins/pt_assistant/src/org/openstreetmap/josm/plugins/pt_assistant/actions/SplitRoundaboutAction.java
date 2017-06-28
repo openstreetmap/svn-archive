@@ -23,6 +23,7 @@ import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.actions.SplitWayAction;
 import org.openstreetmap.josm.actions.SplitWayAction.SplitWayResult;
 import org.openstreetmap.josm.actions.downloadtasks.DownloadOsmTask;
+import org.openstreetmap.josm.actions.relation.DownloadSelectedIncompleteMembersAction;
 import org.openstreetmap.josm.command.ChangeCommand;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.SequenceCommand;
@@ -34,6 +35,7 @@ import org.openstreetmap.josm.data.osm.OsmPrimitiveType;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.gui.dialogs.relation.DownloadRelationMemberTask;
 import org.openstreetmap.josm.plugins.pt_assistant.utils.RouteUtils;
 import org.openstreetmap.josm.tools.Pair;
 
@@ -76,10 +78,11 @@ public class SplitRoundaboutAction extends JosmAction {
                 rbbox.getTopLeftLat() + latOffset,
                 rbbox.getBottomRightLon() + lonOffset);
         Future<?> future = task.download(false, area, null);
+
         Main.worker.submit(() -> {
             try {
                 future.get();
-                continueAfterDownload(roundabout);
+                downloadIncompleteRelations(roundabout);
             } catch (InterruptedException | ExecutionException e1) {
                  Main.error(e1);
                 return;
@@ -116,6 +119,29 @@ public class SplitRoundaboutAction extends JosmAction {
         Main.main.undoRedo.add(getUpdateRelationsCommand(savedPositions, splitNodes, splitWays));
     }
 
+    private void downloadIncompleteRelations(Way roundabout) {
+
+        List<Relation> parents = getPTRouteParents(roundabout);
+        parents.removeIf(r -> !r.hasIncompleteMembers());
+        if(parents.isEmpty())
+            continueAfterDownload(roundabout);
+
+        Future <?>future = Main.worker.submit(new DownloadRelationMemberTask(
+            parents,
+            DownloadSelectedIncompleteMembersAction.buildSetOfIncompleteMembers(parents),
+            Main.getLayerManager().getEditLayer()));
+
+        Main.worker.submit(() -> {
+            try {
+                future.get();
+                continueAfterDownload(roundabout);
+            } catch (InterruptedException | ExecutionException e1) {
+                 Main.error(e1);
+                return;
+            }
+        });
+    }
+
     public Command getUpdateRelationsCommand(Map<Relation,
             List<Integer>> savedPositions,
             List<Node> splitNodes, Collection<Way> splitWays) {
@@ -150,6 +176,9 @@ public class SplitRoundaboutAction extends JosmAction {
                 Pair<Way, Way> entryExitWays= getEntryExitWays(c, i + offset);
                 Way entryWay = entryExitWays.a;
                 Way exitWay = entryExitWays.b;
+
+                if(entryWay == null || exitWay == null)
+                    return;
 
                 //get the entry and exit nodes, exit if not found
                 Node entryNode = getNodeInCommon(splitNodes, entryWay);
@@ -194,8 +223,15 @@ public class SplitRoundaboutAction extends JosmAction {
 
         //the ways returned are the one exactly before and after the roundabout
         Pair<Way, Way> ret = new Pair<>(null, null);
-        ret.a = r.getMember(position-1).getWay();
-        ret.b = r.getMember(position).getWay();
+
+        RelationMember before = r.getMember(position-1);
+        if(before.isWay())
+            ret.a = before.getWay();
+
+        RelationMember after = r.getMember(position);
+        if(after.isWay())
+            ret.b = after.getWay();
+
         return ret;
     }
 
@@ -211,9 +247,7 @@ public class SplitRoundaboutAction extends JosmAction {
                 return true;
             parents.remove(roundabout);
             for(Way parent: parents) {
-                for(Relation r : OsmPrimitive.getFilteredList(
-                        parent.getReferrers(), Relation.class)) {
-                    if(RouteUtils.isPTRoute(r))
+                if(!getPTRouteParents(parent).isEmpty()) {
                         return false;
                 }
             }
@@ -224,12 +258,8 @@ public class SplitRoundaboutAction extends JosmAction {
     }
 
     public Command getRemoveRoundaboutFromRelationsCommand(Way roundabout) {
-        List <Relation> referrers = OsmPrimitive.getFilteredList(
-                roundabout.getReferrers(), Relation.class);
-        referrers.removeIf(r -> !RouteUtils.isPTRoute(r));
-
         List<Command> commands = new ArrayList<>();
-        referrers.forEach(r -> {
+        getPTRouteParents(roundabout).forEach(r -> {
             Relation c = new Relation(r);
             c.removeMembersFor(roundabout);
             commands.add(new ChangeCommand(r, c));
@@ -243,11 +273,8 @@ public class SplitRoundaboutAction extends JosmAction {
     public Map<Relation, List<Integer>> getSavedPositions(Way roundabout) {
 
         Map<Relation, List<Integer>> savedPositions = new HashMap<>();
-        List <Relation> referrers = OsmPrimitive.getFilteredList(
-                roundabout.getReferrers(), Relation.class);
-        referrers.removeIf(r -> !RouteUtils.isPTRoute(r));
 
-        for(Relation curr : referrers) {
+        for(Relation curr : getPTRouteParents(roundabout)) {
             for(int j = 0; j < curr.getMembersCount(); j++) {
                 if(curr.getMember(j).getUniqueId() == roundabout.getUniqueId()) {
                     if(!savedPositions.containsKey(curr))
@@ -259,6 +286,13 @@ public class SplitRoundaboutAction extends JosmAction {
         }
 
         return savedPositions;
+    }
+
+    private List<Relation> getPTRouteParents(Way roundabout) {
+        List <Relation> referrers = OsmPrimitive.getFilteredList(
+                roundabout.getReferrers(), Relation.class);
+        referrers.removeIf(r -> !RouteUtils.isPTRoute(r));
+        return referrers;
     }
 
     @Override

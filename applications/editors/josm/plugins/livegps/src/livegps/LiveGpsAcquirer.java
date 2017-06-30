@@ -277,8 +277,12 @@ public class LiveGpsAcquirer implements Runnable {
         if (!report.getString("class").equals("TPV") || report.getInt("mode") < 2)
             return null;
 
-        lat = report.getJsonNumber("lat").doubleValue();
-        lon = report.getJsonNumber("lon").doubleValue();
+        JsonNumber latJson = report.getJsonNumber("lat");
+        JsonNumber lonJson = report.getJsonNumber("lon");
+        if (latJson == null || lonJson == null)
+            return null;
+        lat = latJson.doubleValue();
+        lon = lonJson.doubleValue();
 
         JsonNumber epxJson = report.getJsonNumber("epx");
         JsonNumber epyJson = report.getJsonNumber("epy");

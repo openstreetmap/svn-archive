@@ -3,9 +3,6 @@ package livegps;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
-import java.awt.Color;
-import java.awt.Graphics2D;
-import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.geom.Point2D;
 import java.beans.PropertyChangeEvent;
@@ -21,20 +18,10 @@ import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.gpx.GpxData;
 import org.openstreetmap.josm.data.gpx.GpxTrack;
 import org.openstreetmap.josm.data.gpx.WayPoint;
-import org.openstreetmap.josm.data.preferences.CachingProperty;
-import org.openstreetmap.josm.data.preferences.ColorProperty;
-import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.layer.GpxLayer;
 
 public class LiveGpsLayer extends GpxLayer implements PropertyChangeListener {
     public static final String LAYER_NAME = tr("LiveGPS layer");
-    public static final String C_LIVEGPS_COLOR_POSITION = "color.livegps.position";
-    public static final String C_LIVEGPS_COLOR_POSITION_ESTIMATE = "color.livegps.position_estimate";
-
-    private static final CachingProperty<Color> COLOR_POSITION =
-            new ColorProperty(C_LIVEGPS_COLOR_POSITION, Color.RED).cached();
-    private static final CachingProperty<Color> COLOR_POSITION_ESTIMATE =
-            new ColorProperty(C_LIVEGPS_COLOR_POSITION_ESTIMATE, Color.CYAN).cached();
 
     private static final int DEFAULT_REFRESH_INTERVAL = 250;
     private static final int DEFAULT_CENTER_INTERVAL = 5000;
@@ -43,9 +30,6 @@ public class LiveGpsLayer extends GpxLayer implements PropertyChangeListener {
     private static final String C_REFRESH_INTERVAL = "livegps.refresh_interval_msec";  /* in msec */
     private static final String C_CENTER_INTERVAL = "livegps.center_interval_msec";  /* in msec */
     private static final String C_CENTER_FACTOR = "livegps.center_factor" /* in percent */;
-    private static final String C_CURSOR_H = "livegps.cursor_height"; /* in pixels */
-    private static final String C_CURSOR_W = "livegps.cursor_width"; /* in pixels */
-    private static final String C_CURSOR_T = "livegps.cursor_thickness"; /* in pixels */
     private int refreshInterval;
     private int centerInterval;
     private double centerFactor;
@@ -70,6 +54,11 @@ public class LiveGpsLayer extends GpxLayer implements PropertyChangeListener {
         data.tracks.add(trackBeingWritten);
 
         initIntervals();
+    }
+
+    @Override
+    protected LayerPainter createMapViewPainter(MapViewEvent event) {
+        return new LiveGpsDrawHelper(this);
     }
 
     void setCurrentPosition(double lat, double lon) {
@@ -109,68 +98,6 @@ public class LiveGpsLayer extends GpxLayer implements PropertyChangeListener {
 
     public void setAutoCenter(boolean ac) {
         autocenter = ac;
-    }
-
-    @Override
-    public void paint(Graphics2D g, MapView mv, Bounds bounds) {
-        super.paint(g, mv, bounds);
-
-        if (lastPoint == null)
-            return;
-
-        Point screen = mv.getPoint(lastPoint.getCoor());
-
-        int TriaHeight = Main.pref.getInteger(C_CURSOR_H, 20);
-        int TriaWidth = Main.pref.getInteger(C_CURSOR_W, 10);
-        int TriaThick = Main.pref.getInteger(C_CURSOR_T, 4);
-
-        /*
-         * Draw a bold triangle.
-         * In case of deep zoom draw also a thin DOP oval.
-         */
-
-        g.setColor(COLOR_POSITION_ESTIMATE.get());
-        int w, h;
-        double ppm = 100 / mv.getDist100Pixel();    /* pixels per metre */
-
-        w = (int) Math.round(lastData.getEpx() * ppm);
-        h = (int) Math.round(lastData.getEpy() * ppm);
-
-        if (w > TriaWidth || h > TriaWidth) {
-            int xo, yo;
-
-            yo = screen.y - Math.round(h/2);
-            xo = screen.x - Math.round(w/2);
-
-            g.drawOval(xo, yo, w, h);
-        }
-
-        int[] x = new int[4];
-        int[] y = new int[4];
-        float course = lastData.getCourse();
-        float csin = (float) Math.sin(Math.toRadians(course));
-        float ccos = (float) Math.cos(Math.toRadians(course));
-        float csin120 = (float) Math.sin(Math.toRadians(course + 120));
-        float ccos120 = (float) Math.cos(Math.toRadians(course + 120));
-        float csin240 = (float) Math.sin(Math.toRadians(course + 240));
-        float ccos240 = (float) Math.cos(Math.toRadians(course + 240));
-
-        g.setColor(COLOR_POSITION.get());
-
-        for (int i = 0; i < TriaThick; i++, TriaHeight--, TriaWidth--) {
-
-            x[0] = screen.x + Math.round(TriaHeight * csin);
-            y[0] = screen.y - Math.round(TriaHeight * ccos);
-            x[1] = screen.x + Math.round(TriaWidth * csin120);
-            y[1] = screen.y - Math.round(TriaWidth * ccos120);
-            x[2] = screen.x;
-            y[2] = screen.y;
-            x[3] = screen.x + Math.round(TriaWidth * csin240);
-            y[3] = screen.y - Math.round(TriaWidth * ccos240);
-
-            g.drawPolygon(x, y, 4);
-        }
-
     }
 
     @Override

@@ -328,7 +328,7 @@ public class PTAssistantValidatorTest extends Test {
     }
 
     /**
-     * Carries out the second stage of the testing: sorting
+     * Carries out the second stage of the testing: sorting and segments
      *
      * @param r
      *            relation
@@ -340,71 +340,32 @@ public class PTAssistantValidatorTest extends Test {
         routeChecker.performSortingTest();
         List<TestError> routeCheckerErrors = routeChecker.getErrors();
 
-        /*- At this point, there are 3 variants:
-         *
-         * 1) There are no errors => route is correct
-         * 2) There is only a sorting error (can only be 1), but otherwise
-         * correct.
-         * 3) There are some other errors/gaps that cannot be fixed by
-         * sorting => start further test (stop-by-stop)
-         *
-         * */
-
-        if (!routeCheckerErrors.isEmpty()) {
-            // Variant 2
-            // If there is only the sorting error, add it
-            this.errors.addAll(routeChecker.getErrors());
-        }
-
-        // if (!routeChecker.getHasGap()) {
-        // // Variant 1
-        // storeCorrectRouteSegments(r);
-        // }
-
-        // Variant 3:
-        proceedAfterSorting(r);
-
-    }
-
-    /**
-     * Carries out the stop-by-stop testing which includes building the route
-     * data model.
-     *
-     * @param r
-     *            route relation
-     */
-    private void proceedAfterSorting(Relation r) {
-
         SegmentChecker segmentChecker = new SegmentChecker(r, this);
-
-        // Check if the creation of the route data model in the segment checker
-        // worked. If it did not, it means the roles in the route relation do
-        // not match the tags of the route members.
-        if (!segmentChecker.getErrors().isEmpty()) {
-            this.errors.addAll(segmentChecker.getErrors());
-        }
-
         segmentChecker.performFirstStopTest();
         segmentChecker.performLastStopTest();
         segmentChecker.performStopNotServedTest();
 
-        boolean sortingErrorFound = false;
-        for (TestError error : this.errors) {
-            if (error.getCode() == ERROR_CODE_SORTING
-                    || error.getCode() == ERROR_CODE_PARTIAL_SORTING) {
-                sortingErrorFound = true;
-                break;
-            }
-        }
-        if (!sortingErrorFound) {
-            segmentChecker.performStopByStopTest();
-            segmentChecker.findFixes();
+        //At this point, there are 3 variants:
+        if(routeCheckerErrors.isEmpty()) {
+             if (!routeChecker.getHasGap()) {
+                 //There are no errors => route is correct
+                 storeCorrectRouteSegments(r, segmentChecker.getManager(),
+                         segmentChecker.getAssigner());
+             } else {
+                 // There are some other errors/gaps that cannot be fixed by
+                 // sorting => start further test (stop-by-stop)
+                 segmentChecker.performStopByStopTest();
+                 segmentChecker.findFixes();
+             }
+        } else {
+            // There is only a sorting error (can only be 1), but otherwise
+            // correct
+            this.errors.addAll(routeChecker.getErrors());
         }
 
-        for (TestError error : segmentChecker.getErrors()) {
-            if (error.getCode() != PTAssistantValidatorTest.ERROR_CODE_RELATION_MEMBER_ROLES) {
-                this.errors.add(error);
-            }
+        //add eventual errors found
+        if (!segmentChecker.getErrors().isEmpty()) {
+            this.errors.addAll(segmentChecker.getErrors());
         }
     }
 
@@ -444,19 +405,17 @@ public class PTAssistantValidatorTest extends Test {
      * @param r
      *            route relation
      */
-    @SuppressWarnings("unused")
-    private void storeCorrectRouteSegments(Relation r) {
-        PTRouteDataManager manager = new PTRouteDataManager(r);
-        StopToWayAssigner assigner = new StopToWayAssigner(manager.getPTWays());
+    private void storeCorrectRouteSegments(Relation r,
+            PTRouteDataManager manager, StopToWayAssigner assigner) {
         if (manager.getPTStops().size() > 1) {
             for (int i = 1; i < manager.getPTStops().size(); i++) {
-                PTStop segmentStartStop = manager.getPTStops().get(i - 1);
-                PTStop segmentEndStop = manager.getPTStops().get(i);
-                Way segmentStartWay = assigner.get(segmentStartStop);
-                Way segmentEndWay = assigner.get(segmentEndStop);
-                List<PTWay> waysBetweenStops = manager.getPTWaysBetween(segmentStartWay, segmentEndWay);
-                PTRouteSegment routeSegment = new PTRouteSegment(segmentStartStop, segmentEndStop, waysBetweenStops, r);
-                SegmentChecker.addCorrectSegment(routeSegment);
+                PTStop startStop = manager.getPTStops().get(i - 1);
+                PTStop endStop = manager.getPTStops().get(i);
+                Way startWay = assigner.get(startStop);
+                Way endWay = assigner.get(endStop);
+                List<PTWay> waysBetweenStops = manager.getPTWaysBetween(startWay, endWay);
+                SegmentChecker.addCorrectSegment(
+                        new PTRouteSegment(startStop, endStop, waysBetweenStops, r));
             }
         }
     }

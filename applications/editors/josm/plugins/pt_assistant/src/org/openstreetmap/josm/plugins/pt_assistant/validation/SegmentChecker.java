@@ -65,9 +65,9 @@ public class SegmentChecker extends Checker {
 
         super(relation, test);
 
-        this.manager = new PTRouteDataManager(relation);
+        this.setManager(new PTRouteDataManager(relation));
 
-        for (RelationMember rm : manager.getFailedMembers()) {
+        for (RelationMember rm : getManager().getFailedMembers()) {
             List<Relation> primitives = new ArrayList<>(1);
             primitives.add(relation);
             List<OsmPrimitive> highlighted = new ArrayList<>(1);
@@ -81,7 +81,7 @@ public class SegmentChecker extends Checker {
             this.errors.add(e);
         }
 
-        this.assigner = new StopToWayAssigner(manager.getPTWays());
+        this.setAssigner(new StopToWayAssigner(getManager().getPTWays()));
 
     }
 
@@ -99,8 +99,7 @@ public class SegmentChecker extends Checker {
      * Adds the given correct segment to the list of correct segments without
      * checking its correctness
      *
-     * @param segment
-     *            to add to the list of correct segments
+     * @param segment to add to the list of correct segments
      */
     public static synchronized void addCorrectSegment(PTRouteSegment segment) {
         for (PTRouteSegment correctSegment : correctSegments) {
@@ -124,13 +123,13 @@ public class SegmentChecker extends Checker {
 
     public void performFirstStopTest() {
 
-        performEndStopTest(manager.getFirstStop());
+        performEndStopTest(getManager().getFirstStop());
 
     }
 
     public void performLastStopTest() {
 
-        performEndStopTest(manager.getLastStop());
+        performEndStopTest(getManager().getLastStop());
 
     }
 
@@ -236,7 +235,7 @@ public class SegmentChecker extends Checker {
 
         boolean contains = false;
 
-        List<PTWay> ptways = manager.getPTWays();
+        List<PTWay> ptways = getManager().getPTWays();
         for (PTWay ptway : ptways) {
             List<Way> ways = ptway.getWays();
             for (Way way : ways) {
@@ -259,8 +258,8 @@ public class SegmentChecker extends Checker {
     }
 
     public void performStopNotServedTest() {
-        for (PTStop stop : manager.getPTStops()) {
-            Way way = assigner.get(stop);
+        for (PTStop stop : getManager().getPTStops()) {
+            Way way = getAssigner().get(stop);
             if (way == null) {
                 createStopError(stop);
             }
@@ -273,25 +272,25 @@ public class SegmentChecker extends Checker {
      */
     public void performStopByStopTest() {
 
-        if (manager.getPTStopCount() < 2) {
+        if (getManager().getPTStopCount() < 2) {
             return;
         }
 
         List<OsmPrimitive> lastCreatedBuilderHighlighted = null;
 
         // Check each route segment:
-        for (int i = 1; i < manager.getPTStopCount(); i++) {
+        for (int i = 1; i < getManager().getPTStopCount(); i++) {
 
-            PTStop startStop = manager.getPTStops().get(i - 1);
-            PTStop endStop = manager.getPTStops().get(i);
+            PTStop startStop = getManager().getPTStops().get(i - 1);
+            PTStop endStop = getManager().getPTStops().get(i);
 
-            Way startWay = assigner.get(startStop);
-            Way endWay = assigner.get(endStop);
-            if (startWay == null || endWay == null || (startWay == endWay && startWay == manager.getLastWay())) {
+            Way startWay = getAssigner().get(startStop);
+            Way endWay = getAssigner().get(endStop);
+            if (startWay == null || endWay == null || (startWay == endWay && startWay == getManager().getLastWay())) {
                 continue;
             }
 
-            List<PTWay> segmentWays = manager.getPTWaysBetween(startWay, endWay);
+            List<PTWay> segmentWays = getManager().getPTWaysBetween(startWay, endWay);
 
             Node firstNode = findFirstNodeOfRouteSegmentInDirectionOfTravel(segmentWays.get(0));
 
@@ -318,14 +317,8 @@ public class SegmentChecker extends Checker {
 
             PTWay wronglySortedPtway = existingWaySortingIsWrong(segmentWays.get(0), firstNode,
                     segmentWays.get(segmentWays.size() - 1));
-            if (wronglySortedPtway == null) { // i.e. if the sorting is correct:
+            if (wronglySortedPtway != null) {  // i.e. if the sorting is wrong:
                 PTRouteSegment routeSegment = new PTRouteSegment(startStop, endStop, segmentWays, relation);
-                addCorrectSegment(routeSegment);
-            } else { // i.e. if the sorting is wrong:
-                PTRouteSegment routeSegment = new PTRouteSegment(startStop, endStop, segmentWays, relation);
-                // TestError error = this.errors.get(this.errors.size() - 1);
-                // wrongSegments.put(error, routeSegment);
-
                 List<Relation> primitives = new ArrayList<>(1);
                 primitives.add(relation);
                 List<OsmPrimitive> highlighted = new ArrayList<>();
@@ -380,11 +373,11 @@ public class SegmentChecker extends Checker {
 
         // 2) failing that, check which node this startWay shares with the
         // following way:
-        PTWay nextWay = manager.getNextPTWay(startWay);
+        PTWay nextWay = getManager().getNextPTWay(startWay);
         if (nextWay == null) {
             return null;
         }
-        PTWay wayAfterNext = manager.getNextPTWay(nextWay);
+        PTWay wayAfterNext = getManager().getNextPTWay(nextWay);
         Node[] nextWayEndnodes = nextWay.getEndNodes();
         if ((startWayEndnodes[0] == nextWayEndnodes[0] && startWayEndnodes[1] == nextWayEndnodes[1])
                 || (startWayEndnodes[0] == nextWayEndnodes[1] && startWayEndnodes[1] == nextWayEndnodes[0])) {
@@ -411,7 +404,7 @@ public class SegmentChecker extends Checker {
 
     private boolean isDeadendNode(Node node) {
         int count = 0;
-        for (PTWay ptway : manager.getPTWays()) {
+        for (PTWay ptway : getManager().getPTWays()) {
             List<Way> ways = ptway.getWays();
             for (Way way : ways) {
                 if (way.firstNode() == node || way.lastNode() == node) {
@@ -477,11 +470,11 @@ public class SegmentChecker extends Checker {
             // is passed multiple times by the bus, the algorithm should stop no
             // matter which of the geometrically equal PTWays it finds
 
-            PTWay nextPTWayAccortingToExistingSorting = manager.getNextPTWay(current);
+            PTWay nextPTWayAccortingToExistingSorting = getManager().getNextPTWay(current);
 
             // if current contains an unsplit roundabout:
             if (current.containsUnsplitRoundabout()) {
-                currentNode = manager.getCommonNode(current, nextPTWayAccortingToExistingSorting);
+                currentNode = getManager().getCommonNode(current, nextPTWayAccortingToExistingSorting);
                 if (currentNode == null) {
 
                     return current;
@@ -577,7 +570,7 @@ public class SegmentChecker extends Checker {
 
         List<PTWay> nextPtways = new ArrayList<>();
 
-        List<PTWay> ptways = manager.getPTWays();
+        List<PTWay> ptways = getManager().getPTWays();
 
         for (PTWay ptway : ptways) {
 
@@ -642,14 +635,10 @@ public class SegmentChecker extends Checker {
     protected void findFixes() {
 
         for (Builder builder : wrongSegmentBuilders.keySet()) {
-
             if (wrongSegmentBuilders.get(builder).getRelation() == this.relation) {
-
                 findFix(builder);
-
             }
         }
-
     }
 
     /**
@@ -1131,6 +1120,22 @@ public class SegmentChecker extends Checker {
         correctSegments.clear();
         wrongSegments.clear();
         wrongSegmentBuilders.clear();
+    }
+
+    public PTRouteDataManager getManager() {
+        return manager;
+    }
+
+    public void setManager(PTRouteDataManager manager) {
+        this.manager = manager;
+    }
+
+    public StopToWayAssigner getAssigner() {
+        return assigner;
+    }
+
+    public void setAssigner(StopToWayAssigner assigner) {
+        this.assigner = assigner;
     }
 
 }

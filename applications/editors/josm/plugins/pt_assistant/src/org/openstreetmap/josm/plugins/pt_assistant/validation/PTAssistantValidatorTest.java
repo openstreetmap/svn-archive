@@ -405,7 +405,7 @@ public class PTAssistantValidatorTest extends Test {
      * @param r
      *            route relation
      */
-    private void storeCorrectRouteSegments(Relation r,
+    public void storeCorrectRouteSegments(Relation r,
             PTRouteDataManager manager, StopToWayAssigner assigner) {
         if (manager.getPTStops().size() > 1) {
             for (int i = 1; i < manager.getPTStops().size(); i++) {

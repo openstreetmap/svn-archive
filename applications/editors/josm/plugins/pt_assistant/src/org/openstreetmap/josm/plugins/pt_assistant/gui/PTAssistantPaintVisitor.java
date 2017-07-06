@@ -66,14 +66,8 @@ public class PTAssistantPaintVisitor extends PaintVisitor {
                     visit(rm.getWay());
                 } else if (rm.isRelation()) {
                     visit(rm.getRelation());
-                } //else {
-                    // if the relation has members that do not fit with the
-                    // PT_Assistant data model, do nothing
-                //}
-            } //else {
-                // if the relation has members that do not fit with the
-                // PT_Assistant data model, do nothing
-            //}
+                }
+            }
         }
 
         // in the end, draw labels:

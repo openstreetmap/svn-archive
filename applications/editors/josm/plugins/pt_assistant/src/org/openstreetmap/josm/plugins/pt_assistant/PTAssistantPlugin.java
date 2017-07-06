@@ -122,7 +122,7 @@ public class PTAssistantPlugin extends Plugin {
 
     public static void addHighlightedRelation(Relation highlightedRelation) {
         highlightedRelations.add(highlightedRelation);
-        if(!editHighlightedRelationsMenu.isEnabled()) {
+        if (!editHighlightedRelationsMenu.isEnabled()) {
             SwingUtilities.invokeLater(() ->
             editHighlightedRelationsMenu.setEnabled(true));
         }

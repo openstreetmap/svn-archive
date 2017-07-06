@@ -45,8 +45,9 @@ public class PTAssistantLayerManager implements SelectionChangedListener {
         if (!routes.isEmpty()) {
             getLayer().setPrimitives(routes);
             PTAssistantPlugin.clearHighlightedRelations();
-            for(OsmPrimitive primitive : routes)
+            for (OsmPrimitive primitive : routes) {
                 PTAssistantPlugin.addHighlightedRelation((Relation) primitive);
+            }
         }
     }
 }

@@ -38,7 +38,7 @@ public class EditHighlightedRelationsAction extends JosmAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        for(Relation relation : PTAssistantPlugin.getHighlightedRelations()) {
+        for (Relation relation : PTAssistantPlugin.getHighlightedRelations()) {
             RelationEditor editor = RelationEditor.getEditor(
                     Main.getLayerManager().getEditLayer(), relation, null);
             editor.setVisible(true);

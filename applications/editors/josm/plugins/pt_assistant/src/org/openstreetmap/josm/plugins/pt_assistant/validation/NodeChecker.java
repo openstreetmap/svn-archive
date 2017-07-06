@@ -72,7 +72,8 @@ public class NodeChecker extends Checker {
             if (referrer.getType().equals(OsmPrimitiveType.WAY)) {
                 Way referringWay = (Way) referrer;
                 if (RouteUtils.isWaySuitableForPublicTransport(referringWay)) {
-                    Builder builder = TestError.builder(this.test, Severity.WARNING, PTAssistantValidatorTest.ERROR_CODE_PLATFORM_PART_OF_HIGHWAY);
+                    Builder builder = TestError.builder(this.test, Severity.WARNING,
+                            PTAssistantValidatorTest.ERROR_CODE_PLATFORM_PART_OF_HIGHWAY);
                     builder.message(tr("PT: Platform should not be part of a way"));
                     builder.primitives(primitives);
                     TestError e = builder.build();
@@ -119,7 +120,8 @@ public class NodeChecker extends Checker {
 
         Node problematicNode = (Node) testError.getPrimitives().iterator().next();
 
-        final int[] userSelection = { JOptionPane.YES_OPTION };
+        final int[] userSelection = {
+                JOptionPane.YES_OPTION };
         final TestError errorParameter = testError;
         if (SwingUtilities.isEventDispatchThread()) {
 
@@ -166,7 +168,8 @@ public class NodeChecker extends Checker {
         primitives.add(problematicNode);
         AutoScaleAction.zoomTo(primitives);
 
-        String[] options = { tr("Yes"), tr("No") };
+        String[] options = {
+                tr("Yes"), tr("No") };
         String message;
         if (e.getCode() == PTAssistantValidatorTest.ERROR_CODE_SOLITARY_STOP_POSITION) {
             message = "Do you want to change the tag public_transport=stop_position to public_transport=platform?";

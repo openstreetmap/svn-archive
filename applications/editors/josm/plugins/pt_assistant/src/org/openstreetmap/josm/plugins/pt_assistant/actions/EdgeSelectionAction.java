@@ -55,25 +55,25 @@ public class EdgeSelectionAction extends MapMode {
      */
     private List<Way> getEdgeFromWay(Way initial, String modeOfTravel) {
         List<Way> edge = new ArrayList<>();
-        if(!isWaySuitableForMode(initial, modeOfTravel))
+        if (!isWaySuitableForMode(initial, modeOfTravel))
             return edge;
 
         Way curr = initial;
-        while(true) {
+        while (true) {
             List<Way> options = curr.firstNode(true).getParentWays();
             options.remove(curr);
             curr = chooseBestWay(options, modeOfTravel);
-            if(curr == null || edge.contains(curr))
+            if (curr == null || edge.contains(curr))
                 break;
             edge.add(curr);
         }
 
         curr = initial;
-        while(true) {
+        while (true) {
             List<Way> options = curr.lastNode(true).getParentWays();
             options.remove(curr);
             curr = chooseBestWay(options, modeOfTravel);
-            if(curr == null || edge.contains(curr))
+            if (curr == null || edge.contains(curr))
                 break;
             edge.add(curr);
         }
@@ -83,7 +83,7 @@ public class EdgeSelectionAction extends MapMode {
     }
 
     private Boolean isWaySuitableForMode(Way toCheck, String modeOfTravel) {
-        if("bus".equals(modeOfTravel))
+        if ("bus".equals(modeOfTravel))
             return RouteUtils.isWaySuitableForBuses(toCheck);
 
         return RouteUtils.isWaySuitableForPublicTransport(toCheck);
@@ -94,19 +94,17 @@ public class EdgeSelectionAction extends MapMode {
      */
     private Way chooseBestWay(List<Way> ways, String modeOfTravel) {
         ways.removeIf(w -> !isWaySuitableForMode(w, modeOfTravel));
-        if(ways.isEmpty())
+        if (ways.isEmpty())
             return null;
-        if(ways.size() == 1)
+        if (ways.size() == 1)
             return ways.get(0);
 
         Way theChoosenOne = null;
 
-        if("bus".equals(modeOfTravel))
-        {
+        if ("bus".equals(modeOfTravel)) {
 
         }
-        if("tram".equals(modeOfTravel))
-        {
+        if ("tram".equals(modeOfTravel)) {
 
         }
 
@@ -124,10 +122,9 @@ public class EdgeSelectionAction extends MapMode {
 
         DataSet ds = Main.getLayerManager().getEditLayer().data;
         Way initial = Main.map.mapView.getNearestWay(e.getPoint(), OsmPrimitive::isUsable);
-        if(initial != null){
+        if (initial != null) {
             ds.setSelected(getEdgeFromWay(initial, getModeOfTravel()));
-        }
-        else
+        } else
             ds.clearSelection();
     }
 
@@ -135,21 +132,22 @@ public class EdgeSelectionAction extends MapMode {
     public void mouseMoved(MouseEvent e) {
         super.mouseMoved(e);
 
-        for(Way way : highlighted)
+        for (Way way : highlighted) {
             way.setHighlighted(false);
+        }
         highlighted.clear();
 
         Way initial = Main.map.mapView.getNearestWay(e.getPoint(), OsmPrimitive::isUsable);
-        if(initial == null) {
+        if (initial == null) {
             Main.map.mapView.setCursor(selectionCursor);
-        }
-        else {
+        } else {
             Main.map.mapView.setCursor(waySelectCursor);
             highlighted.addAll(getEdgeFromWay(initial, getModeOfTravel()));
         }
 
-        for(Way way : highlighted)
+        for (Way way : highlighted) {
             way.setHighlighted(true);
+        }
     }
 
     @Override

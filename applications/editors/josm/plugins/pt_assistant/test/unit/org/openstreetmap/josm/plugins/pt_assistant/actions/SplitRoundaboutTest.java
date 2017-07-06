@@ -91,7 +91,7 @@ public class SplitRoundaboutTest extends AbstractTest {
         Collection<Way> sw2 = splitWay(r2);
         assertEquals(4, sw2.size());
         sw2.forEach(w -> {
-            if(w.firstNode().getUniqueId() == 2158181809L && w.lastNode().getUniqueId() == 2158181798L)
+            if (w.firstNode().getUniqueId() == 2158181809L && w.lastNode().getUniqueId() == 2158181798L)
                 assertEquals(8, w.getReferrers().size());
             else if (w.firstNode().getUniqueId() == 2158181798L && w.lastNode().getUniqueId() == 2158181789L)
                 assertEquals(0, w.getReferrers().size());
@@ -109,7 +109,7 @@ public class SplitRoundaboutTest extends AbstractTest {
         Collection<Way> sw3 = splitWay(r3);
         assertEquals(4, sw3.size());
         sw3.forEach(w -> {
-            if(w.firstNode().getUniqueId() == 280697532L && w.lastNode().getUniqueId() == 280697452L)
+            if (w.firstNode().getUniqueId() == 280697532L && w.lastNode().getUniqueId() == 280697452L)
                 assertEquals(0, w.getReferrers().size());
             else if (w.firstNode().getUniqueId() == 280697452L && w.lastNode().getUniqueId() == 280697591L)
                 assertEquals(2, w.getReferrers().size());
@@ -138,25 +138,25 @@ public class SplitRoundaboutTest extends AbstractTest {
         Node exit3 = (Node) ds.getPrimitives(p -> p.hasTag("name", "nexit3")).iterator().next();
 
         sw4.forEach(w -> {
-            if(w.firstNode().equals(entry11) && w.lastNode().equals(exit22))
+            if (w.firstNode().equals(entry11) && w.lastNode().equals(exit22))
                 assertEquals(2, w.getReferrers().size());
-            else if(w.firstNode().equals(exit22) && w.lastNode().equals(entry21))
+            else if (w.firstNode().equals(exit22) && w.lastNode().equals(entry21))
                 assertEquals(1, w.getReferrers().size());
-            else if(w.firstNode().equals(entry21) && w.lastNode().equals(exit11))
+            else if (w.firstNode().equals(entry21) && w.lastNode().equals(exit11))
                 assertEquals(2, w.getReferrers().size());
-            else if(w.firstNode().equals(exit11) && w.lastNode().equals(entry12))
+            else if (w.firstNode().equals(exit11) && w.lastNode().equals(entry12))
                 assertEquals(1, w.getReferrers().size());
-            else if(w.firstNode().equals(entry12) && w.lastNode().equals(entry3))
+            else if (w.firstNode().equals(entry12) && w.lastNode().equals(entry3))
                 assertEquals(2, w.getReferrers().size());
-            else if(w.firstNode().equals(entry3) && w.lastNode().equals(exit21))
+            else if (w.firstNode().equals(entry3) && w.lastNode().equals(exit21))
                 assertEquals(3, w.getReferrers().size());
-            else if(w.firstNode().equals(exit21) && w.lastNode().equals(entry22))
+            else if (w.firstNode().equals(exit21) && w.lastNode().equals(entry22))
                 assertEquals(2, w.getReferrers().size());
-            else if(w.firstNode().equals(entry22) && w.lastNode().equals(exit3))
+            else if (w.firstNode().equals(entry22) && w.lastNode().equals(exit3))
                 assertEquals(3, w.getReferrers().size());
-            else if(w.firstNode().equals(exit3) && w.lastNode().equals(exit12))
+            else if (w.firstNode().equals(exit3) && w.lastNode().equals(exit12))
                 assertEquals(2, w.getReferrers().size());
-            else if(w.firstNode().equals(exit12) && w.lastNode().equals(entry11))
+            else if (w.firstNode().equals(exit12) && w.lastNode().equals(entry11))
                 assertEquals(1, w.getReferrers().size());
             else
                 fail();

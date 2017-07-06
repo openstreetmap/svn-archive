@@ -34,8 +34,6 @@ public class StopToWayAssignerTest extends AbstractTest {
 
         // test with a [correct] stop_position:
         PTStop ptstop1 = manager.getPTStop(447358573L);
-//        PTWay ptway1 = assigner.get(ptstop1);
-//        Way way1 = ptway1.getWays().get(0);
         Way way1 = assigner.get(ptstop1);
         assertEquals(way1.getId(), 26956744L);
 

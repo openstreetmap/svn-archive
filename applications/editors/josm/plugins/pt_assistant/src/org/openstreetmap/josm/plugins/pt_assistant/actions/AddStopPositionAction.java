@@ -56,7 +56,7 @@ public class AddStopPositionAction extends MapMode {
 
     private static Cursor getCursor() {
         Cursor cursor = ImageProvider.getCursor("crosshair", "bus");
-        if(cursor == null)
+        if (cursor == null)
             cursor = Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR);
         return cursor;
     }
@@ -84,15 +84,15 @@ public class AddStopPositionAction extends MapMode {
         Cursor newCurs = getCursor();
 
         Node n = Main.map.mapView.getNearestNode(e.getPoint(), OsmPrimitive::isUsable);
-        if(n != null) {
+        if (n != null) {
             newHighlights.add(n);
             newCurs = cursorJoinNode;
         } else {
             List<WaySegment> wss =
                     Main.map.mapView.getNearestWaySegments(e.getPoint(), OsmPrimitive::isSelectable);
 
-            if(!wss.isEmpty()) {
-                for(WaySegment ws : wss) {
+            if (!wss.isEmpty()) {
+                for (WaySegment ws : wss) {
                     newHighlights.add(ws.way);
                 }
                 newCurs = cursorJoinWay;
@@ -123,7 +123,7 @@ public class AddStopPositionAction extends MapMode {
         newStopPos.put("bus", "yes");
         newStopPos.put("public_transport", "stop_position");
 
-        if(newNode) {
+        if (newNode) {
             Main.main.undoRedo.add(new AddCommand(newStopPos));
         } else {
             Main.main.undoRedo.add(new ChangeCommand(n, newStopPos));
@@ -133,7 +133,7 @@ public class AddStopPositionAction extends MapMode {
         ds.setSelected(newStopPos);
 
         //join the node to the way only if the node is new
-        if(newNode) {
+        if (newNode) {
             JoinNodeWayAction joinNodeWayAction = JoinNodeWayAction.createJoinNodeToWayAction();
             joinNodeWayAction.actionPerformed(null);
         }
@@ -144,24 +144,23 @@ public class AddStopPositionAction extends MapMode {
     }
 
     private void clearNodeTags(Node newStopPos) {
-        for(String key : newStopPos.keySet()) {
+        for (String key : newStopPos.keySet()) {
             newStopPos.put(key, null);
         }
 
     }
 
     //turn off what has been highlighted on last mouse move and highlight what has to be highlighted now
-    private void updateHighlights()
-    {
-        if(oldHighlights.isEmpty() && newHighlights.isEmpty()) {
+    private void updateHighlights() {
+        if (oldHighlights.isEmpty() && newHighlights.isEmpty()) {
             return;
         }
 
-        for(OsmPrimitive osm : oldHighlights) {
+        for (OsmPrimitive osm : oldHighlights) {
             osm.setHighlighted(false);
         }
 
-        for(OsmPrimitive osm : newHighlights) {
+        for (OsmPrimitive osm : newHighlights) {
             osm.setHighlighted(true);
         }
 

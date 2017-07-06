@@ -870,9 +870,11 @@ public class SegmentChecker extends Checker {
         // zoom to problem:
         final Collection<OsmPrimitive> waysToZoom = new ArrayList<>();
 
-        for (List<PTWay> variants : fixVariants)
-            for(PTWay variant : variants)
+        for (List<PTWay> variants : fixVariants) {
+            for (PTWay variant : variants) {
                 waysToZoom.add(variant.getWay());
+            }
+        }
 
         if (SwingUtilities.isEventDispatchThread()) {
             AutoScaleAction.zoomTo(waysToZoom);

@@ -125,8 +125,7 @@ public final class PTAssistantLayer extends Layer
         return this.fixVariants.get(Character.toUpperCase(c));
     }
 
-    public void setPrimitives(List<OsmPrimitive> primitives)
-    {
+    public void setPrimitives(List<OsmPrimitive> primitives) {
         this.primitives.clear();
         this.primitives.addAll(primitives);
     }
@@ -266,7 +265,7 @@ public final class PTAssistantLayer extends Layer
                 && event.getSource().getLayersOfType(OsmDataLayer.class).isEmpty())
             event.scheduleRemoval(Collections.singleton(this));
 
-        if(event.getRemovedLayer() == this) {
+        if (event.getRemovedLayer() == this) {
             PTAssistantLayerManager.PTLM.resetLayer();
             PTAssistantPlugin.clearHighlightedRelations();
         }

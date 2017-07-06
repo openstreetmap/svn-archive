@@ -16,8 +16,6 @@ public class SegmentCheckerTest extends AbstractTest {
 
     @Test
     public void test() {
-
-
         File file = new File(AbstractTest.PATH_TO_SEGMENT_TEST);
         DataSet ds = ImportUtils.importOsmFile(file, "testLayer");
         PTAssistantValidatorTest test = new PTAssistantValidatorTest();

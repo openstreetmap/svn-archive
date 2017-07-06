@@ -18,7 +18,7 @@ import org.openstreetmap.josm.data.osm.Way;
  */
 public final class RouteUtils {
 
-    private final static String ptVersionTag = "public_transport:version";
+    private static final String ptVersionTag = "public_transport:version";
     private RouteUtils() {
         // private constructor for util classes
     }
@@ -34,7 +34,7 @@ public final class RouteUtils {
      */
     public static boolean isVersionTwoPTRoute(Relation r) {
 
-        if(!isPTRoute(r)) {
+        if (!isPTRoute(r)) {
             return false;
         }
 
@@ -47,11 +47,11 @@ public final class RouteUtils {
 
     public static boolean isVersionOnePTRoute(Relation r) {
 
-        if(!isPTRoute(r)) {
+        if (!isPTRoute(r)) {
             return false;
         }
 
-        if(r.get(ptVersionTag) == null) {
+        if (r.get(ptVersionTag) == null) {
             return true;
         }
 
@@ -226,7 +226,7 @@ public final class RouteUtils {
                 "motorway_link", "trunk_link", "primary_link", "secondary_link",
                 "tertiary_link", "living_street", "bus_guideway", "road"};
 
-        if(way.hasTag("highway", acceptedHighwayTags)
+        if (way.hasTag("highway", acceptedHighwayTags)
                 || way.hasTag("cycleway", "share_busway")
                 || way.hasTag("cycleway", "shared_lane")) {
             return true;

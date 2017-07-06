@@ -346,7 +346,7 @@ public class PTAssistantValidatorTest extends Test {
         segmentChecker.performStopNotServedTest();
 
         //At this point, there are 3 variants:
-        if(routeCheckerErrors.isEmpty()) {
+        if (routeCheckerErrors.isEmpty()) {
              if (!routeChecker.getHasGap()) {
                  //There are no errors => route is correct
                  storeCorrectRouteSegments(r, segmentChecker.getManager(),

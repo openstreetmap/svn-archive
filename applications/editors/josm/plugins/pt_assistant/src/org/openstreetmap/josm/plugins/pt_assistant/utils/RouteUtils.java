@@ -71,6 +71,10 @@ public final class RouteUtils {
         return r.hasTag("route", acceptedRouteTags);
     }
 
+    public static boolean isRoute(Relation r) {
+        return r.get("route") != null;
+    }
+
     /**
      * Checks if the relation member refers to a stop in a public transport
      * route. Some stops can be modeled with ways.

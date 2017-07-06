@@ -122,8 +122,10 @@ public class SplitRoundaboutAction extends JosmAction {
 
         List<Relation> parents = getPTRouteParents(roundabout);
         parents.removeIf(r -> !r.hasIncompleteMembers());
-        if(parents.isEmpty())
+        if(parents.isEmpty()) {
             continueAfterDownload(roundabout);
+            return;
+        }
 
         Future <?>future = Main.worker.submit(new DownloadRelationMemberTask(
             parents,
@@ -246,7 +248,7 @@ public class SplitRoundaboutAction extends JosmAction {
                 return true;
             parents.remove(roundabout);
             for(Way parent: parents) {
-                if(!getPTRouteParents(parent).isEmpty()) {
+                if(!getRouteParents(parent).isEmpty()) {
                         return false;
                 }
             }
@@ -291,6 +293,13 @@ public class SplitRoundaboutAction extends JosmAction {
         List <Relation> referrers = OsmPrimitive.getFilteredList(
                 roundabout.getReferrers(), Relation.class);
         referrers.removeIf(r -> !RouteUtils.isPTRoute(r));
+        return referrers;
+    }
+
+    private List<Relation> getRouteParents(Way roundabout) {
+        List <Relation> referrers = OsmPrimitive.getFilteredList(
+                roundabout.getReferrers(), Relation.class);
+        referrers.removeIf(r -> !RouteUtils.isRoute(r));
         return referrers;
     }
 

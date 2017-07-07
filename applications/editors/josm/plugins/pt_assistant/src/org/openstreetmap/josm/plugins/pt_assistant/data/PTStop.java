@@ -26,6 +26,10 @@ public class PTStop extends RelationMember {
     /* platform element of this stop */
     private OsmPrimitive platform = null;
 
+    private RelationMember stopPositionRM = null;
+
+    private RelationMember platformRM = null;
+
     /* the name of this stop */
     private String name = "";
 
@@ -49,7 +53,7 @@ public class PTStop extends RelationMember {
 
             this.stopPosition = other.getNode();
             this.name = stopPosition.get("name");
-
+            setStopPositionRM(other);
             // } else if (other.getRole().equals("platform") ||
             // other.getRole().equals("platform_entry_only")
             // || other.getRole().equals("platform_exit_only")) {
@@ -59,6 +63,7 @@ public class PTStop extends RelationMember {
 
             this.platform = other.getMember();
             this.name = platform.get("name");
+            setPlatformRM(other);
 
         } else {
             throw new IllegalArgumentException(
@@ -77,7 +82,7 @@ public class PTStop extends RelationMember {
      *         RelationMember does not match its role or that this PTStop
      *         already has an attribute with that role.
      */
-    protected boolean addStopElement(RelationMember member) {
+    public boolean addStopElement(RelationMember member) {
 
         // each element is only allowed once per stop
 
@@ -87,6 +92,7 @@ public class PTStop extends RelationMember {
         if (member.getMember().hasTag("public_transport", "stop_position")) {
             if (member.getType().equals(OsmPrimitiveType.NODE) && stopPosition == null) {
                 this.stopPosition = member.getNode();
+                stopPositionRM = member;
                 return true;
             }
         }
@@ -101,6 +107,7 @@ public class PTStop extends RelationMember {
                 || member.getMember().hasTag("railway", "platform")) {
             if (platform == null) {
                 platform = member.getMember();
+                platformRM = member;
                 return true;
             }
         }
@@ -208,6 +215,22 @@ public class PTStop extends RelationMember {
         }
 
         return false;
+    }
+
+    public RelationMember getPlatformRM() {
+        return platformRM;
+    }
+
+    public void setPlatformRM(RelationMember platformRM) {
+        this.platformRM = platformRM;
+    }
+
+    public RelationMember getStopPositionRM() {
+        return stopPositionRM;
+    }
+
+    public void setStopPositionRM(RelationMember stopPositionRM) {
+        this.stopPositionRM = stopPositionRM;
     }
 
 }

@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.openstreetmap.josm.data.coor.LatLon;
@@ -31,7 +32,7 @@ import org.openstreetmap.josm.tools.Pair;
 public class StopToWayAssigner {
 
     /* contains assigned stops */
-    public static HashMap<PTStop, List<Way>> stopToWay = new HashMap<>();
+    public static Map<PTStop, List<Way>> stopToWay = new HashMap<>();
 
     /*
      * contains all PTWays of the route relation for which this assigner was
@@ -39,13 +40,16 @@ public class StopToWayAssigner {
      */
     private HashSet<Way> ways;
 
-    /* route relation for which this StopToWayAssigner was created */
-
     public StopToWayAssigner(List<PTWay> ptways) {
         ways = new HashSet<>();
         for (PTWay ptway : ptways) {
             ways.addAll(ptway.getWays());
         }
+    }
+
+    public StopToWayAssigner(Collection<Way> ways) {
+        this.ways = new HashSet<>();
+        this.ways.addAll(ways);
     }
 
     /**

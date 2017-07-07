@@ -18,7 +18,7 @@ import org.openstreetmap.josm.data.osm.Way;
  */
 public final class RouteUtils {
 
-    private static final String ptVersionTag = "public_transport:version";
+    private static final String PT_VERSION_TAG = "public_transport:version";
     private RouteUtils() {
         // private constructor for util classes
     }
@@ -38,7 +38,7 @@ public final class RouteUtils {
             return false;
         }
 
-        if (!r.hasTag(ptVersionTag, "2")) {
+        if (!r.hasTag(PT_VERSION_TAG, "2")) {
             return false;
         }
 
@@ -51,11 +51,11 @@ public final class RouteUtils {
             return false;
         }
 
-        if (r.get(ptVersionTag) == null) {
+        if (r.get(PT_VERSION_TAG) == null) {
             return true;
         }
 
-        return r.hasTag(ptVersionTag, "1");
+        return r.hasTag(PT_VERSION_TAG, "1");
     }
 
     public static boolean isPTRoute(Relation r) {

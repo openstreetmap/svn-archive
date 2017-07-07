@@ -83,6 +83,10 @@ public class RouteChecker extends Checker {
         }
     }
 
+    public boolean hasGaps(List<RelationMember> waysToCheck) {
+        return countGaps(waysToCheck) > 0;
+    }
+
     /**
      * Counts how many gaps there are for a given list of ways. It does not check if
      * the way actually stands for a public transport platform - that should be

@@ -134,7 +134,7 @@ public class AddStopPositionAction extends MapMode {
 
         //join the node to the way only if the node is new
         if (newNode) {
-            JoinNodeWayAction joinNodeWayAction = JoinNodeWayAction.createJoinNodeToWayAction();
+            JoinNodeWayAction joinNodeWayAction = JoinNodeWayAction.createMoveNodeOntoWayAction();
             joinNodeWayAction.actionPerformed(null);
         }
 

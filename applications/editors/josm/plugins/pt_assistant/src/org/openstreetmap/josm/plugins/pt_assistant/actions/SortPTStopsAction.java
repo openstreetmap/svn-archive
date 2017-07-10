@@ -2,19 +2,29 @@
 
 package org.openstreetmap.josm.plugins.pt_assistant.actions;
 
+import static org.openstreetmap.josm.tools.I18n.tr;
+
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
+import javax.swing.JOptionPane;
+
+import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
+import org.openstreetmap.josm.actions.relation.DownloadSelectedIncompleteMembersAction;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.OsmPrimitiveType;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.gui.dialogs.relation.DownloadRelationMemberTask;
 import org.openstreetmap.josm.gui.dialogs.relation.sort.RelationSorter;
 import org.openstreetmap.josm.plugins.pt_assistant.data.PTStop;
 import org.openstreetmap.josm.plugins.pt_assistant.utils.RouteUtils;
@@ -37,6 +47,35 @@ public class SortPTStopsAction extends JosmAction {
     public void actionPerformed(ActionEvent e) {
 
         Relation rel = (Relation) getLayerManager().getEditDataSet().getSelected().iterator().next();
+
+        if (rel.hasIncompleteMembers()) {
+            if (JOptionPane.YES_OPTION == JOptionPane.showOptionDialog(Main.parent,
+                tr("The relation has incomplete members. Do you want to download them and continue with the sorting?"),
+                tr("Incomplete Members"), JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE,
+                null, null, null)) {
+
+                List<Relation> incomplete = Collections.singletonList(rel);
+                Future<?> future = Main.worker.submit(new DownloadRelationMemberTask(
+                        incomplete,
+                        DownloadSelectedIncompleteMembersAction.buildSetOfIncompleteMembers(incomplete),
+                        Main.getLayerManager().getEditLayer()));
+
+                    Main.worker.submit(() -> {
+                        try {
+                            future.get();
+                            continueAfterDownload(rel);
+                        } catch (InterruptedException | ExecutionException e1) {
+                             Main.error(e1);
+                            return;
+                        }
+                    });
+            } else
+                return;
+        } else
+            continueAfterDownload(rel);
+    }
+
+    private void continueAfterDownload(Relation rel) {
         List<RelationMember> members = rel.getMembers();
 
         for (int i = 0; i < members.size(); i++) {

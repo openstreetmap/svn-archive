@@ -50,8 +50,7 @@ public class SortPTStopsAction extends JosmAction {
         List<Way> ways = new ArrayList<>();
         for (int i = 0; i < members.size(); i++) {
             RelationMember rm = members.get(i);
-            String role = rm.getRole();
-            if (role != null && (role.startsWith("platform") || role.startsWith("stop")))
+            if (PTStop.isPTPlatform(rm) || PTStop.isPTStopPosition(rm))
                 stops.add(rm);
             else {
                 wayMembers.add(rm);
@@ -61,6 +60,7 @@ public class SortPTStopsAction extends JosmAction {
         }
 
         Map<String, PTStop> stopsByName = new HashMap<>();
+        List<PTStop> unnamed = new ArrayList<>();
         stops.forEach(rm -> {
             String name = getStopName(rm.getMember());
             if (name != null) {
@@ -68,6 +68,8 @@ public class SortPTStopsAction extends JosmAction {
                     stopsByName.put(name, new PTStop(rm));
                 else
                     stopsByName.get(name).addStopElement(rm);
+            } else {
+                unnamed.add(new PTStop(rm));
             }
         });
 
@@ -75,6 +77,13 @@ public class SortPTStopsAction extends JosmAction {
         List<PTStop> ptstops = new ArrayList<>(stopsByName.values());
         Map<Way, List<PTStop>> wayStop = new HashMap<>();
         ptstops.forEach(stop -> {
+            Way way = assigner.get(stop);
+            if (!wayStop.containsKey(way))
+                wayStop.put(way, new ArrayList<PTStop>());
+            wayStop.get(way).add(stop);
+        });
+
+        unnamed.forEach(stop -> {
             Way way = assigner.get(stop);
             if (!wayStop.containsKey(way))
                 wayStop.put(way, new ArrayList<PTStop>());
@@ -102,7 +111,9 @@ public class SortPTStopsAction extends JosmAction {
 
     private static String getStopName(OsmPrimitive p) {
         for (Relation ref : Utils.filteredCollection(p.getReferrers(), Relation.class)) {
-            if (ref.hasTag("type", "public_transport") && ref.hasTag("public_transport", "stop_area") && ref.getName() != null) {
+            if (ref.hasTag("type", "public_transport")
+                    && ref.hasTag("public_transport", "stop_area")
+                    && ref.getName() != null) {
                 return ref.getName();
             }
         }

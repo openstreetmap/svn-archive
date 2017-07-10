@@ -41,35 +41,22 @@ public class PTStop extends RelationMember {
      *             if the given relation member does not fit to the data model
      *             used in the plugin
      */
-    public PTStop(RelationMember other) throws IllegalArgumentException {
+    public PTStop(RelationMember other) {
 
         super(other);
 
-        // if ((other.hasRole("stop") || other.hasRole("stop_entry_only") ||
-        // other.hasRole("stop_exit_only"))
-        // && other.getType().equals(OsmPrimitiveType.NODE)) {
-
-        if (other.getMember().hasTag("public_transport", "stop_position")) {
-
-            this.stopPosition = other.getNode();
-            this.name = stopPosition.get("name");
-            setStopPositionRM(other);
-            // } else if (other.getRole().equals("platform") ||
-            // other.getRole().equals("platform_entry_only")
-            // || other.getRole().equals("platform_exit_only")) {
-        } else if (other.getMember().hasTag("highway", "bus_stop")
-                || other.getMember().hasTag("public_transport", "platform")
-                || other.getMember().hasTag("highway", "platform") || other.getMember().hasTag("railway", "platform")) {
-
-            this.platform = other.getMember();
-            this.name = platform.get("name");
-            setPlatformRM(other);
-
+        if (isPTStopPosition(other)) {
+            stopPosition = other.getNode();
+            name = stopPosition.get("name");
+            setStopPositionRM(new RelationMember("stop", other.getMember()));
+        } else if (isPTPlatform(other)) {
+            platform = other.getMember();
+            name = platform.get("name");
+            setPlatformRM(new RelationMember("platform", other.getMember()));
         } else {
             throw new IllegalArgumentException(
                     "The RelationMember type does not match its role " + other.getMember().getName());
         }
-
     }
 
     /**
@@ -84,36 +71,17 @@ public class PTStop extends RelationMember {
      */
     public boolean addStopElement(RelationMember member) {
 
-        // each element is only allowed once per stop
-
-        // add stop position:
-        // if (member.hasRole("stop") || member.hasRole("stop_entry_only") ||
-        // member.hasRole("stop_exit_only")) {
-        if (member.getMember().hasTag("public_transport", "stop_position")) {
-            if (member.getType().equals(OsmPrimitiveType.NODE) && stopPosition == null) {
-                this.stopPosition = member.getNode();
-                stopPositionRM = member;
-                return true;
-            }
-        }
-
-        // add platform:
-        // if (member.getRole().equals("platform") ||
-        // member.getRole().equals("platform_entry_only")
-        // || member.getRole().equals("platform_exit_only")) {
-        if (member.getMember().hasTag("highway", "bus_stop")
-                || member.getMember().hasTag("public_transport", "platform")
-                || member.getMember().hasTag("highway", "platform")
-                || member.getMember().hasTag("railway", "platform")) {
-            if (platform == null) {
-                platform = member.getMember();
-                platformRM = member;
-                return true;
-            }
+        if (stopPosition == null && isPTStopPosition(member)) {
+            this.stopPosition = member.getNode();
+            stopPositionRM = new RelationMember("stop", member.getMember());
+            return true;
+        } else if (platform == null && isPTPlatform(member)) {
+            platform = member.getMember();
+            platformRM = new RelationMember("platform", member.getMember());
+            return true;
         }
 
         return false;
-
     }
 
     /**
@@ -209,12 +177,31 @@ public class PTStop extends RelationMember {
             return true;
         }
 
-        if (this.platform != null
-                && (this.platform == other.getPlatform() || this.platform == other.getStopPosition())) {
-            return true;
-        }
+        return this.platform != null
+                && (this.platform == other.getPlatform()
+                    || this.platform == other.getStopPosition());
+    }
 
-        return false;
+    /**
+     * checks whether the given relation member matches a Stop Position or not
+     * @param rm member to check
+     * @return true if it matches, false otherwise
+     */
+    public static boolean isPTStopPosition(RelationMember rm) {
+        return rm.getMember().hasTag("public_transport", "stop_position")
+                && rm.getType().equals(OsmPrimitiveType.NODE);
+    }
+
+    /**
+     * checks whether the given relation member matches a Platform or not
+     * @param rm member to check
+     * @return true if it matches, false otherwise
+     */
+    public static boolean isPTPlatform(RelationMember rm) {
+        return rm.getMember().hasTag("highway", "bus_stop")
+                || rm.getMember().hasTag("public_transport", "platform")
+                || rm.getMember().hasTag("highway", "platform")
+                || rm.getMember().hasTag("railway", "platform");
     }
 
     public RelationMember getPlatformRM() {
@@ -232,5 +219,4 @@ public class PTStop extends RelationMember {
     public void setStopPositionRM(RelationMember stopPositionRM) {
         this.stopPositionRM = stopPositionRM;
     }
-
 }

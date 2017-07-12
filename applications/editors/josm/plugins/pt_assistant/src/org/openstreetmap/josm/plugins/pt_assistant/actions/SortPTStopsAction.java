@@ -19,6 +19,10 @@ import javax.swing.JOptionPane;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.actions.relation.DownloadSelectedIncompleteMembersAction;
+import org.openstreetmap.josm.command.ChangeCommand;
+import org.openstreetmap.josm.command.Command;
+import org.openstreetmap.josm.data.coor.EastNorth;
+import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.OsmPrimitiveType;
 import org.openstreetmap.josm.data.osm.Relation;
@@ -31,6 +35,12 @@ import org.openstreetmap.josm.plugins.pt_assistant.utils.RouteUtils;
 import org.openstreetmap.josm.plugins.pt_assistant.utils.StopToWayAssigner;
 import org.openstreetmap.josm.tools.Utils;
 
+/**
+ * Sorts the stop positions in a PT route according to the assigned ways
+ *
+ * @author giacomo
+ *
+ */
 public class SortPTStopsAction extends JosmAction {
 
     private static final long serialVersionUID = 1714879296430852530L;
@@ -76,12 +86,15 @@ public class SortPTStopsAction extends JosmAction {
     }
 
     private void continueAfterDownload(Relation rel) {
-        List<RelationMember> members = rel.getMembers();
+        Main.main.undoRedo.add(getSortPTStopCommand(rel));
+    }
 
+    public Command getSortPTStopCommand(Relation rel) {
+        Relation newRel = new Relation(rel);
+        List<RelationMember> members = newRel.getMembers();
         for (int i = 0; i < members.size(); i++) {
-            rel.removeMember(0);
+            newRel.removeMember(0);
         }
-
         members = new RelationSorter().sortMembers(members);
 
         List<RelationMember> stops = new ArrayList<>();
@@ -129,23 +142,101 @@ public class SortPTStopsAction extends JosmAction {
             wayStop.get(way).add(stop);
         });
 
-        wayMembers.forEach(wm -> {
-            if (wm.getType() != OsmPrimitiveType.WAY)
-                return;
-            List<PTStop> stps = wayStop.get(wm.getWay());
-            if (stps == null)
-                return;
-            stps.forEach(stop -> {
-                if (stop != null) {
-                    if (stop.getStopPositionRM() != null)
-                        rel.addMember(stop.getStopPositionRM());
-                    if (stop.getPlatformRM() != null)
-                        rel.addMember(stop.getPlatformRM());
+        Way prev = null;
+        for (RelationMember wm : wayMembers) {
+            if (wm.getType() == OsmPrimitiveType.WAY) {
+                Way curr = wm.getWay();
+                List<PTStop> stps = wayStop.get(curr);
+                if (stps != null) {
+                    if (stps.size() > 1)
+                        stps = sortSameWayStops(stps, curr, prev);
+                    stps.forEach(stop -> {
+                        if (stop != null) {
+                            if (stop.getStopPositionRM() != null)
+                                newRel.addMember(stop.getStopPositionRM());
+                            if (stop.getPlatformRM() != null)
+                                newRel.addMember(stop.getPlatformRM());
+                        }
+                    });
                 }
-            });
-        });
+                prev = curr;
+            }
+        }
 
-        wayMembers.forEach(rel::addMember);
+        wayMembers.forEach(newRel::addMember);
+
+        return new ChangeCommand(rel, newRel);
+    }
+
+    private List<PTStop> sortSameWayStops(List<PTStop> stps, Way way, Way prev) {
+        Map<Node, List<PTStop>> closeNodes = new HashMap<>();
+        List<PTStop> noLocationStops = new ArrayList<>();
+        List<Node> nodes = way.getNodes();
+        for (PTStop stop : stps) {
+            Node closest = findClosestNode(stop, nodes);
+            if (closest == null) {
+                noLocationStops.add(stop);
+                continue;
+            }
+            if (!closeNodes.containsKey(closest)) {
+                closeNodes.put(closest, new ArrayList<>());
+            }
+            closeNodes.get(closest).add(stop);
+        }
+
+        boolean reverse = prev.firstNode().equals(way.lastNode())
+                || prev.lastNode().equals(way.lastNode());
+
+        if (reverse)
+            Collections.reverse(nodes);
+
+        List<PTStop> ret = new ArrayList<>();
+        for (int i = 0; i < nodes.size(); i++) {
+            Node n = nodes.get(i);
+            Node prevNode = i > 0 ? nodes.get(i - 1) : n;
+            List<PTStop> stops = closeNodes.get(n);
+            if (stops != null) {
+                if (stops.size() > 1) {
+                    stops.sort((s1, s2) -> {
+                        Double d1 = stopEastNorth(s1).distance(prevNode.getEastNorth());
+                        Double d2 = stopEastNorth(s2).distance(prevNode.getEastNorth());
+                        return d1.compareTo(d2);
+                    });
+                }
+                stops.forEach(ret::add);
+            }
+        }
+
+        ret.addAll(noLocationStops);
+        return ret;
+    }
+
+    private Node findClosestNode(PTStop stop, List<Node> nodes) {
+        EastNorth stopEN = stopEastNorth(stop);
+        if (stopEN == null)
+            return null;
+        double minDist = Double.MAX_VALUE;
+        Node closest = null;
+        for (Node node : nodes) {
+            double dist = node.getEastNorth().distance(stopEN);
+            if (dist < minDist) {
+                minDist = dist;
+                closest = node;
+            }
+        }
+        return closest;
+    }
+
+    private EastNorth stopEastNorth(PTStop stop) {
+        if (stop.getStopPosition() != null)
+            return stop.getStopPosition().getEastNorth();
+        OsmPrimitive prim = stop.getPlatform();
+        if (prim.getType() == OsmPrimitiveType.WAY)
+            return ((Way) prim).firstNode().getEastNorth();
+        else if (prim.getType() == OsmPrimitiveType.NODE)
+            return ((Node) prim).getEastNorth();
+        else
+            return null;
     }
 
     private static String getStopName(OsmPrimitive p) {

@@ -149,9 +149,14 @@ public class PTStop extends RelationMember {
         BBox platformBBox = new BBox(ax, ay, bx, by);
 
         Collection<Node> allNodes = platform.getDataSet().getNodes();
+        String platName = platform.get("name");
         for (Node currentNode : allNodes) {
-            if (platformBBox.bounds(currentNode.getBBox()) && currentNode.hasTag("public_transport", "stop_position")) {
-                potentialStopPositions.add(currentNode);
+            String nodeName = currentNode.get("name");
+            if (platformBBox.bounds(currentNode.getBBox())
+                    && currentNode.hasTag("public_transport", "stop_position")
+                    && ((platName == null || nodeName == null)
+                        || platName.equals(nodeName))) {
+                    potentialStopPositions.add(currentNode);
             }
         }
 

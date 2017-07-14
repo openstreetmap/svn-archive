@@ -42,7 +42,6 @@ import org.openstreetmap.josm.tools.Shortcut;
  *
  * @author giacomo
  */
-@SuppressWarnings("serial")
 public class AddStopPositionAction extends MapMode {
 
     private static final String MAP_MODE_NAME = "Add stop position";

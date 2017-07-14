@@ -184,11 +184,20 @@ public class SortPTStopsAction extends JosmAction {
             closeNodes.get(closest).add(stop);
         }
 
-        boolean reverse = prev.firstNode().equals(way.lastNode())
-                || prev.lastNode().equals(way.lastNode());
+        boolean reverse = prev != null &&
+                (prev.firstNode().equals(way.lastNode())
+                        || prev.lastNode().equals(way.lastNode()));
 
         if (reverse)
             Collections.reverse(nodes);
+
+        List<PTStop> ret = getSortedStops(nodes, closeNodes);
+        ret.addAll(noLocationStops);
+        return ret;
+    }
+
+    private List<PTStop> getSortedStops(List<Node> nodes,
+            Map<Node, List<PTStop>> closeNodes) {
 
         List<PTStop> ret = new ArrayList<>();
         for (int i = 0; i < nodes.size(); i++) {
@@ -207,7 +216,6 @@ public class SortPTStopsAction extends JosmAction {
             }
         }
 
-        ret.addAll(noLocationStops);
         return ret;
     }
 

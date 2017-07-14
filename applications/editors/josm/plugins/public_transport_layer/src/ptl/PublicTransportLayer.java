@@ -31,6 +31,7 @@ import org.openstreetmap.josm.gui.mappaint.Environment;
 import org.openstreetmap.josm.gui.mappaint.MultiCascade;
 import org.openstreetmap.josm.gui.mappaint.StyleKeys;
 import org.openstreetmap.josm.gui.mappaint.styleelement.TextLabel;
+import org.openstreetmap.josm.gui.mappaint.styleelement.placement.OnLineStrategy;
 import org.openstreetmap.josm.tools.ColorHelper;
 import org.openstreetmap.josm.tools.ImageProvider;
 import org.openstreetmap.josm.tools.MultiMap;
@@ -103,7 +104,7 @@ public class PublicTransportLayer extends Layer {
             final Way way = new Way();
             way.addNode(nodePair.a);
             way.addNode(nodePair.b);
-            renderer.drawText(way, text);
+            renderer.drawText(way, text, OnLineStrategy.INSTANCE);
         }
     }
 

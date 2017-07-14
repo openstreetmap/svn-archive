@@ -39,6 +39,8 @@ public abstract class AbstractTest {
  public static final String PATH_TO_ROUNDABOUT = "test/data/roundabout.osm";
  public static final String PATH_TO_ROUNDABOUT_ONEWAY = "test/data/duesseldorf_roundabout.osm";
 
+ public static final String PATH_TO_SORT_PT_STOPS = "test/data/sort_test.osm";
+
  public static final String PATH_TO_ROAD_TYPE_ERROR = "test/data/road-type.osm";
 
  public static final String PATH_TO_ONEWAY_BAD_MEMBER_SORTING = "test/data/oneway-bad-member-sorting.osm";

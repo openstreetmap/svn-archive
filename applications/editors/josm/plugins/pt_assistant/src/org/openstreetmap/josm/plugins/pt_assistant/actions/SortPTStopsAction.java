@@ -20,7 +20,6 @@ import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.actions.relation.DownloadSelectedIncompleteMembersAction;
 import org.openstreetmap.josm.command.ChangeCommand;
-import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
@@ -43,7 +42,6 @@ import org.openstreetmap.josm.tools.Utils;
  */
 public class SortPTStopsAction extends JosmAction {
 
-    private static final long serialVersionUID = 1714879296430852530L;
     private static final String ACTION_NAME = "Sort PT Stops";
 
     /**
@@ -86,14 +84,15 @@ public class SortPTStopsAction extends JosmAction {
     }
 
     private void continueAfterDownload(Relation rel) {
-        Main.main.undoRedo.add(getSortPTStopCommand(rel));
+        Relation newRel = new Relation(rel);
+        sortPTStops(newRel);
+        Main.main.undoRedo.add(new ChangeCommand(rel, newRel));
     }
 
-    public Command getSortPTStopCommand(Relation rel) {
-        Relation newRel = new Relation(rel);
-        List<RelationMember> members = newRel.getMembers();
+    public void sortPTStops(Relation rel) {
+        List<RelationMember> members = rel.getMembers();
         for (int i = 0; i < members.size(); i++) {
-            newRel.removeMember(0);
+            rel.removeMember(0);
         }
         members = new RelationSorter().sortMembers(members);
 
@@ -153,9 +152,9 @@ public class SortPTStopsAction extends JosmAction {
                     stps.forEach(stop -> {
                         if (stop != null) {
                             if (stop.getStopPositionRM() != null)
-                                newRel.addMember(stop.getStopPositionRM());
+                                rel.addMember(stop.getStopPositionRM());
                             if (stop.getPlatformRM() != null)
-                                newRel.addMember(stop.getPlatformRM());
+                                rel.addMember(stop.getPlatformRM());
                         }
                     });
                 }
@@ -163,9 +162,7 @@ public class SortPTStopsAction extends JosmAction {
             }
         }
 
-        wayMembers.forEach(newRel::addMember);
-
-        return new ChangeCommand(rel, newRel);
+        wayMembers.forEach(rel::addMember);
     }
 
     private List<PTStop> sortSameWayStops(List<PTStop> stps, Way way, Way prev) {

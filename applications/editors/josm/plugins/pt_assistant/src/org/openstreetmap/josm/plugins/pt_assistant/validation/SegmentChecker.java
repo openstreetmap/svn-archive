@@ -598,7 +598,8 @@ public class SegmentChecker extends Checker {
          */
 
         if (testError.getCode() == PTAssistantValidatorTest.ERROR_CODE_STOP_BY_STOP) {
-            return true;
+            return !"PT: Problem in the route segment with no automatic fix".equals(
+                    testError.getMessage());
         }
 
         return false;

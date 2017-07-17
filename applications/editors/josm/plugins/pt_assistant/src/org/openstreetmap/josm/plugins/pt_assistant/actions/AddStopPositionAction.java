@@ -161,6 +161,8 @@ public class AddStopPositionAction extends MapMode {
 
         SplitWayResult result = SplitWayAction.split(getLayerManager().getEditLayer(),
                 affected, Collections.singletonList(newStopPos), Collections.emptyList());
+        if (result == null) //if the way is already split, return
+            return;
         Main.main.undoRedo.add(result.getCommand());
 
         List<Command> cmds = new ArrayList<>();

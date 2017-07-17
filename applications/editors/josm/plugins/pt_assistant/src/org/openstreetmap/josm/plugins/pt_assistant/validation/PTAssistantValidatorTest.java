@@ -413,6 +413,9 @@ public class PTAssistantValidatorTest extends Test {
                 PTStop endStop = manager.getPTStops().get(i);
                 Way startWay = assigner.get(startStop);
                 Way endWay = assigner.get(endStop);
+                //if no startway and endway for this segment are found, don't store it
+                if (startWay == null || endWay == null)
+                    continue;
                 List<PTWay> waysBetweenStops = manager.getPTWaysBetween(startWay, endWay);
                 SegmentChecker.addCorrectSegment(
                         new PTRouteSegment(startStop, endStop, waysBetweenStops, r));

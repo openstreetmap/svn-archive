@@ -101,7 +101,10 @@ public class PTAssistantPaintVisitor extends PaintVisitor {
 
                 stopOrderMap.put(rm.getUniqueId(), sb.toString());
                 try {
-                    drawStopLabel(rm.getMember(), sb.toString());
+                    if (PTStop.isPTStopPosition(rm))
+                        drawStopLabel(rm.getMember(), sb.toString(), false);
+                    else if (PTStop.isPTPlatform(rm))
+                        drawStopLabel(rm.getMember(), sb.toString(), true);
                 } catch (NullPointerException ex) {
                     // do nothing
                     Main.trace(ex);
@@ -324,7 +327,7 @@ public class PTAssistantPaintVisitor extends PaintVisitor {
      * @param primitive primitive
      * @param label label
      */
-    protected void drawStopLabel(OsmPrimitive primitive, String label) {
+    protected void drawStopLabel(OsmPrimitive primitive, String label, Boolean platform) {
 
         // find the point to which the stop visualization will be linked:
         Node n = new Node(primitive.getBBox().getCenter());
@@ -332,10 +335,16 @@ public class PTAssistantPaintVisitor extends PaintVisitor {
         Point p = mv.getPoint(n);
 
         if (label != null && !label.equals("")) {
-            g.setColor(Color.WHITE);
             Font stringFont = new Font("SansSerif", Font.PLAIN, 24);
-            g.setFont(stringFont);
-            g.drawString(label, p.x + 20, p.y - 20);
+            if (platform) {
+                g.setColor(new Color(255, 255, 102));
+                g.setFont(stringFont);
+                g.drawString(label, p.x + 20, p.y - 40);
+            } else {
+                g.setColor(Color.WHITE);
+                g.setFont(stringFont);
+                g.drawString(label, p.x + 20, p.y - 20);
+            }
         }
 
         // draw the ref values of all parent routes:

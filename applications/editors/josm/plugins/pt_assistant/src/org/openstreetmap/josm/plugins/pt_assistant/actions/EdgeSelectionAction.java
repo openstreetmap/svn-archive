@@ -13,6 +13,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.actions.AutoScaleAction;
 import org.openstreetmap.josm.actions.mapmode.MapMode;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
@@ -138,7 +139,12 @@ public class EdgeSelectionAction extends MapMode {
         DataSet ds = Main.getLayerManager().getEditLayer().data;
         Way initial = Main.map.mapView.getNearestWay(e.getPoint(), OsmPrimitive::isUsable);
         if (initial != null) {
-            ds.setSelected(getEdgeFromWay(initial, getModeOfTravel()));
+            List<Way> edge = getEdgeFromWay(initial, getModeOfTravel());
+            ds.setSelected(edge);
+            AutoScaleAction.zoomTo(
+                    edge.stream()
+                    .map(w -> (OsmPrimitive) w)
+                    .collect(Collectors.toList()));
         } else
             ds.clearSelection();
     }

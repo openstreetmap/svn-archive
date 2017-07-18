@@ -17,6 +17,7 @@ import org.openstreetmap.josm.gui.preferences.PreferenceSetting;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
 import org.openstreetmap.josm.plugins.pt_assistant.actions.AddStopPositionAction;
+import org.openstreetmap.josm.plugins.pt_assistant.actions.CreatePlatformNodeAction;
 import org.openstreetmap.josm.plugins.pt_assistant.actions.EdgeSelectionAction;
 import org.openstreetmap.josm.plugins.pt_assistant.actions.EditHighlightedRelationsAction;
 import org.openstreetmap.josm.plugins.pt_assistant.actions.RepeatLastFixAction;
@@ -67,6 +68,7 @@ public class PTAssistantPlugin extends Plugin {
         editHighlightedRelationsMenu = MainMenu.add(Main.main.menu.toolsMenu, editHighlightedRelationsAction);
         MainMenu.add(Main.main.menu.toolsMenu, new SplitRoundaboutAction());
         MainMenu.add(Main.main.menu.toolsMenu, new SortPTStopsAction());
+        MainMenu.add(Main.main.menu.toolsMenu, new CreatePlatformNodeAction());
     }
 
     /**

@@ -58,7 +58,7 @@ public class PTAssistantPlugin extends Plugin {
      */
     public PTAssistantPlugin(PluginInformation info) {
         super(info);
-
+        Main.info("whatever you want");
         OsmValidator.addTest(PTAssistantValidatorTest.class);
 
         RepeatLastFixAction repeatLastFixAction = new RepeatLastFixAction();

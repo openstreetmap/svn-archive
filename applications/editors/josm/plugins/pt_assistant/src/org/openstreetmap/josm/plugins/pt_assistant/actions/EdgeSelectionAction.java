@@ -10,12 +10,15 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.mapmode.MapMode;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.gui.dialogs.relation.sort.RelationSorter;
 import org.openstreetmap.josm.plugins.pt_assistant.utils.RouteUtils;
 import org.openstreetmap.josm.tools.ImageProvider;
 import org.openstreetmap.josm.tools.Shortcut;
@@ -29,7 +32,7 @@ import org.openstreetmap.josm.tools.Shortcut;
  */
 public class EdgeSelectionAction extends MapMode {
 
-    private static final String mapModeName = "Edge Selection";
+    private static final String MAP_MODE_NAME = "Edge Selection";
     private static final long serialVersionUID = 2414977774504904238L;
 
     private transient Set<Way> highlighted;
@@ -38,9 +41,9 @@ public class EdgeSelectionAction extends MapMode {
     private Cursor waySelectCursor;
 
     public EdgeSelectionAction() {
-        super(tr(mapModeName), "edgeSelection", tr(mapModeName),
+        super(tr(MAP_MODE_NAME), "edgeSelection", tr(MAP_MODE_NAME),
                 Shortcut.registerShortcut("mapmode:edge_selection",
-                        tr("Mode: {0}", tr(mapModeName)),
+                        tr("Mode: {0}", tr(MAP_MODE_NAME)),
                         KeyEvent.VK_K, Shortcut.CTRL),
                 ImageProvider.getCursor("normal", "selection"));
         highlighted = new HashSet<>();
@@ -79,7 +82,19 @@ public class EdgeSelectionAction extends MapMode {
         }
 
         edge.add(initial);
+        edge = sortEdgeWays(edge);
         return edge;
+    }
+
+    private List<Way> sortEdgeWays(List<Way> edge) {
+        List<RelationMember> members =
+                edge.stream()
+                    .map(w -> new RelationMember("", w))
+                    .collect(Collectors.toList());
+        List<RelationMember> sorted = new RelationSorter().sortMembers(members);
+        return sorted.stream()
+                .map(RelationMember::getWay)
+                .collect(Collectors.toList());
     }
 
     private Boolean isWaySuitableForMode(Way toCheck, String modeOfTravel) {

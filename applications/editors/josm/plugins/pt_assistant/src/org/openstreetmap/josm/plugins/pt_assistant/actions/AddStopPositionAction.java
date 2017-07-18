@@ -128,7 +128,6 @@ public class AddStopPositionAction extends MapMode {
             newStopPos = new Node(Main.map.mapView.getLatLon(e.getX(), e.getY()));
         } else {
             newStopPos = new Node(n);
-            clearNodeTags(newStopPos);
         }
 
         //add the tags of the stop position
@@ -240,13 +239,6 @@ public class AddStopPositionAction extends MapMode {
         }
 
         return true;
-    }
-
-    private void clearNodeTags(Node newStopPos) {
-        for (String key : newStopPos.keySet()) {
-            newStopPos.put(key, null);
-        }
-
     }
 
     private List<Relation> getPTRouteParents(Way way) {

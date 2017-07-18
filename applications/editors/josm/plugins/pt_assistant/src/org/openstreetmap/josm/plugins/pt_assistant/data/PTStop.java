@@ -188,6 +188,18 @@ public class PTStop extends RelationMember {
     }
 
     /**
+     * Checks if the relation member refers to a stop in a public transport
+     * route. Some stops can be modeled with ways.
+     *
+     * @param rm
+     *            relation member to be checked
+     * @return true if the relation member refers to a stop, false otherwise
+     */
+    public static boolean isPTStop(RelationMember rm) {
+        return isPTStopPosition(rm) || isPTPlatform(rm);
+    }
+
+    /**
      * checks whether the given relation member matches a Stop Position or not
      * @param rm member to check
      * @return true if it matches, false otherwise

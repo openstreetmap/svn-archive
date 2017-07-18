@@ -76,26 +76,6 @@ public final class RouteUtils {
     }
 
     /**
-     * Checks if the relation member refers to a stop in a public transport
-     * route. Some stops can be modeled with ways.
-     *
-     * @param rm
-     *            relation member to be checked
-     * @return true if the relation member refers to a stop, false otherwise
-     */
-    public static boolean isPTStop(RelationMember rm) {
-
-        if (rm.getType().equals(OsmPrimitiveType.NODE)) {
-                return true;
-        }
-
-        return (rm.getType().equals(OsmPrimitiveType.WAY))
-            && (rm.getWay().hasTag("public_transport", "platform")
-                    || rm.getWay().hasTag("highway", "platform")
-                    || rm.getWay().hasTag("railway", "platform"));
-    }
-
-    /**
      * Checks if the relation member refers to a way in a public transport
      * route. Some OsmPrimitiveType.WAY have to be excluded because platforms
      * can be modeled with ways.

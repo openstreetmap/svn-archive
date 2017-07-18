@@ -21,6 +21,7 @@ import org.openstreetmap.josm.data.validation.Severity;
 import org.openstreetmap.josm.data.validation.Test;
 import org.openstreetmap.josm.data.validation.TestError;
 import org.openstreetmap.josm.data.validation.TestError.Builder;
+import org.openstreetmap.josm.plugins.pt_assistant.data.PTStop;
 import org.openstreetmap.josm.plugins.pt_assistant.utils.RouteUtils;
 
 /**
@@ -412,7 +413,7 @@ public class WayChecker extends Checker {
 
         // copy PT stops first, PT ways last:
         for (RelationMember rm : originalRelation.getMembers()) {
-            if (RouteUtils.isPTStop(rm)) {
+            if (PTStop.isPTStop(rm)) {
 
                 if (rm.getRole().equals("stop_position")) {
                     if (rm.getType().equals(OsmPrimitiveType.NODE)) {

@@ -49,7 +49,7 @@ public class PTRouteDataManager {
 
         for (RelationMember member : this.relation.getMembers()) {
 
-            if (RouteUtils.isPTStop(member)) {
+            if (PTStop.isPTStop(member)) {
 
                 // First, check if the stop already exists (i.e. there are
                 // consecutive elements that belong to the same stop:

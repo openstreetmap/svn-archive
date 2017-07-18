@@ -19,8 +19,8 @@ import org.openstreetmap.josm.data.validation.Test;
 import org.openstreetmap.josm.data.validation.TestError;
 import org.openstreetmap.josm.gui.dialogs.relation.RelationEditor;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
+import org.openstreetmap.josm.plugins.pt_assistant.data.PTStop;
 import org.openstreetmap.josm.plugins.pt_assistant.gui.PTAssistantLayerManager;
-import org.openstreetmap.josm.plugins.pt_assistant.utils.RouteUtils;
 
 /**
  * Represents tests and fixed of the PT_Assistant plugin
@@ -72,7 +72,7 @@ public abstract class Checker {
 
         for (RelationMember rm : r.getMembers()) {
 
-            if (RouteUtils.isPTStop(rm)) {
+            if (PTStop.isPTStop(rm)) {
 
                 if (rm.getMember().hasTag("public_transport", "stop_position")) {
                     if (!rm.hasRole("stop") && !rm.hasRole("stop_entry_only") && !rm.hasRole("stop_exit_only")) {
@@ -109,7 +109,7 @@ public abstract class Checker {
 
         for (RelationMember rm : r.getMembers()) {
 
-            if (!RouteUtils.isPTStop(rm)) {
+            if (!PTStop.isPTStop(rm)) {
 
                 if (rm.hasRole("forward") || rm.hasRole("backward")) {
                     RelationMember newMember = new RelationMember("", rm.getMember());

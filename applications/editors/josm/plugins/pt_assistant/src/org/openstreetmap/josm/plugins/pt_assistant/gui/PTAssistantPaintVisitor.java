@@ -12,6 +12,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.osm.Node;
@@ -22,6 +23,7 @@ import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.data.validation.PaintVisitor;
 import org.openstreetmap.josm.gui.MapView;
+import org.openstreetmap.josm.plugins.pt_assistant.data.PTStop;
 import org.openstreetmap.josm.plugins.pt_assistant.data.PTWay;
 import org.openstreetmap.josm.plugins.pt_assistant.utils.RouteUtils;
 import org.openstreetmap.josm.tools.Pair;
@@ -57,10 +59,10 @@ public class PTAssistantPaintVisitor extends PaintVisitor {
         // first, draw primitives:
         for (RelationMember rm : r.getMembers()) {
 
-            if (RouteUtils.isPTStop(rm)) {
-
-                drawStop(rm.getMember());
-
+            if (PTStop.isPTStopPosition(rm)) {
+                drawStop(rm.getMember(), true);
+            } else if (PTStop.isPTPlatform(rm)) {
+                drawStop(rm.getMember(), false);
             } else if (RouteUtils.isPTWay(rm)) {
                 if (rm.isWay()) {
                     visit(rm.getWay());
@@ -75,29 +77,31 @@ public class PTAssistantPaintVisitor extends PaintVisitor {
         int stopCount = 1;
 
         for (RelationMember rm : r.getMembers()) {
-            if (RouteUtils.isPTStop(rm) || (rm.getMember().isIncomplete() && (rm.isNode() || rm.hasRole("stop")
+            if (PTStop.isPTStop(rm) || (rm.getMember().isIncomplete() && (rm.isNode() || rm.hasRole("stop")
                     || rm.hasRole("stop_entry_only") || rm.hasRole("stop_exit_only") || rm.hasRole("platform")
                     || rm.hasRole("platform_entry_only") || rm.hasRole("platform_exit_only")))) {
 
-                String label = "";
+                StringBuilder sb = new StringBuilder();
 
                 if (stopOrderMap.containsKey(rm.getUniqueId())) {
-                    label = stopOrderMap.get(rm.getUniqueId());
-                    label = label + ";" + stopCount;
+                    sb.append(stopOrderMap.get(rm.getUniqueId()))
+                        .append(";")
+                        .append(stopCount);
                 } else {
                     if (r.hasKey("ref")) {
-                        label = label + r.get("ref");
+                        sb.append(r.get("ref"));
                     } else if (r.hasKey("name")) {
-                        label = label + r.get("name");
+                        sb.append(r.get("name"));
                     } else {
-                        label = "NA";
+                        sb.append("NA");
                     }
-                    label = label + " - " + stopCount;
+                    sb.append(" - ")
+                        .append(stopCount);
                 }
 
-                stopOrderMap.put(rm.getUniqueId(), label);
+                stopOrderMap.put(rm.getUniqueId(), sb.toString());
                 try {
-                    drawStopLabel(rm.getMember(), label);
+                    drawStopLabel(rm.getMember(), sb.toString());
                 } catch (NullPointerException ex) {
                     // do nothing
                     Main.trace(ex);
@@ -163,7 +167,7 @@ public class PTAssistantPaintVisitor extends PaintVisitor {
                 lastN = n;
                 continue;
             }
-            this.drawSegment(lastN, n, new Color(128, 0, 128, 100), oneway);
+            drawSegment(lastN, n, new Color(128, 0, 128, 100), oneway);
             lastN = n;
         }
     }
@@ -280,7 +284,7 @@ public class PTAssistantPaintVisitor extends PaintVisitor {
     @Override
     protected void drawNode(Node n, Color color) {
         if (mv == null || g == null) {
-            ;
+            return;
         }
         Point p = mv.getPoint(n);
         if (p == null) {
@@ -296,7 +300,7 @@ public class PTAssistantPaintVisitor extends PaintVisitor {
      *
      * @param primitive primitive
      */
-    protected void drawStop(OsmPrimitive primitive) {
+    protected void drawStop(OsmPrimitive primitive, Boolean stopPosition) {
 
         // find the point to which the stop visualization will be linked:
         Node n = new Node(primitive.getBBox().getCenter());
@@ -305,7 +309,7 @@ public class PTAssistantPaintVisitor extends PaintVisitor {
 
         g.setColor(Color.BLUE);
 
-        if (primitive.hasTag("public_transport", "stop_position") && p != null) {
+        if (stopPosition) {
             g.fillOval(p.x - 8, p.y - 8, 16, 16);
         } else {
             g.fillRect(p.x - 8, p.y - 8, 16, 16);
@@ -358,14 +362,14 @@ public class PTAssistantPaintVisitor extends PaintVisitor {
 
         Collections.sort(parentsLabelList, new RefTagComparator());
 
-        String parentsLabel = "";
+        StringBuilder sb = new StringBuilder();
         for (String s : parentsLabelList) {
-            parentsLabel = parentsLabel + s + ";";
+            sb.append(s).append(";");
         }
 
-        if (!parentsLabel.equals("")) {
+        if (sb.length() > 0) {
             // remove the last semicolon:
-            parentsLabel = parentsLabel.substring(0, parentsLabel.length() - 1);
+            String parentsLabel = sb.substring(0, sb.length() - 1);
 
             g.setColor(new Color(255, 20, 147));
             Font parentLabelFont = new Font("SansSerif", Font.ITALIC, 20);
@@ -415,8 +419,8 @@ public class PTAssistantPaintVisitor extends PaintVisitor {
             String firstNumberString2 = splitString2[0];
 
             try {
-                int firstNumber1 = Integer.valueOf(firstNumberString1);
-                int firstNumber2 = Integer.valueOf(firstNumberString2);
+                int firstNumber1 = Integer.parseInt(firstNumberString1);
+                int firstNumber2 = Integer.parseInt(firstNumberString2);
                 if (firstNumber1 > firstNumber2) {
                     return 1;
                 } else if (firstNumber1 < firstNumber2) {
@@ -442,7 +446,7 @@ public class PTAssistantPaintVisitor extends PaintVisitor {
     protected void visitFixVariants(HashMap<Character, List<PTWay>> fixVariants,
             HashMap<Way, List<Character>> wayColoring) {
 
-        drawFixVariantsWithParallelLines(wayColoring, fixVariants.size());
+        drawFixVariantsWithParallelLines(wayColoring);
 
         Color[] colors = {
                 new Color(255, 0, 0, 150),
@@ -456,9 +460,9 @@ public class PTAssistantPaintVisitor extends PaintVisitor {
         double letterX = Main.map.mapView.getBounds().getMinX() + 20;
         double letterY = Main.map.mapView.getBounds().getMinY() + 100;
 
-        for (Character c : fixVariants.keySet()) {
+        for (Entry<Character, List<PTWay>> entry : fixVariants.entrySet()) {
+            Character c = entry.getKey();
             if (fixVariants.get(c) != null) {
-                // drawFixVariant(fixVariants.get(c), colors[colorIndex % 5]);
                 drawFixVariantLetter(c.toString(), colors[colorIndex % 5], letterX, letterY);
                 colorIndex++;
                 letterY = letterY + 60;
@@ -482,7 +486,7 @@ public class PTAssistantPaintVisitor extends PaintVisitor {
         }
     }
 
-    protected void drawFixVariantsWithParallelLines(Map<Way, List<Character>> wayColoring, int numberOfFixVariants) {
+    protected void drawFixVariantsWithParallelLines(Map<Way, List<Character>> wayColoring) {
 
         HashMap<Character, Color> colors = new HashMap<>();
         colors.put('A', new Color(255, 0, 0, 200));
@@ -491,7 +495,8 @@ public class PTAssistantPaintVisitor extends PaintVisitor {
         colors.put('D', new Color(255, 255, 0, 200));
         colors.put('E', new Color(0, 255, 255, 200));
 
-        for (Way way : wayColoring.keySet()) {
+        for (Entry<Way, List<Character>> entry : wayColoring.entrySet()) {
+            Way way = entry.getKey();
             List<Character> letterList = wayColoring.get(way);
             List<Color> wayColors = new ArrayList<>();
             for (Character letter : letterList) {

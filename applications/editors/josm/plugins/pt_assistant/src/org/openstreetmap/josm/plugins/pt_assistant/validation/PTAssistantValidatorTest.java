@@ -16,7 +16,6 @@ import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.SelectCommand;
 import org.openstreetmap.josm.command.SequenceCommand;
-import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.OsmPrimitiveType;
@@ -63,9 +62,6 @@ public class PTAssistantValidatorTest extends Test {
     public PTAssistantValidatorTest() {
         super(tr("Public Transport Assistant tests"),
                 tr("Check if route relations are compatible with public transport version 2"));
-
-        DataSet.addSelectionListener(PTAssistantLayerManager.PTLM);
-
     }
 
     @Override

@@ -1,6 +1,7 @@
 // License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.pt_assistant;
 
+import java.awt.KeyboardFocusManager;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,6 +9,7 @@ import javax.swing.JMenuItem;
 import javax.swing.SwingUtilities;
 
 import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.validation.OsmValidator;
 import org.openstreetmap.josm.gui.IconToggleButton;
@@ -24,6 +26,7 @@ import org.openstreetmap.josm.plugins.pt_assistant.actions.RepeatLastFixAction;
 import org.openstreetmap.josm.plugins.pt_assistant.actions.SortPTStopsAction;
 import org.openstreetmap.josm.plugins.pt_assistant.actions.SplitRoundaboutAction;
 import org.openstreetmap.josm.plugins.pt_assistant.data.PTRouteSegment;
+import org.openstreetmap.josm.plugins.pt_assistant.gui.PTAssistantLayerManager;
 import org.openstreetmap.josm.plugins.pt_assistant.gui.PTAssistantPreferenceSetting;
 import org.openstreetmap.josm.plugins.pt_assistant.validation.PTAssistantValidatorTest;
 
@@ -59,9 +62,10 @@ public class PTAssistantPlugin extends Plugin {
      */
     public PTAssistantPlugin(PluginInformation info) {
         super(info);
-        Main.info("whatever you want");
         OsmValidator.addTest(PTAssistantValidatorTest.class);
 
+        DataSet.addSelectionListener(PTAssistantLayerManager.PTLM);
+        KeyboardFocusManager.getCurrentKeyboardFocusManager().addPropertyChangeListener(PTAssistantLayerManager.PTLM);
         RepeatLastFixAction repeatLastFixAction = new RepeatLastFixAction();
         EditHighlightedRelationsAction editHighlightedRelationsAction = new EditHighlightedRelationsAction();
         repeatLastFixMenu = MainMenu.add(Main.main.menu.toolsMenu, repeatLastFixAction);

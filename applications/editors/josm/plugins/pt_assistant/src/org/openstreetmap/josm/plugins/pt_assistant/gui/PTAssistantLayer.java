@@ -3,13 +3,11 @@ package org.openstreetmap.josm.plugins.pt_assistant.gui;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.KeyboardFocusManager;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map.Entry;
 
 import javax.swing.Action;
 import javax.swing.Icon;
@@ -24,7 +22,6 @@ import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.dialogs.LayerListDialog;
 import org.openstreetmap.josm.gui.dialogs.LayerListPopup;
-import org.openstreetmap.josm.gui.dialogs.relation.GenericRelationEditor;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.gui.layer.LayerManager.LayerAddEvent;
 import org.openstreetmap.josm.gui.layer.LayerManager.LayerChangeListener;
@@ -34,7 +31,6 @@ import org.openstreetmap.josm.gui.layer.LayerPositionStrategy;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import org.openstreetmap.josm.plugins.pt_assistant.PTAssistantPlugin;
 import org.openstreetmap.josm.plugins.pt_assistant.data.PTWay;
-import org.openstreetmap.josm.plugins.pt_assistant.utils.RouteUtils;
 import org.openstreetmap.josm.tools.ImageProvider;
 
 /**
@@ -44,7 +40,7 @@ import org.openstreetmap.josm.tools.ImageProvider;
  *
  */
 public final class PTAssistantLayer extends Layer
-        implements PropertyChangeListener, LayerChangeListener {
+        implements LayerChangeListener {
 
     private List<OsmPrimitive> primitives = new ArrayList<>();
     private PTAssistantPaintVisitor paintVisitor;
@@ -53,7 +49,6 @@ public final class PTAssistantLayer extends Layer
 
     public PTAssistantLayer() {
         super("pt_assistant layer");
-        KeyboardFocusManager.getCurrentKeyboardFocusManager().addPropertyChangeListener(this);
         Main.getLayerManager().addLayerChangeListener(this);
         Main.getLayerManager().addLayer(this);
     }
@@ -96,8 +91,9 @@ public final class PTAssistantLayer extends Layer
             alphabet++;
         }
 
-        for (Character currentFixVariantLetter : this.fixVariants.keySet()) {
-            List<PTWay> fixVariant = this.fixVariants.get(currentFixVariantLetter);
+        for (Entry<Character, List<PTWay>> entry : this.fixVariants.entrySet()) {
+            Character currentFixVariantLetter = entry.getKey();
+            List<PTWay> fixVariant = entry.getValue();
             for (PTWay ptway : fixVariant) {
                 for (Way way : ptway.getWays()) {
                     if (wayColoring.containsKey(way)) {
@@ -122,12 +118,11 @@ public final class PTAssistantLayer extends Layer
      * @return fix variant
      */
     public List<PTWay> getFixVariant(char c) {
-        return this.fixVariants.get(Character.toUpperCase(c));
+        return fixVariants.get(Character.toUpperCase(c));
     }
 
-    public void setPrimitives(List<OsmPrimitive> primitives) {
-        this.primitives.clear();
-        this.primitives.addAll(primitives);
+    public void setPrimitives(List<OsmPrimitive> newPrimitives) {
+        primitives = new ArrayList<>(newPrimitives);
     }
 
     @Override
@@ -139,7 +134,7 @@ public final class PTAssistantLayer extends Layer
             paintVisitor.visit(primitive);
         }
 
-        paintVisitor.visitFixVariants(this.fixVariants, this.wayColoring);
+        paintVisitor.visitFixVariants(fixVariants, wayColoring);
 
     }
 
@@ -187,31 +182,7 @@ public final class PTAssistantLayer extends Layer
         return LayerPositionStrategy.IN_FRONT;
     }
 
-    /**
-     * Listens to a focus change, sets the primitives attribute to the route
-     * relation in the top Relation Editor and repaints the map
-     */
-    @Override
-    public void propertyChange(PropertyChangeEvent evt) {
 
-        if ("focusedWindow".equals(evt.getPropertyName())) {
-
-            if (evt.getNewValue() == null) {
-                return;
-            }
-
-            if (evt.getNewValue().getClass().equals(GenericRelationEditor.class)) {
-
-                GenericRelationEditor editor = (GenericRelationEditor) evt.getNewValue();
-                Relation relation = editor.getRelation();
-
-                if (RouteUtils.isVersionTwoPTRoute(relation)) {
-                    this.repaint(relation);
-
-                }
-            }
-        }
-    }
 
     /**
      * Repaints the layer in cases when there was no selection change
@@ -219,8 +190,8 @@ public final class PTAssistantLayer extends Layer
      * @param relation relation
      */
     public void repaint(Relation relation) {
-        this.primitives.clear();
-        this.primitives.add(relation);
+        primitives.clear();
+        primitives.add(relation);
         if (!Main.getLayerManager().containsLayer(this)) {
             Main.getLayerManager().addLayer(this);
         }
@@ -235,7 +206,7 @@ public final class PTAssistantLayer extends Layer
             paintVisitor.visit(primitive);
         }
 
-        paintVisitor.visitFixVariants(this.fixVariants, this.wayColoring);
+        paintVisitor.visitFixVariants(fixVariants, wayColoring);
 
         Main.map.mapView.repaint();
     }
@@ -255,9 +226,9 @@ public final class PTAssistantLayer extends Layer
     public void layerRemoving(LayerRemoveEvent event) {
 
         if (event.getRemovedLayer() instanceof OsmDataLayer) {
-            this.primitives.clear();
-            this.fixVariants.clear();
-            this.wayColoring.clear();
+            primitives.clear();
+            fixVariants.clear();
+            wayColoring.clear();
             Main.map.mapView.repaint();
         }
 
@@ -273,7 +244,6 @@ public final class PTAssistantLayer extends Layer
 
     @Override
     public synchronized void destroy() {
-        KeyboardFocusManager.getCurrentKeyboardFocusManager().removePropertyChangeListener(this);
         Main.getLayerManager().removeLayerChangeListener(this);
         super.destroy();
     }

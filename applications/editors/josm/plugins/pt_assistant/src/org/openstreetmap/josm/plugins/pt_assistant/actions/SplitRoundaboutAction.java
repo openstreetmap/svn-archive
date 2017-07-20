@@ -188,11 +188,16 @@ public class SplitRoundaboutAction extends JosmAction {
                 if (entryNode == null || exitNode == null)
                     return;
 
+                if (needSwap(entryNode, entryWay, exitNode, exitWay)) {
+                    Node temp = entryNode;
+                    entryNode = exitNode;
+                    exitNode = temp;
+                }
+
                 //starting from the entry node, add split ways until the
                 //exit node is reached
-                List<Way> parents = entryNode.getParentWays();
-                parents.removeIf(w -> !w.firstNode().equals(entryNode));
-                parents.removeIf(w -> w.equals(entryWay));
+                List<Way> parents = filterParents(entryNode.getParentWays(),
+                        entryWay, entryNode);
 
                 Way curr = parents.get(0);
 
@@ -207,6 +212,31 @@ public class SplitRoundaboutAction extends JosmAction {
                 memberOffset.put(r, offset);
             }));
         return changingRelation;
+    }
+
+    private List<Way> filterParents(List<Way> parentWays, Way entryWay, Node entryNode) {
+        List<Way> ret = new ArrayList<>();
+        for (Way w : parentWays) {
+            if (!w.equals(entryWay) && w.firstNode().equals(entryNode))
+                ret.add(w);
+        }
+        return ret;
+    }
+
+    //check whether the ways were in reverse order and need to be split
+    private boolean needSwap(Node entryNode, Way entryWay, Node exitNode, Way exitWay) {
+        boolean entryReversed = false;
+        boolean exitReversed = false;
+
+        if (entryWay.firstNode().equals(entryNode)
+                && !entryWay.hasTag("oneway", "-1"))
+            entryReversed = true;
+
+        if (exitWay.lastNode().equals(exitNode)
+                && !exitWay.hasTag("oneway", "-1"))
+            exitReversed = true;
+
+        return entryReversed && exitReversed;
     }
 
     private Node getNodeInCommon(List<Node> nodes, Way way) {

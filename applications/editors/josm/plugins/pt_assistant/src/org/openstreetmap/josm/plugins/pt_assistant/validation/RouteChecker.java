@@ -20,7 +20,10 @@ import org.openstreetmap.josm.data.validation.TestError.Builder;
 import org.openstreetmap.josm.gui.dialogs.relation.sort.RelationSorter;
 import org.openstreetmap.josm.gui.dialogs.relation.sort.WayConnectionType;
 import org.openstreetmap.josm.gui.dialogs.relation.sort.WayConnectionTypeCalculator;
+import org.openstreetmap.josm.plugins.pt_assistant.data.PTRouteDataManager;
+import org.openstreetmap.josm.plugins.pt_assistant.data.PTStop;
 import org.openstreetmap.josm.plugins.pt_assistant.utils.RouteUtils;
+import org.openstreetmap.josm.plugins.pt_assistant.utils.StopToWayAssigner;
 
 /**
  * Performs tests of a route at the level of the whole route: sorting test
@@ -34,6 +37,12 @@ public class RouteChecker extends Checker {
 
     List<RelationMember> sortedMembers;
 
+    /* Manager of the PTStops and PTWays of the current route */
+    private PTRouteDataManager manager;
+
+    /* Assigns PTStops to nearest PTWays and stores that correspondence */
+    private StopToWayAssigner assigner;
+
     public RouteChecker(Relation relation, Test test) {
 
         super(relation, test);
@@ -42,7 +51,7 @@ public class RouteChecker extends Checker {
 
     }
 
-   protected void performSortingTest() {
+    protected void performSortingTest() {
 
         final List<RelationMember> waysToCheck = new ArrayList<>();
         for (RelationMember rm : relation.getMembers()) {
@@ -81,6 +90,60 @@ public class RouteChecker extends Checker {
                 this.errors.add(e);
             }
         }
+    }
+
+    protected void performFromToTagsTest() {
+
+        String from = relation.get("from");
+        String to = relation.get("to");
+        if (from == null || to == null || manager.getPTStopCount() == 0) {
+            return;
+        }
+
+        PTStop stop = manager.getFirstStop();
+        OsmPrimitive primitive = checkPTStopName(stop, from);
+
+        if (primitive != null) {
+            Builder builder = TestError.builder(this.test, Severity.WARNING,
+                    PTAssistantValidatorTest.ERROR_CODE_FROM_TO_ROUTE_TAG);
+            builder.message(tr("PT: The name of the first stop does not match the \"from\" tag of the route relation"));
+            builder.primitives(primitive);
+            TestError e = builder.build();
+            this.errors.add(e);
+        }
+
+        stop = manager.getLastStop();
+        primitive = checkPTStopName(stop, to);
+
+        if (primitive != null) {
+            Builder builder = TestError.builder(this.test, Severity.WARNING,
+                    PTAssistantValidatorTest.ERROR_CODE_FROM_TO_ROUTE_TAG);
+            builder.message(tr("PT: The name of the last stop does not match the \"to\" tag of the route relation"));
+            builder.primitives(primitive);
+            TestError e = builder.build();
+            this.errors.add(e);
+        }
+    }
+
+    //given a PTStop and a name, check whether one of its primitives have a
+    //different name from the one passed. if so, it returns the primitive.
+    //it returns null if the names match
+    private OsmPrimitive checkPTStopName(PTStop stop, String name) {
+        OsmPrimitive primitive = null;
+        String toCheck = null;
+        if (stop.getPlatform() != null) {
+            toCheck = stop.getPlatform().getName();
+            primitive = stop.getPlatform();
+        }
+        if (toCheck == null && stop.getStopPosition() != null) {
+            toCheck = stop.getStopPosition().getName();
+            primitive = stop.getStopPosition();
+        }
+
+        if (toCheck != null && !toCheck.equals(name))
+            return primitive;
+
+        return null;
     }
 
     public boolean hasGaps(List<RelationMember> waysToCheck) {
@@ -183,5 +246,21 @@ public class RouteChecker extends Checker {
         sortedRelation.setMembers(sortedRelationMembers);
 
         return new ChangeCommand(originalRelation, sortedRelation);
+    }
+
+    public PTRouteDataManager getManager() {
+        return manager;
+    }
+
+    public void setManager(PTRouteDataManager manager) {
+        this.manager = manager;
+    }
+
+    public StopToWayAssigner getAssigner() {
+        return assigner;
+    }
+
+    public void setAssigner(StopToWayAssigner assigner) {
+        this.assigner = assigner;
     }
 }

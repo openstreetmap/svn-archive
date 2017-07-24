@@ -64,25 +64,6 @@ public class SegmentChecker extends Checker {
     public SegmentChecker(Relation relation, Test test) {
 
         super(relation, test);
-
-        this.setManager(new PTRouteDataManager(relation));
-
-        for (RelationMember rm : getManager().getFailedMembers()) {
-            List<Relation> primitives = new ArrayList<>(1);
-            primitives.add(relation);
-            List<OsmPrimitive> highlighted = new ArrayList<>(1);
-            highlighted.add(rm.getMember());
-            Builder builder = TestError.builder(this.test, Severity.WARNING,
-                    PTAssistantValidatorTest.ERROR_CODE_RELATION_MEMBER_ROLES);
-            builder.message(tr("PT: Relation member roles do not match tags"));
-            builder.primitives(primitives);
-            builder.highlight(highlighted);
-            TestError e = builder.build();
-            this.errors.add(e);
-        }
-
-        this.setAssigner(new StopToWayAssigner(getManager().getPTWays()));
-
     }
 
     /**

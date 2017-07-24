@@ -10,7 +10,9 @@ import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.plugins.pt_assistant.AbstractTest;
 import org.openstreetmap.josm.plugins.pt_assistant.ImportUtils;
+import org.openstreetmap.josm.plugins.pt_assistant.data.PTRouteDataManager;
 import org.openstreetmap.josm.plugins.pt_assistant.utils.RouteUtils;
+import org.openstreetmap.josm.plugins.pt_assistant.utils.StopToWayAssigner;
 
 public class SegmentCheckerTest extends AbstractTest {
 
@@ -30,6 +32,9 @@ public class SegmentCheckerTest extends AbstractTest {
         }
 
         SegmentChecker segmentChecker = new SegmentChecker(route, test);
+        PTRouteDataManager manager = new PTRouteDataManager(route);
+        segmentChecker.setManager(manager);
+        segmentChecker.setAssigner(new StopToWayAssigner(manager.getPTWays()));
         segmentChecker.performStopByStopTest();
         //since 33425 storing correct segments only of continuous routes
         test.storeCorrectRouteSegments(route,

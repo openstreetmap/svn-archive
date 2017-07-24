@@ -20,6 +20,7 @@ import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.OsmPrimitiveType;
 import org.openstreetmap.josm.data.osm.Relation;
+import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.data.validation.Severity;
 import org.openstreetmap.josm.data.validation.Test;
@@ -331,12 +332,31 @@ public class PTAssistantValidatorTest extends Test {
      */
     private void proceedWithSorting(Relation r) {
 
+        PTRouteDataManager manager = new PTRouteDataManager(r);
+        StopToWayAssigner assigner = new StopToWayAssigner(manager.getPTWays());
+
+        for (RelationMember rm : manager.getFailedMembers()) {
+            List<Relation> primitives = new ArrayList<>(1);
+            primitives.add(r);
+            List<OsmPrimitive> highlighted = new ArrayList<>(1);
+            highlighted.add(rm.getMember());
+            Builder builder = TestError.builder(this, Severity.WARNING,
+                    ERROR_CODE_RELATION_MEMBER_ROLES);
+            builder.message(tr("PT: Relation member roles do not match tags"));
+            builder.primitives(primitives);
+            builder.highlight(highlighted);
+            TestError e = builder.build();
+            errors.add(e);
+        }
+
         // Check if the relation is correct, or only has a wrong sorting order:
         RouteChecker routeChecker = new RouteChecker(r, this);
         routeChecker.performSortingTest();
         List<TestError> routeCheckerErrors = routeChecker.getErrors();
 
         SegmentChecker segmentChecker = new SegmentChecker(r, this);
+        segmentChecker.setManager(manager);
+        segmentChecker.setAssigner(assigner);
         segmentChecker.performFirstStopTest();
         segmentChecker.performLastStopTest();
         segmentChecker.performStopNotServedTest();

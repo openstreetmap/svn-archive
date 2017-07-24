@@ -4,6 +4,7 @@ package org.openstreetmap.josm.plugins.pt_assistant.validation;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
@@ -13,6 +14,7 @@ import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.OsmPrimitiveType;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.RelationMember;
+import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.data.validation.Severity;
 import org.openstreetmap.josm.data.validation.Test;
 import org.openstreetmap.josm.data.validation.TestError;
@@ -51,6 +53,9 @@ public class RouteChecker extends Checker {
 
     }
 
+    //checks if sorting the members of the current relation could make it
+    //continuous or it could reduce the number of gaps. if one of the previous
+    //is true raises a warning
     protected void performSortingTest() {
 
         final List<RelationMember> waysToCheck = new ArrayList<>();
@@ -92,14 +97,17 @@ public class RouteChecker extends Checker {
         }
     }
 
-    protected void performFromToTagsTest() {
+    //checks if the from and to tags of the route match the names of the first
+    //and last stops
+    protected boolean performFromToTagsTest() {
 
         String from = relation.get("from");
         String to = relation.get("to");
         if (from == null || to == null || manager.getPTStopCount() == 0) {
-            return;
+            return false;
         }
 
+        boolean foundError = false;
         PTStop stop = manager.getFirstStop();
         OsmPrimitive primitive = checkPTStopName(stop, from);
 
@@ -107,9 +115,10 @@ public class RouteChecker extends Checker {
             Builder builder = TestError.builder(this.test, Severity.WARNING,
                     PTAssistantValidatorTest.ERROR_CODE_FROM_TO_ROUTE_TAG);
             builder.message(tr("PT: The name of the first stop does not match the \"from\" tag of the route relation"));
-            builder.primitives(primitive);
+            builder.primitives(primitive, relation);
             TestError e = builder.build();
             this.errors.add(e);
+            foundError = true;
         }
 
         stop = manager.getLastStop();
@@ -119,7 +128,50 @@ public class RouteChecker extends Checker {
             Builder builder = TestError.builder(this.test, Severity.WARNING,
                     PTAssistantValidatorTest.ERROR_CODE_FROM_TO_ROUTE_TAG);
             builder.message(tr("PT: The name of the last stop does not match the \"to\" tag of the route relation"));
-            builder.primitives(primitive);
+            builder.primitives(primitive, relation);
+            TestError e = builder.build();
+            this.errors.add(e);
+            foundError = true;
+        }
+
+        return foundError;
+    }
+
+    //checks if the first and last stop are assigned to the first and last way
+    protected void performFirstLastWayStopTest() {
+
+        if (manager.getPTStopCount() == 0 || manager.getPTWayCount() == 0) {
+            return;
+        }
+
+        PTStop stop = manager.getFirstStop();
+        Way way = manager.getFirstWay();
+        if (!way.equals(assigner.get(stop))) {
+            Builder builder = TestError.builder(this.test, Severity.WARNING,
+                    PTAssistantValidatorTest.ERROR_CODE_FIRST_LAST_STOP_WAY_TAG);
+            builder.message(tr("PT: The first stop of the route does not match the first way"));
+            List<OsmPrimitive> prims = new ArrayList<>(Arrays.asList(way, relation));
+            if (stop.getPlatform() != null)
+                prims.add(stop.getPlatform());
+            if (stop.getStopPosition() != null)
+                prims.add(stop.getStopPosition());
+            builder.primitives(prims);
+            TestError e = builder.build();
+            this.errors.add(e);
+        }
+
+        stop = manager.getLastStop();
+        way = manager.getLastWay();
+        if (!way.equals(assigner.get(stop))) {
+            Builder builder = TestError.builder(this.test, Severity.WARNING,
+                    PTAssistantValidatorTest.ERROR_CODE_FIRST_LAST_STOP_WAY_TAG);
+            builder.message(tr("PT: The last stop of the route does not match the last way"));
+            List<OsmPrimitive> prims = new ArrayList<>(Arrays.asList(way, relation));
+            if (stop.getPlatform() != null)
+                prims.add(stop.getPlatform());
+            if (stop.getStopPosition() != null)
+                prims.add(stop.getStopPosition());
+            builder.primitives(prims);
             TestError e = builder.build();
             this.errors.add(e);
         }
@@ -146,6 +198,13 @@ public class RouteChecker extends Checker {
         return null;
     }
 
+    /**
+     * Checks whether there is at least one gap in the given list of ways.
+     *
+     * @param waysToCheck ways to check
+     * @return true if has gap (in the sense of continuity of ways in the
+     *         Relation Editor), false otherwise
+     */
     public boolean hasGaps(List<RelationMember> waysToCheck) {
         return countGaps(waysToCheck) > 0;
     }
@@ -156,8 +215,7 @@ public class RouteChecker extends Checker {
      * checked beforehand.
      *
      * @param waysToCheck ways to check
-     * @return true if has gap (in the sense of continuity of ways in the
-     *         Relation Editor), false otherwise
+     * @return number of gaps
      */
     private int countGaps(List<RelationMember> waysToCheck) {
         int numberOfGaps = 0;

@@ -44,6 +44,7 @@ import org.openstreetmap.josm.plugins.pt_assistant.utils.StopUtils;
 public class PTAssistantValidatorTest extends Test {
 
     public static final int ERROR_CODE_FROM_TO_ROUTE_TAG = 3701;
+    public static final int ERROR_CODE_FIRST_LAST_STOP_WAY_TAG = 3702;
     public static final int ERROR_CODE_SORTING = 3711;
     public static final int ERROR_CODE_PARTIAL_SORTING = 3712;
     public static final int ERROR_CODE_ROAD_TYPE = 3721;
@@ -354,7 +355,9 @@ public class PTAssistantValidatorTest extends Test {
         RouteChecker routeChecker = new RouteChecker(r, this);
         routeChecker.setManager(manager);
         routeChecker.setAssigner(assigner);
-        routeChecker.performFromToTagsTest();
+        if (!routeChecker.performFromToTagsTest()) {
+            routeChecker.performFirstLastWayStopTest();
+        }
         routeChecker.performSortingTest();
         List<TestError> routeCheckerErrors = routeChecker.getErrors();
 

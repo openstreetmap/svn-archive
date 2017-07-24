@@ -26,10 +26,10 @@ public class PTRouteDataManager {
     Relation relation;
 
     /* Stores all relation members that are PTStops */
-    private List<PTStop> ptstops = new ArrayList<>();
+    private List<PTStop> ptStops = new ArrayList<>();
 
     /* Stores all relation members that are PTWays */
-    private List<PTWay> ptways = new ArrayList<>();
+    private List<PTWay> ptWays = new ArrayList<>();
 
     /*
      * Stores relation members that could not be created because they are not
@@ -37,7 +37,7 @@ public class PTRouteDataManager {
      */
     private Set<RelationMember> failedMembers = new HashSet<>();
 
-    public PTRouteDataManager(Relation relation) throws IllegalArgumentException {
+    public PTRouteDataManager(Relation relation) {
 
         // It is assumed that the relation is a route. Build in a check here
         // (e.g. from class RouteUtils) if you want to invoke this constructor
@@ -62,7 +62,7 @@ public class PTRouteDataManager {
                         // if there is no name, check by proximity:
                         // Squared distance of 0.000004 corresponds to
                         // around 100 m
-                        if (this.calculateDistanceSq(member, prev) < 0.000001) {
+                        if (calculateDistanceSq(member, prev) < 0.000001) {
                             stopExists = true;
                         }
 
@@ -92,7 +92,7 @@ public class PTRouteDataManager {
 
                     try {
                         PTStop ptstop = new PTStop(member);
-                        ptstops.add(ptstop);
+                        ptStops.add(ptstop);
                         prev = ptstop;
                     } catch (IllegalArgumentException ex) {
                         if (ex.getMessage().equals(
@@ -110,7 +110,7 @@ public class PTRouteDataManager {
             } else if (RouteUtils.isPTWay(member)) {
 
                 PTWay ptway = new PTWay(member);
-                ptways.add(ptway);
+                ptWays.add(ptway);
 
             } else {
                 if (!failedMembers.contains(member)) {
@@ -149,7 +149,7 @@ public class PTRouteDataManager {
      */
     public PTWay getPTWay(Way inputWay) {
 
-        for (PTWay curr : ptways) {
+        for (PTWay curr : ptWays) {
 
             if (curr.isWay() && curr.getWays().get(0) == inputWay) {
                 return curr;
@@ -169,37 +169,37 @@ public class PTRouteDataManager {
     }
 
     public List<PTStop> getPTStops() {
-        return this.ptstops;
+        return ptStops;
     }
 
     public List<PTWay> getPTWays() {
-        return this.ptways;
+        return ptWays;
     }
 
     public int getPTStopCount() {
-        return ptstops.size();
+        return ptStops.size();
     }
 
     public int getPTWayCount() {
-        return this.ptways.size();
+        return ptWays.size();
     }
 
     public PTStop getFirstStop() {
-        if (this.ptstops.isEmpty()) {
+        if (ptStops.isEmpty()) {
             return null;
         }
-        return this.ptstops.get(0);
+        return ptStops.get(0);
     }
 
     public PTStop getLastStop() {
-        if (this.ptstops.isEmpty()) {
+        if (ptStops.isEmpty()) {
             return null;
         }
-        return this.ptstops.get(ptstops.size() - 1);
+        return ptStops.get(ptStops.size() - 1);
     }
 
     public Set<RelationMember> getFailedMembers() {
-        return this.failedMembers;
+        return failedMembers;
     }
 
     /**
@@ -208,7 +208,7 @@ public class PTRouteDataManager {
      * @return the route relation for which this manager was created
      */
     public Relation getRelation() {
-        return this.relation;
+        return relation;
     }
 
     /**
@@ -218,7 +218,7 @@ public class PTRouteDataManager {
      * @return a PTStop that matches the given id. Returns null if not found
      */
     public PTStop getPTStop(long id) {
-        for (PTStop stop : this.ptstops) {
+        for (PTStop stop : ptStops) {
             if (stop.getStopPosition() != null && stop.getStopPosition().getId() == id) {
                 return stop;
             }
@@ -238,7 +238,7 @@ public class PTRouteDataManager {
      * @return a PTWay that matches the given id. Returns null if not found
      */
     public PTWay getPTWay(long id) {
-        for (PTWay ptway : this.ptways) {
+        for (PTWay ptway : ptWays) {
             for (Way way : ptway.getWays()) {
                 if (way.getId() == id) {
                     return ptway;
@@ -257,7 +257,7 @@ public class PTRouteDataManager {
     public List<PTWay> findPTWaysThatContain(Way way) {
 
         List<PTWay> ptwaysThatContain = new ArrayList<>();
-        for (PTWay ptway : ptways) {
+        for (PTWay ptway : ptWays) {
             if (ptway.getWays().contains(way)) {
                 ptwaysThatContain.add(ptway);
             }
@@ -275,7 +275,7 @@ public class PTRouteDataManager {
     public List<PTWay> findPTWaysThatContainAsEndNode(Node node) {
 
         List<PTWay> ptwaysThatContain = new ArrayList<>();
-        for (PTWay ptway : ptways) {
+        for (PTWay ptway : ptWays) {
             List<Way> ways = ptway.getWays();
             if (ways.get(0).firstNode() == node || ways.get(0).lastNode() == node
                     || ways.get(ways.size() - 1).firstNode() == node || ways.get(ways.size() - 1).lastNode() == node) {
@@ -294,11 +294,8 @@ public class PTRouteDataManager {
      */
     public boolean isDeadendNode(Node node) {
 
-        List<PTWay> referringPtways = this.findPTWaysThatContainAsEndNode(node);
-        if (referringPtways.size() <= 1) {
-            return true;
-        }
-        return false;
+        List<PTWay> referringPtways = findPTWaysThatContainAsEndNode(node);
+        return referringPtways.size() <= 1;
     }
 
     /**
@@ -311,9 +308,9 @@ public class PTRouteDataManager {
      */
     public PTWay getNextPTWay(PTWay ptway) {
 
-        for (int i = 0; i < ptways.size() - 1; i++) {
-            if (ptways.get(i) == ptway) {
-                return ptways.get(i + 1);
+        for (int i = 0; i < ptWays.size() - 1; i++) {
+            if (ptWays.get(i) == ptway) {
+                return ptWays.get(i + 1);
             }
         }
         return null;
@@ -330,9 +327,9 @@ public class PTRouteDataManager {
      */
     public PTWay getPreviousPTWay(PTWay ptway) {
 
-        for (int i = 1; i < ptways.size(); i++) {
-            if (ptways.get(i) == ptway) {
-                return ptways.get(i - 1);
+        for (int i = 1; i < ptWays.size(); i++) {
+            if (ptWays.get(i) == ptway) {
+                return ptWays.get(i - 1);
             }
         }
         return null;
@@ -351,11 +348,11 @@ public class PTRouteDataManager {
         List<Integer> potentialStartIndices = new ArrayList<>();
         List<Integer> potentialEndIndices = new ArrayList<>();
 
-        for (int i = 0; i < ptways.size(); i++) {
-            if (ptways.get(i).getWays().contains(start)) {
+        for (int i = 0; i < ptWays.size(); i++) {
+            if (ptWays.get(i).getWays().contains(start)) {
                 potentialStartIndices.add(i);
             }
-            if (ptways.get(i).getWays().contains(end)) {
+            if (ptWays.get(i).getWays().contains(end)) {
                 potentialEndIndices.add(i);
             }
         }
@@ -382,7 +379,7 @@ public class PTRouteDataManager {
 
         List<PTWay> result = new ArrayList<>();
         for (int i = mostSuitablePair[0]; i <= mostSuitablePair[1]; i++) {
-            result.add(ptways.get(i));
+            result.add(ptWays.get(i));
         }
         return result;
     }
@@ -418,16 +415,39 @@ public class PTRouteDataManager {
         return null;
     }
 
+   /**
+    * Returns the first way of this route
+    *
+    * @return the first way of this route
+    */
+   public Way getFirstWay() {
+       if (ptWays.isEmpty()) {
+           return null;
+       }
+
+       PTWay lastPTWay = ptWays.get(0);
+       if (lastPTWay == null || lastPTWay.getWays().isEmpty()) {
+           return null;
+       }
+
+       return lastPTWay.getWays().get(0);
+   }
+
     /**
      * Returns the last way of this route
      *
      * @return the last way of this route
      */
     public Way getLastWay() {
-        PTWay lastPTWay = this.ptways.get(ptways.size() - 1);
-        if (lastPTWay == null) {
+        if (ptWays.isEmpty()) {
             return null;
         }
+
+        PTWay lastPTWay = ptWays.get(ptWays.size() - 1);
+        if (lastPTWay == null || lastPTWay.getWays().isEmpty()) {
+            return null;
+        }
+
         return lastPTWay.getWays().get(lastPTWay.getWays().size() - 1);
     }
 

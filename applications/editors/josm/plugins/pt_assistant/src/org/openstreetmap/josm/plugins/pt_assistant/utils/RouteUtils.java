@@ -19,6 +19,7 @@ import org.openstreetmap.josm.data.osm.Way;
 public final class RouteUtils {
 
     private static final String PT_VERSION_TAG = "public_transport:version";
+    private static final String TAG_ROUTE = "route";
     private RouteUtils() {
         // private constructor for util classes
     }
@@ -68,11 +69,11 @@ public final class RouteUtils {
                 "bus", "trolleybus", "share_taxi",
                 "tram", "light_rail", "subway", "train"};
 
-        return r.hasTag("route", acceptedRouteTags);
+        return r.hasTag(TAG_ROUTE, acceptedRouteTags);
     }
 
     public static boolean isRoute(Relation r) {
-        return r.get("route") != null;
+        return r.get(TAG_ROUTE) != null;
     }
 
     /**
@@ -229,5 +230,29 @@ public final class RouteUtils {
 
         return isWaySuitableForBuses(way)
                 || way.hasTag("railway", acceptedRailwayTags);
+    }
+
+    public static boolean isBicycleRoute(Relation r) {
+        if (r == null) {
+            return false;
+        }
+
+        return r.hasTag(TAG_ROUTE, "bicycle");
+    }
+
+    public static boolean isFootRoute(Relation r) {
+        if (r == null) {
+            return false;
+        }
+
+        return r.hasTag(TAG_ROUTE, "foot", "walking", "hiking");
+    }
+
+    public static boolean isHorseRoute(Relation r) {
+        if (r == null) {
+            return false;
+        }
+
+        return r.hasTag(TAG_ROUTE, "horse");
     }
 }

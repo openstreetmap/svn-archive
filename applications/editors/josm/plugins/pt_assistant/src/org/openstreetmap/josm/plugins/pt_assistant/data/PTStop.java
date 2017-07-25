@@ -138,14 +138,14 @@ public class PTStop extends RelationMember {
             return potentialStopPositions;
         }
 
-        // Look for a stop position within 0.002 degrees (around 100 m) of this
+        // Look for a stop position within 0.001 degrees (around 50 m) of this
         // platform:
 
         LatLon platformCenter = platform.getBBox().getCenter();
-        Double ax = platformCenter.getX() - 0.002;
-        Double bx = platformCenter.getX() + 0.002;
-        Double ay = platformCenter.getY() - 0.002;
-        Double by = platformCenter.getY() + 0.002;
+        Double ax = platformCenter.getX() - 0.001;
+        Double bx = platformCenter.getX() + 0.001;
+        Double ay = platformCenter.getY() - 0.001;
+        Double by = platformCenter.getY() + 0.001;
         BBox platformBBox = new BBox(ax, ay, bx, by);
 
         Collection<Node> allNodes = platform.getDataSet().getNodes();
@@ -154,8 +154,9 @@ public class PTStop extends RelationMember {
             String nodeName = currentNode.get("name");
             if (platformBBox.bounds(currentNode.getBBox())
                     && currentNode.hasTag("public_transport", "stop_position")
-                    && (platName != null && nodeName != null)
-                    && platName.equals(nodeName)) {
+                    && (platName == null
+                        || nodeName == null
+                        || platName.equals(nodeName))) {
                 potentialStopPositions.add(currentNode);
             }
         }

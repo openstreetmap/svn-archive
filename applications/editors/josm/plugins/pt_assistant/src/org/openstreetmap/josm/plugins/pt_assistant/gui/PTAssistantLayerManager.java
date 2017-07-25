@@ -41,7 +41,10 @@ public class PTAssistantLayerManager
 
         for (OsmPrimitive primitive : newSelection) {
             if (primitive.getType().equals(OsmPrimitiveType.RELATION)
-                    && RouteUtils.isVersionTwoPTRoute((Relation) primitive)) {
+                    && (RouteUtils.isVersionTwoPTRoute((Relation) primitive)
+                        || RouteUtils.isBicycleRoute((Relation) primitive)
+                        || RouteUtils.isFootRoute((Relation) primitive)
+                        || RouteUtils.isHorseRoute((Relation) primitive))) {
                 routes.add(primitive);
             }
         }

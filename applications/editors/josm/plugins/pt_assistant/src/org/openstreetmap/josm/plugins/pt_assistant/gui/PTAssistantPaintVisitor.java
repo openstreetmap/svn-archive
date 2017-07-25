@@ -23,6 +23,8 @@ import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.data.validation.PaintVisitor;
 import org.openstreetmap.josm.gui.MapView;
+import org.openstreetmap.josm.gui.dialogs.relation.sort.WayConnectionType;
+import org.openstreetmap.josm.gui.dialogs.relation.sort.WayConnectionTypeCalculator;
 import org.openstreetmap.josm.plugins.pt_assistant.data.PTStop;
 import org.openstreetmap.josm.plugins.pt_assistant.data.PTWay;
 import org.openstreetmap.josm.plugins.pt_assistant.utils.RouteUtils;
@@ -55,6 +57,13 @@ public class PTAssistantPaintVisitor extends PaintVisitor {
 
     @Override
     public void visit(Relation r) {
+
+        if (RouteUtils.isBicycleRoute(r)
+                || RouteUtils.isFootRoute(r)
+                || RouteUtils.isHorseRoute(r)) {
+            drawCycleRoute(r);
+            return;
+        }
 
         // first, draw primitives:
         for (RelationMember rm : r.getMembers()) {
@@ -113,6 +122,33 @@ public class PTAssistantPaintVisitor extends PaintVisitor {
             }
         }
 
+    }
+
+    private void drawCycleRoute(Relation r) {
+
+        List<RelationMember> members = new ArrayList<>(r.getMembers());
+        members.removeIf(m -> !m.isWay());
+        WayConnectionTypeCalculator connectionTypeCalculator = new WayConnectionTypeCalculator();
+        List<WayConnectionType> links = connectionTypeCalculator.updateLinks(members);
+
+        for (int i = 0; i < links.size(); i++) {
+            WayConnectionType link = links.get(i);
+            Way way = members.get(i).getWay();
+            if (!link.isOnewayLoopForwardPart && !link.isOnewayLoopBackwardPart) {
+                drawWay(way, new Color(0, 255, 255, 100));
+            } else if (link.isOnewayLoopForwardPart) {
+                drawWay(way, new Color(255, 0, 0, 100));
+            } else {
+                drawWay(way, new Color(0, 0, 255, 100));
+            }
+        }
+    }
+
+    private void drawWay(Way way, Color color) {
+        List<Node> nodes = way.getNodes();
+        for (int i = 0; i < nodes.size()-1; i++) {
+            drawSegment(nodes.get(i), nodes.get(i + 1), color, 1);
+        }
     }
 
     @Override

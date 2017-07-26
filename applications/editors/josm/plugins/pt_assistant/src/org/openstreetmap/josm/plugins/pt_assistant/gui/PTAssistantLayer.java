@@ -182,8 +182,6 @@ public final class PTAssistantLayer extends Layer
         return LayerPositionStrategy.IN_FRONT;
     }
 
-
-
     /**
      * Repaints the layer in cases when there was no selection change
      *

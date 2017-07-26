@@ -72,7 +72,10 @@ public class PTAssistantLayerManager
             GenericRelationEditor editor = (GenericRelationEditor) evt.getNewValue();
             Relation relation = editor.getRelation();
 
-            if (RouteUtils.isVersionTwoPTRoute(relation)) {
+            if (RouteUtils.isVersionTwoPTRoute(relation)
+                    || RouteUtils.isBicycleRoute(relation)
+                    || RouteUtils.isFootRoute(relation)
+                    || RouteUtils.isHorseRoute(relation)) {
                 getLayer().repaint(relation);
             }
         }

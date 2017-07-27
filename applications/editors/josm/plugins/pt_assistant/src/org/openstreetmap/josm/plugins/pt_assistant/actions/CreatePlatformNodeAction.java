@@ -8,6 +8,9 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
@@ -20,6 +23,7 @@ import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.OsmPrimitiveType;
 import org.openstreetmap.josm.data.osm.TagCollection;
 import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.data.validation.routines.RegexValidator;
 import org.openstreetmap.josm.gui.conflict.tags.CombinePrimitiveResolverDialog;
 import org.openstreetmap.josm.tools.UserCancelException;
 
@@ -71,15 +75,17 @@ public class CreatePlatformNodeAction extends JosmAction {
         dummy2 = new Node(platformNode.getEastNorth());
         dummy3 = new Node(platformNode.getEastNorth());
 
+        SortedSet<String> refs = new TreeSet<>();
+
         Main.main.undoRedo.add(new AddCommand(dummy1));
         Main.main.undoRedo.add(new AddCommand(dummy2));
         Main.main.undoRedo.add(new AddCommand(dummy3));
 
-        populateMap(stopPositionNode);
-        populateMap(platformNode);
+        refs.addAll(populateMap(stopPositionNode));
+        refs.addAll(populateMap(platformNode));
 
         if (platformWay != null) {
-            populateMap(platformWay);
+            refs.addAll(populateMap(platformWay));
             platformWay.removeAll();
             platformWay.put("public_transport", "platform");
             platformWay.put(" highway", "platform");
@@ -92,6 +98,9 @@ public class CreatePlatformNodeAction extends JosmAction {
         platformNode.removeAll();
         platformNode.put("public_transport", "platform");
         platformNode.put("highway", "bus_stop");
+        if (!refs.isEmpty()) {
+            platformNode.put("route_ref", getRefs(refs));
+        }
 
         List<OsmPrimitive> prims = new ArrayList<>();
         prims.add(platformNode);
@@ -113,24 +122,53 @@ public class CreatePlatformNodeAction extends JosmAction {
         }
     }
 
-    public void populateMap(OsmPrimitive prim) {
+    public List<String> populateMap(OsmPrimitive prim) {
         List<String> unInterestingTags = new ArrayList<>();
         unInterestingTags.add("public_transport");
         unInterestingTags.add("highway");
         unInterestingTags.add("source");
 
+        List<String> refs = new ArrayList<>();
         for (Entry<String, String> tag: prim.getKeys().entrySet()) {
-            if (unInterestingTags.contains(tag.getKey())) {
+            if ("note".equals(tag.getKey())
+                    || "lines".equals(tag.getKey())) {
+                refs.addAll(addRefs(tag.getValue()));
                 continue;
             }
-            if (dummy1.get(tag.getKey()) == null) {
-                dummy1.put(tag.getKey(), tag.getValue());
-            } else if (dummy2.get(tag.getKey()) == null) {
-                dummy2.put(tag.getKey(), tag.getValue());
-            } else if (dummy3.get(tag.getKey()) == null) {
-                dummy3.put(tag.getKey(), tag.getValue());
+
+            if (!unInterestingTags.contains(tag.getKey())) {
+                if (dummy1.get(tag.getKey()) == null) {
+                    dummy1.put(tag.getKey(), tag.getValue());
+                } else if (dummy2.get(tag.getKey()) == null) {
+                    dummy2.put(tag.getKey(), tag.getValue());
+                } else if (dummy3.get(tag.getKey()) == null) {
+                    dummy3.put(tag.getKey(), tag.getValue());
+                }
             }
         }
+        return refs;
+    }
+
+    private List<String> addRefs(String value) {
+        List<String> refs = new ArrayList<>();
+        if (new RegexValidator("\\w+([,;].+)*").isValid(value)) {
+            for (String ref : value.split("[,;]")) {
+                refs.add(ref.trim());
+            }
+        }
+        return refs;
+    }
+
+    private String getRefs(Set<String> refs) {
+        StringBuilder sb = new StringBuilder();
+        if (refs.isEmpty())
+            return sb.toString();
+
+        for (String ref : refs) {
+            sb.append(ref).append(';');
+        }
+
+        return sb.toString().substring(0, sb.length() - 1);
     }
 
     @Override

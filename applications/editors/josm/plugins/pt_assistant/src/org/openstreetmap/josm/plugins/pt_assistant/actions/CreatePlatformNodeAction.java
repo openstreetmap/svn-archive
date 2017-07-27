@@ -131,7 +131,8 @@ public class CreatePlatformNodeAction extends JosmAction {
         List<String> refs = new ArrayList<>();
         for (Entry<String, String> tag: prim.getKeys().entrySet()) {
             if ("note".equals(tag.getKey())
-                    || "lines".equals(tag.getKey())) {
+                    || "lines".equals(tag.getKey())
+                    || "route_ref".equals(tag.getKey())) {
                 refs.addAll(addRefs(tag.getValue()));
                 continue;
             }

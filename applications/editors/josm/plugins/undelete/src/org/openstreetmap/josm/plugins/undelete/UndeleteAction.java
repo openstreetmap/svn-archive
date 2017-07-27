@@ -82,8 +82,8 @@ public class UndeleteAction extends JosmAction {
                             primitive = layer.data.getPrimitiveById(id, type);
                         } else {
                             // We search n-1 version with redaction robustness
-                            int idx = 1;
-                            int n = h.getNumVersions();
+                            long idx = 1;
+                            long n = hPrimitive1.getVersion();
                             while (hPrimitive2 == null && idx < n) {
                                 hPrimitive2 =  h.getByVersion(n - idx++);
                             }

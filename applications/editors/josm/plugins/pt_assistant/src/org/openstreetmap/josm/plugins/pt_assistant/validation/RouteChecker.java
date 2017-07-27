@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map.Entry;
 
 import org.openstreetmap.josm.command.ChangeCommand;
 import org.openstreetmap.josm.command.Command;
@@ -101,8 +102,8 @@ public class RouteChecker extends Checker {
     //and last stops
     protected boolean performFromToTagsTest() {
 
-        String from = relation.get("from");
-        String to = relation.get("to");
+        String from = relation.get("from").toLowerCase();
+        String to = relation.get("to").toLowerCase();
         if (from == null || to == null || manager.getPTStopCount() == 0) {
             return false;
         }
@@ -179,23 +180,38 @@ public class RouteChecker extends Checker {
 
     //given a PTStop and a name, check whether one of its primitives have a
     //different name from the one passed. if so, it returns the primitive.
+    //it compares not only the name tag but all the name:* names
     //it returns null if the names match
     private OsmPrimitive checkPTStopName(PTStop stop, String name) {
         OsmPrimitive primitive = null;
-        String toCheck = null;
+        List<String> toCheck = new ArrayList<>();
         if (stop.getPlatform() != null) {
-            toCheck = stop.getPlatform().getName();
             primitive = stop.getPlatform();
+            toCheck.addAll(getPrimitiveNameTags(primitive));
         }
-        if (toCheck == null && stop.getStopPosition() != null) {
-            toCheck = stop.getStopPosition().getName();
+        if (toCheck.isEmpty() && stop.getStopPosition() != null) {
             primitive = stop.getStopPosition();
+            toCheck.addAll(getPrimitiveNameTags(primitive));
         }
 
-        if (toCheck != null && !toCheck.equals(name))
-            return primitive;
+        for (String value : toCheck) {
+            if (value.equals(name)) {
+                return primitive;
+            }
+        }
 
         return null;
+    }
+
+    private List<String> getPrimitiveNameTags(OsmPrimitive primitive) {
+        List<String> ret = new ArrayList<>();
+        for (Entry<String, String> entry : primitive.getInterestingTags().entrySet()) {
+            if ("name".equals(entry.getKey())
+                    || entry.getKey().contains("name:")) {
+                ret.add(entry.getValue().toLowerCase());
+            }
+        }
+        return ret;
     }
 
     /**

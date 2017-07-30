@@ -102,11 +102,14 @@ public class RouteChecker extends Checker {
     //and last stops
     protected boolean performFromToTagsTest() {
 
-        String from = relation.get("from").toLowerCase();
-        String to = relation.get("to").toLowerCase();
+        String from = relation.get("from");
+        String to = relation.get("to");
         if (from == null || to == null || manager.getPTStopCount() == 0) {
             return false;
         }
+
+        from = from.toLowerCase();
+        to = to.toLowerCase();
 
         boolean foundError = false;
         PTStop stop = manager.getFirstStop();

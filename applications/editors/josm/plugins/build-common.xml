@@ -224,7 +224,12 @@
             <arg value="."/>
         </exec>
         <condition property="svn.info.fail">
-            <not><equals arg1="${svn.info.result}" arg2="0" /></not>
+            <not>
+                <and>
+                    <equals arg1="${svn.info.result}" arg2="0" />
+                    <length file="REVISION.XML" when="greater" length="1" />
+                </and>
+            </not>
         </condition>
     </target>
     <!--
@@ -510,7 +515,7 @@
 
     <target name="checkstyle">
         <taskdef resource="com/puppycrawl/tools/checkstyle/ant/checkstyle-ant-task.properties" classpath="${checkstyle.jar}"/>
-        <checkstyle config="../00_core_tools/checkstyle/josm_checks.xml">
+        <checkstyle config="C:/SVN/josm/plugins/00_core_tools/checkstyle/josm_checks.xml">
             <fileset dir="${basedir}/src" includes="**/*.java" excludes="boofcv/**/*.java,
                                                                          com/google/**/*.java,
                                                                          crosby/**/*.java,

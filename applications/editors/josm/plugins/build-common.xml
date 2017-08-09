@@ -16,6 +16,7 @@
     <property name="josm.test.build.dir"    location="../../core/test/build"/>
     <property name="error_prone_ant.jar"    location="../00_core_tools/error_prone_ant.jar"/>
     <property name="checkstyle.jar"         location="../00_core_tools/checkstyle/checkstyle-all.jar"/>
+    <property name="checkstyle-build.dir"   location="../00_core_tools/checkstyle/build"/>
     <property name="findbugs-ant.jar"       location="../00_core_tools/findbugs/findbugs-ant.jar"/>
     <property name="annotations.jar"        location="../00_core_tools/findbugs/annotations.jar"/>
     <property name="plugin.build.dir"       location="build"/>
@@ -301,6 +302,7 @@
     -->
     <target name="clean">
         <delete dir="${plugin.build.dir}"/>
+        <delete dir="${checkstyle-build.dir}"/>
         <delete file="${plugin.jar}"/>
     </target>
     <!--
@@ -513,9 +515,17 @@
         </sequential>
     </target>
 
-    <target name="checkstyle">
-        <taskdef resource="com/puppycrawl/tools/checkstyle/ant/checkstyle-ant-task.properties" classpath="${checkstyle.jar}"/>
-        <checkstyle config="../00_core_tools/checkstyle/josm_checks.xml">
+    <target name="checkstyle-compile">
+        <mkdir dir="${checkstyle-build.dir}"/>
+        <javac sourcepath="" srcdir="../00_core_tools/checkstyle/src" failonerror="true"
+            destdir="${checkstyle-build.dir}" target="${ant.build.javac.target}" source="${ant.build.javac.source}" debug="on"
+            includeantruntime="false" createMissingPackageInfoClass="false"
+            encoding="UTF-8" classpath="${checkstyle.jar}">
+        </javac>
+    </target>
+    <target name="checkstyle" depends="checkstyle-compile">
+        <taskdef resource="com/puppycrawl/tools/checkstyle/ant/checkstyle-ant-task.properties" classpath="${checkstyle.jar}:${checkstyle-build.dir}"/>
+        <checkstyle config="${basedir}/../00_core_tools/checkstyle/josm_checks.xml">
             <fileset dir="${basedir}/src" includes="**/*.java" excludes="boofcv/**/*.java,
                                                                          com/google/**/*.java,
                                                                          crosby/**/*.java,

@@ -54,33 +54,33 @@ public class SortPTStopsAction extends JosmAction {
     @Override
     public void actionPerformed(ActionEvent e) {
 
-        Relation rel = (Relation) getLayerManager().getEditDataSet().getSelected().iterator().next();
+        for (Relation rel : getLayerManager().getEditDataSet().getSelectedRelations()) {
+            if (rel.hasIncompleteMembers()) {
+                if (JOptionPane.YES_OPTION == JOptionPane.showOptionDialog(Main.parent,
+                    tr("The relation has incomplete members. Do you want to download them and continue with the sorting?"),
+                    tr("Incomplete Members"), JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE,
+                    null, null, null)) {
 
-        if (rel.hasIncompleteMembers()) {
-            if (JOptionPane.YES_OPTION == JOptionPane.showOptionDialog(Main.parent,
-                tr("The relation has incomplete members. Do you want to download them and continue with the sorting?"),
-                tr("Incomplete Members"), JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE,
-                null, null, null)) {
+                    List<Relation> incomplete = Collections.singletonList(rel);
+                    Future<?> future = Main.worker.submit(new DownloadRelationMemberTask(
+                            incomplete,
+                            DownloadSelectedIncompleteMembersAction.buildSetOfIncompleteMembers(incomplete),
+                            Main.getLayerManager().getEditLayer()));
 
-                List<Relation> incomplete = Collections.singletonList(rel);
-                Future<?> future = Main.worker.submit(new DownloadRelationMemberTask(
-                        incomplete,
-                        DownloadSelectedIncompleteMembersAction.buildSetOfIncompleteMembers(incomplete),
-                        Main.getLayerManager().getEditLayer()));
-
-                    Main.worker.submit(() -> {
-                        try {
-                            future.get();
-                            continueAfterDownload(rel);
-                        } catch (InterruptedException | ExecutionException e1) {
-                             Main.error(e1);
-                            return;
-                        }
-                    });
+                        Main.worker.submit(() -> {
+                            try {
+                                future.get();
+                                continueAfterDownload(rel);
+                            } catch (InterruptedException | ExecutionException e1) {
+                                 Main.error(e1);
+                                return;
+                            }
+                        });
+                } else
+                    return;
             } else
-                return;
-        } else
-            continueAfterDownload(rel);
+                continueAfterDownload(rel);
+        }
     }
 
     private void continueAfterDownload(Relation rel) {
@@ -258,13 +258,18 @@ public class SortPTStopsAction extends JosmAction {
     @Override
     protected void updateEnabledState(
             Collection<? extends OsmPrimitive> selection) {
-        setEnabled(false);
-        if (selection == null || selection.size() != 1)
+        if (selection.isEmpty()) {
+            setEnabled(false);
             return;
-        OsmPrimitive selected = selection.iterator().next();
-        if (selected.getType() == OsmPrimitiveType.RELATION &&
-                RouteUtils.isPTRoute((Relation) selected)) {
-            setEnabled(true);
         }
+
+        for (OsmPrimitive sel : selection) {
+            if (sel.getType() != OsmPrimitiveType.RELATION || !RouteUtils.isPTRoute((Relation) sel)) {
+                setEnabled(false);
+                return;
+            }
+        }
+
+        setEnabled(true);
     }
 }

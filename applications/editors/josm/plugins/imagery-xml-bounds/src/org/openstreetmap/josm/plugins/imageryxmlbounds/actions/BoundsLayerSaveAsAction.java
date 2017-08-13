@@ -30,7 +30,7 @@ public class BoundsLayerSaveAsAction extends LayerSaveAsAction {
 
         /**
          * Opens a "File/Save as" dialog if the given layer is an XML bounds layer
-         * @param layer layer
+         * @param layer current layer
          * @return chosen destination file, or {@code null}
          */
         public static File openFileDialog(Layer layer) {

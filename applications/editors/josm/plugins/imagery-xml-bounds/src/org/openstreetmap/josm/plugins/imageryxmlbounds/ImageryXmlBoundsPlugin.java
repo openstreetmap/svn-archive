@@ -42,18 +42,13 @@ public class ImageryXmlBoundsPlugin extends Plugin {
     private final ShowBoundsAction relationListAction = new ShowBoundsAction();
 
     /**
-     * Action showing bounds of the current selection
-     */
-    private final ShowBoundsSelectionAction selectionAction = new ShowBoundsSelectionAction();
-
-    /**
      * Class modifying the Imagery preferences panel
      */
     private final XmlBoundsPreferenceSetting preferenceSetting = new XmlBoundsPreferenceSetting();
 
     /**
      * Initializes the plugin.
-     * @param info
+     * @param info plugin information
      */
     public ImageryXmlBoundsPlugin(PluginInformation info) {
         super(info);
@@ -62,6 +57,7 @@ public class ImageryXmlBoundsPlugin extends Plugin {
         // Allow JOSM to export *.imagery.xml files
         ExtensionFileFilter.addExporterFirst(new XmlBoundsExporter());
         // Initialize the selection action
+        ShowBoundsSelectionAction selectionAction = new ShowBoundsSelectionAction();
         DataSet.addSelectionListener(selectionAction);
         Main.toolbar.register(selectionAction);
         // Allow JOSM to download *.imagery.xml files

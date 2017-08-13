@@ -34,7 +34,7 @@ public class BoundsLayerSaveAction extends LayerSaveAction {
         @Override
         public File getFile(Layer layer) {
             File f = layer.getAssociatedFile();
-            if (f != null && ! f.exists()) {
+            if (f != null && !f.exists()) {
                 f = null;
             }
             return f == null ? BoundsLayerSaveAsAction.SaveBoundsAsAction.openFileDialog(layer) : f;

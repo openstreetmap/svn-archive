@@ -3,8 +3,6 @@ package org.openstreetmap.josm.plugins.imageryxmlbounds;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
-import javax.swing.ImageIcon;
-
 import org.openstreetmap.josm.actions.ExtensionFileFilter;
 
 /**

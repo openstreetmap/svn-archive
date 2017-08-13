@@ -51,8 +51,10 @@ public class ValidatingImageryReader extends ImageryReader implements XmlBoundsC
      * @throws IOException if any I/O error occurs
      */
     public static void validate(String source) throws SAXException, IOException {
-        SchemaFactory factory =  SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-        Schema schema = factory.newSchema(new StreamSource(new CachedFile(XML_SCHEMA).getInputStream()));
-        schema.newValidator().validate(new StreamSource(source));
+        SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+        try (CachedFile xmlSchema = new CachedFile(XML_SCHEMA)) {
+            Schema schema = factory.newSchema(new StreamSource(xmlSchema.getInputStream()));
+            schema.newValidator().validate(new StreamSource(source));
+        }
     }
 }

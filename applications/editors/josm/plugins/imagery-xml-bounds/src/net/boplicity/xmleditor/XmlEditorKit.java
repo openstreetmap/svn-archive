@@ -25,7 +25,7 @@ import javax.swing.text.ViewFactory;
 public class XmlEditorKit extends StyledEditorKit {
 
     private static final long serialVersionUID = 2969169649596107757L;
-    private ViewFactory xmlViewFactory;
+    private final ViewFactory xmlViewFactory;
 
     /**
      * Constructs a new {@code XmlEditorKit}.

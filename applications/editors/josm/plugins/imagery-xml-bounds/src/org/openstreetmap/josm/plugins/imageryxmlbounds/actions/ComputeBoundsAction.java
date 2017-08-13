@@ -4,8 +4,8 @@ package org.openstreetmap.josm.plugins.imageryxmlbounds.actions;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.event.ActionEvent;
+import java.io.IOException;
 import java.io.InputStream;
-import java.lang.Exception;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
@@ -96,7 +96,7 @@ public class ComputeBoundsAction extends AbstractAction implements XmlBoundsCons
             }
         }
         // Remove closed ways already inside a selected multipolygon
-        for (Iterator<Way> it = closedWays.iterator(); it.hasNext(); ) {
+        for (Iterator<Way> it = closedWays.iterator(); it.hasNext();) {
             processIterator(it);
         }
         // Enable the action if at least one area is found
@@ -123,7 +123,7 @@ public class ComputeBoundsAction extends AbstractAction implements XmlBoundsCons
         List<OsmPrimitive> primitives = new ArrayList<>();
         primitives.addAll(multipolygons);
         primitives.addAll(closedWays);
-        return getXml(primitives.toArray(new OsmPrimitive[0]));
+        return getXml(primitives.toArray(new OsmPrimitive[primitives.size()]));
     }
 
     protected static final String startTag(String tag) {
@@ -174,7 +174,7 @@ public class ComputeBoundsAction extends AbstractAction implements XmlBoundsCons
         return s == null ? "" : s.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;");
     }
 
-    protected static final String getXml(OsmPrimitive ... primitives) {
+    protected static final String getXml(OsmPrimitive... primitives) {
         List<String> entries = new ArrayList<>();
         for (OsmPrimitive p : primitives) {
             if (p instanceof Relation) {
@@ -183,23 +183,27 @@ public class ComputeBoundsAction extends AbstractAction implements XmlBoundsCons
                 entries.add(getEntry(p, getClosedWayBounds((Way) p)));
             }
         }
-        return getImagery(entries.toArray(new String[0]));
+        return getImagery(entries.toArray(new String[entries.size()]));
     }
 
-    protected static final String getImagery(String ... entries) {
+    protected static final String getImagery(String... entries) {
         String version = "UNKNOWN";
         try {
-            Properties p = new Properties();
-            p.load(ComputeBoundsAction.class.getResourceAsStream("/REVISION"));
-            version = p.getProperty("Revision");
-        } catch(Exception e) {
+            InputStream revision = ComputeBoundsAction.class.getResourceAsStream("/REVISION");
+            if (revision != null) {
+	            Properties p = new Properties();
+	            p.load(revision);
+	            version = p.getProperty("Revision");
+            }
+        } catch(IOException e) {
+        	Main.warn(e);
         }
-        StringBuilder result = new StringBuilder();
-        result.append("<?xml version=\"1.0\" encoding=\"").append(ENCODING).append("\" ?>\n");
-        result.append("<!-- Generated with JOSM Imagery XML Plugin version ").append(version).append(" -->\n");
-        result.append("<imagery xmlns=\"").append(XML_NAMESPACE).append("\">\n");
+        StringBuilder result = new StringBuilder(256);
+        result.append("<?xml version=\"1.0\" encoding=\"").append(ENCODING).append("\" ?>\n")
+        	  .append("<!-- Generated with JOSM Imagery XML Plugin version ").append(version).append(" -->\n")
+        	  .append("<imagery xmlns=\"").append(XML_NAMESPACE).append("\">\n");
         for (String entry : entries) {
-            result.append(entry).append("\n");
+            result.append(entry).append('\n');
         }
         result.append("</imagery>");
         return result.toString();
@@ -207,7 +211,7 @@ public class ComputeBoundsAction extends AbstractAction implements XmlBoundsCons
 
     protected static final String getEntry(OsmPrimitive p, String bounds) {
         return getEntry(p.get(KEY_NAME), p.get(KEY_TYPE), p.get(KEY_DEFAULT), p.get(KEY_URL), bounds, p.get(KEY_PROJECTIONS),
-                p.get(KEY_LOGO_URL), p.get(KEY_EULA), p.get(KEY_ATTR_TEXT), p.get(KEY_ATTR_URL),  p.get(KEY_TERMS_TEXT),
+                p.get(KEY_LOGO_URL), p.get(KEY_EULA), p.get(KEY_ATTR_TEXT), p.get(KEY_ATTR_URL), p.get(KEY_TERMS_TEXT),
                 p.get(KEY_TERMS_URL), p.get(KEY_COUNTRY_CODE), p.get(KEY_MAX_ZOOM), p.get(KEY_MIN_ZOOM), p.get(KEY_ID),
                 p.get(KEY_DATE));
     }
@@ -219,14 +223,14 @@ public class ComputeBoundsAction extends AbstractAction implements XmlBoundsCons
     protected static final String getEntry(String name, String type, String def, String url, String bounds, String projections,
             String logoURL, String eula, String attributionText, String attributionUrl, String termsText, String termsUrl,
             String countryCode, String maxZoom, String minZoom, String id, String date) {
-        StringBuilder result = new StringBuilder();
+        StringBuilder result = new StringBuilder(128);
         result.append("    <entry>\n"+
-        EIGHT_SP + simpleTag(XML_NAME, name) + "\n"+
-        EIGHT_SP + simpleTag(XML_TYPE, type, "wms") + "\n"+
-        EIGHT_SP + simpleTag(XML_URL, url != null ? encodeUrl(url) : "", false) + "\n"+
-                 bounds+"\n");
+        EIGHT_SP + simpleTag(XML_NAME, name) + '\n'+
+        EIGHT_SP + simpleTag(XML_TYPE, type, "wms") + '\n'+
+        EIGHT_SP + simpleTag(XML_URL, url != null ? encodeUrl(url) : "", false) + '\n'+
+                 bounds+'\n');
         if (projections != null && !projections.isEmpty()) {
-            result.append(EIGHT_SP+startTag(XML_PROJECTIONS)+"\n");
+            result.append(EIGHT_SP+startTag(XML_PROJECTIONS)+'\n');
             int i = 0;
             String[] codes = projections.split(";");
             for (String code : codes) {
@@ -234,49 +238,49 @@ public class ComputeBoundsAction extends AbstractAction implements XmlBoundsCons
                     result.append("            ");
                 }
                 result.append(simpleTag("code", code.trim()));
-                if (i%6 == 5 || i == codes.length-1 ) {
-                    result.append("\n");
+                if (i%6 == 5 || i == codes.length-1) {
+                    result.append('\n');
                 }
                 i++;
             }
-            result.append(EIGHT_SP+endTag(XML_PROJECTIONS)+"\n");
+            result.append(EIGHT_SP+endTag(XML_PROJECTIONS)+'\n');
         }
         if (isSet(def) && "true".equals(def)) {
-            result.append(EIGHT_SP + simpleTag(XML_DEFAULT, def) + "\n");
+            result.append(EIGHT_SP + simpleTag(XML_DEFAULT, def) + '\n');
         }
         if (isSet(id)) {
-            result.append(EIGHT_SP + simpleTag(XML_ID, id, false) + "\n");
+            result.append(EIGHT_SP + simpleTag(XML_ID, id, false) + '\n');
         }
         if (isSet(date)) {
-            result.append(EIGHT_SP + simpleTag(XML_DATE, date, false) + "\n");
+            result.append(EIGHT_SP + simpleTag(XML_DATE, date, false) + '\n');
         }
         if (isSet(eula)) {
-            result.append(EIGHT_SP + mandatoryTag(XML_EULA, encodeUrl(eula), false) + "\n");
+            result.append(EIGHT_SP + mandatoryTag(XML_EULA, encodeUrl(eula), false) + '\n');
         }
         if (isSet(attributionText)) {
-            result.append(EIGHT_SP + mandatoryTag(XML_ATTR_TEXT, attributionText) + "\n");
+            result.append(EIGHT_SP + mandatoryTag(XML_ATTR_TEXT, attributionText) + '\n');
         }
         if (isSet(attributionUrl)) {
-            result.append(EIGHT_SP + simpleTag(XML_ATTR_URL, encodeUrl(attributionUrl), false) + "\n");
+            result.append(EIGHT_SP + simpleTag(XML_ATTR_URL, encodeUrl(attributionUrl), false) + '\n');
         }
         if (isSet(termsText)) {
-            result.append(EIGHT_SP + simpleTag(XML_TERMS_TEXT, termsText) + "\n");
+            result.append(EIGHT_SP + simpleTag(XML_TERMS_TEXT, termsText) + '\n');
         }
         if (isSet(termsUrl)) {
-            result.append(EIGHT_SP + simpleTag(XML_TERMS_URL, encodeUrl(termsUrl), false) + "\n");
+            result.append(EIGHT_SP + simpleTag(XML_TERMS_URL, encodeUrl(termsUrl), false) + '\n');
         }
         if (isSet(logoURL)) {
-            result.append(EIGHT_SP + simpleTag(XML_LOGO_URL, encodeUrl(logoURL), false) + "\n");
+            result.append(EIGHT_SP + simpleTag(XML_LOGO_URL, encodeUrl(logoURL), false) + '\n');
         }
         if (isSet(countryCode)) {
-            result.append(EIGHT_SP + simpleTag(XML_COUNTRY_CODE, countryCode) + "\n");
+            result.append(EIGHT_SP + simpleTag(XML_COUNTRY_CODE, countryCode) + '\n');
         }
         if ("tms".equals(type)) {
             if (isSet(maxZoom)) {
-                result.append(EIGHT_SP + simpleTag(XML_MAX_ZOOM, maxZoom) + "\n");
+                result.append(EIGHT_SP + simpleTag(XML_MAX_ZOOM, maxZoom) + '\n');
             }
             if (isSet(minZoom)) {
-                result.append(EIGHT_SP + simpleTag(XML_MIN_ZOOM, minZoom) + "\n");
+                result.append(EIGHT_SP + simpleTag(XML_MIN_ZOOM, minZoom) + '\n');
             }
         }
         result.append("    </entry>");
@@ -332,7 +336,7 @@ public class ComputeBoundsAction extends AbstractAction implements XmlBoundsCons
                 LatLon c = way.getNode(i).getCoor();
                 if (i > 1) {
                     LatLon b = way.getNode(i-1).getCoor();
-                    if (b.lat() != c.lat() && b.lon() !=  c.lon()) {
+                    if (b.lat() != c.lat() && b.lon() != c.lon()) {
                         return false;
                     }
                 }
@@ -374,11 +378,11 @@ public class ComputeBoundsAction extends AbstractAction implements XmlBoundsCons
             int j = i;
             if(j == cw.getNodesCount())
                 j = 0;
-            result.append("<point ");
-            result.append("lat='").append(DF.format(cw.getNode(i).getCoor().lat())).append("' ");
-            result.append("lon='").append(DF.format(cw.getNode(i).getCoor().lon())).append("'/>");
-            if (i%3 == 2 || i == cw.getNodesCount()-1 ) {
-                result.append("\n");
+            result.append("<point lat='")
+                  .append(DF.format(cw.getNode(i).getCoor().lat())).append("' lon='")
+                  .append(DF.format(cw.getNode(i).getCoor().lon())).append("'/>");
+            if (i%3 == 2 || i == cw.getNodesCount()-1) {
+                result.append('\n');
             }
         }
         result.append("            </shape>\n");

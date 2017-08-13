@@ -10,6 +10,7 @@ import java.util.List;
 import javax.swing.JOptionPane;
 
 import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.data.imagery.ImageryInfo;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.gui.util.GuiHelper;
@@ -22,29 +23,48 @@ import org.openstreetmap.josm.plugins.imageryxmlbounds.data.XmlBoundsConverter;
 import org.xml.sax.SAXException;
 
 /**
+ * Imports a JOSM "Maps" file into an OSM data set, to allow editing it.
  * @author Don-vip
- *
  */
 public class XmlBoundsImporter extends FileImporter implements XmlBoundsConstants {
 
+	/**
+	 * Constructs a new {@code XmlBoundsImporter}.
+	 */
     public XmlBoundsImporter() {
         super(FILE_FILTER);
     }
 
+    /**
+     * Loads the given input source URL and returns corresponding data set.
+     * @param source input source URL
+     * @return OSM data set
+     * @throws IOException if any I/O error occurs
+     * @throws SAXException if any SAX error occurs
+     */
     public DataSet parseDataSet(final String source) throws IOException, SAXException {
         return parseDataSet(source, null);
     }
 
+    /**
+     * Loads the given input file and returns corresponding data set.
+     * @param file input file
+     * @return OSM data set
+     * @throws IOException if any I/O error occurs
+     * @throws SAXException if any SAX error occurs
+     */
     public DataSet parseDataSet(final File file) throws IOException, SAXException {
         return parseDataSet(null, file);
     }
 
     protected DataSet parseDataSet(final String source, final File file) throws IOException, SAXException {
-        ImageryReader reader = null;
-
-        try {
-            reader = new ValidatingImageryReader(source != null ? source : file.getAbsolutePath());
-        } catch (SAXException e)  {
+        List<ImageryInfo> entries;
+		try (ImageryReader reader = new ValidatingImageryReader(source != null ? source : file.getAbsolutePath())) {
+            entries = reader.parse();
+        } catch (SAXException e) {
+        	if (Main.isTraceEnabled()) {
+        		Main.trace(e);
+        	}
             if (JOptionPane.showConfirmDialog(
                     Main.parent,
                     tr("Validating error in file {0}:\n{1}\nDo you want to continue without validating the file ?",
@@ -54,32 +74,30 @@ public class XmlBoundsImporter extends FileImporter implements XmlBoundsConstant
                 return null;
             }
 
-            reader = new ImageryReader(source != null ? source : file.getAbsolutePath());
+            try (ImageryReader reader = new ImageryReader(source != null ? source : file.getAbsolutePath())) {
+            	entries = reader.parse();
+            }
         }
 
-        return XmlBoundsConverter.convertImageryEntries(reader.parse());
+        return XmlBoundsConverter.convertImageryEntries(entries);
     }
 
     protected void importData(final String source, final String layerName, final File file, ProgressMonitor progressMonitor)
-            throws IOException, IllegalDataException {
+            throws IOException {
         try {
             final DataSet dataSet = parseDataSet(source, file);
             final XmlBoundsLayer layer = new XmlBoundsLayer(dataSet, source != null ? layerName : file.getName(), file);
-            Runnable uiStuff = new Runnable() {
-                @Override
-                public void run() {
-                    if (dataSet.allPrimitives().isEmpty()) {
-                        JOptionPane.showMessageDialog(
-                                Main.parent, tr("No data found in file {0}.", source != null ? source : file.getPath()),
-                                tr("Open Imagery XML file"), JOptionPane.INFORMATION_MESSAGE);
-                    }
-                    Main.getLayerManager().addLayer(layer);
-                    layer.onPostLoadFromFile();
-                }
-            };
-            GuiHelper.runInEDT(uiStuff);
+            GuiHelper.runInEDT(() -> {
+			    if (dataSet.allPrimitives().isEmpty()) {
+			        JOptionPane.showMessageDialog(
+			                Main.parent, tr("No data found in file {0}.", source != null ? source : file.getPath()),
+			                tr("Open Imagery XML file"), JOptionPane.INFORMATION_MESSAGE);
+			    }
+			    Main.getLayerManager().addLayer(layer);
+			    layer.onPostLoadFromFile();
+			});
         } catch (SAXException e) {
-            e.printStackTrace();
+            Main.error(e);
         }
     }
 
@@ -87,11 +105,6 @@ public class XmlBoundsImporter extends FileImporter implements XmlBoundsConstant
     public void importData(final File file, ProgressMonitor progressMonitor)
             throws IOException, IllegalDataException {
         importData(null, null, file, progressMonitor);
-    }
-
-    public void importData(final String source, final String layerName, ProgressMonitor progressMonitor)
-            throws IOException, IllegalDataException {
-        importData(source, layerName, null, progressMonitor);
     }
 
     @Override

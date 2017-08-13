@@ -35,7 +35,7 @@ public class EditEntriesAction extends JosmAction implements XmlBoundsConstants,
 
     /**
      * Constructs a new {@code EditEntriesAction}.
-     * @param defaultTable table
+     * @param defaultTable parent table
      * @param defaultModel table model
      */
     public EditEntriesAction(JTable defaultTable, ImageryDefaultLayerTableModel defaultModel) {
@@ -53,14 +53,10 @@ public class EditEntriesAction extends JosmAction implements XmlBoundsConstants,
     public void actionPerformed(ActionEvent e) {
         final XmlBoundsLayer layer = new XmlBoundsLayer(
                 XmlBoundsConverter.convertImageryEntries(entries));
-        final Runnable uiStuff = new Runnable() {
-            @Override
-            public void run() {
-                Main.getLayerManager().addLayer(layer);
-                layer.onPostLoadFromFile();
-            }
-        };
-        GuiHelper.runInEDT(uiStuff);
+        GuiHelper.runInEDT(() -> {
+		    Main.getLayerManager().addLayer(layer);
+		    layer.onPostLoadFromFile();
+		});
     }
 
     @Override

@@ -30,7 +30,7 @@ public class DownloadXmlBoundsTask extends DownloadOsmTask implements XmlBoundsC
     @Override
     public Future<?> loadUrl(boolean newLayer, String url,
             ProgressMonitor progressMonitor) {
-        downloadTask = new DownloadTask(newLayer,
+        downloadTask = new InternalDownloadTask(newLayer,
                 new JosmServerLocationReader(url), progressMonitor);
         // We need submit instead of execute so we can wait for it to finish and get the error
         // message if necessary. If no one calls getErrorMessage() it just behaves like execute.
@@ -50,7 +50,7 @@ public class DownloadXmlBoundsTask extends DownloadOsmTask implements XmlBoundsC
         return tr("Download imagery XML bounds");
     }
 
-    protected class DownloadTask extends DownloadOsmTask.DownloadTask {
+    protected class InternalDownloadTask extends DownloadTask {
 
         /**
          * Constructs a new {@code DownloadTask}.
@@ -58,7 +58,7 @@ public class DownloadXmlBoundsTask extends DownloadOsmTask implements XmlBoundsC
          * @param reader server reader
          * @param progressMonitor progress monitor
          */
-        public DownloadTask(boolean newLayer, OsmServerReader reader, ProgressMonitor progressMonitor) {
+        public InternalDownloadTask(boolean newLayer, OsmServerReader reader, ProgressMonitor progressMonitor) {
             super(newLayer, reader, progressMonitor);
         }
 

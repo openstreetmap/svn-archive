@@ -23,7 +23,11 @@ import org.openstreetmap.josm.plugins.imageryxmlbounds.XmlBoundsConstants;
  * Converts imagery entries to bounds data.
  * @author Don-vip
  */
-public class XmlBoundsConverter implements XmlBoundsConstants {
+public final class XmlBoundsConverter implements XmlBoundsConstants {
+
+	private XmlBoundsConverter() {
+		// Hide default constructor for utilities classes
+	}
 
     /**
      * Convert a list of imagery entries to a dataset containing associated bounds.
@@ -47,13 +51,13 @@ public class XmlBoundsConverter implements XmlBoundsConstants {
     private static void safePut(OsmPrimitive p, String key, Object value) {
         if (value != null) {
             if (value instanceof Collection) {
-                StringBuilder s = new StringBuilder("");
+                StringBuilder s = new StringBuilder();
                 for (Object elt : (Collection<?>)value) {
                     if (elt != null && elt.toString() != null && !elt.toString().isEmpty()) {
                         if (s.length() > 0) {
-                            s.append(";");
+                            s.append(';');
                         }
-                        s.append(elt.toString());
+                        s.append(elt);
                     }
                 }
                 if (s.length() > 0) {

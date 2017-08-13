@@ -21,10 +21,10 @@ import org.openstreetmap.josm.gui.layer.LayerManager.LayerRemoveEvent;
 import org.openstreetmap.josm.gui.layer.MainLayerManager.ActiveLayerChangeEvent;
 import org.openstreetmap.josm.gui.layer.MainLayerManager.ActiveLayerChangeListener;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
-import org.openstreetmap.josm.tools.ImageProvider;
 import org.openstreetmap.josm.plugins.imageryxmlbounds.actions.BoundsLayerSaveAction;
 import org.openstreetmap.josm.plugins.imageryxmlbounds.actions.BoundsLayerSaveAsAction;
 import org.openstreetmap.josm.plugins.imageryxmlbounds.actions.ShowBoundsAction;
+import org.openstreetmap.josm.tools.ImageProvider;
 
 /**
  * An "OSM data" layer that cannot be uploaded, merged, and in which real OSM data cannot be imported.
@@ -51,7 +51,7 @@ public class XmlBoundsLayer extends OsmDataLayer implements LayerChangeListener,
             }
         }
         result.add(new ShowBoundsAction(this));
-        return result.toArray(new Action[0]);
+        return result.toArray(new Action[result.size()]);
     }
 
     private static final JosmAction[] ACTIONS_TO_DISABLE = new JosmAction[] {
@@ -70,7 +70,7 @@ public class XmlBoundsLayer extends OsmDataLayer implements LayerChangeListener,
 
     /**
      * Constructs a new {@code XmlBoundsLayer}.
-     * @param data data
+     * @param data data set
      */
     public XmlBoundsLayer(DataSet data) {
         this(data, OsmDataLayer.createNewName(), null);
@@ -78,7 +78,7 @@ public class XmlBoundsLayer extends OsmDataLayer implements LayerChangeListener,
 
     /**
      * Constructs a new {@code XmlBoundsLayer}.
-     * @param data data
+     * @param data data set
      * @param name Layer name
      * @param associatedFile Associated file (can be null)
      */

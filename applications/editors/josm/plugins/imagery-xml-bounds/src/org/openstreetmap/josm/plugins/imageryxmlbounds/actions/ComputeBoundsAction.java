@@ -25,10 +25,14 @@ import javax.swing.AbstractAction;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.BBox;
+import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.data.osm.visitor.paint.relations.Multipolygon;
+import org.openstreetmap.josm.data.osm.visitor.paint.relations.Multipolygon.JoinedWay;
+import org.openstreetmap.josm.data.osm.visitor.paint.relations.Multipolygon.PolyData;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import org.openstreetmap.josm.plugins.imageryxmlbounds.XmlBoundsConstants;
 import org.openstreetmap.josm.tools.ImageProvider;
@@ -304,23 +308,21 @@ public class ComputeBoundsAction extends AbstractAction implements XmlBoundsCons
 
     protected static final boolean isValidOuterMember(RelationMember mb) {
         return (mb.getRole() == null || mb.getRole().isEmpty() || "outer".equals(mb.getRole()))
-                && mb.getMember() instanceof Way && ((Way) mb.getMember()).isClosed();
+                && mb.getMember() instanceof Way;
+    }
+
+    protected static final boolean isValidOuterClosedMember(RelationMember mb) {
+        return isValidOuterMember(mb) && ((Way) mb.getMember()).isClosed();
     }
 
     protected static final String getMultiPolygonBounds(Relation mp) {
-        List<Way> outerClosedWays = new ArrayList<>();
-        for (RelationMember mb : mp.getMembers()) {
-            if (isValidOuterMember(mb)) {
-                outerClosedWays.add((Way) mb.getMember());
-            }
-        }
-
-        if (outerClosedWays.isEmpty() || (outerClosedWays.size() == 1 && areClosedWayAndBboxEqual(outerClosedWays.get(0), mp.getBBox()))) {
+        List<PolyData> polygons = new Multipolygon(mp).getOuterPolygons();
+        if (polygons.isEmpty() || (polygons.size() == 1 && areJoinedWayAndBboxEqual(polygons.get(0), mp.getBBox()))) {
             return getBounds(mp, true);
         } else {
             StringBuilder result = new StringBuilder(getBounds(mp, false));
-            for (Way way : outerClosedWays) {
-                result.append(getClosedWayShape(way));
+            for (PolyData way : polygons) {
+                result.append(getJoinedWayShape(way));
             }
             result.append("        </bounds>");
             return result.toString();
@@ -328,14 +330,22 @@ public class ComputeBoundsAction extends AbstractAction implements XmlBoundsCons
     }
 
     protected static final boolean areClosedWayAndBboxEqual(Way way, BBox bBox) {
-        if (way.getNodesCount() == 5) {
+        return areNodeListAndBboxEqual(way.getNodes(), bBox);
+    }
+
+    protected static final boolean areJoinedWayAndBboxEqual(JoinedWay way, BBox bBox) {
+        return areNodeListAndBboxEqual(way.getNodes(), bBox);
+    }
+
+    protected static final boolean areNodeListAndBboxEqual(List<Node> nodes, BBox bBox) {
+        if (nodes.size() == 5) {
             Map<Double, List<Integer>> latMap = new HashMap<>();
             Map<Double, List<Integer>> lonMap = new HashMap<>();
 
             for (int i=0; i<4; i++) {
-                LatLon c = way.getNode(i).getCoor();
+                LatLon c = nodes.get(i).getCoor();
                 if (i > 1) {
-                    LatLon b = way.getNode(i-1).getCoor();
+                    LatLon b = nodes.get(i-1).getCoor();
                     if (b.lat() != c.lat() && b.lon() != c.lon()) {
                         return false;
                     }
@@ -370,18 +380,28 @@ public class ComputeBoundsAction extends AbstractAction implements XmlBoundsCons
     }
 
     protected static final String getClosedWayShape(Way cw) {
+        return getNodeListShape(cw.getNodes());
+    }
+
+    protected static final String getJoinedWayShape(JoinedWay jw) {
+        return getNodeListShape(jw.getNodes());
+    }
+
+    protected static final String getNodeListShape(List<Node> nodes) {
         StringBuilder result = new StringBuilder("            <shape>\n");
-        for (int i=0; i<cw.getNodesCount(); i++) {
+        int size = nodes.size();
+        for (int i=0; i<size; i++) {
             if (i%3 == 0) {
                 result.append("                ");
             }
             int j = i;
-            if(j == cw.getNodesCount())
+            if (j == size)
                 j = 0;
+            LatLon ll = nodes.get(i).getCoor();
             result.append("<point lat='")
-                  .append(DF.format(cw.getNode(i).getCoor().lat())).append("' lon='")
-                  .append(DF.format(cw.getNode(i).getCoor().lon())).append("'/>");
-            if (i%3 == 2 || i == cw.getNodesCount()-1) {
+                  .append(DF.format(ll.lat())).append("' lon='")
+                  .append(DF.format(ll.lon())).append("'/>");
+            if (i%3 == 2 || i == size-1) {
                 result.append('\n');
             }
         }

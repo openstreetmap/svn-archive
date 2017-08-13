@@ -7,10 +7,11 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -41,6 +42,7 @@ import org.openstreetmap.josm.gui.layer.geoimage.GeoImageLayer;
 import org.openstreetmap.josm.gui.layer.geoimage.ImageEntry;
 import org.openstreetmap.josm.tools.GBC;
 import org.openstreetmap.josm.tools.ImageProvider;
+import org.openstreetmap.josm.tools.JosmRuntimeException;
 
 /**
  * The action to ask the user for confirmation and then do the tagging.
@@ -112,15 +114,12 @@ class GeotaggingAction extends AbstractAction implements LayerAction {
         }
         settingsPanel.add(mTimeMode, GBC.eol().insets(3,3,3,3));
 
-        setMTime.addActionListener(new ActionListener(){
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (setMTime.isSelected()) {
-                    mTimeMode.setEnabled(true);
-                } else {
-                    mTimeMode.setSelectedIndex(0);
-                    mTimeMode.setEnabled(false);
-                }
+        setMTime.addActionListener(e -> {
+            if (setMTime.isSelected()) {
+                mTimeMode.setEnabled(true);
+            } else {
+                mTimeMode.setSelectedIndex(0);
+                mTimeMode.setEnabled(false);
             }
         });
 
@@ -176,84 +175,108 @@ class GeotaggingAction extends AbstractAction implements LayerAction {
         private File fileTo;
         private File fileDelete;
 
+        private int currentIndex;
+
         public GeoTaggingRunnable(List<ImageEntry> images, boolean keep_backup, int mTimeMode) {
             super(tr("Photo Geotagging Plugin"));
             this.images = images;
             this.keep_backup = keep_backup;
             this.mTimeMode = mTimeMode;
         }
+
+        private void processEntry(ImageEntry e) throws IOException {
+            fileFrom = null;
+            fileTo = null;
+            fileDelete = null;
+
+            if (mTimeMode != 0) {
+                testMTimeReadAndWrite(e.getFile());
+            }
+
+            Long mTime = null;
+            if (mTimeMode == MTIME_MODE_GPS) {
+                // check GPS time fields, do nothing if all fails
+                Date time;
+                if (e.hasGpsTime()) {
+                    time = e.getGpsTime();
+                } else {
+                    time = e.getExifGpsTime();
+                }
+                if (time != null) {
+                    mTime = time.getTime();
+                }
+            }
+            if ( mTimeMode == MTIME_MODE_PREVIOUS_VALUE
+                 // this is also the fallback if one of the other
+                 // modes failed to determine the modification time
+                 || (mTimeMode != 0 && mTime == null)) {
+                mTime = e.getFile().lastModified();
+                if (mTime.equals(0L))
+                    throw new IOException(tr("Could not read mtime."));
+            }
+
+            chooseFiles(e.getFile());
+            if (canceled) return;
+            ExifGPSTagger.setExifGPSTag(fileFrom, fileTo, e.getPos().lat(), e.getPos().lon(),
+                    e.getGpsTime(), e.getSpeed(), e.getElevation(), e.getExifImgDir());
+
+            if (mTime != null) {
+                if (!fileTo.setLastModified(mTime))
+                    throw new IOException(tr("Could not write mtime."));
+            }
+
+            cleanupFiles();
+            e.unflagNewGpsData();
+        }
+
         @Override
         protected void realRun() {
             progressMonitor.subTask(tr("Writing position information to image files..."));
             progressMonitor.setTicksCount(images.size());
 
-            for (int i=0; i<images.size(); ++i) {
+            currentIndex = 0;
+            while (currentIndex < images.size()) {
                 if (canceled) return;
-
-                ImageEntry e = images.get(i);
+                ImageEntry e = images.get(currentIndex);
                 if (debug) {
-                    System.err.print("i:"+i+" "+e.getFile().getName()+" ");
+                    System.err.print("i:"+currentIndex+" "+e.getFile().getName()+" ");
                 }
-
-                fileFrom = null;
-                fileTo = null;
-                fileDelete = null;
-
                 try {
-                    if (mTimeMode != 0) {
-                        testMTimeReadAndWrite(e.getFile());
-                    }
-
-                    Long mTime = null;
-                    if (mTimeMode == MTIME_MODE_GPS) {
-                        // check GPS time fields, do nothing if all fails
-                        Date time;
-                        if (e.hasGpsTime()) {
-                            time = e.getGpsTime();
-                        } else {
-                            time = e.getExifGpsTime();
-                        }
-                        if (time != null) {
-                            mTime = time.getTime();
-                        }
-                    }
-                    if ( mTimeMode == MTIME_MODE_PREVIOUS_VALUE
-                         // this is also the fallback if one of the other
-                         // modes failed to determine the modification time
-                         || (mTimeMode != 0 && mTime == null)) {
-                        mTime = e.getFile().lastModified();
-                        if (mTime.equals(0L))
-                            throw new IOException(tr("Could not read mtime."));
-                    }
-
-                    chooseFiles(e.getFile());
-                    if (canceled) return;
-                    ExifGPSTagger.setExifGPSTag(fileFrom, fileTo, e.getPos().lat(), e.getPos().lon(),
-                            e.getGpsTime(), e.getSpeed(), e.getElevation(), e.getExifImgDir());
-
-                    if (mTime != null) {
-                        if (!fileTo.setLastModified(mTime))
-                            throw new IOException(tr("Could not write mtime."));
-                    }
-
-                    cleanupFiles();
-                    e.unflagNewGpsData();
-
+                    processEntry(e);
                 } catch (final IOException ioe) {
                     ioe.printStackTrace();
-                    // need this so the dialogs don't block
-                    SwingUtilities.invokeLater(new Runnable() {
-                        @Override
-                        public void run() {
-                            JOptionPane.showMessageDialog(Main.parent, ioe.getMessage(), tr("Error"), JOptionPane.ERROR_MESSAGE);
-                        }
-                    });
-                    return;
+                    try {
+                        SwingUtilities.invokeAndWait(() -> {
+                            ExtendedDialog dlg = new ExtendedDialog(progressMonitor.getWindowParent(), tr("Error"), new String[] {tr("Abort"), tr("Retry"), tr("Ignore")});
+                            dlg.setIcon(JOptionPane.ERROR_MESSAGE);
+                            dlg.setButtonIcons("cancel", "dialogs/refresh", "dialogs/next");
+                            String msg;
+                            if (ioe instanceof NoSuchFileException) {
+                                msg = tr("File not found.");
+                            } else {
+                                msg = ioe.toString();
+                            }
+                            dlg.setContent(tr("Unable to process file ''{0}'':", e.getFile().toString()) + "<br/>" + msg);
+                            dlg.showDialog();
+                            switch (dlg.getValue()) {
+                                case 2:  // retry
+                                    currentIndex--;
+                                    break;
+                                case 3:  // continue
+                                    break;
+                                default: // abort
+                                    canceled = true;
+                            }
+                        });
+                    } catch (InterruptedException | InvocationTargetException ex) {
+                        throw new JosmRuntimeException(ex);
+                    }
                 }
                 progressMonitor.worked(1);
                 if (debug) {
-                    System.err.println("");
+                    System.err.println("finished " + e.getFile());
                 }
+                currentIndex++;
             }
         }
 
@@ -318,28 +341,25 @@ class GeotaggingAction extends AbstractAction implements LayerAction {
             if (override_backup != null)
                 return;
             try {
-                SwingUtilities.invokeAndWait(new Runnable() {
-                    @Override
-                    public void run() {
-                        JLabel l = new JLabel(tr("<html><h3>There are old backup files in the image directory!</h3>"));
-                        l.setIcon(UIManager.getIcon("OptionPane.warningIcon"));
-                        int override = new ExtendedDialog(
-                                progressMonitor.getWindowParent(),
-                                tr("Override old backup files?"),
-                                new String[] {tr("Cancel"), tr("Keep old backups and continue"), tr("Override")})
-                            .setButtonIcons(new String[] {"cancel.png", "ok.png", "dialogs/delete.png"})
-                            .setContent(l)
-                            .setCancelButton(1)
-                            .setDefaultButton(2)
-                            .showDialog()
-                            .getValue();
-                        if (override == 2) {
-                            override_backup = false;
-                        } else if (override == 3) {
-                            override_backup = true;
-                        } else {
-                            canceled = true;
-                        }
+                SwingUtilities.invokeAndWait(() -> {
+                    JLabel l = new JLabel(tr("<html><h3>There are old backup files in the image directory!</h3>"));
+                    l.setIcon(UIManager.getIcon("OptionPane.warningIcon"));
+                    int override = new ExtendedDialog(
+                            progressMonitor.getWindowParent(),
+                            tr("Override old backup files?"),
+                            new String[] {tr("Cancel"), tr("Keep old backups and continue"), tr("Override")})
+                        .setButtonIcons(new String[] {"cancel.png", "ok.png", "dialogs/delete.png"})
+                        .setContent(l)
+                        .setCancelButton(1)
+                        .setDefaultButton(2)
+                        .showDialog()
+                        .getValue();
+                    if (override == 2) {
+                        override_backup = false;
+                    } else if (override == 3) {
+                        override_backup = true;
+                    } else {
+                        canceled = true;
                     }
                 });
             } catch (Exception e) {

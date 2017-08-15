@@ -33,6 +33,12 @@ public class PTStop extends RelationMember {
     /* the name of this stop */
     private String name = "";
 
+    /* indicates a stop where people can only exit the bus */
+    private boolean exitOnly;
+
+    /* indicates a stop where people can only entry the bus */
+    private boolean entryOnly;
+
     /**
      * Constructor
      *
@@ -236,5 +242,21 @@ public class PTStop extends RelationMember {
 
     public void setStopPositionRM(RelationMember stopPositionRM) {
         this.stopPositionRM = stopPositionRM;
+    }
+
+    public boolean getExitOnly() {
+        return exitOnly;
+    }
+
+    public void setExitOnly(boolean exitOnly) {
+        this.exitOnly = exitOnly;
+    }
+
+    public boolean getEntryOnly() {
+        return entryOnly;
+    }
+
+    public void setEntryOnly(boolean entryOnly) {
+        this.entryOnly = entryOnly;
     }
 }

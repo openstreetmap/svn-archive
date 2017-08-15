@@ -51,14 +51,23 @@ public class PTStop extends RelationMember {
 
         super(other);
 
+        String role = "";
+        if (other.getRole().contains("_exit_only")) {
+            exitOnly = true;
+            role = "_exit_only";
+        } else if (other.getRole().contains("_entry_only")) {
+            entryOnly = true;
+            role = "_entry_only";
+        }
+
         if (isPTStopPosition(other)) {
             stopPosition = other.getNode();
             name = stopPosition.get("name");
-            setStopPositionRM(new RelationMember("stop", other.getMember()));
+            stopPositionRM = new RelationMember("stop" + role, other.getMember());
         } else if (isPTPlatform(other)) {
             platform = other.getMember();
             name = platform.get("name");
-            setPlatformRM(new RelationMember("platform", other.getMember()));
+            platformRM = new RelationMember("platform" + role, other.getMember());
         } else {
             throw new IllegalArgumentException(
                     "The RelationMember type does not match its role " + other.getMember().getName());
@@ -77,13 +86,22 @@ public class PTStop extends RelationMember {
      */
     public boolean addStopElement(RelationMember member) {
 
+        String role = "";
+        if (member.getRole().contains("_exit_only")) {
+            exitOnly = true;
+            role = "_exit_only";
+        } else if (member.getRole().contains("_entry_only")) {
+            entryOnly = true;
+            role = "_entry_only";
+        }
+
         if (stopPosition == null && isPTStopPosition(member)) {
             this.stopPosition = member.getNode();
-            stopPositionRM = new RelationMember("stop", member.getMember());
+            stopPositionRM = new RelationMember("stop" + role, member.getMember());
             return true;
         } else if (platform == null && isPTPlatform(member)) {
             platform = member.getMember();
-            platformRM = new RelationMember("platform", member.getMember());
+            platformRM = new RelationMember("platform" + role, member.getMember());
             return true;
         }
 

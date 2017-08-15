@@ -141,14 +141,27 @@ public class SortPTStopsAction extends JosmAction {
             wayStop.get(way).add(stop);
         });
 
-        Way prev = null;
-        for (RelationMember wm : wayMembers) {
+        for (int i = 0; i < wayMembers.size(); i++) {
+            RelationMember wm = wayMembers.get(i);
+            Way prev = null;
+            Way next = null;
+            if (i > 0) {
+                RelationMember wmp = wayMembers.get(i-1);
+                if (wmp.getType() == OsmPrimitiveType.WAY)
+                    prev = wmp.getWay();
+            }
+            if (i < wayMembers.size() - 1) {
+                RelationMember wmn = wayMembers.get(i+1);
+                if (wmn.getType() == OsmPrimitiveType.WAY)
+                    next = wmn.getWay();
+            }
+
             if (wm.getType() == OsmPrimitiveType.WAY) {
                 Way curr = wm.getWay();
                 List<PTStop> stps = wayStop.get(curr);
                 if (stps != null) {
                     if (stps.size() > 1)
-                        stps = sortSameWayStops(stps, curr, prev);
+                        stps = sortSameWayStops(stps, curr, prev, next);
                     stps.forEach(stop -> {
                         if (stop != null) {
                             if (stop.getStopPositionRM() != null)
@@ -158,14 +171,13 @@ public class SortPTStopsAction extends JosmAction {
                         }
                     });
                 }
-                prev = curr;
             }
         }
 
         wayMembers.forEach(rel::addMember);
     }
 
-    private List<PTStop> sortSameWayStops(List<PTStop> stps, Way way, Way prev) {
+    private List<PTStop> sortSameWayStops(List<PTStop> stps, Way way, Way prev, Way next) {
         Map<Node, List<PTStop>> closeNodes = new HashMap<>();
         List<PTStop> noLocationStops = new ArrayList<>();
         List<Node> nodes = way.getNodes();
@@ -181,9 +193,15 @@ public class SortPTStopsAction extends JosmAction {
             closeNodes.get(closest).add(stop);
         }
 
-        boolean reverse = prev != null &&
-                (prev.firstNode().equals(way.lastNode())
-                        || prev.lastNode().equals(way.lastNode()));
+        boolean reverse = false;
+
+        if (prev != null) {
+            reverse = prev.firstNode().equals(way.lastNode())
+                        || prev.lastNode().equals(way.lastNode());
+        } else if (next != null) {
+            reverse = next.firstNode().equals(way.firstNode())
+                    || next.lastNode().equals(way.firstNode());
+        }
 
         if (reverse)
             Collections.reverse(nodes);

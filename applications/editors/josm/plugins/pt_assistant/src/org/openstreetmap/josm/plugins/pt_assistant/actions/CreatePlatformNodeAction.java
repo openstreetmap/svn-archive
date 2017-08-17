@@ -45,7 +45,7 @@ public class CreatePlatformNodeAction extends JosmAction {
      * Creates a new PlatformAction
      */
     public CreatePlatformNodeAction() {
-        super(ACTION_NAME, "icons/sortptstops", ACTION_NAME, null, true);
+        super(ACTION_NAME, "icons/transfertags", ACTION_NAME, null, true);
     }
 
     @Override

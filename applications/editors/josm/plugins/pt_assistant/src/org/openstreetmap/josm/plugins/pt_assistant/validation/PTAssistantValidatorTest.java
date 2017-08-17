@@ -457,6 +457,7 @@ public class PTAssistantValidatorTest extends Test {
                 || testError.getCode() == ERROR_CODE_CONSTRUCTION
                 || testError.getCode() == ERROR_CODE_SORTING
                 || testError.getCode() == ERROR_CODE_PARTIAL_SORTING
+                || testError.getCode() == ERROR_CODE_TRIVIAL_FIX
                 || testError.getCode() == ERROR_CODE_END_STOP
                 || testError.getCode() == ERROR_CODE_PLATFORM_PART_OF_HIGHWAY) {
             return true;
@@ -491,6 +492,10 @@ public class PTAssistantValidatorTest extends Test {
                 || testError.getCode() == ERROR_CODE_DIRECTION
                 || testError.getCode() == ERROR_CODE_END_STOP) {
             commands.add(WayChecker.fixErrorByZooming(testError));
+        }
+
+        if (testError.getCode() == ERROR_CODE_TRIVIAL_FIX) {
+            commands.add(RouteChecker.fixTrivialError(testError));
         }
 
         if (testError.getCode() == ERROR_CODE_SORTING

@@ -109,7 +109,7 @@ public class RouteChecker extends Checker {
                     if (fix != null) {
                         Builder builder = TestError.builder(this.test, Severity.WARNING, PTAssistantValidatorTest.ERROR_CODE_TRIVIAL_FIX);
                         builder.message(tr("PT: Route gap can be closed by adding a single way"));
-                        builder.primitives(relation, before, after, fix);
+                        builder.primitives(relation, before, fix, after);
                         TestError e = builder.build();
                         this.errors.add(e);
                     }
@@ -369,6 +369,33 @@ public class RouteChecker extends Checker {
         sortedRelation.setMembers(sortedRelationMembers);
 
         return new ChangeCommand(originalRelation, sortedRelation);
+    }
+
+    //the trivial fix simply adds the right way (the one found during the
+    //detection phase) in the gap in order to close it
+    protected static Command fixTrivialError(TestError testError) {
+
+        if (testError.getCode() != PTAssistantValidatorTest.ERROR_CODE_TRIVIAL_FIX) {
+            return null;
+        }
+
+        List<OsmPrimitive> primitives = new ArrayList<>(testError.getPrimitives());
+        Relation originalRelation = (Relation) primitives.get(0);
+        Way before = (Way) primitives.get(1);
+        Way fix = (Way) primitives.get(2);
+
+        int index = 0;
+        List<RelationMember> members = originalRelation.getMembers();
+        for (index = 0; index < members.size(); index++) {
+            if (members.get(index).getMember().equals(before)) {
+                break;
+            }
+        }
+
+        Relation fixedRelation = new Relation(originalRelation);
+        fixedRelation.addMember(index + 1, new RelationMember(null, fix));
+
+        return new ChangeCommand(originalRelation, fixedRelation);
     }
 
     public PTRouteDataManager getManager() {

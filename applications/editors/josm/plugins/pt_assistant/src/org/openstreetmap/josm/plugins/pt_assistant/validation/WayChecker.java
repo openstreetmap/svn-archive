@@ -79,14 +79,7 @@ public class WayChecker extends Checker {
                     if (way.hasTag("railway", "construction")) {
                         isUnderConstruction = true;
                     }
-                } else if (relation.hasTag("route", "subway")) {
-                    if (!way.hasTag("railway", "subway")) {
-                        isCorrectRoadType = false;
-                    }
-                    if (way.hasTag("railway", "construction")) {
-                        isUnderConstruction = true;
-                    }
-                } else if (relation.hasTag("route", "light_rail")) {
+                } else if (relation.hasTag("route", "subway", "light_rail")) {
                     if (!way.hasTag("railway", "subway")) {
                         isCorrectRoadType = false;
                     }
@@ -101,7 +94,7 @@ public class WayChecker extends Checker {
                         isUnderConstruction = true;
                     }
                 } else if (relation.hasTag("route", "train")) {
-                    if (!way.hasTag("railway", "rail")) {
+                    if (!way.hasTag("railway", "rail", "narrow_gauge")) {
                         isCorrectRoadType = false;
                     }
                     if (way.hasTag("railway", "construction")) {

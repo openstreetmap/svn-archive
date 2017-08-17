@@ -90,8 +90,14 @@ public class SortPTStopsAction extends JosmAction {
     }
 
     public void sortPTStops(Relation rel) {
-        List<RelationMember> members = rel.getMembers();
-        for (int i = 0; i < members.size(); i++) {
+        List<RelationMember> members = new ArrayList<>();
+        List<RelationMember> oldMembers = rel.getMembers();
+        for (int i = 0; i < oldMembers.size(); i++) {
+            RelationMember rm = oldMembers.get(i);
+            if (!PTStop.isPTPlatform(rm) && !PTStop.isPTStopPosition(rm))
+                members.add(new RelationMember("", rm.getMember()));
+            else
+                members.add(rm);
             rel.removeMember(0);
         }
         members = new RelationSorter().sortMembers(members);

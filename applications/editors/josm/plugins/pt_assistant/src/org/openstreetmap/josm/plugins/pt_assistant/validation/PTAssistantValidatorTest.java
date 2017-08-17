@@ -45,6 +45,7 @@ public class PTAssistantValidatorTest extends Test {
 
     public static final int ERROR_CODE_FROM_TO_ROUTE_TAG = 3701;
     public static final int ERROR_CODE_FIRST_LAST_STOP_WAY_TAG = 3702;
+    public static final int ERROR_CODE_TRIVIAL_FIX = 3710;
     public static final int ERROR_CODE_SORTING = 3711;
     public static final int ERROR_CODE_PARTIAL_SORTING = 3712;
     public static final int ERROR_CODE_ROAD_TYPE = 3721;

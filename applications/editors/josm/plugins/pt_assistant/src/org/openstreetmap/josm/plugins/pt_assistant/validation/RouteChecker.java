@@ -11,6 +11,7 @@ import java.util.Map.Entry;
 
 import org.openstreetmap.josm.command.ChangeCommand;
 import org.openstreetmap.josm.command.Command;
+import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.OsmPrimitiveType;
 import org.openstreetmap.josm.data.osm.Relation;
@@ -22,11 +23,13 @@ import org.openstreetmap.josm.data.validation.TestError;
 import org.openstreetmap.josm.data.validation.TestError.Builder;
 import org.openstreetmap.josm.gui.dialogs.relation.sort.RelationSorter;
 import org.openstreetmap.josm.gui.dialogs.relation.sort.WayConnectionType;
+import org.openstreetmap.josm.gui.dialogs.relation.sort.WayConnectionType.Direction;
 import org.openstreetmap.josm.gui.dialogs.relation.sort.WayConnectionTypeCalculator;
 import org.openstreetmap.josm.plugins.pt_assistant.data.PTRouteDataManager;
 import org.openstreetmap.josm.plugins.pt_assistant.data.PTStop;
 import org.openstreetmap.josm.plugins.pt_assistant.utils.RouteUtils;
 import org.openstreetmap.josm.plugins.pt_assistant.utils.StopToWayAssigner;
+import org.openstreetmap.josm.tools.Pair;
 
 /**
  * Performs tests of a route at the level of the whole route: sorting test
@@ -71,7 +74,8 @@ public class RouteChecker extends Checker {
             return;
         }
 
-        int numOfGaps = countGaps(waysToCheck);
+        List<Pair<Integer, Pair<Direction, Direction>>> gaps = getGaps(waysToCheck);
+        int numOfGaps = gaps.size();
 
         if (numOfGaps > 0) {
 
@@ -94,8 +98,43 @@ public class RouteChecker extends Checker {
                 builder.primitives(relation);
                 TestError e = builder.build();
                 this.errors.add(e);
+            } else if (numOfGaps == numOfGapsAfterSort) {
+                //if sorting doesn't help try to fix the gaps trivially
+                //by adding one way
+                for (Pair<Integer, Pair<Direction, Direction>> gap : gaps) {
+                    Way before = waysToCheck.get(gap.a).getWay();
+                    Way after = waysToCheck.get(gap.a + 1).getWay();
+
+                    Way fix = findTrivialFix(before, gap.b.a, after, gap.b.b);
+                    if (fix != null) {
+                        Builder builder = TestError.builder(this.test, Severity.WARNING, PTAssistantValidatorTest.ERROR_CODE_TRIVIAL_FIX);
+                        builder.message(tr("PT: Route gap can be closed by adding a single way"));
+                        builder.primitives(relation, before, after, fix);
+                        TestError e = builder.build();
+                        this.errors.add(e);
+                    }
+                }
             }
         }
+    }
+
+    //given two ways and the direction of the route on those two ways, it seeks
+    //another way that connects the two given ones respecting the directions
+    private Way findTrivialFix(Way before, Direction beforeDirection, Way after, Direction afterDirection) {
+        Node startNode = beforeDirection == Direction.FORWARD ? before.lastNode() : before.firstNode();
+        Node lastNode = afterDirection == Direction.FORWARD ? after.firstNode() : after.lastNode();
+        List<Way> candidates = startNode.getParentWays();
+        candidates.removeIf(w -> !RouteUtils.isWaySuitableForPublicTransport(w));
+
+        for (Way candidate : candidates) {
+            if (candidate.equals(before)) continue;
+            if ((candidate.firstNode().equals(startNode) && candidate.lastNode().equals(lastNode))
+                    || (candidate.lastNode().equals(startNode) && candidate.firstNode().equals(lastNode))) {
+                return candidate;
+            }
+        }
+
+        return null;
     }
 
     //checks if the from and to tags of the route match the names of the first
@@ -221,39 +260,46 @@ public class RouteChecker extends Checker {
      * Checks whether there is at least one gap in the given list of ways.
      *
      * @param waysToCheck ways to check
-     * @return true if has gap (in the sense of continuity of ways in the
-     *         Relation Editor), false otherwise
+     * @return true if has gaps , false otherwise
      */
     public boolean hasGaps(List<RelationMember> waysToCheck) {
         return countGaps(waysToCheck) > 0;
     }
 
     /**
-     * Counts how many gaps there are for a given list of ways. It does not check if
-     * the way actually stands for a public transport platform - that should be
-     * checked beforehand.
+     * Counts how many gaps there are for a given list of ways.
      *
      * @param waysToCheck ways to check
      * @return number of gaps
      */
     private int countGaps(List<RelationMember> waysToCheck) {
-        int numberOfGaps = 0;
+        return getGaps(waysToCheck).size();
+    }
+
+    /**
+     * Finds the gaps (in the sense of continuity of ways in the Relation
+     * Editor) in a given list of ways. It does not check if the way actually
+     * stands for a public transport platform - that should be checked beforehand.
+     *
+     * @param waysToCheck ways to check
+     * @return It returns a list of gaps. a gap is a pair of an index (the index
+     * of the way right before the gap) and a pair of directions of the two ways
+     * around the gap.
+     */
+    private List<Pair<Integer, Pair<Direction, Direction>>> getGaps(List<RelationMember> waysToCheck) {
 
         WayConnectionTypeCalculator connectionTypeCalculator = new WayConnectionTypeCalculator();
         final List<WayConnectionType> links = connectionTypeCalculator.updateLinks(waysToCheck);
-        for (int i = 0; i < links.size(); i++) {
-            final WayConnectionType link = links.get(i);
-            if (!(i == 0 || link.linkPrev)
-                    || !(i == links.size() - 1
-                    || link.linkNext)
-                    || link.direction == null
-                    || WayConnectionType.Direction.NONE.equals(link.direction)) {
-                numberOfGaps++;
-                i++;
+        List<Pair<Integer, Pair<Direction, Direction>>> gaps = new ArrayList<>();
+
+        for (int i = 0; i < links.size() -1; i++) {
+            WayConnectionType link = links.get(i);
+            if (!link.linkNext) {
+                gaps.add(new Pair<>(i, new Pair<>(link.direction, links.get(i+1).direction)));
             }
         }
 
-        return numberOfGaps;
+        return gaps;
     }
 
     public List<RelationMember> getSortedMembers() {

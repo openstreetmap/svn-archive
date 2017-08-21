@@ -25,6 +25,7 @@ import org.openstreetmap.josm.gui.dialogs.relation.sort.RelationSorter;
 import org.openstreetmap.josm.gui.dialogs.relation.sort.WayConnectionType;
 import org.openstreetmap.josm.gui.dialogs.relation.sort.WayConnectionType.Direction;
 import org.openstreetmap.josm.gui.dialogs.relation.sort.WayConnectionTypeCalculator;
+import org.openstreetmap.josm.plugins.pt_assistant.actions.SortPTRouteMembersAction;
 import org.openstreetmap.josm.plugins.pt_assistant.data.PTRouteDataManager;
 import org.openstreetmap.josm.plugins.pt_assistant.data.PTStop;
 import org.openstreetmap.josm.plugins.pt_assistant.utils.RouteUtils;
@@ -327,51 +328,9 @@ public class RouteChecker extends Checker {
         Collection<? extends OsmPrimitive> primitives = testError.getPrimitives();
         Relation originalRelation = (Relation) primitives.iterator().next();
 
-        // separate ways from stops (because otherwise the order of
-        // stops/platforms can be messed up by the sorter:
-        List<RelationMember> members = originalRelation.getMembers();
-        final List<RelationMember> stops = new ArrayList<>();
-        final List<RelationMember> ways = new ArrayList<>();
-        for (RelationMember member : members) {
-            if (RouteUtils.isPTWay(member)) {
-                if ("".equals(member.getRole())) {
-                    ways.add(member);
-                } else {
-                    RelationMember modifiedMember = new RelationMember("", member.getWay());
-                    ways.add(modifiedMember);
-                }
-            } else { // stops:
-                if ("stop_positon".equals(member.getRole())) {
-                    // it is not expected that stop_positions could
-                    // be relations
-                    if (member.getType().equals(OsmPrimitiveType.NODE)) {
-                        RelationMember modifiedMember = new RelationMember("stop", member.getNode());
-                        stops.add(modifiedMember);
-                    } else { // if it is a primitive of type way:
-                        RelationMember modifiedMember = new RelationMember("stop", member.getWay());
-                        stops.add(modifiedMember);
-                    }
-                } else { // if it is not a stop_position:
-                    stops.add(member);
-                }
-            }
-        }
-
-        // sort the ways:
-        RelationSorter sorter = new RelationSorter();
-        List<RelationMember> sortedWays = sorter.sortMembers(ways);
-
         // create a new relation to pass to the command:
         Relation sortedRelation = new Relation(originalRelation);
-        List<RelationMember> sortedRelationMembers = new ArrayList<>(members.size());
-        for (RelationMember rm : stops) {
-            sortedRelationMembers.add(rm);
-        }
-        for (RelationMember rm : sortedWays) {
-            sortedRelationMembers.add(rm);
-        }
-        sortedRelation.setMembers(sortedRelationMembers);
-
+        SortPTRouteMembersAction.sortPTRouteMembers(sortedRelation);
         return new ChangeCommand(originalRelation, sortedRelation);
     }
 

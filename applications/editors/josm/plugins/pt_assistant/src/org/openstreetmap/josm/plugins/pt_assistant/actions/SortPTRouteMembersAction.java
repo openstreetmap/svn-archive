@@ -35,20 +35,21 @@ import org.openstreetmap.josm.plugins.pt_assistant.utils.StopToWayAssigner;
 import org.openstreetmap.josm.tools.Utils;
 
 /**
- * Sorts the stop positions in a PT route according to the assigned ways
+ * Sorts the members of a PT route. It orders first the ways, then the stops
+ * according to the assigned ways
  *
  * @author giacomo
  *
  */
-public class SortPTStopsAction extends JosmAction {
+public class SortPTRouteMembersAction extends JosmAction {
 
-    private static final String ACTION_NAME = "Sort PT Stops";
+    private static final String ACTION_NAME = "Sort PT Route Members";
 
     /**
-     * Creates a new SortPTStopsAction
+     * Creates a new SortPTRouteMembersAction
      */
-    public SortPTStopsAction() {
-        super(ACTION_NAME, "icons/sortptstops", ACTION_NAME, null, true);
+    public SortPTRouteMembersAction() {
+        super(ACTION_NAME, "icons/sortptroutemembers", ACTION_NAME, null, true);
     }
 
     @Override
@@ -85,11 +86,20 @@ public class SortPTStopsAction extends JosmAction {
 
     private void continueAfterDownload(Relation rel) {
         Relation newRel = new Relation(rel);
-        sortPTStops(newRel);
+        sortPTRouteMembers(newRel);
         Main.main.undoRedo.add(new ChangeCommand(rel, newRel));
     }
 
-    public void sortPTStops(Relation rel) {
+    /***
+     * Sort the members of the PT route.
+     *
+     * @param rel route to be sorted
+     */
+    public static void sortPTRouteMembers(Relation rel) {
+        if (!RouteUtils.isVersionTwoPTRoute(rel)) {
+            return;
+        }
+
         List<RelationMember> members = new ArrayList<>();
         List<RelationMember> oldMembers = rel.getMembers();
         for (int i = 0; i < oldMembers.size(); i++) {
@@ -183,7 +193,7 @@ public class SortPTStopsAction extends JosmAction {
         wayMembers.forEach(rel::addMember);
     }
 
-    private List<PTStop> sortSameWayStops(List<PTStop> stps, Way way, Way prev, Way next) {
+    private static List<PTStop> sortSameWayStops(List<PTStop> stps, Way way, Way prev, Way next) {
         Map<Node, List<PTStop>> closeNodes = new HashMap<>();
         List<PTStop> noLocationStops = new ArrayList<>();
         List<Node> nodes = way.getNodes();
@@ -217,7 +227,7 @@ public class SortPTStopsAction extends JosmAction {
         return ret;
     }
 
-    private List<PTStop> getSortedStops(List<Node> nodes,
+    private static List<PTStop> getSortedStops(List<Node> nodes,
             Map<Node, List<PTStop>> closeNodes) {
 
         List<PTStop> ret = new ArrayList<>();
@@ -240,7 +250,7 @@ public class SortPTStopsAction extends JosmAction {
         return ret;
     }
 
-    private Node findClosestNode(PTStop stop, List<Node> nodes) {
+    private static Node findClosestNode(PTStop stop, List<Node> nodes) {
         EastNorth stopEN = stopEastNorth(stop);
         if (stopEN == null)
             return null;
@@ -256,7 +266,7 @@ public class SortPTStopsAction extends JosmAction {
         return closest;
     }
 
-    private EastNorth stopEastNorth(PTStop stop) {
+    private static EastNorth stopEastNorth(PTStop stop) {
         if (stop.getStopPosition() != null)
             return stop.getStopPosition().getEastNorth();
         OsmPrimitive prim = stop.getPlatform();

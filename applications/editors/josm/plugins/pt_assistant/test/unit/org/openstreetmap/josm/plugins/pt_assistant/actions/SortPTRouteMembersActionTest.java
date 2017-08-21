@@ -20,12 +20,12 @@ import org.openstreetmap.josm.plugins.pt_assistant.AbstractTest;
 import org.openstreetmap.josm.testutils.JOSMTestRules;
 
 /**
- * Unit tests for class {@link SortPTStopsAction}.
+ * Unit tests for class {@link SortPTRouteMembersAction}.
  *
  * @author giack
  *
  */
-public class SortPTStopsActionTest extends AbstractTest {
+public class SortPTRouteMembersActionTest extends AbstractTest {
 
     /**
      * Setup test.
@@ -44,7 +44,7 @@ public class SortPTStopsActionTest extends AbstractTest {
     public void test1() {
         Relation rel = (Relation) ds.getPrimitiveById(
                 new SimplePrimitiveId(7367762L, OsmPrimitiveType.RELATION));
-        new SortPTStopsAction().sortPTStops(rel);
+        SortPTRouteMembersAction.sortPTRouteMembers(rel);
 
         assertEquals("Acitillo - Istituto Fortunato", rel.getMember(0).getNode().getName());
         assertEquals("Ribera - Gemito", rel.getMember(1).getNode().getName());
@@ -76,7 +76,7 @@ public class SortPTStopsActionTest extends AbstractTest {
     public void test2() {
         Relation rel = (Relation) ds.getPrimitives(p -> p.getType() == OsmPrimitiveType.RELATION &&
                 "150 Piazza Garibaldi → Osp. Monaldi".equals(p.getName())).iterator().next();
-        new SortPTStopsAction().sortPTStops(rel);
+        SortPTRouteMembersAction.sortPTRouteMembers(rel);
 
         assertNull(rel.getMember(0).getNode().getName());
         assertEquals("Alibus Airport Shuttle", rel.getMember(1).getNode().getName());

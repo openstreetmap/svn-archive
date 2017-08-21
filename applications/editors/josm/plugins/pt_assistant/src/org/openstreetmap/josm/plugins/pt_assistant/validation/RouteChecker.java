@@ -63,6 +63,15 @@ public class RouteChecker extends Checker {
     //is true raises a warning
     protected void performSortingTest() {
 
+        if (relation.hasTag("fixme:relation", "order members")) {
+            Builder builder = TestError.builder(this.test, Severity.WARNING, PTAssistantValidatorTest.ERROR_CODE_SORTING);
+            builder.message(tr("PT: Route needs to be sorted, found tag fixme:relation=order members"));
+            builder.primitives(relation);
+            TestError e = builder.build();
+            this.errors.add(e);
+            return;
+        }
+
         final List<RelationMember> waysToCheck = new ArrayList<>();
         for (RelationMember rm : relation.getMembers()) {
 

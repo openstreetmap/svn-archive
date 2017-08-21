@@ -100,6 +100,10 @@ public class SortPTRouteMembersAction extends JosmAction {
             return;
         }
 
+        if (rel.hasTag("fixme:relation", "order members")) {
+            rel.remove("fixme:relation");
+        }
+
         List<RelationMember> members = new ArrayList<>();
         List<RelationMember> oldMembers = rel.getMembers();
         for (int i = 0; i < oldMembers.size(); i++) {

@@ -141,40 +141,44 @@ public class RouteChecker extends Checker {
     //and last stops
     protected boolean performFromToTagsTest() {
 
-        String from = relation.get("from");
-        String to = relation.get("to");
-        if (from == null || to == null || manager.getPTStopCount() == 0) {
+        if (manager.getPTStopCount() == 0) {
             return false;
         }
 
-        from = from.toLowerCase();
-        to = to.toLowerCase();
-
         boolean foundError = false;
-        PTStop stop = manager.getFirstStop();
-        OsmPrimitive primitive = checkPTStopName(stop, from);
 
-        if (primitive != null) {
-            Builder builder = TestError.builder(this.test, Severity.WARNING,
-                    PTAssistantValidatorTest.ERROR_CODE_FROM_TO_ROUTE_TAG);
-            builder.message(tr("PT: The name of the first stop does not match the \"from\" tag of the route relation"));
-            builder.primitives(primitive, relation);
-            TestError e = builder.build();
-            this.errors.add(e);
-            foundError = true;
+        String from = relation.get("from");
+        if (from != null) {
+            from = from.toLowerCase();
+            PTStop stop = manager.getFirstStop();
+            OsmPrimitive primitive = checkPTStopName(stop, from);
+
+            if (primitive != null) {
+                Builder builder = TestError.builder(this.test, Severity.WARNING,
+                        PTAssistantValidatorTest.ERROR_CODE_FROM_TO_ROUTE_TAG);
+                builder.message(tr("PT: The name of the first stop does not match the \"from\" tag of the route relation"));
+                builder.primitives(primitive, relation);
+                TestError e = builder.build();
+                this.errors.add(e);
+                foundError = true;
+            }
         }
 
-        stop = manager.getLastStop();
-        primitive = checkPTStopName(stop, to);
+        String to = relation.get("to");
+        if (to != null) {
+            to = to.toLowerCase();
+            PTStop stop = manager.getLastStop();
+            OsmPrimitive primitive = checkPTStopName(stop, to);
 
-        if (primitive != null) {
-            Builder builder = TestError.builder(this.test, Severity.WARNING,
-                    PTAssistantValidatorTest.ERROR_CODE_FROM_TO_ROUTE_TAG);
-            builder.message(tr("PT: The name of the last stop does not match the \"to\" tag of the route relation"));
-            builder.primitives(primitive, relation);
-            TestError e = builder.build();
-            this.errors.add(e);
-            foundError = true;
+            if (primitive != null) {
+                Builder builder = TestError.builder(this.test, Severity.WARNING,
+                        PTAssistantValidatorTest.ERROR_CODE_FROM_TO_ROUTE_TAG);
+                builder.message(tr("PT: The name of the last stop does not match the \"to\" tag of the route relation"));
+                builder.primitives(primitive, relation);
+                TestError e = builder.build();
+                this.errors.add(e);
+                foundError = true;
+            }
         }
 
         return foundError;
@@ -225,24 +229,24 @@ public class RouteChecker extends Checker {
     //it compares not only the name tag but all the name:* names
     //it returns null if the names match
     private OsmPrimitive checkPTStopName(PTStop stop, String name) {
-        OsmPrimitive primitive = null;
         List<String> toCheck = new ArrayList<>();
-        if (stop.getPlatform() != null) {
-            primitive = stop.getPlatform();
+        OsmPrimitive primitive = stop.getPlatform();
+        if (primitive != null) {
             toCheck.addAll(getPrimitiveNameTags(primitive));
         }
-        if (toCheck.isEmpty() && stop.getStopPosition() != null) {
-            primitive = stop.getStopPosition();
+        primitive = stop.getStopPosition();
+        if (toCheck.isEmpty() && primitive != null) {
             toCheck.addAll(getPrimitiveNameTags(primitive));
         }
 
         for (String value : toCheck) {
             if (value.equals(name)) {
-                return primitive;
+                //if one of the names matches, return null
+                return null;
             }
         }
 
-        return null;
+        return primitive;
     }
 
     private List<String> getPrimitiveNameTags(OsmPrimitive primitive) {

@@ -125,7 +125,7 @@ public class RasterImageGeoreferencer implements MouseListener {
               }
               if (countMouseClicked == 2) {
                   wmsLayer.cropImage(ea1, ea);
-                  Main.map.mapView.repaint();
+                  wmsLayer.invalidate();
                   startGeoreferencing(wmsLayer);
               }
           } else if (mode == cGetLambertCrosspieces) {
@@ -200,7 +200,7 @@ public class RasterImageGeoreferencer implements MouseListener {
      Main.map.mapView.removeMouseListener(this);
      affineTransform(ea1, ea2, georefpoint1, georefpoint2);
      wmsLayer.grabThread.saveNewCache();
-     Main.map.mapView.repaint();
+     wmsLayer.invalidate();
      actionCompleted();
      clickOnTheMap = false;
      ignoreMouseClick = false;
@@ -299,7 +299,7 @@ public void transformGeoreferencedImg() {
     EastNorth ea2 = wmsLayer.getImage(0).max;
     affineTransform(ea1, ea2, georefpoint1, georefpoint2);
     wmsLayer.grabThread.saveNewCache();
-    Main.map.mapView.repaint();
+    wmsLayer.invalidate();
 }
 
 

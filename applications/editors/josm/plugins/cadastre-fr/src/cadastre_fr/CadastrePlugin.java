@@ -39,7 +39,7 @@ import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
 
 /**
- * Plugin to access the French Cadastre WMS server at <a href="http://www.cadastre.gouv.fr">
+ * Plugin to access the French Cadastre WMS server at <a href="https://www.cadastre.gouv.fr">
  * www.cadastre.gouv.fr</a>.<br>
  * This WMS server requires some specific handling like retrieving a cookie for a
  * limitation in case of no activity, or the request to the server shall provide

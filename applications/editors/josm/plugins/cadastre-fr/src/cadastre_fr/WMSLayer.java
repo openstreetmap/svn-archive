@@ -97,7 +97,6 @@ public class WMSLayer extends Layer implements ImageObserver {
 
     private Action refineGeoRef;
 
-    @SuppressWarnings("serial")
     class ResetOffsetActionMenu extends JosmAction {
         ResetOffsetActionMenu() {
             super(tr("Reset offset"), null, tr("Reset offset (only vector images)"), null, false);
@@ -107,7 +106,7 @@ public class WMSLayer extends Layer implements ImageObserver {
         public void actionPerformed(ActionEvent arg0) {
             deltaEast = 0;
             deltaNorth = 0;
-            Main.map.mapView.repaint();
+            invalidate();
         }
     }
 

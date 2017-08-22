@@ -118,7 +118,7 @@ public class GrabThread extends Thread {
                             wmsLayer.imagesLock.unlock();
                         }
                         wmsLayer.addImage(newImage);
-                        Main.map.mapView.repaint();
+                        wmsLayer.invalidate();
                         saveToCache(newImage);
                     } catch (NullPointerException e) {
                         Main.info("Layer destroyed. Cancel grab thread");

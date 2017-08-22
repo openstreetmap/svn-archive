@@ -10,7 +10,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
@@ -30,9 +29,7 @@ import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.PleaseWaitRunnable;
-import org.openstreetmap.josm.gui.progress.NullProgressMonitor;
 import org.openstreetmap.josm.io.OsmTransferException;
-import org.openstreetmap.josm.io.ProgressInputStream;
 
 public class DownloadSVGBuilding extends PleaseWaitRunnable {
 
@@ -242,13 +239,9 @@ public class DownloadSVGBuilding extends PleaseWaitRunnable {
     }
 
     private String grabSVG(URL url) throws IOException, OsmTransferException {
-        wmsInterface.urlConn = (HttpURLConnection) url.openConnection();
-        wmsInterface.urlConn.setRequestProperty("Connection", "close");
-        wmsInterface.urlConn.setRequestMethod("GET");
-        wmsInterface.setCookie();
         File file = new File(CadastrePlugin.cacheDir + "building.svg");
         String svg = "";
-        try (InputStream is = new ProgressInputStream(wmsInterface.urlConn, NullProgressMonitor.INSTANCE)) {
+        try (InputStream is = wmsInterface.getContent(url)) {
             if (file.exists())
                 file.delete();
             try (BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(file, true));

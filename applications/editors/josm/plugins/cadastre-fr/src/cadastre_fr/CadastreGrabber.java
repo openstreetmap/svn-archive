@@ -6,7 +6,6 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -14,9 +13,7 @@ import javax.imageio.ImageIO;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.coor.EastNorth;
-import org.openstreetmap.josm.gui.progress.NullProgressMonitor;
 import org.openstreetmap.josm.io.OsmTransferException;
-import org.openstreetmap.josm.io.ProgressInputStream;
 
 public class CadastreGrabber {
 
@@ -85,11 +82,7 @@ public class CadastreGrabber {
     }
 
     private BufferedImage grab(URL url) throws IOException, OsmTransferException {
-        wmsInterface.urlConn = (HttpURLConnection) url.openConnection();
-        wmsInterface.urlConn.setRequestProperty("Connection", "close");
-        wmsInterface.urlConn.setRequestMethod("GET");
-        wmsInterface.setCookie();
-        try (InputStream is = new ProgressInputStream(wmsInterface.urlConn, NullProgressMonitor.INSTANCE)) {
+        try (InputStream is = wmsInterface.getContent(url)) {
             return ImageIO.read(is);
         }
     }

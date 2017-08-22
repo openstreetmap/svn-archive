@@ -63,7 +63,7 @@ public class SimplifyWay {
     }
 
     /* From Aviaton Formulary v1.3
-     * http://williams.best.vwh.net/avform.htm
+     * http://www.edwilliams.org/avform.htm
      */
     public static double dist(double lat1, double lon1, double lat2, double lon2) {
         return 2 * Math.asin(Math.sqrt(Math.pow(Math.sin((lat1 - lat2) / 2), 2) + Math.cos(lat1) * Math.cos(lat2)

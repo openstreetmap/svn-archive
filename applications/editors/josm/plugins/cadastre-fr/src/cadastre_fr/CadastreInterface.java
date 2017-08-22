@@ -6,6 +6,7 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 import java.awt.GridBagLayout;
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.CookieHandler;
@@ -28,11 +29,15 @@ import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.validation.util.Entities;
 import org.openstreetmap.josm.gui.layer.Layer;
+import org.openstreetmap.josm.gui.progress.NullProgressMonitor;
+import org.openstreetmap.josm.gui.util.GuiHelper;
+import org.openstreetmap.josm.io.OsmTransferException;
+import org.openstreetmap.josm.io.ProgressInputStream;
 import org.openstreetmap.josm.tools.GBC;
 
 public class CadastreInterface {
     public boolean downloadCanceled;
-    public HttpURLConnection urlConn;
+    private HttpURLConnection urlConn;
 
     private String cookie;
     private String interfaceRef;
@@ -52,7 +57,7 @@ public class CadastreInterface {
     private List<PlanImage> listOfFeuilles = new ArrayList<>();
     private long cookieTimestamp;
 
-    static final String BASE_URL = "http://www.cadastre.gouv.fr";
+    static final String BASE_URL = "https://www.cadastre.gouv.fr";
     static final String C_IMAGE_FORMAT = "Cette commune est au format ";
     static final String C_COMMUNE_LIST_START = "<select name=\"codeCommune\"";
     static final String C_COMMUNE_LIST_END = "</select>";
@@ -97,9 +102,10 @@ public class CadastreInterface {
             openInterface();
         } catch (IOException e) {
             Main.error(e);
-            JOptionPane.showMessageDialog(Main.parent,
+            GuiHelper.runInEDT(() ->
+                JOptionPane.showMessageDialog(Main.parent,
                     tr("Town/city {0} not found or not available\n" +
-                            "or action canceled", wmsLayer.getLocation()));
+                            "or action canceled", wmsLayer.getLocation())));
             return false;
         }
         return true;
@@ -190,7 +196,7 @@ public class CadastreInterface {
         }
     }
 
-    public void setCookie() {
+    private void setCookie() {
         this.urlConn.setRequestProperty("Cookie", this.cookie);
     }
 
@@ -589,5 +595,13 @@ public class CadastreInterface {
         }
         downloadCanceled = true;
         lastWMSLayerName = null;
+    }
+
+    public InputStream getContent(URL url) throws IOException, OsmTransferException {
+        urlConn = (HttpURLConnection) url.openConnection();
+        urlConn.setRequestProperty("Connection", "close");
+        urlConn.setRequestMethod("GET");
+        setCookie();
+        return new ProgressInputStream(urlConn, NullProgressMonitor.INSTANCE);
     }
 }

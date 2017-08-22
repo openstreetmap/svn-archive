@@ -48,7 +48,7 @@ public class DownloadWMSPlanImage {
                         if (CacheControl.cacheEnabled) {
                             if (wmsLayer.grabThread.getCacheControl().loadCacheIfExist()) {
                                 dontGeoreference = true;
-                                Main.map.mapView.repaint();
+                                wmsLayer.invalidate();
                                 return;
                             }
                         }
@@ -60,7 +60,7 @@ public class DownloadWMSPlanImage {
                             wmsLayer.grab(bounds);
                             if (wmsLayer.grabber.getWmsInterface().downloadCanceled) {
                                 wmsLayer.clearImages();
-                                Main.map.mapView.repaint();
+                                wmsLayer.invalidate();
                             } else {
                                 // next steps follow in method finish() when download is terminated
                                 wmsLayer.joinBufferedImages();

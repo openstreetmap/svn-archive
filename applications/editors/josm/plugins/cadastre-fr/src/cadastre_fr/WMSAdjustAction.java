@@ -111,7 +111,9 @@ public class WMSAdjustAction extends MapMode implements
             }
             prevEastNorth = newEastNorth;
         }
-        Main.map.mapView.repaint();
+        if (modifiedLayer != null) {
+            modifiedLayer.invalidate();
+        }
     }
 
     public static void paintAdjustFrames(Graphics2D g, final MapView mv) {
@@ -160,11 +162,14 @@ public class WMSAdjustAction extends MapMode implements
         }
     }
 
-    @Override public void mouseReleased(MouseEvent e) {
+    @Override
+    public void mouseReleased(MouseEvent e) {
         if (mode == Mode.rotate) {
             EastNorth newEastNorth = Main.map.mapView.getEastNorth(e.getX(), e.getY());
             rotate(prevEastNorth, newEastNorth);
-            Main.map.mapView.repaint();
+            if (modifiedLayer != null) {
+                modifiedLayer.invalidate();
+            }
         }
         Main.map.mapView.setCursor(Cursor.getDefaultCursor());
         prevEastNorth = null;
@@ -187,6 +192,6 @@ public class WMSAdjustAction extends MapMode implements
     }
 
     private void saveModifiedLayers() {
-            modifiedLayer.grabThread.saveNewCache();
+        modifiedLayer.grabThread.saveNewCache();
     }
 }

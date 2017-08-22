@@ -104,6 +104,7 @@ public class SortPTRouteMembersAction extends JosmAction {
             rel.remove("fixme:relation");
         }
 
+        //first loop trough all the members and remove the roles
         List<RelationMember> members = new ArrayList<>();
         List<RelationMember> oldMembers = rel.getMembers();
         for (int i = 0; i < oldMembers.size(); i++) {
@@ -114,8 +115,12 @@ public class SortPTRouteMembersAction extends JosmAction {
                 members.add(rm);
             rel.removeMember(0);
         }
+
+        //sort the members with the built in sorting function in order to get
+        //the continuity of the ways
         members = new RelationSorter().sortMembers(members);
 
+        //divide stops and ways
         List<RelationMember> stops = new ArrayList<>();
         List<RelationMember> wayMembers = new ArrayList<>();
         List<Way> ways = new ArrayList<>();
@@ -130,22 +135,36 @@ public class SortPTRouteMembersAction extends JosmAction {
             }
         }
 
-        Map<String, PTStop> stopsByName = new HashMap<>();
+        //couple together stop positions and platforms that are part of the same
+        //stop. the only way used to determine whether they are part of the same
+        //stop or not is the name. this should be improved by using also the
+        //distance
+        Map<String, List<PTStop>> stopsByName = new HashMap<>();
         List<PTStop> unnamed = new ArrayList<>();
         stops.forEach(rm -> {
             String name = getStopName(rm.getMember());
             if (name != null) {
                 if (!stopsByName.containsKey(name))
-                    stopsByName.put(name, new PTStop(rm));
-                else
-                    stopsByName.get(name).addStopElement(rm);
+                    stopsByName.put(name, new ArrayList<>());
+                List<PTStop> ls = stopsByName.get(name);
+                if (ls.isEmpty()) {
+                    ls.add(new PTStop(rm));
+                } else {
+                    PTStop stp = ls.get(ls.size() - 1);
+                    if (!stp.addStopElement(rm)) {
+                        ls.add(new PTStop(rm));
+                    }
+                }
             } else {
                 unnamed.add(new PTStop(rm));
             }
         });
 
+        //assign to each stop the corresponding way. if none is found add already
+        //the stop to the relation since it is not possible to reason on the order
         StopToWayAssigner assigner = new StopToWayAssigner(ways);
-        List<PTStop> ptstops = new ArrayList<>(stopsByName.values());
+        List<PTStop> ptstops = new ArrayList<>();
+        stopsByName.values().forEach(ptstops::addAll);
         Map<Way, List<PTStop>> wayStop = new HashMap<>();
         ptstops.forEach(stop -> {
             Way way = assigner.get(stop);
@@ -167,6 +186,7 @@ public class SortPTRouteMembersAction extends JosmAction {
             wayStop.get(way).add(stop);
         });
 
+        //based on the order of the ways, add the stops to the relation
         for (int i = 0; i < wayMembers.size(); i++) {
             RelationMember wm = wayMembers.get(i);
             Way prev = null;
@@ -186,6 +206,8 @@ public class SortPTRouteMembersAction extends JosmAction {
                 Way curr = wm.getWay();
                 List<PTStop> stps = wayStop.get(curr);
                 if (stps != null) {
+                    //if for one way there are more than one stop assigned to it,
+                    //another sorting step is needed
                     if (stps.size() > 1)
                         stps = sortSameWayStops(stps, curr, prev, next);
                     stps.forEach(stop -> {
@@ -207,6 +229,8 @@ public class SortPTRouteMembersAction extends JosmAction {
             rel.addMember(stop.getPlatformRM());
     }
 
+    //sorts the stops that are assigned to the same way. this is done based on
+    //the distance from the previous way.
     private static List<PTStop> sortSameWayStops(List<PTStop> stps, Way way, Way prev, Way next) {
         Map<Node, List<PTStop>> closeNodes = new HashMap<>();
         List<PTStop> noLocationStops = new ArrayList<>();

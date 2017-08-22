@@ -149,6 +149,9 @@ public class SortPTRouteMembersAction extends JosmAction {
         Map<Way, List<PTStop>> wayStop = new HashMap<>();
         ptstops.forEach(stop -> {
             Way way = assigner.get(stop);
+            if (way == null) {
+                addStopToRelation(rel, stop);
+            }
             if (!wayStop.containsKey(way))
                 wayStop.put(way, new ArrayList<PTStop>());
             wayStop.get(way).add(stop);
@@ -156,6 +159,9 @@ public class SortPTRouteMembersAction extends JosmAction {
 
         unnamed.forEach(stop -> {
             Way way = assigner.get(stop);
+            if (way == null) {
+                addStopToRelation(rel, stop);
+            }
             if (!wayStop.containsKey(way))
                 wayStop.put(way, new ArrayList<PTStop>());
             wayStop.get(way).add(stop);
@@ -184,10 +190,7 @@ public class SortPTRouteMembersAction extends JosmAction {
                         stps = sortSameWayStops(stps, curr, prev, next);
                     stps.forEach(stop -> {
                         if (stop != null) {
-                            if (stop.getStopPositionRM() != null)
-                                rel.addMember(stop.getStopPositionRM());
-                            if (stop.getPlatformRM() != null)
-                                rel.addMember(stop.getPlatformRM());
+                            addStopToRelation(rel, stop);
                         }
                     });
                 }
@@ -195,6 +198,13 @@ public class SortPTRouteMembersAction extends JosmAction {
         }
 
         wayMembers.forEach(rel::addMember);
+    }
+
+    private static void addStopToRelation(Relation rel, PTStop stop) {
+        if (stop.getStopPositionRM() != null)
+            rel.addMember(stop.getStopPositionRM());
+        if (stop.getPlatformRM() != null)
+            rel.addMember(stop.getPlatformRM());
     }
 
     private static List<PTStop> sortSameWayStops(List<PTStop> stps, Way way, Way prev, Way next) {

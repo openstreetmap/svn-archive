@@ -41,8 +41,8 @@ public class WayChecker extends Checker {
 
     protected void performRoadTypeTest() {
 
-        if (!relation.hasTag("route", "bus") && !relation.hasTag("route", "trolleybus")
-                && !relation.hasTag("route", "share_taxi")) {
+        if (!relation.hasTag(RouteUtils.TAG_ROUTE, "bus") && !relation.hasTag(RouteUtils.TAG_ROUTE, "trolleybus")
+                && !relation.hasTag(RouteUtils.TAG_ROUTE, "share_taxi")) {
             return;
         }
 
@@ -58,42 +58,42 @@ public class WayChecker extends Checker {
                 if (way.hasKey("construction")) {
                     isUnderConstruction = true;
                 }
-                if (relation.hasTag("route", "bus") || relation.hasTag("route", "share_taxi")) {
+                if (relation.hasTag(RouteUtils.TAG_ROUTE, "bus") || relation.hasTag(RouteUtils.TAG_ROUTE, "share_taxi")) {
                     if (!RouteUtils.isWaySuitableForBuses(way)) {
                         isCorrectRoadType = false;
                     }
                     if (way.hasTag("highway", "construction")) {
                         isUnderConstruction = true;
                     }
-                } else if (relation.hasTag("route", "trolleybus")) {
+                } else if (relation.hasTag(RouteUtils.TAG_ROUTE, "trolleybus")) {
                     if (!(RouteUtils.isWaySuitableForBuses(way) && way.hasTag("trolley_wire", "yes"))) {
                         isCorrectRoadType = false;
                     }
                     if (way.hasTag("highway", "construction")) {
                         isUnderConstruction = true;
                     }
-                } else if (relation.hasTag("route", "tram")) {
+                } else if (relation.hasTag(RouteUtils.TAG_ROUTE, "tram")) {
                     if (!way.hasTag("railway", "tram")) {
                         isCorrectRoadType = false;
                     }
                     if (way.hasTag("railway", "construction")) {
                         isUnderConstruction = true;
                     }
-                } else if (relation.hasTag("route", "subway", "light_rail")) {
+                } else if (relation.hasTag(RouteUtils.TAG_ROUTE, "subway", "light_rail")) {
                     if (!way.hasTag("railway", "subway")) {
                         isCorrectRoadType = false;
                     }
                     if (way.hasTag("railway", "construction")) {
                         isUnderConstruction = true;
                     }
-                } else if (relation.hasTag("route", "light_rail")) {
+                } else if (relation.hasTag(RouteUtils.TAG_ROUTE, "light_rail")) {
                     if (!way.hasTag("railway", "light_rail")) {
                         isCorrectRoadType = false;
                     }
                     if (way.hasTag("railway", "construction")) {
                         isUnderConstruction = true;
                     }
-                } else if (relation.hasTag("route", "train")) {
+                } else if (relation.hasTag(RouteUtils.TAG_ROUTE, "train")) {
                     if (!way.hasTag("railway", "rail", "narrow_gauge")) {
                         isCorrectRoadType = false;
                     }
@@ -239,39 +239,33 @@ public class WayChecker extends Checker {
             return true;
         }
 
-        if (prev != null) {
+        if (prev != null && RouteUtils.waysTouch(curr, prev)) {
+            Node nodeInQuestion;
+            if (RouteUtils.isOnewayForPublicTransport(curr) == 1) {
+                nodeInQuestion = curr.firstNode();
+            } else {
+                nodeInQuestion = curr.lastNode();
+            }
 
-            if (RouteUtils.waysTouch(curr, prev)) {
-                Node nodeInQuestion;
-                if (RouteUtils.isOnewayForPublicTransport(curr) == 1) {
-                    nodeInQuestion = curr.firstNode();
-                } else {
-                    nodeInQuestion = curr.lastNode();
-                }
+            List<Way> nb = findNeighborWays(curr, nodeInQuestion);
 
-                List<Way> nb = findNeighborWays(curr, nodeInQuestion);
-
-                if (nb.size() < 2 && nodeInQuestion != prev.firstNode() && nodeInQuestion != prev.lastNode()) {
-                    return false;
-                }
+            if (nb.size() < 2 && nodeInQuestion != prev.firstNode() && nodeInQuestion != prev.lastNode()) {
+                return false;
             }
         }
 
-        if (next != null) {
+        if (next != null && RouteUtils.waysTouch(curr, next)) {
+            Node nodeInQuestion;
+            if (RouteUtils.isOnewayForPublicTransport(curr) == 1) {
+                nodeInQuestion = curr.lastNode();
+            } else {
+                nodeInQuestion = curr.firstNode();
+            }
 
-            if (RouteUtils.waysTouch(curr, next)) {
-                Node nodeInQuestion;
-                if (RouteUtils.isOnewayForPublicTransport(curr) == 1) {
-                    nodeInQuestion = curr.lastNode();
-                } else {
-                    nodeInQuestion = curr.firstNode();
-                }
+            List<Way> nb = findNeighborWays(curr, nodeInQuestion);
 
-                List<Way> nb = findNeighborWays(curr, nodeInQuestion);
-
-                if (nb.size() < 2 && nodeInQuestion != next.firstNode() && nodeInQuestion != next.lastNode()) {
-                    return false;
-                }
+            if (nb.size() < 2 && nodeInQuestion != next.firstNode() && nodeInQuestion != next.lastNode()) {
+                return false;
             }
         }
 
@@ -287,7 +281,7 @@ public class WayChecker extends Checker {
         resultSet.add(curr);
 
         if (RouteUtils.isOnewayForPublicTransport(curr) == 0) {
-            return null;
+            return resultSet;
         }
 
         Node firstNodeInRouteDirection;
@@ -309,14 +303,11 @@ public class WayChecker extends Checker {
                 continue;
             }
 
-            if (RouteUtils.isOnewayForPublicTransport(nb) == 1 && nb.firstNode() == firstNodeInRouteDirection) {
-                Set<Way> newSet = this.checkAdjacentWays(nb, resultSet);
+            int oneway = RouteUtils.isOnewayForPublicTransport(nb);
+            if ((oneway == 1 && nb.firstNode() == firstNodeInRouteDirection) ||
+                    (oneway == -1 && nb.lastNode() == firstNodeInRouteDirection)) {
+                Set<Way> newSet = checkAdjacentWays(nb, resultSet);
                 resultSet.addAll(newSet);
-
-            } else if (RouteUtils.isOnewayForPublicTransport(nb) == -1 && nb.lastNode() == firstNodeInRouteDirection) {
-                Set<Way> newSet = this.checkAdjacentWays(nb, resultSet);
-                resultSet.addAll(newSet);
-
             }
         }
 
@@ -326,18 +317,15 @@ public class WayChecker extends Checker {
                 continue;
             }
 
-            if (RouteUtils.isOnewayForPublicTransport(nb) == 1 && nb.lastNode() == lastNodeInRouteDirection) {
-                Set<Way> newSet = this.checkAdjacentWays(nb, resultSet);
-                resultSet.addAll(newSet);
-            } else if (RouteUtils.isOnewayForPublicTransport(nb) == -1 && nb.firstNode() == lastNodeInRouteDirection) {
-                Set<Way> newSet = this.checkAdjacentWays(nb, resultSet);
+            int oneway = RouteUtils.isOnewayForPublicTransport(nb);
+            if ((oneway == 1 && nb.lastNode() == lastNodeInRouteDirection) ||
+                    (oneway == -1 && nb.firstNode() == lastNodeInRouteDirection)) {
+                Set<Way> newSet = checkAdjacentWays(nb, resultSet);
                 resultSet.addAll(newSet);
             }
-
         }
 
         return resultSet;
-
     }
 
     /**
@@ -442,9 +430,7 @@ public class WayChecker extends Checker {
 
         modifiedRelation.setMembers(modifiedRelationMembers);
 
-        ChangeCommand changeCommand = new ChangeCommand(originalRelation, modifiedRelation);
-
-        return changeCommand;
+        return new ChangeCommand(originalRelation, modifiedRelation);
     }
 
 }

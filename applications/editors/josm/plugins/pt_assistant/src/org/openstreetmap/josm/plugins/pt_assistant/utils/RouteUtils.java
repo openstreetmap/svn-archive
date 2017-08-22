@@ -19,7 +19,7 @@ import org.openstreetmap.josm.data.osm.Way;
 public final class RouteUtils {
 
     private static final String PT_VERSION_TAG = "public_transport:version";
-    private static final String TAG_ROUTE = "route";
+    public static final String TAG_ROUTE = "route";
     private RouteUtils() {
         // private constructor for util classes
     }

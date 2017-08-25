@@ -1,9 +1,9 @@
 // License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.utilsplugin2.search;
 
-import org.openstreetmap.josm.actions.search.PushbackTokenizer;
-import org.openstreetmap.josm.actions.search.SearchCompiler;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.data.osm.search.PushbackTokenizer;
+import org.openstreetmap.josm.data.osm.search.SearchCompiler;
 
 /**
  * TODO: remove this copied class and make it public in JOSM core

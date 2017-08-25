@@ -45,6 +45,7 @@ import org.openstreetmap.josm.actions.search.SearchAction;
 import org.openstreetmap.josm.data.SelectionChangedListener;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.OsmPrimitiveType;
+import org.openstreetmap.josm.data.osm.search.SearchMode;
 import org.openstreetmap.josm.data.preferences.ColorProperty;
 import org.openstreetmap.josm.gui.ExtendedDialog;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
@@ -312,7 +313,7 @@ public class MultiTagDialog extends ExtendedDialog implements SelectionChangedLi
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            SearchAction.search(tableModel.getSearchExpression(), SearchAction.SearchMode.replace);
+            SearchAction.search(tableModel.getSearchExpression(), SearchMode.replace);
         }
     }
 

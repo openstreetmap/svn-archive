@@ -3,13 +3,13 @@ package org.openstreetmap.josm.plugins.utilsplugin2.search;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
-import org.openstreetmap.josm.actions.search.PushbackTokenizer;
-import org.openstreetmap.josm.actions.search.SearchCompiler;
 import org.openstreetmap.josm.data.osm.Changeset;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.data.osm.search.SearchParseError;
+import org.openstreetmap.josm.data.osm.search.PushbackTokenizer;
 import org.openstreetmap.josm.data.osm.visitor.Visitor;
 
 /**
@@ -20,7 +20,7 @@ public class UsedInRelationsMatch extends RangeMatch {
         super(range);
     }
 
-    public UsedInRelationsMatch(PushbackTokenizer tokenizer) throws SearchCompiler.ParseError {
+    public UsedInRelationsMatch(PushbackTokenizer tokenizer) throws SearchParseError {
         this(tokenizer.readRange(tr("Range of referencing relation count")));
     }
 

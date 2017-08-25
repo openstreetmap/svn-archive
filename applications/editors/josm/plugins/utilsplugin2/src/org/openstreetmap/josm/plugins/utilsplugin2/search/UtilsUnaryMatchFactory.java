@@ -4,8 +4,9 @@ package org.openstreetmap.josm.plugins.utilsplugin2.search;
 import java.util.Arrays;
 import java.util.Collection;
 
-import org.openstreetmap.josm.actions.search.PushbackTokenizer;
-import org.openstreetmap.josm.actions.search.SearchCompiler;
+import org.openstreetmap.josm.data.osm.search.SearchParseError;
+import org.openstreetmap.josm.data.osm.search.PushbackTokenizer;
+import org.openstreetmap.josm.data.osm.search.SearchCompiler;
 
 public class UtilsUnaryMatchFactory implements SearchCompiler.UnaryMatchFactory {
 
@@ -14,7 +15,7 @@ public class UtilsUnaryMatchFactory implements SearchCompiler.UnaryMatchFactory 
 
     @Override
     public SearchCompiler.UnaryMatch get(String keyword, SearchCompiler.Match matchOperand, PushbackTokenizer tokenizer)
-            throws SearchCompiler.ParseError {
+            throws SearchParseError {
         if ("inside".equals(keyword)) {
             return new InsideMatch(matchOperand);
         } else if ("adjacent".equals(keyword)) {

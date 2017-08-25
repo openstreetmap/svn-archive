@@ -8,11 +8,11 @@ import java.util.LinkedList;
 import java.util.Objects;
 
 import org.openstreetmap.josm.command.Command;
+import org.openstreetmap.josm.data.osm.DefaultNameFormatter;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.OsmPrimitiveType;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.RelationMember;
-import org.openstreetmap.josm.gui.DefaultNameFormatter;
 
 /**
  * Change member in relation to another one

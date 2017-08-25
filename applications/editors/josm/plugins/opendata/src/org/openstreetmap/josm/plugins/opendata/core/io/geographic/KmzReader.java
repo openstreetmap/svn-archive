@@ -11,11 +11,11 @@ import java.util.zip.ZipInputStream;
 import javax.xml.stream.FactoryConfigurationError;
 import javax.xml.stream.XMLStreamException;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.io.AbstractReader;
 import org.openstreetmap.josm.io.IllegalDataException;
+import org.openstreetmap.josm.tools.Logging;
 
 public class KmzReader extends AbstractReader {
 
@@ -41,7 +41,7 @@ public class KmzReader extends AbstractReader {
         do {
             entry = zis.getNextEntry();
             if (entry == null) {
-                Main.warn("No KML file found");
+                Logging.warn("No KML file found");
                 return null;
             }
         } while (!entry.getName().toLowerCase().endsWith(".kml"));

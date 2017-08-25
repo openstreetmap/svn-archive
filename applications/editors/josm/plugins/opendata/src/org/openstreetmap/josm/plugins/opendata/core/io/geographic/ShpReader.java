@@ -48,6 +48,7 @@ import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.gui.util.GuiHelper;
 import org.openstreetmap.josm.plugins.opendata.core.datasets.AbstractDataSetHandler;
 import org.openstreetmap.josm.plugins.opendata.core.datasets.NationalHandlers;
+import org.openstreetmap.josm.tools.Logging;
 import org.openstreetmap.josm.tools.UserCancelException;
 
 import com.vividsolutions.jts.geom.Geometry;
@@ -92,17 +93,14 @@ public class ShpReader extends GeographicReader {
                 if (desc != null && desc.getCoordinateReferenceSystem() != null) {
                     crs = desc.getCoordinateReferenceSystem();
                 } else if (!GraphicsEnvironment.isHeadless()) {
-                    GuiHelper.runInEDTAndWait(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (0 == JOptionPane.showConfirmDialog(
-                                    parent,
-                                    tr("Unable to detect Coordinate Reference System.\nWould you like to fallback to ESPG:4326 (WGS 84) ?"),
-                                    tr("Warning: CRS not found"),
-                                    JOptionPane.YES_NO_CANCEL_OPTION
-                                    )) {
-                                crs = wgs84;
-                            }
+                    GuiHelper.runInEDTAndWait(() -> {
+                        if (0 == JOptionPane.showConfirmDialog(
+                                parent,
+                                tr("Unable to detect Coordinate Reference System.\nWould you like to fallback to ESPG:4326 (WGS 84) ?"),
+                                tr("Warning: CRS not found"),
+                                JOptionPane.YES_NO_CANCEL_OPTION
+                                )) {
+                            crs = wgs84;
                         }
                     });
                 } else {
@@ -125,7 +123,7 @@ public class ShpReader extends GeographicReader {
                 GeometryCollection mp = (GeometryCollection) geometry.getValue();
                 int nGeometries = mp.getNumGeometries();
                 if (nGeometries < 1) {
-                    Main.error("empty geometry collection found");
+                    Logging.error("empty geometry collection found");
                 } else {
                     Relation r = null;
                     Way w = null;
@@ -153,20 +151,20 @@ public class ShpReader extends GeographicReader {
                             // Some belgian data sets hold points into collections ?!
                             readNonGeometricAttributes(feature, createOrGetNode((Point) g));
                         } else {
-                            Main.error("unsupported geometry : "+g);
+                            Logging.error("unsupported geometry : "+g);
                         }
                     }
                     primitive = r != null ? r : w;
                 }
             } else {
                 // Debug unknown geometry
-                Main.debug("\ttype: "+geometry.getType());
-                Main.debug("\tbounds: "+geometry.getBounds());
-                Main.debug("\tdescriptor: "+desc);
-                Main.debug("\tname: "+geometry.getName());
-                Main.debug("\tvalue: "+geometry.getValue());
-                Main.debug("\tid: "+geometry.getIdentifier());
-                Main.debug("-------------------------------------------------------------");
+                Logging.debug("\ttype: "+geometry.getType());
+                Logging.debug("\tbounds: "+geometry.getBounds());
+                Logging.debug("\tdescriptor: "+desc);
+                Logging.debug("\tname: "+geometry.getName());
+                Logging.debug("\tvalue: "+geometry.getValue());
+                Logging.debug("\tid: "+geometry.getIdentifier());
+                Logging.debug("-------------------------------------------------------------");
             }
 
             if (primitive != null) {
@@ -195,12 +193,12 @@ public class ShpReader extends GeographicReader {
                         try (BufferedReader reader = Files.newBufferedReader(cpg, StandardCharsets.UTF_8)) {
                             charset = Charset.forName(reader.readLine());
                         } catch (IOException | UnsupportedCharsetException | IllegalCharsetNameException e) {
-                            Main.warn(e);
+                            Logging.warn(e);
                         }
                     }
                 }
                 if (charset != null) {
-                    Main.info("Using charset "+charset);
+                    Logging.info("Using charset "+charset);
                     params.put(ShapefileDataStoreFactory.DBFCHARSET.key, charset.name());
                 }
                 DataStore dataStore = new ShapefileDataStoreFactory().createDataStore(params);
@@ -248,10 +246,10 @@ public class ShpReader extends GeographicReader {
                 }
             }
         } catch (IOException e) {
-            Main.error(e);
+            Logging.error(e);
             throw e;
         } catch (Exception e) {
-            Main.error(e);
+            Logging.error(e);
             throw new IOException(e);
         }
         return ds;
@@ -276,7 +274,7 @@ public class ShpReader extends GeographicReader {
                 }
             }
         } catch (Exception e) {
-            Main.error(e);
+            Logging.error(e);
         }
     }
 

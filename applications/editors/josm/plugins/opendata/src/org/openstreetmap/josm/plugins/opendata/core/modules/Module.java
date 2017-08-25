@@ -3,7 +3,7 @@ package org.openstreetmap.josm.plugins.opendata.core.modules;
 
 import java.util.List;
 
-import org.openstreetmap.josm.gui.preferences.SourceProvider;
+import org.openstreetmap.josm.data.preferences.sources.SourceProvider;
 import org.openstreetmap.josm.plugins.opendata.core.datasets.AbstractDataSetHandler;
 
 public interface Module {

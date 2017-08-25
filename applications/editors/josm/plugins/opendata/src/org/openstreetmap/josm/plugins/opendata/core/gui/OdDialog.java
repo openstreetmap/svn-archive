@@ -16,8 +16,8 @@ import javax.swing.JTree;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeModel;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.SideButton;
 import org.openstreetmap.josm.gui.dialogs.ToggleDialog;
 import org.openstreetmap.josm.gui.layer.Layer;
@@ -49,7 +49,7 @@ public class OdDialog extends ToggleDialog implements ActiveLayerChangeListener 
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            if (Main.getLayerManager().getEditLayer() instanceof OdLayer) {
+            if (MainApplication.getLayerManager().getEditLayer() instanceof OdLayer) {
                 dataLayer.downloadOsmData();
                 diffButton.setEnabled(dataLayer.osmLayer != null);
             }
@@ -75,7 +75,7 @@ public class OdDialog extends ToggleDialog implements ActiveLayerChangeListener 
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            if (Main.getLayerManager().getEditLayer() instanceof OdLayer) {
+            if (MainApplication.getLayerManager().getEditLayer() instanceof OdLayer) {
                 dataLayer.makeDiff();
             }
         }
@@ -107,7 +107,7 @@ public class OdDialog extends ToggleDialog implements ActiveLayerChangeListener 
         this.toolsButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                if (Main.getLayerManager().getEditLayer() instanceof OdLayer) {
+                if (MainApplication.getLayerManager().getEditLayer() instanceof OdLayer) {
                     JPopupMenu popup = new JPopupMenu();
                     for (JosmAction tool : dataLayer.handler.getTools()) {
                         popup.add(tool);
@@ -124,7 +124,7 @@ public class OdDialog extends ToggleDialog implements ActiveLayerChangeListener 
 
         createLayout(new JTree(treeModel), true, buttons);
 
-        Main.getLayerManager().addActiveLayerChangeListener(this);
+        MainApplication.getLayerManager().addActiveLayerChangeListener(this);
     }
 
     private void disableAllButtons() {
@@ -135,7 +135,7 @@ public class OdDialog extends ToggleDialog implements ActiveLayerChangeListener 
 
     @Override
     public void activeOrEditLayerChanged(ActiveLayerChangeEvent e) {
-        Layer newLayer = Main.getLayerManager().getActiveLayer();
+        Layer newLayer = MainApplication.getLayerManager().getActiveLayer();
         if (newLayer instanceof OdLayer) {
             dataLayer = ((OdLayer) newLayer).getDataLayer();
         } else {
@@ -157,7 +157,7 @@ public class OdDialog extends ToggleDialog implements ActiveLayerChangeListener 
     @Override
     public void destroy() {
         super.destroy();
-        Main.getLayerManager().removeActiveLayerChangeListener(this);
+        MainApplication.getLayerManager().removeActiveLayerChangeListener(this);
     }
 
     public OdDataLayer getDataLayer() {

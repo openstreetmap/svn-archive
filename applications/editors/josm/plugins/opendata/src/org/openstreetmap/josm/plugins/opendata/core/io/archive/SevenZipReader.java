@@ -22,12 +22,12 @@ import org.j7zip.SevenZip.IInStream;
 import org.j7zip.SevenZip.MyRandomAccessFile;
 import org.j7zip.SevenZip.Archive.IInArchive;
 import org.j7zip.SevenZip.Archive.SevenZip.Handler;
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.io.IllegalDataException;
 import org.openstreetmap.josm.plugins.opendata.core.datasets.AbstractDataSetHandler;
 import org.openstreetmap.josm.plugins.opendata.core.util.OdUtils;
+import org.openstreetmap.josm.tools.Logging;
 
 public class SevenZipReader extends ArchiveReader {
 
@@ -43,7 +43,7 @@ public class SevenZipReader extends ArchiveReader {
         IInStream random = new MyRandomAccessFile(tmpFile.getPath(), "r");
         if (archive.Open(random) != 0) {
             String message = "Unable to open 7z archive: "+tmpFile.getPath();
-            Main.warn(message);
+            Logging.warn(message);
             random.close();
             if (!tmpFile.delete()) {
                 tmpFile.deleteOnExit();

@@ -1,7 +1,7 @@
 // License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.opendata.modules.fr.toulouse.datasets.associations;
 
-import org.apache.commons.lang3.text.WordUtils;
+import org.apache.commons.text.WordUtils;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.plugins.opendata.modules.fr.toulouse.datasets.ToulouseDataSetHandler;
@@ -13,7 +13,7 @@ public class Club3eAgeHandler extends ToulouseDataSetHandler {
         setWikiPage("Clubs du 3ème âge");
         setCategory(CAT_ASSOCIATIONS);
     }
-    
+
     @Override
     public boolean acceptsFilename(String filename) {
         return acceptsCsvKmzTabFilename(filename, "Club_3E_AGE");

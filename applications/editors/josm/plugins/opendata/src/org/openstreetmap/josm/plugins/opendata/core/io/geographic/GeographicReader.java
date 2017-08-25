@@ -61,6 +61,7 @@ import org.openstreetmap.josm.plugins.opendata.core.gui.DialogPrompter;
 import org.openstreetmap.josm.tools.ImageOverlay;
 import org.openstreetmap.josm.tools.ImageProvider;
 import org.openstreetmap.josm.tools.ImageProvider.ImageSizes;
+import org.openstreetmap.josm.tools.Logging;
 import org.openstreetmap.josm.tools.UserCancelException;
 import org.openstreetmap.josm.tools.Utils;
 
@@ -179,7 +180,7 @@ public abstract class GeographicReader extends AbstractReader {
                 try {
                     tempWay.addNode(createOrGetNode(ls.getPointN(i)));
                 } catch (TransformException | IllegalArgumentException e) {
-                    Main.error("Exception for " + ls + ": " + e.getClass().getName() + ": " + e.getMessage());
+                    Logging.error("Exception for " + ls + ": " + e.getClass().getName() + ": " + e.getMessage());
                 }
             }
             // Find possible duplicated ways
@@ -249,7 +250,7 @@ public abstract class GeographicReader extends AbstractReader {
     }
 
     private static void compareDebug(CoordinateReferenceSystem crs1, CoordinateReferenceSystem crs2) {
-        Main.debug("-- COMPARING "+crs1.getName()+" WITH "+crs2.getName()+" --");
+        Logging.debug("-- COMPARING "+crs1.getName()+" WITH "+crs2.getName()+" --");
         compareDebug("class", crs1.getClass(), crs2.getClass());
         CoordinateSystem cs1 = crs1.getCoordinateSystem();
         CoordinateSystem cs2 = crs2.getCoordinateSystem();
@@ -278,7 +279,7 @@ public abstract class GeographicReader extends AbstractReader {
                 compareDebug("conversionFromBase", adcrs1.getConversionFromBase(), adcrs2.getConversionFromBase());
             }
         }
-        Main.debug("-- COMPARING FINISHED --");
+        Logging.debug("-- COMPARING FINISHED --");
     }
 
     private static boolean compareDebug(String text, Object o1, Object o2) {
@@ -294,7 +295,7 @@ public abstract class GeographicReader extends AbstractReader {
     }
 
     private static boolean compareDebug(String text, boolean result, Object o1, Object o2) {
-        Main.debug(text + ": " + result + "("+o1+", "+o2+")");
+        Logging.debug(text + ": " + result + "("+o1+", "+o2+")");
         return result;
     }
 
@@ -308,7 +309,7 @@ public abstract class GeographicReader extends AbstractReader {
     }
 
     private static void loadEsriWkid() throws IOException {
-        Main.info("Loading ESRI WKID database...");
+        Logging.info("Loading ESRI WKID database...");
         try (InputStream in = getEsriWkidStream();
             JsonReader json = JsonProvider.provider().createReader(in)) {
             JsonObject root = json.readObject();
@@ -321,7 +322,7 @@ public abstract class GeographicReader extends AbstractReader {
                 esriWkid.put(labels.getString(i), wkids.getInt(i));
             }
         }
-        Main.info("ESRI WKID database loaded");
+        Logging.info("ESRI WKID database loaded");
     }
 
     private static Integer getEpsgCodeFromEsriWkid(String wkid) {
@@ -329,7 +330,7 @@ public abstract class GeographicReader extends AbstractReader {
             try {
                 loadEsriWkid();
             } catch (IOException e) {
-                Main.error(e);
+                Logging.error(e);
             }
         }
         return esriWkid.get(wkid);
@@ -351,7 +352,7 @@ public abstract class GeographicReader extends AbstractReader {
                             Utils.setObjectsAccessible(f);
                             f.set(crs, Collections.singleton(new NamedIdentifier(Citations.fromName("EPSG"), epsgCode.toString())));
                         } catch (ReflectiveOperationException | SecurityException e) {
-                            Main.error(e);
+                            Logging.error(e);
                         }
                     }
                 }
@@ -359,7 +360,7 @@ public abstract class GeographicReader extends AbstractReader {
             // Find math transformation
             transform = CRS.findMathTransform(crs, wgs84);
         } catch (OperationNotFoundException e) {
-            Main.info(crs.getName()+": "+e.getMessage()); // Bursa wolf parameters required.
+            Logging.info(crs.getName()+": "+e.getMessage()); // Bursa wolf parameters required.
 
             if (findSimiliarCrs) {
                 List<CoordinateReferenceSystem> candidates = new ArrayList<>();
@@ -373,7 +374,7 @@ public abstract class GeographicReader extends AbstractReader {
                             Hints.putSystemDefault(Hints.COMPARISON_TOLERANCE, Main.pref.getDouble(
                                     OdConstants.PREF_CRS_COMPARISON_TOLERANCE, OdConstants.DEFAULT_CRS_COMPARISON_TOLERANCE));
                             if (((AbstractCRS) candidate).equals((AbstractIdentifiedObject) crs, false)) {
-                                Main.info("Found a potential CRS: "+candidate.getName());
+                                Logging.info("Found a potential CRS: "+candidate.getName());
                                 candidates.add(candidate);
                             } else if (Main.pref.getBoolean(OdConstants.PREF_CRS_COMPARISON_DEBUG, false)) {
                                 compareDebug(crs, candidate);
@@ -381,12 +382,12 @@ public abstract class GeographicReader extends AbstractReader {
                             Hints.removeSystemDefault(Hints.COMPARISON_TOLERANCE);
                         }
                     } catch (FactoryException ex) {
-                        Main.trace(ex);
+                        Logging.trace(ex);
                     }
                 }
 
                 if (candidates.size() > 1) {
-                    Main.warn("Found several potential CRS: "+Arrays.toString(candidates.toArray()));
+                    Logging.warn("Found several potential CRS: "+Arrays.toString(candidates.toArray()));
                     // TODO: ask user which one to use
                 }
 
@@ -395,7 +396,7 @@ public abstract class GeographicReader extends AbstractReader {
                     try {
                         transform = CRS.findMathTransform(newCRS, wgs84, false);
                     } catch (OperationNotFoundException ex) {
-                        Main.warn(newCRS.getName()+": "+e.getMessage());
+                        Logging.warn(newCRS.getName()+": "+e.getMessage());
                     }
                 }
             }
@@ -406,7 +407,7 @@ public abstract class GeographicReader extends AbstractReader {
                     try {
                         transform = handler.findMathTransform(crs, wgs84, false);
                     } catch (OperationNotFoundException ex) {
-                        Main.warn(crs.getName()+": "+ex.getMessage()); // Bursa wolf parameters required.
+                        Logging.warn(crs.getName()+": "+ex.getMessage()); // Bursa wolf parameters required.
                     }
                 } else {
                     // ask default known handlers
@@ -416,7 +417,7 @@ public abstract class GeographicReader extends AbstractReader {
                                 break;
                             }
                         } catch (OperationNotFoundException ex) {
-                            Main.warn(crs.getName()+": "+ex.getMessage()); // Bursa wolf parameters required.
+                            Logging.warn(crs.getName()+": "+ex.getMessage()); // Bursa wolf parameters required.
                         }
                     }
                 }
@@ -426,7 +427,7 @@ public abstract class GeographicReader extends AbstractReader {
                         // User canceled
                         throw new UserCancelException();
                     }
-                    Main.info("Searching for a lenient math transform.");
+                    Logging.info("Searching for a lenient math transform.");
                     transform = CRS.findMathTransform(crs, wgs84, true);
                 }
             }

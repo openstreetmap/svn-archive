@@ -22,7 +22,6 @@ import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
@@ -34,6 +33,7 @@ import org.openstreetmap.josm.io.AbstractReader;
 import org.openstreetmap.josm.io.IllegalDataException;
 import org.openstreetmap.josm.plugins.opendata.core.datasets.AbstractDataSetHandler;
 import org.openstreetmap.josm.plugins.opendata.core.datasets.fr.FrenchConstants;
+import org.openstreetmap.josm.tools.Logging;
 import org.xml.sax.SAXException;
 
 import neptune.ChouetteAreaType;
@@ -102,17 +102,17 @@ public class NeptuneReader extends AbstractReader implements FrenchConstants {
                 Schema schema = schemaFactory.newSchema(schemaURL);
                 Validator validator = schema.newValidator();
                 validator.validate(xmlFile);
-                Main.info(xmlFile.getSystemId() + " is valid");
+                Logging.info(xmlFile.getSystemId() + " is valid");
                 return true;
             } catch (SAXException e) {
-                Main.error(xmlFile.getSystemId() + " is NOT valid");
-                Main.error("Reason: " + e.getLocalizedMessage());
+                Logging.error(xmlFile.getSystemId() + " is NOT valid");
+                Logging.error("Reason: " + e.getLocalizedMessage());
             } catch (IOException e) {
-                Main.error(xmlFile.getSystemId() + " is NOT valid");
-                Main.error("Reason: " + e.getLocalizedMessage());
+                Logging.error(xmlFile.getSystemId() + " is NOT valid");
+                Logging.error("Reason: " + e.getLocalizedMessage());
             }
         } catch (IOException e) {
-            Main.error(e);
+            Logging.error(e);
         }
 
         return false;
@@ -134,7 +134,7 @@ public class NeptuneReader extends AbstractReader implements FrenchConstants {
     private void linkTridentObjectToOsmPrimitive(TridentObjectType object, OsmPrimitive p) {
         p.put("ref:neptune", object.getObjectId());
         if (tridentObjects.put(object.getObjectId(), p) != null) {
-            Main.error("Trident object duplicated !!! : "+object.getObjectId());
+            Logging.error("Trident object duplicated !!! : "+object.getObjectId());
         }
     }
 
@@ -191,7 +191,7 @@ public class NeptuneReader extends AbstractReader implements FrenchConstants {
         case TROLLEYBUS:
             r.put(OSM_ROUTE_MASTER, OSM_TROLLEYBUS); break;
         default:
-            Main.warn("Unsupported transport mode: "+line.getTransportModeName());
+            Logging.warn("Unsupported transport mode: "+line.getTransportModeName());
         }
         r.put("ref", line.getNumber());
         r.put("name", line.getTransportModeName().value()+" "+line.getNumber()+": "+line.getName());
@@ -262,32 +262,32 @@ public class NeptuneReader extends AbstractReader implements FrenchConstants {
                     if (childId.contains("StopArea")) {
                         StopArea child = findStopArea(childId);
                         if (child == null) {
-                            Main.warn("Cannot find StopArea: "+childId);
+                            Logging.warn("Cannot find StopArea: "+childId);
                         } else {
                             if (child.getStopAreaExtension().getAreaType().equals(ChouetteAreaType.BOARDING_POSITION)) {
                                 for (String grandchildId : child.getContains()) {
                                     if (grandchildId.contains("StopPoint")) {
                                         StopPoint grandchild = findStopPoint(grandchildId);
                                         if (grandchild == null) {
-                                            Main.warn("Cannot find StopPoint: "+grandchildId);
+                                            Logging.warn("Cannot find StopPoint: "+grandchildId);
                                         } else {
                                             if (grandchild.getLongLatType().equals(LongLatTypeType.WGS_84)) {
                                                 Node platform = createPlatform(grandchild);
                                                 stopArea.addMember(new RelationMember(OSM_PLATFORM, platform));
                                             } else {
-                                                Main.warn("Unsupported long/lat type: "+grandchild.getLongLatType());
+                                                Logging.warn("Unsupported long/lat type: "+grandchild.getLongLatType());
                                             }
                                         }
                                     } else {
-                                        Main.warn("Unsupported grandchild: "+grandchildId);
+                                        Logging.warn("Unsupported grandchild: "+grandchildId);
                                     }
                                 }
                                 String centroidId = child.getCentroidOfArea();
                                 AreaCentroid areaCentroid = findAreaCentroid(centroidId);
                                 if (areaCentroid == null) {
-                                    Main.warn("Cannot find AreaCentroid: "+centroidId);
+                                    Logging.warn("Cannot find AreaCentroid: "+centroidId);
                                 } else if (!areaCentroid.getLongLatType().equals(LongLatTypeType.WGS_84)) {
-                                    Main.warn("Unsupported long/lat type: "+areaCentroid.getLongLatType());
+                                    Logging.warn("Unsupported long/lat type: "+areaCentroid.getLongLatType());
                                 } else {
                                     for (RelationMember member : stopArea.getMembers()) {
                                         // Fix stop coordinates if needed
@@ -297,27 +297,27 @@ public class NeptuneReader extends AbstractReader implements FrenchConstants {
                                     }
                                 }
                             } else {
-                                Main.warn("Unsupported child type: "+child.getStopAreaExtension().getAreaType());
+                                Logging.warn("Unsupported child type: "+child.getStopAreaExtension().getAreaType());
                             }
                         }
 
                     } else if (childId.contains("StopPoint")) {
                         StopPoint child = findStopPoint(childId);
                         if (child == null) {
-                            Main.warn("Cannot find StopPoint: "+childId);
+                            Logging.warn("Cannot find StopPoint: "+childId);
                         } else {
                             // TODO
-                            Main.info("TODO: handle StopPoint "+childId);
+                            Logging.info("TODO: handle StopPoint "+childId);
                         }
 
                     } else {
-                        Main.warn("Unsupported child: "+childId);
+                        Logging.warn("Unsupported child: "+childId);
                     }
                 }
             } else if (sa.getStopAreaExtension().getAreaType().equals(ChouetteAreaType.BOARDING_POSITION)) {
                 //Main.info("skipping StopArea with type "+sa.getStopAreaExtension().getAreaType()+": "+sa.getObjectId());
             } else {
-                Main.warn("Unsupported StopArea type: "+sa.getStopAreaExtension().getAreaType());
+                Logging.warn("Unsupported StopArea type: "+sa.getStopAreaExtension().getAreaType());
             }
         }
 
@@ -330,20 +330,20 @@ public class NeptuneReader extends AbstractReader implements FrenchConstants {
             for (String id : cr.getPtLinkId()) {
                 PTLinkType ptlink = findPtLink(id);
                 if (ptlink == null) {
-                    Main.warn("Cannot find PTLinkType: "+id);
+                    Logging.warn("Cannot find PTLinkType: "+id);
                 } else {
                     /*StopPoint start = findStopPoint(ptlink.getStartOfLink());
                     StopPoint end = findStopPoint(ptlink.getEndOfLink());*/
                     OsmPrimitive start = tridentObjects.get(ptlink.getStartOfLink());
                     OsmPrimitive end = tridentObjects.get(ptlink.getEndOfLink());
                     if (start == null) {
-                        Main.warn("Cannot find start StopPoint: "+ptlink.getStartOfLink());
+                        Logging.warn("Cannot find start StopPoint: "+ptlink.getStartOfLink());
                     } else if (start.get(OSM_PUBLIC_TRANSPORT).equals(OSM_STOP) || start.get(OSM_PUBLIC_TRANSPORT).equals(OSM_PLATFORM)) {
                         addStopToRoute(route, start);
                     }
 
                     if (end == null) {
-                        Main.warn("Cannot find end StopPoint: "+ptlink.getEndOfLink());
+                        Logging.warn("Cannot find end StopPoint: "+ptlink.getEndOfLink());
                     } else if (end.get(OSM_PUBLIC_TRANSPORT).equals(OSM_STOP) || end.get(OSM_PUBLIC_TRANSPORT).equals(OSM_PLATFORM)) {
                         addStopToRoute(route, end);
                     }

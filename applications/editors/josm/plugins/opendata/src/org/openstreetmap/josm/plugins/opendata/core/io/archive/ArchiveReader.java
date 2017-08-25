@@ -16,7 +16,6 @@ import java.util.Map;
 import javax.xml.stream.FactoryConfigurationError;
 import javax.xml.stream.XMLStreamException;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.io.AbstractReader;
@@ -38,6 +37,7 @@ import org.openstreetmap.josm.plugins.opendata.core.io.tabular.CsvReader;
 import org.openstreetmap.josm.plugins.opendata.core.io.tabular.OdsReader;
 import org.openstreetmap.josm.plugins.opendata.core.io.tabular.XlsReader;
 import org.openstreetmap.josm.plugins.opendata.core.util.OdUtils;
+import org.openstreetmap.josm.tools.Logging;
 
 public abstract class ArchiveReader extends AbstractReader {
 
@@ -122,7 +122,7 @@ public abstract class ArchiveReader extends AbstractReader {
                 ds = from;
             }
         } catch (IllegalArgumentException e) {
-            Main.error(e.getMessage());
+            Logging.error(e.getMessage());
         } finally {
             OdUtils.deleteDir(temp);
             if (progressMonitor != null) {
@@ -143,10 +143,10 @@ public abstract class ArchiveReader extends AbstractReader {
         if (f == null) {
             return null;
         } else if (!f.exists()) {
-            Main.warn("File does not exist: "+f.getPath());
+            Logging.warn("File does not exist: "+f.getPath());
             return null;
         } else {
-            Main.info("Parsing file "+f.getName());
+            Logging.info("Parsing file "+f.getName());
             DataSet from = null;
             FileInputStream in = new FileInputStream(f);
             ProgressMonitor instance = null;
@@ -175,10 +175,10 @@ public abstract class ArchiveReader extends AbstractReader {
                 if (OdPlugin.getInstance().xmlImporter.acceptFile(f)) {
                     from = NeptuneReader.parseDataSet(in, handler, instance);
                 } else {
-                    Main.warn("Unsupported XML file: "+f.getName());
+                    Logging.warn("Unsupported XML file: "+f.getName());
                 }
             } else {
-                Main.warn("Unsupported file extension: "+f.getName());
+                Logging.warn("Unsupported file extension: "+f.getName());
             }
             return from;
         }

@@ -12,10 +12,10 @@ import org.jopendocument.model.table.TableTable;
 import org.jopendocument.model.table.TableTableCell;
 import org.jopendocument.model.table.TableTableRow;
 import org.jopendocument.model.text.TextP;
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.plugins.opendata.core.datasets.AbstractDataSetHandler;
+import org.openstreetmap.josm.tools.Logging;
 
 public class OdsReader extends SpreadSheetReader {
 
@@ -23,9 +23,9 @@ public class OdsReader extends SpreadSheetReader {
     private TableTable sheet;
     private List<TableTableRow> rows;
     private int rowIndex;
-    
+
     private static final String SEP = "TextP:[";
-    
+
     public OdsReader(SpreadSheetHandler handler) {
         super(handler);
     }
@@ -38,7 +38,7 @@ public class OdsReader extends SpreadSheetReader {
     @Override
     protected void initResources(InputStream in, ProgressMonitor progressMonitor) throws IOException {
         try {
-            Main.info("Parsing ODS file");
+            Logging.info("Parsing ODS file");
             doc = new OdsDocument(in);
             List<OfficeSpreadsheet> spreadsheets = doc.getBody().getOfficeSpreadsheets();
             if (spreadsheets != null && spreadsheets.size() > 0) {
@@ -62,7 +62,7 @@ public class OdsReader extends SpreadSheetReader {
             TableTableRow row = rows.get(rowIndex++);
 
             if (rowIndex % 5000 == 0) {
-                Main.info("Lines read: "+rowIndex);
+                Logging.info("Lines read: "+rowIndex);
             }
 
             List<String> result = new ArrayList<>();
@@ -75,7 +75,7 @@ public class OdsReader extends SpreadSheetReader {
                     allFieldsBlank = false;
                 }
             }
-            
+
             return rowIndex == 1 || !allFieldsBlank ? result.toArray(new String[0]) : null;
         }
         return null;

@@ -32,6 +32,7 @@ import org.openstreetmap.josm.data.projection.proj.LambertConformalConic.Paramet
 import org.openstreetmap.josm.gui.preferences.projection.ProjectionChoice;
 import org.openstreetmap.josm.gui.preferences.projection.ProjectionPreference;
 import org.openstreetmap.josm.plugins.opendata.core.OdConstants;
+import org.openstreetmap.josm.tools.Logging;
 import org.openstreetmap.josm.tools.Pair;
 
 public class DefaultShpHandler extends DefaultGeographicHandler implements ShpHandler {
@@ -51,7 +52,7 @@ public class DefaultShpHandler extends DefaultGeographicHandler implements ShpHa
         boolean res = Math.abs(a - b) <= Main.pref.getDouble(
                 OdConstants.PREF_CRS_COMPARISON_TOLERANCE, OdConstants.DEFAULT_CRS_COMPARISON_TOLERANCE);
         if (Main.pref.getBoolean(OdConstants.PREF_CRS_COMPARISON_DEBUG, false)) {
-            Main.debug("Comparing "+a+" and "+b+" -> "+res);
+            Logging.debug("Comparing "+a+" and "+b+" -> "+res);
         }
         return res;
     }
@@ -104,7 +105,7 @@ public class DefaultShpHandler extends DefaultGeographicHandler implements ShpHa
                                         try {
                                             result.add(CRS.findMathTransform(CRS.decode(p.toCode()), targetCRS, lenient));
                                         } catch (FactoryException e) {
-                                            Main.error(e.getMessage());
+                                            Logging.error(e.getMessage());
                                         }
                                     }
                                 }
@@ -115,7 +116,7 @@ public class DefaultShpHandler extends DefaultGeographicHandler implements ShpHa
             }
             if (!result.isEmpty()) {
                 if (result.size() > 1) {
-                    Main.warn("Found multiple projections !"); // TODO: something
+                    Logging.warn("Found multiple projections !"); // TODO: something
                 }
                 return result.get(0);
             }

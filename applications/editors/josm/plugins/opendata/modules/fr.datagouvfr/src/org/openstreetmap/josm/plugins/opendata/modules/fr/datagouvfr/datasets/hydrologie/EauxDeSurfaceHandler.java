@@ -13,10 +13,10 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.plugins.opendata.core.io.archive.DefaultArchiveHandler;
 import org.openstreetmap.josm.plugins.opendata.modules.fr.datagouvfr.datasets.DataGouvDataSetHandler;
+import org.openstreetmap.josm.tools.Logging;
 import org.openstreetmap.josm.tools.Pair;
 
 public class EauxDeSurfaceHandler extends DataGouvDataSetHandler {
@@ -126,7 +126,7 @@ public class EauxDeSurfaceHandler extends DataGouvDataSetHandler {
                         }
                     }
                 } catch (Exception e) {
-                    Main.error(e);
+                    Logging.error(e);
                 }
             }
         }

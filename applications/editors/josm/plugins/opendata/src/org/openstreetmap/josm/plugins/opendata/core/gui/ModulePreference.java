@@ -41,6 +41,7 @@ import javax.swing.event.DocumentListener;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.HelpAwareOptionPane;
 import org.openstreetmap.josm.gui.HelpAwareOptionPane.ButtonSpec;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.help.HelpUtil;
 import org.openstreetmap.josm.gui.preferences.PreferenceTabbedPane;
 import org.openstreetmap.josm.gui.preferences.SubPreferenceSetting;
@@ -237,21 +238,15 @@ public class ModulePreference implements SubPreferenceSetting {
      */
     public void readLocalModuleInformation() {
         final ReadLocalModuleInformationTask task = new ReadLocalModuleInformationTask();
-        Runnable r = new Runnable() {
-            @Override
-            public void run() {
-                if (task.isCanceled()) return;
-                SwingUtilities.invokeLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        model.setAvailableModules(task.getAvailableModules());
-                        pnlModulePreferences.refreshView();
-                    }
-                });
-            }
+        Runnable r = () -> {
+            if (task.isCanceled()) return;
+            SwingUtilities.invokeLater(() -> {
+                model.setAvailableModules(task.getAvailableModules());
+                pnlModulePreferences.refreshView();
+            });
         };
-        Main.worker.submit(task);
-        Main.worker.submit(r);
+        MainApplication.worker.submit(task);
+        MainApplication.worker.submit(r);
     }
 
     /**
@@ -269,21 +264,15 @@ public class ModulePreference implements SubPreferenceSetting {
         @Override
         public void actionPerformed(ActionEvent e) {
             final ReadRemoteModuleInformationTask task = new ReadRemoteModuleInformationTask(OdPreferenceSetting.getModuleSites());
-            Runnable continuation = new Runnable() {
-                @Override
-                public void run() {
-                    if (task.isCanceled()) return;
-                    SwingUtilities.invokeLater(new Runnable() {
-                        @Override
-                        public void run() {
-                            model.updateAvailableModules(task.getAvailableModules());
-                            pnlModulePreferences.refreshView();
-                        }
-                    });
-                }
+            Runnable continuation = () -> {
+                if (task.isCanceled()) return;
+                SwingUtilities.invokeLater(() -> {
+                    model.updateAvailableModules(task.getAvailableModules());
+                    pnlModulePreferences.refreshView();
+                });
             };
-            Main.worker.submit(task);
-            Main.worker.submit(continuation);
+            MainApplication.worker.submit(task);
+            MainApplication.worker.submit(continuation);
         }
     }
 
@@ -318,18 +307,13 @@ public class ModulePreference implements SubPreferenceSetting {
         }
 
         protected void alertNothingToUpdate() {
-            GuiHelper.runInEDTAndWait(new Runnable() {
-                @Override
-                public void run() {
-                    HelpAwareOptionPane.showOptionDialog(
-                            pnlModulePreferences,
-                            tr("All installed modules are up to date. JOSM does not have to download newer versions."),
-                            tr("Modules up to date"),
-                            JOptionPane.INFORMATION_MESSAGE,
-                            null // FIXME: provide help context
-                            );
-                }
-            });
+            GuiHelper.runInEDTAndWait(() -> HelpAwareOptionPane.showOptionDialog(
+                    pnlModulePreferences,
+                    tr("All installed modules are up to date. JOSM does not have to download newer versions."),
+                    tr("Modules up to date"),
+                    JOptionPane.INFORMATION_MESSAGE,
+                    null // FIXME: provide help context
+                    ));
         }
 
         @Override
@@ -347,52 +331,46 @@ public class ModulePreference implements SubPreferenceSetting {
 
             // to be run asynchronously after the module download
             //
-            final Runnable moduleDownloadContinuation = new Runnable() {
-                @Override
-                public void run() {
-                    if (moduleDownloadTask.isCanceled())
-                        return;
-                    notifyDownloadResults(moduleDownloadTask);
-                    model.refreshLocalModuleVersion(moduleDownloadTask.getDownloadedModules());
-                    model.clearPendingModules(moduleDownloadTask.getDownloadedModules());
-                    GuiHelper.runInEDT(new Runnable() {
-                        @Override
-                        public void run() {
-                            pnlModulePreferences.refreshView();
-                        }
-                    });
-                }
+            final Runnable moduleDownloadContinuation = () -> {
+                if (moduleDownloadTask.isCanceled())
+                    return;
+                notifyDownloadResults(moduleDownloadTask);
+                model.refreshLocalModuleVersion(moduleDownloadTask.getDownloadedModules());
+                model.clearPendingModules(moduleDownloadTask.getDownloadedModules());
+                GuiHelper.runInEDT(new Runnable() {
+                    @Override
+                    public void run() {
+                        pnlModulePreferences.refreshView();
+                    }
+                });
             };
 
             // to be run asynchronously after the module list download
             //
-            final Runnable moduleInfoDownloadContinuation = new Runnable() {
-                @Override
-                public void run() {
-                    if (moduleInfoDownloadTask.isCanceled())
-                        return;
-                    model.updateAvailableModules(moduleInfoDownloadTask.getAvailableModules());
-                    // select modules which actually have to be updated
-                    //
-                    Iterator<ModuleInformation> it = toUpdate.iterator();
-                    while (it.hasNext()) {
-                        ModuleInformation pi = it.next();
-                        if (!pi.isUpdateRequired()) {
-                            it.remove();
-                        }
+            final Runnable moduleInfoDownloadContinuation = () -> {
+                if (moduleInfoDownloadTask.isCanceled())
+                    return;
+                model.updateAvailableModules(moduleInfoDownloadTask.getAvailableModules());
+                // select modules which actually have to be updated
+                //
+                Iterator<ModuleInformation> it = toUpdate.iterator();
+                while (it.hasNext()) {
+                    ModuleInformation pi = it.next();
+                    if (!pi.isUpdateRequired()) {
+                        it.remove();
                     }
-                    if (toUpdate.isEmpty()) {
-                        alertNothingToUpdate();
-                        return;
-                    }
-                    moduleDownloadTask.setModulesToDownload(toUpdate);
-                    Main.worker.submit(moduleDownloadTask);
-                    Main.worker.submit(moduleDownloadContinuation);
                 }
+                if (toUpdate.isEmpty()) {
+                    alertNothingToUpdate();
+                    return;
+                }
+                moduleDownloadTask.setModulesToDownload(toUpdate);
+                MainApplication.worker.submit(moduleDownloadTask);
+                MainApplication.worker.submit(moduleDownloadContinuation);
             };
 
-            Main.worker.submit(moduleInfoDownloadTask);
-            Main.worker.submit(moduleInfoDownloadContinuation);
+            MainApplication.worker.submit(moduleInfoDownloadTask);
+            MainApplication.worker.submit(moduleInfoDownloadContinuation);
         }
     }
 

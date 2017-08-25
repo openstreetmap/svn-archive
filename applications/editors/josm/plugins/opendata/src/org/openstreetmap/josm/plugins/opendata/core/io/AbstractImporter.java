@@ -9,7 +9,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.ExtensionFileFilter;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
@@ -21,17 +20,18 @@ import org.openstreetmap.josm.plugins.opendata.core.datasets.DataSetUpdater;
 import org.openstreetmap.josm.plugins.opendata.core.layers.OdDataLayer;
 import org.openstreetmap.josm.plugins.opendata.core.modules.Module;
 import org.openstreetmap.josm.plugins.opendata.core.modules.ModuleHandler;
+import org.openstreetmap.josm.tools.Logging;
 
 public abstract class AbstractImporter extends OsmImporter {
-    
+
     protected AbstractDataSetHandler handler;
-    
+
     protected File file;
-    
+
     public AbstractImporter(ExtensionFileFilter filter) {
         super(filter);
     }
-    
+
     protected final AbstractDataSetHandler findDataSetHandler(File file) {
         for (Module module : ModuleHandler.moduleList) {
             for (AbstractDataSetHandler dsh : module.getNewlyInstanciatedHandlers()) {
@@ -54,7 +54,7 @@ public abstract class AbstractImporter extends OsmImporter {
         try (InputStream in = new FileInputStream(file)) {
             importData(in, file, progressMonitor);
         } catch (FileNotFoundException e) {
-            Main.error(e);
+            Logging.error(e);
             throw new IOException(tr("File ''{0}'' does not exist.", file.getName()), e);
         }
     }

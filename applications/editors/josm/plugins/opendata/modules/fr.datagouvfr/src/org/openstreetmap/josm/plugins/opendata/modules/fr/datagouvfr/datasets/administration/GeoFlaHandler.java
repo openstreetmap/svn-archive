@@ -6,8 +6,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang3.text.WordUtils;
-import org.openstreetmap.josm.Main;
+import org.apache.commons.text.WordUtils;
 import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.DataSet;
@@ -16,6 +15,7 @@ import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.plugins.opendata.modules.fr.datagouvfr.datasets.DataGouvDataSetHandler;
+import org.openstreetmap.josm.tools.Logging;
 import org.openstreetmap.josm.tools.Pair;
 
 /**
@@ -23,9 +23,9 @@ import org.openstreetmap.josm.tools.Pair;
  * See http://professionnels.ign.fr/sites/default/files/DC_GEOFLA_2-0.pdf
  */
 public class GeoFlaHandler extends DataGouvDataSetHandler {
-    
+
     private static final String ADMIN_LEVEL = "admin_level";
-    
+
     /**
      * Constructs a new {@code GeoFlaHandler}.
      */
@@ -35,7 +35,7 @@ public class GeoFlaHandler extends DataGouvDataSetHandler {
         try {
             setLocalPortalURL("http://professionnels.ign.fr/geofla#tab-3");
         } catch (MalformedURLException e) {
-            Main.error(e);
+            Logging.error(e);
         }
     }
 
@@ -48,7 +48,7 @@ public class GeoFlaHandler extends DataGouvDataSetHandler {
     public boolean acceptsFilename(String filename) {
         return isDepartementFile(filename) || isCommuneFile(filename) || isCantonFile(filename) || isArrondissementFile(filename);
     }
-        
+
     protected boolean isDepartementFile(String filename) {
         return acceptsShpMifFilename(filename, "DEPARTEMENT") || acceptsShpMifFilename(filename, "LIMITE_DEPARTEMENT");
     }
@@ -95,9 +95,9 @@ public class GeoFlaHandler extends DataGouvDataSetHandler {
                     p.put(ADMIN_LEVEL, "4");
                 } else if (isDepartementFile(filename) || "Limite de département".equalsIgnoreCase(nature)) {
                     p.put(ADMIN_LEVEL, "6");
-                } else if(isArrondissementFile(filename) || "Limite d'arrondissement".equalsIgnoreCase(nature)) {
+                } else if (isArrondissementFile(filename) || "Limite d'arrondissement".equalsIgnoreCase(nature)) {
                     p.put(ADMIN_LEVEL, "7");
-                } else if(isCommuneFile(filename)) {
+                } else if (isCommuneFile(filename)) {
                     p.put(ADMIN_LEVEL, "8");
                 }
                 if (p instanceof Relation) {
@@ -134,7 +134,7 @@ public class GeoFlaHandler extends DataGouvDataSetHandler {
                                 chefLieu.put("place", "city");
                             }
                         } catch (NumberFormatException e) {
-                            Main.warn("Invalid population: "+population);
+                            Logging.warn("Invalid population: "+population);
                         }
                     }
                     if (p instanceof Relation) {
@@ -144,7 +144,7 @@ public class GeoFlaHandler extends DataGouvDataSetHandler {
             }
         }
     }
-    
+
     protected static boolean hasKeyIgnoreCase(OsmPrimitive p, String ... strings) {
         return getIgnoreCase(p, strings) != null;
     }
@@ -166,7 +166,7 @@ public class GeoFlaHandler extends DataGouvDataSetHandler {
             p.remove(s.toLowerCase());
         }
     }
-    
+
     protected static String getAndRemoveIgnoreCase(OsmPrimitive p, String ... strings) {
         String result = getIgnoreCase(p, strings);
         removeIgnoreCase(p, strings);
@@ -191,17 +191,17 @@ public class GeoFlaHandler extends DataGouvDataSetHandler {
                     } else if (dptName.equals("Mayotte")) {
                         dptCode = "976";
                     } else {
-                        Main.error("Unknown French department: "+dptName);
+                        Logging.error("Unknown French department: "+dptName);
                     }
                 }
                 return getLatLonByDptCode(new EastNorth(Double.parseDouble(x), Double.parseDouble(y)), dptCode, false);
             } catch (NumberFormatException e) {
-                Main.error(e);
+                Logging.error(e);
             }
         }
         return null;
     }
-    
+
     private Pair<String, URL> getGeoflaURL(String name, String urlSuffix) throws MalformedURLException {
         return new Pair<>(name, new URL("https://wxs-telechargement.ign.fr/oikr5jryiph0iwhw36053ptm/telechargement/inspire/"+urlSuffix));
     }
@@ -238,7 +238,7 @@ public class GeoFlaHandler extends DataGouvDataSetHandler {
             result.add(getGeoflaURL("2014 Départements Réunion",                  "GEOFLA_THEME-DEPARTEMENTS_2014_GEOFLA_2-0_DEPARTEMENT_SHP_RGR92UTM40S_D974_2014-12-05/file/GEOFLA_2-0_DEPARTEMENT_SHP_RGR92UTM40S_D974_2014-12-05.7z"));
             result.add(getGeoflaURL("2014 Départements Mayotte",                  "GEOFLA_THEME-DEPARTEMENTS_2014_GEOFLA_2-0_DEPARTEMENT_SHP_RGM04UTM38S_D976_2014-12-05/file/GEOFLA_2-0_DEPARTEMENT_SHP_RGM04UTM38S_D976_2014-12-05.7z"));
         } catch (MalformedURLException e) {
-            Main.error(e);
+            Logging.error(e);
         }
         return result;
     }

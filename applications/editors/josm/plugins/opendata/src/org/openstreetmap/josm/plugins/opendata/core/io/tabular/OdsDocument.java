@@ -10,7 +10,7 @@ import java.util.zip.ZipInputStream;
 
 import org.jopendocument.io.SaxContentUnmarshaller;
 import org.jopendocument.model.OpenDocument;
-import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.tools.Logging;
 import org.openstreetmap.josm.tools.Utils;
 import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
@@ -44,14 +44,14 @@ public class OdsDocument extends OpenDocument {
             while (!contentParsed && (entry = zis.getNextEntry()) != null) {
                 if (entry.getName().equals("content.xml")) {
                     rdr.setContentHandler(contentHandler);
-                    Main.info("Parsing content.xml");
+                    Logging.info("Parsing content.xml");
                     rdr.parse(getEntryInputSource(zis));
                     contentParsed = true;
                 }
             }
 
         } catch (Exception e) {
-            Main.error(e);
+            Logging.error(e);
         }
 
         init(contentHandler.getBody());

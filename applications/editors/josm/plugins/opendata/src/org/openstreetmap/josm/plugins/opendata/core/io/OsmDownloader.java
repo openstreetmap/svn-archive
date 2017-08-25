@@ -6,7 +6,9 @@ import java.net.URLEncoder;
 import java.util.Collection;
 
 import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.plugins.opendata.core.OdConstants;
+import org.openstreetmap.josm.tools.Logging;
 
 public final class OsmDownloader {
 
@@ -18,9 +20,9 @@ public final class OsmDownloader {
         if (oapiReq != null) {
             try {
                 String oapiServer = Main.pref.get(OdConstants.PREF_OAPI, OdConstants.DEFAULT_OAPI);
-                Main.info(oapiReq);
+                Logging.info(oapiReq);
                 String oapiReqEnc = URLEncoder.encode(oapiReq, OdConstants.UTF8);
-                Main.main.menu.openLocation.openUrl(false, oapiServer+"data="+oapiReqEnc);
+                MainApplication.getMenu().openLocation.openUrl(false, oapiServer+"data="+oapiReqEnc);
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             }
@@ -31,7 +33,7 @@ public final class OsmDownloader {
         if (xapiReqs != null) {
             String xapiServer = Main.pref.get(OdConstants.PREF_XAPI, OdConstants.DEFAULT_XAPI);
             for (String xapiReq : xapiReqs) {
-                Main.main.menu.openLocation.openUrl(false, xapiServer+xapiReq);
+                MainApplication.getMenu().openLocation.openUrl(false, xapiServer+xapiReq);
             }
         }
     }

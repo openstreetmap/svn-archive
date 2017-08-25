@@ -22,6 +22,7 @@ import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 
 import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.preferences.DefaultTabPreferenceSetting;
 import org.openstreetmap.josm.gui.preferences.PreferenceTabbedPane;
 import org.openstreetmap.josm.plugins.opendata.core.OdConstants;
@@ -150,57 +151,47 @@ public class OdPreferenceSetting extends DefaultTabPreferenceSetting {
 
         // this is the task which will run *after* the modules are downloaded
         //
-        final Runnable continuation = new Runnable() {
-            @Override
-            public void run() {
-                boolean requiresRestart = false;
-                if (task != null && !task.isCanceled()) {
-                    if (!task.getDownloadedModules().isEmpty()) {
-                        requiresRestart = true;
-                    }
+        final Runnable continuation = () -> {
+            boolean requiresRestart = false;
+            if (task != null && !task.isCanceled()) {
+                if (!task.getDownloadedModules().isEmpty()) {
+                    requiresRestart = true;
                 }
-
-                // build the messages. We only display one message, including the status
-                // information from the module download task and - if necessary - a hint
-                // to restart JOSM
-                //
-                StringBuilder sb = new StringBuilder();
-                sb.append("<html>");
-                if (task != null && !task.isCanceled()) {
-                    sb.append(ModulePreference.buildDownloadSummary(task));
-                }
-                if (requiresRestart) {
-                    sb.append(tr("You have to restart JOSM for some settings to take effect."));
-                }
-                sb.append("</html>");
-
-                // display the message, if necessary
-                //
-                if ((task != null && !task.isCanceled()) || requiresRestart) {
-                    JOptionPane.showMessageDialog(
-                            Main.parent,
-                            sb.toString(),
-                            tr("Warning"),
-                            JOptionPane.WARNING_MESSAGE
-                            );
-                }
-                Main.parent.repaint();
             }
+
+            // build the messages. We only display one message, including the status
+            // information from the module download task and - if necessary - a hint
+            // to restart JOSM
+            //
+            StringBuilder sb = new StringBuilder();
+            sb.append("<html>");
+            if (task != null && !task.isCanceled()) {
+                sb.append(ModulePreference.buildDownloadSummary(task));
+            }
+            if (requiresRestart) {
+                sb.append(tr("You have to restart JOSM for some settings to take effect."));
+            }
+            sb.append("</html>");
+
+            // display the message, if necessary
+            //
+            if ((task != null && !task.isCanceled()) || requiresRestart) {
+                JOptionPane.showMessageDialog(
+                        Main.parent,
+                        sb.toString(),
+                        tr("Warning"),
+                        JOptionPane.WARNING_MESSAGE
+                        );
+            }
+            Main.parent.repaint();
         };
 
         if (task != null) {
             // if we have to launch a module download task we do it asynchronously, followed
             // by the remaining "save preferences" activites run on the Swing EDT.
             //
-            Main.worker.submit(task);
-            Main.worker.submit(
-                    new Runnable() {
-                        @Override
-                        public void run() {
-                            SwingUtilities.invokeLater(continuation);
-                        }
-                    }
-                    );
+            MainApplication.worker.submit(task);
+            MainApplication.worker.submit(() -> SwingUtilities.invokeLater(continuation));
         } else {
             // no need for asynchronous activities. Simply run the remaining "save preference"
             // activities on this thread (we are already on the Swing EDT

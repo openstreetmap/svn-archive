@@ -14,7 +14,6 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.coor.CoordinateFormat;
 import org.openstreetmap.josm.data.projection.Projection;
@@ -23,6 +22,7 @@ import org.openstreetmap.josm.gui.preferences.projection.ProjectionChoice;
 import org.openstreetmap.josm.gui.preferences.projection.ProjectionPreference;
 import org.openstreetmap.josm.gui.preferences.projection.SubPrefsOptions;
 import org.openstreetmap.josm.tools.GBC;
+import org.openstreetmap.josm.tools.Logging;
 
 /**
  * Projection chooser, ugly copy-paste of ProjectionPreference.
@@ -150,7 +150,7 @@ public class ProjectionChooser extends ExtendedDialog {
     public Projection getProjection() {
         ProjectionChoice pc = (ProjectionChoice) projectionCombo.getSelectedItem();
         if (pc != null) {
-            Main.info("Chosen projection: "+pc+" ("+pc.getProjection()+")");
+            Logging.info("Chosen projection: "+pc+" ("+pc.getProjection()+")");
             return pc.getProjection();
         } else {
             return null;

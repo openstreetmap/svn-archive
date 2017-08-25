@@ -7,12 +7,12 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.plugins.opendata.core.OdConstants;
 import org.openstreetmap.josm.plugins.opendata.core.datasets.AbstractDataSetHandler;
 import org.openstreetmap.josm.plugins.opendata.core.util.OdUtils;
+import org.openstreetmap.josm.tools.Logging;
 
 public class CsvReader extends SpreadSheetReader {
 
@@ -43,7 +43,7 @@ public class CsvReader extends SpreadSheetReader {
         } catch (IllegalArgumentException e) {
             if (csvHandler == null || csvHandler.getSeparator() == null || ";".equals(csvHandler.getSeparator())) {
                 // If default sep has been used, try comma
-                Main.warn(e.getMessage());
+                Logging.warn(e.getMessage());
                 csvReader.sep = ",";
                 return csvReader.doParse(csvReader.splitLine(), instance);
             } else {
@@ -54,7 +54,7 @@ public class CsvReader extends SpreadSheetReader {
 
     @Override
     protected void initResources(InputStream in, ProgressMonitor progressMonitor) throws IOException {
-        Main.info("Parsing CSV file using charset "+charset+" and separator '"+sep+"'");
+        Logging.info("Parsing CSV file using charset "+charset+" and separator '"+sep+"'");
 
         reader = new BufferedReader(new InputStreamReader(in, charset));
     }

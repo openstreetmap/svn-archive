@@ -46,7 +46,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.logging.Level;
 
 import org.geotools.data.DataUtilities;
-import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.tools.Logging;
 
 /**
  * Ugly copy of ShpFiles class modified to fit MapInfo TAB needs.
@@ -176,7 +176,7 @@ public class TabFiles extends ShpFiles {
             try {
                 return files[0].toURI().toURL();
             } catch (MalformedURLException e) {
-                Main.error(e);
+                Logging.error(e);
             }
         }
         return null;
@@ -212,7 +212,7 @@ public class TabFiles extends ShpFiles {
             for (ShpFilesLocker locker : lockerList) {
                 StringBuilder sb = new StringBuilder("The following locker still has a lock: ");
                 sb.append(locker);
-                Main.error(sb.toString());
+                Logging.error(sb.toString());
             }
         }
     }

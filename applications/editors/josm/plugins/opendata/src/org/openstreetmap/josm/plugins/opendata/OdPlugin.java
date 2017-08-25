@@ -15,6 +15,7 @@ import javax.swing.JMenuItem;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.ExtensionFileFilter;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MainMenu;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.gui.MenuScroller;
@@ -74,25 +75,17 @@ public final class OdPlugin extends Plugin {
             ExtensionFileFilter.addImporterFirst(importer);
         }
 
-        menu = Main.main.menu.dataMenu;
+        menu = MainApplication.getMenu().dataMenu;
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                // Load modules in new thread
-                loadModules();
-                // Add menu in EDT
-                GuiHelper.runInEDT(new Runnable() {
-                    @Override
-                    public void run() {
-                        buildMenu();
-                    }
-                });
-            }
+        new Thread(() -> {
+            // Load modules in new thread
+            loadModules();
+            // Add menu in EDT
+            GuiHelper.runInEDT(() -> buildMenu());
         }).start();
 
         // Add download task
-        Main.main.menu.openLocation.addDownloadTaskClass(DownloadDataTask.class);
+        MainApplication.getMenu().openLocation.addDownloadTaskClass(DownloadDataTask.class);
         // Delete previous temp dirs if any (old plugin versions did not remove them correctly)
         OdUtils.deletePreviousTempDirs();
     }

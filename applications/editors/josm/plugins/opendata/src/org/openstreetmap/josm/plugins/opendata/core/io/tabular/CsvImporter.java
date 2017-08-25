@@ -9,13 +9,13 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.ExtensionFileFilter;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.io.IllegalDataException;
 import org.openstreetmap.josm.plugins.opendata.core.OdConstants;
 import org.openstreetmap.josm.plugins.opendata.core.io.AbstractImporter;
+import org.openstreetmap.josm.tools.Logging;
 
 public class CsvImporter extends AbstractImporter {
 
@@ -51,7 +51,7 @@ public class CsvImporter extends AbstractImporter {
                 String line = reader.readLine();
                 result = line != null && line.equalsIgnoreCase(COLOMBUS_HEADER);
             } catch (IOException e) {
-                Main.trace(e);
+                Logging.trace(e);
             }
         }
         return result;

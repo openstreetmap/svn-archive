@@ -16,7 +16,6 @@ import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 import java.util.Arrays;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
@@ -35,6 +34,7 @@ import org.openstreetmap.josm.plugins.opendata.core.datasets.AbstractDataSetHand
 import org.openstreetmap.josm.plugins.opendata.core.gui.ChooserLauncher;
 import org.openstreetmap.josm.plugins.opendata.core.io.InputStreamReaderUnbuffered;
 import org.openstreetmap.josm.plugins.opendata.core.util.OdUtils;
+import org.openstreetmap.josm.tools.Logging;
 
 /**
  * MapInfo Interchange File (MIF) reader, based on these specifications:<ul>
@@ -109,12 +109,12 @@ public final class MifReader extends AbstractMapInfoReader {
 
     private void parseUnique(String[] words) {
         // TODO
-        Main.warn("TODO Unique: "+line);
+        Logging.warn("TODO Unique: "+line);
     }
 
     private void parseIndex(String[] words) {
         // TODO
-        Main.warn("TODO Index: "+line);
+        Logging.warn("TODO Index: "+line);
     }
 
     private static String param(Param p, Object value) {
@@ -284,8 +284,8 @@ public final class MifReader extends AbstractMapInfoReader {
         parseBounds(words, index);
 
         if (josmProj == null) {
-            Main.info(line);
-            Main.info(params);
+            Logging.info(line);
+            Logging.info(params);
             josmProj = new CustomProjection(params);
         }
     }
@@ -311,8 +311,8 @@ public final class MifReader extends AbstractMapInfoReader {
             miny = Double.valueOf(words[index+2].substring(0, words[index+2].length()-1));
             maxx = Double.valueOf(words[index+3].substring(1));
             maxy = Double.valueOf(words[index+4].substring(0, words[index+4].length()-1));
-            if (Main.isTraceEnabled()) {
-                Main.trace(Arrays.toString(words) + " -> "+minx+","+miny+","+maxx+","+maxy);
+            if (Logging.isTraceEnabled()) {
+                Logging.trace(Arrays.toString(words) + " -> "+minx+","+miny+","+maxx+","+maxy);
             }
         }
     }
@@ -347,16 +347,16 @@ public final class MifReader extends AbstractMapInfoReader {
         case "layout":
         case "table":
         case "window":
-            Main.error("Unsupported CoordSys clause: "+line);
+            Logging.error("Unsupported CoordSys clause: "+line);
             break;
         default:
-            Main.error("Line "+lineNum+". Invalid CoordSys clause: "+line);
+            Logging.error("Line "+lineNum+". Invalid CoordSys clause: "+line);
         }
     }
 
     private void parseTransform(String[] words) {
         // TODO
-        Main.warn("TODO Transform: "+line);
+        Logging.warn("TODO Transform: "+line);
     }
 
     @Override
@@ -426,27 +426,27 @@ public final class MifReader extends AbstractMapInfoReader {
 
     private void parseArc(String[] words) {
         // TODO
-        Main.warn("TODO Arc: "+line);
+        Logging.warn("TODO Arc: "+line);
     }
 
     private void parseText(String[] words) {
         // TODO
-        Main.warn("TODO Text: "+line);
+        Logging.warn("TODO Text: "+line);
     }
 
     private void parseRect(String[] words) {
         // TODO
-        Main.warn("TODO Rect: "+line);
+        Logging.warn("TODO Rect: "+line);
     }
 
     private void parseRoundRect(String[] words) {
         // TODO
-        Main.warn("TODO RoundRect: "+line);
+        Logging.warn("TODO RoundRect: "+line);
     }
 
     private void parseEllipse(String[] words) {
         // TODO
-        Main.warn("TODO Ellipse: "+line);
+        Logging.warn("TODO Ellipse: "+line);
     }
 
     private void initializeReaders(InputStream in, File f, Charset cs, int bufSize) throws IOException {
@@ -579,7 +579,7 @@ public final class MifReader extends AbstractMapInfoReader {
             } else if (words[0].equalsIgnoreCase("Font")) {
                 // Do nothing
             } else if (!words[0].isEmpty()) {
-                Main.warn("Line "+lineNum+". Unknown clause in data section: "+line);
+                Logging.warn("Line "+lineNum+". Unknown clause in data section: "+line);
             }
         } else if (state == State.READING_COLUMNS && numcolumns > 0) {
             columns.add(words[0]);
@@ -587,7 +587,7 @@ public final class MifReader extends AbstractMapInfoReader {
                 state = State.UNKNOWN;
             }
         } else if (!line.isEmpty()) {
-            Main.warn("Line "+lineNum+". Unknown clause in header: "+line);
+            Logging.warn("Line "+lineNum+". Unknown clause in header: "+line);
         }
     }
 
@@ -597,7 +597,7 @@ public final class MifReader extends AbstractMapInfoReader {
             if (midLine != null) {
                 String[] fields = OdUtils.stripQuotesAndExtraChars(midLine.split(delimiter.toString()), delimiter.toString());
                 if (columns.size() != fields.length) {
-                    Main.error("Incoherence between MID and MIF files ("+columns.size()+" columns vs "+fields.length+" fields)");
+                    Logging.error("Incoherence between MID and MIF files ("+columns.size()+" columns vs "+fields.length+" fields)");
                 }
                 for (int i = 0; i < Math.min(columns.size(), fields.length); i++) {
                     String field = fields[i].trim();

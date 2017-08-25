@@ -9,11 +9,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang3.text.WordUtils;
-import org.openstreetmap.josm.Main;
+import org.apache.commons.text.WordUtils;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.plugins.opendata.core.OdConstants;
 import org.openstreetmap.josm.plugins.opendata.core.datasets.SimpleDataSetHandler;
+import org.openstreetmap.josm.tools.Logging;
 
 public abstract class NamesFrUtils {
 
@@ -40,7 +40,7 @@ public abstract class NamesFrUtils {
                 result.put(tab[0].replace("\"", ""), tab[1].replace("\"", ""));
             }
         } catch (IOException e) {
-            Main.error(e);
+            Logging.error(e);
         }
         return result;
     }
@@ -158,7 +158,7 @@ public abstract class NamesFrUtils {
         } else if (label.equals("Zone")) {
             return label;
         } else {
-            Main.warn("unknown street label: "+label);
+            Logging.warn("unknown street label: "+label);
             return label;
         }
     }

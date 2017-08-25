@@ -34,10 +34,10 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.data.preferences.sources.SourceProvider;
 import org.openstreetmap.josm.gui.HelpAwareOptionPane;
 import org.openstreetmap.josm.gui.HelpAwareOptionPane.ButtonSpec;
 import org.openstreetmap.josm.gui.help.HelpUtil;
-import org.openstreetmap.josm.gui.preferences.SourceProvider;
 import org.openstreetmap.josm.gui.preferences.map.MapPaintPreference;
 import org.openstreetmap.josm.gui.preferences.map.TaggingPresetPreference;
 import org.openstreetmap.josm.gui.progress.NullProgressMonitor;
@@ -49,6 +49,7 @@ import org.openstreetmap.josm.plugins.opendata.core.gui.OdPreferenceSetting;
 import org.openstreetmap.josm.tools.CheckParameterUtil;
 import org.openstreetmap.josm.tools.I18n;
 import org.openstreetmap.josm.tools.ImageProvider;
+import org.openstreetmap.josm.tools.Logging;
 
 /**
  * ModuleHandler is basically a collection of static utility functions used to bootstrap
@@ -137,20 +138,20 @@ public final class ModuleHandler {
         policy = policy.trim().toLowerCase();
         if (policy.equals("never")) {
             if ("opendata.modulemanager.time-based-update.policy".equals(togglePreferenceKey)) {
-                Main.info(tr("Skipping module update after elapsed update interval. Automatic update at startup is disabled."));
+                Logging.info(tr("Skipping module update after elapsed update interval. Automatic update at startup is disabled."));
             }
             return false;
         }
 
         if (policy.equals("always")) {
             if ("opendata.modulemanager.time-based-update.policy".equals(togglePreferenceKey)) {
-                Main.info(tr("Running module update after elapsed update interval. Automatic update at startup is disabled."));
+                Logging.info(tr("Running module update after elapsed update interval. Automatic update at startup is disabled."));
             }
             return true;
         }
 
         if (!policy.equals("ask")) {
-            Main.warn(tr("Unexpected value ''{0}'' for preference ''{1}''. Assuming value ''ask''.", policy, togglePreferenceKey));
+            Logging.warn(tr("Unexpected value ''{0}'' for preference ''{1}''. Assuming value ''ask''.", policy, togglePreferenceKey));
         }
         int ret = HelpAwareOptionPane.showOptionDialog(
                 parent,
@@ -230,7 +231,7 @@ public final class ModuleHandler {
         try {
             Class<? extends Module> klass = module.loadClass(moduleClassLoader);
             if (klass != null) {
-                Main.info(tr("loading module ''{0}'' (version {1})", module.name, module.localversion));
+                Logging.info(tr("loading module ''{0}'' (version {1})", module.name, module.localversion));
                 Module mod = module.load(klass);
                 if (moduleList.add(mod)) {
                     SourceProvider styleProvider = mod.getMapPaintStyleSourceProvider();
@@ -251,7 +252,7 @@ public final class ModuleHandler {
                         + "Delete from preferences?</html>", module.name, module.className);
             }
         } catch (Exception e) {
-            Main.error(e);
+            Logging.error(e);
         }
         if (msg != null && confirmDisableModule(parent, msg, module.name)) {
             Main.pref.removeFromCollection(OdConstants.PREF_MODULES, module.name);
@@ -313,7 +314,7 @@ public final class ModuleHandler {
             try {
                 future.get();
             } catch (ExecutionException | InterruptedException e) {
-                Main.error(e);
+                Logging.error(e);
                 return null;
             }
             HashMap<String, ModuleInformation> ret = new HashMap<>();
@@ -437,11 +438,11 @@ public final class ModuleHandler {
                 future.get();
                 modules = buildListOfModulesToLoad(parent);
             } catch (ExecutionException e) {
-                Main.warn(tr("Warning: failed to download module information list"));
+                Logging.warn(tr("Warning: failed to download module information list"));
                 e.printStackTrace();
                 // don't abort in case of error, continue with downloading modules below
             } catch (InterruptedException e) {
-                Main.warn(tr("Warning: failed to download module information list"));
+                Logging.warn(tr("Warning: failed to download module information list"));
                 e.printStackTrace();
                 // don't abort in case of error, continue with downloading modules below
             }
@@ -562,14 +563,14 @@ public final class ModuleHandler {
             // CHECKSTYLE.OFF: LineLength
             if (module.exists()) {
                 if (!module.delete() && dowarn) {
-                    Main.warn(tr("Warning: failed to delete outdated module ''{0}''.", module.toString()));
-                    Main.warn(tr("Warning: failed to install already downloaded module ''{0}''. Skipping installation. JOSM is still going to load the old module version.", moduleName));
+                    Logging.warn(tr("Warning: failed to delete outdated module ''{0}''.", module.toString()));
+                    Logging.warn(tr("Warning: failed to install already downloaded module ''{0}''. Skipping installation. JOSM is still going to load the old module version.", moduleName));
                     continue;
                 }
             }
             if (!updatedModule.renameTo(module) && dowarn) {
-                Main.warn(tr("Warning: failed to install module ''{0}'' from temporary download file ''{1}''. Renaming failed.", module.toString(), updatedModule.toString()));
-                Main.warn(tr("Warning: failed to install already downloaded module ''{0}''. Skipping installation. JOSM is still going to load the old module version.", moduleName));
+                Logging.warn(tr("Warning: failed to install module ''{0}'' from temporary download file ''{1}''. Renaming failed.", module.toString(), updatedModule.toString()));
+                Logging.warn(tr("Warning: failed to install already downloaded module ''{0}''. Skipping installation. JOSM is still going to load the old module version.", moduleName));
             }
             // CHECKSTYLE.ON: LineLength
         }

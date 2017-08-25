@@ -5,9 +5,9 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.TreeSet;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Relation;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.progress.NullProgressMonitor;
 import org.openstreetmap.josm.io.OsmTransferException;
 import org.openstreetmap.josm.plugins.opendata.core.io.NetworkReader;
@@ -108,9 +108,9 @@ public class ToulouseModule extends AbstractModule {
         handlers.add(AiresPietonnesHandler.class);
         handlers.add(PointsLumineuxHandler.class);
     }
-    
+
     public static final DataSet data = new DataSet();
-    
+
     private static final Collection<Relation> getBoundaries(int admin_level) {
         Collection<Relation> result = new TreeSet<>(new Comparator<Relation>() {
             @Override
@@ -126,7 +126,7 @@ public class ToulouseModule extends AbstractModule {
         });
         synchronized (data) {
             for (Relation r : data.getRelations()) {
-                if (r.hasTag("admin_level", Integer.toString(admin_level)) && 
+                if (r.hasTag("admin_level", Integer.toString(admin_level)) &&
                         (r.hasKey("name") || r.hasKey("ref") || r.hasKey("description"))) {
                     result.add(r);
                 }
@@ -134,13 +134,13 @@ public class ToulouseModule extends AbstractModule {
         }
         return result;
     }
-    
+
     public static final void downloadData() {
         synchronized (data) {
             if (data.allPrimitives().isEmpty()) {
                 for (final ToulouseDataSetHandler handler : new ToulouseDataSetHandler[]{
                         new CommuneHandler(), new SecteursHandler(), new QuartiersHandler()}) {
-                    Main.worker.submit(new Runnable() {
+                    MainApplication.worker.submit(new Runnable() {
                         @Override
                         public void run() {
                             try {
@@ -159,11 +159,11 @@ public class ToulouseModule extends AbstractModule {
             }
         }
     }
-    
+
     public static final Collection<Relation> getMunicipalities() {
         return getBoundaries(8);
     }
-    
+
     public static final Collection<Relation> getSectors() {
         return getBoundaries(10);
     }

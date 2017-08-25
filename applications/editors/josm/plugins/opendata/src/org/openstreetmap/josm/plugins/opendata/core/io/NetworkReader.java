@@ -10,7 +10,6 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.io.AbstractReader;
@@ -31,6 +30,7 @@ import org.openstreetmap.josm.plugins.opendata.core.io.tabular.CsvReader;
 import org.openstreetmap.josm.plugins.opendata.core.io.tabular.OdsReader;
 import org.openstreetmap.josm.plugins.opendata.core.io.tabular.XlsReader;
 import org.openstreetmap.josm.tools.CheckParameterUtil;
+import org.openstreetmap.josm.tools.Logging;
 
 public class NetworkReader extends OsmServerReader {
 
@@ -109,7 +109,7 @@ public class NetworkReader extends OsmServerReader {
         } else if (contentType.startsWith("tdyn/html")) {
             //return CsvReader.class;//FIXME, can also be .tar.gz
         } else {
-            Main.warn("Unsupported content type: "+contentType);
+            Logging.warn("Unsupported content type: "+contentType);
         }
         return null;
     }
@@ -189,7 +189,7 @@ public class NetworkReader extends OsmServerReader {
                     in.close();
                 }
             } catch (Exception e) {
-                Main.trace(e);
+                Logging.trace(e);
             }
         }
     }

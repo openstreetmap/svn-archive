@@ -28,6 +28,7 @@ import org.openstreetmap.josm.io.IllegalDataException;
 import org.openstreetmap.josm.plugins.opendata.core.OdConstants;
 import org.openstreetmap.josm.plugins.opendata.core.gui.ChooserLauncher;
 import org.openstreetmap.josm.plugins.opendata.core.io.ProjectionPatterns;
+import org.openstreetmap.josm.tools.Logging;
 
 public abstract class SpreadSheetReader extends AbstractReader {
 
@@ -93,7 +94,7 @@ public abstract class SpreadSheetReader extends AbstractReader {
     }
 
     public DataSet doParse(String[] header, ProgressMonitor progressMonitor) throws IOException {
-        Main.info("Header: "+Arrays.toString(header));
+        Logging.info("Header: "+Arrays.toString(header));
 
         Map<ProjectionPatterns, List<CoordinateColumns>> projColumns = new HashMap<>();
 
@@ -172,7 +173,7 @@ public abstract class SpreadSheetReader extends AbstractReader {
             message += c.proj + "("+header[c.xCol]+", "+header[c.yCol]+")";
         }
 
-        Main.info("Loading data using projections "+message);
+        Logging.info("Loading data using projections "+message);
 
         final DataSet ds = new DataSet();
         int lineNumber = 1;
@@ -193,8 +194,8 @@ public abstract class SpreadSheetReader extends AbstractReader {
             }
 
             if (fields.length > header.length) {
-                Main.warn(tr("Invalid file. Bad length on line {0}. Expected {1} columns, got {2}.", lineNumber, header.length, fields.length));
-                Main.warn(Arrays.toString(fields));
+                Logging.warn(tr("Invalid file. Bad length on line {0}. Expected {1} columns, got {2}.", lineNumber, header.length, fields.length));
+                Logging.warn(Arrays.toString(fields));
             }
 
             for (int i = 0; i < Math.min(fields.length, header.length); i++) {
@@ -234,7 +235,7 @@ public abstract class SpreadSheetReader extends AbstractReader {
                         }
                     }
                 } catch (ParseException e) {
-                    Main.warn("Parsing error on line "+lineNumber+": "+e.getMessage());
+                    Logging.warn("Parsing error on line "+lineNumber+": "+e.getMessage());
                 }
             }
             Node firstNode = null;
@@ -244,7 +245,7 @@ public abstract class SpreadSheetReader extends AbstractReader {
                 if (en.isValid()) {
                     n.setCoor(c.proj != null && !handlerOK ? c.proj.eastNorth2latlon(en) : handler != null ? handler.getCoor(en, fields) : null);
                 } else {
-                    Main.warn("Skipping line "+lineNumber+" because no valid coordinates have been found at columns "+c);
+                    Logging.warn("Skipping line "+lineNumber+" because no valid coordinates have been found at columns "+c);
                 }
                 if (n.getCoor() != null) {
                     if (firstNode == null) {

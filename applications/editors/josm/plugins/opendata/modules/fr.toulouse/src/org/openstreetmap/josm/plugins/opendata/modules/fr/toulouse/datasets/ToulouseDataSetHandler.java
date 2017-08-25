@@ -9,7 +9,6 @@ import java.net.MalformedURLException;
 import java.util.Collection;
 import java.util.Collections;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
@@ -26,6 +25,7 @@ import org.openstreetmap.josm.data.osm.event.PrimitivesRemovedEvent;
 import org.openstreetmap.josm.data.osm.event.RelationMembersChangedEvent;
 import org.openstreetmap.josm.data.osm.event.TagsChangedEvent;
 import org.openstreetmap.josm.data.osm.event.WayNodesChangedEvent;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.plugins.opendata.OdPlugin;
 import org.openstreetmap.josm.plugins.opendata.core.datasets.DataSetCategory;
 import org.openstreetmap.josm.plugins.opendata.core.datasets.fr.FrenchDataSetHandler;
@@ -141,7 +141,7 @@ public abstract class ToulouseDataSetHandler extends FrenchDataSetHandler implem
         @Override
         public void actionPerformed(ActionEvent e) {
             final String baseName = OdPlugin.getInstance().getDialog().getDataLayer().getName();
-            final DataSet baseDs = Main.getLayerManager().getEditDataSet();
+            final DataSet baseDs = MainApplication.getLayerManager().getEditDataSet();
             for (OsmPrimitive boundary : getBoundaries()) {
                 DataSet data = new DataSet();
                 for (OsmPrimitive p : NodeWayUtils.selectAllInside(Collections.singleton(boundary), baseDs)) {
@@ -161,7 +161,7 @@ public abstract class ToulouseDataSetHandler extends FrenchDataSetHandler implem
                     if (name == null || name.isEmpty()) {
                         name = boundary.get("description");
                     }
-                    Main.getLayerManager().addLayer(new OdDataLayer(data, baseName+"/"+name, null, ToulouseDataSetHandler.this));
+                    MainApplication.getLayerManager().addLayer(new OdDataLayer(data, baseName+"/"+name, null, ToulouseDataSetHandler.this));
                 }
             }
         }

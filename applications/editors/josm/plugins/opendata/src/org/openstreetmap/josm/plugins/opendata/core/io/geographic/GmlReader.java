@@ -29,6 +29,7 @@ import org.openstreetmap.josm.io.UTFInputStreamReader;
 import org.openstreetmap.josm.plugins.opendata.core.OdConstants;
 import org.openstreetmap.josm.plugins.opendata.core.datasets.AbstractDataSetHandler;
 import org.openstreetmap.josm.plugins.opendata.core.datasets.NationalHandlers;
+import org.openstreetmap.josm.tools.Logging;
 import org.openstreetmap.josm.tools.UserCancelException;
 
 import com.vividsolutions.jts.geom.Coordinate;
@@ -108,7 +109,7 @@ public class GmlReader extends GeographicReader {
     }
 
     private void findCRS(String srs) throws NoSuchAuthorityCodeException, FactoryException {
-        Main.info("Finding CRS for "+srs);
+        Logging.info("Finding CRS for "+srs);
         if (gmlHandler != null) {
             crs = gmlHandler.getCrsFor(srs);
         } else {

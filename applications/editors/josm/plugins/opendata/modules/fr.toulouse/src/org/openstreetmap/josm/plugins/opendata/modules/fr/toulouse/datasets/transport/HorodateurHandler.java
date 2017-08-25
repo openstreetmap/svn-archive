@@ -4,7 +4,7 @@ package org.openstreetmap.josm.plugins.opendata.modules.fr.toulouse.datasets.tra
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.commons.lang3.text.WordUtils;
+import org.apache.commons.text.WordUtils;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.plugins.opendata.modules.fr.toulouse.datasets.ToulouseDataSetHandler;
@@ -22,7 +22,7 @@ public class HorodateurHandler extends ToulouseDataSetHandler {
     public boolean acceptsFilename(String filename) {
         return acceptsCsvKmzTabFilename(filename, "Horodateur");
     }
-    
+
     private String parseHour(String hour) {
         String s = hour.replaceFirst("[hH]", ":");
         if (s.endsWith(":")) {
@@ -30,7 +30,7 @@ public class HorodateurHandler extends ToulouseDataSetHandler {
         }
         return s;
     }
-    
+
     protected String parseOpeningHours(String horaire) {
         final String hour = "\\p{Digit}{1,2}[hH]\\p{Digit}{0,2}";
         final String sep  = "[ -/]+";

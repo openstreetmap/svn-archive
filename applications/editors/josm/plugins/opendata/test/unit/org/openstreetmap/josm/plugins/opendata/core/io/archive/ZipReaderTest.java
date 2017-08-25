@@ -9,10 +9,10 @@ import java.util.Map.Entry;
 
 import org.junit.Rule;
 import org.junit.Test;
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.plugins.opendata.core.io.NonRegFunctionalTests;
 import org.openstreetmap.josm.testutils.JOSMTestRules;
+import org.openstreetmap.josm.tools.Logging;
 
 /**
  * Unit tests of {@link ZipReader} class.
@@ -33,11 +33,11 @@ public class ZipReaderTest {
     public void testReadZipFiles() throws Exception {
         for (Path p : NonRegFunctionalTests.listDataFiles("zip")) {
             File zipfile = p.toFile();
-            Main.info("Testing reading file "+zipfile.getPath());
+            Logging.info("Testing reading file "+zipfile.getPath());
             try (InputStream is = new FileInputStream(zipfile)) {
                 for (Entry<File, DataSet> entry : ZipReader.parseDataSets(is, null, null, false).entrySet()) {
                     String name = entry.getKey().getName();
-                    Main.info("Checking dataset for entry "+name);
+                    Logging.info("Checking dataset for entry "+name);
                     NonRegFunctionalTests.testGeneric(zipfile.getName()+"/"+name, entry.getValue());
                 }
             }

@@ -1,7 +1,7 @@
 // License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.opendata.modules.fr.toulouse.datasets.services;
 
-import org.apache.commons.lang3.text.WordUtils;
+import org.apache.commons.text.WordUtils;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.plugins.opendata.modules.fr.toulouse.datasets.ToulouseDataSetHandler;
@@ -28,18 +28,18 @@ public class MarchesPleinVentHandler extends ToulouseDataSetHandler {
             replace(n, "Nom", "name", new ValueReplacer() {
                 @Override public String replace(String value) {
                     return WordUtils.capitalizeFully(value).replace(", ", "").replace("MarchÉ", "Marché");
-                }});
+                } });
             n.put("amenity", "marketplace");
             replace(n, "Type", "note");
             String hours = "";
             for (String[] day : new String[][]{
-                    new String[]{"Lundi","Mo"},
-                    new String[]{"mardi","Tu"},
-                    new String[]{"mercredi","We"},
-                    new String[]{"jeudi","Th"},
-                    new String[]{"vendredi","Fr"},
-                    new String[]{"samedi","Sa"},
-                    new String[]{"dimanche","Su"}
+                    new String[]{"Lundi", "Mo"},
+                    new String[]{"mardi", "Tu"},
+                    new String[]{"mercredi", "We"},
+                    new String[]{"jeudi", "Th"},
+                    new String[]{"vendredi", "Fr"},
+                    new String[]{"samedi", "Sa"},
+                    new String[]{"dimanche", "Su"}
             }) {
                 String value = n.get(day[0]);
                 if (value != null) {

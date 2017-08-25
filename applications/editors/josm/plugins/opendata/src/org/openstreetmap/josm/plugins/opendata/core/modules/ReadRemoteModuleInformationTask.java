@@ -24,7 +24,6 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.Version;
 import org.openstreetmap.josm.gui.PleaseWaitRunnable;
 import org.openstreetmap.josm.gui.progress.NullProgressMonitor;
@@ -32,6 +31,7 @@ import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.io.OsmTransferException;
 import org.openstreetmap.josm.plugins.opendata.OdPlugin;
 import org.openstreetmap.josm.tools.ImageProvider;
+import org.openstreetmap.josm.tools.Logging;
 import org.xml.sax.SAXException;
 
 /**
@@ -250,7 +250,7 @@ public class ReadRemoteModuleInformationTask extends PleaseWaitRunnable {
             File moduleDir = OdPlugin.getInstance().getModulesDirectory();
             if (!moduleDir.exists()) {
                 if (!moduleDir.mkdirs()) {
-                    Main.warn(tr("Warning: failed to create module directory ''{0}''. Cannot cache module list from module site ''{1}''.",
+                    Logging.warn(tr("Warning: failed to create module directory ''{0}''. Cannot cache module list from module site ''{1}''.",
                             moduleDir.toString(), site));
                 }
             }
@@ -261,7 +261,7 @@ public class ReadRemoteModuleInformationTask extends PleaseWaitRunnable {
             }
         } catch (IOException e) {
             // just failed to write the cache file. No big deal, but log the exception anyway
-            Main.warn(e);
+            Logging.warn(e);
         }
     }
 
@@ -277,10 +277,10 @@ public class ReadRemoteModuleInformationTask extends PleaseWaitRunnable {
             InputStream in = new ByteArrayInputStream(doc.getBytes("UTF-8"));
             availableModules.addAll(new ModuleListParser().parse(in));
         } catch (UnsupportedEncodingException e) {
-            Main.error(tr("Failed to parse module list document from site ''{0}''. Skipping site. Exception was: {1}", site, e.toString()));
+            Logging.error(tr("Failed to parse module list document from site ''{0}''. Skipping site. Exception was: {1}", site, e.toString()));
             e.printStackTrace();
         } catch (ModuleListParseException e) {
-            Main.error(tr("Failed to parse module list document from site ''{0}''. Skipping site. Exception was: {1}", site, e.toString()));
+            Logging.error(tr("Failed to parse module list document from site ''{0}''. Skipping site. Exception was: {1}", site, e.toString()));
             e.printStackTrace();
         }
     }

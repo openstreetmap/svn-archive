@@ -30,6 +30,7 @@ import org.openstreetmap.josm.plugins.opendata.core.util.OdUtils;
 import org.openstreetmap.josm.tools.ImageProvider;
 import org.openstreetmap.josm.tools.ImageProvider.ImageSizes;
 import org.openstreetmap.josm.tools.LanguageInfo;
+import org.openstreetmap.josm.tools.Logging;
 
 /**
  * Encapsulate general information about a module. This information is available
@@ -150,7 +151,7 @@ public class ModuleInformation {
                 @SuppressWarnings("unused")
                 URL url = new URL(s);
             } catch (MalformedURLException e) {
-                Main.error(tr("Invalid URL ''{0}'' in module {1}", s, name));
+                Logging.error(tr("Invalid URL ''{0}'' in module {1}", s, name));
                 s = null;
             }
         }
@@ -174,7 +175,7 @@ public class ModuleInformation {
                 icon = extractIcon(iconPath, OdPlugin.getInstance().getPluginInformation().file, true);
             }
             if (icon == null) {
-                Main.error("Unable to load module icon: "+iconPath);
+                Logging.error("Unable to load module icon: "+iconPath);
             }
         }
 
@@ -251,7 +252,7 @@ public class ModuleInformation {
         try {
             return f.toURI().toURL();
         } catch (MalformedURLException ex) {
-            Main.warn(ex.getMessage());
+            Logging.warn(ex.getMessage());
             return null;
         }
     }

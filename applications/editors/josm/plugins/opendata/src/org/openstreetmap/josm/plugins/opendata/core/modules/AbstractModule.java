@@ -9,13 +9,13 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.gui.preferences.SourceEditor.ExtendedSourceEntry;
-import org.openstreetmap.josm.gui.preferences.SourceEntry;
-import org.openstreetmap.josm.gui.preferences.SourceProvider;
+import org.openstreetmap.josm.data.preferences.sources.ExtendedSourceEntry;
+import org.openstreetmap.josm.data.preferences.sources.SourceEntry;
+import org.openstreetmap.josm.data.preferences.sources.SourceProvider;
 import org.openstreetmap.josm.plugins.opendata.OdPlugin;
 import org.openstreetmap.josm.plugins.opendata.core.OdConstants;
 import org.openstreetmap.josm.plugins.opendata.core.datasets.AbstractDataSetHandler;
+import org.openstreetmap.josm.tools.Logging;
 
 public abstract class AbstractModule implements Module {
 
@@ -61,8 +61,8 @@ public abstract class AbstractModule implements Module {
                         src.url.substring(OdConstants.PROTO_RSRC.length()-1));
                      FileOutputStream out = new FileOutputStream(path)) {
                     String dir = path.substring(0, path.lastIndexOf(File.separatorChar));
-                    if (new File(dir).mkdirs() && Main.isDebugEnabled()) {
-                        Main.debug("Created directory: "+dir);
+                    if (new File(dir).mkdirs() && Logging.isDebugEnabled()) {
+                        Logging.debug("Created directory: "+dir);
                     }
                     while ((n = in.read(buffer)) > 0) {
                         out.write(buffer, 0, n);
@@ -71,7 +71,7 @@ public abstract class AbstractModule implements Module {
                     src.url = OdConstants.PROTO_FILE+path;
                     sources.add(src);
                 } catch (IOException e) {
-                    Main.error(e.getMessage());
+                    Logging.error(e.getMessage());
                 }
             }
         }
@@ -107,7 +107,7 @@ public abstract class AbstractModule implements Module {
                 try {
                     result.add(handlerClass.getConstructor().newInstance());
                 } catch (ReflectiveOperationException | IllegalArgumentException | SecurityException t) {
-                    Main.error(t, "Cannot instantiate "+handlerClass+" because of "+t.getClass().getName());
+                    Logging.log(Logging.LEVEL_ERROR, "Cannot instantiate "+handlerClass+" because of "+t.getClass().getName(), t);
                 }
             }
         }

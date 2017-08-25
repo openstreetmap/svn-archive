@@ -13,11 +13,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.PleaseWaitRunnable;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.io.OsmTransferException;
 import org.openstreetmap.josm.tools.ImageProvider;
+import org.openstreetmap.josm.tools.Logging;
 import org.xml.sax.SAXException;
 
 /**
@@ -93,7 +93,7 @@ public class ReadLocalModuleInformationTask extends PleaseWaitRunnable {
             try {
                 processLocalModuleInformationFile(f);
             } catch (ModuleListParseException e) {
-                Main.warn(tr("Warning: Failed to scan file ''{0}'' for module information. Skipping.", fname));
+                Logging.warn(tr("Warning: Failed to scan file ''{0}'' for module information. Skipping.", fname));
                 e.printStackTrace();
             }
             monitor.worked(1);
@@ -154,7 +154,7 @@ public class ReadLocalModuleInformationTask extends PleaseWaitRunnable {
                     processJarFile(f, moduleName);
                 }
             } catch (ModuleException e) {
-                Main.warn(tr("Warning: Failed to scan file ''{0}'' for module information. Skipping.", fname));
+                Logging.warn(tr("Warning: Failed to scan file ''{0}'' for module information. Skipping.", fname));
                 e.printStackTrace();
             }
             monitor.worked(1);

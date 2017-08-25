@@ -1,7 +1,7 @@
 // License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.opendata.modules.fr.toulouse.datasets.enfance;
 
-import org.apache.commons.lang3.text.WordUtils;
+import org.apache.commons.text.WordUtils;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.plugins.opendata.modules.fr.toulouse.datasets.ToulouseDataSetHandler;
@@ -12,7 +12,7 @@ public class EcoleElementaireHandler extends ToulouseDataSetHandler {
         super(12474, "amenity=school");
         setWikiPage("Écoles élémentaires publiques");
         setCategory(CAT_ENFANCE);
-        for (String forbidden : new String[]{"maternelle","primaire","collège","lycée","secondaire"}) {
+        for (String forbidden : new String[]{"maternelle", "primaire", "collège", "lycée", "secondaire"}) {
             addForbiddenTag("school:FR="+forbidden);
         }
     }

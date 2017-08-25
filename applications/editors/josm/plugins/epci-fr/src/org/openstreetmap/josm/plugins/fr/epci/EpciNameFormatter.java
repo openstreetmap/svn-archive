@@ -4,7 +4,7 @@ package org.openstreetmap.josm.plugins.fr.epci;
 import org.openstreetmap.josm.data.osm.INode;
 import org.openstreetmap.josm.data.osm.IRelation;
 import org.openstreetmap.josm.data.osm.IWay;
-import org.openstreetmap.josm.gui.NameFormatterHook;
+import org.openstreetmap.josm.data.osm.NameFormatterHook;
 
 /**
  * @author Don-vip

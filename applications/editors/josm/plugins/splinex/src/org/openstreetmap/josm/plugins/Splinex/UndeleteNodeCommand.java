@@ -6,9 +6,9 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 import java.util.Collection;
 
 import org.openstreetmap.josm.command.Command;
+import org.openstreetmap.josm.data.osm.DefaultNameFormatter;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
-import org.openstreetmap.josm.gui.DefaultNameFormatter;
 
 class UndeleteNodeCommand extends Command {
     Node n;

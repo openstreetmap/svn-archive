@@ -27,11 +27,12 @@ import org.openstreetmap.josm.command.AddCommand;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.SequenceCommand;
 import org.openstreetmap.josm.data.coor.EastNorth;
+import org.openstreetmap.josm.data.osm.DefaultNameFormatter;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.data.preferences.IntegerProperty;
-import org.openstreetmap.josm.gui.DefaultNameFormatter;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.NavigatableComponent;
 import org.openstreetmap.josm.tools.ImageProvider;
@@ -272,7 +273,7 @@ public class Spline {
         }
         if (!cmds.isEmpty())
             cmds.add(new AddCommand(w));
-        Main.main.undoRedo.add(new FinishSplineCommand(cmds));
+        MainApplication.undoRedo.add(new FinishSplineCommand(cmds));
     }
 
     /**

@@ -2,6 +2,7 @@
 package org.openstreetmap.josm.plugins.Splinex;
 
 import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.tools.Logging;
 
 public class SplineHitTest {
     double x, y, dist, distSq;
@@ -28,8 +29,8 @@ public class SplineHitTest {
         return checkCurve(x1, y1, x2, y2, x3, y3, x4, y4, 32);
     }
     public boolean checkCurve(double x1, double y1, double x2, double y2, double x3, double y3, double x4, double y4, int depth) {
-        if (Main.isDebugEnabled()) {
-            Main.debug("checkCurve {0} {1} {2} {3} {4} {5} {6} {7}", x1, y1, x2, y2, x3, y3, x4, y4);
+        if (Logging.isDebugEnabled()) {
+            Logging.debug("checkCurve {0} {1} {2} {3} {4} {5} {6} {7}", x1, y1, x2, y2, x3, y3, x4, y4);
         }
         //chkCnt++;
         double dx = x4 - x1;

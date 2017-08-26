@@ -1,8 +1,8 @@
 // License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.Splinex;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.IconToggleButton;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.gui.preferences.PreferenceSetting;
 import org.openstreetmap.josm.plugins.Plugin;
@@ -25,7 +25,8 @@ public class SplinexPlugin extends Plugin {
     @Override
     public void mapFrameInitialized(MapFrame oldFrame, MapFrame newFrame) {
         if (oldFrame == null && newFrame != null) { // map frame added
-            Main.map.addMapMode(new IconToggleButton(new DrawSplineAction(Main.map)));
+            MapFrame map = MainApplication.getMap();
+            map.addMapMode(new IconToggleButton(new DrawSplineAction(map)));
         }
     }
 

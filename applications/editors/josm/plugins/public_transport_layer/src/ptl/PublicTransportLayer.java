@@ -14,7 +14,6 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.Icon;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.osm.Node;
@@ -24,6 +23,7 @@ import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
 import org.openstreetmap.josm.data.osm.visitor.paint.StyledMapRenderer;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.gui.mappaint.Cascade;
@@ -34,6 +34,7 @@ import org.openstreetmap.josm.gui.mappaint.styleelement.TextLabel;
 import org.openstreetmap.josm.gui.mappaint.styleelement.placement.OnLineStrategy;
 import org.openstreetmap.josm.tools.ColorHelper;
 import org.openstreetmap.josm.tools.ImageProvider;
+import org.openstreetmap.josm.tools.Logging;
 import org.openstreetmap.josm.tools.MultiMap;
 import org.openstreetmap.josm.tools.Pair;
 import org.openstreetmap.josm.tools.Utils;
@@ -79,7 +80,7 @@ public class PublicTransportLayer extends Layer {
             try {
                 color = ColorHelper.html2color(relation.get("colour"));
             } catch (RuntimeException ignore) {
-                Main.trace(ignore);
+                Logging.trace(ignore);
             }
             renderer.drawWay(way, color, new BasicStroke(1), null, null, 0, doDrawArrows, false, false, false);
         }
@@ -143,14 +144,14 @@ public class PublicTransportLayer extends Layer {
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         doDrawArrows = !doDrawArrows;
-                        Main.map.repaint();
+                        MainApplication.getMap().repaint();
                     }
                 },
                 new AbstractAction(tr("Toggle reference labels")) {
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         doDrawRefLabels = !doDrawRefLabels;
-                        Main.map.repaint();
+                        MainApplication.getMap().repaint();
                     }
                 }
         };
@@ -164,7 +165,7 @@ public class PublicTransportLayer extends Layer {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            Main.getLayerManager().addLayer(new PublicTransportLayer());
+            MainApplication.getLayerManager().addLayer(new PublicTransportLayer());
         }
     }
 }

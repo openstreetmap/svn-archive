@@ -13,7 +13,7 @@ import java.util.Vector;
 import org.bouncycastle.bcpg.ArmoredOutputStream;
 import org.bouncycastle.bcpg.BCPGOutputStream;
 import org.bouncycastle.openpgp.PGPSignature;
-import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.tools.Logging;
 
 public class TrustSignatures {
 
@@ -145,7 +145,7 @@ public class TrustSignatures {
                     return baos.toString("UTF-8");
 
                 } catch (Exception e) {
-                    Main.error(e);
+                    Logging.error(e);
                     return "Error - read console Output";
                 }
             }
@@ -167,7 +167,7 @@ public class TrustSignatures {
 
             return baos.toString("UTF-8");
         } catch (Exception e) {
-            Main.error(e);
+            Logging.error(e);
             return "Error - read console Output";
         }
     }

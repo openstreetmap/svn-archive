@@ -93,6 +93,7 @@ import org.openstreetmap.josm.plugins.trustosm.data.TrustOsmPrimitive;
 import org.openstreetmap.josm.plugins.trustosm.data.TrustWay;
 import org.openstreetmap.josm.tools.GBC;
 import org.openstreetmap.josm.tools.ImageProvider;
+import org.openstreetmap.josm.tools.Logging;
 
 import com.toedter.calendar.JDateChooser;
 import com.toedter.calendar.JSpinnerDateEditor;
@@ -154,8 +155,8 @@ public class TrustGPG {
             try {
                 generateKey();
             } catch (Exception e) {
-                Main.error(e);
-                Main.error("GPG Key Ring File could not be created in: "+
+                Logging.error(e);
+                Logging.error("GPG Key Ring File could not be created in: "+
                         Main.pref.getPluginsDirectory().getPath() + "/trustosm/gnupg/secring.gpg");
             }
         }
@@ -241,7 +242,7 @@ public class TrustGPG {
                         sigKeys.add(secKey);
                     }
                 } catch (NoSuchAlgorithmException | NoSuchProviderException | PGPException | IOException e) {
-                    Main.error(e);
+                    Logging.error(e);
                 }
             } });
         p.add(createButton);

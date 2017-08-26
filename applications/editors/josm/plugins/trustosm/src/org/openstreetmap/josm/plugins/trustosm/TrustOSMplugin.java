@@ -28,6 +28,7 @@ import javax.swing.JMenuItem;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.ExtensionFileFilter;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MainMenu;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.gui.preferences.PreferenceSetting;
@@ -40,6 +41,7 @@ import org.openstreetmap.josm.plugins.trustosm.gui.dialogs.TrustPreferenceEditor
 import org.openstreetmap.josm.plugins.trustosm.io.SigExporter;
 import org.openstreetmap.josm.plugins.trustosm.io.SigImporter;
 import org.openstreetmap.josm.plugins.trustosm.util.TrustGPG;
+import org.openstreetmap.josm.tools.Logging;
 
 public class TrustOSMplugin extends Plugin {
 
@@ -101,11 +103,11 @@ public class TrustOSMplugin extends Plugin {
             c.init(Cipher.ENCRYPT_MODE, key192);
             c.doFinal(data);
         } catch (InvalidKeyException e) {
-            Main.warn(e, "It seems that the Unrestricted Policy Files are not available in this JVM. "+
-                      "So high level crypto is not allowed. Problems may occur.");
+            Logging.log(Logging.LEVEL_WARN, "It seems that the Unrestricted Policy Files are not available in this JVM. "+
+                      "So high level crypto is not allowed. Problems may occur.", e);
             installUnrestrictedPolicyFiles();
         } catch (BadPaddingException | IllegalBlockSizeException | NoSuchPaddingException | NoSuchAlgorithmException e) {
-            Main.error(e);
+            Logging.error(e);
         }
     }
 
@@ -253,7 +255,7 @@ public class TrustOSMplugin extends Plugin {
     }
 
     public static void refreshMenu() {
-        MainMenu menu = Main.main.menu;
+        MainMenu menu = MainApplication.getMenu();
 
         if (gpgJMenu == null) {
             gpgJMenu = menu.addMenu("GPG", tr("GPG"), KeyEvent.VK_B, menu.getDefaultMenuPos(), ht("/Plugin/TrustOSM"));

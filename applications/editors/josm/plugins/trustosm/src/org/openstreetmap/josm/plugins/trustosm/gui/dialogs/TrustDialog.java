@@ -38,11 +38,11 @@ import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.SelectionChangedListener;
 import org.openstreetmap.josm.data.osm.DataSet;
+import org.openstreetmap.josm.data.osm.DefaultNameFormatter;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.OsmPrimitiveType;
@@ -50,7 +50,7 @@ import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.data.osm.WaySegment;
 import org.openstreetmap.josm.data.osm.visitor.paint.PaintColors;
-import org.openstreetmap.josm.gui.DefaultNameFormatter;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.SideButton;
 import org.openstreetmap.josm.gui.dialogs.ToggleDialog;
@@ -157,7 +157,7 @@ public class TrustDialog extends ToggleDialog implements SelectionChangedListene
                 Shortcut.registerShortcut("subwindow:trustosm", tr("Toggle: {0}", tr("Object signatures")),
                         KeyEvent.VK_T, Shortcut.ALT_CTRL), 150);
 
-        Main.map.mapView.addTemporaryLayer(this);
+        MainApplication.getMap().mapView.addTemporaryLayer(this);
 
         // setting up the properties table
         propertyData.setColumnIdentifiers(new String[]{tr("Key"), tr("Value")});
@@ -267,7 +267,7 @@ public class TrustDialog extends ToggleDialog implements SelectionChangedListene
                             selectedPrimitives.add(highlight);
                         }
                     }
-                Main.map.mapView.repaint();
+                MainApplication.getMap().mapView.repaint();
             }
         });
 
@@ -646,7 +646,7 @@ public class TrustDialog extends ToggleDialog implements SelectionChangedListene
         if (selectedSegments.isEmpty()) return;
 
         // sanity checks
-        if (Main.map.mapView == null) return;
+        if (MainApplication.getMap().mapView == null) return;
 
         Graphics2D g2 = g;
         g2.setColor(PaintColors.HIGHLIGHT.get());

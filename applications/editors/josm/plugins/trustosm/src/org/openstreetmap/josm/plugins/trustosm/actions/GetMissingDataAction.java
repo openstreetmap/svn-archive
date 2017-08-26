@@ -14,6 +14,7 @@ import javax.swing.JOptionPane;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.plugins.trustosm.TrustOSMplugin;
 import org.openstreetmap.josm.plugins.trustosm.data.TrustOsmPrimitive;
 import org.openstreetmap.josm.plugins.trustosm.gui.DownloadSignedOsmDataTask;
@@ -49,7 +50,7 @@ public class GetMissingDataAction extends JosmAction {
                     tr("Load objects from server"), JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, null, null);
 
             if (n == JOptionPane.YES_OPTION) {
-                Main.worker.submit(new DownloadSignedOsmDataTask(missingData, Main.getLayerManager().getEditLayer()));
+                MainApplication.worker.submit(new DownloadSignedOsmDataTask(missingData, getLayerManager().getEditLayer()));
                 return true;
             }
         }
@@ -58,7 +59,7 @@ public class GetMissingDataAction extends JosmAction {
     }
 
     public void getMissing(Map<String, TrustOsmPrimitive> trustitems, Collection<OsmPrimitive> missingData) {
-        Collection<OsmPrimitive> presentData = Main.getLayerManager().getEditDataSet().allPrimitives();
+        Collection<OsmPrimitive> presentData = getLayerManager().getEditDataSet().allPrimitives();
         for (TrustOsmPrimitive t : trustitems.values()) {
             OsmPrimitive osm = t.getOsmPrimitive();
             if (!presentData.contains(osm))

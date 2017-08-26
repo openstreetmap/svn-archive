@@ -9,11 +9,11 @@ import java.util.Collection;
 
 import javax.swing.SwingUtilities;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.AutoScaleAction;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.gui.ExceptionDialogUtil;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.PleaseWaitRunnable;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
@@ -52,7 +52,7 @@ public class DownloadSignedOsmDataTask extends PleaseWaitRunnable {
 
     @Override
     protected void finish() {
-        Main.map.repaint();
+        MainApplication.getMap().repaint();
         if (canceled)
             return;
         if (lastException != null) {

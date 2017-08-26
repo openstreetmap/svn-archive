@@ -22,16 +22,18 @@ import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.DataSource;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.DataSet;
+import org.openstreetmap.josm.data.osm.DefaultNameFormatter;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Way;
-import org.openstreetmap.josm.gui.DefaultNameFormatter;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MainMenu;
 import org.openstreetmap.josm.gui.Notification;
 import org.openstreetmap.josm.gui.progress.PleaseWaitProgressMonitor;
 import org.openstreetmap.josm.gui.util.GuiHelper;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
+import org.openstreetmap.josm.tools.Logging;
 import org.openstreetmap.josm.tools.Shortcut;
 
 /**
@@ -48,7 +50,7 @@ public class WayDownloaderPlugin extends Plugin {
     public WayDownloaderPlugin(PluginInformation info) {
         super(info);
         //add WayDownloadAction to tools menu
-        MainMenu.add(Main.main.menu.moreToolsMenu, new WayDownloadAction());
+        MainMenu.add(MainApplication.getMenu().moreToolsMenu, new WayDownloadAction());
     }
 
     private class WayDownloadAction extends JosmAction implements Runnable {
@@ -66,7 +68,7 @@ public class WayDownloaderPlugin extends Plugin {
         @Override
         public void actionPerformed(ActionEvent e) {
             selectedNode = null;
-            DataSet ds = Main.getLayerManager().getEditDataSet();
+            DataSet ds = MainApplication.getLayerManager().getEditDataSet();
             Collection<Node> selection = ds.getSelectedNodes();
             if (selection.isEmpty()) {
                 Collection<Way> selWays = ds.getSelectedWays();
@@ -83,7 +85,7 @@ public class WayDownloaderPlugin extends Plugin {
             }
 
             selectedNode = (Node) selection.iterator().next();
-            Main.map.mapView.zoomTo(selectedNode.getEastNorth());
+            MainApplication.getMap().mapView.zoomTo(selectedNode.getEastNorth());
 
             //Before downloading. Figure a few things out.
             //Find connected way
@@ -115,23 +117,20 @@ public class WayDownloaderPlugin extends Plugin {
             );
             // schedule closing of the progress monitor after the download
             // job has finished
-            Main.worker.submit(
-                    new Runnable() {
-                        @Override
-                        public void run() {
-                            try {
-                                future.get();
-                            } catch(Exception e) {
-                                Main.error(e);
-                                return;
-                            }
-                            monitor.close();
-                        }
-                    }
+            MainApplication.worker.submit(
+                    () -> {
+					    try {
+					        future.get();
+					    } catch(Exception e1) {
+					        Logging.error(e1);
+					        return;
+					    }
+					    monitor.close();
+					}
             );
             //The download is scheduled to be executed.
             //Now schedule the run() method (below) to be executed once that's completed.
-            Main.worker.execute(this);
+            MainApplication.worker.execute(this);
         }
 
         /**
@@ -176,13 +175,13 @@ public class WayDownloaderPlugin extends Plugin {
                     if (ret != JOptionPane.YES_OPTION)
                         return;
                     Command cmd = MergeNodesAction.mergeNodes(
-                            Main.getLayerManager().getEditLayer(),
+                    		MainApplication.getLayerManager().getEditLayer(),
                             Collections.singletonList(dupeNode),
                             selectedNode
                     );
                     if (cmd != null) {
-                        Main.main.undoRedo.add(cmd);
-                        Main.getLayerManager().getEditLayer().data.setSelected(selectedNode);
+                    	MainApplication.undoRedo.add(cmd);
+                        MainApplication.getLayerManager().getEditLayer().data.setSelected(selectedNode);
                     }
                     connectedWays = findConnectedWays(selectedNode);
                 } else {
@@ -213,8 +212,8 @@ public class WayDownloaderPlugin extends Plugin {
                 Node nextNode = findOtherEnd(nextWay, selectedNode);
 
                 //Select the next node
-                Main.getLayerManager().getEditDataSet().setSelected(nextNode);
-                Main.map.mapView.zoomTo(nextNode.getEastNorth());
+                MainApplication.getLayerManager().getEditDataSet().setSelected(nextNode);
+                MainApplication.getMap().mapView.zoomTo(nextNode.getEastNorth());
             }
         }
 
@@ -236,7 +235,7 @@ public class WayDownloaderPlugin extends Plugin {
      * @return the potential duplicate node. null, if no duplicate found.
      */
     private Node findDuplicateNode(Node referenceNode) {
-        DataSet ds = Main.getLayerManager().getEditDataSet();
+        DataSet ds = MainApplication.getLayerManager().getEditDataSet();
         List<Node> candidates = ds.searchNodes(new Bounds(referenceNode.getCoor(), 0.0003, 0.0005).toBBox());
         for (Node candidate: candidates) {
             if (!candidate.equals(referenceNode)
@@ -289,12 +288,12 @@ public class WayDownloaderPlugin extends Plugin {
 
             if (isDownloaded(selectedNode)) return false;
         }
-        Main.getLayerManager().getEditDataSet().setSelected(selectedNode);
+        MainApplication.getLayerManager().getEditDataSet().setSelected(selectedNode);
         return true;
     }
 
     private boolean isDownloaded(Node node) {
-        for (DataSource datasource : Main.getLayerManager().getEditDataSet().getDataSources()) {
+        for (DataSource datasource : MainApplication.getLayerManager().getEditDataSet().getDataSources()) {
             Bounds bounds = datasource.bounds;
             if (bounds != null && bounds.contains(node.getCoor())) return true;
         }
@@ -303,7 +302,7 @@ public class WayDownloaderPlugin extends Plugin {
 
     private static void showWarningMessage(final String msg) {
         if (msg != null) {
-            Main.warn(msg.replace("<html>", "").replace("</html>", ""));
+            Logging.warn(msg.replace("<html>", "").replace("</html>", ""));
             GuiHelper.runInEDT(new Runnable() {
                 @Override
                 public void run() {
@@ -317,7 +316,7 @@ public class WayDownloaderPlugin extends Plugin {
 
     private static void showErrorMessage(final String msg) {
         if (msg != null) {
-            Main.error(msg.replace("<html>", "").replace("</html>", ""));
+            Logging.error(msg.replace("<html>", "").replace("</html>", ""));
             GuiHelper.runInEDT(new Runnable() {
                 @Override
                 public void run() {
@@ -331,7 +330,7 @@ public class WayDownloaderPlugin extends Plugin {
 
     private static void showInfoMessage(final String msg) {
         if (msg != null) {
-            Main.info(msg.replace("<html>", "").replace("</html>", ""));
+            Logging.info(msg.replace("<html>", "").replace("</html>", ""));
             GuiHelper.runInEDT(new Runnable() {
                 @Override
                 public void run() {

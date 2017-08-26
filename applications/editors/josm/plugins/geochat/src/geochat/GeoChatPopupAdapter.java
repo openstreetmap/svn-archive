@@ -12,7 +12,7 @@ import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenu;
 import javax.swing.JPopupMenu;
 
-import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.gui.MainApplication;
 
 /**
  *
@@ -113,19 +113,19 @@ class GeoChatPopupAdapter extends MouseAdapter {
     private class ToggleUserLayerAction extends AbstractAction {
         ToggleUserLayerAction() {
             super(tr("Show users on map"));
-            putValue(SELECTED_KEY, Boolean.valueOf(panel.userLayerActive));
+            putValue(SELECTED_KEY, panel.userLayerActive);
         }
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            if (Main.map == null || Main.map.mapView == null)
+            if (!MainApplication.isDisplayingMapView())
                 return;
-            boolean wasAdded = Main.map.mapView.addTemporaryLayer(panel);
+            boolean wasAdded = MainApplication.getMap().mapView.addTemporaryLayer(panel);
             if (!wasAdded)
-                Main.map.mapView.removeTemporaryLayer(panel);
+                MainApplication.getMap().mapView.removeTemporaryLayer(panel);
             panel.userLayerActive = wasAdded;
-            putValue(SELECTED_KEY, Boolean.valueOf(panel.userLayerActive));
-            Main.map.mapView.repaint();
+            putValue(SELECTED_KEY, panel.userLayerActive);
+            MainApplication.getMap().mapView.repaint();
         }
     }
 

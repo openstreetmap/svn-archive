@@ -36,13 +36,12 @@ import javax.swing.SwingConstants;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.coor.LatLon;
-import org.openstreetmap.josm.gui.JosmUserIdentityManager;
-import org.openstreetmap.josm.gui.MapView;
-import org.openstreetmap.josm.gui.Notification;
+import org.openstreetmap.josm.gui.*;
 import org.openstreetmap.josm.gui.dialogs.ToggleDialog;
 import org.openstreetmap.josm.gui.layer.MapViewPaintable;
 import org.openstreetmap.josm.gui.util.GuiHelper;
 import org.openstreetmap.josm.tools.GBC;
+import org.openstreetmap.josm.tools.Logging;
 
 /**
  * Chat Panel. Contains of one public chat pane and multiple private ones.
@@ -155,7 +154,7 @@ public class GeoChatPanel extends ToggleDialog implements ChatServerConnectionLi
                 connection.bruteLogout();
             }
         } catch (IOException e) {
-            Main.warn("Failed to logout from geochat server: " + e.getMessage());
+            Logging.warn("Failed to logout from geochat server: " + e.getMessage());
         }
         super.destroy();
     }
@@ -316,8 +315,8 @@ public class GeoChatPanel extends ToggleDialog implements ChatServerConnectionLi
         }
         this.users = newUsers;
         updateTitleAlarm();
-        if (userLayerActive && Main.map.mapView != null)
-            Main.map.mapView.repaint();
+        if (userLayerActive && MainApplication.isDisplayingMapView())
+            MainApplication.getMap().mapView.repaint();
     }
 
     private final SimpleDateFormat TIME_FORMAT = new SimpleDateFormat("HH:mm");

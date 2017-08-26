@@ -22,7 +22,9 @@ import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.coor.CoordinateFormat;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.projection.Projection;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MapView;
+import org.openstreetmap.josm.tools.Logging;
 
 /**
  * This class holds all the chat data and periodically polls the server.
@@ -121,7 +123,7 @@ final class ChatServerConnection {
                         Thread.sleep(200);
                     }
                 } catch (InterruptedException e) {
-                    Main.warn(e);
+                    Logging.warn(e);
                 }
                 autoLogin(userName);
             }
@@ -163,7 +165,7 @@ final class ChatServerConnection {
                 }
             });
         } catch (UnsupportedEncodingException e) {
-            Main.error(e);
+            Logging.error(e);
         }
     }
 
@@ -265,7 +267,7 @@ final class ChatServerConnection {
                 }
             });
         } catch (UnsupportedEncodingException e) {
-            Main.error(e);
+            Logging.error(e);
         }
     }
 
@@ -273,12 +275,12 @@ final class ChatServerConnection {
      * Returns current coordinates or null if there is no map, or zoom is too low.
      */
     private static LatLon getPosition() {
-        if (Main.map == null || Main.map.mapView == null)
+        if (!MainApplication.isDisplayingMapView())
             return null;
         if (getCurrentZoom() < 10)
             return null;
         Projection proj = Main.getProjection();
-        return proj.eastNorth2latlon(Main.map.mapView.getCenter());
+        return proj.eastNorth2latlon(MainApplication.getMap().mapView.getCenter());
     }
 
     // Following three methods were snatched from TMSLayer
@@ -293,10 +295,10 @@ final class ChatServerConnection {
     }
 
     public static int getCurrentZoom() {
-        if (Main.map == null || Main.map.mapView == null) {
+        if (!MainApplication.isDisplayingMapView()) {
             return 1;
         }
-        MapView mv = Main.map.mapView;
+        MapView mv = MainApplication.getMap().mapView;
         LatLon topLeft = mv.getLatLon(0, 0);
         LatLon botRight = mv.getLatLon(mv.getWidth(), mv.getHeight());
         double x1 = lonToTileX(topLeft.lon(), 1);
@@ -433,7 +435,7 @@ final class ChatServerConnection {
                         cm.setRecipient(msg.getString("recipient"));
                     result.add(cm);
                 } catch (JsonException e) {
-                    Main.trace(e);
+                    Logging.trace(e);
                 }
             }
             return result;
@@ -449,7 +451,7 @@ final class ChatServerConnection {
                     double lon = Double.parseDouble(user.getString("lon"));
                     result.put(name, new LatLon(lat, lon));
                 } catch (JsonException e) {
-                    Main.trace(e);
+                    Logging.trace(e);
                 }
             }
             return result;

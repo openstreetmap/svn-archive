@@ -83,10 +83,7 @@ public class ChatMessage implements Comparable<ChatMessage> {
             return false;
         }
         final ChatMessage other = (ChatMessage) obj;
-        if (this.id != other.id) {
-            return false;
-        }
-        return true;
+        return this.id == other.id;
     }
 
     @Override

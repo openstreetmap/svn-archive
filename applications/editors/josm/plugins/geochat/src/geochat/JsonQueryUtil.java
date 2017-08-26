@@ -13,6 +13,8 @@ import javax.json.JsonException;
 import javax.json.JsonObject;
 
 import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.gui.MainApplication;
+import org.openstreetmap.josm.tools.Logging;
 
 /**
  * A static class to query the server and return parsed JSON hash.
@@ -69,7 +71,7 @@ public final class JsonQueryUtil implements Runnable {
      * @param callback Callback listener to process the JSON response.
      */
     public static void queryAsync(String query, JsonQueryCallback callback) {
-        Main.worker.submit(new JsonQueryUtil(query, callback));
+        MainApplication.worker.submit(new JsonQueryUtil(query, callback));
     }
 
     private void doRealRun() {
@@ -77,7 +79,7 @@ public final class JsonQueryUtil implements Runnable {
         try {
             obj = query(query);
         } catch (IOException e) {
-            Main.warn(e.getClass().getName() + " while connecting to a chat server: " + e.getMessage());
+            Logging.warn(e.getClass().getName() + " while connecting to a chat server: " + e.getMessage());
             obj = null;
         }
         if (callback != null)

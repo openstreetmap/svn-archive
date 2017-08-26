@@ -15,7 +15,7 @@ import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 import javax.swing.text.DefaultEditorKit;
 
-import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.widgets.PopupMenuLauncher;
 
 /**
@@ -86,8 +86,8 @@ public class JPanelTextField extends JTextField {
                     }
                 }
             } else if (code == KeyEvent.VK_ESCAPE) {
-                if (Main.map != null && Main.map.mapView != null)
-                    Main.map.mapView.requestFocus();
+                if (MainApplication.isDisplayingMapView())
+                    MainApplication.getMap().mapView.requestFocus();
             }
 
             boolean keyIsStandard = false;

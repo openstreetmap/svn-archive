@@ -24,6 +24,7 @@ import javax.swing.text.StyleConstants;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.util.GuiHelper;
+import org.openstreetmap.josm.tools.Logging;
 
 /**
  *
@@ -115,7 +116,7 @@ class ChatPaneManager {
                     }
                     doc.insertString(doc.getLength(), nline, attrs);
                 } catch (BadLocationException ex) {
-                    Main.warn(ex);
+                    Logging.warn(ex);
                 }
                 thepane.setCaretPosition(doc.getLength());
             }

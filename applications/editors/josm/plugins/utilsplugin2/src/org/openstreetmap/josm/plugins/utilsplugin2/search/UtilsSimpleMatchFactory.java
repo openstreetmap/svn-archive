@@ -4,10 +4,10 @@ package org.openstreetmap.josm.plugins.utilsplugin2.search;
 import java.util.Arrays;
 import java.util.Collection;
 
-import org.openstreetmap.josm.data.osm.search.SearchParseError;
 import org.openstreetmap.josm.data.osm.search.PushbackTokenizer;
 import org.openstreetmap.josm.data.osm.search.SearchCompiler;
 import org.openstreetmap.josm.data.osm.search.SearchCompiler.SimpleMatchFactory;
+import org.openstreetmap.josm.data.osm.search.SearchParseError;
 
 public class UtilsSimpleMatchFactory implements SimpleMatchFactory {
 
@@ -19,7 +19,8 @@ public class UtilsSimpleMatchFactory implements SimpleMatchFactory {
     }
 
     @Override
-    public SearchCompiler.Match get(String keyword, PushbackTokenizer tokenizer) throws SearchParseError {
+    public SearchCompiler.Match get(String keyword, boolean caseSensitive, boolean regexSearch, PushbackTokenizer tokenizer)
+            throws SearchParseError {
         if ("usedinways".equals(keyword)) {
             return new UsedInWaysMatch(tokenizer);
         } else

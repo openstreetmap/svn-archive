@@ -8,7 +8,6 @@ import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.command.ChangeCommand;
 import org.openstreetmap.josm.command.Command;
@@ -19,6 +18,7 @@ import org.openstreetmap.josm.data.osm.OsmPrimitiveType;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.util.GuiHelper;
 import org.openstreetmap.josm.tools.ImageProvider;
 import org.openstreetmap.josm.tools.Shortcut;
@@ -81,7 +81,7 @@ public class AddRemoveMemberAction extends JosmAction implements ChosenRelationL
         }
 
         if (!r.getMemberPrimitives().equals(rel.get().getMemberPrimitives())) {
-            Main.main.undoRedo.add(new ChangeCommand(rel.get(), r));
+            MainApplication.undoRedo.add(new ChangeCommand(rel.get(), r));
         }
     }
 

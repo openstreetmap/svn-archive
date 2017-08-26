@@ -19,12 +19,13 @@ import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.SequenceCommand;
 import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.coor.LatLon;
+import org.openstreetmap.josm.data.osm.DefaultNameFormatter;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.data.osm.Way;
-import org.openstreetmap.josm.gui.DefaultNameFormatter;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.tools.Geometry;
 import org.openstreetmap.josm.tools.Geometry.PolygonIntersection;
 
@@ -42,7 +43,7 @@ public final class SplittingMultipolygons {
     public static boolean canProcess(Collection<Way> ways) {
         List<Way> rings = new ArrayList<>();
         List<Way> arcs = new ArrayList<>();
-        Area a = Main.getLayerManager().getEditDataSet().getDataSourceArea();
+        Area a = MainApplication.getLayerManager().getEditDataSet().getDataSourceArea();
         for (Way way : ways) {
             if (way.isDeleted())
                 return false;
@@ -103,7 +104,7 @@ public final class SplittingMultipolygons {
             List<Command> commands = new ArrayList<>();
             Relation newRelation = SplittingMultipolygons.attachRingToNeighbours(ring, commands);
             if (newRelation != null && !commands.isEmpty()) {
-                Main.main.undoRedo.add(commands.get(0));
+                MainApplication.undoRedo.add(commands.get(0));
                 result.add(newRelation);
             }
         }
@@ -112,7 +113,7 @@ public final class SplittingMultipolygons {
             List<Command> commands = new ArrayList<>();
             Relation newRelation = SplittingMultipolygons.tryToCloseOneWay(arc, commands);
             if (newRelation != null && !commands.isEmpty()) {
-                Main.main.undoRedo.add(commands.get(0));
+                MainApplication.undoRedo.add(commands.get(0));
                 result.add(newRelation);
             }
         }

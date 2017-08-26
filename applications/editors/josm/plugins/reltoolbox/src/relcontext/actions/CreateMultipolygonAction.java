@@ -40,6 +40,7 @@ import org.openstreetmap.josm.data.osm.OsmPrimitiveType;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.tools.GBC;
 import org.openstreetmap.josm.tools.Shortcut;
 
@@ -103,7 +104,7 @@ public class CreateMultipolygonAction extends JosmAction {
                     List<Command> commands = new ArrayList<>();
                     rels = TheRing.makeManySimpleMultipolygons(ds.getSelectedWays(), commands);
                     if (!commands.isEmpty()) {
-                        Main.main.undoRedo.add(new SequenceCommand(tr("Create multipolygons from rings"), commands));
+                        MainApplication.undoRedo.add(new SequenceCommand(tr("Create multipolygons from rings"), commands));
                     }
                 }
             }
@@ -146,7 +147,7 @@ public class CreateMultipolygonAction extends JosmAction {
         }
         List<Command> list = removeTagsFromInnerWays(rel);
         if (!list.isEmpty() && isBoundary) {
-            Main.main.undoRedo.add(new SequenceCommand(tr("Move tags from ways to relation"), list));
+            MainApplication.undoRedo.add(new SequenceCommand(tr("Move tags from ways to relation"), list));
             list = new ArrayList<>();
         }
         if (isBoundary) {
@@ -158,7 +159,7 @@ public class CreateMultipolygonAction extends JosmAction {
             }
         }
         list.add(new AddCommand(rel));
-        Main.main.undoRedo.add(new SequenceCommand(tr("Create multipolygon"), list));
+        MainApplication.undoRedo.add(new SequenceCommand(tr("Create multipolygon"), list));
 
         if (chRel != null) {
             chRel.set(rel);

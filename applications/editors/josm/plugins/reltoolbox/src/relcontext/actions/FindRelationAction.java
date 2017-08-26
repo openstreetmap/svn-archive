@@ -30,9 +30,10 @@ import javax.swing.SwingUtilities;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
+import org.openstreetmap.josm.data.osm.DefaultNameFormatter;
 import org.openstreetmap.josm.data.osm.Relation;
-import org.openstreetmap.josm.gui.DefaultNameFormatter;
 import org.openstreetmap.josm.gui.OsmPrimitivRenderer;
+import org.openstreetmap.josm.tools.Logging;
 import org.openstreetmap.josm.tools.Shortcut;
 
 import relcontext.ChosenRelation;
@@ -158,10 +159,10 @@ public class FindRelationAction extends JosmAction {
             keywords = filteredKeywords.toArray(new String[0]);
         }
 
-        if (Main.isDebugEnabled()) {
-            Main.debug("keywords.length = " + keywords.length);
+        if (Logging.isDebugEnabled()) {
+            Logging.debug("keywords.length = " + keywords.length);
             for (int i = 0; i < keywords.length; i++) {
-                Main.debug("keyword["+i+"] = " + keywords[i]);
+                Logging.debug("keyword["+i+"] = " + keywords[i]);
             }
         }
 

@@ -7,8 +7,8 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.osm.Relation;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.tools.ImageProvider;
 
 import relcontext.ChosenRelation;
@@ -28,7 +28,7 @@ public class SelectRelationAction extends AbstractAction implements ChosenRelati
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        Main.getLayerManager().getEditLayer().data.setSelected(rel.get() == null ? null : rel.get());
+        MainApplication.getLayerManager().getEditLayer().data.setSelected(rel.get() == null ? null : rel.get());
     }
 
     @Override

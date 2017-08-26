@@ -23,6 +23,7 @@ import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.tools.Geometry;
 import org.openstreetmap.josm.tools.Geometry.PolygonIntersection;
+import org.openstreetmap.josm.tools.Logging;
 
 /**
  * One ring that contains segments forming an outer way of multipolygon.
@@ -430,7 +431,7 @@ public class TheRing {
     }
 
     private static void log(String s) {
-        Main.debug(s);
+        Logging.debug(s);
     }
 
     private static class RingSegment {

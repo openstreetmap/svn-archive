@@ -7,8 +7,8 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.osm.Relation;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.dialogs.relation.RelationEditor;
 import org.openstreetmap.josm.tools.ImageProvider;
 
@@ -35,7 +35,7 @@ public class EditChosenRelationAction extends AbstractAction implements ChosenRe
     public void actionPerformed(ActionEvent e) {
         Relation relation = rel.get();
         if (relation == null) return;
-        RelationEditor.getEditor(Main.getLayerManager().getEditLayer(), relation, null).setVisible(true);
+        RelationEditor.getEditor(MainApplication.getLayerManager().getEditLayer(), relation, null).setVisible(true);
     }
 
     @Override

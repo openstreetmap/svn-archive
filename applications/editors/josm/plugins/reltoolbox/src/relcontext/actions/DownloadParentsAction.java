@@ -12,10 +12,10 @@ import java.util.Set;
 
 import javax.swing.AbstractAction;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.downloadtasks.DownloadReferrersTask;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.dialogs.relation.DownloadRelationMemberTask;
 import org.openstreetmap.josm.gui.dialogs.relation.DownloadRelationTask;
 import org.openstreetmap.josm.tools.ImageProvider;
@@ -37,7 +37,7 @@ public class DownloadParentsAction extends AbstractAction implements ChosenRelat
         putValue(SHORT_DESCRIPTION, tr("Download referrers for the chosen relation and its members."));
         this.rel = rel;
         rel.addChosenRelationListener(this);
-        setEnabled(rel.get() != null && Main.getLayerManager().getEditLayer() != null);
+        setEnabled(rel.get() != null && MainApplication.getLayerManager().getEditLayer() != null);
     }
 
     @Override
@@ -47,17 +47,19 @@ public class DownloadParentsAction extends AbstractAction implements ChosenRelat
         List<OsmPrimitive> objects = new ArrayList<>();
         objects.add(relation);
         objects.addAll(relation.getMemberPrimitives());
-        Main.worker.submit(new DownloadReferrersTask(Main.getLayerManager().getEditLayer(), objects));
+        MainApplication.worker.submit(
+                new DownloadReferrersTask(MainApplication.getLayerManager().getEditLayer(), objects));
     }
 
     @Override
     public void chosenRelationChanged(Relation oldRelation, Relation newRelation) {
-        setEnabled(newRelation != null && Main.getLayerManager().getEditLayer() != null);
+        setEnabled(newRelation != null && MainApplication.getLayerManager().getEditLayer() != null);
     }
 
     protected void downloadMembers(Relation rel) {
         if (!rel.isNew()) {
-            Main.worker.submit(new DownloadRelationTask(Collections.singletonList(rel), Main.getLayerManager().getEditLayer()));
+            MainApplication.worker.submit(
+                    new DownloadRelationTask(Collections.singletonList(rel), MainApplication.getLayerManager().getEditLayer()));
         }
     }
 
@@ -66,6 +68,7 @@ public class DownloadParentsAction extends AbstractAction implements ChosenRelat
         Set<OsmPrimitive> ret = new HashSet<>();
         ret.addAll(rel.getIncompleteMembers());
         if (ret.isEmpty()) return;
-        Main.worker.submit(new DownloadRelationMemberTask(Collections.singletonList(rel), ret, Main.getLayerManager().getEditLayer()));
+        MainApplication.worker.submit(
+                new DownloadRelationMemberTask(Collections.singletonList(rel), ret, MainApplication.getLayerManager().getEditLayer()));
     }
 }

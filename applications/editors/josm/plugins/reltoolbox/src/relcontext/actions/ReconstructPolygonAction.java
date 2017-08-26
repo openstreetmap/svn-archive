@@ -23,13 +23,14 @@ import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.DeleteCommand;
 import org.openstreetmap.josm.command.SequenceCommand;
 import org.openstreetmap.josm.data.coor.EastNorth;
+import org.openstreetmap.josm.data.osm.DefaultNameFormatter;
 import org.openstreetmap.josm.data.osm.MultipolygonBuilder;
 import org.openstreetmap.josm.data.osm.MultipolygonBuilder.JoinedPolygon;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.data.osm.Way;
-import org.openstreetmap.josm.gui.DefaultNameFormatter;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.tools.ImageProvider;
 
 import relcontext.ChosenRelation;
@@ -83,7 +84,8 @@ public class ReconstructPolygonAction extends AbstractAction implements ChosenRe
         rel.clear();
         List<OsmPrimitive> newSelection = new ArrayList<>();
         List<Command> commands = new ArrayList<>();
-        Command relationDeleteCommand = DeleteCommand.delete(Main.getLayerManager().getEditLayer(), Collections.singleton(r), true, true);
+        Command relationDeleteCommand = DeleteCommand.delete(
+                MainApplication.getLayerManager().getEditLayer(), Collections.singleton(r), true, true);
         if (relationDeleteCommand == null)
             return;
 
@@ -194,9 +196,9 @@ public class ReconstructPolygonAction extends AbstractAction implements ChosenRe
             commands.add(relationDeleteCommand);
         }
 
-        Main.main.undoRedo.add(new SequenceCommand(tr("Reconstruct polygons from relation {0}",
+        MainApplication.undoRedo.add(new SequenceCommand(tr("Reconstruct polygons from relation {0}",
                 r.getDisplayName(DefaultNameFormatter.getInstance())), commands));
-        Main.getLayerManager().getEditDataSet().setSelected(newSelection);
+        MainApplication.getLayerManager().getEditDataSet().setSelected(newSelection);
     }
 
     @Override

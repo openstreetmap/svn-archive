@@ -63,19 +63,21 @@ import org.openstreetmap.josm.command.ChangeRelationMemberRoleCommand;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.SequenceCommand;
 import org.openstreetmap.josm.data.SelectionChangedListener;
+import org.openstreetmap.josm.data.osm.DefaultNameFormatter;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.data.osm.event.DatasetEventManager;
 import org.openstreetmap.josm.data.osm.event.DatasetEventManager.FireMode;
 import org.openstreetmap.josm.data.osm.event.SelectionEventManager;
-import org.openstreetmap.josm.gui.DefaultNameFormatter;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.OsmPrimitivRenderer;
 import org.openstreetmap.josm.gui.dialogs.ToggleDialog;
 import org.openstreetmap.josm.gui.layer.MainLayerManager.ActiveLayerChangeEvent;
 import org.openstreetmap.josm.gui.layer.MainLayerManager.ActiveLayerChangeListener;
 import org.openstreetmap.josm.gui.tagging.ac.AutoCompletingComboBox;
 import org.openstreetmap.josm.tools.GBC;
+import org.openstreetmap.josm.tools.Logging;
 import org.openstreetmap.josm.tools.Shortcut;
 
 import relcontext.actions.AddRemoveMemberAction;
@@ -124,7 +126,7 @@ public class RelContextDialog extends ToggleDialog implements ActiveLayerChangeL
 
         chosenRelation = new ChosenRelation();
         chosenRelation.addChosenRelationListener(this);
-        Main.getLayerManager().addActiveLayerChangeListener(chosenRelation);
+        MainApplication.getLayerManager().addActiveLayerChangeListener(chosenRelation);
 
         popupMenu = new ChosenRelationPopupMenu(chosenRelation);
         multiPopupMenu = new MultipolygonSettingsPopup();
@@ -251,7 +253,7 @@ public class RelContextDialog extends ToggleDialog implements ActiveLayerChangeL
                 if (SwingUtilities.isLeftMouseButton(e) && row >= 0) {
                     Relation relation = (Relation) relationsData.getValueAt(row, 0);
                     if (e.getClickCount() > 1) {
-                        Main.getLayerManager().getEditLayer().data.setSelected(relation);
+                        MainApplication.getLayerManager().getEditLayer().data.setSelected(relation);
                     }
                 }
             }
@@ -336,7 +338,7 @@ public class RelContextDialog extends ToggleDialog implements ActiveLayerChangeL
     @Override
     public void hideNotify() {
         SelectionEventManager.getInstance().removeSelectionListener(this);
-        Main.getLayerManager().removeActiveLayerChangeListener(this);
+        MainApplication.getLayerManager().removeActiveLayerChangeListener(this);
         DatasetEventManager.getInstance().removeDatasetListener(chosenRelation);
         chosenRelation.clear();
     }
@@ -344,7 +346,7 @@ public class RelContextDialog extends ToggleDialog implements ActiveLayerChangeL
     @Override
     public void showNotify() {
         SelectionEventManager.getInstance().addSelectionListener(this, FireMode.IN_EDT_CONSOLIDATED);
-        Main.getLayerManager().addActiveLayerChangeListener(this);
+        MainApplication.getLayerManager().addActiveLayerChangeListener(this);
         DatasetEventManager.getInstance().addDatasetListener(chosenRelation, FireMode.IN_EDT);
     }
 
@@ -357,8 +359,8 @@ public class RelContextDialog extends ToggleDialog implements ActiveLayerChangeL
         if (chosenRelationPanel != null && Main.pref.getBoolean(PREF_PREFIX + ".hidetopline", false)) {
             chosenRelationPanel.setVisible(newRelation != null);
         }
-        if (Main.getLayerManager().getEditDataSet() != null) {
-            selectionChanged(Main.getLayerManager().getEditDataSet().getSelected());
+        if (MainApplication.getLayerManager().getEditDataSet() != null) {
+            selectionChanged(MainApplication.getLayerManager().getEditDataSet().getSelected());
         }
         roleBoxModel.update();
     }
@@ -408,10 +410,10 @@ public class RelContextDialog extends ToggleDialog implements ActiveLayerChangeL
     }
 
     private void updateSelection() {
-        if (Main.getLayerManager().getEditDataSet() == null) {
+        if (MainApplication.getLayerManager().getEditDataSet() == null) {
             selectionChanged(Collections.<OsmPrimitive>emptyList());
         } else {
-            selectionChanged(Main.getLayerManager().getEditDataSet().getSelected());
+            selectionChanged(MainApplication.getLayerManager().getEditDataSet().getSelected());
         }
     }
 
@@ -454,8 +456,8 @@ public class RelContextDialog extends ToggleDialog implements ActiveLayerChangeL
                 }
             }
         } catch (Exception e) {
-            Main.error("[RelToolbox] Error reading possible roles file.");
-            Main.error(e);
+            Logging.error("[RelToolbox] Error reading possible roles file.");
+            Logging.error(e);
         }
         return result;
     }
@@ -509,8 +511,9 @@ public class RelContextDialog extends ToggleDialog implements ActiveLayerChangeL
         @Override
         public void mouseClicked(MouseEvent e) {
             if (e.isControlDown() || !(e.getComponent() instanceof JComboBox)) // do not use left click handler on combo box
-                if (SwingUtilities.isLeftMouseButton(e) && chosenRelation.get() != null && Main.getLayerManager().getEditLayer() != null) {
-                    Main.getLayerManager().getEditLayer().data.setSelected(chosenRelation.get());
+                if (SwingUtilities.isLeftMouseButton(e) && chosenRelation.get() != null
+                && MainApplication.getLayerManager().getEditLayer() != null) {
+                    MainApplication.getLayerManager().getEditLayer().data.setSelected(chosenRelation.get());
                 }
         }
 
@@ -548,8 +551,9 @@ public class RelContextDialog extends ToggleDialog implements ActiveLayerChangeL
 
     protected void applyRoleToSelection(String role) {
         if (chosenRelation != null && chosenRelation.get() != null
-                && Main.getLayerManager().getEditDataSet() != null && !Main.getLayerManager().getEditDataSet().selectionEmpty()) {
-            Collection<OsmPrimitive> selected = Main.getLayerManager().getEditDataSet().getSelected();
+                && MainApplication.getLayerManager().getEditDataSet() != null
+                && !MainApplication.getLayerManager().getEditDataSet().selectionEmpty()) {
+            Collection<OsmPrimitive> selected = MainApplication.getLayerManager().getEditDataSet().getSelected();
             Relation r = chosenRelation.get();
             List<Command> commands = new ArrayList<>();
             for (int i = 0; i < r.getMembersCount(); i++) {
@@ -562,7 +566,7 @@ public class RelContextDialog extends ToggleDialog implements ActiveLayerChangeL
             }
             if (!commands.isEmpty()) {
                 //                Main.main.undoRedo.add(new ChangeCommand(chosenRelation.get(), r));
-                Main.main.undoRedo.add(new SequenceCommand(tr("Change relation member roles to {0}", role), commands));
+                MainApplication.undoRedo.add(new SequenceCommand(tr("Change relation member roles to {0}", role), commands));
             }
         }
     }
@@ -705,8 +709,9 @@ public class RelContextDialog extends ToggleDialog implements ActiveLayerChangeL
         private String getSelectedMembersRoleIntl() {
             String role = null;
             if (chosenRelation != null && chosenRelation.get() != null
-                    && Main.getLayerManager().getEditDataSet() != null && !Main.getLayerManager().getEditDataSet().selectionEmpty()) {
-                Collection<OsmPrimitive> selected = Main.getLayerManager().getEditDataSet().getSelected();
+                    && MainApplication.getLayerManager().getEditDataSet() != null
+                    && !MainApplication.getLayerManager().getEditDataSet().selectionEmpty()) {
+                Collection<OsmPrimitive> selected = MainApplication.getLayerManager().getEditDataSet().getSelected();
                 for (RelationMember m : chosenRelation.get().getMembers()) {
                     if (selected.contains(m.getMember())) {
                         if (role == null) {

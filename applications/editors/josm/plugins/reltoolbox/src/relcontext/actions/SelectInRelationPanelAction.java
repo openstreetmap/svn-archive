@@ -7,8 +7,8 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.osm.Relation;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.tools.ImageProvider;
 
 import relcontext.ChosenRelation;
@@ -30,8 +30,8 @@ public class SelectInRelationPanelAction extends AbstractAction implements Chose
     @Override
     public void actionPerformed(ActionEvent e) {
         if (rel.get() != null) {
-            Main.map.relationListDialog.selectRelation(rel.get());
-            Main.map.relationListDialog.unfurlDialog();
+            MainApplication.getMap().relationListDialog.selectRelation(rel.get());
+            MainApplication.getMap().relationListDialog.unfurlDialog();
         }
     }
 

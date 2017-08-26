@@ -12,7 +12,6 @@ import java.awt.geom.GeneralPath;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
@@ -27,6 +26,7 @@ import org.openstreetmap.josm.data.osm.event.PrimitivesRemovedEvent;
 import org.openstreetmap.josm.data.osm.event.RelationMembersChangedEvent;
 import org.openstreetmap.josm.data.osm.event.TagsChangedEvent;
 import org.openstreetmap.josm.data.osm.event.WayNodesChangedEvent;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.layer.MainLayerManager.ActiveLayerChangeEvent;
 import org.openstreetmap.josm.gui.layer.MainLayerManager.ActiveLayerChangeListener;
@@ -48,7 +48,7 @@ public class ChosenRelation implements ActiveLayerChangeListener, MapViewPaintab
         Relation oldRel = chosenRelation;
         chosenRelation = rel;
         analyse();
-        Main.map.mapView.repaint();
+        MainApplication.getMap().mapView.repaint();
         fireRelationChanged(oldRel);
     }
 
@@ -123,12 +123,12 @@ public class ChosenRelation implements ActiveLayerChangeListener, MapViewPaintab
     public void activeOrEditLayerChanged(ActiveLayerChangeEvent e) {
         // todo: dim chosen relation when changing layer
         // todo: check this WTF!
-        OsmDataLayer newLayer = Main.getLayerManager().getEditLayer();
+        OsmDataLayer newLayer = MainApplication.getLayerManager().getEditLayer();
         clear();
         if (newLayer != null && e.getPreviousEditLayer() == null) {
-            Main.map.mapView.addTemporaryLayer(this);
+            MainApplication.getMap().mapView.addTemporaryLayer(this);
         } else if (newLayer == null) {
-            Main.map.mapView.removeTemporaryLayer(this);
+            MainApplication.getMap().mapView.removeTemporaryLayer(this);
         }
     }
 
@@ -158,7 +158,8 @@ public class ChosenRelation implements ActiveLayerChangeListener, MapViewPaintab
         if (!visitedRelations.contains(rel)) {
             visitedRelations.add(rel);
             for (OsmPrimitive element : rel.getMemberPrimitives()) {
-                if (null != element.getType()) switch(element.getType()) {
+                if (null != element.getType()) {
+                    switch(element.getType()) {
                     case NODE:
                         Node node = (Node) element;
                         Point center = mv.getPoint(node);
@@ -184,6 +185,7 @@ public class ChosenRelation implements ActiveLayerChangeListener, MapViewPaintab
                         break;
                     default:
                         break;
+                    }
                 }
             }
         }

@@ -8,10 +8,10 @@ import java.util.Collections;
 
 import javax.swing.AbstractAction;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.DeleteCommand;
 import org.openstreetmap.josm.data.osm.Relation;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.tools.ImageProvider;
 
 import relcontext.ChosenRelation;
@@ -32,9 +32,9 @@ public class DeleteChosenRelationAction extends AbstractAction implements Chosen
     public void actionPerformed(ActionEvent e) {
         Relation r = rel.get();
         rel.clear();
-        Command c = DeleteCommand.delete(Main.getLayerManager().getEditLayer(), Collections.singleton(r), true, true);
+        Command c = DeleteCommand.delete(MainApplication.getLayerManager().getEditLayer(), Collections.singleton(r), true, true);
         if (c != null) {
-            Main.main.undoRedo.add(c);
+            MainApplication.undoRedo.add(c);
         }
     }
 

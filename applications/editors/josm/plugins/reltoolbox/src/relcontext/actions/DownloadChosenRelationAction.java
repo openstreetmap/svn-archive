@@ -10,10 +10,10 @@ import java.util.Set;
 
 import javax.swing.AbstractAction;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.RelationMember;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.dialogs.relation.DownloadRelationMemberTask;
 import org.openstreetmap.josm.gui.dialogs.relation.DownloadRelationTask;
 import org.openstreetmap.josm.tools.ImageProvider;
@@ -66,7 +66,8 @@ public class DownloadChosenRelationAction extends AbstractAction implements Chos
 
     protected void downloadMembers(Relation rel) {
         if (!rel.isNew()) {
-            Main.worker.submit(new DownloadRelationTask(Collections.singletonList(rel), Main.getLayerManager().getEditLayer()));
+            MainApplication.worker.submit(
+                    new DownloadRelationTask(Collections.singletonList(rel), MainApplication.getLayerManager().getEditLayer()));
         }
     }
 
@@ -75,6 +76,7 @@ public class DownloadChosenRelationAction extends AbstractAction implements Chos
         Set<OsmPrimitive> ret = new HashSet<>();
         ret.addAll(rel.getIncompleteMembers());
         if (ret.isEmpty()) return;
-        Main.worker.submit(new DownloadRelationMemberTask(Collections.singletonList(rel), ret, Main.getLayerManager().getEditLayer()));
+        MainApplication.worker.submit(
+                new DownloadRelationMemberTask(Collections.singletonList(rel), ret, MainApplication.getLayerManager().getEditLayer()));
     }
 }

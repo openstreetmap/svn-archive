@@ -14,6 +14,7 @@ import javax.swing.AbstractAction;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.osm.Relation;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.tools.ImageProvider;
 import org.openstreetmap.josm.tools.LanguageInfo;
 import org.openstreetmap.josm.tools.OpenBrowser;
@@ -60,48 +61,45 @@ public class RelationHelpAction extends AbstractAction implements ChosenRelation
             uris.add(new URI(String.format("%s%sRelations", base, lang)));
             uris.add(new URI(String.format("%sRelations", base)));
 
-            Main.worker.execute(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        // find a page that actually exists in the wiki
-                        HttpURLConnection conn;
-                        for (URI u : uris) {
-                            conn = (HttpURLConnection) u.toURL().openConnection();
+            MainApplication.worker.execute(() -> {
+                try {
+                    // find a page that actually exists in the wiki
+                    HttpURLConnection conn;
+                    for (URI u : uris) {
+                        conn = (HttpURLConnection) u.toURL().openConnection();
+                        conn.setConnectTimeout(5000);
+
+                        if (conn.getResponseCode() != 200) {
+                            System.out.println("INFO: " + u + " does not exist");
+                            conn.disconnect();
+                        } else {
+                            int osize = conn.getContentLength();
+                            conn.disconnect();
+
+                            conn = (HttpURLConnection) new URI(u.toString()
+                                    .replace("=", "%3D") /* do not URLencode whole string! */
+                                    .replaceFirst("/wiki/", "/w/index.php?redirect=no&title=")
+                                    ).toURL().openConnection();
                             conn.setConnectTimeout(5000);
 
-                            if (conn.getResponseCode() != 200) {
-                                System.out.println("INFO: " + u + " does not exist");
+                            /* redirect pages have different content length, but retrieving a "nonredirect"
+                             *  page using index.php and the direct-link method gives slightly different
+                             *  content lengths, so we have to be fuzzy.. (this is UGLY, recode if u know better)
+                             */
+                            if (Math.abs(conn.getContentLength() - osize) > 200) {
+                                System.out.println("INFO: " + u + " is a mediawiki redirect");
                                 conn.disconnect();
                             } else {
-                                int osize = conn.getContentLength();
+                                System.out.println("INFO: browsing to " + u);
                                 conn.disconnect();
 
-                                conn = (HttpURLConnection) new URI(u.toString()
-                                        .replace("=", "%3D") /* do not URLencode whole string! */
-                                        .replaceFirst("/wiki/", "/w/index.php?redirect=no&title=")
-                                        ).toURL().openConnection();
-                                conn.setConnectTimeout(5000);
-
-                                /* redirect pages have different content length, but retrieving a "nonredirect"
-                                 *  page using index.php and the direct-link method gives slightly different
-                                 *  content lengths, so we have to be fuzzy.. (this is UGLY, recode if u know better)
-                                 */
-                                if (Math.abs(conn.getContentLength() - osize) > 200) {
-                                    System.out.println("INFO: " + u + " is a mediawiki redirect");
-                                    conn.disconnect();
-                                } else {
-                                    System.out.println("INFO: browsing to " + u);
-                                    conn.disconnect();
-
-                                    OpenBrowser.displayUrl(u.toString());
-                                    break;
-                                }
+                                OpenBrowser.displayUrl(u.toString());
+                                break;
                             }
                         }
-                    } catch (Exception e) {
-                        e.printStackTrace();
                     }
+                } catch (Exception e1) {
+                    e1.printStackTrace();
                 }
             });
         } catch (Exception e1) {

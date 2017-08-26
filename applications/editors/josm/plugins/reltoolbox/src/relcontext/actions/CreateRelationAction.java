@@ -24,6 +24,7 @@ import org.openstreetmap.josm.command.AddCommand;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.RelationMember;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.tagging.ac.AutoCompletingComboBox;
 import org.openstreetmap.josm.tools.GBC;
 import org.openstreetmap.josm.tools.Shortcut;
@@ -66,7 +67,7 @@ public class CreateRelationAction extends JosmAction {
             rel.addMember(new RelationMember("", selected));
         }
 
-        Main.main.undoRedo.add(new AddCommand(rel));
+        MainApplication.undoRedo.add(new AddCommand(rel));
 
         if (chRel != null) {
             chRel.set(rel);

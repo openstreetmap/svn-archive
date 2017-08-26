@@ -1,7 +1,9 @@
 // License: GPL. For details, see LICENSE file.
 package org.wikipedia;
 
-import org.openstreetmap.josm.Main;
+import javax.swing.JMenu;
+
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MainMenu;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.plugins.Plugin;
@@ -18,9 +20,10 @@ public class WikipediaPlugin extends Plugin {
     public WikipediaPlugin(PluginInformation info) {
         super(info);
         new WikipediaCopyTemplate();
-        MainMenu.add(Main.main.menu.dataMenu, new WikipediaAddNamesAction());
-        MainMenu.add(Main.main.menu.dataMenu, new FetchWikidataAction());
-        MainMenu.add(Main.main.menu.dataMenu, new WikidataItemSearchDialog.Action());
+        JMenu dataMenu = MainApplication.getMenu().dataMenu;
+        MainMenu.add(dataMenu, new WikipediaAddNamesAction());
+        MainMenu.add(dataMenu, new FetchWikidataAction());
+        MainMenu.add(dataMenu, new WikidataItemSearchDialog.Action());
     }
 
     @Override

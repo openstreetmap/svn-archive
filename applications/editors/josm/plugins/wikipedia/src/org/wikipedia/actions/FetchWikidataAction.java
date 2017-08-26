@@ -22,9 +22,11 @@ import org.openstreetmap.josm.command.SequenceCommand;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.gui.ConditionalOptionPaneUtil;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.Notification;
 import org.openstreetmap.josm.gui.PleaseWaitRunnable;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
+import org.openstreetmap.josm.tools.Logging;
 import org.openstreetmap.josm.tools.MultiMap;
 import org.openstreetmap.josm.tools.Utils;
 import org.wikipedia.WikipediaApp;
@@ -44,7 +46,7 @@ public class FetchWikidataAction extends JosmAction {
         if (ds == null) {
             return;
         }
-        Main.worker.submit(new Fetcher(ds.getSelected()));
+        MainApplication.worker.submit(new Fetcher(ds.getSelected()));
     }
 
     public static class Fetcher extends PleaseWaitRunnable {
@@ -98,7 +100,7 @@ public class FetchWikidataAction extends JosmAction {
         @Override
         protected void finish() {
             if (!canceled && !commands.isEmpty()) {
-                Main.main.undoRedo.add(commands.size() == 1 ? commands.get(0) : new SequenceCommand(tr("Add Wikidata"), commands));
+                MainApplication.undoRedo.add(commands.size() == 1 ? commands.get(0) : new SequenceCommand(tr("Add Wikidata"), commands));
             }
             if (!canceled && !notFound.isEmpty()) {
                 new Notification(tr("No Wikidata ID found for: {0}", Utils.joinAsHtmlUnorderedList(notFound)))
@@ -139,7 +141,7 @@ public class FetchWikidataAction extends JosmAction {
                     }
                 } else {
                     final WikipediaEntry article = new WikipediaEntry(lang, wikipedia);
-                    Main.warn(tr("No Wikidata ID found for: {0}", article));
+                    Logging.warn(tr("No Wikidata ID found for: {0}", article));
                     notFound.add(article);
                 }
             }

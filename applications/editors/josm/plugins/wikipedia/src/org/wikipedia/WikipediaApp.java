@@ -33,6 +33,7 @@ import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.gui.datatransfer.ClipboardUtils;
 import org.openstreetmap.josm.tools.HttpClient;
+import org.openstreetmap.josm.tools.Logging;
 import org.openstreetmap.josm.tools.Utils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -192,7 +193,7 @@ public final class WikipediaApp {
                         if (x.length == 2) {
                             status.put(x[0], "1".equals(x[1]));
                         } else {
-                            Main.error("Unknown element " + line);
+                            Logging.error("Unknown element " + line);
                         }
                     });
                 }
@@ -482,8 +483,8 @@ public final class WikipediaApp {
         try {
             return DocumentBuilderFactory.newInstance().newDocumentBuilder();
         } catch (ParserConfigurationException e) {
-            Main.warn("Cannot create DocumentBuilder");
-            Main.warn(e);
+        	Logging.warn("Cannot create DocumentBuilder");
+        	Logging.warn(e);
             throw new RuntimeException(e);
         }
     }

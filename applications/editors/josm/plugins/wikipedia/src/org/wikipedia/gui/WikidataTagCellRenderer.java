@@ -20,6 +20,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.util.GuiHelper;
+import org.openstreetmap.josm.tools.Logging;
 import org.openstreetmap.josm.tools.Utils;
 import org.wikipedia.WikipediaApp;
 import org.wikipedia.data.WikidataEntry;
@@ -69,8 +70,8 @@ public class WikidataTagCellRenderer extends DefaultTableCellRenderer {
             try {
                 label = labelCache.get(id).get();
             } catch (InterruptedException | ExecutionException e) {
-                Main.warn("Could not fetch Wikidata label for " + id);
-                Main.warn(e);
+                Logging.warn("Could not fetch Wikidata label for " + id);
+                Logging.warn(e);
                 return null;
             }
             if (label == null) {

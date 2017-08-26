@@ -15,6 +15,7 @@ import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.io.remotecontrol.AddTagsDialog;
+import org.openstreetmap.josm.tools.Logging;
 import org.wikipedia.WikipediaApp;
 import org.wikipedia.data.WikipediaEntry;
 
@@ -34,8 +35,8 @@ public class WikipediaAddNamesAction extends JosmAction {
                 .filter(this::useWikipediaLangArticle)
                 .map(i -> new String[]{"name:" + i.lang, i.article})
                 .forEach(tags::add);
-        if (Main.isDebugEnabled()) {
-            Main.debug(tags.toString());
+        if (Logging.isDebugEnabled()) {
+        	Logging.debug(tags.toString());
         }
         AddTagsDialog.addTags(tags.toArray(new String[tags.size()][]), "Wikipedia", getLayerManager().getEditDataSet().getSelected());
     }

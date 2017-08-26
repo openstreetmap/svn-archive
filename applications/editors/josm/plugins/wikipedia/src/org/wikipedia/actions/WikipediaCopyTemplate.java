@@ -17,6 +17,7 @@ import org.openstreetmap.josm.data.Preferences.pref;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MainMenu;
 import org.openstreetmap.josm.gui.datatransfer.ClipboardUtils;
 
@@ -33,10 +34,10 @@ public class WikipediaCopyTemplate {
             Main.pref.getListOfStructs("wikipedia.copytemplates", DEFAULT_TEMPLATES, CoordCopyTemplateEntry.class);
 
     public WikipediaCopyTemplate() {
-        JosmAction previous = Main.main.menu.copyCoordinates;
+        JosmAction previous = MainApplication.getMenu().copyCoordinates;
         for (final CoordCopyTemplateEntry templateEntry : TEMPLATE_ENTRIES) {
             CoordCopyTemplate t = new CoordCopyTemplate(templateEntry);
-            final JMenuItem menu = MainMenu.addAfter(Main.main.menu.editMenu, t, false, previous);
+            final JMenuItem menu = MainMenu.addAfter(MainApplication.getMenu().editMenu, t, false, previous);
             menu.setToolTipText(tr("Copies the {0} template to the system clipboard instantiated with the coordinates of the first selected node", templateEntry.name));
             previous = t;
         }

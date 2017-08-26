@@ -24,6 +24,7 @@ import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Tag;
 import org.openstreetmap.josm.gui.ExtendedDialog;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.tagging.ac.AutoCompletingComboBox;
 import org.openstreetmap.josm.gui.tagging.ac.AutoCompletionListItem;
 import org.openstreetmap.josm.gui.util.GuiHelper;
@@ -73,7 +74,7 @@ public final class WikidataItemSearchDialog extends ExtendedDialog {
     }
 
     private void initTargetKeys() {
-        final DataSet editDataSet = Main.getLayerManager().getEditDataSet();
+        final DataSet editDataSet = MainApplication.getLayerManager().getEditDataSet();
         if (editDataSet == null) {
             return;
         }

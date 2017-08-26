@@ -31,14 +31,18 @@ import org.openstreetmap.josm.data.osm.event.AbstractDatasetChangedEvent;
 import org.openstreetmap.josm.data.osm.event.DataSetListenerAdapter;
 import org.openstreetmap.josm.data.osm.event.DatasetEventManager;
 import org.openstreetmap.josm.data.osm.event.DatasetEventManager.FireMode;
+import org.openstreetmap.josm.data.osm.search.SearchMode;
 import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
 import org.openstreetmap.josm.data.preferences.StringProperty;
+import org.openstreetmap.josm.gui.MainApplication;
+import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.SideButton;
 import org.openstreetmap.josm.gui.dialogs.ToggleDialog;
 import org.openstreetmap.josm.gui.layer.MainLayerManager.ActiveLayerChangeEvent;
 import org.openstreetmap.josm.gui.layer.MainLayerManager.ActiveLayerChangeListener;
 import org.openstreetmap.josm.tools.ImageProvider;
 import org.openstreetmap.josm.tools.LanguageInfo;
+import org.openstreetmap.josm.tools.Logging;
 import org.openstreetmap.josm.tools.OpenBrowser;
 import org.wikipedia.WikipediaApp;
 import org.wikipedia.actions.FetchWikidataAction;
@@ -70,15 +74,15 @@ public class WikipediaToggleDialog extends ToggleDialog implements ActiveLayerCh
 
                 @Override
                 public void mouseClicked(MouseEvent e) {
-                    if (e.getClickCount() == 2 && getSelectedValue() != null && Main.getLayerManager().getEditDataSet() != null) {
+                    if (e.getClickCount() == 2 && getSelectedValue() != null && MainApplication.getLayerManager().getEditDataSet() != null) {
                         final WikipediaEntry entry = getSelectedValue();
                         if (entry.coordinate != null) {
                             BoundingXYVisitor bbox = new BoundingXYVisitor();
                             bbox.visit(entry.coordinate);
-                            Main.map.mapView.zoomTo(bbox);
+                            MainApplication.getMap().mapView.zoomTo(bbox);
                         }
                         final String search = entry.getSearchText().replaceAll("\\(.*\\)", "");
-                        SearchAction.search(search, SearchAction.SearchMode.replace);
+                        SearchAction.search(search, SearchMode.replace);
                     }
                 }
             });
@@ -145,8 +149,9 @@ public class WikipediaToggleDialog extends ToggleDialog implements ActiveLayerCh
         public void actionPerformed(ActionEvent e) {
             try {
                 // determine bbox
-                final LatLon min = Main.map.mapView.getLatLon(0, Main.map.mapView.getHeight());
-                final LatLon max = Main.map.mapView.getLatLon(Main.map.mapView.getWidth(), 0);
+            	MapView mapView = MainApplication.getMap().mapView;
+                final LatLon min = mapView.getLatLon(0, mapView.getHeight());
+                final LatLon max = mapView.getLatLon(mapView.getWidth(), 0);
                 // add entries to list model
                 titleContext = tr("coordinates");
                 updateTitle();
@@ -257,7 +262,7 @@ public class WikipediaToggleDialog extends ToggleDialog implements ActiveLayerCh
         public void actionPerformed(ActionEvent e) {
             if (list.getSelectedValue() != null) {
                 final String url = list.getSelectedValue().getBrowserUrl();
-                Main.info("Wikipedia: opening " + url);
+                Logging.info("Wikipedia: opening " + url);
                 OpenBrowser.displayUrl(url);
             }
         }
@@ -312,15 +317,15 @@ public class WikipediaToggleDialog extends ToggleDialog implements ActiveLayerCh
             if (tag == null) {
                 return;
             }
-            final Collection<OsmPrimitive> selected = Main.getLayerManager().getEditDataSet().getSelected();
+            final Collection<OsmPrimitive> selected = MainApplication.getLayerManager().getEditDataSet().getSelected();
             if (!GuiUtils.confirmOverwrite(tag.getKey(), tag.getValue(), selected)) {
                 return;
             }
             ChangePropertyCommand cmd = new ChangePropertyCommand(
                     selected,
                     tag.getKey(), tag.getValue());
-            Main.main.undoRedo.add(cmd);
-            Main.worker.submit(new FetchWikidataAction.Fetcher(selected));
+            MainApplication.undoRedo.add(cmd);
+            MainApplication.worker.submit(new FetchWikidataAction.Fetcher(selected));
         }
     }
 
@@ -344,15 +349,15 @@ public class WikipediaToggleDialog extends ToggleDialog implements ActiveLayerCh
             if (latLon == null) {
                 return;
             }
-            Main.map.mapView.zoomTo(latLon);
+            MainApplication.getMap().mapView.zoomTo(latLon);
         }
     }
 
     protected void updateWikipediaArticles() {
         final String language = getLanguageOfFirstItem();
         articles.clear();
-        if (Main.main != null && Main.getLayerManager().getEditDataSet() != null) {
-            Main.getLayerManager().getEditDataSet().allPrimitives().stream()
+        if (Main.main != null && MainApplication.getLayerManager().getEditDataSet() != null) {
+        	MainApplication.getLayerManager().getEditDataSet().allPrimitives().stream()
                     .flatMap(p -> WikipediaApp.forLanguage(language).getWikipediaArticles(p))
                     .forEach(articles::add);
         }
@@ -363,14 +368,14 @@ public class WikipediaToggleDialog extends ToggleDialog implements ActiveLayerCh
     @Override
     public void showNotify() {
         DatasetEventManager.getInstance().addDatasetListener(dataChangedAdapter, FireMode.IN_EDT_CONSOLIDATED);
-        Main.getLayerManager().addActiveLayerChangeListener(this);
+        MainApplication.getLayerManager().addActiveLayerChangeListener(this);
         updateWikipediaArticles();
     }
 
     @Override
     public void hideNotify() {
         DatasetEventManager.getInstance().removeDatasetListener(dataChangedAdapter);
-        Main.getLayerManager().removeActiveLayerChangeListener(this);
+        MainApplication.getLayerManager().removeActiveLayerChangeListener(this);
         articles.clear();
     }
 

@@ -14,6 +14,7 @@ import javax.xml.parsers.SAXParserFactory;
 
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.io.UTFInputStreamReader;
+import org.openstreetmap.josm.tools.Logging;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -162,7 +163,7 @@ public class IODBReader {
                     } catch (IllegalArgumentException ex) {
                         // On one hand, we don't care, but this situation is one
                         // of those "it can never happen" cases.
-                        System.err.println(ex.getMessage());
+                        Logging.warn(ex);
                     }
                     parsingOffset = false;
                 }

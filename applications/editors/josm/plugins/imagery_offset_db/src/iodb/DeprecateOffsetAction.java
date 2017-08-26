@@ -12,7 +12,9 @@ import javax.swing.JOptionPane;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.JosmUserIdentityManager;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.tools.ImageProvider;
+import org.openstreetmap.josm.tools.Logging;
 
 /**
  * A context-dependent action to deprecate an offset.
@@ -42,7 +44,7 @@ public class DeprecateOffsetAction extends AbstractAction {
      */
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (Main.map == null || Main.map.mapView == null || !Main.map.isVisible())
+        if (!MainApplication.isDisplayingMapView() || !MainApplication.getMap().isVisible())
             return;
 
         String desc = offset instanceof ImageryOffset ?
@@ -97,9 +99,9 @@ public class DeprecateOffsetAction extends AbstractAction {
                     SimpleOffsetQueryTask depTask = new SimpleOffsetQueryTask(query, tr("Notifying the server of the deprecation..."));
                     if (listener != null)
                         depTask.setListener(listener);
-                    Main.worker.submit(depTask);
+                    MainApplication.worker.submit(depTask);
                 } catch (UnsupportedEncodingException ex) {
-                    Main.error(ex);
+                    Logging.error(ex);
                 }
     }
 }

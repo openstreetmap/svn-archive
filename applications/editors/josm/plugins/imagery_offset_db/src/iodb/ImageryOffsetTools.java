@@ -11,6 +11,7 @@ import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.imagery.OffsetBookmark;
 import org.openstreetmap.josm.data.projection.Projection;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.layer.AbstractTileSourceLayer;
 
@@ -35,9 +36,9 @@ public final class ImageryOffsetTools {
      * @return the layer, or null if it hasn't been found.
      */
     public static AbstractTileSourceLayer getTopImageryLayer() {
-        if (Main.map == null || Main.map.mapView == null)
+        if (!MainApplication.isDisplayingMapView())
             return null;
-        List<AbstractTileSourceLayer> layers = Main.getLayerManager().getLayersOfType(AbstractTileSourceLayer.class);
+        List<AbstractTileSourceLayer> layers = MainApplication.getLayerManager().getLayersOfType(AbstractTileSourceLayer.class);
         for (AbstractTileSourceLayer layer : layers) {
             String url = layer.getInfo().getUrl();
             if (layer.isVisible() && url != null && !url.contains("gps-")) {
@@ -53,8 +54,8 @@ public final class ImageryOffsetTools {
      */
     public static LatLon getMapCenter() {
         Projection proj = Main.getProjection();
-        return Main.map == null || Main.map.mapView == null
-                ? new LatLon(0, 0) : proj.eastNorth2latlon(Main.map.mapView.getCenter());
+        return !MainApplication.isDisplayingMapView()
+                ? new LatLon(0, 0) : proj.eastNorth2latlon(MainApplication.getMap().mapView.getCenter());
     }
 
     /**
@@ -66,7 +67,7 @@ public final class ImageryOffsetTools {
      */
     public static LatLon getLayerOffset(AbstractTileSourceLayer layer, LatLon center) {
         Projection proj = Main.getProjection();
-        EastNorth offsetCenter = Main.map.mapView.getCenter();
+        EastNorth offsetCenter = MainApplication.getMap().mapView.getCenter();
         EastNorth centerOffset = offsetCenter.add(-layer.getDisplaySettings().getDx(),
                 -layer.getDisplaySettings().getDy());
         LatLon offsetLL = proj.eastNorth2latlon(centerOffset);
@@ -120,10 +121,10 @@ public final class ImageryOffsetTools {
     }
 
     public static int getCurrentZoom() {
-        if (Main.map == null || Main.map.mapView == null) {
+        if (!MainApplication.isDisplayingMapView()) {
             return 1;
         }
-        MapView mv = Main.map.mapView;
+        MapView mv = MainApplication.getMap().mapView;
         LatLon topLeft = mv.getLatLon(0, 0);
         LatLon botRight = mv.getLatLon(mv.getWidth(), mv.getHeight());
         double x1 = lonToTileX(topLeft.lon(), 1);

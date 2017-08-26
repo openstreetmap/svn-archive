@@ -11,6 +11,7 @@ import javax.swing.JMenu;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.Version;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.preferences.ToolbarPreferences;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
@@ -41,8 +42,8 @@ public class ImageryOffsetPlugin extends Plugin {
         // before 5729 it was regenerated only when the imagery list was modified (also bad)
         int version = Version.getInstance().getVersion();
         JMenu offsetMenu = version < 5803
-                ? Main.main.menu.addMenu("Offset", tr("Offset"), KeyEvent.VK_O, 6, "help")
-                        : Main.main.menu.imageryMenu;
+                ? MainApplication.getMenu().addMenu("Offset", tr("Offset"), KeyEvent.VK_O, 6, "help")
+                        : MainApplication.getMenu().imageryMenu;
                 offsetMenu.add(getAction);
                 offsetMenu.add(storeAction);
 
@@ -52,7 +53,7 @@ public class ImageryOffsetPlugin extends Plugin {
                     if (!toolbar.contains("getoffset")) {
                         toolbar.add("getoffset");
                         Main.pref.putCollection("toolbar", toolbar);
-                        Main.toolbar.refreshToolbarControl();
+                        MainApplication.getToolbar().refreshToolbarControl();
                     }
                     Main.pref.put("iodb.modify.toolbar", false);
                 }

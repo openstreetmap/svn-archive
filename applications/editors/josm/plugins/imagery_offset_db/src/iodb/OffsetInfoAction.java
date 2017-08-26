@@ -12,7 +12,9 @@ import javax.swing.AbstractAction;
 import javax.swing.JOptionPane;
 
 import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.tools.ImageProvider;
+import org.openstreetmap.josm.tools.Logging;
 
 /**
  * Display an information box for an offset.
@@ -60,9 +62,9 @@ public class OffsetInfoAction extends AbstractAction {
                         + "&reason=" + URLEncoder.encode(reason.toString(), "UTF8");
                         SimpleOffsetQueryTask reportTask =
                                 new SimpleOffsetQueryTask(query, tr("Reporting the offset..."));
-                        Main.worker.submit(reportTask);
+                        MainApplication.worker.submit(reportTask);
                     } catch (UnsupportedEncodingException ex) {
-                        Main.error(ex);
+                        Logging.error(ex);
                     }
                 }
             }

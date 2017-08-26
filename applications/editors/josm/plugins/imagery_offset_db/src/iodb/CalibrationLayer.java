@@ -18,11 +18,11 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.Icon;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.AutoScaleAction;
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.dialogs.LayerListDialog;
 import org.openstreetmap.josm.gui.dialogs.LayerListPopup;
@@ -151,13 +151,13 @@ public class CalibrationLayer extends Layer {
             LatLon[] geometry = obj.getGeometry();
             double lat = 0.0;
             double lon = 0.0;
-            for (int i = 0; i < geometry.length; i++) {
-                lon += geometry[i].lon();
-                lat += geometry[i].lat();
+            for (LatLon ll : geometry) {
+                lon += ll.lon();
+                lat += ll.lat();
             }
             center = new LatLon(lat / geometry.length, lon / geometry.length);
         }
-        Main.map.mapView.zoomTo(center);
+        MainApplication.getMap().mapView.zoomTo(center);
     }
 
     /**
@@ -177,7 +177,7 @@ public class CalibrationLayer extends Layer {
         @Override
         public void actionPerformed(ActionEvent e) {
             color = c;
-            Main.map.mapView.repaint();
+            MainApplication.getMap().mapView.repaint();
         }
     }
 

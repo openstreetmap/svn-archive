@@ -20,6 +20,7 @@ import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.data.coor.CoordinateFormat;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.projection.Projection;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.layer.AbstractTileSourceLayer;
 import org.openstreetmap.josm.tools.ImageProvider;
 import org.openstreetmap.josm.tools.Shortcut;
@@ -53,17 +54,17 @@ public class GetImageryOffsetAction extends JosmAction implements ImageryOffsetW
      */
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (Main.map == null || Main.map.mapView == null || !Main.map.isVisible())
+        if (!MainApplication.isDisplayingMapView() || !MainApplication.getMap().isVisible())
             return;
-        Projection proj = Main.map.mapView.getProjection();
-        LatLon center = proj.eastNorth2latlon(Main.map.mapView.getCenter());
+        Projection proj = MainApplication.getMap().mapView.getProjection();
+        LatLon center = proj.eastNorth2latlon(MainApplication.getMap().mapView.getCenter());
         AbstractTileSourceLayer layer = ImageryOffsetTools.getTopImageryLayer();
         String imagery = ImageryOffsetTools.getImageryID(layer);
         if (imagery == null)
             return;
 
         DownloadOffsetsTask download = new DownloadOffsetsTask(center, layer, imagery);
-        Main.worker.submit(download);
+        MainApplication.worker.submit(download);
     }
 
     /**
@@ -73,7 +74,7 @@ public class GetImageryOffsetAction extends JosmAction implements ImageryOffsetW
     @Override
     protected void updateEnabledState() {
         boolean state = true;
-        if (Main.map == null || Main.map.mapView == null || !Main.map.isVisible())
+        if (!MainApplication.isDisplayingMapView() || !MainApplication.getMap().isVisible())
             state = false;
         AbstractTileSourceLayer layer = ImageryOffsetTools.getTopImageryLayer();
         if (ImageryOffsetTools.getImageryID(layer) == null)

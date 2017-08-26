@@ -14,6 +14,7 @@ import java.util.TreeMap;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.imagery.OffsetBookmark;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.NavigatableComponent.ZoomChangeListener;
 import org.openstreetmap.josm.gui.layer.AbstractTileSourceLayer;
@@ -50,8 +51,8 @@ public final class ImageryOffsetWatcher implements ZoomChangeListener, LayerChan
     private ImageryOffsetWatcher() {
         maxDistance = Main.pref.getDouble("iodb.offset.radius", 15);
         MapView.addZoomChangeListener(this);
-        Main.getLayerManager().addLayerChangeListener(this);
-        Main.getLayerManager().addActiveLayerChangeListener(this);
+        MainApplication.getLayerManager().addLayerChangeListener(this);
+        MainApplication.getLayerManager().addActiveLayerChangeListener(this);
         checkOffset(); // we assume there's at the most one imagery layer at this moment
         time = new Timer();
         time.schedule(new IntervalOffsetChecker(), 0, 2000);
@@ -63,8 +64,8 @@ public final class ImageryOffsetWatcher implements ZoomChangeListener, LayerChan
     @Override
     public void destroy() {
         MapView.removeZoomChangeListener(this);
-        Main.getLayerManager().removeLayerChangeListener(this);
-        Main.getLayerManager().removeActiveLayerChangeListener(this);
+        MainApplication.getLayerManager().removeLayerChangeListener(this);
+        MainApplication.getLayerManager().removeActiveLayerChangeListener(this);
         time.cancel();
     }
 

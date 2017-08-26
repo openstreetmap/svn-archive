@@ -19,7 +19,9 @@ import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.gui.JosmUserIdentityManager;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.layer.AbstractTileSourceLayer;
+import org.openstreetmap.josm.tools.Logging;
 
 /**
  * Upload the current imagery offset or an calibration geometry information.
@@ -48,7 +50,7 @@ public class StoreImageryOffsetAction extends JosmAction {
      */
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (Main.map == null || Main.map.mapView == null)
+        if (!MainApplication.isDisplayingMapView())
             return;
 
         AbstractTileSourceLayer layer = ImageryOffsetTools.getTopImageryLayer();
@@ -125,9 +127,9 @@ public class StoreImageryOffsetAction extends JosmAction {
                 }
                 query.append(key).append('=').append(URLEncoder.encode(params.get(key), "UTF8"));
             }
-            Main.worker.submit(new SimpleOffsetQueryTask(query.toString(), tr("Uploading a new offset...")));
+            MainApplication.worker.submit(new SimpleOffsetQueryTask(query.toString(), tr("Uploading a new offset...")));
         } catch (UnsupportedEncodingException ex) {
-            Main.error(ex);
+            Logging.error(ex);
         }
     }
 
@@ -166,7 +168,7 @@ public class StoreImageryOffsetAction extends JosmAction {
     @Override
     protected void updateEnabledState() {
         boolean state = true;
-        if (Main.map == null || Main.map.mapView == null || !Main.map.isVisible())
+        if (!MainApplication.isDisplayingMapView() || !MainApplication.getMap().isVisible())
             state = false;
         if (ImageryOffsetTools.getTopImageryLayer() == null)
             state = false;

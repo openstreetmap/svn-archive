@@ -37,6 +37,7 @@ import javax.swing.border.EmptyBorder;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.gui.JosmUserIdentityManager;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.NavigatableComponent.ZoomChangeListener;
 import org.openstreetmap.josm.gui.layer.AbstractTileSourceLayer;
@@ -153,7 +154,7 @@ public class OffsetDialog extends JDialog implements ActionListener, ZoomChangeL
             buttonPanel.add(button);
         }
         pack();
-        Main.map.mapView.repaint();
+        MainApplication.getMap().mapView.repaint();
     }
 
     /**
@@ -222,8 +223,8 @@ public class OffsetDialog extends JDialog implements ActionListener, ZoomChangeL
         prepareDialog();
         MapView.addZoomChangeListener(this);
         if (!MODAL) {
-            Main.map.mapView.addTemporaryLayer(this);
-            Main.map.mapView.repaint();
+            MainApplication.getMap().mapView.addTemporaryLayer(this);
+            MainApplication.getMap().mapView.repaint();
         }
         setVisible(true);
         return selectedOffset;
@@ -251,8 +252,8 @@ public class OffsetDialog extends JDialog implements ActionListener, ZoomChangeL
         }
         if (!MODAL) {
             if (closeDialog) {
-                Main.map.mapView.removeTemporaryLayer(this);
-                Main.map.mapView.repaint();
+                MainApplication.getMap().mapView.removeTemporaryLayer(this);
+                MainApplication.getMap().mapView.repaint();
             }
             if (selectedOffset != null) {
                 applyOffset();
@@ -272,7 +273,7 @@ public class OffsetDialog extends JDialog implements ActionListener, ZoomChangeL
             AbstractTileSourceLayer layer = ImageryOffsetTools.getTopImageryLayer();
             ImageryOffsetTools.applyLayerOffset(layer, (ImageryOffset) selectedOffset);
             ImageryOffsetWatcher.getInstance().markGood();
-            Main.map.repaint();
+            MainApplication.getMap().repaint();
             if (!Main.pref.getBoolean("iodb.offset.message", false)) {
                 JOptionPane.showMessageDialog(Main.parent,
                         tr("The topmost imagery layer has been shifted to presumably match\n"
@@ -283,7 +284,7 @@ public class OffsetDialog extends JDialog implements ActionListener, ZoomChangeL
             }
         } else if (selectedOffset instanceof CalibrationObject) {
             CalibrationLayer clayer = new CalibrationLayer((CalibrationObject) selectedOffset);
-            Main.getLayerManager().addLayer(clayer);
+            MainApplication.getLayerManager().addLayer(clayer);
             clayer.panToCenter();
             if (!Main.pref.getBoolean("iodb.calibration.message", false)) {
                 JOptionPane.showMessageDialog(Main.parent,

@@ -17,8 +17,8 @@ public enum TurnRestrictionType {
     ONLY_LEFT_TURN("only_left_turn", tr("Only Left Turn")),
     ONLY_STRAIGHT_ON("only_straight_on", tr("Only Straight On"));
 
-    private String tagValue;
-    private String displayName;
+    private final String tagValue;
+    private final String displayName;
 
     TurnRestrictionType(String tagValue, String displayName) {
         this.tagValue = tagValue;

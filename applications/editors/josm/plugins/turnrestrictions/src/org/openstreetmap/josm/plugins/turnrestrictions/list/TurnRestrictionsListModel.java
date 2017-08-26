@@ -12,10 +12,10 @@ import java.util.Set;
 import javax.swing.AbstractListModel;
 import javax.swing.DefaultListSelectionModel;
 
+import org.openstreetmap.josm.data.osm.DefaultNameFormatter;
 import org.openstreetmap.josm.data.osm.NameFormatter;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
-import org.openstreetmap.josm.gui.DefaultNameFormatter;
 
 /**
  * This is a list model for a list of turn restrictions.

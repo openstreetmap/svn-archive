@@ -42,11 +42,12 @@ import org.openstreetmap.josm.command.conflict.ConflictAddCommand;
 import org.openstreetmap.josm.data.Preferences.PreferenceChangeEvent;
 import org.openstreetmap.josm.data.Preferences.PreferenceChangedListener;
 import org.openstreetmap.josm.data.conflict.Conflict;
+import org.openstreetmap.josm.data.osm.DefaultNameFormatter;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.RelationMember;
-import org.openstreetmap.josm.gui.DefaultNameFormatter;
 import org.openstreetmap.josm.gui.HelpAwareOptionPane;
 import org.openstreetmap.josm.gui.HelpAwareOptionPane.ButtonSpec;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.dialogs.relation.RelationEditor;
 import org.openstreetmap.josm.gui.help.ContextSensitiveHelpAction;
 import org.openstreetmap.josm.gui.help.HelpUtil;
@@ -544,7 +545,7 @@ public class TurnRestrictionEditor extends JDialog implements NavigationControle
                 removeDeletedMembers(newTurnRestriction);
             }
 
-            Main.main.undoRedo.add(new AddCommand(getLayer(), newTurnRestriction));
+            MainApplication.undoRedo.add(new AddCommand(getLayer(), newTurnRestriction));
 
             // make sure everybody is notified about the changes
             //
@@ -566,7 +567,7 @@ public class TurnRestrictionEditor extends JDialog implements NavigationControle
             Relation toUpdate = new Relation(getTurnRestriction());
             editorModel.apply(toUpdate);
             Conflict<Relation> conflict = new Conflict<>(getTurnRestriction(), toUpdate);
-            Main.main.undoRedo.add(new ConflictAddCommand(getLayer(), conflict));
+            MainApplication.undoRedo.add(new ConflictAddCommand(getLayer(), conflict));
         }
 
         /**
@@ -576,11 +577,11 @@ public class TurnRestrictionEditor extends JDialog implements NavigationControle
         protected void applyExistingNonConflictingTurnRestriction() {
             if (getTurnRestriction().getDataSet() == null) {
                 editorModel.apply(getTurnRestriction());
-                Main.main.undoRedo.add(new AddCommand(getTurnRestriction()));
+                MainApplication.undoRedo.add(new AddCommand(getTurnRestriction()));
             } else {
                 Relation toUpdate = new Relation(getTurnRestriction());
                 editorModel.apply(toUpdate);
-                Main.main.undoRedo.add(new ChangeCommand(getTurnRestriction(), toUpdate));
+                MainApplication.undoRedo.add(new ChangeCommand(getTurnRestriction(), toUpdate));
             }
             // this will refresh the snapshot and update the dialog title
             //
@@ -825,8 +826,8 @@ public class TurnRestrictionEditor extends JDialog implements NavigationControle
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            if (Main.getLayerManager().getActiveLayer() != getLayer()) {
-                Main.getLayerManager().setActiveLayer(getLayer());
+            if (MainApplication.getLayerManager().getActiveLayer() != getLayer()) {
+                MainApplication.getLayerManager().setActiveLayer(getLayer());
             }
             Relation tr = getTurnRestriction();
             if (tr == null || tr.getDataSet() == null) return;

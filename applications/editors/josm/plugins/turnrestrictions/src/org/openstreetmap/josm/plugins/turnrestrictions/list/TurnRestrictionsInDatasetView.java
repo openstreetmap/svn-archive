@@ -8,10 +8,10 @@ import javax.swing.JList;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.osm.event.DataSetListener;
 import org.openstreetmap.josm.data.osm.event.DatasetEventManager;
 import org.openstreetmap.josm.data.osm.event.DatasetEventManager.FireMode;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.layer.MainLayerManager.ActiveLayerChangeListener;
 
 /**
@@ -31,15 +31,15 @@ public class TurnRestrictionsInDatasetView extends AbstractTurnRestrictionsListV
     }
 
     protected void registerAsListener() {
-        Main.getLayerManager().addActiveLayerChangeListener((ActiveLayerChangeListener) model);
+        MainApplication.getLayerManager().addActiveLayerChangeListener((ActiveLayerChangeListener) model);
         DatasetEventManager.getInstance().addDatasetListener((DataSetListener) model, FireMode.IN_EDT);
-        if (Main.getLayerManager().getEditLayer() != null) {
-            model.setTurnRestrictions(Main.getLayerManager().getEditLayer().data.getRelations());
+        if (MainApplication.getLayerManager().getEditLayer() != null) {
+            model.setTurnRestrictions(MainApplication.getLayerManager().getEditLayer().data.getRelations());
         }
     }
 
     protected void unregisterAsListener() {
-        Main.getLayerManager().removeActiveLayerChangeListener((ActiveLayerChangeListener) model);
+        MainApplication.getLayerManager().removeActiveLayerChangeListener((ActiveLayerChangeListener) model);
         DatasetEventManager.getInstance().removeDatasetListener((DataSetListener) model);
     }
 

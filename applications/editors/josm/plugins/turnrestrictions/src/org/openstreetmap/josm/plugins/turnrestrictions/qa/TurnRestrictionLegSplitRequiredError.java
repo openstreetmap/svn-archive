@@ -9,13 +9,13 @@ import java.util.Collections;
 
 import javax.swing.AbstractAction;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.SplitWayAction;
 import org.openstreetmap.josm.actions.SplitWayAction.SplitWayResult;
+import org.openstreetmap.josm.data.osm.DefaultNameFormatter;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Way;
-import org.openstreetmap.josm.gui.DefaultNameFormatter;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.plugins.turnrestrictions.TurnRestrictionBuilder;
 import org.openstreetmap.josm.plugins.turnrestrictions.editor.TurnRestrictionLegRole;
 import org.openstreetmap.josm.plugins.turnrestrictions.editor.TurnRestrictionType;
@@ -139,7 +139,7 @@ public class TurnRestrictionLegSplitRequiredError extends Issue {
                           Collections.<OsmPrimitive>emptyList()
                   );
                   if (result != null) {
-                      Main.main.undoRedo.add(result.getCommand());
+                	  MainApplication.undoRedo.add(result.getCommand());
                   }
             }
 
@@ -151,7 +151,7 @@ public class TurnRestrictionLegSplitRequiredError extends Issue {
                         Collections.<OsmPrimitive>emptyList()
                 );
                 if (result != null) {
-                    Main.main.undoRedo.add(result.getCommand());
+                    MainApplication.undoRedo.add(result.getCommand());
                 }
                 if (result == null) return;
                 TurnRestrictionType restrictionType = TurnRestrictionType.fromTagValue(

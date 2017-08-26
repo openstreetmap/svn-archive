@@ -10,9 +10,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map.Entry;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.osm.PrimitiveId;
 import org.openstreetmap.josm.data.osm.Relation;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.gui.layer.LayerManager.LayerAddEvent;
 import org.openstreetmap.josm.gui.layer.LayerManager.LayerChangeListener;
@@ -38,7 +38,7 @@ public class TurnRestrictionEditorManager extends WindowAdapter implements Layer
     public static TurnRestrictionEditorManager getInstance() {
         if (TurnRestrictionEditorManager.instance == null) {
             TurnRestrictionEditorManager.instance = new TurnRestrictionEditorManager();
-            Main.getLayerManager().addLayerChangeListener(TurnRestrictionEditorManager.instance);
+            MainApplication.getLayerManager().addLayerChangeListener(TurnRestrictionEditorManager.instance);
         }
         return TurnRestrictionEditorManager.instance;
     }

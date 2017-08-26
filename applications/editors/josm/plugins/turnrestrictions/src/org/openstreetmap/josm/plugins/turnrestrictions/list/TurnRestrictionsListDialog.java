@@ -29,6 +29,7 @@ import org.openstreetmap.josm.data.Preferences.PreferenceChangedListener;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.RelationMember;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.SideButton;
 import org.openstreetmap.josm.gui.dialogs.ToggleDialog;
 import org.openstreetmap.josm.gui.help.HelpUtil;
@@ -78,7 +79,7 @@ public class TurnRestrictionsListDialog extends ToggleDialog {
     public void showNotify() {
         pnlTurnRestrictionsInDataSet.registerAsListener();
         pnlTurnRestrictionsInSelection.registerAsListener();
-        Main.getLayerManager().addActiveLayerChangeListener(actNew);
+        MainApplication.getLayerManager().addActiveLayerChangeListener(actNew);
         actNew.updateEnabledState();
         Main.pref.addPreferenceChangeListener(preferenceChangeHandler);
         preferenceChangeHandler.refreshIconSet();
@@ -88,7 +89,7 @@ public class TurnRestrictionsListDialog extends ToggleDialog {
     public void hideNotify() {
         pnlTurnRestrictionsInDataSet.unregisterAsListener();
         pnlTurnRestrictionsInSelection.unregisterAsListener();
-        Main.getLayerManager().removeActiveLayerChangeListener(actNew);
+        MainApplication.getLayerManager().removeActiveLayerChangeListener(actNew);
         Main.pref.removePreferenceChangeListener(preferenceChangeHandler);
     }
 
@@ -206,7 +207,7 @@ public class TurnRestrictionsListDialog extends ToggleDialog {
 
         protected Collection<RelationMember> getMembersForCurrentSelection(Relation r) {
             Collection<RelationMember> members = new HashSet<>();
-            Collection<OsmPrimitive> selection = Main.getLayerManager().getEditLayer().data.getSelected();
+            Collection<OsmPrimitive> selection = MainApplication.getLayerManager().getEditLayer().data.getSelected();
             for (RelationMember member: r.getMembers()) {
                 if (selection.contains(member.getMember())) {
                     members.add(member);
@@ -218,7 +219,7 @@ public class TurnRestrictionsListDialog extends ToggleDialog {
         public void launchEditor(Relation toEdit) {
             if (toEdit == null)
                 return;
-            OsmDataLayer layer = Main.getLayerManager().getEditLayer();
+            OsmDataLayer layer = MainApplication.getLayerManager().getEditLayer();
             TurnRestrictionEditorManager manager = TurnRestrictionEditorManager.getInstance();
             TurnRestrictionEditor editor = manager.getEditorForRelation(layer, toEdit);
             if (editor != null) {
@@ -270,7 +271,7 @@ public class TurnRestrictionsListDialog extends ToggleDialog {
             if (toDelete == null)
                 return;
             org.openstreetmap.josm.actions.mapmode.DeleteAction.deleteRelation(
-                    Main.getLayerManager().getEditLayer(),
+            		MainApplication.getLayerManager().getEditLayer(),
                     toDelete
             );
         }
@@ -307,7 +308,7 @@ public class TurnRestrictionsListDialog extends ToggleDialog {
         }
 
         public void run() {
-             OsmDataLayer layer = Main.getLayerManager().getEditLayer();
+             OsmDataLayer layer = MainApplication.getLayerManager().getEditLayer();
              if (layer == null) return;
              Relation tr = new TurnRestrictionBuilder().buildFromSelection(layer);
              TurnRestrictionEditor editor = new TurnRestrictionEditor(TurnRestrictionsListDialog.this, layer, tr);
@@ -322,7 +323,7 @@ public class TurnRestrictionsListDialog extends ToggleDialog {
         }
 
         public void updateEnabledState() {
-            setEnabled(Main.getLayerManager().getEditLayer() != null);
+            setEnabled(MainApplication.getLayerManager().getEditLayer() != null);
         }
 
         @Override
@@ -351,7 +352,7 @@ public class TurnRestrictionsListDialog extends ToggleDialog {
             if (!isEnabled()) return;
             List<Relation> toSelect = currentListView.getModel().getSelectedTurnRestrictions();
             if (toSelect.isEmpty()) return;
-            OsmDataLayer layer = Main.getLayerManager().getEditLayer();
+            OsmDataLayer layer = MainApplication.getLayerManager().getEditLayer();
             if (layer == null) return;
             layer.data.setSelected(toSelect);
         }
@@ -386,7 +387,7 @@ public class TurnRestrictionsListDialog extends ToggleDialog {
             if (!isEnabled()) return;
             List<Relation> toSelect = currentListView.getModel().getSelectedTurnRestrictions();
             if (toSelect.isEmpty()) return;
-            OsmDataLayer layer = Main.getLayerManager().getEditLayer();
+            OsmDataLayer layer = MainApplication.getLayerManager().getEditLayer();
             if (layer == null) return;
             layer.data.setSelected(toSelect);
             new AutoScaleAction("selection").autoScale();

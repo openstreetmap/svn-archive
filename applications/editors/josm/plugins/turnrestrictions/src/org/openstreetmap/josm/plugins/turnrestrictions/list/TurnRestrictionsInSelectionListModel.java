@@ -7,10 +7,10 @@ import java.util.Set;
 
 import javax.swing.DefaultListSelectionModel;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.SelectionChangedListener;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.layer.MainLayerManager.ActiveLayerChangeEvent;
 import org.openstreetmap.josm.gui.layer.MainLayerManager.ActiveLayerChangeListener;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
@@ -50,7 +50,7 @@ public class TurnRestrictionsInSelectionListModel extends TurnRestrictionsListMo
     /* --------------------------------------------------------------------------- */
     @Override
     public void activeOrEditLayerChanged(ActiveLayerChangeEvent e) {
-        OsmDataLayer newLayer = Main.getLayerManager().getEditLayer();
+        OsmDataLayer newLayer = MainApplication.getLayerManager().getEditLayer();
         if (newLayer == null) {
             setTurnRestrictions(null);
             return;

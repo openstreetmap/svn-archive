@@ -7,9 +7,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.util.Collection;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.data.osm.Relation;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import org.openstreetmap.josm.plugins.turnrestrictions.editor.TurnRestrictionEditor;
 import org.openstreetmap.josm.plugins.turnrestrictions.editor.TurnRestrictionEditorManager;
@@ -50,7 +50,7 @@ public class CreateOrEditTurnRestrictionAction extends JosmAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        OsmDataLayer layer = Main.getLayerManager().getEditLayer();
+        OsmDataLayer layer = getLayerManager().getEditLayer();
         if (layer == null) return;
         Collection<Relation> trs = TurnRestrictionSelectionPopupPanel.getTurnRestrictionsParticipatingIn(layer.data.getSelected());
         if (trs.isEmpty()) {
@@ -58,16 +58,14 @@ public class CreateOrEditTurnRestrictionAction extends JosmAction {
             // an editor for a new turn restriction
             //
             Relation tr = new TurnRestrictionBuilder().buildFromSelection(layer);
-            TurnRestrictionEditor editor = new TurnRestrictionEditor(Main.map.mapView, layer, tr);
+            TurnRestrictionEditor editor = new TurnRestrictionEditor(MainApplication.getMap().mapView, layer, tr);
             TurnRestrictionEditorManager.getInstance().positionOnScreen(editor);
             TurnRestrictionEditorManager.getInstance().register(layer, tr, editor);
             editor.setVisible(true);
         } else {
             // let the user choose whether he wants to create a new turn restriction or
             // edit one of the turn restrictions participating in the current selection
-            TurnRestrictionSelectionPopupPanel pnl = new TurnRestrictionSelectionPopupPanel(
-                    layer
-            );
+            TurnRestrictionSelectionPopupPanel pnl = new TurnRestrictionSelectionPopupPanel(layer);
             pnl.launch();
         }
     }

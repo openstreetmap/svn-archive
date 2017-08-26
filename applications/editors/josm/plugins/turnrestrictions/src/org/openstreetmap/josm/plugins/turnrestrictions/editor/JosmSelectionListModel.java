@@ -11,7 +11,6 @@ import javax.swing.AbstractListModel;
 import javax.swing.DefaultListSelectionModel;
 import javax.swing.ListSelectionModel;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.SelectionChangedListener;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.PrimitiveId;
@@ -24,6 +23,7 @@ import org.openstreetmap.josm.data.osm.event.PrimitivesRemovedEvent;
 import org.openstreetmap.josm.data.osm.event.RelationMembersChangedEvent;
 import org.openstreetmap.josm.data.osm.event.TagsChangedEvent;
 import org.openstreetmap.josm.data.osm.event.WayNodesChangedEvent;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.layer.MainLayerManager.ActiveLayerChangeEvent;
 import org.openstreetmap.josm.gui.layer.MainLayerManager.ActiveLayerChangeListener;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
@@ -154,7 +154,7 @@ public class JosmSelectionListModel extends AbstractListModel<OsmPrimitive>
     /* ------------------------------------------------------------------------ */
     @Override
     public void activeOrEditLayerChanged(ActiveLayerChangeEvent e) {
-        OsmDataLayer newLayer = Main.getLayerManager().getEditLayer();
+        OsmDataLayer newLayer = MainApplication.getLayerManager().getEditLayer();
         if (newLayer == null) {
             // don't show a JOSM selection if we don't have a data layer
             setJOSMSelection(null);
@@ -174,7 +174,7 @@ public class JosmSelectionListModel extends AbstractListModel<OsmPrimitive>
     public void selectionChanged(Collection<? extends OsmPrimitive> newSelection) {
         // only update the JOSM selection if it is changed in the same data layer
         // this turn restriction editor is working on
-        OsmDataLayer layer = Main.getLayerManager().getEditLayer();
+        OsmDataLayer layer = MainApplication.getLayerManager().getEditLayer();
         if (layer == null) return;
         if (layer != this.layer) return;
         setJOSMSelection(newSelection);

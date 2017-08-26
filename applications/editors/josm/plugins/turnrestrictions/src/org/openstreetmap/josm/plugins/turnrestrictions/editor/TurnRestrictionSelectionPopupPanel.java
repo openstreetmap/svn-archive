@@ -33,9 +33,9 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableColumnModel;
 import javax.swing.table.TableColumn;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import org.openstreetmap.josm.plugins.turnrestrictions.TurnRestrictionBuilder;
 import org.openstreetmap.josm.plugins.turnrestrictions.list.TurnRestrictionCellRenderer;
@@ -196,7 +196,7 @@ public class TurnRestrictionSelectionPopupPanel extends JPanel {
     public void launch() {
         PointerInfo info = MouseInfo.getPointerInfo();
         Point pt = info.getLocation();
-        parentPopup = PopupFactory.getSharedInstance().getPopup(Main.map.mapView, this, pt.x, pt.y);
+        parentPopup = PopupFactory.getSharedInstance().getPopup(MainApplication.getMap().mapView, this, pt.x, pt.y);
         parentPopup.show();
         btnNew.requestFocusInWindow();
     }
@@ -224,7 +224,7 @@ public class TurnRestrictionSelectionPopupPanel extends JPanel {
         @Override
         public void actionPerformed(ActionEvent e) {
             Relation tr = new TurnRestrictionBuilder().buildFromSelection(layer);
-            TurnRestrictionEditor editor = new TurnRestrictionEditor(Main.map.mapView, layer, tr);
+            TurnRestrictionEditor editor = new TurnRestrictionEditor(MainApplication.getMap().mapView, layer, tr);
             TurnRestrictionEditorManager.getInstance().positionOnScreen(editor);
             TurnRestrictionEditorManager.getInstance().register(layer, tr, editor);
             if (parentPopup != null) {
@@ -245,7 +245,7 @@ public class TurnRestrictionSelectionPopupPanel extends JPanel {
                 editor.setVisible(true);
                 editor.toFront();
             } else {
-                editor = new TurnRestrictionEditor(Main.map.mapView, layer, tr);
+                editor = new TurnRestrictionEditor(MainApplication.getMap().mapView, layer, tr);
                 manager.positionOnScreen(editor);
                 manager.register(layer, tr, editor);
                 editor.setVisible(true);

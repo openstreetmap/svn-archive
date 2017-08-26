@@ -21,11 +21,11 @@ import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
 import javax.swing.TransferHandler;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.event.DatasetEventManager;
 import org.openstreetmap.josm.data.osm.event.DatasetEventManager.FireMode;
 import org.openstreetmap.josm.data.osm.event.SelectionEventManager;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.OsmPrimitivRenderer;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import org.openstreetmap.josm.gui.widgets.PopupMenuLauncher;
@@ -85,7 +85,7 @@ public class JosmSelectionPanel extends JPanel {
      * wires the UI as listener to global event sources
      */
     public void wireListeners() {
-        Main.getLayerManager().addActiveLayerChangeListener(model);
+        MainApplication.getLayerManager().addActiveLayerChangeListener(model);
         DatasetEventManager.getInstance().addDatasetListener(model, FireMode.IN_EDT);
         SelectionEventManager.getInstance().addSelectionListener(model, FireMode.IN_EDT_CONSOLIDATED);
     }
@@ -94,7 +94,7 @@ public class JosmSelectionPanel extends JPanel {
      * removes the UI as listener to global event sources
      */
     public void unwireListeners() {
-        Main.getLayerManager().removeActiveLayerChangeListener(model);
+        MainApplication.getLayerManager().removeActiveLayerChangeListener(model);
         DatasetEventManager.getInstance().removeDatasetListener(model);
         SelectionEventManager.getInstance().removeSelectionListener(model);
     }

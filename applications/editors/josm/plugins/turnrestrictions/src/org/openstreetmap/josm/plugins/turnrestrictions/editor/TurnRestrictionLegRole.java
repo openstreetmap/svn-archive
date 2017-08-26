@@ -8,7 +8,7 @@ public enum TurnRestrictionLegRole {
     FROM("from"),
     TO("to");
 
-    private String osmRoleName;
+    private final String osmRoleName;
 
     TurnRestrictionLegRole(String osmRoleName) {
         this.osmRoleName = osmRoleName;

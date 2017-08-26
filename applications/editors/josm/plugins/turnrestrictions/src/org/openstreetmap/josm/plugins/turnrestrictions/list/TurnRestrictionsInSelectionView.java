@@ -9,11 +9,11 @@ import javax.swing.JList;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.SelectionChangedListener;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.event.DatasetEventManager.FireMode;
 import org.openstreetmap.josm.data.osm.event.SelectionEventManager;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.layer.MainLayerManager.ActiveLayerChangeListener;
 
 /**
@@ -36,18 +36,18 @@ public class TurnRestrictionsInSelectionView extends AbstractTurnRestrictionsLis
     }
 
     protected void registerAsListener() {
-        Main.getLayerManager().addActiveLayerChangeListener((ActiveLayerChangeListener) model);
+        MainApplication.getLayerManager().addActiveLayerChangeListener((ActiveLayerChangeListener) model);
         SelectionEventManager.getInstance().addSelectionListener((SelectionChangedListener) model, FireMode.IN_EDT_CONSOLIDATED);
         TurnRestrictionsInSelectionListModel m = (TurnRestrictionsInSelectionListModel) model;
-        if (Main.getLayerManager().getEditLayer() != null) {
-            m.initFromSelection(Main.getLayerManager().getEditLayer().data.getSelected());
+        if (MainApplication.getLayerManager().getEditLayer() != null) {
+            m.initFromSelection(MainApplication.getLayerManager().getEditLayer().data.getSelected());
         } else {
             m.initFromSelection(Collections.<OsmPrimitive>emptyList());
         }
     }
 
     protected void unregisterAsListener() {
-        Main.getLayerManager().removeActiveLayerChangeListener((ActiveLayerChangeListener) model);
+        MainApplication.getLayerManager().removeActiveLayerChangeListener((ActiveLayerChangeListener) model);
         SelectionEventManager.getInstance().removeSelectionListener((SelectionChangedListener) model);
     }
 

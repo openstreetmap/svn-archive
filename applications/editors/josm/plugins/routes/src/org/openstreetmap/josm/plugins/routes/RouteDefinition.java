@@ -2,10 +2,10 @@ package org.openstreetmap.josm.plugins.routes;
 
 import java.awt.Color;
 
-import org.openstreetmap.josm.actions.search.SearchCompiler;
-import org.openstreetmap.josm.actions.search.SearchCompiler.Match;
-import org.openstreetmap.josm.actions.search.SearchCompiler.ParseError;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.data.osm.search.SearchParseError;
+import org.openstreetmap.josm.data.osm.search.SearchCompiler;
+import org.openstreetmap.josm.data.osm.search.SearchCompiler.Match;
 
 public class RouteDefinition {
 
@@ -20,7 +20,7 @@ public class RouteDefinition {
         this.index = index;
         try {
             match = SearchCompiler.compile(expression);
-        } catch (ParseError e) {
+        } catch (SearchParseError e) {
             match = new SearchCompiler.Never();
             e.printStackTrace();
         }

@@ -33,6 +33,7 @@ import org.opengis.referencing.FactoryException;
 import org.opengis.referencing.NoSuchAuthorityCodeException;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.tools.Logging;
 
 /**
  * UI-Dialog which provides:
@@ -233,7 +234,7 @@ public class LayerPropertiesDialog extends JFrame {
             try {
                 crsDescription = imageLayer.getBbox().getCoordinateReferenceSystem().getIdentifiers().iterator().next().toString();
             } catch (Exception e) {
-                Main.debug(e);
+                Logging.debug(e);
             }
             crsValueLabel.setText(crsDescription + "(" + imageLayer.getBbox().getCoordinateReferenceSystem().getName().toString() + ")");
 
@@ -296,7 +297,7 @@ public class LayerPropertiesDialog extends JFrame {
             try {
                 crsDescription = imageLayer.getSourceRefSys().getIdentifiers().iterator().next().toString();
             } catch (Exception e) {
-                Main.debug(e);
+                Logging.debug(e);
             }
             currentCRSValueLabel.setText(crsDescription);
 
@@ -538,7 +539,7 @@ public class LayerPropertiesDialog extends JFrame {
                                     defaultCRSLabel.setText(selection);
 
                                 } catch (IOException | FactoryException e2) {
-                                    Main.error(e2);
+                                    Logging.error(e2);
                                 }
                             } else {
                                 JOptionPane.showMessageDialog(getContentPane(), "Please make a selection from the list.");

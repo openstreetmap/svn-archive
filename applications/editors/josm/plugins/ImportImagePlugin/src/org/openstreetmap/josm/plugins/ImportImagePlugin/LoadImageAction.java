@@ -13,6 +13,7 @@ import org.apache.log4j.Logger;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.plugins.ImportImagePlugin.ImageLayer.LayerCreationCanceledException;
 
 /**
@@ -56,10 +57,10 @@ public class LoadImageAction extends JosmAction {
             }
 
             // Add layer:
-            Main.getLayerManager().addLayer(layer);
+            MainApplication.getLayerManager().addLayer(layer);
             BoundingXYVisitor boundingXYVisitor = new BoundingXYVisitor();
             layer.visitBoundingBox(boundingXYVisitor);
-            Main.map.mapView.zoomTo(boundingXYVisitor);
+            MainApplication.getMap().mapView.zoomTo(boundingXYVisitor);
         }
     }
 }

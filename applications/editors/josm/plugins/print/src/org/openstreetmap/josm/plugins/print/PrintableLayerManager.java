@@ -6,15 +6,15 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.osm.DataSet;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.gui.layer.MainLayerManager;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 
 public class PrintableLayerManager extends MainLayerManager {
 
-    private static final MainLayerManager layerManager = Main.getLayerManager();
+    private static final MainLayerManager layerManager = MainApplication.getLayerManager();
 
     @Override
     public synchronized void removeActiveLayerChangeListener(ActiveLayerChangeListener listener) {

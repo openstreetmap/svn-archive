@@ -25,6 +25,7 @@ import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.gui.tagging.ac.AutoCompletingComboBox;
 import org.openstreetmap.josm.gui.tagging.ac.AutoCompletionListItem;
+import org.openstreetmap.josm.tools.Logging;
 import org.openstreetmap.josm.tools.UserCancelException;
 
 /**
@@ -299,7 +300,7 @@ public class HouseNumberInputHandler extends JosmAction implements ActionListene
                             doHandleRelation(),
                             doKeepOutline(), buildingType());
                     } catch (UserCancelException ex) {
-                        Main.trace(ex);
+                        Logging.trace(ex);
                     }
 
                     this.dialog.setVisible(false);

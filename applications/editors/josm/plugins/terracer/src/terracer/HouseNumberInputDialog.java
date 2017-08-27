@@ -27,10 +27,11 @@ import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.gui.ExtendedDialog;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.tagging.ac.AutoCompletingComboBox;
 import org.openstreetmap.josm.gui.tagging.ac.AutoCompletionListItem;
+import org.openstreetmap.josm.gui.util.WindowGeometry;
 import org.openstreetmap.josm.tools.GBC;
-import org.openstreetmap.josm.tools.WindowGeometry;
 
 /**
  * The HouseNumberInputDialog is the layout of the house number input logic.
@@ -309,7 +310,8 @@ public class HouseNumberInputDialog extends ExtendedDialog {
     private AutoCompletingComboBox getBuilding() {
 
         if (buildingComboBox == null) {
-            final List<AutoCompletionListItem> values = Main.getLayerManager().getEditDataSet().getAutoCompletionManager().getValues("building");
+            final List<AutoCompletionListItem> values = MainApplication
+                .getLayerManager().getEditDataSet().getAutoCompletionManager().getValues("building");
 
             buildingComboBox = new AutoCompletingComboBox();
             buildingComboBox.setPossibleACItems(values);
@@ -361,7 +363,7 @@ public class HouseNumberInputDialog extends ExtendedDialog {
      */
     TreeSet<String> createAutoCompletionInfo() {
         final TreeSet<String> names = new TreeSet<>();
-        for (OsmPrimitive osm : Main.getLayerManager().getEditDataSet()
+        for (OsmPrimitive osm : MainApplication.getLayerManager().getEditDataSet()
                 .allNonDeletedPrimitives()) {
             if (osm.getKeys() != null && osm.keySet().contains("highway")
                     && osm.keySet().contains("name")) {

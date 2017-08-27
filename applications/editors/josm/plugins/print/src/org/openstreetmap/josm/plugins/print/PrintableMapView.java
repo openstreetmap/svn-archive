@@ -24,6 +24,7 @@ import org.openstreetmap.gui.jmapviewer.tilesources.AbstractOsmTileSource;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.SystemOfMeasurement;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.gui.layer.LayerManager.LayerAddEvent;
@@ -121,7 +122,7 @@ public class PrintableMapView extends MapView implements Printable {
         Dimension dim = getSize();
         if (dim.width != width || dim.height != height) {
             super.setSize(width, height);
-            zoomTo(Main.map.mapView.getRealBounds());
+            zoomTo(MainApplication.getMap().mapView.getRealBounds());
             rezoomToFixedScale();
         }
     }
@@ -134,7 +135,7 @@ public class PrintableMapView extends MapView implements Printable {
         Dimension dim = getSize();
         if (dim.width != newSize.width || dim.height != newSize.height) {
             super.setSize(newSize);
-            zoomTo(Main.map.mapView.getRealBounds());
+            zoomTo(MainApplication.getMap().mapView.getRealBounds());
             rezoomToFixedScale();
         }
     }

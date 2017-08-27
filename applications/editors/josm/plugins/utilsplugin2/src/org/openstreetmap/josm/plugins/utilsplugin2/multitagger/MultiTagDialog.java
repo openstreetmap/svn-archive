@@ -48,17 +48,19 @@ import org.openstreetmap.josm.data.osm.OsmPrimitiveType;
 import org.openstreetmap.josm.data.osm.search.SearchMode;
 import org.openstreetmap.josm.data.preferences.ColorProperty;
 import org.openstreetmap.josm.gui.ExtendedDialog;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import org.openstreetmap.josm.gui.tagging.ac.AutoCompletingTextField;
 import org.openstreetmap.josm.gui.tagging.ac.AutoCompletionList;
 import org.openstreetmap.josm.gui.tagging.ac.AutoCompletionManager;
 import org.openstreetmap.josm.gui.util.HighlightHelper;
 import org.openstreetmap.josm.gui.util.TableHelper;
+import org.openstreetmap.josm.gui.util.WindowGeometry;
 import org.openstreetmap.josm.gui.widgets.HistoryComboBox;
 import org.openstreetmap.josm.gui.widgets.PopupMenuLauncher;
 import org.openstreetmap.josm.tools.GBC;
 import org.openstreetmap.josm.tools.ImageProvider;
-import org.openstreetmap.josm.tools.WindowGeometry;
+import org.openstreetmap.josm.tools.Logging;
 
 /**
  * Dialog for editing multiple object tags
@@ -137,7 +139,7 @@ public class MultiTagDialog extends ExtendedDialog implements SelectionChangedLi
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     if (jt.isSelected()) tableModel.shownTypes.add(type); else tableModel.shownTypes.remove(type);
-                    tableModel.updateData(Main.getLayerManager().getEditDataSet().getSelected());
+                    tableModel.updateData(MainApplication.getLayerManager().getEditDataSet().getSelected());
                 }
             });
             ImageProvider.get(type);
@@ -180,7 +182,7 @@ public class MultiTagDialog extends ExtendedDialog implements SelectionChangedLi
     private final MouseAdapter tableMouseAdapter = new MouseAdapter() {
         @Override
         public void mouseClicked(MouseEvent e) {
-            if (e.getClickCount() > 1 && Main.isDisplayingMapView()) {
+            if (e.getClickCount() > 1 && MainApplication.isDisplayingMapView()) {
                 AutoScaleAction.zoomTo(currentSelection);
             }
         }
@@ -190,9 +192,9 @@ public class MultiTagDialog extends ExtendedDialog implements SelectionChangedLi
         @Override
         public void valueChanged(ListSelectionEvent e) {
             currentSelection = getSelectedPrimitives();
-            if (currentSelection != null && Main.isDisplayingMapView()) {
+            if (currentSelection != null && MainApplication.isDisplayingMapView()) {
                 if (highlightHelper.highlightOnly(currentSelection)) {
-                    Main.map.mapView.repaint();
+                    MainApplication.getMap().mapView.repaint();
                 }
             }
         }
@@ -209,7 +211,7 @@ public class MultiTagDialog extends ExtendedDialog implements SelectionChangedLi
     private final TagSetChanger tagSetChanger = new TagSetChanger();
 
     private void initAutocompletion() {
-        OsmDataLayer l = Main.getLayerManager().getEditLayer();
+        OsmDataLayer l = MainApplication.getLayerManager().getEditLayer();
         AutoCompletionManager autocomplete = l.data.getAutoCompletionManager();
         for (int i = 0; i < tableModel.mainTags.length; i++) {
             if (tableModel.isSpecialTag[i]) continue;
@@ -226,7 +228,7 @@ public class MultiTagDialog extends ExtendedDialog implements SelectionChangedLi
         menu.add(new AbstractAction(tr("Zoom to objects"), ImageProvider.get("dialogs/autoscale", "selection")) {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (Main.isDisplayingMapView()) {
+                if (MainApplication.isDisplayingMapView()) {
                     AutoScaleAction.zoomTo(currentSelection);
                 }
             }
@@ -234,7 +236,7 @@ public class MultiTagDialog extends ExtendedDialog implements SelectionChangedLi
         menu.add(new AbstractAction(tr("Select"), ImageProvider.get("dialogs", "select")) {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Main.getLayerManager().getEditDataSet().setSelected(getSelectedPrimitives());
+                MainApplication.getLayerManager().getEditDataSet().setSelected(getSelectedPrimitives());
             }
         });
         menu.add(new AbstractAction(tr("Remove tag"), ImageProvider.get("dialogs", "delete")) {
@@ -339,7 +341,7 @@ public class MultiTagDialog extends ExtendedDialog implements SelectionChangedLi
     }
 
     private void specifyTagSet(String s) {
-        Main.info("Multitagger tags="+s);
+        Logging.info("Multitagger tags="+s);
         tableModel.setupColumnsFromText(s);
 
         tbl.createDefaultColumnsFromModel();

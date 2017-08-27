@@ -58,9 +58,11 @@ import javax.swing.event.DocumentListener;
 
 import org.openstreetmap.gui.jmapviewer.tilesources.AbstractOsmTileSource;
 import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.gui.MainApplication;
+import org.openstreetmap.josm.gui.util.WindowGeometry;
 import org.openstreetmap.josm.tools.GBC;
+import org.openstreetmap.josm.tools.Logging;
 import org.openstreetmap.josm.tools.Utils;
-import org.openstreetmap.josm.tools.WindowGeometry;
 
 /**
  * A print dialog with preview
@@ -232,7 +234,7 @@ public class PrintDialog extends JDialog implements ActionListener {
                             mapView.setFixedMapScale(scaleModel.getNumber().intValue());
                             printPreview.repaint();
                         } catch (ParseException e) {
-                            Main.error(e);
+                            Logging.error(e);
                         }
                     }
                 });
@@ -260,7 +262,7 @@ public class PrintDialog extends JDialog implements ActionListener {
                             Main.pref.put("print.resolution.dpi", resolutionModel.getNumber().toString());
                             printPreview.repaint();
                         } catch (ParseException e) {
-                            Main.error(e);
+                            Logging.error(e);
                         }
                     }
                 });
@@ -342,7 +344,7 @@ public class PrintDialog extends JDialog implements ActionListener {
         }
         JScrollPane previewPane = new JScrollPane(printPreview,
                 JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-        previewPane.setPreferredSize(Main.main != null ? Main.map.mapView.getSize() : new Dimension(210, 297));
+        previewPane.setPreferredSize(MainApplication.getMap() != null ? MainApplication.getMap().mapView.getSize() : new Dimension(210, 297));
         add(previewPane, GBC.std(0, 0).span(1, GBC.RELATIVE).fill().weight(5.0, 5.0));
 
         row++;
@@ -478,7 +480,7 @@ public class PrintDialog extends JDialog implements ActionListener {
                 setting = marshallPrintSetting(a, IntegerSyntax.class, Integer.toString(((IntegerSyntax) a).getValue()));
             } else if (!ignoredAttributes.contains(a.getName())) {
                 // TODO: Add support for DateTimeSyntax, SetOfIntegerSyntax, ResolutionSyntax if needed
-                Main.warn("Print request attribute not supported: "+a.getName() +": "+a.getCategory()+" - "+a.toString());
+                Logging.warn("Print request attribute not supported: "+a.getName() +": "+a.getCategory()+" - "+a.toString());
             }
             if (setting != null) {
                 requestAttributes.add(setting);
@@ -530,7 +532,7 @@ public class PrintDialog extends JDialog implements ActionListener {
         } else if (syntax.equals(IntegerSyntax.class)) {
             return realClass.getConstructor(int.class).newInstance(Integer.parseInt(value));
         } else {
-            Main.warn("Attribute syntax not supported: "+syntax);
+            Logging.warn("Attribute syntax not supported: "+syntax);
         }
         return null;
     }
@@ -543,14 +545,14 @@ public class PrintDialog extends JDialog implements ActionListener {
                     job.setPrintService(PrintServiceLookup.lookupPrintServices(null, new HashPrintServiceAttributeSet(a))[0]);
                 }
             } catch (PrinterException | ReflectiveOperationException e) {
-                Main.warn(e.getClass().getSimpleName()+": "+e.getMessage());
+                Logging.warn(e.getClass().getSimpleName()+": "+e.getMessage());
             }
         }
         for (Collection<String> setting : Main.pref.getArray("print.settings.request-attributes")) {
             try {
                 attrs.add(unmarshallPrintSetting(setting));
             } catch (ReflectiveOperationException e) {
-                Main.warn(e.getClass().getSimpleName()+": "+e.getMessage());
+                Logging.warn(e.getClass().getSimpleName()+": "+e.getMessage());
             }
         }
     }

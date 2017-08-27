@@ -23,8 +23,10 @@ import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.PrimitiveData;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.RelationMember;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.datatransfer.ClipboardUtils;
 import org.openstreetmap.josm.gui.datatransfer.data.PrimitiveTransferData;
+import org.openstreetmap.josm.tools.Logging;
 import org.openstreetmap.josm.tools.Shortcut;
 
 /**
@@ -52,7 +54,7 @@ public class PasteRelationsAction extends JosmAction {
         try {
             data = ((PrimitiveTransferData) ClipboardUtils.getClipboard().getData(PrimitiveTransferData.DATA_FLAVOR)).getDirectlyAdded();
         } catch (UnsupportedFlavorException | IOException ex) {
-            Main.warn(ex);
+            Logging.warn(ex);
         }
         for (PrimitiveData pdata : data) {
             OsmPrimitive p = getLayerManager().getEditDataSet().getPrimitiveById(pdata.getUniqueId(), pdata.getType());
@@ -98,7 +100,7 @@ public class PasteRelationsAction extends JosmAction {
         }
 
         if (!commands.isEmpty())
-            Main.main.undoRedo.add(new SequenceCommand(TITLE, commands));
+            MainApplication.undoRedo.add(new SequenceCommand(TITLE, commands));
     }
 
     @Override
@@ -112,10 +114,10 @@ public class PasteRelationsAction extends JosmAction {
             setEnabled(selection != null && !selection.isEmpty()
                     && ClipboardUtils.getClipboard().isDataFlavorAvailable(PrimitiveTransferData.DATA_FLAVOR));
         } catch (IllegalStateException e) {
-            Main.warn(e);
+            Logging.warn(e);
         } catch (NullPointerException e) {
             // JDK-6322854: On Linux/X11, NPE can happen for unknown reasons, on all versions of Java
-            Main.error(e);
+            Logging.error(e);
         }
     }
 }

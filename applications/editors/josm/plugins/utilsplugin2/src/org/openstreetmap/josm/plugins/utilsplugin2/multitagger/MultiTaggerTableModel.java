@@ -11,7 +11,6 @@ import java.util.Set;
 import javax.swing.JTable;
 import javax.swing.table.AbstractTableModel;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.command.ChangePropertyCommand;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.SequenceCommand;
@@ -19,6 +18,7 @@ import org.openstreetmap.josm.data.SelectionChangedListener;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.OsmPrimitiveType;
 import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.tools.Geometry;
 
 public class MultiTaggerTableModel extends AbstractTableModel implements SelectionChangedListener {
@@ -48,8 +48,8 @@ public class MultiTaggerTableModel extends AbstractTableModel implements Selecti
 
     public void setWatchSelection(boolean watchSelection) {
         this.watchSelection = watchSelection;
-        if (watchSelection && Main.getLayerManager().getEditLayer() != null)
-            selectionChanged(Main.getLayerManager().getEditDataSet().getSelected());
+        if (watchSelection && MainApplication.getLayerManager().getEditLayer() != null)
+            selectionChanged(MainApplication.getLayerManager().getEditDataSet().getSelected());
     }
 
     @Override
@@ -114,7 +114,7 @@ public class MultiTaggerTableModel extends AbstractTableModel implements Selecti
         if (!val.equals(newValue)) {
             Command cmd = new ChangePropertyCommand(sel, key, (String) value);
             if (autoCommit) {
-                Main.main.undoRedo.add(cmd);
+                MainApplication.undoRedo.add(cmd);
             } else {
                 cmds.add(cmd);
             }
@@ -184,7 +184,7 @@ public class MultiTaggerTableModel extends AbstractTableModel implements Selecti
     }
 
     void commit(String commandTitle) {
-        Main.main.undoRedo.add(new SequenceCommand(commandTitle, cmds));
+        MainApplication.undoRedo.add(new SequenceCommand(commandTitle, cmds));
         cmds.clear();
     }
 

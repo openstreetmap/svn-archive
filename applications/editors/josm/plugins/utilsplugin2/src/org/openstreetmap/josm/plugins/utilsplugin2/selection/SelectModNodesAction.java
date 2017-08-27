@@ -10,12 +10,12 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.tools.Shortcut;
 
 /**
@@ -41,13 +41,13 @@ public class SelectModNodesAction extends JosmAction {
             ds.clearSelection(OsmPrimitive.getFilteredSet(selection, Node.class));
             Command cmd = null;
 
-            if (Main.main.undoRedo.commands == null) return;
-            int num = Main.main.undoRedo.commands.size();
+            if (MainApplication.undoRedo.commands == null) return;
+            int num = MainApplication.undoRedo.commands.size();
             if (num == 0) return;
             int k = 0, idx;
             if (selection != null && !selection.isEmpty() && selection.hashCode() == lastHash) {
                 // we are selecting next command in history if nothing is selected
-                idx = Main.main.undoRedo.commands.indexOf(lastCmd);
+                idx = MainApplication.undoRedo.commands.indexOf(lastCmd);
             } else {
                 idx = num;
             }
@@ -55,7 +55,7 @@ public class SelectModNodesAction extends JosmAction {
             Set<Node> nodes = new HashSet<>(10);
             do {  //  select next history element
                 if (idx > 0) idx--; else idx = num-1;
-                cmd = Main.main.undoRedo.commands.get(idx);
+                cmd = MainApplication.undoRedo.commands.get(idx);
                 Collection<? extends OsmPrimitive> pp = cmd.getParticipatingPrimitives();
                 nodes.clear();
                 for (OsmPrimitive p : pp) {  // find all affected ways

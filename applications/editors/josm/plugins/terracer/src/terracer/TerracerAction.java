@@ -37,7 +37,9 @@ import org.openstreetmap.josm.data.osm.Tag;
 import org.openstreetmap.josm.data.osm.TagCollection;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.gui.ExtendedDialog;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.conflict.tags.CombinePrimitiveResolverDialog;
+import org.openstreetmap.josm.tools.Logging;
 import org.openstreetmap.josm.tools.Pair;
 import org.openstreetmap.josm.tools.Shortcut;
 import org.openstreetmap.josm.tools.UserCancelException;
@@ -177,7 +179,7 @@ public final class TerracerAction extends JosmAction {
                 throw new InvalidUserInputException("wrong or missing outline");
 
         } catch (InvalidUserInputException ex) {
-            Main.warn("Terracer: "+ex.getMessage());
+            Logging.warn("Terracer: "+ex.getMessage());
             new ExtendedDialog(Main.parent, tr("Invalid selection"), new String[] {"OK"})
                 .setButtonIcons(new String[] {"ok"}).setIcon(JOptionPane.INFORMATION_MESSAGE)
                 .setContent(tr("Select a single, closed way of at least four nodes. " +
@@ -190,7 +192,7 @@ public final class TerracerAction extends JosmAction {
         Relation associatedStreet = null;
 
         // Try to find an associatedStreet relation that could be reused from housenumbers, outline and street.
-        Set<OsmPrimitive> candidates = new HashSet<OsmPrimitive>(housenumbers);
+        Set<OsmPrimitive> candidates = new HashSet<>(housenumbers);
         candidates.add(outline);
         if (street != null) {
             candidates.add(street);
@@ -202,7 +204,7 @@ public final class TerracerAction extends JosmAction {
             associatedStreet = associatedStreets.iterator().next();
             if (associatedStreets.size() > 1) {
                 // TODO: Deal with multiple associated Streets
-                Main.warn("Terracer: Found "+associatedStreets.size()+" associatedStreet relations. Considering the first one only.");
+                Logging.warn("Terracer: Found "+associatedStreets.size()+" associatedStreet relations. Considering the first one only.");
             }
         }
 
@@ -217,7 +219,7 @@ public final class TerracerAction extends JosmAction {
                 terraceBuilding(outline, init, street, associatedStreet, 0, null, null, 0, 
                         housenumbers, streetname, associatedStreet != null, false, "yes");
             } catch (UserCancelException ex) {
-                Main.trace(ex);
+                Logging.trace(ex);
             } finally {
                 this.commands.clear();
                 this.commands = null;
@@ -244,7 +246,7 @@ public final class TerracerAction extends JosmAction {
      * @param house
      *            number nodes
      */
-    class HousenumberNodeComparator implements Comparator<Node> {
+    static class HousenumberNodeComparator implements Comparator<Node> {
         private final Pattern pat = Pattern.compile("^(\\d+)\\s*(.*)");
 
         @Override
@@ -401,7 +403,7 @@ public final class TerracerAction extends JosmAction {
                         nodesToDelete.add(n);
                 }
                 if (!nodesToDelete.isEmpty())
-                    this.commands.add(DeleteCommand.delete(Main.getLayerManager().getEditLayer(), nodesToDelete));
+                    this.commands.add(DeleteCommand.delete(MainApplication.getLayerManager().getEditLayer(), nodesToDelete));
             }
         } else {
             // Single building, just add the address details
@@ -412,7 +414,7 @@ public final class TerracerAction extends JosmAction {
         // Remove the address nodes since their tags have been incorporated into the terraces.
         // Or should removing them also be an option?
         if (!housenumbers.isEmpty()) {
-            commands.add(DeleteCommand.delete(Main.getLayerManager().getEditLayer(),
+            commands.add(DeleteCommand.delete(MainApplication.getLayerManager().getEditLayer(),
                     housenumbers, true, true));
         }
 
@@ -424,13 +426,13 @@ public final class TerracerAction extends JosmAction {
             }
         }
 
-        Main.main.undoRedo.add(createTerracingCommand(outline));
+        MainApplication.undoRedo.add(createTerracingCommand(outline));
         if (nb <= 1 && street != null) {
             // Select the way (for quick selection of a new house (with the same way))
-            Main.getLayerManager().getEditDataSet().setSelected(street);
+            MainApplication.getLayerManager().getEditDataSet().setSelected(street);
         } else {
             // Select the new building outlines (for quick reversing)
-            Main.getLayerManager().getEditDataSet().setSelected(ways);
+            MainApplication.getLayerManager().getEditDataSet().setSelected(ways);
         }
     }
 
@@ -487,7 +489,7 @@ public final class TerracerAction extends JosmAction {
                             }
                         }
                     } catch (UserCancelException e) {
-                        Main.trace(e);
+                        Logging.trace(e);
                     }
                 }
                 return result;

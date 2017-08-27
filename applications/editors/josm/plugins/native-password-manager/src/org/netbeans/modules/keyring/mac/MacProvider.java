@@ -52,10 +52,12 @@ public class MacProvider implements KeyringProvider {
 
     private static final Logger LOG = Logger.getLogger(MacProvider.class.getName());
 
+    @Override
     public boolean enabled() {
         return true; // test elsewhere if we are on a mac
     }
 
+    @Override
     public char[] read(String key) {
         try {
             byte[] serviceName = key.getBytes("UTF-8");
@@ -75,6 +77,7 @@ public class MacProvider implements KeyringProvider {
         }
     }
 
+    @Override
     public void save(String key, char[] password, String description) {
         try {
             byte[] serviceName = key.getBytes("UTF-8");
@@ -97,6 +100,7 @@ public class MacProvider implements KeyringProvider {
         // XXX use description somehow... better to use SecItemAdd with kSecAttrDescription
     }
 
+    @Override
     public void delete(String key) {
         try {
             byte[] serviceName = key.getBytes("UTF-8");

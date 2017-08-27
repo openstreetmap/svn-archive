@@ -17,6 +17,7 @@ import org.openstreetmap.josm.command.SequenceCommand;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.tools.Shortcut;
 
 // TODO: investigate splines
@@ -57,7 +58,7 @@ public class CurveAction extends JosmAction {
 
         Collection<Command> cmds = CircleArcMaker.doCircleArc(selectedNodes, selectedWays, angleSeparation);
         if (cmds != null)
-            Main.main.undoRedo.add(new SequenceCommand("Create a curve", cmds));
+            MainApplication.undoRedo.add(new SequenceCommand("Create a curve", cmds));
     }
 
     @Override

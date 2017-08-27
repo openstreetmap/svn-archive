@@ -20,6 +20,7 @@ import org.openstreetmap.josm.command.SequenceCommand;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.tools.Shortcut;
 
 /**
@@ -47,11 +48,11 @@ public class ReverseTerraceAction extends JosmAction {
 
     /**
      * Breadth-first searches based on the selection while the selection is a way
-     * with a building=* tag and then applies the addr:housenumber tag in reverse
-     * order.
+     * with a building=* tag and then applies the addr:housenumber tag in reverse order.
      */
+    @Override
     public void actionPerformed(ActionEvent e) {
-        Collection<Way> selectedWays = Main.getLayerManager().getEditDataSet().getSelectedWays();
+        Collection<Way> selectedWays = MainApplication.getLayerManager().getEditDataSet().getSelectedWays();
 
         // Set to keep track of all the nodes that have been visited - that is: if
         // we encounter them again we will not follow onto the connected ways.
@@ -122,8 +123,8 @@ public class ReverseTerraceAction extends JosmAction {
                     houseNumbers.get(i)));
         }
 
-        Main.main.undoRedo.add(new SequenceCommand(tr("Reverse Terrace"), commands));
-        Main.getLayerManager().getEditDataSet().setSelected(orderedWays);
+        MainApplication.undoRedo.add(new SequenceCommand(tr("Reverse Terrace"), commands));
+        MainApplication.getLayerManager().getEditDataSet().setSelected(orderedWays);
     }
 
     @Override

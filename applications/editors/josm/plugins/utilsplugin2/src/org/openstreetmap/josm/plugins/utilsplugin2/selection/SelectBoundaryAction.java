@@ -13,13 +13,13 @@ import java.util.Set;
 
 import javax.swing.JOptionPane;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.actions.SelectByInternalPointAction;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.Notification;
 import org.openstreetmap.josm.tools.Shortcut;
 
@@ -57,8 +57,8 @@ public class SelectBoundaryAction extends JosmAction {
                         }
                     }
                 } else {
-                    Point p = Main.map.mapView.getMousePosition();
-                    SelectByInternalPointAction.performSelection(Main.map.mapView.getEastNorth(p.x, p.y), false, false);
+                    Point p = MainApplication.getMap().mapView.getMousePosition();
+                    SelectByInternalPointAction.performSelection(MainApplication.getMap().mapView.getEastNorth(p.x, p.y), false, false);
                     return;
                 }
             } else if (selectedWays.size() == 1) {

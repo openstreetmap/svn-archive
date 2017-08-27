@@ -67,6 +67,8 @@ import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.SequenceCommand;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.gui.ExtendedDialog;
+import org.openstreetmap.josm.gui.MainApplication;
+import org.openstreetmap.josm.gui.util.WindowGeometry;
 import org.openstreetmap.josm.gui.widgets.MultiSplitLayout.Divider;
 import org.openstreetmap.josm.gui.widgets.MultiSplitLayout.Leaf;
 import org.openstreetmap.josm.gui.widgets.MultiSplitLayout.Node;
@@ -76,9 +78,9 @@ import org.openstreetmap.josm.plugins.roadsigns.RoadSignsPlugin.PresetMetaData;
 import org.openstreetmap.josm.plugins.roadsigns.Sign.SignParameter;
 import org.openstreetmap.josm.plugins.roadsigns.Sign.Tag;
 import org.openstreetmap.josm.tools.GBC;
+import org.openstreetmap.josm.tools.Logging;
 import org.openstreetmap.josm.tools.OpenBrowser;
 import org.openstreetmap.josm.tools.Pair;
-import org.openstreetmap.josm.tools.WindowGeometry;
 
 /**
  * Input dialog for road sign.
@@ -133,13 +135,13 @@ class RoadSignInputDialog extends ExtendedDialog {
     @Override
     protected void buttonAction(int i, ActionEvent evt) {
         if (i == 0) { // OK Button
-            Collection<OsmPrimitive> selPrim = Main.getLayerManager().getEditDataSet().getSelected();
+            Collection<OsmPrimitive> selPrim = MainApplication.getLayerManager().getEditDataSet().getSelected();
             if (!selPrim.isEmpty()) {
                 Main.pref.put("plugin.roadsigns.addTrafficSignTag", addTrafficSignTag.isSelected());
 
                 Command cmd = createCommand(selPrim);
                 if (cmd != null) {
-                    Main.main.undoRedo.add(cmd);
+                    MainApplication.undoRedo.add(cmd);
                 }
             }
         }
@@ -158,7 +160,7 @@ class RoadSignInputDialog extends ExtendedDialog {
                     )) {
                     xmlenc.writeObject(model);
                 } catch (FileNotFoundException ex) {
-                    Main.warn("unable to write dialog layout: "+ex);
+                    Logging.warn("unable to write dialog layout: "+ex);
                 }
             }
         }

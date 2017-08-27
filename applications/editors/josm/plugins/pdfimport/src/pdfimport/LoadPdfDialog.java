@@ -59,9 +59,9 @@ import org.openstreetmap.josm.gui.preferences.projection.ProjectionPreference;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.gui.progress.ProgressRenderer;
 import org.openstreetmap.josm.gui.progress.swing.SwingRenderingProgressMonitor;
+import org.openstreetmap.josm.gui.util.WindowGeometry;
 import org.openstreetmap.josm.tools.ImageProvider;
 import org.openstreetmap.josm.tools.Logging;
-import org.openstreetmap.josm.tools.WindowGeometry;
 
 import pdfimport.pdfbox.PdfBoxParser;
 

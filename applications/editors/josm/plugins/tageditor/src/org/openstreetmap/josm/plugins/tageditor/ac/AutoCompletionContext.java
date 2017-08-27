@@ -1,8 +1,8 @@
 // License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.tageditor.ac;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.osm.DataSet;
+import org.openstreetmap.josm.gui.MainApplication;
 
 public class AutoCompletionContext {
 
@@ -15,7 +15,7 @@ public class AutoCompletionContext {
     }
 
     public void initFromJOSMSelection() {
-        DataSet ds = Main.getLayerManager().getEditDataSet();
+        DataSet ds = MainApplication.getLayerManager().getEditDataSet();
         selectionIncludesNodes = !ds.getSelectedNodes().isEmpty();
         selectionIncludesWays = !ds.getSelectedWays().isEmpty();
         selectionIncludesRelations = !ds.getSelectedRelations().isEmpty();

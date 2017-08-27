@@ -18,7 +18,7 @@ import javax.swing.JPanel;
 import javax.swing.JViewport;
 import javax.swing.RepaintManager;
 
-import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.tools.Logging;
 
 /**
  * A generic print preview component
@@ -280,7 +280,7 @@ class PrintPreview extends JPanel {
                 printable.print(g2d, format, 0);
             } catch (PrinterException e) {
                 // should never happen since we are not printing
-                Main.error(e);
+                Logging.error(e);
             }
         } else {
             g2d.setColor(Color.gray);

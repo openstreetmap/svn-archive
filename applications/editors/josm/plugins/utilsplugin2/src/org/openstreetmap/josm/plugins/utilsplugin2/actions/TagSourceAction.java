@@ -13,6 +13,7 @@ import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.command.ChangePropertyCommand;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.tools.Shortcut;
 
 /**
@@ -41,7 +42,7 @@ public class TagSourceAction extends JosmAction {
         if (selection.isEmpty() || source == null || source.length() == 0)
             return;
 
-        Main.main.undoRedo.add(new ChangePropertyCommand(selection, "source", source));
+        MainApplication.undoRedo.add(new ChangePropertyCommand(selection, "source", source));
     }
 
     @Override

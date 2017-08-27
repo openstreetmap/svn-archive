@@ -17,6 +17,7 @@ import org.openstreetmap.josm.command.SequenceCommand;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.tools.Shortcut;
 
 /**
@@ -79,8 +80,8 @@ public final class LatLonAction extends JosmAction {
             wnew.setNodes(nodes);
             cmds.add(new AddCommand(wnew));
         }
-        Main.main.undoRedo.add(new SequenceCommand(tr("Lat Lon tool"), cmds));
-        Main.map.mapView.repaint();
+        MainApplication.undoRedo.add(new SequenceCommand(tr("Lat Lon tool"), cmds));
+        MainApplication.getMap().mapView.repaint();
     }
 
     @Override

@@ -30,9 +30,11 @@ import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Tag;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.tagging.ac.AutoCompletionList;
 import org.openstreetmap.josm.gui.tagging.ac.AutoCompletionManager;
 import org.openstreetmap.josm.gui.tagging.presets.TaggingPreset;
+import org.openstreetmap.josm.gui.util.WindowGeometry;
 import org.openstreetmap.josm.plugins.tageditor.ac.AutoCompletionListViewer;
 import org.openstreetmap.josm.plugins.tageditor.editor.TagEditor;
 import org.openstreetmap.josm.plugins.tageditor.editor.TagEditorModel;
@@ -41,7 +43,6 @@ import org.openstreetmap.josm.plugins.tageditor.preset.ui.TabularPresetSelector;
 import org.openstreetmap.josm.plugins.tageditor.tagspec.ui.ITagSelectorListener;
 import org.openstreetmap.josm.plugins.tageditor.tagspec.ui.TabularTagSelector;
 import org.openstreetmap.josm.tools.ImageProvider;
-import org.openstreetmap.josm.tools.WindowGeometry;
 
 /**
  * The dialog for editing name/value-pairs (aka <em>tags</em>) associated with {@link OsmPrimitive}s.
@@ -281,7 +282,7 @@ public class TagEditorDialog extends JDialog {
     public void startEditSession() {
         tagEditor.getModel().clearAppliedPresets();
         tagEditor.getModel().initFromJOSMSelection();
-        autocomplete = Main.getLayerManager().getEditLayer().data.getAutoCompletionManager();
+        autocomplete = MainApplication.getLayerManager().getEditLayer().data.getAutoCompletionManager();
         tagEditor.setAutoCompletionManager(autocomplete);
         getModel().ensureOneTag();
     }
@@ -318,7 +319,7 @@ public class TagEditorDialog extends JDialog {
             tagEditor.stopEditing();
             setVisible(false);
             tagEditor.getModel().updateJOSMSelection();
-            DataSet ds = Main.getLayerManager().getEditDataSet();
+            DataSet ds = MainApplication.getLayerManager().getEditDataSet();
             ds.fireSelectionChanged();
             Main.parent.repaint(); // repaint all - drawing could have been changed
         }

@@ -35,9 +35,9 @@ import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.coor.CoordinateFormat;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.gui.ExtendedDialog;
+import org.openstreetmap.josm.gui.util.WindowGeometry;
 import org.openstreetmap.josm.gui.widgets.HtmlPanel;
 import org.openstreetmap.josm.tools.GBC;
-import org.openstreetmap.josm.tools.WindowGeometry;
 
 public class LatLonDialog extends ExtendedDialog {
     private static final Color BG_COLOR_ERROR = new Color(255, 224, 224);

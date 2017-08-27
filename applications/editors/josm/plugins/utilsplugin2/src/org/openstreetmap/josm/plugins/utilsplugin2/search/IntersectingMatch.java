@@ -5,10 +5,10 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.data.osm.search.SearchCompiler;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.plugins.utilsplugin2.selection.NodeWayUtils;
 
 /**
@@ -30,7 +30,7 @@ public class IntersectingMatch extends SearchCompiler.UnaryMatch {
     private void init(boolean all) {
         Collection<Way> matchedWays = new HashSet<>();
         // find all ways that match the expression
-        Collection<Way> allWays = Main.getLayerManager().getEditDataSet().getWays();
+        Collection<Way> allWays = MainApplication.getLayerManager().getEditDataSet().getWays();
         for (Way way : allWays) {
             if (match.match(way)) {
                 matchedWays.add(way);

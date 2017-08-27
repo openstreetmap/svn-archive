@@ -17,6 +17,9 @@ import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.OsmPrimitiveType;
+import org.openstreetmap.josm.gui.MainApplication;
+import org.openstreetmap.josm.gui.MapView;
+import org.openstreetmap.josm.tools.Logging;
 import org.openstreetmap.josm.tools.OpenBrowser;
 import org.openstreetmap.josm.tools.OsmUrlToBounds;
 import org.openstreetmap.josm.tools.Shortcut;
@@ -49,7 +52,8 @@ public final class OpenPageAction extends JosmAction {
         if (Main.pref.getBoolean("utilsplugin2.askurl", false) == true)
             ChooseURLAction.showConfigDialog(true);
 
-        LatLon center = Main.map.mapView.getLatLon(Main.map.mapView.getWidth()/2, Main.map.mapView.getHeight()/2);
+        MapView mv = MainApplication.getMap().mapView;
+        LatLon center = mv.getLatLon(mv.getWidth()/2, mv.getHeight()/2);
 
         String addr = URLList.getSelectedURL();
         Pattern pat = Pattern.compile("\\{([^\\}]*)\\}");
@@ -69,7 +73,7 @@ public final class OpenPageAction extends JosmAction {
                 } else if (key.equals("#lon")) {
                     val = Double.toString(center.lon());
                 } else if (key.equals("#zoom")) {
-                    val = Integer.toString(OsmUrlToBounds.getZoom(Main.map.mapView.getRealBounds()));
+                    val = Integer.toString(OsmUrlToBounds.getZoom(MainApplication.getMap().mapView.getRealBounds()));
                 } else {
                     if (p != null) {
                         val = p.get(key);
@@ -82,7 +86,7 @@ public final class OpenPageAction extends JosmAction {
                 i++;
             }
         } catch (UnsupportedEncodingException ex) {
-            Main.error(ex, "Encoding error");
+            Logging.log(Logging.LEVEL_ERROR, "Encoding error", ex);
             return;
         }
         for (int j = 0; j < i; j++) {
@@ -91,7 +95,7 @@ public final class OpenPageAction extends JosmAction {
         try {
             OpenBrowser.displayUrl(addr);
         } catch (Exception ex) {
-            Main.error(ex, "Can not open URL " + addr);
+            Logging.log(Logging.LEVEL_ERROR, "Can not open URL " + addr, ex);
         }
     }
 

@@ -14,7 +14,6 @@ import java.util.Map;
 
 import javax.swing.JOptionPane;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.actions.SplitWayAction;
 import org.openstreetmap.josm.command.Command;
@@ -22,6 +21,7 @@ import org.openstreetmap.josm.command.SequenceCommand;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.Notification;
 import org.openstreetmap.josm.tools.Shortcut;
 
@@ -94,7 +94,7 @@ public class SplitOnIntersectionsAction extends JosmAction {
         }
 
         if (!list.isEmpty()) {
-            Main.main.undoRedo.add(list.size() == 1 ? list.get(0) : new SequenceCommand(TITLE, list));
+            MainApplication.undoRedo.add(list.size() == 1 ? list.get(0) : new SequenceCommand(TITLE, list));
             getLayerManager().getEditDataSet().clearSelection();
         }
     }

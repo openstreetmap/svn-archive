@@ -99,6 +99,7 @@ public class FallbackProvider implements KeyringProvider {
         }
     }
 
+    @Override
     public char[] read(String key) {
         byte[] ciphertext = prefs.getByteArray(key, null);
         if (ciphertext == null) {
@@ -112,6 +113,7 @@ public class FallbackProvider implements KeyringProvider {
         return null;
     }
 
+    @Override
     public void save(String key, char[] password, String description) {
         _save(key, password, description);
     }
@@ -125,6 +127,7 @@ public class FallbackProvider implements KeyringProvider {
         return true;
     }
 
+    @Override
     public void delete(String key) {
         prefs.remove(key);
         prefs.remove(key + DESCRIPTION);

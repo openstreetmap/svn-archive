@@ -6,6 +6,7 @@ import javax.swing.JMenuItem;
 import javax.swing.KeyStroke;
 
 import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
@@ -40,7 +41,7 @@ public class PrintPlugin extends Plugin {
     public PrintPlugin(PluginInformation info) {
         super(info);
 
-        JMenu fileMenu = Main.main.menu.fileMenu;
+        JMenu fileMenu = MainApplication.getMenu().fileMenu;
         int pos = fileMenu.getItemCount();
         do {
             pos--;

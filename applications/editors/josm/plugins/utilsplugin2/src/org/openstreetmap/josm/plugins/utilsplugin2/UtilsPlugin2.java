@@ -4,8 +4,8 @@ package org.openstreetmap.josm.plugins.utilsplugin2;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.osm.search.SearchCompiler;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MainMenu;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.gui.preferences.PreferenceSetting;
@@ -92,12 +92,12 @@ public class UtilsPlugin2 extends Plugin {
         super(info);
         instance = this;
 
-        JMenu editMenu = Main.main.menu.editMenu;
-        JMenu toolsMenu = Main.main.menu.moreToolsMenu;
-        JMenu dataMenu = Main.main.menu.dataMenu;
-        JMenu selectionMenu = Main.main.menu.selectionMenu;
+        JMenu editMenu = MainApplication.getMenu().editMenu;
+        JMenu toolsMenu = MainApplication.getMenu().moreToolsMenu;
+        JMenu dataMenu = MainApplication.getMenu().dataMenu;
+        JMenu selectionMenu = MainApplication.getMenu().selectionMenu;
 
-        copyTags = MainMenu.addAfter(editMenu, new CopyTagsAction(), false, Main.main.menu.copy);
+        copyTags = MainMenu.addAfter(editMenu, new CopyTagsAction(), false, MainApplication.getMenu().copy);
 
         addIntersections = MainMenu.add(toolsMenu, new AddIntersectionsAction());
         splitObject = MainMenu.add(toolsMenu, new SplitObjectAction());

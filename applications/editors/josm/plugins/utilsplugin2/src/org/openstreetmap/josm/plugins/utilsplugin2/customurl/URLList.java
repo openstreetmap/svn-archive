@@ -14,6 +14,7 @@ import java.util.logging.Logger;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.plugins.utilsplugin2.UtilsPlugin2;
+import org.openstreetmap.josm.tools.Logging;
 
 public final class URLList {
     public static final String defaultURL = "http://osm.mapki.com/history/{#type}.php?id={#id}";
@@ -77,7 +78,7 @@ public final class URLList {
                 items.add(s);
             }
         } catch (IOException e) {
-            Main.error(e);
+            Logging.error(e);
         }
         return items;
     }
@@ -92,13 +93,13 @@ public final class URLList {
                 fw.println(s);
             }
         } catch (IOException e) {
-            Main.error(e);
+            Logging.error(e);
         } finally {
             try {
                 if (fw != null)
                     fw.close();
             } catch (Exception e) {
-                Main.warn(e);
+                Logging.warn(e);
             }
         }
     }

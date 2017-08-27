@@ -32,8 +32,10 @@ import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.data.osm.TagCollection;
 import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.Notification;
 import org.openstreetmap.josm.gui.conflict.tags.CombinePrimitiveResolverDialog;
+import org.openstreetmap.josm.tools.Logging;
 import org.openstreetmap.josm.tools.UserCancelException;
 
 import edu.princeton.cs.algs4.AssignmentProblem;
@@ -109,7 +111,8 @@ public final class ReplaceGeometryUtils {
         }
         // FIXME: handle different layers
         List<Command> commands = new ArrayList<>();
-        Command c = MergeNodesAction.mergeNodes(Main.getLayerManager().getEditLayer(), Arrays.asList(subjectNode, referenceNode), referenceNode);
+        Command c = MergeNodesAction.mergeNodes(MainApplication.getLayerManager().getEditLayer(),
+            Arrays.asList(subjectNode, referenceNode), referenceNode);
         if (c == null) {
             // User canceled
             return null;
@@ -196,7 +199,7 @@ public final class ReplaceGeometryUtils {
             commands.add(new DeleteCommand(subjectNode));
         }
 
-        Main.getLayerManager().getEditDataSet().setSelected(referenceObject);
+        MainApplication.getLayerManager().getEditDataSet().setSelected(referenceObject);
 
         return new ReplaceGeometryCommand(
                 tr("Replace geometry for node {0}", subjectNode.getDisplayName(DefaultNameFormatter.getInstance())),
@@ -235,7 +238,7 @@ public final class ReplaceGeometryUtils {
 
     public static ReplaceGeometryCommand buildReplaceWayCommand(Way subjectWay, Way referenceWay) {
 
-        Area a = Main.getLayerManager().getEditDataSet().getDataSourceArea();
+        Area a = MainApplication.getLayerManager().getEditDataSet().getDataSourceArea();
         if (!isInArea(subjectWay, a) || !isInArea(referenceWay, a)) {
             throw new ReplaceGeometryException(tr("The ways must be entirely within the downloaded area."));
         }
@@ -252,7 +255,7 @@ public final class ReplaceGeometryUtils {
             commands.addAll(getTagConflictResolutionCommands(referenceWay, subjectWay));
         } catch (UserCancelException e) {
             // user canceled tag merge dialog
-            Main.trace(e);
+            Logging.trace(e);
             return null;
         }
 
@@ -353,7 +356,7 @@ public final class ReplaceGeometryUtils {
         }
 
         // Remove geometry way from selection
-        Main.getLayerManager().getEditDataSet().clearSelection(referenceWay);
+        MainApplication.getLayerManager().getEditDataSet().clearSelection(referenceWay);
 
         // And delete old geometry way
         commands.add(new DeleteCommand(referenceWay));

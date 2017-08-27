@@ -21,6 +21,7 @@ import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.Notification;
 import org.openstreetmap.josm.tools.Shortcut;
 
@@ -86,8 +87,8 @@ public final class SymmetryAction extends JosmAction {
             cmds.add(new MoveCommand(n, -2*ne*pr, -2*nn*pr));
         }
 
-        Main.main.undoRedo.add(new SequenceCommand(tr("Symmetry"), cmds));
-        Main.map.repaint();
+        MainApplication.undoRedo.add(new SequenceCommand(tr("Symmetry"), cmds));
+        MainApplication.getMap().repaint();
     }
 
     @Override

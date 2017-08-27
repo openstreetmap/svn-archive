@@ -23,6 +23,7 @@ import org.openstreetmap.josm.command.SequenceCommand;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.Notification;
 import org.openstreetmap.josm.tools.Shortcut;
 
@@ -55,9 +56,9 @@ public class ExtractPointAction extends JosmAction {
         Node ndCopy = new Node(nd.getCoor());
         List<Command> cmds = new LinkedList<>();
 
-        Point p = Main.map.mapView.getMousePosition();
+        Point p = MainApplication.getMap().mapView.getMousePosition();
         if (p != null)
-            cmds.add(new MoveCommand(nd, Main.map.mapView.getLatLon(p.x, p.y)));
+            cmds.add(new MoveCommand(nd, MainApplication.getMap().mapView.getLatLon(p.x, p.y)));
         List<OsmPrimitive> refs = nd.getReferrers();
         cmds.add(new AddCommand(ndCopy));
 
@@ -70,7 +71,7 @@ public class ExtractPointAction extends JosmAction {
                 cmds.add(new ChangeNodesCommand(w, nodes));
             }
         }
-        if (cmds.size() > 1) Main.main.undoRedo.add(new SequenceCommand(tr("Extract node from line"), cmds));
+        if (cmds.size() > 1) MainApplication.undoRedo.add(new SequenceCommand(tr("Extract node from line"), cmds));
     }
 
     @Override

@@ -9,11 +9,11 @@ import java.util.Collection;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListSelectionModel;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.SequenceCommand;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Tag;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.tagging.TagModel;
 import org.openstreetmap.josm.gui.tagging.presets.TaggingPreset;
 import org.openstreetmap.josm.plugins.tageditor.preset.AdvancedTag;
@@ -146,7 +146,7 @@ public class TagEditorModel extends org.openstreetmap.josm.gui.tagging.TagEditor
      */
     public void updateJOSMSelection() {
         ArrayList<Command> commands = new ArrayList<>();
-        Collection<OsmPrimitive> selection = Main.getLayerManager().getEditDataSet().getSelected();
+        Collection<OsmPrimitive> selection = MainApplication.getLayerManager().getEditDataSet().getSelected();
         if (selection == null)
             return;
         for (TagModel tag : tags) {
@@ -166,14 +166,14 @@ public class TagEditorModel extends org.openstreetmap.josm.gui.tagging.TagEditor
         );
 
         // executes the commands and adds them to the undo/redo chains
-        Main.main.undoRedo.add(command);
+        MainApplication.undoRedo.add(command);
     }
 
     /**
      * initializes the model with the tags in the current JOSM selection
      */
     public void initFromJOSMSelection() {
-        Collection<OsmPrimitive> selection = Main.getLayerManager().getEditDataSet().getSelected();
+        Collection<OsmPrimitive> selection = MainApplication.getLayerManager().getEditDataSet().getSelected();
         clear();
         for (OsmPrimitive element : selection) {
             for (String key : element.keySet()) {

@@ -30,6 +30,7 @@ import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.io.AbstractReader;
 import org.openstreetmap.josm.io.IllegalDataException;
 import org.openstreetmap.josm.tools.CheckParameterUtil;
+import org.openstreetmap.josm.tools.Logging;
 
 /**
  * @author GerdP
@@ -221,7 +222,7 @@ public class O5mReader extends AbstractReader {
                                  && LatLon.isValidLon(minlon) && LatLon.isValidLon(maxlon)) {
                 ds.addDataSource(new DataSource(b, header));
             } else {
-                Main.error("Invalid Bounds: "+b);
+                Logging.error("Invalid Bounds: "+b);
             }
         }
 

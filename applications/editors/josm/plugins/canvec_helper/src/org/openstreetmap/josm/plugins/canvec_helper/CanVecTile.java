@@ -15,14 +15,16 @@ import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.coor.LatLon;
+import org.openstreetmap.josm.data.osm.DataSet.UploadPolicy;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.io.importexport.OsmImporter;
 import org.openstreetmap.josm.gui.io.importexport.OsmImporter.OsmImporterData;
 import org.openstreetmap.josm.io.CachedFile;
 import org.openstreetmap.josm.io.IllegalDataException;
+import org.openstreetmap.josm.tools.Logging;
 
 class CanVecTile {
     private CanvecLayer layer;
@@ -189,8 +191,8 @@ class CanVecTile {
 
     private ZipFile openZip() throws IOException {
         File downloadPath = new File(layer.plugin.getPluginDir() + File.separator);
-        if (!downloadPath.mkdir() && Main.isDebugEnabled()) {
-            Main.debug("Unable to create directory: "+downloadPath);
+        if (!downloadPath.mkdir() && Logging.isDebugEnabled()) {
+            Logging.debug("Unable to create directory: "+downloadPath);
         }
         CachedFile tileZip = new CachedFile(getDownloadUrl()).setDestDir(downloadPath.toString());
         return new ZipFile(tileZip.getFile());
@@ -202,7 +204,7 @@ class CanVecTile {
         try {
             zipFile = openZip();
         } catch (IOException e) {
-            Main.error(e);
+            Logging.error(e);
             return;
         }
         Enumeration<? extends ZipEntry> entries = zipFile.entries();
@@ -229,13 +231,13 @@ class CanVecTile {
                     InputStream rawtile = zipFile.getInputStream(entry);
                     OsmImporter importer = new OsmImporter();
                     OsmImporterData temp = importer.loadLayer(rawtile, null, entry.getName(), null);
-                    Main.worker.submit(temp.getPostLayerTask());
-                    Main.getLayerManager().addLayer(temp.getLayer());
-                    temp.getLayer().data.setUploadDiscouraged(false);
+                    MainApplication.worker.submit(temp.getPostLayerTask());
+                    MainApplication.getLayerManager().addLayer(temp.getLayer());
+                    temp.getLayer().data.setUploadPolicy(UploadPolicy.NORMAL);
                 }
             }
         } catch (IOException | IllegalDataException e) {
-            Main.error(e);
+            Logging.error(e);
             return;
         }
     }

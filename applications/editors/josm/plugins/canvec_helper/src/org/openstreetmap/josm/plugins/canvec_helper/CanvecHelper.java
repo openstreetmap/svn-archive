@@ -1,7 +1,7 @@
 // License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.canvec_helper;
 
-import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
 
@@ -16,6 +16,6 @@ public class CanvecHelper extends Plugin {
      */
     public CanvecHelper(PluginInformation info) {
         super(info);
-        Main.main.menu.imagerySubMenu.add(new CanvecHelperAction(this));
+        MainApplication.getMenu().imagerySubMenu.add(new CanvecHelperAction(this));
     }
 }

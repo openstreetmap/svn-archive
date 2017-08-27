@@ -25,7 +25,6 @@ import javax.swing.ImageIcon;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
 import org.openstreetmap.josm.gui.MapView;
@@ -33,6 +32,7 @@ import org.openstreetmap.josm.gui.dialogs.LayerListDialog;
 import org.openstreetmap.josm.gui.dialogs.LayerListPopup;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.io.CachedFile;
+import org.openstreetmap.josm.tools.Logging;
 
 // most of the layout was copied from the openstreetbugs plugin to get things started
 class CanvecLayer extends Layer {
@@ -71,19 +71,19 @@ class CanvecLayer extends Layer {
                     }
                     lastCell = cell;
                 } else if (!line.contains("Metadata.txt")) {
-                    Main.warn("bad line '" + line + "'\n");
+                    Logging.warn("bad line '" + line + "'\n");
                 }
             }
             CanVecTile tile = new CanVecTile(lastCell, "", 0, "", this, list);
             if (tile.isValid()) tiles.add(tile);
 
-            if (Main.isDebugEnabled()) {
+            if (Logging.isDebugEnabled()) {
                 long end = System.currentTimeMillis();
-                Main.debug((end-start)+"ms spent");
+                Logging.debug((end-start)+"ms spent");
             }
         } catch (IOException e) {
-            Main.error("exception getting index");
-            Main.error(e);
+            Logging.error("exception getting index");
+            Logging.error(e);
         }
     }
 

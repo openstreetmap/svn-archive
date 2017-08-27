@@ -1,8 +1,8 @@
 // License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.canvec_helper;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
+import org.openstreetmap.josm.gui.MainApplication;
 
 class CanvecHelperAction extends JosmAction {
     private CanvecHelper parentTemp;
@@ -13,6 +13,6 @@ class CanvecHelperAction extends JosmAction {
 
     @Override
     public void actionPerformed(java.awt.event.ActionEvent action) {
-        Main.getLayerManager().addLayer(new CanvecLayer("canvec tile helper", parentTemp));
+        MainApplication.getLayerManager().addLayer(new CanvecLayer("canvec tile helper", parentTemp));
     }
 }

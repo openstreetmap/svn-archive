@@ -19,10 +19,10 @@ import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.gui.MapView;
+import org.openstreetmap.josm.gui.io.importexport.OsmImporter;
+import org.openstreetmap.josm.gui.io.importexport.OsmImporter.OsmImporterData;
 import org.openstreetmap.josm.io.CachedFile;
 import org.openstreetmap.josm.io.IllegalDataException;
-import org.openstreetmap.josm.io.OsmImporter;
-import org.openstreetmap.josm.io.OsmImporter.OsmImporterData;
 
 class CanVecTile {
     private CanvecLayer layer;

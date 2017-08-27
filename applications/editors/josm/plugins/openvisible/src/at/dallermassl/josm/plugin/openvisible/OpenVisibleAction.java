@@ -22,15 +22,16 @@ import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.DataSet;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MapView;
+import org.openstreetmap.josm.gui.io.importexport.GpxImporter;
+import org.openstreetmap.josm.gui.io.importexport.OsmImporter;
 import org.openstreetmap.josm.gui.layer.GpxLayer;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import org.openstreetmap.josm.gui.layer.markerlayer.MarkerLayer;
 import org.openstreetmap.josm.gui.progress.NullProgressMonitor;
-import org.openstreetmap.josm.io.GpxImporter;
 import org.openstreetmap.josm.io.GpxReader;
 import org.openstreetmap.josm.io.IllegalDataException;
-import org.openstreetmap.josm.io.OsmImporter;
 import org.openstreetmap.josm.io.OsmReader;
 import org.openstreetmap.josm.tools.Shortcut;
 import org.xml.sax.SAXException;
@@ -54,12 +55,13 @@ public class OpenVisibleAction extends JosmAction {
     /* (non-Javadoc)
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
+    @Override
     public void actionPerformed(ActionEvent e) {
-        if(Main.map == null || Main.map.mapView == null) {
+        if(!MainApplication.isDisplayingMapView()) {
             JOptionPane.showMessageDialog(Main.parent, tr("No view open - cannot determine boundaries!"));
             return;
         }
-        MapView view = Main.map.mapView;
+        MapView view = MainApplication.getMap().mapView;
         Rectangle bounds = view.getBounds();
         LatLon bottomLeft = view.getLatLon(bounds.x, bounds.y + bounds.height);
         LatLon topRight = view.getLatLon(bounds.x + bounds.width, bounds.y);
@@ -108,7 +110,7 @@ public class OpenVisibleAction extends JosmAction {
         if (new OsmImporter().acceptFile(file)) {
             DataSet dataSet = OsmReader.parseDataSet(new FileInputStream(file), NullProgressMonitor.INSTANCE);
             OsmDataLayer layer = new OsmDataLayer(dataSet, fn, file);
-            Main.getLayerManager().addLayer(layer);
+            MainApplication.getLayerManager().addLayer(layer);
         }
         else
             JOptionPane.showMessageDialog(Main.parent, fn+": "+tr("Unknown file extension: {0}", fn.substring(fn.lastIndexOf('.')+1)));
@@ -130,8 +132,8 @@ public class OpenVisibleAction extends JosmAction {
             }
             r.getGpxData().storageFile = file;
             GpxLayer gpxLayer = new GpxLayer(r.getGpxData(), fn);
-            Main.getLayerManager().addLayer(gpxLayer);
-            Main.getLayerManager().addLayer(new MarkerLayer(r.getGpxData(), tr("Markers from {0}", fn), file, gpxLayer));
+            MainApplication.getLayerManager().addLayer(gpxLayer);
+            MainApplication.getLayerManager().addLayer(new MarkerLayer(r.getGpxData(), tr("Markers from {0}", fn), file, gpxLayer));
 
         } else {
             throw new IllegalStateException();

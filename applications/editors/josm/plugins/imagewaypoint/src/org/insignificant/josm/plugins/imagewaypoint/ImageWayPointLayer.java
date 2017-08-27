@@ -12,9 +12,9 @@ import java.awt.event.MouseListener;
 import javax.swing.Action;
 import javax.swing.Icon;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.tools.ImageProvider;
@@ -39,7 +39,7 @@ public final class ImageWayPointLayer extends Layer {
                     // which they're painted - this means than an image which
                     // partly obscures another will match the click first
                     for (int index = images.length - 1; !found && index >= 0; index--) {
-                        final Rectangle bounds = images[index].getBounds(Main.map.mapView);
+                        final Rectangle bounds = images[index].getBounds(MainApplication.getMap().mapView);
                         if (null != bounds && bounds.contains(event.getPoint())) {
                             found = true;
                             ImageEntries.getInstance()
@@ -54,12 +54,12 @@ public final class ImageWayPointLayer extends Layer {
     private static final class ImageChangeListener implements IImageChangeListener {
         @Override
         public void onAvailableImageEntriesChanged(final ImageEntries entries) {
-            Main.map.repaint();
+            MainApplication.getMap().repaint();
         }
 
         @Override
         public void onSelectedImageEntryChanged(final ImageEntries entries) {
-            Main.map.repaint();
+            MainApplication.getMap().repaint();
         }
     }
 
@@ -69,10 +69,10 @@ public final class ImageWayPointLayer extends Layer {
     public ImageWayPointLayer() {
         super(tr("Imported Images"));
 
-        Main.getLayerManager().addLayer(this);
+        MainApplication.getLayerManager().addLayer(this);
 
         this.layerMouseListener = new ImageWayPointMouseListener(this);
-        Main.map.mapView.addMouseListener(this.layerMouseListener);
+        MainApplication.getMap().mapView.addMouseListener(this.layerMouseListener);
 
         this.imageChangeListener = new ImageChangeListener();
         ImageEntries.getInstance().addListener(this.imageChangeListener);
@@ -155,7 +155,7 @@ public final class ImageWayPointLayer extends Layer {
     public void destroy() {
         super.destroy();
 
-        Main.map.mapView.removeMouseListener(this.layerMouseListener);
+        MainApplication.getMap().mapView.removeMouseListener(this.layerMouseListener);
         ImageEntries.getInstance().removeListener(this.imageChangeListener);
     }
 }

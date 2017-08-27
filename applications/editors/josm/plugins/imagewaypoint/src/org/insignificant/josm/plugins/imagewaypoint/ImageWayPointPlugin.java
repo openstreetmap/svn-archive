@@ -9,8 +9,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.ExtensionFileFilter;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.gui.io.importexport.FileImporter;
 import org.openstreetmap.josm.gui.layer.Layer;
@@ -49,7 +49,7 @@ public final class ImageWayPointPlugin extends org.openstreetmap.josm.plugins.Pl
 
                 // check to see whether there's already an ImageWayPointLayer
                 boolean foundImageWayPointLayer = false;
-                final Collection<Layer> layerCollection = Main.getLayerManager().getLayers();
+                final Collection<Layer> layerCollection = MainApplication.getLayerManager().getLayers();
                 final Iterator<Layer> layerIterator = layerCollection.iterator();
                 while (layerIterator.hasNext() && !foundImageWayPointLayer) {
                     if (layerIterator.next() instanceof ImageWayPointLayer) {

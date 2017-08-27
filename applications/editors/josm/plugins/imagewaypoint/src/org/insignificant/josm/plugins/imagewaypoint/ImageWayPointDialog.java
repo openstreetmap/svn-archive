@@ -14,7 +14,7 @@ import org.insignificant.josm.plugins.imagewaypoint.actions.NextAction;
 import org.insignificant.josm.plugins.imagewaypoint.actions.PreviousAction;
 import org.insignificant.josm.plugins.imagewaypoint.actions.RotateLeftAction;
 import org.insignificant.josm.plugins.imagewaypoint.actions.RotateRightAction;
-import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.dialogs.ToggleDialog;
 import org.openstreetmap.josm.tools.Shortcut;
 
@@ -69,8 +69,8 @@ public final class ImageWayPointDialog extends ToggleDialog {
         this.rotateLeftAction.setEnabled(null != ImageEntries.getInstance().getCurrentImageEntry());
         this.rotateRightAction.setEnabled(null != ImageEntries.getInstance().getCurrentImageEntry());
 
-        if (null != Main.map) {
-            Main.map.repaint();
+        if (null != MainApplication.getMap()) {
+            MainApplication.getMap().repaint();
         }
     }
 }

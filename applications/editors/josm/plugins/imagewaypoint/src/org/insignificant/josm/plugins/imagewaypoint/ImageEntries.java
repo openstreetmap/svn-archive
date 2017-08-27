@@ -8,8 +8,8 @@ import java.util.Collection;
 import java.util.List;
 
 import org.insignificant.josm.plugins.imagewaypoint.ImageEntry.IImageReadyListener;
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.gpx.WayPoint;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.layer.GpxLayer;
 import org.openstreetmap.josm.gui.layer.Layer;
 
@@ -76,7 +76,7 @@ public final class ImageEntries {
         }
         this.locatedImages.clear();
 
-        final Collection<Layer> layerCollection = Main.getLayerManager().getLayers();
+        final Collection<Layer> layerCollection = MainApplication.getLayerManager().getLayers();
         final Layer[] layers = layerCollection.toArray(new Layer[layerCollection.size()]);
 
         for (int index = 0; index < layers.length; index++) {

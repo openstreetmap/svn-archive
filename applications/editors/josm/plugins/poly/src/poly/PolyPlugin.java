@@ -1,8 +1,8 @@
 // License: GPL. For details, see LICENSE file.
 package poly;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.ExtensionFileFilter;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
 
@@ -21,6 +21,6 @@ public class PolyPlugin extends Plugin {
         super(info);
         ExtensionFileFilter.addImporter(new PolyImporter());
         ExtensionFileFilter.addExporter(new PolyExporter());
-        Main.main.menu.openLocation.addDownloadTaskClass(DownloadPolyTask.class);
+        MainApplication.getMenu().openLocation.addDownloadTaskClass(DownloadPolyTask.class);
     }
 }

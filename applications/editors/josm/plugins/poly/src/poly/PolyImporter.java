@@ -19,11 +19,12 @@ import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.data.osm.DataSet.UploadPolicy;
+import org.openstreetmap.josm.gui.io.importexport.OsmImporter;
 import org.openstreetmap.josm.gui.progress.NullProgressMonitor;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.io.CachedFile;
 import org.openstreetmap.josm.io.IllegalDataException;
-import org.openstreetmap.josm.io.OsmImporter;
 import org.openstreetmap.josm.tools.CheckParameterUtil;
 import org.xml.sax.SAXException;
 
@@ -141,7 +142,7 @@ public class PolyImporter extends OsmImporter {
 
     private DataSet constructDataSet(List<Area> areas) {
         DataSet ds = new DataSet();
-        ds.setUploadDiscouraged(true);
+        ds.setUploadPolicy(UploadPolicy.DISCOURAGED);
 
         boolean foundInner = false;
         for (Area area : areas) {
@@ -162,7 +163,7 @@ public class PolyImporter extends OsmImporter {
         return ds;
     }
 
-    private class Area {
+    private static class Area {
         private String name;
         private String polygonName;
         private List<LatLon> nodes;

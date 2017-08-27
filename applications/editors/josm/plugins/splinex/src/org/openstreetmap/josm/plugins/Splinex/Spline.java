@@ -313,7 +313,7 @@ public class Spline {
         public boolean executeCommand() {
             nodes.add(idx, sn);
             if (!existing) {
-                getLayer().data.addPrimitive(sn.node);
+                getAffectedDataSet().addPrimitive(sn.node);
                 sn.node.setModified(true);
                 affected = true;
             }
@@ -323,7 +323,7 @@ public class Spline {
         @Override
         public void undoCommand() {
             if (!existing)
-                getLayer().data.removePrimitive(sn.node);
+                getAffectedDataSet().removePrimitive(sn.node);
             nodes.remove(idx);
             affected = false;
         }

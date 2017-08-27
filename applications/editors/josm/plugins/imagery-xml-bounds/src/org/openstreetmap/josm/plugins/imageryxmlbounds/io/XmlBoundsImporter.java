@@ -12,6 +12,7 @@ import javax.swing.JOptionPane;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.imagery.ImageryInfo;
 import org.openstreetmap.josm.data.osm.DataSet;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.io.importexport.FileImporter;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.gui.util.GuiHelper;
@@ -20,6 +21,7 @@ import org.openstreetmap.josm.io.imagery.ImageryReader;
 import org.openstreetmap.josm.plugins.imageryxmlbounds.XmlBoundsConstants;
 import org.openstreetmap.josm.plugins.imageryxmlbounds.XmlBoundsLayer;
 import org.openstreetmap.josm.plugins.imageryxmlbounds.data.XmlBoundsConverter;
+import org.openstreetmap.josm.tools.Logging;
 import org.xml.sax.SAXException;
 
 /**
@@ -62,9 +64,7 @@ public class XmlBoundsImporter extends FileImporter implements XmlBoundsConstant
 		try (ImageryReader reader = new ValidatingImageryReader(source != null ? source : file.getAbsolutePath())) {
             entries = reader.parse();
         } catch (SAXException e) {
-        	if (Main.isTraceEnabled()) {
-        		Main.trace(e);
-        	}
+      	    Logging.trace(e);
             if (JOptionPane.showConfirmDialog(
                     Main.parent,
                     tr("Validating error in file {0}:\n{1}\nDo you want to continue without validating the file ?",
@@ -93,11 +93,11 @@ public class XmlBoundsImporter extends FileImporter implements XmlBoundsConstant
 			                Main.parent, tr("No data found in file {0}.", source != null ? source : file.getPath()),
 			                tr("Open Imagery XML file"), JOptionPane.INFORMATION_MESSAGE);
 			    }
-			    Main.getLayerManager().addLayer(layer);
+			    MainApplication.getLayerManager().addLayer(layer);
 			    layer.onPostLoadFromFile();
 			});
         } catch (SAXException e) {
-            Main.error(e);
+            Logging.error(e);
         }
     }
 

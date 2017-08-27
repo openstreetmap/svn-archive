@@ -1,9 +1,9 @@
 // License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.imageryxmlbounds;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.ExtensionFileFilter;
 import org.openstreetmap.josm.data.osm.DataSet;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.gui.preferences.PreferenceSetting;
 import org.openstreetmap.josm.plugins.Plugin;
@@ -59,9 +59,9 @@ public class ImageryXmlBoundsPlugin extends Plugin {
         // Initialize the selection action
         ShowBoundsSelectionAction selectionAction = new ShowBoundsSelectionAction();
         DataSet.addSelectionListener(selectionAction);
-        Main.toolbar.register(selectionAction);
+        MainApplication.getToolbar().register(selectionAction);
         // Allow JOSM to download *.imagery.xml files
-        Main.main.menu.openLocation.addDownloadTaskClass(DownloadXmlBoundsTask.class);
+        MainApplication.getMenu().openLocation.addDownloadTaskClass(DownloadXmlBoundsTask.class);
     }
 
     @Override

@@ -7,8 +7,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.util.Collection;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.tools.Shortcut;
 
 import reverter.ChangesetReverter.RevertType;
@@ -35,7 +35,7 @@ public class RevertChangesetAction extends JosmAction {
         boolean newLayer = dlg.isNewLayerRequired();
         final boolean autoConfirmDownload = newLayer || changesetIds.size() > 1;
         for (Integer changesetId : changesetIds) {
-            Main.worker.submit(new RevertChangesetTask(changesetId, revertType, autoConfirmDownload, newLayer));
+            MainApplication.worker.submit(new RevertChangesetTask(changesetId, revertType, autoConfirmDownload, newLayer));
             newLayer = false; // reuse layer for subsequent reverts
         }
     }

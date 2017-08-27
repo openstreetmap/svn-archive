@@ -9,7 +9,6 @@ import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.command.ChangeCommand;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.data.conflict.Conflict;
@@ -20,6 +19,7 @@ import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.tools.Logging;
 
 /**
  * Modified {@see org.openstreetmap.josm.data.osm.DataSetMerger} that
@@ -52,7 +52,7 @@ final class DataSetCommandMerger {
             if (nominal) {
                 nominalRevertedPrimitives.add(target);
             }
-            Main.debug("Reverting "+target+" to "+newTarget);
+            Logging.debug("Reverting "+target+" to "+newTarget);
         }
     }
 
@@ -112,17 +112,17 @@ final class DataSetCommandMerger {
             } else if (sourceNode.isIncomplete() && !conflicts.hasConflictForMy(targetNode)) {
                 localConflicts.add(new Conflict<OsmPrimitive>(targetNode, sourceNode, true));
             } else {
-                Main.info("Skipping target node "+targetNode+" for source node "+sourceNode+" while reverting way "+source);
+               Logging.info("Skipping target node "+targetNode+" for source node "+sourceNode+" while reverting way "+source);
             }
         }
         Way newTarget = new Way(target);
         mergePrimitive(source, target, newTarget);
         newTarget.setNodes(newNodes);
         if (newNodes.isEmpty()) {
-            Main.error("Unable to revert "+source+" as it produces 0 nodes way "+newTarget);
+            Logging.error("Unable to revert "+source+" as it produces 0 nodes way "+newTarget);
         } else {
             for (Conflict<OsmPrimitive> c : localConflicts) {
-                Main.warn("New conflict: "+c);
+                Logging.warn("New conflict: "+c);
                 conflicts.add(c);
                 Node targetNode = (Node) c.getTheir();
                 Node undeletedTargetNode = new Node(targetNode);

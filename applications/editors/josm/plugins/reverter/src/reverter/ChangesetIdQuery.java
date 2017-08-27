@@ -27,6 +27,7 @@ import javax.swing.plaf.basic.BasicComboBoxEditor;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.gui.ExtendedDialog;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.widgets.HistoryComboBox;
 import org.openstreetmap.josm.tools.GBC;
 
@@ -106,7 +107,7 @@ public class ChangesetIdQuery extends ExtendedDialog {
         addWindowListener(new InternalWindowListener());
         super.setupDialog();
 
-        final DataSet ds = Main.getLayerManager().getEditDataSet();
+        final DataSet ds = MainApplication.getLayerManager().getEditDataSet();
 
         // Disables "Download in new layer" choice if there is no current data set (i.e no data layer)
         if (ds == null) {

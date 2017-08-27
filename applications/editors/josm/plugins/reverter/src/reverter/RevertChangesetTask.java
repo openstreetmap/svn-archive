@@ -11,10 +11,11 @@ import javax.swing.JOptionPane;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.conflict.ConflictAddCommand;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.Notification;
 import org.openstreetmap.josm.gui.PleaseWaitRunnable;
-import org.openstreetmap.josm.gui.progress.PleaseWaitProgressMonitor;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
+import org.openstreetmap.josm.gui.progress.swing.PleaseWaitProgressMonitor;
 import org.openstreetmap.josm.gui.util.GuiHelper;
 import org.openstreetmap.josm.io.OsmTransferException;
 
@@ -122,9 +123,9 @@ public class RevertChangesetTask extends PleaseWaitRunnable {
         GuiHelper.runInEDT(new Runnable() {
             @Override
             public void run() {
-                Main.main.undoRedo.add(cmd);
+                MainApplication.undoRedo.add(cmd);
                 if (newConflicts > 0) {
-                    Main.map.conflictDialog.warnNumNewConflicts(newConflicts);
+                    MainApplication.getMap().conflictDialog.warnNumNewConflicts(newConflicts);
                 }
             }
         });

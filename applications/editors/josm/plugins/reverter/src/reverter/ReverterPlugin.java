@@ -3,8 +3,8 @@ package reverter;
 
 import javax.swing.JMenu;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.UploadAction;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MainMenu;
 import org.openstreetmap.josm.io.remotecontrol.RemoteControl;
 import org.openstreetmap.josm.plugins.Plugin;
@@ -14,7 +14,7 @@ public class ReverterPlugin extends Plugin {
     static boolean reverterUsed = false;
     public ReverterPlugin(PluginInformation info) {
         super(info);
-        JMenu historyMenu = Main.main.menu.dataMenu;
+        JMenu historyMenu = MainApplication.getMenu().dataMenu;
         //MainMenu.add(historyMenu, new ObjectsHistoryAction());
         MainMenu.add(historyMenu, new RevertChangesetAction());
         UploadAction.registerUploadHook(new ReverterUploadHook(this));

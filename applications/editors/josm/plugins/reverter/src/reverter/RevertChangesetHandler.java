@@ -3,7 +3,7 @@ package reverter;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
-import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.io.remotecontrol.PermissionPrefWithDefault;
 import org.openstreetmap.josm.io.remotecontrol.handler.RequestHandler;
 
@@ -18,7 +18,7 @@ public class RevertChangesetHandler extends RequestHandler {
     protected void handleRequest() throws RequestHandlerErrorException,
             RequestHandlerBadRequestException {
         try {
-            Main.worker.submit(new RevertChangesetTask(changesetId, ChangesetReverter.RevertType.FULL, true));
+            MainApplication.worker.submit(new RevertChangesetTask(changesetId, ChangesetReverter.RevertType.FULL, true));
         } catch (Exception ex) {
             System.out.println("RemoteControl: Error parsing revert_changeset remote control request:");
             ex.printStackTrace();

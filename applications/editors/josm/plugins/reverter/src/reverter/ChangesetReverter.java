@@ -11,7 +11,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.DeleteCommand;
 import org.openstreetmap.josm.command.conflict.ConflictAddCommand;
@@ -31,12 +30,14 @@ import org.openstreetmap.josm.data.osm.history.HistoryNode;
 import org.openstreetmap.josm.data.osm.history.HistoryOsmPrimitive;
 import org.openstreetmap.josm.data.osm.history.HistoryRelation;
 import org.openstreetmap.josm.data.osm.history.HistoryWay;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.gui.util.GuiHelper;
 import org.openstreetmap.josm.io.MultiFetchServerObjectReader;
 import org.openstreetmap.josm.io.OsmApiException;
 import org.openstreetmap.josm.io.OsmTransferException;
+import org.openstreetmap.josm.tools.Logging;
 
 import reverter.corehacks.ChangesetDataSet;
 import reverter.corehacks.ChangesetDataSet.ChangesetDataSetEntry;
@@ -137,7 +138,7 @@ public class ChangesetReverter {
             this.ds = new DataSet();
             this.layer = new OsmDataLayer(this.ds, tr("Reverted changeset") + tr(" [id: {0}]", String.valueOf(changesetId)), null);
         } else {
-            this.layer = Main.getLayerManager().getEditLayer();
+            this.layer = MainApplication.getLayerManager().getEditLayer();
             this.ds = layer.data;
         }
         this.revertType = revertType;
@@ -153,12 +154,7 @@ public class ChangesetReverter {
         } finally {
             monitor.finishTask();
             if (newLayer) {
-                GuiHelper.runInEDT(new Runnable() {
-                    @Override
-                    public void run() {
-                        Main.getLayerManager().addLayer(layer);
-                    }
-                });
+                GuiHelper.runInEDT(() -> MainApplication.getLayerManager().addLayer(layer));
             }
         }
 
@@ -203,12 +199,12 @@ public class ChangesetReverter {
                 if (version > 1) {
                     message += ", requesting previous one";
                 }
-                Main.info(message);
+                Logging.info(message);
                 version--;
             }
         }
         if (!readOK) {
-            Main.warn("Cannot retrieve any previous version of "+id);
+            Logging.warn("Cannot retrieve any previous version of "+id);
         }
     }
 

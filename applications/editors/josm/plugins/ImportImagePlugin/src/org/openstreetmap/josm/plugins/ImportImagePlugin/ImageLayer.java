@@ -33,6 +33,7 @@ import org.openstreetmap.josm.data.ProjectionBounds;
 import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
 import org.openstreetmap.josm.gui.ExtendedDialog;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.dialogs.LayerListDialog;
 import org.openstreetmap.josm.gui.dialogs.LayerListPopup;
@@ -298,7 +299,7 @@ public class ImageLayer extends Layer {
         // repaint and zoom to new bbox
         BoundingXYVisitor boundingXYVisitor = new BoundingXYVisitor();
         visitBoundingBox(boundingXYVisitor);
-        Main.map.mapView.zoomTo(boundingXYVisitor);
+        MainApplication.getMap().mapView.zoomTo(boundingXYVisitor);
     }
 
     /**

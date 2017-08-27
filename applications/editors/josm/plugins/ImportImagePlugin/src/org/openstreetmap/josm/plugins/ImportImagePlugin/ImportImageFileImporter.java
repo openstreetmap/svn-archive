@@ -11,6 +11,7 @@ import org.apache.log4j.Logger;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.ExtensionFileFilter;
 import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.io.importexport.FileImporter;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.io.IllegalDataException;
@@ -49,7 +50,7 @@ public class ImportImageFileImporter extends FileImporter {
             try {
                 layer = new ImageLayer(file);
             } catch (LayerCreationCanceledException e) {
-            // if user decides that layer should not be created just return.
+                // if user decides that layer should not be created just return.
                 continue;
             } catch (Exception e) {
                logger.error("Error while creating image layer: \n" + e.getMessage());
@@ -58,10 +59,10 @@ public class ImportImageFileImporter extends FileImporter {
             }
 
             // Add layer:
-            Main.getLayerManager().addLayer(layer);
+            MainApplication.getLayerManager().addLayer(layer);
             BoundingXYVisitor boundingXYVisitor = new BoundingXYVisitor();
             layer.visitBoundingBox(boundingXYVisitor);
-            Main.map.mapView.zoomTo(boundingXYVisitor);
+            MainApplication.getMap().mapView.zoomTo(boundingXYVisitor);
         }
     }
 }

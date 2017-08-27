@@ -12,7 +12,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.DataSource;
 import org.openstreetmap.josm.data.coor.LatLon;
@@ -30,6 +29,7 @@ import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.io.AbstractReader;
 import org.openstreetmap.josm.io.IllegalDataException;
 import org.openstreetmap.josm.tools.CheckParameterUtil;
+import org.openstreetmap.josm.tools.Logging;
 
 import crosby.binary.BinaryParser;
 import crosby.binary.Osmformat;
@@ -81,7 +81,7 @@ public class PbfReader extends AbstractReader {
                 if (!b.isCollapsed() && areCoordinatesValid(minlat, minlon, maxlat, maxlon)) {
                     ds.addDataSource(new DataSource(b, header.getSource()));
                 } else {
-                    Main.error("Invalid Bounds: "+b);
+                    Logging.error("Invalid Bounds: "+b);
                 }
             }
         }

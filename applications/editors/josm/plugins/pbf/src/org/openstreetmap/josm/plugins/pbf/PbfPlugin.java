@@ -1,8 +1,8 @@
 // License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.pbf;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.ExtensionFileFilter;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.io.OverpassDownloadReader;
 import org.openstreetmap.josm.io.OverpassDownloadReader.OverpassOutpoutFormat;
 import org.openstreetmap.josm.plugins.Plugin;
@@ -29,7 +29,7 @@ public class PbfPlugin extends Plugin {
         // Allow JOSM to export *.osm.pbf files
         ExtensionFileFilter.addExporter(new PbfExporter());
         // Allow JOSM to download remote *.osm.pbf files
-        Main.main.menu.openLocation.addDownloadTaskClass(DownloadPbfTask.class);
+        MainApplication.getMenu().openLocation.addDownloadTaskClass(DownloadPbfTask.class);
         // Alow JOSM to download PBF data from Overpass API
         OverpassDownloadReader.registerOverpassOutpoutFormatReader(OverpassOutpoutFormat.PBF, PbfReader.class);
     }

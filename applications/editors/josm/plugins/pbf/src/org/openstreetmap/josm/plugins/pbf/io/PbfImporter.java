@@ -5,11 +5,11 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import org.openstreetmap.josm.data.osm.DataSet;
+import org.openstreetmap.josm.gui.io.importexport.OsmImporter;
 import org.openstreetmap.josm.gui.progress.NullProgressMonitor;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.io.CachedFile;
 import org.openstreetmap.josm.io.IllegalDataException;
-import org.openstreetmap.josm.io.OsmImporter;
 import org.openstreetmap.josm.plugins.pbf.PbfConstants;
 
 /**

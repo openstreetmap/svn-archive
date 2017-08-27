@@ -21,10 +21,12 @@ import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.gpx.GpxData;
 import org.openstreetmap.josm.data.gpx.ImmutableGpxTrack;
 import org.openstreetmap.josm.data.gpx.WayPoint;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.io.importexport.FileImporter;
 import org.openstreetmap.josm.gui.layer.GpxLayer;
 import org.openstreetmap.josm.gui.layer.markerlayer.MarkerLayer;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
+import org.openstreetmap.josm.tools.Logging;
 
 /**
  * Data import for TangoGPS file format.
@@ -68,7 +70,7 @@ public class TangoGPS extends FileImporter {
                         currentTrackSeg.add(currentWayPoint);
                         imported++;
                     } catch (NumberFormatException e) {
-                        Main.error(e);
+                        Logging.error(e);
                     }
                 }
             }
@@ -79,11 +81,11 @@ public class TangoGPS extends FileImporter {
                 data.recalculateBounds();
                 data.storageFile = file;
                 GpxLayer gpxLayer = new GpxLayer(data, file.getName());
-                Main.getLayerManager().addLayer(gpxLayer);
+                MainApplication.getLayerManager().addLayer(gpxLayer);
                 if (Main.pref.getBoolean("marker.makeautomarkers", true)) {
                     MarkerLayer ml = new MarkerLayer(data, tr("Markers from {0}", file.getName()), file, gpxLayer);
                     if (ml.data.size() > 0) {
-                        Main.getLayerManager().addLayer(ml);
+                        MainApplication.getLayerManager().addLayer(ml);
                     }
                 }
             }

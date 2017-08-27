@@ -24,9 +24,9 @@ import static java.lang.Math.toRadians;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.gpx.WayPoint;
+import org.openstreetmap.josm.tools.Logging;
 
 /**
  * @author Oliver Wieland <oliver.wieland@online.de> Provides several static methods to access way point
@@ -62,7 +62,7 @@ public class WayPointHelper {
             try {
                 return Double.parseDouble(height);
             } catch (NumberFormatException e) {
-                Main.error(String.format(
+                Logging.error(String.format(
                         "Cannot parse double from '%s': %s", height, e
                                 .getMessage()));
             }

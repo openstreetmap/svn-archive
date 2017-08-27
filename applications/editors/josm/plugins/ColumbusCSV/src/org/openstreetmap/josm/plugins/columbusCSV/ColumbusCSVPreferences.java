@@ -54,11 +54,11 @@ public class ColumbusCSVPreferences extends DefaultTabPreferenceSetting {
     /**
      * Ui elements for each flag.
      */
-    private JCheckBox colCSVShowSummary = new JCheckBox(tr("Show summary after import"));
-    private JCheckBox colCSVDontZoomAfterImport = new JCheckBox(tr("Do not zoom after import"));
-    private JCheckBox colCSVIgnoreVDOP = new JCheckBox(tr("Ignore hdop/vdop/pdop entries"));
-    private JCheckBox colCSVWarnMissingAudio = new JCheckBox(tr("Warn on missing audio files"));
-    private JCheckBox colCSVWarnConversionErrors = new JCheckBox(tr("Warn on conversion errors"));
+    private final JCheckBox colCSVShowSummary = new JCheckBox(tr("Show summary after import"));
+    private final JCheckBox colCSVDontZoomAfterImport = new JCheckBox(tr("Do not zoom after import"));
+    private final JCheckBox colCSVIgnoreVDOP = new JCheckBox(tr("Ignore hdop/vdop/pdop entries"));
+    private final JCheckBox colCSVWarnMissingAudio = new JCheckBox(tr("Warn on missing audio files"));
+    private final JCheckBox colCSVWarnConversionErrors = new JCheckBox(tr("Warn on conversion errors"));
     
     /**
      * Creates a new preferences instance.
@@ -149,6 +149,7 @@ public class ColumbusCSVPreferences extends DefaultTabPreferenceSetting {
         colCSVWarnMissingAudio.setSelected(Main.pref.getBoolean(WARN_MISSING_AUDIO, true));
     }
 
+    @Override
     public boolean isExpert() {
         return false;
     }

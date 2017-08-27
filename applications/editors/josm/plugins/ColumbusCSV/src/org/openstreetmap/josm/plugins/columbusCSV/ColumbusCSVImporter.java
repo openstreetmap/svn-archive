@@ -23,12 +23,14 @@ import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.AutoScaleAction;
 import org.openstreetmap.josm.actions.ExtensionFileFilter;
 import org.openstreetmap.josm.data.gpx.GpxData;
+import org.openstreetmap.josm.gui.MainApplication;
+import org.openstreetmap.josm.gui.io.importexport.FileImporter;
 import org.openstreetmap.josm.gui.layer.GpxLayer;
 import org.openstreetmap.josm.gui.layer.markerlayer.MarkerLayer;
 import org.openstreetmap.josm.gui.progress.NullProgressMonitor;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
-import org.openstreetmap.josm.io.FileImporter;
 import org.openstreetmap.josm.io.IllegalDataException;
+import org.openstreetmap.josm.tools.Logging;
 
 /**
  * 
@@ -88,7 +90,7 @@ public class ColumbusCSVImporter extends FileImporter {
                 assert gpxLayer != null;
         
                 // add layer to show way points
-                Main.getLayerManager().addLayer(gpxLayer);
+                MainApplication.getLayerManager().addLayer(gpxLayer);
         
                 progressMonitor.setTicksCount(3);
         
@@ -107,22 +109,22 @@ public class ColumbusCSVImporter extends FileImporter {
                         assert ml != null;
                         assert ml.data != null;
             
-                        Main.info("Layer: " + ml);
-                        Main.info("Data size: " + ml.data.size());
+                        Logging.info("Layer: " + ml);
+                        Logging.info("Data size: " + ml.data.size());
             
-                        Main.getLayerManager().addLayer(ml);
+                        MainApplication.getLayerManager().addLayer(ml);
                         if (ml.data.isEmpty()) {
-                            Main.warn("File contains no markers.");
+                        	Logging.warn("File contains no markers.");
                         }
                     } catch (Exception exLayer) {
-                        Main.error(exLayer);
+                    	Logging.error(exLayer);
                     }
                 } else {
-                    Main.warn("Option 'marker.makeautomarkers' is not set; audio marker layer is not created.");
+                	Logging.warn("Option 'marker.makeautomarkers' is not set; audio marker layer is not created.");
                 }
             } catch (Exception e) {
                 // catch and forward exception
-                Main.error(e);
+            	Logging.error(e);
                 throw new IllegalDataException(e);
             } finally { // take care of monitor...
                 progressMonitor.finishTask();

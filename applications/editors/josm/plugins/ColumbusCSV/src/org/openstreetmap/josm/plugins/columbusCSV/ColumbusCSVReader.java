@@ -33,7 +33,6 @@ import java.util.Map;
 import java.util.StringTokenizer;
 import java.util.zip.DataFormatException;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.gpx.GpxData;
 import org.openstreetmap.josm.data.gpx.GpxLink;
@@ -41,6 +40,7 @@ import org.openstreetmap.josm.data.gpx.GpxTrack;
 import org.openstreetmap.josm.data.gpx.ImmutableGpxTrack;
 import org.openstreetmap.josm.data.gpx.WayPoint;
 import org.openstreetmap.josm.io.IllegalDataException;
+import org.openstreetmap.josm.tools.Logging;
 
 /**
  * This class reads a native CSV of the Columbus V-900 data logger and converts
@@ -292,7 +292,7 @@ public class ColumbusCSVReader {
             String voxFile = String.format("vox%05d.wav", i);
             String nextVoxFile = String.format("vox%05d.wav", i + 1);
             if (!voxFiles.containsKey(voxFile)) {
-                Main.info("Found lost vox file " + voxFile);
+                Logging.info("Found lost vox file " + voxFile);
         
                 File f = getVoxFilePath(voxFile);
                 WayPoint nearestWpt = null;
@@ -314,14 +314,14 @@ public class ColumbusCSVReader {
                 // Add link to found way point
                 if (nearestWpt != null) {
                     if (addLinkToWayPoint(nearestWpt, "*" + voxFile + "*", f)) {
-                        Main.info(String.format(
+                        Logging.info(String.format(
                             "Linked file %s to position %s", voxFile,
                             nearestWpt.getCoor().toDisplayString()));
                         // Add linked way point to way point list of GPX; otherwise it would not be shown correctly
                         gpx.waypoints.add(nearestWpt);
                         rescuedFiles++;
                     } else {
-                        Main.error(String.format("Could not link vox file %s due to invalid parameters.", voxFile));
+                        Logging.error(String.format("Could not link vox file %s due to invalid parameters.", voxFile));
                     }
                 }
             }
@@ -441,16 +441,16 @@ public class ColumbusCSVReader {
                 addLinkToWayPoint(wpt, voxFile, file);
         
                 if (!"V".equals(csvLine[1])) {
-                    Main.info("Rescued unlinked audio file " + voxFile);
+                    Logging.info("Rescued unlinked audio file " + voxFile);
                 }
                 voxFiles.put(voxFile, wpt);
         
                 // set type to way point with vox
                 wpt.attr.put(TYPE_TAG, "V");
             } else { // audio file not found -> issue warning
-                Main.error("File " + voxFile + " not found!");
+            	Logging.error("File " + voxFile + " not found!");
                 String warnMsg = tr("Missing audio file") + ": " + voxFile;
-                Main.error(warnMsg);
+                Logging.error(warnMsg);
                 if (ColumbusCSVPreferences.warnMissingAudio()) {
                     ColumbusCSVUtils.showInfoMessage(warnMsg);
                 }
@@ -474,7 +474,7 @@ public class ColumbusCSVReader {
             wpt.setTime();
         } catch (ParseException ex) {
             dateConversionErrors++;
-            Main.error(ex);
+            Logging.error(ex);
         }
     
         // Add further attributes

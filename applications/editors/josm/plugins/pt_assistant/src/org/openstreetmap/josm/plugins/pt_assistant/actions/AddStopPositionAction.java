@@ -15,7 +15,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JoinNodeWayAction;
 import org.openstreetmap.josm.actions.SplitWayAction;
 import org.openstreetmap.josm.actions.SplitWayAction.SplitWayResult;
@@ -31,6 +30,7 @@ import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.data.osm.WaySegment;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.plugins.pt_assistant.data.PTStop;
 import org.openstreetmap.josm.plugins.pt_assistant.utils.RouteUtils;
 import org.openstreetmap.josm.tools.ImageProvider;
@@ -76,15 +76,15 @@ public class AddStopPositionAction extends MapMode {
     @Override
     public void enterMode() {
         super.enterMode();
-        Main.map.mapView.addMouseListener(this);
-        Main.map.mapView.addMouseMotionListener(this);
+        MainApplication.getMap().mapView.addMouseListener(this);
+        MainApplication.getMap().mapView.addMouseMotionListener(this);
     }
 
     @Override
     public void exitMode() {
         super.exitMode();
-        Main.map.mapView.removeMouseListener(this);
-        Main.map.mapView.removeMouseMotionListener(this);
+        MainApplication.getMap().mapView.removeMouseListener(this);
+        MainApplication.getMap().mapView.removeMouseMotionListener(this);
     }
 
     @Override
@@ -95,13 +95,13 @@ public class AddStopPositionAction extends MapMode {
         //priority is given to nodes
         Cursor newCurs = getCursor();
 
-        Node n = Main.map.mapView.getNearestNode(e.getPoint(), OsmPrimitive::isUsable);
+        Node n = MainApplication.getMap().mapView.getNearestNode(e.getPoint(), OsmPrimitive::isUsable);
         if (n != null) {
             newHighlights.add(n);
             newCurs = cursorJoinNode;
         } else {
             List<WaySegment> wss =
-                    Main.map.mapView.getNearestWaySegments(e.getPoint(), OsmPrimitive::isSelectable);
+                MainApplication.getMap().mapView.getNearestWaySegments(e.getPoint(), OsmPrimitive::isSelectable);
 
             if (!wss.isEmpty()) {
                 for (WaySegment ws : wss) {
@@ -111,7 +111,7 @@ public class AddStopPositionAction extends MapMode {
             }
         }
 
-        Main.map.mapView.setCursor(newCurs);
+        MainApplication.getMap().mapView.setCursor(newCurs);
         updateHighlights();
     }
 
@@ -122,10 +122,10 @@ public class AddStopPositionAction extends MapMode {
         Node newStopPos;
 
         //check if the user as selected an existing node, or a new one
-        Node n = Main.map.mapView.getNearestNode(e.getPoint(), OsmPrimitive::isUsable);
+        Node n = MainApplication.getMap().mapView.getNearestNode(e.getPoint(), OsmPrimitive::isUsable);
         if (n == null) {
             newNode = true;
-            newStopPos = new Node(Main.map.mapView.getLatLon(e.getX(), e.getY()));
+            newStopPos = new Node(MainApplication.getMap().mapView.getLatLon(e.getX(), e.getY()));
         } else {
             newStopPos = new Node(n);
         }
@@ -135,13 +135,13 @@ public class AddStopPositionAction extends MapMode {
         newStopPos.put("public_transport", "stop_position");
 
         if (newNode) {
-            Main.main.undoRedo.add(new AddCommand(newStopPos));
+            MainApplication.undoRedo.add(new AddCommand(newStopPos));
         } else {
-            Main.main.undoRedo.add(new ChangeCommand(n, newStopPos));
+            MainApplication.undoRedo.add(new ChangeCommand(n, newStopPos));
             newStopPos = n;
         }
 
-        Main.getLayerManager().getEditLayer().data.setSelected(newStopPos);
+        MainApplication.getLayerManager().getEditLayer().data.setSelected(newStopPos);
 
         //join the node to the way only if the node is new
         if (newNode) {
@@ -162,7 +162,7 @@ public class AddStopPositionAction extends MapMode {
                 affected, Collections.singletonList(newStopPos), Collections.emptyList());
         if (result == null) //if the way is already split, return
             return;
-        Main.main.undoRedo.add(result.getCommand());
+        MainApplication.undoRedo.add(result.getCommand());
 
         List<Command> cmds = new ArrayList<>();
         for (Entry<Relation, Boolean> route : needPostProcess.entrySet()) {
@@ -173,7 +173,7 @@ public class AddStopPositionAction extends MapMode {
                 deleteLastWay(r);
             cmds.add(new ChangeCommand(route.getKey(), r));
         }
-        Main.main.undoRedo.add(new SequenceCommand("Update PT Relations", cmds));
+        MainApplication.undoRedo.add(new SequenceCommand("Update PT Relations", cmds));
     }
 
     private void deleteLastWay(Relation r) {
@@ -262,7 +262,7 @@ public class AddStopPositionAction extends MapMode {
             osm.setHighlighted(true);
         }
 
-        Main.getLayerManager().getEditLayer().invalidate();
+        MainApplication.getLayerManager().getEditLayer().invalidate();
 
         oldHighlights.clear();
         oldHighlights.addAll(newHighlights);

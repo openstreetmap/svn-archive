@@ -5,8 +5,8 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.event.ActionEvent;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.plugins.pt_assistant.PTAssistantPlugin;
 import org.openstreetmap.josm.plugins.pt_assistant.validation.SegmentChecker;
 import org.openstreetmap.josm.tools.ImageProvider;
@@ -35,7 +35,7 @@ public class RepeatLastFixAction extends JosmAction {
     @Override
     public void actionPerformed(ActionEvent e) {
 
-        if (!isEnabled() || !Main.isDisplayingMapView()) {
+        if (!isEnabled() || !MainApplication.isDisplayingMapView()) {
             return;
         }
 

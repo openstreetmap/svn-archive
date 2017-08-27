@@ -13,7 +13,6 @@ import java.util.Map.Entry;
 
 import javax.swing.SwingUtilities;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.AutoScaleAction;
 import org.openstreetmap.josm.command.ChangeCommand;
 import org.openstreetmap.josm.command.Command;
@@ -27,6 +26,7 @@ import org.openstreetmap.josm.data.validation.Severity;
 import org.openstreetmap.josm.data.validation.Test;
 import org.openstreetmap.josm.data.validation.TestError;
 import org.openstreetmap.josm.data.validation.TestError.Builder;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.Notification;
 import org.openstreetmap.josm.gui.dialogs.relation.GenericRelationEditor;
 import org.openstreetmap.josm.gui.dialogs.relation.RelationEditor;
@@ -878,8 +878,8 @@ public class SegmentChecker extends Checker {
         final TestError testErrorParameter = testError;
 
         // // add the key listener:
-        Main.map.mapView.requestFocus();
-        Main.map.mapView.addKeyListener(new KeyListener() {
+        MainApplication.getMap().mapView.requestFocus();
+        MainApplication.getMap().mapView.addKeyListener(new KeyListener() {
 
             @Override
             public void keyTyped(KeyEvent e) {
@@ -891,13 +891,13 @@ public class SegmentChecker extends Checker {
                 Character typedKey = e.getKeyChar();
                 Character typedKeyUpperCase = typedKey.toString().toUpperCase().toCharArray()[0];
                 if (allowedCharacters.contains(typedKeyUpperCase)) {
-                    Main.map.mapView.removeKeyListener(this);
+                    MainApplication.getMap().mapView.removeKeyListener(this);
                     List<PTWay> selectedFix = test.getFixVariant(typedKeyUpperCase);
                     test.clearFixVariants();
                     carryOutSelectedFix(testErrorParameter, selectedFix);
                 }
                 if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
-                    Main.map.mapView.removeKeyListener(this);
+                    MainApplication.getMap().mapView.removeKeyListener(this);
                     test.clearFixVariants();
                 }
             }
@@ -940,8 +940,8 @@ public class SegmentChecker extends Checker {
         Relation modifiedRelation = new Relation(originalRelation);
         modifiedRelation.setMembers(getModifiedRelationMembers(testError, fix));
         ChangeCommand changeCommand = new ChangeCommand(originalRelation, modifiedRelation);
-        Main.main.undoRedo.addNoRedraw(changeCommand);
-        Main.main.undoRedo.afterAdd();
+        MainApplication.undoRedo.addNoRedraw(changeCommand);
+        MainApplication.undoRedo.afterAdd();
         PTRouteSegment wrongSegment = wrongSegments.get(testError);
         wrongSegments.remove(testError);
         wrongSegment.setPTWays(fix);
@@ -956,7 +956,7 @@ public class SegmentChecker extends Checker {
 
         // get layer:
         OsmDataLayer layer = null;
-        List<OsmDataLayer> listOfLayers = Main.getLayerManager().getLayersOfType(OsmDataLayer.class);
+        List<OsmDataLayer> listOfLayers = MainApplication.getLayerManager().getLayersOfType(OsmDataLayer.class);
         for (OsmDataLayer osmDataLayer : listOfLayers) {
             if (osmDataLayer.data == originalRelation.getDataSet()) {
                 layer = osmDataLayer;
@@ -1075,20 +1075,20 @@ public class SegmentChecker extends Checker {
                 Relation modifiedRelation = new Relation(originalRelation);
                 modifiedRelation.setMembers(getModifiedRelationMembers(testError, segment.getPTWays()));
                 ChangeCommand changeCommand = new ChangeCommand(originalRelation, modifiedRelation);
-                Main.main.undoRedo.addNoRedraw(changeCommand);
-                Main.main.undoRedo.afterAdd();
+                MainApplication.undoRedo.addNoRedraw(changeCommand);
+                MainApplication.undoRedo.afterAdd();
                 wrongSegmentsToRemove.add(testError);
             }
         }
 
         // update the errors displayed in the validator dialog:
         List<TestError> modifiedValidatorTestErrors = new ArrayList<>();
-        for (TestError validatorTestError : Main.map.validatorDialog.tree.getErrors()) {
+        for (TestError validatorTestError : MainApplication.getMap().validatorDialog.tree.getErrors()) {
             if (!wrongSegmentsToRemove.contains(validatorTestError)) {
                 modifiedValidatorTestErrors.add(validatorTestError);
             }
         }
-        Main.map.validatorDialog.tree.setErrors(modifiedValidatorTestErrors);
+        MainApplication.getMap().validatorDialog.tree.setErrors(modifiedValidatorTestErrors);
 
         // update wrong segments:
         for (TestError testError : wrongSegmentsToRemove) {

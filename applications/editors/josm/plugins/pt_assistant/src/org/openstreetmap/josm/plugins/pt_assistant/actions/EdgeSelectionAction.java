@@ -12,13 +12,13 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.AutoScaleAction;
 import org.openstreetmap.josm.actions.mapmode.MapMode;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.dialogs.relation.sort.RelationSorter;
 import org.openstreetmap.josm.plugins.pt_assistant.utils.RouteUtils;
 import org.openstreetmap.josm.tools.ImageProvider;
@@ -136,8 +136,8 @@ public class EdgeSelectionAction extends MapMode {
     @Override
     public void mouseClicked(MouseEvent e) {
 
-        DataSet ds = Main.getLayerManager().getEditLayer().data;
-        Way initial = Main.map.mapView.getNearestWay(e.getPoint(), OsmPrimitive::isUsable);
+        DataSet ds = MainApplication.getLayerManager().getEditLayer().data;
+        Way initial = MainApplication.getMap().mapView.getNearestWay(e.getPoint(), OsmPrimitive::isUsable);
         if (initial != null) {
             List<Way> edge = getEdgeFromWay(initial, getModeOfTravel());
             ds.setSelected(edge);
@@ -158,11 +158,11 @@ public class EdgeSelectionAction extends MapMode {
         }
         highlighted.clear();
 
-        Way initial = Main.map.mapView.getNearestWay(e.getPoint(), OsmPrimitive::isUsable);
+        Way initial = MainApplication.getMap().mapView.getNearestWay(e.getPoint(), OsmPrimitive::isUsable);
         if (initial == null) {
-            Main.map.mapView.setCursor(selectionCursor);
+            MainApplication.getMap().mapView.setCursor(selectionCursor);
         } else {
-            Main.map.mapView.setCursor(waySelectCursor);
+            MainApplication.getMap().mapView.setCursor(waySelectCursor);
             highlighted.addAll(getEdgeFromWay(initial, getModeOfTravel()));
         }
 
@@ -174,14 +174,14 @@ public class EdgeSelectionAction extends MapMode {
     @Override
     public void enterMode() {
         super.enterMode();
-        Main.map.mapView.addMouseListener(this);
-        Main.map.mapView.addMouseMotionListener(this);
+        MainApplication.getMap().mapView.addMouseListener(this);
+        MainApplication.getMap().mapView.addMouseMotionListener(this);
     }
 
     @Override
     public void exitMode() {
         super.exitMode();
-        Main.map.mapView.removeMouseListener(this);
-        Main.map.mapView.removeMouseMotionListener(this);
+        MainApplication.getMap().mapView.removeMouseListener(this);
+        MainApplication.getMap().mapView.removeMouseMotionListener(this);
     }
 }

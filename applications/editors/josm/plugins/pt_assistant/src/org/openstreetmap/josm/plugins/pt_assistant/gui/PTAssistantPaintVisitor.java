@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.OsmPrimitiveType;
@@ -22,12 +21,14 @@ import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.data.validation.PaintVisitor;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.dialogs.relation.sort.WayConnectionType;
 import org.openstreetmap.josm.gui.dialogs.relation.sort.WayConnectionTypeCalculator;
 import org.openstreetmap.josm.plugins.pt_assistant.data.PTStop;
 import org.openstreetmap.josm.plugins.pt_assistant.data.PTWay;
 import org.openstreetmap.josm.plugins.pt_assistant.utils.RouteUtils;
+import org.openstreetmap.josm.tools.Logging;
 import org.openstreetmap.josm.tools.Pair;
 
 /**
@@ -116,7 +117,7 @@ public class PTAssistantPaintVisitor extends PaintVisitor {
                         drawStopLabel(rm.getMember(), sb.toString(), true);
                 } catch (NullPointerException ex) {
                     // do nothing
-                    Main.trace(ex);
+                    Logging.trace(ex);
                 }
                 stopCount++;
             }
@@ -240,7 +241,7 @@ public class PTAssistantPaintVisitor extends PaintVisitor {
                 drawSegment(mv.getPoint(n1), mv.getPoint(n2), color, oneway);
             } catch (NullPointerException ex) {
                 // do nothing
-                Main.trace(ex);
+                Logging.trace(ex);
             }
 
         }
@@ -429,7 +430,7 @@ public class PTAssistantPaintVisitor extends PaintVisitor {
      * @author darya
      *
      */
-    private class RefTagComparator implements Comparator<String> {
+    private static class RefTagComparator implements Comparator<String> {
 
         @Override
         public int compare(String s1, String s2) {
@@ -502,8 +503,8 @@ public class PTAssistantPaintVisitor extends PaintVisitor {
 
         int colorIndex = 0;
 
-        double letterX = Main.map.mapView.getBounds().getMinX() + 20;
-        double letterY = Main.map.mapView.getBounds().getMinY() + 100;
+        double letterX = MainApplication.getMap().mapView.getBounds().getMinX() + 20;
+        double letterY = MainApplication.getMap().mapView.getBounds().getMinY() + 100;
 
         for (Entry<Character, List<PTWay>> entry : fixVariants.entrySet()) {
             Character c = entry.getKey();
@@ -631,7 +632,7 @@ public class PTAssistantPaintVisitor extends PaintVisitor {
             g.drawString(letter, (int) letterX, (int) letterY);
         } catch (NullPointerException ex) {
             // do nothing
-            Main.trace(ex);
+            Logging.trace(ex);
         }
 
     }

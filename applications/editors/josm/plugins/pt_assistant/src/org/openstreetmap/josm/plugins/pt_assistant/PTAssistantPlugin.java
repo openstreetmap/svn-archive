@@ -8,11 +8,11 @@ import java.util.List;
 import javax.swing.JMenuItem;
 import javax.swing.SwingUtilities;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.validation.OsmValidator;
 import org.openstreetmap.josm.gui.IconToggleButton;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MainMenu;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.gui.preferences.PreferenceSetting;
@@ -70,11 +70,11 @@ public class PTAssistantPlugin extends Plugin {
         KeyboardFocusManager.getCurrentKeyboardFocusManager().addPropertyChangeListener(PTAssistantLayerManager.PTLM);
         RepeatLastFixAction repeatLastFixAction = new RepeatLastFixAction();
         EditHighlightedRelationsAction editHighlightedRelationsAction = new EditHighlightedRelationsAction();
-        repeatLastFixMenu = MainMenu.add(Main.main.menu.toolsMenu, repeatLastFixAction);
-        editHighlightedRelationsMenu = MainMenu.add(Main.main.menu.toolsMenu, editHighlightedRelationsAction);
-        MainMenu.add(Main.main.menu.toolsMenu, new SplitRoundaboutAction());
-        MainMenu.add(Main.main.menu.toolsMenu, new SortPTRouteMembersAction());
-        MainMenu.add(Main.main.menu.toolsMenu, new CreatePlatformNodeAction());
+        repeatLastFixMenu = MainMenu.add(MainApplication.getMenu().toolsMenu, repeatLastFixAction);
+        editHighlightedRelationsMenu = MainMenu.add(MainApplication.getMenu().toolsMenu, editHighlightedRelationsAction);
+        MainMenu.add(MainApplication.getMenu().toolsMenu, new SplitRoundaboutAction());
+        MainMenu.add(MainApplication.getMenu().toolsMenu, new SortPTRouteMembersAction());
+        MainMenu.add(MainApplication.getMenu().toolsMenu, new CreatePlatformNodeAction());
     }
 
     /**
@@ -85,8 +85,8 @@ public class PTAssistantPlugin extends Plugin {
         if (oldFrame == null && newFrame != null) {
             repeatLastFixMenu.setEnabled(false);
             editHighlightedRelationsMenu.setEnabled(false);
-            Main.map.addMapMode(new IconToggleButton(new AddStopPositionAction()));
-            Main.map.addMapMode(new IconToggleButton(new EdgeSelectionAction()));
+            MainApplication.getMap().addMapMode(new IconToggleButton(new AddStopPositionAction()));
+            MainApplication.getMap().addMapMode(new IconToggleButton(new EdgeSelectionAction()));
         } else if (oldFrame != null && newFrame == null) {
             repeatLastFixMenu.setEnabled(false);
             editHighlightedRelationsMenu.setEnabled(false);

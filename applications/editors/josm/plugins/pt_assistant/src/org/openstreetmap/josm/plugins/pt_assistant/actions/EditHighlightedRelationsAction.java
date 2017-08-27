@@ -6,9 +6,9 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.data.osm.Relation;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.dialogs.relation.RelationEditor;
 import org.openstreetmap.josm.plugins.pt_assistant.PTAssistantPlugin;
 import org.openstreetmap.josm.tools.ImageProvider;
@@ -40,7 +40,7 @@ public class EditHighlightedRelationsAction extends JosmAction {
     public void actionPerformed(ActionEvent e) {
         for (Relation relation : PTAssistantPlugin.getHighlightedRelations()) {
             RelationEditor editor = RelationEditor.getEditor(
-                    Main.getLayerManager().getEditLayer(), relation, null);
+                    MainApplication.getLayerManager().getEditLayer(), relation, null);
             editor.setVisible(true);
         }
     }

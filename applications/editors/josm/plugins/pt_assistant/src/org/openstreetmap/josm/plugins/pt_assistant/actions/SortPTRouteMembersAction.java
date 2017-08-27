@@ -27,11 +27,13 @@ import org.openstreetmap.josm.data.osm.OsmPrimitiveType;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.dialogs.relation.DownloadRelationMemberTask;
 import org.openstreetmap.josm.gui.dialogs.relation.sort.RelationSorter;
 import org.openstreetmap.josm.plugins.pt_assistant.data.PTStop;
 import org.openstreetmap.josm.plugins.pt_assistant.utils.RouteUtils;
 import org.openstreetmap.josm.plugins.pt_assistant.utils.StopToWayAssigner;
+import org.openstreetmap.josm.tools.Logging;
 import org.openstreetmap.josm.tools.Utils;
 
 /**
@@ -63,17 +65,17 @@ public class SortPTRouteMembersAction extends JosmAction {
                     null, null, null)) {
 
                     List<Relation> incomplete = Collections.singletonList(rel);
-                    Future<?> future = Main.worker.submit(new DownloadRelationMemberTask(
+                    Future<?> future = MainApplication.worker.submit(new DownloadRelationMemberTask(
                             incomplete,
                             DownloadSelectedIncompleteMembersAction.buildSetOfIncompleteMembers(incomplete),
-                            Main.getLayerManager().getEditLayer()));
+                            MainApplication.getLayerManager().getEditLayer()));
 
-                        Main.worker.submit(() -> {
+                        MainApplication.worker.submit(() -> {
                             try {
                                 future.get();
                                 continueAfterDownload(rel);
                             } catch (InterruptedException | ExecutionException e1) {
-                                 Main.error(e1);
+                                Logging.error(e1);
                                 return;
                             }
                         });
@@ -87,7 +89,7 @@ public class SortPTRouteMembersAction extends JosmAction {
     private void continueAfterDownload(Relation rel) {
         Relation newRel = new Relation(rel);
         sortPTRouteMembers(newRel);
-        Main.main.undoRedo.add(new ChangeCommand(rel, newRel));
+        MainApplication.undoRedo.add(new ChangeCommand(rel, newRel));
     }
 
     /***

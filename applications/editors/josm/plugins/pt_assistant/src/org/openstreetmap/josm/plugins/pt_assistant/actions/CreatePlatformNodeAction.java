@@ -12,7 +12,6 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.command.AddCommand;
 import org.openstreetmap.josm.command.Command;
@@ -24,7 +23,9 @@ import org.openstreetmap.josm.data.osm.OsmPrimitiveType;
 import org.openstreetmap.josm.data.osm.TagCollection;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.data.validation.routines.RegexValidator;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.conflict.tags.CombinePrimitiveResolverDialog;
+import org.openstreetmap.josm.tools.Logging;
 import org.openstreetmap.josm.tools.UserCancelException;
 
 /**
@@ -77,9 +78,9 @@ public class CreatePlatformNodeAction extends JosmAction {
 
         SortedSet<String> refs = new TreeSet<>();
 
-        Main.main.undoRedo.add(new AddCommand(dummy1));
-        Main.main.undoRedo.add(new AddCommand(dummy2));
-        Main.main.undoRedo.add(new AddCommand(dummy3));
+        MainApplication.undoRedo.add(new AddCommand(dummy1));
+        MainApplication.undoRedo.add(new AddCommand(dummy2));
+        MainApplication.undoRedo.add(new AddCommand(dummy3));
 
         refs.addAll(populateMap(stopPositionNode));
         refs.addAll(populateMap(platformNode));
@@ -112,13 +113,13 @@ public class CreatePlatformNodeAction extends JosmAction {
             TagCollection tagColl = TagCollection.unionOfAllPrimitives(prims);
             List<Command> cmds = CombinePrimitiveResolverDialog.launchIfNecessary(
                     tagColl, prims, Collections.singleton(platformNode));
-            Main.main.undoRedo.add(new SequenceCommand("merging", cmds));
+            MainApplication.undoRedo.add(new SequenceCommand("merging", cmds));
         } catch (UserCancelException ex) {
-            Main.trace(ex);
+            Logging.trace(ex);
         } finally {
-            Main.main.undoRedo.add(new DeleteCommand(dummy1));
-            Main.main.undoRedo.add(new DeleteCommand(dummy2));
-            Main.main.undoRedo.add(new DeleteCommand(dummy3));
+            MainApplication.undoRedo.add(new DeleteCommand(dummy1));
+            MainApplication.undoRedo.add(new DeleteCommand(dummy2));
+            MainApplication.undoRedo.add(new DeleteCommand(dummy3));
         }
     }
 

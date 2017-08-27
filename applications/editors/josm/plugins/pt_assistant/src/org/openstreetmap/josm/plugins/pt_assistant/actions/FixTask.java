@@ -10,9 +10,9 @@ import java.util.Collection;
 
 import javax.swing.SwingUtilities;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.data.validation.TestError;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.PleaseWaitRunnable;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.io.OsmTransferException;
@@ -51,7 +51,7 @@ public class FixTask extends PleaseWaitRunnable {
                 SwingUtilities.invokeAndWait(new Runnable() {
                     @Override
                     public void run() {
-                        Main.main.undoRedo.addNoRedraw(fixCommand);
+                        MainApplication.undoRedo.addNoRedraw(fixCommand);
                     }
                 });
             }
@@ -70,12 +70,7 @@ public class FixTask extends PleaseWaitRunnable {
         try {
             monitor.setTicksCount(testErrors.size());
             int i = 0;
-            SwingUtilities.invokeAndWait(new Runnable() {
-                @Override
-                public void run() {
-                    Main.getLayerManager().getEditDataSet().beginUpdate();
-                }
-            });
+            SwingUtilities.invokeAndWait(() -> MainApplication.getLayerManager().getEditDataSet().beginUpdate());
             try {
                 for (TestError error : testErrors) {
                     i++;
@@ -86,27 +81,18 @@ public class FixTask extends PleaseWaitRunnable {
                     monitor.worked(1);
                 }
             } finally {
-                SwingUtilities.invokeAndWait(new Runnable() {
-                    @Override
-                    public void run() {
-                        Main.getLayerManager().getEditDataSet().endUpdate();
-                    }
-                });
+                SwingUtilities.invokeAndWait(() -> MainApplication.getLayerManager().getEditDataSet().endUpdate());
             }
             monitor.subTask(tr("Updating map ..."));
-            SwingUtilities.invokeAndWait(new Runnable() {
-                @Override
-                public void run() {
-                    Main.main.undoRedo.afterAdd();
-                    Main.map.repaint();
-                    // tree.resetErrors();
-                    Main.getLayerManager().getEditDataSet().fireSelectionChanged();
-                }
+            SwingUtilities.invokeAndWait(() -> {
+                MainApplication.undoRedo.afterAdd();
+                MainApplication.getMap().repaint();
+                // tree.resetErrors();
+                MainApplication.getLayerManager().getEditDataSet().fireSelectionChanged();
             });
         } catch (InterruptedException | InvocationTargetException e) {
             // FIXME: signature of realRun should have a generic checked
-            // exception we
-            // could throw here
+            // exception we could throw here
             throw new RuntimeException(e);
         } finally {
             monitor.finishTask();

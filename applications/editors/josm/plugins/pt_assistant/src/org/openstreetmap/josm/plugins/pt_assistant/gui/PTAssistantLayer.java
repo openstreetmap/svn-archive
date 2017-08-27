@@ -1,7 +1,6 @@
 // License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.pt_assistant.gui;
 
-import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -12,13 +11,13 @@ import java.util.Map.Entry;
 import javax.swing.Action;
 import javax.swing.Icon;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.RenameLayerAction;
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.dialogs.LayerListDialog;
 import org.openstreetmap.josm.gui.dialogs.LayerListPopup;
@@ -49,8 +48,8 @@ public final class PTAssistantLayer extends Layer
 
     public PTAssistantLayer() {
         super("pt_assistant layer");
-        Main.getLayerManager().addLayerChangeListener(this);
-        Main.getLayerManager().addLayer(this);
+        MainApplication.getLayerManager().addLayerChangeListener(this);
+        MainApplication.getLayerManager().addLayer(this);
     }
 
     /**
@@ -72,7 +71,7 @@ public final class PTAssistantLayer extends Layer
     public void clearFixVariants() {
         fixVariants.clear();
         wayColoring.clear();
-        Main.map.mapView.repaint();
+        MainApplication.getMap().mapView.repaint();
     }
 
     /**
@@ -190,14 +189,13 @@ public final class PTAssistantLayer extends Layer
     public void repaint(Relation relation) {
         primitives.clear();
         primitives.add(relation);
-        if (!Main.getLayerManager().containsLayer(this)) {
-            Main.getLayerManager().addLayer(this);
+        if (!MainApplication.getLayerManager().containsLayer(this)) {
+            MainApplication.getLayerManager().addLayer(this);
         }
 
         if (paintVisitor == null) {
-            Graphics g = Main.map.mapView.getGraphics();
-            MapView mv = Main.map.mapView;
-            paintVisitor = new PTAssistantPaintVisitor(g, mv);
+            MapView mv = MainApplication.getMap().mapView;
+            paintVisitor = new PTAssistantPaintVisitor(mv.getGraphics(), mv);
         }
 
         for (OsmPrimitive primitive : primitives) {
@@ -206,7 +204,7 @@ public final class PTAssistantLayer extends Layer
 
         paintVisitor.visitFixVariants(fixVariants, wayColoring);
 
-        Main.map.mapView.repaint();
+        MainApplication.getMap().mapView.repaint();
     }
 
     @Override
@@ -227,7 +225,7 @@ public final class PTAssistantLayer extends Layer
             primitives.clear();
             fixVariants.clear();
             wayColoring.clear();
-            Main.map.mapView.repaint();
+            MainApplication.getMap().mapView.repaint();
         }
 
         if (event.getRemovedLayer() instanceof OsmDataLayer
@@ -242,7 +240,7 @@ public final class PTAssistantLayer extends Layer
 
     @Override
     public synchronized void destroy() {
-        Main.getLayerManager().removeLayerChangeListener(this);
+        MainApplication.getLayerManager().removeLayerChangeListener(this);
         super.destroy();
     }
 }

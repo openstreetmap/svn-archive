@@ -35,8 +35,10 @@ import org.openstreetmap.josm.data.osm.OsmPrimitiveType;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.dialogs.relation.DownloadRelationMemberTask;
 import org.openstreetmap.josm.plugins.pt_assistant.utils.RouteUtils;
+import org.openstreetmap.josm.tools.Logging;
 import org.openstreetmap.josm.tools.Pair;
 
 /**
@@ -79,12 +81,12 @@ public class SplitRoundaboutAction extends JosmAction {
                 rbbox.getBottomRightLon() + lonOffset);
         Future<?> future = task.download(false, area, null);
 
-        Main.worker.submit(() -> {
+        MainApplication.worker.submit(() -> {
             try {
                 future.get();
                 downloadIncompleteRelations(roundabout);
             } catch (InterruptedException | ExecutionException e1) {
-                 Main.error(e1);
+                Logging.error(e1);
                 return;
             }
         });
@@ -104,18 +106,18 @@ public class SplitRoundaboutAction extends JosmAction {
         Map<Relation, List<Integer>> savedPositions = getSavedPositions(roundabout);
 
         //remove the roundabout from each relation
-        Main.main.undoRedo.add(getRemoveRoundaboutFromRelationsCommand(roundabout));
+        MainApplication.undoRedo.add(getRemoveRoundaboutFromRelationsCommand(roundabout));
 
         //split the roundabout on the designed nodes
         List<Node> splitNodes = getSplitNodes(roundabout);
         SplitWayResult result = SplitWayAction.split(getLayerManager().getEditLayer(),
                 roundabout, splitNodes, Collections.emptyList());
-        Main.main.undoRedo.add(result.getCommand());
+        MainApplication.undoRedo.add(result.getCommand());
         Collection<Way> splitWays = result.getNewWays();
         splitWays.add(result.getOriginalWay());
 
         //update the relations.
-        Main.main.undoRedo.add(getUpdateRelationsCommand(savedPositions, splitNodes, splitWays));
+        MainApplication.undoRedo.add(getUpdateRelationsCommand(savedPositions, splitNodes, splitWays));
     }
 
     private void downloadIncompleteRelations(Way roundabout) {
@@ -127,17 +129,17 @@ public class SplitRoundaboutAction extends JosmAction {
             return;
         }
 
-        Future<?> future = Main.worker.submit(new DownloadRelationMemberTask(
+        Future<?> future = MainApplication.worker.submit(new DownloadRelationMemberTask(
             parents,
             DownloadSelectedIncompleteMembersAction.buildSetOfIncompleteMembers(parents),
-            Main.getLayerManager().getEditLayer()));
+            MainApplication.getLayerManager().getEditLayer()));
 
-        Main.worker.submit(() -> {
+        MainApplication.worker.submit(() -> {
             try {
                 future.get();
                 continueAfterDownload(roundabout);
             } catch (InterruptedException | ExecutionException e1) {
-                 Main.error(e1);
+                Logging.error(e1);
                 return;
             }
         });

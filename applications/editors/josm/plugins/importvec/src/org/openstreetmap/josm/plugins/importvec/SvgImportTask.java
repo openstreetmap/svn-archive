@@ -29,6 +29,7 @@ import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.data.projection.Projection;
 import org.openstreetmap.josm.data.projection.Projections;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.PleaseWaitRunnable;
 import org.openstreetmap.josm.io.OsmTransferException;
 import org.openstreetmap.josm.tools.I18n;
@@ -158,7 +159,7 @@ public class SvgImportTask extends PleaseWaitRunnable {
 
     @Override
     protected void realRun() throws IOException, OsmTransferException {
-        LatLon center = Main.getProjection().eastNorth2latlon(Main.map.mapView.getCenter());
+        LatLon center = Main.getProjection().eastNorth2latlon(MainApplication.getMap().mapView.getCenter());
         scale = Settings.getScaleNumerator() / Settings.getScaleDivisor() / Math.cos(Math.toRadians(center.lat()));
         this.center = projection.latlon2eastNorth(center);
         try {
@@ -190,7 +191,7 @@ public class SvgImportTask extends PleaseWaitRunnable {
         for (Way w : ways) {
             cmds.add(new AddCommand(w));
         }
-        Main.main.undoRedo.add(new SequenceCommand("Import primitives", cmds));
+        MainApplication.undoRedo.add(new SequenceCommand("Import primitives", cmds));
     }
     
 }

@@ -10,6 +10,7 @@ import javax.swing.JOptionPane;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.ExtensionFileFilter;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.io.importexport.FileImporter;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.io.IllegalDataException;
@@ -31,13 +32,13 @@ public class SvgImporter extends FileImporter {
 
     @Override
     public void importData(List<File> files, ProgressMonitor progressMonitor) throws IOException, IllegalDataException {
-        if (Main.getLayerManager().getEditLayer() == null) {
+        if (MainApplication.getLayerManager().getEditLayer() == null) {
             JOptionPane.showMessageDialog(Main.parent, tr("Please open or create data layer before importing"));
             return;
         }
         ImportDialog dlg = new ImportDialog();
         if (dlg.getValue() != 1) return;
         dlg.saveSettings();
-        Main.worker.submit(new SvgImportTask(files));
+        MainApplication.worker.submit(new SvgImportTask(files));
     }
 }

@@ -50,22 +50,24 @@ import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.SideButton;
+import org.openstreetmap.josm.gui.io.importexport.OsmExporter;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import org.openstreetmap.josm.gui.preferences.projection.ProjectionChoice;
 import org.openstreetmap.josm.gui.preferences.projection.ProjectionPreference;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.gui.progress.ProgressRenderer;
-import org.openstreetmap.josm.gui.progress.SwingRenderingProgressMonitor;
-import org.openstreetmap.josm.io.OsmExporter;
+import org.openstreetmap.josm.gui.progress.swing.SwingRenderingProgressMonitor;
 import org.openstreetmap.josm.tools.ImageProvider;
+import org.openstreetmap.josm.tools.Logging;
 import org.openstreetmap.josm.tools.WindowGeometry;
 
 import pdfimport.pdfbox.PdfBoxParser;
 
 public class LoadPdfDialog extends JFrame {
 
-    class LoadProgressRenderer implements ProgressRenderer {
+    static class LoadProgressRenderer implements ProgressRenderer {
         private final JProgressBar pBar;
         private String title = "";
 
@@ -677,8 +679,8 @@ public class LoadPdfDialog extends JFrame {
         }
 
         //zoom to new location
-        Main.map.mapView.zoomTo(placement.getWorldBounds(this.data));
-        Main.map.repaint();
+        MainApplication.getMap().mapView.zoomTo(placement.getWorldBounds(this.data));
+        MainApplication.getMap().repaint();
     }
 
     private void cancelPressed() {
@@ -707,7 +709,7 @@ public class LoadPdfDialog extends JFrame {
     // Implementation methods
 
     private EastNorth getSelectedCoor() {
-        Collection<OsmPrimitive> selected = Main.getLayerManager().getEditDataSet().getSelected();
+        Collection<OsmPrimitive> selected = MainApplication.getLayerManager().getEditDataSet().getSelected();
 
         if (selected.size() != 1 || !(selected.iterator().next() instanceof Node)) {
             JOptionPane.showMessageDialog(Main.parent, tr("Please select exactly one node."));
@@ -1039,13 +1041,13 @@ public class LoadPdfDialog extends JFrame {
     private void placeLayer(OsmDataLayer _layer, FilePlacement placement) {
         this.removeLayer();
         this.layer = _layer;
-        Main.getLayerManager().addLayer(this.layer);
-        Main.map.mapView.zoomTo(placement.getWorldBounds(this.data));
+        MainApplication.getLayerManager().addLayer(this.layer);
+        MainApplication.getMap().mapView.zoomTo(placement.getWorldBounds(this.data));
     }
 
     private void removeLayer() {
         if (this.layer != null) {
-            Main.getLayerManager().removeLayer(this.layer);
+            MainApplication.getLayerManager().removeLayer(this.layer);
             this.layer.data.clear(); //saves memory
             this.layer = null;
         }
@@ -1066,7 +1068,7 @@ public class LoadPdfDialog extends JFrame {
         try {
             exporter.exportData(file, layer);
         } catch (IOException e) {
-            Main.error(e);
+            Logging.error(e);
         }
 
         monitor.finishTask();

@@ -18,6 +18,7 @@ import org.openstreetmap.gui.jmapviewer.interfaces.TileCache;
 import org.openstreetmap.gui.jmapviewer.interfaces.TileSource;
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.coor.LatLon;
+import org.openstreetmap.josm.data.imagery.CoordinateConversion;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.plugins.elevation.ElevationHelper;
 import org.openstreetmap.josm.plugins.elevation.IVertexRenderer;
@@ -127,8 +128,8 @@ public class ElevationGridTile extends Tile {
      */
     private Bounds tile2Bounds(final int x, final int y, final int zoom) {
         return new Bounds(
-                new LatLon(source.tileXYToLatLon(x, y, zoom)),
-                new LatLon(source.tileXYToLatLon(x + 1, y + 1, zoom)));
+                CoordinateConversion.coorToLL(source.tileXYToLatLon(x, y, zoom)),
+                CoordinateConversion.coorToLL(source.tileXYToLatLon(x + 1, y + 1, zoom)));
     }
 
     /**

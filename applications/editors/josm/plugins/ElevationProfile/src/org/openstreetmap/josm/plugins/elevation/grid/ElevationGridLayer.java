@@ -20,6 +20,7 @@ import org.openstreetmap.gui.jmapviewer.interfaces.TileSource;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.coor.LatLon;
+import org.openstreetmap.josm.data.imagery.CoordinateConversion;
 import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.layer.Layer;
@@ -84,7 +85,7 @@ public class ElevationGridLayer extends Layer implements TileLoaderListener {
                     ((ElevationGridTile) t).paintTile(g, mv, vertexRenderer);
                 } else {
                     // give some consolation...
-                    Point topLeft = mv.getPoint(new LatLon(tileSource.tileXYToLatLon(x, y, ELE_ZOOM_LEVEL)));
+                    Point topLeft = mv.getPoint(CoordinateConversion.coorToLL(tileSource.tileXYToLatLon(x, y, ELE_ZOOM_LEVEL)));
                     t.paint(g, topLeft.x, topLeft.y);
                 }
             }

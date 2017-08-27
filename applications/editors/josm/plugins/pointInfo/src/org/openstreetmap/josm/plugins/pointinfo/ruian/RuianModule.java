@@ -3,9 +3,9 @@ package org.openstreetmap.josm.plugins.pointinfo.ruian;
 
 import java.net.URL;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.tools.HttpClient;
+import org.openstreetmap.josm.tools.Logging;
 
 /**
  * A module for the Czech RUIAN database
@@ -47,7 +47,7 @@ public class RuianModule {
             String request = URL + "?lat=" + pos.lat() + "&lon=" + pos.lon();
             m_record.parseJSON(HttpClient.create(new URL(request)).connect().fetchContent());
         } catch (Exception e) {
-            Main.warn(e);
+            Logging.warn(e);
         }
     }
 }

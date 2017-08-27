@@ -1,7 +1,7 @@
 // License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.pointinfo;
 
-import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MainMenu;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
@@ -18,6 +18,6 @@ public class PointInfoPlugin extends Plugin {
      */
     public PointInfoPlugin(PluginInformation info) {
         super(info);
-        MainMenu.add(Main.main.menu.moreToolsMenu, new PointInfoAction(Main.map));
+        MainMenu.add(MainApplication.getMenu().moreToolsMenu, new PointInfoAction());
     }
 }

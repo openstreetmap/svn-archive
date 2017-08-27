@@ -16,7 +16,6 @@ import javax.json.JsonObject;
 import javax.json.JsonReader;
 import javax.json.JsonValue;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.command.AddCommand;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.SequenceCommand;
@@ -26,7 +25,10 @@ import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Tag;
 import org.openstreetmap.josm.data.osm.TagCollection;
 import org.openstreetmap.josm.gui.datatransfer.ClipboardUtils;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.plugins.pointinfo.PointInfoUtils;
+import org.openstreetmap.josm.tools.Logging;
+import java.util.logging.Level;
 
 /**
  * Private class contains RUIAN data
@@ -185,23 +187,23 @@ class RuianRecord {
             try {
                 m_coor_lat = Double.parseDouble(coorObjekt.getString("lat"));
             } catch (NumberFormatException e) {
-                Main.warn(e, "coordinates.lat:");
+                Logging.log(Level.WARNING, "coordinates.lat:", e);
             }
 
             try {
                 m_coor_lon = Double.parseDouble(coorObjekt.getString("lon"));
             } catch (NumberFormatException e) {
-                Main.warn(e, "coordinates.lon:");
+                Logging.log(Level.WARNING, "coordinates.lon:", e);
             }
 
             try {
                 m_source = obj.getString("source");
             } catch (RuntimeException e) {
-                Main.warn(e, "source:");
+                Logging.log(Level.WARNING, "source:", e);
             }
 
         } catch (Exception e) {
-            Main.warn(e, "coordinates:");
+            Logging.log(Level.WARNING, "coordinates:", e);
         }
     }
 
@@ -212,59 +214,59 @@ class RuianRecord {
             try {
                 m_objekt_ruian_id = Long.parseLong(stavebniObjekt.getString("ruian_id"));
             } catch (Exception e) {
-                Main.warn(e, "stavebni_objekt.ruian_id:");
+                Logging.log(Level.WARNING, "stavebni_objekt.ruian_id:", e);
             }
 
             try {
                 m_objekt_podlazi = Integer.parseInt(stavebniObjekt.getString("pocet_podlazi"));
             } catch (Exception e) {
-                Main.warn(e, "stavebni_objekt.pocet_podlazi:");
+                Logging.log(Level.WARNING, "stavebni_objekt.pocet_podlazi:", e);
             }
 
             try {
                 m_objekt_byty = Integer.parseInt(stavebniObjekt.getString("pocet_bytu"));
             } catch (Exception e) {
-                Main.warn(e, "stavebni_objekt.pocet_bytu:");
+                Logging.log(Level.WARNING, "stavebni_objekt.pocet_bytu:", e);
             }
 
             try {
                 m_objekt_zpusob_vyuziti = stavebniObjekt.getString("zpusob_vyuziti");
             } catch (Exception e) {
-                Main.warn(e, "stavebni_objekt.zpusob_vyuziti:");
+                Logging.log(Level.WARNING, "stavebni_objekt.zpusob_vyuziti:", e);
             }
 
             try {
                 m_objekt_zpusob_vyuziti_kod = stavebniObjekt.getString("zpusob_vyuziti_kod");
             } catch (Exception e) {
-                Main.warn(e, "stavebni_objekt.m_objekt_zpusob_vyuziti_kod:");
+                Logging.log(Level.WARNING, "stavebni_objekt.m_objekt_zpusob_vyuziti_kod:", e);
             }
 
             try {
                 m_objekt_zpusob_vyuziti_key = stavebniObjekt.getString("zpusob_vyuziti_key");
             } catch (Exception e) {
-                Main.warn(e, "stavebni_objekt.zpusob_vyuziti_key:");
+                Logging.log(Level.WARNING, "stavebni_objekt.zpusob_vyuziti_key:", e);
             }
 
             try {
                 m_objekt_zpusob_vyuziti_val = stavebniObjekt.getString("zpusob_vyuziti_val");
             } catch (Exception e) {
-                Main.warn(e, "stavebni_objekt.m_objekt_zpusob_vyuziti_val:");
+                Logging.log(Level.WARNING, "stavebni_objekt.m_objekt_zpusob_vyuziti_val:", e);
             }
 
             try {
                 m_objekt_plati_od = stavebniObjekt.getString("plati_od");
             } catch (Exception e) {
-                Main.warn(e, "stavebni_objekt.plati_od:");
+                Logging.log(Level.WARNING, "stavebni_objekt.plati_od:", e);
             }
 
             try {
                 m_objekt_dokonceni = stavebniObjekt.getString("dokonceni");
             } catch (Exception e) {
-                Main.warn(e, "stavebni_objekt.dokonceni:");
+                Logging.log(Level.WARNING, "stavebni_objekt.dokonceni:", e);
             }
 
         } catch (Exception e) {
-            Main.warn(e, "stavebni_objekt:");
+            Logging.log(Level.WARNING, "stavebni_objekt:", e);
         }
     }
 
@@ -275,29 +277,29 @@ class RuianRecord {
             try {
                 m_err_user = errObjekt.getString("uzivatel");
             } catch (Exception e) {
-                Main.warn(e, "nahlaseny_problem.uzivatel:");
+                Logging.log(Level.WARNING, "nahlaseny_problem.uzivatel:", e);
             }
 
             try {
                 m_err_date = errObjekt.getString("datum");
             } catch (Exception e) {
-                Main.warn(e, "nahlaseny_problem.datum:");
+                Logging.log(Level.WARNING, "nahlaseny_problem.datum:", e);
             }
 
             try {
                 m_err_type = errObjekt.getString("duvod");
             } catch (Exception e) {
-                Main.warn(e, "nahlaseny_problem.duvod:");
+                Logging.log(Level.WARNING, "nahlaseny_problem.duvod:", e);
             }
 
             try {
                 m_err_note = errObjekt.getString("poznamka");
             } catch (Exception e) {
-                Main.warn(e, "nahlaseny_problem.poznamka:");
+                Logging.log(Level.WARNING, "nahlaseny_problem.poznamka:", e);
             }
 
         } catch (Exception e) {
-            Main.warn(e, "nahlaseny_problem:");
+            Logging.log(Level.WARNING, "nahlaseny_problem:", e);
         }
     }
 
@@ -312,67 +314,67 @@ class RuianRecord {
                 try {
                     so.setRuianID(Long.parseLong(soBezGeom.getString("ruian_id")));
                 } catch (Exception e) {
-                    Main.warn(e, "so_bez_geometrie.ruian_id:");
+                    Logging.log(Level.WARNING, "so_bez_geometrie.ruian_id:", e);
                 }
 
                 try {
                     so.setPodlazi(Integer.parseInt(soBezGeom.getString("pocet_podlazi")));
                 } catch (Exception e) {
-                    Main.warn(e, "so_bez_geometrie.pocet_podlazi:");
+                    Logging.log(Level.WARNING, "so_bez_geometrie.pocet_podlazi:", e);
                 }
 
                 try {
                     so.setByty(Integer.parseInt(soBezGeom.getString("pocet_bytu")));
                 } catch (Exception e) {
-                    Main.warn(e, "so_bez_geometrie.pocet_bytu:");
+                    Logging.log(Level.WARNING, "so_bez_geometrie.pocet_bytu:", e);
                 }
 
                 try {
                     so.setZpusobVyuziti(soBezGeom.getString("zpusob_vyuziti"));
                 } catch (Exception e) {
-                    Main.warn(e, "so_bez_geometrie.zpusob_vyuziti:");
+                    Logging.log(Level.WARNING, "so_bez_geometrie.zpusob_vyuziti:", e);
                 }
 
                 try {
                     so.setZpusobVyuzitiKod(soBezGeom.getString("zpusob_vyuziti_kod"));
                 } catch (Exception e) {
-                    Main.warn(e, "so_bez_geometrie.zpusob_vyuziti_kod:");
+                    Logging.log(Level.WARNING, "so_bez_geometrie.zpusob_vyuziti_kod:", e);
                 }
 
                 try {
                     so.setZpusobVyuzitiKey(soBezGeom.getString("zpusob_vyuziti_key"));
                 } catch (Exception e) {
-                    Main.warn(e, "so_bez_geometrie.zpusob_vyuziti_key:");
+                    Logging.log(Level.WARNING, "so_bez_geometrie.zpusob_vyuziti_key:", e);
                 }
 
                 try {
                     so.setZpusobVyuzitiVal(soBezGeom.getString("zpusob_vyuziti_val"));
                 } catch (Exception e) {
-                    Main.warn(e, "so_bez_geometrie.zpusob_vyuziti_val:");
+                    Logging.log(Level.WARNING, "so_bez_geometrie.zpusob_vyuziti_val:", e);
                 }
 
                 try {
                     so.setDokonceni(soBezGeom.getString("dokonceni"));
                 } catch (Exception e) {
-                    Main.warn(e, "so_bez_geometrie.dokonceni:");
+                    Logging.log(Level.WARNING, "so_bez_geometrie.dokonceni:", e);
                 }
 
                 try {
                     so.setPlatiOd(soBezGeom.getString("plati_od"));
                 } catch (Exception e) {
-                    Main.warn(e, "so_bez_geometrie.plati_od:");
+                    Logging.log(Level.WARNING, "so_bez_geometrie.plati_od:", e);
                 }
 
                 try {
                     so.setVzdalenost(Float.parseFloat(soBezGeom.getString("vzdalenost")));
                 } catch (Exception e) {
-                    Main.warn(e, "so_bez_geometrie.vzdalenost:");
+                    Logging.log(Level.WARNING, "so_bez_geometrie.vzdalenost:", e);
                 }
 
                 m_so_bez_geometrie.add(so);
             }
         } catch (Exception e) {
-            Main.warn(e, "so_bez_geometrie:");
+            Logging.log(Level.WARNING, "so_bez_geometrie:", e);
         }
     }
 
@@ -387,7 +389,7 @@ class RuianRecord {
                 try {
                     am.setRuianID(Long.parseLong(adresniMisto.getString("ruian_id")));
                 } catch (Exception e) {
-                    Main.warn(e, "adresni_mista.ruian_id:");
+                    Logging.log(Level.WARNING, "adresni_mista.ruian_id:", e);
                 }
 
                 try {
@@ -397,121 +399,121 @@ class RuianRecord {
                             LatLon.roundToOsmPrecision(node.getJsonNumber(0).doubleValue()))
                             );
                 } catch (Exception e) {
-                    Main.warn(e, "adresni_mista.pozice:");
+                    Logging.log(Level.WARNING, "adresni_mista.pozice:", e);
                 }
 
                 try {
                     am.setBudovaID(Long.parseLong(adresniMisto.getString("budova_kod")));
                 } catch (Exception e) {
-                    Main.warn(e, "adresni_mista.budova_kod:");
+                    Logging.log(Level.WARNING, "adresni_mista.budova_kod:", e);
                 }
 
                 try {
                     am.setCisloTyp(adresniMisto.getString("cislo_typ"));
                 } catch (Exception e) {
-                    Main.warn(e, "adresni_mista.cislo_typ:");
+                    Logging.log(Level.WARNING, "adresni_mista.cislo_typ:", e);
                 }
 
                 try {
                     am.setCisloDomovni(adresniMisto.getString("cislo_domovni"));
                 } catch (Exception e) {
-                    Main.warn(e, "adresni_mista.cislo_domovni:");
+                    Logging.log(Level.WARNING, "adresni_mista.cislo_domovni:", e);
                 }
 
                 try {
                     am.setCisloOrientacni(adresniMisto.getString("cislo_orientacni"));
                 } catch (Exception e) {
-                    Main.warn(e, "adresni_mista.cislo_orientacni:");
+                    Logging.log(Level.WARNING, "adresni_mista.cislo_orientacni:", e);
                 }
 
                 try {
                     am.setUliceID(Long.parseLong(adresniMisto.getString("ulice_kod")));
                 } catch (Exception e) {
-                    Main.warn(e, "adresni_mista.ulice_kod:");
+                    Logging.log(Level.WARNING, "adresni_mista.ulice_kod:", e);
                 }
 
                 try {
                     am.setUlice(adresniMisto.getString("ulice"));
                 } catch (Exception e) {
-                    Main.warn(e, "adresni_mista.ulice:");
+                    Logging.log(Level.WARNING, "adresni_mista.ulice:", e);
                 }
 
                 try {
                     am.setCastObceID(Long.parseLong(adresniMisto.getString("cast_obce_kod")));
                 } catch (Exception e) {
-                    Main.warn(e, "adresni_mista.cast_obce_kod:");
+                    Logging.log(Level.WARNING, "adresni_mista.cast_obce_kod:", e);
                 }
 
                 try {
                     am.setCastObce(adresniMisto.getString("cast_obce"));
                 } catch (Exception e) {
-                    Main.warn(e, "adresni_mista.m_cast_obce:");
+                    Logging.log(Level.WARNING, "adresni_mista.m_cast_obce:", e);
                 }
 
                 try {
                     am.setMestskaCastID(Long.parseLong(adresniMisto.getString("mestska_cast_kod")));
                 } catch (Exception e) {
-                    Main.warn(e, "adresni_mista.mestska_cast_kod:");
+                    Logging.log(Level.WARNING, "adresni_mista.mestska_cast_kod:", e);
                 }
 
                 try {
                     am.setMestskaCast(adresniMisto.getString("mestska_cast"));
                 } catch (Exception e) {
-                    Main.warn(e, "adresni_mista.mestska_cast:");
+                    Logging.log(Level.WARNING, "adresni_mista.mestska_cast:", e);
                 }
 
                 try {
                     am.setObecID(Long.parseLong(adresniMisto.getString("obec_kod")));
                 } catch (Exception e) {
-                    Main.warn(e, "adresni_mista.obec_kod:");
+                    Logging.log(Level.WARNING, "adresni_mista.obec_kod:", e);
                 }
 
                 try {
                     am.setObec(adresniMisto.getString("obec"));
                 } catch (Exception e) {
-                    Main.warn(e, "adresni_mista.obec:");
+                    Logging.log(Level.WARNING, "adresni_mista.obec:", e);
                 }
 
                 try {
                     am.setOkresID(Long.parseLong(adresniMisto.getString("okres_kod")));
                 } catch (Exception e) {
-                    Main.warn(e, "adresni_mista.okres_kod:");
+                    Logging.log(Level.WARNING, "adresni_mista.okres_kod:", e);
                 }
 
                 try {
                     am.setOkres(adresniMisto.getString("okres"));
                 } catch (Exception e) {
-                    Main.warn(e, "adresni_mista.okres:");
+                    Logging.log(Level.WARNING, "adresni_mista.okres:", e);
                 }
 
                 try {
                     am.setKrajID(Long.parseLong(adresniMisto.getString("kraj_kod")));
                 } catch (Exception e) {
-                    Main.warn(e, "adresni_mista.kraj_kod:");
+                    Logging.log(Level.WARNING, "adresni_mista.kraj_kod:", e);
                 }
 
                 try {
                     am.setKraj(adresniMisto.getString("kraj"));
                 } catch (Exception e) {
-                    Main.warn(e, "adresni_mista.kraj:");
+                    Logging.log(Level.WARNING, "adresni_mista.kraj:", e);
                 }
 
                 try {
                     am.setPsc(adresniMisto.getString("psc"));
                 } catch (Exception e) {
-                    Main.warn(e, "adresni_mista.psc:");
+                    Logging.log(Level.WARNING, "adresni_mista.psc:", e);
                 }
 
                 try {
                     am.setVzdalenost(Float.parseFloat(adresniMisto.getString("vzdalenost")));
                 } catch (Exception e) {
-                    Main.warn(e, "adresni_mista.vzdalenost:");
+                    Logging.log(Level.WARNING, "adresni_mista.vzdalenost:", e);
                 }
 
                 m_adresni_mista.add(am);
             }
         } catch (Exception e) {
-            Main.warn(e, "adresni_mista:");
+            Logging.log(Level.WARNING, "adresni_mista:", e);
         }
     }
 
@@ -522,29 +524,29 @@ class RuianRecord {
             try {
                 m_parcela_ruian_id = Long.parseLong(parcela.getString("ruian_id"));
             } catch (Exception e) {
-                Main.warn(e, "parcela.ruian_id:");
+                Logging.log(Level.WARNING, "parcela.ruian_id:", e);
             }
 
             try {
                 m_parcela_druh_pozemku = parcela.getString("druh_pozemku");
             } catch (Exception e) {
-                Main.warn(e, "parcela.druh_pozemku:");
+                Logging.log(Level.WARNING, "parcela.druh_pozemku:", e);
             }
 
             try {
                 m_parcela_zpusob_vyuziti = parcela.getString("zpusob_vyuziti");
             } catch (Exception e) {
-                Main.warn(e, "parcela.zpusob_vyuziti:");
+                Logging.log(Level.WARNING, "parcela.zpusob_vyuziti:", e);
             }
 
             try {
                 m_parcela_plati_od = parcela.getString("plati_od");
             } catch (Exception e) {
-                Main.warn(e, "parcela.plati_od:");
+                Logging.log(Level.WARNING, "parcela.plati_od:", e);
             }
 
         } catch (Exception e) {
-            Main.warn(e, "parcela:");
+            Logging.log(Level.WARNING, "parcela:", e);
         }
     }
 
@@ -555,17 +557,17 @@ class RuianRecord {
             try {
                 m_ulice_ruian_id = Long.parseLong(ulice.getString("ruian_id"));
             } catch (Exception e) {
-                Main.warn(e, "ulice.ruian_id:");
+                Logging.log(Level.WARNING, "ulice.ruian_id:", e);
             }
 
             try {
                 m_ulice_jmeno = ulice.getString("jmeno");
             } catch (Exception e) {
-                Main.warn(e, "ulice.jmeno:");
+                Logging.log(Level.WARNING, "ulice.jmeno:", e);
             }
 
         } catch (Exception e) {
-            Main.warn(e, "ulice:");
+            Logging.log(Level.WARNING, "ulice:", e);
         }
     }
 
@@ -576,53 +578,53 @@ class RuianRecord {
             try {
                 m_katastr_ruian_id = Long.parseLong(katastr.getString("ruian_id"));
             } catch (Exception e) {
-                Main.warn(e, "katastr.ruian_id:");
+                Logging.log(Level.WARNING, "katastr.ruian_id:", e);
             }
 
             try {
                 m_katastr_nazev = katastr.getString("nazev");
             } catch (Exception e) {
-                Main.warn(e, "katastr.nazev:");
+                Logging.log(Level.WARNING, "katastr.nazev:", e);
             }
 
             try {
                 m_katastr_obec_kod = Long.parseLong(katastr.getString("obec_kod"));
             } catch (Exception e) {
-                Main.warn(e, "katastr.obec_kod:");
+                Logging.log(Level.WARNING, "katastr.obec_kod:", e);
             }
 
             try {
                 m_katastr_obec = katastr.getString("obec");
             } catch (Exception e) {
-                Main.warn(e, "katastr.okres:");
+                Logging.log(Level.WARNING, "katastr.okres:", e);
             }
 
             try {
                 m_katastr_okres_kod = Long.parseLong(katastr.getString("okres_kod"));
             } catch (Exception e) {
-                Main.warn(e, "katastr.okres_kod:");
+                Logging.log(Level.WARNING, "katastr.okres_kod:", e);
             }
 
             try {
                 m_katastr_okres = katastr.getString("okres");
             } catch (Exception e) {
-                Main.warn(e, "katastr.okres:");
+                Logging.log(Level.WARNING, "katastr.okres:", e);
             }
 
             try {
                 m_katastr_kraj_kod = Long.parseLong(katastr.getString("kraj_kod"));
             } catch (Exception e) {
-                Main.warn(e, "katastr.kraj_kod:");
+                Logging.log(Level.WARNING, "katastr.kraj_kod:", e);
             }
 
             try {
                 m_katastr_kraj = katastr.getString("kraj");
             } catch (Exception e) {
-                Main.warn(e, "katastr.kraj:");
+                Logging.log(Level.WARNING, "katastr.kraj:", e);
             }
 
         } catch (Exception e) {
-            Main.warn(e, "katastr:");
+            Logging.log(Level.WARNING, "katastr:", e);
         }
     }
 
@@ -932,7 +934,7 @@ class RuianRecord {
             int year = Integer.parseInt(parts[2]);
             r = Integer.toString(year) + "-" + String.format("%02d", month) + "-" + String.format("%02d", day);
         } catch (Exception e) {
-            Main.warn(e);
+            Logging.warn(e);
         }
 
         return r;
@@ -1015,7 +1017,7 @@ class RuianRecord {
                 } else {
                     String[] key = keyType.split(":");
                     i = Integer.valueOf(key[1]);
-                    Main.info("Address ID: " + i);
+                    Logging.info("Address ID: " + i);
                 }
 
                 // Only one address place
@@ -1116,13 +1118,13 @@ class RuianRecord {
         ArrayList<String> list = new ArrayList<>(Arrays.asList(t.split("\n")));
         for (String line : list) {
             String[] tag = line.split("\"=\"");
-            Main.info("<" + tag[0] + ">. <" + tag[1] +">");
+            Logging.info("<" + tag[0] + ">. <" + tag[1] +">");
             tc.add(new Tag(tag[0].substring(1), tag[1].substring(0, tag[1].length()-1)));
         }
 
         tc.applyTo(coll);
 
-        Main.main.undoRedo.add(new SequenceCommand(tr("Add new address point"), commands));
+        MainApplication.undoRedo.add(new SequenceCommand(tr("Add new address point"), commands));
     }
 
     /**
@@ -1132,7 +1134,7 @@ class RuianRecord {
      */
     public void performAction(String act) {
 
-        Main.info("act: " + act.substring(7));
+        Logging.info("act: " + act.substring(7));
         String[] params = act.substring(7).split("/");
         if (!params[0].equals("tags.copy") && !params[0].startsWith("tags.create")) {
             return;

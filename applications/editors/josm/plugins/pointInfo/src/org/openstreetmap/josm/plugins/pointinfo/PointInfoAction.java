@@ -17,15 +17,16 @@ import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.event.HyperlinkEvent;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.mapmode.MapMode;
 import org.openstreetmap.josm.data.coor.LatLon;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.gui.PleaseWaitRunnable;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.gui.util.GuiHelper;
 import org.openstreetmap.josm.plugins.pointinfo.ruian.RuianModule;
 import org.openstreetmap.josm.tools.ImageProvider;
+import org.openstreetmap.josm.tools.Logging;
 import org.openstreetmap.josm.tools.OpenBrowser;
 import org.openstreetmap.josm.tools.Shortcut;
 import org.xml.sax.SAXException;
@@ -40,10 +41,10 @@ class PointInfoAction extends MapMode implements MouseListener {
     private String htmlText = "";
     private String coordinatesText = "";
 
-    PointInfoAction(MapFrame mapFrame) {
+    PointInfoAction() {
         super(tr("Point info"), "info-sml", tr("Point info."),
                 Shortcut.registerShortcut("tools:pointInfo", tr("Tool: {0}", tr("Point info")), KeyEvent.VK_X, Shortcut.CTRL_SHIFT),
-                mapFrame, getCursor());
+                getCursor());
     }
 
     @Override
@@ -52,14 +53,14 @@ class PointInfoAction extends MapMode implements MouseListener {
             return;
         }
         super.enterMode();
-        Main.map.mapView.setCursor(getCursor());
-        Main.map.mapView.addMouseListener(this);
+        MainApplication.getMap().mapView.setCursor(getCursor());
+        MainApplication.getMap().mapView.addMouseListener(this);
     }
 
     @Override
     public void exitMode() {
         super.exitMode();
-        Main.map.mapView.removeMouseListener(this);
+        MainApplication.getMap().mapView.removeMouseListener(this);
     }
 
     private static Cursor getCursor() {
@@ -71,7 +72,7 @@ class PointInfoAction extends MapMode implements MouseListener {
         /**
          * Positional data
          */
-        final LatLon pos = Main.map.mapView.getLatLon(clickPoint.x, clickPoint.y);
+        final LatLon pos = MainApplication.getMap().mapView.getLatLon(clickPoint.x, clickPoint.y);
 
         try {
             PleaseWaitRunnable infoTask = new PleaseWaitRunnable(tr("Connecting server")) {
@@ -122,7 +123,7 @@ class PointInfoAction extends MapMode implements MouseListener {
             };
             new Thread(infoTask).start();
         } catch (Exception e) {
-            Main.error(e);
+            Logging.error(e);
         }
     }
 
@@ -163,7 +164,7 @@ class PointInfoAction extends MapMode implements MouseListener {
 
     @Override
     public void mousePressed(MouseEvent e) {
-        if (!Main.map.mapView.isActiveLayerDrawable()) {
+        if (!MainApplication.getMap().mapView.isActiveLayerDrawable()) {
             return;
         }
         requestFocusInMapView();

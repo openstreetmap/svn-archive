@@ -32,6 +32,7 @@ import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.gui.ConditionalOptionPaneUtil;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.datatransfer.OsmTransferHandler;
@@ -39,12 +40,12 @@ import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.gui.layer.MapViewPaintable;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import org.openstreetmap.josm.gui.util.KeyPressReleaseListener;
-import org.openstreetmap.josm.gui.util.ModifierListener;
+import org.openstreetmap.josm.gui.util.ModifierExListener;
 import org.openstreetmap.josm.tools.ImageProvider;
 import org.openstreetmap.josm.tools.Shortcut;
 import org.openstreetmap.josm.tools.TextTagParser;
 
-class FastDrawingMode extends MapMode implements MapViewPaintable, KeyPressReleaseListener, ModifierListener {
+class FastDrawingMode extends MapMode implements MapViewPaintable, KeyPressReleaseListener, ModifierExListener {
     // CHECKSTYLE.OFF: LineLength
     private static final String SIMPLIFYMODE_MESSAGE =
             tr("Q=Options, Enter=save, Ctrl-Enter=save with tags, Up/Down=tune");
@@ -78,7 +79,7 @@ class FastDrawingMode extends MapMode implements MapViewPaintable, KeyPressRelea
     FastDrawingMode(MapFrame mapFrame) {
         super(tr("FastDrawing"), "turbopen.png", tr("Fast drawing mode"),
                 Shortcut.registerShortcut("mapmode:fastdraw", tr("Mode: {0}", tr("Fast drawing mode")), KeyEvent.VK_F, Shortcut.SHIFT),
-                mapFrame, Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+                Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
         line = new DrawnPolyLine();
         cursorDraw = ImageProvider.getCursor("crosshair", null);
         cursorCtrl = ImageProvider.getCursor("crosshair", "fixed");
@@ -99,35 +100,37 @@ class FastDrawingMode extends MapMode implements MapViewPaintable, KeyPressRelea
         settings.loadPrefs();
         settings.savePrefs();
 
+        MapFrame map = MainApplication.getMap();
         eps = settings.startingEps;
-        mv = Main.map.mapView;
+        mv = map.mapView;
         line.setMv(mv);
 
         if (getLayerManager().getEditDataSet() == null) return;
 
-        Main.map.mapView.addMouseListener(this);
-        Main.map.mapView.addMouseMotionListener(this);
-        Main.map.mapView.addTemporaryLayer(this);
+        map.mapView.addMouseListener(this);
+        map.mapView.addMouseMotionListener(this);
+        map.mapView.addTemporaryLayer(this);
 
-        Main.map.keyDetector.addKeyListener(this);
-        Main.map.keyDetector.addModifierListener(this);
+        map.keyDetector.addKeyListener(this);
+        map.keyDetector.addModifierExListener(this);
     }
 
     @Override
     public void exitMode() {
         super.exitMode();
         if (line.wasSimplified() && !lineWasSaved) saveAsWay(false);
+        MapFrame map = MainApplication.getMap();
 
-        Main.map.mapView.removeMouseListener(this);
-        Main.map.mapView.removeMouseMotionListener(this);
+        map.mapView.removeMouseListener(this);
+        map.mapView.removeMouseMotionListener(this);
 
-        Main.map.mapView.removeTemporaryLayer(this);
+        map.mapView.removeTemporaryLayer(this);
 
-        Main.map.keyDetector.removeKeyListener(this);
-        Main.map.keyDetector.removeModifierListener(this);
+        map.keyDetector.removeKeyListener(this);
+        map.keyDetector.removeModifierExListener(this);
 
         settings.savePrefs();
-        Main.map.mapView.setCursor(cursorDraw);
+        map.mapView.setCursor(cursorDraw);
         repaint();
     }
 
@@ -466,7 +469,7 @@ class FastDrawingMode extends MapMode implements MapViewPaintable, KeyPressRelea
                     if (!answer) break;
                 }
                 newDrawing(); // stop drawing
-                Main.map.selectSelectTool(false);
+                MainApplication.getMap().selectSelectTool(false);
             }
             break;
 
@@ -490,7 +493,7 @@ class FastDrawingMode extends MapMode implements MapViewPaintable, KeyPressRelea
         case KeyEvent.VK_SPACE:
             e.consume();
             if (!drawing) {
-                Point p = Main.map.mapView.getMousePosition();
+                Point p = MainApplication.getMap().mapView.getMousePosition();
                 if (p != null) startDrawing(p, settings.fixedSpacebar);
             }
             break;
@@ -505,15 +508,15 @@ class FastDrawingMode extends MapMode implements MapViewPaintable, KeyPressRelea
     }
 
     @Override
-    public void modifiersChanged(int modifiers) {
-        updateKeyModifiers(modifiers);
+    public void modifiersExChanged(int modifiers) {
+        updateKeyModifiersEx(modifiers);
         updateCursor();
     }
 
     @Override
     protected void updateStatusLine() {
-        Main.map.statusLine.setHelpText(statusText);
-        Main.map.statusLine.repaint();
+        MainApplication.getMap().statusLine.setHelpText(statusText);
+        MainApplication.getMap().statusLine.repaint();
     }
     // </editor-fold>
 
@@ -546,7 +549,7 @@ class FastDrawingMode extends MapMode implements MapViewPaintable, KeyPressRelea
         Node firstNode = null;
 
         for (LatLon p : pts) {
-            Node nd = Main.map.mapView.getNearestNode(line.getPoint(p), OsmPrimitive::isSelectable);
+            Node nd = MainApplication.getMap().mapView.getNearestNode(line.getPoint(p), OsmPrimitive::isSelectable);
             // there may be a node with the same coords!
 
             if (nd != null && p.greatCircleDistance(nd.getCoor()) > 0.01) nd = null;
@@ -594,13 +597,13 @@ class FastDrawingMode extends MapMode implements MapViewPaintable, KeyPressRelea
         } else cmds.add(new AddCommand(w));
         Command c = new SequenceCommand(tr("Draw the way by mouse"), cmds);
         if (getLayerManager().getEditLayer() == null) return;
-        Main.main.undoRedo.add(c);
+        MainApplication.undoRedo.add(c);
         lineWasSaved = true;
         newDrawing(); // stop drawing
         if (autoExit) {
             // Select this way and switch drawing mode off
             getLayerManager().getEditDataSet().setSelected(w);
-            Main.map.selectSelectTool(false);
+            MainApplication.getMap().selectSelectTool(false);
         }
     }
 
@@ -675,21 +678,22 @@ class FastDrawingMode extends MapMode implements MapViewPaintable, KeyPressRelea
     }
 
     private void updateCursor() {
-        if (shift) Main.map.mapView.setCursor(cursorShift); else
-            if (line.isClosed() || (nearestPointIndex == 0)) Main.map.mapView.setCursor(cursorReady); else
-                if (ctrl) Main.map.mapView.setCursor(cursorCtrl); else
-                    if (nearSomeNode && settings.snapNodes) Main.map.mapView.setCursor(cursorCtrl); else
-                        if (drawing) Main.map.mapView.setCursor(cursorDrawing); else
-                            Main.map.mapView.setCursor(cursorDraw);
+        MapView mapView = MainApplication.getMap().mapView;
+        if (shift) mapView.setCursor(cursorShift); else
+            if (line.isClosed() || (nearestPointIndex == 0)) mapView.setCursor(cursorReady); else
+                if (ctrl) mapView.setCursor(cursorCtrl); else
+                    if (nearSomeNode && settings.snapNodes) mapView.setCursor(cursorCtrl); else
+                        if (drawing) mapView.setCursor(cursorDrawing); else
+                            mapView.setCursor(cursorDraw);
     }
 
     private void repaint() {
-        Main.map.mapView.repaint();
+        MainApplication.getMap().mapView.repaint();
     }
 
     private void tryToLoadWay() {
         updateCursor();
-        Collection<Way> selectedWays = Main.getLayerManager().getEditDataSet().getSelectedWays();
+        Collection<Way> selectedWays = MainApplication.getLayerManager().getEditDataSet().getSelectedWays();
         if (selectedWays != null // if there is a selection
                 && selectedWays.size() == 1 // and one way is selected
                 && line.getPoints().size() == 0) /* and ther is no already drawn line */ {
@@ -710,7 +714,7 @@ class FastDrawingMode extends MapMode implements MapViewPaintable, KeyPressRelea
     // <editor-fold defaultstate="collapsed" desc="Helper functions">
 
     private Node getNearestNode(Point point, double maxDist) {
-        Node nd = Main.map.mapView.getNearestNode(point, OsmPrimitive::isSelectable);
+        Node nd = MainApplication.getMap().mapView.getNearestNode(point, OsmPrimitive::isSelectable);
         if (nd != null && line.getPoint(nd.getCoor()).distance(point) <= maxDist) return nd;
         else return null;
     }

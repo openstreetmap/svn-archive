@@ -21,6 +21,7 @@ import javax.swing.JPanel;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.ExtendedDialog;
 import org.openstreetmap.josm.gui.datatransfer.ClipboardUtils;
+import org.openstreetmap.josm.gui.datatransfer.importers.TextTagPaster;
 import org.openstreetmap.josm.gui.widgets.HistoryComboBox;
 import org.openstreetmap.josm.tools.GBC;
 import org.openstreetmap.josm.tools.ImageProvider;
@@ -57,7 +58,7 @@ public class FastDrawConfigDialog extends ExtendedDialog {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String s = ClipboardUtils.getClipboardStringContent();
-                if (TextTagParser.getValidatedTagsFromText(s) != null) {
+                if (TextTagParser.getValidatedTagsFromText(s, TextTagPaster::warning) != null) {
                     addTags.setText(s);
                 }
             }

@@ -21,6 +21,7 @@ import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.gpx.GpxData;
 import org.openstreetmap.josm.data.gpx.ImmutableGpxTrack;
 import org.openstreetmap.josm.data.gpx.WayPoint;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.io.importexport.FileImporter;
 import org.openstreetmap.josm.gui.layer.GpxLayer;
 import org.openstreetmap.josm.gui.layer.markerlayer.MarkerLayer;
@@ -73,11 +74,11 @@ public class Tcx extends FileImporter {
         GpxData gpxData = getGpxData();
         gpxData.storageFile = tcxFile;
         GpxLayer gpxLayer = new GpxLayer(gpxData, tcxFile.getName());
-        Main.getLayerManager().addLayer(gpxLayer);
+        MainApplication.getLayerManager().addLayer(gpxLayer);
         if (Main.pref.getBoolean("marker.makeautomarkers", true)) {
             MarkerLayer ml = new MarkerLayer(gpxData, tr("Markers from {0}", tcxFile.getName()), tcxFile, gpxLayer);
             if (ml.data.size() > 0) {
-                Main.getLayerManager().addLayer(ml);
+                MainApplication.getLayerManager().addLayer(ml);
             }
         }
     }

@@ -30,6 +30,7 @@ import javax.swing.border.EmptyBorder;
 import com.bric.swing.ColorPicker;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.plugins.rasterfilters.model.FiltersManager;
+import org.openstreetmap.josm.tools.Logging;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
@@ -244,8 +245,8 @@ public class FilterPanel extends JPanel {
             int maxValue = array.getInt(1);
             int initValue = json.getInt("default");
 
-            Main.debug("Slider is integer\n");
-            Main.debug("minValue: " + String.valueOf(minValue)
+            Logging.debug("Slider is integer\n");
+            Logging.debug("minValue: " + String.valueOf(minValue)
                     + "maxValue: " + String.valueOf(maxValue));
             try {
                 slider = new JSlider(JSlider.HORIZONTAL, minValue, maxValue,
@@ -264,11 +265,11 @@ public class FilterPanel extends JPanel {
 
         } else if (valueType.equals("float")) {
 
-            Main.debug("Slider is float\n");
+            Logging.debug("Slider is float\n");
             // every value is supplied by 10 to be integer for slider
             double minValueDouble = array.getJsonNumber(0).doubleValue();
             double maxValueDouble = array.getJsonNumber(1).doubleValue();
-            Main.debug("DminValue: " + String.valueOf(minValueDouble)
+            Logging.debug("DminValue: " + String.valueOf(minValueDouble)
                     + "DmaxValue: " + String.valueOf(maxValueDouble));
 
             int minValue = (int) (minValueDouble * 100);

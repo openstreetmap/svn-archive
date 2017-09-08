@@ -24,13 +24,14 @@ import javax.swing.JPanel;
 import javax.swing.JSlider;
 
 import com.bric.swing.ColorPicker;
-import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.gui.layer.ImageProcessor;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.plugins.rasterfilters.filters.Filter;
 import org.openstreetmap.josm.plugins.rasterfilters.gui.FilterGuiListener;
 import org.openstreetmap.josm.plugins.rasterfilters.gui.FilterPanel;
 import org.openstreetmap.josm.plugins.rasterfilters.gui.FiltersDialog;
 import org.openstreetmap.josm.plugins.rasterfilters.preferences.FiltersDownloader;
+import org.openstreetmap.josm.tools.ImageProcessor;
+import org.openstreetmap.josm.tools.Logging;
 
 
 /**
@@ -74,13 +75,13 @@ public class FiltersManager implements StateChangeListener, ImageProcessor, Acti
         Filter filter = null;
 
         try {
-            Main.debug("ClassName for loading " + filterState.getFilterClassName());
+            Logging.debug("ClassName for loading " + filterState.getFilterClassName());
             clazz = FiltersDownloader.loader.loadClass(filterState
                     .getFilterClassName());
             filter = (Filter) clazz.getConstructor().newInstance();
 
         } catch (ReflectiveOperationException | IllegalArgumentException | SecurityException e) {
-            e.printStackTrace();
+            Logging.error(e);
         }
 
         if (filter != null) {
@@ -129,13 +130,13 @@ public class FiltersManager implements StateChangeListener, ImageProcessor, Acti
         if (filter != null) {
             filter.changeFilterState(filterState.encodeJson());
         }
-        Main.getLayerManager().getActiveLayer().setFilterStateChanged();
+        MainApplication.getLayerManager().getActiveLayer().setFilterStateChanged();
 
         fp.createBottomPanel(this);
 
         filterListener.setFilterState(filterState);
 
-        Main.debug("The number of elems in the Filters map is equal \n"
+        Logging.debug("The number of elems in the Filters map is equal \n"
                 + filtersMap.size());
 
         return fp;
@@ -153,8 +154,8 @@ public class FiltersManager implements StateChangeListener, ImageProcessor, Acti
             filtersMap.get(filterId).changeFilterState(filterState.encodeJson());
         }
 
-        if (Main.getLayerManager().getActiveLayer() != null) {
-            Main.getLayerManager().getActiveLayer().setFilterStateChanged();
+        if (MainApplication.getLayerManager().getActiveLayer() != null) {
+            MainApplication.getLayerManager().getActiveLayer().setFilterStateChanged();
         }
 
     }
@@ -237,7 +238,7 @@ public class FiltersManager implements StateChangeListener, ImageProcessor, Acti
             dialog.getAddButton().setEnabled(true);
         }
 
-        Main.getLayerManager().getActiveLayer().setFilterStateChanged();
+        MainApplication.getLayerManager().getActiveLayer().setFilterStateChanged();
 
     }
 
@@ -253,14 +254,14 @@ public class FiltersManager implements StateChangeListener, ImageProcessor, Acti
             UID filterId = filterPanel.getFilterId();
             disabledFilters.add(filtersMap.get(filterId));
 
-            Main.getLayerManager().getActiveLayer().setFilterStateChanged();
+            MainApplication.getLayerManager().getActiveLayer().setFilterStateChanged();
 
         } else {
 
             UID filterId = filterPanel.getFilterId();
             disabledFilters.remove(filtersMap.get(filterId));
 
-            Main.getLayerManager().getActiveLayer().setFilterStateChanged();
+            MainApplication.getLayerManager().getActiveLayer().setFilterStateChanged();
 
         }
     }

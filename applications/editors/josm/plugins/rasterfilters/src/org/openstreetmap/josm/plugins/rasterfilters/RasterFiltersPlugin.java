@@ -7,6 +7,7 @@ import java.io.IOException;
 import javax.swing.JPanel;
 
 import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.gui.SideButton;
 import org.openstreetmap.josm.gui.dialogs.LayerListDialog;
@@ -24,7 +25,7 @@ import org.openstreetmap.josm.plugins.rasterfilters.actions.ShowFiltersDialogAct
 import org.openstreetmap.josm.plugins.rasterfilters.gui.FiltersDialog;
 import org.openstreetmap.josm.plugins.rasterfilters.preferences.FiltersDownloader;
 import org.openstreetmap.josm.plugins.rasterfilters.preferences.RasterFiltersPreferences;
-
+import org.openstreetmap.josm.tools.Logging;
 
 /**
  * Main Plugin class. This class embed new plugin button for adding filter and
@@ -40,7 +41,7 @@ public class RasterFiltersPlugin extends Plugin implements LayerChangeListener, 
 
     public RasterFiltersPlugin(PluginInformation info) {
         super(info);
-        Main.debug("Loading RasterFiltersPlugin");
+        Logging.debug("Loading RasterFiltersPlugin");
 
         File file = new File(getPluginDir());
         if (file.mkdir()) {
@@ -51,7 +52,7 @@ public class RasterFiltersPlugin extends Plugin implements LayerChangeListener, 
                 try {
                     file.createNewFile();
                 } catch (IOException e) {
-                    Main.debug("Cannot create file" + file.getAbsolutePath() + "\n" + e.getMessage());
+                    Logging.debug("Cannot create file" + file.getAbsolutePath() + "\n" + e.getMessage());
                 }
             }
         }
@@ -61,15 +62,15 @@ public class RasterFiltersPlugin extends Plugin implements LayerChangeListener, 
 
     @Override
     public void mapFrameInitialized(MapFrame oldFrame, MapFrame newFrame) {
-        if (Main.isDisplayingMapView()) {
-            Main.getLayerManager().addLayerChangeListener(this);
-            Main.getLayerManager().addActiveLayerChangeListener(this);
+        if (MainApplication.isDisplayingMapView()) {
+            MainApplication.getLayerManager().addLayerChangeListener(this);
+            MainApplication.getLayerManager().addActiveLayerChangeListener(this);
         }
     }
 
     @Override
     public void activeOrEditLayerChanged(ActiveLayerChangeEvent e) {
-        if (!(Main.getLayerManager().getActiveLayer() instanceof ImageryLayer)) {
+        if (!(MainApplication.getLayerManager().getActiveLayer() instanceof ImageryLayer)) {
             filterButton.setEnabled(false);
         } else {
             filterButton.setEnabled(true);
@@ -120,7 +121,7 @@ public class RasterFiltersPlugin extends Plugin implements LayerChangeListener, 
             action.removeFiltersDialog(dialog);
         }
 
-        if (Main.getLayerManager().getLayers().isEmpty()) {
+        if (MainApplication.getLayerManager().getLayers().isEmpty()) {
             Container container = filterButton.getParent();
             if (container != null) {
                 container.remove(filterButton);
@@ -130,8 +131,8 @@ public class RasterFiltersPlugin extends Plugin implements LayerChangeListener, 
             filterButton = null;
         }
 
-        Main.getLayerManager().removeLayerChangeListener(this);
-        Main.getLayerManager().removeActiveLayerChangeListener(this);
+        MainApplication.getLayerManager().removeLayerChangeListener(this);
+        MainApplication.getLayerManager().removeActiveLayerChangeListener(this);
     }
 
     @Override

@@ -9,12 +9,13 @@ import java.util.List;
 import javax.swing.AbstractAction;
 import javax.swing.JMenuItem;
 
-import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.layer.ImageryLayer;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.gui.layer.Layer.LayerAction;
 import org.openstreetmap.josm.plugins.rasterfilters.gui.FiltersDialog;
 import org.openstreetmap.josm.tools.ImageProvider;
+import org.openstreetmap.josm.tools.Logging;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
@@ -47,7 +48,7 @@ public final class ShowFiltersDialogAction extends AbstractAction implements Lay
     @Override
     public void actionPerformed(ActionEvent e) {
 
-        Layer layer = Main.getLayerManager().getActiveLayer();
+        Layer layer = MainApplication.getLayerManager().getActiveLayer();
 
         if (layer instanceof ImageryLayer) {
             for (FiltersDialog temp : dialogs) {
@@ -63,7 +64,7 @@ public final class ShowFiltersDialogAction extends AbstractAction implements Lay
 
             }
         } else {
-            Main.debug("The layer is not the instance of " + ImageryLayer.class.getCanonicalName());
+            Logging.debug("The layer is not the instance of " + ImageryLayer.class.getCanonicalName());
         }
     }
 

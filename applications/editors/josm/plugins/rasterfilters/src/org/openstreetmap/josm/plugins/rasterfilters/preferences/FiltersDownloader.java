@@ -37,6 +37,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.tools.Logging;
 
 /**
  * This class is responsible for downloading jars which contains
@@ -224,7 +225,7 @@ public class FiltersDownloader implements ActionListener {
 
     public static void initFilters() {
         File file = new File(pluginDir, "urls.map");
-        Main.debug("EXIST FILE? " + file.exists());
+        Logging.debug("EXIST FILE? " + file.exists());
 
         try (BufferedReader br = Files.newBufferedReader(file.toPath(), StandardCharsets.UTF_8)) {
             String temp;
@@ -236,10 +237,10 @@ public class FiltersDownloader implements ActionListener {
                     URL url;
                     try {
                         url = new URL("jar", "", fileUrl.toURI().toURL() + "!/");
-                        Main.debug("binaryUrl: " + url.toString());
+                        Logging.debug("binaryUrl: " + url.toString());
                         binariesLocalUrls.add(url);
                     } catch (MalformedURLException e) {
-                        Main.debug("Initializing filters with unknown protocol. \n"
+                        Logging.debug("Initializing filters with unknown protocol. \n"
                                 + e.getMessage());
                     }
                 }
@@ -248,7 +249,7 @@ public class FiltersDownloader implements ActionListener {
             e.printStackTrace();
         }
 
-        Main.debug("BinariesLocal : " + binariesLocalUrls.toString());
+        Logging.debug("BinariesLocal : " + binariesLocalUrls.toString());
 
         loader = new URLClassLoader(
                 binariesLocalUrls.toArray(new URL[binariesLocalUrls.size()]),
@@ -285,7 +286,7 @@ public class FiltersDownloader implements ActionListener {
     public static void loadBinariesFromMeta(Set<JsonObject> metaList) {
 
         File file = new File(pluginDir, "urls.map");
-        Main.debug("pluginDir and urls map" + file.getAbsoluteFile());
+        Logging.debug("pluginDir and urls map" + file.getAbsoluteFile());
 
         try (BufferedWriter writer = Files.newBufferedWriter(file.toPath(), StandardCharsets.UTF_8)) {
             for (JsonObject temp : metaList) {
@@ -316,7 +317,7 @@ public class FiltersDownloader implements ActionListener {
 
     public static String loadBinaryToFile(String fromUrl) {
 
-        // Main.debug("Need to load binary from " + fromUrl);
+        // Logging.debug("Need to load binary from " + fromUrl);
 
         URL url = null;
         URLConnection con = null;
@@ -326,14 +327,12 @@ public class FiltersDownloader implements ActionListener {
 
         String localFile = null;
         File plugin = new File(pluginDir);
-        Main.debug("plugin dir" + plugin.getAbsolutePath());
+        Logging.debug("plugin dir" + plugin.getAbsolutePath());
 
         if (m.find()) {
-
             if (plugin.exists()) {
-
                 localFile = fromUrl.substring(m.end());
-                Main.debug("localFile: " + localFile);
+                Logging.debug("localFile: " + localFile);
             }
         }
 
@@ -342,10 +341,10 @@ public class FiltersDownloader implements ActionListener {
             con = url.openConnection();
             String plugDir = plugin.getAbsolutePath();
             File file = new File(plugDir, localFile);
-            Main.debug("Binary file: " + file.getAbsolutePath());
+            Logging.debug("Binary file: " + file.getAbsolutePath());
 
             if (file.exists()) {
-                Main.debug("File " + localFile + " already exists");
+                Logging.debug("File " + localFile + " already exists");
 
                 return file.getAbsolutePath();
             } else {

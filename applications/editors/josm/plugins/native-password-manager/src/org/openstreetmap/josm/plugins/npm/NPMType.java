@@ -7,6 +7,7 @@ import org.netbeans.modules.keyring.gnome.GnomeProvider;
 import org.netbeans.modules.keyring.kde.KWalletProvider;
 import org.netbeans.modules.keyring.mac.MacProvider;
 import org.netbeans.spi.keyring.KeyringProvider;
+import org.openstreetmap.josm.tools.JosmRuntimeException;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
@@ -91,11 +92,9 @@ public enum NPMType {
         if (providerClass == null) return null;
         if (provider == null) {
             try {
-                provider = providerClass.newInstance();
-            } catch (InstantiationException ex) {
-                throw new RuntimeException();
-            } catch (IllegalAccessException ex) {
-                throw new RuntimeException();
+                provider = providerClass.getDeclaredConstructor().newInstance();
+            } catch (IllegalArgumentException | ReflectiveOperationException | SecurityException ex) {
+                throw new JosmRuntimeException(ex);
             }
         }
         return provider;

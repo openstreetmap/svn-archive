@@ -42,9 +42,9 @@ import javax.swing.border.EtchedBorder;
 import org.netbeans.spi.keyring.KeyringProvider;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.oauth.OAuthToken;
-import org.openstreetmap.josm.gui.preferences.server.ProxyPreferencesPanel;
 import org.openstreetmap.josm.gui.util.WindowGeometry;
 import org.openstreetmap.josm.gui.widgets.HtmlPanel;
+import org.openstreetmap.josm.io.DefaultProxySelector;
 import org.openstreetmap.josm.io.OsmApi;
 import org.openstreetmap.josm.io.auth.CredentialsAgentException;
 import org.openstreetmap.josm.io.auth.CredentialsManager;
@@ -364,15 +364,15 @@ public class InitializationWizard extends JDialog {
                 }
             }
             
-            String proxy_username = Main.pref.get(ProxyPreferencesPanel.PROXY_USER, null);
-            String proxy_password = Main.pref.get(ProxyPreferencesPanel.PROXY_PASS, null);
-            String proxy_host = Main.pref.get(ProxyPreferencesPanel.PROXY_HTTP_HOST, null);
+            String proxy_username = Main.pref.get(DefaultProxySelector.PROXY_USER, null);
+            String proxy_password = Main.pref.get(DefaultProxySelector.PROXY_PASS, null);
+            String proxy_host = Main.pref.get(DefaultProxySelector.PROXY_HTTP_HOST, null);
             if (proxy_username != null || proxy_password != null) {
                 try {
                     cm.store(RequestorType.PROXY, proxy_host, new PasswordAuthentication(string(proxy_username), toCharArray(proxy_password)));
                     if (rbClear.isSelected()) {
-                        Main.pref.put(ProxyPreferencesPanel.PROXY_USER, null);
-                        Main.pref.put(ProxyPreferencesPanel.PROXY_PASS, null);
+                        Main.pref.put(DefaultProxySelector.PROXY_USER, null);
+                        Main.pref.put(DefaultProxySelector.PROXY_PASS, null);
                     }
                 } catch (CredentialsAgentException ex) {
                     ex.printStackTrace();
@@ -424,8 +424,8 @@ public class InitializationWizard extends JDialog {
         return 
             Main.pref.get("osm-server.username", null) != null ||
             Main.pref.get("osm-server.password", null) != null ||
-            Main.pref.get(ProxyPreferencesPanel.PROXY_USER, null) != null ||
-            Main.pref.get(ProxyPreferencesPanel.PROXY_PASS, null) != null ||
+            Main.pref.get(DefaultProxySelector.PROXY_USER, null) != null ||
+            Main.pref.get(DefaultProxySelector.PROXY_PASS, null) != null ||
             Main.pref.get("oauth.access-token.key", null) != null ||
             Main.pref.get("oauth.access-token.secret", null) != null;
     }

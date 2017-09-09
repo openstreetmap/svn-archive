@@ -1,9 +1,9 @@
 // License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.npm;
 
-import java.awt.Component;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
+import java.awt.Component;
 import java.net.Authenticator.RequestorType;
 import java.net.PasswordAuthentication;
 import java.util.ArrayList;
@@ -11,13 +11,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.zip.CRC32;
+
 import javax.swing.text.html.HTMLEditorKit;
 
 import org.netbeans.spi.keyring.KeyringProvider;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.oauth.OAuthToken;
-import org.openstreetmap.josm.gui.preferences.server.ProxyPreferencesPanel;
 import org.openstreetmap.josm.gui.widgets.HtmlPanel;
+import org.openstreetmap.josm.io.DefaultProxySelector;
 import org.openstreetmap.josm.io.OsmApi;
 import org.openstreetmap.josm.io.auth.AbstractCredentialsAgent;
 import org.openstreetmap.josm.io.auth.CredentialsAgentException;
@@ -69,8 +70,8 @@ public class NPMCredentialsAgent extends AbstractCredentialsAgent {
     
     protected String getProxyDescriptor() {
         String pref = Main.pref.getPreferenceFile().getAbsolutePath();
-        String host = Main.pref.get(ProxyPreferencesPanel.PROXY_HTTP_HOST, "");
-        String port = Main.pref.get(ProxyPreferencesPanel.PROXY_HTTP_PORT, "");
+        String host = Main.pref.get(DefaultProxySelector.PROXY_HTTP_HOST, "");
+        String port = Main.pref.get(DefaultProxySelector.PROXY_HTTP_PORT, "");
         
         CRC32 id = new CRC32();
         id.update((pref+"/"+host+"/"+port).getBytes());
@@ -228,10 +229,10 @@ public class NPMCredentialsAgent extends AbstractCredentialsAgent {
         if (Main.pref.get("osm-server.password", null) != null) {
             sensitive.add(tr("password"));
         }
-        if (Main.pref.get(ProxyPreferencesPanel.PROXY_USER, null) != null) {
+        if (Main.pref.get(DefaultProxySelector.PROXY_USER, null) != null) {
             sensitive.add(tr("proxy username"));
         }
-        if (Main.pref.get(ProxyPreferencesPanel.PROXY_PASS, null) != null) {
+        if (Main.pref.get(DefaultProxySelector.PROXY_PASS, null) != null) {
             sensitive.add(tr("proxy password"));
         }
         if (Main.pref.get("oauth.access-token.key", null) != null) {

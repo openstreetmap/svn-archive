@@ -221,7 +221,7 @@ public class KWalletProvider implements KeyringProvider{
         logger.log(Level.WARNING, "Something went wrong: {0}", descr);
     }      
   
-    private class CommandResult {
+    private static class CommandResult {
         private int exitCode;
         private char[] retVal;
 

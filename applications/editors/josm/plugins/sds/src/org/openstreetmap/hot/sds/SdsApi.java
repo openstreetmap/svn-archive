@@ -29,6 +29,7 @@ import org.openstreetmap.josm.io.OsmApiException;
 import org.openstreetmap.josm.io.OsmTransferCanceledException;
 import org.openstreetmap.josm.io.ProgressInputStream;
 import org.openstreetmap.josm.tools.CheckParameterUtil;
+import org.openstreetmap.josm.tools.Logging;
 
 /**
  * Class that encapsulates the communications with the SDS API.
@@ -282,7 +283,7 @@ public class SdsApi extends SdsConnection {
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException ex) {
-                Main.trace(ex);
+                Logging.trace(ex);
             }
         }
         System.out.println(tr("OK - trying again."));

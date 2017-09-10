@@ -10,13 +10,12 @@ import java.util.ArrayList;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParserFactory;
 
-import org.openstreetmap.josm.data.osm.Changeset;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.Way;
-import org.openstreetmap.josm.data.osm.visitor.Visitor;
+import org.openstreetmap.josm.data.osm.visitor.OsmPrimitiveVisitor;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.io.OsmServerReadPostprocessor;
 import org.xml.sax.InputSource;
@@ -41,7 +40,7 @@ public class ReadPostprocessor implements OsmServerReadPostprocessor {
         wayList = new ArrayList<>();
         relationList = new ArrayList<>();
 
-        Visitor adder = new Visitor() {
+        OsmPrimitiveVisitor adder = new OsmPrimitiveVisitor() {
             @Override
             public void visit(Node n) {
                 nodeList.add(n.getId());
@@ -59,9 +58,6 @@ public class ReadPostprocessor implements OsmServerReadPostprocessor {
                 relationList.add(e.getId());
                 plugin.originalNodes.put(e.getId(), e.save());
             }
-
-            @Override
-            public void visit(Changeset cs) {}
         };
 
         for (OsmPrimitive p : ds.allPrimitives()) {

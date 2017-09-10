@@ -18,6 +18,7 @@ import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.osm.IPrimitive;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
+import org.openstreetmap.josm.tools.Logging;
 import org.openstreetmap.josm.tools.Utils;
 
 public class SdsSaveAction extends SdsDiskAccessAction {
@@ -36,8 +37,8 @@ public class SdsSaveAction extends SdsDiskAccessAction {
 
     public boolean doSave() {
         Layer layer = null;
-        if (Main.getLayerManager().getActiveLayer() instanceof OsmDataLayer)
-            layer = Main.getLayerManager().getActiveLayer();
+        if (getLayerManager().getActiveLayer() instanceof OsmDataLayer)
+            layer = getLayerManager().getActiveLayer();
 
         if (layer == null)
             return false;
@@ -83,7 +84,7 @@ public class SdsSaveAction extends SdsDiskAccessAction {
                 tmpFile.delete();
             }
         } catch (IOException e) {
-            Main.error(e);
+            Logging.error(e);
             JOptionPane.showMessageDialog(
                     Main.parent,
                     tr("<html>An error occurred while saving.<br>Error is:<br>{0}</html>", e.getMessage()),
@@ -98,7 +99,7 @@ public class SdsSaveAction extends SdsDiskAccessAction {
                     Utils.copyFile(tmpFile, file);
                 }
             } catch (IOException e2) {
-                Main.error(e2);
+                Logging.error(e2);
                 JOptionPane.showMessageDialog(
                         Main.parent,
                         tr("<html>An error occurred while restoring backup file.<br>Error is:<br>{0}</html>", e2.getMessage()),

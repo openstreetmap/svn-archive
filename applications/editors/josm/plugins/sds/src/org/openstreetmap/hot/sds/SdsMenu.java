@@ -19,6 +19,7 @@ import javax.swing.JTextArea;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MainMenu;
 import org.openstreetmap.josm.gui.layer.LayerManager.LayerAddEvent;
 import org.openstreetmap.josm.gui.layer.LayerManager.LayerChangeListener;
@@ -28,6 +29,7 @@ import org.openstreetmap.josm.gui.layer.MainLayerManager.ActiveLayerChangeEvent;
 import org.openstreetmap.josm.gui.layer.MainLayerManager.ActiveLayerChangeListener;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import org.openstreetmap.josm.gui.preferences.PreferenceDialog;
+import org.openstreetmap.josm.tools.Logging;
 
 @SuppressWarnings("serial")
 public class SdsMenu extends JMenu implements LayerChangeListener, ActiveLayerChangeListener {
@@ -39,7 +41,7 @@ public class SdsMenu extends JMenu implements LayerChangeListener, ActiveLayerCh
     private JMenu menu;
 
     public SdsMenu(final SeparateDataStorePlugin thePlugin) {
-        MainMenu mm = Main.main.menu;
+        MainMenu mm = MainApplication.getMenu();
         menu = mm.addMenu("SDS", tr("SDS"), KeyEvent.VK_S, mm.getDefaultMenuPos(), null);
         saveItem = new JMenuItem(new SdsSaveAction());
         menu.add(saveItem);
@@ -52,13 +54,13 @@ public class SdsMenu extends JMenu implements LayerChangeListener, ActiveLayerCh
         aboutItem = new JMenuItem(new SdsAboutAction());
         menu.add(aboutItem);
 
-        Main.getLayerManager().addLayerChangeListener(this);
-        Main.getLayerManager().addActiveLayerChangeListener(this);
+        MainApplication.getLayerManager().addLayerChangeListener(this);
+        MainApplication.getLayerManager().addActiveLayerChangeListener(this);
         setEnabledState();
     }
 
     void setEnabledState() {
-        boolean en = Main.getLayerManager().getActiveLayer() instanceof OsmDataLayer;
+        boolean en = MainApplication.getLayerManager().getActiveLayer() instanceof OsmDataLayer;
         loadItem.setEnabled(en);
         saveItem.setEnabled(en);
     }
@@ -147,7 +149,7 @@ public class SdsMenu extends JMenu implements LayerChangeListener, ActiveLayerCh
                 Method sptbn = pd.getClass().getMethod("selectPreferencesTabByName", String.class);
                 sptbn.invoke(pd, "sds");
             } catch (Exception ex) {
-                Main.trace(ex);
+                Logging.trace(ex);
             }
             pd.setVisible(true);
         }

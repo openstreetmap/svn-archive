@@ -6,9 +6,9 @@ import java.net.HttpURLConnection;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.io.auth.CredentialsAgentException;
 import org.openstreetmap.josm.io.auth.CredentialsAgentResponse;
+import org.openstreetmap.josm.tools.Logging;
 
 /**
  * Base class that handles common things like authentication for the reader and writer
@@ -44,7 +44,7 @@ public class SdsConnection {
         try {
             Thread.sleep(100);
         } catch (InterruptedException ex) {
-            Main.trace(ex);
+            Logging.trace(ex);
         }
 
         synchronized (this) {

@@ -16,7 +16,7 @@ import java.util.List;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParserFactory;
 
-import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.PleaseWaitRunnable;
 import org.openstreetmap.josm.gui.widgets.SwingFileChooser;
 import org.openstreetmap.josm.io.OsmTransferException;
@@ -44,7 +44,7 @@ public class SdsLoadAction extends SdsDiskAccessAction {
 
     public void openFiles(List<File> fileList) {
         OpenFileTask task = new OpenFileTask(fileList, plugin);
-        Main.worker.submit(task);
+        MainApplication.worker.submit(task);
     }
 
     public class OpenFileTask extends PleaseWaitRunnable {

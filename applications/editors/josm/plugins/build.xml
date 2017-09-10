@@ -44,7 +44,7 @@
     <target name="checkstyle">
         <iterate target="checkstyle"/>
     </target>
-    <target name="findbugs">
-        <iterate target="findbugs"/>
+    <target name="spotbugs">
+        <iterate target="spotbugs"/>
     </target>
 </project>

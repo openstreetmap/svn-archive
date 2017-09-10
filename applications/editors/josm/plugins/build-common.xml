@@ -17,8 +17,8 @@
     <property name="error_prone_ant.jar"    location="../00_core_tools/error_prone_ant.jar"/>
     <property name="checkstyle.jar"         location="../00_core_tools/checkstyle/checkstyle-all.jar"/>
     <property name="checkstyle-build.dir"   location="../00_core_tools/checkstyle/build"/>
-    <property name="findbugs-ant.jar"       location="../00_core_tools/findbugs/findbugs-ant.jar"/>
-    <property name="annotations.jar"        location="../00_core_tools/findbugs/annotations.jar"/>
+    <property name="spotbugs-ant.jar"       location="../00_core_tools/spotbugs/spotbugs-ant.jar"/>
+    <property name="annotations.jar"        location="../00_core_tools/spotbugs/spotbugs-annotations.jar"/>
     <property name="plugin.build.dir"       location="build"/>
     <property name="plugin.test.dir"        location="test"/>
     <property name="plugin.src.dir"         location="src"/>
@@ -547,26 +547,26 @@
         </checkstyle>
     </target>
 
-    <target name="findbugs" depends="dist">
-        <taskdef name="findbugs" classname="edu.umd.cs.findbugs.anttask.FindBugsTask" classpath="${findbugs-ant.jar}"/>
-        <path id="findbugs-classpath">
-            <fileset dir="../00_core_tools/findbugs/">
+    <target name="spotbugs" depends="dist">
+        <taskdef name="spotbugs" classname="edu.umd.cs.findbugs.anttask.FindBugsTask" classpath="${spotbugs-ant.jar}"/>
+        <path id="spotbugs-classpath">
+            <fileset dir="../00_core_tools/spotbugs/">
                 <include name="*.jar"/>
             </fileset>
         </path>
-        <property name="findbugs-classpath" refid="findbugs-classpath"/>
-        <findbugs output="xml"
-                outputFile="findbugs-josm-${ant.project.name}.xml"
-                classpath="${findbugs-classpath}"
+        <property name="spotbugs-classpath" refid="spotbugs-classpath"/>
+        <spotbugs output="xml"
+                outputFile="spotbugs-josm-${ant.project.name}.xml"
+                classpath="${spotbugs-classpath}"
                 pluginList=""
-                excludeFilter="../findbugs-filter.xml"
+                excludeFilter="../spotbugs-filter.xml"
                 effort="default"
                 reportLevel="low"
                 >
             <auxClasspath refid="plugin.classpath" />
             <sourcePath path="${basedir}/src" />
             <class location="${plugin.jar}" />
-        </findbugs>
+        </spotbugs>
     </target>
 
     <target name="runjosm" depends="install">

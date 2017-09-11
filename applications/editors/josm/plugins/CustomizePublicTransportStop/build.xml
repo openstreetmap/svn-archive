@@ -96,5 +96,5 @@
 	
     <target name="test"/> 
 	<target name="checkstyle"/>
-	<target name="findbugs"/>
+	<target name="spotbugs"/>
 </project>

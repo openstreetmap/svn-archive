@@ -18,6 +18,7 @@ import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.IPrimitive;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.preferences.sources.ExtendedSourceEntry;
+import org.openstreetmap.josm.data.preferences.sources.SourceType;
 import org.openstreetmap.josm.io.AbstractReader;
 import org.openstreetmap.josm.plugins.opendata.core.OdConstants;
 import org.openstreetmap.josm.plugins.opendata.core.io.archive.ArchiveHandler;
@@ -401,7 +402,7 @@ public abstract class AbstractDataSetHandler {
     }
 
     protected final ExtendedSourceEntry getMapPaintStyle(String displayName, String fileNameWithoutExtension) {
-        return new ExtendedSourceEntry(displayName, OdConstants.PROTO_RSRC+//"/"+
+        return new ExtendedSourceEntry(SourceType.MAP_PAINT_STYLE, displayName, OdConstants.PROTO_RSRC+//"/"+
                 this.getClass().getPackage().getName().replace(".", "/")+"/"+
                 fileNameWithoutExtension+"."+OdConstants.MAPCSS_EXT);
     }

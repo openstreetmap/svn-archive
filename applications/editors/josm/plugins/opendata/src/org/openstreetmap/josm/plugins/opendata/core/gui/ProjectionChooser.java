@@ -15,7 +15,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import org.openstreetmap.josm.data.Bounds;
-import org.openstreetmap.josm.data.coor.CoordinateFormat;
+import org.openstreetmap.josm.data.coor.conversion.CoordinateFormatManager;
+import org.openstreetmap.josm.data.coor.conversion.ICoordinateFormat;
 import org.openstreetmap.josm.data.projection.Projection;
 import org.openstreetmap.josm.gui.ExtendedDialog;
 import org.openstreetmap.josm.gui.preferences.projection.ProjectionChoice;
@@ -130,9 +131,9 @@ public class ProjectionChooser extends ExtendedDialog {
         projectionCode.setText(proj.toCode());
         projectionName.setText(proj.toString());
         Bounds b = proj.getWorldBoundsLatLon();
-        CoordinateFormat cf = CoordinateFormat.getDefaultFormat();
-        bounds.setText(b.getMin().lonToString(cf)+", "+b.getMin().latToString(cf)+" : "+
-                       b.getMax().lonToString(cf)+", "+b.getMax().latToString(cf));
+        ICoordinateFormat cf = CoordinateFormatManager.getDefaultFormat();
+        bounds.setText(cf.lonToString(b.getMin())+", "+cf.latToString(b.getMin())+" : "+
+                       cf.lonToString(b.getMax())+", "+cf.latToString(b.getMax()));
         boolean showCode = true;
         boolean showName = false;
         if (pc instanceof SubPrefsOptions) {

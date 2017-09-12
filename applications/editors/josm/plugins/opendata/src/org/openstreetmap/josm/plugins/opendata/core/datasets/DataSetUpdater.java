@@ -60,7 +60,7 @@ public abstract class DataSetUpdater {
                 for (int i = 1; i < n; i++) {
                     atNodes.add(w.getNode((int) ((i / n) * w.getNodesCount())));
                 }
-                SplitWayResult res = SplitWayAction.split(null, w, atNodes, Collections.emptyList());
+                SplitWayResult res = SplitWayAction.split(w, atNodes, Collections.emptyList());
                 if (res != null) {
                     res.getCommand().executeCommand();
                 }

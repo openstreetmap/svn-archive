@@ -15,6 +15,7 @@ import javax.xml.bind.Unmarshaller;
 
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.layer.Layer;
+import org.openstreetmap.josm.gui.layer.LayerManager;
 import org.openstreetmap.josm.gui.layer.LayerManager.LayerAddEvent;
 import org.openstreetmap.josm.gui.layer.LayerManager.LayerChangeListener;
 import org.openstreetmap.josm.gui.layer.LayerManager.LayerOrderChangeEvent;
@@ -79,10 +80,13 @@ public class RoutesPlugin extends Plugin implements LayerChangeListener {
 	public void layerAdded(LayerAddEvent e) {
 		Layer layer = e.getAddedLayer();
 		if (layer instanceof OsmDataLayer) {
+			LayerManager lm = e.getSource();
 			for (RouteLayer routeLayer : routeLayers) {
-				if (!e.getSource().containsLayer(routeLayer)) {
+				if (!lm.containsLayer(routeLayer)) {
 					SwingUtilities.invokeLater(() -> {
-						e.getSource().addLayer(routeLayer);
+						if (!lm.containsLayer(routeLayer)) {
+							lm.addLayer(routeLayer);
+						}
 					});
 				}
 			}

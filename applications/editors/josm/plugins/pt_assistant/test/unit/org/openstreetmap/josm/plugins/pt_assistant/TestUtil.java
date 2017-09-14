@@ -13,6 +13,7 @@ import java.lang.reflect.Modifier;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.projection.Projections;
 import org.openstreetmap.josm.gui.preferences.ToolbarPreferences;
+import org.openstreetmap.josm.spi.preferences.Config;
 import org.openstreetmap.josm.tools.I18n;
 
 /**
@@ -42,6 +43,8 @@ public final class TestUtil {
       Main.determinePlatformHook();
       Main.platform.preStartupHook();
       Main.pref.init(false);
+      Config.setPreferencesInstance(Main.pref);
+      Config.setBaseDirectoriesProvider(Main.pref);
       I18n.set(Main.pref.get("language", "en"));
       Main.setProjection(Projections.getProjectionByCode("EPSG:3857")); // Mercator
       isInitialized = true;

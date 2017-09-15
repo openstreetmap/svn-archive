@@ -11,9 +11,8 @@ import java.util.stream.Collectors;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.SimplifyWayAction;
-import org.openstreetmap.josm.actions.SplitWayAction;
-import org.openstreetmap.josm.actions.SplitWayAction.SplitWayResult;
 import org.openstreetmap.josm.command.SequenceCommand;
+import org.openstreetmap.josm.command.SplitWayCommand;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
@@ -60,9 +59,9 @@ public abstract class DataSetUpdater {
                 for (int i = 1; i < n; i++) {
                     atNodes.add(w.getNode((int) ((i / n) * w.getNodesCount())));
                 }
-                SplitWayResult res = SplitWayAction.split(w, atNodes, Collections.emptyList());
+                SplitWayCommand res = SplitWayCommand.split(w, atNodes, Collections.emptyList());
                 if (res != null) {
-                    res.getCommand().executeCommand();
+                    res.executeCommand();
                 }
             }
             // Replace multipolygons with single untagged member by their sole member

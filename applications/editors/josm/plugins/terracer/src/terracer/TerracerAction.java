@@ -11,10 +11,12 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -29,6 +31,7 @@ import org.openstreetmap.josm.command.ChangePropertyCommand;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.DeleteCommand;
 import org.openstreetmap.josm.command.SequenceCommand;
+import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
@@ -59,12 +62,7 @@ import org.openstreetmap.josm.tools.UserCancelException;
  */
 public final class TerracerAction extends JosmAction {
 
-    // smsms1 asked for the last value to be remembered to make it easier to do
-    // repeated terraces. this is the easiest, but not necessarily nicest, way.
-    // private static String lastSelectedValue = "";
-
-    Collection<Command> commands;
-
+    private Collection<Command> commands;
     private Collection<OsmPrimitive> primitives;
     private TagCollection tagsInConflict;
 
@@ -346,6 +344,7 @@ public final class TerracerAction extends JosmAction {
 
         this.commands = new LinkedList<>();
         Collection<Way> ways = new LinkedList<>();
+        DataSet ds = getLayerManager().getEditDataSet();
 
         if (nb > 1) {
             // add required new nodes and build list of nodes to reuse
@@ -354,11 +353,11 @@ public final class TerracerAction extends JosmAction {
                 newNodes[0][i] = interpolateAlong(interp.a, frontLength * iDir / nb);
                 newNodes[1][i] = interpolateAlong(interp.b, backLength * iDir / nb);
                 if (!outline.containsNode(newNodes[0][i]))
-                    this.commands.add(new AddCommand(newNodes[0][i]));
+                    this.commands.add(new AddCommand(ds, newNodes[0][i]));
                 else
                     reusedNodes.add(newNodes[0][i]);
                 if (!outline.containsNode(newNodes[1][i]))
-                    this.commands.add(new AddCommand(newNodes[1][i]));
+                    this.commands.add(new AddCommand(ds, newNodes[1][i]));
                 else
                     reusedNodes.add(newNodes[1][i]);
             }
@@ -387,7 +386,7 @@ public final class TerracerAction extends JosmAction {
 
                 if (createNewWay) {
                     ways.add(terr);
-                    this.commands.add(new AddCommand(terr));
+                    this.commands.add(new AddCommand(ds, terr));
                 } else {
                     ways.add(outline);
                     this.commands.add(new ChangeCommand(outline, terr));
@@ -403,7 +402,7 @@ public final class TerracerAction extends JosmAction {
                         nodesToDelete.add(n);
                 }
                 if (!nodesToDelete.isEmpty())
-                    this.commands.add(DeleteCommand.delete(MainApplication.getLayerManager().getEditLayer(), nodesToDelete));
+                    this.commands.add(DeleteCommand.delete(nodesToDelete));
             }
         } else {
             // Single building, just add the address details
@@ -414,8 +413,7 @@ public final class TerracerAction extends JosmAction {
         // Remove the address nodes since their tags have been incorporated into the terraces.
         // Or should removing them also be an option?
         if (!housenumbers.isEmpty()) {
-            commands.add(DeleteCommand.delete(MainApplication.getLayerManager().getEditLayer(),
-                    housenumbers, true, true));
+            commands.add(DeleteCommand.delete(housenumbers, true, true));
         }
 
         if (handleRelations) { // create a new relation or merge with existing
@@ -461,7 +459,7 @@ public final class TerracerAction extends JosmAction {
         for (Way w : ways) {
             associatedStreet.addMember(new RelationMember("house", w));
         }
-        this.commands.add(new AddCommand(associatedStreet));
+        this.commands.add(new AddCommand(getLayerManager().getEditDataSet(), associatedStreet));
     }
 
     private Command createTerracingCommand(final Way outline) {
@@ -513,6 +511,7 @@ public final class TerracerAction extends JosmAction {
         Node houseNum = (housenumbers != null && i >= 0 && i < housenumbers.size()) ? housenumbers.get(i) : null;
         boolean buildingAdded = false;
         boolean numberAdded = false;
+        Map<String, String> tags = new HashMap<>();
         if (houseNum != null) {
             primitives = Arrays.asList(new OsmPrimitive[]{houseNum, outline});
 
@@ -521,25 +520,28 @@ public final class TerracerAction extends JosmAction {
             tagsToCopy = tagsToCopy.minus(tagsInConflict).minus(TagCollection.from(outline));
 
             for (Tag tag : tagsToCopy) {
-                this.commands.add(new ChangePropertyCommand(outline, tag.getKey(), tag.getValue()));
+                tags.put(tag.getKey(), tag.getValue());
             }
 
             buildingAdded = houseNum.hasKey("building");
             numberAdded = houseNum.hasKey("addr:housenumber");
         }
         if (!buildingAdded && buildingValue != null && !buildingValue.isEmpty()) {
-            this.commands.add(new ChangePropertyCommand(outline, "building", buildingValue));
+            tags.put("building", buildingValue);
         }
         if (defaultNumber != null && !numberAdded) {
-            this.commands.add(new ChangePropertyCommand(outline, "addr:housenumber", defaultNumber));
+            tags.put("addr:housenumber", defaultNumber);
         }
         // Only put addr:street if no relation exists or if it has no name
         if (associatedStreet == null || !associatedStreet.hasKey("name")) {
             if (street != null) {
-                this.commands.add(new ChangePropertyCommand(outline, "addr:street", street.get("name")));
+                tags.put("addr:street", street.get("name"));
             } else if (streetName != null && !streetName.trim().isEmpty()) {
-                this.commands.add(new ChangePropertyCommand(outline, "addr:street", streetName.trim()));
+                tags.put("addr:street", streetName.trim());
             }
+        }
+        if (!tags.isEmpty()) {
+            commands.add(new ChangePropertyCommand(getLayerManager().getEditDataSet(), Collections.singleton(outline), tags));
         }
     }
 

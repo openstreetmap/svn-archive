@@ -23,8 +23,8 @@ import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.data.tagging.ac.AutoCompletionItem;
 import org.openstreetmap.josm.gui.tagging.ac.AutoCompletingComboBox;
-import org.openstreetmap.josm.gui.tagging.ac.AutoCompletionListItem;
 import org.openstreetmap.josm.tools.Logging;
 import org.openstreetmap.josm.tools.UserCancelException;
 
@@ -390,8 +390,8 @@ public class HouseNumberInputHandler extends JosmAction implements ActionListene
             return null;
         } else {
             String name;
-            if (selected instanceof AutoCompletionListItem) {
-               name = ((AutoCompletionListItem) selected).getValue();
+            if (selected instanceof AutoCompletionItem) {
+               name = ((AutoCompletionItem) selected).getValue();
             } else {
                name = selected.toString();
             }

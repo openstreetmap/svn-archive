@@ -14,7 +14,6 @@ import javax.media.jai.OperationRegistry;
 import org.geotools.referencing.CRS;
 import org.opengis.referencing.FactoryException;
 import org.opengis.referencing.NoSuchAuthorityCodeException;
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
 import org.openstreetmap.josm.tools.Logging;
@@ -47,7 +46,7 @@ public class GeoToolsPlugin extends Plugin {
         // http://docs.oracle.com/cd/E17802_01/products/products/java-media/jai/forDevelopers/jai-apidocs/javax/media/jai/OperationRegistry.html
         OperationRegistry registry = JAI.getDefaultInstance().getOperationRegistry();
         if (registry == null) {
-            Main.error("geotools: error in JAI initialization. Cannot access default operation registry");
+            Logging.error("geotools: error in JAI initialization. Cannot access default operation registry");
         } else {
             // Update registry with com.sun.media.jai.imageioimpl.ImageReadWriteSpi (only class listed javax.media.jai.OperationRegistrySpi)
             // it would be safer to parse this file instead, but a JAI update is very unlikely as it has not been modified since 2005
@@ -55,18 +54,18 @@ public class GeoToolsPlugin extends Plugin {
                 new ImageReadWriteSpi().updateRegistry(registry);
             } catch (IllegalArgumentException e) {
                 // See #10652: IAE: A descriptor is already registered against the name "ImageRead" under registry mode "rendered"
-                Main.warn("geotools: error in JAI/ImageReadWriteSpi initialization: "+e.getMessage());
+                Logging.warn("geotools: error in JAI/ImageReadWriteSpi initialization: "+e.getMessage());
             }
 
             // Update registry with GeoTools registry file
             try (InputStream in = GeoToolsPlugin.class.getResourceAsStream("/META-INF/registryFile.jai")) {
                 if (in == null) {
-                    Main.error("geotools: error in JAI initialization. Cannot access META-INF/registryFile.jai");
+                    Logging.error("geotools: error in JAI initialization. Cannot access META-INF/registryFile.jai");
                 } else {
                     registry.updateFromStream(in);
                 }
             } catch (IOException | IllegalArgumentException e) {
-                Main.error("geotools: error in JAI/GeoTools initialization: "+e.getMessage());
+                Logging.error("geotools: error in JAI/GeoTools initialization: "+e.getMessage());
             }
         }
 
@@ -96,9 +95,9 @@ public class GeoToolsPlugin extends Plugin {
         try {
             CRS.decode("EPSG:4326");
         } catch (NoSuchAuthorityCodeException e) {
-            Main.error("geotools: error in EPSG database initialization. NoSuchAuthorityCodeException: "+e.getMessage());
+            Logging.error("geotools: error in EPSG database initialization. NoSuchAuthorityCodeException: "+e.getMessage());
         } catch (FactoryException e) {
-            Main.error("geotools: error in EPSG database initialization. FactoryException: "+e.getMessage());
+            Logging.error("geotools: error in EPSG database initialization. FactoryException: "+e.getMessage());
         }
     }
 }

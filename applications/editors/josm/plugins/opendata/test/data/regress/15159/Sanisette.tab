@@ -1,0 +1,17 @@
+!table
+!version 300
+!charset WindowsLatin1
+
+Definition Table
+  Type NATIVE Charset "WindowsLatin1"
+  Fields 10
+    numero Char (50) ;
+    type Char (50) ;
+    PMR Logical ;
+    adresse Char (50) ;
+    emplacement_valide Char (5) ;
+    INSEE Char (5) ;
+    X_CC43 Decimal (11, 3) ;
+    Y_CC43 Decimal (11, 3) ;
+    X_WGS84 Decimal (6, 3) ;
+    Y_WGS84 Decimal (6, 3) ;

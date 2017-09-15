@@ -32,7 +32,7 @@ public class MifTabImporter extends AbstractImporter {
             } else {
                 return TabReader.parseDataSet(in, file, handler, instance);
             }
-        } catch (IOException e) {
+        } catch (IOException | IllegalArgumentException e) {
             throw new IllegalDataException(e);
         }
     }

@@ -62,7 +62,7 @@ public final class OdPlugin extends Plugin {
         if (instance == null) {
             instance = this;
         } else {
-            throw new IllegalAccessError("Cannot instantiate plugin twice !");
+            throw new IllegalStateException("Cannot instantiate plugin twice !");
         }
         // Allow JOSM to import more files
         for (AbstractImporter importer : Arrays.asList(new AbstractImporter[]{

@@ -14,7 +14,6 @@ import java.util.List;
 
 import org.geotools.data.shapefile.dbf.DbaseFileReader;
 import org.geotools.data.shapefile.dbf.DbaseFileReader.Row;
-import org.geotools.data.shapefile.files.TabFiles;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.plugins.opendata.core.OdConstants;

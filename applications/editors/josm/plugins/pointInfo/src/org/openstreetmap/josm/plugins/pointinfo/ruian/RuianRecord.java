@@ -1109,7 +1109,7 @@ class RuianRecord {
         } else {
             node = new Node(new LatLon(m_coor_lat, m_coor_lon));
         }
-        commands.add(new AddCommand(node));
+        commands.add(new AddCommand(MainApplication.getLayerManager().getEditDataSet(), node));
 
         Collection<OsmPrimitive> coll = new LinkedList<>();
         coll.add(node);

@@ -2,7 +2,7 @@
 <project name="pointInfo" default="dist" basedir=".">
 
     <!-- enter the SVN commit message -->
-    <property name="commit.message" value="PointInfo: Replace depricated functions."/>
+    <property name="commit.message" value="PointInfo: Replace depricated AddCommand function."/>
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
     <property name="plugin.main.version" value="12666"/>
 

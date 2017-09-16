@@ -71,7 +71,7 @@ public final class ModuleHandler {
     static {
         try {
             sources.add(ClassLoader.getSystemClassLoader());
-            sources.add(org.openstreetmap.josm.gui.MainApplication.class.getClassLoader());
+            sources.add(ModuleHandler.class.getClassLoader());
         } catch (SecurityException ex) {
             sources.add(ImageProvider.class.getClassLoader());
         }
@@ -284,6 +284,7 @@ public final class ModuleHandler {
 
             ClassLoader moduleClassLoader = createClassLoader(toLoad);
             sources.add(0, moduleClassLoader);
+            ImageProvider.addAdditionalClassLoader(moduleClassLoader);
             monitor.setTicksCount(toLoad.size());
             for (ModuleInformation info : toLoad) {
                 monitor.setExtraText(tr("Loading module ''{0}''...", info.name));

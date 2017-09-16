@@ -16,7 +16,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
-import org.openstreetmap.josm.plugins.opendata.core.modules.ModuleHandler;
 import org.openstreetmap.josm.tools.ImageProvider;
 import org.openstreetmap.josm.tools.Utils;
 
@@ -67,7 +66,7 @@ public abstract class OdUtils {
     }
 
     public static final ImageProvider getImageProvider(String iconName, boolean optional) {
-        return new ImageProvider(iconName).setOptional(optional).setAdditionalClassLoaders(ModuleHandler.getResourceClassLoaders());
+        return new ImageProvider(iconName).setOptional(optional);
     }
 
     public static final String getJosmLanguage() {

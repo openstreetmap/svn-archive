@@ -45,6 +45,7 @@ import org.openstreetmap.josm.plugins.opendata.core.modules.Module;
 import org.openstreetmap.josm.plugins.opendata.core.modules.ModuleHandler;
 import org.openstreetmap.josm.plugins.opendata.core.modules.ModuleInformation;
 import org.openstreetmap.josm.plugins.opendata.core.util.OdUtils;
+import org.openstreetmap.josm.tools.ImageProvider;
 import org.openstreetmap.josm.tools.Pair;
 
 public final class OdPlugin extends Plugin {
@@ -59,6 +60,7 @@ public final class OdPlugin extends Plugin {
 
     public OdPlugin(PluginInformation info) {
         super(info);
+        ImageProvider.addAdditionalClassLoaders(ModuleHandler.getResourceClassLoaders());
         if (instance == null) {
             instance = this;
         } else {

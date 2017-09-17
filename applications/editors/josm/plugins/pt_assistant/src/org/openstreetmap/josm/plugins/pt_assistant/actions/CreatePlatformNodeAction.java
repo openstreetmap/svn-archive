@@ -17,6 +17,7 @@ import org.openstreetmap.josm.command.AddCommand;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.DeleteCommand;
 import org.openstreetmap.josm.command.SequenceCommand;
+import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.OsmPrimitiveType;
@@ -78,9 +79,10 @@ public class CreatePlatformNodeAction extends JosmAction {
 
         SortedSet<String> refs = new TreeSet<>();
 
-        MainApplication.undoRedo.add(new AddCommand(dummy1));
-        MainApplication.undoRedo.add(new AddCommand(dummy2));
-        MainApplication.undoRedo.add(new AddCommand(dummy3));
+        DataSet ds = getLayerManager().getEditDataSet();
+        MainApplication.undoRedo.add(new AddCommand(ds, dummy1));
+        MainApplication.undoRedo.add(new AddCommand(ds, dummy2));
+        MainApplication.undoRedo.add(new AddCommand(ds, dummy3));
 
         refs.addAll(populateMap(stopPositionNode));
         refs.addAll(populateMap(platformNode));

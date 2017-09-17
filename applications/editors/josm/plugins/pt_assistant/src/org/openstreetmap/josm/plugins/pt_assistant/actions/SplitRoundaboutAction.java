@@ -20,13 +20,12 @@ import javax.swing.JOptionPane;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.AlignInCircleAction;
 import org.openstreetmap.josm.actions.JosmAction;
-import org.openstreetmap.josm.actions.SplitWayAction;
-import org.openstreetmap.josm.actions.SplitWayAction.SplitWayResult;
 import org.openstreetmap.josm.actions.downloadtasks.DownloadOsmTask;
 import org.openstreetmap.josm.actions.relation.DownloadSelectedIncompleteMembersAction;
 import org.openstreetmap.josm.command.ChangeCommand;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.SequenceCommand;
+import org.openstreetmap.josm.command.SplitWayCommand;
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.osm.BBox;
 import org.openstreetmap.josm.data.osm.Node;
@@ -110,9 +109,9 @@ public class SplitRoundaboutAction extends JosmAction {
 
         //split the roundabout on the designed nodes
         List<Node> splitNodes = getSplitNodes(roundabout);
-        SplitWayResult result = SplitWayAction.split(getLayerManager().getEditLayer(),
+        SplitWayCommand result = SplitWayCommand.split(
                 roundabout, splitNodes, Collections.emptyList());
-        MainApplication.undoRedo.add(result.getCommand());
+        MainApplication.undoRedo.add(result);
         Collection<Way> splitWays = result.getNewWays();
         splitWays.add(result.getOriginalWay());
 

@@ -16,13 +16,12 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import org.openstreetmap.josm.actions.JoinNodeWayAction;
-import org.openstreetmap.josm.actions.SplitWayAction;
-import org.openstreetmap.josm.actions.SplitWayAction.SplitWayResult;
 import org.openstreetmap.josm.actions.mapmode.MapMode;
 import org.openstreetmap.josm.command.AddCommand;
 import org.openstreetmap.josm.command.ChangeCommand;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.SequenceCommand;
+import org.openstreetmap.josm.command.SplitWayCommand;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.OsmPrimitiveType;
@@ -135,7 +134,7 @@ public class AddStopPositionAction extends MapMode {
         newStopPos.put("public_transport", "stop_position");
 
         if (newNode) {
-            MainApplication.undoRedo.add(new AddCommand(newStopPos));
+            MainApplication.undoRedo.add(new AddCommand(getLayerManager().getEditDataSet(), newStopPos));
         } else {
             MainApplication.undoRedo.add(new ChangeCommand(n, newStopPos));
             newStopPos = n;
@@ -158,11 +157,11 @@ public class AddStopPositionAction extends MapMode {
         if (needPostProcess.isEmpty())
             return;
 
-        SplitWayResult result = SplitWayAction.split(getLayerManager().getEditLayer(),
+        SplitWayCommand result = SplitWayCommand.split(
                 affected, Collections.singletonList(newStopPos), Collections.emptyList());
         if (result == null) //if the way is already split, return
             return;
-        MainApplication.undoRedo.add(result.getCommand());
+        MainApplication.undoRedo.add(result);
 
         List<Command> cmds = new ArrayList<>();
         for (Entry<Relation, Boolean> route : needPostProcess.entrySet()) {

@@ -515,13 +515,8 @@ public class PTAssistantValidatorTest extends Test {
             for (Object obj : testError.getPrimitives()) {
                 primitivesToSelect.add((OsmPrimitive) obj);
             }
-            SelectCommand selectCommand = new SelectCommand(primitivesToSelect);
-            SwingUtilities.invokeLater(new Runnable() {
-                @Override
-                public void run() {
-                    selectCommand.executeCommand();
-                }
-            });
+            SelectCommand selectCommand = new SelectCommand(Main.main.getEditDataSet(), primitivesToSelect);
+            SwingUtilities.invokeLater(() -> selectCommand.executeCommand());
         }
 
         if (commands.isEmpty()) {

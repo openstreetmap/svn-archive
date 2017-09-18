@@ -3,9 +3,7 @@ package org.wikipedia.gui;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.GridBagLayout;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
@@ -35,6 +33,7 @@ import org.openstreetmap.josm.gui.util.GuiHelper;
 import org.openstreetmap.josm.gui.widgets.JosmTextArea;
 import org.openstreetmap.josm.tools.GBC;
 import org.openstreetmap.josm.tools.ImageProvider;
+import org.openstreetmap.josm.tools.OpenBrowser;
 import org.wikipedia.io.WikosmDownloadReader;
 
 /**
@@ -75,6 +74,7 @@ public class WikosmDownloadSource implements DownloadSource<WikosmDownloadSource
      */
     public static class WikosmDownloadSourcePanel extends AbstractDownloadSourcePanel<WikosmDownloadData> {
 
+        private static final String HELP_PAGE = "https://wiki.openstreetmap.org/wiki/Wikidata%2BOSM_SPARQL_query_service";
         private static final String SIMPLE_NAME = "wikosmdownloadpanel";
         private static final AbstractProperty<Integer> PANEL_SIZE_PROPERTY =
                 new IntegerProperty(TAB_SPLIT_NAMESPACE + SIMPLE_NAME, 150).cached();
@@ -95,12 +95,19 @@ public class WikosmDownloadSource implements DownloadSource<WikosmDownloadSource
             super(ds);
             setLayout(new BorderLayout());
 
-            // CHECKSTYLE.OFF: LineLength
-            this.wikosmQuery = new JosmTextArea(
-                    "# " + tr("Enter your Wikosm SPARQL query below") + "\n"
-                            + "SELECT ?osmId ?loc WHERE { BIND(osmnode:2681940767 as ?osmId). ?osmId osmm:loc ?loc . }",
-                    8, 80);
-            // CHECKSTYLE.ON: LineLength
+            String queryText = "# " +
+                    tr("Find places of education at least 2km, and at most 3km from the center of the selection") +
+                    "\n" +
+                    "SELECT ?osmid WHERE {\n" +
+                    "  VALUES ?amenity { \"kindergarten\" \"school\" \"university\" \"college\" }\n" +
+                    "  ?osmid osmt:amenity ?amenity ;\n" +
+                    "         osmm:loc ?location .\n" +
+                    "  BIND(geof:distance({{center}}, ?location) as ?distance)\n" +
+                    "  FILTER(?distance > 2 && ?distance < 3)\n" +
+                    "}";
+
+            this.wikosmQuery = new JosmTextArea(queryText, 8, 80);
+
             this.wikosmQuery.setFont(GuiHelper.getMonospacedFont(wikosmQuery));
             this.wikosmQuery.addFocusListener(new FocusListener() {
                 @Override
@@ -148,15 +155,13 @@ public class WikosmDownloadSource implements DownloadSource<WikosmDownloadSource
                 }
             });
 
-
-            referrers = new JCheckBox(tr("Download referrers (parent relations)"));
-            referrers.setToolTipText(tr("Select if the referrers of the object should be downloaded as well, i.e.,"
-                    + "parent relations and for nodes, additionally, parent ways"));
-
             // TODO: Once new core is widely avialable, replace:
             //   Main.pref.getBoolean --> Config.getPref().getBoolean
             //   Main.pref.put --> Config.getPref().putBoolean
 
+            referrers = new JCheckBox(tr("Download referrers (parent relations)"));
+            referrers.setToolTipText(tr("Select if the referrers of the object should be downloaded as well, i.e.,"
+                    + "parent relations and for nodes, additionally, parent ways"));
             referrers.setSelected(Main.pref.getBoolean("wikosm.downloadprimitive.referrers", true));
             referrers.addActionListener(e -> Main.pref.put("wikosm.downloadprimitive.referrers", referrers.isSelected()));
 
@@ -165,10 +170,21 @@ public class WikosmDownloadSource implements DownloadSource<WikosmDownloadSource
             fullRel.setSelected(Main.pref.getBoolean("wikosm.downloadprimitive.full", true));
             fullRel.addActionListener(e -> Main.pref.put("wikosm.downloadprimitive.full", fullRel.isSelected()));
 
+            // https://stackoverflow.com/questions/527719/how-to-add-hyperlink-in-jlabel
+            JButton helpLink = new JButton();
+            helpLink.setText("<HTML><FONT color=\"#000099\"><U>"+tr("help")+"</U></FONT></HTML>");
+            helpLink.setToolTipText(HELP_PAGE);
+            helpLink.setHorizontalAlignment(SwingConstants.LEFT);
+            helpLink.setBorderPainted(false);
+            helpLink.setOpaque(false);
+            helpLink.setBackground(Color.WHITE);
+            helpLink.addActionListener(e -> OpenBrowser.displayUrl(HELP_PAGE));
+
             JPanel centerPanel = new JPanel(new GridBagLayout());
             centerPanel.add(scrollPane, GBC.eol().fill(GBC.BOTH));
             centerPanel.add(referrers, GBC.std().anchor(GBC.WEST).insets(5, 5, 5, 5));
             centerPanel.add(fullRel, GBC.std().anchor(GBC.WEST).insets(15, 5, 5, 5));
+            centerPanel.add(helpLink, GBC.std().anchor(GBC.WEST).insets(10, 5, 5, 5));
 
 
             JPanel innerPanel = new JPanel(new BorderLayout());

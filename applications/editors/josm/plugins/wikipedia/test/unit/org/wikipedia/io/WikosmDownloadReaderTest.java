@@ -16,6 +16,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -32,7 +33,19 @@ public class WikosmDownloadReaderTest {
     public JOSMTestRules test = new JOSMTestRules().preferences();
 
     /**
-     * Tests evaluating the extended query feature {@code date}.
+     * Tests point generation
+     */
+    @Test
+    public void testPoint() throws UnsupportedEncodingException {
+        assertThat(WikosmDownloadReader.point(9.5, 47.16),
+                is("\"Point(9.5 47.16)\"^^geo:wktLiteral"));
+        assertThat(WikosmDownloadReader.boxParams(1, 2, 3, 4),
+                is("\nbd:serviceParam wikibase:cornerWest \"Point(1 2)\"^^geo:wktLiteral." +
+                        "\nbd:serviceParam wikibase:cornerEast \"Point(3 4)\"^^geo:wktLiteral.\n"));
+    }
+
+    /**
+     * Tests server response parsing
      */
     @Test
     public void testIdParsing() throws UnsupportedEncodingException {

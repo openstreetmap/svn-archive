@@ -87,23 +87,23 @@ public class WikosmDownloadReader extends BoundingBoxDownloader {
     @Override
     protected String getRequestForBbox(double lon1, double lat1, double lon2, double lat2) {
         final String query = this.wikosmQuery
-                .replace("{{boxParams}}", bbox(lon1, lat1, lon2, lat2))
+                .replace("{{boxParams}}", boxParams(lon1, lat1, lon2, lat2))
                 .replace("{{center}}", center(lon1, lat1, lon2, lat2));
         return DATA_PREFIX + Utils.encodeUrl(query);
     }
 
-    private static String bbox(double lon1, double lat1, double lon2, double lat2) {
-        return "\nbd:serviceParam wikibase:cornerWest " + point(lon1, lat1) + "." +
+    public static String boxParams(double lon1, double lat1, double lon2, double lat2) {
+        return "\nbd:serviceParam wikibase:cornerWest " + point(lon1, lat1) + ".\n" +
                 "bd:serviceParam wikibase:cornerEast " + point(lon2, lat2) + ".\n";
     }
 
-    private static String center(double lon1, double lat1, double lon2, double lat2) {
+    public static String center(double lon1, double lat1, double lon2, double lat2) {
         LatLon c = new BBox(lon1, lat1, lon2, lat2).getCenter();
         return point(c.lon(), c.lat());
     }
 
-    private static String point(double lon, double lat) {
-        return "Point(\"" + lon + " " + lat + "\")^^geo:wktLiteral";
+    public static String point(double lon, double lat) {
+        return "\"Point(" + lon + " " + lat + ")\"^^geo:wktLiteral";
     }
 
     static String date(String humanDuration, LocalDateTime from) {
@@ -265,7 +265,7 @@ public class WikosmDownloadReader extends BoundingBoxDownloader {
         DataSet ds = super.parseOsm(progressMonitor);
 
         // add bounds if necessary (note that Wikosm API does not return bounds in the response XML)
-        if (ds != null && ds.getDataSources().isEmpty() && wikosmQuery.contains("{{bbox}}")) {
+        if (ds != null && ds.getDataSources().isEmpty() && wikosmQuery.contains("{{boxParams}}")) {
             if (crosses180th) {
                 Bounds bounds = new Bounds(lat1, lon1, lat2, 180.0);
                 DataSource src = new DataSource(bounds, getBaseUrl());

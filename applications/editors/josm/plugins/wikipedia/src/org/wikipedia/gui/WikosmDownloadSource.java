@@ -220,7 +220,10 @@ public class WikosmDownloadSource implements DownloadSource<WikosmDownloadSource
              * Absence of the selected area can be justified only if the Wikosm query
              * is not restricted to bbox.
              */
-            if (!settings.getDownloadBounds().isPresent() && query.contains("{{bbox}}")) {
+            if (!settings.getDownloadBounds().isPresent() && (
+                    query.contains("{{boxParams}}") ||
+                    query.contains("{{center}}")
+            )) {
                 JOptionPane.showMessageDialog(
                         this.getParent(),
                         tr("Please select a download area first."),

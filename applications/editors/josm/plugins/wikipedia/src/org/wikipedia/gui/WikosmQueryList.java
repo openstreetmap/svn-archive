@@ -48,7 +48,6 @@ import org.openstreetmap.josm.gui.widgets.AbstractTextComponentValidator;
 import org.openstreetmap.josm.gui.widgets.DefaultTextComponentValidator;
 import org.openstreetmap.josm.gui.widgets.JosmTextArea;
 import org.openstreetmap.josm.gui.widgets.SearchTextResultListPanel;
-import org.openstreetmap.josm.spi.preferences.Config;
 import org.openstreetmap.josm.tools.GBC;
 import org.openstreetmap.josm.tools.Logging;
 import org.openstreetmap.josm.tools.Utils;
@@ -253,7 +252,8 @@ public final class WikosmQueryList extends SearchTextResultListPanel<WikosmQuery
             toSave.add(it);
         }
 
-        Config.getPref().putListOfMaps(PREFERENCE_ITEMS, toSave);
+        // TODO: Core dependency:  Config.getPref().putListOfMaps(PREFERENCE_ITEMS, toSave);
+        Main.pref.putListOfStructs(PREFERENCE_ITEMS, toSave);
     }
 
     /**
@@ -261,8 +261,9 @@ public final class WikosmQueryList extends SearchTextResultListPanel<WikosmQuery
      * @return A set of the user saved items.
      */
     private static Map<String, SelectorItem> restorePreferences() {
+        // TODO: Core dependency:  Config.getPref().getListOfMaps(PREFERENCE_ITEMS, Collections.emptyList());
         Collection<Map<String, String>> toRetrieve =
-                Config.getPref().getListOfMaps(PREFERENCE_ITEMS, Collections.emptyList());
+                Main.pref.getListOfStructs(PREFERENCE_ITEMS, Collections.emptyList());
         Map<String, SelectorItem> result = new HashMap<>();
 
         for (Map<String, String> entry : toRetrieve) {

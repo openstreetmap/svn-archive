@@ -18,6 +18,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.plaf.basic.BasicArrowButton;
 
+import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.downloadtasks.DownloadOsmTask;
 import org.openstreetmap.josm.actions.downloadtasks.PostDownloadHandler;
 import org.openstreetmap.josm.data.Bounds;
@@ -32,7 +33,6 @@ import org.openstreetmap.josm.gui.download.DownloadSourceSizingPolicy;
 import org.openstreetmap.josm.gui.download.DownloadSourceSizingPolicy.AdjustableDownloadSizePolicy;
 import org.openstreetmap.josm.gui.util.GuiHelper;
 import org.openstreetmap.josm.gui.widgets.JosmTextArea;
-import org.openstreetmap.josm.spi.preferences.Config;
 import org.openstreetmap.josm.tools.GBC;
 import org.openstreetmap.josm.tools.ImageProvider;
 import org.wikipedia.io.WikosmDownloadReader;
@@ -152,13 +152,18 @@ public class WikosmDownloadSource implements DownloadSource<WikosmDownloadSource
             referrers = new JCheckBox(tr("Download referrers (parent relations)"));
             referrers.setToolTipText(tr("Select if the referrers of the object should be downloaded as well, i.e.,"
                     + "parent relations and for nodes, additionally, parent ways"));
-            referrers.setSelected(Config.getPref().getBoolean("wikosm.downloadprimitive.referrers", true));
-            referrers.addActionListener(e -> Config.getPref().putBoolean("wikosm.downloadprimitive.referrers", referrers.isSelected()));
+
+            // TODO: Once new core is widely avialable, replace:
+            //   Main.pref.getBoolean --> Config.getPref().getBoolean
+            //   Main.pref.put --> Config.getPref().putBoolean
+
+            referrers.setSelected(Main.pref.getBoolean("wikosm.downloadprimitive.referrers", true));
+            referrers.addActionListener(e -> Main.pref.put("wikosm.downloadprimitive.referrers", referrers.isSelected()));
 
             fullRel = new JCheckBox(tr("Download relation members"));
             fullRel.setToolTipText(tr("Select if the members of a relation should be downloaded as well"));
-            fullRel.setSelected(Config.getPref().getBoolean("wikosm.downloadprimitive.full", true));
-            fullRel.addActionListener(e -> Config.getPref().putBoolean("wikosm.downloadprimitive.full", fullRel.isSelected()));
+            fullRel.setSelected(Main.pref.getBoolean("wikosm.downloadprimitive.full", true));
+            fullRel.addActionListener(e -> Main.pref.put("wikosm.downloadprimitive.full", fullRel.isSelected()));
 
             JPanel centerPanel = new JPanel(new GridBagLayout());
             centerPanel.add(scrollPane, GBC.eol().fill(GBC.BOTH));

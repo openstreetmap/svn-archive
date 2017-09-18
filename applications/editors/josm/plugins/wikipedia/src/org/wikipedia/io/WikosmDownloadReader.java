@@ -6,7 +6,7 @@ import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.DataSource;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.*;
-import org.openstreetmap.josm.data.preferences.ListProperty;
+import org.openstreetmap.josm.data.preferences.CollectionProperty;
 import org.openstreetmap.josm.data.preferences.StringProperty;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.io.*;
@@ -47,7 +47,10 @@ public class WikosmDownloadReader extends BoundingBoxDownloader {
     /**
      * Property for list of known Wikosm servers.
      */
-    public static final ListProperty WIKOSM_SERVER_HISTORY = new ListProperty("download.wikosm.servers",
+// TODO: Core dependency:
+//    public static final ListProperty WIKOSM_SERVER_HISTORY = new ListProperty("download.wikosm.servers",
+//            Arrays.asList("http://88.99.164.208/bigdata/namespace/wdq/sparql"));
+    public static final CollectionProperty WIKOSM_SERVER_HISTORY = new CollectionProperty("download.wikosm.servers",
             Arrays.asList("http://88.99.164.208/bigdata/namespace/wdq/sparql"));
 
     private static final String DATA_PREFIX = "?query=";

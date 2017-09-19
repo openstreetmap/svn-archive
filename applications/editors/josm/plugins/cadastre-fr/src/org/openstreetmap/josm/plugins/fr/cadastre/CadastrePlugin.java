@@ -37,6 +37,18 @@ import org.openstreetmap.josm.gui.preferences.projection.ProjectionPreference;
 import org.openstreetmap.josm.gui.util.GuiHelper;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
+import org.openstreetmap.josm.plugins.fr.cadastre.actions.MenuActionGrab;
+import org.openstreetmap.josm.plugins.fr.cadastre.actions.MenuActionGrabPlanImage;
+import org.openstreetmap.josm.plugins.fr.cadastre.actions.MenuActionLoadFromCache;
+import org.openstreetmap.josm.plugins.fr.cadastre.actions.MenuActionNewLocation;
+import org.openstreetmap.josm.plugins.fr.cadastre.actions.MenuActionOpenPreferences;
+import org.openstreetmap.josm.plugins.fr.cadastre.actions.mapmode.Address;
+import org.openstreetmap.josm.plugins.fr.cadastre.actions.mapmode.WMSAdjustAction;
+import org.openstreetmap.josm.plugins.fr.cadastre.actions.upload.CheckSourceUploadHook;
+import org.openstreetmap.josm.plugins.fr.cadastre.preferences.CadastrePreferenceSetting;
+import org.openstreetmap.josm.plugins.fr.cadastre.session.CadastreSessionExporter;
+import org.openstreetmap.josm.plugins.fr.cadastre.session.CadastreSessionImporter;
+import org.openstreetmap.josm.plugins.fr.cadastre.wms.WMSLayer;
 
 /**
  * Plugin to access the French Cadastre WMS server at <a href="https://www.cadastre.gouv.fr">

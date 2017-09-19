@@ -38,9 +38,9 @@ public class WikosmDownloadReaderTest {
     public void testPoint() throws UnsupportedEncodingException {
         assertThat(WikosmDownloadReader.point(9.5, 47.16),
                 is("\"Point(9.5 47.16)\"^^geo:wktLiteral"));
-        assertThat(WikosmDownloadReader.boxParams(1, 2, 3, 4),
-                is("\nbd:serviceParam wikibase:cornerWest \"Point(1 2)\"^^geo:wktLiteral." +
-                        "\nbd:serviceParam wikibase:cornerEast \"Point(3 4)\"^^geo:wktLiteral.\n"));
+        assertThat(WikosmDownloadReader.boxParams(1.1, 2.2, 3.3, 4.4),
+                is("\nbd:serviceParam wikibase:cornerWest \"Point(1.1 2.2)\"^^geo:wktLiteral." +
+                        "\nbd:serviceParam wikibase:cornerEast \"Point(3.3 4.4)\"^^geo:wktLiteral.\n"));
     }
 
     /**

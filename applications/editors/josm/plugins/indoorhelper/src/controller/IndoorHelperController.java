@@ -23,6 +23,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -33,8 +34,6 @@ import javax.swing.JOptionPane;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.ValidateAction;
 import org.openstreetmap.josm.data.osm.Tag;
-import org.openstreetmap.josm.data.preferences.MapListSetting;
-import org.openstreetmap.josm.data.preferences.Setting;
 import org.openstreetmap.josm.data.validation.OsmValidator;
 import org.openstreetmap.josm.data.validation.tests.MapCSSTagChecker;
 import org.openstreetmap.josm.gui.dialogs.FilterDialog;
@@ -394,21 +393,11 @@ public class IndoorHelperController {
      * @param enabled Activates or disables the settings.
      */
     private void setPluginPreferences(boolean enabled) {
-        Map<String, Setting<?>> settings = Main.pref.getAllSettings();
-
-        MapListSetting validatorMapListSetting = (MapListSetting) settings.
-                get("validator.org.openstreetmap.josm.data.validation.tests.MapCSSTagChecker.entries");
-        List<Map<String, String>> validatorMaps = new ArrayList<>();
-        if (validatorMapListSetting != null) {
-            validatorMaps = validatorMapListSetting.getValue();
-        }
-
-        MapListSetting styleMapListSetting = (MapListSetting) settings.
-                get("mappaint.style.entries");
-        List<Map<String, String>> styleMaps = new ArrayList<>();
-        if (styleMapListSetting != null) {
-            styleMaps = styleMapListSetting.getValue();
-        }
+        Collection<Map<String, String>> validatorMaps = 
+                Main.pref.getListOfStructs("validator.org.openstreetmap.josm.data.validation.tests.MapCSSTagChecker.entries",
+                new ArrayList<>());
+        Collection<Map<String, String>> styleMaps = 
+                Main.pref.getListOfStructs("mappaint.style.entries", new ArrayList<>());
 
         if (enabled) {
             //set the validator active

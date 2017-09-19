@@ -27,7 +27,7 @@ public class WikipediaPlugin extends Plugin {
         MainMenu.add(dataMenu, new FetchWikidataAction());
         MainMenu.add(dataMenu, new WikidataItemSearchDialog.Action());
 
-        DownloadDialog.getInstance().addDownloadSource(new WikosmDownloadSource());
+        DownloadDialog.addDownloadSource(new WikosmDownloadSource());
     }
 
     @Override

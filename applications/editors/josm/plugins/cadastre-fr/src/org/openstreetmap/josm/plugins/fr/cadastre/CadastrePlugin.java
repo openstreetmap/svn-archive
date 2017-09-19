@@ -27,6 +27,7 @@ import org.openstreetmap.josm.actions.UploadAction;
 import org.openstreetmap.josm.data.projection.AbstractProjection;
 import org.openstreetmap.josm.data.projection.Projection;
 import org.openstreetmap.josm.gui.IconToggleButton;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MainMenu;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.gui.layer.Layer;
@@ -49,6 +50,7 @@ import org.openstreetmap.josm.plugins.fr.cadastre.preferences.CadastrePreference
 import org.openstreetmap.josm.plugins.fr.cadastre.session.CadastreSessionExporter;
 import org.openstreetmap.josm.plugins.fr.cadastre.session.CadastreSessionImporter;
 import org.openstreetmap.josm.plugins.fr.cadastre.wms.WMSLayer;
+import org.openstreetmap.josm.tools.Logging;
 
 /**
  * Plugin to access the French Cadastre WMS server at <a href="https://www.cadastre.gouv.fr">
@@ -212,7 +214,7 @@ public class CadastrePlugin extends Plugin {
      */
     public CadastrePlugin(PluginInformation info) {
         super(info);
-        Main.info("Pluging cadastre-fr v"+VERSION+" started...");
+        Logging.info("Pluging cadastre-fr v"+VERSION+" started...");
         initCacheDir();
 
         refreshConfiguration();
@@ -225,17 +227,17 @@ public class CadastrePlugin extends Plugin {
 
     private static void initCacheDir() {
         if (Main.pref.get("cadastrewms.cacheDir").isEmpty()) {
-            cacheDir = new File(Main.pref.getCacheDirectory(), "cadastrewms").getAbsolutePath();
+            cacheDir = new File(Main.pref.getCacheDirectory(true), "cadastrewms").getAbsolutePath();
         } else {
             cacheDir = Main.pref.get("cadastrewms.cacheDir");
         }
         if (cacheDir.charAt(cacheDir.length()-1) != File.separatorChar)
             cacheDir += File.separatorChar;
-        Main.info("current cache directory: "+cacheDir);
+        Logging.info("current cache directory: "+cacheDir);
     }
 
     public static void refreshMenu() {
-        MainMenu menu = Main.main.menu;
+        MainMenu menu = MainApplication.getMenu();
 
         if (cadastreJMenu == null) {
             cadastreJMenu = menu.addMenu("Cadastre", tr("Cadastre"), KeyEvent.VK_C, menu.getDefaultMenuPos(), ht("/Plugin/CadastreFr"));
@@ -252,7 +254,7 @@ public class CadastrePlugin extends Plugin {
             menuSource.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent ev) {
-                    Main.pref.put("cadastrewms.autosourcing", menuSource.isSelected());
+                    Main.pref.putBoolean("cadastrewms.autosourcing", menuSource.isSelected());
                     autoSourcing = menuSource.isSelected();
                 }
             });
@@ -359,8 +361,8 @@ public class CadastrePlugin extends Plugin {
         } else {
             JOptionPane.showMessageDialog(Main.parent, tr("Please enable at least two WMS layers in the cadastre-fr "
                     + "plugin configuration.\nLayers ''Building'' and ''Parcel'' added by default."));
-            Main.pref.put("cadastrewms.layerBuilding", true);
-            Main.pref.put("cadastrewms.layerParcel", true);
+            Main.pref.putBoolean("cadastrewms.layerBuilding", true);
+            Main.pref.putBoolean("cadastrewms.layerParcel", true);
             grabLayers += LAYER_BULDINGS + "," + LAYER_PARCELS;
             grabStyles += STYLE_BUILDING + "," + STYLE_PARCELS;
         }
@@ -390,8 +392,8 @@ public class CadastrePlugin extends Plugin {
         if (cadastreJMenu != null) {
             if (oldFrame == null && newFrame != null) {
                 setEnabledAll(true);
-                Main.map.addMapMode(new IconToggleButton(new WMSAdjustAction()));
-                Main.map.addMapMode(new IconToggleButton(new Address()));
+                MainApplication.getMap().addMapMode(new IconToggleButton(new WMSAdjustAction()));
+                MainApplication.getMap().addMapMode(new IconToggleButton(new Address()));
             } else if (oldFrame != null && newFrame == null) {
                 setEnabledAll(false);
                 //Lambert.layoutZone = -1;
@@ -449,7 +451,7 @@ public class CadastrePlugin extends Plugin {
         try {
             Thread.sleep(milliseconds);
         } catch (InterruptedException e) {
-            Main.debug(e);
+            Logging.debug(e);
         }
     }
 
@@ -460,7 +462,7 @@ public class CadastrePlugin extends Plugin {
             try {
                 dialog.setAlwaysOnTop(true);
             } catch (SecurityException e) {
-                Main.warn(tr("Warning: failed to put option pane dialog always on top. Exception was: {0}", e.toString()));
+                Logging.warn(tr("Warning: failed to put option pane dialog always on top. Exception was: {0}", e.toString()));
             }
         }
         dialog.setModal(true);
@@ -475,17 +477,17 @@ public class CadastrePlugin extends Plugin {
      * @param wmsLayer the wmsLayer to add
      */
     public static void addWMSLayer(WMSLayer wmsLayer) {
-        if (Main.map != null && Main.map.mapView != null) {
-            int wmsNewLayerPos = Main.getLayerManager().getLayers().size();
-            for (Layer l : Main.getLayerManager().getLayersOfType(WMSLayer.class)) {
-                int wmsPos = Main.getLayerManager().getLayers().indexOf(l);
+        if (MainApplication.isDisplayingMapView()) {
+            int wmsNewLayerPos = MainApplication.getLayerManager().getLayers().size();
+            for (Layer l : MainApplication.getLayerManager().getLayersOfType(WMSLayer.class)) {
+                int wmsPos = MainApplication.getLayerManager().getLayers().indexOf(l);
                 if (wmsPos < wmsNewLayerPos) wmsNewLayerPos = wmsPos;
             }
-            Main.getLayerManager().addLayer(wmsLayer);
+            MainApplication.getLayerManager().addLayer(wmsLayer);
             // Move the layer to its new position
-            Main.map.mapView.moveLayer(wmsLayer, wmsNewLayerPos);
+            MainApplication.getMap().mapView.moveLayer(wmsLayer, wmsNewLayerPos);
         } else
-            Main.getLayerManager().addLayer(wmsLayer);
+            MainApplication.getLayerManager().addLayer(wmsLayer);
     }
 
     private static String checkSourceMillesime() {
@@ -498,10 +500,10 @@ public class CadastrePlugin extends Plugin {
         try {
             year = Integer.decode(srcYear);
         } catch (NumberFormatException e) {
-            Main.debug(e);
+            Logging.debug(e);
         }
         if (srcYear.equals("AAAA") || (year != null && year < currentYear)) {
-            Main.info("Replace source year "+srcYear+" by current year "+currentYear);
+            Logging.info("Replace source year "+srcYear+" by current year "+currentYear);
             src = src.substring(0, src.lastIndexOf(" ")+1)+currentYear;
             Main.pref.put("cadastrewms.source", src);
         }

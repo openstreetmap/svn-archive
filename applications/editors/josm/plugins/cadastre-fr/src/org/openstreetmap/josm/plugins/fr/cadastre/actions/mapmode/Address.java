@@ -55,9 +55,11 @@ import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.data.osm.WaySegment;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.tools.GBC;
 import org.openstreetmap.josm.tools.ImageProvider;
+import org.openstreetmap.josm.tools.Logging;
 import org.openstreetmap.josm.tools.Pair;
 import org.openstreetmap.josm.tools.Shortcut;
 
@@ -107,13 +109,13 @@ public class Address extends MapMode {
             createDialog();
         }
         dialog.setVisible(true);
-        Main.map.mapView.addMouseListener(this);
+        MainApplication.getMap().mapView.addMouseListener(this);
     }
 
     @Override public void exitMode() {
-        if (Main.map.mapView != null) {
+        if (MainApplication.getMap().mapView != null) {
             super.exitMode();
-            Main.map.mapView.removeMouseListener(this);
+            MainApplication.getMap().mapView.removeMouseListener(this);
         }
         // kill the window completely to fix an issue on some linux distro and full screen mode.
         if (dialog != null) {
@@ -128,7 +130,7 @@ public class Address extends MapMode {
             return;
         shift = (e.getModifiers() & ActionEvent.SHIFT_MASK) != 0;
         ctrl = (e.getModifiers() & ActionEvent.CTRL_MASK) != 0;
-        MapView mv = Main.map.mapView;
+        MapView mv = MainApplication.getMap().mapView;
         Point mousePos = e.getPoint();
         List<Way> mouseOnExistingWays = new ArrayList<>();
         List<Way> mouseOnExistingBuildingWays = new ArrayList<>();
@@ -154,8 +156,8 @@ public class Address extends MapMode {
                         Integer.parseInt(num);
                         inputNumber.setText(num);
                         applyInputNumberChange();
-                    } catch (NumberFormatException en) {
-                        Main.warn("Unable to parse house number \"" + num + "\"");
+                    } catch (NumberFormatException ex) {
+                        Logging.warn("Unable to parse house number \"" + num + "\"");
                     }
                 }
                 if (currentMouseNode.get(tagHouseStreet) != null) {
@@ -247,8 +249,8 @@ public class Address extends MapMode {
         if (shift) {
             try {
                 revertInputNumberChange();
-            } catch (NumberFormatException en) {
-                Main.warn("Unable to parse house number \"" + inputNumber.getText() + "\"");
+            } catch (NumberFormatException ex) {
+                Logging.warn("Unable to parse house number \"" + inputNumber.getText() + "\"");
             }
         }
         cmds.add(new ChangePropertyCommand(osm, tagHouseNumber, inputNumber.getText()));
@@ -258,8 +260,8 @@ public class Address extends MapMode {
             Command c = new SequenceCommand("Add node address", cmds);
             Main.main.undoRedo.add(c);
             setNewSelection(osm);
-        } catch (NumberFormatException en) {
-            Main.warn("Unable to parse house number \"" + inputNumber.getText() + "\"");
+        } catch (NumberFormatException ex) {
+            Logging.warn("Unable to parse house number \"" + inputNumber.getText() + "\"");
         }
     }
 
@@ -291,16 +293,16 @@ public class Address extends MapMode {
                 newRel.put(relationAddrName, selectedWay.get(tagHighwayName));
                 newRel.addMember(new RelationMember(relationAddrStreetRole, selectedWay));
                 newRel.addMember(new RelationMember(relationMemberHouse, osm));
-                cmds.add(new AddCommand(newRel));
+                cmds.add(new AddCommand(Main.main.getEditDataSet(), newRel));
             }
         }
     }
 
     private static Node createNewNode(MouseEvent e, Collection<Command> cmds) {
         // DrawAction.mouseReleased() but without key modifiers
-        Node n = new Node(Main.map.mapView.getLatLon(e.getX(), e.getY()));
-        cmds.add(new AddCommand(n));
-        List<WaySegment> wss = Main.map.mapView.getNearestWaySegments(e.getPoint(), OsmPrimitive::isSelectable);
+        Node n = new Node(MainApplication.getMap().mapView.getLatLon(e.getX(), e.getY()));
+        cmds.add(new AddCommand(Main.main.getEditDataSet(), n));
+        List<WaySegment> wss = MainApplication.getMap().mapView.getNearestWaySegments(e.getPoint(), OsmPrimitive::isSelectable);
         Map<Way, List<Integer>> insertPoints = new HashMap<>();
         for (WaySegment ws : wss) {
             List<Integer> is;
@@ -369,12 +371,12 @@ public class Address extends MapMode {
                     B.north() + q * (A.north() - B.north()));
 
             int snapToIntersectionThreshold
-            = Main.pref.getInteger("edit.snap-intersection-threshold", 10);
+            = Main.pref.getInt("edit.snap-intersection-threshold", 10);
 
             // only adjust to intersection if within snapToIntersectionThreshold pixel of mouse click; otherwise
             // fall through to default action.
             // (for semi-parallel lines, intersection might be miles away!)
-            if (Main.map.mapView.getPoint(n).distance(Main.map.mapView.getPoint(intersection)) < snapToIntersectionThreshold) {
+            if (MainApplication.getMap().mapView.getPoint(n).distance(MainApplication.getMap().mapView.getPoint(intersection)) < snapToIntersectionThreshold) {
                 n.setEastNorth(intersection);
                 return;
             }
@@ -413,7 +415,7 @@ public class Address extends MapMode {
         try {
             return ImageProvider.getCursor("crosshair", null);
         } catch (RuntimeException e) {
-            Main.warn(e);
+            Logging.warn(e);
         }
         return Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR);
     }
@@ -479,7 +481,7 @@ public class Address extends MapMode {
         tagPolygon.addChangeListener(new ChangeListener() {
             @Override
             public void stateChanged(ChangeEvent arg0) {
-                Main.pref.put("cadastrewms.addr.onBuilding", tagPolygon.isSelected());
+                Main.pref.putBoolean("cadastrewms.addr.onBuilding", tagPolygon.isSelected());
             }
         });
         p.add(tagPolygon, GBC.eol().fill(GBC.HORIZONTAL).insets(0, 0, 0, 0));
@@ -510,7 +512,7 @@ public class Address extends MapMode {
         dialog.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent arg) {
-                Main.map.selectMapMode((MapMode) Main.map.getDefaultButtonAction());
+                MainApplication.getMap().selectMapMode((MapMode) MainApplication.getMap().getDefaultButtonAction());
             }
         });
         String bounds = Main.pref.get("cadastrewms.addr.bounds", null);
@@ -531,7 +533,7 @@ public class Address extends MapMode {
     }
 
     private static void setNewSelection(OsmPrimitive osm) {
-        DataSet ds = Main.getLayerManager().getEditDataSet();
+        DataSet ds = MainApplication.getLayerManager().getEditDataSet();
         Collection<OsmPrimitive> newSelection = new LinkedList<>(ds.getSelected());
         newSelection.clear();
         newSelection.add(osm);

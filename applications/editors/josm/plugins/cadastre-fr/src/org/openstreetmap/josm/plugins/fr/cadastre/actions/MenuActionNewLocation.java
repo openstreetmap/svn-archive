@@ -15,11 +15,13 @@ import javax.swing.JTextField;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.plugins.fr.cadastre.CadastrePlugin;
 import org.openstreetmap.josm.plugins.fr.cadastre.wms.DownloadWMSVectorImage;
 import org.openstreetmap.josm.plugins.fr.cadastre.wms.WMSLayer;
 import org.openstreetmap.josm.tools.GBC;
+import org.openstreetmap.josm.tools.Logging;
 
 public class MenuActionNewLocation extends JosmAction {
 
@@ -115,8 +117,8 @@ public class MenuActionNewLocation extends JosmAction {
             Main.pref.put("cadastrewms.location", location);
             Main.pref.put("cadastrewms.codeCommune", codeCommune);
             Main.pref.put("cadastrewms.codeDepartement", codeDepartement);
-            if (Main.map != null) {
-                for (Layer l : Main.getLayerManager().getLayers()) {
+            if (MainApplication.getMap() != null) {
+                for (Layer l : MainApplication.getLayerManager().getLayers()) {
                     if (l instanceof WMSLayer && l.getName().equalsIgnoreCase(location)) {
                         return null;
                     }
@@ -127,9 +129,9 @@ public class MenuActionNewLocation extends JosmAction {
             wmsLayer = new WMSLayer(location, codeCommune, zone);
             wmsLayer.setDepartement(codeDepartement);
             CadastrePlugin.addWMSLayer(wmsLayer);
-            Main.info("Add new layer with Location:" + inputTown.getText());
-        } else if (existingLayers != null && existingLayers.size() > 0 && Main.getLayerManager().getActiveLayer() instanceof WMSLayer) {
-            wmsLayer = (WMSLayer) Main.getLayerManager().getActiveLayer();
+            Logging.info("Add new layer with Location:" + inputTown.getText());
+        } else if (existingLayers != null && existingLayers.size() > 0 && MainApplication.getLayerManager().getActiveLayer() instanceof WMSLayer) {
+            wmsLayer = (WMSLayer) MainApplication.getLayerManager().getActiveLayer();
         }
 
         return wmsLayer;

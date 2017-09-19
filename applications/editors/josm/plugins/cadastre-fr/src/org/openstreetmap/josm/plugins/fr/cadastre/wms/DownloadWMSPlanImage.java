@@ -11,9 +11,11 @@ import javax.swing.JOptionPane;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.Bounds;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.PleaseWaitRunnable;
 import org.openstreetmap.josm.plugins.fr.cadastre.CadastrePlugin;
+import org.openstreetmap.josm.tools.Logging;
 
 public class DownloadWMSPlanImage {
 
@@ -82,7 +84,7 @@ public class DownloadWMSPlanImage {
                 }
             } catch (DuplicateLayerException e) {
                 // we tried to grab onto a duplicated layer (removed)
-                Main.warn("removed a duplicated layer");
+                Logging.warn("removed a duplicated layer");
             } catch (WMSException e) {
                 errorMessage = e.getMessage();
                 wmsLayer.grabber.getWmsInterface().resetCookie();
@@ -101,7 +103,7 @@ public class DownloadWMSPlanImage {
     }
 
     public void download(WMSLayer wmsLayer) {
-        MapView mv = Main.map.mapView;
+        MapView mv = MainApplication.getMap().mapView;
         Bounds bounds = new Bounds(mv.getLatLon(0, mv.getHeight()), mv.getLatLon(mv.getWidth(), 0));
         dontGeoreference = false;
 
@@ -109,7 +111,7 @@ public class DownloadWMSPlanImage {
         Task t = new Task(wmsLayer, bounds);
         this.wmsLayer = wmsLayer;
         this.bounds = bounds;
-        task = Main.worker.submit(t, t);
+        task = MainApplication.worker.submit(t, t);
         if (errorMessage != null)
             JOptionPane.showMessageDialog(Main.parent, errorMessage);
     }

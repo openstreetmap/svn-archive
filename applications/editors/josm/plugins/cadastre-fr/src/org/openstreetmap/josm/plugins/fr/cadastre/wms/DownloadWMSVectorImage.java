@@ -9,8 +9,10 @@ import javax.swing.JOptionPane;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.Bounds;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.PleaseWaitRunnable;
+import org.openstreetmap.josm.tools.Logging;
 
 public class DownloadWMSVectorImage extends PleaseWaitRunnable {
 
@@ -35,7 +37,7 @@ public class DownloadWMSVectorImage extends PleaseWaitRunnable {
                     // first time we grab an image for this layer
                     if (CacheControl.cacheEnabled) {
                         if (wmsLayer.grabThread.getCacheControl().loadCacheIfExist()) {
-                            Main.map.mapView.zoomTo(wmsLayer.getFirstViewFromCacheBBox().toBounds());
+                            MainApplication.getMap().mapView.zoomTo(wmsLayer.getFirstViewFromCacheBBox().toBounds());
                             return;
                         }
                     }
@@ -43,7 +45,7 @@ public class DownloadWMSVectorImage extends PleaseWaitRunnable {
                         // set raster image commune bounding box based on current view (before adjustment)
                         JOptionPane.showMessageDialog(Main.parent,
                                 tr("This commune is not vectorized.\nPlease use the other menu entry to georeference a \"Plan image\""));
-                        Main.getLayerManager().removeLayer(wmsLayer);
+                        MainApplication.getLayerManager().removeLayer(wmsLayer);
                         wmsLayer = null;
                         return;
                     } else {
@@ -55,13 +57,13 @@ public class DownloadWMSVectorImage extends PleaseWaitRunnable {
                 wmsLayer.grab(bounds);
             } else if (!wmsLayer.hasImages()) {
               // failed to contact WMS of find this commune. Remove layer if empty.
-              Main.getLayerManager().removeLayer(wmsLayer);
+              MainApplication.getLayerManager().removeLayer(wmsLayer);
             }
         } catch (DuplicateLayerException e) {
             // we tried to grab onto a duplicated layer (removed)
-            Main.warn("removed a duplicated layer");
+            Logging.warn("removed a duplicated layer");
         } catch (WMSException e) {
-            Main.warn(e);
+            Logging.warn(e);
             errorMessage = e.getMessage();
             wmsLayer.grabber.getWmsInterface().resetCookie();
         }
@@ -79,10 +81,10 @@ public class DownloadWMSVectorImage extends PleaseWaitRunnable {
     }
 
     public static void download(WMSLayer wmsLayer) {
-        MapView mv = Main.map.mapView;
+        MapView mv = MainApplication.getMap().mapView;
         Bounds bounds = new Bounds(mv.getLatLon(0, mv.getHeight()), mv.getLatLon(mv.getWidth(), 0));
 
-        Main.worker.execute(new DownloadWMSVectorImage(wmsLayer, bounds));
+        MainApplication.worker.execute(new DownloadWMSVectorImage(wmsLayer, bounds));
         if (errorMessage != null)
             JOptionPane.showMessageDialog(Main.parent, errorMessage);
     }

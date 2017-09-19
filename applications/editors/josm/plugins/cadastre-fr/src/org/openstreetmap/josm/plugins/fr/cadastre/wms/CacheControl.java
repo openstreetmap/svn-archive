@@ -23,6 +23,7 @@ import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.util.GuiHelper;
 import org.openstreetmap.josm.plugins.fr.cadastre.CadastrePlugin;
 import org.openstreetmap.josm.plugins.fr.cadastre.preferences.CadastrePreferenceSetting;
+import org.openstreetmap.josm.tools.Logging;
 
 /**
  * This class handles the WMS layer cache mechanism. The design is oriented for a good performance (no
@@ -96,7 +97,7 @@ public class CacheControl implements Runnable {
                 }
             }
             if (size > (long) cacheSize*1024*1024) {
-                Main.info("Delete oldest file  \""+ files[oldestFile].getName()
+                Logging.info("Delete oldest file  \""+ files[oldestFile].getName()
                         + "\" in cache dir to stay under the limit of " + cacheSize + " MB.");
                 files[oldestFile].delete();
                 checkDirSize(path);
@@ -141,7 +142,7 @@ public class CacheControl implements Runnable {
     }
 
     private static void delete(File file) {
-        Main.info("Delete file "+file);
+        Logging.info("Delete file "+file);
         if (file.exists())
             file.delete();
         while (file.exists()) { // wait until file is really gone (otherwise appends to existing one)
@@ -157,14 +158,10 @@ public class CacheControl implements Runnable {
         ) {
             successfulRead = wmsLayer.read(file, ois, currentLambertZone);
         } catch (IOException | ClassNotFoundException ex) {
-            Main.error(ex);
-            GuiHelper.runInEDTAndWait(new Runnable() {
-                @Override
-                public void run() {
-                    JOptionPane.showMessageDialog(Main.parent, tr("Error loading file.\nProbably an old version of the cache file."),
-                            tr("Error"), JOptionPane.ERROR_MESSAGE);
-                }
-            });
+            Logging.error(ex);
+            GuiHelper.runInEDTAndWait(() -> JOptionPane.showMessageDialog(Main.parent,
+                    tr("Error loading file.\nProbably an old version of the cache file."),
+                    tr("Error"), JOptionPane.ERROR_MESSAGE));
             return false;
         }
         if (successfulRead && wmsLayer.isRaster()) {
@@ -210,7 +207,7 @@ public class CacheControl implements Runnable {
                         }
                     }
                 } catch (IOException e) {
-                    Main.error(e);
+                    Logging.error(e);
                 }
                 imagesLock.lock();
                 for (int i = 0; i < size; i++) {
@@ -221,7 +218,7 @@ public class CacheControl implements Runnable {
             try {
                 wait();
             } catch (InterruptedException e) {
-                Main.error(e);
+                Logging.error(e);
             }
         }
     }

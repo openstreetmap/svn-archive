@@ -27,10 +27,12 @@ import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.PleaseWaitRunnable;
 import org.openstreetmap.josm.io.OsmTransferException;
 import org.openstreetmap.josm.plugins.fr.cadastre.CadastrePlugin;
+import org.openstreetmap.josm.tools.Logging;
 
 public class DownloadSVGBuilding extends PleaseWaitRunnable {
 
@@ -66,7 +68,7 @@ public class DownloadSVGBuilding extends PleaseWaitRunnable {
                 createBuildings(svg);
             }
         } catch (DuplicateLayerException e) {
-            Main.warn("removed a duplicated layer");
+            Logging.warn("removed a duplicated layer");
         } catch (WMSException e) {
             errorMessage = e.getMessage();
             wmsLayer.grabber.getWmsInterface().resetCookie();
@@ -90,7 +92,7 @@ public class DownloadSVGBuilding extends PleaseWaitRunnable {
                     new EastNorth(box[0]+box[2], box[1]+box[3]));
             return true;
         }
-        Main.warn("Unable to parse SVG data (viewBox)");
+        Logging.warn("Unable to parse SVG data (viewBox)");
         return false;
     }
 
@@ -136,7 +138,7 @@ public class DownloadSVGBuilding extends PleaseWaitRunnable {
 
         // check if the new way or its nodes is already in OSM layer
         for (Node n : svgDataSet.getNodes()) {
-            Node nearestNewNode = checkNearestNode(n, Main.getLayerManager().getEditDataSet().getNodes());
+            Node nearestNewNode = checkNearestNode(n, MainApplication.getLayerManager().getEditDataSet().getNodes());
             if (nearestNewNode != n) {
                 // replace the SVG node by the OSM node
                 for (Way w : svgDataSet.getWays()) {
@@ -152,20 +154,20 @@ public class DownloadSVGBuilding extends PleaseWaitRunnable {
                 }
                 n.setDeleted(true);
             }
-
         }
 
+        DataSet ds = Main.main.getEditDataSet();
         Collection<Command> cmds = new LinkedList<>();
         for (Node node : svgDataSet.getNodes()) {
             if (!node.isDeleted())
-                cmds.add(new AddCommand(node));
+                cmds.add(new AddCommand(ds, node));
         }
         for (Way way : svgDataSet.getWays()) {
             if (!way.isDeleted())
-                cmds.add(new AddCommand(way));
+                cmds.add(new AddCommand(ds, way));
         }
         Main.main.undoRedo.add(new SequenceCommand(tr("Create buildings"), cmds));
-        Main.map.repaint();
+        MainApplication.getMap().repaint();
     }
 
     private void createNodes(String SVGpath, ArrayList<EastNorth> eastNorth) {
@@ -232,7 +234,7 @@ public class DownloadSVGBuilding extends PleaseWaitRunnable {
         str += "&exception=application/vnd.ogc.se_inimage";
         str += "&styles=";
         str += "LS2_90";
-        Main.info("URL="+str);
+        Logging.info("URL="+str);
         return new URL(str.replace(" ", "%20"));
     }
 
@@ -253,13 +255,13 @@ public class DownloadSVGBuilding extends PleaseWaitRunnable {
                 }
             }
         } catch (IOException e) {
-            Main.error(e);
+            Logging.error(e);
         }
         return svg;
     }
 
     public static void download(WMSLayer wmsLayer) {
-        MapView mv = Main.map.mapView;
+        MapView mv = MainApplication.getMap().mapView;
         currentView = new EastNorthBound(mv.getEastNorth(0, mv.getHeight()),
                 mv.getEastNorth(mv.getWidth(), 0));
         if ((currentView.max.east() - currentView.min.east()) > 1000 ||
@@ -273,7 +275,7 @@ public class DownloadSVGBuilding extends PleaseWaitRunnable {
                     tr("Please, enable auto-sourcing and check cadastre millesime."));
             return;
         }
-        Main.worker.execute(new DownloadSVGBuilding(wmsLayer));
+        MainApplication.worker.execute(new DownloadSVGBuilding(wmsLayer));
         if (errorMessage != null)
             JOptionPane.showMessageDialog(Main.parent, errorMessage);
     }

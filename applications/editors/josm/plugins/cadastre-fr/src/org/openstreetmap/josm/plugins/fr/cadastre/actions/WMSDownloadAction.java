@@ -9,20 +9,25 @@ import java.util.ArrayList;
 import javax.swing.JOptionPane;
 
 import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.gui.MainApplication;
 //import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.plugins.fr.cadastre.wms.WMSLayer;
 
-public class WMSDownloadAction {
+final class WMSDownloadAction {
 
-    public static WMSLayer getLayer() {
+    private WMSDownloadAction() {
+        // Hide default constructor
+    }
+
+    static WMSLayer getLayer() {
         // check if we already have a layer created. if not, create; if yes, reuse.
         ArrayList<WMSLayer> existingWMSlayers = new ArrayList<>();
-        if (Main.map != null) {
-            Layer activeLayer = Main.getLayerManager().getActiveLayer();
+        if (MainApplication.getMap() != null) {
+            Layer activeLayer = MainApplication.getLayerManager().getActiveLayer();
             if (activeLayer instanceof WMSLayer)
                 return (WMSLayer) activeLayer;
-            for (Layer l : Main.getLayerManager().getLayers()) {
+            for (Layer l : MainApplication.getLayerManager().getLayers()) {
                 if (l instanceof WMSLayer) {
                     existingWMSlayers.add((WMSLayer) l);
                 }

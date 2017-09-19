@@ -17,7 +17,9 @@ import javax.swing.JTextField;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.coor.EastNorth;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.tools.GBC;
+import org.openstreetmap.josm.tools.Logging;
 
 public class RasterImageGeoreferencer implements MouseListener {
 
@@ -40,7 +42,7 @@ public class RasterImageGeoreferencer implements MouseListener {
     private int initialClickDelay;
 
     public void addListener() {
-        Main.map.mapView.addMouseListener(this);
+        MainApplication.getMap().mapView.addMouseListener(this);
     }
 
     /**
@@ -51,7 +53,7 @@ public class RasterImageGeoreferencer implements MouseListener {
        this.wmsLayer = wmsLayer;
        mode = cGetCorners;
        countMouseClicked = 0;
-       initialClickDelay = Main.pref.getInteger("cadastrewms.georef-click-delay", 200);
+       initialClickDelay = Main.pref.getInt("cadastrewms.georef-click-delay", 200);
        mouseClickedTime = System.currentTimeMillis();
        Object[] options = {"OK", "Cancel"};
        int ret = JOptionPane.showOptionDialog(null,
@@ -75,7 +77,7 @@ public class RasterImageGeoreferencer implements MouseListener {
       this.wmsLayer = wmsLayer;
       countMouseClicked = 0;
       mode = cGetLambertCrosspieces;
-      initialClickDelay = Main.pref.getInteger("cadastrewms.georef-click-delay", 200);
+      initialClickDelay = Main.pref.getInt("cadastrewms.georef-click-delay", 200);
       mouseClickedTime = System.currentTimeMillis();
       Object[] options = {"OK", "Cancel"};
       int ret = JOptionPane.showOptionDialog(null,
@@ -98,15 +100,15 @@ public class RasterImageGeoreferencer implements MouseListener {
   @Override
   public void mouseClicked(MouseEvent e) {
       if (System.currentTimeMillis() - mouseClickedTime < initialClickDelay) {
-          Main.info("mouse click bounce detected");
+          Logging.info("mouse click bounce detected");
           return; // mouse click anti-bounce
       } else
           mouseClickedTime = System.currentTimeMillis();
       if (e.getButton() != MouseEvent.BUTTON1)
           return;
       if (ignoreMouseClick) return; // In case we are currently just allowing zooming to read lambert coordinates
-      EastNorth ea = Main.getProjection().latlon2eastNorth(Main.map.mapView.getLatLon(e.getX(), e.getY()));
-      Main.info("click:"+countMouseClicked+" ,"+ea+", mode:"+mode);
+      EastNorth ea = Main.getProjection().latlon2eastNorth(MainApplication.getMap().mapView.getLatLon(e.getX(), e.getY()));
+      Logging.info("click:"+countMouseClicked+" ,"+ea+", mode:"+mode);
       if (clickOnTheMap) {
           clickOnTheMap = false;
           handleNewCoordinates(ea.east(), ea.north());
@@ -114,7 +116,7 @@ public class RasterImageGeoreferencer implements MouseListener {
           // ignore clicks outside the image
           if (ea.east() < wmsLayer.getImage(0).min.east() || ea.east() > wmsLayer.getImage(0).max.east()
                   || ea.north() < wmsLayer.getImage(0).min.north() || ea.north() > wmsLayer.getImage(0).max.north()) {
-              Main.info("ignore click outside the image");
+              Logging.info("ignore click outside the image");
               return;
           }
           countMouseClicked++;
@@ -155,9 +157,9 @@ public class RasterImageGeoreferencer implements MouseListener {
      countMouseClicked = 0;
      if (selectedValue == 0) { // "Cancel"
          // remove layer
-         Main.getLayerManager().removeLayer(wmsLayer);
+         MainApplication.getLayerManager().removeLayer(wmsLayer);
          wmsLayer = null;
-         Main.map.mapView.removeMouseListener(this);
+         MainApplication.getMap().mapView.removeMouseListener(this);
          return false;
      }
      return true;
@@ -177,7 +179,7 @@ public class RasterImageGeoreferencer implements MouseListener {
          JOptionPane.showMessageDialog(Main.parent,
                  tr("Ooops. I failed to catch all coordinates\n"+
                     "correctly. Retry please."));
-         Main.warn("failed to transform: one coordinate missing:"
+         Logging.warn("failed to transform: one coordinate missing:"
                     +"org1="+org1+", org2="+org2+", dst1="+dst1+", dst2="+dst2);
          return;
      }
@@ -197,7 +199,7 @@ public class RasterImageGeoreferencer implements MouseListener {
   * Ends the georeferencing by computing the affine transformation
   */
  private void endGeoreferencing() {
-     Main.map.mapView.removeMouseListener(this);
+     MainApplication.getMap().mapView.removeMouseListener(this);
      affineTransform(ea1, ea2, georefpoint1, georefpoint2);
      wmsLayer.grabThread.saveNewCache();
      wmsLayer.invalidate();
@@ -340,24 +342,24 @@ private boolean continueGeoreferencing() {
  public void actionInterrupted() {
      actionCompleted();
      if (wmsLayer != null) {
-         Main.getLayerManager().removeLayer(wmsLayer);
+         MainApplication.getLayerManager().removeLayer(wmsLayer);
          wmsLayer = null;
      }
  }
 
  @Override
- public void mouseEntered(MouseEvent arg0) {
+ public void mouseEntered(MouseEvent e) {
  }
 
  @Override
- public void mouseExited(MouseEvent arg0) {
+ public void mouseExited(MouseEvent e) {
  }
 
  @Override
- public void mousePressed(MouseEvent arg0) {
+ public void mousePressed(MouseEvent e) {
  }
 
  @Override
- public void mouseReleased(MouseEvent arg0) {
+ public void mouseReleased(MouseEvent e) {
  }
 }

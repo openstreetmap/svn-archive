@@ -28,6 +28,7 @@ import javax.swing.JPanel;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.validation.util.Entities;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.gui.progress.NullProgressMonitor;
 import org.openstreetmap.josm.gui.util.GuiHelper;
@@ -35,6 +36,7 @@ import org.openstreetmap.josm.io.OsmTransferException;
 import org.openstreetmap.josm.io.ProgressInputStream;
 import org.openstreetmap.josm.plugins.fr.cadastre.CadastrePlugin;
 import org.openstreetmap.josm.tools.GBC;
+import org.openstreetmap.josm.tools.Logging;
 
 public class CadastreInterface {
     public boolean downloadCanceled;
@@ -102,7 +104,7 @@ public class CadastreInterface {
             }
             openInterface();
         } catch (IOException e) {
-            Main.error(e);
+            Logging.error(e);
             GuiHelper.runInEDT(() ->
                 JOptionPane.showMessageDialog(Main.parent,
                     tr("Town/city {0} not found or not available\n" +
@@ -128,7 +130,7 @@ public class CadastreInterface {
                 urlConn.setRequestMethod("GET");
                 urlConn.connect();
                 if (urlConn.getResponseCode() == HttpURLConnection.HTTP_OK) {
-                    Main.info("GET "+searchFormURL);
+                    Logging.info("GET "+searchFormURL);
                     BufferedReader in = new BufferedReader(new InputStreamReader(urlConn.getInputStream(), StandardCharsets.UTF_8));
                     while (in.readLine() != null) {
                         // read the buffer otherwise we sent POST too early
@@ -150,7 +152,7 @@ public class CadastreInterface {
                         }
                     }
                 } else {
-                    Main.warn("Request to home page failed. Http error:"+urlConn.getResponseCode()+". Try again "+retries+" times");
+                    Logging.warn("Request to home page failed. Http error:"+urlConn.getResponseCode()+". Try again "+retries+" times");
                     CadastrePlugin.safeSleep(3000);
                     retries--;
                 }
@@ -163,7 +165,7 @@ public class CadastreInterface {
     private boolean handleCookie(String pCookie) {
         cookie = pCookie;
         if (cookie == null || cookie.isEmpty()) {
-            Main.warn("received empty cookie");
+            Logging.warn("received empty cookie");
             cookie = null;
         } else {
             int index = cookie.indexOf(';');
@@ -171,7 +173,7 @@ public class CadastreInterface {
                 cookie = cookie.substring(0, index);
             }
             cookieTimestamp = new Date().getTime();
-            Main.info("received cookie=" + cookie + " at " + new Date(cookieTimestamp));
+            Logging.info("received cookie=" + cookie + " at " + new Date(cookieTimestamp));
         }
         return cookie != null;
     }
@@ -184,7 +186,7 @@ public class CadastreInterface {
     public boolean isCookieExpired() {
         long now = new Date().getTime();
         if ((now - cookieTimestamp) > COOKIE_EXPIRATION) {
-            Main.info("cookie received at "+new Date(cookieTimestamp)+" expired (now is "+new Date(now)+")");
+            Logging.info("cookie received at "+new Date(cookieTimestamp)+" expired (now is "+new Date(now)+")");
             return true;
         }
         return false;
@@ -255,18 +257,18 @@ public class CadastreInterface {
             if (urlConn.getResponseCode() != HttpURLConnection.HTTP_OK) {
                 throw new IOException("Cannot open Cadastre interface. GET response:"+urlConn.getResponseCode());
             }
-            Main.info("GET "+interfaceURL);
+            Logging.info("GET "+interfaceURL);
             BufferedReader in = new BufferedReader(new InputStreamReader(urlConn.getInputStream(), StandardCharsets.UTF_8));
             // read the buffer otherwise we sent POST too early
             StringBuilder lines = new StringBuilder();
             String ln;
             while ((ln = in.readLine()) != null) {
-                if (Main.isDebugEnabled()) {
+                if (Logging.isDebugEnabled()) {
                     lines.append(ln);
                 }
             }
-            if (Main.isDebugEnabled()) {
-                Main.debug(lines.toString());
+            if (Logging.isDebugEnabled()) {
+                Logging.debug(lines.toString());
             }
         } catch (MalformedURLException e) {
             throw (IOException) new IOException(
@@ -318,7 +320,7 @@ public class CadastreInterface {
             setCookie();
             try (OutputStream wr = urlConn.getOutputStream()) {
                 wr.write(content.getBytes(StandardCharsets.UTF_8));
-                Main.info("POST "+content);
+                Logging.info("POST "+content);
                 wr.flush();
             }
             String ln;
@@ -341,7 +343,7 @@ public class CadastreInterface {
                     lines = lines.substring(lines.indexOf(C_INTERFACE_VECTOR), lines.length());
                     lines = lines.substring(0, lines.indexOf('\''));
                     lines = Entities.unescape(lines);
-                    Main.info("interface ref.:"+lines);
+                    Logging.info("interface ref.:"+lines);
                     return lines;
                 } else if (wmsLayer.isRaster() && lines.indexOf(C_INTERFACE_RASTER_TA) != -1) { // "afficherCarteTa.do"
                     // list of values parsed in listOfFeuilles (list all non-georeferenced images)
@@ -357,7 +359,7 @@ public class CadastreInterface {
                                 wmsLayer.setCodeCommune(listOfFeuilles.get(res).ref);
                                 lines = buildRasterFeuilleInterfaceRef(listOfFeuilles.get(res).ref);
                                 lines = Entities.unescape(lines);
-                                Main.info("interface ref.:"+lines);
+                                Logging.info("interface ref.:"+lines);
                                 return lines;
                             }
                         }
@@ -373,7 +375,7 @@ public class CadastreInterface {
         } catch (MalformedURLException e) {
             throw (IOException) new IOException("Illegal url.").initCause(e);
         } catch (DuplicateLayerException e) {
-            Main.error(e);
+            Logging.error(e);
         }
         return null;
     }
@@ -387,10 +389,10 @@ public class CadastreInterface {
                 if (j != -1 && k > (i + C_OPTION_LIST_START.length())) {
                     String lov = input.substring(i+C_OPTION_LIST_START.length()-1, j);
                     if (lov.indexOf('>') != -1) {
-                        Main.info("parse "+lov);
+                        Logging.info("parse "+lov);
                         listOfCommunes.add(lov);
                     } else
-                        Main.error("unable to parse commune string:"+lov);
+                        Logging.error("unable to parse commune string:"+lov);
                 }
                 input = input.substring(j+C_OPTION_LIST_END.length());
             }
@@ -407,7 +409,7 @@ public class CadastreInterface {
             urlConn2 = (HttpURLConnection) getAllImagesURL.openConnection();
             setCookie(urlConn2);
             urlConn2.connect();
-            Main.info("GET "+getAllImagesURL);
+            Logging.info("GET "+getAllImagesURL);
             try (BufferedReader rd = new BufferedReader(new InputStreamReader(urlConn2.getInputStream(), StandardCharsets.UTF_8))) {
                 while ((ln = rd.readLine()) != null) {
                     lines.append(ln);
@@ -416,7 +418,7 @@ public class CadastreInterface {
             urlConn2.disconnect();
         } catch (IOException e) {
             listOfFeuilles.clear();
-            Main.error(e);
+            Logging.error(e);
         }
         return lines.toString();
     }
@@ -509,7 +511,7 @@ public class CadastreInterface {
         if (urlConn.getResponseCode() != HttpURLConnection.HTTP_OK) {
             throw new IOException("Cannot get Cadastre response.");
         }
-        Main.info("GET "+searchFormURL);
+        Logging.info("GET "+searchFormURL);
         String ln;
         StringBuilder sb = new StringBuilder();
         try (BufferedReader in = new BufferedReader(new InputStreamReader(urlConn.getInputStream(), StandardCharsets.UTF_8))) {
@@ -577,12 +579,12 @@ public class CadastreInterface {
     }
 
     private static void checkLayerDuplicates(WMSLayer wmsLayer) throws DuplicateLayerException {
-        if (Main.map != null) {
-            for (Layer l : Main.getLayerManager().getLayers()) {
+        if (MainApplication.getMap() != null) {
+            for (Layer l : MainApplication.getLayerManager().getLayers()) {
                 if (l instanceof WMSLayer && l.getName().equals(wmsLayer.getName()) && (!l.equals(wmsLayer))) {
-                    Main.info("Try to grab into a new layer when "+wmsLayer.getName()+" is already opened.");
+                    Logging.info("Try to grab into a new layer when "+wmsLayer.getName()+" is already opened.");
                     // remove the duplicated layer
-                    Main.getLayerManager().removeLayer(wmsLayer);
+                    MainApplication.getLayerManager().removeLayer(wmsLayer);
                     throw new DuplicateLayerException();
                 }
             }

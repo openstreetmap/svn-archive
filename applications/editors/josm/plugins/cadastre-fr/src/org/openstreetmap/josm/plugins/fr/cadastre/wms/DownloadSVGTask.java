@@ -26,11 +26,14 @@ import org.openstreetmap.josm.command.AddCommand;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.SequenceCommand;
 import org.openstreetmap.josm.data.coor.EastNorth;
+import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.PleaseWaitRunnable;
 import org.openstreetmap.josm.io.OsmTransferException;
 import org.openstreetmap.josm.plugins.fr.cadastre.CadastrePlugin;
+import org.openstreetmap.josm.tools.Logging;
 
 /**
  * Grab the SVG administrative boundaries of the active commune layer (cadastre),
@@ -73,7 +76,7 @@ public class DownloadSVGTask extends PleaseWaitRunnable {
                 createWay(svg);
             }
         } catch (DuplicateLayerException e) {
-            Main.warn("removed a duplicated layer");
+            Logging.warn("removed a duplicated layer");
         } catch (WMSException e) {
             errorMessage = e.getMessage();
             wmsLayer.grabber.getWmsInterface().resetCookie();
@@ -97,7 +100,7 @@ public class DownloadSVGTask extends PleaseWaitRunnable {
                     new EastNorth(box[0]+box[2], box[1]+box[3]));
             return true;
         }
-        Main.warn("Unable to parse SVG data (viewBox)");
+        Logging.warn("Unable to parse SVG data (viewBox)");
         return false;
     }
 
@@ -122,16 +125,17 @@ public class DownloadSVGTask extends PleaseWaitRunnable {
             nodeList.add(new Node(Main.getProjection().eastNorth2latlon(eastNorth)));
         }
         Way wayToAdd = new Way();
+        DataSet ds = Main.main.getEditDataSet();
         Collection<Command> cmds = new LinkedList<>();
         for (Node node : nodeList) {
-            cmds.add(new AddCommand(node));
+            cmds.add(new AddCommand(ds, node));
             wayToAdd.addNode(node);
         }
         wayToAdd.addNode(wayToAdd.getNode(0)); // close the circle
 
-        cmds.add(new AddCommand(wayToAdd));
+        cmds.add(new AddCommand(ds, wayToAdd));
         Main.main.undoRedo.add(new SequenceCommand(tr("Create boundary"), cmds));
-        Main.map.repaint();
+        MainApplication.getMap().repaint();
     }
 
     private double createNodes(String SVGpath, ArrayList<EastNorth> eastNorth) {
@@ -182,7 +186,7 @@ public class DownloadSVGTask extends PleaseWaitRunnable {
         str += "&width="+CadastrePlugin.imageWidth+"&height="+CadastrePlugin.imageHeight;
         str += "&styles=";
         str += "COMMUNE_90";
-        Main.info("URL="+str);
+        Logging.info("URL="+str);
         return new URL(str.replace(" ", "%20"));
     }
 
@@ -203,7 +207,7 @@ public class DownloadSVGTask extends PleaseWaitRunnable {
                 }
             }
         } catch (IOException e) {
-            Main.error(e);
+            Logging.error(e);
         }
         return svg;
     }
@@ -214,7 +218,7 @@ public class DownloadSVGTask extends PleaseWaitRunnable {
                     tr("Please, enable auto-sourcing and check cadastre millesime."));
             return;
         }
-        Main.worker.execute(new DownloadSVGTask(wmsLayer));
+        MainApplication.worker.execute(new DownloadSVGTask(wmsLayer));
         if (errorMessage != null)
             JOptionPane.showMessageDialog(Main.parent, errorMessage);
     }

@@ -27,6 +27,7 @@ import org.opengis.parameter.ParameterValueGroup;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.plugins.fr.cadastre.wms.WMSLayer;
+import org.openstreetmap.josm.tools.Logging;
 
 public class MenuActionSaveRasterAs extends JosmAction {
 
@@ -106,7 +107,7 @@ public class MenuActionSaveRasterAs extends JosmAction {
                 }
             } else if (fc.getFileFilter().equals(filtreTiff)) {
                 boolean alpha = bi.getColorModel().hasAlpha();
-                Main.info("image with alpha channel : " + alpha);
+                Logging.info("image with alpha channel : " + alpha);
                 try {
                     double x = wmsLayer.getImage(0).min.east();
                     double y = wmsLayer.getImage(0).min.north();
@@ -131,7 +132,7 @@ public class MenuActionSaveRasterAs extends JosmAction {
                     gtwriter.dispose();
                     coverage.dispose(true);
                 } catch (Exception e) {
-                    Main.error(e);
+                    Logging.error(e);
                 }
             }
         }

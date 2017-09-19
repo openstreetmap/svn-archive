@@ -9,11 +9,11 @@ import java.util.ArrayList;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.io.OsmTransferException;
 import org.openstreetmap.josm.plugins.fr.cadastre.CadastrePlugin;
+import org.openstreetmap.josm.tools.Logging;
 
 public class GrabThread extends Thread {
 
@@ -43,7 +43,7 @@ public class GrabThread extends Thread {
         synchronized (this) {
             this.notify();
         }
-        Main.info("Added " + moreImages.size() + " to the grab thread");
+        Logging.info("Added " + moreImages.size() + " to the grab thread");
         if (wmsLayer.isRaster()) {
             waitNotification();
         }
@@ -88,19 +88,19 @@ public class GrabThread extends Thread {
                 } else {
                     GeorefImage newImage;
                     try {
-                        Main.map.repaint(); // paint the current grab box
+                        wmsLayer.invalidate(); // paint the current grab box
                         newImage = grabber.grab(wmsLayer, currentGrabImage.min, currentGrabImage.max);
                     } catch (IOException e) {
-                        Main.warn("Download action canceled by user or server did not respond");
+                        Logging.warn("Download action canceled by user or server did not respond");
                         setCanceled(true);
                         break;
                     } catch (OsmTransferException e) {
-                        Main.error("OSM transfer failed");
+                        Logging.error("OSM transfer failed");
                         setCanceled(true);
                         break;
                     }
                     if (grabber.getWmsInterface().downloadCanceled) {
-                        Main.info("Download action canceled by user");
+                        Logging.info("Download action canceled by user");
                         setCanceled(true);
                         break;
                     }
@@ -122,12 +122,12 @@ public class GrabThread extends Thread {
                         wmsLayer.invalidate();
                         saveToCache(newImage);
                     } catch (NullPointerException e) {
-                        Main.info("Layer destroyed. Cancel grab thread");
+                        Logging.info("Layer destroyed. Cancel grab thread");
                         setCanceled(true);
                     }
                 }
             }
-            Main.info("grab thread list empty");
+            Logging.info("grab thread list empty");
             lockCurrentGrabImage.lock();
             currentGrabImage = null;
             lockCurrentGrabImage.unlock();
@@ -163,7 +163,7 @@ public class GrabThread extends Thread {
         clearImagesToGrab();
         if (cacheControl != null) {
             while (!cacheControl.isCachePipeEmpty()) {
-                Main.info("Try to close a WMSLayer which is currently saving in cache : wait 1 sec.");
+                Logging.info("Try to close a WMSLayer which is currently saving in cache : wait 1 sec.");
                 CadastrePlugin.safeSleep(1000);
             }
         }
@@ -230,7 +230,7 @@ public class GrabThread extends Thread {
         try {
             wait();
         } catch (InterruptedException e) {
-            Main.error(e);
+            Logging.error(e);
         }
     }
 }

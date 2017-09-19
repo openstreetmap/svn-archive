@@ -14,9 +14,9 @@ import java.awt.event.MouseMotionListener;
 
 import javax.swing.JOptionPane;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.mapmode.MapMode;
 import org.openstreetmap.josm.data.coor.EastNorth;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.plugins.fr.cadastre.wms.CacheControl;
 import org.openstreetmap.josm.plugins.fr.cadastre.wms.WMSLayer;
@@ -44,12 +44,12 @@ public class WMSAdjustAction extends MapMode implements
     }
 
     @Override public void enterMode() {
-        if (Main.map != null) {
-            if (Main.getLayerManager().getActiveLayer() instanceof WMSLayer) {
-                modifiedLayer = (WMSLayer) Main.getLayerManager().getActiveLayer();
+        if (MainApplication.getMap() != null) {
+            if (MainApplication.getLayerManager().getActiveLayer() instanceof WMSLayer) {
+                modifiedLayer = (WMSLayer) MainApplication.getLayerManager().getActiveLayer();
                 super.enterMode();
-                Main.map.mapView.addMouseListener(this);
-                Main.map.mapView.addMouseMotionListener(this);
+                MainApplication.getMap().mapView.addMouseListener(this);
+                MainApplication.getMap().mapView.addMouseMotionListener(this);
                 rasterMoved = false;
                 modifiedLayer.adjustModeEnabled = true;
             } else {
@@ -57,15 +57,15 @@ public class WMSAdjustAction extends MapMode implements
                 if (Boolean.TRUE.equals(getValue("active"))) {
                     exitMode();
                 }
-                Main.map.selectMapMode((MapMode) Main.map.getDefaultButtonAction());
+                MainApplication.getMap().selectMapMode((MapMode) MainApplication.getMap().getDefaultButtonAction());
             }
         }
     }
 
     @Override public void exitMode() {
         super.exitMode();
-        Main.map.mapView.removeMouseListener(this);
-        Main.map.mapView.removeMouseMotionListener(this);
+        MainApplication.getMap().mapView.removeMouseListener(this);
+        MainApplication.getMap().mapView.removeMouseMotionListener(this);
         if (rasterMoved && CacheControl.cacheEnabled && modifiedLayer.isRaster()) {
             int reply = JOptionPane.showConfirmDialog(null,
                     "Save the changes in cache ?",
@@ -97,12 +97,12 @@ public class WMSAdjustAction extends MapMode implements
         else
             mode = Mode.moveXY;
         rasterMoved = true;
-        prevEastNorth = Main.map.mapView.getEastNorth(e.getX(), e.getY());
-        Main.map.mapView.setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
+        prevEastNorth = MainApplication.getMap().mapView.getEastNorth(e.getX(), e.getY());
+        MainApplication.getMap().mapView.setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
     }
 
     @Override public void mouseDragged(MouseEvent e) {
-        EastNorth newEastNorth = Main.map.mapView.getEastNorth(e.getX(), e.getY());
+        EastNorth newEastNorth = MainApplication.getMap().mapView.getEastNorth(e.getX(), e.getY());
         if (mode == Mode.rotate) {
             rotateFrameOnly(prevEastNorth, newEastNorth);
         } else {
@@ -167,13 +167,13 @@ public class WMSAdjustAction extends MapMode implements
     @Override
     public void mouseReleased(MouseEvent e) {
         if (mode == Mode.rotate) {
-            EastNorth newEastNorth = Main.map.mapView.getEastNorth(e.getX(), e.getY());
+            EastNorth newEastNorth = MainApplication.getMap().mapView.getEastNorth(e.getX(), e.getY());
             rotate(prevEastNorth, newEastNorth);
             if (modifiedLayer != null) {
                 modifiedLayer.invalidate();
             }
         }
-        Main.map.mapView.setCursor(Cursor.getDefaultCursor());
+        MainApplication.getMap().mapView.setCursor(Cursor.getDefaultCursor());
         prevEastNorth = null;
         mode = null;
     }

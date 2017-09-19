@@ -7,8 +7,8 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.plugins.fr.cadastre.CadastrePlugin;
 import org.openstreetmap.josm.plugins.fr.cadastre.wms.DownloadWMSVectorImage;
 import org.openstreetmap.josm.plugins.fr.cadastre.wms.WMSLayer;
@@ -32,7 +32,7 @@ public class MenuActionGrab extends JosmAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (Main.map != null) {
+        if (MainApplication.getMap() != null) {
             if (CadastrePlugin.isCadastreProjection()) {
                 WMSLayer wmsLayer = WMSDownloadAction.getLayer();
                 if (wmsLayer != null)

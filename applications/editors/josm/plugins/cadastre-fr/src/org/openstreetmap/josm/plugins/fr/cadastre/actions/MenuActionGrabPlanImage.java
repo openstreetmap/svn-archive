@@ -11,6 +11,7 @@ import javax.swing.JOptionPane;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.plugins.fr.cadastre.CadastrePlugin;
 import org.openstreetmap.josm.plugins.fr.cadastre.wms.DownloadWMSPlanImage;
 import org.openstreetmap.josm.plugins.fr.cadastre.wms.RasterImageGeoreferencer;
@@ -39,9 +40,9 @@ public class MenuActionGrabPlanImage extends JosmAction implements Runnable {
 
     @Override
     protected void updateEnabledState() {
-        if (wmsLayer == null || Main.map == null || Main.map.mapView == null) return;
+        if (wmsLayer == null || !MainApplication.isDisplayingMapView()) return;
         if (!rasterImageGeoreferencer.isRunning()) return;
-        if (Main.getLayerManager().containsLayer(wmsLayer))
+        if (MainApplication.getLayerManager().containsLayer(wmsLayer))
             return;
         JOptionPane.showMessageDialog(Main.parent, tr("Georeferencing interrupted"));
         rasterImageGeoreferencer.actionInterrupted();
@@ -49,14 +50,14 @@ public class MenuActionGrabPlanImage extends JosmAction implements Runnable {
 
     @Override
     public void actionPerformed(ActionEvent ae) {
-        if (Main.map != null) {
+        if (MainApplication.getMap() != null) {
             if (CadastrePlugin.isCadastreProjection()) {
                 wmsLayer = new MenuActionNewLocation().addNewLayer(new ArrayList<WMSLayer>());
                 if (wmsLayer == null) return;
                 downloadWMSPlanImage = new DownloadWMSPlanImage();
                 downloadWMSPlanImage.download(wmsLayer);
                 // download sub-images of the cadastre scan and join them into one single
-                Main.worker.execute(this);
+                MainApplication.worker.execute(this);
             } else {
                 CadastrePlugin.askToChangeProjection();
             }
@@ -68,7 +69,7 @@ public class MenuActionGrabPlanImage extends JosmAction implements Runnable {
         // wait until plan image is fully loaded and joined into one single image
         boolean loadedFromCache = downloadWMSPlanImage.waitFinished();
         if (loadedFromCache) {
-            Main.map.repaint();
+            wmsLayer.invalidate();
         } else if (wmsLayer.getImages().size() == 0) {
             // action canceled or image loaded from cache (and already georeferenced)
             rasterImageGeoreferencer.actionInterrupted();

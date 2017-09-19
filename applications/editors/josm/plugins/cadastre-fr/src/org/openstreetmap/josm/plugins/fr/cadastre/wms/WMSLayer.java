@@ -35,6 +35,7 @@ import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.dialogs.LayerListDialog;
 import org.openstreetmap.josm.gui.dialogs.LayerListPopup;
@@ -47,6 +48,7 @@ import org.openstreetmap.josm.plugins.fr.cadastre.actions.MenuActionRefineGeoRef
 import org.openstreetmap.josm.plugins.fr.cadastre.actions.MenuActionSaveRasterAs;
 import org.openstreetmap.josm.plugins.fr.cadastre.actions.mapmode.WMSAdjustAction;
 import org.openstreetmap.josm.plugins.fr.cadastre.preferences.CadastrePreferenceSetting;
+import org.openstreetmap.josm.tools.Logging;
 
 /**
  * This is a layer that grabs the current screen from the French cadastre WMS
@@ -148,7 +150,7 @@ public class WMSLayer extends Layer implements ImageObserver {
         super.destroy();
         images = null;
         dividedBbox = null;
-        Main.info("Layer "+location+" destroyed");
+        Logging.info("Layer "+location+" destroyed");
     }
 
     private static String buildName(String location, String codeCommune) {
@@ -166,14 +168,9 @@ public class WMSLayer extends Layer implements ImageObserver {
         grabThread.setCanceled(false);
         grabThread.setGrabber(grabber);
         // if it is the first layer, use the communeBBox as grab bbox (and not divided)
-        if (Main.getLayerManager().getLayers().size() == 1) {
+        if (MainApplication.getLayerManager().getLayers().size() == 1) {
             final Bounds bounds = this.getCommuneBBox().toBounds();
-            GuiHelper.runInEDTAndWait(new Runnable() {
-                @Override
-                public void run() {
-                    Main.map.mapView.zoomTo(bounds);
-                }
-            });
+            GuiHelper.runInEDTAndWait(() -> MainApplication.getMap().mapView.zoomTo(bounds));
             divideBbox(bounds, 1);
         } else {
             if (isRaster) {
@@ -537,10 +534,10 @@ public class WMSLayer extends Layer implements ImageObserver {
                 }
             } catch (EOFException ex) {
                 // expected exception when all images are read
-                Main.trace(ex);
+                Logging.trace(ex);
             }
         }
-        Main.info("Cache loaded for location "+location+" with "+images.size()+" images");
+        Logging.info("Cache loaded for location "+location+" with "+images.size()+" images");
         return true;
     }
 
@@ -702,7 +699,7 @@ public class WMSLayer extends Layer implements ImageObserver {
         try {
             img = this.images.get(index);
         } catch (ArrayIndexOutOfBoundsException e) {
-            Main.error(e);
+            Logging.error(e);
         }
         imagesLock.unlock();
         return img;

@@ -12,6 +12,7 @@ import javax.swing.JOptionPane;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.plugins.fr.cadastre.CadastrePlugin;
 import org.openstreetmap.josm.plugins.fr.cadastre.wms.CacheControl;
@@ -19,6 +20,7 @@ import org.openstreetmap.josm.plugins.fr.cadastre.wms.CacheFileLambert4ZoneFilte
 import org.openstreetmap.josm.plugins.fr.cadastre.wms.CacheFileLambert9ZoneFilter;
 import org.openstreetmap.josm.plugins.fr.cadastre.wms.CacheFileUTM20NFilter;
 import org.openstreetmap.josm.plugins.fr.cadastre.wms.WMSLayer;
+import org.openstreetmap.josm.tools.Logging;
 
 public class MenuActionLoadFromCache extends JosmAction {
     private static final long serialVersionUID = 1L;
@@ -69,17 +71,21 @@ public class MenuActionLoadFromCache extends JosmAction {
                                         tr("Error"), JOptionPane.ERROR_MESSAGE);
                                 continue nextFile;
                             } else
-                                Main.info("Load cache " + filename);
+                                Logging.info("Load cache " + filename);
                         }
                     } catch (NumberFormatException ex) {
-                        JOptionPane.showMessageDialog(Main.parent, tr("Selected file {0} is not a cache file from this plugin (invalid extension)", filename), tr("Error"), JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.showMessageDialog(Main.parent,
+                                tr("Selected file {0} is not a cache file from this plugin (invalid extension)", filename),
+                                tr("Error"), JOptionPane.ERROR_MESSAGE);
                         continue nextFile;
                     }
                     // check if the selected cache is not already displayed
-                    if (Main.map != null) {
-                        for (Layer l : Main.getLayerManager().getLayers()) {
+                    if (MainApplication.getMap() != null) {
+                        for (Layer l : MainApplication.getLayerManager().getLayers()) {
                             if (l instanceof WMSLayer && l.getName().equals(location)) {
-                                JOptionPane.showMessageDialog(Main.parent, tr("The location {0} is already on screen. Cache not loaded.", filename), tr("Error"), JOptionPane.ERROR_MESSAGE);
+                                JOptionPane.showMessageDialog(Main.parent,
+                                        tr("The location {0} is already on screen. Cache not loaded.", filename),
+                                        tr("Error"), JOptionPane.ERROR_MESSAGE);
                                 continue nextFile;
                             }
                         }
@@ -92,7 +98,6 @@ public class MenuActionLoadFromCache extends JosmAction {
                 }
             }
         }
-
     }
 
     protected static JFileChooser createAndOpenFileChooser() {

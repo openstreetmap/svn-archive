@@ -30,6 +30,7 @@ import org.openstreetmap.josm.plugins.fr.cadastre.wms.CacheControl;
 import org.openstreetmap.josm.tools.GBC;
 import org.openstreetmap.josm.tools.I18n;
 import org.openstreetmap.josm.tools.ImageProvider;
+import org.openstreetmap.josm.tools.Logging;
 
 /**
  * Preference settings for the French Cadastre plugin
@@ -384,11 +385,11 @@ public class CadastrePreferenceSetting extends DefaultTabPreferenceSetting {
     public boolean ok() {
         Main.pref.put("cadastrewms.source", sourcing.getText());
         CadastrePlugin.source = sourcing.getText();
-        Main.pref.put("cadastrewms.alterColors", alterColors.isSelected());
-        Main.pref.put("cadastrewms.invertGrey", reversGrey.isSelected());
-        Main.pref.put("cadastrewms.backgroundTransparent", transparency.isSelected());
+        Main.pref.putBoolean("cadastrewms.alterColors", alterColors.isSelected());
+        Main.pref.putBoolean("cadastrewms.invertGrey", reversGrey.isSelected());
+        Main.pref.putBoolean("cadastrewms.backgroundTransparent", transparency.isSelected());
         Main.pref.put("cadastrewms.brightness", Float.toString((float) sliderTrans.getValue()/10));
-        Main.pref.put("cadastrewms.drawBoundaries", drawBoundaries.isSelected());
+        Main.pref.putBoolean("cadastrewms.drawBoundaries", drawBoundaries.isSelected());
         if (grabRes1.isSelected())
             Main.pref.put("cadastrewms.resolution", "high");
         else if (grabRes2.isSelected())
@@ -414,44 +415,44 @@ public class CadastrePreferenceSetting extends DefaultTabPreferenceSetting {
                 if (squareSize >= 25 && squareSize <= 1000)
                     Main.pref.put("cadastrewms.squareSize", grabMultiplier4Size.getText());
             } catch (NumberFormatException e) {
-                Main.debug(e);
+                Logging.debug(e);
             }
         }
-        Main.pref.put("cadastrewms.layerWater", layerLS3.isSelected());
-        Main.pref.put("cadastrewms.layerBuilding", layerLS2.isSelected());
-        Main.pref.put("cadastrewms.layerSymbol", layerLS1.isSelected());
-        Main.pref.put("cadastrewms.layerParcel", layerParcel.isSelected());
-        Main.pref.put("cadastrewms.layerLabel", layerLabel.isSelected());
-        Main.pref.put("cadastrewms.layerNumero", layerNumero.isSelected());
-        Main.pref.put("cadastrewms.layerLieudit", layerLieudit.isSelected());
-        Main.pref.put("cadastrewms.layerSection", layerSection.isSelected());
-        Main.pref.put("cadastrewms.layerCommune", layerCommune.isSelected());
+        Main.pref.putBoolean("cadastrewms.layerWater", layerLS3.isSelected());
+        Main.pref.putBoolean("cadastrewms.layerBuilding", layerLS2.isSelected());
+        Main.pref.putBoolean("cadastrewms.layerSymbol", layerLS1.isSelected());
+        Main.pref.putBoolean("cadastrewms.layerParcel", layerParcel.isSelected());
+        Main.pref.putBoolean("cadastrewms.layerLabel", layerLabel.isSelected());
+        Main.pref.putBoolean("cadastrewms.layerNumero", layerNumero.isSelected());
+        Main.pref.putBoolean("cadastrewms.layerLieudit", layerLieudit.isSelected());
+        Main.pref.putBoolean("cadastrewms.layerSection", layerSection.isSelected());
+        Main.pref.putBoolean("cadastrewms.layerCommune", layerCommune.isSelected());
         try {
             int i = Integer.parseInt(rasterDivider.getText());
             if (i > 0 && i < 13)
                 Main.pref.put("cadastrewms.rasterDivider", String.valueOf(i));
         } catch (NumberFormatException e) {
-            Main.debug(e);
+            Logging.debug(e);
         }
-        Main.pref.put("cadastrewms.noImageCropping", disableImageCropping.isSelected());
-        Main.pref.put("cadastrewms.useTA", enableTableauAssemblage.isSelected());
-        Main.pref.put("cadastrewms.raster2bitsColors", simplify2BitsColors.isSelected());
+        Main.pref.putBoolean("cadastrewms.noImageCropping", disableImageCropping.isSelected());
+        Main.pref.putBoolean("cadastrewms.useTA", enableTableauAssemblage.isSelected());
+        Main.pref.putBoolean("cadastrewms.raster2bitsColors", simplify2BitsColors.isSelected());
         if (crosspiece1.isSelected()) Main.pref.put("cadastrewms.crosspieces", "0");
         else if (crosspiece2.isSelected()) Main.pref.put("cadastrewms.crosspieces", "1");
         else if (crosspiece3.isSelected()) Main.pref.put("cadastrewms.crosspieces", "2");
         else if (crosspiece4.isSelected()) Main.pref.put("cadastrewms.crosspieces", "3");
-        Main.pref.put("cadastrewms.enableCaching", enableCache.isSelected());
+        Main.pref.putBoolean("cadastrewms.enableCaching", enableCache.isSelected());
 
         // spread data into objects instead of restarting the application
         try {
             CacheControl.cacheSize = Integer.parseInt(cacheSize.getText());
             Main.pref.put("cadastrewms.cacheSize", String.valueOf(CacheControl.cacheSize));
         } catch (NumberFormatException e) {
-            Main.debug(e);
+            Logging.debug(e);
         }
-        Main.pref.put("cadastrewms.autoFirstLayer", autoFirstLayer.isSelected());
+        Main.pref.putBoolean("cadastrewms.autoFirstLayer", autoFirstLayer.isSelected());
         CacheControl.cacheEnabled = enableCache.isSelected();
-        Main.pref.put("cadastrewms.addr.dontUseRelation", dontUseRelation.isSelected());
+        Main.pref.putBoolean("cadastrewms.addr.dontUseRelation", dontUseRelation.isSelected());
         CadastrePlugin.refreshConfiguration();
         CadastrePlugin.refreshMenu();
 

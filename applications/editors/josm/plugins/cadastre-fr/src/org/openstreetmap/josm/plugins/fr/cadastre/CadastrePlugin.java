@@ -154,9 +154,12 @@ import org.openstreetmap.josm.plugins.fr.cadastre.wms.WMSLayer;
  * <br>                - improvement when clicking on existing node address street in mode relation
  * <br>                - option to simplify raster images in 2 bits colors (like images served in the past).
  * <br>2.6 10-Sep-2013 - add JOSM "sessions" feature support (list of layers stored in a file)
+ * <br>2.7 26-Apr-2014 - switch to Java 7
+ * <br>2.8 21-Jul-2016 - switch to Java 8
+ * <br>2.9 23-Aug-2017 - use new HTTPS links from French cadastre - requires JOSM 12623+ to load Certigna certificate
  */
 public class CadastrePlugin extends Plugin {
-    static String VERSION = "2.6";
+    static String VERSION = "2.9";
 
     static JMenu cadastreJMenu;
 

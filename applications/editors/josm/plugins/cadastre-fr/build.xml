@@ -8,7 +8,7 @@
     <!-- Configure these properties (replace "..." accordingly).
          See https://josm.openstreetmap.de/wiki/DevelopersGuide/DevelopingPlugins
     -->
-    <property name="plugin.author" value="Pieren"/>
+    <property name="plugin.author" value="Pieren;Don-vip"/>
     <property name="plugin.class" value="org.openstreetmap.josm.plugins.fr.cadastre.CadastrePlugin"/>
     <property name="plugin.description" value="A special handler for the French land registry WMS server."/>
     <property name="plugin.icon" value="images/preferences/cadastrewms.png"/>

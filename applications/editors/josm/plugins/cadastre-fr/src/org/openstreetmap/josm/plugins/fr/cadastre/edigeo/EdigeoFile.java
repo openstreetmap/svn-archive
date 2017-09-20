@@ -55,6 +55,7 @@ abstract class EdigeoFile {
     private Block currentBlock;
 
     EdigeoFile(Path path) throws IOException {
+        init();
         try (BufferedReader reader = Files.newBufferedReader(path, StandardCharsets.ISO_8859_1)) {
             String line;
             while ((line = reader.readLine()) != null) {
@@ -94,6 +95,10 @@ abstract class EdigeoFile {
                 }
             }
         }
+    }
+
+    protected void init() {
+        // To be overidden if needed
     }
 
     protected abstract Block createBlock(String type);

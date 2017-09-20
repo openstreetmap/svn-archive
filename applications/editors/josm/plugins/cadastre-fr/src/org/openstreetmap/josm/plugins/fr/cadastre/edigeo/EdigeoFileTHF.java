@@ -61,6 +61,26 @@ public class EdigeoFileTHF extends EdigeoFile {
             super(type);
         }
 
+        @Override
+        void processRecord(EdigeoRecord r) {
+            switch (r.name) {
+            case "AUT": author = safeGetAndLog(r, tr("Author")); break;
+            case "ADR": recipient = safeGetAndLog(r, tr("Recipient")); break;
+            case "LOC": nLots = safeGetInt(r); break;
+            case "VOC": nVolumes = safeGetInt(r); break;
+            case "SEC": security = SecurityClassification.of(safeGetInt(r)); break;
+            case "RDI": diffusionRestriction = safeGetAndLog(r, tr("Diffusion restriction")); break;
+            case "VER": edigeoVersion = safeGet(r); break;
+            case "VDA": edigeoDate = safeGetDate(r); break;
+            case "TRL": transmissionName = safeGet(r); break;
+            case "EDN": transmissionEdition = safeGetInt(r); break;
+            case "TDA": transmissionDate = safeGetDateAndLog(r, tr("Date")); break;
+            case "INF": transmissionInformation = safeGetAndLog(r, tr("Information")); break;
+            default:
+                super.processRecord(r);
+            }
+        }
+
         /**
          * Returns author.
          * @return author
@@ -156,26 +176,6 @@ public class EdigeoFileTHF extends EdigeoFile {
         public final String getTransmissionInformation() {
             return transmissionInformation;
         }
-
-        @Override
-        void processRecord(EdigeoRecord r) {
-            switch (r.name) {
-            case "AUT": author = safeGetAndLog(r, tr("Author")); break;
-            case "ADR": recipient = safeGetAndLog(r, tr("Recipient")); break;
-            case "LOC": nLots = safeGetInt(r); break;
-            case "VOC": nVolumes = safeGetInt(r); break;
-            case "SEC": security = SecurityClassification.of(safeGetInt(r)); break;
-            case "RDI": diffusionRestriction = safeGetAndLog(r, tr("Diffusion restriction")); break;
-            case "VER": edigeoVersion = safeGet(r); break;
-            case "VDA": edigeoDate = safeGetDate(r); break;
-            case "TRL": transmissionName = safeGet(r); break;
-            case "EDN": transmissionEdition = safeGetInt(r); break;
-            case "TDA": transmissionDate = safeGetDateAndLog(r, tr("Date")); break;
-            case "INF": transmissionInformation = safeGetAndLog(r, tr("Information")); break;
-            default:
-                super.processRecord(r);
-            }
-        }
     }
 
     /**
@@ -225,6 +225,144 @@ public class EdigeoFileTHF extends EdigeoFile {
                 super.processRecord(r);
             }
         }
+
+        /**
+         * Returns name.
+         * @return name
+         */
+        public final String getName() {
+            return name;
+        }
+
+        /**
+         * Returns general information.
+         * @return general information
+         */
+        public final String getInformation() {
+            return information;
+        }
+
+        /**
+         * Returns general data subset name.
+         * @return general data subset name
+         */
+        public final String getGenDataName() {
+            return genDataName;
+        }
+
+        /**
+         * Returns general data subset identifier.
+         * @return general data subset identifier
+         */
+        public final String getGenDataId() {
+            return genDataId;
+        }
+
+        /**
+         * Returns coordinates reference subset name.
+         * @return coordinates reference subset name
+         */
+        public final String getCoorRefName() {
+            return coorRefName;
+        }
+
+        /**
+         * Returns coordinates reference subset identifier.
+         * @return coordinates reference subset identifier
+         */
+        public final String getCoorRefId() {
+            return coorRefId;
+        }
+
+        /**
+         * Returns quality subset name.
+         * @return quality subset name
+         */
+        public final String getQualityName() {
+            return qualityName;
+        }
+
+        /**
+         * Returns quality subset identifier.
+         * @return quality subset identifier
+         */
+        public final String getQualityId() {
+            return qualityId;
+        }
+
+        /**
+         * Returns dictionary subset name.
+         * @return dictionary subset name
+         */
+        public final String getDictName() {
+            return dictName;
+        }
+
+        /**
+         * Returns dictionary subset identifier.
+         * @return dictionary subset identifier
+         */
+        public final String getDictId() {
+            return dictId;
+        }
+
+        /**
+         * Returns SCD subset name.
+         * @return SCD subset name
+         */
+        public final String getScdName() {
+            return scdName;
+        }
+
+        /**
+         * Returns SCD subset identifier.
+         * @return SCD subset identifier
+         */
+        public final String getScdId() {
+            return scdId;
+        }
+
+        /**
+         * Returns number of geographic data subsets.
+         * @return number of geographic data subsets
+         */
+        public final int getNumberOfGeoData() {
+            return nGeoData;
+        }
+
+        /**
+         * Returns geographic data subset name at index i.
+         * @param i index
+         * @return geographic data subset name at index i
+         */
+        public final String getGeoDataName(int i) {
+            return geoDataName.get(i);
+        }
+
+        /**
+         * Returns list of geographic data subset names.
+         * @return list of geographic data subset names
+         */
+        public final List<String> getGeoDataNames() {
+            return Collections.unmodifiableList(geoDataName);
+        }
+
+        /**
+         * Returns list of geographic data subset identifiers.
+         * @return list of geographic data subset identifiers
+         */
+        public final List<String> getGeoDataIds() {
+            return Collections.unmodifiableList(geoDataId);
+        }
+
+        /**
+         * Returns geographic data subset identifier at index i.
+         * @param i index
+         * @return geographic data subset identifier at index i
+         */
+        public final String getGeoDataId(int i) {
+            return geoDataId.get(i);
+        }
     }
 
     Support support;
@@ -237,6 +375,11 @@ public class EdigeoFileTHF extends EdigeoFile {
      */
     public EdigeoFileTHF(Path path) throws IOException {
         super(path);
+    }
+
+    @Override
+    protected void init() {
+        lots = new ArrayList<>();
     }
 
     /**
@@ -262,9 +405,6 @@ public class EdigeoFileTHF extends EdigeoFile {
                 support = new Support(type);
                 return support;
             case "GTL":
-                if (lots == null) {
-                    lots = new ArrayList<>();
-                }
                 Lot lot = new Lot(type);
                 lots.add(lot);
                 return lot;

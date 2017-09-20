@@ -75,7 +75,9 @@ class EdigeoRecord {
         if (line.length() > 8) {
             assert line.length() <= 80;
             values = Arrays.asList(line.substring(8).split(";"));
-            assert (nature == Nature.SIMPLE && values.size() == 1) || (nature == Nature.COMPOSED && values.size() > 1) : line;
+            assert nature == Nature.RESERVED
+                    || (nature == Nature.SIMPLE && values.size() == 1)
+                    || (nature == Nature.COMPOSED && values.size() > 1) : line;
         } else {
             values = Collections.emptyList();
         }

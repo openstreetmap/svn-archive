@@ -44,18 +44,18 @@ public class EdigeoFileTHF extends EdigeoFile {
             }
         }
 
-        /** AUT */ String author;
-        /** ADR */ String recipient;
+        /** AUT */ String author = "";
+        /** ADR */ String recipient = "";
         /** LOC */ int nLots;
         /** VOC */ int nVolumes;
         /** SEC */ SecurityClassification security;
-        /** RDI */ String diffusionRestriction;
-        /** VER */ String edigeoVersion;
+        /** RDI */ String diffusionRestriction = "";
+        /** VER */ String edigeoVersion = "";
         /** VDA */ LocalDate edigeoDate;
-        /** TRL */ String transmissionName;
+        /** TRL */ String transmissionName = "";
         /** EDN */ int transmissionEdition;
         /** TDA */ LocalDate transmissionDate;
-        /** INF */ String transmissionInformation;
+        /** INF */ String transmissionInformation = "";
 
         Support(String type) {
             super(type);
@@ -64,18 +64,18 @@ public class EdigeoFileTHF extends EdigeoFile {
         @Override
         void processRecord(EdigeoRecord r) {
             switch (r.name) {
-            case "AUT": author = safeGetAndLog(r, tr("Author")); break;
-            case "ADR": recipient = safeGetAndLog(r, tr("Recipient")); break;
+            case "AUT": safeGetAndLog(r, s -> author += s, tr("Author")); break;
+            case "ADR": safeGetAndLog(r, s -> recipient += s, tr("Recipient")); break;
             case "LOC": nLots = safeGetInt(r); break;
             case "VOC": nVolumes = safeGetInt(r); break;
             case "SEC": security = SecurityClassification.of(safeGetInt(r)); break;
-            case "RDI": diffusionRestriction = safeGetAndLog(r, tr("Diffusion restriction")); break;
-            case "VER": edigeoVersion = safeGet(r); break;
+            case "RDI": safeGetAndLog(r, s -> diffusionRestriction += s, tr("Diffusion restriction")); break;
+            case "VER": safeGet(r, s -> edigeoVersion += s); break;
             case "VDA": edigeoDate = safeGetDate(r); break;
-            case "TRL": transmissionName = safeGet(r); break;
+            case "TRL": safeGet(r, s -> transmissionName += s); break;
             case "EDN": transmissionEdition = safeGetInt(r); break;
             case "TDA": transmissionDate = safeGetDateAndLog(r, tr("Date")); break;
-            case "INF": transmissionInformation = safeGetAndLog(r, tr("Information")); break;
+            case "INF": safeGetAndLog(r, s -> transmissionInformation += s, tr("Information")); break;
             default:
                 super.processRecord(r);
             }
@@ -183,18 +183,18 @@ public class EdigeoFileTHF extends EdigeoFile {
      */
     public static class Lot extends Block {
 
-        /** LON */ String name;
-        /** INF */ String information;
-        /** GNN */ String genDataName;
-        /** GNI */ String genDataId;
-        /** GON */ String coorRefName;
-        /** GOI */ String coorRefId;
-        /** QAN */ String qualityName;
-        /** QAI */ String qualityId;
-        /** DIN */ String dictName;
-        /** DII */ String dictId;
-        /** SCN */ String scdName;
-        /** SCI */ String scdId;
+        /** LON */ String name = "";
+        /** INF */ String information = "";
+        /** GNN */ String genDataName = "";
+        /** GNI */ String genDataId = "";
+        /** GON */ String coorRefName = "";
+        /** GOI */ String coorRefId = "";
+        /** QAN */ String qualityName = "";
+        /** QAI */ String qualityId = "";
+        /** DIN */ String dictName = "";
+        /** DII */ String dictId = "";
+        /** SCN */ String scdName = "";
+        /** SCI */ String scdId = "";
         /** GDC */ int nGeoData;
         /** GDN */ final List<String> geoDataName = new ArrayList<>();
         /** GDI */ final List<String> geoDataId = new ArrayList<>();
@@ -206,21 +206,21 @@ public class EdigeoFileTHF extends EdigeoFile {
         @Override
         void processRecord(EdigeoRecord r) {
             switch (r.name) {
-            case "LON": name = safeGetAndLog(r, tr("Name")); break;
-            case "INF": information = safeGetAndLog(r, tr("Information")); break;
-            case "GNN": genDataName = safeGet(r); break;
-            case "GNI": genDataId = safeGet(r); break;
-            case "GON": coorRefName = safeGet(r); break;
-            case "GOI": coorRefId = safeGet(r); break;
-            case "QAN": qualityName = safeGet(r); break;
-            case "QAI": qualityId = safeGet(r); break;
-            case "DIN": dictName = safeGet(r); break;
-            case "DII": dictId = safeGet(r); break;
-            case "SCN": scdName = safeGet(r); break;
-            case "SCI": scdId = safeGet(r); break;
+            case "LON": safeGetAndLog(r, s -> name += s, tr("Name")); break;
+            case "INF": safeGetAndLog(r, s -> information += s, tr("Information")); break;
+            case "GNN": safeGet(r, s -> genDataName += s); break;
+            case "GNI": safeGet(r, s -> genDataId += s); break;
+            case "GON": safeGet(r, s -> coorRefName += s); break;
+            case "GOI": safeGet(r, s -> coorRefId += s); break;
+            case "QAN": safeGet(r, s -> qualityName += s); break;
+            case "QAI": safeGet(r, s -> qualityId += s); break;
+            case "DIN": safeGet(r, s -> dictName += s); break;
+            case "DII": safeGet(r, s -> dictId += s); break;
+            case "SCN": safeGet(r, s -> scdName += s); break;
+            case "SCI": safeGet(r, s -> scdId += s); break;
             case "GDC": nGeoData = safeGetInt(r); break;
-            case "GDN": geoDataName.add(safeGet(r)); break;
-            case "GDI": geoDataId.add(safeGet(r)); break;
+            case "GDN": geoDataName.add(""); safeGet(r, geoDataName); break;
+            case "GDI": geoDataId.add(""); safeGet(r, geoDataId); break;
             default:
                 super.processRecord(r);
             }

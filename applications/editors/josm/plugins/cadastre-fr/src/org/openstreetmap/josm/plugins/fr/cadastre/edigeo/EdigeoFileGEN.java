@@ -15,8 +15,8 @@ public class EdigeoFileGEN extends EdigeoFile {
      * Geographic bounds.
      */
     public static class GeoBounds extends Block {
-        String cm1;
-        String cm2;
+        /** CM1 */ String min = "";
+        /** CM2 */ String max = "";
 
         GeoBounds(String type) {
             super(type);
@@ -25,8 +25,8 @@ public class EdigeoFileGEN extends EdigeoFile {
         @Override
         void processRecord(EdigeoRecord r) {
             switch (r.name) {
-            case "CM1": cm1 = safeGet(r); break;
-            case "CM2": cm2 = safeGet(r); break;
+            case "CM1": safeGet(r, s -> min += s); break;
+            case "CM2": safeGet(r, s -> max += s); break;
             default:
                 super.processRecord(r);
             }
@@ -36,16 +36,16 @@ public class EdigeoFileGEN extends EdigeoFile {
          * Returns the minimal coordinates.
          * @return the minimal coordinates
          */
-        public final String getCm1() {
-            return cm1;
+        public final String getMinCm1() {
+            return min;
         }
 
         /**
          * Returns the maximal coordinates.
          * @return the maximal coordinates
          */
-        public final String getCm2() {
-            return cm2;
+        public final String getMaxCm2() {
+            return max;
         }
     }
 
@@ -79,9 +79,9 @@ public class EdigeoFileGEN extends EdigeoFile {
             }
         }
 
-        String information;
-        Structure structure;
-        String offsetId;
+        /** INF */ String information = "";
+        /** STR */ Structure structure;
+        /** REG */ String offsetId = "";
 
         GeoData(String type) {
             super(type);
@@ -90,9 +90,9 @@ public class EdigeoFileGEN extends EdigeoFile {
         @Override
         void processRecord(EdigeoRecord r) {
             switch (r.name) {
-            case "INF": information = safeGetAndLog(r, tr("Information")); break;
+            case "INF": safeGetAndLog(r, s -> information += s, tr("Information")); break;
             case "STR": structure = Structure.of(safeGetInt(r)); break;
-            case "REG": offsetId = safeGet(r); break;
+            case "REG": safeGet(r, s -> offsetId += s); break;
             default:
                 super.processRecord(r);
             }
@@ -123,8 +123,8 @@ public class EdigeoFileGEN extends EdigeoFile {
         }
     }
 
-    GeoBounds bounds;
-    GeoData geodata;
+    /** DEG */ GeoBounds bounds;
+    /** GSE */ GeoData geodata;
 
     /**
      * Constructs a new {@code EdigeoFileGEN}.

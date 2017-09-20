@@ -58,7 +58,7 @@ public class EdigeoPciReader extends AbstractReader {
             }
         }
         DataSet ds = new DataSet();
-        ds.setName(thf.getSupport().getIdentifier());
+        ds.setName(thf.getSupport().getBlockIdentifier());
         ds.setUploadPolicy(UploadPolicy.DISCOURAGED);
         return ds;
     }

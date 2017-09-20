@@ -55,12 +55,12 @@ public class EdigeoFileGEO extends EdigeoFile {
             }
         }
 
-        ReferenceType type;
-        String name;
-        String code;
-        int nDim;
-        AltitudeSystem altitudeSystem;
-        String unit;
+        /** RET */ ReferenceType type;
+        /** REN */ String name = "";
+        /** REL */ String code = "";
+        /** DIM */ int nDim;
+        /** ALS */ AltitudeSystem altitudeSystem;
+        /** UNH */ String unit = "";
 
         CoorReference(String type) {
             super(type);
@@ -69,12 +69,12 @@ public class EdigeoFileGEO extends EdigeoFile {
         @Override
         void processRecord(EdigeoRecord r) {
             switch (r.name) {
-            case "RET": type = ReferenceType.of(safeGet(r)); break;
-            case "REN": name = safeGetAndLog(r, tr("Projection")); break;
-            case "REL": code = safeGetAndLog(r, tr("Projection")); break;
+            case "RET": safeGet(r, s -> type = ReferenceType.of(s)); break;
+            case "REN": safeGetAndLog(r, s -> name += s, tr("Projection")); break;
+            case "REL": safeGetAndLog(r, s -> code += s, tr("Projection")); break;
             case "DIM": nDim = safeGetInt(r); break;
             case "ALS": altitudeSystem = AltitudeSystem.of(safeGetInt(r)); break;
-            case "UNH": unit = safeGet(r); break;
+            case "UNH": safeGet(r, s -> unit += s); break;
             default:
                 super.processRecord(r);
             }

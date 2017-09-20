@@ -10,7 +10,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Objects;
+import java.util.function.Consumer;
 
 import org.openstreetmap.josm.tools.Logging;
 
@@ -26,26 +28,67 @@ abstract class EdigeoFile {
      */
     static class Block {
         /** RTY */ final String type;
-        /** RID */ String identifier;
+        /** RID */ String identifier = "";
+
+        // Remembers the last string read, to handle multiline text (more than 80 chars) with "NEXT" keyword
+        Consumer<String> lastReadString;
 
         Block(String type) {
             this.type = Objects.requireNonNull(type, "type");
         }
 
-        public final String getType() {
+        public final String getBlockType() {
             return type;
         }
 
-        public final String getIdentifier() {
+        public final String getBlockIdentifier() {
             return identifier;
         }
 
         void processRecord(EdigeoRecord r) {
             if ("RID".equals(r.name)) {
-                identifier = safeGetAndLog(r, tr("Identifier"));
+                safeGetAndLog(r, s -> identifier += s, tr("Identifier"));
+            } else if ("NEX".equals(r.name) && lastReadString != null) {
+                safeGet(r, lastReadString);
             } else {
                 throw new IllegalArgumentException(r.toString());
             }
+        }
+
+        protected void safeGet(EdigeoRecord r, List<String> list) {
+            safeGet(r, s -> {
+                int idx = list.size() - 1;
+                list.set(idx, list.get(idx) + s);
+            });
+        }
+
+        protected void safeGet(EdigeoRecord r, Consumer<String> callback) {
+            (lastReadString = callback).accept(r.length > 0 ? r.values.get(0) : null);
+        }
+
+        protected int safeGetInt(EdigeoRecord r) {
+            return r.length > 0 ? Integer.parseInt(r.values.get(0)) : 0;
+        }
+
+        protected LocalDate safeGetDate(EdigeoRecord r) {
+            return r.length > 0 ? LocalDate.parse(r.values.get(0), dateFormatter) : null;
+        }
+
+        protected void safeGetAndLog(EdigeoRecord r, Consumer<String> callback, String msg) {
+            if (r.length > 0) {
+                String v = r.values.get(0);
+                Logging.info(msg + ": " + v);
+                (lastReadString = callback).accept(v);
+            }
+        }
+
+        protected LocalDate safeGetDateAndLog(EdigeoRecord r, String msg) {
+            if (r.length > 0) {
+                LocalDate v = LocalDate.parse(r.values.get(0), dateFormatter);
+                Logging.info(msg + ": " + v);
+                return v;
+            }
+            return null;
         }
     }
 
@@ -114,35 +157,5 @@ abstract class EdigeoFile {
         }
 
         currentBlock.processRecord(r);
-    }
-
-    protected static String safeGet(EdigeoRecord r) {
-        return r.length > 0 ? r.values.get(0) : null;
-    }
-
-    protected static int safeGetInt(EdigeoRecord r) {
-        return r.length > 0 ? Integer.parseInt(r.values.get(0)) : 0;
-    }
-
-    protected static LocalDate safeGetDate(EdigeoRecord r) {
-        return r.length > 0 ? LocalDate.parse(r.values.get(0), dateFormatter) : null;
-    }
-
-    protected static String safeGetAndLog(EdigeoRecord r, String msg) {
-        if (r.length > 0) {
-            String v = r.values.get(0);
-            Logging.info(msg + ": " + v);
-            return v;
-        }
-        return null;
-    }
-
-    protected static LocalDate safeGetDateAndLog(EdigeoRecord r, String msg) {
-        if (r.length > 0) {
-            LocalDate v = LocalDate.parse(r.values.get(0), dateFormatter);
-            Logging.info(msg + ": " + v);
-            return v;
-        }
-        return null;
     }
 }

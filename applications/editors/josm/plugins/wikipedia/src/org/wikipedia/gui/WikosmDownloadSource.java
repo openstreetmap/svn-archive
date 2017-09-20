@@ -29,6 +29,7 @@ import org.openstreetmap.josm.gui.download.DownloadSettings;
 import org.openstreetmap.josm.gui.download.DownloadSource;
 import org.openstreetmap.josm.gui.download.DownloadSourceSizingPolicy;
 import org.openstreetmap.josm.gui.download.DownloadSourceSizingPolicy.AdjustableDownloadSizePolicy;
+import org.openstreetmap.josm.gui.download.UserQueryList;
 import org.openstreetmap.josm.gui.util.GuiHelper;
 import org.openstreetmap.josm.gui.widgets.JosmTextArea;
 import org.openstreetmap.josm.tools.GBC;
@@ -83,12 +84,12 @@ public class WikosmDownloadSource implements DownloadSource<WikosmDownloadSource
         private static final String ACTION_IMG_SUBDIR = "dialogs";
 
         private final JosmTextArea wikosmQuery;
-        private final WikosmQueryList wikosmQueryList;
+        private final UserQueryList wikosmQueryList;
         private final JCheckBox referrers;
         private final JCheckBox fullRel;
 
         /**
-         * Create a new {@link WikosmDownloadSourcePanel}
+         * Create a new {@code WikosmDownloadSourcePanel}
          * @param ds The download source to create the panel for
          */
         public WikosmDownloadSourcePanel(WikosmDownloadSource ds) {
@@ -122,7 +123,7 @@ public class WikosmDownloadSource implements DownloadSource<WikosmDownloadSource
             });
 
 
-            this.wikosmQueryList = new WikosmQueryList(this, this.wikosmQuery);
+            this.wikosmQueryList = new UserQueryList(this, this.wikosmQuery, "download.wikosm.query");
             this.wikosmQueryList.setPreferredSize(new Dimension(350, 300));
 
             EditSnippetAction edit = new EditSnippetAction();
@@ -268,7 +269,7 @@ public class WikosmDownloadSource implements DownloadSource<WikosmDownloadSource
         }
 
         /**
-         * Action that delegates snippet creation to {@link WikosmQueryList#createNewItem()}.
+         * Action that delegates snippet creation to {@link UserQueryList#createNewItem()}.
          */
         private class AddSnippetAction extends AbstractAction {
 
@@ -288,7 +289,7 @@ public class WikosmDownloadSource implements DownloadSource<WikosmDownloadSource
         }
 
         /**
-         * Action that delegates snippet removal to {@link WikosmQueryList#removeSelectedItem()}.
+         * Action that delegates snippet removal to {@link UserQueryList#removeSelectedItem()}.
          */
         private class RemoveSnippetAction extends AbstractAction implements ListSelectionListener {
 
@@ -321,7 +322,7 @@ public class WikosmDownloadSource implements DownloadSource<WikosmDownloadSource
         }
 
         /**
-         * Action that delegates snippet edit to {@link WikosmQueryList#editSelectedItem()}.
+         * Action that delegates snippet edit to {@link UserQueryList#editSelectedItem()}.
          */
         private class EditSnippetAction extends AbstractAction implements ListSelectionListener {
 

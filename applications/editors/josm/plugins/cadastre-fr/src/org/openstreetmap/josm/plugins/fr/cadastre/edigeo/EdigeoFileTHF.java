@@ -9,6 +9,9 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
+
+import org.openstreetmap.josm.data.osm.DataSet;
 
 /**
  * Edigeo THF file.
@@ -185,19 +188,26 @@ public class EdigeoFileTHF extends EdigeoFile {
 
         /** LON */ String name = "";
         /** INF */ String information = "";
-        /** GNN */ String genDataName = "";
-        /** GNI */ String genDataId = "";
-        /** GON */ String coorRefName = "";
-        /** GOI */ String coorRefId = "";
-        /** QAN */ String qualityName = "";
-        /** QAI */ String qualityId = "";
-        /** DIN */ String dictName = "";
-        /** DII */ String dictId = "";
+        /** GNN */ String genName = "";
+        /** GNI */ String genId = "";
+        /** GON */ String geoName = "";
+        /** GOI */ String geoId = "";
+        /** QAN */ String qalName = "";
+        /** QAI */ String qalId = "";
+        /** DIN */ String dicName = "";
+        /** DII */ String dicId = "";
         /** SCN */ String scdName = "";
         /** SCI */ String scdId = "";
-        /** GDC */ int nGeoData;
-        /** GDN */ final List<String> geoDataName = new ArrayList<>();
-        /** GDI */ final List<String> geoDataId = new ArrayList<>();
+        /** GDC */ int nVec;
+        /** GDN */ final List<String> vecName = new ArrayList<>();
+        /** GDI */ final List<String> vecId = new ArrayList<>();
+
+        EdigeoFileGEN gen;
+        EdigeoFileGEO geo;
+        EdigeoFileDIC dic;
+        EdigeoFileSCD scd;
+        EdigeoFileQAL qal;
+        final List<EdigeoFileVEC> vec = new ArrayList<>();
 
         Lot(String type) {
             super(type);
@@ -208,21 +218,33 @@ public class EdigeoFileTHF extends EdigeoFile {
             switch (r.name) {
             case "LON": safeGetAndLog(r, s -> name += s, tr("Name")); break;
             case "INF": safeGetAndLog(r, s -> information += s, tr("Information")); break;
-            case "GNN": safeGet(r, s -> genDataName += s); break;
-            case "GNI": safeGet(r, s -> genDataId += s); break;
-            case "GON": safeGet(r, s -> coorRefName += s); break;
-            case "GOI": safeGet(r, s -> coorRefId += s); break;
-            case "QAN": safeGet(r, s -> qualityName += s); break;
-            case "QAI": safeGet(r, s -> qualityId += s); break;
-            case "DIN": safeGet(r, s -> dictName += s); break;
-            case "DII": safeGet(r, s -> dictId += s); break;
+            case "GNN": safeGet(r, s -> genName += s); break;
+            case "GNI": safeGet(r, s -> genId += s); break;
+            case "GON": safeGet(r, s -> geoName += s); break;
+            case "GOI": safeGet(r, s -> geoId += s); break;
+            case "QAN": safeGet(r, s -> qalName += s); break;
+            case "QAI": safeGet(r, s -> qalId += s); break;
+            case "DIN": safeGet(r, s -> dicName += s); break;
+            case "DII": safeGet(r, s -> dicId += s); break;
             case "SCN": safeGet(r, s -> scdName += s); break;
             case "SCI": safeGet(r, s -> scdId += s); break;
-            case "GDC": nGeoData = safeGetInt(r); break;
-            case "GDN": safeGet(r, geoDataName); break;
-            case "GDI": safeGet(r, geoDataId); break;
+            case "GDC": nVec = safeGetInt(r); break;
+            case "GDN": safeGet(r, vecName); break;
+            case "GDI": safeGet(r, vecId); break;
             default:
                 super.processRecord(r);
+            }
+        }
+
+        void readFiles(Path path, DataSet ds) throws IOException, ReflectiveOperationException {
+            Path dir = path.getParent();
+            new EdigeoFileGEN(this, genId, dir.resolve(name + genName + ".GEN")).read(ds);
+            new EdigeoFileGEO(this, geoId, dir.resolve(name + geoName + ".GEO")).read(ds);
+            new EdigeoFileDIC(this, dicId, dir.resolve(name + dicName + ".DIC")).read(ds);
+            new EdigeoFileSCD(this, scdId, dir.resolve(name + scdName + ".SCD")).read(ds);
+            new EdigeoFileQAL(this, qalId, dir.resolve(name + qalName + ".QAL")).read(ds);
+            for (int i = 0; i < getNumberOfGeoData(); i++) {
+                new EdigeoFileVEC(this, vecId.get(i), dir.resolve(name + vecName.get(i) + ".VEC")).read(ds);
             }
         }
 
@@ -247,7 +269,7 @@ public class EdigeoFileTHF extends EdigeoFile {
          * @return general data subset name
          */
         public final String getGenDataName() {
-            return genDataName;
+            return genName;
         }
 
         /**
@@ -255,7 +277,7 @@ public class EdigeoFileTHF extends EdigeoFile {
          * @return general data subset identifier
          */
         public final String getGenDataId() {
-            return genDataId;
+            return genId;
         }
 
         /**
@@ -263,7 +285,7 @@ public class EdigeoFileTHF extends EdigeoFile {
          * @return coordinates reference subset name
          */
         public final String getCoorRefName() {
-            return coorRefName;
+            return geoName;
         }
 
         /**
@@ -271,7 +293,7 @@ public class EdigeoFileTHF extends EdigeoFile {
          * @return coordinates reference subset identifier
          */
         public final String getCoorRefId() {
-            return coorRefId;
+            return geoId;
         }
 
         /**
@@ -279,7 +301,7 @@ public class EdigeoFileTHF extends EdigeoFile {
          * @return quality subset name
          */
         public final String getQualityName() {
-            return qualityName;
+            return qalName;
         }
 
         /**
@@ -287,7 +309,7 @@ public class EdigeoFileTHF extends EdigeoFile {
          * @return quality subset identifier
          */
         public final String getQualityId() {
-            return qualityId;
+            return qalId;
         }
 
         /**
@@ -295,7 +317,7 @@ public class EdigeoFileTHF extends EdigeoFile {
          * @return dictionary subset name
          */
         public final String getDictName() {
-            return dictName;
+            return dicName;
         }
 
         /**
@@ -303,7 +325,7 @@ public class EdigeoFileTHF extends EdigeoFile {
          * @return dictionary subset identifier
          */
         public final String getDictId() {
-            return dictId;
+            return dicId;
         }
 
         /**
@@ -327,7 +349,7 @@ public class EdigeoFileTHF extends EdigeoFile {
          * @return number of geographic data subsets
          */
         public final int getNumberOfGeoData() {
-            return nGeoData;
+            return nVec;
         }
 
         /**
@@ -336,7 +358,7 @@ public class EdigeoFileTHF extends EdigeoFile {
          * @return geographic data subset name at index i
          */
         public final String getGeoDataName(int i) {
-            return geoDataName.get(i);
+            return vecName.get(i);
         }
 
         /**
@@ -344,7 +366,7 @@ public class EdigeoFileTHF extends EdigeoFile {
          * @return list of geographic data subset names
          */
         public final List<String> getGeoDataNames() {
-            return Collections.unmodifiableList(geoDataName);
+            return Collections.unmodifiableList(vecName);
         }
 
         /**
@@ -352,7 +374,7 @@ public class EdigeoFileTHF extends EdigeoFile {
          * @return list of geographic data subset identifiers
          */
         public final List<String> getGeoDataIds() {
-            return Collections.unmodifiableList(geoDataId);
+            return Collections.unmodifiableList(vecId);
         }
 
         /**
@@ -361,12 +383,25 @@ public class EdigeoFileTHF extends EdigeoFile {
          * @return geographic data subset identifier at index i
          */
         public final String getGeoDataId(int i) {
-            return geoDataId.get(i);
+            return vecId.get(i);
         }
     }
 
-    Support support;
-    List<Lot> lots;
+    /**
+     * Block inside {@link EdigeoLotFile}.
+     */
+    public static class ChildBlock extends Block {
+
+        protected final Lot lot;
+
+        ChildBlock(Lot lot, String type) {
+            super(type);
+            this.lot = Objects.requireNonNull(lot, "lot");
+        }
+    }
+
+    /** GTS */ Support support;
+    /** GTL */ final List<Lot> lots = new ArrayList<>();
 
     /**
      * Constructs a new {@code EdigeoFileTHF}.
@@ -375,11 +410,6 @@ public class EdigeoFileTHF extends EdigeoFile {
      */
     public EdigeoFileTHF(Path path) throws IOException {
         super(path);
-    }
-
-    @Override
-    protected void init() {
-        lots = new ArrayList<>();
     }
 
     /**
@@ -401,15 +431,19 @@ public class EdigeoFileTHF extends EdigeoFile {
     @Override
     protected Block createBlock(String type) {
         switch (type) {
-            case "GTS":
-                support = new Support(type);
-                return support;
-            case "GTL":
-                Lot lot = new Lot(type);
-                lots.add(lot);
-                return lot;
+            case "GTS": return support = new Support(type);
+            case "GTL": return addBlock(lots, new Lot(type));
             default:
                 throw new IllegalArgumentException(type);
         }
+    }
+
+    @Override
+    public EdigeoFileTHF read(DataSet ds) throws IOException, ReflectiveOperationException {
+        super.read(ds);
+        for (Lot lot : getLots()) {
+            lot.readFiles(path, ds);
+        }
+        return this;
     }
 }

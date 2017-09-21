@@ -11,14 +11,7 @@ import org.openstreetmap.josm.data.osm.DataSet.UploadPolicy;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.io.AbstractReader;
 import org.openstreetmap.josm.io.IllegalDataException;
-import org.openstreetmap.josm.plugins.fr.cadastre.edigeo.EdigeoFileDIC;
-import org.openstreetmap.josm.plugins.fr.cadastre.edigeo.EdigeoFileGEN;
-import org.openstreetmap.josm.plugins.fr.cadastre.edigeo.EdigeoFileGEO;
-import org.openstreetmap.josm.plugins.fr.cadastre.edigeo.EdigeoFileQAL;
-import org.openstreetmap.josm.plugins.fr.cadastre.edigeo.EdigeoFileSCD;
 import org.openstreetmap.josm.plugins.fr.cadastre.edigeo.EdigeoFileTHF;
-import org.openstreetmap.josm.plugins.fr.cadastre.edigeo.EdigeoFileTHF.Lot;
-import org.openstreetmap.josm.plugins.fr.cadastre.edigeo.EdigeoFileVEC;
 
 /**
  * Reader for French Cadastre - Edigéo files.
@@ -39,28 +32,17 @@ public class EdigeoPciReader extends AbstractReader {
             return new EdigeoPciReader().parse(file.toPath(), instance);
         } catch (IOException e) {
             throw e;
-        } catch (Throwable t) {
-            throw new IOException(t);
+        } catch (Exception | AssertionError e) {
+            throw new IOException(e);
         }
     }
 
-    DataSet parse(Path path, ProgressMonitor instance) throws IOException {
-        Path dir = path.getParent();
-        EdigeoFileTHF thf = new EdigeoFileTHF(path);
-        for (Lot lot : thf.getLots()) {
-            EdigeoFileGEN gen = new EdigeoFileGEN(dir.resolve(lot.getName()+lot.getGenDataName()+".GEN"));
-            EdigeoFileGEO geo = new EdigeoFileGEO(dir.resolve(lot.getName()+lot.getCoorRefName()+".GEO"));
-            EdigeoFileDIC dic = new EdigeoFileDIC(dir.resolve(lot.getName()+lot.getDictName()+".DIC"));
-            EdigeoFileSCD scd = new EdigeoFileSCD(dir.resolve(lot.getName()+lot.getScdName()+".SCD"));
-            EdigeoFileQAL qal = new EdigeoFileQAL(dir.resolve(lot.getName()+lot.getQualityName()+".QAL"));
-            for (int i = 0; i < lot.getNumberOfGeoData(); i++) {
-                EdigeoFileVEC vec = new EdigeoFileVEC(dir.resolve(lot.getName()+lot.getGeoDataName(i)+".VEC"));
-            }
-        }
-        DataSet ds = new DataSet();
-        ds.setName(thf.getSupport().getBlockIdentifier());
-        ds.setUploadPolicy(UploadPolicy.DISCOURAGED);
-        return ds;
+    DataSet parse(Path path, ProgressMonitor instance) throws IOException, ReflectiveOperationException {
+        DataSet data = new DataSet();
+        data.setUploadPolicy(UploadPolicy.DISCOURAGED);
+        EdigeoFileTHF thf = new EdigeoFileTHF(path).read(data);
+        data.setName(thf.getSupport().getBlockIdentifier());
+        return data;
     }
 
     @Override

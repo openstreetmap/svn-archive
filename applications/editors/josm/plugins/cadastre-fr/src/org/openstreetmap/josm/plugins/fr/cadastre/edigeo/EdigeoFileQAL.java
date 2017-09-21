@@ -7,15 +7,26 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.openstreetmap.josm.data.osm.DataSet;
+import org.openstreetmap.josm.plugins.fr.cadastre.edigeo.EdigeoFileQAL.QalBlock;
+import org.openstreetmap.josm.plugins.fr.cadastre.edigeo.EdigeoFileTHF.ChildBlock;
+import org.openstreetmap.josm.plugins.fr.cadastre.edigeo.EdigeoFileTHF.Lot;
+
 /**
  * Edigeo QAL file.
  */
-public class EdigeoFileQAL extends EdigeoFile {
+public class EdigeoFileQAL extends EdigeoLotFile<QalBlock> {
+
+    abstract static class QalBlock extends ChildBlock {
+        QalBlock(Lot lot, String type) {
+            super(lot, type);
+        }
+    }
 
     /**
      * Update descriptor.
      */
-    public static class Update extends Block {
+    public static class Update extends QalBlock {
 
         enum UpdateType {
             NO_MODIFICATION(0),
@@ -66,8 +77,8 @@ public class EdigeoFileQAL extends EdigeoFile {
         /** COC */ int nElements;
         /** COP */ final List<String> mcdRef = new ArrayList<>();
 
-        Update(String type) {
-            super(type);
+        Update(Lot lot, String type) {
+            super(lot, type);
         }
 
         @Override
@@ -89,18 +100,20 @@ public class EdigeoFileQAL extends EdigeoFile {
 
     /**
      * Constructs a new {@code EdigeoFileQAL}.
+     * @param lot parent lot
+     * @param seId subset id
      * @param path path to QAL file
      * @throws IOException if any I/O error occurs
      */
-    public EdigeoFileQAL(Path path) throws IOException {
-        super(path);
+    public EdigeoFileQAL(Lot lot, String seId, Path path) throws IOException {
+        super(lot, seId, path);
+        register("QUP", Update.class);
+        lot.qal = this;
     }
 
     @Override
-    protected Block createBlock(String type) {
-        if ("QUP".equals(type)) {
-            return new Update(type);
-        }
-        throw new IllegalArgumentException(type);
+    public EdigeoFileQAL read(DataSet ds) throws IOException, ReflectiveOperationException {
+        super.read(ds);
+        return this;
     }
 }

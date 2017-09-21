@@ -6,15 +6,29 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.openstreetmap.josm.data.osm.DataSet;
+import org.openstreetmap.josm.plugins.fr.cadastre.edigeo.EdigeoFileSCD.ScdBlock;
+import org.openstreetmap.josm.plugins.fr.cadastre.edigeo.EdigeoFileTHF.ChildBlock;
+import org.openstreetmap.josm.plugins.fr.cadastre.edigeo.EdigeoFileTHF.Lot;
+
 /**
  * Edigeo SCD file.
  */
-public class EdigeoFileSCD extends EdigeoFile {
+public class EdigeoFileSCD extends EdigeoLotFile<ScdBlock> {
+
+    /**
+     * MCD definition.
+     */
+    abstract static class ScdBlock extends ChildBlock {
+        ScdBlock(Lot lot, String type) {
+            super(lot, type);
+        }
+    }
 
     /**
      * MCD Object definition.
      */
-    public static class McdObjDef extends Block {
+    public static class McdObjectDef extends ScdBlock {
 
         /** DIP */ String dictRef = "";
         /** KND */ String kind = "";
@@ -22,8 +36,8 @@ public class EdigeoFileSCD extends EdigeoFile {
         /** AAP */ final List<String> attributes = new ArrayList<>();
         /** QAC */ int nQualities;
 
-        McdObjDef(String type) {
-            super(type);
+        McdObjectDef(Lot lot, String type) {
+            super(lot, type);
         }
 
         @Override
@@ -43,7 +57,7 @@ public class EdigeoFileSCD extends EdigeoFile {
     /**
      * MCD Attribute definition.
      */
-    public static class McdAttrDef extends Block {
+    public static class McdAttributeDef extends ScdBlock {
 
         /** DIP */ String dictRef = "";
         /** CAN */ int nMaxChars;
@@ -53,8 +67,8 @@ public class EdigeoFileSCD extends EdigeoFile {
         /** AV1 */ String min = "";
         /** AV2 */ String max = "";
 
-        McdAttrDef(String type) {
-            super(type);
+        McdAttributeDef(Lot lot, String type) {
+            super(lot, type);
         }
 
         @Override
@@ -76,7 +90,7 @@ public class EdigeoFileSCD extends EdigeoFile {
     /**
      * MCD Primitive definition.
      */
-    public static class McdPrimDef extends Block {
+    public static class McdPrimitiveDef extends ScdBlock {
 
         enum PrimitiveKind {
             NODE("NOD"),
@@ -102,8 +116,8 @@ public class EdigeoFileSCD extends EdigeoFile {
         /** AAC */ int nAttributes;
         /** QAC */ int nQualities;
 
-        McdPrimDef(String type) {
-            super(type);
+        McdPrimitiveDef(Lot lot, String type) {
+            super(lot, type);
         }
 
         @Override
@@ -121,18 +135,18 @@ public class EdigeoFileSCD extends EdigeoFile {
     /**
      * MCD Relation definition.
      */
-    abstract static class McdRelDef extends Block {
+    abstract static class McdRelationDef extends ScdBlock {
 
         /** CA1 */ int minCardinal;
         /** CA2 */ int maxCardinal;
         /** SCC */ int nTypes;
-        /** SCP */ final List<String> scdRef = new ArrayList<>();
+        /** SCP */ final List<ScdBlock> scdRef = new ArrayList<>();
         /** OCC */ final List<Integer> nOccurences = new ArrayList<>();
         /** AAC */ int nAttributes;
         /** QAC */ int nQualities;
 
-        McdRelDef(String type) {
-            super(type);
+        McdRelationDef(Lot lot, String type) {
+            super(lot, type);
         }
 
         @Override
@@ -141,7 +155,7 @@ public class EdigeoFileSCD extends EdigeoFile {
             case "CA1": minCardinal = safeGetInt(r); break;
             case "CA2": maxCardinal = safeGetInt(r); break;
             case "SCC": nTypes = safeGetInt(r); break;
-            case "SCP": safeGet(r, scdRef); break;
+            case "SCP": scdRef.add(lot.scd.find(r.values)); break;
             case "OCC": nOccurences.add(safeGetInt(r)); break;
             case "AAC": nAttributes = safeGetInt(r); break;
             case "QAC": nQualities = safeGetInt(r); break;
@@ -154,12 +168,12 @@ public class EdigeoFileSCD extends EdigeoFile {
     /**
      * MCD Semantic Relation definition.
      */
-    public static class McdSemRelDef extends McdRelDef {
+    public static class McdSemanticRelationDef extends McdRelationDef {
 
         /** DIP */ String dictRef = "";
 
-        McdSemRelDef(String type) {
-            super(type);
+        McdSemanticRelationDef(Lot lot, String type) {
+            super(lot, type);
         }
 
         @Override
@@ -175,7 +189,7 @@ public class EdigeoFileSCD extends EdigeoFile {
     /**
      * MCD Construction Relation definition.
      */
-    public static class McdBuildRelDef extends McdRelDef {
+    public static class McdConstructionRelationDef extends McdRelationDef {
 
         enum RelationKind {
             IS_COMPOSED_OF("ICO"),
@@ -205,8 +219,8 @@ public class EdigeoFileSCD extends EdigeoFile {
 
         /** KND */ RelationKind kind;
 
-        McdBuildRelDef(String type) {
-            super(type);
+        McdConstructionRelationDef(Lot lot, String type) {
+            super(lot, type);
         }
 
         @Override
@@ -221,28 +235,24 @@ public class EdigeoFileSCD extends EdigeoFile {
 
     /**
      * Constructs a new {@code EdigeoFileSCD}.
+     * @param lot parent lot
+     * @param seId subset id
      * @param path path to SCD file
      * @throws IOException if any I/O error occurs
      */
-    public EdigeoFileSCD(Path path) throws IOException {
-        super(path);
+    public EdigeoFileSCD(Lot lot, String seId, Path path) throws IOException {
+        super(lot, seId, path);
+        register("OBJ", McdObjectDef.class);
+        register("ATT", McdAttributeDef.class);
+        register("PGE", McdPrimitiveDef.class);
+        register("ASS", McdSemanticRelationDef.class);
+        register("REL", McdConstructionRelationDef.class);
+        lot.scd = this;
     }
 
     @Override
-    protected Block createBlock(String type) {
-        switch (type) {
-        case "OBJ":
-            return new McdObjDef(type);
-        case "ATT":
-            return new McdAttrDef(type);
-        case "PGE":
-            return new McdPrimDef(type);
-        case "ASS":
-            return new McdSemRelDef(type);
-        case "REL":
-            return new McdBuildRelDef(type);
-        default:
-            throw new IllegalArgumentException(type);
-        }
+    public EdigeoFileSCD read(DataSet ds) throws IOException, ReflectiveOperationException {
+        super.read(ds);
+        return this;
     }
 }

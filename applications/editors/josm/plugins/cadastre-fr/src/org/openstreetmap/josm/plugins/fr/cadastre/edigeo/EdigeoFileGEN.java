@@ -6,20 +6,31 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 import java.io.IOException;
 import java.nio.file.Path;
 
+import org.openstreetmap.josm.data.osm.DataSet;
+import org.openstreetmap.josm.plugins.fr.cadastre.edigeo.EdigeoFileGEN.GenBlock;
+import org.openstreetmap.josm.plugins.fr.cadastre.edigeo.EdigeoFileTHF.ChildBlock;
+import org.openstreetmap.josm.plugins.fr.cadastre.edigeo.EdigeoFileTHF.Lot;
+
 /**
  * Edigeo GEN file.
  */
-public class EdigeoFileGEN extends EdigeoFile {
+public class EdigeoFileGEN extends EdigeoLotFile<GenBlock> {
+
+    abstract static class GenBlock extends ChildBlock {
+        GenBlock(Lot lot, String type) {
+            super(lot, type);
+        }
+    }
 
     /**
      * Geographic bounds.
      */
-    public static class GeoBounds extends Block {
+    public static class GeoBounds extends GenBlock {
         /** CM1 */ String min = "";
         /** CM2 */ String max = "";
 
-        GeoBounds(String type) {
-            super(type);
+        GeoBounds(Lot lot, String type) {
+            super(lot, type);
         }
 
         @Override
@@ -52,7 +63,7 @@ public class EdigeoFileGEN extends EdigeoFile {
     /**
      * Geographic data.
      */
-    public static class GeoData extends Block {
+    public static class GeoData extends GenBlock {
 
         /**
          * Data structure.
@@ -83,8 +94,8 @@ public class EdigeoFileGEN extends EdigeoFile {
         /** STR */ Structure structure;
         /** REG */ String offsetId = "";
 
-        GeoData(String type) {
-            super(type);
+        GeoData(Lot lot, String type) {
+            super(lot, type);
         }
 
         @Override
@@ -123,29 +134,23 @@ public class EdigeoFileGEN extends EdigeoFile {
         }
     }
 
-    /** DEG */ GeoBounds bounds;
-    /** GSE */ GeoData geodata;
-
     /**
      * Constructs a new {@code EdigeoFileGEN}.
+     * @param lot parent lot
+     * @param seId subset id
      * @param path path to GEN file
      * @throws IOException if any I/O error occurs
      */
-    public EdigeoFileGEN(Path path) throws IOException {
-        super(path);
+    public EdigeoFileGEN(Lot lot, String seId, Path path) throws IOException {
+        super(lot, seId, path);
+        register("DEG", GeoBounds.class);
+        register("GSE", GeoData.class);
+        lot.gen = this;
     }
 
     @Override
-    protected Block createBlock(String type) {
-        switch (type) {
-        case "DEG":
-            bounds = new GeoBounds(type);
-            return bounds;
-        case "GSE":
-            geodata = new GeoData(type);
-            return geodata;
-        default:
-            throw new IllegalArgumentException(type);
-        }
+    public EdigeoFileGEN read(DataSet ds) throws IOException, ReflectiveOperationException {
+        super.read(ds);
+        return this;
     }
 }

@@ -7,15 +7,20 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.openstreetmap.josm.data.osm.DataSet;
+import org.openstreetmap.josm.plugins.fr.cadastre.edigeo.EdigeoFileDIC.DicBlock;
+import org.openstreetmap.josm.plugins.fr.cadastre.edigeo.EdigeoFileTHF.ChildBlock;
+import org.openstreetmap.josm.plugins.fr.cadastre.edigeo.EdigeoFileTHF.Lot;
+
 /**
  * Edigeo DIC file.
  */
-public class EdigeoFileDIC extends EdigeoFile {
+public class EdigeoFileDIC extends EdigeoLotFile<DicBlock> {
 
     /**
      * Abstract definition.
      */
-    abstract static class Def extends Block {
+    abstract static class DicBlock extends ChildBlock {
 
         /** LAB */ String code = "";
         /** TEX */ EdigeoCharset charset;
@@ -23,8 +28,8 @@ public class EdigeoFileDIC extends EdigeoFile {
         /** ORI */ String origin = "";
         /** CAT */ String category = "";
 
-        Def(String type) {
-            super(type);
+        DicBlock(Lot lot, String type) {
+            super(lot, type);
         }
 
         @Override
@@ -76,16 +81,16 @@ public class EdigeoFileDIC extends EdigeoFile {
     /**
      * Object definition.
      */
-    public static class ObjectDef extends Def {
-        ObjectDef(String type) {
-            super(type);
+    public static class ObjectDef extends DicBlock {
+        ObjectDef(Lot lot, String type) {
+            super(lot, type);
         }
     }
 
     /**
      * Attribute definition.
      */
-    public static class AttributeDef extends Def {
+    public static class AttributeDef extends DicBlock {
 
         /** TYP */ String type = "";
         /** UNI */ String unit = "";
@@ -93,8 +98,8 @@ public class EdigeoFileDIC extends EdigeoFile {
         /** AVL */ final List<String> values = new ArrayList<>();
         /** AVD */ final List<String> descrs = new ArrayList<>();
 
-        AttributeDef(String type) {
-            super(type);
+        AttributeDef(Lot lot, String type) {
+            super(lot, type);
         }
 
         @Override
@@ -154,50 +159,31 @@ public class EdigeoFileDIC extends EdigeoFile {
     /**
      * Relation definition.
      */
-    public static class RelationDef extends Def {
-        RelationDef(String type) {
-            super(type);
+    public static class RelationDef extends DicBlock {
+        RelationDef(Lot lot, String type) {
+            super(lot, type);
         }
     }
-
-    /** DID */ List<ObjectDef> objects;
-    /** DIA */ List<AttributeDef> attributes;
-    /** DIR */ List<RelationDef> relations;
 
     /**
      * Constructs a new {@code EdigeoFileDIC}.
+     * @param lot parent lot
+     * @param seId subset id
      * @param path path to DIC file
      * @throws IOException if any I/O error occurs
      */
-    public EdigeoFileDIC(Path path) throws IOException {
-        super(path);
+    public EdigeoFileDIC(Lot lot, String seId, Path path) throws IOException {
+        super(lot, seId, path);
+        register("DID", ObjectDef.class);
+        register("DIA", AttributeDef.class);
+        register("DIR", RelationDef.class);
+        lot.dic = this;
     }
 
     @Override
-    protected void init() {
-        objects = new ArrayList<>();
-        attributes = new ArrayList<>();
-        relations = new ArrayList<>();
-    }
-
-    @Override
-    protected Block createBlock(String type) {
-        switch (type) {
-        case "DID":
-            ObjectDef objDef = new ObjectDef(type);
-            objects.add(objDef);
-            return objDef;
-        case "DIA":
-            AttributeDef attDef = new AttributeDef(type);
-            attributes.add(attDef);
-            return attDef;
-        case "DIR":
-            RelationDef relDef = new RelationDef(type);
-            relations.add(relDef);
-            return relDef;
-        default:
-            throw new IllegalArgumentException(type);
-        }
+    public EdigeoFileDIC read(DataSet ds) throws IOException, ReflectiveOperationException {
+        super.read(ds);
+        return this;
     }
 
     /**
@@ -205,7 +191,7 @@ public class EdigeoFileDIC extends EdigeoFile {
      * @return list of object definitions
      */
     public final List<ObjectDef> getObjects() {
-        return Collections.unmodifiableList(objects);
+        return Collections.unmodifiableList(blocks.getInstances(ObjectDef.class));
     }
 
     /**
@@ -213,7 +199,7 @@ public class EdigeoFileDIC extends EdigeoFile {
      * @return list of attribute definitions
      */
     public final List<AttributeDef> getAttributes() {
-        return Collections.unmodifiableList(attributes);
+        return Collections.unmodifiableList(blocks.getInstances(AttributeDef.class));
     }
 
     /**
@@ -221,6 +207,6 @@ public class EdigeoFileDIC extends EdigeoFile {
      * @return list of relation definitions
      */
     public final List<RelationDef> getRelations() {
-        return Collections.unmodifiableList(relations);
+        return Collections.unmodifiableList(blocks.getInstances(RelationDef.class));
     }
 }

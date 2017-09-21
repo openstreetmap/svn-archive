@@ -13,6 +13,7 @@ import java.util.Objects;
 import java.util.function.Consumer;
 
 import org.openstreetmap.josm.data.coor.EastNorth;
+import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.tools.Logging;
 
 /**
@@ -101,13 +102,17 @@ abstract class EdigeoFile {
         }
     }
 
+    protected final Path path;
     private boolean bomFound;
     private boolean eomFound;
     EdigeoCharset charset;
     private Block currentBlock;
 
-    EdigeoFile(Path path) throws IOException {
-        init();
+    EdigeoFile(Path path) {
+        this.path = path;
+    }
+
+    public EdigeoFile read(DataSet ds) throws IOException, ReflectiveOperationException {
         try (BufferedReader reader = Files.newBufferedReader(path, StandardCharsets.ISO_8859_1)) {
             String line;
             while ((line = reader.readLine()) != null) {
@@ -147,17 +152,19 @@ abstract class EdigeoFile {
                 }
             }
         }
+        return this;
     }
 
-    protected void init() {
-        // To be overidden if needed
+    protected abstract Block createBlock(String type) throws ReflectiveOperationException;
+
+    protected static <T extends Block> T addBlock(List<T> blocks, T block) {
+        blocks.add(block);
+        return block;
     }
 
-    protected abstract Block createBlock(String type);
-
-    private void processRecord(EdigeoRecord r) {
+    private void processRecord(EdigeoRecord r) throws ReflectiveOperationException {
         if ("RTY".equals(r.name)) {
-            currentBlock = createBlock(r.values.get(0));
+            currentBlock = Objects.requireNonNull(createBlock(r.values.get(0)), r.toString());
             return;
         }
 

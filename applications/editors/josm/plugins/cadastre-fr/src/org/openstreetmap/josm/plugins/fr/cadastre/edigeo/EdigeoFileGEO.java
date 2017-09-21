@@ -6,15 +6,26 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 import java.io.IOException;
 import java.nio.file.Path;
 
+import org.openstreetmap.josm.data.osm.DataSet;
+import org.openstreetmap.josm.plugins.fr.cadastre.edigeo.EdigeoFileGEO.GeoBlock;
+import org.openstreetmap.josm.plugins.fr.cadastre.edigeo.EdigeoFileTHF.ChildBlock;
+import org.openstreetmap.josm.plugins.fr.cadastre.edigeo.EdigeoFileTHF.Lot;
+
 /**
  * Edigeo GEO file.
  */
-public class EdigeoFileGEO extends EdigeoFile {
+public class EdigeoFileGEO extends EdigeoLotFile<GeoBlock> {
+
+    abstract static class GeoBlock extends ChildBlock {
+        GeoBlock(Lot lot, String type) {
+            super(lot, type);
+        }
+    }
 
     /**
      * Coordinates reference.
      */
-    public static class CoorReference extends Block {
+    public static class CoorReference extends GeoBlock {
 
         enum ReferenceType {
             CARTESIAN("CAR"),
@@ -62,8 +73,8 @@ public class EdigeoFileGEO extends EdigeoFile {
         /** ALS */ AltitudeSystem altitudeSystem;
         /** UNH */ String unit = "";
 
-        CoorReference(String type) {
-            super(type);
+        CoorReference(Lot lot, String type) {
+            super(lot, type);
         }
 
         @Override
@@ -131,18 +142,20 @@ public class EdigeoFileGEO extends EdigeoFile {
 
     /**
      * Constructs a new {@code EdigeoFileGEO}.
+     * @param lot parent lot
+     * @param seId subset id
      * @param path path to GEO file
      * @throws IOException if any I/O error occurs
      */
-    public EdigeoFileGEO(Path path) throws IOException {
-        super(path);
+    public EdigeoFileGEO(Lot lot, String seId, Path path) throws IOException {
+        super(lot, seId, path);
+        register("GEO", CoorReference.class);
+        lot.geo = this;
     }
 
     @Override
-    protected Block createBlock(String type) {
-        if ("GEO".equals(type)) {
-            return new CoorReference(type);
-        }
-        throw new IllegalArgumentException(type);
+    public EdigeoFileGEO read(DataSet ds) throws IOException, ReflectiveOperationException {
+        super.read(ds);
+        return this;
     }
 }

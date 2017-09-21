@@ -1,8 +1,6 @@
 // License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.fr.cadastre.edigeo;
 
-import static org.openstreetmap.josm.tools.I18n.tr;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -14,6 +12,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
 
+import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.tools.Logging;
 
 /**
@@ -47,7 +46,7 @@ abstract class EdigeoFile {
 
         void processRecord(EdigeoRecord r) {
             if ("RID".equals(r.name)) {
-                safeGetAndLog(r, s -> identifier += s, tr("Identifier"));
+                safeGet(r, s -> identifier += s);
             } else if ("NEX".equals(r.name) && lastReadString != null) {
                 safeGet(r, lastReadString);
             } else {
@@ -77,6 +76,11 @@ abstract class EdigeoFile {
 
         protected final double safeGetDouble(EdigeoRecord r) {
             return r.length > 0 ? Double.parseDouble(r.values.get(0)) : 0;
+        }
+
+        protected final EastNorth safeGetEastNorth(EdigeoRecord r) {
+            return r.length > 0 ? new EastNorth(Double.parseDouble(r.values.get(0)),
+                                                Double.parseDouble(r.values.get(1))) : null;
         }
 
         protected final void safeGetAndLog(EdigeoRecord r, Consumer<String> callback, String msg) {

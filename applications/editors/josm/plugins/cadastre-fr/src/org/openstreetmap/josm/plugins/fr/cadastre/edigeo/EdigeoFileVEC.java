@@ -12,6 +12,7 @@ import java.util.Map;
 import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
+import org.openstreetmap.josm.data.projection.Projection;
 import org.openstreetmap.josm.plugins.fr.cadastre.edigeo.EdigeoFileSCD.McdObjectDef;
 import org.openstreetmap.josm.plugins.fr.cadastre.edigeo.EdigeoFileSCD.McdPrimitiveDef;
 import org.openstreetmap.josm.plugins.fr.cadastre.edigeo.EdigeoFileSCD.McdRelationDef;
@@ -321,10 +322,12 @@ public class EdigeoFileVEC extends EdigeoLotFile<VecBlock<?>> {
     @Override
     public EdigeoFileVEC read(DataSet ds) throws IOException, ReflectiveOperationException {
         super.read(ds);
+        Projection proj = lot.geo.getCoorReference().getProjection();
         for (NodeBlock nb : getNodes()) {
             assert nb.getNumberOfAttributes() == 0;
             assert nb.getNumberOfQualityIndicators() == 0;
-            Node n = new Node(nb.getCoordinate());
+            lot.geo.toString();
+            Node n = new Node(proj.eastNorth2latlon(nb.getCoordinate()));
             ds.addPrimitive(n);
         }
         return this;

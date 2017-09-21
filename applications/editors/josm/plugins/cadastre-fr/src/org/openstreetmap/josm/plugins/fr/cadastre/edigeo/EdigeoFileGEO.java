@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.nio.file.Path;
 
 import org.openstreetmap.josm.data.osm.DataSet;
+import org.openstreetmap.josm.data.projection.Projection;
+import org.openstreetmap.josm.data.projection.Projections;
 import org.openstreetmap.josm.plugins.fr.cadastre.edigeo.EdigeoFileGEO.GeoBlock;
 import org.openstreetmap.josm.plugins.fr.cadastre.edigeo.EdigeoFileTHF.ChildBlock;
 import org.openstreetmap.josm.plugins.fr.cadastre.edigeo.EdigeoFileTHF.Lot;
@@ -63,6 +65,96 @@ public class EdigeoFileGEO extends EdigeoLotFile<GeoBlock> {
                     }
                 }
                 throw new IllegalArgumentException(Integer.toString(code));
+            }
+        }
+
+        interface Reference {
+            String getEpsgCode();
+        }
+
+        enum CartesianReference implements Reference {
+            NTF("EPSG:4275"),
+            ED50("EPSG:4230"),
+            WGS72("EPSG:4322"),
+            WGS84("EPSG:4326"),
+            REUN47("EPSG:4626"),
+            MART38("EPSG:4625"),
+            GUAD48("EPSG:4622"),
+            CSG67("EPSG:4623"),
+            MAYO50("EPSG:4632"),
+            STPM50("EPSG:4638");
+
+            final String epsg;
+            CartesianReference(String epsg) {
+                this.epsg = epsg;
+            }
+
+            @Override
+            public String getEpsgCode() {
+                return epsg;
+            }
+        }
+
+        enum GeographicReference implements Reference {
+            NTFG("EPSG:4275"),
+            NTFP("EPSG:4807"),
+            ED50G("EPSG:4230"),
+            WGS72G("EPSG:4322"),
+            WGS84G("EPSG:4326"),
+            REUN47GEO("EPSG:4626"),
+            MART38GEO("EPSG:4625"),
+            GUAD48GEO("EPSG:4622"),
+            CSG67GEO("EPSG:4623"),
+            MAYO50GEO("EPSG:4632"),
+            STPM50GEO("EPSG:4638");
+
+            final String epsg;
+            GeographicReference(String epsg) {
+                this.epsg = epsg;
+            }
+
+            @Override
+            public String getEpsgCode() {
+                return epsg;
+            }
+        }
+
+        enum ProjectedReference implements Reference {
+            LAMB1("EPSG:27561"),
+            LAMB2("EPSG:27562"),
+            LAMB3("EPSG:27563"),
+            LAMB4("EPSG:27564"),
+            LAMB1C("EPSG:27571"),
+            LAMB2C("EPSG:27572"),
+            LAMB3C("EPSG:27573"),
+            LAMB4C("EPSG:27574"),
+            LAMBE("EPSG:27572"),
+            LAMB93("EPSG:2154"),
+            UTM30("EPSG:23030"),
+            UTM31("EPSG:23031"),
+            UTM32("EPSG:23032"),
+            UTM30W72("EPSG:32230"),
+            UTM31W72("EPSG:32231"),
+            UTM32W72("EPSG:32232"),
+            UTM30W84("EPSG:32630"),
+            UTM31W84("EPSG:32631"),
+            UTM32W84("EPSG:32632"),
+            REUN47GAUSSL("EPSG:3727"),
+            MART38UTM20("EPSG:2973"),
+            GUAD48UTM20("EPSG:2970"),
+            CSG67UTM21("EPSG:3312"),
+            CSG67UTM22("EPSG:2971"),
+            MAYO50UTM38S("EPSG:2980"),
+            STPM50UTM21("EPSG:2987");
+
+            final String epsg;
+            ProjectedReference(String epsg) {
+                this.epsg = epsg;
+            }
+
+            @Override
+            public String getEpsgCode() {
+                return epsg;
             }
         }
 
@@ -138,6 +230,21 @@ public class EdigeoFileGEO extends EdigeoLotFile<GeoBlock> {
         public final String getUnit() {
             return unit;
         }
+
+        /**
+         * Returns the projection.
+         * @return the projection
+         */
+        public final Projection getProjection() {
+            Reference ref;
+            switch (type.code) {
+            case "CAR": ref = CartesianReference.valueOf(code); break;
+            case "GEO": ref = GeographicReference.valueOf(code); break;
+            case "MAP": ref = ProjectedReference.valueOf(code); break;
+            default: throw new IllegalArgumentException(code);
+            }
+            return Projections.getProjectionByCode(ref.getEpsgCode());
+        }
     }
 
     /**
@@ -157,5 +264,13 @@ public class EdigeoFileGEO extends EdigeoLotFile<GeoBlock> {
     public EdigeoFileGEO read(DataSet ds) throws IOException, ReflectiveOperationException {
         super.read(ds);
         return this;
+    }
+
+    /**
+     * Returns the coordinate reference system.
+     * @return the coordinate reference system
+     */
+    public CoorReference getCoorReference() {
+        return blocks.getInstances(CoorReference.class).get(0);
     }
 }

@@ -219,8 +219,8 @@ public class EdigeoFileTHF extends EdigeoFile {
             case "SCN": safeGet(r, s -> scdName += s); break;
             case "SCI": safeGet(r, s -> scdId += s); break;
             case "GDC": nGeoData = safeGetInt(r); break;
-            case "GDN": geoDataName.add(""); safeGet(r, geoDataName); break;
-            case "GDI": geoDataId.add(""); safeGet(r, geoDataId); break;
+            case "GDN": safeGet(r, geoDataName); break;
+            case "GDI": safeGet(r, geoDataId); break;
             default:
                 super.processRecord(r);
             }

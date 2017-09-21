@@ -56,6 +56,7 @@ abstract class EdigeoFile {
         }
 
         protected void safeGet(EdigeoRecord r, List<String> list) {
+            list.add("");
             safeGet(r, s -> {
                 int idx = list.size() - 1;
                 list.set(idx, list.get(idx) + s);

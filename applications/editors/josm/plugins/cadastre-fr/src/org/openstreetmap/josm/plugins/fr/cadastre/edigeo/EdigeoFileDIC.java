@@ -103,8 +103,8 @@ public class EdigeoFileDIC extends EdigeoFile {
             case "TYP": safeGet(r, s -> type += s); break;
             case "UNI": safeGet(r, s -> unit += s); break;
             case "AVC": nValues = safeGetInt(r); break;
-            case "AVL": values.add(""); safeGet(r, values); break;
-            case "AVD": descrs.add(""); safeGet(r, descrs); break;
+            case "AVL": safeGet(r, values); break;
+            case "AVD": safeGet(r, descrs); break;
             default:
                 super.processRecord(r);
             }

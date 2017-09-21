@@ -83,7 +83,7 @@ public class EdigeoFileSCD extends EdigeoFile {
             ARC("ARC"),
             FACE("FAC");
 
-            String code;
+            final String code;
             PrimitiveKind(String code) {
                 this.code = code;
             }
@@ -188,7 +188,7 @@ public class EdigeoFileSCD extends EdigeoFile {
             IS_INCLUDED_IN("ILI"),
             BELONG_TO("BET");
 
-            String code;
+            final String code;
             RelationKind(String code) {
                 this.code = code;
             }

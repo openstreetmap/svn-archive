@@ -55,7 +55,7 @@ abstract class EdigeoFile {
             }
         }
 
-        protected void safeGet(EdigeoRecord r, List<String> list) {
+        protected final void safeGet(EdigeoRecord r, List<String> list) {
             list.add("");
             safeGet(r, s -> {
                 int idx = list.size() - 1;
@@ -63,19 +63,23 @@ abstract class EdigeoFile {
             });
         }
 
-        protected void safeGet(EdigeoRecord r, Consumer<String> callback) {
+        protected final void safeGet(EdigeoRecord r, Consumer<String> callback) {
             (lastReadString = callback).accept(r.length > 0 ? r.values.get(0) : null);
         }
 
-        protected int safeGetInt(EdigeoRecord r) {
+        protected final int safeGetInt(EdigeoRecord r) {
             return r.length > 0 ? Integer.parseInt(r.values.get(0)) : 0;
         }
 
-        protected LocalDate safeGetDate(EdigeoRecord r) {
+        protected final LocalDate safeGetDate(EdigeoRecord r) {
             return r.length > 0 ? LocalDate.parse(r.values.get(0), dateFormatter) : null;
         }
 
-        protected void safeGetAndLog(EdigeoRecord r, Consumer<String> callback, String msg) {
+        protected final double safeGetDouble(EdigeoRecord r) {
+            return r.length > 0 ? Double.parseDouble(r.values.get(0)) : 0;
+        }
+
+        protected final void safeGetAndLog(EdigeoRecord r, Consumer<String> callback, String msg) {
             if (r.length > 0) {
                 String v = r.values.get(0);
                 Logging.info(msg + ": " + v);
@@ -83,7 +87,7 @@ abstract class EdigeoFile {
             }
         }
 
-        protected LocalDate safeGetDateAndLog(EdigeoRecord r, String msg) {
+        protected final LocalDate safeGetDateAndLog(EdigeoRecord r, String msg) {
             if (r.length > 0) {
                 LocalDate v = LocalDate.parse(r.values.get(0), dateFormatter);
                 Logging.info(msg + ": " + v);

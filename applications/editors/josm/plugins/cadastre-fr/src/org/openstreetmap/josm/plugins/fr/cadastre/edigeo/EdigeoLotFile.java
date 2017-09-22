@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.plugins.fr.cadastre.edigeo.EdigeoFileTHF.ChildBlock;
 import org.openstreetmap.josm.plugins.fr.cadastre.edigeo.EdigeoFileTHF.Lot;
 import org.openstreetmap.josm.plugins.fr.cadastre.edigeo.utils.ClassToInstancesMap;
@@ -41,6 +42,17 @@ public abstract class EdigeoLotFile<B extends ChildBlock> extends EdigeoFile {
     protected final Block createBlock(String type) throws ReflectiveOperationException {
         Class<? extends B> klass = classes.get(type);
         return addBlock(blocks.get(klass), klass.getDeclaredConstructor(Lot.class, String.class).newInstance(lot, type));
+    }
+
+    @Override
+    public EdigeoLotFile<B> read(DataSet ds) throws IOException, ReflectiveOperationException {
+        super.read(ds);
+        return this;
+    }
+
+    @Override
+    boolean isValid() {
+        return blocks.values().stream().allMatch(l -> l.stream().allMatch(Block::isValid));
     }
 
     /**

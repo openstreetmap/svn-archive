@@ -46,6 +46,11 @@ public class EdigeoFileGEN extends EdigeoLotFile<GenBlock> {
             }
         }
 
+        @Override
+        boolean isValid() {
+            return super.isValid() && areNotNull(min, max);
+        }
+
         /**
          * Returns the minimal coordinates.
          * @return the minimal coordinates
@@ -130,6 +135,11 @@ public class EdigeoFileGEN extends EdigeoLotFile<GenBlock> {
             default:
                 super.processRecord(r);
             }
+        }
+
+        @Override
+        boolean isValid() {
+            return super.isValid() && areNotNull(structure);
         }
 
         /**

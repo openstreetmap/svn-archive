@@ -11,6 +11,7 @@ import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.plugins.fr.cadastre.edigeo.EdigeoFileDIC.DicBlock;
 import org.openstreetmap.josm.plugins.fr.cadastre.edigeo.EdigeoFileTHF.ChildBlock;
 import org.openstreetmap.josm.plugins.fr.cadastre.edigeo.EdigeoFileTHF.Lot;
+import org.openstreetmap.josm.plugins.fr.cadastre.edigeo.EdigeoRecord.Format;
 
 /**
  * Edigeo DIC file.
@@ -26,7 +27,6 @@ public class EdigeoFileDIC extends EdigeoLotFile<DicBlock> {
         /** TEX */ EdigeoCharset charset;
         /** DEF */ String definition = "";
         /** ORI */ String origin = "";
-        /** CAT */ String category = "";
 
         DicBlock(Lot lot, String type) {
             super(lot, type);
@@ -39,10 +39,14 @@ public class EdigeoFileDIC extends EdigeoLotFile<DicBlock> {
             case "TEX": safeGet(r, s -> charset = EdigeoCharset.of(s)); break;
             case "DEF": safeGet(r, s -> definition += s); break;
             case "ORI": safeGet(r, s -> origin += s); break;
-            case "CAT": safeGet(r, s -> category += s); break;
             default:
                 super.processRecord(r);
             }
+        }
+
+        @Override
+        boolean isValid() {
+            return super.isValid() && areNotEmpty(code);
         }
 
         /**
@@ -68,12 +72,57 @@ public class EdigeoFileDIC extends EdigeoLotFile<DicBlock> {
         public final String getOrigin() {
             return origin;
         }
+    }
+
+    /**
+     * Categorized definition.
+     */
+    abstract static class CategorizedBlock extends DicBlock {
+
+        enum Category {
+            GENERAL('G'),
+            SPECIFIC('P');
+
+            final char code;
+            Category(char code) {
+                this.code = code;
+            }
+
+            public static Category of(char code) {
+                for (Category s : values()) {
+                    if (s.code == code) {
+                        return s;
+                    }
+                }
+                throw new IllegalArgumentException(Character.toString(code));
+            }
+        }
+
+        /** CAT */ Category category;
+
+        CategorizedBlock(Lot lot, String type) {
+            super(lot, type);
+        }
+
+        @Override
+        void processRecord(EdigeoRecord r) {
+            switch (r.name) {
+            case "CAT": category = Category.of(safeGetChar(r)); break;
+            default:
+                super.processRecord(r);
+            }
+        }
+
+        @Override
+        boolean isValid() {
+            return super.isValid() && areNotNull(category);
+        }
 
         /**
          * Returns category.
          * @return category
          */
-        public final String getCategory() {
+        public final Category getCategory() {
             return category;
         }
     }
@@ -90,9 +139,9 @@ public class EdigeoFileDIC extends EdigeoLotFile<DicBlock> {
     /**
      * Attribute definition.
      */
-    public static class AttributeDef extends DicBlock {
+    public static class AttributeDef extends CategorizedBlock {
 
-        /** TYP */ String type = "";
+        /** TYP */ Format type;
         /** UNI */ String unit = "";
         /** AVC */ int nValues;
         /** AVL */ final List<String> values = new ArrayList<>();
@@ -105,7 +154,7 @@ public class EdigeoFileDIC extends EdigeoLotFile<DicBlock> {
         @Override
         void processRecord(EdigeoRecord r) {
             switch (r.name) {
-            case "TYP": safeGet(r, s -> type += s); break;
+            case "TYP": type = Format.of(safeGetChar(r)); break;
             case "UNI": safeGet(r, s -> unit += s); break;
             case "AVC": nValues = safeGetInt(r); break;
             case "AVL": safeGet(r, values); break;
@@ -119,7 +168,7 @@ public class EdigeoFileDIC extends EdigeoLotFile<DicBlock> {
          * Returns attribute type.
          * @return attribute type
          */
-        public final String getType() {
+        public final Format getType() {
             return type;
         }
 
@@ -159,7 +208,7 @@ public class EdigeoFileDIC extends EdigeoLotFile<DicBlock> {
     /**
      * Relation definition.
      */
-    public static class RelationDef extends DicBlock {
+    public static class RelationDef extends CategorizedBlock {
         RelationDef(Lot lot, String type) {
             super(lot, type);
         }

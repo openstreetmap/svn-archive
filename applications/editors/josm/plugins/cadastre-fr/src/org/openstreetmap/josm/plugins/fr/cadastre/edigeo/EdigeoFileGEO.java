@@ -5,7 +5,10 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
 
+import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.projection.Projection;
 import org.openstreetmap.josm.data.projection.Projections;
@@ -60,6 +63,25 @@ public class EdigeoFileGEO extends EdigeoLotFile<GeoBlock> {
 
             public static AltitudeSystem of(int code) {
                 for (AltitudeSystem s : values()) {
+                    if (s.code == code) {
+                        return s;
+                    }
+                }
+                throw new IllegalArgumentException(Integer.toString(code));
+            }
+        }
+
+        enum AltitudeSystemType {
+            TERRESTRIAL(1),
+            BATHYMETRIC(2);
+
+            int code;
+            AltitudeSystemType(int code) {
+                this.code = code;
+            }
+
+            public static AltitudeSystemType of(int code) {
+                for (AltitudeSystemType s : values()) {
                     if (s.code == code) {
                         return s;
                     }
@@ -163,7 +185,11 @@ public class EdigeoFileGEO extends EdigeoLotFile<GeoBlock> {
         /** REL */ String code = "";
         /** DIM */ int nDim;
         /** ALS */ AltitudeSystem altitudeSystem;
-        /** UNH */ String unit = "";
+        /**     */ AltitudeSystemType altitudeSystemType; // TODO
+        /**     */ String altitudeSystemName = ""; // TODO
+        /**     */ String altitudeSystemCode = ""; // TODO
+        /** UNH */ String unitHorizontal = "";
+        /**     */ String unitVertical = ""; // TODO
 
         CoorReference(Lot lot, String type) {
             super(lot, type);
@@ -177,10 +203,18 @@ public class EdigeoFileGEO extends EdigeoLotFile<GeoBlock> {
             case "REL": safeGetAndLog(r, s -> code += s, tr("Projection")); break;
             case "DIM": nDim = safeGetInt(r); break;
             case "ALS": altitudeSystem = AltitudeSystem.of(safeGetInt(r)); break;
-            case "UNH": safeGet(r, s -> unit += s); break;
+            case "UNH": safeGet(r, s -> unitHorizontal += s); break;
             default:
                 super.processRecord(r);
             }
+        }
+
+        @Override
+        boolean isValid() {
+            return super.isValid() && areNotNull(type, altitudeSystem) && areNotEmpty(code, unitHorizontal)
+                    && (nDim == 2 || (nDim == 3 && areNotEmpty(unitVertical)))
+                    && (AltitudeSystem.THREE_DIM_OR_NO_ALTITUDE == altitudeSystem
+                    || areNotNull(altitudeSystemType, altitudeSystemName, altitudeSystemCode));
         }
 
         /**
@@ -224,11 +258,19 @@ public class EdigeoFileGEO extends EdigeoLotFile<GeoBlock> {
         }
 
         /**
-         * Returns unit.
-         * @return unit
+         * Returns horizontal unit.
+         * @return horizontal unit
          */
-        public final String getUnit() {
-            return unit;
+        public final String getUnitHorizontal() {
+            return unitHorizontal;
+        }
+
+        /**
+         * Returns vertical unit.
+         * @return vertical unit
+         */
+        public final String getUnitVertical() {
+            return unitVertical;
         }
 
         /**
@@ -248,6 +290,32 @@ public class EdigeoFileGEO extends EdigeoLotFile<GeoBlock> {
     }
 
     /**
+     * Offset.
+     */
+    public static class Offset extends GeoBlock {
+
+        /**     */ int nOffsetPoints; // TODO
+        /**     */ int nControlPoints; // TODO
+        /**     */ final List<String> offsetPointIds = new ArrayList<>(); // TODO
+        /**     */ final List<EastNorth> offsetInputCoor = new ArrayList<>(); // TODO
+        /**     */ final List<EastNorth> offsetReferCoor = new ArrayList<>(); // TODO
+        /**     */ final List<String> controlPointIds = new ArrayList<>(); // TODO
+        /**     */ final List<EastNorth> controlInputCoor = new ArrayList<>(); // TODO
+        /**     */ final List<EastNorth> controlReferCoor = new ArrayList<>(); // TODO
+
+        Offset(Lot lot, String type) {
+            super(lot, type);
+        }
+
+        @Override
+        boolean isValid() {
+            return super.isValid()
+                    && areSameSize(nOffsetPoints, offsetPointIds, offsetInputCoor, offsetReferCoor)
+                    && areSameSize(nControlPoints, controlPointIds, controlInputCoor, controlReferCoor);
+        }
+    }
+
+    /**
      * Constructs a new {@code EdigeoFileGEO}.
      * @param lot parent lot
      * @param seId subset id
@@ -257,6 +325,7 @@ public class EdigeoFileGEO extends EdigeoLotFile<GeoBlock> {
     public EdigeoFileGEO(Lot lot, String seId, Path path) throws IOException {
         super(lot, seId, path);
         register("GEO", CoorReference.class);
+        register("RPR", Offset.class);
         lot.geo = this;
     }
 

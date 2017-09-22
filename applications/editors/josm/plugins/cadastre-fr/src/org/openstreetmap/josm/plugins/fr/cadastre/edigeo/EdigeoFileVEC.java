@@ -33,6 +33,12 @@ public class EdigeoFileVEC extends EdigeoLotFile<VecBlock<?>> {
         final Class<T> klass;
 
         /** SCP */ T scdRef;
+        /** ATC */ int nAttributes;
+        /** ATP */ final List<String> attributeDefs = new ArrayList<>();
+        /** TEX */ EdigeoCharset charset;
+        /** ATV */ final List<String> attributeValues = new ArrayList<>();
+        /** QAC */ int nQualities;
+        /** QAP */ final List<String> qualityIndics = new ArrayList<>();
 
         VecBlock(Lot lot, String type, Class<T> klass) {
             super(lot, type);
@@ -43,6 +49,31 @@ public class EdigeoFileVEC extends EdigeoLotFile<VecBlock<?>> {
         void processRecord(EdigeoRecord r) {
             switch (r.name) {
             case "SCP": scdRef = lot.scd.find(r.values, klass); break;
+            case "ATC": nAttributes = safeGetInt(r); break;
+            case "ATP": safeGet(r, attributeDefs); break;
+            case "TEX": safeGet(r, s -> charset = EdigeoCharset.of(s)); break;
+            case "ATV": safeGet(r, attributeValues); break;
+            case "QAC": nQualities = safeGetInt(r); break;
+            case "QAP": safeGet(r, qualityIndics); break;
+            default:
+                super.processRecord(r);
+            }
+        }
+    }
+
+    abstract static class BoundedBlock<T extends ScdBlock> extends VecBlock<T> {
+        /** CM1 */ EastNorth minCoordinate;
+        /** CM2 */ EastNorth maxCoordinate;
+
+        BoundedBlock(Lot lot, String type, Class<T> klass) {
+            super(lot, type, klass);
+        }
+
+        @Override
+        void processRecord(EdigeoRecord r) {
+            switch (r.name) {
+            case "CM1": minCoordinate = safeGetEastNorth(r); break;
+            case "CM2": maxCoordinate = safeGetEastNorth(r); break;
             default:
                 super.processRecord(r);
             }
@@ -75,8 +106,6 @@ public class EdigeoFileVEC extends EdigeoLotFile<VecBlock<?>> {
 
         /** TYP */ NodeType nodeType;
         /** COR */ EastNorth coordinate;
-        /** ATC */ int nAttributes;
-        /** QAC */ int nQualities;
 
         NodeBlock(Lot lot, String type) {
             super(lot, type, McdPrimitiveDef.class);
@@ -87,8 +116,6 @@ public class EdigeoFileVEC extends EdigeoLotFile<VecBlock<?>> {
             switch (r.name) {
             case "TYP": nodeType = NodeType.of(safeGetInt(r)); break;
             case "COR": coordinate = safeGetEastNorth(r); break;
-            case "ATC": nAttributes = safeGetInt(r); break;
-            case "QAC": nQualities = safeGetInt(r); break;
             default:
                 super.processRecord(r);
             }
@@ -138,7 +165,7 @@ public class EdigeoFileVEC extends EdigeoLotFile<VecBlock<?>> {
     /**
      * Arc descriptor block.
      */
-    public static class ArcBlock extends VecBlock<McdPrimitiveDef> {
+    public static class ArcBlock extends BoundedBlock<McdPrimitiveDef> {
         enum ArcType {
             LINE(1),
             CIRCLE_ARC(2),
@@ -159,13 +186,9 @@ public class EdigeoFileVEC extends EdigeoLotFile<VecBlock<?>> {
             }
         }
 
-        /** CM1 */ EastNorth minCoordinate;
-        /** CM2 */ EastNorth maxCoordinate;
         /** TYP */ ArcType arcType;
         /** PTC */ int nPoints;
         /** COR */ final List<EastNorth> points = new ArrayList<>();
-        /** ATC */ int nAttributes;
-        /** QAC */ int nQualities;
 
         ArcBlock(Lot lot, String type) {
             super(lot, type, McdPrimitiveDef.class);
@@ -174,15 +197,20 @@ public class EdigeoFileVEC extends EdigeoLotFile<VecBlock<?>> {
         @Override
         void processRecord(EdigeoRecord r) {
             switch (r.name) {
-            case "CM1": minCoordinate = safeGetEastNorth(r); break;
-            case "CM2": maxCoordinate = safeGetEastNorth(r); break;
             case "TYP": arcType = ArcType.of(safeGetInt(r)); break;
-            case "PTC": nPoints = safeGetInt(r); break;
+            case "PTC": nPoints = safeGetInt(r); assert checkNumberOfPoints(); break;
             case "COR": points.add(safeGetEastNorth(r)); break;
-            case "ATC": nAttributes = safeGetInt(r); break;
-            case "QAC": nQualities = safeGetInt(r); break;
             default:
                 super.processRecord(r);
+            }
+        }
+
+        private boolean checkNumberOfPoints() {
+            switch (arcType) {
+            case LINE: return nPoints >= 2;
+            case CIRCLE_ARC: return nPoints == 3;
+            case CURVE: return nPoints >= 3;
+            default: throw new IllegalStateException(arcType.toString());
             }
         }
     }
@@ -190,42 +218,18 @@ public class EdigeoFileVEC extends EdigeoLotFile<VecBlock<?>> {
     /**
      * Face descriptor block.
      */
-    public static class FaceBlock extends VecBlock<McdPrimitiveDef> {
-        /** CM1 */ EastNorth minCoordinate;
-        /** CM2 */ EastNorth maxCoordinate;
-        /** ATC */ int nAttributes;
-        /** QAC */ int nQualities;
+    public static class FaceBlock extends BoundedBlock<McdPrimitiveDef> {
 
         FaceBlock(Lot lot, String type) {
             super(lot, type, McdPrimitiveDef.class);
-        }
-
-        @Override
-        void processRecord(EdigeoRecord r) {
-            switch (r.name) {
-            case "CM1": minCoordinate = safeGetEastNorth(r); break;
-            case "CM2": maxCoordinate = safeGetEastNorth(r); break;
-            case "ATC": nAttributes = safeGetInt(r); break;
-            case "QAC": nQualities = safeGetInt(r); break;
-            default:
-                super.processRecord(r);
-            }
         }
     }
 
     /**
      * Object descriptor block.
      */
-    public static class ObjectBlock extends VecBlock<McdObjectDef> {
-        /** CM1 */ EastNorth minCoordinate;
-        /** CM2 */ EastNorth maxCoordinate;
+    public static class ObjectBlock extends BoundedBlock<McdObjectDef> {
         /** REF */ String pointRef = "";
-        /** ATC */ int nAttributes;
-        /** ATP */ final List<String> attributeDefs = new ArrayList<>();
-        /** TEX */ EdigeoCharset charset;
-        /** ATV */ final List<String> attributeValues = new ArrayList<>();
-        /** QAC */ int nQualities;
-        /** QAP */ final List<String> qualityIndics = new ArrayList<>();
 
         ObjectBlock(Lot lot, String type) {
             super(lot, type, McdObjectDef.class);
@@ -234,15 +238,7 @@ public class EdigeoFileVEC extends EdigeoLotFile<VecBlock<?>> {
         @Override
         void processRecord(EdigeoRecord r) {
             switch (r.name) {
-            case "CM1": minCoordinate = safeGetEastNorth(r); break;
-            case "CM2": maxCoordinate = safeGetEastNorth(r); break;
             case "REF": safeGet(r, s -> pointRef += s); break;
-            case "ATC": nAttributes = safeGetInt(r); break;
-            case "ATP": safeGet(r, attributeDefs); break;
-            case "TEX": safeGet(r, s -> charset = EdigeoCharset.of(s)); break;
-            case "ATV": safeGet(r, attributeValues); break;
-            case "QAC": nQualities = safeGetInt(r); break;
-            case "QAP": safeGet(r, qualityIndics); break;
             default:
                 super.processRecord(r);
             }
@@ -255,29 +251,27 @@ public class EdigeoFileVEC extends EdigeoLotFile<VecBlock<?>> {
     public static class RelationBlock extends VecBlock<McdRelationDef> {
 
         enum Composition {
-            PLUS("P"),
-            MINUS("M");
+            PLUS('P'),
+            MINUS('M');
 
-            String code;
-            Composition(String code) {
+            final char code;
+            Composition(char code) {
                 this.code = code;
             }
 
-            public static Composition of(String code) {
+            public static Composition of(char code) {
                 for (Composition s : values()) {
-                    if (s.code.equals(code)) {
+                    if (s.code == code) {
                         return s;
                     }
                 }
-                throw new IllegalArgumentException(code);
+                throw new IllegalArgumentException(Character.toString(code));
             }
         }
 
         /** FTC */ int nElements;
         /** FTP */ final List<String> elements = new ArrayList<>();
         /** SNS */ final Map<String, Composition> compositions = new HashMap<>();
-        /** ATC */ int nAttributes;
-        /** QAC */ int nQualities;
 
         RelationBlock(Lot lot, String type) {
             super(lot, type, McdRelationDef.class);
@@ -288,9 +282,7 @@ public class EdigeoFileVEC extends EdigeoLotFile<VecBlock<?>> {
             switch (r.name) {
             case "FTC": nElements = safeGetInt(r); break;
             case "FTP": safeGet(r, elements); break;
-            case "SNS": safeGet(r, s -> compositions.put(elements.get(elements.size()-1), Composition.of(s))); break;
-            case "ATC": nAttributes = safeGetInt(r); break;
-            case "QAC": nQualities = safeGetInt(r); break;
+            case "SNS": compositions.put(elements.get(elements.size()-1), Composition.of(safeGetChar(r))); break;
             default:
                 super.processRecord(r);
             }

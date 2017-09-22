@@ -27,12 +27,13 @@ class EdigeoRecord {
                     return n;
                 }
             }
-            throw new IllegalArgumentException("Unknown code: " + c);
+            throw new IllegalArgumentException(Character.toString(c));
         }
     }
 
     enum Format {
         STRING('A'),
+        BINARY('B'),
         COORDINATES('C'),
         DATE('D'),
         REAL_WITH_EXP('E'),
@@ -54,7 +55,7 @@ class EdigeoRecord {
                     return f;
                 }
             }
-            throw new IllegalArgumentException("Unknown code: " + c);
+            throw new IllegalArgumentException(Character.toString(c));
         }
     }
 

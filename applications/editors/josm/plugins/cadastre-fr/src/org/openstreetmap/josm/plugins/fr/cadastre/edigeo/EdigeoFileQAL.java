@@ -24,7 +24,16 @@ public class EdigeoFileQAL extends EdigeoLotFile<QalBlock> {
     }
 
     /**
-     * Update descriptor.
+     * Genealogy descriptor (6.4.5.1). TODO
+     */
+    public static class Genealogy extends QalBlock {
+        Genealogy(Lot lot, String type) {
+            super(lot, type);
+        }
+    }
+
+    /**
+     * Update descriptor (6.4.5.2).
      */
     public static class Update extends QalBlock {
 
@@ -95,6 +104,69 @@ public class EdigeoFileQAL extends EdigeoLotFile<QalBlock> {
             default:
                 super.processRecord(r);
             }
+        }
+    }
+
+    /**
+     * Horizontal precision descriptor (6.4.5.3). TODO
+     */
+    public static class HorizontalPrecision extends QalBlock {
+        HorizontalPrecision(Lot lot, String type) {
+            super(lot, type);
+        }
+    }
+
+    /**
+     * Vertical precision descriptor (6.4.5.4). TODO
+     */
+    public static class VerticalPrecision extends QalBlock {
+        VerticalPrecision(Lot lot, String type) {
+            super(lot, type);
+        }
+    }
+
+    /**
+     * Metric precision descriptor (6.4.5.5). TODO
+     */
+    public static class MetricPrecision extends QalBlock {
+        MetricPrecision(Lot lot, String type) {
+            super(lot, type);
+        }
+    }
+
+    /**
+     * Exhaustivity descriptor (6.4.5.6). TODO
+     */
+    public static class Exhaustivity extends QalBlock {
+        Exhaustivity(Lot lot, String type) {
+            super(lot, type);
+        }
+    }
+
+    /**
+     * Semantic precision descriptor (6.4.5.7). TODO
+     */
+    public static class SemanticPrecision extends QalBlock {
+        SemanticPrecision(Lot lot, String type) {
+            super(lot, type);
+        }
+    }
+
+    /**
+     * Logical coherence descriptor (6.4.5.8). TODO
+     */
+    public static class LogicalCoherence extends QalBlock {
+        LogicalCoherence(Lot lot, String type) {
+            super(lot, type);
+        }
+    }
+
+    /**
+     * Specific quality descriptor (6.4.5.9). TODO
+     */
+    public static class SpecificQuality extends QalBlock {
+        SpecificQuality(Lot lot, String type) {
+            super(lot, type);
         }
     }
 

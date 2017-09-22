@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Objects;
 
 import org.openstreetmap.josm.data.osm.DataSet;
+import org.openstreetmap.josm.tools.Logging;
 
 /**
  * Edigeo THF file.
@@ -51,6 +52,7 @@ public class EdigeoFileTHF extends EdigeoFile {
         /** ADR */ String recipient = "";
         /** LOC */ int nLots;
         /** VOC */ int nVolumes;
+        /**     */ final List<String> volumeLabels = new ArrayList<>(); // TODO
         /** SEC */ SecurityClassification security;
         /** RDI */ String diffusionRestriction = "";
         /** VER */ String edigeoVersion = "";
@@ -82,6 +84,12 @@ public class EdigeoFileTHF extends EdigeoFile {
             default:
                 super.processRecord(r);
             }
+        }
+
+        @Override
+        boolean isValid() {
+            return super.isValid() && areNotEmpty(author, recipient, edigeoVersion, transmissionName)
+                    && areSameSize(nVolumes, volumeLabels) && transmissionEdition >= 1;
         }
 
         /**
@@ -238,14 +246,28 @@ public class EdigeoFileTHF extends EdigeoFile {
 
         void readFiles(Path path, DataSet ds) throws IOException, ReflectiveOperationException {
             Path dir = path.getParent();
-            new EdigeoFileGEN(this, genId, dir.resolve(name + genName + ".GEN")).read(ds);
-            new EdigeoFileGEO(this, geoId, dir.resolve(name + geoName + ".GEO")).read(ds);
-            new EdigeoFileDIC(this, dicId, dir.resolve(name + dicName + ".DIC")).read(ds);
-            new EdigeoFileSCD(this, scdId, dir.resolve(name + scdName + ".SCD")).read(ds);
-            new EdigeoFileQAL(this, qalId, dir.resolve(name + qalName + ".QAL")).read(ds);
+            List<EdigeoFile> allFiles = new ArrayList<>();
+            allFiles.add(new EdigeoFileGEN(this, genId, dir.resolve(name + genName + ".GEN")).read(ds));
+            allFiles.add(new EdigeoFileGEO(this, geoId, dir.resolve(name + geoName + ".GEO")).read(ds));
+            allFiles.add(new EdigeoFileDIC(this, dicId, dir.resolve(name + dicName + ".DIC")).read(ds));
+            allFiles.add(new EdigeoFileSCD(this, scdId, dir.resolve(name + scdName + ".SCD")).read(ds));
+            allFiles.add(new EdigeoFileQAL(this, qalId, dir.resolve(name + qalName + ".QAL")).read(ds));
             for (int i = 0; i < getNumberOfGeoData(); i++) {
-                new EdigeoFileVEC(this, vecId.get(i), dir.resolve(name + vecName.get(i) + ".VEC")).read(ds);
+                allFiles.add(new EdigeoFileVEC(this, vecId.get(i), dir.resolve(name + vecName.get(i) + ".VEC")).read(ds));
             }
+            for (EdigeoFile f : allFiles) {
+                boolean valid = f.isValid();
+                if (valid) {
+                    Logging.debug(f.path + ": valid");
+                } else {
+                    Logging.warn(f.path + ": invalid!");
+                }
+            }
+        }
+
+        @Override
+        boolean isValid() {
+            return super.isValid() && areNotEmpty(name, genName, genId, geoName, geoId);
         }
 
         /**
@@ -446,5 +468,10 @@ public class EdigeoFileTHF extends EdigeoFile {
             //ds.addDataSource(new DataSource(lot.gen.getGeoBounds().getBounds(), support.author));
         }
         return this;
+    }
+
+    @Override
+    boolean isValid() {
+        return support.isValid() && lots.stream().allMatch(Block::isValid);
     }
 }

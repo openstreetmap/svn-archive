@@ -8,6 +8,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
@@ -55,6 +57,22 @@ abstract class EdigeoFile {
             }
         }
 
+        static boolean areNotNull(Object... objects) {
+            return Arrays.stream(objects).noneMatch(o -> o == null);
+        }
+
+        static boolean areNotEmpty(String... strings) {
+            return areNotNull((Object[]) strings) && Arrays.stream(strings).noneMatch(String::isEmpty);
+        }
+
+        static boolean areSameSize(int size, Collection<?>... collections) {
+            return areNotNull((Object[]) collections) && Arrays.stream(collections).allMatch(c -> c.size() == size);
+        }
+
+        boolean isValid() {
+            return type.length() == 3 && areNotEmpty(identifier);
+        }
+
         protected final void safeGet(EdigeoRecord r, List<String> list) {
             list.add("");
             safeGet(r, s -> {
@@ -65,6 +83,10 @@ abstract class EdigeoFile {
 
         protected final void safeGet(EdigeoRecord r, Consumer<String> callback) {
             (lastReadString = callback).accept(r.length > 0 ? r.values.get(0) : null);
+        }
+
+        protected final char safeGetChar(EdigeoRecord r) {
+            return r.length > 0 ? r.values.get(0).charAt(0) : 0;
         }
 
         protected final int safeGetInt(EdigeoRecord r) {
@@ -174,4 +196,6 @@ abstract class EdigeoFile {
 
         currentBlock.processRecord(r);
     }
+
+    abstract boolean isValid();
 }

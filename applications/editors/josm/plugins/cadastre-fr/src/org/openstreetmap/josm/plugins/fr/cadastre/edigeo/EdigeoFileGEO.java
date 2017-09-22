@@ -28,7 +28,7 @@ public class EdigeoFileGEO extends EdigeoLotFile<GeoBlock> {
     }
 
     /**
-     * Coordinates reference.
+     * Coordinates reference. 7.4.2.1
      */
     public static class CoorReference extends GeoBlock {
 
@@ -37,7 +37,7 @@ public class EdigeoFileGEO extends EdigeoLotFile<GeoBlock> {
             GEOGRAPHIC("GEO"),
             PROJECTED("MAP");
 
-            String code;
+            final String code;
             ReferenceType(String code) {
                 this.code = code;
             }
@@ -56,7 +56,7 @@ public class EdigeoFileGEO extends EdigeoLotFile<GeoBlock> {
             TWO_DIM_PLUS_ALTITUDE(1),
             THREE_DIM_OR_NO_ALTITUDE(2);
 
-            int code;
+            final int code;
             AltitudeSystem(int code) {
                 this.code = code;
             }
@@ -75,7 +75,7 @@ public class EdigeoFileGEO extends EdigeoLotFile<GeoBlock> {
             TERRESTRIAL(1),
             BATHYMETRIC(2);
 
-            int code;
+            final int code;
             AltitudeSystemType(int code) {
                 this.code = code;
             }
@@ -185,11 +185,11 @@ public class EdigeoFileGEO extends EdigeoLotFile<GeoBlock> {
         /** REL */ String code = "";
         /** DIM */ int nDim;
         /** ALS */ AltitudeSystem altitudeSystem;
-        /**     */ AltitudeSystemType altitudeSystemType; // TODO
-        /**     */ String altitudeSystemName = ""; // TODO
-        /**     */ String altitudeSystemCode = ""; // TODO
+        /** ALT */ AltitudeSystemType altitudeSystemType;
+        /** ALN */ String altitudeSystemName = "";
+        /** ALL */ String altitudeSystemCode = "";
         /** UNH */ String unitHorizontal = "";
-        /**     */ String unitVertical = ""; // TODO
+        /** UNV */ String unitVertical = "";
 
         CoorReference(Lot lot, String type) {
             super(lot, type);
@@ -203,7 +203,11 @@ public class EdigeoFileGEO extends EdigeoLotFile<GeoBlock> {
             case "REL": safeGetAndLog(r, s -> code += s, tr("Projection")); break;
             case "DIM": nDim = safeGetInt(r); break;
             case "ALS": altitudeSystem = AltitudeSystem.of(safeGetInt(r)); break;
+            case "ALT": altitudeSystemType = AltitudeSystemType.of(safeGetInt(r)); break;
+            case "ALN": safeGet(r, s -> altitudeSystemName += s); break;
+            case "ALL": safeGet(r, s -> altitudeSystemCode += s); break;
             case "UNH": safeGet(r, s -> unitHorizontal += s); break;
+            case "UNV": safeGet(r, s -> unitVertical += s); break;
             default:
                 super.processRecord(r);
             }
@@ -290,21 +294,36 @@ public class EdigeoFileGEO extends EdigeoLotFile<GeoBlock> {
     }
 
     /**
-     * Offset.
+     * Offset. 7.4.2.2
      */
     public static class Offset extends GeoBlock {
 
-        /**     */ int nOffsetPoints; // TODO
-        /**     */ int nControlPoints; // TODO
-        /**     */ final List<String> offsetPointIds = new ArrayList<>(); // TODO
-        /**     */ final List<EastNorth> offsetInputCoor = new ArrayList<>(); // TODO
-        /**     */ final List<EastNorth> offsetReferCoor = new ArrayList<>(); // TODO
-        /**     */ final List<String> controlPointIds = new ArrayList<>(); // TODO
-        /**     */ final List<EastNorth> controlInputCoor = new ArrayList<>(); // TODO
-        /**     */ final List<EastNorth> controlReferCoor = new ArrayList<>(); // TODO
+        /** RPC */ int nOffsetPoints;
+        /** RPI */ final List<String> offsetPointIds = new ArrayList<>();
+        /** RP1 */ final List<EastNorth> offsetInputCoor = new ArrayList<>();
+        /** RP2 */ final List<EastNorth> offsetReferCoor = new ArrayList<>();
+        /** CPC */ int nControlPoints;
+        /** CPI */ final List<String> controlPointIds = new ArrayList<>();
+        /** CP1 */ final List<EastNorth> controlInputCoor = new ArrayList<>();
+        /** CP2 */ final List<EastNorth> controlReferCoor = new ArrayList<>();
 
         Offset(Lot lot, String type) {
             super(lot, type);
+        }
+
+        @Override
+        void processRecord(EdigeoRecord r) {
+            switch (r.name) {
+            case "RPC": nOffsetPoints = safeGetInt(r); break;
+            case "RPI": safeGet(r, offsetPointIds); break;
+            case "RP1": offsetInputCoor.add(safeGetEastNorth(r)); break;
+            case "RP2": offsetReferCoor.add(safeGetEastNorth(r)); break;
+            case "CPC": nControlPoints = safeGetInt(r); break;
+            case "CPI": safeGet(r, controlPointIds); break;
+            case "CP1": controlInputCoor.add(safeGetEastNorth(r)); break;
+            case "CP2": controlReferCoor.add(safeGetEastNorth(r)); break;
+            default: super.processRecord(r);
+            }
         }
 
         @Override
@@ -341,5 +360,13 @@ public class EdigeoFileGEO extends EdigeoLotFile<GeoBlock> {
      */
     public CoorReference getCoorReference() {
         return blocks.getInstances(CoorReference.class).get(0);
+    }
+
+    /**
+     * Returns the offset descriptor.
+     * @return the offset descriptor
+     */
+    public Offset getOffset() {
+        return blocks.getInstances(Offset.class).get(0);
     }
 }

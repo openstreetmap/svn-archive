@@ -52,7 +52,7 @@ public class EdigeoFileTHF extends EdigeoFile {
         /** ADR */ String recipient = "";
         /** LOC */ int nLots;
         /** VOC */ int nVolumes;
-        /**     */ final List<String> volumeLabels = new ArrayList<>(); // TODO
+        /** VOL */ final List<String> volumeLabels = new ArrayList<>();
         /** SEC */ SecurityClassification security;
         /** RDI */ String diffusionRestriction = "";
         /** VER */ String edigeoVersion = "";
@@ -73,6 +73,7 @@ public class EdigeoFileTHF extends EdigeoFile {
             case "ADR": safeGetAndLog(r, s -> recipient += s, tr("Recipient")); break;
             case "LOC": nLots = safeGetInt(r); break;
             case "VOC": nVolumes = safeGetInt(r); break;
+            case "VOL": safeGet(r, volumeLabels); break;
             case "SEC": security = SecurityClassification.of(safeGetInt(r)); break;
             case "RDI": safeGetAndLog(r, s -> diffusionRestriction += s, tr("Diffusion restriction")); break;
             case "VER": safeGet(r, s -> edigeoVersion += s); break;
@@ -122,6 +123,14 @@ public class EdigeoFileTHF extends EdigeoFile {
          */
         public final int getnVolumes() {
             return nVolumes;
+        }
+
+        /**
+         * Returns volume labels.
+         * @return volume labels
+         */
+        public final List<String> getVolumeLabels() {
+            return Collections.unmodifiableList(volumeLabels);
         }
 
         /**

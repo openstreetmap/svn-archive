@@ -6,7 +6,10 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 import java.io.IOException;
 import java.nio.file.Path;
 
+import org.openstreetmap.josm.data.Bounds;
+import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.osm.DataSet;
+import org.openstreetmap.josm.data.projection.Projection;
 import org.openstreetmap.josm.plugins.fr.cadastre.edigeo.EdigeoFileGEN.GenBlock;
 import org.openstreetmap.josm.plugins.fr.cadastre.edigeo.EdigeoFileTHF.ChildBlock;
 import org.openstreetmap.josm.plugins.fr.cadastre.edigeo.EdigeoFileTHF.Lot;
@@ -26,8 +29,8 @@ public class EdigeoFileGEN extends EdigeoLotFile<GenBlock> {
      * Geographic bounds.
      */
     public static class GeoBounds extends GenBlock {
-        /** CM1 */ String min = "";
-        /** CM2 */ String max = "";
+        /** CM1 */ EastNorth min;
+        /** CM2 */ EastNorth max;
 
         GeoBounds(Lot lot, String type) {
             super(lot, type);
@@ -36,8 +39,8 @@ public class EdigeoFileGEN extends EdigeoLotFile<GenBlock> {
         @Override
         void processRecord(EdigeoRecord r) {
             switch (r.name) {
-            case "CM1": safeGet(r, s -> min += s); break;
-            case "CM2": safeGet(r, s -> max += s); break;
+            case "CM1": min = safeGetEastNorth(r); break;
+            case "CM2": max = safeGetEastNorth(r); break;
             default:
                 super.processRecord(r);
             }
@@ -47,7 +50,7 @@ public class EdigeoFileGEN extends EdigeoLotFile<GenBlock> {
          * Returns the minimal coordinates.
          * @return the minimal coordinates
          */
-        public final String getMinCm1() {
+        public final EastNorth getMinCm1() {
             return min;
         }
 
@@ -55,8 +58,28 @@ public class EdigeoFileGEN extends EdigeoLotFile<GenBlock> {
          * Returns the maximal coordinates.
          * @return the maximal coordinates
          */
-        public final String getMaxCm2() {
+        public final EastNorth getMaxCm2() {
             return max;
+        }
+
+        /**
+         * Returns the bounds.
+         * @return the bounds
+         */
+        public Bounds getBounds() {
+/*
+            for (String s : Projections.getAllProjectionCodes()) {
+                Projection p = Projections.getProjectionByCode(s);
+                LatLon en = p.eastNorth2latlon(min);
+                double lat = en.lat();
+                double lon = en.lon();
+                if (43 <= lat && lat <= 44 && 1.38 <= lon && lon <= 1.45) {
+                    System.out.println(s + ": " + p);
+                }
+            }
+*/
+            Projection proj = lot.geo.getCoorReference().getProjection();
+            return new Bounds(proj.eastNorth2latlon(min), proj.eastNorth2latlon(max));
         }
     }
 
@@ -152,5 +175,13 @@ public class EdigeoFileGEN extends EdigeoLotFile<GenBlock> {
     public EdigeoFileGEN read(DataSet ds) throws IOException, ReflectiveOperationException {
         super.read(ds);
         return this;
+    }
+
+    /**
+     * Returns the geographic bounds.
+     * @return the geographic bounds
+     */
+    public final GeoBounds getGeoBounds() {
+        return blocks.getInstances(GeoBounds.class).get(0);
     }
 }

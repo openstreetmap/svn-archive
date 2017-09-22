@@ -443,6 +443,7 @@ public class EdigeoFileTHF extends EdigeoFile {
         super.read(ds);
         for (Lot lot : getLots()) {
             lot.readFiles(path, ds);
+            //ds.addDataSource(new DataSource(lot.gen.getGeoBounds().getBounds(), support.author));
         }
         return this;
     }

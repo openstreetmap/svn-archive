@@ -73,6 +73,10 @@ abstract class EdigeoFile {
             return type.length() == 3 && areNotEmpty(identifier);
         }
 
+        void resolve() {
+            // To be overriden if relevant
+        }
+
         protected final void safeGet(EdigeoRecord r, List<String> list) {
             list.add("");
             safeGet(r, s -> {
@@ -198,4 +202,8 @@ abstract class EdigeoFile {
     }
 
     abstract boolean isValid();
+
+    void resolve() {
+        // To be overriden if relevant
+    }
 }

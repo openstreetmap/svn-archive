@@ -264,6 +264,7 @@ public class EdigeoFileTHF extends EdigeoFile {
             for (int i = 0; i < getNumberOfGeoData(); i++) {
                 allFiles.add(new EdigeoFileVEC(this, vecId.get(i), dir.resolve(name + vecName.get(i) + ".VEC")).read(ds));
             }
+            allFiles.forEach(EdigeoFile::resolve);
             for (EdigeoFile f : allFiles) {
                 boolean valid = f.isValid();
                 if (valid) {

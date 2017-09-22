@@ -59,6 +59,13 @@ public class EdigeoFileVEC extends EdigeoLotFile<VecBlock<?>> {
                 super.processRecord(r);
             }
         }
+
+        @Override
+        boolean isValid() {
+            return super.isValid() && areNotNull(scdRef)
+                    && areSameSize(nAttributes, attributeDefs, attributeValues)
+                    && areSameSize(nQualities, qualityIndics);
+        }
     }
 
     abstract static class BoundedBlock<T extends ScdBlock> extends VecBlock<T> {
@@ -226,10 +233,10 @@ public class EdigeoFileVEC extends EdigeoLotFile<VecBlock<?>> {
     }
 
     /**
-     * Object descriptor block.
+     * Object descriptor block. 7.5.1.4
      */
     public static class ObjectBlock extends BoundedBlock<McdObjectDef> {
-        /** REF */ String pointRef = "";
+        /** REF */ EastNorth refPoint;
 
         ObjectBlock(Lot lot, String type) {
             super(lot, type, McdObjectDef.class);
@@ -238,7 +245,7 @@ public class EdigeoFileVEC extends EdigeoLotFile<VecBlock<?>> {
         @Override
         void processRecord(EdigeoRecord r) {
             switch (r.name) {
-            case "REF": safeGet(r, s -> pointRef += s); break;
+            case "REF": refPoint = safeGetEastNorth(r); break;
             default:
                 super.processRecord(r);
             }
@@ -246,7 +253,7 @@ public class EdigeoFileVEC extends EdigeoLotFile<VecBlock<?>> {
     }
 
     /**
-     * Relation descriptor block.
+     * Relation descriptor block. 7.5.1.5
      */
     public static class RelationBlock extends VecBlock<McdRelationDef> {
 
@@ -270,8 +277,12 @@ public class EdigeoFileVEC extends EdigeoLotFile<VecBlock<?>> {
         }
 
         /** FTC */ int nElements;
-        /** FTP */ final List<String> elements = new ArrayList<>();
-        /** SNS */ final Map<String, Composition> compositions = new HashMap<>();
+        /** FTP */ final List<List<String>> lElements = new ArrayList<>();
+        /** SNS */ final Map<List<String>, Composition> mCompositions = new HashMap<>();
+
+        // Resolution of elements must be done when all VEC files are read
+        final List<VecBlock<?>> elements = new ArrayList<>();
+        final Map<VecBlock<?>, Composition> compositions = new HashMap<>();
 
         RelationBlock(Lot lot, String type) {
             super(lot, type, McdRelationDef.class);
@@ -281,11 +292,29 @@ public class EdigeoFileVEC extends EdigeoLotFile<VecBlock<?>> {
         void processRecord(EdigeoRecord r) {
             switch (r.name) {
             case "FTC": nElements = safeGetInt(r); break;
-            case "FTP": safeGet(r, elements); break;
-            case "SNS": compositions.put(elements.get(elements.size()-1), Composition.of(safeGetChar(r))); break;
+            case "FTP": lElements.add(r.values); break;
+            case "SNS": mCompositions.put(lElements.get(lElements.size()-1), Composition.of(safeGetChar(r))); break;
             default:
                 super.processRecord(r);
             }
+        }
+
+        @Override
+        boolean isValid() {
+            return super.isValid() && nElements >= 2 && areSameSize(nElements, elements) && compositions.size() <= nElements;
+        }
+
+        @Override
+        final void resolve() {
+            for (List<String> values : lElements) {
+                VecBlock<?> b = lot.vec.stream().filter(v -> v.subsetId.equals(values.get(1))).findAny()
+                        .orElseThrow(() -> new IllegalArgumentException(values.toString()))
+                        .find(values, VecBlock.class);
+                elements.add(b);
+                compositions.put(b, mCompositions.get(values));
+            }
+            lElements.clear();
+            mCompositions.clear();
         }
     }
 

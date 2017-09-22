@@ -22,7 +22,7 @@ import org.openstreetmap.josm.plugins.fr.cadastre.edigeo.utils.MutableClassToIns
 public abstract class EdigeoLotFile<B extends ChildBlock> extends EdigeoFile {
 
     protected final Lot lot;
-    private final String subsetId;
+    protected final String subsetId;
 
     private final Map<String, Class<? extends B>> classes = new HashMap<>();
     protected final ClassToInstancesMap<B> blocks = new MutableClassToInstancesMap<>();
@@ -51,8 +51,13 @@ public abstract class EdigeoLotFile<B extends ChildBlock> extends EdigeoFile {
     }
 
     @Override
-    boolean isValid() {
+    final boolean isValid() {
         return blocks.values().stream().allMatch(l -> l.stream().allMatch(Block::isValid));
+    }
+
+    @Override
+    final void resolve() {
+        blocks.forEach((k, v) -> v.forEach(Block::resolve));
     }
 
     /**
@@ -83,8 +88,8 @@ public abstract class EdigeoLotFile<B extends ChildBlock> extends EdigeoFile {
     @SuppressWarnings("unchecked")
     public final <T extends B> T find(List<String> values, Class<T> klass) {
         assert values.size() == 4 : values;
-        assert values.get(0).equals(lot.identifier) : values;
-        assert values.get(1).equals(subsetId) : values;
+        assert values.get(0).equals(lot.identifier) : values + " / " + lot.identifier;
+        assert values.get(1).equals(subsetId) : values + " / " + subsetId;
         assert klass.isAssignableFrom(classes.get(values.get(2))) : values;
         List<T> list = blocks.getInstances(klass);
         if (list == null) {

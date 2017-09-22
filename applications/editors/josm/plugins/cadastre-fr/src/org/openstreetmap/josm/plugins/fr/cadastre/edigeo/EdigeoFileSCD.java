@@ -7,6 +7,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.openstreetmap.josm.data.osm.DataSet;
+import org.openstreetmap.josm.plugins.fr.cadastre.edigeo.EdigeoFileDIC.AttributeDef;
+import org.openstreetmap.josm.plugins.fr.cadastre.edigeo.EdigeoFileDIC.ObjectDef;
+import org.openstreetmap.josm.plugins.fr.cadastre.edigeo.EdigeoFileDIC.RelationDef;
 import org.openstreetmap.josm.plugins.fr.cadastre.edigeo.EdigeoFileSCD.ScdBlock;
 import org.openstreetmap.josm.plugins.fr.cadastre.edigeo.EdigeoFileTHF.ChildBlock;
 import org.openstreetmap.josm.plugins.fr.cadastre.edigeo.EdigeoFileTHF.Lot;
@@ -26,15 +29,63 @@ public class EdigeoFileSCD extends EdigeoLotFile<ScdBlock> {
     }
 
     /**
-     * MCD Object definition.
+     * MCD definition with attributes.
      */
-    public static class McdObjectDef extends ScdBlock {
-
-        /** DIP */ String dictRef = "";
-        /** KND */ String kind = "";
+    abstract static class ScdTaggedDef extends ScdBlock {
         /** AAC */ int nAttributes;
         /** AAP */ final List<String> attributes = new ArrayList<>();
         /** QAC */ int nQualities;
+        // TODO: qualities ?
+
+        ScdTaggedDef(Lot lot, String type) {
+            super(lot, type);
+        }
+
+        @Override
+        void processRecord(EdigeoRecord r) {
+            switch (r.name) {
+            case "AAC": nAttributes = safeGetInt(r); break;
+            case "AAP": safeGet(r, attributes); break;
+            case "QAC": nQualities = safeGetInt(r); break;
+            default:
+                super.processRecord(r);
+            }
+        }
+
+        @Override
+        boolean isValid() {
+            return super.isValid() && areSameSize(nAttributes, attributes);
+        }
+    }
+
+    /**
+     * MCD Object definition.
+     */
+    public static class McdObjectDef extends ScdTaggedDef {
+
+        enum ObjectKind {
+            COMPLEX("CPX"),
+            POINT("PCT"),
+            LINE("LIN"),
+            AREA("ARE");
+
+            final String code;
+            ObjectKind(String code) {
+                this.code = code;
+            }
+
+            public static ObjectKind of(String code) {
+                for (ObjectKind s : values()) {
+                    if (s.code.equals(code)) {
+                        return s;
+                    }
+                }
+                throw new IllegalArgumentException(code);
+            }
+        }
+
+        /** DIP */ ObjectDef dictRef;
+        /** KND */ ObjectKind kind;
 
         McdObjectDef(Lot lot, String type) {
             super(lot, type);
@@ -43,14 +94,16 @@ public class EdigeoFileSCD extends EdigeoLotFile<ScdBlock> {
         @Override
         void processRecord(EdigeoRecord r) {
             switch (r.name) {
-            case "DIP": safeGet(r, s -> dictRef += s); break;
-            case "KND": safeGet(r, s -> kind += s); break;
-            case "AAC": nAttributes = safeGetInt(r); break;
-            case "AAP": safeGet(r, attributes); break;
-            case "QAC": nQualities = safeGetInt(r); break;
+            case "DIP": dictRef = lot.dic.find(r.values, ObjectDef.class); break;
+            case "KND": safeGet(r, s -> kind = ObjectKind.of(s)); break;
             default:
                 super.processRecord(r);
             }
+        }
+
+        @Override
+        boolean isValid() {
+            return super.isValid() && areNotNull(dictRef, kind);
         }
     }
 
@@ -59,7 +112,7 @@ public class EdigeoFileSCD extends EdigeoLotFile<ScdBlock> {
      */
     public static class McdAttributeDef extends ScdBlock {
 
-        /** DIP */ String dictRef = "";
+        /** DIP */ AttributeDef dictRef;
         /** CAN */ int nMaxChars;
         /** CAD */ int nMaxDigits;
         /** CAE */ int nMaxExponent;
@@ -74,7 +127,7 @@ public class EdigeoFileSCD extends EdigeoLotFile<ScdBlock> {
         @Override
         void processRecord(EdigeoRecord r) {
             switch (r.name) {
-            case "DIP": safeGet(r, s -> dictRef += s); break;
+            case "DIP": dictRef = lot.dic.find(r.values, AttributeDef.class); break;
             case "CAN": nMaxChars = safeGetInt(r); break;
             case "CAD": nMaxDigits = safeGetInt(r); break;
             case "CAE": nMaxExponent = safeGetInt(r); break;
@@ -85,12 +138,17 @@ public class EdigeoFileSCD extends EdigeoLotFile<ScdBlock> {
                 super.processRecord(r);
             }
         }
+
+        @Override
+        boolean isValid() {
+            return super.isValid() && areNotNull(dictRef);
+        }
     }
 
     /**
      * MCD Primitive definition.
      */
-    public static class McdPrimitiveDef extends ScdBlock {
+    public static class McdPrimitiveDef extends ScdTaggedDef {
 
         enum PrimitiveKind {
             NODE("NOD"),
@@ -113,8 +171,6 @@ public class EdigeoFileSCD extends EdigeoLotFile<ScdBlock> {
         }
 
         /** KND */ PrimitiveKind kind;
-        /** AAC */ int nAttributes;
-        /** QAC */ int nQualities;
 
         McdPrimitiveDef(Lot lot, String type) {
             super(lot, type);
@@ -124,26 +180,27 @@ public class EdigeoFileSCD extends EdigeoLotFile<ScdBlock> {
         void processRecord(EdigeoRecord r) {
             switch (r.name) {
             case "KND": safeGet(r, s -> kind = PrimitiveKind.of(s)); break;
-            case "AAC": nAttributes = safeGetInt(r); break;
-            case "QAC": nQualities = safeGetInt(r); break;
             default:
                 super.processRecord(r);
             }
+        }
+
+        @Override
+        boolean isValid() {
+            return super.isValid() && areNotNull(kind);
         }
     }
 
     /**
      * MCD Relation definition.
      */
-    abstract static class McdRelationDef extends ScdBlock {
+    abstract static class McdRelationDef extends ScdTaggedDef {
 
         /** CA1 */ int minCardinal;
         /** CA2 */ int maxCardinal;
         /** SCC */ int nTypes;
         /** SCP */ final List<ScdBlock> scdRef = new ArrayList<>();
         /** OCC */ final List<Integer> nOccurences = new ArrayList<>();
-        /** AAC */ int nAttributes;
-        /** QAC */ int nQualities;
 
         McdRelationDef(Lot lot, String type) {
             super(lot, type);
@@ -157,11 +214,14 @@ public class EdigeoFileSCD extends EdigeoLotFile<ScdBlock> {
             case "SCC": nTypes = safeGetInt(r); break;
             case "SCP": scdRef.add(lot.scd.find(r.values)); break;
             case "OCC": nOccurences.add(safeGetInt(r)); break;
-            case "AAC": nAttributes = safeGetInt(r); break;
-            case "QAC": nQualities = safeGetInt(r); break;
             default:
                 super.processRecord(r);
             }
+        }
+
+        @Override
+        boolean isValid() {
+            return super.isValid() && areNotNull(minCardinal, maxCardinal) && areSameSize(nTypes, scdRef, nOccurences);
         }
     }
 
@@ -170,7 +230,7 @@ public class EdigeoFileSCD extends EdigeoLotFile<ScdBlock> {
      */
     public static class McdSemanticRelationDef extends McdRelationDef {
 
-        /** DIP */ String dictRef = "";
+        /** DIP */ RelationDef dictRef;
 
         McdSemanticRelationDef(Lot lot, String type) {
             super(lot, type);
@@ -179,10 +239,15 @@ public class EdigeoFileSCD extends EdigeoLotFile<ScdBlock> {
         @Override
         void processRecord(EdigeoRecord r) {
             switch (r.name) {
-            case "DIP": safeGet(r, s -> dictRef += s); break;
+            case "DIP": dictRef = lot.dic.find(r.values, RelationDef.class); break;
             default:
                 super.processRecord(r);
             }
+        }
+
+        @Override
+        boolean isValid() {
+            return super.isValid() && areNotNull(dictRef);
         }
     }
 
@@ -230,6 +295,11 @@ public class EdigeoFileSCD extends EdigeoLotFile<ScdBlock> {
             default:
                 super.processRecord(r);
             }
+        }
+
+        @Override
+        boolean isValid() {
+            return super.isValid() && areNotNull(kind);
         }
     }
 

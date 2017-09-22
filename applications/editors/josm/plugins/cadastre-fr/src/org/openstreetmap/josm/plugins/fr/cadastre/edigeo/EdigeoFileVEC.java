@@ -10,8 +10,11 @@ import java.util.List;
 import java.util.Map;
 
 import org.openstreetmap.josm.data.coor.EastNorth;
+import org.openstreetmap.josm.data.coor.LatLon;
+import org.openstreetmap.josm.data.osm.BBox;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
+import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.data.projection.Projection;
 import org.openstreetmap.josm.plugins.fr.cadastre.edigeo.EdigeoFileSCD.McdObjectDef;
 import org.openstreetmap.josm.plugins.fr.cadastre.edigeo.EdigeoFileSCD.McdPrimitiveDef;
@@ -160,8 +163,7 @@ public class EdigeoFileVEC extends EdigeoLotFile<VecBlock<?>> {
         /** CM2 */ EastNorth maxCoordinate;
         /** TYP */ ArcType arcType;
         /** PTC */ int nPoints;
-        /** COR */ EastNorth initialPoint;
-        /** COR */ EastNorth finalPoint;
+        /** COR */ final List<EastNorth> points = new ArrayList<>();
         /** ATC */ int nAttributes;
         /** QAC */ int nQualities;
 
@@ -176,14 +178,7 @@ public class EdigeoFileVEC extends EdigeoLotFile<VecBlock<?>> {
             case "CM2": maxCoordinate = safeGetEastNorth(r); break;
             case "TYP": arcType = ArcType.of(safeGetInt(r)); break;
             case "PTC": nPoints = safeGetInt(r); break;
-            case "COR":
-                EastNorth en = safeGetEastNorth(r);
-                if (initialPoint == null) {
-                    initialPoint = en;
-                } else if (finalPoint == null) {
-                    finalPoint = en;
-                }
-                break;
+            case "COR": points.add(safeGetEastNorth(r)); break;
             case "ATC": nAttributes = safeGetInt(r); break;
             case "QAC": nQualities = safeGetInt(r); break;
             default:
@@ -319,16 +314,45 @@ public class EdigeoFileVEC extends EdigeoLotFile<VecBlock<?>> {
         lot.vec.add(this);
     }
 
+    private static BBox around(LatLon ll) {
+        final double r = 1e-7;
+        return new BBox(ll.getX() - r, ll.getY() - r, ll.getX() + r, ll.getY() + r);
+    }
+
+    private static Node getNodeAt(DataSet ds, Projection proj, EastNorth en) {
+        LatLon ll = proj.eastNorth2latlon(en);
+        List<Node> nodes = ds.searchNodes(around(ll));
+        if (nodes.isEmpty()) {
+            Node n = new Node(ll);
+            ds.addPrimitive(n);
+            return n;
+        }
+        return nodes.get(0);
+    }
+
     @Override
     public EdigeoFileVEC read(DataSet ds) throws IOException, ReflectiveOperationException {
         super.read(ds);
         Projection proj = lot.geo.getCoorReference().getProjection();
+        // Nodes
         for (NodeBlock nb : getNodes()) {
-            assert nb.getNumberOfAttributes() == 0;
-            assert nb.getNumberOfQualityIndicators() == 0;
-            lot.geo.toString();
-            Node n = new Node(proj.eastNorth2latlon(nb.getCoordinate()));
-            ds.addPrimitive(n);
+            assert nb.nAttributes == 0 : nb;
+            assert nb.nQualities == 0 : nb;
+            LatLon ll = proj.eastNorth2latlon(nb.getCoordinate());
+            if (ds.searchNodes(around(ll)).isEmpty()) {
+                ds.addPrimitive(new Node(ll));
+            }
+        }
+        // Arcs
+        for (ArcBlock ab : getArcs()) {
+            assert ab.nAttributes == 0 : ab;
+            assert ab.nQualities == 0 : ab;
+            assert ab.nPoints >= 2 : ab;
+            Way w = new Way();
+            for (EastNorth en : ab.points) {
+                w.addNode(getNodeAt(ds, proj, en));
+            }
+            ds.addPrimitive(w);
         }
         return this;
     }

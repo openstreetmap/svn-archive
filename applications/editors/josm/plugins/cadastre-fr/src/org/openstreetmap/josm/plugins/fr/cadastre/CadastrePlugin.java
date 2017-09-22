@@ -22,6 +22,7 @@ import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
 
 import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.actions.ExtensionFileFilter;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.actions.UploadAction;
 import org.openstreetmap.josm.data.projection.AbstractProjection;
@@ -46,6 +47,7 @@ import org.openstreetmap.josm.plugins.fr.cadastre.actions.MenuActionOpenPreferen
 import org.openstreetmap.josm.plugins.fr.cadastre.actions.mapmode.Address;
 import org.openstreetmap.josm.plugins.fr.cadastre.actions.mapmode.WMSAdjustAction;
 import org.openstreetmap.josm.plugins.fr.cadastre.actions.upload.CheckSourceUploadHook;
+import org.openstreetmap.josm.plugins.fr.cadastre.edigeo.pci.EdigeoPciImporter;
 import org.openstreetmap.josm.plugins.fr.cadastre.preferences.CadastrePreferenceSetting;
 import org.openstreetmap.josm.plugins.fr.cadastre.session.CadastreSessionExporter;
 import org.openstreetmap.josm.plugins.fr.cadastre.session.CadastreSessionImporter;
@@ -60,9 +62,10 @@ import org.openstreetmap.josm.tools.Logging;
  * a city/town/village code.
  *
  * @author Pieren &lt;pieren3@gmail.com&gt;,
- *         &lt;matthieu.lochegnies@gmail.com&gt; for the extension to codeCommune
+ *         &lt;matthieu.lochegnies@gmail.com&gt; for the extension to codeCommune;
+ *         Don-vip&lt;vincent.privat@gmail.com&gt; for the maintenance and Edigeo support
  *
- * @version 2.6
+ * @version 3.0
  * <br>History:
  * <br>0.1 17-Jun-2008 first prototype using a first Lambert projection impl. in core
  * <br>0.2 22-Jun-2008 first stable version
@@ -156,12 +159,13 @@ import org.openstreetmap.josm.tools.Logging;
  * <br>                - improvement when clicking on existing node address street in mode relation
  * <br>                - option to simplify raster images in 2 bits colors (like images served in the past).
  * <br>2.6 10-Sep-2013 - add JOSM "sessions" feature support (list of layers stored in a file)
- * <br>2.7 26-Apr-2014 - switch to Java 7
- * <br>2.8 21-Jul-2016 - switch to Java 8
+ * <br>2.7 26-Apr-2014 - switch to Java 7 + bugfixes
+ * <br>2.8 21-Jul-2016 - switch to Java 8 + bugfixes
  * <br>2.9 23-Aug-2017 - use new HTTPS links from French cadastre - requires JOSM 12623+ to load Certigna certificate
+ * <br>3.0 30-Sep-2017 - add support for direct access to Cadastre vectorial data (Edigeo files)
  */
 public class CadastrePlugin extends Plugin {
-    static String VERSION = "2.9";
+    static String VERSION = "3.0";
 
     static JMenu cadastreJMenu;
 
@@ -220,6 +224,7 @@ public class CadastrePlugin extends Plugin {
         refreshConfiguration();
 
         UploadAction.registerUploadHook(new CheckSourceUploadHook());
+        ExtensionFileFilter.addImporter(new EdigeoPciImporter());
 
         registerSessionLayerExporter(WMSLayer.class, CadastreSessionExporter.class);
         registerSessionLayerImporter("cadastre-fr", CadastreSessionImporter.class);

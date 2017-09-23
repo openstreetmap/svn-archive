@@ -7,7 +7,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.plugins.fr.cadastre.edigeo.EdigeoFileQAL.QalBlock;
 import org.openstreetmap.josm.plugins.fr.cadastre.edigeo.EdigeoFileTHF.ChildBlock;
 import org.openstreetmap.josm.plugins.fr.cadastre.edigeo.EdigeoFileTHF.Lot;
@@ -181,11 +180,5 @@ public class EdigeoFileQAL extends EdigeoLotFile<QalBlock> {
         super(lot, seId, path);
         register("QUP", Update.class);
         lot.qal = this;
-    }
-
-    @Override
-    public EdigeoFileQAL read(DataSet ds) throws IOException, ReflectiveOperationException {
-        super.read(ds);
-        return this;
     }
 }

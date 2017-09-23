@@ -8,21 +8,30 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.BBox;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
+import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.data.osm.Tag;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.data.projection.Projection;
+import org.openstreetmap.josm.plugins.fr.cadastre.edigeo.EdigeoFileSCD.McdAttributeDef;
+import org.openstreetmap.josm.plugins.fr.cadastre.edigeo.EdigeoFileSCD.McdConstructionRelationDef;
+import org.openstreetmap.josm.plugins.fr.cadastre.edigeo.EdigeoFileSCD.McdConstructionRelationDef.RelationKind;
 import org.openstreetmap.josm.plugins.fr.cadastre.edigeo.EdigeoFileSCD.McdObjectDef;
 import org.openstreetmap.josm.plugins.fr.cadastre.edigeo.EdigeoFileSCD.McdPrimitiveDef;
 import org.openstreetmap.josm.plugins.fr.cadastre.edigeo.EdigeoFileSCD.McdRelationDef;
+import org.openstreetmap.josm.plugins.fr.cadastre.edigeo.EdigeoFileSCD.McdSemanticRelationDef;
 import org.openstreetmap.josm.plugins.fr.cadastre.edigeo.EdigeoFileSCD.ScdBlock;
 import org.openstreetmap.josm.plugins.fr.cadastre.edigeo.EdigeoFileTHF.ChildBlock;
 import org.openstreetmap.josm.plugins.fr.cadastre.edigeo.EdigeoFileTHF.Lot;
 import org.openstreetmap.josm.plugins.fr.cadastre.edigeo.EdigeoFileVEC.VecBlock;
+import org.openstreetmap.josm.plugins.fr.cadastre.edigeo.EdigeoRecord.Nature;
 
 /**
  * Edigeo VEC file.
@@ -30,19 +39,22 @@ import org.openstreetmap.josm.plugins.fr.cadastre.edigeo.EdigeoFileVEC.VecBlock;
 public class EdigeoFileVEC extends EdigeoLotFile<VecBlock<?>> {
 
     abstract static class VecBlock<T extends ScdBlock> extends ChildBlock {
-        final Class<T> klass;
+        private final Class<T> klass;
+        private final List<RelationBlock> parentRelations = new ArrayList<>();
 
         /** SCP */ T scdRef;
         /** ATC */ int nAttributes;
-        /** ATP */ final List<String> attributeDefs = new ArrayList<>();
+        /** ATP */ final List<McdAttributeDef> attributeDefs = new ArrayList<>();
         /** TEX */ EdigeoCharset charset;
-        /** ATV */ final List<String> attributeValues = new ArrayList<>();
+        /** ATV */ final List<EdigeoRecord> lAttributeValues = new ArrayList<>();
         /** QAC */ int nQualities;
         /** QAP */ final List<String> qualityIndics = new ArrayList<>();
 
+        final List<String> attributeValues = new ArrayList<>();
+
         VecBlock(Lot lot, String type, Class<T> klass) {
             super(lot, type);
-            this.klass = klass;
+            this.klass = Objects.requireNonNull(klass, "klass");
         }
 
         @Override
@@ -50,9 +62,9 @@ public class EdigeoFileVEC extends EdigeoLotFile<VecBlock<?>> {
             switch (r.name) {
             case "SCP": scdRef = lot.scd.find(r.values, klass); break;
             case "ATC": nAttributes = safeGetInt(r); break;
-            case "ATP": safeGet(r, attributeDefs); break;
+            case "ATP": attributeDefs.add(lot.scd.find(r.values, McdAttributeDef.class)); break;
             case "TEX": safeGet(r, s -> charset = EdigeoCharset.of(s)); break;
-            case "ATV": safeGet(r, attributeValues); break;
+            case "ATV": lAttributeValues.add(r); break;
             case "QAC": nQualities = safeGetInt(r); break;
             case "QAP": safeGet(r, qualityIndics); break;
             default:
@@ -61,10 +73,36 @@ public class EdigeoFileVEC extends EdigeoLotFile<VecBlock<?>> {
         }
 
         @Override
+        void resolve() {
+            super.resolve();
+            for (EdigeoRecord r : lAttributeValues) {
+                if (r.nature == Nature.COMPOSED) {
+                    //attributeValues.add(lot.scd.find(r.values, McdAttributeDef.class).dictRef);
+                    attributeValues.add(r.values.toString()); // FIXME
+                } else {
+                    attributeValues.add(r.values.get(0));
+                }
+            }
+            lAttributeValues.clear();
+        }
+
+        @Override
         boolean isValid() {
             return super.isValid() && areNotNull(scdRef)
                     && areSameSize(nAttributes, attributeDefs, attributeValues)
                     && areSameSize(nQualities, qualityIndics);
+        }
+
+        final boolean addRelation(RelationBlock relationBlock) {
+            return parentRelations.add(Objects.requireNonNull(relationBlock, "relationBlock"));
+        }
+
+        public final List<RelationBlock> getConstructionRelations() {
+            return parentRelations.stream().filter(r -> r.scdRef instanceof McdConstructionRelationDef).collect(Collectors.toList());
+        }
+
+        public final List<RelationBlock> getSemanticRelations() {
+            return parentRelations.stream().filter(r -> r.scdRef instanceof McdSemanticRelationDef).collect(Collectors.toList());
         }
     }
 
@@ -126,6 +164,11 @@ public class EdigeoFileVEC extends EdigeoLotFile<VecBlock<?>> {
             default:
                 super.processRecord(r);
             }
+        }
+
+        @Override
+        public String toString() {
+            return "NodeBlock [identifier=" + identifier + ']';
         }
 
         /**
@@ -205,11 +248,21 @@ public class EdigeoFileVEC extends EdigeoLotFile<VecBlock<?>> {
         void processRecord(EdigeoRecord r) {
             switch (r.name) {
             case "TYP": arcType = ArcType.of(safeGetInt(r)); break;
-            case "PTC": nPoints = safeGetInt(r); assert checkNumberOfPoints(); break;
+            case "PTC": nPoints = safeGetInt(r); break;
             case "COR": points.add(safeGetEastNorth(r)); break;
             default:
                 super.processRecord(r);
             }
+        }
+
+        @Override
+        boolean isValid() {
+            return super.isValid() && areNotNull(arcType) && checkNumberOfPoints() && areSameSize(nPoints, points);
+        }
+
+        @Override
+        public String toString() {
+            return "ArcBlock [identifier=" + identifier + ']';
         }
 
         private boolean checkNumberOfPoints() {
@@ -230,6 +283,11 @@ public class EdigeoFileVEC extends EdigeoLotFile<VecBlock<?>> {
         FaceBlock(Lot lot, String type) {
             super(lot, type, McdPrimitiveDef.class);
         }
+
+        @Override
+        public String toString() {
+            return "FaceBlock [identifier=" + identifier + ']';
+        }
     }
 
     /**
@@ -249,6 +307,11 @@ public class EdigeoFileVEC extends EdigeoLotFile<VecBlock<?>> {
             default:
                 super.processRecord(r);
             }
+        }
+
+        @Override
+        public String toString() {
+            return "ObjectBlock [identifier=" + identifier + ']';
         }
     }
 
@@ -306,15 +369,22 @@ public class EdigeoFileVEC extends EdigeoLotFile<VecBlock<?>> {
 
         @Override
         final void resolve() {
+            super.resolve();
             for (List<String> values : lElements) {
                 VecBlock<?> b = lot.vec.stream().filter(v -> v.subsetId.equals(values.get(1))).findAny()
                         .orElseThrow(() -> new IllegalArgumentException(values.toString()))
                         .find(values, VecBlock.class);
+                b.addRelation(this);
                 elements.add(b);
                 compositions.put(b, mCompositions.get(values));
             }
             lElements.clear();
             mCompositions.clear();
+        }
+
+        @Override
+        public String toString() {
+            return "RelationBlock [identifier=" + identifier + ']';
         }
     }
 
@@ -352,30 +422,75 @@ public class EdigeoFileVEC extends EdigeoLotFile<VecBlock<?>> {
     }
 
     @Override
-    public EdigeoFileVEC read(DataSet ds) throws IOException, ReflectiveOperationException {
-        super.read(ds);
+    EdigeoFileVEC fill(DataSet ds) {
+        super.fill(ds);
         Projection proj = lot.geo.getCoorReference().getProjection();
-        // Nodes
-        for (NodeBlock nb : getNodes()) {
-            assert nb.nAttributes == 0 : nb;
-            assert nb.nQualities == 0 : nb;
-            LatLon ll = proj.eastNorth2latlon(nb.getCoordinate());
-            if (ds.searchNodes(around(ll)).isEmpty()) {
-                ds.addPrimitive(new Node(ll));
+        for (ObjectBlock obj : getObjects()) {
+            List<RelationBlock> constructionRelations = obj.getConstructionRelations();
+            switch (obj.scdRef.kind) {
+            case POINT: fillPoint(ds, proj, obj, constructionRelations); break;
+            case LINE: fillLine(ds, proj, obj, constructionRelations); break;
+            case COMPLEX: break; // TODO
+            case AREA: break; // TODO
+            default: throw new IllegalArgumentException(obj.toString());
             }
-        }
-        // Arcs
-        for (ArcBlock ab : getArcs()) {
-            assert ab.nAttributes == 0 : ab;
-            assert ab.nQualities == 0 : ab;
-            assert ab.nPoints >= 2 : ab;
-            Way w = new Way();
-            for (EastNorth en : ab.points) {
-                w.addNode(getNodeAt(ds, proj, en));
-            }
-            ds.addPrimitive(w);
         }
         return this;
+    }
+
+    private static void addPrimitiveAndTags(DataSet ds, ObjectBlock obj, OsmPrimitive osm) {
+        for (int i = 0; i < obj.nAttributes; i++) {
+            osm.put(new Tag(obj.attributeDefs.get(i).identifier, obj.attributeValues.get(i)));
+        }
+        ds.addPrimitive(osm);
+    }
+
+    private static void fillPoint(DataSet ds, Projection proj, ObjectBlock obj, List<RelationBlock> constructionRelations) {
+        assert constructionRelations.size() == 1 : constructionRelations;
+        RelationBlock rel = constructionRelations.get(0);
+        assert rel.scdRef instanceof McdConstructionRelationDef : rel;
+        if (rel.scdRef instanceof McdConstructionRelationDef) {
+            McdConstructionRelationDef crd = (McdConstructionRelationDef) rel.scdRef;
+            assert crd.kind == RelationKind.IS_MADE_OF;
+            assert crd.nAttributes == 0;
+        }
+        for (VecBlock<?> e : rel.elements) {
+            if (e instanceof NodeBlock) {
+                NodeBlock nb = (NodeBlock) e;
+                assert nb.nAttributes == 0;
+                LatLon ll = proj.eastNorth2latlon(nb.getCoordinate());
+                //if (ds.searchNodes(around(ll)).isEmpty()) {
+                addPrimitiveAndTags(ds, obj, new Node(ll));
+                //}
+                break;
+            }
+        }
+    }
+
+    private static void fillLine(DataSet ds, Projection proj, ObjectBlock obj, List<RelationBlock> constructionRelations) {
+        assert constructionRelations.size() >= 1 : constructionRelations;
+        // TODO sort relations
+        Way w = new Way();
+        for (RelationBlock rel : constructionRelations) {
+            assert rel.scdRef instanceof McdConstructionRelationDef : rel;
+            if (rel.scdRef instanceof McdConstructionRelationDef) {
+                McdConstructionRelationDef crd = (McdConstructionRelationDef) rel.scdRef;
+                assert crd.kind == RelationKind.IS_MADE_OF_ARC;
+                assert crd.nAttributes == 0;
+            }
+            for (VecBlock<?> e : rel.elements) {
+                if (e instanceof ArcBlock) {
+                    ArcBlock ab = (ArcBlock) e;
+                    assert ab.nAttributes == 0 : ab;
+                    assert ab.nQualities == 0 : ab;
+                    for (EastNorth en : ab.points) {
+                        w.addNode(getNodeAt(ds, proj, en));
+                    }
+                }
+            }
+        }
+        assert w.getNodesCount() >= 2;
+        addPrimitiveAndTags(ds, obj, w);
     }
 
     /**

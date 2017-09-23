@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.openstreetmap.josm.data.coor.EastNorth;
-import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.projection.Projection;
 import org.openstreetmap.josm.data.projection.Projections;
 import org.openstreetmap.josm.plugins.fr.cadastre.edigeo.EdigeoFileGEO.GeoBlock;
@@ -346,12 +345,6 @@ public class EdigeoFileGEO extends EdigeoLotFile<GeoBlock> {
         register("GEO", CoorReference.class);
         register("RPR", Offset.class);
         lot.geo = this;
-    }
-
-    @Override
-    public EdigeoFileGEO read(DataSet ds) throws IOException, ReflectiveOperationException {
-        super.read(ds);
-        return this;
     }
 
     /**

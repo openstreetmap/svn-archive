@@ -6,7 +6,6 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.plugins.fr.cadastre.edigeo.EdigeoFileDIC.AttributeDef;
 import org.openstreetmap.josm.plugins.fr.cadastre.edigeo.EdigeoFileDIC.ObjectDef;
 import org.openstreetmap.josm.plugins.fr.cadastre.edigeo.EdigeoFileDIC.RelationDef;
@@ -33,9 +32,11 @@ public class EdigeoFileSCD extends EdigeoLotFile<ScdBlock> {
      */
     abstract static class ScdTaggedDef extends ScdBlock {
         /** AAC */ int nAttributes;
-        /** AAP */ final List<String> attributes = new ArrayList<>();
+        /** AAP */ final List<List<String>> lAttributes = new ArrayList<>();
         /** QAC */ int nQualities;
         // TODO: qualities ?
+
+        final List<McdAttributeDef> attributes = new ArrayList<>();
 
         ScdTaggedDef(Lot lot, String type) {
             super(lot, type);
@@ -45,11 +46,20 @@ public class EdigeoFileSCD extends EdigeoLotFile<ScdBlock> {
         void processRecord(EdigeoRecord r) {
             switch (r.name) {
             case "AAC": nAttributes = safeGetInt(r); break;
-            case "AAP": safeGet(r, attributes); break;
+            case "AAP": lAttributes.add(r.values); break;
             case "QAC": nQualities = safeGetInt(r); break;
             default:
                 super.processRecord(r);
             }
+        }
+
+        @Override
+        void resolve() {
+            super.resolve();
+            for (List<String> values : lAttributes) {
+                attributes.add(lot.scd.find(values, McdAttributeDef.class));
+            }
+            lAttributes.clear();
         }
 
         @Override
@@ -105,6 +115,13 @@ public class EdigeoFileSCD extends EdigeoLotFile<ScdBlock> {
         boolean isValid() {
             return super.isValid() && areNotNull(dictRef, kind);
         }
+
+        @Override
+        public String toString() {
+            return "McdObjectDef [dictRef=" + dictRef + ", kind=" + kind + ", nAttributes=" + nAttributes
+                    + ", attributes=" + attributes + ", nQualities=" + nQualities + ", type=" + type + ", identifier="
+                    + identifier + ']';
+        }
     }
 
     /**
@@ -142,6 +159,13 @@ public class EdigeoFileSCD extends EdigeoLotFile<ScdBlock> {
         @Override
         boolean isValid() {
             return super.isValid() && areNotNull(dictRef);
+        }
+
+        @Override
+        public String toString() {
+            return "McdAttributeDef [dictRef=" + dictRef + ", nMaxChars=" + nMaxChars + ", nMaxDigits=" + nMaxDigits
+                    + ", nMaxExponent=" + nMaxExponent + ", unit=" + unit + ", min=" + min + ", max=" + max + ", type="
+                    + type + ", identifier=" + identifier + ']';
         }
     }
 
@@ -188,6 +212,12 @@ public class EdigeoFileSCD extends EdigeoLotFile<ScdBlock> {
         @Override
         boolean isValid() {
             return super.isValid() && areNotNull(kind);
+        }
+
+        @Override
+        public String toString() {
+            return "McdPrimitiveDef [kind=" + kind + ", nAttributes=" + nAttributes + ", attributes=" + attributes
+                    + ", nQualities=" + nQualities + ", type=" + type + ", identifier=" + identifier + ']';
         }
     }
 
@@ -249,6 +279,13 @@ public class EdigeoFileSCD extends EdigeoLotFile<ScdBlock> {
         boolean isValid() {
             return super.isValid() && areNotNull(dictRef);
         }
+
+        @Override
+        public String toString() {
+            return "McdSemanticRelationDef [dictRef=" + dictRef + ", minCardinal=" + minCardinal + ", maxCardinal="
+                    + maxCardinal + ", scdRef=" + scdRef + ", nOccurences=" + nOccurences + ", attributes=" + attributes
+                    + ", type=" + type + ", identifier=" + identifier + ']';
+        }
     }
 
     /**
@@ -258,8 +295,8 @@ public class EdigeoFileSCD extends EdigeoLotFile<ScdBlock> {
 
         enum RelationKind {
             IS_COMPOSED_OF("ICO"),
-            IS_DISPLAYED_BY("IDB"),
-            IS_DISPLAYED_BY_ARC("IDR"),
+            IS_MADE_OF("IDB"),
+            IS_MADE_OF_ARC("IDR"),
             HAS_FOR_INITIAL_NODE("IND"),
             HAS_FOR_FINAL_NODE("FND"),
             HAS_FOR_LEFT_FACE("LPO"),
@@ -301,6 +338,13 @@ public class EdigeoFileSCD extends EdigeoLotFile<ScdBlock> {
         boolean isValid() {
             return super.isValid() && areNotNull(kind);
         }
+
+        @Override
+        public String toString() {
+            return "McdConstructionRelationDef [kind=" + kind + ", minCardinal=" + minCardinal + ", maxCardinal="
+                    + maxCardinal + ", scdRef=" + scdRef + ", nOccurences=" + nOccurences + ", attributes=" + attributes
+                    + ", type=" + type + ", identifier=" + identifier + ']';
+        }
     }
 
     /**
@@ -318,11 +362,5 @@ public class EdigeoFileSCD extends EdigeoLotFile<ScdBlock> {
         register("ASS", McdSemanticRelationDef.class);
         register("REL", McdConstructionRelationDef.class);
         lot.scd = this;
-    }
-
-    @Override
-    public EdigeoFileSCD read(DataSet ds) throws IOException, ReflectiveOperationException {
-        super.read(ds);
-        return this;
     }
 }

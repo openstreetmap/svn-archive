@@ -8,7 +8,6 @@ import java.nio.file.Path;
 
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.coor.EastNorth;
-import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.projection.Projection;
 import org.openstreetmap.josm.plugins.fr.cadastre.edigeo.EdigeoFileGEN.GenBlock;
 import org.openstreetmap.josm.plugins.fr.cadastre.edigeo.EdigeoFileTHF.ChildBlock;
@@ -179,12 +178,6 @@ public class EdigeoFileGEN extends EdigeoLotFile<GenBlock> {
         register("DEG", GeoBounds.class);
         register("GSE", GeoData.class);
         lot.gen = this;
-    }
-
-    @Override
-    public EdigeoFileGEN read(DataSet ds) throws IOException, ReflectiveOperationException {
-        super.read(ds);
-        return this;
     }
 
     /**

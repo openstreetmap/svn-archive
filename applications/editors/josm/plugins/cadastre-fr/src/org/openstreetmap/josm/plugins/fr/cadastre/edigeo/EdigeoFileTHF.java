@@ -225,6 +225,7 @@ public class EdigeoFileTHF extends EdigeoFile {
         EdigeoFileSCD scd;
         EdigeoFileQAL qal;
         final List<EdigeoFileVEC> vec = new ArrayList<>();
+        final List<EdigeoLotFile<?>> allFiles = new ArrayList<>();
 
         Lot(String type) {
             super(type);
@@ -253,16 +254,15 @@ public class EdigeoFileTHF extends EdigeoFile {
             }
         }
 
-        void readFiles(Path path, DataSet ds) throws IOException, ReflectiveOperationException {
+        void readFiles(Path path) throws IOException, ReflectiveOperationException {
             Path dir = path.getParent();
-            List<EdigeoFile> allFiles = new ArrayList<>();
-            allFiles.add(new EdigeoFileGEN(this, genId, dir.resolve(name + genName + ".GEN")).read(ds));
-            allFiles.add(new EdigeoFileGEO(this, geoId, dir.resolve(name + geoName + ".GEO")).read(ds));
-            allFiles.add(new EdigeoFileDIC(this, dicId, dir.resolve(name + dicName + ".DIC")).read(ds));
-            allFiles.add(new EdigeoFileSCD(this, scdId, dir.resolve(name + scdName + ".SCD")).read(ds));
-            allFiles.add(new EdigeoFileQAL(this, qalId, dir.resolve(name + qalName + ".QAL")).read(ds));
+            allFiles.add(new EdigeoFileGEN(this, genId, dir.resolve(name + genName + ".GEN")).read());
+            allFiles.add(new EdigeoFileGEO(this, geoId, dir.resolve(name + geoName + ".GEO")).read());
+            allFiles.add(new EdigeoFileDIC(this, dicId, dir.resolve(name + dicName + ".DIC")).read());
+            allFiles.add(new EdigeoFileSCD(this, scdId, dir.resolve(name + scdName + ".SCD")).read());
+            allFiles.add(new EdigeoFileQAL(this, qalId, dir.resolve(name + qalName + ".QAL")).read());
             for (int i = 0; i < getNumberOfGeoData(); i++) {
-                allFiles.add(new EdigeoFileVEC(this, vecId.get(i), dir.resolve(name + vecName.get(i) + ".VEC")).read(ds));
+                allFiles.add(new EdigeoFileVEC(this, vecId.get(i), dir.resolve(name + vecName.get(i) + ".VEC")).read());
             }
             allFiles.forEach(EdigeoFile::resolve);
             for (EdigeoFile f : allFiles) {
@@ -273,6 +273,10 @@ public class EdigeoFileTHF extends EdigeoFile {
                     Logging.warn(f.path + ": invalid!");
                 }
             }
+        }
+
+        void fill(DataSet ds) {
+            allFiles.forEach(f -> f.fill(ds));
         }
 
         @Override
@@ -471,11 +475,20 @@ public class EdigeoFileTHF extends EdigeoFile {
     }
 
     @Override
-    public EdigeoFileTHF read(DataSet ds) throws IOException, ReflectiveOperationException {
-        super.read(ds);
+    public EdigeoFileTHF read() throws IOException, ReflectiveOperationException {
+        super.read();
         for (Lot lot : getLots()) {
-            lot.readFiles(path, ds);
+            lot.readFiles(path);
+        }
+        return this;
+    }
+
+    @Override
+    public EdigeoFileTHF fill(DataSet ds) {
+        super.fill(ds);
+        for (Lot lot : getLots()) {
             //ds.addDataSource(new DataSource(lot.gen.getGeoBounds().getBounds(), support.author));
+            lot.fill(ds);
         }
         return this;
     }

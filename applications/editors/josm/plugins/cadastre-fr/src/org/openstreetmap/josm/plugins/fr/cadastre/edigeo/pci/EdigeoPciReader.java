@@ -40,7 +40,7 @@ public class EdigeoPciReader extends AbstractReader {
     DataSet parse(Path path, ProgressMonitor instance) throws IOException, ReflectiveOperationException {
         DataSet data = new DataSet();
         data.setUploadPolicy(UploadPolicy.DISCOURAGED);
-        EdigeoFileTHF thf = new EdigeoFileTHF(path).read(data);
+        EdigeoFileTHF thf = new EdigeoFileTHF(path).read().fill(data);
         data.setName(thf.getSupport().getBlockIdentifier());
         return data;
     }

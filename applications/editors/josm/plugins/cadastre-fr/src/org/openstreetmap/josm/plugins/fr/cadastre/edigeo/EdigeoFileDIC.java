@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.plugins.fr.cadastre.edigeo.EdigeoFileDIC.DicBlock;
 import org.openstreetmap.josm.plugins.fr.cadastre.edigeo.EdigeoFileTHF.ChildBlock;
 import org.openstreetmap.josm.plugins.fr.cadastre.edigeo.EdigeoFileTHF.Lot;
@@ -134,6 +133,12 @@ public class EdigeoFileDIC extends EdigeoLotFile<DicBlock> {
         ObjectDef(Lot lot, String type) {
             super(lot, type);
         }
+
+        @Override
+        public String toString() {
+            return "ObjectDef [code=" + code + ", charset=" + charset + ", definition=" + definition + ", origin="
+                    + origin + ", type=" + type + ", identifier=" + identifier + ']';
+        }
     }
 
     /**
@@ -203,6 +208,13 @@ public class EdigeoFileDIC extends EdigeoLotFile<DicBlock> {
         public final List<String> getDescriptions() {
             return Collections.unmodifiableList(descrs);
         }
+
+        @Override
+        public String toString() {
+            return "AttributeDef [type=" + type + ", unit=" + unit + ", values=" + values + ", descrs=" + descrs
+                    + ", category=" + category + ", code=" + code + ", definition=" + definition + ", origin=" + origin
+                    + ", identifier=" + identifier + ']';
+        }
     }
 
     /**
@@ -211,6 +223,12 @@ public class EdigeoFileDIC extends EdigeoLotFile<DicBlock> {
     public static class RelationDef extends CategorizedBlock {
         RelationDef(Lot lot, String type) {
             super(lot, type);
+        }
+
+        @Override
+        public String toString() {
+            return "RelationDef [category=" + category + ", code=" + code + ", charset=" + charset + ", definition="
+                    + definition + ", origin=" + origin + ", type=" + type + ", identifier=" + identifier + "]";
         }
     }
 
@@ -227,12 +245,6 @@ public class EdigeoFileDIC extends EdigeoLotFile<DicBlock> {
         register("DIA", AttributeDef.class);
         register("DIR", RelationDef.class);
         lot.dic = this;
-    }
-
-    @Override
-    public EdigeoFileDIC read(DataSet ds) throws IOException, ReflectiveOperationException {
-        super.read(ds);
-        return this;
     }
 
     /**

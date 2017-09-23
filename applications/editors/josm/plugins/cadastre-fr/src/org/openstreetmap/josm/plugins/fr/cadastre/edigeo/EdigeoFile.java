@@ -33,7 +33,7 @@ abstract class EdigeoFile {
         /** RID */ String identifier = "";
 
         // Remembers the last string read, to handle multiline text (more than 80 chars) with "NEXT" keyword
-        Consumer<String> lastReadString;
+        private Consumer<String> lastReadString;
 
         Block(String type) {
             this.type = Objects.requireNonNull(type, "type");
@@ -138,7 +138,7 @@ abstract class EdigeoFile {
         this.path = path;
     }
 
-    public EdigeoFile read(DataSet ds) throws IOException, ReflectiveOperationException {
+    public EdigeoFile read() throws IOException, ReflectiveOperationException {
         try (BufferedReader reader = Files.newBufferedReader(path, StandardCharsets.ISO_8859_1)) {
             String line;
             while ((line = reader.readLine()) != null) {
@@ -205,5 +205,10 @@ abstract class EdigeoFile {
 
     void resolve() {
         // To be overriden if relevant
+    }
+
+    EdigeoFile fill(DataSet ds) {
+        // To be overriden if relevant
+        return this;
     }
 }

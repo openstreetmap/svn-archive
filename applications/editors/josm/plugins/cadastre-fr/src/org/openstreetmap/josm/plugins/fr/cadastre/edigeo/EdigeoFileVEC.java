@@ -15,6 +15,8 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.openstreetmap.josm.actions.CreateMultipolygonAction;
+import org.openstreetmap.josm.command.SequenceCommand;
 import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.BBox;
@@ -313,6 +315,10 @@ public class EdigeoFileVEC extends EdigeoLotFile<VecBlock<?>> {
             default: throw new IllegalStateException(arcType.toString());
             }
         }
+
+        boolean isClosed() {
+            return nPoints >= 4 && points.get(0).equals(points.get(nPoints - 1));
+        }
     }
 
     /**
@@ -556,11 +562,13 @@ public class EdigeoFileVEC extends EdigeoLotFile<VecBlock<?>> {
     }
 
     private static <T extends OsmPrimitive> T addPrimitiveAndTags(DataSet ds, ObjectBlock obj, T osm) {
-        for (int i = 0; i < obj.nAttributes; i++) {
-            osm.put(obj.attributeDefs.get(i).identifier, obj.attributeValues.get(i));
-        }
-        if (osm.getDataSet() == null) {
-            ds.addPrimitive(osm);
+        if (osm != null) {
+            for (int i = 0; i < obj.nAttributes; i++) {
+                osm.put(obj.attributeDefs.get(i).identifier, obj.attributeValues.get(i));
+            }
+            if (osm.getDataSet() == null) {
+                ds.addPrimitive(osm);
+            }
         }
         return osm;
     }
@@ -659,19 +667,45 @@ public class EdigeoFileVEC extends EdigeoLotFile<VecBlock<?>> {
     }
 
     private static OsmPrimitive faceToOsmPrimitive(DataSet ds, Projection proj, FaceBlock face) {
-        List<ArcBlock> leftArcs = extract(ArcBlock.class, face.getConstructionRelations(), RelationKind.HAS_FOR_LEFT_FACE);
-        List<ArcBlock> rightArcs = extract(ArcBlock.class, face.getConstructionRelations(), RelationKind.HAS_FOR_RIGHT_FACE);
-        assert leftArcs.size() >= 1 || rightArcs.size() >= 1;
-        if ((leftArcs.size() == 1 && rightArcs.isEmpty()) || (leftArcs.isEmpty() && rightArcs.size() == 1)) {
-            Way w = new Way();
-            ArcBlock ab = (leftArcs.isEmpty() ? rightArcs : leftArcs).get(0);
-            for (EastNorth en : ab.points) {
-                w.addNode(getNodeAt(ds, proj, en));
-            }
-            return w;
+        List<ArcBlock> allArcs = new ArrayList<>();
+        allArcs.addAll(extract(ArcBlock.class, face.getConstructionRelations(), RelationKind.HAS_FOR_LEFT_FACE));
+        allArcs.addAll(extract(ArcBlock.class, face.getConstructionRelations(), RelationKind.HAS_FOR_RIGHT_FACE));
+        assert allArcs.size() >= 1;
+        if (allArcs.size() == 1) {
+            ArcBlock ab = allArcs.get(0);
+            assert ab.isClosed();
+            return arcToWay(ds, proj, ab);
         } else {
-            // TODO
-            return new Way();
+            List<Way> ways = allArcs.stream().map(ab -> arcToWay(ds, proj, ab)).filter(w -> w != null).collect(Collectors.toList());
+            Pair<SequenceCommand, Relation> cmd = CreateMultipolygonAction.createMultipolygonCommand(ways, null);
+            if (cmd != null) {
+                cmd.a.executeCommand();
+                return cmd.b;
+            } else {
+                ways.forEach(w -> ds.removePrimitive(w.getPrimitiveId()));
+                return null;
+            }
+        }
+    }
+
+    private static Way arcToWay(DataSet ds, Projection proj, ArcBlock ab) {
+        Way way = new Way();
+        for (int i = 0; i < ab.nPoints; i++) {
+            Node n = getNodeAt(ds, proj, ab.points.get(i));
+            if (i == 0 || !n.equals(way.lastNode())) {
+                way.addNode(n);
+            }
+        }
+        if (way.getNodesCount() < 2) {
+            return null;
+        }
+        List<Way> existingWays = ds.searchWays(way.getBBox()).stream().filter(
+                w -> w.hasEqualSemanticAttributes(way)).collect(Collectors.toList());
+        if (existingWays.isEmpty()) {
+            ds.addPrimitive(way);
+            return way;
+        } else {
+            return existingWays.get(0);
         }
     }
 

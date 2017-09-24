@@ -59,7 +59,7 @@ public class EdigeoPciReader extends AbstractReader {
                 sb.append(' ').append(v.trim());
                 p.remove(t);
             }
-            p.put("name", sb.toString().replaceAll("   ", " ").replaceAll("  ", " "));
+            p.put("name", sb.toString().replaceAll("    ", " ").replaceAll("   ", " ").replaceAll("  ", " "));
         }, "TEX_id");
 
         EdigeoFileVEC.addObjectPostProcessor((o, p) -> {

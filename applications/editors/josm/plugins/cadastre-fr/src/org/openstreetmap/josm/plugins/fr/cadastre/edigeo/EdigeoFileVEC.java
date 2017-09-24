@@ -21,6 +21,8 @@ import org.openstreetmap.josm.data.osm.BBox;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.data.osm.Relation;
+import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.data.projection.Projection;
 import org.openstreetmap.josm.plugins.fr.cadastre.edigeo.EdigeoFileSCD.McdAttributeDef;
@@ -570,12 +572,13 @@ public class EdigeoFileVEC extends EdigeoLotFile<VecBlock<?>> {
             assert rel.scdRef instanceof McdConstructionRelationDef : rel;
             if (rel.scdRef instanceof McdConstructionRelationDef) {
                 McdConstructionRelationDef crd = (McdConstructionRelationDef) rel.scdRef;
-                assert crd.kind == kind;
-                assert crd.nAttributes == 0;
-            }
-            for (VecBlock<?> e : rel.elements) {
-                if (klass.isInstance(e)) {
-                    list.add((T) e);
+                if (crd.kind == kind) {
+                    assert crd.nAttributes == 0;
+                    for (VecBlock<?> e : rel.elements) {
+                        if (klass.isInstance(e)) {
+                            list.add((T) e);
+                        }
+                    }
                 }
             }
         }
@@ -641,8 +644,35 @@ public class EdigeoFileVEC extends EdigeoLotFile<VecBlock<?>> {
     private static OsmPrimitive fillArea(DataSet ds, Projection proj, ObjectBlock obj,
             List<RelationBlock> constructionRelations, List<RelationBlock> semanticRelations) {
         assert constructionRelations.size() >= 1 : constructionRelations;
-        // TODO
-        return null;
+        List<FaceBlock> faces = extract(FaceBlock.class, constructionRelations, RelationKind.IS_MADE_OF);
+        assert faces.size() >= 1;
+        if (faces.size() == 1) {
+            return addPrimitiveAndTags(ds, obj, faceToOsmPrimitive(ds, proj, faces.get(0)));
+        } else {
+            Relation r = new Relation();
+            r.put("type", "multipolygon");
+            for (FaceBlock face : faces) {
+                r.addMember(new RelationMember("outer", faceToOsmPrimitive(ds, proj, face)));
+            }
+            return addPrimitiveAndTags(ds, obj, r);
+        }
+    }
+
+    private static OsmPrimitive faceToOsmPrimitive(DataSet ds, Projection proj, FaceBlock face) {
+        List<ArcBlock> leftArcs = extract(ArcBlock.class, face.getConstructionRelations(), RelationKind.HAS_FOR_LEFT_FACE);
+        List<ArcBlock> rightArcs = extract(ArcBlock.class, face.getConstructionRelations(), RelationKind.HAS_FOR_RIGHT_FACE);
+        assert leftArcs.size() >= 1 || rightArcs.size() >= 1;
+        if ((leftArcs.size() == 1 && rightArcs.isEmpty()) || (leftArcs.isEmpty() && rightArcs.size() == 1)) {
+            Way w = new Way();
+            ArcBlock ab = (leftArcs.isEmpty() ? rightArcs : leftArcs).get(0);
+            for (EastNorth en : ab.points) {
+                w.addNode(getNodeAt(ds, proj, en));
+            }
+            return w;
+        } else {
+            // TODO
+            return new Way();
+        }
     }
 
     /**

@@ -40,10 +40,13 @@ public class EdigeoPciReader extends AbstractReader {
 
         EdigeoFileVEC.addObjectPostProcessor("19", "boundary=administrative;admin_level=8"); // Municipality limit trigger
         EdigeoFileVEC.addObjectPostProcessor("21", "highway=road"); // Path
+        EdigeoFileVEC.addObjectPostProcessor("33", "barrier=wall;bridge=yes"); // bridge parapet
+        EdigeoFileVEC.addObjectPostProcessor("34", "landuse=reservoir;natural=water;water=reservoir"); // reservoir, lake
         EdigeoFileVEC.addObjectPostProcessor("39", "barrier=wall"); // Common wall
         EdigeoFileVEC.addObjectPostProcessor("40", "barrier=wall"); // Non-adjacent wall
         EdigeoFileVEC.addObjectPostProcessor("45", "barrier=hedge"); // Common hedge
         EdigeoFileVEC.addObjectPostProcessor("46", "barrier=hedge"); // Non-adjacent hedge
+        EdigeoFileVEC.addObjectPostProcessor("65", "leisure=swimming_pool;access=private"); // Swimming pool
 
         EdigeoFileVEC.addObjectPostProcessor((o, p) -> {
             StringBuffer sb = new StringBuffer(p.get("TEX_id").trim());
@@ -56,7 +59,7 @@ public class EdigeoPciReader extends AbstractReader {
                 sb.append(' ').append(v.trim());
                 p.remove(t);
             }
-            p.put("name", sb.toString());
+            p.put("name", sb.toString().replaceAll("   ", " ").replaceAll("  ", " "));
         }, "TEX_id");
 
         EdigeoFileVEC.addObjectPostProcessor((o, p) -> {
@@ -75,6 +78,27 @@ public class EdigeoPciReader extends AbstractReader {
                 }
             }
         }, o -> o.hasScdIdentifier("ZONCOMMUNI_id"));
+
+        EdigeoFileVEC.addObjectPostProcessor((o, p) -> {
+            p.put("boundary", "administrative");
+            p.put("admin_level", "8");
+            p.put("ref:INSEE", "XX"+p.get("IDU_id")); // TODO: find department number
+            p.put("name", p.get("TEX2_id")); // TODO: lowercase
+            p.remove("IDU_id");
+            p.remove("TEX2_id");
+        }, o -> o.hasScdIdentifier("COMMUNE_id"));
+
+        EdigeoFileVEC.addObjectPostProcessor((o, p) -> {
+            p.put("boundary", "cadastral");
+            p.put("ref", p.get("IDU_id"));
+            p.remove("IDU_id");
+        }, o -> o.hasScdIdentifier("SECTION_id") || o.hasScdIdentifier("SUBDSECT_id") || o.hasScdIdentifier("PARCELLE_id"));
+
+        EdigeoFileVEC.addObjectPostProcessor((o, p) -> p.put("wall", "no"), "DUR_id", "02");
+        EdigeoFileVEC.addObjectPostProcessor((o, p) -> {
+            p.put("building", "yes");
+            p.remove("DUR_id");
+        }, o -> o.hasScdIdentifier("BATIMENT_id"));
     }
 
     private static boolean setCorrectHighway(OsmPrimitive p, String[] words) {

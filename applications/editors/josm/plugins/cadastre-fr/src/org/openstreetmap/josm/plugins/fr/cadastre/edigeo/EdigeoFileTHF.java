@@ -11,6 +11,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
+import org.openstreetmap.josm.actions.SimplifyWayAction;
+import org.openstreetmap.josm.command.SequenceCommand;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.tools.Logging;
 
@@ -490,6 +492,12 @@ public class EdigeoFileTHF extends EdigeoFile {
             //ds.addDataSource(new DataSource(lot.gen.getGeoBounds().getBounds(), support.author));
             lot.fill(ds);
         }
+        ds.getWays().forEach(w -> {
+            SequenceCommand command = SimplifyWayAction.simplifyWay(w, 0.25);
+            if (command != null) {
+                command.executeCommand();
+            }
+        });
         return this;
     }
 

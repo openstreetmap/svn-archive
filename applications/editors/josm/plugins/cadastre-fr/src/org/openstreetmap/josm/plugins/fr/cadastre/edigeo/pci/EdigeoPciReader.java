@@ -5,9 +5,15 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.DataSet.UploadPolicy;
+import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.io.AbstractReader;
 import org.openstreetmap.josm.io.IllegalDataException;
@@ -19,8 +25,67 @@ import org.openstreetmap.josm.plugins.fr.cadastre.edigeo.EdigeoFileVEC;
  */
 public class EdigeoPciReader extends AbstractReader {
 
+    private static final Map<String, List<String>> highways = new HashMap<>();
     static {
-        EdigeoFileVEC.addIgnoredObject("SYM_id", "31");
+        highways.put("motorway", Arrays.asList("Autoroute"));
+        highways.put("trunk", Arrays.asList("Rocade"));
+        highways.put("secondary", Arrays.asList("Avenue", "Boulevard", "Allee", "Allée", "Allees", "Allées", "Pont", "Port", "Route"));
+        highways.put("residential", Arrays.asList("Chemin", "Impasse", "Place", "Rue", "Quai", "Voie", "Grand Rue"));
+
+        EdigeoFileVEC.addIgnoredObject("SYM_id",
+                "31", // Connecting arrows between parcelles and numbers
+                "62", // "Sports ground, small streams". What the fuck France?
+                "64"  // "parking, terrace, overhang". What the fuck France?
+        );
+
+        EdigeoFileVEC.addObjectPostProcessor("19", "boundary=administrative;admin_level=8"); // Municipality limit trigger
+        EdigeoFileVEC.addObjectPostProcessor("21", "highway=road"); // Path
+        EdigeoFileVEC.addObjectPostProcessor("39", "barrier=wall"); // Common wall
+        EdigeoFileVEC.addObjectPostProcessor("40", "barrier=wall"); // Non-adjacent wall
+        EdigeoFileVEC.addObjectPostProcessor("45", "barrier=hedge"); // Common hedge
+        EdigeoFileVEC.addObjectPostProcessor("46", "barrier=hedge"); // Non-adjacent hedge
+
+        EdigeoFileVEC.addObjectPostProcessor((o, p) -> {
+            StringBuffer sb = new StringBuffer(p.get("TEX_id").trim());
+            p.remove("TEX_id");
+            for (String t : Arrays.asList("TEX2_id", "TEX3_id", "TEX4_id", "TEX5_id", "TEX6_id", "TEX7_id", "TEX8_id", "TEX9_id")) {
+                String v = p.get(t);
+                if (v == null) {
+                    break;
+                }
+                sb.append(' ').append(v.trim());
+                p.remove(t);
+            }
+            p.put("name", sb.toString());
+        }, "TEX_id");
+
+        EdigeoFileVEC.addObjectPostProcessor((o, p) -> {
+            p.put("highway", "road");
+            String name = p.get("name");
+            if (name != null && name.contains(" ")) {
+                String[] words = name.split(" ");
+                if (!setCorrectHighway(p, words)) {
+                    if (highways.values().stream().anyMatch(l -> l.contains(words[words.length - 1]))) {
+                        String[] newWords = new String[words.length];
+                        newWords[0] = words[words.length - 1];
+                        System.arraycopy(words, 0, newWords, 1, words.length - 1);
+                        p.put("name", String.join(" ", newWords));
+                        setCorrectHighway(p, newWords);
+                    }
+                }
+            }
+        }, o -> o.hasScdIdentifier("ZONCOMMUNI_id"));
+    }
+
+    private static boolean setCorrectHighway(OsmPrimitive p, String[] words) {
+        String type = words[0];
+        for (Entry<String, List<String>> e : highways.entrySet()) {
+            if (e.getValue().contains(type)) {
+                p.put("highway", e.getKey());
+                return true;
+            }
+        }
+        return false;
     }
 
     /**

@@ -4,11 +4,13 @@ package org.openstreetmap.josm.plugins.fr.cadastre.edigeo;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.BiConsumer;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -19,7 +21,6 @@ import org.openstreetmap.josm.data.osm.BBox;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
-import org.openstreetmap.josm.data.osm.Tag;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.data.projection.Projection;
 import org.openstreetmap.josm.plugins.fr.cadastre.edigeo.EdigeoFileSCD.McdAttributeDef;
@@ -35,6 +36,7 @@ import org.openstreetmap.josm.plugins.fr.cadastre.edigeo.EdigeoFileTHF.Lot;
 import org.openstreetmap.josm.plugins.fr.cadastre.edigeo.EdigeoFileVEC.VecBlock;
 import org.openstreetmap.josm.plugins.fr.cadastre.edigeo.EdigeoRecord.Nature;
 import org.openstreetmap.josm.tools.Logging;
+import org.openstreetmap.josm.tools.Pair;
 
 /**
  * Edigeo VEC file.
@@ -143,6 +145,10 @@ public class EdigeoFileVEC extends EdigeoLotFile<VecBlock<?>> {
 
         public final String getAttributeValue(int i) {
             return attributeValues.get(i);
+        }
+
+        public boolean hasScdIdentifier(String id) {
+            return scdRef.identifier.equals(id);
         }
     }
 
@@ -421,32 +427,71 @@ public class EdigeoFileVEC extends EdigeoLotFile<VecBlock<?>> {
     }
 
     private static final List<Predicate<ObjectBlock>> ignoredObjects = new ArrayList<>();
+    private static final List<Pair<Predicate<ObjectBlock>, BiConsumer<ObjectBlock, OsmPrimitive>>> postProcessors = new ArrayList<>();
 
     /**
      * Adds a predicate to ignore a special type of object.
      * @param predicate defines how to identify the object to ignore
-     * @return {@code true}
      */
-    public static boolean addIgnoredObject(Predicate<ObjectBlock> predicate) {
-        return ignoredObjects.add(Objects.requireNonNull(predicate, "predicate"));
+    public static void addIgnoredObject(Predicate<ObjectBlock> predicate) {
+        ignoredObjects.add(Objects.requireNonNull(predicate, "predicate"));
     }
 
     /**
      * Adds a predicate to ignore a special type of object based on a key/value attribute.
      * @param key attribute key
-     * @param value attribute value
-     * @return {@code true}
+     * @param values attribute values
      */
-    public static boolean addIgnoredObject(String key, String value) {
-        return addIgnoredObject(o -> {
+    public static void addIgnoredObject(String key, String... values) {
+        addIgnoredObject(predicate(key, values));
+    }
+
+    private static Predicate<ObjectBlock> predicate(String key, String... values) {
+        return o -> {
+            List<String> vals = Arrays.asList(values);
             for (int i = 0; i < o.nAttributes; i++) {
                 if (key.equals(o.attributeDefs.get(i).identifier)
-                        && value.equals(o.attributeValues.get(i))) {
+                        && (vals.isEmpty() || vals.contains(o.attributeValues.get(i)))) {
                     return true;
                 }
             }
             return false;
-        });
+        };
+    }
+
+    /**
+     * Adds a data postprocessor.
+     * @param consumer consumer that will update OSM primitive accordingly
+     * @param predicate predicate to match
+     */
+    public static void addObjectPostProcessor(BiConsumer<ObjectBlock, OsmPrimitive> consumer, Predicate<ObjectBlock> predicate) {
+        postProcessors.add(new Pair<>(Objects.requireNonNull(predicate, "predicate"), Objects.requireNonNull(consumer, "consumer")));
+    }
+
+    /**
+     * Adds a data postprocessor based on a key/value attribute.
+     * @param consumer consumer that will update OSM primitive accordingly
+     * @param key attribute key
+     * @param values attribute values
+     */
+    public static void addObjectPostProcessor(BiConsumer<ObjectBlock, OsmPrimitive> consumer, String key, String... values) {
+        postProcessors.add(new Pair<>(predicate(key, values), Objects.requireNonNull(consumer, "consumer")));
+    }
+
+    /**
+     * Adds a data postprocessor based on a SYM_id specific value.
+     * @param consumer consumer that will update OSM primitive accordingly
+     * @param symId value for "SYM_id" attribute.
+     * @param keyValues OSM attribute key/values (int the form {@code foo=bar;bar=baz})
+     */
+    public static void addObjectPostProcessor(String symId, String keyValues) {
+        postProcessors.add(new Pair<>(predicate("SYM_id", symId), (o, p) -> {
+            p.remove("SYM_id");
+            for (String tag : keyValues.split(";")) {
+                String[] kv = tag.split("=");
+                p.put(kv[0], kv[1]);
+            }
+        }));
     }
 
     /**
@@ -467,7 +512,7 @@ public class EdigeoFileVEC extends EdigeoLotFile<VecBlock<?>> {
     }
 
     private static BBox around(LatLon ll) {
-        final double r = 1e-7;
+        final double r = 1e-6;
         return new BBox(ll.getX() - r, ll.getY() - r, ll.getX() + r, ll.getY() + r);
     }
 
@@ -488,23 +533,34 @@ public class EdigeoFileVEC extends EdigeoLotFile<VecBlock<?>> {
         Projection proj = lot.geo.getCoorReference().getProjection();
         for (ObjectBlock obj : getObjects()) {
             if (!ignoredObjects.stream().anyMatch(p -> p.test(obj))) {
+                OsmPrimitive p;
                 switch (obj.scdRef.kind) {
-                    case POINT: fillPoint(ds, proj, obj, obj.getConstructionRelations(), obj.getSemanticRelations()); break;
-                    case LINE: fillLine(ds, proj, obj, obj.getConstructionRelations(), obj.getSemanticRelations()); break;
-                    case AREA: fillArea(ds, proj, obj, obj.getConstructionRelations(), obj.getSemanticRelations()); break;
-                    case COMPLEX: break; // TODO (not used in PCI)
+                    case POINT: p = fillPoint(ds, proj, obj, obj.getConstructionRelations(), obj.getSemanticRelations()); break;
+                    case LINE: p = fillLine(ds, proj, obj, obj.getConstructionRelations(), obj.getSemanticRelations()); break;
+                    case AREA: p = fillArea(ds, proj, obj, obj.getConstructionRelations(), obj.getSemanticRelations()); break;
+                    case COMPLEX: // TODO (not used in PCI)
                     default: throw new IllegalArgumentException(obj.toString());
+                }
+                if (p != null) {
+                    for (Pair<Predicate<ObjectBlock>, BiConsumer<ObjectBlock, OsmPrimitive>> e : postProcessors) {
+                        if (e.a.test(obj)) {
+                            e.b.accept(obj, p);
+                        }
+                    }
                 }
             }
         }
         return this;
     }
 
-    private static void addPrimitiveAndTags(DataSet ds, ObjectBlock obj, OsmPrimitive osm) {
+    private static <T extends OsmPrimitive> T addPrimitiveAndTags(DataSet ds, ObjectBlock obj, T osm) {
         for (int i = 0; i < obj.nAttributes; i++) {
-            osm.put(new Tag(obj.attributeDefs.get(i).identifier, obj.attributeValues.get(i)));
+            osm.put(obj.attributeDefs.get(i).identifier, obj.attributeValues.get(i));
         }
-        ds.addPrimitive(osm);
+        if (osm.getDataSet() == null) {
+            ds.addPrimitive(osm);
+        }
+        return osm;
     }
 
     @SuppressWarnings("unchecked")
@@ -526,20 +582,21 @@ public class EdigeoFileVEC extends EdigeoLotFile<VecBlock<?>> {
         return list;
     }
 
-    private static void fillPoint(DataSet ds, Projection proj, ObjectBlock obj,
+    private static Node fillPoint(DataSet ds, Projection proj, ObjectBlock obj,
             List<RelationBlock> constructionRelations, List<RelationBlock> semanticRelations) {
         assert constructionRelations.size() == 1 : constructionRelations;
-        List<NodeBlock> nodes = extract(NodeBlock.class, constructionRelations, RelationKind.IS_MADE_OF);
-        assert nodes.size() == 1 : nodes;
-        NodeBlock nb = nodes.get(0);
+        List<NodeBlock> blocks = extract(NodeBlock.class, constructionRelations, RelationKind.IS_MADE_OF);
+        assert blocks.size() == 1 : blocks;
+        NodeBlock nb = blocks.get(0);
         assert nb.nAttributes == 0;
         LatLon ll = proj.eastNorth2latlon(nb.getCoordinate());
-        //if (ds.searchNodes(around(ll)).isEmpty()) {
-        addPrimitiveAndTags(ds, obj, new Node(ll));
-        //}
+        List<Node> nodes = ds.searchNodes(around(ll));
+        assert nodes.size() <= 1;
+        Node n = nodes.isEmpty() ? new Node(ll) : nodes.get(0);
+        return addPrimitiveAndTags(ds, obj, n);
     }
 
-    private static void fillLine(DataSet ds, Projection proj, ObjectBlock obj,
+    private static Way fillLine(DataSet ds, Projection proj, ObjectBlock obj,
             List<RelationBlock> constructionRelations, List<RelationBlock> semanticRelations) {
         assert constructionRelations.size() >= 1 : constructionRelations;
         // Retrieve all arcs for the linear object
@@ -553,7 +610,7 @@ public class EdigeoFileVEC extends EdigeoLotFile<VecBlock<?>> {
                             b -> b.points.get(0).equalsEpsilon(a.points.get(a.nPoints - 1), EPSILON))).collect(Collectors.toList());
             if (newArcs.size() != 1) {
                 Logging.warn("Unable to process geometry of: " + obj);
-                return;
+                return null;
             }
             while (newArcs.size() < arcs.size()) {
                 ArcBlock ab = newArcs.get(newArcs.size() - 1);
@@ -578,13 +635,14 @@ public class EdigeoFileVEC extends EdigeoLotFile<VecBlock<?>> {
             }
         }
         assert w.getNodesCount() >= 2;
-        addPrimitiveAndTags(ds, obj, w);
+        return addPrimitiveAndTags(ds, obj, w);
     }
 
-    private static void fillArea(DataSet ds, Projection proj, ObjectBlock obj,
+    private static OsmPrimitive fillArea(DataSet ds, Projection proj, ObjectBlock obj,
             List<RelationBlock> constructionRelations, List<RelationBlock> semanticRelations) {
         assert constructionRelations.size() >= 1 : constructionRelations;
         // TODO
+        return null;
     }
 
     /**

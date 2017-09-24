@@ -73,8 +73,12 @@ abstract class EdigeoFile {
             return type.length() == 3 && areNotEmpty(identifier);
         }
 
-        void resolve() {
-            // To be overriden if relevant
+        void resolvePhase1() {
+            // To be overriden if relevant (before relations are resolved)
+        }
+
+        void resolvePhase2() {
+            // To be overriden if relevant (after relations are resolved)
         }
 
         protected final void safeGet(EdigeoRecord r, List<String> list) {

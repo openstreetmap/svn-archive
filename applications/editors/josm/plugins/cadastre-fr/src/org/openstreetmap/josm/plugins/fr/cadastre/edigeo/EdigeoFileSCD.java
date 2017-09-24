@@ -54,8 +54,8 @@ public class EdigeoFileSCD extends EdigeoLotFile<ScdBlock> {
         }
 
         @Override
-        void resolve() {
-            super.resolve();
+        void resolvePhase1() {
+            super.resolvePhase1();
             for (List<String> values : lAttributes) {
                 attributes.add(lot.scd.find(values, McdAttributeDef.class));
             }

@@ -56,7 +56,8 @@ public abstract class EdigeoLotFile<B extends ChildBlock> extends EdigeoFile {
 
     @Override
     final void resolve() {
-        blocks.forEach((k, v) -> v.forEach(Block::resolve));
+        blocks.forEach((k, v) -> v.forEach(Block::resolvePhase1));
+        blocks.forEach((k, v) -> v.forEach(Block::resolvePhase2));
     }
 
     /**

@@ -76,14 +76,31 @@ public class EdigeoFileVEC extends EdigeoLotFile<VecBlock<?>> {
         }
 
         @Override
-        void resolve() {
-            super.resolve();
+        void resolvePhase1() {
+            super.resolvePhase1();
             for (EdigeoRecord r : lAttributeValues) {
+                // Does not work for composed attributes, the value is overriden in phase 2
+                attributeValues.add(r.values.get(0));
+            }
+        }
+
+        @Override
+        void resolvePhase2() {
+            super.resolvePhase2();
+            for (int i = 0; i < nAttributes; i++) {
+                EdigeoRecord r = lAttributeValues.get(i);
                 if (r.nature == Nature.COMPOSED) {
-                    //attributeValues.add(lot.scd.find(r.values, McdAttributeDef.class).dictRef);
-                    attributeValues.add(r.values.toString()); // FIXME
-                } else {
-                    attributeValues.add(r.values.get(0));
+                    assert !parentRelations.isEmpty();
+                    McdAttributeDef def = lot.scd.find(r.values, McdAttributeDef.class);
+                    List<RelationBlock> relations = getSemanticRelations().stream().filter(
+                            rel -> rel.elements.stream().anyMatch(e -> e.attributeDefs.contains(def))).collect(Collectors.toList());
+                    assert relations.size() == 1;
+                    List<VecBlock<?>> elements = relations.get(0).elements.stream().filter(
+                            e -> e.attributeDefs.contains(def)).collect(Collectors.toList());
+                    assert elements.size() == 1;
+                    VecBlock<?> e = elements.get(0);
+                    attributeValues.set(i, e.attributeValues.get(e.attributeDefs.indexOf(def)));
+                    attributeDefs.set(i, def);
                 }
             }
             lAttributeValues.clear();
@@ -383,8 +400,8 @@ public class EdigeoFileVEC extends EdigeoLotFile<VecBlock<?>> {
         }
 
         @Override
-        final void resolve() {
-            super.resolve();
+        final void resolvePhase1() {
+            super.resolvePhase1();
             for (List<String> values : lElements) {
                 VecBlock<?> b = lot.vec.stream().filter(v -> v.subsetId.equals(values.get(1))).findAny()
                         .orElseThrow(() -> new IllegalArgumentException(values.toString()))
@@ -471,11 +488,10 @@ public class EdigeoFileVEC extends EdigeoLotFile<VecBlock<?>> {
         Projection proj = lot.geo.getCoorReference().getProjection();
         for (ObjectBlock obj : getObjects()) {
             if (!ignoredObjects.stream().anyMatch(p -> p.test(obj))) {
-                List<RelationBlock> constructionRelations = obj.getConstructionRelations();
                 switch (obj.scdRef.kind) {
-                    case POINT: fillPoint(ds, proj, obj, constructionRelations); break;
-                    case LINE: fillLine(ds, proj, obj, constructionRelations); break;
-                    case AREA: fillArea(ds, proj, obj, constructionRelations); break;
+                    case POINT: fillPoint(ds, proj, obj, obj.getConstructionRelations(), obj.getSemanticRelations()); break;
+                    case LINE: fillLine(ds, proj, obj, obj.getConstructionRelations(), obj.getSemanticRelations()); break;
+                    case AREA: fillArea(ds, proj, obj, obj.getConstructionRelations(), obj.getSemanticRelations()); break;
                     case COMPLEX: break; // TODO (not used in PCI)
                     default: throw new IllegalArgumentException(obj.toString());
                 }
@@ -491,48 +507,45 @@ public class EdigeoFileVEC extends EdigeoLotFile<VecBlock<?>> {
         ds.addPrimitive(osm);
     }
 
-    private static void fillPoint(DataSet ds, Projection proj, ObjectBlock obj, List<RelationBlock> constructionRelations) {
-        assert constructionRelations.size() == 1 : constructionRelations;
-        RelationBlock rel = constructionRelations.get(0);
-        assert rel.scdRef instanceof McdConstructionRelationDef : rel;
-        if (rel.scdRef instanceof McdConstructionRelationDef) {
-            McdConstructionRelationDef crd = (McdConstructionRelationDef) rel.scdRef;
-            assert crd.kind == RelationKind.IS_MADE_OF;
-            assert crd.nAttributes == 0;
-        }
-        for (VecBlock<?> e : rel.elements) {
-            if (e instanceof NodeBlock) {
-                NodeBlock nb = (NodeBlock) e;
-                assert nb.nAttributes == 0;
-                LatLon ll = proj.eastNorth2latlon(nb.getCoordinate());
-                //if (ds.searchNodes(around(ll)).isEmpty()) {
-                addPrimitiveAndTags(ds, obj, new Node(ll));
-                //}
-                break;
-            }
-        }
-    }
-
-    private static void fillLine(DataSet ds, Projection proj, ObjectBlock obj, List<RelationBlock> constructionRelations) {
-        assert constructionRelations.size() >= 1 : constructionRelations;
-        // Retrieve all arcs for the linear object
-        final List<ArcBlock> arcs = new ArrayList<>();
+    @SuppressWarnings("unchecked")
+    private static <T extends VecBlock<?>> List<T> extract(Class<T> klass, List<RelationBlock> constructionRelations, RelationKind kind) {
+        final List<T> list = new ArrayList<>();
         for (RelationBlock rel : constructionRelations) {
             assert rel.scdRef instanceof McdConstructionRelationDef : rel;
             if (rel.scdRef instanceof McdConstructionRelationDef) {
                 McdConstructionRelationDef crd = (McdConstructionRelationDef) rel.scdRef;
-                assert crd.kind == RelationKind.IS_MADE_OF_ARC;
+                assert crd.kind == kind;
                 assert crd.nAttributes == 0;
             }
             for (VecBlock<?> e : rel.elements) {
-                if (e instanceof ArcBlock) {
-                    arcs.add((ArcBlock) e);
+                if (klass.isInstance(e)) {
+                    list.add((T) e);
                 }
             }
         }
+        return list;
+    }
+
+    private static void fillPoint(DataSet ds, Projection proj, ObjectBlock obj,
+            List<RelationBlock> constructionRelations, List<RelationBlock> semanticRelations) {
+        assert constructionRelations.size() == 1 : constructionRelations;
+        List<NodeBlock> nodes = extract(NodeBlock.class, constructionRelations, RelationKind.IS_MADE_OF);
+        assert nodes.size() == 1 : nodes;
+        NodeBlock nb = nodes.get(0);
+        assert nb.nAttributes == 0;
+        LatLon ll = proj.eastNorth2latlon(nb.getCoordinate());
+        //if (ds.searchNodes(around(ll)).isEmpty()) {
+        addPrimitiveAndTags(ds, obj, new Node(ll));
+        //}
+    }
+
+    private static void fillLine(DataSet ds, Projection proj, ObjectBlock obj,
+            List<RelationBlock> constructionRelations, List<RelationBlock> semanticRelations) {
+        assert constructionRelations.size() >= 1 : constructionRelations;
+        // Retrieve all arcs for the linear object
+        final List<ArcBlock> arcs = extract(ArcBlock.class, constructionRelations, RelationKind.IS_MADE_OF_ARC);
         final double EPSILON = 1e-2;
         assert arcs.size() >= 1;
-        Way w = new Way();
         // Some lines are made of several arcs, but they need to be sorted
         if (arcs.size() > 1) {
             List<ArcBlock> newArcs = arcs.stream().filter(
@@ -552,8 +565,8 @@ public class EdigeoFileVEC extends EdigeoLotFile<VecBlock<?>> {
             assert newArcs.size() == arcs.size();
             arcs.clear();
             arcs.addAll(newArcs);
-            w.put(new Tag("fixme", "several_arcs")); // FIXME
         }
+        Way w = new Way();
         // Add first node of first arc
         w.addNode(getNodeAt(ds, proj, arcs.get(0).points.get(0)));
         // For each arc, add all nodes except first one
@@ -568,8 +581,10 @@ public class EdigeoFileVEC extends EdigeoLotFile<VecBlock<?>> {
         addPrimitiveAndTags(ds, obj, w);
     }
 
-    private static void fillArea(DataSet ds, Projection proj, ObjectBlock obj, List<RelationBlock> constructionRelations) {
+    private static void fillArea(DataSet ds, Projection proj, ObjectBlock obj,
+            List<RelationBlock> constructionRelations, List<RelationBlock> semanticRelations) {
         assert constructionRelations.size() >= 1 : constructionRelations;
+        // TODO
     }
 
     /**

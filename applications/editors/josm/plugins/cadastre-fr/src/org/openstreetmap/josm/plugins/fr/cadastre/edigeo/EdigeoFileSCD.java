@@ -163,9 +163,7 @@ public class EdigeoFileSCD extends EdigeoLotFile<ScdBlock> {
 
         @Override
         public String toString() {
-            return "McdAttributeDef [dictRef=" + dictRef + ", nMaxChars=" + nMaxChars + ", nMaxDigits=" + nMaxDigits
-                    + ", nMaxExponent=" + nMaxExponent + ", unit=" + unit + ", min=" + min + ", max=" + max + ", type="
-                    + type + ", identifier=" + identifier + ']';
+            return "McdAttributeDef [identifier=" + identifier + ']';
         }
     }
 

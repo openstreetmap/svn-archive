@@ -12,11 +12,16 @@ import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.io.AbstractReader;
 import org.openstreetmap.josm.io.IllegalDataException;
 import org.openstreetmap.josm.plugins.fr.cadastre.edigeo.EdigeoFileTHF;
+import org.openstreetmap.josm.plugins.fr.cadastre.edigeo.EdigeoFileVEC;
 
 /**
  * Reader for French Cadastre - Edigéo files.
  */
 public class EdigeoPciReader extends AbstractReader {
+
+    static {
+        EdigeoFileVEC.addIgnoredObject("SYM_id", "31");
+    }
 
     /**
      * Constructs a new {@code EdigeoReader}.

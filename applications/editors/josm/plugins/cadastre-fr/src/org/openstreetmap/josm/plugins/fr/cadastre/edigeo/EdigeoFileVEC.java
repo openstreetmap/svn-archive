@@ -9,7 +9,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.coor.LatLon;
@@ -32,6 +34,7 @@ import org.openstreetmap.josm.plugins.fr.cadastre.edigeo.EdigeoFileTHF.ChildBloc
 import org.openstreetmap.josm.plugins.fr.cadastre.edigeo.EdigeoFileTHF.Lot;
 import org.openstreetmap.josm.plugins.fr.cadastre.edigeo.EdigeoFileVEC.VecBlock;
 import org.openstreetmap.josm.plugins.fr.cadastre.edigeo.EdigeoRecord.Nature;
+import org.openstreetmap.josm.tools.Logging;
 
 /**
  * Edigeo VEC file.
@@ -103,6 +106,26 @@ public class EdigeoFileVEC extends EdigeoLotFile<VecBlock<?>> {
 
         public final List<RelationBlock> getSemanticRelations() {
             return parentRelations.stream().filter(r -> r.scdRef instanceof McdSemanticRelationDef).collect(Collectors.toList());
+        }
+
+        /**
+         * Returns the number of attributes.
+         * @return the number of attributes
+         */
+        public final int getNumberOfAttributes() {
+            return nAttributes;
+        }
+
+        public final List<McdAttributeDef> getAttributeDefinitions() {
+            return Collections.unmodifiableList(attributeDefs);
+        }
+
+        public final McdAttributeDef getAttributeDefinition(int i) {
+            return attributeDefs.get(i);
+        }
+
+        public final String getAttributeValue(int i) {
+            return attributeValues.get(i);
         }
     }
 
@@ -193,14 +216,6 @@ public class EdigeoFileVEC extends EdigeoLotFile<VecBlock<?>> {
          */
         public final EastNorth getCoordinate() {
             return coordinate;
-        }
-
-        /**
-         * Returns the number of attributes.
-         * @return the number of attributes
-         */
-        public final int getNumberOfAttributes() {
-            return nAttributes;
         }
 
         /**
@@ -311,7 +326,7 @@ public class EdigeoFileVEC extends EdigeoLotFile<VecBlock<?>> {
 
         @Override
         public String toString() {
-            return "ObjectBlock [identifier=" + identifier + ']';
+            return "ObjectBlock [identifier=" + identifier + ", attributeDefs=" + attributeDefs +", attributeValues=" + attributeValues + ']';
         }
     }
 
@@ -388,6 +403,35 @@ public class EdigeoFileVEC extends EdigeoLotFile<VecBlock<?>> {
         }
     }
 
+    private static final List<Predicate<ObjectBlock>> ignoredObjects = new ArrayList<>();
+
+    /**
+     * Adds a predicate to ignore a special type of object.
+     * @param predicate defines how to identify the object to ignore
+     * @return {@code true}
+     */
+    public static boolean addIgnoredObject(Predicate<ObjectBlock> predicate) {
+        return ignoredObjects.add(Objects.requireNonNull(predicate, "predicate"));
+    }
+
+    /**
+     * Adds a predicate to ignore a special type of object based on a key/value attribute.
+     * @param key attribute key
+     * @param value attribute value
+     * @return {@code true}
+     */
+    public static boolean addIgnoredObject(String key, String value) {
+        return addIgnoredObject(o -> {
+            for (int i = 0; i < o.nAttributes; i++) {
+                if (key.equals(o.attributeDefs.get(i).identifier)
+                        && value.equals(o.attributeValues.get(i))) {
+                    return true;
+                }
+            }
+            return false;
+        });
+    }
+
     /**
      * Constructs a new {@code EdigeoFileVEC}.
      * @param lot parent lot
@@ -426,13 +470,15 @@ public class EdigeoFileVEC extends EdigeoLotFile<VecBlock<?>> {
         super.fill(ds);
         Projection proj = lot.geo.getCoorReference().getProjection();
         for (ObjectBlock obj : getObjects()) {
-            List<RelationBlock> constructionRelations = obj.getConstructionRelations();
-            switch (obj.scdRef.kind) {
-            case POINT: fillPoint(ds, proj, obj, constructionRelations); break;
-            case LINE: fillLine(ds, proj, obj, constructionRelations); break;
-            case COMPLEX: break; // TODO
-            case AREA: break; // TODO
-            default: throw new IllegalArgumentException(obj.toString());
+            if (!ignoredObjects.stream().anyMatch(p -> p.test(obj))) {
+                List<RelationBlock> constructionRelations = obj.getConstructionRelations();
+                switch (obj.scdRef.kind) {
+                    case POINT: fillPoint(ds, proj, obj, constructionRelations); break;
+                    case LINE: fillLine(ds, proj, obj, constructionRelations); break;
+                    case AREA: fillArea(ds, proj, obj, constructionRelations); break;
+                    case COMPLEX: break; // TODO (not used in PCI)
+                    default: throw new IllegalArgumentException(obj.toString());
+                }
             }
         }
         return this;
@@ -469,8 +515,8 @@ public class EdigeoFileVEC extends EdigeoLotFile<VecBlock<?>> {
 
     private static void fillLine(DataSet ds, Projection proj, ObjectBlock obj, List<RelationBlock> constructionRelations) {
         assert constructionRelations.size() >= 1 : constructionRelations;
-        // TODO sort relations
-        Way w = new Way();
+        // Retrieve all arcs for the linear object
+        final List<ArcBlock> arcs = new ArrayList<>();
         for (RelationBlock rel : constructionRelations) {
             assert rel.scdRef instanceof McdConstructionRelationDef : rel;
             if (rel.scdRef instanceof McdConstructionRelationDef) {
@@ -480,17 +526,50 @@ public class EdigeoFileVEC extends EdigeoLotFile<VecBlock<?>> {
             }
             for (VecBlock<?> e : rel.elements) {
                 if (e instanceof ArcBlock) {
-                    ArcBlock ab = (ArcBlock) e;
-                    assert ab.nAttributes == 0 : ab;
-                    assert ab.nQualities == 0 : ab;
-                    for (EastNorth en : ab.points) {
-                        w.addNode(getNodeAt(ds, proj, en));
-                    }
+                    arcs.add((ArcBlock) e);
                 }
+            }
+        }
+        final double EPSILON = 1e-2;
+        assert arcs.size() >= 1;
+        Way w = new Way();
+        // Some lines are made of several arcs, but they need to be sorted
+        if (arcs.size() > 1) {
+            List<ArcBlock> newArcs = arcs.stream().filter(
+                    a -> arcs.stream().noneMatch(
+                            b -> b.points.get(0).equalsEpsilon(a.points.get(a.nPoints - 1), EPSILON))).collect(Collectors.toList());
+            if (newArcs.size() != 1) {
+                Logging.warn("Unable to process geometry of: " + obj);
+                return;
+            }
+            while (newArcs.size() < arcs.size()) {
+                ArcBlock ab = newArcs.get(newArcs.size() - 1);
+                EastNorth en = ab.points.get(ab.nPoints - 1);
+                Stream<ArcBlock> stream = arcs.stream().filter(a -> a.points.get(0).equalsEpsilon(en, EPSILON));
+                assert stream.count() == 1;
+                newArcs.add(stream.findAny().get());
+            }
+            assert newArcs.size() == arcs.size();
+            arcs.clear();
+            arcs.addAll(newArcs);
+            w.put(new Tag("fixme", "several_arcs")); // FIXME
+        }
+        // Add first node of first arc
+        w.addNode(getNodeAt(ds, proj, arcs.get(0).points.get(0)));
+        // For each arc, add all nodes except first one
+        for (ArcBlock ab : arcs) {
+            assert ab.nAttributes == 0 : ab;
+            assert ab.nQualities == 0 : ab;
+            for (int i = 1; i < ab.nPoints; i++) {
+                w.addNode(getNodeAt(ds, proj, ab.points.get(i)));
             }
         }
         assert w.getNodesCount() >= 2;
         addPrimitiveAndTags(ds, obj, w);
+    }
+
+    private static void fillArea(DataSet ds, Projection proj, ObjectBlock obj, List<RelationBlock> constructionRelations) {
+        assert constructionRelations.size() >= 1 : constructionRelations;
     }
 
     /**

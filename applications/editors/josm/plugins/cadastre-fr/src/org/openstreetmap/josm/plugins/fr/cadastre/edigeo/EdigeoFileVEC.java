@@ -563,6 +563,7 @@ public class EdigeoFileVEC extends EdigeoLotFile<VecBlock<?>> {
 
     private static <T extends OsmPrimitive> T addPrimitiveAndTags(DataSet ds, ObjectBlock obj, T osm) {
         if (osm != null) {
+            osm.put("cadastre_scd", obj.scdRef.identifier);
             for (int i = 0; i < obj.nAttributes; i++) {
                 osm.put(obj.attributeDefs.get(i).identifier, obj.attributeValues.get(i));
             }

@@ -13,7 +13,8 @@ import javax.swing.JMenuItem;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.data.Preferences;
-import org.openstreetmap.josm.data.Preferences.pref;
+import org.openstreetmap.josm.data.StructUtils;
+import org.openstreetmap.josm.data.StructUtils.StructEntry;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
@@ -31,7 +32,7 @@ public class WikipediaCopyTemplate {
     );
 
     private static final List<CoordCopyTemplateEntry> TEMPLATE_ENTRIES =
-            Main.pref.getListOfStructs("wikipedia.copytemplates", DEFAULT_TEMPLATES, CoordCopyTemplateEntry.class);
+            StructUtils.getListOfStructs(Main.pref, "wikipedia.copytemplates", DEFAULT_TEMPLATES, CoordCopyTemplateEntry.class);
 
     public WikipediaCopyTemplate() {
         JosmAction previous = MainApplication.getMenu().copyCoordinates;
@@ -49,11 +50,11 @@ public class WikipediaCopyTemplate {
      */
     @SuppressWarnings("WeakerAccess")
     public static class CoordCopyTemplateEntry {
-        @pref
+        @StructEntry
         public String name;
-        @pref
+        @StructEntry
         public String id;
-        @pref
+        @StructEntry
         public String pattern;
 
         public CoordCopyTemplateEntry() {

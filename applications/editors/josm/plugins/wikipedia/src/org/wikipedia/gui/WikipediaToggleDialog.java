@@ -222,7 +222,7 @@ public class WikipediaToggleDialog extends ToggleDialog implements ActiveLayerCh
                 @Override
                 List<WikipediaEntry> getEntries() {
                     return WikipediaApp.forLanguage(wikipediaLang.get())
-                            .getEntriesFromCategory(category, Main.pref.getInteger("wikipedia.depth", 3));
+                            .getEntriesFromCategory(category, Main.pref.getInt("wikipedia.depth", 3));
                 }
             }.execute();
         }

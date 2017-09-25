@@ -25,6 +25,7 @@ import org.openstreetmap.josm.data.preferences.BooleanProperty;
 import org.openstreetmap.josm.data.preferences.IntegerProperty;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.download.AbstractDownloadSourcePanel;
+import org.openstreetmap.josm.gui.download.DownloadDialog;
 import org.openstreetmap.josm.gui.download.DownloadSettings;
 import org.openstreetmap.josm.gui.download.DownloadSource;
 import org.openstreetmap.josm.gui.download.DownloadSourceSizingPolicy;
@@ -43,7 +44,7 @@ import org.wikipedia.io.WikosmDownloadReader;
 public class WikosmDownloadSource implements DownloadSource<WikosmDownloadSource.WikosmDownloadData> {
 
     @Override
-    public AbstractDownloadSourcePanel<WikosmDownloadData> createPanel() {
+    public AbstractDownloadSourcePanel<WikosmDownloadData> createPanel(DownloadDialog dialog) {
         return new WikosmDownloadSourcePanel(this);
     }
 
@@ -164,12 +165,12 @@ public class WikosmDownloadSource implements DownloadSource<WikosmDownloadSource
             referrers.setToolTipText(tr("Select if the referrers of the object should be downloaded as well, i.e.,"
                     + "parent relations and for nodes, additionally, parent ways"));
             referrers.setSelected(Main.pref.getBoolean("wikosm.downloadprimitive.referrers", true));
-            referrers.addActionListener(e -> Main.pref.put("wikosm.downloadprimitive.referrers", referrers.isSelected()));
+            referrers.addActionListener(e -> Main.pref.putBoolean("wikosm.downloadprimitive.referrers", referrers.isSelected()));
 
             fullRel = new JCheckBox(tr("Download relation members"));
             fullRel.setToolTipText(tr("Select if the members of a relation should be downloaded as well"));
             fullRel.setSelected(Main.pref.getBoolean("wikosm.downloadprimitive.full", true));
-            fullRel.addActionListener(e -> Main.pref.put("wikosm.downloadprimitive.full", fullRel.isSelected()));
+            fullRel.addActionListener(e -> Main.pref.putBoolean("wikosm.downloadprimitive.full", fullRel.isSelected()));
 
             // https://stackoverflow.com/questions/527719/how-to-add-hyperlink-in-jlabel
             JButton helpLink = new JButton();

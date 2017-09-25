@@ -23,10 +23,11 @@ import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Tag;
+import org.openstreetmap.josm.data.tagging.ac.AutoCompletionItem;
 import org.openstreetmap.josm.gui.ExtendedDialog;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.tagging.ac.AutoCompletingComboBox;
-import org.openstreetmap.josm.gui.tagging.ac.AutoCompletionListItem;
+import org.openstreetmap.josm.gui.tagging.ac.AutoCompletionManager;
 import org.openstreetmap.josm.gui.util.GuiHelper;
 import org.openstreetmap.josm.tools.GBC;
 import org.wikipedia.WikipediaApp;
@@ -44,7 +45,7 @@ public final class WikidataItemSearchDialog extends ExtendedDialog {
         this.selector.setDblClickListener(e -> buttonAction(0, null));
         this.targetKey = new AutoCompletingComboBox();
         this.targetKey.setEditable(true);
-        this.targetKey.setSelectedItem(new AutoCompletionListItem("wikidata"));
+        this.targetKey.setSelectedItem(new AutoCompletionItem("wikidata"));
 
         final JPanel panel = new JPanel(new GridBagLayout());
         panel.add(selector, GBC.eop().fill(GBC.BOTH));
@@ -78,19 +79,19 @@ public final class WikidataItemSearchDialog extends ExtendedDialog {
         if (editDataSet == null) {
             return;
         }
-        final Collection<AutoCompletionListItem> keys = new TreeSet<>();
+        final Collection<AutoCompletionItem> keys = new TreeSet<>();
         // from http://wiki.openstreetmap.org/wiki/Proposed_features/Wikidata#Tagging
-        keys.add(new AutoCompletionListItem("wikidata"));
-        keys.add(new AutoCompletionListItem("operator:wikidata"));
-        keys.add(new AutoCompletionListItem("brand:wikidata"));
-        keys.add(new AutoCompletionListItem("architect:wikidata"));
-        keys.add(new AutoCompletionListItem("artist:wikidata"));
-        keys.add(new AutoCompletionListItem("subject:wikidata"));
-        keys.add(new AutoCompletionListItem("name:etymology:wikidata"));
-        editDataSet.getAutoCompletionManager().getKeys().stream()
+        keys.add(new AutoCompletionItem("wikidata"));
+        keys.add(new AutoCompletionItem("operator:wikidata"));
+        keys.add(new AutoCompletionItem("brand:wikidata"));
+        keys.add(new AutoCompletionItem("architect:wikidata"));
+        keys.add(new AutoCompletionItem("artist:wikidata"));
+        keys.add(new AutoCompletionItem("subject:wikidata"));
+        keys.add(new AutoCompletionItem("name:etymology:wikidata"));
+        AutoCompletionManager.of(editDataSet).getTagKeys().stream()
                 .filter(v -> v.getValue().contains("wikidata"))
                 .forEach(keys::add);
-        targetKey.setPossibleACItems(keys);
+        targetKey.setPossibleAcItems(keys);
     }
 
     @Override

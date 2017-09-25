@@ -7,5 +7,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/JOSM-GeoTools"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/JOSM-jts"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/JOSM-apache-commons"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

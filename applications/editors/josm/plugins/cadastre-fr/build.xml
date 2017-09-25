@@ -14,13 +14,14 @@
     <property name="plugin.icon" value="images/preferences/cadastrewms.png"/>
     <property name="plugin.link" value="https://wiki.openstreetmap.org/wiki/FR:JOSM/Fr:Plugin/Cadastre"/>
     <property name="plugin.stage" value="60"/>
-    <property name="plugin.requires" value="jts;geotools"/>
+    <property name="plugin.requires" value="apache-commons;ejml;jts;geotools"/>
 
     <!-- ** include targets that all plugins have in common ** -->
     <import file="../build-common.xml"/>
 
     <property name="jts" location="${plugin.dist.dir}/jts.jar"/>
     <property name="geotools" location="${plugin.dist.dir}/geotools.jar"/>
+    <property name="apache-commons" location="${plugin.dist.dir}/apache-commons.jar"/>
 
     <!--
     **********************************************************
@@ -35,7 +36,8 @@
                 <pathelement location="${josm}"/>
                 <pathelement location="${jts}"/>
                 <pathelement location="${geotools}"/>
-            </classpath>
+                <pathelement location="${apache-commons}"/>
+             </classpath>
             <compilerarg value="-Xlint:deprecation"/>
             <compilerarg value="-Xlint:unchecked"/>
         </javac>

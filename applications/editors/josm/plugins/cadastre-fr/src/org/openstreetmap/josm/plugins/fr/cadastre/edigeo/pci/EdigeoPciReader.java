@@ -1,9 +1,12 @@
 // License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.fr.cadastre.edigeo.pci;
 
+import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -11,6 +14,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
+import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
+import org.apache.commons.compress.compressors.bzip2.BZip2CompressorInputStream;
+import org.apache.commons.compress.utils.IOUtils;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.DataSet.UploadPolicy;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
@@ -19,6 +26,7 @@ import org.openstreetmap.josm.io.AbstractReader;
 import org.openstreetmap.josm.io.IllegalDataException;
 import org.openstreetmap.josm.plugins.fr.cadastre.edigeo.EdigeoFileTHF;
 import org.openstreetmap.josm.plugins.fr.cadastre.edigeo.EdigeoFileVEC;
+import org.openstreetmap.josm.tools.Utils;
 
 /**
  * Reader for French Cadastre - Edigéo files.
@@ -179,11 +187,39 @@ public class EdigeoPciReader extends AbstractReader {
     }
 
     DataSet parse(Path path, ProgressMonitor instance) throws IOException, ReflectiveOperationException {
-        DataSet data = new DataSet();
-        data.setUploadPolicy(UploadPolicy.DISCOURAGED);
-        EdigeoFileTHF thf = new EdigeoFileTHF(path).read().fill(data);
-        data.setName(thf.getSupport().getBlockIdentifier());
-        return data;
+        Path tmpDir = null;
+        Path thfPath = path;
+        try {
+            if (thfPath.toString().endsWith(".tar.bz2")) {
+                try (InputStream fin = Files.newInputStream(path);
+                     BufferedInputStream in = new BufferedInputStream(fin);
+                     BZip2CompressorInputStream bzIn = new BZip2CompressorInputStream(in);
+                     TarArchiveInputStream tar = new TarArchiveInputStream(bzIn)
+                ) {
+                    TarArchiveEntry entry;
+                    tmpDir = Files.createTempDirectory(Utils.getJosmTempDir().toPath(), "cadastre");
+                    while ((entry = tar.getNextTarEntry()) != null) {
+                        File file = tmpDir.resolve(entry.getName()).toFile();
+                        try (FileOutputStream out = new FileOutputStream(file)) {
+                            if (IOUtils.copy(tar, out) < entry.getSize()) {
+                                throw new IOException(String.format("Unable to write ''{0}'' entirely", file));
+                            } else if (file.toString().endsWith(".THF")) {
+                                thfPath = file.toPath();
+                            }
+                        }
+                    }
+                }
+            }
+            DataSet data = new DataSet();
+            data.setUploadPolicy(UploadPolicy.DISCOURAGED);
+            EdigeoFileTHF thf = new EdigeoFileTHF(thfPath).read().fill(data);
+            data.setName(thf.getSupport().getBlockIdentifier());
+            return data;
+        } finally {
+            if (tmpDir != null) {
+                Utils.deleteDirectory(tmpDir.toFile());
+            }
+        }
     }
 
     @Override

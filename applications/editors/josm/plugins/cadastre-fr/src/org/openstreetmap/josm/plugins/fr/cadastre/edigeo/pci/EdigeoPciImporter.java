@@ -12,7 +12,6 @@ import java.io.InputStream;
 import org.openstreetmap.josm.actions.ExtensionFileFilter;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.gui.io.importexport.OsmImporter;
-import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.io.IllegalDataException;
 import org.openstreetmap.josm.tools.Logging;
@@ -23,7 +22,7 @@ import org.openstreetmap.josm.tools.Logging;
 public class EdigeoPciImporter extends OsmImporter {
 
     static final ExtensionFileFilter EDIGEO_FILE_FILTER = new ExtensionFileFilter(
-            "thf", "thf", tr("Cadastre Edigeo files") + " (*.thf)");
+            "thf,tar.bz2", "thf", tr("Cadastre Edigeo files") + " (*.thf, *.tar.bz2)");
 
     protected File file;
 
@@ -37,9 +36,7 @@ public class EdigeoPciImporter extends OsmImporter {
     @Override
     public void importData(File file, ProgressMonitor progressMonitor)
             throws IOException, IllegalDataException {
-        if (file != null) {
-            this.file = file;
-        }
+        this.file = file;
         // Do not call super.importData because Compression.getUncompressedFileInputStream skips the first entry
         try (InputStream in = new FileInputStream(file)) {
             importData(in, file, progressMonitor);
@@ -56,12 +53,5 @@ public class EdigeoPciImporter extends OsmImporter {
         } catch (IOException e) {
             throw new IllegalDataException(e);
         }
-    }
-
-    @Override
-    protected OsmDataLayer createLayer(DataSet dataSet, File associatedFile, String layerName) {
-        // FIXME: mapping pci => osm
-        //DataSetUpdater.updateDataSet(dataSet, handler, associatedFile);
-        return new OsmDataLayer(dataSet, layerName, associatedFile);
     }
 }

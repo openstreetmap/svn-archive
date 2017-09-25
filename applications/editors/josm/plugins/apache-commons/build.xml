@@ -42,7 +42,7 @@
             <exclude name="**/org/apache/commons/lang3/**" />
             <classpath>
                 <pathelement path="${plugin.build.dir}"/>
-                <pathelement location="${josm}"/>
+            	<path refid="plugin.classpath"/>
             </classpath>
         </javac>
     </target>

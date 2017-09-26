@@ -159,12 +159,12 @@ public final class CircleArcMaker {
 
         Node[] anchorNodes = {n1, n2, n3};
         //// "Fuse" the arc with all target ways
-        fuseArc(anchorNodes, arcNodes, targetWays, cmds);
+        fuseArc(ds, anchorNodes, arcNodes, targetWays, cmds);
 
         return cmds;
     }
 
-    private static void fuseArc(Node[] anchorNodes, List<Node> arcNodes, Set<Way> targetWays, Collection<Command> cmds) {
+    private static void fuseArc(DataSet ds, Node[] anchorNodes, List<Node> arcNodes, Set<Way> targetWays, Collection<Command> cmds) {
 
         for (Way originalTw : targetWays) {
             Way tw = new Way(originalTw);
@@ -211,7 +211,7 @@ public final class CircleArcMaker {
                 }
             }
             if (didChangeTw)
-                cmds.add(new ChangeCommand(originalTw, tw));
+                cmds.add(new ChangeCommand(ds, originalTw, tw));
         }
     }
 
@@ -241,7 +241,7 @@ public final class CircleArcMaker {
         double s = 0.5 * ((x2 - x3) * (x1 - x3) - (y2 - y3) * (y3 - y1));
         double sUnder = (x1 - x2) * (y3 - y1) - (y2 - y1) * (x1 - x3);
 
-        assert (sUnder == 0);
+        assert (sUnder != 0);
 
         s /= sUnder;
 

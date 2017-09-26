@@ -38,7 +38,7 @@ public class CurveAction extends JosmAction {
 
     private void updatePreferences() {
         // @formatter:off
-        angleSeparation = Main.pref.getInteger(prefKey("circlearc.angle-separation"), 20);
+        angleSeparation = Main.pref.getInt(prefKey("circlearc.angle-separation"), 20);
         // @formatter:on
     }
 

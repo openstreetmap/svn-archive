@@ -150,7 +150,7 @@ public class MultiTagDialog extends ExtendedDialog implements SelectionChangedLi
 
     private void loadHistory() {
         List<String> cmtHistory = new LinkedList<>(
-                Main.pref.getCollection(HISTORY_KEY, Arrays.asList(defaultHistory)));
+                Main.pref.getList(HISTORY_KEY, Arrays.asList(defaultHistory)));
         Collections.reverse(cmtHistory);
         cbTagSet.setPossibleItems(cmtHistory);
         String s = cmtHistory.get(cmtHistory.size()-1);
@@ -212,7 +212,7 @@ public class MultiTagDialog extends ExtendedDialog implements SelectionChangedLi
 
     private void initAutocompletion() {
         OsmDataLayer l = MainApplication.getLayerManager().getEditLayer();
-        AutoCompletionManager autocomplete = l.data.getAutoCompletionManager();
+        AutoCompletionManager autocomplete = AutoCompletionManager.of(l.data);
         for (int i = 0; i < tableModel.mainTags.length; i++) {
             if (tableModel.isSpecialTag[i]) continue;
             AutoCompletingTextField tf = new AutoCompletingTextField(0, false);
@@ -302,7 +302,7 @@ public class MultiTagDialog extends ExtendedDialog implements SelectionChangedLi
             if (history.isEmpty()) {
                 history = Arrays.asList(defaultHistory);
             }
-            Main.pref.putCollection(HISTORY_KEY, history);
+            Main.pref.putList(HISTORY_KEY, history);
             loadHistory();
         }
     }
@@ -335,7 +335,7 @@ public class MultiTagDialog extends ExtendedDialog implements SelectionChangedLi
             if (s == null || s.isEmpty() || s.equals(oldTags)) return;
             oldTags = s;
             cbTagSet.addCurrentItemToHistory();
-            Main.pref.putCollection(HISTORY_KEY, cbTagSet.getHistory());
+            Main.pref.putList(HISTORY_KEY, cbTagSet.getHistory());
             specifyTagSet(s);
         }
     }

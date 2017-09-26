@@ -32,8 +32,10 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
 import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.data.coor.CoordinateFormat;
 import org.openstreetmap.josm.data.coor.LatLon;
+import org.openstreetmap.josm.data.coor.conversion.CoordinateFormatManager;
+import org.openstreetmap.josm.data.coor.conversion.ICoordinateFormat;
+import org.openstreetmap.josm.data.coor.conversion.LatLonParser;
 import org.openstreetmap.josm.gui.ExtendedDialog;
 import org.openstreetmap.josm.gui.util.WindowGeometry;
 import org.openstreetmap.josm.gui.widgets.HtmlPanel;
@@ -57,10 +59,10 @@ public class LatLonDialog extends ExtendedDialog {
     private static final String MIN = "\u2032";
     private static final String SEC = "\u2033";
 
-    private static final char N_TR = LatLon.NORTH.charAt(0);
-    private static final char S_TR = LatLon.SOUTH.charAt(0);
-    private static final char E_TR = LatLon.EAST.charAt(0);
-    private static final char W_TR = LatLon.WEST.charAt(0);
+    private static final char N_TR = LatLonParser.NORTH.charAt(0);
+    private static final char S_TR = LatLonParser.SOUTH.charAt(0);
+    private static final char E_TR = LatLonParser.EAST.charAt(0);
+    private static final char W_TR = LatLonParser.WEST.charAt(0);
 
     private static final Pattern p = Pattern.compile(
             "([+|-]?\\d+[.,]\\d+)|"             // (1)
@@ -178,9 +180,9 @@ public class LatLonDialog extends ExtendedDialog {
         }
         this.latLonCoordinates = ll;
         String text = "";
+        ICoordinateFormat format = CoordinateFormatManager.getDefaultFormat();
         for (LatLon latlon : ll) {
-            text = text + latlon.latToString(CoordinateFormat.getDefaultFormat())
-            + " " + latlon.lonToString(CoordinateFormat.getDefaultFormat()) + "\n";
+            text = text + format.latToString(latlon) + " " + format.lonToString(latlon) + "\n";
         }
         taLatLon.setText(text);
         setOkEnabled(true);

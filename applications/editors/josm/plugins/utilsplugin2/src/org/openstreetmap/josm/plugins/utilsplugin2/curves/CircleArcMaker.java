@@ -17,9 +17,11 @@ import org.openstreetmap.josm.command.AddCommand;
 import org.openstreetmap.josm.command.ChangeCommand;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.data.coor.EastNorth;
+import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.gui.MainApplication;
 
 public final class CircleArcMaker {
 
@@ -67,6 +69,7 @@ public final class CircleArcMaker {
         }
 
         Set<Way> targetWays = new HashSet<>();
+        DataSet ds = MainApplication.getLayerManager().getEditDataSet();
 
         boolean nodesHaveBeenChoosen = false;
         if (selectedNodes.size() == 3) {
@@ -78,7 +81,7 @@ public final class CircleArcMaker {
             if (selectedWays.isEmpty()) { // Create a brand new way
                 Way newWay = new Way();
                 targetWays.add(newWay);
-                cmds.add(new AddCommand(newWay));
+                cmds.add(new AddCommand(ds, newWay));
                 newWay.addNode(n1);
                 newWay.addNode(n2);
                 newWay.addNode(n3);
@@ -148,7 +151,7 @@ public final class CircleArcMaker {
             } else {
                 Node n = new Node(p);
                 arcNodes.add(n);
-                cmds.add(new AddCommand(n));
+                cmds.add(new AddCommand(ds, n));
             }
             i++;
         }

@@ -86,7 +86,7 @@ public class ChooseURLAction extends JosmAction {
         int idx = list1.getSelectedIndex();
         if (dialog.getValue() == 1 && idx >= 0) {
             URLList.select(vals[idx]);
-            Main.pref.put("utilsplugin2.askurl", check1.isSelected());
+            Main.pref.putBoolean("utilsplugin2.askurl", check1.isSelected());
         }
     }
 }

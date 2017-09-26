@@ -13,13 +13,13 @@ import java.util.List;
 
 import javax.swing.JOptionPane;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.command.AddCommand;
 import org.openstreetmap.josm.command.ChangeNodesCommand;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.MoveCommand;
 import org.openstreetmap.josm.command.SequenceCommand;
+import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Way;
@@ -45,7 +45,8 @@ public class ExtractPointAction extends JosmAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        Collection<OsmPrimitive> selection = getLayerManager().getEditDataSet().getSelected();
+        DataSet ds = getLayerManager().getEditDataSet();
+        Collection<OsmPrimitive> selection = ds.getSelected();
         List<Node> selectedNodes = OsmPrimitive.getFilteredList(selection, Node.class);
         if (selectedNodes.size() != 1) {
             new Notification(tr("This tool extracts node from its ways and requires single node to be selected."))
@@ -60,7 +61,7 @@ public class ExtractPointAction extends JosmAction {
         if (p != null)
             cmds.add(new MoveCommand(nd, MainApplication.getMap().mapView.getLatLon(p.x, p.y)));
         List<OsmPrimitive> refs = nd.getReferrers();
-        cmds.add(new AddCommand(ndCopy));
+        cmds.add(new AddCommand(ds, ndCopy));
 
         for (OsmPrimitive pr: refs) {
             if (pr instanceof Way) {

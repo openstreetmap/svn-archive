@@ -3,14 +3,13 @@ package org.openstreetmap.josm.plugins.utilsplugin2.search;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
-import org.openstreetmap.josm.data.osm.Changeset;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.Way;
-import org.openstreetmap.josm.data.osm.search.SearchParseError;
 import org.openstreetmap.josm.data.osm.search.PushbackTokenizer;
-import org.openstreetmap.josm.data.osm.visitor.Visitor;
+import org.openstreetmap.josm.data.osm.search.SearchParseError;
+import org.openstreetmap.josm.data.osm.visitor.OsmPrimitiveVisitor;
 
 /**
  * Matches nodes that are attached to given range of ways
@@ -24,7 +23,7 @@ public class UsedInWaysMatch extends RangeMatch {
         this(tokenizer.readRange(tr("Range of attached ways count")));
     }
 
-    private static class WayCounter implements Visitor {
+    private static class WayCounter implements OsmPrimitiveVisitor {
         int count;
         @Override
         public void visit(Way w) {
@@ -38,11 +37,6 @@ public class UsedInWaysMatch extends RangeMatch {
 
         @Override
         public void visit(Relation r) {
-            // Do nothing
-        }
-
-        @Override
-        public void visit(Changeset cs) {
             // Do nothing
         }
     }

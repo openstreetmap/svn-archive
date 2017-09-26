@@ -10,11 +10,11 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.command.AddCommand;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.SequenceCommand;
+import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
@@ -51,7 +51,8 @@ public class UnGlueRelationAction extends JosmAction {
 
         LinkedList<Command> cmds = new LinkedList<>();
         List<OsmPrimitive> newPrimitives = new LinkedList<>();
-        Collection<OsmPrimitive> selection = getLayerManager().getEditDataSet().getSelected();
+        DataSet ds = getLayerManager().getEditDataSet();
+        Collection<OsmPrimitive> selection = ds.getSelected();
 
         for (OsmPrimitive p : selection) {
             boolean first = true;
@@ -68,8 +69,8 @@ public class UnGlueRelationAction extends JosmAction {
                     default: throw new AssertionError();
                     }
                     newPrimitives.add(newp);
-                    cmds.add(new AddCommand(newp));
-                    cmds.add(new ChangeRelationMemberCommand(relation, p, newp));
+                    cmds.add(new AddCommand(ds, newp));
+                    cmds.add(new ChangeRelationMemberCommand(ds, relation, p, newp));
                 } else {
                     first = false;
                 }
@@ -82,7 +83,7 @@ public class UnGlueRelationAction extends JosmAction {
             MainApplication.undoRedo.add(new SequenceCommand(tr("Unglued Relations"), cmds));
             //Set selection all primiteves (new and old)
             newPrimitives.addAll(selection);
-            getLayerManager().getEditDataSet().setSelected(newPrimitives);
+            ds.setSelected(newPrimitives);
             MainApplication.getMap().mapView.repaint();
         }
     }

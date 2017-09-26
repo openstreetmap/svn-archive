@@ -18,8 +18,8 @@ import java.util.Map.Entry;
 import javax.swing.JOptionPane;
 
 import org.openstreetmap.josm.actions.JosmAction;
-import org.openstreetmap.josm.actions.SplitWayAction;
 import org.openstreetmap.josm.command.DeleteCommand;
+import org.openstreetmap.josm.command.SplitWayCommand;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Way;
@@ -184,7 +184,7 @@ public class SplitObjectAction extends JosmAction {
             return;
         }
 
-        List<List<Node>> wayChunks = SplitWayAction.buildSplitChunks(selectedWay, selectedNodes);
+        List<List<Node>> wayChunks = SplitWayCommand.buildSplitChunks(selectedWay, selectedNodes);
         if (wayChunks != null) {
             // close the chunks
             // update the logic - if we have splitWay not null, we have to add points from it to both chunks (in the correct direction)
@@ -207,9 +207,9 @@ public class SplitObjectAction extends JosmAction {
                     wayChunk.addAll(way);
                 }
             }
-            SplitWayAction.SplitWayResult result = SplitWayAction.splitWay(
-                    getLayerManager().getEditLayer(), selectedWay, wayChunks, Collections.<OsmPrimitive>emptyList());
-            MainApplication.undoRedo.add(result.getCommand());
+            SplitWayCommand result = SplitWayCommand.splitWay(
+                    selectedWay, wayChunks, Collections.<OsmPrimitive>emptyList());
+            MainApplication.undoRedo.add(result);
             if (splitWay != null)
                 MainApplication.undoRedo.add(new DeleteCommand(splitWay));
             getLayerManager().getEditDataSet().setSelected(result.getNewSelection());

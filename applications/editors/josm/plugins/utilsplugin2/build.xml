@@ -4,7 +4,7 @@
     <!-- enter the SVN commit message -->
     <property name="commit.message" value="[josm_utilsplugin2]: select boundary by double-click; multitagger table highlights"/>
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
-    <property name="plugin.main.version" value="12678"/>
+    <property name="plugin.main.version" value="12840"/>
 
     <property name="plugin.author" value="Kalle Lampila, Upliner, Zverik, akks, joshdoe and others"/>
     <property name="plugin.class" value="org.openstreetmap.josm.plugins.utilsplugin2.UtilsPlugin2"/>

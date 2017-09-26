@@ -111,7 +111,7 @@ public final class ReplaceGeometryUtils {
         }
         // FIXME: handle different layers
         List<Command> commands = new ArrayList<>();
-        Command c = MergeNodesAction.mergeNodes(MainApplication.getLayerManager().getEditLayer(),
+        Command c = MergeNodesAction.mergeNodes(
             Arrays.asList(subjectNode, referenceNode), referenceNode);
         if (c == null) {
             // User canceled

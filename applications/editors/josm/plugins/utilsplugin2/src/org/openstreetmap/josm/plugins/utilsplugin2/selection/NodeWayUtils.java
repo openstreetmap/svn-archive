@@ -31,9 +31,9 @@ import org.openstreetmap.josm.tools.Pair;
  */
 public final class NodeWayUtils {
 
-    static final int maxLevel = Main.pref.getInteger("selection.maxrecursion", 15);
-    static final int maxWays = Main.pref.getInteger("selection.maxfoundways", 2000);
-    static final int maxWays1 = Main.pref.getInteger("selection.maxfoundways.intersection", 500);
+    static final int maxLevel = Main.pref.getInt("selection.maxrecursion", 15);
+    static final int maxWays = Main.pref.getInt("selection.maxfoundways", 2000);
+    static final int maxWays1 = Main.pref.getInt("selection.maxfoundways.intersection", 500);
 
     private NodeWayUtils() {
         // Hide default constructor for utilities classes

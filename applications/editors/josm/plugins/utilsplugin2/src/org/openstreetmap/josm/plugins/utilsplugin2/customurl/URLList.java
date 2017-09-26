@@ -46,22 +46,22 @@ public final class URLList {
         items.add("https://www.openstreetmap.org/{#type}/{#id}/history");
         items.add("Browse element [demo, =Ctrl-Shift-I]");
         items.add("https://www.openstreetmap.org/{#type}/{#id}");
-        Main.pref.putCollection("utilsplugin2.urlHistory", items);
+        Main.pref.putList("utilsplugin2.urlHistory", items);
         Main.pref.put("utilsplugin2.customurl", items.get(9));
         return items;
     }
 
     public static List<String> getURLList() {
-        List<String> items = (List<String>) Main.pref.getCollection("utilsplugin2.urlHistory");
+        List<String> items = Main.pref.getList("utilsplugin2.urlHistory");
         if (items == null || items.isEmpty()) {
             resetURLList();
-            items = (List<String>) Main.pref.getCollection("utilsplugin2.urlHistory");
+            items = Main.pref.getList("utilsplugin2.urlHistory");
         }
         return items;
     }
 
     public static void updateURLList(List<String> lst) {
-        Main.pref.putCollection("utilsplugin2.urlHistory", lst);
+        Main.pref.putList("utilsplugin2.urlHistory", lst);
         try {
             Main.pref.save();
         } catch (IOException ex) {

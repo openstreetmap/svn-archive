@@ -15,9 +15,9 @@ import java.util.Map;
 import javax.swing.JOptionPane;
 
 import org.openstreetmap.josm.actions.JosmAction;
-import org.openstreetmap.josm.actions.SplitWayAction;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.SequenceCommand;
+import org.openstreetmap.josm.command.SplitWayCommand;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Way;
@@ -84,12 +84,9 @@ public class SplitOnIntersectionsAction extends JosmAction {
         }
 
         for (Way splitWay : splitWays.keySet()) {
-            List<List<Node>> wayChunks = SplitWayAction.buildSplitChunks(splitWay, splitWays.get(splitWay));
+            List<List<Node>> wayChunks = SplitWayCommand.buildSplitChunks(splitWay, splitWays.get(splitWay));
             if (wayChunks != null) {
-                List<OsmPrimitive> sel = new ArrayList<>(selectedWays.size());
-                sel.addAll(selectedWays);
-                SplitWayAction.SplitWayResult result = SplitWayAction.splitWay(getLayerManager().getEditLayer(), splitWay, wayChunks, sel);
-                list.add(result.getCommand());
+                list.add(SplitWayCommand.splitWay(splitWay, wayChunks, new ArrayList<>(selectedWays)));
             }
         }
 

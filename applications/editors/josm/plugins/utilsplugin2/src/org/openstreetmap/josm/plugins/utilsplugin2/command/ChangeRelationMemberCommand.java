@@ -8,6 +8,7 @@ import java.util.LinkedList;
 import java.util.Objects;
 
 import org.openstreetmap.josm.command.Command;
+import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.DefaultNameFormatter;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.OsmPrimitiveType;
@@ -24,7 +25,8 @@ public class ChangeRelationMemberCommand extends Command {
     private final OsmPrimitive newMember;
     private boolean oldModified;
 
-    public ChangeRelationMemberCommand(Relation relation, OsmPrimitive oldMember, OsmPrimitive newMember) {
+    public ChangeRelationMemberCommand(DataSet ds, Relation relation, OsmPrimitive oldMember, OsmPrimitive newMember) {
+        super(ds);
         this.relation = relation;
         this.oldMember = oldMember;
         this.newMember = newMember;

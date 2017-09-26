@@ -15,6 +15,7 @@ import org.openstreetmap.josm.command.AddCommand;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.SequenceCommand;
 import org.openstreetmap.josm.data.coor.LatLon;
+import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.gui.MainApplication;
@@ -61,11 +62,12 @@ public final class LatLonAction extends JosmAction {
         Collection<Command> cmds = new LinkedList<>();
         // first we create all the nodes, then we do extra stuff based on what geometry type we need.
         LinkedList<Node> nodes = new LinkedList<>();
+        DataSet ds = getLayerManager().getEditDataSet();
 
         for (LatLon ll : coordinates) {
             Node nnew = new Node(ll);
             nodes.add(nnew);
-            cmds.add(new AddCommand(nnew));
+            cmds.add(new AddCommand(ds, nnew));
         }
 
         if ("nodes".equals(type)) {
@@ -73,12 +75,12 @@ public final class LatLonAction extends JosmAction {
         } else if ("way".equals(type)) {
             Way wnew = new Way();
             wnew.setNodes(nodes);
-            cmds.add(new AddCommand(wnew));
+            cmds.add(new AddCommand(ds, wnew));
         } else if ("area".equals(type)) {
             nodes.add(nodes.get(0)); // this is needed to close the way.
             Way wnew = new Way();
             wnew.setNodes(nodes);
-            cmds.add(new AddCommand(wnew));
+            cmds.add(new AddCommand(ds, wnew));
         }
         MainApplication.undoRedo.add(new SequenceCommand(tr("Lat Lon tool"), cmds));
         MainApplication.getMap().mapView.repaint();

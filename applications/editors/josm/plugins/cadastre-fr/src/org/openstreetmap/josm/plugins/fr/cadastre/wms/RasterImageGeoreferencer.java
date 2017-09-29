@@ -18,6 +18,7 @@ import javax.swing.JTextField;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.gui.MainApplication;
+import org.openstreetmap.josm.gui.util.GuiHelper;
 import org.openstreetmap.josm.tools.GBC;
 import org.openstreetmap.josm.tools.Logging;
 
@@ -45,8 +46,9 @@ public class RasterImageGeoreferencer implements MouseListener {
         MainApplication.getMap().mapView.addMouseListener(this);
     }
 
-    /**
+   /**
     *
+    * @param wmsLayer WMS layer
     * @return false if all operations are canceled
     */
    public boolean startCropping(WMSLayer wmsLayer) {
@@ -56,11 +58,11 @@ public class RasterImageGeoreferencer implements MouseListener {
        initialClickDelay = Main.pref.getInt("cadastrewms.georef-click-delay", 200);
        mouseClickedTime = System.currentTimeMillis();
        Object[] options = {"OK", "Cancel"};
-       int ret = JOptionPane.showOptionDialog(null,
+       int ret = GuiHelper.runInEDTAndWaitAndReturn(() -> JOptionPane.showOptionDialog(null,
                tr("Click first corner for image cropping\n(two points required)"),
                tr("Image cropping"),
                JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE,
-               null, options, options[0]);
+               null, options, options[0]));
        if (ret == JOptionPane.OK_OPTION) {
            mouseClickedTime = System.currentTimeMillis();
        } else
@@ -69,10 +71,10 @@ public class RasterImageGeoreferencer implements MouseListener {
        return true;
    }
 
-   /**
-    *
-    * @return false if all operations are canceled
-    */
+  /**
+   * @param wmsLayer WMS layer
+   * @return false if all operations are canceled
+   */
   public boolean startGeoreferencing(WMSLayer wmsLayer) {
       this.wmsLayer = wmsLayer;
       countMouseClicked = 0;

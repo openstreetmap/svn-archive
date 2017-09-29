@@ -42,6 +42,7 @@ public class CadastreInterface {
     public boolean downloadCanceled;
     private HttpURLConnection urlConn;
 
+    private String csrfToken;
     private String cookie;
     private String interfaceRef;
     private String lastWMSLayerName;
@@ -71,11 +72,14 @@ public class CadastreInterface {
 
     static final String C_INTERFACE_VECTOR = "afficherCarteCommune.do";
     static final String C_INTERFACE_RASTER_TA = "afficherCarteTa.do";
-    static final String C_INTERFACE_RASTER_FEUILLE = "afficherCarteFeuille.do";
-    static final String C_IMAGE_LINK_START = "<a href=\"#\" class=\"raster\" onClick=\"popup('afficherCarteFeuille.do?f=";
-    static final String C_TA_IMAGE_LINK_START = "<a href=\"#\" class=\"raster\" onClick=\"popup('afficherCarteTa.do?f=";
+    static final String C_INTERFACE_RASTER_FEUILLE = "afficherCarteFeuille.do?CSRF_TOKEN=";
+    static final String C_IMAGE_LINK_START = "<a href=\"#\" class=\"raster\" onClick=\"popup('" + C_INTERFACE_RASTER_FEUILLE;
+    static final String C_TA_IMAGE_LINK_START = "<a href=\"#\" class=\"raster\" onClick=\"popup('afficherCarteTa.do?CSRF_TOKEN=";
     static final String C_IMAGE_NAME_START = ">Feuille ";
     static final String C_TA_IMAGE_NAME_START = "Tableau d'assemblage <strong>";
+
+    static final String C_CSRF_TOKEN = "CSRF_TOKEN=";
+    static final String C_F = "&amp;f=";
 
     static final long COOKIE_EXPIRATION = 30 * 60 * 1000L; // 30 minutes expressed in milliseconds
 
@@ -99,8 +103,8 @@ public class CadastreInterface {
             if (cookie == null)
                 throw new WMSException(tr("Cannot open a new client session.\nServer in maintenance or temporary overloaded."));
             if (interfaceRef == null) {
-                    getInterface(wmsLayer);
-                    this.lastWMSLayerName = wmsLayer.getName();
+                getInterface(wmsLayer);
+                this.lastWMSLayerName = wmsLayer.getName();
             }
             openInterface();
         } catch (IOException e) {
@@ -236,7 +240,7 @@ public class CadastreInterface {
                     if (res != -1) {
                         wmsLayer.setCodeCommune(listOfFeuilles.get(res).name);
                         checkLayerDuplicates(wmsLayer);
-                        interfaceRef = buildRasterFeuilleInterfaceRef(wmsLayer.getCodeCommune());
+                        interfaceRef = buildRasterFeuilleInterfaceRef(wmsLayer.getCodeCommune(), csrfToken);
                     }
                 }
             }
@@ -333,31 +337,36 @@ public class CadastreInterface {
             String lines = sb.toString();
             urlConn.disconnect();
             if (lines != null) {
-                if (lines.indexOf(C_IMAGE_FORMAT) != -1) {
-                    int i = lines.indexOf(C_IMAGE_FORMAT);
-                    int j = lines.indexOf('.', i);
-                    wmsLayer.setRaster("image".equals(lines.substring(i+C_IMAGE_FORMAT.length(), j)));
+                int i = lines.indexOf(C_IMAGE_FORMAT);
+                if (i > -1) {
+                    wmsLayer.setRaster("image".equals(lines.substring(i+C_IMAGE_FORMAT.length(), lines.indexOf('.', i))));
                 }
-                if (!wmsLayer.isRaster() && lines.indexOf(C_INTERFACE_VECTOR) != -1) {  // "afficherCarteCommune.do"
+                csrfToken = null;
+                i = lines.indexOf(C_CSRF_TOKEN);
+                if (i > -1) {
+                    csrfToken = lines.substring(i+C_CSRF_TOKEN.length(), Math.min(lines.indexOf('"', i), lines.indexOf('&', i)));
+                }
+                i = lines.indexOf(C_INTERFACE_VECTOR);
+                if (!wmsLayer.isRaster() && i != -1) {  // "afficherCarteCommune.do"
                     // shall be something like: interfaceRef = "afficherCarteCommune.do?c=X2269";
-                    lines = lines.substring(lines.indexOf(C_INTERFACE_VECTOR), lines.length());
+                    lines = lines.substring(i, lines.length());
                     lines = lines.substring(0, lines.indexOf('\''));
                     lines = Entities.unescape(lines);
                     Logging.info("interface ref.:"+lines);
                     return lines;
                 } else if (wmsLayer.isRaster() && lines.indexOf(C_INTERFACE_RASTER_TA) != -1) { // "afficherCarteTa.do"
                     // list of values parsed in listOfFeuilles (list all non-georeferenced images)
-                    lines = getFeuillesList();
+                    lines = getFeuillesList(csrfToken);
                     if (!downloadCanceled) {
-                        parseFeuillesList(lines);
+                        parseFeuillesList(lines, csrfToken);
                         if (!listOfFeuilles.isEmpty()) {
                             int res = selectFeuilleDialog();
                             if (res != -1) {
                                 wmsLayer.setCodeCommune(listOfFeuilles.get(res).name);
                                 checkLayerDuplicates(wmsLayer);
-                                interfaceRef = buildRasterFeuilleInterfaceRef(wmsLayer.getCodeCommune());
+                                interfaceRef = buildRasterFeuilleInterfaceRef(wmsLayer.getCodeCommune(), csrfToken);
                                 wmsLayer.setCodeCommune(listOfFeuilles.get(res).ref);
-                                lines = buildRasterFeuilleInterfaceRef(listOfFeuilles.get(res).ref);
+                                lines = buildRasterFeuilleInterfaceRef(listOfFeuilles.get(res).ref, csrfToken);
                                 lines = Entities.unescape(lines);
                                 Logging.info("interface ref.:"+lines);
                                 return lines;
@@ -367,9 +376,8 @@ public class CadastreInterface {
                     return null;
                 } else if (lines.indexOf(C_COMMUNE_LIST_START) != -1 && lines.indexOf(C_COMMUNE_LIST_END) != -1) {
                     // list of values parsed in listOfCommunes
-                    int i = lines.indexOf(C_COMMUNE_LIST_START);
-                    int j = lines.indexOf(C_COMMUNE_LIST_END, i);
-                    parseCommuneList(lines.substring(i, j));
+                    i = lines.indexOf(C_COMMUNE_LIST_START);
+                    parseCommuneList(lines.substring(i, lines.indexOf(C_COMMUNE_LIST_END, i)));
                 }
             }
         } catch (MalformedURLException e) {
@@ -399,13 +407,14 @@ public class CadastreInterface {
         }
     }
 
-    private String getFeuillesList() {
+    private String getFeuillesList(String csrfToken) {
         // get all images in one html page
         String ln = null;
         StringBuilder lines = new StringBuilder();
         HttpURLConnection urlConn2 = null;
         try {
-            URL getAllImagesURL = new URL(BASE_URL + "/scpc/listerFeuillesParcommune.do?keepVolatileSession=&offset=2000");
+            URL getAllImagesURL = new URL(BASE_URL + "/scpc/listerFeuillesParcommune.do?CSRF_TOKEN=" +
+                    csrfToken + "&keepVolatileSession=&offset=2000");
             urlConn2 = (HttpURLConnection) getAllImagesURL.openConnection();
             setCookie(urlConn2);
             urlConn2.connect();
@@ -423,13 +432,14 @@ public class CadastreInterface {
         return lines.toString();
     }
 
-    private void parseFeuillesList(String input) {
+    private void parseFeuillesList(String input, String csrfToken) {
         listOfFeuilles.clear();
         // get "Tableau d'assemblage"
         String inputTA = input;
         if (Main.pref.getBoolean("cadastrewms.useTA", false)) {
             while (inputTA.indexOf(C_TA_IMAGE_LINK_START) != -1) {
-                inputTA = inputTA.substring(inputTA.indexOf(C_TA_IMAGE_LINK_START) + C_TA_IMAGE_LINK_START.length());
+                inputTA = inputTA.substring(inputTA.indexOf(C_TA_IMAGE_LINK_START) + C_TA_IMAGE_LINK_START.length()
+                    + csrfToken.length() + C_F.length());
                 String refTA = inputTA.substring(0, inputTA.indexOf('\''));
                 String nameTA = inputTA.substring(inputTA.indexOf(C_TA_IMAGE_NAME_START) + C_TA_IMAGE_NAME_START.length());
                 nameTA = nameTA.substring(0, nameTA.indexOf('<'));
@@ -438,7 +448,8 @@ public class CadastreInterface {
         }
         // get "Feuilles"
         while (input.indexOf(C_IMAGE_LINK_START) != -1) {
-            input = input.substring(input.indexOf(C_IMAGE_LINK_START)+C_IMAGE_LINK_START.length());
+            input = input.substring(input.indexOf(C_IMAGE_LINK_START)+C_IMAGE_LINK_START.length()
+                + csrfToken.length() + C_F.length());
             String refFeuille = input.substring(0, input.indexOf('\''));
             String nameFeuille = input.substring(
                     input.indexOf(C_IMAGE_NAME_START)+C_IMAGE_NAME_START.length(),
@@ -448,46 +459,50 @@ public class CadastreInterface {
     }
 
     private String selectMunicipalityDialog() {
-        JPanel p = new JPanel(new GridBagLayout());
-        String[] communeList = new String[listOfCommunes.size() + 1];
-        communeList[0] = tr("Choose from...");
-        for (int i = 0; i < listOfCommunes.size(); i++) {
-            communeList[i + 1] = listOfCommunes.get(i).substring(listOfCommunes.get(i).indexOf('>')+1);
-        }
-        JComboBox<String> inputCommuneList = new JComboBox<>(communeList);
-        p.add(inputCommuneList, GBC.eol().fill(GBC.HORIZONTAL).insets(10, 0, 0, 0));
-        JOptionPane pane = new JOptionPane(p, JOptionPane.INFORMATION_MESSAGE, JOptionPane.OK_CANCEL_OPTION, null);
-        // this below is a temporary workaround to fix the "always on top" issue
-        JDialog dialog = pane.createDialog(Main.parent, tr("Select commune"));
-        CadastrePlugin.prepareDialog(dialog);
-        dialog.setVisible(true);
-        // till here
-        if (!Integer.valueOf(JOptionPane.OK_OPTION).equals(pane.getValue()))
-            return null;
-        return listOfCommunes.get(inputCommuneList.getSelectedIndex()-1);
+        return GuiHelper.runInEDTAndWaitAndReturn(() -> {
+            JPanel p = new JPanel(new GridBagLayout());
+            String[] communeList = new String[listOfCommunes.size() + 1];
+            communeList[0] = tr("Choose from...");
+            for (int i = 0; i < listOfCommunes.size(); i++) {
+                communeList[i + 1] = listOfCommunes.get(i).substring(listOfCommunes.get(i).indexOf('>')+1);
+            }
+            JComboBox<String> inputCommuneList = new JComboBox<>(communeList);
+            p.add(inputCommuneList, GBC.eol().fill(GBC.HORIZONTAL).insets(10, 0, 0, 0));
+            JOptionPane pane = new JOptionPane(p, JOptionPane.INFORMATION_MESSAGE, JOptionPane.OK_CANCEL_OPTION, null);
+            // this below is a temporary workaround to fix the "always on top" issue
+            JDialog dialog = pane.createDialog(Main.parent, tr("Select commune"));
+            CadastrePlugin.prepareDialog(dialog);
+            dialog.setVisible(true);
+            // till here
+            if (!Integer.valueOf(JOptionPane.OK_OPTION).equals(pane.getValue()))
+                return null;
+            return listOfCommunes.get(inputCommuneList.getSelectedIndex()-1);
+        });
     }
 
     private int selectFeuilleDialog() {
-        JPanel p = new JPanel(new GridBagLayout());
-        List<String> imageNames = new ArrayList<>();
-        for (PlanImage src : listOfFeuilles) {
-            imageNames.add(src.name);
-        }
-        JComboBox<String> inputFeuilleList = new JComboBox<>(imageNames.toArray(new String[]{}));
-        p.add(inputFeuilleList, GBC.eol().fill(GBC.HORIZONTAL).insets(10, 0, 0, 0));
-        JOptionPane pane = new JOptionPane(p, JOptionPane.INFORMATION_MESSAGE, JOptionPane.OK_CANCEL_OPTION, null);
-        // this below is a temporary workaround to fix the "always on top" issue
-        JDialog dialog = pane.createDialog(Main.parent, tr("Select Feuille"));
-        CadastrePlugin.prepareDialog(dialog);
-        dialog.setVisible(true);
-        // till here
-        if (!Integer.valueOf(JOptionPane.OK_OPTION).equals(pane.getValue()))
-            return -1;
-        return inputFeuilleList.getSelectedIndex();
+        return GuiHelper.runInEDTAndWaitAndReturn(() -> {
+            JPanel p = new JPanel(new GridBagLayout());
+            List<String> imageNames = new ArrayList<>();
+            for (PlanImage src : listOfFeuilles) {
+                imageNames.add(src.name);
+            }
+            JComboBox<String> inputFeuilleList = new JComboBox<>(imageNames.toArray(new String[]{}));
+            p.add(inputFeuilleList, GBC.eol().fill(GBC.HORIZONTAL).insets(10, 0, 0, 0));
+            JOptionPane pane = new JOptionPane(p, JOptionPane.INFORMATION_MESSAGE, JOptionPane.OK_CANCEL_OPTION, null);
+            // this below is a temporary workaround to fix the "always on top" issue
+            JDialog dialog = pane.createDialog(Main.parent, tr("Select Feuille"));
+            CadastrePlugin.prepareDialog(dialog);
+            dialog.setVisible(true);
+            // till here
+            if (!Integer.valueOf(JOptionPane.OK_OPTION).equals(pane.getValue()))
+                return -1;
+            return inputFeuilleList.getSelectedIndex();
+        });
     }
 
-    private static String buildRasterFeuilleInterfaceRef(String codeCommune) {
-        return C_INTERFACE_RASTER_FEUILLE + "?f=" + codeCommune;
+    private static String buildRasterFeuilleInterfaceRef(String codeCommune, String csrfToken) {
+        return C_INTERFACE_RASTER_FEUILLE + csrfToken + "&f=" + codeCommune;
     }
 
     /**
@@ -496,6 +511,7 @@ public class CadastreInterface {
      * In case of raster image, we also check in the same http request if the image is already georeferenced
      * and store the result in the wmsLayer as well.
      * @param wmsLayer the WMSLayer where the commune data and images are stored
+     * @throws IOException if any I/O error occurs
      */
     public void retrieveCommuneBBox(WMSLayer wmsLayer) throws IOException {
         if (interfaceRef == null)

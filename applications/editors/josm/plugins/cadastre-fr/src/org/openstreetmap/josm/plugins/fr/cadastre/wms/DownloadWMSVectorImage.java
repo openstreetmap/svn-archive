@@ -12,6 +12,7 @@ import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.PleaseWaitRunnable;
+import org.openstreetmap.josm.gui.util.GuiHelper;
 import org.openstreetmap.josm.tools.Logging;
 
 public class DownloadWMSVectorImage extends PleaseWaitRunnable {
@@ -43,8 +44,9 @@ public class DownloadWMSVectorImage extends PleaseWaitRunnable {
                     }
                     if (wmsLayer.isRaster()) {
                         // set raster image commune bounding box based on current view (before adjustment)
-                        JOptionPane.showMessageDialog(Main.parent,
-                                tr("This commune is not vectorized.\nPlease use the other menu entry to georeference a \"Plan image\""));
+                        GuiHelper.runInEDT(() ->
+                            JOptionPane.showMessageDialog(Main.parent,
+                                tr("This commune is not vectorized.\nPlease use the other menu entry to georeference a \"Plan image\"")));
                         MainApplication.getLayerManager().removeLayer(wmsLayer);
                         wmsLayer = null;
                         return;

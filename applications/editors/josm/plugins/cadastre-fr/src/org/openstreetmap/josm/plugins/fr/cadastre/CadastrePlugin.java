@@ -47,6 +47,7 @@ import org.openstreetmap.josm.plugins.fr.cadastre.actions.MenuActionOpenPreferen
 import org.openstreetmap.josm.plugins.fr.cadastre.actions.mapmode.Address;
 import org.openstreetmap.josm.plugins.fr.cadastre.actions.mapmode.WMSAdjustAction;
 import org.openstreetmap.josm.plugins.fr.cadastre.actions.upload.CheckSourceUploadHook;
+import org.openstreetmap.josm.plugins.fr.cadastre.download.CadastreDownloadTask;
 import org.openstreetmap.josm.plugins.fr.cadastre.edigeo.pci.EdigeoPciImporter;
 import org.openstreetmap.josm.plugins.fr.cadastre.preferences.CadastrePreferenceSetting;
 import org.openstreetmap.josm.plugins.fr.cadastre.session.CadastreSessionExporter;
@@ -228,6 +229,9 @@ public class CadastrePlugin extends Plugin {
 
         registerSessionLayerExporter(WMSLayer.class, CadastreSessionExporter.class);
         registerSessionLayerImporter("cadastre-fr", CadastreSessionImporter.class);
+
+        MainApplication.getMenu().openLocation.addDownloadTaskClass(CadastreDownloadTask.class);
+        //DownloadDialog.addDownloadSource(new CadastreDownloadSource());
     }
 
     private static void initCacheDir() {

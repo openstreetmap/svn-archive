@@ -12,7 +12,9 @@ import java.io.InputStream;
 import org.openstreetmap.josm.actions.ExtensionFileFilter;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.gui.io.importexport.OsmImporter;
+import org.openstreetmap.josm.gui.progress.NullProgressMonitor;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
+import org.openstreetmap.josm.io.CachedFile;
 import org.openstreetmap.josm.io.IllegalDataException;
 import org.openstreetmap.josm.tools.Logging;
 
@@ -52,6 +54,20 @@ public class EdigeoPciImporter extends OsmImporter {
             return EdigeoPciReader.parseDataSet(in, file, instance);
         } catch (IOException e) {
             throw new IllegalDataException(e);
+        }
+    }
+
+    /**
+     * Import data from an URL.
+     * @param source source URL
+     * @return imported data set
+     * @throws IOException if any I/O error occurs
+     * @throws IllegalDataException if an error was found while parsing the data
+     */
+    public DataSet parseDataSet(final String source) throws IOException, IllegalDataException {
+        try (CachedFile cf = new CachedFile(source)) {
+            this.file = cf.getFile();
+            return parseDataSet(cf.getInputStream(), NullProgressMonitor.INSTANCE);
         }
     }
 }

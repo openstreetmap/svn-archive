@@ -172,6 +172,7 @@ public class EdigeoPciReader extends AbstractReader {
 
         EdigeoFileVEC.addObjectPostProcessor((o, p) -> {
             p.put("place", "unknown");
+            p.put("fixme", "place type");
         }, o -> o.hasScdIdentifier("LIEUDIT_id"));
 
         EdigeoFileVEC.addObjectPostProcessor((o, p) -> {

@@ -27,6 +27,7 @@ import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.data.projection.Projection;
+import org.openstreetmap.josm.plugins.fr.cadastre.CadastrePlugin;
 import org.openstreetmap.josm.plugins.fr.cadastre.edigeo.EdigeoFileSCD.McdAttributeDef;
 import org.openstreetmap.josm.plugins.fr.cadastre.edigeo.EdigeoFileSCD.McdConstructionRelationDef;
 import org.openstreetmap.josm.plugins.fr.cadastre.edigeo.EdigeoFileSCD.McdConstructionRelationDef.RelationKind;
@@ -562,6 +563,9 @@ public class EdigeoFileVEC extends EdigeoLotFile<VecBlock<?>> {
                         if (e.a.test(obj)) {
                             e.b.accept(obj, p);
                         }
+                    }
+                    if (p.isTagged()) {
+                        p.put("source", CadastrePlugin.source);
                     }
                 }
             }

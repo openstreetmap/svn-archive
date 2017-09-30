@@ -11,6 +11,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.io.File;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -500,8 +501,7 @@ public class CadastrePlugin extends Plugin {
     }
 
     private static String checkSourceMillesime() {
-        java.util.Calendar calendar = java.util.Calendar.getInstance();
-        int currentYear = calendar.get(java.util.Calendar.YEAR);
+        int currentYear = Calendar.getInstance().get(Calendar.YEAR);
         String src = Main.pref.get("cadastrewms.source",
             "cadastre-dgi-fr source : Direction G\u00e9n\u00e9rale des Imp\u00f4ts - Cadastre. Mise \u00e0 jour : AAAA");
         String srcYear = src.substring(src.lastIndexOf(" ")+1);

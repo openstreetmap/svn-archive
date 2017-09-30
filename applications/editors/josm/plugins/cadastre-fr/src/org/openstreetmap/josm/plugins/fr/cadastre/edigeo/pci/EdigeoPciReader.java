@@ -200,7 +200,10 @@ public class EdigeoPciReader extends AbstractReader {
     private static void setName(OsmPrimitive p, String input) {
         if (input != null) {
             String name = input.replaceAll("    ", " ").replaceAll("   ", " ").replaceAll("  ", " ");
-            if (name.length() > 2 && StringUtils.isAllUpperCase(name)) {
+            if (name.matches("([A-Za-z] )+[A-Za-z]")) {
+                name = name.replaceAll(" ", "");
+            }
+            if (name.length() > 2 && StringUtils.isAllUpperCase(name.replaceAll(" ", "").replaceAll("'", "").replaceAll("-", ""))) {
                 name = WordUtils.capitalizeFully(name);
             }
             p.put("name", name);

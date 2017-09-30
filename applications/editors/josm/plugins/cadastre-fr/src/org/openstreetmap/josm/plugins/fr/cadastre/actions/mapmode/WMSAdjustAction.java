@@ -21,6 +21,7 @@ import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.plugins.fr.cadastre.wms.CacheControl;
 import org.openstreetmap.josm.plugins.fr.cadastre.wms.WMSLayer;
 import org.openstreetmap.josm.tools.ImageProvider;
+import org.openstreetmap.josm.tools.Logging;
 
 public class WMSAdjustAction extends MapMode implements
         MouseListener, MouseMotionListener {
@@ -43,7 +44,8 @@ public class WMSAdjustAction extends MapMode implements
                         ImageProvider.getCursor("normal", "move"));
     }
 
-    @Override public void enterMode() {
+    @Override
+    public void enterMode() {
         if (MainApplication.getMap() != null) {
             if (MainApplication.getLayerManager().getActiveLayer() instanceof WMSLayer) {
                 modifiedLayer = (WMSLayer) MainApplication.getLayerManager().getActiveLayer();
@@ -62,8 +64,13 @@ public class WMSAdjustAction extends MapMode implements
         }
     }
 
-    @Override public void exitMode() {
-        super.exitMode();
+    @Override
+    public void exitMode() {
+        try {
+            super.exitMode();
+        } catch (IllegalArgumentException e) {
+            Logging.error(e);
+        }
         MainApplication.getMap().mapView.removeMouseListener(this);
         MainApplication.getMap().mapView.removeMouseMotionListener(this);
         if (rasterMoved && CacheControl.cacheEnabled && modifiedLayer.isRaster()) {

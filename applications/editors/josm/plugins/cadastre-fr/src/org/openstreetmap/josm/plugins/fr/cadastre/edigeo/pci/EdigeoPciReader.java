@@ -13,14 +13,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.function.Predicate;
 
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
 import org.apache.commons.compress.compressors.bzip2.BZip2CompressorInputStream;
 import org.apache.commons.compress.utils.IOUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.text.WordUtils;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.DataSet.UploadPolicy;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.io.AbstractReader;
 import org.openstreetmap.josm.io.IllegalDataException;
@@ -41,11 +45,12 @@ public class EdigeoPciReader extends AbstractReader {
         highways.put("residential", Arrays.asList("Chemin", "Impasse", "Place", "Rue", "Quai", "Voie", "Grand Rue"));
 
         // Ignored objects
-        EdigeoFileVEC.addIgnoredObject("PTCANV_id");  // Canvas point
-        EdigeoFileVEC.addIgnoredObject("BORNE_id");   // Property boundary marker
-        EdigeoFileVEC.addIgnoredObject("BOULON_id");  // Property boundary marker for Alsace and Moselle
-        EdigeoFileVEC.addIgnoredObject("CROIX_id");   // Property boundary marker for Alsace and Moselle
-        EdigeoFileVEC.addIgnoredObject("SYMBLIM_id"); // Common wall symbol
+        EdigeoFileVEC.addIgnoredScdObjects(
+                "PTCANV_id",   // Canvas point
+                "BORNE_id",    // Property boundary marker
+                "BOULON_id",   // Property boundary marker for Alsace and Moselle
+                "CROIX_id",    // Property boundary marker for Alsace and Moselle
+                "SYMBLIM_id"); // Common wall symbol
         EdigeoFileVEC.addIgnoredObject("SYM_id",
                 "30", // Water stream arrow
                 "31", // Connecting arrows between parcelles and numbers
@@ -63,7 +68,19 @@ public class EdigeoPciReader extends AbstractReader {
         EdigeoFileVEC.addObjectPostProcessor("19", "boundary=administrative;admin_level=8"); // Municipality limit trigger
         EdigeoFileVEC.addObjectPostProcessor("21", "highway=road"); // Way
         EdigeoFileVEC.addObjectPostProcessor("22", "highway=road"); // Road trigger
-        EdigeoFileVEC.addObjectPostProcessor("23", "highway=path"); // Path
+        EdigeoFileVEC.addObjectPostProcessor((o, p) -> { // Path / Footway
+            String highwayValue = "path";
+            if (p instanceof Way) {
+                Way w = (Way) p;
+                Predicate<Way> isBuilding = x -> x.hasKey("building");
+                if (w.firstNode().getParentWays().stream().anyMatch(isBuilding)
+                  || w.lastNode().getParentWays().stream().anyMatch(isBuilding)) {
+                    highwayValue = "footway";
+                }
+            }
+            p.put("highway", highwayValue);
+            p.remove("SYM_id");
+        }, "SYM_id", "23"); // Path / Footway
         EdigeoFileVEC.addObjectPostProcessor("24", "man_made=pipeline"); // Pipeline
         EdigeoFileVEC.addObjectPostProcessor("25", "man_made=pipeline"); // Aqueduct
         EdigeoFileVEC.addObjectPostProcessor("26", "aerialway=cable_car"); // Aerialway
@@ -82,7 +99,7 @@ public class EdigeoPciReader extends AbstractReader {
         EdigeoFileVEC.addObjectPostProcessor("63", "man_made=water_well"); // Well
         EdigeoFileVEC.addObjectPostProcessor("65", "leisure=swimming_pool;access=private"); // Swimming pool
 
-        // Mapping TEX*_id => name
+        // Mapping TEX*_id => name (first step)
         EdigeoFileVEC.addObjectPostProcessor((o, p) -> {
             StringBuffer sb = new StringBuffer(p.get("TEX_id").trim());
             p.remove("TEX_id");
@@ -94,7 +111,7 @@ public class EdigeoPciReader extends AbstractReader {
                 sb.append(' ').append(v.trim());
                 p.remove(t);
             }
-            p.put("name", sb.toString().replaceAll("    ", " ").replaceAll("   ", " ").replaceAll("  ", " "));
+            setName(p, sb.toString());
         }, "TEX_id");
 
         // Objects mapping
@@ -119,7 +136,7 @@ public class EdigeoPciReader extends AbstractReader {
             p.put("boundary", "administrative");
             p.put("admin_level", "8");
             p.put("ref:INSEE", "XX"+p.get("IDU_id")); // TODO: find department number
-            p.put("name", p.get("TEX2_id")); // TODO: lowercase
+            p.put("name", WordUtils.capitalizeFully(p.get("TEX2_id")));
             p.remove("IDU_id");
             p.remove("TEX2_id");
         }, o -> o.hasScdIdentifier("COMMUNE_id"));
@@ -128,6 +145,17 @@ public class EdigeoPciReader extends AbstractReader {
             p.put("boundary", "cadastral");
             p.put("ref", p.get("IDU_id"));
             p.remove("IDU_id");
+            p.remove("ICL_id");
+            p.remove("COAR_id");
+            p.remove("COPL_id");
+            p.remove("DEDI_id");
+            p.remove("DIS_id");
+            p.remove("DRED_id");
+            p.remove("EOR_id");
+            p.remove("INDP_id");
+            p.remove("INP_id");
+            p.remove("QUPL_id");
+            p.remove("SUPF_id");
         }, o -> o.hasScdIdentifier("SECTION_id") || o.hasScdIdentifier("SUBDSECT_id")
              || o.hasScdIdentifier("PARCELLE_id") || o.hasScdIdentifier("SUBDFISC_id") || o.hasScdIdentifier("CHARGE_id"));
 
@@ -143,8 +171,12 @@ public class EdigeoPciReader extends AbstractReader {
         }, o -> o.hasScdIdentifier("NUMVOIE_id"));
 
         EdigeoFileVEC.addObjectPostProcessor((o, p) -> {
-            p.put("place", "isolated_dwelling");
+            p.put("place", "unknown");
         }, o -> o.hasScdIdentifier("LIEUDIT_id"));
+
+        EdigeoFileVEC.addObjectPostProcessor((o, p) -> {
+            p.remove("ORI_id");
+        }, o -> o.hasScdIdentifier("TPOINT_id"));
 
         EdigeoFileVEC.addObjectPostProcessor((o, p) -> {
             p.put("highway", "road");
@@ -154,6 +186,24 @@ public class EdigeoPciReader extends AbstractReader {
         EdigeoFileVEC.addObjectPostProcessor((o, p) -> {
             p.put("waterway", "riverbank");
         }, o -> o.hasScdIdentifier("TRONFLUV_id"));
+
+        // Mapping TEX*_id => name (last step)
+        for (String t : Arrays.asList("TEX2_id", "TEX3_id", "TEX4_id", "TEX5_id", "TEX6_id", "TEX7_id", "TEX8_id", "TEX9_id")) {
+            EdigeoFileVEC.addObjectPostProcessor((o, p) -> {
+                setName(p, p.get(t));
+                p.remove(t);
+            }, t);
+        }
+    }
+
+    private static void setName(OsmPrimitive p, String input) {
+        if (input != null) {
+            String name = input.replaceAll("    ", " ").replaceAll("   ", " ").replaceAll("  ", " ");
+            if (name.length() > 2 && StringUtils.isAllUpperCase(name)) {
+                name = WordUtils.capitalizeFully(name);
+            }
+            p.put("name", name);
+        }
     }
 
     private static boolean setCorrectHighway(OsmPrimitive p, String[] words) {

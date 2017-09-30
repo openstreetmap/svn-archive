@@ -454,6 +454,14 @@ public class EdigeoFileVEC extends EdigeoLotFile<VecBlock<?>> {
         addIgnoredObject(predicate(key, values));
     }
 
+    /**
+     * Adds a predicate to ignore special types of objects based on their SCD identifier.
+     * @param types SCD identifiers to ignore
+     */
+    public static void addIgnoredScdObjects(String... types) {
+        addIgnoredObject(o -> Arrays.asList(types).contains(o.scdRef.identifier));
+    }
+
     private static Predicate<ObjectBlock> predicate(String key, String... values) {
         return o -> {
             List<String> vals = Arrays.asList(values);
@@ -563,9 +571,11 @@ public class EdigeoFileVEC extends EdigeoLotFile<VecBlock<?>> {
 
     private static <T extends OsmPrimitive> T addPrimitiveAndTags(DataSet ds, ObjectBlock obj, T osm) {
         if (osm != null) {
-            osm.put("cadastre_scd", obj.scdRef.identifier);
             for (int i = 0; i < obj.nAttributes; i++) {
-                osm.put(obj.attributeDefs.get(i).identifier, obj.attributeValues.get(i));
+                String key = obj.attributeDefs.get(i).identifier;
+                if (!key.startsWith("ID_S_ATT_")) { // Ignore Z_1_2_2 text attributes
+                    osm.put(key, obj.attributeValues.get(i));
+                }
             }
             if (osm.getDataSet() == null) {
                 ds.addPrimitive(osm);

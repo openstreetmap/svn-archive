@@ -21,6 +21,7 @@ import javax.swing.JPanel;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.command.AddCommand;
+import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.RelationMember;
@@ -63,11 +64,12 @@ public class CreateRelationAction extends JosmAction {
         if (type.length() > 0) {
             rel.put("type", type);
         }
-        for (OsmPrimitive selected : getLayerManager().getEditDataSet().getSelected()) {
+        DataSet ds = getLayerManager().getEditDataSet();
+        for (OsmPrimitive selected : ds.getSelected()) {
             rel.addMember(new RelationMember("", selected));
         }
 
-        MainApplication.undoRedo.add(new AddCommand(rel));
+        MainApplication.undoRedo.add(new AddCommand(ds, rel));
 
         if (chRel != null) {
             chRel.set(rel);

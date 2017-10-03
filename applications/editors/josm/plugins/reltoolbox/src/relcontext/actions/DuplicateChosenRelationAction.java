@@ -8,6 +8,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 
 import org.openstreetmap.josm.command.AddCommand;
+import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.tools.ImageProvider;
@@ -16,7 +17,7 @@ import relcontext.ChosenRelation;
 import relcontext.ChosenRelationListener;
 
 public class DuplicateChosenRelationAction extends AbstractAction implements ChosenRelationListener {
-    private ChosenRelation rel;
+    private final ChosenRelation rel;
 
     public DuplicateChosenRelationAction(ChosenRelation rel) {
         super(tr("Duplicate relation"));
@@ -29,12 +30,13 @@ public class DuplicateChosenRelationAction extends AbstractAction implements Cho
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        Relation r = rel.get();
-        Relation copy = new Relation(r, true);
-        MainApplication.undoRedo.add(new AddCommand(copy));
-        rel.set(copy);
-        if (MainApplication.getLayerManager().getEditDataSet() != null) {
-            MainApplication.getLayerManager().getEditDataSet().setSelected(copy);
+        DataSet ds = MainApplication.getLayerManager().getEditDataSet();
+        if (ds != null) {
+            Relation r = rel.get();
+            Relation copy = new Relation(r, true);
+            MainApplication.undoRedo.add(new AddCommand(ds, copy));
+            rel.set(copy);
+            ds.setSelected(copy);
         }
     }
 

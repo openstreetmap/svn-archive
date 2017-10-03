@@ -123,7 +123,7 @@ public class CreateMultipolygonAction extends JosmAction {
 
         // for now, just copying standard action
         MultipolygonBuilder mpc = new MultipolygonBuilder();
-        String error = mpc.makeFromWays(getLayerManager().getEditDataSet().getSelectedWays());
+        String error = mpc.makeFromWays(ds.getSelectedWays());
         if (error != null) {
             JOptionPane.showMessageDialog(Main.parent, error);
             return;
@@ -158,14 +158,14 @@ public class CreateMultipolygonAction extends JosmAction {
                 list.addAll(fixWayTagsForBoundary(rel));
             }
         }
-        list.add(new AddCommand(rel));
+        list.add(new AddCommand(ds, rel));
         MainApplication.undoRedo.add(new SequenceCommand(tr("Create multipolygon"), list));
 
         if (chRel != null) {
             chRel.set(rel);
         }
 
-        getLayerManager().getEditDataSet().setSelected(rel);
+        ds.setSelected(rel);
     }
 
     @Override
@@ -334,7 +334,7 @@ public class CreateMultipolygonAction extends JosmAction {
             values.remove(key);
         }
 
-        for (String linearTag : Main.pref.getCollection(PREF_MULTIPOLY + "lineartags", DEFAULT_LINEAR_TAGS)) {
+        for (String linearTag : Main.pref.getList(PREF_MULTIPOLY + "lineartags", DEFAULT_LINEAR_TAGS)) {
             values.remove(linearTag);
         }
 

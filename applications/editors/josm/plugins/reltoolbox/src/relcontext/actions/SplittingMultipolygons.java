@@ -19,6 +19,7 @@ import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.SequenceCommand;
 import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.coor.LatLon;
+import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.DefaultNameFormatter;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
@@ -217,6 +218,7 @@ public final class SplittingMultipolygons {
             result.add(updatedWay);
         }
 
+        DataSet ds = MainApplication.getLayerManager().getEditDataSet();
         for (int i = 1; i < chunks.size(); i++) {
             List<Node> achunk = chunks.get(i);
             Way newWay = new Way();
@@ -228,7 +230,7 @@ public final class SplittingMultipolygons {
             }
             newWay.setNodes(achunk);
             if (commands != null) {
-                commands.add(new AddCommand(newWay));
+                commands.add(new AddCommand(ds, newWay));
             }
         }
         if (commands != null) {
@@ -272,7 +274,7 @@ public final class SplittingMultipolygons {
         Relation newRelation = new Relation();
         newRelation.put("type", "multipolygon");
         newRelation.addMember(new RelationMember("outer", segment));
-        Collection<String> linearTags = Main.pref.getCollection(PREF_MULTIPOLY + "lineartags", CreateMultipolygonAction.DEFAULT_LINEAR_TAGS);
+        Collection<String> linearTags = Main.pref.getList(PREF_MULTIPOLY + "lineartags", CreateMultipolygonAction.DEFAULT_LINEAR_TAGS);
         Way segmentCopy = new Way(segment);
         boolean changed = false;
         for (String key : segmentCopy.keySet()) {
@@ -306,7 +308,7 @@ public final class SplittingMultipolygons {
             }
         }
         newRelation.addMember(new RelationMember("outer", addingWay.getUniqueId() == target.getUniqueId() ? target : addingWay));
-        commands.add(new AddCommand(newRelation));
+        commands.add(new AddCommand(MainApplication.getLayerManager().getEditDataSet(), newRelation));
         resultingCommands.add(new SequenceCommand(tr("Complete multipolygon for way {0}",
                 DefaultNameFormatter.getInstance().format(segment)), commands));
         return newRelation;

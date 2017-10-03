@@ -23,6 +23,7 @@ import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.DeleteCommand;
 import org.openstreetmap.josm.command.SequenceCommand;
 import org.openstreetmap.josm.data.coor.EastNorth;
+import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.DefaultNameFormatter;
 import org.openstreetmap.josm.data.osm.MultipolygonBuilder;
 import org.openstreetmap.josm.data.osm.MultipolygonBuilder.JoinedPolygon;
@@ -84,11 +85,11 @@ public class ReconstructPolygonAction extends AbstractAction implements ChosenRe
         rel.clear();
         List<OsmPrimitive> newSelection = new ArrayList<>();
         List<Command> commands = new ArrayList<>();
-        Command relationDeleteCommand = DeleteCommand.delete(
-                MainApplication.getLayerManager().getEditLayer(), Collections.singleton(r), true, true);
+        Command relationDeleteCommand = DeleteCommand.delete(Collections.singleton(r), true, true);
         if (relationDeleteCommand == null)
             return;
 
+        DataSet ds = MainApplication.getLayerManager().getEditDataSet();
         for (JoinedPolygon p : mpc.outerWays) {
 
             ArrayList<JoinedPolygon> myInnerWays = new ArrayList<>();
@@ -122,7 +123,7 @@ public class ReconstructPolygonAction extends AbstractAction implements ChosenRe
                     }
                 }
                 if (relationReused) {
-                    commands.add(new AddCommand(n));
+                    commands.add(new AddCommand(ds, n));
                 } else {
                     relationReused = true;
                     commands.add(new ChangeCommand(r, n));
@@ -188,7 +189,7 @@ public class ReconstructPolygonAction extends AbstractAction implements ChosenRe
             result.addNode(result.firstNode());
             result.setKeys(tags);
             newSelection.add(candidateWay == null ? result : candidateWay);
-            commands.add(candidateWay == null ? new AddCommand(result) : new ChangeCommand(candidateWay, result));
+            commands.add(candidateWay == null ? new AddCommand(ds, result) : new ChangeCommand(candidateWay, result));
         }
 
         // only delete the relation if it hasn't been re-used
@@ -198,7 +199,7 @@ public class ReconstructPolygonAction extends AbstractAction implements ChosenRe
 
         MainApplication.undoRedo.add(new SequenceCommand(tr("Reconstruct polygons from relation {0}",
                 r.getDisplayName(DefaultNameFormatter.getInstance())), commands));
-        MainApplication.getLayerManager().getEditDataSet().setSelected(newSelection);
+        ds.setSelected(newSelection);
     }
 
     @Override

@@ -16,11 +16,13 @@ import org.openstreetmap.josm.command.AddCommand;
 import org.openstreetmap.josm.command.ChangeCommand;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.DeleteCommand;
+import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.tools.Geometry;
 import org.openstreetmap.josm.tools.Geometry.PolygonIntersection;
 import org.openstreetmap.josm.tools.Logging;
@@ -328,7 +330,7 @@ public class TheRing {
     public List<Command> getCommands(boolean createMultipolygon, Map<Relation, Relation> relationChangeMap) {
         Way sourceCopy = new Way(source);
         if (createMultipolygon) {
-            Collection<String> linearTags = Main.pref.getCollection(PREF_MULTIPOLY + "lineartags", CreateMultipolygonAction.DEFAULT_LINEAR_TAGS);
+            Collection<String> linearTags = Main.pref.getList(PREF_MULTIPOLY + "lineartags", CreateMultipolygonAction.DEFAULT_LINEAR_TAGS);
             relation = new Relation();
             relation.put("type", "multipolygon");
             for (String key : sourceCopy.keySet()) {
@@ -368,13 +370,14 @@ public class TheRing {
             }
         }
 
+        DataSet ds = MainApplication.getLayerManager().getEditDataSet();
         List<Command> commands = new ArrayList<>();
         boolean foundOwnWay = false;
         for (RingSegment seg : segments) {
             boolean needAdding = !seg.isWayConstructed();
             Way w = seg.constructWay(seg.isReference() ? null : sourceCopy);
             if (needAdding) {
-                commands.add(new AddCommand(w));
+                commands.add(new AddCommand(ds, w));
             }
             if (w.equals(source)) {
                 if (createMultipolygon || !seg.getWayNodes().equals(source.getNodes())) {
@@ -397,7 +400,7 @@ public class TheRing {
         }
         commands.addAll(relationCommands);
         if (createMultipolygon) {
-            commands.add(new AddCommand(relation));
+            commands.add(new AddCommand(ds, relation));
         }
         return commands;
     }

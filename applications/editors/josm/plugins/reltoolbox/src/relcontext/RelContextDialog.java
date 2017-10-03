@@ -607,7 +607,7 @@ public class RelContextDialog extends ToggleDialog implements ActiveLayerChangeL
             String property = e.getActionCommand();
             if (property != null && property.length() > 0 && e.getSource() instanceof JCheckBoxMenuItem) {
                 boolean value = ((JCheckBoxMenuItem) e.getSource()).isSelected();
-                Main.pref.put(property, value);
+                Main.pref.putBoolean(property, value);
                 show(getInvoker(), getX(), getY());
             }
         }

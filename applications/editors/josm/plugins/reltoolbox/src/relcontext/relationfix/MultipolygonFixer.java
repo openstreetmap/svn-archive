@@ -16,6 +16,7 @@ import org.openstreetmap.josm.data.osm.OsmPrimitiveType;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.gui.MainApplication;
 
 /**
  * @see http://wiki.openstreetmap.org/wiki/Relation:multipolygon
@@ -45,7 +46,7 @@ public class MultipolygonFixer extends RelationFixer {
     @Override
     public Command fixRelation(Relation rel) {
         Relation rr = fixMultipolygonRoles(rel);
-        return rr != null ? new ChangeCommand(rel, rr) : null;
+        return rr != null ? new ChangeCommand(MainApplication.getLayerManager().getEditDataSet(), rel, rr) : null;
     }
 
     /**
@@ -81,9 +82,9 @@ public class MultipolygonFixer extends RelationFixer {
             RelationMember m = r.getMember(i);
             if (m.isWay()) {
                 String role = null;
-                if (outerWays.contains((Way)m.getMember())) {
+                if (outerWays.contains(m.getMember())) {
                     role = "outer";
-                } else if (innerWays.contains((Way)m.getMember())) {
+                } else if (innerWays.contains(m.getMember())) {
                     role = "inner";
                 }
                 if (role != null && !role.equals(m.getRole())) {

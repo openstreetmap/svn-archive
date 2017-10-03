@@ -318,7 +318,7 @@ public class WikipediaToggleDialog extends ToggleDialog implements ActiveLayerCh
                 return;
             }
             final Collection<OsmPrimitive> selected = MainApplication.getLayerManager().getEditDataSet().getSelected();
-            if (!GuiUtils.confirmOverwrite(tag.getKey(), tag.getValue(), selected)) {
+            if (selected.isEmpty() || !GuiUtils.confirmOverwrite(tag.getKey(), tag.getValue(), selected)) {
                 return;
             }
             ChangePropertyCommand cmd = new ChangePropertyCommand(

@@ -13,6 +13,7 @@ import org.openstreetmap.josm.command.ChangeCommand;
 import org.openstreetmap.josm.command.ChangeNodesCommand;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.data.osm.*;
+import org.openstreetmap.josm.gui.MainApplication;
 
 final class DataSetToCmd {
 
@@ -64,7 +65,7 @@ final class DataSetToCmd {
         }
         target.mergeFrom(source);
         mergedMap.put(source.getPrimitiveId(), target);
-        cmds.add(new AddCommand(target));
+        cmds.add(new AddCommand(MainApplication.getLayerManager().getEditDataSet(), target));
     }
 
     private OsmPrimitive getMergeTarget(OsmPrimitive mergeSource)
@@ -122,7 +123,7 @@ final class DataSetToCmd {
 
             newNodes.add(targetNode);
         }
-        cmds.add(new ChangeNodesCommand(target, newNodes));
+        cmds.add(new ChangeNodesCommand(MainApplication.getLayerManager().getEditDataSet(), target, newNodes));
     }
 
     /**
@@ -162,7 +163,7 @@ final class DataSetToCmd {
         }
         Relation newRelation = new Relation(target);
         newRelation.setMembers(newMembers);
-        cmds.add(new ChangeCommand(target, newRelation));
+        cmds.add(new ChangeCommand(MainApplication.getLayerManager().getEditDataSet(), target, newRelation));
     }
 
     private void merge() {

@@ -8,7 +8,7 @@ import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.tools.Logging;
 
 public class ToolsInformation {
     String filename;
@@ -33,7 +33,7 @@ public class ToolsInformation {
                 }
             }
         } catch (Exception e) {
-            Main.warn("Ext_Tools warning: can not load file "+filename);
+            Logging.warn("Ext_Tools warning: can not load file "+filename);
         }
     }
 
@@ -42,7 +42,7 @@ public class ToolsInformation {
             for (ExtTool tool : tools)
                 w.write(tool.serialize());
         } catch (Exception e) {
-            Main.warn("Ext_Tools warning: can not save file "+filename);
+            Logging.warn("Ext_Tools warning: can not save file "+filename);
         }
     }
 

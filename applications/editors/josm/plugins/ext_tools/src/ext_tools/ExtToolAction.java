@@ -6,8 +6,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.mapmode.MapMode;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import org.openstreetmap.josm.tools.ImageProvider;
@@ -23,39 +23,39 @@ class ExtToolAction extends MapMode {
         super(tr(tool.name), "empty", tool.description,
             Shortcut.registerShortcut(tr("exttool:{0}", tool.name), tr("External Tool: {0}", tool.name), 
                 KeyEvent.CHAR_UNDEFINED, Shortcut.NONE),
-            null, ImageProvider.getCursor("crosshair", null));
+            ImageProvider.getCursor("crosshair", null));
         this.tool = tool;
         setEnabled(true);
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (Main.map == null || Main.map.mapView == null)
+        if (!MainApplication.isDisplayingMapView())
             return;
-        oldMapMode = Main.map.mapMode;
+        oldMapMode = MainApplication.getMap().mapMode;
         super.actionPerformed(e);
     }
 
     @Override
     public void enterMode() {
         super.enterMode();
-        Main.map.mapView.addMouseListener(this);
+        MainApplication.getMap().mapView.addMouseListener(this);
     }
 
     @Override
     public void exitMode() {
         super.exitMode();
-        Main.map.mapView.removeMouseListener(this);
+        MainApplication.getMap().mapView.removeMouseListener(this);
     }
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        if (Main.map == null || Main.map.mapView == null) {
+        if (!MainApplication.isDisplayingMapView()) {
             return;
         }
 
-        tool.runTool(Main.map.mapView.getLatLon(e.getX(), e.getY()));
-        Main.map.selectMapMode(oldMapMode);
+        tool.runTool(MainApplication.getMap().mapView.getLatLon(e.getX(), e.getY()));
+        MainApplication.getMap().selectMapMode(oldMapMode);
     }
 
     @Override

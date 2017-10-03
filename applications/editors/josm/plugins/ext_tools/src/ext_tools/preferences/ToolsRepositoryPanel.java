@@ -40,11 +40,7 @@ public class ToolsRepositoryPanel extends JPanel {
 
             final JCheckBox cbTool = new JCheckBox(tool.getName());
             cbTool.setSelected(tool.isEnabled());
-            cbTool.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    tool.setEnabled(cbTool.isSelected());
-                }
-            });
+            cbTool.addActionListener(e -> tool.setEnabled(cbTool.isSelected()));
             add(cbTool, gbc);
 
             gbc.gridx = 1;

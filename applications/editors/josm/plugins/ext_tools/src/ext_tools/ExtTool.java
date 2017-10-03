@@ -26,6 +26,7 @@ import org.openstreetmap.josm.command.SequenceCommand;
 import org.openstreetmap.josm.data.ProjectionBounds;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.DataSet;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MainMenu;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.PleaseWaitRunnable;
@@ -34,6 +35,7 @@ import org.openstreetmap.josm.gui.widgets.JMultilineLabel;
 import org.openstreetmap.josm.io.IllegalDataException;
 import org.openstreetmap.josm.io.OsmReader;
 import org.openstreetmap.josm.tools.GBC;
+import org.openstreetmap.josm.tools.Logging;
 
 public class ExtTool {
 
@@ -56,9 +58,9 @@ public class ExtTool {
         if (enabled) {
             if (action == null)
                 action = new ExtToolAction(this);
-            menuItem = MainMenu.add(Main.main.menu.toolsMenu, action);
+            menuItem = MainMenu.add(MainApplication.getMenu().toolsMenu, action);
         } else {
-            Main.main.menu.toolsMenu.remove(menuItem);
+            MainApplication.getMenu().toolsMenu.remove(menuItem);
         }
     }
 
@@ -106,14 +108,14 @@ public class ExtTool {
         return t;
     }
 
-    private class ToolProcess {
+    private static class ToolProcess {
         public Process process;
         public volatile boolean running;
     }
 
     static double getPPD() {
-        ProjectionBounds bounds = Main.map.mapView.getProjectionBounds();
-        return Main.map.mapView.getWidth() /
+        ProjectionBounds bounds = MainApplication.getMap().mapView.getProjectionBounds();
+        return MainApplication.getMap().mapView.getWidth() /
                 (bounds.maxEast - bounds.minEast);
     }
 
@@ -128,8 +130,8 @@ public class ExtTool {
     }
 
     private double getTMSZoom() {
-        if (Main.map == null || Main.map.mapView == null) return 1;
-        MapView mv = Main.map.mapView;
+        if (!MainApplication.isDisplayingMapView()) return 1;
+        MapView mv = MainApplication.getMap().mapView;
         LatLon topLeft = mv.getLatLon(0, 0);
         LatLon botRight = mv.getLatLon(mv.getWidth(), mv.getHeight());
         double x1 = lonToTileX(topLeft.lon(), 1);
@@ -144,23 +146,21 @@ public class ExtTool {
     }
 
     protected void showErrorMessage(final String message, final String details) {
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                final JPanel p = new JPanel(new GridBagLayout());
-                p.add(new JMultilineLabel(message),GBC.eol());
-                if (details != null) {
-                    JTextArea info = new JTextArea(details, 20, 60);
-                    info.setCaretPosition(0);
-                    info.setEditable(false);
-                    p.add(new JScrollPane(info), GBC.eop());
-                }
-                JOptionPane.showMessageDialog(Main.parent, p, tr("External tool error"), JOptionPane.ERROR_MESSAGE);
+        SwingUtilities.invokeLater(() -> {
+            final JPanel p = new JPanel(new GridBagLayout());
+            p.add(new JMultilineLabel(message),GBC.eol());
+            if (details != null) {
+                JTextArea info = new JTextArea(details, 20, 60);
+                info.setCaretPosition(0);
+                info.setEditable(false);
+                p.add(new JScrollPane(info), GBC.eop());
             }
+            JOptionPane.showMessageDialog(Main.parent, p, tr("External tool error"), JOptionPane.ERROR_MESSAGE);
         });
     }
 
     public void runTool(LatLon pos) {
-        Main.map.mapView.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+        MainApplication.getMap().mapView.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         // parse cmdline and build cmdParams array
         HashMap<String, String> replace = new HashMap<>();
 
@@ -200,7 +200,7 @@ public class ExtTool {
         try {
             tp.process = builder.start();
         } catch (final IOException e) {
-            e.printStackTrace();
+            Logging.error(e);
             synchronized (debugstr) {
                 showErrorMessage(
                         tr("Error executing the script:"),
@@ -211,54 +211,48 @@ public class ExtTool {
         tp.running = true;
 
         // redirect child process's stderr to JOSM stderr
-        new Thread(new Runnable() {
-            public void run() {
-                try {
-                    byte[] buffer = new byte[1024];
-                    InputStream errStream = tp.process.getErrorStream();
-                    int len;
-                    while ((len = errStream.read(buffer)) > 0) {
-                        synchronized (debugstr) {
-                            debugstr.append(new String(buffer, 0, len));
-                        }
-                        System.err.write(buffer, 0, len);
+        new Thread(() -> {
+            try {
+                byte[] buffer = new byte[1024];
+                InputStream errStream = tp.process.getErrorStream();
+                int len;
+                while ((len = errStream.read(buffer)) > 0) {
+                    synchronized (debugstr) {
+                        debugstr.append(new String(buffer, 0, len));
                     }
-                } catch (IOException e) {
+                    System.err.write(buffer, 0, len);
                 }
+            } catch (IOException e) {
+                Logging.error(e);
             }
         }).start();
 
         // read stdout stream
-        Thread osmParseThread = new Thread(new Runnable() {
-            public void run() {
-                try {
-                    final InputStream inputStream = tp.process.getInputStream();
-                    final DataSet ds = OsmReader.parseDataSet(inputStream,
-                            NullProgressMonitor.INSTANCE);
-                    final List<Command> cmdlist = new DataSetToCmd(ds).getCommandList();
-                    if (!cmdlist.isEmpty()) {
-                        SequenceCommand cmd =
-                                new SequenceCommand(getName(), cmdlist);
-                        Main.main.undoRedo.add(cmd);
-                    }
-                } catch (IllegalDataException e) {
-                    e.printStackTrace();
-                    if (tp.running) {
-                        tp.process.destroy();
-                        synchronized (debugstr) {
-                            showErrorMessage(
-                                    tr("Child script have returned invalid data.\n\nstderr contents:"),
-                                    debugstr.toString());
-                        }
-                    }
-                } finally {
-                    synchronized (syncObj) {
-                        tp.running = false;
-                        syncObj.notifyAll();
+        Thread osmParseThread = new Thread(() -> {
+            try {
+                final InputStream inputStream = tp.process.getInputStream();
+                final DataSet ds = OsmReader.parseDataSet(inputStream,
+                        NullProgressMonitor.INSTANCE);
+                final List<Command> cmdlist = new DataSetToCmd(ds).getCommandList();
+                if (!cmdlist.isEmpty()) {
+                    Main.main.undoRedo.add(new SequenceCommand(getName(), cmdlist));
+                }
+            } catch (IllegalDataException e) {
+                Logging.error(e);
+                if (tp.running) {
+                    tp.process.destroy();
+                    synchronized (debugstr) {
+                        showErrorMessage(
+                                tr("Child script have returned invalid data.\n\nstderr contents:"),
+                                debugstr.toString());
                     }
                 }
+            } finally {
+                synchronized (syncObj) {
+                    tp.running = false;
+                    syncObj.notifyAll();
+                }
             }
-
         });
         osmParseThread.start();
 
@@ -266,6 +260,7 @@ public class ExtTool {
             try {
                 syncObj.wait(10000);
             } catch (InterruptedException e) {
+                Logging.trace(e);
             }
         }
         if (tp.running) {

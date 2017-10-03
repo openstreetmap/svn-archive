@@ -26,10 +26,12 @@ SelectionChangedListener {
         DataSet.addSelectionListener(this);
     }
 
+    @Override
     public void actionPerformed(ActionEvent e) {
         /*AddrInterpolationDialog addrDialog =*/ new AddrInterpolationDialog(tr("Define Address Interpolation"));
     }
 
+    @Override
     public void selectionChanged(
             Collection<? extends OsmPrimitive> newSelection) {
 

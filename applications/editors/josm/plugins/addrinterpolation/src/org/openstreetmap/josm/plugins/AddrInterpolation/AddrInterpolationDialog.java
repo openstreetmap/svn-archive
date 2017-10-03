@@ -23,7 +23,10 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 import javax.swing.BorderFactory;
@@ -53,6 +56,7 @@ import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.widgets.UrlLabel;
 import org.openstreetmap.josm.tools.ImageProvider;
 
@@ -265,6 +269,7 @@ public class AddrInterpolationDialog extends JDialog implements ActionListener {
         // Watch when Interpolation Method combo box is changed so that
         // Numeric increment box can be enabled or disabled.
         addrInterpolationList.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
                 int selectedIndex = addrInterpolationList.getSelectedIndex();
                 incrementTextField.setEnabled(selectedIndex == NumericIndex); // Enable or disable numeric field
@@ -526,7 +531,7 @@ public class AddrInterpolationDialog extends JDialog implements ActionListener {
     // Returns relation description, or an empty string
     private String FindRelation() {
         String relationDescription = null;
-        DataSet currentDataSet = Main.getLayerManager().getEditDataSet();
+        DataSet currentDataSet = MainApplication.getLayerManager().getEditDataSet();
         if (currentDataSet != null) {
             for (Relation relation : currentDataSet.getRelations()) {
 
@@ -573,7 +578,7 @@ public class AddrInterpolationDialog extends JDialog implements ActionListener {
 
         int namedWayCount = 0;
         int unNamedWayCount = 0;
-        DataSet currentDataSet = Main.getLayerManager().getEditDataSet();
+        DataSet currentDataSet = MainApplication.getLayerManager().getEditDataSet();
         if (currentDataSet != null) {
             for (OsmPrimitive osm : currentDataSet.getSelectedWays()) {
                 Way way = (Way) osm;
@@ -666,6 +671,7 @@ public class AddrInterpolationDialog extends JDialog implements ActionListener {
         }
     }
 
+    @Override
     public void actionPerformed(ActionEvent e) {
         if ("ok".equals(e.getActionCommand())) {
             if (ValidateAndSave()) {
@@ -760,7 +766,7 @@ public class AddrInterpolationDialog extends JDialog implements ActionListener {
                 String newHouseNumber = baseAlpha + currentChar;
                 newHouseNumberNode.put("addr:housenumber", newHouseNumber);
 
-                commandGroup.add(new AddCommand(newHouseNumberNode));
+                commandGroup.add(new AddCommand(MainApplication.getLayerManager().getEditDataSet(), newHouseNumberNode));
                 houseNumberNodes.add(newHouseNumberNode);   // Street, etc information to be added later
 
                 lastHouseNode = newHouseNumberNode;
@@ -862,7 +868,7 @@ public class AddrInterpolationDialog extends JDialog implements ActionListener {
                 String newHouseNumber = Long.toString(currentHouseNumber);
                 newHouseNumberNode.put("addr:housenumber", newHouseNumber);
 
-                commandGroup.add(new AddCommand(newHouseNumberNode));
+                commandGroup.add(new AddCommand(MainApplication.getLayerManager().getEditDataSet(), newHouseNumberNode));
                 houseNumberNodes.add(newHouseNumberNode);   // Street, etc information to be added later
 
                 lastHouseNode = newHouseNumberNode;
@@ -1010,6 +1016,7 @@ public class AddrInterpolationDialog extends JDialog implements ActionListener {
         commandGroup = new LinkedList<>();
 
         String streetName = selectedStreet.get("name");
+        DataSet currentDataSet = MainApplication.getLayerManager().getEditDataSet();
 
         if (addrInterpolationWay != null) {
 
@@ -1017,11 +1024,8 @@ public class AddrInterpolationDialog extends JDialog implements ActionListener {
             Node lastNode = addrInterpolationWay.getNode(addrInterpolationWay.getNodesCount()-1);
 
             // De-select address interpolation way; leave street selected
-            DataSet currentDataSet = Main.getLayerManager().getEditDataSet();
-            if (currentDataSet != null) {
-                currentDataSet.clearSelection(addrInterpolationWay);
-                currentDataSet.clearSelection(lastNode);  // Workaround for JOSM Bug #3838
-            }
+            currentDataSet.clearSelection(addrInterpolationWay);
+            currentDataSet.clearSelection(lastNode);  // Workaround for JOSM Bug #3838
 
             String interpolationTagValue = selectedMethod;
             if (selectedMethod.equals("Numeric")) {
@@ -1051,7 +1055,7 @@ public class AddrInterpolationDialog extends JDialog implements ActionListener {
 
             // Relation button was selected
             if (associatedStreetRelation == null) {
-                CreateRelation(streetName);
+                CreateRelation(currentDataSet, streetName);
                 // relationChanged = true;   (not changed since it was created)
             }
             // Make any additional changes only to the copy
@@ -1069,16 +1073,18 @@ public class AddrInterpolationDialog extends JDialog implements ActionListener {
             if (streetRelationButton.isSelected()) {
                 AddToRelation(associatedStreetRelation, node, "house");
             }
+            Map<String, String> tags = new HashMap<>();
             if ((city != null) || (streetNameButton.isSelected())) {
                 // Include street unconditionally if adding nodes only or city name specified
-                commandGroup.add(new ChangePropertyCommand(node, "addr:street", streetName));
+                tags.put("addr:street", streetName);
             }
             // Set or remove remaining optional fields
-            commandGroup.add(new ChangePropertyCommand(node, "addr:city", city));
-            commandGroup.add(new ChangePropertyCommand(node, "addr:state", state));
-            commandGroup.add(new ChangePropertyCommand(node, "addr:postcode", postCode));
-            commandGroup.add(new ChangePropertyCommand(node, "addr:country", country));
-            commandGroup.add(new ChangePropertyCommand(node, "addr:full", fullAddress));
+            tags.put("addr:city", city);
+            tags.put("addr:state", state);
+            tags.put("addr:postcode", postCode);
+            tags.put("addr:country", country);
+            tags.put("addr:full", fullAddress);
+            commandGroup.add(new ChangePropertyCommand(currentDataSet, Collections.singleton(node), tags));
         }
 
         if (relationChanged) {
@@ -1086,7 +1092,7 @@ public class AddrInterpolationDialog extends JDialog implements ActionListener {
         }
 
         Main.main.undoRedo.add(new SequenceCommand(tr("Address Interpolation"), commandGroup));
-        Main.map.repaint();
+        MainApplication.getLayerManager().getEditLayer().invalidate();
 
         return true;
     }
@@ -1108,13 +1114,13 @@ public class AddrInterpolationDialog extends JDialog implements ActionListener {
     }
 
     // Create Associated Street relation, add street, and add to list of commands to perform
-    private void CreateRelation(String streetName) {
+    private void CreateRelation(DataSet currentDataSet, String streetName) {
         associatedStreetRelation = new Relation();
         associatedStreetRelation.put("name", streetName);
         associatedStreetRelation.put("type", "associatedStreet");
         RelationMember newStreetMember = new RelationMember("street", selectedStreet);
         associatedStreetRelation.addMember(newStreetMember);
-        commandGroup.add(new AddCommand(associatedStreetRelation));
+        commandGroup.add(new AddCommand(currentDataSet, associatedStreetRelation));
     }
 
     // Read from dialog text box, removing leading and trailing spaces

@@ -52,9 +52,9 @@ public class EscapeDialog extends JDialog {
     @Override
     protected JRootPane createRootPane() {
         ActionListener escapeActionListener = new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent actionEvent) {
                 dispose();
-                // setVisible(false);
             }
         };
         JRootPane rootPane = new JRootPane();

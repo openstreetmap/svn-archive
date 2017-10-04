@@ -93,7 +93,10 @@ public final class OpenPageAction extends JosmAction {
             addr = addr.replace(keys[j], vals[j]);
         }
         try {
-            OpenBrowser.displayUrl(addr);
+            // See #12836 - do not load invalid history
+            if (!addr.endsWith("/0/history")) {
+                OpenBrowser.displayUrl(addr);
+            }
         } catch (Exception ex) {
             Logging.log(Logging.LEVEL_ERROR, "Can not open URL " + addr, ex);
         }

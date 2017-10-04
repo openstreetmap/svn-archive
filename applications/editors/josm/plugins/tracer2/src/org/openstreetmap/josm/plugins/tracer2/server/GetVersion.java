@@ -1,7 +1,7 @@
 // License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.tracer2.server;
 
-import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.tools.Logging;
 
 public class GetVersion extends Request {
 
@@ -41,7 +41,7 @@ public class GetVersion extends Request {
             if (astrParts.length > 2) m_nVersionBuild = Integer.parseInt(astrParts[2]);
             if (astrParts.length > 3) m_nVersionRevision = Integer.parseInt(astrParts[3]);
         } catch (Exception e) {
-            Main.warn(e);
+            Logging.warn(e);
         }
     }
 

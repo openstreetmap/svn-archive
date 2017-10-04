@@ -4,8 +4,9 @@ package org.openstreetmap.josm.plugins.tracer2;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.gui.tagging.ac.AutoCompletionListItem;
+import org.openstreetmap.josm.data.tagging.ac.AutoCompletionItem;
+import org.openstreetmap.josm.gui.MainApplication;
+import org.openstreetmap.josm.gui.tagging.ac.AutoCompletionManager;
 import org.openstreetmap.josm.plugins.tracer2.preferences.ServerParam;
 
 public class TagValues {
@@ -36,8 +37,7 @@ public class TagValues {
 
         // get values
         List<String> tagValues = new ArrayList<>();
-        List<AutoCompletionListItem> values = Main.getLayerManager().getEditDataSet().getAutoCompletionManager().getValues(m_strTag);
-        for (AutoCompletionListItem i : values) {
+        for (AutoCompletionItem i : AutoCompletionManager.of(MainApplication.getLayerManager().getEditDataSet()).getTagValues(m_strTag)) {
             tagValues.add(i.getValue());
         }
         m_astrTagValues = tagValues.toArray(new String[tagValues.size()]);

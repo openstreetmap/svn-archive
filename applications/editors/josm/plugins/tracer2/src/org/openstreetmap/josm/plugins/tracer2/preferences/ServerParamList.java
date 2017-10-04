@@ -10,7 +10,7 @@ import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.tools.Logging;
 
 public class ServerParamList {
     ArrayList<ServerParam> m_listServerParam = new ArrayList<>();
@@ -57,7 +57,7 @@ public class ServerParamList {
                 }
             }
         } catch (Exception e) {
-            Main.warn("Tracer2 warning: can't load file " + m_strFilename);
+            Logging.warn("Tracer2 warning: can't load file " + m_strFilename);
         }
     }
 
@@ -67,7 +67,7 @@ public class ServerParamList {
                 oWriter.write(param.serialize());
             }
         } catch (Exception e) {
-            Main.warn("Tracer2 warning: can't save file " + m_strFilename);
+            Logging.warn("Tracer2 warning: can't save file " + m_strFilename);
         }
     }
 

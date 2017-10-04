@@ -9,7 +9,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.command.AddCommand;
 import org.openstreetmap.josm.command.ChangeCommand;
 import org.openstreetmap.josm.command.Command;
@@ -18,9 +17,11 @@ import org.openstreetmap.josm.command.MoveCommand;
 import org.openstreetmap.josm.command.SequenceCommand;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.BBox;
+import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.plugins.tracer2.preferences.ServerParam;
 import org.openstreetmap.josm.tools.Pair;
 
@@ -63,7 +64,7 @@ public final class ConnectWays {
     private static void getWays(Way way) {
         BBox bbox = new BBox(way);
         bbox.addPrimitive(way, s_dMinDistance);
-        s_oWays = Main.getLayerManager().getEditDataSet().searchWays(bbox);
+        s_oWays = MainApplication.getLayerManager().getEditDataSet().searchWays(bbox);
     }
 
     private static List<Way> getWaysOfNode(Node node) {
@@ -75,7 +76,7 @@ public final class ConnectWays {
     private static void getNodes(Way way) {
         BBox bbox = new BBox(way);
         bbox.addPrimitive(way, s_dMinDistance);
-        s_oNodes = Main.getLayerManager().getEditDataSet().searchNodes(bbox);
+        s_oNodes = MainApplication.getLayerManager().getEditDataSet().searchNodes(bbox);
     }
 
     private static double calcAlpha(LatLon oP1, Node n) {
@@ -184,6 +185,7 @@ public final class ConnectWays {
         }
 
         cmds2.addAll(connectTo());
+        DataSet ds = MainApplication.getLayerManager().getEditDataSet();
 
         // add new Node
         Node firstNode = null;
@@ -199,7 +201,7 @@ public final class ConnectWays {
             }
             for (Node node : way.getNodes()) {
                 if (firstNode == null || firstNode != node) {
-                    cmds.add(new AddCommand(node));
+                    cmds.add(new AddCommand(ds, node));
                 }
                 if (firstNode == null) {
                     firstNode = node;
@@ -209,10 +211,10 @@ public final class ConnectWays {
 
         // add new way
         if (bAddWay == true) {
-            cmds.add(new AddCommand(s_oWay));
+            cmds.add(new AddCommand(ds, s_oWay));
         }
 
-        cmds.add(new ChangeCommand(s_oWayOld, trySplitWayByAnyNodes(s_oWay)));
+        cmds.add(new ChangeCommand(ds, s_oWayOld, trySplitWayByAnyNodes(s_oWay)));
         cmds.addAll(cmds2);
 
         TracerDebug oTracerDebug = new TracerDebug();

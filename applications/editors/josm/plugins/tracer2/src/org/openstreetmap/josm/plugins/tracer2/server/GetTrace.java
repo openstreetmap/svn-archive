@@ -3,9 +3,9 @@ package org.openstreetmap.josm.plugins.tracer2.server;
 
 import java.util.ArrayList;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.plugins.tracer2.preferences.ServerParam;
+import org.openstreetmap.josm.tools.Logging;
 
 public class GetTrace extends Request {
 
@@ -67,7 +67,7 @@ public class GetTrace extends Request {
             }
         } catch (Exception e) {
             //m_listLatLon = new ArrayList<>();
-            Main.warn(e);
+            Logging.warn(e);
         }
     }
 
@@ -93,7 +93,7 @@ public class GetTrace extends Request {
             m_listLatLon = nodelist;
         } catch (Exception e) {
             //m_listLatLon = new ArrayList<>();
-            Main.warn(e);
+            Logging.warn(e);
         }
     }
 

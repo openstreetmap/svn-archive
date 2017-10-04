@@ -29,7 +29,8 @@ import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Way;
-import org.openstreetmap.josm.gui.MapFrame;
+import org.openstreetmap.josm.gui.MainApplication;
+import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.PleaseWaitRunnable;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.plugins.tracer2.preferences.ServerParam;
@@ -38,6 +39,7 @@ import org.openstreetmap.josm.plugins.tracer2.preferences.ServerParamSelectDialo
 import org.openstreetmap.josm.plugins.tracer2.server.GetTrace;
 import org.openstreetmap.josm.plugins.tracer2.server.GetVersion;
 import org.openstreetmap.josm.tools.ImageProvider;
+import org.openstreetmap.josm.tools.Logging;
 import org.openstreetmap.josm.tools.Shortcut;
 import org.xml.sax.SAXException;
 
@@ -55,10 +57,10 @@ class TracerAction extends MapMode implements MouseListener, KeyListener {
 
     TracerPlugin m_oPlugin;
 
-    TracerAction(MapFrame mapFrame) {
+    TracerAction() {
         super(tr("Tracer2"), "tracer2-sml", tr("Tracer2."),
                 Shortcut.registerShortcut("tools:tracer2", tr("Tool: {0}", tr("Tracer2")), KeyEvent.VK_T, Shortcut.DIRECT),
-                mapFrame, getCursor());
+                getCursor());
     }
 
     @Override
@@ -121,9 +123,10 @@ class TracerAction extends MapMode implements MouseListener, KeyListener {
             return;
         }
         super.enterMode();
-        Main.map.mapView.setCursor(getCursor());
-        Main.map.mapView.addMouseListener(this);
-        Main.map.mapView.addKeyListener(this);
+        MapView mapView = MainApplication.getMap().mapView;
+        mapView.setCursor(getCursor());
+        mapView.addMouseListener(this);
+        mapView.addKeyListener(this);
     }
 
     @Override
@@ -131,8 +134,9 @@ class TracerAction extends MapMode implements MouseListener, KeyListener {
         m_bEnter = false;
 
         super.exitMode();
-        Main.map.mapView.removeMouseListener(this);
-        Main.map.mapView.removeKeyListener(this);
+        MapView mapView = MainApplication.getMap().mapView;
+        mapView.removeMouseListener(this);
+        mapView.removeKeyListener(this);
     }
 
     private static Cursor getCursor() {
@@ -144,7 +148,7 @@ class TracerAction extends MapMode implements MouseListener, KeyListener {
         /**
          * Positional data
          */
-        final LatLon pos = Main.map.mapView.getLatLon(clickPoint.x, clickPoint.y);
+        final LatLon pos = MainApplication.getMap().mapView.getLatLon(clickPoint.x, clickPoint.y);
 
         try {
             PleaseWaitRunnable tracerTask = new PleaseWaitRunnable(tr("Tracing")) {
@@ -165,7 +169,7 @@ class TracerAction extends MapMode implements MouseListener, KeyListener {
             Thread executeTraceThread = new Thread(tracerTask);
             executeTraceThread.start();
         } catch (Exception e) {
-            e.printStackTrace();
+            Logging.error(e);
         }
     }
 
@@ -349,7 +353,7 @@ class TracerAction extends MapMode implements MouseListener, KeyListener {
 
     @Override
     public void mousePressed(MouseEvent e) {
-        if (!Main.map.mapView.isActiveLayerDrawable()) {
+        if (!MainApplication.getMap().mapView.isActiveLayerDrawable()) {
             return;
         }
         requestFocusInMapView();
@@ -371,4 +375,3 @@ class TracerAction extends MapMode implements MouseListener, KeyListener {
     }
 
 }
-

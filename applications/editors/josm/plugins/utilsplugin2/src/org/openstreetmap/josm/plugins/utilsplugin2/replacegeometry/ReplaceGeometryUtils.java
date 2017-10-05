@@ -272,16 +272,17 @@ public final class ReplaceGeometryUtils {
                 geometryPool.add(node);
         }
 
-        boolean useRobust = Main.pref.getBoolean("utilsplugin2.replace-geometry.robustAssignment", true);
+        int gLen = geometryPool.size();
+        int nLen = nodePool.size();
+        int N = Math.max(gLen, nLen);
+        boolean useRobust = Main.pref.getBoolean("utilsplugin2.replace-geometry.robustAssignment", true)
+                && N <= Main.pref.getInt("utilsplugin2.replace-geometry.robustAssignment.max-size", 300);
 
         // Find new nodes that are closest to the old ones, remove matching old ones from the pool
         // Assign node moves with least overall distance moved
         Map<Node, Node> nodeAssoc = new HashMap<>();
-        if (geometryPool.size() > 0 && nodePool.size() > 0) {
+        if (gLen > 0 && nLen > 0) {
             if (useRobust) {  // use robust, but slower assignment
-                int gLen = geometryPool.size();
-                int nLen = nodePool.size();
-                int N = Math.max(gLen, nLen);
                 double[][] cost = new double[N][N];
                 for (int i = 0; i < N; i++) {
                     for (int j = 0; j < N; j++) {

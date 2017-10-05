@@ -253,7 +253,9 @@ public class Address extends MapMode {
                 Logging.warn("Unable to parse house number \"" + inputNumber.getText() + "\"");
             }
         }
-        cmds.add(new ChangePropertyCommand(osm, tagHouseNumber, inputNumber.getText()));
+        Map<String, String> tags = new HashMap<>();
+        tags.put(tagHouseNumber, inputNumber.getText());
+        cmds.add(new ChangePropertyCommand(Main.main.getEditDataSet(), Collections.singleton(osm), tags));
         addStreetNameOrRelation(osm, cmds);
         try {
             applyInputNumberChange();

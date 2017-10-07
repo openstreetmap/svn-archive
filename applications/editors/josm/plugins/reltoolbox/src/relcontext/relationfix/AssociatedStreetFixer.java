@@ -16,6 +16,7 @@ import org.openstreetmap.josm.data.osm.OsmPrimitiveType;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.gui.MainApplication;
 
 public class AssociatedStreetFixer extends RelationFixer {
 
@@ -133,7 +134,7 @@ public class AssociatedStreetFixer extends RelationFixer {
 
         List<Command> commandList = new ArrayList<>();
         if (fixed) {
-            commandList.add(new ChangeCommand(source, rel));
+            commandList.add(new ChangeCommand(MainApplication.getLayerManager().getEditDataSet(), source, rel));
         }
 
         /*if (!commonName.isEmpty())
@@ -149,7 +150,7 @@ public class AssociatedStreetFixer extends RelationFixer {
                 Way newWay = new Way(oldWay);
                 newWay.put("name", commonName);
 
-                commandList.add(new ChangeCommand(oldWay, newWay));
+                commandList.add(new ChangeCommand(MainApplication.getLayerManager().getEditDataSet(), oldWay, newWay));
             }
          */
         // return results

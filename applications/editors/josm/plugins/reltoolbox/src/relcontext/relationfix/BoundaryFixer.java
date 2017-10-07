@@ -9,6 +9,7 @@ import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitiveType;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.RelationMember;
+import org.openstreetmap.josm.gui.MainApplication;
 
 
 /**
@@ -64,7 +65,7 @@ public class BoundaryFixer extends MultipolygonFixer {
             fixed = true;
             r = rr;
         }
-        return fixed ? new ChangeCommand(rel, r) : null;
+        return fixed ? new ChangeCommand(MainApplication.getLayerManager().getEditDataSet(), rel, r) : null;
     }
 
     private Relation fixBoundaryRoles(Relation source) {

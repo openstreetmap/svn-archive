@@ -6,6 +6,7 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 import java.io.File;
 
 import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MainMenu;
 import org.openstreetmap.josm.gui.preferences.PreferenceSetting;
 import org.openstreetmap.josm.plugins.Plugin;
@@ -19,7 +20,7 @@ import org.openstreetmap.josm.plugins.PluginInformation;
 public class LakewalkerPlugin extends Plugin {
     public LakewalkerPlugin(PluginInformation info) {
         super(info);
-        MainMenu.add(Main.main.menu.moreToolsMenu, new LakewalkerAction(tr("Lake Walker")));
+        MainMenu.add(MainApplication.getMenu().moreToolsMenu, new LakewalkerAction(tr("Lake Walker")));
     }
 
     @Override
@@ -28,6 +29,6 @@ public class LakewalkerPlugin extends Plugin {
     }
 
     public static File getLakewalkerCacheDir() {
-        return new File(Main.pref.getCacheDirectory(), "lakewalkerwms");
+        return new File(Main.pref.getCacheDirectory(true), "lakewalkerwms");
     }
 }

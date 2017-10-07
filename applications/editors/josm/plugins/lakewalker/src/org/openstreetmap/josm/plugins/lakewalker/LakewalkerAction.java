@@ -24,11 +24,15 @@ import org.openstreetmap.josm.command.AddCommand;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.SequenceCommand;
 import org.openstreetmap.josm.data.coor.LatLon;
+import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.gui.MainApplication;
+import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.PleaseWaitRunnable;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.tools.ImageProvider;
+import org.openstreetmap.josm.tools.Logging;
 import org.openstreetmap.josm.tools.Shortcut;
 import org.xml.sax.SAXException;
 
@@ -59,13 +63,14 @@ class LakewalkerAction extends JosmAction implements MouseListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (Main.map == null || Main.map.mapView == null || active)
+        if (!MainApplication.isDisplayingMapView() || active)
             return;
 
         active = true;
-        oldCursor = Main.map.mapView.getCursor();
-        Main.map.mapView.setCursor(ImageProvider.getCursor("crosshair", "lakewalker-sml"));
-        Main.map.mapView.addMouseListener(this);
+        MapView mapView = MainApplication.getMap().mapView;
+        oldCursor = mapView.getCursor();
+        mapView.setCursor(ImageProvider.getCursor("crosshair", "lakewalker-sml"));
+        mapView.addMouseListener(this);
     }
 
     /**
@@ -73,8 +78,8 @@ class LakewalkerAction extends JosmAction implements MouseListener {
     * size/age limit is on a per folder basis.
     */
     private void cleanupCache() {
-        final long maxCacheAge = System.currentTimeMillis()-Main.pref.getInteger(LakewalkerPreferences.PREF_MAXCACHEAGE, 100)*24*60*60*1000L;
-        final long maxCacheSize = Main.pref.getInteger(LakewalkerPreferences.PREF_MAXCACHESIZE, 300)*1024*1024L;
+        final long maxCacheAge = System.currentTimeMillis()-Main.pref.getInt(LakewalkerPreferences.PREF_MAXCACHEAGE, 100)*24*60*60*1000L;
+        final long maxCacheSize = Main.pref.getInt(LakewalkerPreferences.PREF_MAXCACHESIZE, 300)*1024*1024L;
 
         for (String wmsFolder : LakewalkerPreferences.WMSLAYERS) {
             File wmsCacheDir = new File(LakewalkerPlugin.getLakewalkerCacheDir(), wmsFolder);
@@ -115,20 +120,20 @@ class LakewalkerAction extends JosmAction implements MouseListener {
 
     protected void lakewalk(Point clickPoint) {
         // Positional data
-        final LatLon pos = Main.map.mapView.getLatLon(clickPoint.x, clickPoint.y);
-        final LatLon topLeft = Main.map.mapView.getLatLon(0, 0);
-        final LatLon botRight = Main.map.mapView.getLatLon(Main.map.mapView.getWidth(),
-            Main.map.mapView.getHeight());
+        MapView mapView = MainApplication.getMap().mapView;
+        final LatLon pos = mapView.getLatLon(clickPoint.x, clickPoint.y);
+        final LatLon topLeft = mapView.getLatLon(0, 0);
+        final LatLon botRight = mapView.getLatLon(mapView.getWidth(), mapView.getHeight());
 
         /*
         * Collect options
         */
-        final int waylen = Main.pref.getInteger(LakewalkerPreferences.PREF_MAX_SEG, 500);
-        final int maxnode = Main.pref.getInteger(LakewalkerPreferences.PREF_MAX_NODES, 50000);
-        final int threshold = Main.pref.getInteger(LakewalkerPreferences.PREF_THRESHOLD_VALUE, 90);
+        final int waylen = Main.pref.getInt(LakewalkerPreferences.PREF_MAX_SEG, 500);
+        final int maxnode = Main.pref.getInt(LakewalkerPreferences.PREF_MAX_NODES, 50000);
+        final int threshold = Main.pref.getInt(LakewalkerPreferences.PREF_THRESHOLD_VALUE, 90);
         final double epsilon = Main.pref.getDouble(LakewalkerPreferences.PREF_EPSILON, 0.0003);
-        final int resolution = Main.pref.getInteger(LakewalkerPreferences.PREF_LANDSAT_RES, 4000);
-        final int tilesize = Main.pref.getInteger(LakewalkerPreferences.PREF_LANDSAT_SIZE, 2000);
+        final int resolution = Main.pref.getInt(LakewalkerPreferences.PREF_LANDSAT_RES, 4000);
+        final int tilesize = Main.pref.getInt(LakewalkerPreferences.PREF_LANDSAT_SIZE, 2000);
         final String startdir = Main.pref.get(LakewalkerPreferences.PREF_START_DIR, "east");
         final String wmslayer = Main.pref.get(LakewalkerPreferences.PREF_WMS, "IR1");
 
@@ -150,7 +155,7 @@ class LakewalkerAction extends JosmAction implements MouseListener {
             };
             new Thread(lakewalkerTask).start();
         } catch (Exception ex) {
-            Main.error(ex);
+            Logging.error(ex);
         }
     }
 
@@ -163,7 +168,7 @@ class LakewalkerAction extends JosmAction implements MouseListener {
                 nodelist = lw.trace(pos.lat(), pos.lon(), topLeft.lon(), botRight.lon(), topLeft.lat(), botRight.lat(),
                         progressMonitor.createSubTaskMonitor(1, false));
             } catch (LakewalkerException e) {
-                Main.error(e);
+                Logging.error(e);
             }
 
             System.out.println(nodelist.size()+" nodes generated");
@@ -218,6 +223,7 @@ class LakewalkerAction extends JosmAction implements MouseListener {
             double northOffset = Main.pref.getDouble(LakewalkerPreferences.PREF_NORTH_OFFSET, 0.0);
 
             int nodesinway = 0;
+            DataSet ds = getLayerManager().getEditDataSet();
 
             for (int i = 0; i < nodelist.size(); i++) {
                 if (cancel) {
@@ -230,7 +236,7 @@ class LakewalkerAction extends JosmAction implements MouseListener {
                     if (fn == null) {
                         fn = n;
                     }
-                    commands.add(new AddCommand(n));
+                    commands.add(new AddCommand(ds, n));
 
                 } catch (Exception ex) {
                     ex.printStackTrace();
@@ -238,7 +244,7 @@ class LakewalkerAction extends JosmAction implements MouseListener {
 
                 way.addNode(n);
 
-                if (nodesinway > Main.pref.getInteger(LakewalkerPreferences.PREF_MAX_SEG, 500)) {
+                if (nodesinway > Main.pref.getInt(LakewalkerPreferences.PREF_MAX_SEG, 500)) {
                     String waytype = Main.pref.get(LakewalkerPreferences.PREF_WAYTYPE, "water");
 
                     if (!waytype.equals("none")) {
@@ -246,7 +252,7 @@ class LakewalkerAction extends JosmAction implements MouseListener {
                     }
 
                     way.put("source", Main.pref.get(LakewalkerPreferences.PREF_SOURCE, "Landsat"));
-                    commands.add(new AddCommand(way));
+                    commands.add(new AddCommand(ds, way));
 
                     way = new Way();
 
@@ -268,11 +274,11 @@ class LakewalkerAction extends JosmAction implements MouseListener {
 
             way.addNode(fn);
 
-            commands.add(new AddCommand(way));
+            commands.add(new AddCommand(ds, way));
 
             if (!commands.isEmpty()) {
                 Main.main.undoRedo.add(new SequenceCommand(tr("Lakewalker trace"), commands));
-                getLayerManager().getEditDataSet().setSelected(ways);
+                ds.setSelected(ways);
             } else {
                 System.out.println("Failed");
             }
@@ -292,8 +298,9 @@ class LakewalkerAction extends JosmAction implements MouseListener {
     public void mouseClicked(MouseEvent e) {
         if (active) {
             active = false;
-            Main.map.mapView.removeMouseListener(this);
-            Main.map.mapView.setCursor(oldCursor);
+            MapView mapView = MainApplication.getMap().mapView;
+            mapView.removeMouseListener(this);
+            mapView.setCursor(oldCursor);
             lakewalk(e.getPoint());
         }
     }

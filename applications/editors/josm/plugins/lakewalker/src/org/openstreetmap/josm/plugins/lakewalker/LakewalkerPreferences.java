@@ -97,20 +97,20 @@ public class LakewalkerPreferences extends DefaultTabPreferenceSetting {
         JPanel prefPanel = gui.createPreferenceTab(this);
         buildPreferences(prefPanel);
 
-        maxSegsConfig.setValue(Main.pref.getInteger(PREF_MAX_SEG, 500));
-        maxNodesConfig.setValue(Main.pref.getInteger(PREF_MAX_NODES, 50000));
-        thresholdConfig.setValue(Main.pref.getInteger(PREF_THRESHOLD_VALUE, 90));
+        maxSegsConfig.setValue(Main.pref.getInt(PREF_MAX_SEG, 500));
+        maxNodesConfig.setValue(Main.pref.getInt(PREF_MAX_NODES, 50000));
+        thresholdConfig.setValue(Main.pref.getInt(PREF_THRESHOLD_VALUE, 90));
         epsilonConfig.setValue(Main.pref.getDouble(PREF_EPSILON, 0.0003));
-        landsatResConfig.setValue(Main.pref.getInteger(PREF_LANDSAT_RES, 4000));
-        landsatSizeConfig.setValue(Main.pref.getInteger(PREF_LANDSAT_SIZE, 2000));
+        landsatResConfig.setValue(Main.pref.getInt(PREF_LANDSAT_RES, 4000));
+        landsatSizeConfig.setValue(Main.pref.getInt(PREF_LANDSAT_SIZE, 2000));
         eastOffsetConfig.setValue(Main.pref.getDouble(PREF_EAST_OFFSET, 0.0));
         northOffsetConfig.setValue(Main.pref.getDouble(PREF_NORTH_OFFSET, 0.0));
         startDirConfig.setValue(Main.pref.get(PREF_START_DIR, "east"));
         lakeTypeConfig.setValue(Main.pref.get(PREF_WAYTYPE, "water"));
         wmsConfig.setValue(Main.pref.get(PREF_WMS, "IR1"));
         sourceConfig.setValue(Main.pref.get(PREF_SOURCE, "Landsat"));
-        maxCacheSizeConfig.setValue(Main.pref.getInteger(PREF_MAXCACHESIZE, 300));
-        maxCacheAgeConfig.setValue(Main.pref.getInteger(PREF_MAXCACHEAGE, 100));
+        maxCacheSizeConfig.setValue(Main.pref.getInt(PREF_MAXCACHESIZE, 300));
+        maxCacheAgeConfig.setValue(Main.pref.getInt(PREF_MAXCACHEAGE, 100));
     }
 
     public void buildPreferences(JPanel prefPanel) {

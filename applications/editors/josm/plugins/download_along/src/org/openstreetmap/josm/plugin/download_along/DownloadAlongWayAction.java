@@ -6,6 +6,7 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.geom.Area;
+import java.awt.geom.Path2D;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -22,6 +23,7 @@ import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.gui.help.HelpUtil;
 import org.openstreetmap.josm.gui.layer.gpx.DownloadAlongPanel;
 import org.openstreetmap.josm.gui.progress.NullProgressMonitor;
+import org.openstreetmap.josm.tools.Logging;
 import org.openstreetmap.josm.tools.Shortcut;
 
 class DownloadAlongWayAction extends DownloadAlongAction {
@@ -83,7 +85,7 @@ class DownloadAlongWayAction extends DownloadAlongAction {
         double buffer_y = buffer_dist / 100000.0;
         double buffer_x = buffer_y / scale;
         double max_area = panel.getArea() / 10000.0 / scale;
-        Area a = new Area();
+        Path2D path = new Path2D.Double();
         Rectangle2D r = new Rectangle2D.Double();
 
         /*
@@ -100,14 +102,14 @@ class DownloadAlongWayAction extends DownloadAlongAction {
                 if (previous != null && c.greatCircleDistance(previous) > buffer_dist) {
                     Double d = c.greatCircleDistance(previous) / buffer_dist;
                     int nbNodes = d.intValue();
-                    Main.info(tr("{0} intermediate nodes to download.", nbNodes));
-                    Main.info(tr("between {0} {1} and {2} {3}", c.lat(), c.lon(), previous.lat(),
+                    Logging.info(tr("{0} intermediate nodes to download.", nbNodes));
+                    Logging.info(tr("between {0} {1} and {2} {3}", c.lat(), c.lon(), previous.lat(),
                             previous.lon()));
                     for (int i = 1; i < nbNodes; i++) {
                         intermediateNodes.add(new LatLon(previous.lat()
                                 + (i * (c.lat() - previous.lat()) / (nbNodes + 1)), previous.lon()
                                 + (i * (c.lon() - previous.lon()) / (nbNodes + 1))));
-                        Main.info(tr("  adding {0} {1}", previous.lat()
+                        Logging.info(tr("  adding {0} {1}", previous.lat()
                                 + (i * (c.lat() - previous.lat()) / (nbNodes + 1)), previous.lon()
                                 + (i * (c.lon() - previous.lon()) / (nbNodes + 1))));
                     }
@@ -117,14 +119,14 @@ class DownloadAlongWayAction extends DownloadAlongAction {
                     if (previous == null || d.greatCircleDistance(previous) > buffer_dist) {
                         // we add a buffer around the point.
                         r.setRect(d.lon() - buffer_x, d.lat() - buffer_y, 2 * buffer_x, 2 * buffer_y);
-                        a.add(new Area(r));
+                        path.append(r, false);
                         previous = d;
                     }
                 }
                 previous = c;
             }
         }
-        
+        Area a = new Area(path);
         confirmAndDownloadAreas(a, max_area, panel.isDownloadOsmData(), panel.isDownloadGpxData(), 
                 tr("Download from OSM along selected ways"), NullProgressMonitor.INSTANCE);
     }

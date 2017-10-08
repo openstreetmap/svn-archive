@@ -38,9 +38,10 @@ import org.openstreetmap.josm.command.ChangePropertyCommand;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.SequenceCommand;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.data.tagging.ac.AutoCompletionItem;
 import org.openstreetmap.josm.gui.ExtendedDialog;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.tagging.ac.AutoCompletingComboBox;
-import org.openstreetmap.josm.gui.tagging.ac.AutoCompletionListItem;
 import org.openstreetmap.josm.gui.tagging.ac.AutoCompletionManager;
 
 /**
@@ -95,6 +96,11 @@ public class TagDialog extends ExtendedDialog {
     private JRadioButton streetRadio;
     private JRadioButton placeRadio;
 
+    /**
+     * Constructs a new {@code TagDialog}.
+     * @param pluginDir plugin directory
+     * @param selection selected primitive
+     */
     public TagDialog(String pluginDir, OsmPrimitive selection) {
         super(Main.parent, tr("House Number Editor"), new String[] { tr("OK"), tr("Cancel") }, true);
         this.pluginDir = pluginDir;
@@ -103,7 +109,7 @@ public class TagDialog extends ExtendedDialog {
         JPanel editPanel = createContentPane();
 
         setContent(editPanel);
-        setButtonIcons(new String[] { "ok.png", "cancel.png" });
+        setButtonIcons("ok", "cancel");
         setDefaultButton(1);
         setupDialog();
         getRootPane().setDefaultButton(defaultButton);
@@ -111,17 +117,14 @@ public class TagDialog extends ExtendedDialog {
         // middle of the screen
         setLocationRelativeTo(null);
 
-        SwingUtilities.invokeLater(new Runnable()  {
-            @Override
-            public void run() {
-                housnumber.requestFocus();
-                housnumber.selectAll();
-            }
+        SwingUtilities.invokeLater(() -> {
+            housnumber.requestFocus();
+            housnumber.selectAll();
         });
     }
 
     private JPanel createContentPane() {
-        acm = selection.getDataSet().getAutoCompletionManager();
+        acm = AutoCompletionManager.of(selection.getDataSet());
 
         Dto dto = loadDto();
 
@@ -163,7 +166,7 @@ public class TagDialog extends ExtendedDialog {
         editPanel.add(countryEnabled, c);
 
         country = new AutoCompletingComboBox();
-        country.setPossibleACItems(acm.getValues(TAG_ADDR_COUNTRY));
+        country.setPossibleAcItems(acm.getTagValues(TAG_ADDR_COUNTRY));
         country.setPreferredSize(new Dimension(200, 24));
         country.setEditable(true);
         country.setSelectedItem(dto.getCountry());
@@ -188,7 +191,7 @@ public class TagDialog extends ExtendedDialog {
         editPanel.add(stateEnabled, c);
 
         state = new AutoCompletingComboBox();
-        state.setPossibleACItems(acm.getValues(TAG_ADDR_STATE));
+        state.setPossibleAcItems(acm.getTagValues(TAG_ADDR_STATE));
         state.setPreferredSize(new Dimension(200, 24));
         state.setEditable(true);
         state.setSelectedItem(dto.getState());
@@ -212,7 +215,7 @@ public class TagDialog extends ExtendedDialog {
         editPanel.add(cityEnabled, c);
 
         city = new AutoCompletingComboBox();
-        city.setPossibleACItems(acm.getValues(TAG_ADDR_CITY));
+        city.setPossibleAcItems(acm.getTagValues(TAG_ADDR_CITY));
         city.setPreferredSize(new Dimension(200, 24));
         city.setEditable(true);
         city.setSelectedItem(dto.getCity());
@@ -236,7 +239,7 @@ public class TagDialog extends ExtendedDialog {
         editPanel.add(zipEnabled, c);
 
         postcode = new AutoCompletingComboBox();
-        postcode.setPossibleACItems(acm.getValues(TAG_ADDR_POSTCODE));
+        postcode.setPossibleAcItems(acm.getTagValues(TAG_ADDR_POSTCODE));
         postcode.setPreferredSize(new Dimension(200, 24));
         postcode.setEditable(true);
         postcode.setSelectedItem(dto.getPostcode());
@@ -289,7 +292,7 @@ public class TagDialog extends ExtendedDialog {
         if (dto.isTagStreet()) {
             street.setPossibleItems(getPossibleStreets());
         } else {
-            street.setPossibleACItems(acm.getValues(TAG_ADDR_PLACE));
+            street.setPossibleAcItems(acm.getTagValues(TAG_ADDR_PLACE));
         }
         street.setPreferredSize(new Dimension(200, 24));
         street.setEditable(true);
@@ -390,8 +393,8 @@ public class TagDialog extends ExtendedDialog {
             if (item instanceof String) {
                 return (String) item;
             }
-            if (item instanceof AutoCompletionListItem) {
-                return ((AutoCompletionListItem) item).getValue();
+            if (item instanceof AutoCompletionItem) {
+                return ((AutoCompletionItem) item).getValue();
             }
             return item.toString();
         } else {
@@ -511,7 +514,7 @@ public class TagDialog extends ExtendedDialog {
          * Generates a list of all visible names of highways in order to do autocompletion on the road name.
          */
         Set<String> names = new TreeSet<>();
-        for (OsmPrimitive osm : Main.getLayerManager().getEditDataSet().allNonDeletedPrimitives()) {
+        for (OsmPrimitive osm : MainApplication.getLayerManager().getEditDataSet().allNonDeletedPrimitives()) {
             if (osm.getKeys() != null && osm.keySet().contains("highway") && osm.keySet().contains("name")) {
                 names.add(osm.get("name"));
             }
@@ -553,7 +556,7 @@ public class TagDialog extends ExtendedDialog {
             if (streetRadio.isSelected()) {
                 street.setPossibleItems(getPossibleStreets());
             } else {
-                street.setPossibleACItems(acm.getValues(TAG_ADDR_PLACE));
+                street.setPossibleAcItems(acm.getTagValues(TAG_ADDR_PLACE));
             }
         }
     }

@@ -1,6 +1,6 @@
 package org.openstreetmap.josm.plugins.housenumbertool;
 
-import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MainMenu;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
@@ -18,6 +18,6 @@ public class HouseNumberTaggingToolPlugin extends Plugin {
     public HouseNumberTaggingToolPlugin(PluginInformation info) {
         super(info);
         action = new LaunchAction(getPluginDir());
-        MainMenu.add(Main.main.menu.dataMenu, action, false,0);
+        MainMenu.add(MainApplication.getMenu().dataMenu, action, false,0);
     }
 }

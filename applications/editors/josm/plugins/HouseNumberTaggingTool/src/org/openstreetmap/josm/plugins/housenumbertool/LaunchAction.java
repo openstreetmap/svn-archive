@@ -15,7 +15,11 @@ public class LaunchAction extends JosmAction implements SelectionChangedListener
     private OsmPrimitive selection = null;
 
     private String pluginDir;
-   
+
+    /**
+     * Constructs a new {@code LaunchAction}.
+     * @param pluginDir plugin directory
+     */
     public LaunchAction(String pluginDir) {
         super("HouseNumberTaggingTool", 
               "home-icon32", 

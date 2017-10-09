@@ -34,7 +34,7 @@ public final class ShowFiltersDialogAction extends AbstractAction implements Lay
     public ShowFiltersDialogAction() {
         putValue(NAME, tr("Filters"));
         putValue(SHORT_DESCRIPTION, tr("Choose Filter"));
-        putValue("ImageResource", new ImageProvider("josm_filters_48.png").getResource());
+        new ImageProvider("josm_filters_48.png").getResource().attachImageIcon(this, true);
     }
 
     public void addFiltersDialog(FiltersDialog dialog) {

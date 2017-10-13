@@ -49,8 +49,8 @@ public final class FixAddressesPreferences extends DefaultTabPreferenceSetting {
      * Save the preference settings.
      */
     private void saveToPrefs() {
-        Main.pref.put(FIX_ADDRESSES_SELECT_GUESSED_OBJECTS_KEY, isSelectGuessedObjects());
-        Main.pref.put(FIX_ADDRESSES_IGNORE_POST_CODE_KEY, isIgnorePostCode());
+        Main.pref.putBoolean(FIX_ADDRESSES_SELECT_GUESSED_OBJECTS_KEY, isSelectGuessedObjects());
+        Main.pref.putBoolean(FIX_ADDRESSES_IGNORE_POST_CODE_KEY, isIgnorePostCode());
     }
 
     @Override

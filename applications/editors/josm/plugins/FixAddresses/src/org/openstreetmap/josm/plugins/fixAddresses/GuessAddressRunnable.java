@@ -8,9 +8,10 @@ import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
 import java.util.List;
 
-import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.PleaseWaitRunnable;
 import org.openstreetmap.josm.io.OsmTransferException;
 import org.xml.sax.SAXException;
@@ -119,7 +120,8 @@ public class GuessAddressRunnable extends PleaseWaitRunnable {
     protected void realRun() throws SAXException, IOException,
     OsmTransferException {
 
-        if (Main.getLayerManager().getEditDataSet() == null || addressesToGuess == null) return;
+        DataSet ds = MainApplication.getLayerManager().getEditDataSet();
+        if (ds == null || addressesToGuess == null) return;
 
         isRunning = true;
         canceled = false;
@@ -152,7 +154,7 @@ public class GuessAddressRunnable extends PleaseWaitRunnable {
                     guesser.setAddressNode(aNode);
 
                     // visit osm data
-                    for (Way way : Main.getLayerManager().getEditDataSet().getWays()) {
+                    for (Way way : ds.getWays()) {
                         if (canceled) {
                             break;
                         }
@@ -172,7 +174,7 @@ public class GuessAddressRunnable extends PleaseWaitRunnable {
                     guesser.setAddressNode(aNode);
 
                     // visit osm data
-                    for (Node node : Main.getLayerManager().getEditDataSet().getNodes()) {
+                    for (Node node : ds.getNodes()) {
                         if (canceled) {
                             break;
                         }

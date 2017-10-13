@@ -5,7 +5,7 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.util.List;
 
-import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.plugins.fixAddresses.AddressEditContainer;
 import org.openstreetmap.josm.plugins.fixAddresses.GuessAddressRunnable;
 import org.openstreetmap.josm.plugins.fixAddresses.IProgressMonitorFinishedListener;
@@ -65,7 +65,7 @@ public class GuessAddressDataAction extends AbstractAddressEditAction implements
         // Launch address guessing thread
         GuessAddressRunnable aft = new GuessAddressRunnable(nodes, tr("Guessing address values"));
         aft.addFinishListener(this);
-        Main.worker.submit(aft);
+        MainApplication.worker.submit(aft);
     }
 
     @Override

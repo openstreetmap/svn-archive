@@ -169,11 +169,13 @@ public abstract class AbstractAddressEditAction extends JosmAction implements IA
         if (commands == null) {
             throw new RuntimeException("No command list available. Did you forget to call beginTransaction?");
         }
-        // execute the command
-        Main.main.undoRedo.add(new SequenceCommand(txName, commands));
-        commands.clear();
-        if (container != null) {
-            container.invalidate();
+        // execute the commands
+        if (!commands.isEmpty()) {
+            Main.main.undoRedo.add(new SequenceCommand(txName, commands));
+            commands.clear();
+            if (container != null) {
+                container.invalidate();
+            }
         }
     }
 

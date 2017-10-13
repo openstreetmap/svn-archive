@@ -1,8 +1,8 @@
 // License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.fixAddresses;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.IconToggleButton;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MainMenu;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.gui.preferences.PreferenceSetting;
@@ -29,8 +29,8 @@ public class FixAddressesPlugin extends Plugin {
         SelectIncompleteAddressesAction incAddrAction = new SelectIncompleteAddressesAction();
 
         // ... and add them to the tools menu in main
-                MainMenu.add(Main.main.menu.toolsMenu, action, false, 0);
-        MainMenu.add(Main.main.menu.toolsMenu, incAddrAction);
+        MainMenu.add(MainApplication.getMenu().toolsMenu, action, false, 0);
+        MainMenu.add(MainApplication.getMenu().toolsMenu, incAddrAction);
 
         // create preferences instance
         preferences = (FixAddressesPreferences) new FixAddressesPreferences.Factory().createPreferenceSetting();
@@ -39,7 +39,7 @@ public class FixAddressesPlugin extends Plugin {
     @Override
     public void mapFrameInitialized(MapFrame oldFrame, MapFrame newFrame) {
         if (newFrame != null) {
-            FixAddressesMapMode faMode = new FixAddressesMapMode(Main.map);
+            FixAddressesMapMode faMode = new FixAddressesMapMode();
             IconToggleButton faModeButton = new IconToggleButton(faMode);
             faModeButton.setVisible(true);
             newFrame.addToggleDialog(new IncompleteAddressesDialog());

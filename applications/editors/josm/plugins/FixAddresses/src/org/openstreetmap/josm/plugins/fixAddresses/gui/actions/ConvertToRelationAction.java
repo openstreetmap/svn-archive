@@ -54,7 +54,7 @@ public class ConvertToRelationAction extends AbstractAddressEditAction {
         beginTransaction(tr("Create address relation for ") + " '" + streetNode.getName() + "'");
         // Create the relation
         Relation r = new Relation();
-        commands.add(new AddCommand(r));
+        commands.add(new AddCommand(getLayerManager().getEditDataSet(), r));
         commands.add(new ChangePropertyCommand(r, TagConstants.NAME_TAG, streetNode.getName()));
         commands.add(new ChangePropertyCommand(r, TagConstants.RELATION_TYPE, TagConstants.ASSOCIATEDSTREET_RELATION_TYPE));
         // add street with role 'street'

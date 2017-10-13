@@ -9,7 +9,7 @@ import java.util.HashSet;
 import java.util.List;
 
 import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.data.osm.Changeset;
+import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
@@ -23,7 +23,8 @@ import org.openstreetmap.josm.data.osm.event.PrimitivesRemovedEvent;
 import org.openstreetmap.josm.data.osm.event.RelationMembersChangedEvent;
 import org.openstreetmap.josm.data.osm.event.TagsChangedEvent;
 import org.openstreetmap.josm.data.osm.event.WayNodesChangedEvent;
-import org.openstreetmap.josm.data.osm.visitor.Visitor;
+import org.openstreetmap.josm.data.osm.visitor.OsmPrimitiveVisitor;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.tools.CheckParameterUtil;
 
 /**
@@ -42,7 +43,7 @@ import org.openstreetmap.josm.tools.CheckParameterUtil;
  * @author Oliver Wieland &lt;oliver.wieland@online.de>
  *
  */
-public class AddressEditContainer implements Visitor, DataSetListener, IAddressEditContainerListener, IProblemVisitor, IAllKnowingTrashHeap {
+public class AddressEditContainer implements OsmPrimitiveVisitor, DataSetListener, IAddressEditContainerListener, IProblemVisitor, IAllKnowingTrashHeap {
 
     private Collection<? extends OsmPrimitive> workingSet;
     /** The street dictionary collecting all streets to a set of unique street names. */
@@ -299,10 +300,6 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
     public void visit(Relation e) {
     }
 
-    @Override
-    public void visit(Changeset cs) {
-    }
-
     /**
      * Gets the dictionary containing the collected streets.
      * @return dictionary containing the collected streets
@@ -488,8 +485,9 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
         if (workingSet != null) {
             invalidate(workingSet);
         } else {
-            if (Main.getLayerManager().getEditDataSet() != null) {
-                invalidate(Main.getLayerManager().getEditDataSet().allPrimitives());
+            DataSet ds = MainApplication.getLayerManager().getEditDataSet();
+            if (ds != null) {
+                invalidate(ds.allPrimitives());
             }
         }
     }
@@ -707,7 +705,7 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
     /**
      * Internal class to handle results of {@link AddressEditContainer#getClosestStreetNames(String, int)}.
      */
-    private class StreetScore implements Comparable<StreetScore> {
+    private static class StreetScore implements Comparable<StreetScore> {
         private String name;
         private int score;
 

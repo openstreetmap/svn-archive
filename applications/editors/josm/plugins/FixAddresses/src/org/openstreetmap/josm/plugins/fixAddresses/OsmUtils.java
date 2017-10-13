@@ -4,7 +4,6 @@ package org.openstreetmap.josm.plugins.fixAddresses;
 import java.util.List;
 import java.util.Locale;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.Node;
@@ -13,6 +12,7 @@ import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.tools.CheckParameterUtil;
 import org.openstreetmap.josm.tools.Pair;
 
@@ -201,8 +201,8 @@ public final class OsmUtils {
     public static void zoomAddresses(List<OSMAddress> addressList) {
         CheckParameterUtil.ensureParameterNotNull(addressList, "addressList");
 
-        if (Main.map == null && Main.map.mapView == null) return;   // nothing to do
-        if (addressList.size() == 0) return;                        // dto.
+        if (!MainApplication.isDisplayingMapView()) return;   // nothing to do
+        if (addressList.size() == 0) return;                  // dto.
 
         // compute bounding box
         BoundingXYVisitor bbox = new BoundingXYVisitor();
@@ -214,7 +214,7 @@ public final class OsmUtils {
 
         if (bbox.getBounds() != null) {
             //  zoom to calculated bounding box
-            Main.map.mapView.zoomTo(bbox.getBounds());
+            MainApplication.getMap().mapView.zoomTo(bbox.getBounds());
         }
     }
 

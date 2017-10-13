@@ -1,12 +1,11 @@
 // License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.fixAddresses;
 
-import org.openstreetmap.josm.data.osm.Changeset;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.Way;
-import org.openstreetmap.josm.data.osm.visitor.Visitor;
+import org.openstreetmap.josm.data.osm.visitor.OsmPrimitiveVisitor;
 
 /**
  * GuessedValueHandler visits all nodes and ways in order to find a guessed value for a given tag.
@@ -15,7 +14,7 @@ import org.openstreetmap.josm.data.osm.visitor.Visitor;
  *
  * The default maximum distance is 100m.
  */
-public class GuessedValueHandler implements Visitor {
+public class GuessedValueHandler implements OsmPrimitiveVisitor {
 
     /** Default maximum distance (100m) */
     private static final double DEFAULT_MAX_DIST = 100.0;
@@ -188,11 +187,6 @@ public class GuessedValueHandler implements Visitor {
 
     @Override
     public void visit(Relation e) {
-        // nothing to do (yet)
-    }
-
-    @Override
-    public void visit(Changeset cs) {
         // nothing to do (yet)
     }
 }

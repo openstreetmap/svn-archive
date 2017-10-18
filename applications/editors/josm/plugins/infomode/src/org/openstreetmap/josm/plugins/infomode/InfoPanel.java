@@ -6,8 +6,8 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.text.DateFormat;
 import java.util.Collection;
 import java.util.HashSet;
@@ -19,11 +19,12 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.gpx.GpxTrack;
 import org.openstreetmap.josm.data.gpx.GpxTrackSegment;
 import org.openstreetmap.josm.data.gpx.WayPoint;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.tools.GBC;
+import org.openstreetmap.josm.tools.Logging;
 import org.openstreetmap.josm.tools.OpenBrowser;
 
 class InfoPanel extends JPanel {
@@ -54,30 +55,18 @@ class InfoPanel extends JPanel {
         add(but1, GBC.std().insets(10, 5, 0, 0));
         add(but2, GBC.eop().insets(10, 5, 0, 0));
         // lightweight hyperlink
-        label6.addMouseListener(new MouseListener() {
+        label6.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 String s = label6.getText();
                 OpenBrowser.displayUrl(s.substring(9, s.length()-11));
             }
-
-            @Override
-            public void mousePressed(MouseEvent e) { }
-
-            @Override
-            public void mouseReleased(MouseEvent e) { }
-
-            @Override
-            public void mouseEntered(MouseEvent e) { }
-
-            @Override
-            public void mouseExited(MouseEvent e) { }
         });
         but1.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (tracks != null) tracks.remove(trk);
-                Main.map.mapView.repaint();
+                MainApplication.getMap().mapView.repaint();
             }
         });
         but2.addActionListener(new ActionListener() {
@@ -108,11 +97,9 @@ class InfoPanel extends JPanel {
                 if (f) toRemove.add(track);
             }
             tracks.removeAll(toRemove);
-            Main.map.mapView.repaint();
+            MainApplication.getMap().mapView.repaint();
             }
         });
-
-
     }
 
     void setData(WayPoint wp, GpxTrack trk, double vel, Collection<GpxTrack> tracks) {
@@ -138,7 +125,7 @@ class InfoPanel extends JPanel {
         try {
             s1 = String.format("H=%3.1f   ", Double.parseDouble(s));
         } catch (Exception e) {
-            Main.warn(e);
+            Logging.warn(e);
         }
         s1 = s1+"L="+(int) trk.length();
         label5.setText(s1);

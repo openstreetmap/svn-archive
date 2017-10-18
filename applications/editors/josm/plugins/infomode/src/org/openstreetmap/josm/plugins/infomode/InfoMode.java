@@ -29,11 +29,12 @@ import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.gpx.GpxTrack;
 import org.openstreetmap.josm.data.gpx.GpxTrackSegment;
 import org.openstreetmap.josm.data.gpx.WayPoint;
-import org.openstreetmap.josm.gui.MapFrame;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.layer.GpxLayer;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.gui.layer.MapViewPaintable;
+import org.openstreetmap.josm.tools.Logging;
 import org.openstreetmap.josm.tools.Shortcut;
 
 class InfoMode extends MapMode implements MapViewPaintable, AWTEventListener {
@@ -49,10 +50,10 @@ class InfoMode extends MapMode implements MapViewPaintable, AWTEventListener {
     private Popup oldPopup;
     private InfoPanel infoPanel;
 
-    InfoMode(MapFrame mapFrame) {
+    InfoMode() {
         super(tr("InfoMode"), "infomode.png", tr("GPX info mode"),
                 Shortcut.registerShortcut("mapmode:infomode", tr("Mode: {0}", tr("GPX info mode")), KeyEvent.VK_BACK_SLASH, Shortcut.DIRECT),
-                mapFrame, Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+                Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
         infoPanel = new InfoPanel();
     }
 
@@ -62,10 +63,10 @@ class InfoMode extends MapMode implements MapViewPaintable, AWTEventListener {
     public void enterMode() {
         if (!isEnabled()) return;
         super.enterMode();
-        mv = Main.map.mapView;
-        Main.map.mapView.addMouseListener(this);
-        Main.map.mapView.addMouseMotionListener(this);
-        Main.map.mapView.addTemporaryLayer(this);
+        mv = MainApplication.getMap().mapView;
+        mv.addMouseListener(this);
+        mv.addMouseMotionListener(this);
+        mv.addTemporaryLayer(this);
         /*if (!(Main.main.getActiveLayer() instanceof GpxLayer)) {
             boolean answer = ConditionalOptionPaneUtil.showConfirmationDialog(
                     "scan_all_layers", Main.parent,
@@ -74,30 +75,31 @@ class InfoMode extends MapMode implements MapViewPaintable, AWTEventListener {
                  if(!answer) return;
         }*/
 
-        Main.map.statusLine.setHelpText(tr("Move the mouse to show trackpoint info for current layer. Hold shift to highlight tracks"));
-        Main.map.statusLine.repaint();
+        MainApplication.getMap().statusLine.setHelpText(
+                tr("Move the mouse to show trackpoint info for current layer. Hold shift to highlight tracks"));
+        MainApplication.getMap().statusLine.repaint();
 
         try {
             Toolkit.getDefaultToolkit().addAWTEventListener(this,
                     AWTEvent.KEY_EVENT_MASK);
         } catch (SecurityException ex) {
-            Main.error(ex);
+            Logging.error(ex);
         }
     }
 
     @Override
     public void exitMode() {
         super.exitMode();
-        Main.map.mapView.removeMouseListener(this);
-        Main.map.mapView.removeMouseMotionListener(this);
+        MainApplication.getMap().mapView.removeMouseListener(this);
+        MainApplication.getMap().mapView.removeMouseMotionListener(this);
 
-        Main.map.mapView.removeTemporaryLayer(this);
+        MainApplication.getMap().mapView.removeTemporaryLayer(this);
         if (oldPopup != null) oldPopup.hide();
 
         try {
             Toolkit.getDefaultToolkit().removeAWTEventListener(this);
         } catch (SecurityException ex) {
-            Main.error(ex);
+            Logging.error(ex);
         }
 
         repaint();
@@ -179,7 +181,7 @@ class InfoMode extends MapMode implements MapViewPaintable, AWTEventListener {
         if (e.getKeyCode() == KeyEvent.VK_BACK_SLASH ||
                 e.getKeyCode() == KeyEvent.VK_ENTER ||
                 e.getKeyCode() == KeyEvent.VK_ESCAPE) {
-            Main.map.selectSelectTool(false);
+            MainApplication.getMap().selectSelectTool(false);
         }
     }
 
@@ -197,13 +199,14 @@ class InfoMode extends MapMode implements MapViewPaintable, AWTEventListener {
 
     @Override
     protected void updateStatusLine() {
-        Main.map.statusLine.setHelpText(statusText);
-        Main.map.statusLine.repaint();
+        MainApplication.getMap().statusLine.setHelpText(statusText);
+        MainApplication.getMap().statusLine.repaint();
     }
 // </editor-fold>
 
     private void repaint() {
-        if (Main.map != null) Main.map.mapView.repaint();
+        if (MainApplication.getMap() != null)
+            MainApplication.getMap().mapView.repaint();
     }
     /*private void setStatusLine(String tr) {
         statusText=tr;
@@ -243,7 +246,7 @@ class InfoMode extends MapMode implements MapViewPaintable, AWTEventListener {
                 for (GpxTrackSegment seg : track.getSegments()) {
                     oldWp = null; // next segment will have new previous point
                     for (WayPoint S : seg.getWayPoints()) {
-                        d = S.getEastNorth().distance(pos);
+                        d = S.getEastNorth(Main.getProjection()).distance(pos);
 
                         if (d < minDist && d < maxD) {
                             minDist = d;
@@ -267,7 +270,7 @@ class InfoMode extends MapMode implements MapViewPaintable, AWTEventListener {
                     for (GpxTrackSegment seg : trk.getSegments()) {
                     Point oldP = null, curP = null; // next segment will have new previous point
                         for (WayPoint S : seg.getWayPoints()) {
-                            curP = mv.getPoint(S.getEastNorth());
+                            curP = mv.getPoint(S.getEastNorth(Main.getProjection()));
                             if (oldP != null) g.drawLine(oldP.x, oldP.y, curP.x, curP.y);
                             oldP = curP;
                         }

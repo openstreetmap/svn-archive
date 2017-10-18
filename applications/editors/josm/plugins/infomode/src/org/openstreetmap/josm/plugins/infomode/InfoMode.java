@@ -289,7 +289,7 @@ class InfoMode extends MapMode implements MapViewPaintable, AWTEventListener {
                     double vel = -1;
                     if (prevWp != null && wp.time != prevWp.time) {
                         vel = wp.getCoor().greatCircleDistance(prevWp.getCoor())/
-                                (wp.time-prevWp.time)*3.6;
+                                (wp.time-prevWp.time);
                     }
                     infoPanel.setData(wp, trk, vel, gpxL.data.tracks);
                     Popup pp = PopupFactory.getSharedInstance().getPopup(mv, infoPanel, pcx, pcy);

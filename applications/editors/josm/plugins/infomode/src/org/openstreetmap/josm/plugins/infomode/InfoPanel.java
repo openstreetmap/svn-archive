@@ -18,6 +18,7 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import org.openstreetmap.josm.data.SystemOfMeasurement;
 import org.openstreetmap.josm.data.gpx.GpxTrack;
 import org.openstreetmap.josm.data.gpx.GpxTrackSegment;
 import org.openstreetmap.josm.data.gpx.WayPoint;
@@ -110,8 +111,12 @@ class InfoPanel extends JPanel {
             label1.setText(DateUtils.formatDateTime(wp.getTime(), DateFormat.DEFAULT, DateFormat.DEFAULT));
             but2.setVisible(true);
         }
-        if (vel > 0) label2.setText(String.format("%.1f "+tr("km/h"), vel));
-        else label2.setText(null);
+        if (vel > 0) {
+            SystemOfMeasurement som = SystemOfMeasurement.getSystemOfMeasurement();
+            label2.setText(String.format("%.1f "+som.speedName, vel * som.speedValue));
+        } else {
+            label2.setText(null);
+        }
         String s = (String) trk.getAttributes().get("name");
         if (s != null)
             label3.setText(tr("Track name: ")+s);

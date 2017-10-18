@@ -11,7 +11,6 @@ import java.awt.event.MouseEvent;
 import java.text.DateFormat;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Locale;
 import java.util.Set;
 
 import javax.swing.BorderFactory;
@@ -26,12 +25,12 @@ import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.tools.GBC;
 import org.openstreetmap.josm.tools.Logging;
 import org.openstreetmap.josm.tools.OpenBrowser;
+import org.openstreetmap.josm.tools.date.DateUtils;
 
 class InfoPanel extends JPanel {
 
     private Collection<GpxTrack> tracks;
     private GpxTrack trk;
-    private DateFormat df;
 
     private JLabel label1 = new JLabel();
     private JLabel label2 = new JLabel();
@@ -44,7 +43,6 @@ class InfoPanel extends JPanel {
 
     InfoPanel() {
         super(new GridBagLayout());
-        df = DateFormat.getDateTimeInstance(DateFormat.DEFAULT, DateFormat.DEFAULT, Locale.getDefault());
         setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         add(label1, GBC.eol().insets(10, 0, 0, 0));
         add(label2, GBC.eol().insets(10, 0, 0, 0));
@@ -109,7 +107,7 @@ class InfoPanel extends JPanel {
             label1.setText(tr("No timestamp"));
             but2.setVisible(false);
         } else {
-            label1.setText(df.format(wp.getTime()));
+            label1.setText(DateUtils.formatDateTime(wp.getTime(), DateFormat.DEFAULT, DateFormat.DEFAULT));
             but2.setVisible(true);
         }
         if (vel > 0) label2.setText(String.format("%.1f "+tr("km/h"), vel));
@@ -122,10 +120,12 @@ class InfoPanel extends JPanel {
         label4.setText(s);
         s = (String) wp.attr.get("ele");
         String s1 = "";
-        try {
-            s1 = String.format("H=%3.1f   ", Double.parseDouble(s));
-        } catch (Exception e) {
-            Logging.warn(e);
+        if (s != null) {
+            try {
+                s1 = String.format("H=%3.1f   ", Double.parseDouble(s));
+            } catch (NumberFormatException e) {
+                Logging.warn(e);
+            }
         }
         s1 = s1+"L="+(int) trk.length();
         label5.setText(s1);

@@ -51,8 +51,6 @@ public final class S57osm { // OSM to S57 Object/Attribute and Object/Primitive 
         OSMtags.put("man_made=pier", new KeyVal<>(Obj.SLCONS, Att.UNKATT, null, null)); OSMtags.put("man_made=jetty", new KeyVal<>(Obj.SLCONS, Att.UNKATT, null, null));
         OSMtags.put("landuse=industrial", new KeyVal<>(Obj.BUAARE, Att.UNKATT, null, null)); OSMtags.put("landuse=commercial", new KeyVal<>(Obj.BUAARE, Att.UNKATT, null, null));
         OSMtags.put("landuse=retail", new KeyVal<>(Obj.BUAARE, Att.UNKATT, null, null)); OSMtags.put("landuse=residential", new KeyVal<>(Obj.BUAARE, Att.UNKATT, null, null));
-        OSMtags.put("place=city", new KeyVal<>(Obj.BUAARE, Att.CATBUA, Conv.E, CatBUA.BUA_CITY)); OSMtags.put("place=town", new KeyVal<>(Obj.BUAARE, Att.CATBUA, Conv.E, CatBUA.BUA_TOWN));
-        OSMtags.put("place=village", new KeyVal<>(Obj.BUAARE, Att.CATBUA, Conv.E, CatBUA.BUA_VLLG));
     }
 
     public static void OSMtag(ArrayList<KeyVal<?>> osm, String key, String val) {

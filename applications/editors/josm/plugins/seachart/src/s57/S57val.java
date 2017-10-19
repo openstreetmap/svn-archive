@@ -1504,7 +1504,7 @@ public final class S57val { // S57 Attribute values lookup tables & methods
         keys.put(Att.LC_BM2, new S57key(Conv.F, null)); keys.put(Att.LC_LG1, new S57key(Conv.F, null)); keys.put(Att.LC_LG2, new S57key(Conv.F, null));
         keys.put(Att.LC_DR1, new S57key(Conv.F, null)); keys.put(Att.LC_DR2, new S57key(Conv.F, null)); keys.put(Att.LC_SP1, new S57key(Conv.F, null));
         keys.put(Att.LC_SP2, new S57key(Conv.F, null)); keys.put(Att.LC_WD1, new S57key(Conv.F, null)); keys.put(Att.LC_WD2, new S57key(Conv.F, null));
-        keys.put(Att.LITRAD, new S57key(Conv.F, null)); keys.put(Att.CATCVR, new S57key(Conv.E, Catcvr));
+        keys.put(Att.CATCVR, new S57key(Conv.E, Catcvr));
     }
 
     public static Enum<?> s57Enum(String val, Att att) { // Convert S57 attribute value string to SCM enumeration

@@ -416,9 +416,6 @@ public class Signals extends Rules {
                     } else {
                         continue;
                     }
-                    if (atts.containsKey(Att.LITRAD)) {
-                        radius = (Double) atts.get(Att.LITRAD).val;
-                    }
                     if (atts.containsKey(Att.CATLIT)) {
                         ArrayList<CatLIT> cats = (ArrayList<CatLIT>) atts.get(Att.CATLIT).val;
                         if (cats.contains(CatLIT.LIT_DIR)) {
@@ -433,9 +430,6 @@ public class Signals extends Rules {
                                     Double sdir = null;
                                     if (satts == atts)
                                         continue;
-                                    if (satts.containsKey(Att.LITRAD)) {
-                                        srad = (Double) satts.get(Att.LITRAD).val;
-                                    }
                                     if (srad == radius) {
                                         ArrayList<CatLIT> scats = (ArrayList<CatLIT>) ((satts.containsKey(Att.CATLIT)) ?
                                                 (ArrayList<CatLIT>) satts.get(Att.CATLIT).val : new ArrayList<>());

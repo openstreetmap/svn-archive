@@ -28,7 +28,7 @@ public final class S57att { // S57 Attribute lookup tables & methods
         DIRIMP, DISBK1, DISBK2, DISIPU, DISIPD, ELEVA1, ELEVA2, FNCTNM, WTWDIS, BUNVES, BNKWTW, COMCTN, HORCLL, HORCLW, TRSHGD, UNLOCD, HIGWAT, HIGNAM, LOWWAT, LOWNAM,
         MEAWAT, MEANAM, OTHWAT, OTHNAM, REFLEV, SDRLEV, VCRLEV, SCHREF, USESHP, CURVHW, CURVLW, CURVMW, CURVOW, APTREF, SHPTYP, UPDMSG, ADDMRK, CATNMK, CATBRT, CATBUN,
         CATCCL, CATCOM, CATHBR, CATRFD, CATTML, CATGAG, CATVTR, CATTAB, CATEXS, LG_SPD, LG_SPR, LG_BME, LG_LGS, LG_DRT, LG_WDP, LG_WDU, LG_REL, LG_FNC, LG_DES, LG_PBR,
-        LC_CSI, LC_CSE, LC_ASI, LC_ASE, LC_CCI, LC_CCE, LC_BM1, LC_BM2, LC_LG1, LC_LG2, LC_DR1, LC_DR2, LC_SP1, LC_SP2, LC_WD1, LC_WD2, LITRAD, CATCVR, HUNITS
+        LC_CSI, LC_CSE, LC_ASI, LC_ASE, LC_CCI, LC_CCE, LC_BM1, LC_BM2, LC_LG1, LC_LG2, LC_DR1, LC_DR2, LC_SP1, LC_SP2, LC_WD1, LC_WD2, CATCVR, HUNITS
     }
 
     private static final EnumMap<Att, Integer> AttS57 = new EnumMap<>(Att.class);
@@ -144,7 +144,7 @@ public final class S57att { // S57 Attribute lookup tables & methods
         AttStr.put(Att.CATTAB, "operation"); AttStr.put(Att.SCHREF, "schedule"); AttStr.put(Att.USESHP, "use"); AttStr.put(Att.CURVHW, "high_velocity");
         AttStr.put(Att.CURVLW, "low_velocity"); AttStr.put(Att.CURVMW, "mean_velocity"); AttStr.put(Att.CURVOW, "other_velocity"); AttStr.put(Att.APTREF, "passing_time");
         AttStr.put(Att.CATCOM, "category"); AttStr.put(Att.CATCVR, "category"); AttStr.put(Att.CATEXS, "category"); AttStr.put(Att.SHPTYP, "ship");
-        AttStr.put(Att.UPDMSG, "message"); AttStr.put(Att.LITRAD, "radius");
+        AttStr.put(Att.UPDMSG, "message");
     }
 
     private static final EnumMap<Obj, Att> Accuracy = new EnumMap<>(Obj.class); static {
@@ -447,10 +447,7 @@ public final class S57att { // S57 Attribute lookup tables & methods
     private static final EnumMap<Obj, Att> Quality = new EnumMap<>(Obj.class); static {
         Quality.put(Obj.UNKOBJ, Att.QUASOU); }
 
-    private static final EnumMap<Obj, Att> Radius = new EnumMap<>(Obj.class); static {
-        Radius.put(Obj.UNKOBJ, Att.RADIUS); Radius.put(Obj.LIGHTS, Att.LITRAD); }
-
-    private static final EnumMap<Obj, Att> Range = new EnumMap<>(Obj.class); static {
+   private static final EnumMap<Obj, Att> Range = new EnumMap<>(Obj.class); static {
         Range.put(Obj.UNKOBJ, Att.VALNMR); }
 
     private static final EnumMap<Obj, Att> Reference = new EnumMap<>(Obj.class); static {
@@ -594,7 +591,7 @@ public final class S57att { // S57 Attribute lookup tables & methods
         StrAtt.put("national_name", National_name); StrAtt.put("national_pilot_district", National_pilot_district); StrAtt.put("nm_date", Nm_date); StrAtt.put("other_velocity", Other_velocity);
         StrAtt.put("operation", Operation); StrAtt.put("orientation", Orientation); StrAtt.put("passing_time", Passing_time); StrAtt.put("period", Period); StrAtt.put("period_end", Period_end);
         StrAtt.put("period_start", Period_start); StrAtt.put("pilot_district", Pilot_district); StrAtt.put("position_quality", Position_quality); StrAtt.put("positional_accuracy", Positional_accuracy);
-        StrAtt.put("producing_country", Producing_country); StrAtt.put("product", Product); StrAtt.put("quality", Quality); StrAtt.put("radius", Radius); StrAtt.put("range", Range);
+        StrAtt.put("producing_country", Producing_country); StrAtt.put("product", Product); StrAtt.put("quality", Quality); StrAtt.put("range", Range);
         StrAtt.put("reference", Reference); StrAtt.put("reflectivity", Reflectivity); StrAtt.put("restriction", Restriction); StrAtt.put("schedule", Schedule); StrAtt.put("shape", Shape);
         StrAtt.put("sector_end", Sector_end); StrAtt.put("sector_start", Sector_start); StrAtt.put("sequence", Sequence); StrAtt.put("shift", Shift); StrAtt.put("ship", Ship);
         StrAtt.put("sounding_accuracy", Sounding_accuracy); StrAtt.put("sounding_name", Sounding_name); StrAtt.put("start_date", Start_date); StrAtt.put("start_time", Start_time);

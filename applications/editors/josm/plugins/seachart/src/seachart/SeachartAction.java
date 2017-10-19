@@ -6,7 +6,7 @@ import java.util.Map.Entry;
 
 import javax.swing.SwingUtilities;
 
-import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.coor.LatLon;
@@ -123,17 +123,17 @@ public class SeachartAction extends JosmAction implements ActiveLayerChangeListe
     protected void createChartLayer() {
         rendering = new ChartImage(new ImageryInfo("SeaChart"));
         rendering.setBackgroundLayer(true);
-        Main.getLayerManager().addLayer(rendering);
-        Main.getLayerManager().addAndFireActiveLayerChangeListener(this);
-        Main.getLayerManager().addLayerChangeListener(this);
+        MainApplication.getLayerManager().addLayer(rendering);
+        MainApplication.getLayerManager().addAndFireActiveLayerChangeListener(this);
+        MainApplication.getLayerManager().addLayerChangeListener(this);
     }
 
     public void closeChartLayer() {
         if (isOpen) {
         	try {
-            Main.getLayerManager().removeActiveLayerChangeListener(this);
-            Main.getLayerManager().removeLayerChangeListener(this);
-            Main.getLayerManager().removeLayer(rendering);
+            MainApplication.getLayerManager().removeActiveLayerChangeListener(this);
+            MainApplication.getLayerManager().removeLayerChangeListener(this);
+            MainApplication.getLayerManager().removeLayer(rendering);
         	} catch (Exception e) {
         		// Assume that this can't be serious?
         		System.err.println(e);
@@ -148,7 +148,7 @@ public class SeachartAction extends JosmAction implements ActiveLayerChangeListe
         if (oldLayer != null) {
             oldLayer.data.removeDataSetListener(dataSetListener);
         }
-        OsmDataLayer newLayer = Main.getLayerManager().getEditLayer();
+        OsmDataLayer newLayer = MainApplication.getLayerManager().getEditLayer();
         if (newLayer != null) {
             newLayer.data.addDataSetListener(dataSetListener);
             data = newLayer.data;

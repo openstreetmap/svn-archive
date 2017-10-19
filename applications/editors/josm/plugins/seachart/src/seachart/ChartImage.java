@@ -10,7 +10,7 @@ import java.awt.geom.Point2D.Double;
 
 import javax.swing.Action;
 
-import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.imagery.ImageryInfo;
@@ -69,7 +69,7 @@ public class ChartImage extends ImageryLayer implements ZoomChangeListener, Char
 
     @Override
     public void paint(Graphics2D g2, MapView mv, Bounds bb) {
-        Rectangle rect = Main.map.mapView.getBounds();
+        Rectangle rect = MainApplication.getMap().mapView.getBounds();
         Renderer.reRender(g2, rect, zoom, Math.pow(2, (zoom-12)), SeachartAction.map, this);
         g2.setPaint(Color.black);
         g2.setFont(new Font("Arial", Font.BOLD, 20));
@@ -83,26 +83,26 @@ public class ChartImage extends ImageryLayer implements ZoomChangeListener, Char
 
     @Override
     public void zoomChanged() {
-        if ((Main.map != null) && (Main.map.mapView != null)) {
-            Bounds bounds = Main.map.mapView.getRealBounds();
+        if ((MainApplication.getMap() != null) && (MainApplication.getMap().mapView != null)) {
+            Bounds bounds = MainApplication.getMap().mapView.getRealBounds();
             top = bounds.getMax().lat();
             bottom = bounds.getMin().lat();
             left = bounds.getMin().lon();
             right = bounds.getMax().lon();
-            width = Main.map.mapView.getBounds().getWidth();
-            height = Main.map.mapView.getBounds().getHeight();
+            width = MainApplication.getMap().mapView.getBounds().getWidth();
+            height = MainApplication.getMap().mapView.getBounds().getHeight();
             zoom = ((int) Math.min(18, Math.max(9, Math.round(Math.floor(Math.log(1024 / bounds.asRect().height) / Math.log(2))))));
         }
     }
 
     @Override
     public Point2D.Double getPoint(Snode coord) {
-        return (Double) Main.map.mapView.getPoint2D(new LatLon(Math.toDegrees(coord.lat), Math.toDegrees(coord.lon)));
+        return (Double) MainApplication.getMap().mapView.getPoint2D(new LatLon(Math.toDegrees(coord.lat), Math.toDegrees(coord.lon)));
     }
 
     @Override
     public double mile(Feature feature) {
-        return 185000 / Main.map.mapView.getDist100Pixel();
+        return 185000 / MainApplication.getMap().mapView.getDist100Pixel();
     }
 
     @Override

@@ -271,6 +271,20 @@ public final class RouteUtils {
         return r.hasTag(TAG_ROUTE, "bicycle");
     }
 
+
+    /**
+     * Checks if this way is suitable for bicycles
+     * @param way way
+     * @return {@code true} if this way is suitable for bicycles
+     */
+    public static boolean isWaySuitableForBicycle(Way way) {
+
+        return way.hasTag("highway", "cycleway")
+                || !(way.hasKey("highway", "motorway")
+                  || way.hasKey("bicycle", "no")
+                  || way.hasKey("bicycle", "use_sidepath"));
+    }
+
     public static boolean isFootRoute(Relation r) {
         if (r == null) {
             return false;

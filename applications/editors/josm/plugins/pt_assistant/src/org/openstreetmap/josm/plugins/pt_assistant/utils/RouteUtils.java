@@ -13,7 +13,7 @@ import org.openstreetmap.josm.data.osm.Way;
 /**
  * Utils class for routes
  *
- * @author darya
+ * @author darya, giacomo, polyglot
  *
  */
 public final class RouteUtils {
@@ -141,6 +141,37 @@ public final class RouteUtils {
         }
         return 0;
     }
+
+    /**
+     * Checks if the given way has tags that make it oneway for bicycles
+     * The test does not check whether the way violates those
+     * restrictions.
+     *
+     * @return 0 if the way is not oneway for bicycles, 1 if the way is
+     *         oneway for bicycles, -1 if the way is reversely oneway
+     *         for bicycles
+     */
+    public static int isOnewayForBicycles(Way way) {
+
+        if (OsmUtils.isTrue(way.get("oneway"))
+                || OsmUtils.isReversed(way.get("oneway"))
+                || way.hasTag("junction", "roundabout")) {
+
+            if (!way.hasTag("busway", "lane")
+                    && !way.hasTag("cycleway", "opposite_lane")
+                    && !way.hasTag("cycleway:left", "lane")
+                    && !way.hasTag("cycleway:right", "lane")
+                    && !way.hasTag("oneway:bicycle", "no")) {
+
+                if (OsmUtils.isReversed(way.get("oneway"))) {
+                    return -1;
+                }
+                return 1;
+            }
+        }
+        return 0;
+    }
+
 
     /**
      * Checks if the ways have a common node

@@ -48,7 +48,7 @@ import org.openstreetmap.josm.tools.Pair;
  * the ways and it. The routes will be fixed by connecting the entry
  * point to the exit point of the roundabout.
  *
- * @author giacomo
+ * @author giacomo, polyglot
  */
 public class SplitRoundaboutAction extends JosmAction {
 
@@ -107,7 +107,7 @@ public class SplitRoundaboutAction extends JosmAction {
         //remove the roundabout from each relation
         MainApplication.undoRedo.add(getRemoveRoundaboutFromRelationsCommand(roundabout));
 
-        //split the roundabout on the designed nodes
+        //split the roundabout on the designated nodes
         List<Node> splitNodes = getSplitNodes(roundabout);
         SplitWayCommand result = SplitWayCommand.split(
                 roundabout, splitNodes, Collections.emptyList());
@@ -253,7 +253,7 @@ public class SplitRoundaboutAction extends JosmAction {
     //the entry and exit ways of that occurrence of the roundabout
     private Pair<Way, Way> getEntryExitWays(Relation r, Integer position) {
 
-        //the ways returned are the one exactly before and after the roundabout
+        //the ways returned are the ones exactly before and after the roundabout
         Pair<Way, Way> ret = new Pair<>(null, null);
 
         RelationMember before = r.getMember(position-1);
@@ -267,8 +267,8 @@ public class SplitRoundaboutAction extends JosmAction {
         return ret;
     }
 
-    //split only on the nodes which might be the
-    //entry or exit point for some public transport route
+    //split on all nodes which are the
+    //entry or exit point for route relations
     public List<Node> getSplitNodes(Way roundabout) {
         Set<Node> noDuplicateSplitNodes = new HashSet<>(roundabout.getNodes());
         List<Node> splitNodes = new ArrayList<>(noDuplicateSplitNodes);
@@ -276,16 +276,15 @@ public class SplitRoundaboutAction extends JosmAction {
         splitNodes.removeIf(n -> {
             List<Way> parents = n.getParentWays();
             if (parents.size() == 1)
-                return true;
+                return true; // return value for removeIf, not of the method
             parents.remove(roundabout);
             for (Way parent: parents) {
                 if (!getRouteParents(parent).isEmpty()) {
-                        return false;
+                        return false; // return value for removeIf
                 }
             }
-
-            return true;
-        });
+            return true; // return value for removeIf
+            });
         return splitNodes;
     }
 

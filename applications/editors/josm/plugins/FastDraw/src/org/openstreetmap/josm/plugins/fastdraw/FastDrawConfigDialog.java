@@ -65,7 +65,7 @@ public class FastDrawConfigDialog extends ExtendedDialog {
         });
         pasteButton.setToolTipText(tr("Try copying tags from properties table"));
 
-        ArrayList<String> history = new ArrayList<>(Main.pref.getCollection("fastdraw.tags-history"));
+        ArrayList<String> history = new ArrayList<>(Main.pref.getList("fastdraw.tags-history"));
         while (history.remove("")) { };
         addTags.setPossibleItems(history);
 
@@ -130,7 +130,7 @@ public class FastDrawConfigDialog extends ExtendedDialog {
                 if (!settings.autoTags.isEmpty()) {
                     addTags.addCurrentItemToHistory();
                 }
-                Main.pref.putCollection("fastdraw.tags-history", addTags.getHistory());
+                Main.pref.putList("fastdraw.tags-history", addTags.getHistory());
                 settings.savePrefs();
             } catch (ParseException e) {
                 JOptionPane.showMessageDialog(Main.parent,

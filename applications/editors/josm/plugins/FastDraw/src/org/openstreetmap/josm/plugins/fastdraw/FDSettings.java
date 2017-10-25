@@ -8,16 +8,17 @@ import java.awt.Stroke;
 import java.io.IOException;
 
 import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.data.preferences.ColorProperty;
+import org.openstreetmap.josm.data.preferences.NamedColorProperty;
 import org.openstreetmap.josm.gui.util.GuiHelper;
+import org.openstreetmap.josm.tools.Logging;
 
 public class FDSettings {
-    public ColorProperty COLOR_FIXED = new ColorProperty("fastdraw.color.delete", Color.red);
-    public ColorProperty COLOR_NORMAL = new ColorProperty("fastdraw.color.edit", Color.orange);
-    public ColorProperty COLOR_DELETE = new ColorProperty("fastdraw.color.fixed", Color.green);
-    public ColorProperty COLOR_SELECTEDFRAGMENT = new ColorProperty("fastdraw.color.normal", Color.red);
-    public ColorProperty COLOR_EDITEDFRAGMENT = new ColorProperty("fastdraw.color.select", Color.blue);
-    public ColorProperty COLOR_SIMPLIFIED = new ColorProperty("fastdraw.color.simplified", Color.orange);
+    public NamedColorProperty COLOR_FIXED = new NamedColorProperty("fastdraw.color.delete", Color.red);
+    public NamedColorProperty COLOR_NORMAL = new NamedColorProperty("fastdraw.color.edit", Color.orange);
+    public NamedColorProperty COLOR_DELETE = new NamedColorProperty("fastdraw.color.fixed", Color.green);
+    public NamedColorProperty COLOR_SELECTEDFRAGMENT = new NamedColorProperty("fastdraw.color.normal", Color.red);
+    public NamedColorProperty COLOR_EDITEDFRAGMENT = new NamedColorProperty("fastdraw.color.select", Color.blue);
+    public NamedColorProperty COLOR_SIMPLIFIED = new NamedColorProperty("fastdraw.color.simplified", Color.orange);
 
     public double maxDist;
     public double epsilonMult;
@@ -55,8 +56,8 @@ public class FDSettings {
         deleteStroke = GuiHelper.getCustomizedStroke(Main.pref.get("fastdraw.stroke.delete", "3"));
         simplifiedStroke = GuiHelper.getCustomizedStroke(Main.pref.get("fastdraw.stroke.simplified", "2"));
 
-        bigDotSize = Main.pref.getInteger("fastdraw.point.bigsize", 7);
-        dotSize = Main.pref.getInteger("fastdraw.point.normalsize", 5);
+        bigDotSize = Main.pref.getInt("fastdraw.point.bigsize", 7);
+        dotSize = Main.pref.getInt("fastdraw.point.normalsize", 5);
 
         maxDist = Main.pref.getDouble("fastdraw.maxdist", 5);
         epsilonMult = Main.pref.getDouble("fastdraw.epsilonmult", 1.1);
@@ -64,13 +65,13 @@ public class FDSettings {
         minPixelsBetweenPoints = Main.pref.getDouble("fastdraw.mindelta", 20);
         startingEps = Main.pref.getDouble("fastdraw.startingEps", 5);
         maxPointsPerKm = Main.pref.getDouble("fastdraw.maxpkm", 150);
-        pkmBlockSize = Main.pref.getInteger("fastdraw.pkmblocksize", 10);
+        pkmBlockSize = Main.pref.getInt("fastdraw.pkmblocksize", 10);
         drawLastSegment = Main.pref.getBoolean("fastdraw.drawlastsegment", true);
         snapNodes = Main.pref.getBoolean("fastdraw.snapnodes", true);
         fixedClick = Main.pref.getBoolean("fastdraw.fixedclick", false);
         fixedSpacebar = Main.pref.getBoolean("fastdraw.fixedspacebar", false);
         drawClosed = Main.pref.getBoolean("fastdraw.drawclosed", false);
-        simplifyMode = Main.pref.getInteger("fastdraw.simplifymode", 0) % 3;
+        simplifyMode = Main.pref.getInt("fastdraw.simplifymode", 0) % 3;
         allowEditExistingWays = Main.pref.getBoolean("fastdraw.alloweditexisting", false);
 
         autoTags = Main.pref.get("fastdraw.autotags");
@@ -83,19 +84,19 @@ public class FDSettings {
         Main.pref.putDouble("fastdraw.mindelta", minPixelsBetweenPoints);
         Main.pref.putDouble("fastdraw.startingEps", startingEps);
         Main.pref.putDouble("fastdraw.maxpkm", maxPointsPerKm);
-        Main.pref.putInteger("fastdraw.pkmblocksize", pkmBlockSize);
-        Main.pref.put("fastdraw.drawlastsegment", drawLastSegment);
-        Main.pref.put("fastdraw.snapnodes", snapNodes);
-        Main.pref.put("fastdraw.fixedclick", fixedClick);
-        Main.pref.put("fastdraw.fixedspacebar", fixedSpacebar);
-        Main.pref.put("fastdraw.drawclosed", drawClosed);
-        Main.pref.putInteger("fastdraw.simplifymode", simplifyMode);
+        Main.pref.putInt("fastdraw.pkmblocksize", pkmBlockSize);
+        Main.pref.putBoolean("fastdraw.drawlastsegment", drawLastSegment);
+        Main.pref.putBoolean("fastdraw.snapnodes", snapNodes);
+        Main.pref.putBoolean("fastdraw.fixedclick", fixedClick);
+        Main.pref.putBoolean("fastdraw.fixedspacebar", fixedSpacebar);
+        Main.pref.putBoolean("fastdraw.drawclosed", drawClosed);
+        Main.pref.putInt("fastdraw.simplifymode", simplifyMode);
         Main.pref.put("fastdraw.autotags", autoTags);
-        Main.pref.put("fastdraw.alloweditexisting", allowEditExistingWays);
+        Main.pref.putBoolean("fastdraw.alloweditexisting", allowEditExistingWays);
         try {
             Main.pref.save();
         } catch (IOException e) {
-            System.err.println(tr("Can not save preferences"));
+            Logging.error(tr("Can not save preferences"));
         }
     }
 }

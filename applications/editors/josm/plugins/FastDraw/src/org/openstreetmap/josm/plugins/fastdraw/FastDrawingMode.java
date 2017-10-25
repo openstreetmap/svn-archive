@@ -28,6 +28,7 @@ import org.openstreetmap.josm.command.DeleteCommand;
 import org.openstreetmap.josm.command.SequenceCommand;
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.coor.LatLon;
+import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Way;
@@ -534,6 +535,7 @@ class FastDrawingMode extends MapMode implements MapViewPaintable, KeyPressRelea
         if (line.isClosed() && n == 2) return;
         if (line.isClosed() && n == 3) pts.remove(2); // two-point way can not be closed
 
+        DataSet ds = getLayerManager().getEditDataSet();
         Collection<Command> cmds = new LinkedList<>();
         int i = 0;
 
@@ -558,7 +560,7 @@ class FastDrawingMode extends MapMode implements MapViewPaintable, KeyPressRelea
                     nd = firstNode;
                 } else {
                     nd = new Node(p);
-                    cmds.add(new AddCommand(nd));
+                    cmds.add(new AddCommand(ds, nd));
                 }
             }
             if (nd.getCoor().isOutSideWorld()) {
@@ -594,15 +596,14 @@ class FastDrawingMode extends MapMode implements MapViewPaintable, KeyPressRelea
                 }
             }
             oldWay = null; // that is all with this command
-        } else cmds.add(new AddCommand(w));
+        } else cmds.add(new AddCommand(ds, w));
         Command c = new SequenceCommand(tr("Draw the way by mouse"), cmds);
-        if (getLayerManager().getEditLayer() == null) return;
         MainApplication.undoRedo.add(c);
         lineWasSaved = true;
         newDrawing(); // stop drawing
         if (autoExit) {
             // Select this way and switch drawing mode off
-            getLayerManager().getEditDataSet().setSelected(w);
+            ds.setSelected(w);
             MainApplication.getMap().selectSelectTool(false);
         }
     }

@@ -3,3 +3,4 @@
 /bin
 /checkstyle-josm-FastDraw.xml
 /findbugs-josm-FastDraw.xml
+/spotbugs-josm-FastDraw.xml

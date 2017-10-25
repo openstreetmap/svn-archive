@@ -42,6 +42,7 @@ import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MainMenu;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.gui.PleaseWaitRunnable;
@@ -55,6 +56,7 @@ import org.openstreetmap.josm.io.OsmWriterFactory;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
 import org.openstreetmap.josm.tools.HttpClient;
+import org.openstreetmap.josm.tools.Logging;
 import org.openstreetmap.josm.tools.SubclassFilteredCollection;
 import org.openstreetmap.josm.tools.Utils;
 
@@ -81,9 +83,10 @@ public class CommandLine extends Plugin {
         historyField = new DisableShortcutsOnFocusGainedTextField();
         textField = new CommandTextField();
 
-        if (Main.main.menu != null) {
-            commandMenu = Main.main.menu.addMenu("Commands", tr("Commands"), KeyEvent.VK_O,
-                    Main.main.menu.getDefaultMenuPos(), ht("/Plugin/CommandLine"));
+        MainMenu mainMenu = MainApplication.getMenu();
+        if (mainMenu != null) {
+            commandMenu = mainMenu.addMenu("Commands", tr("Commands"), KeyEvent.VK_O,
+                    mainMenu.getDefaultMenuPos(), ht("/Plugin/CommandLine"));
             MainMenu.add(commandMenu, new CommandLineAction(this));
         }
         loadCommands();
@@ -98,22 +101,23 @@ public class CommandLine extends Plugin {
     }
 
     protected void startCommand(Command command) {
-        if (Main.map == null)
+        MapFrame map = MainApplication.getMap();
+        if (map == null)
             return;
-        DataSet ds = Main.getLayerManager().getEditDataSet();
+        DataSet ds = MainApplication.getLayerManager().getEditDataSet();
         if (ds == null)
             return;
         currentCommand = command;
         currentCommand.resetLoading();
         parseSelection(ds.getSelected());
-        if (!(Main.map.mapMode instanceof AnyAction
-           || Main.map.mapMode instanceof DummyAction
-           || Main.map.mapMode instanceof LengthAction
-           || Main.map.mapMode instanceof NodeAction
-           || Main.map.mapMode instanceof PointAction
-           || Main.map.mapMode instanceof RelationAction
-           || Main.map.mapMode instanceof WayAction)) {
-            previousMode = Main.map.mapMode;
+        if (!(map.mapMode instanceof AnyAction
+           || map.mapMode instanceof DummyAction
+           || map.mapMode instanceof LengthAction
+           || map.mapMode instanceof NodeAction
+           || map.mapMode instanceof PointAction
+           || map.mapMode instanceof RelationAction
+           || map.mapMode instanceof WayAction)) {
+            previousMode = map.mapMode;
         }
         if (currentCommand.currentParameterNum < currentCommand.parameters.size())
             setMode(Mode.SELECTION);
@@ -137,27 +141,22 @@ public class CommandLine extends Plugin {
     }
 
     protected void printHistory(final String text) {
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                historyField.setText(text);
-            }
-        });
+        SwingUtilities.invokeLater(() -> historyField.setText(text));
     }
 
     private void loadCommands() {
-        commands = (new Loader(getPluginDir())).load();
+        commands = (new Loader(getPluginDirs().getUserDataDirectory(false))).load();
         if (commands.isEmpty()) {
             if (!GraphicsEnvironment.isHeadless() && JOptionPane.YES_OPTION == JOptionPane.showConfirmDialog(Main.parent,
                     tr("No command has been found. Would you like to download and install default commands now?"),
                     tr("No command found"), JOptionPane.YES_NO_CANCEL_OPTION)) {
                 try {
                     downloadAndInstallDefaultCommands();
-                    commands = (new Loader(getPluginDir())).load();
+                    commands = (new Loader(getPluginDirs().getUserDataDirectory(false))).load();
                     JOptionPane.showMessageDialog(Main.parent, tr("Default commands have been successfully installed"),
                             tr("Success"), JOptionPane.INFORMATION_MESSAGE);
                 } catch (IOException e) {
-                    Main.warn(e);
+                    Logging.warn(e);
                     JOptionPane.showMessageDialog(Main.parent,
                             tr("Failed to download and install default commands.\n\nError: {0}", e.getMessage()),
                             tr("Warning"), JOptionPane.WARNING_MESSAGE);
@@ -173,7 +172,7 @@ public class CommandLine extends Plugin {
         String url = Main.pref.get("commandline.default.commands.url",
                 "https://github.com/Foxhind/JOSM-CommandLine-commands/archive/master.zip");
         try (ZipInputStream zis = new ZipInputStream(HttpClient.create(new URL(url)).connect().getContent(), StandardCharsets.UTF_8)) {
-            File dir = new File(getPluginDir());
+            File dir = getPluginDirs().getUserDataDirectory(false);
             if (!dir.exists()) {
                 dir.mkdirs();
             }
@@ -185,7 +184,7 @@ public class CommandLine extends Plugin {
                         name = name.substring(name.lastIndexOf("/"));
                     }
                     File file = new File(dir + File.separator + name);
-                    Main.info("Installing command file: "+file);
+                    Logging.info("Installing command file: "+file);
                     if (!file.createNewFile()) {
                         throw new IOException("Could not create file: " + file.getAbsolutePath());
                     }
@@ -215,10 +214,10 @@ public class CommandLine extends Plugin {
     }
 
     protected void setMode(Mode targetMode) {
-        DataSet currentDataSet = Main.getLayerManager().getEditDataSet();
+        DataSet currentDataSet = MainApplication.getLayerManager().getEditDataSet();
         if (currentDataSet != null) {
             currentDataSet.clearSelection();
-            Main.map.mapView.repaint();
+            MainApplication.getMap().mapView.repaint();
         }
         if (targetMode == Mode.IDLE) {
             mode = Mode.IDLE;
@@ -260,10 +259,10 @@ public class CommandLine extends Plugin {
                 action = new DummyAction(this);
                 break;
             case IMAGERYURL:
-                Layer layer = Main.getLayerManager().getActiveLayer();
+                Layer layer = MainApplication.getLayerManager().getActiveLayer();
                 if (layer != null) {
                     if (!(layer instanceof ImageryLayer)) {
-                        List<ImageryLayer> imageryLayers = Main.getLayerManager().getLayersOfType(ImageryLayer.class);
+                        List<ImageryLayer> imageryLayers = MainApplication.getLayerManager().getLayersOfType(ImageryLayer.class);
                         if (imageryLayers.size() == 1) {
                             layer = imageryLayers.get(0);
                         } else {
@@ -280,10 +279,10 @@ public class CommandLine extends Plugin {
                 action = new DummyAction(this);
                 break;
             case IMAGERYOFFSET:
-                Layer olayer = Main.getLayerManager().getActiveLayer();
+                Layer olayer = MainApplication.getLayerManager().getActiveLayer();
                 if (olayer != null) {
                     if (!(olayer instanceof ImageryLayer)) {
-                        List<ImageryLayer> imageryLayers = Main.getLayerManager().getLayersOfType(ImageryLayer.class);
+                        List<ImageryLayer> imageryLayers = MainApplication.getLayerManager().getLayersOfType(ImageryLayer.class);
                         if (imageryLayers.size() == 1) {
                             olayer = imageryLayers.get(0);
                         } else {
@@ -306,7 +305,7 @@ public class CommandLine extends Plugin {
             mode = Mode.PROCESSING;
             prefix = tr("Processing...");
             textField.setText(prefix);
-            Main.map.mapView.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+            MainApplication.getMap().mapView.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         }
     }
 
@@ -316,7 +315,7 @@ public class CommandLine extends Plugin {
     }
 
     public void deactivate() {
-        Main.map.mapView.requestFocus();
+        MainApplication.getMap().mapView.requestFocus();
     }
 
     public void abortInput() {
@@ -326,8 +325,8 @@ public class CommandLine extends Plugin {
 
     public void endInput() {
         setMode(Mode.IDLE);
-        Main.map.selectMapMode(previousMode);
-        Main.map.mapView.repaint();
+        MainApplication.getMap().selectMapMode(previousMode);
+        MainApplication.getMap().mapView.repaint();
     }
 
     public void loadParameter(Object obj, boolean next) {
@@ -346,7 +345,7 @@ public class CommandLine extends Plugin {
                 runTool();
             }
         } else {
-            Main.info("Invalid argument");
+            Logging.info("Invalid argument");
             endInput();
         }
     }
@@ -391,7 +390,7 @@ public class CommandLine extends Plugin {
                          || currentMapFrame.mapMode instanceof NodeAction
                          || currentMapFrame.mapMode instanceof RelationAction
                          || currentMapFrame.mapMode instanceof AnyAction) {
-                            Collection<OsmPrimitive> selected = Main.getLayerManager().getEditDataSet().getSelected();
+                            Collection<OsmPrimitive> selected = MainApplication.getLayerManager().getEditDataSet().getSelected();
                             if (!selected.isEmpty())
                                 loadParameter(selected, true);
                         } else {
@@ -487,7 +486,7 @@ public class CommandLine extends Plugin {
 
         ProcessBuilder builder;
         builder = new ProcessBuilder(listToRun);
-        builder.directory(new File(getPluginDir()));
+        builder.directory(getPluginDirs().getUserDataDirectory(false));
 
         final StringBuilder debugstr = new StringBuilder();
 
@@ -496,14 +495,14 @@ public class CommandLine extends Plugin {
             debugstr.append(s + " ");
         }
         debugstr.append("\n");
-        Main.info(debugstr.toString());
+        Logging.info(debugstr.toString());
 
         final ToolProcess tp = new ToolProcess();
         try {
             tp.process = builder.start();
         } catch (final IOException e) {
             synchronized (debugstr) {
-                Main.error(
+                Logging.error(
                         tr("Error executing the script: ") +
                         debugstr.toString() + e.getMessage() + "\n" + Arrays.toString(e.getStackTrace()));
             }
@@ -524,7 +523,7 @@ public class CommandLine extends Plugin {
                     System.err.write(buffer, 0, len);
                 }
             } catch (IOException e) {
-                Main.warn(e);
+                Logging.warn(e);
             }
         }).start();
 
@@ -536,7 +535,7 @@ public class CommandLine extends Plugin {
             try {
                 printWriter = new PrintWriter(new OutputStreamWriter(outputStream, StandardCharsets.UTF_8));
             } catch (Exception e1) {
-                Main.error(e1);
+                Logging.error(e1);
             }
             final OsmWriter osmWriter = OsmWriterFactory.createOsmWriter(printWriter, true, null);
             Collection<OsmPrimitive> refObjects = currentCommand.getDepsObjects();
@@ -580,13 +579,13 @@ public class CommandLine extends Plugin {
                 try (GpxWriter gpxWriter = new GpxWriter(printWriter)) {
                     GpxFilter gpxFilter = new GpxFilter();
                     gpxFilter.initBboxFilter(bbox);
-                    List<GpxLayer> gpxLayers = Main.getLayerManager().getLayersOfType(GpxLayer.class);
+                    List<GpxLayer> gpxLayers = MainApplication.getLayerManager().getLayersOfType(GpxLayer.class);
                     for (GpxLayer gpxLayer : gpxLayers) {
                         gpxFilter.addGpxData(gpxLayer.data);
                     }
                     gpxWriter.write(gpxFilter.getGpxData());
                 } catch (IOException e2) {
-                    Main.warn(e2);
+                    Logging.warn(e2);
                 }
             }
             Utils.close(osmWriter);
@@ -599,36 +598,27 @@ public class CommandLine extends Plugin {
         });
 
         // Read stdout stream
-        final DataSet currentDataSet = Main.getLayerManager().getEditDataSet();
+        final DataSet currentDataSet = MainApplication.getLayerManager().getEditDataSet();
         final CommandLine that = this;
-        Thread osmParseThread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    final OsmToCmd osmToCmd = new OsmToCmd(that, currentDataSet);
-                    String commandName = currentCommand.name;
-                    final InputStream inputStream = tp.process.getInputStream();
-                    osmToCmd.parseStream(inputStream);
-                    final List<org.openstreetmap.josm.command.Command> cmdlist = osmToCmd.getCommandList();
-                    if (!cmdlist.isEmpty()) {
-                        final SequenceCommand cmd = new SequenceCommand(commandName, cmdlist);
-                        SwingUtilities.invokeLater(new Runnable() {
-                            @Override
-                            public void run() {
-                                Main.main.undoRedo.add(cmd);
-                            }
-                        });
-                    }
-                } catch (Exception e) {
-                    Main.warn(e);
-                } finally {
-                    synchronized (syncObj) {
-                        tp.running = false;
-                        syncObj.notifyAll();
-                    }
+        Thread osmParseThread = new Thread(() -> {
+            try {
+                final OsmToCmd osmToCmd = new OsmToCmd(that, currentDataSet);
+                String commandName = currentCommand.name;
+                final InputStream inputStream = tp.process.getInputStream();
+                osmToCmd.parseStream(inputStream);
+                final List<org.openstreetmap.josm.command.Command> cmdlist = osmToCmd.getCommandList();
+                if (!cmdlist.isEmpty()) {
+                    final SequenceCommand cmd = new SequenceCommand(commandName, cmdlist);
+                    SwingUtilities.invokeLater(() -> Main.main.undoRedo.add(cmd));
+                }
+            } catch (Exception e) {
+                Logging.warn(e);
+            } finally {
+                synchronized (syncObj) {
+                    tp.running = false;
+                    syncObj.notifyAll();
                 }
             }
-
         });
 
         osmParseThread.start();
@@ -636,9 +626,9 @@ public class CommandLine extends Plugin {
 
         synchronized (syncObj) {
             try {
-                syncObj.wait(Main.pref.getInteger("commandline.timeout", 20000));
+                syncObj.wait(Main.pref.getInt("commandline.timeout", 20000));
             } catch (InterruptedException e) {
-                Main.warn(e);
+                Logging.warn(e);
             }
         }
         if (tp.running) {
@@ -652,7 +642,7 @@ public class CommandLine extends Plugin {
                                 syncObj.wait();
                         }
                     } catch (InterruptedException e) {
-                        Main.warn(e);
+                        Logging.warn(e);
                     }
                 }
 

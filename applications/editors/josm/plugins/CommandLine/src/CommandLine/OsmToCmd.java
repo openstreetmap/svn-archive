@@ -13,7 +13,6 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.command.AddCommand;
 import org.openstreetmap.josm.command.ChangeCommand;
 import org.openstreetmap.josm.command.Command;
@@ -33,8 +32,10 @@ import org.openstreetmap.josm.data.osm.SimplePrimitiveId;
 import org.openstreetmap.josm.data.osm.User;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.data.osm.WayData;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.io.IllegalDataException;
 import org.openstreetmap.josm.io.UTFInputStreamReader;
+import org.openstreetmap.josm.tools.Logging;
 import org.openstreetmap.josm.tools.XmlParsingException;
 import org.openstreetmap.josm.tools.date.DateUtils;
 import org.xml.sax.Attributes;
@@ -217,7 +218,7 @@ final class OsmToCmd {
                     }
                     currentPrimitive.put(key.intern(), value.intern());
                 } else {
-                    Main.warn(tr("Undefined element ''{0}'' found in input stream. Skipping.", qName));
+                    Logging.warn(tr("Undefined element ''{0}'' found in input stream. Skipping.", qName));
                 }
             } catch (Exception e) {
                 throw new SAXParseException(e.getMessage(), locator, e);
@@ -226,34 +227,35 @@ final class OsmToCmd {
 
         @Override
         public void endElement(String namespaceURI, String localName, String qName) {
+            DataSet ds = MainApplication.getLayerManager().getEditDataSet();
             if (qName.equals("node")) {
                 if (currentPrimitive.isDeleted()) {
                     cmds.add(new DeleteCommand(targetDataSet.getPrimitiveById(currentPrimitive.getPrimitiveId())));
                 } else if (currentPrimitive.isModified()) {
-                    cmds.add(new ChangeCommand(Main.getLayerManager().getEditLayer(),
+                    cmds.add(new ChangeCommand(ds,
                             targetDataSet.getPrimitiveById(currentPrimitive.getPrimitiveId()), currentPrimitive));
                 } else if (currentPrimitive.isNew()) {
-                    cmds.add(new AddCommand(currentPrimitive));
+                    cmds.add(new AddCommand(ds, currentPrimitive));
                 }
             } else if (qName.equals("way")) {
                 ((Way) currentPrimitive).setNodes(currentWayNodes);
                 if (currentPrimitive.isDeleted()) {
                     cmds.add(new DeleteCommand(targetDataSet.getPrimitiveById(currentPrimitive.getPrimitiveId())));
                 } else if (currentPrimitive.isModified()) {
-                    cmds.add(new ChangeCommand(Main.getLayerManager().getEditLayer(),
+                    cmds.add(new ChangeCommand(ds,
                             targetDataSet.getPrimitiveById(currentPrimitive.getPrimitiveId()), currentPrimitive));
                 } else if (currentPrimitive.isNew()) {
-                    cmds.add(new AddCommand(currentPrimitive));
+                    cmds.add(new AddCommand(ds, currentPrimitive));
                 }
             } else if (qName.equals("relation")) {
                 ((Relation) currentPrimitive).setMembers(currentRelationMembers);
                 if (currentPrimitive.isDeleted()) {
                     cmds.add(new DeleteCommand(targetDataSet.getPrimitiveById(currentPrimitive.getPrimitiveId())));
                 } else if (currentPrimitive.isModified()) {
-                    cmds.add(new ChangeCommand(Main.getLayerManager().getEditLayer(),
+                    cmds.add(new ChangeCommand(ds,
                             targetDataSet.getPrimitiveById(currentPrimitive.getPrimitiveId()), currentPrimitive));
                 } else if (currentPrimitive.isNew()) {
-                    cmds.add(new AddCommand(currentPrimitive));
+                    cmds.add(new AddCommand(ds, currentPrimitive));
                 }
             }
         }
@@ -369,7 +371,7 @@ final class OsmToCmd {
                     current.setChangesetId(Integer.parseInt(v));
                 } catch (NumberFormatException e) {
                     if (current.getUniqueId() <= 0) {
-                        Main.warn(tr("Illegal value for attribute ''changeset'' on new object {1}. Got {0}. Resetting to 0.",
+                        Logging.warn(tr("Illegal value for attribute ''changeset'' on new object {1}. Got {0}. Resetting to 0.",
                                 v, current.getUniqueId()));
                         current.setChangesetId(0);
                     } else {
@@ -378,7 +380,7 @@ final class OsmToCmd {
                 }
                 if (current.getChangesetId() <= 0) {
                     if (current.getUniqueId() <= 0) {
-                        Main.warn(tr("Illegal value for attribute ''changeset'' on new object {1}. Got {0}. Resetting to 0.",
+                        Logging.warn(tr("Illegal value for attribute ''changeset'' on new object {1}. Got {0}. Resetting to 0.",
                                 v, current.getUniqueId()));
                         current.setChangesetId(0);
                     } else {

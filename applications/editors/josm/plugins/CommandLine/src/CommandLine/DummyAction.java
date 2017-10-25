@@ -5,8 +5,9 @@ import java.awt.AWTEvent;
 import java.awt.event.AWTEventListener;
 import java.awt.event.KeyEvent;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.mapmode.MapMode;
+import org.openstreetmap.josm.gui.MainApplication;
+import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.tools.ImageProvider;
 
 public class DummyAction extends MapMode implements AWTEventListener {
@@ -29,11 +30,12 @@ public class DummyAction extends MapMode implements AWTEventListener {
     }
 
     public void cancelDrawing() {
-        if (Main.map == null || Main.map.mapView == null)
+        if (!MainApplication.isDisplayingMapView())
             return;
-        Main.map.statusLine.setHeading(-1);
-        Main.map.statusLine.setAngle(-1);
-        Main.map.mapView.repaint();
+        MapFrame map = MainApplication.getMap();
+        map.statusLine.setHeading(-1);
+        map.statusLine.setAngle(-1);
+        map.mapView.repaint();
         updateStatusLine();
         parentPlugin.abortInput();
     }

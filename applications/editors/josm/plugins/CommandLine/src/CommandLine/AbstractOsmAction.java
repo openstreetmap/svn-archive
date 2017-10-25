@@ -10,11 +10,13 @@ import java.awt.event.AWTEventListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.mapmode.MapMode;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.gui.MainApplication;
+import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.tools.ImageProvider;
+import org.openstreetmap.josm.tools.Logging;
 
 public abstract class AbstractOsmAction<T extends OsmPrimitive> extends MapMode implements AWTEventListener {
     private final CommandLine parentPlugin;
@@ -37,63 +39,64 @@ public abstract class AbstractOsmAction<T extends OsmPrimitive> extends MapMode 
     @Override public void enterMode() {
         super.enterMode();
         currentCursor = cursorNormal;
-        Main.map.mapView.addMouseListener(this);
-        Main.map.mapView.addMouseMotionListener(this);
+        MainApplication.getMap().mapView.addMouseListener(this);
+        MainApplication.getMap().mapView.addMouseMotionListener(this);
         try {
             Toolkit.getDefaultToolkit().addAWTEventListener(this, AWTEvent.KEY_EVENT_MASK);
         } catch (SecurityException ex) {
-            Main.warn(ex);
+            Logging.warn(ex);
         }
     }
 
     @Override public void exitMode() {
         super.exitMode();
-        Main.map.mapView.removeMouseListener(this);
-        Main.map.mapView.removeMouseMotionListener(this);
+        MainApplication.getMap().mapView.removeMouseListener(this);
+        MainApplication.getMap().mapView.removeMouseMotionListener(this);
         try {
             Toolkit.getDefaultToolkit().removeAWTEventListener(this);
         } catch (SecurityException ex) {
-            Main.warn(ex);
+            Logging.warn(ex);
         }
     }
 
     @Override
     public void mouseMoved(MouseEvent e) {
-        if (!Main.map.mapView.isActiveLayerDrawable())
+        if (!MainApplication.getMap().mapView.isActiveLayerDrawable())
             return;
         processMouseEvent(e);
         updCursor();
-        Main.map.mapView.repaint();
+        MainApplication.getMap().mapView.repaint();
         super.mouseMoved(e);
     }
 
     @Override
     public void mousePressed(MouseEvent e) {
-        if (!Main.map.mapView.isActiveLayerDrawable())
+        MapFrame map = MainApplication.getMap();
+        if (!map.mapView.isActiveLayerDrawable())
             return;
         processMouseEvent(e);
         if (nearestPrimitive != null) {
-            DataSet ds = Main.getLayerManager().getEditDataSet();
+            DataSet ds = MainApplication.getLayerManager().getEditDataSet();
             if (isCtrlDown) {
                 ds.clearSelection(nearestPrimitive);
-                Main.map.mapView.repaint();
+                map.mapView.repaint();
             } else {
                 int maxInstances = parentPlugin.currentCommand.parameters.get(parentPlugin.currentCommand.currentParameterNum).maxInstances;
                 switch (maxInstances) {
                 case 0:
                     ds.addSelected(nearestPrimitive);
-                    Main.map.mapView.repaint();
+                    map.mapView.repaint();
                     break;
                 case 1:
                     ds.addSelected(nearestPrimitive);
-                    Main.map.mapView.repaint();
+                    map.mapView.repaint();
                     parentPlugin.loadParameter(nearestPrimitive, true);
-                    Main.map.selectSelectTool(false);
+                    map.selectSelectTool(false);
                     break;
                 default:
                     if (ds.getSelected().size() < maxInstances) {
                         ds.addSelected(nearestPrimitive);
-                        Main.map.mapView.repaint();
+                        map.mapView.repaint();
                     } else
                         parentPlugin.printHistory("Maximum instances is " + maxInstances);
                 }
@@ -116,7 +119,7 @@ public abstract class AbstractOsmAction<T extends OsmPrimitive> extends MapMode 
 
     private void updCursor() {
         if (mousePos != null) {
-            if (!Main.isDisplayingMapView())
+            if (!MainApplication.isDisplayingMapView())
                 return;
             nearestPrimitive = getNearest(mousePos);
             if (nearestPrimitive != null) {
@@ -142,22 +145,23 @@ public abstract class AbstractOsmAction<T extends OsmPrimitive> extends MapMode 
             // We invoke this to prevent strange things from happening
             EventQueue.invokeLater(() -> {
                 // Don't change cursor when mode has changed already
-                if (!AbstractOsmAction.this.getClass().isAssignableFrom(Main.map.mapMode.getClass()))
+                if (!AbstractOsmAction.this.getClass().isAssignableFrom(MainApplication.getMap().mapMode.getClass()))
                     return;
-                Main.map.mapView.setCursor(c);
+                MainApplication.getMap().mapView.setCursor(c);
             });
             currentCursor = c;
         } catch (Exception e) {
-            Main.warn(e);
+            Logging.warn(e);
         }
     }
 
     public void cancelDrawing() {
-        if (Main.map == null || Main.map.mapView == null)
+        MapFrame map = MainApplication.getMap();
+        if (map == null || map.mapView == null)
             return;
-        Main.map.statusLine.setHeading(-1);
-        Main.map.statusLine.setAngle(-1);
-        Main.map.mapView.repaint();
+        map.statusLine.setHeading(-1);
+        map.statusLine.setAngle(-1);
+        map.mapView.repaint();
         updateStatusLine();
         parentPlugin.abortInput();
     }

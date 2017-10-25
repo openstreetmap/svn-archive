@@ -20,7 +20,10 @@ import org.openstreetmap.josm.actions.mapmode.MapMode;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.gui.MainApplication;
+import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.tools.ImageProvider;
+import org.openstreetmap.josm.tools.Logging;
 
 public class PointAction extends MapMode implements AWTEventListener {
     private final CommandLine parentPlugin;
@@ -45,27 +48,27 @@ public class PointAction extends MapMode implements AWTEventListener {
     @Override public void enterMode() {
         super.enterMode();
         if (getLayerManager().getEditDataSet() == null) {
-            Main.map.selectSelectTool(false);
+            MainApplication.getMap().selectSelectTool(false);
             return;
         }
         currentCursor = cursorCrosshair;
-        Main.map.mapView.addMouseListener(this);
-        Main.map.mapView.addMouseMotionListener(this);
+        MainApplication.getMap().mapView.addMouseListener(this);
+        MainApplication.getMap().mapView.addMouseMotionListener(this);
         try {
             Toolkit.getDefaultToolkit().addAWTEventListener(this, AWTEvent.KEY_EVENT_MASK);
         } catch (SecurityException ex) {
-            Main.warn(ex);
+            Logging.warn(ex);
         }
     }
 
     @Override public void exitMode() {
         super.exitMode();
-        Main.map.mapView.removeMouseListener(this);
-        Main.map.mapView.removeMouseMotionListener(this);
+        MainApplication.getMap().mapView.removeMouseListener(this);
+        MainApplication.getMap().mapView.removeMouseMotionListener(this);
         try {
             Toolkit.getDefaultToolkit().removeAWTEventListener(this);
         } catch (SecurityException ex) {
-            Main.warn(ex);
+            Logging.warn(ex);
         }
     }
 
@@ -79,7 +82,7 @@ public class PointAction extends MapMode implements AWTEventListener {
             } else {
                 LatLon coor;
                 if (nearestNode == null)
-                    coor = Main.map.mapView.getLatLon(e.getX(), e.getY());
+                    coor = MainApplication.getMap().mapView.getLatLon(e.getX(), e.getY());
                 else
                     coor = nearestNode.getCoor();
                 if (coor.isOutSideWorld()) {
@@ -90,13 +93,13 @@ public class PointAction extends MapMode implements AWTEventListener {
                 int maxInstances = parentPlugin.currentCommand.parameters.get(parentPlugin.currentCommand.currentParameterNum).maxInstances;
                 if (maxInstances == 1) {
                     parentPlugin.loadParameter(point, true);
-                    Main.map.selectSelectTool(false);
+                    MainApplication.getMap().selectSelectTool(false);
                 } else {
                     if (pointList.size() < maxInstances || maxInstances == 0) {
                         pointList.add(point);
                         updateTextEdit();
                     } else
-                        Main.info("Maximum instances!");
+                        Logging.info("Maximum instances!");
                 }
             }
         }
@@ -104,11 +107,11 @@ public class PointAction extends MapMode implements AWTEventListener {
 
     @Override
     public void mouseMoved(MouseEvent e) {
-        if (!Main.map.mapView.isActiveLayerDrawable())
+        if (!MainApplication.getMap().mapView.isActiveLayerDrawable())
             return;
         processMouseEvent(e);
         updCursor();
-        Main.map.mapView.repaint();
+        MainApplication.getMap().mapView.repaint();
     }
 
     @Override
@@ -125,9 +128,9 @@ public class PointAction extends MapMode implements AWTEventListener {
 
     private void updCursor() {
         if (mousePos != null) {
-            if (!Main.isDisplayingMapView())
+            if (!MainApplication.isDisplayingMapView())
                 return;
-            nearestNode = Main.map.mapView.getNearestNode(mousePos, OsmPrimitive::isUsable);
+            nearestNode = MainApplication.getMap().mapView.getNearestNode(mousePos, OsmPrimitive::isUsable);
             if (nearestNode != null) {
                 setCursor(cursorJoinNode);
             } else {
@@ -147,27 +150,25 @@ public class PointAction extends MapMode implements AWTEventListener {
             return;
         try {
             // We invoke this to prevent strange things from happening
-            EventQueue.invokeLater(new Runnable() {
-                @Override
-                public void run() {
-                    // Don't change cursor when mode has changed already
-                    if (!(Main.map.mapMode instanceof PointAction))
-                        return;
-                    Main.map.mapView.setCursor(c);
-                }
+            EventQueue.invokeLater(() -> {
+                // Don't change cursor when mode has changed already
+                if (!(MainApplication.getMap().mapMode instanceof PointAction))
+                    return;
+                MainApplication.getMap().mapView.setCursor(c);
             });
             currentCursor = c;
         } catch (Exception e) {
-            Main.warn(e);
+            Logging.warn(e);
         }
     }
 
     public void cancelDrawing() {
-        if (Main.map == null || Main.map.mapView == null)
+        if (!MainApplication.isDisplayingMapView())
             return;
-        Main.map.statusLine.setHeading(-1);
-        Main.map.statusLine.setAngle(-1);
-        Main.map.mapView.repaint();
+        MapFrame map = MainApplication.getMap();
+        map.statusLine.setHeading(-1);
+        map.statusLine.setAngle(-1);
+        map.mapView.repaint();
         updateStatusLine();
         parentPlugin.abortInput();
     }

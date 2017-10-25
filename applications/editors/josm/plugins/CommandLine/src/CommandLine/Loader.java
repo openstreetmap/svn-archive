@@ -7,21 +7,21 @@ import java.util.ArrayList;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
-import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.tools.Logging;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.DefaultHandler;
 
 public class Loader extends DefaultHandler {
-    private final String dirToScan;
+    private final File dirToScan;
     private String currentFile; // For debug XML-files
     private String currentTag;
     private Command currentCommand;
     private Parameter currentParameter;
     private final ArrayList<Command> loadingCommands;
 
-    public Loader(String dir) {
+    public Loader(File dir) {
         dirToScan = dir;
         currentTag = "";
         loadingCommands = new ArrayList<>();
@@ -33,17 +33,17 @@ public class Loader extends DefaultHandler {
             SAXParser sp = SAXParserFactory.newInstance().newSAXParser();
 
             // Files loading
-            String[] list = new File(dirToScan + "/").list();
+            String[] list = dirToScan.list();
             if (list != null) {
                 for (int i = 0; i < list.length; i++) {
                     if (list[i].endsWith(".xml")) {
-                        currentFile = dirToScan + "/" + list[i];
+                        currentFile = dirToScan.getPath() + "/" + list[i];
                         loadFile(sp, currentFile);
                     }
                 }
             }
         } catch (Exception e) {
-            Main.error(e);
+            Logging.error(e);
         }
         return loadingCommands;
     }
@@ -51,10 +51,10 @@ public class Loader extends DefaultHandler {
     private void loadFile(SAXParser parser, String fileName) {
         try {
             String a = new File(fileName).toURI().toString().replace("file:/", "file:///");
-            Main.info(a);
+            Logging.info(a);
             parser.parse(a, this);
         } catch (Exception e) {
-            Main.error(e);
+            Logging.error(e);
         }
         // TODO: Create links for each argument
     }
@@ -152,17 +152,17 @@ public class Loader extends DefaultHandler {
 
     @Override
     public void warning(SAXParseException ex) {
-        Main.warn("Warning in command xml file " + currentFile + ": " + ex.getMessage());
+        Logging.warn("Warning in command xml file " + currentFile + ": " + ex.getMessage());
     }
 
     @Override
     public void error(SAXParseException ex) {
-        Main.error("Error in command xml file " + currentFile + ": " + ex.getMessage());
+        Logging.error("Error in command xml file " + currentFile + ": " + ex.getMessage());
     }
 
     @Override
     public void fatalError(SAXParseException ex) throws SAXException {
-        Main.error("Error in command xml file " + currentFile + ": " + ex.getMessage());
+        Logging.error("Error in command xml file " + currentFile + ": " + ex.getMessage());
         throw ex;
     }
 }

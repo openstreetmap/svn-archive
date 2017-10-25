@@ -17,18 +17,20 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.geom.GeneralPath;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.mapmode.MapMode;
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
-import org.openstreetmap.josm.data.preferences.ColorProperty;
+import org.openstreetmap.josm.data.preferences.NamedColorProperty;
+import org.openstreetmap.josm.gui.MainApplication;
+import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.gui.layer.MapViewPaintable;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import org.openstreetmap.josm.tools.ImageProvider;
+import org.openstreetmap.josm.tools.Logging;
 
 public class LengthAction extends MapMode implements MapViewPaintable, AWTEventListener {
     private final CommandLine parentPlugin;
@@ -47,7 +49,7 @@ public class LengthAction extends MapMode implements MapViewPaintable, AWTEventL
     public LengthAction(CommandLine parentPlugin) {
         super(null, "addsegment.png", null, ImageProvider.getCursor("crosshair", null));
         this.parentPlugin = parentPlugin;
-        selectedColor = new ColorProperty(marktr("selected"), Color.red).get();
+        selectedColor = new NamedColorProperty(marktr("selected"), Color.red).get();
         cursorCrosshair = ImageProvider.getCursor("crosshair", null);
         cursorJoinNode = ImageProvider.getCursor("crosshair", "joinnode");
         currentCursor = cursorCrosshair;
@@ -57,45 +59,48 @@ public class LengthAction extends MapMode implements MapViewPaintable, AWTEventL
     @Override
     public void enterMode() {
         super.enterMode();
-        Main.map.mapView.addMouseListener(this);
-        Main.map.mapView.addMouseMotionListener(this);
-        Main.map.mapView.addTemporaryLayer(this);
+        MapView mapView = MainApplication.getMap().mapView;
+        mapView.addMouseListener(this);
+        mapView.addMouseMotionListener(this);
+        mapView.addTemporaryLayer(this);
         try {
             Toolkit.getDefaultToolkit().addAWTEventListener(this, AWTEvent.KEY_EVENT_MASK);
         } catch (SecurityException ex) {
-            Main.warn(ex);
+            Logging.warn(ex);
         }
     }
 
     @Override
     public void exitMode() {
         super.exitMode();
-        Main.map.mapView.removeMouseListener(this);
-        Main.map.mapView.removeMouseMotionListener(this);
-        Main.map.mapView.removeTemporaryLayer(this);
+        MapView mapView = MainApplication.getMap().mapView;
+        mapView.removeMouseListener(this);
+        mapView.removeMouseMotionListener(this);
+        mapView.removeTemporaryLayer(this);
         try {
             Toolkit.getDefaultToolkit().removeAWTEventListener(this);
         } catch (SecurityException ex) {
-            Main.warn(ex);
+            Logging.warn(ex);
         }
         if (drawing)
-            Main.map.mapView.repaint();
+            mapView.repaint();
     }
 
     public void cancelDrawing() {
-        if (Main.map == null || Main.map.mapView == null)
+        MapFrame map = MainApplication.getMap();
+        if (map == null || map.mapView == null)
             return;
-        Main.map.statusLine.setHeading(-1);
-        Main.map.statusLine.setAngle(-1);
+        map.statusLine.setHeading(-1);
+        map.statusLine.setAngle(-1);
         updateStatusLine();
         parentPlugin.abortInput();
     }
 
     @Override
-    public void eventDispatched(AWTEvent arg0) {
-        if (!(arg0 instanceof KeyEvent))
+    public void eventDispatched(AWTEvent event) {
+        if (!(event instanceof KeyEvent))
             return;
-        KeyEvent ev = (KeyEvent) arg0;
+        KeyEvent ev = (KeyEvent) event;
         if (ev.getKeyCode() == KeyEvent.VK_ESCAPE && ev.getID() == KeyEvent.KEY_PRESSED) {
             if (drawing)
                 ev.consume();
@@ -131,12 +136,12 @@ public class LengthAction extends MapMode implements MapViewPaintable, AWTEventL
     private void drawingStart(MouseEvent e) {
         mousePos = e.getPoint();
         if (nearestNode != null) {
-            drawStartPos = Main.map.mapView.getPoint(nearestNode.getCoor());
+            drawStartPos = MainApplication.getMap().mapView.getPoint(nearestNode.getCoor());
         } else {
             drawStartPos = mousePos;
         }
         drawEndPos = drawStartPos;
-        startCoor = Main.map.mapView.getLatLon(drawStartPos.x, drawStartPos.y);
+        startCoor = MainApplication.getMap().mapView.getLatLon(drawStartPos.x, drawStartPos.y);
         endCoor = startCoor;
         drawing = true;
         updateStatusLine();
@@ -152,7 +157,7 @@ public class LengthAction extends MapMode implements MapViewPaintable, AWTEventL
     @Override
     public void mousePressed(MouseEvent e) {
         if (e.getButton() == MouseEvent.BUTTON1) {
-            if (!Main.map.mapView.isActiveLayerDrawable())
+            if (!MainApplication.getMap().mapView.isActiveLayerDrawable())
                 return;
             requestFocusInMapView();
             drawingStart(e);
@@ -164,7 +169,7 @@ public class LengthAction extends MapMode implements MapViewPaintable, AWTEventL
     public void mouseReleased(MouseEvent e) {
         if (e.getButton() != MouseEvent.BUTTON1)
             return;
-        if (!Main.map.mapView.isActiveLayerDrawable())
+        if (!MainApplication.getMap().mapView.isActiveLayerDrawable())
             return;
         boolean dragged = true;
         if (drawStartPos != null)
@@ -178,25 +183,26 @@ public class LengthAction extends MapMode implements MapViewPaintable, AWTEventL
     public void mouseDragged(MouseEvent e) {
         processMouseEvent(e);
         updCursor();
+        MapFrame map = MainApplication.getMap();
         if (nearestNode != null)
-            drawEndPos = Main.map.mapView.getPoint(nearestNode.getCoor());
+            drawEndPos = map.mapView.getPoint(nearestNode.getCoor());
         else
             drawEndPos = mousePos;
-        endCoor = Main.map.mapView.getLatLon(drawEndPos.x, drawEndPos.y);
+        endCoor = map.mapView.getLatLon(drawEndPos.x, drawEndPos.y);
         if (drawing) {
-            Main.map.statusLine.setDist(startCoor.greatCircleDistance(endCoor));
-            Main.map.mapView.repaint();
+            map.statusLine.setDist(startCoor.greatCircleDistance(endCoor));
+            map.mapView.repaint();
         }
     }
 
     @Override
     public void mouseMoved(MouseEvent e) {
-        if (!Main.map.mapView.isActiveLayerDrawable())
+        if (!MainApplication.getMap().mapView.isActiveLayerDrawable())
             return;
         processMouseEvent(e);
         updCursor();
         if (drawing)
-            Main.map.mapView.repaint();
+            MainApplication.getMap().mapView.repaint();
     }
 
     @Override
@@ -214,9 +220,9 @@ public class LengthAction extends MapMode implements MapViewPaintable, AWTEventL
 
     private void updCursor() {
         if (mousePos != null) {
-            if (!Main.isDisplayingMapView())
+            if (!MainApplication.isDisplayingMapView())
                 return;
-            nearestNode = Main.map.mapView.getNearestNode(mousePos, OsmPrimitive::isUsable);
+            nearestNode = MainApplication.getMap().mapView.getNearestNode(mousePos, OsmPrimitive::isUsable);
             if (nearestNode != null) {
                 setCursor(cursorJoinNode);
             } else {
@@ -230,18 +236,15 @@ public class LengthAction extends MapMode implements MapViewPaintable, AWTEventL
             return;
         try {
             // We invoke this to prevent strange things from happening
-            EventQueue.invokeLater(new Runnable() {
-                @Override
-                public void run() {
-                    // Don't change cursor when mode has changed already
-                    if (!(Main.map.mapMode instanceof LengthAction))
-                        return;
-                    Main.map.mapView.setCursor(c);
-                }
+            EventQueue.invokeLater(() -> {
+                // Don't change cursor when mode has changed already
+                if (!(MainApplication.getMap().mapMode instanceof LengthAction))
+                    return;
+                MainApplication.getMap().mapView.setCursor(c);
             });
             currentCursor = c;
         } catch (Exception e) {
-            Main.warn(e);
+            Logging.warn(e);
         }
     }
 }

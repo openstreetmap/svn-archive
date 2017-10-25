@@ -3,8 +3,8 @@ package CommandLine;
 
 import java.awt.Point;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.gui.MainApplication;
 
 public class AnyAction extends AbstractOsmAction<OsmPrimitive> {
 
@@ -14,6 +14,6 @@ public class AnyAction extends AbstractOsmAction<OsmPrimitive> {
 
     @Override
     protected OsmPrimitive getNearest(Point mousePos) {
-        return Main.map.mapView.getNearestNodeOrWay(mousePos, OsmPrimitive::isUsable, false);
+        return MainApplication.getMap().mapView.getNearestNodeOrWay(mousePos, OsmPrimitive::isUsable, false);
     }
 }

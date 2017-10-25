@@ -385,13 +385,13 @@ class FastDrawingMode extends MapMode implements MapViewPaintable, KeyPressRelea
 
         // free mouse-drawing
         if (nearSomeNode) {
-            if (settings.snapNodes && Math.hypot(e.getX() - lastP.x, e.getY() - lastP.y) > 1e-2) {
+            if (settings.snapNodes && lastP != null && Math.hypot(e.getX() - lastP.x, e.getY() - lastP.y) > 1e-2) {
                 line.addFixed(nd1.getCoor()); // snap to node coords
                 repaint();
                 return;
             }
         } else {
-            if (Math.hypot(e.getX() - lastP.x, e.getY() - lastP.y) > settings.minPixelsBetweenPoints) {
+            if (lastP != null && Math.hypot(e.getX() - lastP.x, e.getY() - lastP.y) > settings.minPixelsBetweenPoints) {
                 line.addLast(getLatLon(e)); // add new point
                 repaint();
                 return;

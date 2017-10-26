@@ -21,7 +21,6 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.Map.Entry;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.mapmode.MapMode;
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.SelectionChangedListener;
@@ -30,20 +29,22 @@ import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Way;
-import org.openstreetmap.josm.data.preferences.ColorProperty;
+import org.openstreetmap.josm.data.preferences.NamedColorProperty;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.gui.layer.MapViewPaintable;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import org.openstreetmap.josm.gui.util.KeyPressReleaseListener;
-import org.openstreetmap.josm.gui.util.ModifierListener;
+import org.openstreetmap.josm.gui.util.ModifierExListener;
 import org.openstreetmap.josm.tools.ImageProvider;
+import org.openstreetmap.josm.tools.Logging;
 import org.openstreetmap.josm.tools.Shortcut;
 
 @SuppressWarnings("serial")
 public class DrawBuildingAction extends MapMode implements MapViewPaintable, SelectionChangedListener,
-        KeyPressReleaseListener, ModifierListener {
+        KeyPressReleaseListener, ModifierExListener {
     private enum Mode {
         None, Drawing, DrawingWidth, DrawingAngFix
     }
@@ -62,12 +63,12 @@ public class DrawBuildingAction extends MapMode implements MapViewPaintable, Sel
 
     final Building building = new Building();
 
-    public DrawBuildingAction(MapFrame mapFrame) {
+    public DrawBuildingAction() {
         super(tr("Draw buildings"), "building", tr("Draw buildings"),
                 Shortcut.registerShortcut("mapmode:buildings",
                         tr("Mode: {0}", tr("Draw buildings")),
                         KeyEvent.VK_B, Shortcut.DIRECT),
-                mapFrame, getCursor());
+                getCursor());
 
         cursorCrosshair = getCursor();
         cursorJoinNode = ImageProvider.getCursor("crosshair", "joinnode");
@@ -78,7 +79,7 @@ public class DrawBuildingAction extends MapMode implements MapViewPaintable, Sel
         try {
             return ImageProvider.getCursor("crosshair", "building");
         } catch (Exception e) {
-            Main.error(e);
+            Logging.error(e);
         }
         return Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR);
     }
@@ -93,18 +94,16 @@ public class DrawBuildingAction extends MapMode implements MapViewPaintable, Sel
             return;
         try {
             // We invoke this to prevent strange things from happening
-            EventQueue.invokeLater(new Runnable() {
-                @Override
-                public void run() {
-                    // Don't change cursor when mode has changed already
-                    if (!(Main.map.mapMode instanceof DrawBuildingAction))
-                        return;
-                    Main.map.mapView.setCursor(c);
-                }
+            EventQueue.invokeLater(() -> {
+                MapFrame map = MainApplication.getMap();
+                // Don't change cursor when mode has changed already
+                if (!(map.mapMode instanceof DrawBuildingAction))
+                    return;
+                map.mapView.setCursor(c);
             });
             currCursor = c;
         } catch (Exception e) {
-            Main.error(e);
+            Logging.error(e);
         }
     }
 
@@ -127,17 +126,18 @@ public class DrawBuildingAction extends MapMode implements MapViewPaintable, Sel
     @Override
     public void enterMode() {
         super.enterMode();
+        MapFrame map = MainApplication.getMap();
         if (getLayerManager().getEditDataSet() == null) {
-            Main.map.selectSelectTool(false);
+            map.selectSelectTool(false);
             return;
         }
-        selectedColor = new ColorProperty(marktr("selected"), selectedColor).get();
+        selectedColor = new NamedColorProperty(marktr("selected"), selectedColor).get();
         currCursor = cursorCrosshair;
-        Main.map.mapView.addMouseListener(this);
-        Main.map.mapView.addMouseMotionListener(this);
-        Main.map.mapView.addTemporaryLayer(this);
-        Main.map.keyDetector.addKeyListener(this);
-        Main.map.keyDetector.addModifierListener(this);
+        map.mapView.addMouseListener(this);
+        map.mapView.addMouseMotionListener(this);
+        map.mapView.addTemporaryLayer(this);
+        map.keyDetector.addKeyListener(this);
+        map.keyDetector.addModifierExListener(this);
         DataSet.addSelectionListener(this);
         updateSnap(getLayerManager().getEditDataSet().getSelected());
     }
@@ -145,38 +145,40 @@ public class DrawBuildingAction extends MapMode implements MapViewPaintable, Sel
     @Override
     public void exitMode() {
         super.exitMode();
-        Main.map.mapView.removeMouseListener(this);
-        Main.map.mapView.removeMouseMotionListener(this);
-        Main.map.mapView.removeTemporaryLayer(this);
-        Main.map.keyDetector.removeKeyListener(this);
-        Main.map.keyDetector.removeModifierListener(this);
+        MapFrame map = MainApplication.getMap();
+        map.mapView.removeMouseListener(this);
+        map.mapView.removeMouseMotionListener(this);
+        map.mapView.removeTemporaryLayer(this);
+        map.keyDetector.removeKeyListener(this);
+        map.keyDetector.removeModifierExListener(this);
         DataSet.removeSelectionListener(this);
         if (mode != Mode.None)
-            Main.map.mapView.repaint();
+            map.mapView.repaint();
         mode = Mode.None;
     }
 
     public final void cancelDrawing() {
         mode = Mode.None;
-        if (Main.map == null || Main.map.mapView == null)
+        MapFrame map = MainApplication.getMap();
+        if (map == null || map.mapView == null)
             return;
-        Main.map.statusLine.setHeading(-1);
-        Main.map.statusLine.setAngle(-1);
+        map.statusLine.setHeading(-1);
+        map.statusLine.setAngle(-1);
         building.reset();
-        Main.map.mapView.repaint();
+        map.mapView.repaint();
         updateStatusLine();
     }
 
     @Override
-    public void modifiersChanged(int modifiers) {
+    public void modifiersExChanged(int modifiers) {
         boolean oldCtrl = ctrl;
         boolean oldShift = shift;
-        updateKeyModifiers(modifiers);
+        updateKeyModifiersEx(modifiers);
         if (ctrl != oldCtrl || shift != oldShift) {
             processMouseEvent(null);
             updCursor();
             if (mode != Mode.None)
-                Main.map.mapView.repaint();
+                MainApplication.getMap().mapView.repaint();
         }
     }
 
@@ -199,10 +201,10 @@ public class DrawBuildingAction extends MapMode implements MapViewPaintable, Sel
         if (ctrl) {
             n = null;
         } else {
-            n = Main.map.mapView.getNearestNode(mousePos, OsmPrimitive::isUsable);
+            n = MainApplication.getMap().mapView.getNearestNode(mousePos, OsmPrimitive::isUsable);
         }
         if (n == null) {
-            return latlon2eastNorth(Main.map.mapView.getLatLon(mousePos.x, mousePos.y));
+            return latlon2eastNorth(MainApplication.getMap().mapView.getLatLon(mousePos.x, mousePos.y));
         } else {
             return latlon2eastNorth(n.getCoor());
         }
@@ -219,7 +221,7 @@ public class DrawBuildingAction extends MapMode implements MapViewPaintable, Sel
             return shift ? Mode.DrawingAngFix : Mode.None;
         } else {
             building.setPlace(p, ToolSettings.getWidth(), ToolSettings.getLenStep(), shift);
-            Main.map.statusLine.setDist(building.getLength());
+            MainApplication.getMap().statusLine.setDist(building.getLength());
             this.nextMode = ToolSettings.getWidth() == 0 ? Mode.DrawingWidth : Mode.None;
             return this.nextMode;
         }
@@ -227,7 +229,7 @@ public class DrawBuildingAction extends MapMode implements MapViewPaintable, Sel
 
     private Mode modeDrawingWidth() {
         building.setWidth(getEastNorth());
-        Main.map.statusLine.setDist(Math.abs(building.getWidth()));
+        MainApplication.getMap().statusLine.setDist(Math.abs(building.getWidth()));
         return Mode.None;
     }
 
@@ -276,9 +278,9 @@ public class DrawBuildingAction extends MapMode implements MapViewPaintable, Sel
         mousePos = e.getPoint();
         drawStartPos = mousePos;
 
-        Node n = Main.map.mapView.getNearestNode(mousePos, OsmPrimitive::isUsable);
+        Node n = MainApplication.getMap().mapView.getNearestNode(mousePos, OsmPrimitive::isUsable);
         if (n == null) {
-            building.setBase(latlon2eastNorth(Main.map.mapView.getLatLon(mousePos.x, mousePos.y)));
+            building.setBase(latlon2eastNorth(MainApplication.getMap().mapView.getLatLon(mousePos.x, mousePos.y)));
         } else {
             building.setBase(n);
         }
@@ -319,7 +321,7 @@ public class DrawBuildingAction extends MapMode implements MapViewPaintable, Sel
     public void mousePressed(MouseEvent e) {
         if (e.getButton() != MouseEvent.BUTTON1)
             return;
-        if (!Main.map.mapView.isActiveLayerDrawable())
+        if (!MainApplication.getMap().mapView.isActiveLayerDrawable())
             return;
 
         requestFocusInMapView();
@@ -333,14 +335,14 @@ public class DrawBuildingAction extends MapMode implements MapViewPaintable, Sel
         processMouseEvent(e);
         updCursor();
         if (mode != Mode.None)
-            Main.map.mapView.repaint();
+            MainApplication.getMap().mapView.repaint();
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
         if (e.getButton() != MouseEvent.BUTTON1)
             return;
-        if (!Main.map.mapView.isActiveLayerDrawable())
+        if (!MainApplication.getMap().mapView.isActiveLayerDrawable())
             return;
         boolean dragged = true;
         if (drawStartPos != null)
@@ -358,11 +360,11 @@ public class DrawBuildingAction extends MapMode implements MapViewPaintable, Sel
     private void updCursor() {
         if (mousePos == null)
             return;
-        if (!Main.isDisplayingMapView())
+        if (!MainApplication.isDisplayingMapView())
             return;
         Node n = null;
         if (!ctrl)
-            n = Main.map.mapView.getNearestNode(mousePos, OsmPrimitive::isUsable);
+            n = MainApplication.getMap().mapView.getNearestNode(mousePos, OsmPrimitive::isUsable);
         if (n != null) {
             setCursor(cursorJoinNode);
         } else {
@@ -376,12 +378,12 @@ public class DrawBuildingAction extends MapMode implements MapViewPaintable, Sel
 
     @Override
     public void mouseMoved(MouseEvent e) {
-        if (!Main.map.mapView.isActiveLayerDrawable())
+        if (!MainApplication.getMap().mapView.isActiveLayerDrawable())
             return;
         processMouseEvent(e);
         updCursor();
         if (mode != Mode.None)
-            Main.map.mapView.repaint();
+            MainApplication.getMap().mapView.repaint();
     }
 
     @Override

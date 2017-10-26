@@ -31,6 +31,7 @@ import org.openstreetmap.josm.data.osm.OsmPrimitiveType;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MapView;
 
 class Building {
@@ -160,14 +161,14 @@ class Building {
 
         updatePos();
 
-        Main.map.statusLine.setHeading(Math.toDegrees(heading));
+        MainApplication.getMap().statusLine.setHeading(Math.toDegrees(heading));
         if (this.drawingAngle != null && !ignoreConstraints) {
             double ang = Math.toDegrees(heading - this.drawingAngle);
             if (ang < 0)
                 ang += 360;
             if (ang > 360)
                 ang -= 360;
-            Main.map.statusLine.setAngle(ang);
+            MainApplication.getMap().statusLine.setAngle(ang);
         }
     }
 
@@ -178,7 +179,7 @@ class Building {
             throw new IllegalStateException("Invalid drawing mode");
         heading = drawingAngle;
         setLengthWidth(projection1(p2), projection2(p2));
-        Main.map.statusLine.setHeading(Math.toDegrees(heading));
+        MainApplication.getMap().statusLine.setHeading(Math.toDegrees(heading));
     }
 
     public void angFix(EastNorth point) {
@@ -209,7 +210,7 @@ class Building {
     }
 
     private Node findNode(EastNorth pos) {
-        DataSet ds = Main.getLayerManager().getEditDataSet();
+        DataSet ds = MainApplication.getLayerManager().getEditDataSet();
         LatLon l = eastNorth2latlon(pos);
         List<Node> nodes = ds.searchNodes(new BBox(l.lon() - 0.0000001, l.lat() - 0.0000001,
                 l.lon() + 0.0000001, l.lat() + 0.0000001));
@@ -236,7 +237,7 @@ class Building {
         bbox.add(eastNorth2latlon(en[3]));
         List<Node> nodes = new LinkedList<>();
         nodesloop:
-        for (Node n : Main.getLayerManager().getEditDataSet().searchNodes(bbox)) {
+        for (Node n : MainApplication.getLayerManager().getEditDataSet().searchNodes(bbox)) {
             if (!n.isUsable())
                 continue;
             tagcheck: do {
@@ -297,12 +298,13 @@ class Building {
             w.addNode(nodes[1]);
         }
         w.addNode(nodes[0]);
+        DataSet ds = MainApplication.getLayerManager().getEditDataSet();
         Collection<Command> cmds = new LinkedList<>();
         for (int i = 0; i < 4; i++) {
             if (created[i])
-                cmds.add(new AddCommand(nodes[i]));
+                cmds.add(new AddCommand(ds, nodes[i]));
         }
-        cmds.add(new AddCommand(w));
+        cmds.add(new AddCommand(ds, w));
 
         if (ToolSettings.PROP_USE_ADDR_NODE.get()) {
             Node addrNode = getAddressNode();

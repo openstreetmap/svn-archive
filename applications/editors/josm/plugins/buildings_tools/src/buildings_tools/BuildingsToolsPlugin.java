@@ -1,12 +1,14 @@
 // License: GPL. For details, see LICENSE file.
 package buildings_tools;
 
-import org.openstreetmap.josm.Main;
+import javax.swing.JMenu;
+
 import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.projection.Projection;
 import org.openstreetmap.josm.data.projection.Projections;
 import org.openstreetmap.josm.gui.IconToggleButton;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MainMenu;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.plugins.Plugin;
@@ -25,14 +27,15 @@ public class BuildingsToolsPlugin extends Plugin {
 
     public BuildingsToolsPlugin(PluginInformation info) {
         super(info);
-        MainMenu.add(Main.main.menu.dataMenu, new BuildingSizeAction());
-        MainMenu.add(Main.main.menu.dataMenu, new MergeAddrPointsAction());
+        JMenu dataMenu = MainApplication.getMenu().dataMenu;
+        MainMenu.add(dataMenu, new BuildingSizeAction());
+        MainMenu.add(dataMenu, new MergeAddrPointsAction());
     }
 
     @Override
     public void mapFrameInitialized(MapFrame oldFrame, MapFrame newFrame) {
         if (oldFrame == null && newFrame != null) {
-            Main.map.addMapMode(new IconToggleButton(new DrawBuildingAction(Main.map)));
+            MainApplication.getMap().addMapMode(new IconToggleButton(new DrawBuildingAction()));
         }
     }
 }

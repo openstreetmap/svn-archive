@@ -12,6 +12,7 @@ import java.util.NoSuchElementException;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.preferences.BooleanProperty;
+import org.openstreetmap.josm.tools.Logging;
 
 public final class ToolSettings {
 
@@ -60,24 +61,24 @@ public final class ToolSettings {
             values.add(entry.getKey());
             values.add(entry.getValue());
         }
-        Main.pref.putCollection("buildings_tools.tags", values);
+        Main.pref.putList("buildings_tools.tags", values);
     }
 
     private static void loadTags() {
         TAGS.clear();
-        Collection<String> values = Main.pref.getCollection("buildings_tools.tags",
-                Arrays.asList(new String[] {"building", "yes"}));
+        Collection<String> values = Main.pref.getList("buildings_tools.tags",
+                Arrays.asList("building", "yes"));
         try {
             for (Iterator<String> iterator = values.iterator(); iterator.hasNext();) {
                 TAGS.put(iterator.next(), iterator.next());
             }
         } catch (NoSuchElementException e) {
-            Main.warn(e);
+            Logging.warn(e);
         }
     }
 
     public static void setBBMode(boolean bbmode) {
-        Main.pref.put("buildings_tools.bbmode", bbmode);
+        Main.pref.putBoolean("buildings_tools.bbmode", bbmode);
     }
 
     public static boolean isBBMode() {
@@ -85,7 +86,7 @@ public final class ToolSettings {
     }
 
     public static void setSoftCursor(boolean softCursor) {
-        Main.pref.put("buildings_tools.softcursor", softCursor);
+        Main.pref.putBoolean("buildings_tools.softcursor", softCursor);
     }
 
     public static boolean isSoftCursor() {

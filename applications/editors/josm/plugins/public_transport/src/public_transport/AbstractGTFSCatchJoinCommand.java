@@ -8,11 +8,11 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.gui.MainApplication;
 
 public abstract class AbstractGTFSCatchJoinCommand extends Command {
     private List<Integer> workingLines = null;
@@ -44,7 +44,7 @@ public abstract class AbstractGTFSCatchJoinCommand extends Command {
         if (workingLines.size() != 1)
             return false;
         Node dest = null;
-        DataSet ds = Main.getLayerManager().getEditDataSet();
+        DataSet ds = MainApplication.getLayerManager().getEditDataSet();
         Iterator<Node> iter = ds.getSelectedNodes().iterator();
         int j = workingLines.get(0);
         while (iter.hasNext()) {
@@ -87,7 +87,7 @@ public abstract class AbstractGTFSCatchJoinCommand extends Command {
             return;
         int j = workingLines.get(0);
 
-        DataSet ds = Main.getLayerManager().getEditDataSet();
+        DataSet ds = MainApplication.getLayerManager().getEditDataSet();
         Node node = gtfsStopTM.nodes.elementAt(j);
         if (node != null) {
             ds.removePrimitive(node);

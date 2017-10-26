@@ -29,6 +29,7 @@ import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
+import org.openstreetmap.josm.gui.MainApplication;
 
 public class GTFSImporterAction extends JosmAction {
     private static GTFSImporterDialog dialog = null;
@@ -171,7 +172,7 @@ public class GTFSImporterAction extends JosmAction {
         if (data != null) {
             Vector<Node> existingStops = new Vector<>();
 
-            DataSet ds = Main.getLayerManager().getEditDataSet();
+            DataSet ds = MainApplication.getLayerManager().getEditDataSet();
             if (ds == null) {
                 JOptionPane.showMessageDialog(null,
                         tr("There exists no dataset. Try to download data from the server or open an OSM file."),
@@ -235,7 +236,7 @@ public class GTFSImporterAction extends JosmAction {
         node.put("highway", "bus_stop");
         node.put("stop_id", id);
         node.put("name", name);
-        DataSet ds = Main.getLayerManager().getEditDataSet();
+        DataSet ds = MainApplication.getLayerManager().getEditDataSet();
         if (ds == null) {
             JOptionPane.showMessageDialog(null,
                     tr("There exists no dataset."
@@ -268,7 +269,7 @@ public class GTFSImporterAction extends JosmAction {
 
     /** marks the table items whose nodes are marked on the map */
     public static void findNodesInTable(JTable table, Vector<Node> nodes) {
-        DataSet ds = Main.getLayerManager().getEditDataSet();
+        DataSet ds = MainApplication.getLayerManager().getEditDataSet();
         if (ds == null)
             return;
 
@@ -304,7 +305,7 @@ public class GTFSImporterAction extends JosmAction {
      */
     public static void markNodesFromTable(JTable table, Vector<Node> nodes) {
         OsmPrimitive[] osmp = {null};
-        DataSet ds = Main.getLayerManager().getEditDataSet();
+        DataSet ds = MainApplication.getLayerManager().getEditDataSet();
         ds.setSelected(osmp);
         Vector<Integer> consideredLines = getConsideredLines(table);
         for (int i = 0; i < consideredLines.size(); ++i) {

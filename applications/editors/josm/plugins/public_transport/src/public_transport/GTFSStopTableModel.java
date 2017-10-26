@@ -10,11 +10,11 @@ import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.DataSource;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
+import org.openstreetmap.josm.gui.MainApplication;
 
 public class GTFSStopTableModel extends DefaultTableModel implements TableModelListener {
     private GTFSImporterAction controller = null;
@@ -161,7 +161,7 @@ public class GTFSStopTableModel extends DefaultTableModel implements TableModelL
 
         LatLon coor = new LatLon(lat, lon);
 
-        DataSet ds = Main.getLayerManager().getEditDataSet();
+        DataSet ds = MainApplication.getLayerManager().getEditDataSet();
         if (ds != null) {
             boolean inside = false;
             Iterator<DataSource> iter = ds.getDataSources().iterator();

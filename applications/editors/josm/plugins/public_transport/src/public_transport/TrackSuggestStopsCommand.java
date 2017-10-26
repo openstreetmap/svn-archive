@@ -7,13 +7,13 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Vector;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.gpx.GpxTrackSegment;
 import org.openstreetmap.josm.data.gpx.WayPoint;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.gui.MainApplication;
 
 public class TrackSuggestStopsCommand extends Command {
     private TrackStoplistTableModel stoplistTM = null;
@@ -64,7 +64,7 @@ public class TrackSuggestStopsCommand extends Command {
             Node node = stoplistTM.nodeAt(i);
             if (node == null)
                 continue;
-            Main.getLayerManager().getEditDataSet().removePrimitive(node);
+            MainApplication.getLayerManager().getEditDataSet().removePrimitive(node);
             node.setDeleted(true);
         }
         stoplistTM.clear();
@@ -172,7 +172,7 @@ public class TrackSuggestStopsCommand extends Command {
             Node node = stoplistTM.nodeAt(i);
             if (node == null)
                 continue;
-            Main.getLayerManager().getEditDataSet().removePrimitive(node);
+            MainApplication.getLayerManager().getEditDataSet().removePrimitive(node);
             node.setDeleted(true);
         }
 
@@ -185,7 +185,7 @@ public class TrackSuggestStopsCommand extends Command {
             if (node == null)
                 continue;
             node.setDeleted(false);
-            Main.getLayerManager().getEditDataSet().addPrimitive(node);
+            MainApplication.getLayerManager().getEditDataSet().addPrimitive(node);
         }
     }
 

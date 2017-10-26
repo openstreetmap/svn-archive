@@ -7,9 +7,9 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.Vector;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.gui.MainApplication;
 
 public class PublicTransportAStar extends AStarAlgorithm {
     public PublicTransportAStar(Node start, Node end) {
@@ -86,7 +86,7 @@ public class PublicTransportAStar extends AStarAlgorithm {
         if (waysPerNode == null) {
             waysPerNode = new TreeMap<>();
 
-            Iterator<Way> iter = Main.getLayerManager().getEditDataSet().getWays().iterator();
+            Iterator<Way> iter = MainApplication.getLayerManager().getEditDataSet().getWays().iterator();
             while (iter.hasNext()) {
                 Way way = iter.next();
 

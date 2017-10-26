@@ -52,6 +52,7 @@ import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
+import org.openstreetmap.josm.gui.MainApplication;
 
 public class RoutePatternAction extends JosmAction {
 
@@ -330,7 +331,7 @@ public class RoutePatternAction extends JosmAction {
     @Override
     public void actionPerformed(ActionEvent event) {
         Frame frame = JOptionPane.getFrameForComponent(Main.parent);
-        DataSet mainDataSet = Main.getLayerManager().getEditDataSet();
+        DataSet mainDataSet = MainApplication.getLayerManager().getEditDataSet();
 
         if (jDialog == null) {
             jDialog = new JDialog(frame, tr("Route Patterns"), false);
@@ -1056,7 +1057,7 @@ public class RoutePatternAction extends JosmAction {
              * System.out.print(edge.beginIndex); System.out.print("\t"); System.out.print(edge.endIndex); System.out.print("\n"); } }
              */
         } else if ("routePattern.overviewDelete".equals(event.getActionCommand())) {
-            DeleteAction.deleteRelation(Main.getLayerManager().getEditLayer(), currentRoute);
+            DeleteAction.deleteRelation(MainApplication.getLayerManager().getEditLayer(), currentRoute);
 
             currentRoute = null;
             tabbedPane.setEnabledAt(1, false);
@@ -1103,7 +1104,7 @@ public class RoutePatternAction extends JosmAction {
             Main.map.mapView.zoomTo(box);
         } else if ("routePattern.itineraryMark".equals(event.getActionCommand())) {
             OsmPrimitive[] osmp = {null};
-            Main.getLayerManager().getEditDataSet().setSelected(osmp);
+            MainApplication.getLayerManager().getEditDataSet().setSelected(osmp);
             markedWays.clear();
             if (itineraryTable.getSelectedRowCount() > 0) {
                 for (int i = 0; i < itineraryData.getRowCount(); ++i) {
@@ -1333,7 +1334,7 @@ public class RoutePatternAction extends JosmAction {
             Main.map.mapView.zoomTo(box);
         } else if ("routePattern.stoplistMark".equals(event.getActionCommand())) {
             OsmPrimitive[] osmp = {null};
-            Main.getLayerManager().getEditDataSet().setSelected(osmp);
+            MainApplication.getLayerManager().getEditDataSet().setSelected(osmp);
             markedNodes.clear();
             if (stoplistTable.getSelectedRowCount() > 0) {
                 for (int i = 0; i < stoplistData.getRowCount(); ++i) {
@@ -1525,7 +1526,7 @@ public class RoutePatternAction extends JosmAction {
             Vector<StopReference> srm = new Vector<>();
             // Determine for each member its position on the itinerary: position means here the
             // point on the itinerary that has minimal distance to the coor
-            mainDataSet = Main.getLayerManager().getEditDataSet();
+            mainDataSet = MainApplication.getLayerManager().getEditDataSet();
             if (mainDataSet != null) {
                 String stopKey = "";
                 String stopValue = "";
@@ -1595,7 +1596,7 @@ public class RoutePatternAction extends JosmAction {
         relsListModel.clear();
         currentRoute = copy;
 
-        DataSet mainDataSet = Main.getLayerManager().getEditDataSet();
+        DataSet mainDataSet = MainApplication.getLayerManager().getEditDataSet();
         if (mainDataSet != null) {
             Vector<RouteReference> relRefs = new Vector<>();
             Collection<Relation> relCollection = mainDataSet.getRelations();

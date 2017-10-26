@@ -33,6 +33,7 @@ import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.io.GpxReader;
 import org.xml.sax.SAXException;
 
@@ -242,7 +243,7 @@ public class StopImporterAction extends JosmAction {
         Node node = new Node(latLon);
         setTagsWrtType(node, type);
         node.put("name", name);
-        DataSet ds = Main.getLayerManager().getEditDataSet();
+        DataSet ds = MainApplication.getLayerManager().getEditDataSet();
         if (ds == null) {
             JOptionPane.showMessageDialog(null,
                     tr("There exists no dataset."
@@ -291,7 +292,7 @@ public class StopImporterAction extends JosmAction {
 
     /** marks the table items whose nodes are marked on the map */
     public static void findNodesInTable(JTable table, Vector<Node> nodes) {
-        DataSet ds = Main.getLayerManager().getEditDataSet();
+        DataSet ds = MainApplication.getLayerManager().getEditDataSet();
         if (ds == null)
             return;
 
@@ -325,7 +326,7 @@ public class StopImporterAction extends JosmAction {
      */
     public static void markNodesFromTable(JTable table, Vector<Node> nodes) {
         OsmPrimitive[] osmp = {null};
-        DataSet ds = Main.getLayerManager().getEditDataSet();
+        DataSet ds = MainApplication.getLayerManager().getEditDataSet();
         ds.setSelected(osmp);
         Vector<Integer> consideredLines = getConsideredLines(table);
         for (int i = 0; i < consideredLines.size(); ++i) {

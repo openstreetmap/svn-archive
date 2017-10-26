@@ -6,10 +6,10 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 import java.util.Collection;
 import java.util.Vector;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.gui.MainApplication;
 
 public class GTFSAddCommand extends Command {
     private Vector<Integer> workingLines = null;
@@ -69,7 +69,7 @@ public class GTFSAddCommand extends Command {
             gtfsStopTM.setValueAt(typesForUndo.elementAt(i), j, 2);
             if (node == null)
                 continue;
-            Main.getLayerManager().getEditDataSet().removePrimitive(node);
+            MainApplication.getLayerManager().getEditDataSet().removePrimitive(node);
             node.setDeleted(true);
         }
     }

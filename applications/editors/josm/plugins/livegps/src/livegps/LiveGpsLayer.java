@@ -13,11 +13,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.gpx.GpxData;
 import org.openstreetmap.josm.data.gpx.GpxTrack;
 import org.openstreetmap.josm.data.gpx.WayPoint;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.layer.GpxLayer;
 
 public class LiveGpsLayer extends GpxLayer implements PropertyChangeListener {
@@ -79,19 +79,19 @@ public class LiveGpsLayer extends GpxLayer implements PropertyChangeListener {
 
     public void center() {
         if (lastPoint != null)
-            Main.map.mapView.zoomTo(lastPoint.getCoor());
+            MainApplication.getMap().mapView.zoomTo(lastPoint.getCoor());
     }
 
     public void conditionalCenter(LatLon Pos) {
-        Point2D P = Main.map.mapView.getPoint2D(Pos);
-        Rectangle rv = Main.map.mapView.getBounds(null);
+        Point2D P = MainApplication.getMap().mapView.getPoint2D(Pos);
+        Rectangle rv = MainApplication.getMap().mapView.getBounds(null);
         Date date = new Date();
         long current = date.getTime();
 
         rv.grow(-(int) (rv.getHeight() * centerFactor), -(int) (rv.getWidth() * centerFactor));
 
         if (!rv.contains(P) || (centerInterval > 0 && current - lastCenter >= centerInterval)) {
-            Main.map.mapView.zoomTo(Pos);
+            MainApplication.getMap().mapView.zoomTo(Pos);
             lastCenter = current;
         }
     }
@@ -110,7 +110,7 @@ public class LiveGpsLayer extends GpxLayer implements PropertyChangeListener {
             if (lastData.isFix()) {
                 setCurrentPosition(lastData.getLatitude(), lastData.getLongitude());
                 if (allowRedraw())
-                    Main.map.repaint();
+                    MainApplication.getMap().repaint();
             }
         }
     }
@@ -138,20 +138,20 @@ public class LiveGpsLayer extends GpxLayer implements PropertyChangeListener {
      * exists, it will be initialized here.
      */
     private void initIntervals() {
-        if ((refreshInterval = Main.pref.getInteger(oldC_REFRESH_INTERVAL, 0)) != 0) {
+        if ((refreshInterval = Main.pref.getInt(oldC_REFRESH_INTERVAL, 0)) != 0) {
             refreshInterval *= 1000;
             Main.pref.put(oldC_REFRESH_INTERVAL, null);
         } else
-            refreshInterval = Main.pref.getInteger(C_REFRESH_INTERVAL, DEFAULT_REFRESH_INTERVAL);
+            refreshInterval = Main.pref.getInt(C_REFRESH_INTERVAL, DEFAULT_REFRESH_INTERVAL);
 
-        centerInterval = Main.pref.getInteger(C_CENTER_INTERVAL, DEFAULT_CENTER_INTERVAL);
-        centerFactor = Main.pref.getInteger(C_CENTER_FACTOR, DEFAULT_CENTER_FACTOR);
+        centerInterval = Main.pref.getInt(C_CENTER_INTERVAL, DEFAULT_CENTER_INTERVAL);
+        centerFactor = Main.pref.getInt(C_CENTER_FACTOR, DEFAULT_CENTER_FACTOR);
         if (centerFactor <= 1 || centerFactor >= 99)
             centerFactor = DEFAULT_CENTER_FACTOR;
 
-            Main.pref.putInteger(C_REFRESH_INTERVAL, refreshInterval);
-            Main.pref.putInteger(C_CENTER_INTERVAL, centerInterval);
-        Main.pref.putInteger(C_CENTER_FACTOR, (int) centerFactor);
+            Main.pref.putInt(C_REFRESH_INTERVAL, refreshInterval);
+            Main.pref.putInt(C_CENTER_INTERVAL, centerInterval);
+        Main.pref.putInt(C_CENTER_FACTOR, (int) centerFactor);
 
         /*
          * Do one time conversion of factor: user value means "how big is inner rectangle

@@ -12,9 +12,9 @@ import java.util.List;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenu;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.data.gpx.GpxData;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MainMenu;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.gui.layer.Layer;
@@ -109,13 +109,13 @@ public class LiveGpsPlugin extends Plugin implements LayerChangeListener {
 
         enableTracking(false);
         lgpscapture.setSelected(false);
-        Main.getLayerManager().removeLayerChangeListener(this);
+        MainApplication.getLayerManager().removeLayerChangeListener(this);
         lgpslayer = null;
     }
 
     public LiveGpsPlugin(PluginInformation info) {
         super(info);
-        MainMenu menu = Main.main.menu;
+        MainMenu menu = MainApplication.getMenu();
         lgpsmenu = menu.gpsMenu;
         if (lgpsmenu.getItemCount() > 0) {
             lgpsmenu.addSeparator();
@@ -172,8 +172,8 @@ public class LiveGpsPlugin extends Plugin implements LayerChangeListener {
 
             if (lgpslayer == null) {
                 lgpslayer = new LiveGpsLayer(data);
-                Main.getLayerManager().addLayer(lgpslayer);
-                Main.getLayerManager().addLayerChangeListener(this);
+                MainApplication.getLayerManager().addLayer(lgpslayer);
+                MainApplication.getLayerManager().addLayerChangeListener(this);
                 lgpslayer.setAutoCenter(isAutoCenter());
             }
 

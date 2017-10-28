@@ -1,8 +1,6 @@
 // License: Public Domain. For details, see LICENSE file.
 package livegps;
 
-import static org.openstreetmap.josm.tools.I18n.tr;
-
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
@@ -10,9 +8,8 @@ import java.awt.Point;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.gpx.WayPoint;
 import org.openstreetmap.josm.data.preferences.CachingProperty;
-import org.openstreetmap.josm.data.preferences.ColorProperty;
+import org.openstreetmap.josm.data.preferences.NamedColorProperty;
 import org.openstreetmap.josm.gui.MapView;
-import org.openstreetmap.josm.gui.layer.GpxLayer;
 import org.openstreetmap.josm.gui.layer.MapViewGraphics;
 import org.openstreetmap.josm.gui.layer.gpx.GpxDrawHelper;
 
@@ -23,9 +20,9 @@ public class LiveGpsDrawHelper extends GpxDrawHelper {
     public static final String C_LIVEGPS_COLOR_POSITION_ESTIMATE = "color.livegps.position_estimate";
 
     private static final CachingProperty<Color> COLOR_POSITION =
-            new ColorProperty(C_LIVEGPS_COLOR_POSITION, Color.RED).cached();
+            new NamedColorProperty(C_LIVEGPS_COLOR_POSITION, Color.RED).cached();
     private static final CachingProperty<Color> COLOR_POSITION_ESTIMATE =
-            new ColorProperty(C_LIVEGPS_COLOR_POSITION_ESTIMATE, Color.CYAN).cached();
+            new NamedColorProperty(C_LIVEGPS_COLOR_POSITION_ESTIMATE, Color.CYAN).cached();
 
     private static final String C_CURSOR_H = "livegps.cursor_height"; /* in pixels */
     private static final String C_CURSOR_W = "livegps.cursor_width"; /* in pixels */
@@ -50,9 +47,9 @@ public class LiveGpsDrawHelper extends GpxDrawHelper {
 
         Point screen = mv.getPoint(lastPoint.getCoor());
 
-        int TriaHeight = Main.pref.getInteger(C_CURSOR_H, 20);
-        int TriaWidth = Main.pref.getInteger(C_CURSOR_W, 10);
-        int TriaThick = Main.pref.getInteger(C_CURSOR_T, 4);
+        int TriaHeight = Main.pref.getInt(C_CURSOR_H, 20);
+        int TriaWidth = Main.pref.getInt(C_CURSOR_W, 10);
+        int TriaThick = Main.pref.getInt(C_CURSOR_T, 4);
 
         /*
          * Draw a bold triangle.

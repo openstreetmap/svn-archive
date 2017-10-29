@@ -71,7 +71,7 @@ public final class URLList {
 
     public static List<String> loadURLList() {
         ArrayList<String> items = new ArrayList<>();
-        File f = new File(UtilsPlugin2.getInstance().getPluginDir(), "customurl.txt");
+        File f = new File(UtilsPlugin2.getInstance().getPluginDirs().getUserDataDirectory(false), "customurl.txt");
         try (BufferedReader fr = Files.newBufferedReader(f.toPath(), StandardCharsets.UTF_8)) {
             String s;
             while ((s = fr.readLine()) != null) {
@@ -84,7 +84,7 @@ public final class URLList {
     }
 
     public static void saveURLList(List<String> items) {
-        File f = new File(UtilsPlugin2.getInstance().getPluginDir(), "customurl.txt");
+        File f = new File(UtilsPlugin2.getInstance().getPluginDirs().getUserDataDirectory(false), "customurl.txt");
         PrintWriter fw = null;
         try {
             f.getParentFile().mkdirs();

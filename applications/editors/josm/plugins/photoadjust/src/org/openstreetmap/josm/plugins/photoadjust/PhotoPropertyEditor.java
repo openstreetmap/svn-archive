@@ -23,7 +23,10 @@ import javax.swing.event.DocumentListener;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.data.coor.LatLon;
+import org.openstreetmap.josm.data.coor.conversion.CoordinateFormatManager;
+import org.openstreetmap.josm.data.coor.conversion.LatLonParser;
 import org.openstreetmap.josm.gui.ExtendedDialog;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MainMenu;
 import org.openstreetmap.josm.gui.dialogs.LatLonDialog;
 import org.openstreetmap.josm.gui.layer.geoimage.GeoImageLayer;
@@ -39,7 +42,7 @@ import org.openstreetmap.josm.tools.ImageProvider;
 public class PhotoPropertyEditor {
 
     public PhotoPropertyEditor() {
-        MainMenu.add(Main.main.menu.editMenu, new PropertyEditorAction());
+        MainMenu.add(MainApplication.getMenu().editMenu, new PropertyEditorAction());
     }
 
     /**
@@ -87,7 +90,17 @@ public class PhotoPropertyEditor {
                     new PropertyEditorDialog(title.toString(), photo, layer);
                 if (dialog.getValue() == 1) {
                     dialog.updateImageTmp();
+                    // FIXME: Remove next line, see below.
+                    boolean isNewGpsData = photo.getTmp().hasNewGpsData();
+                    // There are cases where isNewGpsData is not set but there
+                    // is still new data, e.g. if the EXIF data was re-read
+                    // from the image file.
                     photo.applyTmp();
+                    // FIXME: Remove the next lines once the patch in ticket
+                    // #15502 is active.
+                    if (isNewGpsData) {
+                        photo.flagNewGpsData();
+                    }
                 } else {
                     photo.discardTmp();
                 }
@@ -134,6 +147,8 @@ public class PhotoPropertyEditor {
         // Image that is to be updated.
         private final ImageEntry image;
         private final GeoImageLayer layer;
+        // Image as it was when the dialog was opened.
+        private final ImageEntry imgOrig;
         private static final Color BG_COLOR_ERROR = new Color(255, 224, 224);
 
         public PropertyEditorDialog(String title, final ImageEntry image,
@@ -141,6 +156,7 @@ public class PhotoPropertyEditor {
             super(Main.parent, title, new String[] {tr("Ok"), tr("Cancel")});
             this.image = image;
             this.layer = layer;
+            imgOrig = image.clone();
             setButtonIcons(new String[] {"ok", "cancel"});
             final JPanel content = new JPanel(new GridBagLayout());
             //content.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
@@ -173,15 +189,15 @@ public class PhotoPropertyEditor {
             content.add(coords, GBC.std().fill(GBC.HORIZONTAL));
             Action editCoordAction = new AbstractAction(tr("Edit")) {
                 @Override public void actionPerformed(ActionEvent evt) {
-                    final LatLonDialog dialog 
+                    final LatLonDialog llDialog 
                         = new LatLonDialog(Main.parent,
                                            tr("Edit Image Coordinates"), null);
-                    dialog.setCoordinates(getLatLon());
-                    dialog.showDialog();
-                    if (dialog.getValue() == 1) {
-                        LatLon coordinates = dialog.getCoordinates();
+                    llDialog.setCoordinates(getLatLon());
+                    llDialog.showDialog();
+                    if (llDialog.getValue() == 1) {
+                        final LatLon coordinates = llDialog.getCoordinates();
                         if (coordinates != null) {
-                            coords.setText(coordinates.toStringCSV(" "));
+                            coords.setText(posToText(coordinates));
                         }
                     }
                 }
@@ -301,6 +317,21 @@ public class PhotoPropertyEditor {
             setInitialValues(image);
         }
 
+        /**
+         * Convert an image position into a display string.
+         *
+         * @param pos Coordinates of image position.
+         * @return Image position as text.
+         */
+        private String posToText(LatLon pos) {
+            // See josm.gui.dialogs.LatLonDialog.setCoordinates().
+            String posStr =
+                pos == null ? "" :
+                CoordinateFormatManager.getDefaultFormat().latToString(pos) +
+                ' ' +
+                CoordinateFormatManager.getDefaultFormat().lonToString(pos);
+            return posStr;
+        }
 
         /**
          * Initialize the dialog with image data.  The image can be specified.
@@ -310,7 +341,7 @@ public class PhotoPropertyEditor {
         private void setInitialValues(ImageEntry image) {
             if (image.getPos() != null) {
                 //coords.setText(image.getPos().toDisplayString());
-                coords.setText(image.getPos().toStringCSV(" "));
+                coords.setText(posToText(image.getPos()));
             } else {
                 coords.setText(null);
             }
@@ -381,17 +412,28 @@ public class PhotoPropertyEditor {
          */
         public void updateImageTmp() {
             ImageEntry imgTmp = image.getTmp();
+
             String text = coords.getText();
+            // The position of imgTmp is set in any case because it was
+            // modified while the dialog was open.
             if (text == null || text.isEmpty()) {
-                if (imgTmp.getPos() != null) {
+                imgTmp.setPos(null);
+                if (imgOrig.getPos() != null) {
                     imgTmp.flagNewGpsData();
-                    imgTmp.setPos(null);
                 }
             } else {
-                if ( imgTmp.getPos() == null
-                     || !text.equals(imgTmp.getPos().toStringCSV(" "))) {
+                // Coordinates field is not empty.
+                imgTmp.setPos(getLatLon());
+                // Flag new GPS data if the temporary image is at a different
+                // position as the original image.  It doesn't work to compare
+                // against the coords text field as that might contain data
+                // (e.g. trailing zeros) that do not change the value.  It
+                // doesn't work to compare imgTmp.getPos() with getLatLon()
+                // because the dialog will round the initial position.
+                if ( imgOrig.getPos() == null
+                     || !posToText(imgOrig.getPos()).equals(posToText(imgTmp.getPos()))
+                     ) {
                     imgTmp.flagNewGpsData();
-                    imgTmp.setPos(getLatLon());
                 }
             }
 
@@ -430,7 +472,7 @@ public class PhotoPropertyEditor {
         private LatLon getLatLon() {
             LatLon latLon;
             try {
-                latLon = LatLon.parse(coords.getText());
+                latLon = LatLonParser.parse(coords.getText());
                 if (!latLon.isValid()) {
                     latLon = null;
                 }
@@ -452,7 +494,7 @@ public class PhotoPropertyEditor {
             LatLon latLon;
             final String coordsText = coords.getText();
             try {
-                latLon = LatLon.parse(coordsText);
+                latLon = LatLonParser.parse(coordsText);
             } catch (IllegalArgumentException exn) {
                 latLon = null;
             }

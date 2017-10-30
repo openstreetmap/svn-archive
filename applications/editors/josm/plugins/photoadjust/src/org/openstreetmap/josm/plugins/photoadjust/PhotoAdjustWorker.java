@@ -5,8 +5,8 @@ import java.awt.event.MouseEvent;
 import java.awt.geom.Point2D;
 import java.util.List;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.coor.LatLon;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.layer.geoimage.GeoImageLayer;
 import org.openstreetmap.josm.gui.layer.geoimage.ImageEntry;
 import org.openstreetmap.josm.gui.layer.geoimage.ImageViewerDialog;
@@ -138,6 +138,10 @@ public class PhotoAdjustWorker {
      */
     public void doMouseReleased(MouseEvent evt) {
         restoreCenterView();
+        //if (dragLayer != null && dragPhoto != null) {
+        //    // Re-display the photo to update the OSD.
+        //    ImageViewerDialog.showImage(dragLayer, dragPhoto);
+        //}
     }
 
     /**
@@ -165,7 +169,7 @@ public class PhotoAdjustWorker {
      * @param evt Mouse event from one of the mouse adapters.
      */
     private void setDragOffset(ImageEntry photo, MouseEvent evt) {
-        final Point2D centerPoint = Main.map.mapView.getPoint2D(photo.getPos());
+        final Point2D centerPoint = MainApplication.getMap().mapView.getPoint2D(photo.getPos());
         dragOffset = new Point2D.Double(centerPoint.getX() - evt.getX(),
                                         centerPoint.getY() - evt.getY());
     }
@@ -181,18 +185,19 @@ public class PhotoAdjustWorker {
                            MouseEvent evt) {
         LatLon newPos;
         if (dragOffset != null) {
-            newPos = Main.map.mapView.getLatLon(dragOffset.getX() + evt.getX(),
-                                                dragOffset.getY() + evt.getY());
+            newPos = MainApplication.getMap().mapView.getLatLon(
+                dragOffset.getX() + evt.getX(),
+                dragOffset.getY() + evt.getY());
         }
         else {
-            newPos = Main.map.mapView.getLatLon(evt.getX(), evt.getY());
+            newPos = MainApplication.getMap().mapView.getLatLon(evt.getX(), evt.getY());
         }
         photo.setPos(newPos);
         photo.flagNewGpsData();
         layer.updateBufferAndRepaint();
-        // Need to re-display the photo because the OSD data might change (new
-        // coordinates).
-        ImageViewerDialog.showImage(layer, photo);
+        // Re-display the photo because the OSD data might change (new
+        // coordinates).  Or do that in doMouseReleased().
+        //ImageViewerDialog.showImage(layer, photo);
     }
 
     /**
@@ -209,9 +214,9 @@ public class PhotoAdjustWorker {
             // Direction cannot be set if image doesn't have a position.
             return;
         }
-        final LatLon mouseLL = Main.map.mapView.getLatLon(evt.getX(), evt.getY());
+        final LatLon mouseLL = MainApplication.getMap().mapView.getLatLon(evt.getX(), evt.getY());
         // The projection doesn't matter here.
-        double direction = 360.0 - photoLL.heading(mouseLL) * 360.0 / 2.0 / Math.PI;
+        double direction = photoLL.bearing(mouseLL) * 360.0 / 2.0 / Math.PI;
         if (direction < 0.0) {
             direction += 360.0;
         } else if (direction >= 360.0) {

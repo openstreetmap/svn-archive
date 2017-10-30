@@ -10,7 +10,7 @@ import java.util.List;
 import javax.swing.AbstractAction;
 import javax.swing.JMenuItem;
 
-import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.dialogs.LayerListDialog;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.gui.layer.Layer.LayerAction;
@@ -52,9 +52,10 @@ public class UntaggedGeoImageLayerAction
                     layer.removePhotoByIdx(idx);
                 }
             }
-            Main.getLayerManager().addLayer(new GeoImageLayer(untagged, layer.getGpxLayer(),
-                                                 tr("Untagged Images"),
-                                                 layer.isUseThumbs()));
+            MainApplication.getLayerManager()
+                .addLayer(new GeoImageLayer(untagged, layer.getGpxLayer(),
+                                            tr("Untagged Images"),
+                                            layer.isUseThumbs()));
         }
     }
 

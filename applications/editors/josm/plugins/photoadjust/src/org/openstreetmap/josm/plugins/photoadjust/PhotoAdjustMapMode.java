@@ -11,15 +11,16 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.mapmode.MapMode;
 import org.openstreetmap.josm.gui.IconToggleButton;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.gui.layer.LayerManager.LayerAddEvent;
 import org.openstreetmap.josm.gui.layer.LayerManager.LayerChangeListener;
 import org.openstreetmap.josm.gui.layer.LayerManager.LayerOrderChangeEvent;
 import org.openstreetmap.josm.gui.layer.LayerManager.LayerRemoveEvent;
+import org.openstreetmap.josm.gui.layer.MainLayerManager;
 import org.openstreetmap.josm.gui.layer.MainLayerManager.ActiveLayerChangeEvent;
 import org.openstreetmap.josm.gui.layer.MainLayerManager.ActiveLayerChangeListener;
 import org.openstreetmap.josm.gui.layer.geoimage.GeoImageLayer;
@@ -56,8 +57,8 @@ public class PhotoAdjustMapMode extends MapMode implements LayerChangeListener, 
         GeoImageLayer.registerSupportedMapMode(this);
         initAdapters();
         this.worker = worker;
-        Main.getLayerManager().addLayerChangeListener(this);
-        Main.getLayerManager().addActiveLayerChangeListener(this);
+        MainApplication.getLayerManager().addLayerChangeListener(this);
+        MainApplication.getLayerManager().addActiveLayerChangeListener(this);
     }
 
     /**
@@ -114,8 +115,8 @@ public class PhotoAdjustMapMode extends MapMode implements LayerChangeListener, 
      */
     private void activateMode() {
         if (modeSelected && !modeActive) {
-            Main.map.mapView.addMouseListener(mouseAdapter);
-            Main.map.mapView.addMouseMotionListener(mouseMotionAdapter);
+            MainApplication.getMap().mapView.addMouseListener(mouseAdapter);
+            MainApplication.getMap().mapView.addMouseMotionListener(mouseMotionAdapter);
             modeActive = true;
             updateStatusLine();
         }
@@ -126,8 +127,8 @@ public class PhotoAdjustMapMode extends MapMode implements LayerChangeListener, 
      */
     private void deactivateMode() {
         if (modeActive) {
-            Main.map.mapView.removeMouseListener(mouseAdapter);
-            Main.map.mapView.removeMouseMotionListener(mouseMotionAdapter);
+            MainApplication.getMap().mapView.removeMouseListener(mouseAdapter);
+            MainApplication.getMap().mapView.removeMouseMotionListener(mouseMotionAdapter);
             modeActive = false;
         }
     }
@@ -138,7 +139,7 @@ public class PhotoAdjustMapMode extends MapMode implements LayerChangeListener, 
         modeSelected = true;
         // Activate the mode only if the current layer is not a GeoImageLayer.
         // GeoImageLayer's are handled by the plug-in directly.
-        if (!(Main.getLayerManager().getActiveLayer() instanceof GeoImageLayer)) {
+        if (!(MainApplication.getLayerManager().getActiveLayer() instanceof GeoImageLayer)) {
             activateMode();
         }
     }
@@ -153,7 +154,7 @@ public class PhotoAdjustMapMode extends MapMode implements LayerChangeListener, 
     @Override
     public void activeOrEditLayerChanged(ActiveLayerChangeEvent e) {
         // The main part of the plugin takes care of all operations if a GeoImageLayer is active.
-        if (Main.getLayerManager().getActiveLayer() instanceof GeoImageLayer) {
+        if (MainApplication.getLayerManager().getActiveLayer() instanceof GeoImageLayer) {
             deactivateMode();
         } else {
             activateMode();
@@ -218,8 +219,9 @@ public class PhotoAdjustMapMode extends MapMode implements LayerChangeListener, 
      * @return {@code true} if there is at least one geo image layer
      */
     private boolean hasLayersToAdjust() {
-        if (Main.map == null || Main.map.mapView == null) return false;
-        int giLayerNum = Main.getLayerManager().getLayersOfType(GeoImageLayer.class).size();
+        final MainLayerManager layerManager = MainApplication.getLayerManager();
+        if (layerManager == null) return false;
+        int giLayerNum = layerManager.getLayersOfType(GeoImageLayer.class).size();
         if (ignoreOneGILayer) {
             giLayerNum--;
         }
@@ -232,7 +234,7 @@ public class PhotoAdjustMapMode extends MapMode implements LayerChangeListener, 
      * @return list of visible GeoImageLayer's
      */
     private List<GeoImageLayer> getVisibleGeoImageLayers() {
-        List<GeoImageLayer> all = new ArrayList<>(Main.getLayerManager().getLayersOfType(GeoImageLayer.class));
+        List<GeoImageLayer> all = new ArrayList<>(MainApplication.getLayerManager().getLayersOfType(GeoImageLayer.class));
         Iterator<GeoImageLayer> it = all.iterator();
         while (it.hasNext()) {
             if (!it.next().isVisible()) it.remove();
@@ -244,8 +246,8 @@ public class PhotoAdjustMapMode extends MapMode implements LayerChangeListener, 
     @Override 
     public void destroy() { 
         super.destroy(); 
-        Main.getLayerManager().removeActiveLayerChangeListener(this);
-        Main.getLayerManager().removeLayerChangeListener(this);
+        MainApplication.getLayerManager().removeActiveLayerChangeListener(this);
+        MainApplication.getLayerManager().removeLayerChangeListener(this);
     } 
 
 }

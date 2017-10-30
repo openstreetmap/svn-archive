@@ -6,7 +6,7 @@ import java.awt.event.MouseMotionAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.gui.layer.MainLayerManager.ActiveLayerChangeEvent;
@@ -76,11 +76,11 @@ public class PhotoAdjustPlugin extends Plugin implements ActiveLayerChangeListen
     @Override
     public void mapFrameInitialized(MapFrame oldFrame, MapFrame newFrame) {
         if (oldFrame == null && newFrame != null) {
-            Main.getLayerManager().addAndFireActiveLayerChangeListener(this);
+            MainApplication.getLayerManager().addAndFireActiveLayerChangeListener(this);
             PhotoAdjustMapMode adjustMode = new PhotoAdjustMapMode(worker);
             adjustMode.installMapMode(newFrame);
         } else {
-            Main.getLayerManager().removeActiveLayerChangeListener(this);
+            MainApplication.getLayerManager().removeActiveLayerChangeListener(this);
         }
     }
 
@@ -88,21 +88,21 @@ public class PhotoAdjustPlugin extends Plugin implements ActiveLayerChangeListen
     public void activeOrEditLayerChanged(ActiveLayerChangeEvent e) {
         worker.reset();
         Layer oldLayer = e.getPreviousActiveLayer();
-        Layer newLayer = Main.getLayerManager().getActiveLayer();
+        Layer newLayer = MainApplication.getLayerManager().getActiveLayer();
         if ( oldLayer instanceof GeoImageLayer
              && newLayer instanceof GeoImageLayer) {
             imageLayer = (GeoImageLayer)newLayer;
         }
         else {
             if (oldLayer instanceof GeoImageLayer) {
-                Main.map.mapView.removeMouseListener(mouseAdapter);
-                Main.map.mapView.removeMouseMotionListener(mouseMotionAdapter);
+                MainApplication.getMap().mapView.removeMouseListener(mouseAdapter);
+                MainApplication.getMap().mapView.removeMouseMotionListener(mouseMotionAdapter);
                 imageLayer = null;
             }
             if (newLayer instanceof GeoImageLayer) {
                 imageLayer = (GeoImageLayer)newLayer;
-                Main.map.mapView.addMouseListener(mouseAdapter);
-                Main.map.mapView.addMouseMotionListener(mouseMotionAdapter);
+                MainApplication.getMap().mapView.addMouseListener(mouseAdapter);
+                MainApplication.getMap().mapView.addMouseMotionListener(mouseMotionAdapter);
             }
         }
     }

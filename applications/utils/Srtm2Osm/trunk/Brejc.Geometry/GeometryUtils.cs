@@ -49,13 +49,14 @@ namespace Brejc.Geometry
         /// Returns a string representation of a specified angle value.
         /// </summary>
         /// <param name="angle">The angle value.</param>
-        /// <param name="shortenIfPossible">if set to <c>true</c>, the method will not display mintes and seconds
+        /// <param name="shortenIfPossible">if set to <c>true</c>, the method will not display minutes and seconds
         /// if they are equal to zero.</param>
         /// <returns>A string representation of a specified angle value.</returns>
         static public string FormatAngle (double angle, bool shortenIfPossible)
         {
+            IFormatProvider provider = System.Globalization.CultureInfo.InvariantCulture;
             StringBuilder builder = new StringBuilder ();
-            builder.AppendFormat ("{0}\u00b0", (int)angle);
+            builder.AppendFormat (provider, "{0}\u00b0", (int)angle);
 
             angle = Math.Abs (angle);
 
@@ -63,10 +64,10 @@ namespace Brejc.Geometry
             int seconds = (int)Math.Round ((angle * 3600) % 60);
 
             if (minutes != 0 || seconds != 0 || false == shortenIfPossible)
-                builder.AppendFormat ("{0:00}'", minutes);
+                builder.AppendFormat (provider, "{0:00}'", minutes);
 
             if (seconds != 0 || false == shortenIfPossible)
-                builder.AppendFormat ("{0:00}\"", seconds);
+                builder.AppendFormat (provider, "{0:00}\"", seconds);
 
             return builder.ToString ();
         }

@@ -17,6 +17,7 @@ import org.junit.Test;
 import org.openstreetmap.josm.TestUtils;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.plugins.elevation.HgtReader;
+import org.openstreetmap.josm.spi.preferences.Config;
 import org.openstreetmap.josm.testutils.JOSMTestRules;
 
 public class HgtReaderTest {
@@ -32,7 +33,8 @@ public class HgtReaderTest {
     public void setUp() throws IOException {
         // Install SRTM files to plugin directory
         try (DirectoryStream<Path> stream = Files.newDirectoryStream(Paths.get(TestUtils.getTestDataRoot()), "*.hgt")) {
-            Path dir = Paths.get(System.getProperty("josm.home")).resolve("elevation");
+            Path dir = Config.getDirs().getUserDataDirectory(true).toPath().resolve("elevation");
+
             if (!Files.exists(dir)) {
                 Files.createDirectory(dir);
             }

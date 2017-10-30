@@ -66,6 +66,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AsyncOperationCallback.cs" />
+    <Compile Include="Compatibility\SecurityProtocolTypeExtensions.cs" />
+    <Compile Include="Compatibility\SslProtocolsExtensions.cs" />
     <Compile Include="Console\ConsoleApplicationBase.cs" />
     <Compile Include="Console\ConsoleApplicationOption.cs" />
     <Compile Include="Console\IConsoleApplicationCommand.cs" />

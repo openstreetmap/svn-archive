@@ -22,6 +22,7 @@ import javax.swing.JOptionPane;
 import org.apache.commons.jcs.access.CacheAccess;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.cache.BufferedImageCacheEntry;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.Notification;
 import org.openstreetmap.josm.gui.PleaseWaitRunnable;
 import org.openstreetmap.josm.gui.dialogs.LayerListDialog;
@@ -254,7 +255,7 @@ public abstract class AbstractImageryCacheExportAction
             new ExportImageryTask(exportPath, cache, cacheName,
                                   cacheKeyPrefix, keySet, objects);
         if (task != null) {
-            Main.worker.submit(task);
+            MainApplication.worker.submit(task);
         }
     }
  

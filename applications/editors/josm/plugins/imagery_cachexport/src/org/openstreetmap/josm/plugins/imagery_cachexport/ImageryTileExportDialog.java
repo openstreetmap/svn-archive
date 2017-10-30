@@ -19,6 +19,7 @@ import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.cache.BufferedImageCacheEntry;
 import org.openstreetmap.josm.gui.ExtendedDialog;
 import org.openstreetmap.josm.gui.widgets.JosmTextField;
+import org.openstreetmap.josm.spi.preferences.Config;
 import org.openstreetmap.josm.tools.GBC;
 
 /**
@@ -54,7 +55,7 @@ public class ImageryTileExportDialog extends ExtendedDialog {
 
         exportDir.setHint(tr("file system path"));
         exportDir.setToolTipText(tr("File system path the tiles are exported to."));
-        exportDir.setText(Main.pref.get(EXPORT_DIR_PNAME, null));
+        exportDir.setText(Config.getPref().get(EXPORT_DIR_PNAME, null));
         exportDir.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void changedUpdate(DocumentEvent e) {
@@ -74,7 +75,7 @@ public class ImageryTileExportDialog extends ExtendedDialog {
         content.add(exportDir, GBC.eol().fill(GBC.HORIZONTAL));
 
         appendName.setToolTipText(tr("Append cache name to export directory."));
-        appendName.setSelected(Main.pref.getBoolean(APPEND_NAME_PNAME));
+        appendName.setSelected(Config.getPref().getBoolean(APPEND_NAME_PNAME));
         ChangeListener appendNameChangeListener = new ChangeListener() {
             @Override
             public void stateChanged(ChangeEvent changeEvent) {
@@ -212,7 +213,7 @@ public class ImageryTileExportDialog extends ExtendedDialog {
      * Store the entered information in the JOSM preferences.
      */
     public void storePrefs() {
-        Main.pref.put(EXPORT_DIR_PNAME, exportDir.getText());
-        Main.pref.put(APPEND_NAME_PNAME, appendName.isSelected());
+        Config.getPref().put(EXPORT_DIR_PNAME, exportDir.getText());
+        Config.getPref().putBoolean(APPEND_NAME_PNAME, appendName.isSelected());
     }
 }

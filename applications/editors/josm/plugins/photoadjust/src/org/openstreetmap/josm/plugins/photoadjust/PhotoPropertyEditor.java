@@ -90,17 +90,10 @@ public class PhotoPropertyEditor {
                     new PropertyEditorDialog(title.toString(), photo, layer);
                 if (dialog.getValue() == 1) {
                     dialog.updateImageTmp();
-                    // FIXME: Remove next line, see below.
-                    boolean isNewGpsData = photo.getTmp().hasNewGpsData();
                     // There are cases where isNewGpsData is not set but there
                     // is still new data, e.g. if the EXIF data was re-read
                     // from the image file.
                     photo.applyTmp();
-                    // FIXME: Remove the next lines once the patch in ticket
-                    // #15502 is active.
-                    if (isNewGpsData) {
-                        photo.flagNewGpsData();
-                    }
                 } else {
                     photo.discardTmp();
                 }

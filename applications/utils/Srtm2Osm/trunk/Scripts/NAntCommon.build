@@ -451,6 +451,16 @@
                     </exec>
                 </if>
             </if>
+            <if test="${NetTargetFw == 'net-4.0'}">
+                <if test="${BuildEngine == 'MSBuild'}">
+                    <exec program="C:\Windows\Microsoft.NET\Framework\v4.0.30319\msbuild.exe" verbose="true">
+                        <arg value="${ProjectId}.sln"/>
+                        <arg value="/p:Configuration=${ProjectConfig}"/>
+                        <arg value="/consoleloggerparameters:NoSummary"/>
+                    </exec>
+                </if>
+            </if>
+
         </if>
 
         <if test="${target::exists('compile.post')}">

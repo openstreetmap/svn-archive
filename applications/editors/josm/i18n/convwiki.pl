@@ -10,7 +10,7 @@ use open qw/:std :encoding(utf8)/;
 my $filename;
 my $dir = $ARGV[1] || "build/josmfiles";
 print "$ARGV[0]\n";
-if($ARGV[0] && $ARGV[0] =~ /^http:\/\//)
+if($ARGV[0] && $ARGV[0] =~ /^https?:\/\//)
 {
   $filename = $ARGV[2] || "build/josmfiles.zip";
   my $content = get($ARGV[0]);

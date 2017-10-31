@@ -18,7 +18,7 @@ my $comment = 0;
 print "class trans_maps { void tr(String s){} void f() {";
 
 my @lines;
-if($ARGV[0] && $ARGV[0] =~ /^http:\/\//)
+if($ARGV[0] && $ARGV[0] =~ /^https?:\/\//)
 {
   my $content = get($ARGV[0]);
   die "Couldn't get $ARGV[0]" unless defined $content;

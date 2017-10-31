@@ -4,8 +4,8 @@
     <property name="josm.build.dir" value="../core"/>
     <property name="josm.presets" value="${josm.build.dir}/data/defaultpresets.xml"/>
     <property name="plugin.dir" value="../plugins"/>
-    <property name="maps.srcfile" value="http://josm.openstreetmap.de/maps"/>
-    <property name="wiki.srcfile" value="http://josm.openstreetmap.de/josmfile?mode=en"/>
+    <property name="maps.srcfile" value="https://josm.openstreetmap.de/maps"/>
+    <property name="wiki.srcfile" value="https://josm.openstreetmap.de/josmfile?mode=en"/>
     <property name="surveyor.srcfile" value="${plugin.dir}/surveyor/resources/surveyor.xml"/>
     <property name="tag2link.srcfile" value="${plugin.dir}/tag2link/resources/tag2link_sources.xml"/>
     <property name="i18n.build.dir" value="build"/>

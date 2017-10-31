@@ -117,6 +117,24 @@
      </Message>
     </Messages>
    </Namespace>
+   <Namespace Name="System.Net">
+    <Messages>
+     <Message TypeName="AvoidNamespacesWithFewTypes" Category="Microsoft.Design" CheckId="CA1020" Status="Excluded" Created="2017-10-31 22:30:22Z">
+      <Issue>
+       <Item>System.Net</Item>
+      </Issue>
+     </Message>
+    </Messages>
+   </Namespace>
+   <Namespace Name="System.Security.Authentication">
+    <Messages>
+     <Message TypeName="AvoidNamespacesWithFewTypes" Category="Microsoft.Design" CheckId="CA1020" Status="Excluded" Created="2017-10-31 22:30:22Z">
+      <Issue>
+       <Item>System.Security.Authentication</Item>
+      </Issue>
+     </Message>
+    </Messages>
+   </Namespace>
   </Namespaces>
   <Targets>
    <Target Name="$(ProjectDir)/Brejc.Common.Library/bin/Release/Brejc.Common.Library.dll">

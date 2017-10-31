@@ -3,6 +3,11 @@ Srtm2Osm tool by Igor Brejc and others
 VERSION HISTORY
 ---------------
 
+1.13
+----
+- Support for encrypted HTTP communication with SRTM servers.
+- Srtm2Osm requires at least .NET Framework 4.0 / Mono 4.8.
+
 1.12
 ----
 - New feature for splitting the bounding box into smaller ones for reduced memory footprint.

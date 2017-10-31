@@ -65,7 +65,6 @@
       <Link>CommonAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="ExpressionFunctions.cs" />
-    <Compile Include="ExpressionSelector.cs" />
     <Compile Include="IOsmElementSelector.cs" />
     <Compile Include="KeyValueSelector.cs" />
     <Compile Include="MultipleKeyValueSelector.cs" />

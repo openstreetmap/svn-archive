@@ -14,6 +14,7 @@ using System.Xml.Serialization;
 using Brejc.Geometry;
 using System.Text.RegularExpressions;
 using System.Globalization;
+using System.Net;
 
 namespace Srtm2Osm
 {
@@ -49,8 +50,14 @@ namespace Srtm2Osm
             ConsoleActivityLogger activityLogger = new ConsoleActivityLogger();
             activityLogger.LogLevel = ActivityLogLevel.Verbose;
 
+            // Use all available encryption protocols supported in the .NET Framework 4.0.
+            // TLS versions > 1.0 are supported and available via the extensions.
+            // see https://blogs.perficient.com/microsoft/2016/04/tsl-1-2-and-net-support/
+            // This is a global setting for all HTTP requests.
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls | SecurityProtocolTypeExtensions.Tls11 | SecurityProtocolTypeExtensions.Tls12 | SecurityProtocolType.Ssl3;
+
             // first make sure that the SRTM directory exists
-            if (false == Directory.Exists (srtmDir))
+            if (!Directory.Exists (srtmDir))
                 Directory.CreateDirectory (srtmDir);
 
             string srtmIndexFilename = Path.Combine (srtmDir, "SrtmIndex.dat");

@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.photoadjust;
 
 import java.awt.event.MouseAdapter;
@@ -22,10 +23,10 @@ import org.openstreetmap.josm.plugins.PluginInformation;
  */
 public class PhotoAdjustPlugin extends Plugin implements ActiveLayerChangeListener {
   
-    private GeoImageLayer imageLayer = null;
-    private MouseAdapter mouseAdapter = null;
-    private MouseMotionAdapter mouseMotionAdapter = null;
-    public PhotoAdjustWorker worker = null;
+    private GeoImageLayer imageLayer;
+    private MouseAdapter mouseAdapter;
+    private MouseMotionAdapter mouseMotionAdapter;
+    private final PhotoAdjustWorker worker = new PhotoAdjustWorker();
 
     /**
      * Will be invoked by JOSM to bootstrap the plugin.
@@ -35,8 +36,7 @@ public class PhotoAdjustPlugin extends Plugin implements ActiveLayerChangeListen
     public PhotoAdjustPlugin(PluginInformation info) {
 	super(info);
         GeoImageLayer.registerMenuAddition(new UntaggedGeoImageLayerAction());
-        new PhotoPropertyEditor();
-        worker = new PhotoAdjustWorker();
+        PhotoPropertyEditor.init();
         initAdapters();
     }
 
@@ -89,11 +89,10 @@ public class PhotoAdjustPlugin extends Plugin implements ActiveLayerChangeListen
         worker.reset();
         Layer oldLayer = e.getPreviousActiveLayer();
         Layer newLayer = MainApplication.getLayerManager().getActiveLayer();
-        if ( oldLayer instanceof GeoImageLayer
-             && newLayer instanceof GeoImageLayer) {
+        if (oldLayer instanceof GeoImageLayer
+            && newLayer instanceof GeoImageLayer) {
             imageLayer = (GeoImageLayer)newLayer;
-        }
-        else {
+        } else {
             if (oldLayer instanceof GeoImageLayer) {
                 MainApplication.getMap().mapView.removeMouseListener(mouseAdapter);
                 MainApplication.getMap().mapView.removeMouseMotionListener(mouseMotionAdapter);

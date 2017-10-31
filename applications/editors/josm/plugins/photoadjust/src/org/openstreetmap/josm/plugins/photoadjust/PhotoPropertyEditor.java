@@ -1,6 +1,6 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.photoadjust;
 
-//import static org.openstreetmap.josm.gui.help.HelpUtil.ht;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.Color;
@@ -41,7 +41,10 @@ import org.openstreetmap.josm.tools.ImageProvider;
  */
 public class PhotoPropertyEditor {
 
-    public PhotoPropertyEditor() {
+    /**
+     * Add photo property editor to edit menu.
+     */
+    public static void init() {
         MainMenu.add(MainApplication.getMenu().editMenu, new PropertyEditorAction());
     }
 
@@ -61,15 +64,14 @@ public class PhotoPropertyEditor {
      */
     private static class PropertyEditorAction extends JosmAction {
         public PropertyEditorAction() {
-            super(tr("Edit photo GPS data"),	// String name
-                  (String)null,			// String iconName
+            super(tr("Edit photo GPS data"),    // String name
+                  (String)null,                         // String iconName
                   tr("Edit GPS data of selected photo."), // String tooltip
-                  null,				// Shortcut shortcut
-                  true,				// boolean registerInToolbar
+                  null,                                 // Shortcut shortcut
+                  true,                                 // boolean registerInToolbar
                   "photoadjust/propertyeditor", // String toolbarId
-                  true				// boolean installAdapters
+                  true                          // boolean installAdapters
                   );
-            //putValue("help", ht("/Action/..."));
         }
 
         @Override
@@ -113,7 +115,7 @@ public class PhotoPropertyEditor {
          * @return {@code true} if the image viewer exists and there is an
          *         image shown, {@code false} otherwise.
          */
-        private boolean enabled() {
+        private static boolean enabled() {
             try {
                 //return ImageViewerDialog.getInstance().hasImage();
                 ImageViewerDialog.getInstance().hasImage();
@@ -146,11 +148,11 @@ public class PhotoPropertyEditor {
 
         public PropertyEditorDialog(String title, final ImageEntry image,
                                     final GeoImageLayer layer) {
-            super(Main.parent, title, new String[] {tr("Ok"), tr("Cancel")});
+            super(Main.parent, title, tr("Ok"), tr("Cancel"));
             this.image = image;
             this.layer = layer;
             imgOrig = image.clone();
-            setButtonIcons(new String[] {"ok", "cancel"});
+            setButtonIcons("ok", "cancel");
             final JPanel content = new JPanel(new GridBagLayout());
             //content.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
             if (image.hasThumbnail() || image.getFile() != null) {
@@ -182,7 +184,7 @@ public class PhotoPropertyEditor {
             content.add(coords, GBC.std().fill(GBC.HORIZONTAL));
             Action editCoordAction = new AbstractAction(tr("Edit")) {
                 @Override public void actionPerformed(ActionEvent evt) {
-                    final LatLonDialog llDialog 
+                    final LatLonDialog llDialog
                         = new LatLonDialog(Main.parent,
                                            tr("Edit Image Coordinates"), null);
                     llDialog.setCoordinates(getLatLon());
@@ -316,14 +318,13 @@ public class PhotoPropertyEditor {
          * @param pos Coordinates of image position.
          * @return Image position as text.
          */
-        private String posToText(LatLon pos) {
+        private static String posToText(LatLon pos) {
             // See josm.gui.dialogs.LatLonDialog.setCoordinates().
-            String posStr =
+            return
                 pos == null ? "" :
                 CoordinateFormatManager.getDefaultFormat().latToString(pos) +
                 ' ' +
                 CoordinateFormatManager.getDefaultFormat().lonToString(pos);
-            return posStr;
         }
 
         /**
@@ -388,7 +389,7 @@ public class PhotoPropertyEditor {
          *         the field is empty or if the field value cannot be
          *         converted to double.
          */
-        private Double getDoubleValue(JosmTextField txtFld) {
+        private static Double getDoubleValue(JosmTextField txtFld) {
             final String text = txtFld.getText();
             if (text == null || text.isEmpty()) {
                 return null;
@@ -423,9 +424,9 @@ public class PhotoPropertyEditor {
                 // (e.g. trailing zeros) that do not change the value.  It
                 // doesn't work to compare imgTmp.getPos() with getLatLon()
                 // because the dialog will round the initial position.
-                if ( imgOrig.getPos() == null
-                     || !posToText(imgOrig.getPos()).equals(posToText(imgTmp.getPos()))
-                     ) {
+                if (imgOrig.getPos() == null
+                    || !posToText(imgOrig.getPos()).equals(
+                        posToText(imgTmp.getPos()))) {
                     imgTmp.flagNewGpsData();
                 }
             }
@@ -491,8 +492,8 @@ public class PhotoPropertyEditor {
             } catch (IllegalArgumentException exn) {
                 latLon = null;
             }
-            if ( latLon == null && coordsText != null
-                 && !coordsText.isEmpty()) {
+            if ((latLon == null && coordsText != null
+                 && !coordsText.isEmpty())) {
                 setErrorFeedback(coords);
                 setOkEnabled(false);
                 latLon = null;
@@ -521,11 +522,9 @@ public class PhotoPropertyEditor {
             boolean isError = false;
             final String text = txtFld.getText();
             Double value = null;
-            if (text == null || text.isEmpty()) {
-                isError = false;
-            } else {
+            if (text != null && !text.isEmpty()) {
                 try {
-                    value = Double.parseDouble(text);
+                    value = Double.valueOf(text);
                     if (min != null && value < min) {
                         isError = true;
                     }

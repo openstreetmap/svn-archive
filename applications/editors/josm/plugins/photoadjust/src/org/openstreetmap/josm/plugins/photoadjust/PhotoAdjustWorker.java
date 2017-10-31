@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.photoadjust;
 
 import java.awt.event.InputEvent;
@@ -16,12 +17,12 @@ import org.openstreetmap.josm.gui.layer.geoimage.ImageViewerDialog;
  */
 public class PhotoAdjustWorker {
 
-    private ImageEntry dragPhoto = null;
-    private GeoImageLayer dragLayer = null;
+    private ImageEntry dragPhoto;
+    private GeoImageLayer dragLayer;
     // Offset between center of the photo and point where it is
     // clicked.  This must be in pixels to maintain the same offset if
     // the photo is moved very far.
-    private Point2D dragOffset = null;
+    private Point2D dragOffset;
     private boolean centerViewIsDisabled = false;
     private boolean centerViewNeedsEnable = false;
 
@@ -75,7 +76,7 @@ public class PhotoAdjustWorker {
         reset();
 
         if (evt.getButton() == MouseEvent.BUTTON1
-            && imageLayers != null && imageLayers.size() > 0) {
+            && imageLayers != null && !imageLayers.isEmpty()) {
             // Check if modifier key is pressed and change to
             // image viewer photo if it is.
             final boolean isShift = (evt.getModifiers() & InputEvent.SHIFT_MASK) != 0;
@@ -83,9 +84,9 @@ public class PhotoAdjustWorker {
             if (isShift || isCtrl) {
                 final GeoImageLayer viewerLayer = ImageViewerDialog.getCurrentLayer();
                 final ImageEntry img = ImageViewerDialog.getCurrentImage();
-                if ( img != null && viewerLayer != null
-                     && viewerLayer.isVisible()
-                     && imageLayers.contains(viewerLayer)) {
+                if (img != null && viewerLayer != null
+                    && viewerLayer.isVisible()
+                    && imageLayers.contains(viewerLayer)) {
                     // Change direction if control is pressed, position
                     // otherwise.  Shift+control changes direction, similar to
                     // rotate in select mode.
@@ -106,15 +107,13 @@ public class PhotoAdjustWorker {
                         if (img.getPos() != null) {
                             changeDirection(img, viewerLayer, evt);
                         }
-                    }
-                    else { // shift pressed
+                    } else { // shift pressed
                         movePhoto(img, viewerLayer, evt);
                     }
                     dragPhoto = img;
                     dragLayer = viewerLayer;
                 }
-            }
-            else {
+            } else {
                 // Start with the top layer.
                 for (GeoImageLayer layer: imageLayers) {
                     if (layer.isVisible()) {
@@ -150,12 +149,11 @@ public class PhotoAdjustWorker {
      * @param evt Mouse event from MouseMotionAdapter mouseDragged().
      */
     public void doMouseDragged(MouseEvent evt) {
-        if ( dragLayer != null && dragLayer.isVisible()
-             && dragPhoto != null) {
+        if (dragLayer != null && dragLayer.isVisible()
+            && dragPhoto != null) {
             if ((evt.getModifiers() & InputEvent.CTRL_MASK) != 0) {
                 changeDirection(dragPhoto, dragLayer, evt);
-            }
-            else {
+            } else {
                 disableCenterView();
                 movePhoto(dragPhoto, dragLayer, evt);
             }
@@ -188,8 +186,7 @@ public class PhotoAdjustWorker {
             newPos = MainApplication.getMap().mapView.getLatLon(
                 dragOffset.getX() + evt.getX(),
                 dragOffset.getY() + evt.getY());
-        }
-        else {
+        } else {
             newPos = MainApplication.getMap().mapView.getLatLon(evt.getX(), evt.getY());
         }
         photo.setPos(newPos);

@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.photoadjust;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -42,10 +43,15 @@ public class PhotoAdjustMapMode extends MapMode implements LayerChangeListener, 
     private MouseAdapter mouseAdapter;
     private MouseMotionAdapter mouseMotionAdapter;
     private IconToggleButton mmButton;
-    private PhotoAdjustWorker worker;
+    private final PhotoAdjustWorker worker;
     /** True if one existing GeoImageLayer is to be ignored. */
     private boolean ignoreOneGILayer = false;
 
+    /**
+     * Initialize photo adjust map mode.
+     *
+     * @param worker Worker that does the actual work.
+     */
     public PhotoAdjustMapMode(PhotoAdjustWorker worker) {
         super(tr("Adjust photos"), "photoadjust.png",
               tr("Move and position photos"),
@@ -78,8 +84,7 @@ public class PhotoAdjustMapMode extends MapMode implements LayerChangeListener, 
     public String getModeHelpText() {
         if (hasLayersToAdjust()) {
             return tr("Click+drag photo, shift+click to position photo, control+click to set direction.");
-        }
-        else {
+        } else {
             return tr("Please load some photos.");
         }
     }
@@ -182,6 +187,7 @@ public class PhotoAdjustMapMode extends MapMode implements LayerChangeListener, 
 
     @Override
     public void layerOrderChanged(LayerOrderChangeEvent e) {
+        // Nothing to do at layer order change.
     }
 
     /**
@@ -233,7 +239,7 @@ public class PhotoAdjustMapMode extends MapMode implements LayerChangeListener, 
      *
      * @return list of visible GeoImageLayer's
      */
-    private List<GeoImageLayer> getVisibleGeoImageLayers() {
+    private static List<GeoImageLayer> getVisibleGeoImageLayers() {
         List<GeoImageLayer> all = new ArrayList<>(MainApplication.getLayerManager().getLayersOfType(GeoImageLayer.class));
         Iterator<GeoImageLayer> it = all.iterator();
         while (it.hasNext()) {

@@ -3,8 +3,8 @@ package org.openstreetmap.josm.plugins.measurement;
 /// @author Raphael Mack <osm@raphael-mack.de>
 import static org.openstreetmap.josm.tools.I18n.tr;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.IconToggleButton;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.gui.layer.LayerManager.LayerAddEvent;
@@ -31,7 +31,7 @@ public class MeasurementPlugin extends Plugin {
     public void mapFrameInitialized(MapFrame oldFrame, MapFrame newFrame) {
         if (newFrame != null) {
             newFrame.addToggleDialog(measurementDialog = new MeasurementDialog());
-            mode = new MeasurementMode(newFrame, "measurement", tr("measurement mode"));
+            mode = new MeasurementMode("measurement", tr("measurement mode"));
             btn = new IconToggleButton(mode);
             btn.setVisible(true);
             newFrame.addMapMode(btn);
@@ -45,17 +45,17 @@ public class MeasurementPlugin extends Plugin {
     public static MeasurementLayer getCurrentLayer() {
         if (currentLayer == null) {
             currentLayer = new MeasurementLayer(tr("Measurements"));
-            Main.getLayerManager().addLayer(currentLayer);
+            MainApplication.getLayerManager().addLayer(currentLayer);
             final ActiveLayerChangeListener activeListener = new ActiveLayerChangeListener() {
                 @Override
                 public void activeOrEditLayerChanged(ActiveLayerChangeEvent e) {
-                    Layer newLayer = Main.getLayerManager().getActiveLayer();
+                    Layer newLayer = MainApplication.getLayerManager().getActiveLayer();
                     if (newLayer instanceof MeasurementLayer)
                         MeasurementPlugin.currentLayer = (MeasurementLayer)newLayer;
                 }
             };
-            Main.getLayerManager().addActiveLayerChangeListener(activeListener);
-            Main.getLayerManager().addLayerChangeListener(new LayerChangeListener(){
+            MainApplication.getLayerManager().addActiveLayerChangeListener(activeListener);
+            MainApplication.getLayerManager().addLayerChangeListener(new LayerChangeListener(){
                 @Override
                 public void layerAdded(LayerAddEvent e) {
                     // Do nothing
@@ -65,8 +65,8 @@ public class MeasurementPlugin extends Plugin {
                 public void layerRemoving(LayerRemoveEvent e) {
                     Layer oldLayer = e.getRemovedLayer();
                     if (oldLayer != null && oldLayer == currentLayer) {
-                        Main.getLayerManager().removeActiveLayerChangeListener(activeListener);
-                        Main.getLayerManager().removeLayerChangeListener(this);
+                        MainApplication.getLayerManager().removeActiveLayerChangeListener(activeListener);
+                        MainApplication.getLayerManager().removeLayerChangeListener(this);
                     }
                 }
 

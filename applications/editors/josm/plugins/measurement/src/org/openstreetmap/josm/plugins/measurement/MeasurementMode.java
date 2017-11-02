@@ -11,26 +11,26 @@ import javax.swing.JOptionPane;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.mapmode.MapMode;
 import org.openstreetmap.josm.data.coor.LatLon;
-import org.openstreetmap.josm.gui.MapFrame;
+import org.openstreetmap.josm.gui.MainApplication;
 
 public class MeasurementMode extends MapMode {
 
     private static final long serialVersionUID = 3853830673475744263L;
-    
-    public MeasurementMode(MapFrame mapFrame, String name, String desc) {
-        super(name, "measurement.png", desc, mapFrame, Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
+
+    public MeasurementMode(String name, String desc) {
+        super(name, "measurement.png", desc, Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
     }
 
     @Override
     public void enterMode() {
         super.enterMode();
-        Main.map.mapView.addMouseListener(this);
+        MainApplication.getMap().mapView.addMouseListener(this);
     }
 
     @Override
     public void exitMode() {
         super.exitMode();
-        Main.map.mapView.removeMouseListener(this);
+        MainApplication.getMap().mapView.removeMouseListener(this);
     }
 
     /**
@@ -46,7 +46,7 @@ public class MeasurementMode extends MapMode {
         if (e.getButton() == MouseEvent.BUTTON3){
             MeasurementPlugin.getCurrentLayer().removeLastPoint();
         } else if (e.getButton() == MouseEvent.BUTTON1){
-            LatLon coor = Main.map.mapView.getLatLon(e.getX(), e.getY());
+            LatLon coor = MainApplication.getMap().mapView.getLatLon(e.getX(), e.getY());
             if (coor.isOutSideWorld()) {
                 JOptionPane.showMessageDialog(Main.parent,tr("Can not draw outside of the world."));
                 return;

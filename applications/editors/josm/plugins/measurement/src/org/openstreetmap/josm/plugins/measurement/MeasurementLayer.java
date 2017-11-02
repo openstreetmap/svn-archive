@@ -33,6 +33,7 @@ import org.openstreetmap.josm.data.gpx.GpxTrack;
 import org.openstreetmap.josm.data.gpx.GpxTrackSegment;
 import org.openstreetmap.josm.data.gpx.WayPoint;
 import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.NavigatableComponent;
 import org.openstreetmap.josm.gui.dialogs.LayerListDialog;
@@ -114,23 +115,20 @@ public class MeasurementLayer extends Layer {
         for(WayPoint p:points) l = p;
         if(l != null) points.remove(l);
         recalculate();
-        Main.map.repaint();
     }
 
     public void mouseClicked(MouseEvent e){
         if (e.getButton() != MouseEvent.BUTTON1) return;
 
-        LatLon coor = Main.map.mapView.getLatLon(e.getX(), e.getY());
+        LatLon coor = MainApplication.getMap().mapView.getLatLon(e.getX(), e.getY());
         points.add(new WayPoint(coor));
 
-        Main.map.repaint();
         recalculate();
     }
 
     public void reset(){
         points.clear();
         recalculate();
-        Main.map.repaint();
     }
 
     private void recalculate(){
@@ -148,9 +146,10 @@ public class MeasurementLayer extends Layer {
         if (MeasurementPlugin.measurementDialog != null) {
             MeasurementPlugin.measurementDialog.pathLengthLabel.setText(NavigatableComponent.getDistText(pathLength));
         }
-        if (Main.map.mapMode instanceof MeasurementMode) {
-            Main.map.statusLine.setDist(pathLength);
+        if (MainApplication.getMap().mapMode instanceof MeasurementMode) {
+            MainApplication.getMap().statusLine.setDist(pathLength);
         }
+        invalidate();
     }
 
     /*
@@ -233,7 +232,7 @@ public class MeasurementLayer extends Layer {
         public void actionPerformed(ActionEvent e) {
             Box panel = Box.createVerticalBox();
             final JList<GpxLayer> layerList = new JList<>(model);
-            Collection<Layer> data = Main.getLayerManager().getLayers();
+            Collection<Layer> data = MainApplication.getLayerManager().getLayers();
             Layer lastLayer = null;
             int layerCnt = 0;
 
@@ -294,7 +293,6 @@ public class MeasurementLayer extends Layer {
                     }
                 }
                 recalculate();
-                Main.parent.repaint();
             } else{
                 // TODO: register a listener and show menu entry only if gps layers are available
                 // no gps layer

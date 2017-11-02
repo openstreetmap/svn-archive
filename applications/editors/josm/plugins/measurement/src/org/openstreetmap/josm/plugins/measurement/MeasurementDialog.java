@@ -15,7 +15,6 @@ import javax.swing.AbstractAction;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.SelectionChangedListener;
 import org.openstreetmap.josm.data.SystemOfMeasurement;
 import org.openstreetmap.josm.data.SystemOfMeasurement.SoMChangeListener;
@@ -32,6 +31,7 @@ import org.openstreetmap.josm.data.osm.event.PrimitivesRemovedEvent;
 import org.openstreetmap.josm.data.osm.event.RelationMembersChangedEvent;
 import org.openstreetmap.josm.data.osm.event.TagsChangedEvent;
 import org.openstreetmap.josm.data.osm.event.WayNodesChangedEvent;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.SideButton;
 import org.openstreetmap.josm.gui.dialogs.ToggleDialog;
 import org.openstreetmap.josm.gui.help.HelpUtil;
@@ -170,15 +170,19 @@ public class MeasurementDialog extends ToggleDialog implements SelectionChangedL
 
     @Override
     public void selectionChanged(Collection<? extends OsmPrimitive> newSelection) {
+        refresh(newSelection);
+    }
+
+    private void refresh(Collection<? extends OsmPrimitive> selection) {
         double length = 0.0;
         double segAngle = 0.0;
         double area = 0.0;
         double radius = 0.0;
         Node lastNode = null;
         // Don't mix up way and nodes computation (fix #6872). Priority given to ways
-        ways = new SubclassFilteredCollection<>(newSelection, Way.class::isInstance);
+        ways = new SubclassFilteredCollection<>(selection, Way.class::isInstance);
         if (ways.isEmpty()) {
-            nodes = new SubclassFilteredCollection<>(newSelection, Node.class::isInstance);
+            nodes = new SubclassFilteredCollection<>(selection, Node.class::isInstance);
             for (Node n : nodes) {
                 if (n.getCoor() != null) {
                     if (lastNode == null) {
@@ -240,7 +244,7 @@ public class MeasurementDialog extends ToggleDialog implements SelectionChangedL
             }
         });
 
-        DataSet currentDs = Main.getLayerManager().getEditDataSet();
+        DataSet currentDs = MainApplication.getLayerManager().getEditDataSet();
 
         if (ds != currentDs) {
             if (ds != null) {
@@ -279,14 +283,19 @@ public class MeasurementDialog extends ToggleDialog implements SelectionChangedL
         Node n = event.getNode();
         // Refresh selection if a node belonging to a selected member has moved (example: scale action)
         if ((nodes != null && nodes.contains(n)) || waysContain(n)) {
-            selectionChanged(Main.getLayerManager().getEditDataSet().getSelected());
+            refresh(event.getDataset().getSelected());
+        }
+    }
+
+    @Override public void wayNodesChanged(WayNodesChangedEvent event) {
+        if (ways.contains(event.getChangedWay())) {
+            refresh(event.getDataset().getSelected());
         }
     }
 
     @Override public void primitivesAdded(PrimitivesAddedEvent event) {}
     @Override public void primitivesRemoved(PrimitivesRemovedEvent event) {}
     @Override public void tagsChanged(TagsChangedEvent event) {}
-    @Override public void wayNodesChanged(WayNodesChangedEvent event) { }
     @Override public void relationMembersChanged(RelationMembersChangedEvent event) {}
     @Override public void otherDatasetChange(AbstractDatasetChangedEvent event) {}
     @Override public void dataChanged(DataChangedEvent event) {}
@@ -294,9 +303,9 @@ public class MeasurementDialog extends ToggleDialog implements SelectionChangedL
     @Override
     public void systemOfMeasurementChanged(String oldSoM, String newSoM) {
         // Refresh selection to take into account new system of measurement
-        DataSet currentDs = Main.getLayerManager().getEditDataSet();
+        DataSet currentDs = MainApplication.getLayerManager().getEditDataSet();
         if (currentDs != null) {
-            selectionChanged(currentDs.getSelected());
+            refresh(currentDs.getSelected());
         }
     }
 }

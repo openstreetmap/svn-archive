@@ -6,6 +6,7 @@ import static org.junit.Assert.assertEquals;
 import java.util.Arrays;
 
 import org.junit.Test;
+import org.openstreetmap.josm.TestUtils;
 import org.openstreetmap.josm.plugins.fr.cadastre.edigeo.EdigeoRecord.Format;
 import org.openstreetmap.josm.plugins.fr.cadastre.edigeo.EdigeoRecord.Nature;
 
@@ -34,6 +35,7 @@ public class EdigeoRecordTest {
      */
     @Test
     public void testEqualsContract() {
+        TestUtils.assumeWorkingEqualsVerifier();
         EqualsVerifier.forClass(EdigeoRecord.class).usingGetClass()
             .verify();
     }

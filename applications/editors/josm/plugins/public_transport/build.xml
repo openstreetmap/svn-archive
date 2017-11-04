@@ -7,7 +7,7 @@
     <property name="plugin.main.version" value="12643"/>
 
     <property name="plugin.author" value="Roland M. Olbricht"/>
-    <property name="plugin.class" value="public_transport.PublicTransportPlugin"/>
+    <property name="plugin.class" value="org.openstreetmap.josm.plugins.public_transport.PublicTransportPlugin"/>
     <property name="plugin.description" value="This plugin simplifies the mapping and editing of public transport routes."/>
     <!-- <property name="plugin.icon" value=""/> -->
     <property name="plugin.link" value="https://wiki.openstreetmap.org/wiki/JOSM/Plugins/public_transport"/>

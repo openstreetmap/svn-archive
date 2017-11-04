@@ -30,6 +30,7 @@ import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
 import org.openstreetmap.josm.gui.MainApplication;
+import org.openstreetmap.josm.tools.Logging;
 
 public class GTFSImporterAction extends JosmAction {
     private static GTFSImporterDialog dialog = null;
@@ -51,7 +52,7 @@ public class GTFSImporterAction extends JosmAction {
         super(tr("Create Stops from GTFS ..."), null, tr("Create Stops from a GTFS file"), null,
                 false);
         putValue("toolbar", "publictransport/gtfsimporter");
-        Main.toolbar.register(this);
+        MainApplication.getToolbar().register(this);
     }
 
     public GTFSStopTableModel getGTFSStopTableModel() {
@@ -160,10 +161,10 @@ public class GTFSImporterAction extends JosmAction {
                 data.add(r.readLine());
             }
         } catch (FileNotFoundException e) {
-            Main.error(e);
+            Logging.error(e);
             JOptionPane.showMessageDialog(null, tr("File \"{0}\" does not exist", file.getName()));
         } catch (IOException e) {
-            Main.error(e);
+            Logging.error(e);
             JOptionPane.showMessageDialog(null, tr("IOException \"{0}\" occurred", e.toString()));
         }
     }
@@ -296,7 +297,7 @@ public class GTFSImporterAction extends JosmAction {
         if (box.getBounds() == null)
             return;
         box.enlargeBoundingBox();
-        Main.map.mapView.zoomTo(box);
+        MainApplication.getMap().mapView.zoomTo(box);
     }
 
     /**

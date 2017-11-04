@@ -57,7 +57,7 @@ public class StopImporterAction extends JosmAction {
         super(tr("Create Stops from GPX ..."), null, tr("Create Stops from a GPX file"), null,
                 false);
         putValue("toolbar", "publictransport/stopimporter");
-        Main.toolbar.register(this);
+        MainApplication.getToolbar().register(this);
     }
 
     public WaypointTableModel getWaypointTableModel() {
@@ -318,7 +318,7 @@ public class StopImporterAction extends JosmAction {
         if (box.getBounds() == null)
             return;
         box.enlargeBoundingBox();
-        Main.map.mapView.zoomTo(box);
+        MainApplication.getMap().mapView.zoomTo(box);
     }
 
     /**

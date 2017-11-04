@@ -8,7 +8,7 @@ import java.awt.event.KeyEvent;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 
-import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MainMenu;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
@@ -23,7 +23,7 @@ public class PublicTransportPlugin extends Plugin {
     }
 
     public static void refreshMenu() {
-        MainMenu menu = Main.main.menu;
+        MainMenu menu = MainApplication.getMenu();
 
         if (jMenu == null)
             jMenu = menu.addMenu("Public Transport", tr("Public Transport"), KeyEvent.VK_COMMA,

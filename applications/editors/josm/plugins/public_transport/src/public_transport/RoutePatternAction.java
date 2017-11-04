@@ -325,7 +325,7 @@ public class RoutePatternAction extends JosmAction {
         super(tr("Route patterns ..."), null, tr("Edit Route patterns for public transport"), null,
                 false);
         putValue("toolbar", "publictransport/routepattern");
-        Main.toolbar.register(this);
+        MainApplication.getToolbar().register(this);
     }
 
     @Override
@@ -1101,7 +1101,7 @@ public class RoutePatternAction extends JosmAction {
             if (box.getBounds() == null)
                 return;
             box.enlargeBoundingBox();
-            Main.map.mapView.zoomTo(box);
+            MainApplication.getMap().mapView.zoomTo(box);
         } else if ("routePattern.itineraryMark".equals(event.getActionCommand())) {
             OsmPrimitive[] osmp = {null};
             MainApplication.getLayerManager().getEditDataSet().setSelected(osmp);
@@ -1331,7 +1331,7 @@ public class RoutePatternAction extends JosmAction {
             if (box.getBounds() == null)
                 return;
             box.enlargeBoundingBox();
-            Main.map.mapView.zoomTo(box);
+            MainApplication.getMap().mapView.zoomTo(box);
         } else if ("routePattern.stoplistMark".equals(event.getActionCommand())) {
             OsmPrimitive[] osmp = {null};
             MainApplication.getLayerManager().getEditDataSet().setSelected(osmp);

@@ -18,7 +18,7 @@ import org.openstreetmap.josm.plugins.public_transport.actions.GTFSImporterActio
 import org.openstreetmap.josm.plugins.public_transport.models.GTFSStopTableModel;
 
 public class GTFSImporterDialog extends AbstractImporterDialog<GTFSImporterAction> {
-    private JTable gtfsStopTable = null;
+    private final JTable gtfsStopTable = new JTable();
 
     public GTFSImporterDialog(GTFSImporterAction controller) {
         super(controller, tr("Create Stops from GTFS"), "gtfsImporter");
@@ -228,7 +228,6 @@ public class GTFSImporterDialog extends AbstractImporterDialog<GTFSImporterActio
     ("gtfsImporter.gtfsStopsDelete",
      controller.getFocusWaypointDeleteAction());*/
 
-        gtfsStopTable = new JTable();
         JScrollPane tableSP = new JScrollPane(gtfsStopTable);
 
         layoutCons.gridx = 0;

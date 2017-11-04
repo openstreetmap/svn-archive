@@ -31,9 +31,9 @@ import org.openstreetmap.josm.plugins.public_transport.refs.TrackReference;
 public class StopImporterDialog extends AbstractImporterDialog<StopImporterAction> {
     private JList<TrackReference> tracksList = null;
 
-    private JTable stoplistTable = null;
+    private final JTable stoplistTable = new JTable();
 
-    private JTable waypointTable = null;
+    private final JTable waypointTable = new JTable();
 
     public StopImporterDialog(StopImporterAction controller) {
         super(controller, tr("Create Stops from GPX"), "stopImporter");
@@ -277,7 +277,6 @@ public class StopImporterDialog extends AbstractImporterDialog<StopImporterActio
         contentPane.getActionMap().put("stopImporter.stoplistDelete",
                 controller.getFocusStoplistDeleteAction());
 
-        stoplistTable = new JTable();
         JScrollPane tableSP = new JScrollPane(stoplistTable);
 
         layoutCons.gridx = 0;
@@ -410,7 +409,6 @@ public class StopImporterDialog extends AbstractImporterDialog<StopImporterActio
         contentPane.getActionMap().put("stopImporter.waypointsDelete",
                 controller.getFocusWaypointDeleteAction());
 
-        waypointTable = new JTable();
         tableSP = new JScrollPane(waypointTable);
 
         layoutCons.gridx = 0;

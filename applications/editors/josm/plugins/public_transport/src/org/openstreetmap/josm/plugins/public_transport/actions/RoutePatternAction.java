@@ -1008,7 +1008,7 @@ public class RoutePatternAction extends JosmAction {
             Vector<RelationMember> otherItems = new Vector<>();
 
             // Temp
-            Node firstNode = null;
+            // Node firstNode = null;
             // Node lastNode = null;
 
             for (int i = 0; i < currentRoute.getMembersCount(); ++i) {
@@ -1026,9 +1026,9 @@ public class RoutePatternAction extends JosmAction {
                     itemsToReflect.add(new RelationMember(role, item.getWay()));
 
                     // Temp
-                    if (firstNode == null) {
-                        firstNode = item.getWay().getNode(0);
-                    }
+                    // if (firstNode == null) {
+                    //     firstNode = item.getWay().getNode(0);
+                    // }
                     // lastNode = item.getWay().getNode(item.getWay().getNodesCount() - 1);
                 } else if (item.isNode())
                     itemsToReflect.add(item);

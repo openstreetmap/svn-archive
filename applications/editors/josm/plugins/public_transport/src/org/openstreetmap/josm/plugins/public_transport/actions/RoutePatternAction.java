@@ -1827,14 +1827,15 @@ public class RoutePatternAction extends JosmAction {
 
     private double calcOffset(StopReference sr, Vector<SegmentMetric> segmentMetrics) {
         double offset = 0;
-        if ((sr.index + 1) / 2 < segmentMetrics.size()) {
+        int size = segmentMetrics.size();
+        if ((sr.index + 1) / 2 < size) {
             offset = segmentMetrics.elementAt((sr.index + 1) / 2).distance;
             if (sr.index % 2 == 0)
                 offset += sr.pos;
-        } else
-            offset = segmentMetrics.elementAt(segmentMetrics.size() - 1).distance
-                    + segmentMetrics.elementAt(segmentMetrics.size() - 1).length;
-
+        } else if (size > 0) {
+            offset = segmentMetrics.elementAt(size - 1).distance
+                   + segmentMetrics.elementAt(size - 1).length;
+        }
         return offset;
     }
 

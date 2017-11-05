@@ -24,10 +24,11 @@ class GPSBlamMarker {
 
     /** construct a blammarker by analysis of selected GPS points */
     GPSBlamMarker(GPSBlamInputData inputData) {
+        Projection projection = Main.getProjection();
         // get mean east, north
         double meanEast=0.0, meanNorth=0.0;
         for (CachedLatLon cll : inputData) {
-            EastNorth en = cll.getEastNorth();
+            EastNorth en = cll.getEastNorth(projection);
             meanEast += en.east();
             meanNorth += en.north();
         }
@@ -39,7 +40,7 @@ class GPSBlamMarker {
         double ca=0.0, cb=0.0, cc=0.0, cd=0.0;
         double deast, dnorth;
         for (CachedLatLon cll : inputData) {
-            EastNorth en = cll.getEastNorth();
+            EastNorth en = cll.getEastNorth(projection);
             deast = en.east()-meanEast;
             dnorth = en.north()-meanNorth;
             ca += deast*deast;
@@ -86,21 +87,22 @@ class GPSBlamMarker {
     }
 
     void paint(Graphics2D g, MapView mv) {
+        Projection projection = Main.getProjection();
         g.setColor(Color.GREEN);
         g.setPaintMode();
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g.setStroke(new BasicStroke(2.0f));
-        Point hair1Point1 = mv.getPoint(hair1Coord1.getEastNorth());
-        Point hair1Point2 = mv.getPoint(hair1Coord2.getEastNorth());
-        Point hair2Point1 = mv.getPoint(hair2Coord1.getEastNorth());
-        Point hair2Point2 = mv.getPoint(hair2Coord2.getEastNorth());
+        Point hair1Point1 = mv.getPoint(hair1Coord1.getEastNorth(projection));
+        Point hair1Point2 = mv.getPoint(hair1Coord2.getEastNorth(projection));
+        Point hair2Point1 = mv.getPoint(hair2Coord1.getEastNorth(projection));
+        Point hair2Point2 = mv.getPoint(hair2Coord2.getEastNorth(projection));
         g.drawLine(hair1Point1.x, hair1Point1.y, hair1Point2.x, hair1Point2.y);
         g.drawLine(hair2Point1.x, hair2Point1.y, hair2Point2.x, hair2Point2.y);
 
-        Point2D meanPoint = mv.getPoint2D(mean.getEastNorth());
-        Point2D ellipsePoint1 = mv.getPoint2D(ellipseCoord1.getEastNorth());
-        Point2D ellipsePoint2 = mv.getPoint2D(ellipseCoord2.getEastNorth());
-        Point2D ellipsePoint3 = mv.getPoint2D(ellipseCoord3.getEastNorth());
+        Point2D meanPoint = mv.getPoint2D(mean.getEastNorth(projection));
+        Point2D ellipsePoint1 = mv.getPoint2D(ellipseCoord1.getEastNorth(projection));
+        Point2D ellipsePoint2 = mv.getPoint2D(ellipseCoord2.getEastNorth(projection));
+        Point2D ellipsePoint3 = mv.getPoint2D(ellipseCoord3.getEastNorth(projection));
         double majorAxis = ellipsePoint2.distance(ellipsePoint1);
         double minorAxis = ellipsePoint3.distance(ellipsePoint1);
         double angle = -Math.atan2(-(ellipsePoint2.getY()-ellipsePoint1.getY()), ellipsePoint2.getX()-ellipsePoint1.getX());

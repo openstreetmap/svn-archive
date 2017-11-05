@@ -21,12 +21,14 @@ import java.awt.geom.Arc2D;
 import java.awt.geom.Line2D;
 import java.awt.geom.Path2D;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.mapmode.MapMode;
+import org.openstreetmap.josm.gui.MainApplication;
+import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.layer.LayerManager.LayerAddEvent;
 import org.openstreetmap.josm.gui.layer.LayerManager.LayerChangeListener;
 import org.openstreetmap.josm.gui.layer.LayerManager.LayerOrderChangeEvent;
 import org.openstreetmap.josm.gui.layer.LayerManager.LayerRemoveEvent;
+import org.openstreetmap.josm.tools.Logging;
 
 class GPSBlamMode extends MapMode implements LayerChangeListener, MouseWheelListener, AWTEventListener {
 
@@ -44,13 +46,14 @@ class GPSBlamMode extends MapMode implements LayerChangeListener, MouseWheelList
     @Override
     public void enterMode() {
         super.enterMode();
-        Main.map.mapView.addMouseListener(this);
-        Main.map.mapView.addMouseMotionListener(this);
-        Main.map.mapView.addMouseWheelListener(this);
+        MapView mapView = MainApplication.getMap().mapView;
+        mapView.addMouseListener(this);
+        mapView.addMouseMotionListener(this);
+        mapView.addMouseWheelListener(this);
         try {
             Toolkit.getDefaultToolkit().addAWTEventListener(this, AWTEvent.KEY_EVENT_MASK);
         } catch (SecurityException ex) {
-            Main.error(ex);
+            Logging.error(ex);
         }
 
         getLayerManager().addLayerChangeListener(this);
@@ -71,9 +74,9 @@ class GPSBlamMode extends MapMode implements LayerChangeListener, MouseWheelList
     public void exitMode() {
         super.exitMode();
         getLayerManager().removeLayerChangeListener(this);
-        Main.map.mapView.removeMouseListener(this);
-        Main.map.mapView.removeMouseMotionListener(this);
-        Main.map.mapView.removeMouseWheelListener(this);
+        MainApplication.getMap().mapView.removeMouseListener(this);
+        MainApplication.getMap().mapView.removeMouseMotionListener(this);
+        MainApplication.getMap().mapView.removeMouseWheelListener(this);
         Toolkit.getDefaultToolkit().removeAWTEventListener(this);
     }
 
@@ -82,10 +85,10 @@ class GPSBlamMode extends MapMode implements LayerChangeListener, MouseWheelList
         if (e.getButton() == MouseEvent.BUTTON1) {
             pointPressed = new Point(e.getPoint());
             // gain exclusive use of mouse wheel for now
-            mapViewWheelListeners = Main.map.mapView.getMouseWheelListeners();
+            mapViewWheelListeners = MainApplication.getMap().mapView.getMouseWheelListeners();
             for (MouseWheelListener l : mapViewWheelListeners) {
                 if (l != this)
-                    Main.map.mapView.removeMouseWheelListener(l);
+                    MainApplication.getMap().mapView.removeMouseWheelListener(l);
             }
             paintBox(pointPressed, radius);
         }
@@ -107,7 +110,7 @@ class GPSBlamMode extends MapMode implements LayerChangeListener, MouseWheelList
         // give mapView back its mouse wheel
         for (MouseWheelListener l : mapViewWheelListeners) {
             if (l != this)
-                Main.map.mapView.addMouseWheelListener(l);
+                MainApplication.getMap().mapView.addMouseWheelListener(l);
         }
 
         xorDrawBox(pointPressed, oldP2, radius); // clear box
@@ -119,7 +122,7 @@ class GPSBlamMode extends MapMode implements LayerChangeListener, MouseWheelList
                 getLayerManager().addLayer(currentBlamLayer);
             }
             currentBlamLayer.addBlamMarker(new GPSBlamMarker(inputData));
-            Main.map.mapView.repaint();
+            MainApplication.getMap().mapView.repaint();
         }
 
         pointPressed = oldP2 = null;
@@ -143,8 +146,8 @@ class GPSBlamMode extends MapMode implements LayerChangeListener, MouseWheelList
     }
 
     private void xorDrawBox(Point p1, Point p2, int radius){
-        if (Main.map != null) {
-            Graphics2D g = (Graphics2D) Main.map.mapView.getGraphics();
+        if (MainApplication.getMap() != null) {
+            Graphics2D g = (Graphics2D) MainApplication.getMap().mapView.getGraphics();
             g.setXORMode(Color.BLACK);
             g.setColor(Color.WHITE);
             // AA+XOR broken in some versions of Java
@@ -176,8 +179,8 @@ class GPSBlamMode extends MapMode implements LayerChangeListener, MouseWheelList
                     Math.round(radius*2), Math.round(radius*2));
                 } catch (InternalError e) {
                     // Robustness against Java bug https://bugs.openjdk.java.net/browse/JDK-8041647
-                    Main.error(e);
-                    Main.error("Java bug JDK-8041647 occured. To avoid this bug, please consult https://bugs.openjdk.java.net/browse/JDK-8041647."
+                    Logging.error(e);
+                    Logging.error("Java bug JDK-8041647 occured. To avoid this bug, please consult https://bugs.openjdk.java.net/browse/JDK-8041647."
                             +" If the bug is fixed, please update your Java Runtime Environment.");
                 }
             }
@@ -185,7 +188,7 @@ class GPSBlamMode extends MapMode implements LayerChangeListener, MouseWheelList
     }
 
     private void paintBox(Point p2, int newRadius) {
-        if (Main.map != null) {
+        if (MainApplication.getMap() != null) {
             if (oldP2 != null) {
                 xorDrawBox(pointPressed, oldP2, radius); // clear old box
             }
@@ -208,8 +211,8 @@ class GPSBlamMode extends MapMode implements LayerChangeListener, MouseWheelList
     public void layerRemoving(LayerRemoveEvent e) {
         if (e.getRemovedLayer() instanceof GPSBlamLayer) {
             currentBlamLayer = null;
-            if (Main.map.mapMode instanceof GPSBlamMode)
-                Main.map.selectSelectTool(false);
+            if (MainApplication.getMap().mapMode instanceof GPSBlamMode)
+                MainApplication.getMap().selectSelectTool(false);
         }
     }
 }

@@ -224,7 +224,7 @@ public class ModulePreference implements SubPreferenceSetting {
         if (model.isActiveModulesChanged()) {
             LinkedList<String> l = new LinkedList<>(model.getSelectedModuleNames());
             Collections.sort(l);
-            Main.pref.putCollection(OdConstants.PREF_MODULES, l);
+            Main.pref.putList(OdConstants.PREF_MODULES, l);
             return true;
         }
         return false;

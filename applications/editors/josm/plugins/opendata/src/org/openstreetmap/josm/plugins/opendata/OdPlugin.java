@@ -196,7 +196,7 @@ public final class OdPlugin extends Plugin {
     }
 
     private File getSubDirectory(String name) {
-        File dir = new File(getPluginDir()+File.separator+name);
+        File dir = new File(getPluginDirs().getUserDataDirectory(false), name);
         if (!dir.exists()) {
             dir.mkdirs();
         }

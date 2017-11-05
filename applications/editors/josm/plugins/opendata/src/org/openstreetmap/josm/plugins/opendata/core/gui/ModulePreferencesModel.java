@@ -27,13 +27,12 @@ public class ModulePreferencesModel extends ChangeNotifier {
     private String filterExpression;
     private final Set<String> currentActiveModules;
 
-    protected Collection<String> getModules(Collection<String> def) {
-        return Main.pref.getCollection(OdConstants.PREF_MODULES, def);
+    protected List<String> getModules(List<String> def) {
+        return Main.pref.getList(OdConstants.PREF_MODULES, def);
     }
 
     public ModulePreferencesModel() {
-        currentActiveModules = new HashSet<>();
-        currentActiveModules.addAll(getModules(currentActiveModules));
+        currentActiveModules = new HashSet<>(getModules(Collections.emptyList()));
     }
 
     public void filterDisplayedModules(String filter) {
@@ -60,8 +59,7 @@ public class ModulePreferencesModel extends ChangeNotifier {
         }
         sort();
         filterDisplayedModules(filterExpression);
-        Set<String> activeModules = new HashSet<>();
-        activeModules.addAll(getModules(activeModules));
+        Set<String> activeModules = new HashSet<>(getModules(Collections.emptyList()));
         for (ModuleInformation pi: availableModules) {
             if (selectedModulesMap.get(pi) == null) {
                 if (activeModules.contains(pi.name)) {
@@ -94,8 +92,7 @@ public class ModulePreferencesModel extends ChangeNotifier {
         }
         sort();
         filterDisplayedModules(filterExpression);
-        Set<String> activeModules = new HashSet<>();
-        activeModules.addAll(getModules(activeModules));
+        Set<String> activeModules = new HashSet<>(getModules(Collections.emptyList()));
         for (ModuleInformation pi: availableModules) {
             if (selectedModulesMap.get(pi) == null) {
                 if (activeModules.contains(pi.name)) {

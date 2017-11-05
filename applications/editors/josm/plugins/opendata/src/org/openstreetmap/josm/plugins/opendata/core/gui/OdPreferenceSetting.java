@@ -58,7 +58,7 @@ public class OdPreferenceSetting extends DefaultTabPreferenceSetting {
      * @return the collection of module site URLs from where module lists can be downloaded
      */
     public static final Collection<String> getModuleSites() {
-        return Main.pref.getCollection(OdConstants.PREF_MODULES_SITES, Arrays.asList(OdConstants.DEFAULT_MODULE_SITES));
+        return Main.pref.getList(OdConstants.PREF_MODULES_SITES, Arrays.asList(OdConstants.DEFAULT_MODULE_SITES));
     }
 
     /**
@@ -67,7 +67,7 @@ public class OdPreferenceSetting extends DefaultTabPreferenceSetting {
      * @param sites the site URLs
      */
     public static void setModuleSites(List<String> sites) {
-        Main.pref.putCollection(OdConstants.PREF_MODULES_SITES, sites);
+        Main.pref.putList(OdConstants.PREF_MODULES_SITES, sites);
     }
 
     @Override
@@ -136,7 +136,7 @@ public class OdPreferenceSetting extends DefaultTabPreferenceSetting {
         //Main.pref.put(PREF_COORDINATES, rbWGS84.isSelected() ? VALUE_WGS84 : VALUE_CC9ZONES);
         Main.pref.put(OdConstants.PREF_OAPI, oapi.getText());
         Main.pref.put(OdConstants.PREF_XAPI, xapi.getText());
-        Main.pref.put(OdConstants.PREF_RAWDATA, rawData.isSelected());
+        Main.pref.putBoolean(OdConstants.PREF_RAWDATA, rawData.isSelected());
 
         // create a task for downloading modules if the user has activated, yet not downloaded,
         // new modules

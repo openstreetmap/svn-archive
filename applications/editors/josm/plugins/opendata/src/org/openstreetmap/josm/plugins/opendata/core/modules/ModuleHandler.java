@@ -34,6 +34,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.data.PreferencesUtils;
 import org.openstreetmap.josm.data.preferences.sources.SourceProvider;
 import org.openstreetmap.josm.gui.HelpAwareOptionPane;
 import org.openstreetmap.josm.gui.HelpAwareOptionPane.ButtonSpec;
@@ -100,7 +101,7 @@ public final class ModuleHandler {
         String togglePreferenceKey = null;
         long tim = System.currentTimeMillis();
         long last = Main.pref.getLong("opendata.modulemanager.lastupdate", 0);
-        Integer maxTime = Main.pref.getInteger("opendata.modulemanager.time-based-update.interval", 60);
+        Integer maxTime = Main.pref.getInt("opendata.modulemanager.time-based-update.interval", 60);
         long d = (tim - last) / (24 * 60 * 60 * 1000L);
         if ((last <= 0) || (maxTime <= 0)) {
             Main.pref.put("opendata.modulemanager.lastupdate", Long.toString(tim));
@@ -255,7 +256,7 @@ public final class ModuleHandler {
             Logging.error(e);
         }
         if (msg != null && confirmDisableModule(parent, msg, module.name)) {
-            Main.pref.removeFromCollection(OdConstants.PREF_MODULES, module.name);
+            PreferencesUtils.removeFromList(Main.pref, OdConstants.PREF_MODULES, module.name);
         }
     }
 
@@ -361,7 +362,7 @@ public final class ModuleHandler {
      */
     public static List<ModuleInformation> buildListOfModulesToLoad(Component parent) {
         Set<String> modules = new HashSet<>();
-        modules.addAll(Main.pref.getCollection(OdConstants.PREF_MODULES, new LinkedList<String>()));
+        modules.addAll(Main.pref.getList(OdConstants.PREF_MODULES, new LinkedList<String>()));
         if (System.getProperty("josm."+OdConstants.PREF_MODULES) != null) {
             modules.addAll(Arrays.asList(System.getProperty("josm."+OdConstants.PREF_MODULES).split(",")));
         }

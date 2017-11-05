@@ -20,6 +20,8 @@ import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.gpx.GpxData;
 import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
+import org.openstreetmap.josm.data.projection.Projection;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.dialogs.LayerListDialog;
 import org.openstreetmap.josm.gui.dialogs.LayerListPopup;
@@ -102,11 +104,12 @@ public class EditGpxLayer extends Layer {
 
         //don't iterate through dataSet whiling making changes
         synchronized(layerImport.importing) {
+            Projection projection = Main.getProjection();
             for (EditGpxTrack track: data.getTracks()) {
                 for (EditGpxTrackSegment segment: track.getSegments()) {
                     for (EditGpxWayPoint wayPoint: segment.getWayPoints()) {
                         if (!wayPoint.isDeleted()) {
-                            Point pnt = mv.getPoint(wayPoint.getCoor().getEastNorth());
+                            Point pnt = mv.getPoint(wayPoint.getCoor().getEastNorth(projection));
                             g.drawOval(pnt.x - 2, pnt.y - 2, 4, 4);
                         }
                     }
@@ -146,11 +149,11 @@ public class EditGpxLayer extends Layer {
         }
         @Override
         public void actionPerformed(ActionEvent e) {
-            if (Main.map.mapMode instanceof EditGpxMode && !Main.map.selectSelectTool(false)) {
-                Main.map.selectZoomTool(false); // Select tool might not be support of active layer, zoom is always supported
+            if (MainApplication.getMap().mapMode instanceof EditGpxMode && !MainApplication.getMap().selectSelectTool(false)) {
+                MainApplication.getMap().selectZoomTool(false); // Select tool might not be support of active layer, zoom is always supported
             }
-            Main.getLayerManager().addLayer(new GpxLayer(toGpxData(false), tr("Converted from: {0}", getName())));
-            Main.getLayerManager().removeLayer(EditGpxLayer.this);
+            MainApplication.getLayerManager().addLayer(new GpxLayer(toGpxData(false), tr("Converted from: {0}", getName())));
+            MainApplication.getLayerManager().removeLayer(EditGpxLayer.this);
         }
     }
 
@@ -166,11 +169,11 @@ public class EditGpxLayer extends Layer {
         }
         @Override
         public void actionPerformed(ActionEvent e) {
-            if (Main.map.mapMode instanceof EditGpxMode && !Main.map.selectSelectTool(false)) {
-                Main.map.selectZoomTool(false); // Select tool might not be support of active layer, zoom is always supported
+            if (MainApplication.getMap().mapMode instanceof EditGpxMode && !MainApplication.getMap().selectSelectTool(false)) {
+                MainApplication.getMap().selectZoomTool(false); // Select tool might not be support of active layer, zoom is always supported
             }
-            Main.getLayerManager().addLayer(new GpxLayer(toGpxData(true), tr("Converted from: {0}", getName())));
-            Main.getLayerManager().removeLayer(EditGpxLayer.this);
+            MainApplication.getLayerManager().addLayer(new GpxLayer(toGpxData(true), tr("Converted from: {0}", getName())));
+            MainApplication.getLayerManager().removeLayer(EditGpxLayer.this);
         }
     }
 }

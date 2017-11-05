@@ -23,6 +23,7 @@ import javax.swing.JList;
 import javax.swing.JOptionPane;
 
 import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.layer.GpxLayer;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.plugins.editgpx.data.EditGpxData;
@@ -53,7 +54,7 @@ class GPXLayerImportAction extends AbstractAction {
         final JList<GpxLayer> layerList = new JList<>(dModel);
         int layerCnt = 0;
 
-        for (Layer l : Main.map.mapView.getLayerManager().getLayers()){
+        for (Layer l : MainApplication.getMap().mapView.getLayerManager().getLayers()){
             if (l instanceof GpxLayer){
                 dModel.addElement((GpxLayer) l);
                 layerCnt++;
@@ -102,7 +103,7 @@ class GPXLayerImportAction extends AbstractAction {
                     this.data.load(gpx.data);
                 }
             }
-            Main.map.mapView.repaint();
+            MainApplication.getMap().mapView.repaint();
 
         } else {
             // no gps layer

@@ -16,6 +16,8 @@ import java.util.List;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.mapmode.MapMode;
+import org.openstreetmap.josm.data.projection.Projection;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.gui.layer.LayerManager.LayerAddEvent;
 import org.openstreetmap.josm.gui.layer.LayerManager.LayerChangeListener;
@@ -40,25 +42,25 @@ public class EditGpxMode extends MapMode implements LayerChangeListener {
      * @param mapFrame map frame
      */
     public EditGpxMode(MapFrame mapFrame) {
-        super("editgpx", "editgpx_mode.png", tr("edit gpx tracks"), Main.map, Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
+        super("editgpx", "editgpx_mode.png", tr("edit gpx tracks"), Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
         this.mapFrame = mapFrame;
     }
 
     @Override
     public void enterMode() {
         super.enterMode();
-        Main.map.mapView.addMouseListener(this);
-        Main.map.mapView.addMouseMotionListener(this);
-        Main.map.mapView.getLayerManager().addLayerChangeListener(this);
+        MainApplication.getMap().mapView.addMouseListener(this);
+        MainApplication.getMap().mapView.addMouseMotionListener(this);
+        MainApplication.getMap().mapView.getLayerManager().addLayerChangeListener(this);
         updateLayer();
     }
 
     @Override
     public void exitMode() {
         super.exitMode();
-        Main.map.mapView.removeMouseListener(this);
-        Main.map.mapView.removeMouseMotionListener(this);
-        Main.map.mapView.getLayerManager().removeLayerChangeListener(this);
+        MainApplication.getMap().mapView.removeMouseListener(this);
+        MainApplication.getMap().mapView.removeMouseMotionListener(this);
+        MainApplication.getMap().mapView.getLayerManager().removeLayerChangeListener(this);
     }
 
     @Override
@@ -86,10 +88,11 @@ public class EditGpxMode extends MapMode implements LayerChangeListener {
 
         //go through nodes and mark the ones in the selection rect as deleted
         if (currentEditLayer != null) {
+            Projection projection = Main.getProjection();
             for (EditGpxTrack track: currentEditLayer.data.getTracks()) {
                 for (EditGpxTrackSegment segment: track.getSegments()) {
                     for (EditGpxWayPoint wayPoint: segment.getWayPoints()) {
-                        Point p = Main.map.mapView.getPoint(wayPoint.getCoor().getEastNorth());
+                        Point p = MainApplication.getMap().mapView.getPoint(wayPoint.getCoor().getEastNorth(projection));
                         if (r.contains(p)) {
                             wayPoint.setDeleted(true);
                         }
@@ -98,7 +101,7 @@ public class EditGpxMode extends MapMode implements LayerChangeListener {
             }
         }
         oldRect = null;
-        Main.map.mapView.repaint();
+        MainApplication.getMap().mapView.repaint();
     }
 
     /**
@@ -159,15 +162,15 @@ public class EditGpxMode extends MapMode implements LayerChangeListener {
      */
     private void updateLayer() {
 
-        List<EditGpxLayer> layers = Main.map.mapView.getLayerManager().getLayersOfType(EditGpxLayer.class);
+        List<EditGpxLayer> layers = MainApplication.getMap().mapView.getLayerManager().getLayersOfType(EditGpxLayer.class);
         currentEditLayer = layers.isEmpty() ? null : layers.get(0);
 
         if(currentEditLayer == null) {
             currentEditLayer = new EditGpxLayer(new EditGpxData());
-            Main.getLayerManager().addLayer(currentEditLayer);
+            MainApplication.getLayerManager().addLayer(currentEditLayer);
             currentEditLayer.initializeImport();
         }
-        Main.map.mapView.repaint();
+        MainApplication.getMap().mapView.repaint();
     }
 
     @Override
@@ -179,11 +182,11 @@ public class EditGpxMode extends MapMode implements LayerChangeListener {
     public void layerRemoving(LayerRemoveEvent e) {
         if (e.getRemovedLayer() instanceof EditGpxLayer) {
             currentEditLayer = null;
-            if (Main.map.mapMode instanceof EditGpxMode) {
-                if (Main.map.mapView.getLayerManager().getActiveLayer() instanceof OsmDataLayer) {
-                    Main.map.selectSelectTool(false);
+            if (MainApplication.getMap().mapMode instanceof EditGpxMode) {
+                if (MainApplication.getMap().mapView.getLayerManager().getActiveLayer() instanceof OsmDataLayer) {
+                    MainApplication.getMap().selectSelectTool(false);
                 } else {
-                    Main.map.selectZoomTool(false);
+                    MainApplication.getMap().selectZoomTool(false);
                 }
             }
         }

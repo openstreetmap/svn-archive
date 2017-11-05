@@ -5,8 +5,8 @@ package org.openstreetmap.josm.plugins.editgpx;
 
 import javax.swing.ImageIcon;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.IconToggleButton;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
@@ -39,8 +39,8 @@ public class EditGpxPlugin extends Plugin {
     public void mapFrameInitialized(MapFrame oldFrame, MapFrame newFrame) {
         if (newFrame != null) {
             EditGpxMode mode = new EditGpxMode(newFrame);
-            if (Main.map != null)
-                Main.map.addMapMode(new IconToggleButton(mode));
+            if (MainApplication.getMap() != null)
+                MainApplication.getMap().addMapMode(new IconToggleButton(mode));
         }
     }
 

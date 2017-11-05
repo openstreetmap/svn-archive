@@ -44,6 +44,7 @@ public class EditGpxWayPoint implements Comparable<EditGpxWayPoint> {
         return coor;
     }
 
+    @Override
     public int compareTo(EditGpxWayPoint o) {
         return Double.compare(getTime(), o.getTime());
     }

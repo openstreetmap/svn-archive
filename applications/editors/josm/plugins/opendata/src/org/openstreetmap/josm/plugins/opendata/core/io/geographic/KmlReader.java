@@ -29,6 +29,7 @@ import org.openstreetmap.josm.io.IllegalDataException;
 import org.openstreetmap.josm.io.UTFInputStreamReader;
 import org.openstreetmap.josm.plugins.opendata.core.OdConstants;
 import org.openstreetmap.josm.plugins.opendata.core.io.ProjectionPatterns;
+import org.openstreetmap.josm.tools.date.DateUtils;
 
 public class KmlReader extends AbstractReader {
 
@@ -44,6 +45,10 @@ public class KmlReader extends AbstractReader {
     public static final String KML_INNER_BOUND = "innerBoundaryIs";
     public static final String KML_LINEAR_RING = "LinearRing";
     public static final String KML_COORDINATES = "coordinates";
+    public static final String KML_WHEN = "when";
+
+    public static final String KML_EXT_TRACK = "Track";
+    public static final String KML_EXT_COORD = "coord";
     // CHECKSTYLE.ON: SingleSpaceSeparator
 
     public static Pattern COLOR_PATTERN = Pattern.compile("\\p{XDigit}{8}");
@@ -92,6 +97,7 @@ public class KmlReader extends AbstractReader {
 
     private void parsePlaceMark(DataSet ds) throws XMLStreamException {
         List<OsmPrimitive> list = new ArrayList<>();
+        long when = 0;
         Way way = null;
         Node node = null;
         Relation relation = null;
@@ -126,28 +132,21 @@ public class KmlReader extends AbstractReader {
                         ds.addPrimitive(way = new Way());
                         relation.addMember(new RelationMember(role, way));
                     }
-                } else if (parser.getLocalName().equals(KML_LINE_STRING)) {
+                } else if (parser.getLocalName().equals(KML_LINE_STRING) || parser.getLocalName().equals(KML_EXT_TRACK)) {
                     ds.addPrimitive(way = new Way());
                     list.add(way);
                 } else if (parser.getLocalName().equals(KML_COORDINATES)) {
                     String[] tab = parser.getElementText().trim().split("\\s");
                     for (int i = 0; i < tab.length; i++) {
-                        String[] values = tab[i].split(",");
-                        if (values.length >= 2) {
-                            LatLon ll = new LatLon(Double.valueOf(values[1]), Double.valueOf(values[0])).getRoundedToOsmPrecision();
-                            node = nodes.get(ll);
-                            if (node == null) {
-                                ds.addPrimitive(node = new Node(ll));
-                                nodes.put(ll, node);
-                                if (values.length > 2 && !values[2].equals("0")) {
-                                    node.put("ele", values[2]);
-                                }
-                            }
-                            if (way != null) {
-                                way.addNode(node);
-                            }
-                        }
+                        node = parseNode(ds, way, node, tab[i].split(","));
                     }
+                } else if (parser.getLocalName().equals(KML_EXT_COORD)) {
+                    node = parseNode(ds, way, node, parser.getElementText().trim().split("\\s"));
+                    if (node != null && when > 0) {
+                        node.setRawTimestamp((int) when);
+                    }
+                } else if (parser.getLocalName().equals(KML_WHEN)) {
+                    when = DateUtils.tsFromString(parser.getElementText().trim());
                 }
             } else if (event == XMLStreamConstants.END_ELEMENT) {
                 if (parser.getLocalName().equals(KML_PLACEMARK)) {
@@ -162,5 +161,23 @@ public class KmlReader extends AbstractReader {
                 p.put(key, tags.get(key));
             }
         }
+    }
+
+    private Node parseNode(DataSet ds, Way way, Node node, String[] values) {
+        if (values.length >= 2) {
+            LatLon ll = new LatLon(Double.valueOf(values[1]), Double.valueOf(values[0])).getRoundedToOsmPrecision();
+            node = nodes.get(ll);
+            if (node == null) {
+                ds.addPrimitive(node = new Node(ll));
+                nodes.put(ll, node);
+                if (values.length > 2 && !values[2].equals("0")) {
+                    node.put("ele", values[2]);
+                }
+            }
+            if (way != null) {
+                way.addNode(node);
+            }
+        }
+        return node;
     }
 }

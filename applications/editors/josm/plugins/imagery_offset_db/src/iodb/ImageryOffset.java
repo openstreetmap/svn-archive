@@ -3,8 +3,8 @@ package iodb;
 
 import java.util.Map;
 
-import org.openstreetmap.josm.data.coor.CoordinateFormat;
 import org.openstreetmap.josm.data.coor.LatLon;
+import org.openstreetmap.josm.data.coor.conversion.DecimalDegreesCoordinateFormat;
 
 /**
  * An imagery offset. Contains imagery identifier, zoom bracket and a location
@@ -54,8 +54,8 @@ public class ImageryOffset extends ImageryOffsetBase {
     public void putServerParams(Map<String, String> map) {
         super.putServerParams(map);
         map.put("imagery", imagery);
-        map.put("imlat", imageryPos.latToString(CoordinateFormat.DECIMAL_DEGREES));
-        map.put("imlon", imageryPos.lonToString(CoordinateFormat.DECIMAL_DEGREES));
+        map.put("imlat", DecimalDegreesCoordinateFormat.INSTANCE.latToString(imageryPos));
+        map.put("imlon", DecimalDegreesCoordinateFormat.INSTANCE.lonToString(imageryPos));
         if (minZoom > 0)
             map.put("minzoom", String.valueOf(minZoom));
         if (maxZoom < 30)

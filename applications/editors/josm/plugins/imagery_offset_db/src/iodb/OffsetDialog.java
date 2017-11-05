@@ -36,7 +36,7 @@ import javax.swing.border.EmptyBorder;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.Bounds;
-import org.openstreetmap.josm.gui.JosmUserIdentityManager;
+import org.openstreetmap.josm.data.UserIdentityManager;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.NavigatableComponent.ZoomChangeListener;
@@ -56,7 +56,7 @@ import org.openstreetmap.josm.tools.OpenBrowser;
 public class OffsetDialog extends JDialog implements ActionListener, ZoomChangeListener, MapViewPaintable {
     protected static final String PREF_CALIBRATION = "iodb.show.calibration";
     protected static final String PREF_DEPRECATED = "iodb.show.deprecated";
-    private static final int MAX_OFFSETS = Main.pref.getInteger("iodb.max.offsets", 4);
+    private static final int MAX_OFFSETS = Main.pref.getInt("iodb.max.offsets", 4);
 
     /**
      * Whether to create a modal frame. It turns out, modal dialogs
@@ -96,7 +96,7 @@ public class OffsetDialog extends JDialog implements ActionListener, ZoomChangeL
         calibrationBox.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Main.pref.put(PREF_CALIBRATION, calibrationBox.isSelected());
+                Main.pref.putBoolean(PREF_CALIBRATION, calibrationBox.isSelected());
                 updateButtonPanel();
             }
         });
@@ -105,7 +105,7 @@ public class OffsetDialog extends JDialog implements ActionListener, ZoomChangeL
         deprecatedBox.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Main.pref.put(PREF_DEPRECATED, deprecatedBox.isSelected());
+                Main.pref.putBoolean(PREF_DEPRECATED, deprecatedBox.isSelected());
                 updateButtonPanel();
             }
         });
@@ -270,7 +270,7 @@ public class OffsetDialog extends JDialog implements ActionListener, ZoomChangeL
      */
     public void applyOffset() {
         if (selectedOffset instanceof ImageryOffset) {
-            AbstractTileSourceLayer layer = ImageryOffsetTools.getTopImageryLayer();
+            AbstractTileSourceLayer<?> layer = ImageryOffsetTools.getTopImageryLayer();
             ImageryOffsetTools.applyLayerOffset(layer, (ImageryOffset) selectedOffset);
             ImageryOffsetWatcher.getInstance().markGood();
             MainApplication.getMap().repaint();
@@ -280,7 +280,7 @@ public class OffsetDialog extends JDialog implements ActionListener, ZoomChangeL
                                 + "OSM data in the area. Please check that the offset is still valid\n"
                                 + "by downloading GPS tracks and comparing them and OSM data to the imagery."),
                         ImageryOffsetTools.DIALOG_TITLE, JOptionPane.INFORMATION_MESSAGE);
-                Main.pref.put("iodb.offset.message", true);
+                Main.pref.putBoolean("iodb.offset.message", true);
             }
         } else if (selectedOffset instanceof CalibrationObject) {
             CalibrationLayer clayer = new CalibrationLayer((CalibrationObject) selectedOffset);
@@ -291,7 +291,7 @@ public class OffsetDialog extends JDialog implements ActionListener, ZoomChangeL
                         tr("A layer has been added with a calibration geometry. Hide data layers,\n"
                                 + "find the corresponding feature on the imagery layer and move it accordingly."),
                         ImageryOffsetTools.DIALOG_TITLE, JOptionPane.INFORMATION_MESSAGE);
-                Main.pref.put("iodb.calibration.message", true);
+                Main.pref.putBoolean("iodb.calibration.message", true);
             }
         }
     }
@@ -314,7 +314,7 @@ public class OffsetDialog extends JDialog implements ActionListener, ZoomChangeL
          */
         @Override
         public void queryPassed() {
-            offset.setDeprecated(new Date(), JosmUserIdentityManager.getInstance().getUserName(), "");
+            offset.setDeprecated(new Date(), UserIdentityManager.getInstance().getUserName(), "");
             updateButtonPanel();
         }
     }

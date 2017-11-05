@@ -4,8 +4,8 @@ package iodb;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.event.KeyEvent;
-import java.util.Collection;
 import java.util.LinkedList;
+import java.util.List;
 
 import javax.swing.JMenu;
 
@@ -49,13 +49,13 @@ public class ImageryOffsetPlugin extends Plugin {
 
                 // an ugly hack to add this plugin to the toolbar
                 if (Main.pref.getBoolean("iodb.modify.toolbar", true)) {
-                    Collection<String> toolbar = new LinkedList<>(ToolbarPreferences.getToolString());
+                    List<String> toolbar = new LinkedList<>(ToolbarPreferences.getToolString());
                     if (!toolbar.contains("getoffset")) {
                         toolbar.add("getoffset");
-                        Main.pref.putCollection("toolbar", toolbar);
+                        Main.pref.putList("toolbar", toolbar);
                         MainApplication.getToolbar().refreshToolbarControl();
                     }
-                    Main.pref.put("iodb.modify.toolbar", false);
+                    Main.pref.putBoolean("iodb.modify.toolbar", false);
                 }
     }
 }

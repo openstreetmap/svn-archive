@@ -17,8 +17,8 @@ import javax.swing.JOptionPane;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
-import org.openstreetmap.josm.data.coor.CoordinateFormat;
 import org.openstreetmap.josm.data.coor.LatLon;
+import org.openstreetmap.josm.data.coor.conversion.DecimalDegreesCoordinateFormat;
 import org.openstreetmap.josm.data.projection.Projection;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.layer.AbstractTileSourceLayer;
@@ -58,7 +58,7 @@ public class GetImageryOffsetAction extends JosmAction implements ImageryOffsetW
             return;
         Projection proj = MainApplication.getMap().mapView.getProjection();
         LatLon center = proj.eastNorth2latlon(MainApplication.getMap().mapView.getCenter());
-        AbstractTileSourceLayer layer = ImageryOffsetTools.getTopImageryLayer();
+        AbstractTileSourceLayer<?> layer = ImageryOffsetTools.getTopImageryLayer();
         String imagery = ImageryOffsetTools.getImageryID(layer);
         if (imagery == null)
             return;
@@ -76,7 +76,7 @@ public class GetImageryOffsetAction extends JosmAction implements ImageryOffsetW
         boolean state = true;
         if (!MainApplication.isDisplayingMapView() || !MainApplication.getMap().isVisible())
             state = false;
-        AbstractTileSourceLayer layer = ImageryOffsetTools.getTopImageryLayer();
+        AbstractTileSourceLayer<?> layer = ImageryOffsetTools.getTopImageryLayer();
         if (ImageryOffsetTools.getImageryID(layer) == null)
             state = false;
         setEnabled(state);
@@ -130,13 +130,13 @@ public class GetImageryOffsetAction extends JosmAction implements ImageryOffsetW
          * @param layer The topmost imagery layer.
          * @param imagery Imagery ID for the layer.
          */
-        DownloadOffsetsTask(LatLon center, AbstractTileSourceLayer layer, String imagery) {
+        DownloadOffsetsTask(LatLon center, AbstractTileSourceLayer<?> layer, String imagery) {
             super(null, tr("Loading imagery offsets..."));
             try {
-                String query = "get?lat=" + center.latToString(CoordinateFormat.DECIMAL_DEGREES)
-                + "&lon=" + center.lonToString(CoordinateFormat.DECIMAL_DEGREES)
+                String query = "get?lat=" + DecimalDegreesCoordinateFormat.INSTANCE.latToString(center)
+                + "&lon=" + DecimalDegreesCoordinateFormat.INSTANCE.lonToString(center)
                 + "&imagery=" + URLEncoder.encode(imagery, "UTF8");
-                int radius = Main.pref.getInteger("iodb.radius", -1);
+                int radius = Main.pref.getInt("iodb.radius", -1);
                 if (radius > 0)
                     query = query + "&radius=" + radius;
                 setQuery(query);

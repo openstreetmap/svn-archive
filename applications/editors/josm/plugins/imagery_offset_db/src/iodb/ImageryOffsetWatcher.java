@@ -2,7 +2,6 @@
 package iodb;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -115,7 +114,7 @@ public final class ImageryOffsetWatcher implements ZoomChangeListener, LayerChan
             setOffsetGood(true);
             return;
         }
-        AbstractTileSourceLayer layer = ImageryOffsetTools.getTopImageryLayer();
+        AbstractTileSourceLayer<?> layer = ImageryOffsetTools.getTopImageryLayer();
         if (layer == null) {
             setOffsetGood(true);
             return;
@@ -157,7 +156,7 @@ public final class ImageryOffsetWatcher implements ZoomChangeListener, LayerChan
      * whether it has changed an offset, the currect imagery alignment is ok.
      */
     public void markGood() {
-        AbstractTileSourceLayer layer = ImageryOffsetTools.getTopImageryLayer();
+        AbstractTileSourceLayer<?> layer = ImageryOffsetTools.getTopImageryLayer();
         if (layer != null) {
             TileSourceDisplaySettings displaySettings = layer.getDisplaySettings();
             LatLon center = ImageryOffsetTools.getMapCenter();
@@ -204,7 +203,7 @@ public final class ImageryOffsetWatcher implements ZoomChangeListener, LayerChan
     public void layerAdded(LayerAddEvent e) {
         Layer newLayer = e.getAddedLayer();
         if (newLayer instanceof AbstractTileSourceLayer)
-            loadLayerOffset((AbstractTileSourceLayer) newLayer);
+            loadLayerOffset((AbstractTileSourceLayer<?>) newLayer);
         checkOffset();
     }
 
@@ -222,11 +221,11 @@ public final class ImageryOffsetWatcher implements ZoomChangeListener, LayerChan
      * collection of ':'-separated strings: imagery_id:lat:lon:dx:dy. No need for
      * projections: nobody uses them anyway.
      */
-    private void storeLayerOffset(AbstractTileSourceLayer layer) {
+    private void storeLayerOffset(AbstractTileSourceLayer<?> layer) {
         String id = ImageryOffsetTools.getImageryID(layer);
         if (!Main.pref.getBoolean("iodb.remember.offsets", true) || id == null)
             return;
-        Collection<String> offsets = new LinkedList<>(Main.pref.getCollection("iodb.stored.offsets"));
+        List<String> offsets = new LinkedList<>(Main.pref.getList("iodb.stored.offsets"));
         for (Iterator<String> iter = offsets.iterator(); iter.hasNext();) {
             String[] offset = iter.next().split(":");
             if (offset.length == 5 && offset[0].equals(id))
@@ -235,17 +234,17 @@ public final class ImageryOffsetWatcher implements ZoomChangeListener, LayerChan
         LatLon center = ImageryOffsetTools.getMapCenter();
         offsets.add(id + ":" + center.lat() + ":" + center.lon() + ":" +
                 layer.getDisplaySettings().getDx() + ":" + layer.getDisplaySettings().getDy());
-        Main.pref.putCollection("iodb.stored.offsets", offsets);
+        Main.pref.putList("iodb.stored.offsets", offsets);
     }
 
     /**
      * Loads the current imagery layer offset from preferences.
      */
-    private void loadLayerOffset(AbstractTileSourceLayer layer) {
+    private void loadLayerOffset(AbstractTileSourceLayer<?> layer) {
         String id = ImageryOffsetTools.getImageryID(layer);
         if (!Main.pref.getBoolean("iodb.remember.offsets", true) || id == null)
             return;
-        Collection<String> offsets = Main.pref.getCollection("iodb.stored.offsets");
+        List<String> offsets = Main.pref.getList("iodb.stored.offsets");
         for (String offset : offsets) {
             String[] parts = offset.split(":");
             if (parts.length == 5 && parts[0].equals(id)) {

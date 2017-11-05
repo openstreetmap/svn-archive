@@ -11,7 +11,7 @@ import javax.swing.AbstractAction;
 import javax.swing.JOptionPane;
 
 import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.gui.JosmUserIdentityManager;
+import org.openstreetmap.josm.data.UserIdentityManager;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.tools.ImageProvider;
 import org.openstreetmap.josm.tools.Logging;
@@ -78,7 +78,7 @@ public class DeprecateOffsetAction extends AbstractAction {
      * and executes {@link SimpleOffsetQueryTask} with a query to deprecate the offset.
      */
     public static void deprecateOffset(ImageryOffsetBase offset, QuerySuccessListener listener) {
-        String userName = JosmUserIdentityManager.getInstance().getUserName();
+        String userName = UserIdentityManager.getInstance().getUserName();
         if (userName == null) {
             JOptionPane.showMessageDialog(Main.parent, tr("To store imagery offsets you must be a registered OSM user."),
                     ImageryOffsetTools.DIALOG_TITLE, JOptionPane.ERROR_MESSAGE);

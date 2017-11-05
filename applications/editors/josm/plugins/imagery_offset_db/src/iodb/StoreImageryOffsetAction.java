@@ -14,11 +14,11 @@ import javax.swing.JOptionPane;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
+import org.openstreetmap.josm.data.UserIdentityManager;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Way;
-import org.openstreetmap.josm.gui.JosmUserIdentityManager;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.layer.AbstractTileSourceLayer;
 import org.openstreetmap.josm.tools.Logging;
@@ -53,11 +53,11 @@ public class StoreImageryOffsetAction extends JosmAction {
         if (!MainApplication.isDisplayingMapView())
             return;
 
-        AbstractTileSourceLayer layer = ImageryOffsetTools.getTopImageryLayer();
+        AbstractTileSourceLayer<?> layer = ImageryOffsetTools.getTopImageryLayer();
         if (layer == null)
             return;
 
-        String userName = JosmUserIdentityManager.getInstance().getUserName();
+        String userName = UserIdentityManager.getInstance().getUserName();
         if (userName == null || userName.length() == 0) {
             JOptionPane.showMessageDialog(Main.parent,
                     tr("To store imagery offsets you must be a registered OSM user."),

@@ -4,8 +4,8 @@ package iodb;
 import java.util.Date;
 import java.util.Map;
 
-import org.openstreetmap.josm.data.coor.CoordinateFormat;
 import org.openstreetmap.josm.data.coor.LatLon;
+import org.openstreetmap.josm.data.coor.conversion.DecimalDegreesCoordinateFormat;
 
 /**
  * Stores one offset record. It is the superclass for {@link ImageryOffset}
@@ -106,8 +106,8 @@ public class ImageryOffsetBase {
     }
 
     public void putServerParams(Map<String, String> map) {
-        map.put("lat", position.latToString(CoordinateFormat.DECIMAL_DEGREES));
-        map.put("lon", position.lonToString(CoordinateFormat.DECIMAL_DEGREES));
+        map.put("lat", DecimalDegreesCoordinateFormat.INSTANCE.latToString(position));
+        map.put("lon", DecimalDegreesCoordinateFormat.INSTANCE.lonToString(position));
         map.put("author", author);
         map.put("description", description);
     }

@@ -15,7 +15,6 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Objects;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
@@ -23,6 +22,7 @@ import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.data.osm.WaySegment;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.layer.MapViewPaintable;
+import org.openstreetmap.josm.tools.Logging;
 
 /**
  * @author tilusnet <tilusnet@gmail.com>
@@ -62,7 +62,7 @@ public class AlignWaysSegment implements MapViewPaintable {
                 segmentEndPoints.add(segment.getFirstNode());
                 segmentEndPoints.add(segment.getSecondNode());
             } catch (IndexOutOfBoundsException e) {
-                Main.error(e);
+                Logging.error(e);
             }
         }
     }
@@ -90,7 +90,7 @@ public class AlignWaysSegment implements MapViewPaintable {
         // Note: segment should never be null here, and its nodes should never be missing.
         // If they are, it's a bug, possibly related to tracking of DataSet deletions.
         if (segment.way.getNodesCount() <= segment.lowerIndex + 1) {
-            Main.warn("Not drawing AlignWays highlighting segment: underlying nodes disappeared");
+            Logging.warn("Not drawing AlignWays highlighting segment: underlying nodes disappeared");
             return;
         }
 
@@ -111,7 +111,7 @@ public class AlignWaysSegment implements MapViewPaintable {
 
             g.draw(new Line2D.Double(mv.getPoint(n1), mv.getPoint(n2)));
         } catch (IndexOutOfBoundsException e) {
-            Main.error(e);
+            Logging.error(e);
         }
     }
 

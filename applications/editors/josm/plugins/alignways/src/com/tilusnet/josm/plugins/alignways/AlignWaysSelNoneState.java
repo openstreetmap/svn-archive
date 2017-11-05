@@ -4,7 +4,8 @@
 package com.tilusnet.josm.plugins.alignways;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
-import org.openstreetmap.josm.Main;
+
+import org.openstreetmap.josm.gui.MainApplication;
 
 /**
  * @author tilusnet <tilusnet@gmail.com>
@@ -27,7 +28,7 @@ public class AlignWaysSelNoneState extends AlignWaysState {
 
     @Override
     public void setHelpText() {
-        Main.map.statusLine
+        MainApplication.getMap().statusLine
         .setHelpText(tr("Ctrl-click: select reference way segment; Click: select way segment to be aligned"));
     }
 

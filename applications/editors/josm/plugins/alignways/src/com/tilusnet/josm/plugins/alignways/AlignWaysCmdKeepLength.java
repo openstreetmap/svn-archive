@@ -1,15 +1,15 @@
 /**
- * 
+ *
  */
 package com.tilusnet.josm.plugins.alignways;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
-import java.util.Collections;
 
 import javax.swing.Icon;
 import javax.swing.JOptionPane;
@@ -17,19 +17,20 @@ import javax.swing.JOptionPane;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.data.coor.EastNorth;
+import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.WaySegment;
-import org.openstreetmap.josm.data.projection.Projections;
+import org.openstreetmap.josm.gui.MainApplication;
+import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.tools.ImageProvider;
 
 /**
  * Executes one of the desired geometric actions
  * needed to align the ways.
- * 
+ *
  * @author tilusnet <tilusnet@gmail.com>
  */
-
 public class AlignWaysCmdKeepLength extends Command {
 
     enum AlignableStatus {
@@ -53,7 +54,6 @@ public class AlignWaysCmdKeepLength extends Command {
      */
     final Map<Node,EastNorth> calculatedNodes = new HashMap<>();
 
-
     /**
      * Set of nodes that were affected by the last command execution.
      */
@@ -66,7 +66,7 @@ public class AlignWaysCmdKeepLength extends Command {
 
     /**
      * Computed rotation angle to rotate the segment
-     * 
+     *
      */
     private final double rotationAngle;
 
@@ -79,15 +79,14 @@ public class AlignWaysCmdKeepLength extends Command {
      * Creates an AlignWaysRotateCommand.
      * TODO Limitation (for now): constructor assumes areSegsAlignable() returns true.
      */
-    public AlignWaysCmdKeepLength() {
-
+    public AlignWaysCmdKeepLength(DataSet ds) {
+        super(ds);
         lastAffectedNodes = null;
 
-        algnSeg = AlignWaysSegmentMgr.getInstance(Main.map.mapView)
-                .getAlgnSeg();
+        MapView mapView = MainApplication.getMap().mapView;
+        algnSeg = AlignWaysSegmentMgr.getInstance(mapView).getAlgnSeg();
         WaySegment algnWS = algnSeg.getSegment();
-        WaySegment refWS = AlignWaysSegmentMgr.getInstance(Main.map.mapView)
-                .getRefSeg().getSegment();
+        WaySegment refWS = AlignWaysSegmentMgr.getInstance(mapView).getRefSeg().getSegment();
 
         this.pivot = algnSeg.getCurrPivotCoord();
         this.displaceableNodes = algnSeg.getSegmentEndPoints();
@@ -122,7 +121,6 @@ public class AlignWaysCmdKeepLength extends Command {
             calculatedNodes.put(n, new EastNorth(nx, ny));
         }
 
-
         /*
          * For debug only
          * String s = "Ref Angle: " + refAngle + " (" + Math.toDegrees(refAngle)
@@ -132,12 +130,11 @@ public class AlignWaysCmdKeepLength extends Command {
          * s += "Rotation angle: " + rotationAngle + " ("
          * + Math.toDegrees(rotationAngle) + ")";
          */
-
     }
 
     /**
      * Helper for actually rotating the nodes.
-     * 
+     *
      * @param setModified
      *            - true if rotated nodes should be flagged "modified"
      */
@@ -235,7 +232,7 @@ public class AlignWaysCmdKeepLength extends Command {
     AlignableStatus areSegsAlignable() {
         Collection<Node> algnNodes = displaceableNodes;
         Collection<Node> refNodes = AlignWaysSegmentMgr
-                .getInstance(Main.map.mapView).getRefSeg()
+                .getInstance(MainApplication.getMap().mapView).getRefSeg()
                 .getSegmentEndPoints();
 
         // First check if the pivot node of the alignee exists in the reference:
@@ -255,10 +252,8 @@ public class AlignWaysCmdKeepLength extends Command {
 
         // Deny action if the nodes would end up outside world
         for (EastNorth en : calculatedNodes.values()) {
-
-            if (Projections.inverseProject(en).isOutSideWorld())
+            if (Main.getProjection().eastNorth2latlon(en).isOutSideWorld())
                 return AlignableStatus.ALGN_INV_OUTSIDE_WORLD;
-
         }
 
         // In all other cases alignment is possible
@@ -267,7 +262,7 @@ public class AlignWaysCmdKeepLength extends Command {
 
     /**
      * Validates the circumstances of the alignment command to be executed.
-     * 
+     *
      * @return true if the aligning action can be done, false otherwise.
      */
     public boolean executable() {
@@ -283,7 +278,7 @@ public class AlignWaysCmdKeepLength extends Command {
 
     /**
      * Reports invalid alignable statuses on screen in dialog boxes.
-     * 
+     *
      * @param stat The invalid status to report
      */
     void reportInvalidCommand(AlignableStatus stat) {

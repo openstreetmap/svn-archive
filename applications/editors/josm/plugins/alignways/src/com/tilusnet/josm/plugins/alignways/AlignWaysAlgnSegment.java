@@ -4,8 +4,8 @@ import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
-import java.awt.Shape;
 import java.awt.RenderingHints;
+import java.awt.Shape;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
 import java.util.ArrayList;
@@ -15,14 +15,15 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.WaySegment;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.NavigatableComponent;
+import org.openstreetmap.josm.tools.Logging;
 
 /**
  * @author tilusnet <tilusnet@gmail.com>
@@ -131,7 +132,7 @@ public class AlignWaysAlgnSegment extends AlignWaysSegment {
                 return null;
             }
         } catch (IndexOutOfBoundsException e) {
-            Main.error(e);
+            Logging.error(e);
             return null;
         }
     }
@@ -193,14 +194,14 @@ public class AlignWaysAlgnSegment extends AlignWaysSegment {
         final int stepsOnCircle = 24;
         final double incrementOnCircle = 2 * Math.PI / stepsOnCircle;
 
-        Point p = Main.map.mapView.getPoint(node);
+        Point p = MainApplication.getMap().mapView.getPoint(node);
         for (int i = 0; i < stepsOnCircle; i++) {
             double ang = i * incrementOnCircle;
             double x = p.getX() + (Math.cos(ang) * radius);
             double y = p.getY() + (Math.sin(ang) * radius);
             Point pnew = new Point();
             pnew.setLocation(x, y);
-            WaySegment ws = Main.map.mapView.getNearestWaySegment(pnew, OsmPrimitive::isUsable);
+            WaySegment ws = MainApplication.getMap().mapView.getNearestWaySegment(pnew, OsmPrimitive::isUsable);
             if (ws != null &&  !ws.equals(this.segment) &&
                     (ws.getFirstNode().equals(node) || ws.getSecondNode().equals(node))) {
                 // We won't want to add a:
@@ -232,7 +233,7 @@ public class AlignWaysAlgnSegment extends AlignWaysSegment {
         // Note: segment should never be null here, and its nodes should never be missing.
         // If they are, it's a bug, possibly related to tracking of DataSet deletions.
         if (segment.way.getNodesCount() <= segment.lowerIndex + 1) {
-            Main.warn("Not drawing AlignWays pivot points: underlying nodes disappeared");
+            Logging.warn("Not drawing AlignWays pivot points: underlying nodes disappeared");
             return;
         }
 

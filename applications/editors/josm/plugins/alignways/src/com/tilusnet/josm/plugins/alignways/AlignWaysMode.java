@@ -30,7 +30,7 @@ import org.openstreetmap.josm.data.osm.event.RelationMembersChangedEvent;
 import org.openstreetmap.josm.data.osm.event.TagsChangedEvent;
 import org.openstreetmap.josm.data.osm.event.WayNodesChangedEvent;
 import org.openstreetmap.josm.gui.IconToggleButton;
-import org.openstreetmap.josm.gui.MapFrame;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import org.openstreetmap.josm.tools.Shortcut;
@@ -51,18 +51,17 @@ public class AlignWaysMode extends MapMode implements DataSetListener {
     private AlignWaysSegmentMgr awSegs;
     boolean tipShown;
 
-    public AlignWaysMode(MapFrame mapFrame, String name, String desc) {
+    public AlignWaysMode(String name, String desc) {
         super(tr(name), "alignways.png", tr(desc),
                 Shortcut.registerShortcut("mapmode:alignways",
                         tr("Mode: {0}", tr("Align Ways")),
                         KeyEvent.VK_N, Shortcut.SHIFT),
-                        mapFrame, Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+                        Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
         noneSelected = new AlignWaysSelNoneState();
         referenceSelected = new AlignWaysSelRefState();
         aligneeSelected = new AlignWaysSelAlgnState();
         bothSelected = new AlignWaysSelBothState();
         tipShown = false;
-
     }
 
     @Override
@@ -85,9 +84,9 @@ public class AlignWaysMode extends MapMode implements DataSetListener {
             showWhatsNew();
         }
 
-        awSegs = AlignWaysSegmentMgr.getInstance(Main.map.mapView);
-        Main.map.mapView.addMouseListener(this);
-        DataSet ds = Main.getLayerManager().getEditDataSet();
+        awSegs = AlignWaysSegmentMgr.getInstance(MainApplication.getMap().mapView);
+        MainApplication.getMap().mapView.addMouseListener(this);
+        DataSet ds = MainApplication.getLayerManager().getEditDataSet();
         if (ds != null)
             ds.addDataSetListener(this);
         setCurrentState(noneSelected);
@@ -106,8 +105,8 @@ public class AlignWaysMode extends MapMode implements DataSetListener {
         }
 
         setCurrentState(noneSelected);
-        Main.map.mapView.removeMouseListener(this);
-        DataSet ds = Main.getLayerManager().getEditDataSet();
+        MainApplication.getMap().mapView.removeMouseListener(this);
+        DataSet ds = MainApplication.getLayerManager().getEditDataSet();
         if (ds != null)
             ds.removeDataSetListener(this);
         AlignWaysPlugin.getAwAction().setEnabled(false);
@@ -143,7 +142,7 @@ public class AlignWaysMode extends MapMode implements DataSetListener {
             }
         }
 
-        Main.map.mapView.repaint();
+        MainApplication.getMap().mapView.repaint();
     }
 
     /**
@@ -233,7 +232,7 @@ public class AlignWaysMode extends MapMode implements DataSetListener {
 
         tipDialog.dispose();
 
-        Main.pref.put("alignways.showtips", !atp.isChkBoxSelected());
+        Main.pref.putBoolean("alignways.showtips", !atp.isChkBoxSelected());
     }
 
     private void showWhatsNew() {
@@ -272,7 +271,7 @@ public class AlignWaysMode extends MapMode implements DataSetListener {
 
     @Override
     public void primitivesRemoved(PrimitivesRemovedEvent event) {
-        awSegs = AlignWaysSegmentMgr.getInstance(Main.map.mapView);
+        awSegs = AlignWaysSegmentMgr.getInstance(MainApplication.getMap().mapView);
 
         // Check whether any of the removed primitives were part of a highlighted alignee or reference segment.
         // If so: remove the affected segment and update the state accordingly.

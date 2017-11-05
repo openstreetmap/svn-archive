@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.tilusnet.josm.plugins.alignways;
 
@@ -12,6 +12,7 @@ import javax.swing.JOptionPane;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.coor.EastNorth;
+import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.WaySegment;
 
@@ -27,7 +28,8 @@ public class AlignWaysCmdKeepAngles extends AlignWaysCmdKeepLength {
 
     private AlignableStatus alignableStatKeepAngles = AlignableStatus.ALGN_VALID;
 
-    public AlignWaysCmdKeepAngles() {
+    public AlignWaysCmdKeepAngles(DataSet ds) {
+        super(ds);
         // Now the calculatedNodes reflect the coordinates that we'd have
         // without preserving the angles, i.e. preserving the length.
 
@@ -35,7 +37,7 @@ public class AlignWaysCmdKeepAngles extends AlignWaysCmdKeepLength {
 
         // Now we'll proceed with the hypothetical recalculation of the endpoint coordinates
         // following the rule of preserving angles instead. The new nodes will be stored in nodeArr[].
-        
+
         Node[] nodeArr = algnSeg.getSegmentEndPoints().toArray(new Node[2]);
 
         EastNorth enCalc1 = calcNodesKeepLength.get(nodeArr[0]);
@@ -52,14 +54,14 @@ public class AlignWaysCmdKeepAngles extends AlignWaysCmdKeepLength {
             // endpoint is pivot: the coordinates won't change
             return;
         }
-        
+
         ArrayList<WaySegment> alws = algnSeg.getAdjacentWaySegments(endpoint);
         int alwsSize = alws.size();
         if (0 < alwsSize && alwsSize <= 2) {
             // We need the intersection point of
             //  - the alignee following the keep length rule
             //  - the adjacent way segment
-            
+
             Node adjOther1 = getNonEqualNode(alws.get(0), endpoint);
             EastNorth enAdjOther1 = adjOther1.getEastNorth();
             Node adjOther2 = null;
@@ -68,7 +70,7 @@ public class AlignWaysCmdKeepAngles extends AlignWaysCmdKeepLength {
             if (alwsSize == 2) {
                 adjOther2 = getNonEqualNode(alws.get(1), endpoint);
                 enAdjOther2 = adjOther2.getEastNorth();
-                
+
                 // In order have a chance to align, (enAdjOther1, enAdjOther2 and endpoint) must be collinear
                 ArrayList<EastNorth> enAdjPts = new ArrayList<>(3);
                 enAdjPts.add(enAdjOther1);
@@ -79,11 +81,11 @@ public class AlignWaysCmdKeepAngles extends AlignWaysCmdKeepLength {
                     alignableStatKeepAngles = AlignableStatus.ALGN_INV_ANGLE_PRESERVING_CONFLICT;
                     return;
                 }
-                
+
             }
 
             // Update the calculated node for angle preserving alignment
-            AlignWaysGeomPoint isectPnt = alignedLineKeepLength.getIntersection(new AlignWaysGeomLine(enAdjOther1.getX(), enAdjOther1.getY(), 
+            AlignWaysGeomPoint isectPnt = alignedLineKeepLength.getIntersection(new AlignWaysGeomLine(enAdjOther1.getX(), enAdjOther1.getY(),
                                                                                                       endpoint.getEastNorth().getX(), endpoint.getEastNorth().getY()));
             EastNorth enIsectPt = null;
             // If the intersection is null, the adjacent and the alignee are parallel already:
@@ -95,16 +97,16 @@ public class AlignWaysCmdKeepAngles extends AlignWaysCmdKeepLength {
                 alignableStatKeepAngles = AlignableStatus.ALGN_INV_ANGLE_PRESERVING_CONFLICT;
                 return;
             }
-            
-            // For the case of two adjacent segments with collinear points, the new endpoint may  
-            // not fall between enAdjOther1 and enAdjOther2; 
-            // this scenario is not allowed for the time being as placing the new intersection point on the line 
+
+            // For the case of two adjacent segments with collinear points, the new endpoint may
+            // not fall between enAdjOther1 and enAdjOther2;
+            // this scenario is not allowed for the time being as placing the new intersection point on the line
             // triggers complications.
             // TODO - find a solution
             if (alwsSize == 2 && enIsectPt != null) {
                 int middlePtIdx = AlignWaysGeomPoint.getMiddleOf3(
-                        new AlignWaysGeomPoint(enIsectPt), 
-                        new AlignWaysGeomPoint(enAdjOther1), 
+                        new AlignWaysGeomPoint(enIsectPt),
+                        new AlignWaysGeomPoint(enAdjOther1),
                         new AlignWaysGeomPoint(enAdjOther2));
                 if (middlePtIdx != 0) {
                     EastNorth middlePt = null;
@@ -125,7 +127,7 @@ public class AlignWaysCmdKeepAngles extends AlignWaysCmdKeepLength {
                             // Intersection point didn't fall between the two adjacent points; not allowed
                             alignableStatKeepAngles = AlignableStatus.ALGN_INV_XPOINT_FALLSOUT;
                             return;
-                            
+
                             /*
                             if (middlePt.equalsEpsilon(enAdjOther1, eps)) {
                                 // Delete adjOther1
@@ -139,13 +141,13 @@ public class AlignWaysCmdKeepAngles extends AlignWaysCmdKeepLength {
                     }
                 }
             }
-            
+
             if (isectPnt != null) {
                 // Angle preserving alignment passed all verification tests: record it.
                 calculatedNodes.put(endpoint, enIsectPt);
             }
-            
-            
+
+
         } else {
             // angle preserving alignment not possible
             alignableStatKeepAngles = AlignableStatus.ALGN_INV_TOOMANY_CONNECTED_WS;
@@ -154,12 +156,12 @@ public class AlignWaysCmdKeepAngles extends AlignWaysCmdKeepLength {
 
     private boolean isEnSetCollinear(ArrayList<EastNorth> enAdjPts) {
         ArrayList<AlignWaysGeomPoint> awAdjPts = new ArrayList<>();
-        
+
         for (EastNorth en : enAdjPts) {
             AlignWaysGeomPoint pt = new AlignWaysGeomPoint(en.getX(), en.getY());
             awAdjPts.add(pt);
         }
-        
+
         return AlignWaysGeomPoint.isSetCollinear(awAdjPts);
     }
 
@@ -174,7 +176,7 @@ public class AlignWaysCmdKeepAngles extends AlignWaysCmdKeepLength {
 
     /**
      * Reports invalid alignable statuses on screen in dialog boxes.
-     * 
+     *
      * @param stat The invalid status to report
      */
     @Override

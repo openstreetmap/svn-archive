@@ -2,9 +2,9 @@ package com.tilusnet.josm.plugins.alignways;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.gui.IconToggleButton;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MainMenu;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.plugins.Plugin;
@@ -14,7 +14,6 @@ import org.openstreetmap.josm.plugins.PluginInformation;
  * @author tilusnet <tilusnet@gmail.com>
  *
  */
-
 public class AlignWaysPlugin extends Plugin {
 
     private static AlignWaysMode awMode;
@@ -28,18 +27,18 @@ public class AlignWaysPlugin extends Plugin {
 
     public AlignWaysPlugin(PluginInformation info) {
         super(info);
-        
+
         // Add the action entries to the Tools Menu
-        Main.main.menu.moreToolsMenu.addSeparator();
+        MainApplication.getMenu().moreToolsMenu.addSeparator();
         awAction = new AlignWaysAction();
-        MainMenu.add(Main.main.menu.moreToolsMenu, awAction);
+        MainMenu.add(MainApplication.getMenu().moreToolsMenu, awAction);
     }
 
     @Override
     public void mapFrameInitialized(MapFrame oldFrame, MapFrame newFrame) {
         if (newFrame != null) {
             // Construct the AlignWays mode toggle button
-            awMode = new AlignWaysMode(Main.map, "alignways", tr("Align Ways mode"));
+            awMode = new AlignWaysMode("alignways", tr("Align Ways mode"));
             btn = new IconToggleButton(awMode);
             btn.setVisible(true);
             newFrame.addMapMode(btn);

@@ -13,6 +13,7 @@ import java.awt.event.MouseEvent;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.mapmode.MapMode;
 import org.openstreetmap.josm.data.coor.LatLon;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.gui.layer.MainLayerManager.ActiveLayerChangeEvent;
@@ -39,20 +40,20 @@ public class JunctionCheckerMapMode extends MapMode implements ActiveLayerChange
 
     @Override public void enterMode() {
         super.enterMode();
-        Main.map.mapView.addMouseListener(this);
-        Main.map.mapView.addMouseMotionListener(this);
-        Main.getLayerManager().addActiveLayerChangeListener(this);
+        MainApplication.getMap().mapView.addMouseListener(this);
+        MainApplication.getMap().mapView.addMouseMotionListener(this);
+        MainApplication.getLayerManager().addActiveLayerChangeListener(this);
     }
 
     @Override public void exitMode() {
         super.exitMode();
-        Main.map.mapView.removeMouseListener(this);
-        Main.map.mapView.removeMouseMotionListener(this);
+        MainApplication.getMap().mapView.removeMouseListener(this);
+        MainApplication.getMap().mapView.removeMouseMotionListener(this);
     }
 
     @Override
     public void activeOrEditLayerChanged(ActiveLayerChangeEvent e) {
-        Layer newLayer = Main.getLayerManager().getActiveLayer();
+        Layer newLayer = MainApplication.getLayerManager().getActiveLayer();
         if (newLayer instanceof ChannelDiGraphLayer) {
             layer = (ChannelDiGraphLayer) newLayer;
         }
@@ -90,12 +91,12 @@ public class JunctionCheckerMapMode extends MapMode implements ActiveLayerChange
         }
         //go through nodes and mark the ones in the selection rect as deleted
         if (layer != null && digraph != null) {
-            LatLon lefttop = Main.map.mapView.getLatLon(r.x + r.width, r.y + r.height);
-            LatLon rightbottom = Main.map.mapView.getLatLon(r.x, r.y);
+            LatLon lefttop = MainApplication.getMap().mapView.getLatLon(r.x + r.width, r.y + r.height);
+            LatLon rightbottom = MainApplication.getMap().mapView.getLatLon(r.x, r.y);
             digraph.detectSelectedChannels(rightbottom.lon(), rightbottom.lat(), lefttop.lon(), lefttop.lat());
         }
         oldRect = null;
-        Main.map.mapView.repaint();
+        MainApplication.getMap().mapView.repaint();
 
     }
 
@@ -163,6 +164,6 @@ public class JunctionCheckerMapMode extends MapMode implements ActiveLayerChange
     @Override
     public void destroy() {
         super.destroy();
-        Main.getLayerManager().removeActiveLayerChangeListener(this);
+        MainApplication.getLayerManager().removeActiveLayerChangeListener(this);
     }
 }

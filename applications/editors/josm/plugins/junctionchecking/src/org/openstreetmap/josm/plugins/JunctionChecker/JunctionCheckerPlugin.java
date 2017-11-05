@@ -7,6 +7,7 @@ import java.io.File;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.mapmode.MapMode;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.gui.layer.LayerManager.LayerAddEvent;
@@ -53,9 +54,9 @@ public class JunctionCheckerPlugin extends Plugin implements LayerChangeListener
         if (newFrame != null) {
             junctionCheckDialog = new JunctionCheckDialog(this);
             newFrame.addToggleDialog(junctionCheckDialog);
-            Main.getLayerManager().addLayerChangeListener(this);
+            MainApplication.getLayerManager().addLayerChangeListener(this);
         } else
-            Main.getLayerManager().removeLayerChangeListener(this);
+            MainApplication.getLayerManager().removeLayerChangeListener(this);
     }
 
     public void activeLayerChange(Layer oldLayer, Layer newLayer) {
@@ -63,12 +64,12 @@ public class JunctionCheckerPlugin extends Plugin implements LayerChangeListener
             this.getJunctionCheckDialog().setActivateCreateDigraph(true);
             this.getJunctionCheckDialog().setActivateJunctionCheckOrSearch(false);
             if (normalMapMode != null) {
-                Main.map.selectMapMode(normalMapMode);
+                MainApplication.getMap().selectMapMode(normalMapMode);
             }
         } else if (newLayer instanceof ChannelDiGraphLayer) {
             this.getJunctionCheckDialog().setActivateCreateDigraph(false);
             this.getJunctionCheckDialog().setActivateJunctionCheckOrSearch(true);
-            Main.map.selectMapMode(jcMapMode);
+            MainApplication.getMap().selectMapMode(jcMapMode);
         }
     }
 

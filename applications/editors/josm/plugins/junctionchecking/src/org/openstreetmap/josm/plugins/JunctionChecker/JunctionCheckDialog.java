@@ -18,7 +18,7 @@ import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.border.TitledBorder;
 
-import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.SideButton;
 import org.openstreetmap.josm.gui.dialogs.ToggleDialog;
 import org.openstreetmap.josm.gui.util.GuiHelper;
@@ -94,9 +94,8 @@ public class JunctionCheckDialog extends ToggleDialog {
             }
             @Override
             public void actionPerformed(ActionEvent e) {
-                    DigraphCreationTask dct = new DigraphCreationTask(plugin, digraphsealcb.isSelected(), sccCB.isSelected());
-                    Main.worker.submit(dct);
-                    setActivateJunctionCheckOrSearch(true);
+                MainApplication.worker.submit(new DigraphCreationTask(plugin, digraphsealcb.isSelected(), sccCB.isSelected()));
+                setActivateJunctionCheckOrSearch(true);
             }
         });
         checkJunctionButton = new SideButton(new AbstractAction() {
@@ -107,8 +106,7 @@ public class JunctionCheckDialog extends ToggleDialog {
             }
             @Override
             public void actionPerformed(ActionEvent e) {
-                PrepareJunctionCheckorSearch pjc = new PrepareJunctionCheckorSearch(plugin, smodel.getNumber().intValue(), produceRelation.isSelected());
-                pjc.prepareJunctionCheck();
+                new PrepareJunctionCheckorSearch(plugin, smodel.getNumber().intValue(), produceRelation.isSelected()).prepareJunctionCheck();
             }
         });
         checkJunctionButton.setEnabled(false);
@@ -120,8 +118,7 @@ public class JunctionCheckDialog extends ToggleDialog {
             }
             @Override
             public void actionPerformed(ActionEvent e) {
-                PrepareJunctionCheckorSearch pjc = new PrepareJunctionCheckorSearch(plugin, smodel.getNumber().intValue(), produceRelation.isSelected());
-                pjc.prepareJunctionSearch();
+                new PrepareJunctionCheckorSearch(plugin, smodel.getNumber().intValue(), produceRelation.isSelected()).prepareJunctionSearch();
             }
         });
         searchJunctionButton.setEnabled(false);
@@ -130,7 +127,6 @@ public class JunctionCheckDialog extends ToggleDialog {
             createDigraphButton, checkJunctionButton, searchJunctionButton
         }));
     }
-
 
     /**
      * (de)aktiviert Buttons zum JunctionCheck oder Suche

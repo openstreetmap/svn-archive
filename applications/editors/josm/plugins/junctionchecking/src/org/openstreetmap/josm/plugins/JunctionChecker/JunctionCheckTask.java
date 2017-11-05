@@ -10,6 +10,7 @@ import java.util.HashSet;
 import javax.swing.JOptionPane;
 
 import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.PleaseWaitRunnable;
 import org.openstreetmap.josm.io.OsmTransferException;
 import org.openstreetmap.josm.plugins.JunctionChecker.datastructure.Channel;
@@ -88,6 +89,6 @@ public class JunctionCheckTask extends PleaseWaitRunnable {
         for (int i = 0; i < jc.getSubJunction().size(); i++) {
             plugin.getChannelDigraph().addJunctioncandidateChannel(jc.getSubJunction().get(i));
         }
-        Main.getLayerManager().setActiveLayer(plugin.getChannelDigraphLayer());
+        MainApplication.getLayerManager().setActiveLayer(plugin.getChannelDigraphLayer());
     }
 }

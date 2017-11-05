@@ -6,6 +6,7 @@ import java.util.HashSet;
 import javax.swing.JOptionPane;
 
 import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.plugins.JunctionChecker.datastructure.Channel;
 
 /**
@@ -30,14 +31,13 @@ public class PrepareJunctionCheckorSearch {
     protected void prepareJunctionCheck() {
         if (prepareSubset()) {
             jct = new JunctionCheckTask(plugin, n, subset, produceRelation);
-            Main.worker.submit(jct);
+            MainApplication.worker.submit(jct);
         }
     }
 
     protected void prepareJunctionSearch() {
         if (prepareSubset()) {
-            JunctionSearchTask jst = new JunctionSearchTask(plugin, n, subset, produceRelation);
-            Main.worker.submit(jst);
+            MainApplication.worker.submit(new JunctionSearchTask(plugin, n, subset, produceRelation));
         }
     }
 

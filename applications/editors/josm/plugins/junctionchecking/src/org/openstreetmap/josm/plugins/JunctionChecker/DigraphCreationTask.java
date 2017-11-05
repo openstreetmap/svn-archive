@@ -11,9 +11,11 @@ import javax.swing.JOptionPane;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.DataSource;
+import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.PleaseWaitRunnable;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import org.openstreetmap.josm.io.OsmTransferException;
@@ -61,8 +63,8 @@ public class DigraphCreationTask extends PleaseWaitRunnable {
 
     private void removeDigraphLayer() {
         ChannelDiGraphLayer layer = plugin.getChannelDigraphLayer();
-        if (Main.getLayerManager().containsLayer(layer)) {
-            Main.getLayerManager().removeLayer(layer);
+        if (MainApplication.getLayerManager().containsLayer(layer)) {
+            MainApplication.getLayerManager().removeLayer(layer);
         }
     }
 
@@ -70,8 +72,8 @@ public class DigraphCreationTask extends PleaseWaitRunnable {
     protected void realRun() throws SAXException, IOException,
     OsmTransferException {
         //Prüfen, ob der ausgewählte Layer ein OSMDataLayer ist
-        if (Main.map == null
-                || !Main.map.isVisible() || !(Main.getLayerManager().getActiveLayer() instanceof OsmDataLayer)) {
+        if (MainApplication.getMap() == null
+                || !MainApplication.getMap().isVisible() || !(MainApplication.getLayerManager().getActiveLayer() instanceof OsmDataLayer)) {
             JOptionPane.showMessageDialog(Main.parent, tr("this layer is no osm data layer"));
             return;
         }
@@ -90,23 +92,21 @@ public class DigraphCreationTask extends PleaseWaitRunnable {
 
         OSMGraph graph = new OSMGraph();
         //Der vom Benutzer in JOSM ausgewählte, zur Zeit aktive Layer wird der PLugin-OSM-Layer
-        plugin.setOsmlayer((OsmDataLayer) Main.getLayerManager().getActiveLayer());
-        Iterator<Node> it = Main.getLayerManager().getEditDataSet().getNodes().iterator();
+        plugin.setOsmlayer((OsmDataLayer) MainApplication.getLayerManager().getActiveLayer());
+        DataSet ds = MainApplication.getLayerManager().getEditDataSet();
+        Iterator<Node> it = ds.getNodes().iterator();
         while (it.hasNext()) {
             graph.addNode(it.next());
         }
-
-        Iterator<Way> itway = Main.getLayerManager().getEditDataSet().getWays()
-        .iterator();
+        Iterator<Way> itway = ds.getWays().iterator();
         while (itway.hasNext()) {
             graph.addWay(itway.next());
         }
-        Iterator<Relation> itrel = Main.getLayerManager().getEditDataSet().getRelations()
-        .iterator();
+        Iterator<Relation> itrel = ds.getRelations().iterator();
         while (itrel.hasNext()) {
             graph.addRelation(itrel.next());
         }
-        Iterator<DataSource> itdata = Main.getLayerManager().getEditDataSet().getDataSources().iterator();
+        Iterator<DataSource> itdata = ds.getDataSources().iterator();
         while (itdata.hasNext()) {
             Bounds b = itdata.next().bounds;
             graph.setBbbottom(b.getMin().getY());
@@ -150,9 +150,9 @@ public class DigraphCreationTask extends PleaseWaitRunnable {
         plugin.getChannelDigraphLayer().setDigraph(cdgb.getDigraph());
         plugin.setChannelDigraph(cdgb.getDigraph());
         plugin.getJcMapMode().setDigraph(cdgb.getDigraph());
-        plugin.setNormalMapMode(Main.map.mapMode);
-        Main.map.selectMapMode(plugin.getJcMapMode());
-        Main.getLayerManager().addLayer(plugin.getChannelDigraphLayer());
-        Main.getLayerManager().setActiveLayer(plugin.getChannelDigraphLayer());
+        plugin.setNormalMapMode(MainApplication.getMap().mapMode);
+        MainApplication.getMap().selectMapMode(plugin.getJcMapMode());
+        MainApplication.getLayerManager().addLayer(plugin.getChannelDigraphLayer());
+        MainApplication.getLayerManager().setActiveLayer(plugin.getChannelDigraphLayer());
     }
 }

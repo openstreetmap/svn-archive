@@ -5,11 +5,11 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.OsmPrimitiveType;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.RelationMember;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.plugins.JunctionChecker.JunctionCheckerPlugin;
 import org.openstreetmap.josm.plugins.JunctionChecker.datastructure.Channel;
 
@@ -42,7 +42,7 @@ public class RelationProducer {
                         .getId(), OsmPrimitiveType.WAY));
             }
         }
-        Main.getLayerManager().setActiveLayer(plugin.getOsmlayer());
+        MainApplication.getLayerManager().setActiveLayer(plugin.getOsmlayer());
         plugin.getOsmlayer().data.setSelected(ways);
 
         Relation jrelation = new Relation();

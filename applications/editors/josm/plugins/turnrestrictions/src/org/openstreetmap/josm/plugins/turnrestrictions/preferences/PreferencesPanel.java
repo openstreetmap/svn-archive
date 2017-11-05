@@ -195,7 +195,7 @@ public class PreferencesPanel extends VerticallyScrollablePanel {
      */
     public void saveToPreferences(Preferences prefs) {
         prefs.put(PreferenceKeys.ROAD_SIGNS, rbSetA.isSelected() ? "set-a" : "set-b");
-        prefs.put(PreferenceKeys.SHOW_VIAS_IN_BASIC_EDITOR, cbShowViaListInBasicEditor.isSelected());
+        prefs.putBoolean(PreferenceKeys.SHOW_VIAS_IN_BASIC_EDITOR, cbShowViaListInBasicEditor.isSelected());
     }
 
     public PreferencesPanel() {

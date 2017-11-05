@@ -7,10 +7,10 @@ import javax.swing.AbstractCellEditor;
 import javax.swing.JTable;
 import javax.swing.table.TableCellEditor;
 
+import org.openstreetmap.josm.data.tagging.ac.AutoCompletionItem;
+import org.openstreetmap.josm.data.tagging.ac.AutoCompletionPriority;
 import org.openstreetmap.josm.gui.tagging.ac.AutoCompletingTextField;
-import org.openstreetmap.josm.gui.tagging.ac.AutoCompletionItemPriority;
 import org.openstreetmap.josm.gui.tagging.ac.AutoCompletionList;
-import org.openstreetmap.josm.gui.tagging.ac.AutoCompletionListItem;
 
 /**
  * The cell editor for member roles of relation members in a turn restriction.
@@ -31,10 +31,10 @@ public class MemberRoleCellEditor extends AbstractCellEditor implements TableCel
         editor = new AutoCompletingTextField(0, false);
         autoCompletionList = new AutoCompletionList();
         editor.setAutoCompletionList(autoCompletionList);
-        autoCompletionList.add(new AutoCompletionListItem("from", AutoCompletionItemPriority.IS_IN_STANDARD));
-        autoCompletionList.add(new AutoCompletionListItem("to", AutoCompletionItemPriority.IS_IN_STANDARD));
-        autoCompletionList.add(new AutoCompletionListItem("via", AutoCompletionItemPriority.IS_IN_STANDARD));
-        autoCompletionList.add(new AutoCompletionListItem("location_hint", AutoCompletionItemPriority.IS_IN_STANDARD));
+        autoCompletionList.add(new AutoCompletionItem("from", AutoCompletionPriority.IS_IN_STANDARD));
+        autoCompletionList.add(new AutoCompletionItem("to", AutoCompletionPriority.IS_IN_STANDARD));
+        autoCompletionList.add(new AutoCompletionItem("via", AutoCompletionPriority.IS_IN_STANDARD));
+        autoCompletionList.add(new AutoCompletionItem("location_hint", AutoCompletionPriority.IS_IN_STANDARD));
     }
 
     /**

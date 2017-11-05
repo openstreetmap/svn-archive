@@ -24,8 +24,6 @@ import javax.swing.event.ListSelectionListener;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.AutoScaleAction;
-import org.openstreetmap.josm.data.Preferences.PreferenceChangeEvent;
-import org.openstreetmap.josm.data.Preferences.PreferenceChangedListener;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.RelationMember;
@@ -41,6 +39,8 @@ import org.openstreetmap.josm.plugins.turnrestrictions.TurnRestrictionBuilder;
 import org.openstreetmap.josm.plugins.turnrestrictions.editor.TurnRestrictionEditor;
 import org.openstreetmap.josm.plugins.turnrestrictions.editor.TurnRestrictionEditorManager;
 import org.openstreetmap.josm.plugins.turnrestrictions.preferences.PreferenceKeys;
+import org.openstreetmap.josm.spi.preferences.PreferenceChangeEvent;
+import org.openstreetmap.josm.spi.preferences.PreferenceChangedListener;
 import org.openstreetmap.josm.tools.ImageProvider;
 
 /**

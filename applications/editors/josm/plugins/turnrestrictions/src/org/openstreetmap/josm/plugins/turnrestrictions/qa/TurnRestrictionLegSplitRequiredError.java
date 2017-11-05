@@ -9,8 +9,7 @@ import java.util.Collections;
 
 import javax.swing.AbstractAction;
 
-import org.openstreetmap.josm.actions.SplitWayAction;
-import org.openstreetmap.josm.actions.SplitWayAction.SplitWayResult;
+import org.openstreetmap.josm.command.SplitWayCommand;
 import org.openstreetmap.josm.data.osm.DefaultNameFormatter;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
@@ -130,28 +129,26 @@ public class TurnRestrictionLegSplitRequiredError extends Issue {
         @Override
         public void actionPerformed(ActionEvent e) {
 
-            SplitWayResult result = null;
+            SplitWayCommand result = null;
             if (role == null || role.equals(TurnRestrictionLegRole.FROM)) {
-                  result = SplitWayAction.split(
-                          parent.getEditorModel().getLayer(),
+                  result = SplitWayCommand.split(
                           from,
                           Collections.singletonList(intersect),
                           Collections.<OsmPrimitive>emptyList()
                   );
                   if (result != null) {
-                	  MainApplication.undoRedo.add(result.getCommand());
+                      MainApplication.undoRedo.add(result);
                   }
             }
 
             if (role == null || role.equals(TurnRestrictionLegRole.TO)) {
-                result = SplitWayAction.split(
-                        parent.getEditorModel().getLayer(),
+                result = SplitWayCommand.split(
                         to,
                         Collections.singletonList(intersect),
                         Collections.<OsmPrimitive>emptyList()
                 );
                 if (result != null) {
-                    MainApplication.undoRedo.add(result.getCommand());
+                    MainApplication.undoRedo.add(result);
                 }
                 if (result == null) return;
                 TurnRestrictionType restrictionType = TurnRestrictionType.fromTagValue(

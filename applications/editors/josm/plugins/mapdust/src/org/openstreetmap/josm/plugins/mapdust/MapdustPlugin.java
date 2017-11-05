@@ -41,9 +41,8 @@ import javax.swing.SwingUtilities;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.Bounds;
-import org.openstreetmap.josm.data.Preferences.PreferenceChangeEvent;
-import org.openstreetmap.josm.data.Preferences.PreferenceChangedListener;
-import org.openstreetmap.josm.gui.JosmUserIdentityManager;
+import org.openstreetmap.josm.data.UserIdentityManager;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.NavigatableComponent;
@@ -65,6 +64,8 @@ import org.openstreetmap.josm.plugins.mapdust.service.value.BoundingBox;
 import org.openstreetmap.josm.plugins.mapdust.service.value.MapdustBug;
 import org.openstreetmap.josm.plugins.mapdust.service.value.MapdustBugFilter;
 import org.openstreetmap.josm.plugins.mapdust.service.value.MapdustRelevance;
+import org.openstreetmap.josm.spi.preferences.PreferenceChangeEvent;
+import org.openstreetmap.josm.spi.preferences.PreferenceChangedListener;
 import org.openstreetmap.josm.tools.Shortcut;
 
 /**
@@ -130,7 +131,7 @@ public class MapdustPlugin extends Plugin implements LayerChangeListener,
         /* add default values for static variables */
         Main.pref.put("mapdust.pluginState", MapdustPluginState.ONLINE.getValue());
         Main.pref.put("mapdust.nickname", "");
-        Main.pref.put("mapdust.showError", true);
+        Main.pref.putBoolean("mapdust.showError", true);
         Main.pref.put("mapdust.version", getPluginInformation().version);
         Main.pref.put("mapdust.localVersion", getPluginInformation().localversion);
         Main.pref.addPreferenceChangeListener(this);
@@ -156,14 +157,14 @@ public class MapdustPlugin extends Plugin implements LayerChangeListener,
             newMapFrame.addToggleDialog(mapdustGUI);
             /* add Listeners */
             NavigatableComponent.addZoomChangeListener(this);
-            Main.getLayerManager().addLayerChangeListener(this);
+            MainApplication.getLayerManager().addLayerChangeListener(this);
             newMapFrame.mapView.addMouseListener(this);
             /* put username to preferences */
-            Main.pref.put("mapdust.josmUserName", JosmUserIdentityManager.getInstance().getUserName());
+            Main.pref.put("mapdust.josmUserName", UserIdentityManager.getInstance().getUserName());
         } else {
             /* if new MapFrame is null, remove listener */
             oldMapFrame.mapView.removeMouseListener(this);
-            Main.getLayerManager().removeLayerChangeListener(this);
+            MainApplication.getLayerManager().removeLayerChangeListener(this);
             NavigatableComponent.removeZoomChangeListener(this);
             mapdustGUI.removeObserver(this);
             mapdustGUI = null;
@@ -185,7 +186,7 @@ public class MapdustPlugin extends Plugin implements LayerChangeListener,
         if (mapdustGUI != null && mapdustGUI.isShowing() && !wasError && mapdustLayer != null
                 && mapdustLayer.isVisible()) {
             if (event.getKey().equals("osm-server.username")) {
-                String newUserName = JosmUserIdentityManager.getInstance().getUserName();
+                String newUserName = UserIdentityManager.getInstance().getUserName();
                 String oldUserName = Main.pref.get("mapdust.josmUserName");
                 String nickname = Main.pref.get("mapdust.nickname");
                 if (nickname.isEmpty()) {
@@ -221,7 +222,7 @@ public class MapdustPlugin extends Plugin implements LayerChangeListener,
             mapdustBugList = new ArrayList<>();
         }
         if (getMapdustGUI().isDialogShowing()) {
-            if (Main.map != null && Main.map.mapView != null) {
+            if (MainApplication.getMap() != null && MainApplication.getMap().mapView != null) {
                 MapdustBug oldBug = null;
                 for (MapdustBug bug : mapdustBugList) {
                     if (bug.getId().equals(mapdustBug.getId())) {
@@ -250,7 +251,7 @@ public class MapdustPlugin extends Plugin implements LayerChangeListener,
                 } else {
                     mapdustLayer.setBugSelected(null);
                     mapdustGUI.enableBtnPanel(true);
-                    Main.map.mapView.repaint();
+                    MainApplication.getMap().mapView.repaint();
                     String title = "MapDust";
                     String message = "The operation was successful.";
                     JOptionPane.showMessageDialog(Main.parent, message, title,
@@ -367,7 +368,7 @@ public class MapdustPlugin extends Plugin implements LayerChangeListener,
         if (mapdustLayer != null && mapdustLayer.isVisible()) {
             if (event.getButton() == MouseEvent.BUTTON1) {
                 if (event.getClickCount() == 2 && !event.isConsumed()) {
-                    if (Main.getLayerManager().getActiveLayer() == getMapdustLayer()) {
+                    if (MainApplication.getLayerManager().getActiveLayer() == getMapdustLayer()) {
                         /* show add bug dialog */
                         MapdustBug bug = mapdustGUI.getSelectedBug();
                         if (bug != null) {
@@ -393,7 +394,7 @@ public class MapdustPlugin extends Plugin implements LayerChangeListener,
                         mapdustLayer.setBugSelected(nearestBug);
                         /* set also in the list of bugs the element */
                         mapdustGUI.setSelectedBug(nearestBug);
-                        Main.map.mapView.repaint();
+                        MainApplication.getMap().mapView.repaint();
                     }
                     return;
                 }
@@ -413,7 +414,7 @@ public class MapdustPlugin extends Plugin implements LayerChangeListener,
         double minDistanceSq = Double.MAX_VALUE;
         MapdustBug nearestBug = null;
         for (MapdustBug bug : mapdustBugList) {
-            Point sp = Main.map.mapView.getPoint(bug.getLatLon());
+            Point sp = MainApplication.getMap().mapView.getPoint(bug.getLatLon());
             double dist = p.distanceSq(sp);
             if (minDistanceSq > dist && p.distance(sp) < snapDistance) {
                 minDistanceSq = p.distanceSq(sp);
@@ -453,7 +454,7 @@ public class MapdustPlugin extends Plugin implements LayerChangeListener,
                     MapdustPluginState.ONLINE.getValue());
             NavigatableComponent.removeZoomChangeListener(this);
             if (mapdustGUI != null) {
-                Main.map.remove(mapdustGUI);
+                MainApplication.getMap().remove(mapdustGUI);
                 mapdustGUI.destroy();
             }
             mapdustLayer = null;
@@ -517,7 +518,7 @@ public class MapdustPlugin extends Plugin implements LayerChangeListener,
      * @return A <code>BoundingBox</code>
      */
     private BoundingBox getBBox() {
-        MapView mapView = Main.map.mapView;
+        MapView mapView = MainApplication.getMap().mapView;
         Bounds bounds = new Bounds(mapView.getLatLon(0, mapView.getHeight()),
                 mapView.getLatLon(mapView.getWidth(), 0));
         return new BoundingBox(bounds.getMin().lon(), bounds.getMin().lat(),
@@ -530,13 +531,12 @@ public class MapdustPlugin extends Plugin implements LayerChangeListener,
      * <code>MapdustGUI</code> and the map with the new data.
      */
     private void updatePluginData() {
-        Main.worker.execute(new Runnable() {
+        MainApplication.worker.execute(new Runnable() {
             @Override
             public void run() {
                 updateMapdustData();
             }
         });
-
     }
 
     /**
@@ -545,8 +545,8 @@ public class MapdustPlugin extends Plugin implements LayerChangeListener,
      * and the MapDust layer with the new data.
      */
     protected synchronized void updateMapdustData() {
-        if (Main.map != null && Main.map.mapView != null) {
-            /* Down-loads the MapDust data */
+        if (MainApplication.getMap() != null && MainApplication.getMap().mapView != null) {
+            /* Downloads the MapDust data */
             try {
                 MapdustServiceHandler handler = new MapdustServiceHandler();
                 mapdustBugList = handler.getBugs(bBox, filter);
@@ -567,17 +567,15 @@ public class MapdustPlugin extends Plugin implements LayerChangeListener,
                     }
                 }
             });
-
         }
     }
-
 
     /**
      * Updates the current view ( map and MapDust bug list), with the given list
      * of <code>MapdustBug</code> objects.
      */
     protected void updateView() {
-        if (Main.map != null && Main.map.mapView != null) {
+        if (MainApplication.getMap() != null && MainApplication.getMap().mapView != null) {
             /* update the MapdustLayer */
             boolean needRepaint = false;
             if (!containsMapdustLayer()) {
@@ -587,9 +585,9 @@ public class MapdustPlugin extends Plugin implements LayerChangeListener,
                     /* create and add the layer */
                     mapdustLayer = new MapdustLayer("MapDust", mapdustGUI,
                             mapdustBugList);
-                    Main.getLayerManager().addLayer(this.mapdustLayer);
-                    Main.map.mapView.moveLayer(this.mapdustLayer, 0);
-                    Main.map.mapView.addMouseListener(this);
+                    MainApplication.getLayerManager().addLayer(this.mapdustLayer);
+                    MainApplication.getMap().mapView.moveLayer(this.mapdustLayer, 0);
+                    MainApplication.getMap().mapView.addMouseListener(this);
                     NavigatableComponent.addZoomChangeListener(this);
                     needRepaint = true;
                 }
@@ -605,8 +603,8 @@ public class MapdustPlugin extends Plugin implements LayerChangeListener,
             if (needRepaint) {
                 /* force repaint */
                 mapdustGUI.revalidate();
-                Main.map.mapView.revalidate();
-                Main.map.repaint();
+                MainApplication.getMap().mapView.revalidate();
+                MainApplication.getMap().repaint();
             }
         }
     }
@@ -619,7 +617,7 @@ public class MapdustPlugin extends Plugin implements LayerChangeListener,
      * <code>MapdustLayer</code> false otherwise
      */
     private boolean containsMapdustLayer() {
-        return mapdustLayer != null && Main.getLayerManager().containsLayer(mapdustLayer);
+        return mapdustLayer != null && MainApplication.getLayerManager().containsLayer(mapdustLayer);
     }
 
     /**
@@ -630,7 +628,7 @@ public class MapdustPlugin extends Plugin implements LayerChangeListener,
         Boolean showErrorMessage = Boolean.parseBoolean(showMessage);
         if (showErrorMessage) {
             /* show errprMessage, and remove the layer */
-            Main.pref.put("mapdust.showError", false);
+            Main.pref.putBoolean("mapdust.showError", false);
             String errorMessage = "There was a Mapdust service error.";
             errorMessage += " Please try later.";
             JOptionPane.showMessageDialog(Main.parent, tr(errorMessage));

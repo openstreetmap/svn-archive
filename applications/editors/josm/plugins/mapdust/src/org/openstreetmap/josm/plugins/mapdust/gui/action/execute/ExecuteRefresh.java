@@ -71,7 +71,7 @@ public class ExecuteRefresh extends AbstractAction implements
         if (event.getSource() instanceof JToggleButton) {
             JToggleButton btn = (JToggleButton) event.getSource();
             /* update the bugs */
-            Main.pref.put("mapdust.showError", true);
+            Main.pref.putBoolean("mapdust.showError", true);
             notifyObservers(null, false);
             btn.setSelected(false);
             btn.setFocusable(false);

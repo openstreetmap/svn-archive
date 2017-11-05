@@ -2,7 +2,7 @@
 <project name="mapdust" default="dist" basedir=".">
     <!-- properties -->
     <property name="commit.message" value="MapDust bug reporter plugin"/>
-    <property name="plugin.main.version" value="10580"/>
+    <property name="plugin.main.version" value="12881"/>
     <property name="apidoc.dir" value="doc"/>
 
     <!--

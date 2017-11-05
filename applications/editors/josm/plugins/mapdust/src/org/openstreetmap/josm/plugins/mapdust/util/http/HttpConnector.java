@@ -43,6 +43,7 @@ import java.util.Map;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.plugins.mapdust.util.retry.RetryAgent;
 import org.openstreetmap.josm.plugins.mapdust.util.retry.RetrySetup;
+import org.openstreetmap.josm.tools.Logging;
 
 
 /**
@@ -233,7 +234,7 @@ public class HttpConnector {
                 buf.append(key).append("=").append(URLEncoder.encode(
                         postParameters.get(key), "utf-8"));
             } catch (UnsupportedEncodingException e) {
-                Main.error(e);
+                Logging.error(e);
             }
             i++;
         }

@@ -28,6 +28,7 @@
 package org.openstreetmap.josm.plugins.mapdust.util.retry;
 
 import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.tools.Logging;
 
 /**
  * A <code>RetryAgent</code> attempts several times to execute a given
@@ -129,7 +130,7 @@ public abstract class RetryAgent<T> {
                     try {
                         Thread.sleep(delay);
                     } catch (InterruptedException e1) {
-                        Main.error(e1);
+                        Logging.error(e1);
                         // throw e;
                     }
                     delay = delay * 3 / 2;
@@ -139,7 +140,7 @@ public abstract class RetryAgent<T> {
                     cleanup();
                 } catch (Exception e) {
                     /* if it can't be cleaned up, there's nothing to do */
-                    Main.error("Could not clean up", e);
+                    Logging.error("Could not clean up", e);
                 }
             }
         } while (!success && attempts > 0);
@@ -156,8 +157,8 @@ public abstract class RetryAgent<T> {
     private T runTimed() throws Exception {
         T result = null;
         boolean success = false;
-        int delay = setup.getBaseDelay();
-        int maxTime = setup.getStopCondition();
+        long delay = setup.getBaseDelay();
+        long maxTime = setup.getStopCondition();
         do {
             long time = System.currentTimeMillis();
             try {
@@ -172,7 +173,7 @@ public abstract class RetryAgent<T> {
                     try {
                         Thread.sleep(delay);
                     } catch (InterruptedException e1) {
-                        Main.error(e1);
+                        Logging.error(e1);
                         throw e;
                     }
                     delay = delay * 3 / 2;
@@ -182,7 +183,7 @@ public abstract class RetryAgent<T> {
                     cleanup();
                 } catch (Exception e) {
                     /* if it can't be cleaned up, there's nothing to do */
-                    Main.error("Could not clean up", e);
+                    Logging.log(Logging.LEVEL_ERROR, "Could not clean up", e);
                 }
             }
             time = System.currentTimeMillis() - time;

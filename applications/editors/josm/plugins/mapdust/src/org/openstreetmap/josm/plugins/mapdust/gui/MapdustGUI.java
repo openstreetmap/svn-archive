@@ -36,6 +36,7 @@ import java.util.List;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.dialogs.ToggleDialog;
 import org.openstreetmap.josm.plugins.mapdust.MapdustPlugin;
 import org.openstreetmap.josm.plugins.mapdust.gui.component.panel.MapdustActionPanel;
@@ -193,8 +194,8 @@ public class MapdustGUI extends ToggleDialog implements MapdustActionObserver,
             mapdustPlugin.getMapdustLayer().setBugSelected(null);
         }
         revalidate();
-        Main.map.mapView.revalidate();
-        Main.map.repaint();
+        MainApplication.getMap().mapView.revalidate();
+        MainApplication.getMap().repaint();
     }
 
     /**

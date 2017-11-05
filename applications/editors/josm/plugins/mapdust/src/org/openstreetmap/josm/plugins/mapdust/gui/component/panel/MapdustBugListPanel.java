@@ -42,6 +42,7 @@ import javax.swing.border.LineBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.plugins.mapdust.MapdustPlugin;
 import org.openstreetmap.josm.plugins.mapdust.gui.MapdustGUI;
 import org.openstreetmap.josm.plugins.mapdust.gui.action.adapter.DisplayMenu;
@@ -271,7 +272,7 @@ public class MapdustBugListPanel extends JPanel implements
                 btnPanel.getBtnReOpenBugReport().setEnabled(false);
             }
             /* re-paint */
-            Main.map.mapView.repaint();
+            MainApplication.getMap().mapView.repaint();
             mapdustGUI.repaint();
         } else {
             return;

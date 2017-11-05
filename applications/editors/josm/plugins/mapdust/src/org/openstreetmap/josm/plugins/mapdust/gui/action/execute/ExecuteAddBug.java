@@ -36,6 +36,7 @@ import java.util.Iterator;
 import javax.swing.JOptionPane;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.coor.LatLon;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.plugins.mapdust.gui.MapdustGUI;
 import org.openstreetmap.josm.plugins.mapdust.gui.component.dialog.CreateBugDialog;
 import org.openstreetmap.josm.plugins.mapdust.gui.observer.MapdustActionObservable;
@@ -119,7 +120,7 @@ public class ExecuteAddBug extends MapdustExecuteAction implements
             Point p = createDialog.getPoint();
             LatLon latlon = null;
             if (p != null) {
-                latlon = Main.map.mapView.getLatLon(p.x, p.y);
+                latlon = MainApplication.getMap().mapView.getLatLon(p.x, p.y);
             }
             MapdustBug bug = new MapdustBug(latlon, type, commentText,
                     nickname);

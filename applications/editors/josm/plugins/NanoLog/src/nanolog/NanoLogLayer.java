@@ -36,6 +36,7 @@ import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.gpx.WayPoint;
 import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.dialogs.LayerListDialog;
 import org.openstreetmap.josm.gui.dialogs.LayerListPopup;
@@ -43,6 +44,7 @@ import org.openstreetmap.josm.gui.layer.GpxLayer;
 import org.openstreetmap.josm.gui.layer.JumpToMarkerActions;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.tools.ImageProvider;
+import org.openstreetmap.josm.tools.Logging;
 
 /**
  * NanoLog layer: a set of points that can be georeferenced.
@@ -64,14 +66,14 @@ public class NanoLogLayer extends Layer implements JumpToMarkerActions.JumpToMar
     }
 
     public void setupListeners() {
-        Main.map.mapView.addMouseListener(mouseListener);
-        Main.map.mapView.addMouseMotionListener(mouseListener);
+        MainApplication.getMap().mapView.addMouseListener(mouseListener);
+        MainApplication.getMap().mapView.addMouseMotionListener(mouseListener);
     }
 
     @Override
-    public void destroy() {
-        Main.map.mapView.removeMouseListener(mouseListener);
-        Main.map.mapView.removeMouseMotionListener(mouseListener);
+    public synchronized void destroy() {
+        MainApplication.getMap().mapView.removeMouseListener(mouseListener);
+        MainApplication.getMap().mapView.removeMouseMotionListener(mouseListener);
         super.destroy();
     }
 
@@ -122,7 +124,7 @@ public class NanoLogLayer extends Layer implements JumpToMarkerActions.JumpToMar
                         try {
                             timeDate = fmt.parse(time);
                         } catch (ParseException e) {
-                            Main.warn(e);
+                            Logging.warn(e);
                         }
                         if (message == null || message.length() == 0 || timeDate == null)
                             continue;
@@ -131,13 +133,12 @@ public class NanoLogLayer extends Layer implements JumpToMarkerActions.JumpToMar
                         if (lat != null && lon != null) {
                             try {
                                 pos = new LatLon(Double.parseDouble(lat), Double.parseDouble(lon));
-                                direction = new Integer(dir);
+                                direction = Integer.valueOf(dir);
                             } catch (NumberFormatException e) {
-                                Main.trace(e);
+                                Logging.trace(e);
                             }
                         }
-                        NanoLogEntry entry = new NanoLogEntry(timeDate, message, pos, direction);
-                        result.add(entry);
+                        result.add(new NanoLogEntry(timeDate, message, pos, direction));
                     }
                 }
             }
@@ -220,7 +221,7 @@ public class NanoLogLayer extends Layer implements JumpToMarkerActions.JumpToMar
             selectedEntry = 0;
         else if (selectedEntry >= log.size())
             selectedEntry = log.size() - 1;
-        Main.map.repaint();
+        invalidate();
     }
 
     @Override
@@ -230,16 +231,15 @@ public class NanoLogLayer extends Layer implements JumpToMarkerActions.JumpToMar
             selectedEntry = 0;
         else if (selectedEntry >= log.size())
             selectedEntry = log.size() - 1;
-        Main.map.repaint();
+        invalidate();
     }
 
     protected void setSelected(int i) {
         int newSelected = i >= 0 && i < log.size() ? i : -1;
         if (newSelected != selectedEntry) {
-//            System.out.println("selected: " + log.get(newSelected).getMessage());
             selectedEntry = newSelected;
             fireMarkerSelected();
-            Main.map.mapView.repaint();
+            invalidate();
         }
     }
 
@@ -260,10 +260,10 @@ public class NanoLogLayer extends Layer implements JumpToMarkerActions.JumpToMar
         private int dragging;
 
         public int nearestEntry(MouseEvent e) {
-            LatLon ll = Main.map.mapView.getLatLon(e.getX(), e.getY());
+            LatLon ll = MainApplication.getMap().mapView.getLatLon(e.getX(), e.getY());
             int radius = 8;
             if (ll != null) {
-                LatLon lld = Main.map.mapView.getLatLon(e.getX() + radius, e.getY() + radius);
+                LatLon lld = MainApplication.getMap().mapView.getLatLon(e.getX() + radius, e.getY() + radius);
                 double distance = Math.max(lld.lat() - ll.lat(), lld.lon() - ll.lon());
                 boolean selectedIsSelected = false;
                 int newSelected = -1;
@@ -302,7 +302,7 @@ public class NanoLogLayer extends Layer implements JumpToMarkerActions.JumpToMar
         @Override
         public void mousePressed(MouseEvent e) {
             int nearest = nearestEntry(e);
-            if (nearest > 0 && Main.getLayerManager().getActiveLayer() == NanoLogLayer.this) {
+            if (nearest > 0 && MainApplication.getLayerManager().getActiveLayer() == NanoLogLayer.this) {
                 dragging = nearest;
                 doDrag(e);
             }
@@ -318,8 +318,8 @@ public class NanoLogLayer extends Layer implements JumpToMarkerActions.JumpToMar
         GpxLayer gpx = GPXChooser.topLayer();
         if (gpx == null)
             return;
-        EastNorth eastNorth = Main.map.mapView.getEastNorth(x, y);
-        double tolerance = eastNorth.distance(Main.map.mapView.getEastNorth(x + 300, y));
+        EastNorth eastNorth = MainApplication.getMap().mapView.getEastNorth(x, y);
+        double tolerance = eastNorth.distance(MainApplication.getMap().mapView.getEastNorth(x + 300, y));
         WayPoint wp = gpx.data.nearestPointOnTrack(eastNorth, tolerance);
         if (wp == null)
             return;
@@ -328,7 +328,7 @@ public class NanoLogLayer extends Layer implements JumpToMarkerActions.JumpToMar
             return;
         Correlator.revertPos(log);
         Correlator.correlate(log, gpx.data, log.get(entry).getTime().getTime() - newTime);
-        Main.map.mapView.repaint();
+        MainApplication.getMap().mapView.repaint();
     }
 
     private class CorrelateEntries extends JosmAction {
@@ -352,14 +352,14 @@ public class NanoLogLayer extends Layer implements JumpToMarkerActions.JumpToMar
                 Correlator.revertPos(log);
                 Correlator.correlate(log, layer.data, offset);
                 fireMarkersChanged();
-                Main.map.mapView.repaint();
+                MainApplication.getMap().mapView.repaint();
             }
             // 3. Show non-modal (?) window with a slider and a text input
             // (todo: better slider, like in blender)
         }
     }
 
-    private class SaveLayer extends JosmAction {
+    private static class SaveLayer extends JosmAction {
 
         SaveLayer() {
             super(tr("Save layer..."), "nanolog/save", tr("Save NanoLog layer"), null, false);

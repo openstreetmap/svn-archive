@@ -11,6 +11,7 @@ import javax.swing.JOptionPane;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
@@ -23,7 +24,7 @@ import org.openstreetmap.josm.plugins.PluginInformation;
 public class NanoLogPlugin extends Plugin {
     public NanoLogPlugin(PluginInformation info) {
         super(info);
-        Main.main.menu.fileMenu.insert(new OpenNanoLogLayerAction(), 4);
+        MainApplication.getMenu().fileMenu.insert(new OpenNanoLogLayerAction(), 4);
     }
 
     @Override
@@ -31,11 +32,11 @@ public class NanoLogPlugin extends Plugin {
         if (oldFrame == null && newFrame != null) {
             NanoLogPanel panel = new NanoLogPanel();
             newFrame.addToggleDialog(panel);
-            Main.getLayerManager().addLayerChangeListener(panel);
+            MainApplication.getLayerManager().addLayerChangeListener(panel);
         }
     }
 
-    private class OpenNanoLogLayerAction extends JosmAction {
+    private static class OpenNanoLogLayerAction extends JosmAction {
 
         OpenNanoLogLayerAction() {
             super(tr("Open NanoLog file..."), "nanolog.png", tr("Open NanoLog file..."), null, false);
@@ -49,7 +50,7 @@ public class NanoLogPlugin extends Plugin {
                     List<NanoLogEntry> entries = NanoLogLayer.readNanoLog(fc.getSelectedFile());
                     if (!entries.isEmpty()) {
                         NanoLogLayer layer = new NanoLogLayer(entries);
-                        Main.getLayerManager().addLayer(layer);
+                        MainApplication.getLayerManager().addLayer(layer);
                         layer.setupListeners();
                     }
                 } catch (IOException ex) {

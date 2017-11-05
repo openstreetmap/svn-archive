@@ -15,6 +15,7 @@ import org.openstreetmap.josm.data.gpx.GpxData;
 import org.openstreetmap.josm.data.gpx.GpxTrack;
 import org.openstreetmap.josm.data.gpx.GpxTrackSegment;
 import org.openstreetmap.josm.data.gpx.WayPoint;
+import org.openstreetmap.josm.tools.Logging;
 import org.openstreetmap.josm.tools.UncheckedParseException;
 import org.openstreetmap.josm.tools.date.DateUtils;
 
@@ -51,7 +52,7 @@ public final class Correlator {
                         firstGPXDate = DateUtils.fromString(curDateWpStr).getTime();
                         break outer;
                     } catch (Exception e) {
-                        Main.warn(e);
+                        Logging.warn(e);
                     }
                 }
             }
@@ -98,8 +99,8 @@ public final class Correlator {
                             prevWpTime = curWpTime;
 
                         } catch (UncheckedParseException e) {
-                            Main.error("Error while parsing date \"" + curWpTimeStr + '"');
-                            Main.error(e);
+                            Logging.error("Error while parsing date \"" + curWpTimeStr + '"');
+                            Logging.error(e);
                             prevWp = null;
                             prevWpTime = 0;
                         }
@@ -246,8 +247,8 @@ public final class Correlator {
                             prevWp = curWp;
                             prevWpTime = curWpTime;
                         } catch (UncheckedParseException e) {
-                            Main.error("Error while parsing date \"" + curWpTimeStr + '"');
-                            Main.error(e);
+                            Logging.error("Error while parsing date \"" + curWpTimeStr + '"');
+                            Logging.error(e);
                             prevWp = null;
                             prevWpTime = 0;
                         }

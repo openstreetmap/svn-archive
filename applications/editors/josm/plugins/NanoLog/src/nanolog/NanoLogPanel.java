@@ -10,7 +10,7 @@ import java.util.List;
 import javax.swing.AbstractListModel;
 import javax.swing.JList;
 
-import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.dialogs.ToggleDialog;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.gui.layer.LayerManager.LayerAddEvent;
@@ -39,7 +39,7 @@ public class NanoLogPanel extends ToggleDialog implements LayerChangeListener, N
 
     public void updateMarkers() {
         List<NanoLogEntry> entries = new ArrayList<>();
-        for (NanoLogLayer l : Main.getLayerManager().getLayersOfType(NanoLogLayer.class)) {
+        for (NanoLogLayer l : MainApplication.getLayerManager().getLayersOfType(NanoLogLayer.class)) {
             entries.addAll(l.getEntries());
         }
         listModel.setEntries(entries);
@@ -77,7 +77,7 @@ public class NanoLogPanel extends ToggleDialog implements LayerChangeListener, N
         }
     }
 
-    private class LogListModel extends AbstractListModel<String> {
+    private static class LogListModel extends AbstractListModel<String> {
         private List<NanoLogEntry> entries;
         private final SimpleDateFormat TIME_FORMAT = new SimpleDateFormat("HH:mm:ss");
 

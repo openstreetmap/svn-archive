@@ -12,11 +12,11 @@ import org.jgrapht.Graph;
 import org.jgrapht.alg.BellmanFordShortestPath;
 import org.jgrapht.alg.DijkstraShortestPath;
 import org.jgrapht.graph.DirectedWeightedMultigraph;
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.gui.MainApplication;
 
 import com.innovant.josm.jrt.osm.OsmEdge;
 import com.innovant.josm.plugin.routing.RoutingLayer;
@@ -317,7 +317,7 @@ public class RoutingGraph {
         List<OsmEdge> path = new ArrayList<>();
         Graph<Node, OsmEdge> g;
         double totalWeight = 0;
-        RoutingLayer layer = (RoutingLayer) Main.getLayerManager().getActiveLayer();
+        RoutingLayer layer = (RoutingLayer) MainApplication.getLayerManager().getActiveLayer();
         RoutingModel routingModel = layer.getRoutingModel();
 
         if (graph == null || routingModel.getOnewayChanged())

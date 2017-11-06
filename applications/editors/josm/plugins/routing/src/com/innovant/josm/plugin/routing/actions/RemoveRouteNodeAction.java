@@ -7,10 +7,9 @@ import java.awt.event.MouseEvent;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.mapmode.MapMode;
 import org.openstreetmap.josm.data.osm.Node;
-import org.openstreetmap.josm.gui.MapFrame;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.tools.ImageProvider;
 
@@ -37,28 +36,28 @@ public class RemoveRouteNodeAction extends MapMode {
      */
     static Logger logger = Logger.getLogger(RoutingLayer.class);
 
-    public RemoveRouteNodeAction(MapFrame mapFrame) {
+    public RemoveRouteNodeAction() {
         // TODO Use constructor with shortcut
         super(tr("Routing"), "remove",
                 tr("Click to remove destination"),
-                mapFrame, ImageProvider.getCursor("normal", "delete"));
+                ImageProvider.getCursor("normal", "delete"));
     }
 
     @Override public void enterMode() {
         super.enterMode();
-        Main.map.mapView.addMouseListener(this);
+        MainApplication.getMap().mapView.addMouseListener(this);
     }
 
     @Override public void exitMode() {
         super.exitMode();
-        Main.map.mapView.removeMouseListener(this);
+        MainApplication.getMap().mapView.removeMouseListener(this);
     }
 
     @Override public void mouseClicked(MouseEvent e) {
         // If left button is clicked
         if (e.getButton() == MouseEvent.BUTTON1) {
-            if (Main.getLayerManager().getActiveLayer() instanceof RoutingLayer) {
-                RoutingLayer layer = (RoutingLayer) Main.getLayerManager().getActiveLayer();
+            if (MainApplication.getLayerManager().getActiveLayer() instanceof RoutingLayer) {
+                RoutingLayer layer = (RoutingLayer) MainApplication.getLayerManager().getActiveLayer();
                 RoutingModel routingModel = layer.getRoutingModel();
                 // Search for the nearest node in the list
                 List<Node> nl = routingModel.getSelectedNodes();
@@ -66,7 +65,7 @@ public class RemoveRouteNodeAction extends MapMode {
                 double dmax = REMOVE_SQR_RADIUS; // maximum distance, in pixels
                 for (int i = 0; i < nl.size(); i++) {
                     Node node = nl.get(i);
-                    double d = Main.map.mapView.getPoint(node).distanceSq(e.getPoint());
+                    double d = MainApplication.getMap().mapView.getPoint(node).distanceSq(e.getPoint());
                     if (d < dmax) {
                         dmax = d;
                         index = i;
@@ -78,7 +77,7 @@ public class RemoveRouteNodeAction extends MapMode {
                     logger.debug("Removing node " + nl.get(index));
                     routingModel.removeNode(index);
                     RoutingPlugin.getInstance().getRoutingDialog().removeNode(index);
-                    Main.map.repaint();
+                    MainApplication.getMap().repaint();
                 } else {
                     logger.debug("Can't find a node to remove.");
                 }

@@ -6,10 +6,9 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 import java.awt.event.MouseEvent;
 
 import org.apache.log4j.Logger;
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.mapmode.MapMode;
 import org.openstreetmap.josm.data.osm.Node;
-import org.openstreetmap.josm.gui.MapFrame;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.tools.ImageProvider;
 
@@ -34,21 +33,21 @@ public class AddRouteNodeAction extends MapMode {
      * Constructor
      * @param mapFrame map frame
      */
-    public AddRouteNodeAction(MapFrame mapFrame) {
+    public AddRouteNodeAction() {
         // TODO Use constructor with shortcut
         super(tr("Routing"), "add",
                 tr("Click to add destination."),
-                mapFrame, ImageProvider.getCursor("crosshair", null));
+                ImageProvider.getCursor("crosshair", null));
     }
 
     @Override public void enterMode() {
         super.enterMode();
-        Main.map.mapView.addMouseListener(this);
+        MainApplication.getMap().mapView.addMouseListener(this);
     }
 
     @Override public void exitMode() {
         super.exitMode();
-        Main.map.mapView.removeMouseListener(this);
+        MainApplication.getMap().mapView.removeMouseListener(this);
     }
 
     @Override public void mouseClicked(MouseEvent e) {
@@ -56,8 +55,8 @@ public class AddRouteNodeAction extends MapMode {
         if (e.getButton() == MouseEvent.BUTTON1) {
             // Search for nearest highway node
             Node node = null;
-            if (Main.getLayerManager().getActiveLayer() instanceof RoutingLayer) {
-                RoutingLayer layer = (RoutingLayer) Main.getLayerManager().getActiveLayer();
+            if (MainApplication.getLayerManager().getActiveLayer() instanceof RoutingLayer) {
+                RoutingLayer layer = (RoutingLayer) MainApplication.getLayerManager().getActiveLayer();
                 node = layer.getNearestHighwayNode(e.getPoint());
                 if (node == null) {
                     logger.debug("no selected node");
@@ -68,7 +67,7 @@ public class AddRouteNodeAction extends MapMode {
                 RoutingPlugin.getInstance().getRoutingDialog().addNode(node);
             }
         }
-        Main.map.repaint();
+        MainApplication.getMap().repaint();
     }
 
     @Override public boolean layerIsSupported(Layer l) {

@@ -8,12 +8,12 @@ import java.util.ArrayList;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.xml.DOMConfigurator;
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.osm.event.AbstractDatasetChangedEvent;
 import org.openstreetmap.josm.data.osm.event.DataSetListenerAdapter;
 import org.openstreetmap.josm.data.osm.event.DatasetEventManager;
 import org.openstreetmap.josm.data.osm.event.DatasetEventManager.FireMode;
 import org.openstreetmap.josm.gui.IconToggleButton;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.gui.layer.LayerManager.LayerAddEvent;
@@ -24,6 +24,7 @@ import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import org.openstreetmap.josm.gui.preferences.PreferenceSetting;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
+import org.openstreetmap.josm.tools.Logging;
 
 import com.innovant.josm.plugin.routing.actions.AddRouteNodeAction;
 import com.innovant.josm.plugin.routing.actions.MoveRouteNodeAction;
@@ -127,7 +128,7 @@ public class RoutingPlugin extends Plugin implements LayerChangeListener, DataSe
         // Add menu
         menu = new RoutingMenu();
         // Register this class as LayerChangeListener
-        Main.getLayerManager().addLayerChangeListener(this);
+        MainApplication.getLayerManager().addLayerChangeListener(this);
         DatasetEventManager.getInstance().addDatasetListener(datasetAdapter, FireMode.IN_EDT_CONSOLIDATED);
         logger.debug("Finished loading plugin");
     }
@@ -149,11 +150,11 @@ public class RoutingPlugin extends Plugin implements LayerChangeListener, DataSe
     }
 
     public void addLayer() {
-        OsmDataLayer osmLayer = Main.getLayerManager().getEditLayer();
+        OsmDataLayer osmLayer = MainApplication.getLayerManager().getEditLayer();
         if (osmLayer != null) {
             RoutingLayer layer = new RoutingLayer(tr("Routing") + " [" + osmLayer.getName() + "]", osmLayer);
             layers.add(layer);
-            Main.getLayerManager().addLayer(layer);
+            MainApplication.getLayerManager().addLayer(layer);
         }
     }
 
@@ -161,9 +162,9 @@ public class RoutingPlugin extends Plugin implements LayerChangeListener, DataSe
     public void mapFrameInitialized(MapFrame oldFrame, MapFrame newFrame) {
         if (newFrame != null) {
             // Create plugin map modes
-            addRouteNodeAction = new AddRouteNodeAction(newFrame);
-            removeRouteNodeAction = new RemoveRouteNodeAction(newFrame);
-            moveRouteNodeAction = new MoveRouteNodeAction(newFrame);
+            addRouteNodeAction = new AddRouteNodeAction();
+            removeRouteNodeAction = new RemoveRouteNodeAction();
+            moveRouteNodeAction = new MoveRouteNodeAction();
             // Create plugin buttons and add them to the toolbar
             addRouteNodeButton = new IconToggleButton(addRouteNodeAction);
             removeRouteNodeButton = new IconToggleButton(removeRouteNodeAction);
@@ -215,7 +216,7 @@ public class RoutingPlugin extends Plugin implements LayerChangeListener, DataSe
         if (newLayer instanceof RoutingLayer) {
             menu.enableRestOfItems();
             // Set layer on top and select layer, also refresh toggleDialog to reflect selection
-            Main.map.mapView.moveLayer(newLayer, 0);
+            MainApplication.getMap().mapView.moveLayer(newLayer, 0);
             logger.debug("Added routing layer.");
         }
     }
@@ -240,9 +241,9 @@ public class RoutingPlugin extends Plugin implements LayerChangeListener, DataSe
                 if (layersArray[i].getDataLayer().equals(oldLayer)) {
                     try {
                         // Remove layer
-                        Main.getLayerManager().removeLayer(layersArray[i]);
+                        MainApplication.getLayerManager().removeLayer(layersArray[i]);
                     } catch (IllegalArgumentException e) {
-                        Main.error(e);
+                        Logging.error(e);
                     }
                 }
             }

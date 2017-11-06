@@ -16,7 +16,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JRadioButtonMenuItem;
 
-import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MainMenu;
 
 import com.innovant.josm.jrt.core.RoutingGraph.RouteType;
@@ -46,7 +46,7 @@ public class RoutingMenu extends JMenu {
     /**
      */
     public RoutingMenu() {
-        MainMenu mm = Main.main.menu;
+        MainMenu mm = MainApplication.getMenu();
         menu = mm.addMenu("Routing", tr("Routing"), KeyEvent.VK_O, mm.getDefaultMenuPos(), ht("/Plugin/Routing"));
 
         startMI = new JMenuItem(tr("Add routing layer"));
@@ -68,8 +68,8 @@ public class RoutingMenu extends JMenu {
         rshorter.addItemListener(new ItemListener() {
             @Override
             public void itemStateChanged(ItemEvent e) {
-                if (Main.getLayerManager().getActiveLayer() instanceof RoutingLayer) {
-                    RoutingLayer layer = (RoutingLayer) Main.getLayerManager().getActiveLayer();
+                if (MainApplication.getLayerManager().getActiveLayer() instanceof RoutingLayer) {
+                    RoutingLayer layer = (RoutingLayer) MainApplication.getLayerManager().getActiveLayer();
                     RoutingModel routingModel = layer.getRoutingModel();
                     if (e.getStateChange() == ItemEvent.SELECTED) {
                         routingModel.routingGraph.setTypeRoute(RouteType.SHORTEST);
@@ -81,7 +81,7 @@ public class RoutingMenu extends JMenu {
                     //TODO: Change this way
                     //FIXME: do not change node but recalculate routing.
                     routingModel.setNodesChanged();
-                    Main.map.repaint();
+                    MainApplication.getMap().repaint();
                 }
             }
 
@@ -98,8 +98,8 @@ public class RoutingMenu extends JMenu {
         cbmi.addItemListener(new ItemListener() {
             @Override
             public void itemStateChanged(ItemEvent e) {
-                if (Main.getLayerManager().getActiveLayer() instanceof RoutingLayer) {
-                    RoutingLayer layer = (RoutingLayer) Main.getLayerManager().getActiveLayer();
+                if (MainApplication.getLayerManager().getActiveLayer() instanceof RoutingLayer) {
+                    RoutingLayer layer = (RoutingLayer) MainApplication.getLayerManager().getActiveLayer();
                     RoutingModel routingModel = layer.getRoutingModel();
                     if (e.getStateChange() == ItemEvent.SELECTED)
                         routingModel.routingGraph.getRoutingProfile().setOnewayUse(false);
@@ -107,7 +107,7 @@ public class RoutingMenu extends JMenu {
                         routingModel.routingGraph.getRoutingProfile().setOnewayUse(true);
                     routingModel.setNodesChanged();
                     routingModel.setOnewayChanged();
-                    Main.map.repaint();
+                    MainApplication.getMap().repaint();
                 }
             }
         });
@@ -119,11 +119,11 @@ public class RoutingMenu extends JMenu {
         reverseMI.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (Main.getLayerManager().getActiveLayer() instanceof RoutingLayer) {
-                    RoutingLayer layer = (RoutingLayer) Main.getLayerManager().getActiveLayer();
+                if (MainApplication.getLayerManager().getActiveLayer() instanceof RoutingLayer) {
+                    RoutingLayer layer = (RoutingLayer) MainApplication.getLayerManager().getActiveLayer();
                     RoutingModel routingModel = layer.getRoutingModel();
                     routingModel.reverseNodes();
-                    Main.map.repaint();
+                    MainApplication.getMap().repaint();
                 }
             }
         });
@@ -133,13 +133,13 @@ public class RoutingMenu extends JMenu {
         clearMI.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (Main.getLayerManager().getActiveLayer() instanceof RoutingLayer) {
-                    RoutingLayer layer = (RoutingLayer) Main.getLayerManager().getActiveLayer();
+                if (MainApplication.getLayerManager().getActiveLayer() instanceof RoutingLayer) {
+                    RoutingLayer layer = (RoutingLayer) MainApplication.getLayerManager().getActiveLayer();
                     RoutingModel routingModel = layer.getRoutingModel();
                     // Reset routing nodes and paths
                     routingModel.reset();
                     RoutingPlugin.getInstance().getRoutingDialog().clearNodes();
-                    Main.map.repaint();
+                    MainApplication.getMap().repaint();
                 }
             }
         });
@@ -149,18 +149,15 @@ public class RoutingMenu extends JMenu {
         regraphMI.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
-                if (Main.getLayerManager().getActiveLayer() instanceof RoutingLayer) {
-                    RoutingLayer layer = (RoutingLayer) Main.getLayerManager().getActiveLayer();
+                if (MainApplication.getLayerManager().getActiveLayer() instanceof RoutingLayer) {
+                    RoutingLayer layer = (RoutingLayer) MainApplication.getLayerManager().getActiveLayer();
                     RoutingModel routingModel = layer.getRoutingModel();
                     routingModel.routingGraph.resetGraph();
                     routingModel.routingGraph.createGraph();
                 }
-
             }
         });
         menu.add(regraphMI);
-
 
         // Initially disabled
         disableAllItems();

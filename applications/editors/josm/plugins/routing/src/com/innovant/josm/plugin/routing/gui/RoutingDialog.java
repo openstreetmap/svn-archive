@@ -10,8 +10,8 @@ import javax.swing.DefaultListModel;
 import javax.swing.JList;
 import javax.swing.JScrollPane;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.osm.Node;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.dialogs.ToggleDialog;
 import org.openstreetmap.josm.tools.Shortcut;
 
@@ -100,8 +100,8 @@ public class RoutingDialog extends ToggleDialog {
 
     public void refresh() {
         clearNodes();
-        if (Main.getLayerManager().getActiveLayer() instanceof RoutingLayer) {
-            RoutingLayer routingLayer = (RoutingLayer) Main.getLayerManager().getActiveLayer();
+        if (MainApplication.getLayerManager().getActiveLayer() instanceof RoutingLayer) {
+            RoutingLayer routingLayer = (RoutingLayer) MainApplication.getLayerManager().getActiveLayer();
             RoutingModel routingModel = routingLayer.getRoutingModel();
             for (Node n : routingModel.getSelectedNodes()) {
                 addNode(n);

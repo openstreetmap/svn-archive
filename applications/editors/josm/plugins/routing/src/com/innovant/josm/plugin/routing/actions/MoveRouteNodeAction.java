@@ -8,10 +8,9 @@ import java.awt.event.MouseEvent;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.mapmode.MapMode;
 import org.openstreetmap.josm.data.osm.Node;
-import org.openstreetmap.josm.gui.MapFrame;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.tools.ImageProvider;
 
@@ -48,29 +47,29 @@ public class MoveRouteNodeAction extends MapMode {
      * Constructor
      * @param mapFrame map frame
      */
-    public MoveRouteNodeAction(MapFrame mapFrame) {
+    public MoveRouteNodeAction() {
         // TODO Use constructor with shortcut
         super(tr("Routing"), "move",
                 tr("Click and drag to move destination"),
-                mapFrame, ImageProvider.getCursor("normal", "move"));
+                ImageProvider.getCursor("normal", "move"));
     }
 
     @Override public void enterMode() {
         super.enterMode();
-        Main.map.mapView.addMouseListener(this);
+        MainApplication.getMap().mapView.addMouseListener(this);
     }
 
     @Override public void exitMode() {
         super.exitMode();
-        Main.map.mapView.removeMouseListener(this);
+        MainApplication.getMap().mapView.removeMouseListener(this);
     }
 
     @Override public void mousePressed(MouseEvent e) {
         // If left button is pressed
         if (e.getButton() == MouseEvent.BUTTON1) {
-            if (Main.getLayerManager().getActiveLayer() instanceof RoutingLayer) {
+            if (MainApplication.getLayerManager().getActiveLayer() instanceof RoutingLayer) {
                 requestFocusInMapView();
-                RoutingLayer layer = (RoutingLayer) Main.getLayerManager().getActiveLayer();
+                RoutingLayer layer = (RoutingLayer) MainApplication.getLayerManager().getActiveLayer();
                 RoutingModel routingModel = layer.getRoutingModel();
                 // Search for the nearest node in the list
                 List<Node> nl = routingModel.getSelectedNodes();
@@ -78,7 +77,7 @@ public class MoveRouteNodeAction extends MapMode {
                 double dmax = DRAG_SQR_RADIUS; // maximum distance, in pixels
                 for (int i = 0; i < nl.size(); i++) {
                     Node node = nl.get(i);
-                    double d = Main.map.mapView.getPoint(node).distanceSq(e.getPoint());
+                    double d = MainApplication.getMap().mapView.getPoint(node).distanceSq(e.getPoint());
                     if (d < dmax) {
                         dmax = d;
                         index = i;
@@ -101,8 +100,8 @@ public class MoveRouteNodeAction extends MapMode {
     }
 
     private void searchAndReplaceNode(Point point) {
-        if (Main.getLayerManager().getActiveLayer() instanceof RoutingLayer) {
-            RoutingLayer layer = (RoutingLayer) Main.getLayerManager().getActiveLayer();
+        if (MainApplication.getLayerManager().getActiveLayer() instanceof RoutingLayer) {
+            RoutingLayer layer = (RoutingLayer) MainApplication.getLayerManager().getActiveLayer();
             RoutingModel routingModel = layer.getRoutingModel();
             RoutingDialog routingDialog = RoutingPlugin.getInstance().getRoutingDialog();
             // Search for nearest highway node
@@ -117,7 +116,7 @@ public class MoveRouteNodeAction extends MapMode {
             routingDialog.removeNode(index);
             routingModel.insertNode(index, node);
             routingDialog.insertNode(index, node);
-            Main.map.repaint();
+            MainApplication.getMap().repaint();
         }
     }
 

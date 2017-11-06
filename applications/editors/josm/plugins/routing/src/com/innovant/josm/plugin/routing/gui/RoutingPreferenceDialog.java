@@ -192,7 +192,7 @@ public class RoutingPreferenceDialog extends DefaultTabPreferenceSetting {
         if (orig.size() == 0) { // defaults
             logger.debug("Loading Default Preferences.");
             for (OsmWayTypes owt : OsmWayTypes.values()) {
-                Main.pref.putInteger("routing.profile.default.speed."
+                Main.pref.putInt("routing.profile.default.speed."
                         + owt.getTag(), owt.getSpeed());
             }
             orig = Main.pref.getAllPrefix("routing.profile.default.speed");

@@ -150,7 +150,7 @@ public class OsmInspectorLayer extends Layer {
 	 * @author snikhil
 	 * 
 	 */
-	public class BugInfo implements Comparable<BugInfo>{
+	public static class BugInfo implements Comparable<BugInfo>{
 
 		public Geometry getGeom() {
 			return geom;
@@ -254,7 +254,7 @@ public class OsmInspectorLayer extends Layer {
 	 * @author snikhil
 	 * 
 	 */
-	public class BugIndex {
+	public static class BugIndex {
 		private int nextIndex;
 		private int previousIndex;
 		private ArrayList<BugInfo> osmBugs;

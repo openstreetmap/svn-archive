@@ -7,7 +7,7 @@ import java.util.Arrays;
 
 import javax.swing.JTextPane;
 
-import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.SideButton;
 import org.openstreetmap.josm.gui.dialogs.ToggleDialog;
 import org.openstreetmap.josm.plugins.osminspector.OsmInspectorLayer;
@@ -22,7 +22,7 @@ public class OsmInspectorBugInfoDialog extends ToggleDialog {
 	 * Builds the content panel for this dialog
 	 */
 	protected void buildContentPanel() {
-		Main.map.addToggleDialog(this, true);
+		MainApplication.getMap().addToggleDialog(this, true);
 		
 		bugTextArea = new JTextPane();
 		createLayout(bugTextArea, true, Arrays.asList(new SideButton[] {}));

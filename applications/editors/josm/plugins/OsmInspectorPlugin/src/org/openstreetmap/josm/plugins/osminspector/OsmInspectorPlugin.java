@@ -8,9 +8,8 @@ import java.awt.event.MouseListener;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.Bounds;
-import org.openstreetmap.josm.data.Preferences.PreferenceChangeEvent;
-import org.openstreetmap.josm.data.Preferences.PreferenceChangedListener;
-import org.openstreetmap.josm.gui.JosmUserIdentityManager;
+import org.openstreetmap.josm.data.UserIdentityManager;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.gui.NavigatableComponent;
 import org.openstreetmap.josm.gui.NavigatableComponent.ZoomChangeListener;
@@ -18,6 +17,8 @@ import org.openstreetmap.josm.gui.download.DownloadDialog;
 import org.openstreetmap.josm.gui.download.DownloadSelection;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
+import org.openstreetmap.josm.spi.preferences.PreferenceChangeEvent;
+import org.openstreetmap.josm.spi.preferences.PreferenceChangedListener;
 import org.openstreetmap.josm.tools.Shortcut;
 
 public class OsmInspectorPlugin extends Plugin 
@@ -25,7 +26,7 @@ implements ZoomChangeListener,
 MouseListener, PreferenceChangedListener, DownloadSelection{
 
 	/** The JOSM user identity manager, it is used for obtaining the user name */
-    private final JosmUserIdentityManager userIdentityManager;
+    private final UserIdentityManager userIdentityManager;
    
 
     /** The bounding box from where the MapDust bugs are down-loaded */
@@ -35,7 +36,7 @@ MouseListener, PreferenceChangedListener, DownloadSelection{
     
 	public OsmInspectorPlugin(PluginInformation info) {
 		super(info);
-		userIdentityManager = JosmUserIdentityManager.getInstance();
+		userIdentityManager = UserIdentityManager.getInstance();
 		initializePlugin();
 	}
 	
@@ -52,31 +53,31 @@ MouseListener, PreferenceChangedListener, DownloadSelection{
         
         /* add default values for static variables */
         Main.pref.put("osmInspector.nickname", "osmi");
-        Main.pref.put("osmInspector.showBugs", true);
+        Main.pref.putBoolean("osmInspector.showBugs", true);
         Main.pref.put("osmInspector.version", getPluginInformation().version);
         Main.pref.put("osmInspector.localVersion",getPluginInformation().localversion);
         inspectorLayer = null;
     }
 	@Override
 	public void mapFrameInitialized(MapFrame oldFrame, MapFrame newFrame) {
-		Main.toolbar.register( new ImportOsmInspectorBugsAction( this ) );
+		MainApplication.getToolbar().register( new ImportOsmInspectorBugsAction( this ) );
 		if (newFrame == null) {
             /* if new MapFrame is null, remove listener */
             NavigatableComponent.removeZoomChangeListener(this);
         } else {
             /* add MapDust dialog window */
-            if (Main.map != null && Main.map.mapView != null) {
+            if (MainApplication.getMap() != null && MainApplication.getMap().mapView != null) {
                 /* add MapdustGUI */
-                Main.map.setBounds(newFrame.getBounds());
+                MainApplication.getMap().setBounds(newFrame.getBounds());
                 
                 /* add Listeners */
                 NavigatableComponent.addZoomChangeListener(this);
-                Main.map.mapView.addMouseListener(this);
+                MainApplication.getMap().mapView.addMouseListener(this);
                 Main.pref.addPreferenceChangeListener(this);
                 /* put username to preferences */
                 Main.pref.put("osmInspector.josmUserName",
                         userIdentityManager.getUserName());
-                Main.toolbar.control.add( new ImportOsmInspectorBugsAction( this ) );
+                MainApplication.getToolbar().control.add( new ImportOsmInspectorBugsAction( this ) );
             }
         }
 	}
@@ -90,29 +91,29 @@ MouseListener, PreferenceChangedListener, DownloadSelection{
 	//
 	//  Delegate feature selection to layer
 	//
-	public void mouseClicked(MouseEvent arg0) {
+	public void mouseClicked(MouseEvent e) {
 	    if (inspectorLayer != null) {
-	        inspectorLayer.selectFeatures(arg0.getX(), arg0.getY());
+	        inspectorLayer.selectFeatures(e.getX(), e.getY());
 	    }
 	}
 
 	@Override
-	public void mouseEntered(MouseEvent arg0) {
+	public void mouseEntered(MouseEvent e) {
 		
 	}
 
 	@Override
-	public void mouseExited(MouseEvent arg0) {
+	public void mouseExited(MouseEvent e) {
 		
 	}
 
 	@Override
-	public void mousePressed(MouseEvent arg0) {
+	public void mousePressed(MouseEvent e) {
 		
 	}
 
 	@Override
-	public void mouseReleased(MouseEvent arg0) {
+	public void mouseReleased(MouseEvent e) {
 		
 	}
 

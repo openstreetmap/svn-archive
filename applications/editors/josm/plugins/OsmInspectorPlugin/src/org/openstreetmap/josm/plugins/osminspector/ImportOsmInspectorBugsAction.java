@@ -11,9 +11,11 @@ import java.util.NoSuchElementException;
 import javax.swing.ProgressMonitor;
 
 import org.opengis.referencing.FactoryException;
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.data.Bounds;
+import org.openstreetmap.josm.gui.MainApplication;
+import org.openstreetmap.josm.gui.MapView;
+import org.openstreetmap.josm.tools.Logging;
 import org.openstreetmap.josm.tools.Shortcut;
 
 import com.vividsolutions.jts.io.ParseException;
@@ -37,14 +39,14 @@ public class ImportOsmInspectorBugsAction extends JosmAction {
 	@Override
 	public void actionPerformed(ActionEvent event) {
 		if (isEnabled()) {
-			ProgressMonitor monitor = new ProgressMonitor(Main.map.mapView,
+		    MapView mapView = MainApplication.getMap().mapView;
+			ProgressMonitor monitor = new ProgressMonitor(mapView,
 					"Querying WFS Geofabrik", "Dowloading features", 0, 100);
 
 			try {
-				Bounds bounds = Main.map.mapView
-						.getLatLonBounds(Main.map.mapView.getBounds());
+				Bounds bounds = mapView.getLatLonBounds(mapView.getBounds());
 
-				Main.info("OSMI View bounds" + bounds);
+				Logging.info("OSMI View bounds" + bounds);
 
 				monitor.setProgress(10);
 
@@ -53,7 +55,7 @@ public class ImportOsmInspectorBugsAction extends JosmAction {
 					GeoFabrikWFSClient wfs = new GeoFabrikWFSClient(bounds);
 					wfs.initializeDataStore();
 					inspector = new OsmInspectorLayer(wfs, monitor);
-					Main.getLayerManager().addLayer(inspector);
+					MainApplication.getLayerManager().addLayer(inspector);
 					plugin.setLayer(inspector);
 				} else {
 					GeoFabrikWFSClient wfs = new GeoFabrikWFSClient(bounds);
@@ -62,7 +64,7 @@ public class ImportOsmInspectorBugsAction extends JosmAction {
 
 				}
 			} catch (IOException | IndexOutOfBoundsException | NoSuchElementException | FactoryException | ParseException e) {
-				Main.error(e);
+				Logging.error(e);
 			} finally {
 				monitor.close();
 				if (plugin.getLayer() != null) {
@@ -70,7 +72,7 @@ public class ImportOsmInspectorBugsAction extends JosmAction {
 				}
 			}
 		} else {
-		    Main.warn("Osm Inspector Action not enabled");
+		    Logging.warn("Osm Inspector Action not enabled");
 		}
 	}
 

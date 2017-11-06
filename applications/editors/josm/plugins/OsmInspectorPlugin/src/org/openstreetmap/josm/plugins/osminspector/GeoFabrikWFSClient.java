@@ -23,9 +23,10 @@ import org.opengis.filter.FilterFactory2;
 import org.opengis.referencing.FactoryException;
 import org.opengis.referencing.NoSuchAuthorityCodeException;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.coor.LatLon;
+import org.openstreetmap.josm.gui.MainApplication;
+import org.openstreetmap.josm.tools.Logging;
 
 public class GeoFabrikWFSClient {
 
@@ -50,8 +51,8 @@ public class GeoFabrikWFSClient {
 		// Step 4 - target
 		FeatureSource<SimpleFeatureType, SimpleFeature> source = data
 				.getFeatureSource(typeName);
-		Main.info("Source Metadata Bounds:" + source.getBounds());
-		Main.info("Source schema: " + source.getSchema());
+		Logging.info("Source Metadata Bounds:" + source.getBounds());
+		Logging.info("Source schema: " + source.getSchema());
 
 		progressMonitor.setProgress(40);
 		
@@ -60,8 +61,8 @@ public class GeoFabrikWFSClient {
 		String geomName = listAttrs.get(0).getLocalName();
 		CoordinateReferenceSystem targetCRS = CRS.decode("EPSG:4236");
 
-		Bounds bounds = Main.map.mapView.getLatLonBounds(Main.map.mapView
-				.getBounds());
+		Bounds bounds = MainApplication.getMap().mapView.getLatLonBounds(
+		        MainApplication.getMap().mapView.getBounds());
 
 		LatLon minLL = bounds.getMin();
 		LatLon maxLL = bounds.getMax();
@@ -72,7 +73,7 @@ public class GeoFabrikWFSClient {
 
 		ReferencedEnvelope bboxRef = new ReferencedEnvelope(minLon, maxLon,
 				minLat, maxLat, targetCRS);
-		Main.info("Reference Bounds:" + bboxRef);
+		Logging.info("Reference Bounds:" + bboxRef);
 
 		progressMonitor.setProgress(50);
 		//

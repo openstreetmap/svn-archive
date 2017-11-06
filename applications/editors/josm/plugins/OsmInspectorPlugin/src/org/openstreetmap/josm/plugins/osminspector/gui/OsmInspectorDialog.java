@@ -16,8 +16,8 @@ import javax.swing.ScrollPaneConstants;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.coor.LatLon;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.SideButton;
 import org.openstreetmap.josm.gui.dialogs.ToggleDialog;
 import org.openstreetmap.josm.gui.layer.Layer;
@@ -53,7 +53,7 @@ public class OsmInspectorDialog extends ToggleDialog implements LayerChangeListe
 	 * Builds the content panel for this dialog
 	 */
 	protected void buildContentPanel() {
-		Main.map.addToggleDialog(this, true);
+		MainApplication.getMap().addToggleDialog(this, true);
 
 		model = new DefaultListModel<>();
 		refreshModel();
@@ -76,7 +76,7 @@ public class OsmInspectorDialog extends ToggleDialog implements LayerChangeListe
 				Geometry geom = next.getGeom();
 				Point centroid = geom.getCentroid();
 				LatLon center = new LatLon(centroid.getY(), centroid.getX());
-				Main.map.mapView.zoomTo(center);
+				MainApplication.getMap().mapView.zoomTo(center);
 				layer.selectFeatures(center);
 				bugInfoDialog.setBugDescription(next);
 			}
@@ -87,12 +87,13 @@ public class OsmInspectorDialog extends ToggleDialog implements LayerChangeListe
 		final SideButton nextButton = new SideButton(
 				actNext = new OsmInspectorNextAction(layer));
 		nextButton.createArrow(new ActionListener() {
+		    @Override
 			public void actionPerformed(ActionEvent e) {
 				int index = bugsList.getSelectedIndex();
 				Geometry geom = layer.getOsmBugGeometry(index);
 				Point centroid = geom.getCentroid();
 				LatLon center = new LatLon(centroid.getY(), centroid.getX());
-				Main.map.mapView.zoomTo(center);
+				MainApplication.getMap().mapView.zoomTo(center);
 				layer.selectFeatures(center);
 			}
 		});
@@ -101,6 +102,7 @@ public class OsmInspectorDialog extends ToggleDialog implements LayerChangeListe
 		final SideButton prevButton = new SideButton(
 				actPrev = new OsmInspectorPrevAction(layer));
 		prevButton.createArrow(new ActionListener() {
+            @Override
 			public void actionPerformed(ActionEvent e) {
 			}
 		});
@@ -111,11 +113,11 @@ public class OsmInspectorDialog extends ToggleDialog implements LayerChangeListe
 
 		Shortcut sprev = Shortcut.registerShortcut("osmi:prev", tr("Prev OSMI bug"),
 				KeyEvent.VK_J, Shortcut.CTRL_SHIFT);
-		Main.registerActionShortcut(actPrev, sprev);
+		MainApplication.registerActionShortcut(actPrev, sprev);
 
 		Shortcut snext = Shortcut.registerShortcut("osmi:next", tr("Next OSMI bug"),
 				KeyEvent.VK_K, Shortcut.CTRL_SHIFT);
-		Main.registerActionShortcut(actNext, snext);
+		MainApplication.registerActionShortcut(actNext, snext);
 	}
 
 	public void refreshModel() {
@@ -176,7 +178,7 @@ public class OsmInspectorDialog extends ToggleDialog implements LayerChangeListe
 			Geometry geom = next.getGeom();
 			Point centroid = geom.getCentroid();
 			LatLon center = new LatLon(centroid.getY(), centroid.getX());
-			Main.map.mapView.zoomTo(center);
+			MainApplication.getMap().mapView.zoomTo(center);
 			inspectlayer.selectFeatures(center);
 			bugInfoDialog.setBugDescription(next);
 			updateSelection(next);
@@ -206,7 +208,7 @@ public class OsmInspectorDialog extends ToggleDialog implements LayerChangeListe
 			Geometry geom = prev.getGeom();
 			Point centroid = geom.getCentroid();
 			LatLon center = new LatLon(centroid.getY(), centroid.getX());
-			Main.map.mapView.zoomTo(center);
+			MainApplication.getMap().mapView.zoomTo(center);
 			inspectlayer.selectFeatures(center);
 			bugInfoDialog.setBugDescription(prev);
 			updateSelection(prev);
@@ -215,7 +217,7 @@ public class OsmInspectorDialog extends ToggleDialog implements LayerChangeListe
 
 	@Override
 	public void activeOrEditLayerChanged(ActiveLayerChangeEvent e) {
-	    Layer newLayer = Main.getLayerManager().getActiveLayer();
+	    Layer newLayer = MainApplication.getLayerManager().getActiveLayer();
 		if (newLayer instanceof OsmInspectorLayer) {
 			this.layer = (OsmInspectorLayer) newLayer;
 			refreshModel();

@@ -19,8 +19,8 @@ import javax.json.JsonException;
 import javax.json.JsonObject;
 
 import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.data.coor.CoordinateFormat;
 import org.openstreetmap.josm.data.coor.LatLon;
+import org.openstreetmap.josm.data.coor.conversion.DecimalDegreesCoordinateFormat;
 import org.openstreetmap.josm.data.projection.Projection;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MapView;
@@ -87,7 +87,7 @@ final class ChatServerConnection {
      * Does not autologin, if userName is null, obviously.
      */
     public void autoLogin(final String userName) {
-        final int uid = Main.pref.getInteger("geochat.lastuid", 0);
+        final int uid = Main.pref.getInt("geochat.lastuid", 0);
         if (uid <= 0) {
             if (userName != null && userName.length() > 1)
                 login(userName);
@@ -146,8 +146,8 @@ final class ChatServerConnection {
 
         try {
             String nameAttr = token != null ? "&token=" + token : "&name=" + URLEncoder.encode(userName, "UTF-8");
-            String query = "register&lat=" + pos.latToString(CoordinateFormat.DECIMAL_DEGREES)
-            + "&lon=" + pos.lonToString(CoordinateFormat.DECIMAL_DEGREES)
+            String query = "register&lat=" + DecimalDegreesCoordinateFormat.INSTANCE.latToString(pos)
+            + "&lon=" + DecimalDegreesCoordinateFormat.INSTANCE.lonToString(pos)
             + nameAttr;
             JsonQueryUtil.queryAsync(query, new JsonQueryCallback() {
                 @Override
@@ -172,7 +172,7 @@ final class ChatServerConnection {
     private void login(int userId, String userName) {
         this.userId = userId;
         this.userName = userName;
-        Main.pref.putInteger("geochat.lastuid", userId);
+        Main.pref.putInt("geochat.lastuid", userId);
         for (ChatServerConnectionListener listener : listeners) {
             listener.loggedIn(userName);
         }
@@ -251,8 +251,8 @@ final class ChatServerConnection {
             return;
         }
         try {
-            String query = "post&lat=" + pos.latToString(CoordinateFormat.DECIMAL_DEGREES)
-            + "&lon=" + pos.lonToString(CoordinateFormat.DECIMAL_DEGREES)
+            String query = "post&lat=" + DecimalDegreesCoordinateFormat.INSTANCE.latToString(pos)
+            + "&lon=" + DecimalDegreesCoordinateFormat.INSTANCE.lonToString(pos)
             + "&uid=" + userId
             + "&message=" + URLEncoder.encode(message, "UTF8");
             if (targetUser != null && targetUser.length() > 0)
@@ -328,7 +328,7 @@ final class ChatServerConnection {
         @Override
         public void run() {
             //            lastId = Main.pref.getLong("geochat.lastid", 0);
-            int interval = Main.pref.getInteger("geochat.interval", 2);
+            int interval = Main.pref.getInt("geochat.interval", 2);
             while (!stopping) {
                 process();
                 try {
@@ -368,8 +368,8 @@ final class ChatServerConnection {
             lastUserId = userId;
             lastPosition = pos;
 
-            String query = "get&lat=" + pos.latToString(CoordinateFormat.DECIMAL_DEGREES)
-            + "&lon=" + pos.lonToString(CoordinateFormat.DECIMAL_DEGREES)
+            String query = "get&lat=" + DecimalDegreesCoordinateFormat.INSTANCE.latToString(pos)
+            + "&lon=" + DecimalDegreesCoordinateFormat.INSTANCE.lonToString(pos)
             + "&uid=" + userId + "&last=" + lastId;
             JsonObject json;
             try {

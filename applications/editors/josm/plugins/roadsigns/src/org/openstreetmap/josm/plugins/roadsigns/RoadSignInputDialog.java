@@ -137,7 +137,7 @@ class RoadSignInputDialog extends ExtendedDialog {
         if (i == 0) { // OK Button
             Collection<OsmPrimitive> selPrim = MainApplication.getLayerManager().getEditDataSet().getSelected();
             if (!selPrim.isEmpty()) {
-                Main.pref.put("plugin.roadsigns.addTrafficSignTag", addTrafficSignTag.isSelected());
+                Main.pref.putBoolean("plugin.roadsigns.addTrafficSignTag", addTrafficSignTag.isSelected());
 
                 Command cmd = createCommand(selPrim);
                 if (cmd != null) {

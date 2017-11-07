@@ -25,7 +25,8 @@ import javax.swing.JOptionPane;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
-import org.openstreetmap.josm.data.Preferences.pref;
+import org.openstreetmap.josm.data.StructUtils;
+import org.openstreetmap.josm.data.StructUtils.StructEntry;
 import org.openstreetmap.josm.gui.ExtendedDialog;
 import org.openstreetmap.josm.gui.dialogs.properties.PropertiesDialog;
 import org.openstreetmap.josm.io.CachedFile;
@@ -62,7 +63,7 @@ public class RoadSignsPlugin extends Plugin {
     }
 
     public static File pluginDir() {
-        File dir = new File(plugin.getPluginDir());
+        File dir = plugin.getPluginDirs().getUserDataDirectory(false);
         if (!dir.exists()) {
             dir.mkdirs();
         }
@@ -114,10 +115,10 @@ public class RoadSignsPlugin extends Plugin {
     }
 
     public static class PresetMetaData {
-        @pref public String code;
-        @pref public String display_name;
-        @pref public String preset_path;
-        @pref public String icon_path;
+        @StructEntry public String code;
+        @StructEntry public String display_name;
+        @StructEntry public String preset_path;
+        @StructEntry public String icon_path;
 
         public PresetMetaData() {
         }
@@ -142,12 +143,13 @@ public class RoadSignsPlugin extends Plugin {
 
     public static List<PresetMetaData> getAvailablePresetsMetaData() {
 
-        List<PresetMetaData> presetsData = Main.pref.getListOfStructs("plugin.roadsigns.presets", DEFAULT_PRESETS, PresetMetaData.class);
+        List<PresetMetaData> presetsData = StructUtils.getListOfStructs(
+                Main.pref, "plugin.roadsigns.presets", DEFAULT_PRESETS, PresetMetaData.class);
 
         String customFile = Main.pref.get("plugin.roadsigns.sources", null);
         if (customFile == null) {
             // for legacy reasons, try both string and collection preference type
-            Collection<String> customFiles = Main.pref.getCollection("plugin.roadsigns.sources", null);
+            List<String> customFiles = Main.pref.getList("plugin.roadsigns.sources", null);
             if (customFiles != null && !customFiles.isEmpty()) {
                 customFile = customFiles.iterator().next();
             }
@@ -163,11 +165,11 @@ public class RoadSignsPlugin extends Plugin {
             }
 
             String customIconDirsStr = Main.pref.get("plugin.roadsigns.icon.sources", null);
-            Collection<String> customIconDirs = null;
+            List<String> customIconDirs = null;
             if (customIconDirsStr != null) {
                 customIconDirs = new ArrayList<>(Arrays.asList(customIconDirsStr.split(",")));
             } else {
-                customIconDirs = Main.pref.getCollection("plugin.roadsigns.icon.sources", null);
+                customIconDirs = Main.pref.getList("plugin.roadsigns.icon.sources", null);
             }
             if (customIconDirs != null) {
                 customIconDirs = new ArrayList<>(customIconDirs);

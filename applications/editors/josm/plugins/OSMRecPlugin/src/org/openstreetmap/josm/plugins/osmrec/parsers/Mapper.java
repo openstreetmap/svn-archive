@@ -33,7 +33,7 @@ public class Mapper {
 
     public void parseFile(InputStream inps) throws FileNotFoundException {
 
-        Scanner input = new Scanner(inps); //the Map file contains lines of the mappings separated with the symbol "|"
+        Scanner input = new Scanner(inps, "UTF-8"); //the Map file contains lines of the mappings separated with the symbol "|"
         //e.g. highway motorway | Motorway
         //the key will be the string "highway motorway" and the value "Motorway"
         while (input.hasNext()) {

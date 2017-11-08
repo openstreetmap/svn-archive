@@ -98,13 +98,12 @@ import org.openstreetmap.josm.data.osm.Tag;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.data.preferences.BooleanProperty;
 import org.openstreetmap.josm.data.preferences.IntegerProperty;
+import org.openstreetmap.josm.data.tagging.ac.AutoCompletionItem;
 import org.openstreetmap.josm.gui.ExtendedDialog;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.mappaint.MapPaintStyles;
 import org.openstreetmap.josm.gui.tagging.ac.AutoCompletingComboBox;
-import org.openstreetmap.josm.gui.tagging.ac.AutoCompletionListItem;
 import org.openstreetmap.josm.gui.tagging.ac.AutoCompletionManager;
-//import org.openstreetmap.josm.gui.tagging.presets.TaggingPreset;
 import org.openstreetmap.josm.gui.util.GuiHelper;
 import org.openstreetmap.josm.gui.util.WindowGeometry;
 import org.openstreetmap.josm.gui.widgets.PopupMenuLauncher;
@@ -171,9 +170,9 @@ class OSMRecPluginHelper {
 
     private String changedKey;
 
-    Comparator<AutoCompletionListItem> defaultACItemComparator = new Comparator<AutoCompletionListItem>() {
+    Comparator<AutoCompletionItem> defaultACItemComparator = new Comparator<AutoCompletionItem>() {
         @Override
-        public int compare(AutoCompletionListItem o1, AutoCompletionListItem o2) {
+        public int compare(AutoCompletionItem o1, AutoCompletionItem o2) {
             return String.CASE_INSENSITIVE_ORDER.compare(o1.getValue(), o2.getValue());
         }
     };
@@ -194,7 +193,7 @@ class OSMRecPluginHelper {
 
     OSMRecPluginHelper(DefaultTableModel propertyData, Map<String, Map<String, Integer>> valueCount) {
         this.tagData = propertyData;
-        fileHistory = Main.pref.getCollection("file-open.history");
+        fileHistory = Main.pref.getList("file-open.history");
         if (!fileHistory.isEmpty()) {
             MAIN_PATH = (String) fileHistory.toArray()[0];
         } else {
@@ -281,7 +280,7 @@ class OSMRecPluginHelper {
     public void loadTagsIfNeeded() {
         if (PROPERTY_REMEMBER_TAGS.get() && recentTags.isEmpty()) {
             recentTags.clear();
-            Collection<String> c = Main.pref.getCollection("properties.recent-tags");
+            Collection<String> c = Main.pref.getList("properties.recent-tags");
             Iterator<String> it = c.iterator();
             String key, value;
             while (it.hasNext()) {
@@ -302,7 +301,7 @@ class OSMRecPluginHelper {
                 c.add(t.getKey());
                 c.add(t.getValue());
             }
-            Main.pref.putCollection("properties.recent-tags", c);
+            Main.pref.putList("properties.recent-tags", c);
         }
     }
 
@@ -423,7 +422,7 @@ class OSMRecPluginHelper {
             userNameField.setColumns(FIELD_COLUMNS);
             daysField.setColumns(FIELD_COLUMNS);
 
-            Collection<String> fileHistory = Main.pref.getCollection("file-open.history");
+            Collection<String> fileHistory = Main.pref.getList("file-open.history");
             if (!fileHistory.isEmpty()) {
                 inputFileField.setText(MAIN_PATH);
             }
@@ -622,8 +621,8 @@ class OSMRecPluginHelper {
             mainPanel.add(startTrainingButton, BorderLayout.CENTER);
             mainPanel.add(trainingProgressBar, BorderLayout.SOUTH);
 
-            AutoCompletionManager autocomplete = MainApplication.getLayerManager().getEditLayer().data.getAutoCompletionManager();
-            List<AutoCompletionListItem> keyList = autocomplete.getKeys();
+            AutoCompletionManager autocomplete = AutoCompletionManager.of(MainApplication.getLayerManager().getEditLayer().data);
+            List<AutoCompletionItem> keyList = new ArrayList<>(autocomplete.getTagKeys());
             Collections.sort(keyList, defaultACItemComparator);
 
             setContent(mainPanel, false);
@@ -963,7 +962,7 @@ class OSMRecPluginHelper {
          * @param comparator Class to decide what values are offered on autocompletion
          * @return The created adapter
          */
-        protected FocusAdapter addFocusAdapter(final AutoCompletionManager autocomplete, final Comparator<AutoCompletionListItem> comparator) {
+        protected FocusAdapter addFocusAdapter(final AutoCompletionManager autocomplete, final Comparator<AutoCompletionItem> comparator) {
             // get the combo box' editor component
             JTextComponent editor = (JTextComponent) values.getEditor().getEditorComponent();
             // Refresh the values model when focus is gained
@@ -972,10 +971,10 @@ class OSMRecPluginHelper {
                 public void focusGained(FocusEvent e) {
                     String key = keys.getEditor().getItem().toString();
 
-                    List<AutoCompletionListItem> valueList = autocomplete.getValues(getAutocompletionKeys(key));
+                    List<AutoCompletionItem> valueList = new ArrayList<>(autocomplete.getTagValues(getAutocompletionKeys(key)));
                     Collections.sort(valueList, comparator);
 
-                    values.setPossibleACItems(valueList);
+                    values.setPossibleAcItems(valueList);
                     values.getEditor().selectAll();
                 }
             };
@@ -1547,14 +1546,14 @@ class OSMRecPluginHelper {
                     "This will change up to {0} objects.", sel.size(), sel.size())
             +"<br><br>"+tr("Please select a key")), GBC.eol().fill(GBC.HORIZONTAL));
 
-            AutoCompletionManager autocomplete = MainApplication.getLayerManager().getEditLayer().data.getAutoCompletionManager();
-            List<AutoCompletionListItem> keyList = autocomplete.getKeys();
+            AutoCompletionManager autocomplete = AutoCompletionManager.of(MainApplication.getLayerManager().getEditLayer().data);
+            List<AutoCompletionItem> keyList = new ArrayList<>(autocomplete.getTagKeys());
 
-            AutoCompletionListItem itemToSelect = null;
+            AutoCompletionItem itemToSelect = null;
             // remove the object's tag keys from the list
-            Iterator<AutoCompletionListItem> iter = keyList.iterator();
+            Iterator<AutoCompletionItem> iter = keyList.iterator();
             while (iter.hasNext()) {
-                AutoCompletionListItem item = iter.next();
+                AutoCompletionItem item = iter.next();
                 if (item.getValue().equals(lastAddKey)) {
                     itemToSelect = item;
                 }
@@ -1570,7 +1569,7 @@ class OSMRecPluginHelper {
             }
 
             Collections.sort(keyList, defaultACItemComparator);
-            keys.setPossibleACItems(keyList);
+            keys.setPossibleAcItems(keyList);
             keys.setEditable(true);
 
             mainPanel.add(keys, GBC.eop().fill());
@@ -2362,7 +2361,7 @@ class OSMRecPluginHelper {
             Scanner input = null;
 
             try {
-                input = new Scanner(textualListFile);
+                input = new Scanner(textualListFile, "UTF-8");
             } catch (FileNotFoundException ex) {
                 Logging.warn(ex);
             }

@@ -22,7 +22,7 @@ public class TextualStatistics {
     public void parseTextualList(InputStream textualFileStream) {
         textualList = new ArrayList<>();
 
-        Scanner input = new Scanner(textualFileStream);
+        Scanner input = new Scanner(textualFileStream, "UTF-8");
         while (input.hasNext()) {
             String nextLine = input.nextLine();
             textualList.add(nextLine);

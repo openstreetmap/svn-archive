@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <project default="all" name="Compile and build java classes plus jar archives">
 
-	<target name="all" depends="clean,build,svn_info,pack,create_run_jar,findbugs,checkstyle,javadoc,create_release_zip,create_source_release_zip" />
+	<target name="all" depends="clean,build,svn_info,pack,create_run_jar,spotbugs,checkstyle,javadoc,create_release_zip,create_source_release_zip" />
 
 	<target name="clean">
 		<mkdir dir="bin" />
@@ -84,23 +84,23 @@
         </checkstyle>
     </target>
 
-    <target name="findbugs" depends="pack">
-        <taskdef name="findbugs" classname="edu.umd.cs.findbugs.anttask.FindBugsTask" 
-        	classpath="tools/findbugs/findbugs-ant.jar"/>
-        <path id="findbugs-classpath">
-            <fileset dir="tools/findbugs/">
+    <target name="spotbugs" depends="pack">
+        <taskdef name="spotbugs" classname="edu.umd.cs.findbugs.anttask.FindBugsTask" 
+        	classpath="tools/spotbugs/spotbugs-ant.jar"/>
+        <path id="spotbugs-classpath">
+            <fileset dir="tools/spotbugs/">
                 <include name="*.jar"/>
             </fileset>
         </path>
-        <property name="findbugs-classpath" refid="findbugs-classpath"/>
-        <findbugs output="xml"
-                outputFile="findbugs-jmapviewer.xml"
-                classpath="${findbugs-classpath}"
+        <property name="spotbugs-classpath" refid="spotbugs-classpath"/>
+        <spotbugs output="xml"
+                outputFile="spotbugs-jmapviewer.xml"
+                classpath="${spotbugs-classpath}"
                 effort="max"
                 >
             <sourcePath path="${basedir}/src" />
             <class location="JMapViewer.jar" />
-        </findbugs>
+        </spotbugs>
     </target>
 
 	<target name="javadoc">

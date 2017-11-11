@@ -19,6 +19,7 @@ JMapViewer
 (c) 2013, Alexei Kasatkin
 (c) 2013, Galo Higueras
 (c) 2015-2016, Wiktor Niesiobędzki
+(c) 2017, Robert Scott
 
 This work bases partly on the JOSM plugin "Slippy Map Chooser" by Tim Haussmann
 

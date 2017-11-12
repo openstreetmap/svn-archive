@@ -27,7 +27,6 @@ import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 
 import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Tag;
 import org.openstreetmap.josm.gui.MainApplication;
@@ -282,7 +281,7 @@ public class TagEditorDialog extends JDialog {
     public void startEditSession() {
         tagEditor.getModel().clearAppliedPresets();
         tagEditor.getModel().initFromJOSMSelection();
-        autocomplete = MainApplication.getLayerManager().getEditLayer().data.getAutoCompletionManager();
+        autocomplete = AutoCompletionManager.of(MainApplication.getLayerManager().getEditLayer().data);
         tagEditor.setAutoCompletionManager(autocomplete);
         getModel().ensureOneTag();
     }
@@ -319,8 +318,6 @@ public class TagEditorDialog extends JDialog {
             tagEditor.stopEditing();
             setVisible(false);
             tagEditor.getModel().updateJOSMSelection();
-            DataSet ds = MainApplication.getLayerManager().getEditDataSet();
-            ds.fireSelectionChanged();
             Main.parent.repaint(); // repaint all - drawing could have been changed
         }
 

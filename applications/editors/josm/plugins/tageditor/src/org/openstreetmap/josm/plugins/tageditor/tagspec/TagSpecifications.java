@@ -13,8 +13,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.openstreetmap.josm.data.osm.Tag;
-import org.openstreetmap.josm.gui.tagging.ac.AutoCompletionItemPriority;
-import org.openstreetmap.josm.gui.tagging.ac.AutoCompletionListItem;
+import org.openstreetmap.josm.data.tagging.ac.AutoCompletionItem;
+import org.openstreetmap.josm.data.tagging.ac.AutoCompletionPriority;
 import org.openstreetmap.josm.plugins.tageditor.ac.AutoCompletionContext;
 import org.xml.sax.Attributes;
 import org.xml.sax.EntityResolver;
@@ -125,22 +125,19 @@ public class TagSpecifications {
         }
     }
 
-    public List<AutoCompletionListItem> getKeysForAutoCompletion(AutoCompletionContext context) {
-        ArrayList<AutoCompletionListItem> keys = new ArrayList<>();
+    public List<AutoCompletionItem> getKeysForAutoCompletion(AutoCompletionContext context) {
+        ArrayList<AutoCompletionItem> keys = new ArrayList<>();
         for (TagSpecification spec : tagSpecifications) {
             if (!spec.isApplicable(context)) {
                 continue;
             }
-            AutoCompletionListItem item = new AutoCompletionListItem();
-            item.setValue(spec.getKey());
-            item.setPriority(AutoCompletionItemPriority.IS_IN_STANDARD);
-            keys.add(item);
+            keys.add(new AutoCompletionItem(spec.getKey(), AutoCompletionPriority.IS_IN_STANDARD));
         }
         return keys;
     }
 
-    public List<AutoCompletionListItem> getLabelsForAutoCompletion(String forKey, AutoCompletionContext context) {
-        ArrayList<AutoCompletionListItem> items = new ArrayList<>();
+    public List<AutoCompletionItem> getLabelsForAutoCompletion(String forKey, AutoCompletionContext context) {
+        ArrayList<AutoCompletionItem> items = new ArrayList<>();
         for (TagSpecification spec : tagSpecifications) {
             if (spec.getKey().equals(forKey)) {
                 List<LabelSpecification> lables = spec.getLables();
@@ -148,10 +145,7 @@ public class TagSpecifications {
                     if (!l.isApplicable(context)) {
                         continue;
                     }
-                    AutoCompletionListItem item = new AutoCompletionListItem();
-                    item.setValue(l.getValue());
-                    item.setPriority(AutoCompletionItemPriority.IS_IN_STANDARD);
-                    items.add(item);
+                    items.add(new AutoCompletionItem(l.getValue(), AutoCompletionPriority.IS_IN_STANDARD));
                 }
             }
         }

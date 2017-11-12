@@ -14,8 +14,8 @@ import javax.swing.JTable;
 import javax.swing.UIManager;
 import javax.swing.table.TableCellRenderer;
 
-import org.openstreetmap.josm.gui.tagging.ac.AutoCompletionItemPriority;
-import org.openstreetmap.josm.gui.tagging.ac.AutoCompletionListItem;
+import org.openstreetmap.josm.data.tagging.ac.AutoCompletionItem;
+import org.openstreetmap.josm.data.tagging.ac.AutoCompletionPriority;
 
 /**
  * This is the table cell renderer for the list of auto completion list items.
@@ -27,12 +27,12 @@ public class AutoCompletionListRenderer extends JLabel implements TableCellRende
     public static final String RES_SELECTION_ICON = "/resources/selection.png";
 
     /** the icon used to decorate items of priority
-     *  {@link AutoCompletionItemPriority#IS_IN_STANDARD}
+     *  {@link AutoCompletionPriority#IS_IN_STANDARD}
      */
     private Icon iconStandard;
 
     /** the icon used to decorate items of priority
-     *  {@link AutoCompletionItemPriority#IS_IN_SELECTION}
+     *  {@link AutoCompletionPriority#IS_IN_SELECTION}
      */
     private Icon iconSelection;
 
@@ -70,12 +70,12 @@ public class AutoCompletionListRenderer extends JLabel implements TableCellRende
      *
      * @param item the item to be rendered
      */
-    protected void prepareRendererIcon(AutoCompletionListItem item) {
-        if (item.getPriority().equals(AutoCompletionItemPriority.IS_IN_STANDARD)) {
+    protected void prepareRendererIcon(AutoCompletionItem item) {
+        if (item.getPriority().equals(AutoCompletionPriority.IS_IN_STANDARD)) {
             if (iconStandard != null) {
                 setIcon(iconStandard);
             }
-        } else if (item.getPriority().equals(AutoCompletionItemPriority.IS_IN_SELECTION)) {
+        } else if (item.getPriority().equals(AutoCompletionPriority.IS_IN_SELECTION)) {
             if (iconSelection != null) {
                 setIcon(iconSelection);
             }
@@ -109,8 +109,8 @@ public class AutoCompletionListRenderer extends JLabel implements TableCellRende
         resetRenderer();
         // set icon and text
         //
-        if (value instanceof AutoCompletionListItem) {
-            AutoCompletionListItem item = (AutoCompletionListItem) value;
+        if (value instanceof AutoCompletionItem) {
+            AutoCompletionItem item = (AutoCompletionItem) value;
             prepareRendererIcon(item);
             setText(item.getValue());
             setToolTipText(item.getValue());

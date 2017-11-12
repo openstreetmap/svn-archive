@@ -76,7 +76,7 @@ public class AutoCompletionListViewer extends JPanel {
                     public void mouseClicked(MouseEvent e) {
                         if (e.getClickCount() == 2) {
                             int row = table.getSelectedRow();
-                            String item = autoCompletionList.getFilteredItem(row).getValue();
+                            String item = autoCompletionList.getFilteredItemAt(row).getValue();
                             fireAutoCompletionListItemSelected(item);
                         }
                     }

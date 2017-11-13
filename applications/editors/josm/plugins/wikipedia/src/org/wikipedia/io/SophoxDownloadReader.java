@@ -35,45 +35,45 @@ import java.util.regex.Pattern;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 /**
- * Read content from an Wikosm server.
+ * Read content from an Sophox server.
  */
-public class WikosmDownloadReader extends BoundingBoxDownloader {
+public class SophoxDownloadReader extends BoundingBoxDownloader {
 
     /**
-     * Property for current Wikosm server.
+     * Property for current Sophox server.
      */
-    public static final StringProperty WIKOSM_SERVER = new StringProperty("download.wikosm.server",
-            "http://88.99.164.208/bigdata/namespace/wdq/sparql");
+    public static final StringProperty SOPHOX_SERVER = new StringProperty("download.sophox.server",
+            "https://sophox.org/bigdata/namespace/wdq/sparql");
     /**
-     * Property for list of known Wikosm servers.
+     * Property for list of known Sophox servers.
      */
 // TODO: Core dependency:
-//    public static final ListProperty WIKOSM_SERVER_HISTORY = new ListProperty("download.wikosm.servers",
-//            Arrays.asList("http://88.99.164.208/bigdata/namespace/wdq/sparql"));
-    public static final ListProperty WIKOSM_SERVER_HISTORY = new ListProperty("download.wikosm.servers",
-            Arrays.asList("http://88.99.164.208/bigdata/namespace/wdq/sparql"));
+//    public static final ListProperty SOPHOX_SERVER_HISTORY = new ListProperty("download.sophox.servers",
+//            Arrays.asList("https://sophox.org/bigdata/namespace/wdq/sparql"));
+    public static final ListProperty SOPHOX_SERVER_HISTORY = new ListProperty("download.sophox.servers",
+            Arrays.asList("https://sophox.org/bigdata/namespace/wdq/sparql"));
 
     private static final String DATA_PREFIX = "?query=";
 
-    private final String wikosmServer;
-    private final String wikosmQuery;
+    private final String sophoxServer;
+    private final String sophoxQuery;
     private final boolean asNewLayer;
     private final boolean downloadReferrers;
     private final boolean downloadFull;
 
     /**
-     * Constructs a new {@code WikosmDownloadReader}.
+     * Constructs a new {@code SophoxDownloadReader}.
      *
      * @param downloadArea The area to download
-     * @param wikosmServer The Wikosm server to use
-     * @param wikosmQuery  The Wikosm query
+     * @param sophoxServer The Sophox server to use
+     * @param sophoxQuery  The Sophox query
      */
-    public WikosmDownloadReader(Bounds downloadArea, String wikosmServer, String wikosmQuery,
+    public SophoxDownloadReader(Bounds downloadArea, String sophoxServer, String sophoxQuery,
                                 boolean asNewLayer, boolean downloadReferrers, boolean downloadFull) {
         super(downloadArea);
         setDoAuthenticate(false);
-        this.wikosmServer = wikosmServer;
-        this.wikosmQuery = wikosmQuery.trim();
+        this.sophoxServer = sophoxServer;
+        this.sophoxQuery = sophoxQuery.trim();
         this.asNewLayer = asNewLayer;
         this.downloadReferrers = downloadReferrers;
         this.downloadFull = downloadFull;
@@ -81,12 +81,12 @@ public class WikosmDownloadReader extends BoundingBoxDownloader {
 
     @Override
     protected String getBaseUrl() {
-        return wikosmServer;
+        return sophoxServer;
     }
 
     @Override
     protected String getRequestForBbox(double lon1, double lat1, double lon2, double lat2) {
-        final String query = this.wikosmQuery
+        final String query = this.sophoxQuery
                 .replace("{{boxParams}}", boxParams(lon1, lat1, lon2, lat2))
                 .replace("{{center}}", center(lon1, lat1, lon2, lat2));
         return DATA_PREFIX + Utils.encodeUrl(query);
@@ -203,7 +203,7 @@ public class WikosmDownloadReader extends BoundingBoxDownloader {
     @Override
     protected void adaptRequest(HttpClient request) {
         // see https://wiki.openstreetmap.org/wiki/Overpass_API/Overpass_QL#timeout
-        final Matcher timeoutMatcher = Pattern.compile("#timeout:(\\d+)").matcher(wikosmQuery);
+        final Matcher timeoutMatcher = Pattern.compile("#timeout:(\\d+)").matcher(sophoxQuery);
         final int timeout;
         if (timeoutMatcher.find()) {
             timeout = (int) TimeUnit.SECONDS.toMillis(Integer.parseInt(timeoutMatcher.group(1)));
@@ -264,8 +264,8 @@ public class WikosmDownloadReader extends BoundingBoxDownloader {
 
         DataSet ds = super.parseOsm(progressMonitor);
 
-        // add bounds if necessary (note that Wikosm API does not return bounds in the response XML)
-        if (ds != null && ds.getDataSources().isEmpty() && wikosmQuery.contains("{{boxParams}}")) {
+        // add bounds if necessary (note that Sophox API does not return bounds in the response XML)
+        if (ds != null && ds.getDataSources().isEmpty() && sophoxQuery.contains("{{boxParams}}")) {
             if (crosses180th) {
                 Bounds bounds = new Bounds(lat1, lon1, lat2, 180.0);
                 DataSource src = new DataSource(bounds, getBaseUrl());

@@ -12,9 +12,9 @@ import org.openstreetmap.josm.testutils.JOSMTestRules;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
- * Unit tests of {@link WikosmServerPreference} class.
+ * Unit tests of {@link SophoxServerPreference} class.
  */
-public class WikosmServerPreferenceTest {
+public class SophoxServerPreferenceTest {
 
     /**
      * Setup tests
@@ -24,18 +24,18 @@ public class WikosmServerPreferenceTest {
     public JOSMTestRules test = new JOSMTestRules().preferences().platform();
 
     /**
-     * Unit test of {@link WikosmServerPreference}.
+     * Unit test of {@link SophoxServerPreference}.
      */
     @Test
-    public void testWikosmServerPreference() {
-        assertNotNull(new WikosmServerPreference.Factory().createPreferenceSetting());
+    public void testSophoxServerPreference() {
+        assertNotNull(new SophoxServerPreference.Factory().createPreferenceSetting());
     }
 
     /**
-     * Unit test of {@link WikosmServerPreference#addGui}.
+     * Unit test of {@link SophoxServerPreference#addGui}.
      */
     @Test
     public void testAddGui() {
-        PreferencesTestUtils.doTestPreferenceSettingAddGui(new WikosmServerPreference.Factory(), ServerAccessPreference.class);
+        PreferencesTestUtils.doTestPreferenceSettingAddGui(new SophoxServerPreference.Factory(), ServerAccessPreference.class);
     }
 }

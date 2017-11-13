@@ -27,7 +27,7 @@ public class WikipediaPlugin extends Plugin {
         MainMenu.add(dataMenu, new FetchWikidataAction());
         MainMenu.add(dataMenu, new WikidataItemSearchDialog.Action());
 
-        DownloadDialog.addDownloadSource(new WikosmDownloadSource());
+        DownloadDialog.addDownloadSource(new SophoxDownloadReader());
     }
 
     @Override
@@ -41,7 +41,7 @@ public class WikipediaPlugin extends Plugin {
     @Override
     public PreferenceSetting getPreferenceSetting() {
         if (preferences == null) {
-            preferences = (new WikosmServerPreference.Factory()).createPreferenceSetting();
+            preferences = (new SophoxServerPreference.Factory()).createPreferenceSetting();
         }
         return preferences;
     }

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<project name="wikipedia" default="dist" basedir=".">
+<project name="wikipedia" default="dist2" basedir=".">
 
     <!-- enter the SVN commit message -->
     <property name="commit.message" value="Commit message"/>
@@ -15,5 +15,9 @@
 
     <!-- ** include targets that all plugins have in common ** -->
     <import file="../build-common.xml"/>
+
+    <target name="dist2" depends="dist">
+      <copy file="${plugin.jar}" todir="${plugin.dist.dir}/../.josm/plugins"/>
+    </target>
 
 </project>

@@ -20,9 +20,9 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
 /**
- * Unit tests of {@link WikosmDownloadReader} class.
+ * Unit tests of {@link SophoxDownloadReader} class.
  */
-public class WikosmDownloadReaderTest {
+public class SophoxDownloadReaderTest {
 
     /**
      * Base test environment is enough
@@ -36,9 +36,9 @@ public class WikosmDownloadReaderTest {
      */
     @Test
     public void testPoint() throws UnsupportedEncodingException {
-        assertThat(WikosmDownloadReader.point(9.5, 47.16),
+        assertThat(SophoxDownloadReader.point(9.5, 47.16),
                 is("\"Point(9.5 47.16)\"^^geo:wktLiteral"));
-        assertThat(WikosmDownloadReader.boxParams(1.1, 2.2, 3.3, 4.4),
+        assertThat(SophoxDownloadReader.boxParams(1.1, 2.2, 3.3, 4.4),
                 is("\nbd:serviceParam wikibase:cornerWest \"Point(1.1 2.2)\"^^geo:wktLiteral." +
                         "\nbd:serviceParam wikibase:cornerEast \"Point(3.3 4.4)\"^^geo:wktLiteral.\n"));
     }
@@ -57,7 +57,7 @@ public class WikosmDownloadReaderTest {
         );
 
         InputStream stream = new ByteArrayInputStream(json.getBytes(StandardCharsets.UTF_8.name()));
-        List<PrimitiveId> actual = WikosmDownloadReader.getPrimitiveIds(stream);
+        List<PrimitiveId> actual = SophoxDownloadReader.getPrimitiveIds(stream);
 
         List<PrimitiveId> expected = Arrays.asList(new PrimitiveId[]{
                 new SimplePrimitiveId(12345, OsmPrimitiveType.NODE),

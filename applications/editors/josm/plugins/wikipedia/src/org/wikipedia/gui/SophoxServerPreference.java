@@ -17,22 +17,22 @@ import org.openstreetmap.josm.gui.preferences.SubPreferenceSetting;
 import org.openstreetmap.josm.gui.preferences.TabPreferenceSetting;
 import org.openstreetmap.josm.gui.widgets.HistoryComboBox;
 import org.openstreetmap.josm.tools.GBC;
-import org.wikipedia.io.WikosmDownloadReader;
+import org.wikipedia.io.SophoxDownloadReader;
 
 /**
- * Preferences related to Wikosm API servers.
+ * Preferences related to Sophox API servers.
  */
-public class WikosmServerPreference implements SubPreferenceSetting {
+public class SophoxServerPreference implements SubPreferenceSetting {
 
-    private final HistoryComboBox wikosmServer = new HistoryComboBox();
+    private final HistoryComboBox SophoxServer = new HistoryComboBox();
 
     /**
-     * Factory used to create a new {@link WikosmServerPreference}.
+     * Factory used to create a new {@link SophoxServerPreference}.
      */
     public static class Factory implements PreferenceSettingFactory {
         @Override
         public PreferenceSetting createPreferenceSetting() {
-            return new WikosmServerPreference();
+            return new SophoxServerPreference();
         }
     }
 
@@ -47,9 +47,9 @@ public class WikosmServerPreference implements SubPreferenceSetting {
 
         panel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         panel.add(new JLabel(tr("Server: ")), GBC.std().insets(5, 5, 5, 5));
-        panel.add(wikosmServer, GBC.eop().fill(GBC.HORIZONTAL));
-        wikosmServer.setPossibleItems(WikosmDownloadReader.WIKOSM_SERVER_HISTORY.get());
-        wikosmServer.setText(WikosmDownloadReader.WIKOSM_SERVER.get());
+        panel.add(SophoxServer, GBC.eop().fill(GBC.HORIZONTAL));
+        SophoxServer.setPossibleItems(SophoxDownloadReader.SOPHOX_SERVER_HISTORY.get());
+        SophoxServer.setText(SophoxDownloadReader.SOPHOX_SERVER.get());
 
         panel.add(Box.createVerticalGlue(), GBC.eol().fill());
 
@@ -58,8 +58,8 @@ public class WikosmServerPreference implements SubPreferenceSetting {
 
     @Override
     public boolean ok() {
-        WikosmDownloadReader.WIKOSM_SERVER.put(wikosmServer.getText());
-        WikosmDownloadReader.WIKOSM_SERVER_HISTORY.put(wikosmServer.getHistory());
+        SophoxDownloadReader.SOPHOX_SERVER.put(SophoxServer.getText());
+        SophoxDownloadReader.SOPHOX_SERVER_HISTORY.put(SophoxServer.getHistory());
         return false;
     }
 

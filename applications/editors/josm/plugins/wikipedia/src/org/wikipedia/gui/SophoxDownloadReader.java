@@ -36,25 +36,24 @@ import org.openstreetmap.josm.gui.widgets.JosmTextArea;
 import org.openstreetmap.josm.tools.GBC;
 import org.openstreetmap.josm.tools.ImageProvider;
 import org.openstreetmap.josm.tools.OpenBrowser;
-import org.wikipedia.io.WikosmDownloadReader;
 
 /**
- * Class defines the way data is fetched from Wikosm API.
+ * Class defines the way data is fetched from Sophox API.
  */
-public class WikosmDownloadSource implements DownloadSource<WikosmDownloadSource.WikosmDownloadData> {
+public class SophoxDownloadReader implements DownloadSource<SophoxDownloadReader.SophoxDownloadData> {
 
     @Override
-    public AbstractDownloadSourcePanel<WikosmDownloadData> createPanel(DownloadDialog dialog) {
-        return new WikosmDownloadSourcePanel(this);
+    public AbstractDownloadSourcePanel<SophoxDownloadData> createPanel(DownloadDialog dialog) {
+        return new SophoxDownloadSourcePanel(this);
     }
 
     @Override
-    public void doDownload(WikosmDownloadData data, DownloadSettings settings) {
+    public void doDownload(SophoxDownloadData data, DownloadSettings settings) {
         Bounds area = settings.getDownloadBounds().orElse(new Bounds(0, 0, 0, 0));
         DownloadOsmTask task = new DownloadOsmTask();
         task.setZoomAfterDownload(settings.zoomToData());
         Future<?> future = task.download(
-                new WikosmDownloadReader(area, WikosmDownloadReader.WIKOSM_SERVER.get(), data.getQuery(),
+                new org.wikipedia.io.SophoxDownloadReader(area, org.wikipedia.io.SophoxDownloadReader.SOPHOX_SERVER.get(), data.getQuery(),
                         settings.asNewLayer(), data.getDownloadReferrers(), data.getDownloadFull()),
 
                 settings.asNewLayer(), area, null);
@@ -63,7 +62,7 @@ public class WikosmDownloadSource implements DownloadSource<WikosmDownloadSource
 
     @Override
     public String getLabel() {
-        return tr("Download from Wikosm API");
+        return tr("Download from Sophox API");
     }
 
     @Override
@@ -72,28 +71,28 @@ public class WikosmDownloadSource implements DownloadSource<WikosmDownloadSource
     }
 
     /**
-     * The GUI representation of the Wikosm download source.
+     * The GUI representation of the Sophox download source.
      */
-    public static class WikosmDownloadSourcePanel extends AbstractDownloadSourcePanel<WikosmDownloadData> {
+    public static class SophoxDownloadSourcePanel extends AbstractDownloadSourcePanel<SophoxDownloadData> {
 
         private static final String HELP_PAGE = "https://wiki.openstreetmap.org/wiki/Wikidata%2BOSM_SPARQL_query_service";
-        private static final String SIMPLE_NAME = "wikosmdownloadpanel";
+        private static final String SIMPLE_NAME = "sophoxdownloadpanel";
         private static final AbstractProperty<Integer> PANEL_SIZE_PROPERTY =
                 new IntegerProperty(TAB_SPLIT_NAMESPACE + SIMPLE_NAME, 150).cached();
-        private static final BooleanProperty WIKOSM_QUERY_LIST_OPENED =
-                new BooleanProperty("download.wikosm.query-list.opened", false);
+        private static final BooleanProperty SOPHOX_QUERY_LIST_OPENED =
+                new BooleanProperty("download.sophox.query-list.opened", false);
         private static final String ACTION_IMG_SUBDIR = "dialogs";
 
-        private final JosmTextArea wikosmQuery;
-        private final UserQueryList wikosmQueryList;
+        private final JosmTextArea sophoxQuery;
+        private final UserQueryList sophoxQueryList;
         private final JCheckBox referrers;
         private final JCheckBox fullRel;
 
         /**
-         * Create a new {@code WikosmDownloadSourcePanel}
+         * Create a new {@code SophoxDownloadSourcePanel}
          * @param ds The download source to create the panel for
          */
-        public WikosmDownloadSourcePanel(WikosmDownloadSource ds) {
+        public SophoxDownloadSourcePanel(SophoxDownloadReader ds) {
             super(ds);
             setLayout(new BorderLayout());
 
@@ -108,13 +107,13 @@ public class WikosmDownloadSource implements DownloadSource<WikosmDownloadSource
                     "  FILTER(?distance > 2 && ?distance < 3)\n" +
                     "}";
 
-            this.wikosmQuery = new JosmTextArea(queryText, 8, 80);
+            this.sophoxQuery = new JosmTextArea(queryText, 8, 80);
 
-            this.wikosmQuery.setFont(GuiHelper.getMonospacedFont(wikosmQuery));
-            this.wikosmQuery.addFocusListener(new FocusListener() {
+            this.sophoxQuery.setFont(GuiHelper.getMonospacedFont(sophoxQuery));
+            this.sophoxQuery.addFocusListener(new FocusListener() {
                 @Override
                 public void focusGained(FocusEvent e) {
-                    wikosmQuery.selectAll();
+                    sophoxQuery.selectAll();
                 }
 
                 @Override
@@ -124,36 +123,36 @@ public class WikosmDownloadSource implements DownloadSource<WikosmDownloadSource
             });
 
 
-            this.wikosmQueryList = new UserQueryList(this, this.wikosmQuery, "download.wikosm.query");
-            this.wikosmQueryList.setPreferredSize(new Dimension(350, 300));
+            this.sophoxQueryList = new UserQueryList(this, this.sophoxQuery, "download.sophox.query");
+            this.sophoxQueryList.setPreferredSize(new Dimension(350, 300));
 
             EditSnippetAction edit = new EditSnippetAction();
             RemoveSnippetAction remove = new RemoveSnippetAction();
-            this.wikosmQueryList.addSelectionListener(edit);
-            this.wikosmQueryList.addSelectionListener(remove);
+            this.sophoxQueryList.addSelectionListener(edit);
+            this.sophoxQueryList.addSelectionListener(remove);
 
             JPanel listPanel = new JPanel(new GridBagLayout());
             listPanel.add(new JLabel(tr("Your saved queries:")), GBC.eol().insets(2).anchor(GBC.CENTER));
-            listPanel.add(this.wikosmQueryList, GBC.eol().fill(GBC.BOTH));
+            listPanel.add(this.sophoxQueryList, GBC.eol().fill(GBC.BOTH));
             listPanel.add(new JButton(new AddSnippetAction()), GBC.std().fill(GBC.HORIZONTAL));
             listPanel.add(new JButton(edit), GBC.std().fill(GBC.HORIZONTAL));
             listPanel.add(new JButton(remove), GBC.std().fill(GBC.HORIZONTAL));
-            listPanel.setVisible(WIKOSM_QUERY_LIST_OPENED.get());
+            listPanel.setVisible(SOPHOX_QUERY_LIST_OPENED.get());
 
-            JScrollPane scrollPane = new JScrollPane(wikosmQuery);
+            JScrollPane scrollPane = new JScrollPane(sophoxQuery);
             BasicArrowButton arrowButton = new BasicArrowButton(listPanel.isVisible()
                     ? BasicArrowButton.EAST
                     : BasicArrowButton.WEST);
-            arrowButton.setToolTipText(tr("Show/hide Wikosm snippet list"));
+            arrowButton.setToolTipText(tr("Show/hide Sophox snippet list"));
             arrowButton.addActionListener(e -> {
                 if (listPanel.isVisible()) {
                     listPanel.setVisible(false);
                     arrowButton.setDirection(BasicArrowButton.WEST);
-                    WIKOSM_QUERY_LIST_OPENED.put(Boolean.FALSE);
+                    SOPHOX_QUERY_LIST_OPENED.put(Boolean.FALSE);
                 } else {
                     listPanel.setVisible(true);
                     arrowButton.setDirection(BasicArrowButton.EAST);
-                    WIKOSM_QUERY_LIST_OPENED.put(Boolean.TRUE);
+                    SOPHOX_QUERY_LIST_OPENED.put(Boolean.TRUE);
                 }
             });
 
@@ -164,13 +163,13 @@ public class WikosmDownloadSource implements DownloadSource<WikosmDownloadSource
             referrers = new JCheckBox(tr("Download referrers (parent relations)"));
             referrers.setToolTipText(tr("Select if the referrers of the object should be downloaded as well, i.e.,"
                     + "parent relations and for nodes, additionally, parent ways"));
-            referrers.setSelected(Main.pref.getBoolean("wikosm.downloadprimitive.referrers", true));
-            referrers.addActionListener(e -> Main.pref.putBoolean("wikosm.downloadprimitive.referrers", referrers.isSelected()));
+            referrers.setSelected(Main.pref.getBoolean("sophox.downloadprimitive.referrers", true));
+            referrers.addActionListener(e -> Main.pref.putBoolean("sophox.downloadprimitive.referrers", referrers.isSelected()));
 
             fullRel = new JCheckBox(tr("Download relation members"));
             fullRel.setToolTipText(tr("Select if the members of a relation should be downloaded as well"));
-            fullRel.setSelected(Main.pref.getBoolean("wikosm.downloadprimitive.full", true));
-            fullRel.addActionListener(e -> Main.pref.putBoolean("wikosm.downloadprimitive.full", fullRel.isSelected()));
+            fullRel.setSelected(Main.pref.getBoolean("sophox.downloadprimitive.full", true));
+            fullRel.addActionListener(e -> Main.pref.putBoolean("sophox.downloadprimitive.full", fullRel.isSelected()));
 
             // https://stackoverflow.com/questions/527719/how-to-add-hyperlink-in-jlabel
             JButton helpLink = new JButton();
@@ -200,12 +199,12 @@ public class WikosmDownloadSource implements DownloadSource<WikosmDownloadSource
         }
 
         @Override
-        public WikosmDownloadData getData() {
-            String query = wikosmQuery.getText();
+        public SophoxDownloadData getData() {
+            String query = sophoxQuery.getText();
             /*
              * A callback that is passed to PostDownloadReporter that is called once the download task
              * has finished. According to the number of errors happened, their type we decide whether we
-             * want to save the last query in WikosmQueryList.
+             * want to save the last query in SophoxQueryList.
              */
             Consumer<Collection<Object>> errorReporter = errors -> {
 
@@ -213,11 +212,11 @@ public class WikosmDownloadSource implements DownloadSource<WikosmDownloadSource
                         errors.contains("No data found in this area.");
 
                 if (errors.isEmpty() || onlyNoDataError) {
-                    wikosmQueryList.saveHistoricItem(query);
+                    sophoxQueryList.saveHistoricItem(query);
                 }
             };
 
-            return new WikosmDownloadData(query, referrers.isSelected(), fullRel.isSelected(), errorReporter);
+            return new SophoxDownloadData(query, referrers.isSelected(), fullRel.isSelected(), errorReporter);
         }
 
         @Override
@@ -235,7 +234,7 @@ public class WikosmDownloadSource implements DownloadSource<WikosmDownloadSource
             String query = getData().getQuery();
 
             /*
-             * Absence of the selected area can be justified only if the Wikosm query
+             * Absence of the selected area can be justified only if the Sophox query
              * is not restricted to bbox.
              */
             if (!settings.getDownloadBounds().isPresent() && (
@@ -256,7 +255,7 @@ public class WikosmDownloadSource implements DownloadSource<WikosmDownloadSource
 
         @Override
         public Icon getIcon() {
-            return ImageProvider.get(ACTION_IMG_SUBDIR, "wikosm");
+            return ImageProvider.get(ACTION_IMG_SUBDIR, "sophox");
         }
 
         @Override
@@ -285,7 +284,7 @@ public class WikosmDownloadSource implements DownloadSource<WikosmDownloadSource
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                wikosmQueryList.createNewItem();
+                sophoxQueryList.createNewItem();
             }
         }
 
@@ -306,14 +305,14 @@ public class WikosmDownloadSource implements DownloadSource<WikosmDownloadSource
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                wikosmQueryList.removeSelectedItem();
+                sophoxQueryList.removeSelectedItem();
             }
 
             /**
              * Disables the action if no items are selected.
              */
             void checkEnabled() {
-                setEnabled(wikosmQueryList.getSelectedItem().isPresent());
+                setEnabled(sophoxQueryList.getSelectedItem().isPresent());
             }
 
             @Override
@@ -339,14 +338,14 @@ public class WikosmDownloadSource implements DownloadSource<WikosmDownloadSource
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                wikosmQueryList.editSelectedItem();
+                sophoxQueryList.editSelectedItem();
             }
 
             /**
              * Disables the action if no items are selected.
              */
             void checkEnabled() {
-                setEnabled(wikosmQueryList.getSelectedItem().isPresent());
+                setEnabled(sophoxQueryList.getSelectedItem().isPresent());
             }
 
             @Override
@@ -357,15 +356,15 @@ public class WikosmDownloadSource implements DownloadSource<WikosmDownloadSource
     }
 
     /**
-     * Encapsulates data that is required to preform download from Wikosm API.
+     * Encapsulates data that is required to preform download from Sophox API.
      */
-    static class WikosmDownloadData {
+    static class SophoxDownloadData {
         private final String query;
         private final boolean downloadReferrers;
         private final boolean downloadFull;
         private final Consumer<Collection<Object>> errorReporter;
 
-        WikosmDownloadData(String query, boolean downloadReferrers, boolean downloadFull, Consumer<Collection<Object>> errorReporter) {
+        SophoxDownloadData(String query, boolean downloadReferrers, boolean downloadFull, Consumer<Collection<Object>> errorReporter) {
             this.query = query;
             this.downloadReferrers = downloadReferrers;
             this.downloadFull = downloadFull;

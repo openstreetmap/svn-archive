@@ -12,7 +12,8 @@ import org.openstreetmap.josm.tools.ImageProvider;
 public class RemovePointAction extends GenericPicTransformAction {
 
     public RemovePointAction(MapFrame frame) {
-        super(tr("PicLayer Remove point"), tr("Point removed"), "removepoint", tr("Remove point on the picture"), frame, ImageProvider.getCursor("crosshair", null));
+        super(tr("PicLayer Remove point"), tr("Point removed"), "removepoint", tr("Remove point on the picture"),
+                frame, ImageProvider.getCursor("crosshair", null));
     }
 
     @Override

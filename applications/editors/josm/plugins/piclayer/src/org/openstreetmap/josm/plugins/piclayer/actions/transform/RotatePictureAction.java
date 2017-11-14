@@ -26,7 +26,7 @@ import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Point2D;
 
-import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.plugins.piclayer.actions.GenericPicTransformAction;
 import org.openstreetmap.josm.tools.ImageProvider;
@@ -47,7 +47,7 @@ public class RotatePictureAction extends GenericPicTransformAction {
 
     @Override
     protected void doAction(MouseEvent e) {
-        Point2D center = new Point(Main.map.mapView.getWidth()/2, Main.map.mapView.getHeight()/2);
+        Point2D center = new Point(MainApplication.getMap().mapView.getWidth()/2, MainApplication.getMap().mapView.getHeight()/2);
         double alpha1 = Math.atan2(e.getY() - center.getY(), e.getX() - center.getX());
         double alpha0 = Math.atan2(prevMousePoint.getY() - center.getY(), prevMousePoint.getX() - center.getX());
         currentLayer.rotatePictureBy(alpha1 - alpha0);

@@ -27,8 +27,8 @@ import java.io.IOException;
 
 import javax.swing.JOptionPane;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.plugins.piclayer.layer.PicLayerFromClipboard;
 
 /**
@@ -62,6 +62,6 @@ public class NewLayerFromClipboardAction extends JosmAction {
             return;
         }
         // Add layer
-        Main.getLayerManager().addLayer(layer);
+        MainApplication.getLayerManager().addLayer(layer);
     }
 }

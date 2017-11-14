@@ -7,9 +7,9 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.geom.Point2D;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.mapmode.MapMode;
 import org.openstreetmap.josm.data.coor.EastNorth;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.plugins.piclayer.command.TransformCommand;
@@ -42,28 +42,28 @@ public abstract class GenericPicTransformAction extends MapMode implements Mouse
     @Override
     public void enterMode() {
         super.enterMode();
-        Main.map.mapView.addMouseListener(this);
-        Main.map.mapView.addMouseMotionListener(this);
+        MainApplication.getMap().mapView.addMouseListener(this);
+        MainApplication.getMap().mapView.addMouseMotionListener(this);
     }
 
     @Override
     public void exitMode() {
         super.exitMode();
-        Main.map.mapView.removeMouseListener(this);
-        Main.map.mapView.removeMouseMotionListener(this);
+        MainApplication.getMap().mapView.removeMouseListener(this);
+        MainApplication.getMap().mapView.removeMouseMotionListener(this);
     }
 
     @Override
     public void mousePressed(MouseEvent e) {
         // Start action
-        if (Main.getLayerManager().getActiveLayer() instanceof PicLayerAbstract) {
-            currentLayer = (PicLayerAbstract) Main.getLayerManager().getActiveLayer();
+        if (MainApplication.getLayerManager().getActiveLayer() instanceof PicLayerAbstract) {
+            currentLayer = (PicLayerAbstract) MainApplication.getLayerManager().getActiveLayer();
 
             if (currentLayer != null && e.getButton() == MouseEvent.BUTTON1) {
                 requestFocusInMapView();
                 isDragging = true;
                 prevMousePoint = new Point(e.getPoint());
-                prevEastNorth = Main.map.mapView.getEastNorth(e.getX(), e.getY());
+                prevEastNorth = MainApplication.getMap().mapView.getEastNorth(e.getX(), e.getY());
                 // try to find and fill selected point if possible
                 selectedPoint = currentLayer.findSelectedPoint(e.getPoint());
                 currentCommand = new TransformCommand(currentLayer, actionName);
@@ -77,7 +77,7 @@ public abstract class GenericPicTransformAction extends MapMode implements Mouse
         if (isDragging && currentLayer != null) {
             doAction(e);
             prevMousePoint = new Point(e.getPoint());
-            prevEastNorth = Main.map.mapView.getEastNorth(e.getX(), e.getY());
+            prevEastNorth = MainApplication.getMap().mapView.getEastNorth(e.getX(), e.getY());
             currentLayer.invalidate();
         }
     }
@@ -98,7 +98,7 @@ public abstract class GenericPicTransformAction extends MapMode implements Mouse
     }
 
     protected void updateDrawPoints(boolean value) {
-        Layer active = Main.getLayerManager().getActiveLayer();
+        Layer active = MainApplication.getLayerManager().getActiveLayer();
         if (active instanceof PicLayerAbstract) {
             ((PicLayerAbstract) active).setDrawPoints(value);
             active.invalidate();

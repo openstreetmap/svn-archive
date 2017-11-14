@@ -31,6 +31,7 @@ import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.actions.mapmode.MapMode;
 import org.openstreetmap.josm.gui.IconToggleButton;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MainMenu;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.gui.layer.Layer;
@@ -75,12 +76,12 @@ public class PicLayerPlugin extends Plugin implements LayerChangeListener, Activ
         // Create menu entry
 
         // Add menu items
-        MainMenu.add(Main.main.menu.imagerySubMenu, newLayerFromFileAction);
-        MainMenu.add(Main.main.menu.imagerySubMenu, newLayerFromClipboardAction);
+        MainMenu.add(MainApplication.getMenu().imagerySubMenu, newLayerFromFileAction);
+        MainMenu.add(MainApplication.getMenu().imagerySubMenu, newLayerFromClipboardAction);
         updateEnabledState();
         // Listen to layers
-        Main.getLayerManager().addLayerChangeListener(this);
-        Main.getLayerManager().addActiveLayerChangeListener(this);
+        MainApplication.getLayerManager().addLayerChangeListener(this);
+        MainApplication.getLayerManager().addActiveLayerChangeListener(this);
     }
 
     /**
@@ -131,7 +132,7 @@ public class PicLayerPlugin extends Plugin implements LayerChangeListener, Activ
     @Override
     public void activeOrEditLayerChanged(ActiveLayerChangeEvent e) {
         Layer oldLayer = e.getPreviousActiveLayer();
-        Layer newLayer = Main.getLayerManager().getActiveLayer();
+        Layer newLayer = MainApplication.getLayerManager().getActiveLayer();
         boolean oldPic = oldLayer instanceof PicLayerAbstract;
         boolean newPic = newLayer instanceof PicLayerAbstract;
 
@@ -176,7 +177,7 @@ public class PicLayerPlugin extends Plugin implements LayerChangeListener, Activ
     }
 
     private void updateEnabledState() {
-        boolean enable = !Main.getLayerManager().getLayers().isEmpty();
+        boolean enable = !MainApplication.getLayerManager().getLayers().isEmpty();
         newLayerFromFileAction.setEnabled(enable);
         newLayerFromClipboardAction.setEnabled(enable);
     }

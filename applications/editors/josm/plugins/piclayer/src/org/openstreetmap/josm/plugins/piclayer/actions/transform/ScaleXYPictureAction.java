@@ -26,7 +26,7 @@ import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Point2D;
 
-import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.plugins.piclayer.actions.GenericPicTransformAction;
 import org.openstreetmap.josm.tools.ImageProvider;
@@ -41,13 +41,14 @@ public class ScaleXYPictureAction extends GenericPicTransformAction {
      * Constructor
      */
     public ScaleXYPictureAction(MapFrame frame) {
-        super(tr("PicLayer scale"), tr("Scaled"), "scale", tr("Drag to scale the picture in the X and Y Axis"), frame, ImageProvider.getCursor("crosshair", null));
+        super(tr("PicLayer scale"), tr("Scaled"), "scale", tr("Drag to scale the picture in the X and Y Axis"),
+                frame, ImageProvider.getCursor("crosshair", null));
     }
 
     @Override
     protected void doAction(MouseEvent e) {
-        double centerX = Main.map.mapView.getWidth()/2;
-        double centerY = Main.map.mapView.getHeight()/2;
+        double centerX = MainApplication.getMap().mapView.getWidth()/2;
+        double centerY = MainApplication.getMap().mapView.getHeight()/2;
         double d0 = Math.max(prevMousePoint.distance(centerX, centerY), 10);
         Point2D mousePoint = new Point(e.getX(), e.getY());
         double d = mousePoint.distance(centerX, centerY);

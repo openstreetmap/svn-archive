@@ -9,7 +9,7 @@ import javax.swing.Icon;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
-import org.openstreetmap.josm.gui.layer.Layer;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.plugins.piclayer.layer.PicLayerAbstract;
 import org.openstreetmap.josm.plugins.piclayer.transform.PictureTransform;
 import org.openstreetmap.josm.tools.ImageProvider;
@@ -22,6 +22,7 @@ public class TransformCommand extends Command {
     private String actionName;
 
     public TransformCommand(PicLayerAbstract layer, String actionName) {
+        super(MainApplication.getLayerManager().getEditDataSet());
         this.layer = layer;
         this.actionName = actionName;
         beforeTransform = extractTransform();
@@ -57,11 +58,6 @@ public class TransformCommand extends Command {
         transform.setTransform(layer.getTransformer().getTransform());
         transform.setImagePosition(layer.getTransformer().getImagePosition());
         return transform;
-    }
-
-    @Override
-    public boolean invalidBecauselayerRemoved(Layer oldLayer) {
-        return oldLayer == layer;
     }
 
     @Override

@@ -24,8 +24,8 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.event.MouseEvent;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.coor.EastNorth;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.plugins.piclayer.actions.GenericPicTransformAction;
 import org.openstreetmap.josm.tools.ImageProvider;
@@ -40,12 +40,13 @@ public class MovePictureAction extends GenericPicTransformAction {
      * Constructor
      */
     public MovePictureAction(MapFrame frame) {
-        super(tr("PicLayer move"), tr("Moved"), "move", tr("Drag to move the picture"), frame, ImageProvider.getCursor("crosshair", null));
+        super(tr("PicLayer move"), tr("Moved"), "move", tr("Drag to move the picture"),
+                frame, ImageProvider.getCursor("crosshair", null));
     }
 
     @Override
     protected void doAction(MouseEvent e) {
-        EastNorth eastNorth = Main.map.mapView.getEastNorth(e.getX(), e.getY());
+        EastNorth eastNorth = MainApplication.getMap().mapView.getEastNorth(e.getX(), e.getY());
         currentLayer.movePictureBy(
             eastNorth.east() - prevEastNorth.east(),
             eastNorth.north() - prevEastNorth.north()

@@ -36,6 +36,7 @@ import javax.swing.filechooser.FileFilter;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.plugins.piclayer.layer.PicLayerAbstract;
 import org.openstreetmap.josm.plugins.piclayer.layer.PicLayerFromFile;
@@ -118,9 +119,9 @@ public class NewLayerFromFileAction extends JosmAction {
             // The first loaded layer will be placed at the top of any other layer of the same class,
             // or at the bottom of the stack if there is no such layer yet
             // The next layers we load will be placed one after the other after this first layer
-            int newLayerPos = Main.getLayerManager().getLayers().size();
-            for (Layer l : Main.getLayerManager().getLayersOfType(PicLayerAbstract.class)) {
-                int pos = Main.getLayerManager().getLayers().indexOf(l);
+            int newLayerPos = MainApplication.getLayerManager().getLayers().size();
+            for (Layer l : MainApplication.getLayerManager().getLayersOfType(PicLayerAbstract.class)) {
+                int pos = MainApplication.getLayerManager().getLayers().indexOf(l);
                 if (pos < newLayerPos) newLayerPos = pos;
             }
 
@@ -163,14 +164,14 @@ public class NewLayerFromFileAction extends JosmAction {
     private void placeLayer(PicLayerAbstract layer, int newLayerPos, boolean isZoomToLayer) throws IOException {
         // Add layer only if successfully initialized
 
-        Main.getLayerManager().addLayer(layer);
-        Main.map.mapView.moveLayer(layer, newLayerPos++);
+        MainApplication.getLayerManager().addLayer(layer);
+        MainApplication.getMap().mapView.moveLayer(layer, newLayerPos++);
 
-        if (isZoomToLayer && Main.pref.getInteger("piclayer.zoom-on-load", 1) != 0) {
+        if (isZoomToLayer && Main.pref.getInt("piclayer.zoom-on-load", 1) != 0) {
             // if we are loading a single picture file, zoom on it, so that the user can see something
             BoundingXYVisitor v = new BoundingXYVisitor();
             layer.visitBoundingBox(v);
-            Main.map.mapView.zoomTo(v);
+            MainApplication.getMap().mapView.zoomTo(v);
         }
     }
 

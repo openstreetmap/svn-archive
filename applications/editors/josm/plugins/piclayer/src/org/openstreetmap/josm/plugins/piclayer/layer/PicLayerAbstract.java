@@ -49,6 +49,7 @@ import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
 import org.openstreetmap.josm.data.projection.Projection;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.plugins.piclayer.actions.LoadPictureCalibrationAction;
@@ -57,6 +58,8 @@ import org.openstreetmap.josm.plugins.piclayer.actions.ResetCalibrationAction;
 import org.openstreetmap.josm.plugins.piclayer.actions.SavePictureCalibrationAction;
 import org.openstreetmap.josm.plugins.piclayer.actions.SavePictureCalibrationToWorldAction;
 import org.openstreetmap.josm.plugins.piclayer.transform.PictureTransform;
+import org.openstreetmap.josm.tools.JosmDecimalFormatSymbolsProvider;
+import org.openstreetmap.josm.tools.Logging;
 
 /**
  * Base class for layers showing images. Actually it does all the showing. The
@@ -155,15 +158,15 @@ public abstract class PicLayerAbstract extends Layer {
         transformer = new PictureTransform();
 
         // If the map does not exist - we're screwed. We should not get into this situation in the first place!
-        if (Main.map != null && Main.map.mapView != null) {
+        if (MainApplication.getMap() != null && MainApplication.getMap().mapView != null) {
 
-            EastNorth center = Main.map.mapView.getCenter();
+            EastNorth center = MainApplication.getMap().mapView.getCenter();
 
 //            imagePosition = new EastNorth(center.east(), center.north());
             transformer.setImagePosition(new EastNorth(center.east(), center.north()));
 //            initialImagePosition = new EastNorth(imagePosition.east(), imagePosition.north());
             // Initial scale at which the image was loaded
-            initialImageScale = Main.map.mapView.getDist100Pixel();
+            initialImageScale = MainApplication.getMap().mapView.getDist100Pixel();
         } else {
             throw new IOException(tr("Could not find the map object."));
         }
@@ -448,12 +451,12 @@ public abstract class PicLayerAbstract extends Layer {
         } else {
             // initialize matrix
             double[] matrix = new double[6];
-            matrix[0] = Double.parseDouble(props.getProperty(MATRIXm00, "1"));
-            matrix[1] = Double.parseDouble(props.getProperty(MATRIXm01, "0"));
-            matrix[2] = Double.parseDouble(props.getProperty(MATRIXm10, "0"));
-            matrix[3] = Double.parseDouble(props.getProperty(MATRIXm11, "1"));
-            matrix[4] = Double.parseDouble(props.getProperty(MATRIXm02, "0"));
-            matrix[5] = Double.parseDouble(props.getProperty(MATRIXm12, "0"));
+            matrix[0] = JosmDecimalFormatSymbolsProvider.parseDouble(props.getProperty(MATRIXm00, "1"));
+            matrix[1] = JosmDecimalFormatSymbolsProvider.parseDouble(props.getProperty(MATRIXm01, "0"));
+            matrix[2] = JosmDecimalFormatSymbolsProvider.parseDouble(props.getProperty(MATRIXm10, "0"));
+            matrix[3] = JosmDecimalFormatSymbolsProvider.parseDouble(props.getProperty(MATRIXm11, "1"));
+            matrix[4] = JosmDecimalFormatSymbolsProvider.parseDouble(props.getProperty(MATRIXm02, "0"));
+            matrix[5] = JosmDecimalFormatSymbolsProvider.parseDouble(props.getProperty(MATRIXm12, "0"));
 
             transform = new AffineTransform(matrix);
         }
@@ -473,7 +476,7 @@ public abstract class PicLayerAbstract extends Layer {
             double[] e = new double[6];
             for (int i = 0; i < 6; ++i) {
                 String line = br.readLine();
-                e[i] = Double.parseDouble(line);
+                e[i] = JosmDecimalFormatSymbolsProvider.parseDouble(line);
             }
             double sx = e[0], ry = e[1], rx = e[2], sy = e[3], dx = e[4], dy = e[5];
             int w = image.getWidth(null);
@@ -531,11 +534,11 @@ public abstract class PicLayerAbstract extends Layer {
     public Point2D transformPoint(Point p) throws NoninvertibleTransformException {
         // Position image at the right graphical place
 
-        EastNorth center = Main.map.mapView.getCenter();
-        EastNorth leftop = Main.map.mapView.getEastNorth(0, 0);
+        EastNorth center = MainApplication.getMap().mapView.getCenter();
+        EastNorth leftop = MainApplication.getMap().mapView.getEastNorth(0, 0);
         // Number of pixels for one unit in east north space.
         // This is the same in x- and y- direction.
-        double pixel_per_en = (Main.map.mapView.getWidth() / 2.0) / (center.east() - leftop.east());
+        double pixel_per_en = (MainApplication.getMap().mapView.getWidth() / 2.0) / (center.east() - leftop.east());
 
         EastNorth imageCenter = transformer.getImagePosition();
         //     This is now the offset in screen pixels
@@ -564,31 +567,31 @@ public abstract class PicLayerAbstract extends Layer {
 
     public void rotatePictureBy(double angle) {
         try {
-            Point2D trans = transformPoint(new Point(Main.map.mapView.getWidth()/2, Main.map.mapView.getHeight()/2));
-
+            MapView mapView = MainApplication.getMap().mapView;
+            Point2D trans = transformPoint(new Point(mapView.getWidth()/2, mapView.getHeight()/2));
             transformer.concatenateTransformPoint(AffineTransform.getRotateInstance(angle), trans);
         } catch (NoninvertibleTransformException e) {
-            e.printStackTrace();
+            Logging.error(e);
         }
     }
 
     public void scalePictureBy(double scalex, double scaley) {
         try {
-            Point2D trans = transformPoint(new Point(Main.map.mapView.getWidth()/2, Main.map.mapView.getHeight()/2));
-
+            MapView mapView = MainApplication.getMap().mapView;
+            Point2D trans = transformPoint(new Point(mapView.getWidth()/2, mapView.getHeight()/2));
             transformer.concatenateTransformPoint(AffineTransform.getScaleInstance(scalex, scaley), trans);
         } catch (NoninvertibleTransformException e) {
-            e.printStackTrace();
+            Logging.error(e);
         }
     }
 
     public void shearPictureBy(double shx, double shy) {
         try {
-            Point2D trans = transformPoint(new Point(Main.map.mapView.getWidth()/2, Main.map.mapView.getHeight()/2));
-
+            MapView mapView = MainApplication.getMap().mapView;
+            Point2D trans = transformPoint(new Point(mapView.getWidth()/2, mapView.getHeight()/2));
             transformer.concatenateTransformPoint(AffineTransform.getShearInstance(shx, shy), trans);
         } catch (NoninvertibleTransformException e) {
-            e.printStackTrace();
+            Logging.error(e);
         }
     }
 

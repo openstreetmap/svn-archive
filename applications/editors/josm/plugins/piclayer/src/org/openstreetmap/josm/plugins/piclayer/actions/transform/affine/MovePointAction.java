@@ -15,7 +15,8 @@ import org.openstreetmap.josm.tools.ImageProvider;
 public class MovePointAction extends GenericPicTransformAction {
 
     public MovePointAction(MapFrame frame) {
-        super(tr("PicLayer Move point"), tr("Point added/moved"), "movepoint", tr("Drag or create point on the picture"), frame, ImageProvider.getCursor("crosshair", null));
+        super(tr("PicLayer Move point"), tr("Point added/moved"), "movepoint", tr("Drag or create point on the picture"),
+                frame, ImageProvider.getCursor("crosshair", null));
     }
 
     @Override

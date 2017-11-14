@@ -36,6 +36,7 @@ import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
 
 import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.tools.Logging;
 /**
  * Layer displaying a picture loaded from a file.
  */
@@ -70,8 +71,6 @@ public class PicLayerFromFile extends PicLayerAbstract {
     @Override
     protected Image createImage() throws IOException {
         // Try to load file
-        Image image = null;
-
         if (isZip) {
             try (ZipFile zipFile = new ZipFile(m_file)) {
                 ZipEntry imgEntry = null;
@@ -94,15 +93,14 @@ public class PicLayerFromFile extends PicLayerAbstract {
                         return ImageIO.read(is);
                     }
                 }
-                System.err.println("Warning: no image in zip file found");
+                Logging.warn("Warning: no image in zip file found");
                 return null;
             } catch (Exception e) {
-                System.err.println(tr("Warning: failed to handle zip file ''{0}''. Exception was: {1}", m_file.getName(), e.toString()));
+                Logging.warn(tr("Warning: failed to handle zip file ''{0}''. Exception was: {1}", m_file.getName(), e.toString()));
                 return null;
             }
         } else {
-            image = ImageIO.read(m_file);
-            return image;
+            return ImageIO.read(m_file);
         }
     }
 
@@ -169,7 +167,7 @@ public class PicLayerFromFile extends PicLayerAbstract {
                     }
                 }
             } catch (Exception e) {
-                Main.warn(tr("Warning: failed to handle zip file ''{0}''. Exception was: {1}", m_file.getName(), e.toString()));
+                Logging.warn(tr("Warning: failed to handle zip file ''{0}''. Exception was: {1}", m_file.getName(), e.toString()));
                 return;
             }
         } else {

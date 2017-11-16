@@ -22,6 +22,7 @@ public class WaypointsEnableCommand extends Command {
     private String type = null;
 
     public WaypointsEnableCommand(StopImporterAction controller) {
+        super(MainApplication.getLayerManager().getEditDataSet());
         waypointTM = controller.getWaypointTableModel();
         type = controller.getDialog().getStoptype();
         workingLines = new Vector<>();

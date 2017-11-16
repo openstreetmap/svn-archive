@@ -7,6 +7,7 @@ import java.util.Collection;
 
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.plugins.public_transport.actions.StopImporterAction;
 import org.openstreetmap.josm.plugins.public_transport.models.TrackStoplistTableModel;
 
@@ -16,6 +17,7 @@ public class TrackStoplistAddCommand extends Command {
     private TrackStoplistTableModel stoplistTM = null;
 
     public TrackStoplistAddCommand(StopImporterAction controller) {
+        super(MainApplication.getLayerManager().getEditDataSet());
         stoplistTM = controller.getCurrentTrack().stoplistTM;
         workingLine = controller.getDialog().getStoplistTable().getSelectedRow();
     }

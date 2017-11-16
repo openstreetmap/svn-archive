@@ -9,6 +9,7 @@ import java.util.Vector;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.plugins.public_transport.actions.StopImporterAction;
 import org.openstreetmap.josm.plugins.public_transport.models.TrackStoplistTableModel;
 
@@ -20,6 +21,7 @@ public class TrackStoplistDetachCommand extends Command {
     private TrackStoplistTableModel stoplistTM = null;
 
     public TrackStoplistDetachCommand(StopImporterAction controller) {
+        super(MainApplication.getLayerManager().getEditDataSet());
         stoplistTM = controller.getCurrentTrack().stoplistTM;
         workingLines = new Vector<>();
         nodesForUndo = new Vector<>();

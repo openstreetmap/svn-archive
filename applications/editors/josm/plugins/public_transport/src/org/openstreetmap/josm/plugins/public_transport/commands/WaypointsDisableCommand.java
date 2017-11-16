@@ -21,6 +21,7 @@ public class WaypointsDisableCommand extends Command {
     private WaypointTableModel waypointTM = null;
 
     public WaypointsDisableCommand(StopImporterAction controller) {
+        super(MainApplication.getLayerManager().getEditDataSet());
         waypointTM = controller.getWaypointTableModel();
         workingLines = new Vector<>();
         nodesForUndo = new Vector<>();

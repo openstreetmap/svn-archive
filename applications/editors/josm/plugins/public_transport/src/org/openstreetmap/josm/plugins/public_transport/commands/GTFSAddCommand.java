@@ -23,6 +23,7 @@ public class GTFSAddCommand extends Command {
     private String type = null;
 
     public GTFSAddCommand(GTFSImporterAction controller) {
+        super(MainApplication.getLayerManager().getEditDataSet());
         gtfsStopTM = controller.getGTFSStopTableModel();
         type = controller.getDialog().getStoptype();
         workingLines = new Vector<>();

@@ -30,6 +30,7 @@ public abstract class AbstractGTFSCatchJoinCommand extends Command {
     private final boolean isCatch;
 
     public AbstractGTFSCatchJoinCommand(GTFSImporterAction controller, boolean isCatch) {
+        super(MainApplication.getLayerManager().getEditDataSet());
         gtfsStopTM = controller.getGTFSStopTableModel();
         workingLines = new ArrayList<>();
         this.isCatch = isCatch;

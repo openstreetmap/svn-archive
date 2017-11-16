@@ -7,6 +7,7 @@ import java.util.Collection;
 
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.plugins.public_transport.TransText;
 import org.openstreetmap.josm.plugins.public_transport.models.WaypointTableModel;
 
@@ -25,6 +26,7 @@ public class WaypointsNameCommand extends Command {
 
     public WaypointsNameCommand(WaypointTableModel waypointTM, int workingLine, String name,
             TransText shelter) {
+        super(MainApplication.getLayerManager().getEditDataSet());
         this.waypointTM = waypointTM;
         this.workingLine = workingLine;
         if (waypointTM.nodes.elementAt(workingLine) != null) {

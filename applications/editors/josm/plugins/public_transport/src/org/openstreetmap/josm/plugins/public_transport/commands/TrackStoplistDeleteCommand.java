@@ -39,6 +39,7 @@ public class TrackStoplistDeleteCommand extends Command {
     private TrackStoplistTableModel stoplistTM = null;
 
     public TrackStoplistDeleteCommand(StopImporterAction controller) {
+        super(MainApplication.getLayerManager().getEditDataSet());
         stoplistTM = controller.getCurrentTrack().stoplistTM;
         workingLines = new Vector<>();
         nodesForUndo = new Vector<>();

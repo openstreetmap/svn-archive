@@ -43,6 +43,7 @@ public class TrackSuggestStopsCommand extends Command {
     private Vector<String> times = null;
 
     public TrackSuggestStopsCommand(StopImporterAction controller) {
+        super(MainApplication.getLayerManager().getEditDataSet());
         if (controller.getCurrentTrack() == null)
             return;
         stoplistTM = controller.getCurrentTrack().stoplistTM;

@@ -23,6 +23,7 @@ public class GTFSDeleteCommand extends Command {
     private GTFSStopTableModel gtfsStopTM = null;
 
     public GTFSDeleteCommand(GTFSImporterAction controller) {
+        super(MainApplication.getLayerManager().getEditDataSet());
         gtfsStopTM = controller.getGTFSStopTableModel();
         workingLines = new Vector<>();
         nodesForUndo = new Vector<>();

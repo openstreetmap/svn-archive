@@ -11,6 +11,7 @@ import java.util.Vector;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.plugins.public_transport.TransText;
 import org.openstreetmap.josm.plugins.public_transport.actions.StopImporterAction;
 import org.openstreetmap.josm.plugins.public_transport.dialogs.StopImporterDialog;
@@ -32,6 +33,7 @@ public class TrackStoplistSortCommand extends Command {
     private String stopwatchStart;
 
     public TrackStoplistSortCommand(StopImporterAction controller) {
+        super(MainApplication.getLayerManager().getEditDataSet());
         stoplistTM = controller.getCurrentTrack().stoplistTM;
         workingLines = new Vector<>();
         insPos = controller.getDialog().getStoplistTable().getSelectedRow();

@@ -9,6 +9,7 @@ import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.plugins.public_transport.TransText;
 import org.openstreetmap.josm.plugins.public_transport.dialogs.StopImporterDialog;
 import org.openstreetmap.josm.plugins.public_transport.refs.TrackReference;
@@ -33,6 +34,7 @@ public class TrackStoplistNameCommand extends Command {
     private LatLon oldLatLon = null;
 
     public TrackStoplistNameCommand(TrackReference trackref, int workingLine) {
+        super(MainApplication.getLayerManager().getEditDataSet());
         this.trackref = trackref;
         this.workingLine = workingLine;
         Node node = trackref.stoplistTM.nodeAt(workingLine);

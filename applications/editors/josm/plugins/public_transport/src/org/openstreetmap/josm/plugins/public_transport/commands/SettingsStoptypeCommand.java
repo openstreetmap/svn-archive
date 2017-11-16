@@ -11,6 +11,7 @@ import javax.swing.DefaultListModel;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.plugins.public_transport.actions.StopImporterAction;
 import org.openstreetmap.josm.plugins.public_transport.models.WaypointTableModel;
 import org.openstreetmap.josm.plugins.public_transport.refs.TrackReference;
@@ -39,6 +40,7 @@ public class SettingsStoptypeCommand extends Command {
     private String type = null;
 
     public SettingsStoptypeCommand(StopImporterAction controller) {
+        super(MainApplication.getLayerManager().getEditDataSet());
         waypointTM = controller.getWaypointTableModel();
         tracksListModel = controller.getTracksListModel();
         type = controller.getDialog().getStoptype();

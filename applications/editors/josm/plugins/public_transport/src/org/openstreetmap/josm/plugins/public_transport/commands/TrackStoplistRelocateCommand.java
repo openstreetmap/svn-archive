@@ -8,6 +8,7 @@ import java.util.Collection;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.plugins.public_transport.actions.StopImporterAction;
 import org.openstreetmap.josm.plugins.public_transport.dialogs.StopImporterDialog;
 import org.openstreetmap.josm.plugins.public_transport.refs.TrackReference;
@@ -26,6 +27,7 @@ public class TrackStoplistRelocateCommand extends Command {
     private String stopwatchStart = null;
 
     public TrackStoplistRelocateCommand(StopImporterAction controller) {
+        super(MainApplication.getLayerManager().getEditDataSet());
         this.controller = controller;
         this.currentTrack = controller.getCurrentTrack();
         this.gpsSyncTime = controller.getDialog().getGpsTimeStart();

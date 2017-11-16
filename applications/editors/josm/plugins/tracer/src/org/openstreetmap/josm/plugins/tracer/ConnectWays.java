@@ -7,21 +7,23 @@
 package org.openstreetmap.josm.plugins.tracer;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
+
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import org.openstreetmap.josm.Main;
+
 import org.openstreetmap.josm.command.ChangeCommand;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.DeleteCommand;
 import org.openstreetmap.josm.command.MoveCommand;
 import org.openstreetmap.josm.command.SequenceCommand;
 import org.openstreetmap.josm.data.coor.LatLon;
-import org.openstreetmap.josm.data.osm.Node;
-import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.data.osm.BBox;
+import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.tools.Pair;
 
 public class ConnectWays {
@@ -52,7 +54,7 @@ public class ConnectWays {
 
             // bude se node slucovat s jinym?
             double minDistanceSq = MIN_DISTANCE;
-            List<Node> nodes = Main.getLayerManager().getEditDataSet().searchNodes(bbox);
+            List<Node> nodes = MainApplication.getLayerManager().getEditDataSet().searchNodes(bbox);
             Node nearestNode = null;
             for (Node nn : nodes) {
                 if (!nn.isUsable() || way.containsNode(nn) || newWay.containsNode(nn) || !isInBuilding(nn)) {
@@ -132,7 +134,7 @@ public class ConnectWays {
 
         // node nebyl slouceny s jinym
         // hledani pripadne blizke usecky, kam bod pridat
-        List<Way> ways = Main.getLayerManager().getEditDataSet().searchWays(bbox);
+        List<Way> ways = MainApplication.getLayerManager().getEditDataSet().searchWays(bbox);
         double minDist = Double.MAX_VALUE;
         Way nearestWay = null;
         int nearestNodeIndex = 0;
@@ -189,7 +191,7 @@ public class ConnectWays {
             System.out.println(way.getNodes().get(i) + "-----" + way.getNodes().get((i + 1) % way.getNodesCount()));
             double minDistanceSq = MIN_DISTANCE_SQ;
             //double maxAngle = MAX_ANGLE;
-            List<Node> nodes = Main.getLayerManager().getEditDataSet().searchNodes(new BBox(
+            List<Node> nodes = MainApplication.getLayerManager().getEditDataSet().searchNodes(new BBox(
                 Math.min(n1.getX(), n2.getX()) - minDistanceSq,
                 Math.min(n1.getY(), n2.getY()) - minDistanceSq,
                 Math.max(n1.getX(), n2.getX()) + minDistanceSq,

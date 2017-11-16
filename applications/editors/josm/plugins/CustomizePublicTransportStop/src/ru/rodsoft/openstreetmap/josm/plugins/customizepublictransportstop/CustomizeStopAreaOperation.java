@@ -18,6 +18,7 @@ import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.gui.MainApplication;
 
 /**
  * Operation of creation and customizing stop area relation and its members under user selection
@@ -273,7 +274,7 @@ public class CustomizeStopAreaOperation extends StopAreaOperationBase
 		{
 			newRelation.addMember(new RelationMember("", otherMember));
 		}
-		Main.main.undoRedo.add(new AddCommand(newRelation));
+		Main.main.undoRedo.add(new AddCommand(MainApplication.getLayerManager().getEditDataSet(), newRelation));
 		commands = generalTagAssign(newRelation, commands, stopArea);
 		commands = assignTag(commands, newRelation, OSMTags.TYPE_TAG, OSMTags.PUBLIC_TRANSPORT_TAG);
 		commands = assignTag(commands, newRelation, OSMTags.PUBLIC_TRANSPORT_TAG, OSMTags.STOP_AREA_TAG_VALUE);
@@ -484,7 +485,7 @@ public class CustomizeStopAreaOperation extends StopAreaOperationBase
 			{
 				Node newNode =new Node();
 				newNode.setCoor(centerOfPlatform);
-		    	Main.main.undoRedo.add(new AddCommand(newNode));
+		    	Main.main.undoRedo.add(new AddCommand(MainApplication.getLayerManager().getEditDataSet(), newNode));
 		    	Main.main.undoRedo.add(new ChangePropertyCommand(newNode, tag, tagValue));
 				commands = assignTag(commands, newNode, tag, tagValue);
 				stopArea.otherMembers.add(newNode);

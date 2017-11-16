@@ -9,7 +9,6 @@ import java.awt.Graphics2D;
 import javax.swing.Action;
 import javax.swing.Icon;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.gpx.WayPoint;
 import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
@@ -61,7 +60,7 @@ public class ElevationProfileLayer extends Layer implements IElevationProfileSel
     public void setProfile(IElevationProfile profile) {
         if (this.profile != profile) {
             this.profile = profile;
-            Main.map.repaint();
+            invalidate();
         }
     }
 
@@ -207,7 +206,7 @@ public class ElevationProfileLayer extends Layer implements IElevationProfileSel
     public void selectedWayPointChanged(WayPoint newWayPoint) {
         if (selWayPoint != newWayPoint) {
             selWayPoint = newWayPoint;
-            Main.map.repaint();
+            invalidate();
         }
     }
 }

@@ -17,7 +17,6 @@ import org.openstreetmap.gui.jmapviewer.TileController;
 import org.openstreetmap.gui.jmapviewer.TileXY;
 import org.openstreetmap.gui.jmapviewer.interfaces.TileLoaderListener;
 import org.openstreetmap.gui.jmapviewer.interfaces.TileSource;
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.imagery.CoordinateConversion;
@@ -26,6 +25,7 @@ import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.plugins.elevation.IVertexRenderer;
 import org.openstreetmap.josm.tools.ImageProvider;
+import org.openstreetmap.josm.tools.Logging;
 
 /**
  * @author Oliver Wieland &lt;oliver.wieland@online.de&gt;
@@ -113,12 +113,9 @@ public class ElevationGridLayer extends Layer implements TileLoaderListener {
     @Override
     public void tileLoadingFinished(Tile tile, boolean success) {
         try {
-            if (Main.map != null) {
-                Main.map.repaint(100);
-            }
+            invalidate();
         } catch (Exception ex) {
-            System.err.println(ex);
-            ex.printStackTrace(System.err);
+            Logging.error(ex);
         }
     }
 

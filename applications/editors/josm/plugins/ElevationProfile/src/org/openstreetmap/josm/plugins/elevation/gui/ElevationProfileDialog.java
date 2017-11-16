@@ -24,9 +24,9 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.event.ListDataListener;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.SystemOfMeasurement;
 import org.openstreetmap.josm.data.gpx.GpxData;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.dialogs.ToggleDialog;
 import org.openstreetmap.josm.gui.layer.GpxLayer;
 import org.openstreetmap.josm.gui.layer.Layer;
@@ -161,11 +161,11 @@ public class ElevationProfileDialog extends ToggleDialog implements LayerChangeL
         zoomButton = new JButton(tr("Zoom"));
         zoomButton.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent arg0) {
+            public void actionPerformed(ActionEvent e) {
                 if (model != null) {
                     IElevationProfile profile = model.getCurrentProfile();
                     if (profile != null) {
-                        Main.map.mapView.zoomTo(profile.getBounds());
+                        MainApplication.getMap().mapView.zoomTo(profile.getBounds());
                     }
                 }
 
@@ -197,10 +197,10 @@ public class ElevationProfileDialog extends ToggleDialog implements LayerChangeL
 
     @Override
     public void showNotify() {
-        Main.getLayerManager().addLayerChangeListener(this);
-        Main.getLayerManager().addActiveLayerChangeListener(this);
-        if (Main.isDisplayingMapView()) {
-            Layer layer = Main.getLayerManager().getActiveLayer();
+        MainApplication.getLayerManager().addLayerChangeListener(this);
+        MainApplication.getLayerManager().addActiveLayerChangeListener(this);
+        if (MainApplication.isDisplayingMapView()) {
+            Layer layer = MainApplication.getLayerManager().getActiveLayer();
             if (layer instanceof GpxLayer) {
                 setActiveLayer((GpxLayer) layer);
             }
@@ -209,8 +209,8 @@ public class ElevationProfileDialog extends ToggleDialog implements LayerChangeL
 
     @Override
     public void hideNotify() {
-        Main.getLayerManager().removeActiveLayerChangeListener(this);
-        Main.getLayerManager().removeLayerChangeListener(this);
+        MainApplication.getLayerManager().removeActiveLayerChangeListener(this);
+        MainApplication.getLayerManager().removeLayerChangeListener(this);
     }
 
     /**
@@ -352,7 +352,7 @@ public class ElevationProfileDialog extends ToggleDialog implements LayerChangeL
 
     @Override
     public void activeOrEditLayerChanged(ActiveLayerChangeEvent e) {
-        Layer newLayer = Main.getLayerManager().getActiveLayer();
+        Layer newLayer = MainApplication.getLayerManager().getActiveLayer();
         if (newLayer instanceof GpxLayer) {
             setActiveLayer((GpxLayer) newLayer);
         }

@@ -5,8 +5,8 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.Color;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.IconToggleButton;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MainMenu;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.plugins.Plugin;
@@ -34,7 +34,7 @@ public class ElevationProfilePlugin extends Plugin {
         createColorMaps();
 
         // TODO: Disable this view as long as it is not stable
-        MainMenu.add(Main.main.menu.imagerySubMenu, new AddElevationLayerAction(), false, 0);
+        MainMenu.add(MainApplication.getMenu().imagerySubMenu, new AddElevationLayerAction(), false, 0);
     }
 
     /**
@@ -63,7 +63,7 @@ public class ElevationProfilePlugin extends Plugin {
     public static ElevationProfileLayer getCurrentLayer() {
         if (currentLayer == null) {
             currentLayer = new ElevationProfileLayer(tr("Elevation Profile"));
-            Main.getLayerManager().addLayer(currentLayer);
+            MainApplication.getLayerManager().addLayer(currentLayer);
         }
         return currentLayer;
     }

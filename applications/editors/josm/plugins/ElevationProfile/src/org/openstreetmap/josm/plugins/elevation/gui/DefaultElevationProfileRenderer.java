@@ -18,6 +18,7 @@ import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.gpx.WayPoint;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.plugins.elevation.ElevationHelper;
@@ -149,8 +150,8 @@ IElevationProfileRenderer {
         g.setColor(getColorForWaypoint(profile, wpt2, kind));
 
         // transform to view
-        Point pnt1 = mv.getPoint(wpt1.getEastNorth());
-        Point pnt2 = mv.getPoint(wpt2.getEastNorth());
+        Point pnt1 = mv.getPoint(wpt1.getEastNorth(Main.getProjection()));
+        Point pnt2 = mv.getPoint(wpt2.getEastNorth(Main.getProjection()));
 
         // use thick line, if possible
         if (g instanceof Graphics2D) {
@@ -187,7 +188,7 @@ IElevationProfileRenderer {
             MapView mv, WayPoint wpt, ElevationWayPointKind kind) {
 
         Color c = getColorForWaypoint(profile, wpt, kind);
-        Point pnt = mv.getPoint(wpt.getEastNorth());
+        Point pnt = mv.getPoint(wpt.getEastNorth(Main.getProjection()));
 
         /* Paint full hour label */
         if (kind == ElevationWayPointKind.FullHour) {
@@ -234,7 +235,7 @@ IElevationProfileRenderer {
 
         Color c = getColorForWaypoint(profile, wpt, kind);
         int eleH = (int) ElevationHelper.getElevation(wpt);
-        Point pnt = mv.getPoint(wpt.getEastNorth());
+        Point pnt = mv.getPoint(wpt.getEastNorth(Main.getProjection()));
 
         TriangleDir td = TriangleDir.Up;
 
@@ -358,7 +359,7 @@ IElevationProfileRenderer {
             MapView mv, WayPoint wpt, ElevationWayPointKind kind) {
 
         Color c = getColorForWaypoint(profile, wpt, kind);
-        Point pnt = mv.getPoint(wpt.getEastNorth());
+        Point pnt = mv.getPoint(wpt.getEastNorth(Main.getProjection()));
         drawSphere(g, Color.WHITE, c, pnt.x, pnt.y, BIG_WPT_RADIUS);
     }
 

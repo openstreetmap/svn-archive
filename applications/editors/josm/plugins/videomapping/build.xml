@@ -4,7 +4,7 @@
     <!-- enter the SVN commit message -->
     <property name="commit.message" value="fix after JOSM update"/>
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
-    <property name="plugin.main.version" value="10580"/>
+    <property name="plugin.main.version" value="12840"/>
     <property name="plugin.author" value="Matthias Meißer"/>
     <property name="plugin.class" value="org.openstreetmap.josm.plugins.videomapping.VideoPlugin"/>
     <property name="plugin.description" value="(This Plugin is currently work in progress!!!) Links and syncs a georeferenced video against a GPS track, to use it for identify visible objects."/>

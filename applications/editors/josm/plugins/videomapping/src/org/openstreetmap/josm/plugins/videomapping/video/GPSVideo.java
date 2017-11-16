@@ -6,8 +6,8 @@ import java.util.List;
 
 import javax.swing.JComponent;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.gpx.WayPoint;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.plugins.videomapping.VideoPositionLayer;
 
 import uk.co.caprica.vlcj.player.MediaPlayerFactory;
@@ -51,7 +51,7 @@ public class GPSVideo extends Video {
         firstWayPoint = getFirstGPS();
         lastWayPoint = getLastGPS();
         markSyncedWayPoints();
-        Main.map.mapView.repaint();
+        MainApplication.getMap().mapView.repaint();
     }
 
     //make sure we don't leave the GPS track

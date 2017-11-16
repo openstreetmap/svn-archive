@@ -27,6 +27,7 @@ import javax.swing.text.MaskFormatter;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.layer.GpxLayer;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.gui.layer.LayerManager.LayerAddEvent;
@@ -70,8 +71,8 @@ public class VideoPlugin extends Plugin implements LayerChangeListener, ActiveLa
     public VideoPlugin(PluginInformation info) {
         super(info);
         VideoEngine.setupPlayer();
-        Main.getLayerManager().addLayerChangeListener(this);
-        Main.getLayerManager().addActiveLayerChangeListener(this);
+        MainApplication.getLayerManager().addLayerChangeListener(this);
+        MainApplication.getLayerManager().addActiveLayerChangeListener(this);
         createMenusAndShortCuts();
         enableVideoControlMenus(false);
         setDefaults();
@@ -79,7 +80,8 @@ public class VideoPlugin extends Plugin implements LayerChangeListener, ActiveLa
     }
 
     private void createMenusAndShortCuts() {
-        VMenu = Main.main.menu.addMenu("Video", tr("Video"), KeyEvent.VK_Q, Main.main.menu.getDefaultMenuPos(), ht("/Plugin/Videomapping"));
+        VMenu = MainApplication.getMenu().addMenu("Video", tr("Video"), KeyEvent.VK_Q,
+                MainApplication.getMenu().getDefaultMenuPos(), ht("/Plugin/Videomapping"));
         VMenu.setEnabled(false);
         VAdd = new JosmAction(tr("Import Video"), "videomapping", tr("Sync a video against this GPS track"), null, false) {
             @Override public void actionPerformed(ActionEvent arg0) {
@@ -285,7 +287,7 @@ public class VideoPlugin extends Plugin implements LayerChangeListener, ActiveLa
     }
 
     private void saveProperties() {
-        Main.pref.put(PROP_AUTOCENTER, autoCenter);
+        Main.pref.putBoolean(PROP_AUTOCENTER, autoCenter);
         Main.pref.put(PROP_JUMPLENGTH, jumpLength.toString());
         Main.pref.put(PROP_LOOPLENGTH, loopLength.toString());
         Main.pref.put(PROP_MRU, mostRecentFolder);
@@ -342,7 +344,7 @@ public class VideoPlugin extends Plugin implements LayerChangeListener, ActiveLa
 
     @Override
     public void activeOrEditLayerChanged(ActiveLayerChangeEvent e) {
-        handleLayer(Main.getLayerManager().getActiveLayer());
+        handleLayer(MainApplication.getLayerManager().getActiveLayer());
     }
 
     @Override

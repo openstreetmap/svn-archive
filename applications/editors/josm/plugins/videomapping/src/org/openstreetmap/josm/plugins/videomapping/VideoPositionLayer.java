@@ -27,6 +27,7 @@ import org.openstreetmap.josm.data.gpx.GpxTrack;
 import org.openstreetmap.josm.data.gpx.GpxTrackSegment;
 import org.openstreetmap.josm.data.gpx.WayPoint;
 import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.dialogs.LayerListDialog;
 import org.openstreetmap.josm.gui.dialogs.LayerListPopup;
@@ -50,7 +51,7 @@ public class VideoPositionLayer extends Layer {
         gpsTrack = importGPSLayer(gpsLayer.data);
         gpsTimeFormat = new SimpleDateFormat("HH:mm:ss");
         iconPosition = gpsTrack.get(0);
-        Main.getLayerManager().addLayer(this);
+        MainApplication.getLayerManager().addLayer(this);
     }
 
     //make a flat copy
@@ -76,7 +77,7 @@ public class VideoPositionLayer extends Layer {
     private void paintGpsTrack(Graphics2D g, MapView map) {
         g.setColor(Color.YELLOW);
         for (WayPoint n: gpsTrack) {
-            Point p = map.getPoint(n.getEastNorth());
+            Point p = map.getPoint(n.getEastNorth(Main.getProjection()));
             g.drawOval(p.x - 2, p.y - 2, 4, 4);
         }
     }
@@ -85,7 +86,7 @@ public class VideoPositionLayer extends Layer {
         g.setColor(Color.GREEN);
         for (WayPoint n : gpsTrack) {
             if (n.attr.containsKey("synced")) {
-                Point p = map.getPoint(n.getEastNorth());
+                Point p = map.getPoint(n.getEastNorth(Main.getProjection()));
                 g.drawOval(p.x - 2, p.y - 2, 4, 4);
             }
         }
@@ -93,7 +94,7 @@ public class VideoPositionLayer extends Layer {
 
     private void paintPositionIcon(Graphics2D g, MapView map) {
         if (iconPosition != null) {
-            Point p = map.getPoint(iconPosition.getEastNorth());
+            Point p = map.getPoint(iconPosition.getEastNorth(Main.getProjection()));
             layerIcon.paintIcon(null, g, p.x-layerIcon.getIconWidth()/2, p.y-layerIcon.getIconHeight()/2);
             g.drawString(gpsTimeFormat.format(iconPosition.getTime()), p.x-15, p.y-15);
         }
@@ -215,10 +216,10 @@ public class VideoPositionLayer extends Layer {
 
     public void setIconPosition(WayPoint wp) {
         iconPosition = wp;
-        if (Main.isDisplayingMapView()) {
-            Main.map.mapView.repaint();
+        if (MainApplication.isDisplayingMapView()) {
+            invalidate();
             if (autoCenter)
-                Main.map.mapView.zoomTo(iconPosition.getCoor());
+                MainApplication.getMap().mapView.zoomTo(iconPosition.getCoor());
         }
     }
 
@@ -243,7 +244,7 @@ public class VideoPositionLayer extends Layer {
         Rectangle rect = new Rectangle(mouse.x-MAX/2, mouse.y-MAX/2, MAX, MAX);
         //iterate through all possible notes
         for (WayPoint n : gpsTrack) {
-            p = Main.map.mapView.getPoint(n.getEastNorth());
+            p = MainApplication.getMap().mapView.getPoint(n.getEastNorth(Main.getProjection()));
             if (rect.contains(p)) {
                 return n;
             }
@@ -299,6 +300,6 @@ public class VideoPositionLayer extends Layer {
     }
 
     public void unload() {
-        Main.getLayerManager().removeLayer(this);
+        MainApplication.getLayerManager().removeLayer(this);
     }
 }

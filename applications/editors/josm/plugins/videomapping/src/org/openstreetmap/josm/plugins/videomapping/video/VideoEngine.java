@@ -7,7 +7,7 @@ import java.awt.Window;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.tools.Logging;
 
 import com.sun.jna.NativeLibrary;
 import com.sun.jna.platform.win32.Advapi32Util;
@@ -50,7 +50,7 @@ public class VideoEngine implements MediaPlayerEventListener {
                             WindowsRuntimeUtil.VLC_REGISTRY_KEY.replaceFirst("\\\\", "\\\\Wow6432Node\\\\"),
                             WindowsRuntimeUtil.VLC_INSTALL_DIR_KEY);
                 } catch (RuntimeException e) {
-                    Main.error(e);
+                    Logging.error(e);
                 }
             }
         } else if (RuntimeUtil.isMac()) {
@@ -60,10 +60,10 @@ public class VideoEngine implements MediaPlayerEventListener {
         }
 
         if (vlcInstallDir != null) {
-            Main.info("videomapping: found VLC install dir: "+vlcInstallDir);
+            Logging.info("videomapping: found VLC install dir: "+vlcInstallDir);
             NativeLibrary.addSearchPath("libvlc", vlcInstallDir);
         } else {
-            Main.error("videomapping: unable to locate VLC install dir");
+            Logging.error("videomapping: unable to locate VLC install dir");
         }
     }
 
@@ -75,11 +75,11 @@ public class VideoEngine implements MediaPlayerEventListener {
             mediaPlayerFactory = new MediaPlayerFactory(libvlcArgs);
             fullScreenStrategy = new DefaultFullScreenStrategy(parent);
         } catch (NoClassDefFoundError e) {
-            Main.error(tr("Unable to find JNA Java library!"));
+            Logging.error(tr("Unable to find JNA Java library!"));
         } catch (UnsatisfiedLinkError e) {
-            Main.error(tr("Unable to find native libvlc library!"));
+            Logging.error(tr("Unable to find native libvlc library!"));
         } catch (Exception t) {
-            Main.error(t);
+            Logging.error(t);
         }
     }
 
@@ -96,9 +96,9 @@ public class VideoEngine implements MediaPlayerEventListener {
             mp.playMedia(mediaPath);
             //now fetching and playback starts automatically
         } catch (NoClassDefFoundError e) {
-            Main.error(tr("Unable to find JNA Java library!"));
+            Logging.error(tr("Unable to find JNA Java library!"));
         } catch (UnsatisfiedLinkError e) {
-            Main.error(tr("Unable to find native libvlc library!"));
+            Logging.error(tr("Unable to find native libvlc library!"));
         }
     }
 

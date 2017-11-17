@@ -14,7 +14,7 @@ import javax.sound.sampled.DataLine;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
-import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.gui.MainApplication;
 
 import at.dallermassl.josm.plugin.surveyor.GpsActionEvent;
 import at.dallermassl.josm.plugin.surveyor.util.ResourceLoader;
@@ -31,7 +31,7 @@ public class PlayAudioAction extends AbstractSurveyorAction {
     @Override
     public void actionPerformed(GpsActionEvent event) {
         // run as a separate thread
-        Main.worker.execute(new Runnable() {
+        MainApplication.worker.execute(new Runnable() {
             public void run() {
                 try {
                     if (audioSource == null) {

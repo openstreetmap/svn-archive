@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.dinopolis.util.io.Tokenizer;
-import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.tools.Logging;
 
 /**
  * @author cdaller
@@ -97,7 +97,7 @@ public class SurveyorActionDescription {
         try {
             params = tokenizer.nextLine();
         } catch (IOException ignore) {
-            Main.debug(ignore);
+            Logging.debug(ignore);
         }
     }
 

@@ -7,11 +7,11 @@ import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 
-import livegps.LiveGpsPlugin;
-
 import org.openstreetmap.josm.gui.MainMenu;
 import org.openstreetmap.josm.plugins.PluginHandler;
 import org.openstreetmap.josm.plugins.PluginInformation;
+
+import livegps.LiveGpsPlugin;
 
 // CHECKSTYLE.OFF: HideUtilityClassConstructorCheck
 

@@ -19,15 +19,16 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
 
-import livegps.LiveGpsPlugin;
-
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
+import org.openstreetmap.josm.gui.MainApplication;
+import org.openstreetmap.josm.tools.Logging;
 import org.openstreetmap.josm.tools.Shortcut;
 import org.openstreetmap.josm.tools.XmlObjectParser;
 import org.xml.sax.SAXException;
 
 import at.dallermassl.josm.plugin.surveyor.util.ResourceLoader;
+import livegps.LiveGpsPlugin;
 
 /**
  * @author cdaller
@@ -63,8 +64,8 @@ public class SurveyorShowAction extends JosmAction {
             actionMap.put("zoomout", new AbstractAction() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    if (Main.map != null && Main.map.mapView != null) {
-                        Main.map.mapView.zoomToFactor(2);
+                    if (MainApplication.getMap() != null && MainApplication.getMap().mapView != null) {
+                        MainApplication.getMap().mapView.zoomToFactor(2);
                     }
                 }
             });
@@ -73,8 +74,8 @@ public class SurveyorShowAction extends JosmAction {
             actionMap.put("zoomin", new AbstractAction() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    if (Main.map != null && Main.map.mapView != null) {
-                        Main.map.mapView.zoomToFactor(1/2);
+                    if (MainApplication.getMap() != null && MainApplication.getMap().mapView != null) {
+                        MainApplication.getMap().mapView.zoomToFactor(1/2);
                     }
                 }
             });
@@ -116,10 +117,10 @@ public class SurveyorShowAction extends JosmAction {
         try (InputStream in = ResourceLoader.getInputStream(source)) {
             return createComponent(in);
         } catch (IOException e) {
-            Main.error(e);
+            Logging.error(e);
             JOptionPane.showMessageDialog(Main.parent, tr("Could not read surveyor definition: {0}", source));
         } catch (SAXException e) {
-            Main.error(e);
+            Logging.error(e);
             JOptionPane.showMessageDialog(Main.parent, tr("Error parsing {0}: {1}", source, e.getMessage()));
         }
         return null;
@@ -154,7 +155,7 @@ public class SurveyorShowAction extends JosmAction {
                 //System.out.println("SurveyorActionDescription " + object);
                 actions.add((SurveyorActionDescription) object);
             } else {
-                Main.error("surveyor: unknown xml element: " + object);
+                Logging.error("surveyor: unknown xml element: " + object);
             }
         }
         return surveyorComponent;

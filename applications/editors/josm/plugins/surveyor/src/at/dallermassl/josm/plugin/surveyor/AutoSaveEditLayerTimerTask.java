@@ -13,9 +13,11 @@ import javax.swing.JOptionPane;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.osm.DataSet;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import org.openstreetmap.josm.io.OsmWriter;
 import org.openstreetmap.josm.io.OsmWriterFactory;
+import org.openstreetmap.josm.tools.Logging;
 
 /**
  * @author cdaller
@@ -30,7 +32,7 @@ public class AutoSaveEditLayerTimerTask extends TimerTask {
 
     @Override
     public void run() {
-        OsmDataLayer layer = Main.getLayerManager().getEditLayer();
+        OsmDataLayer layer = MainApplication.getLayerManager().getEditLayer();
         if (layer == null) {
             return;
         }
@@ -49,10 +51,10 @@ public class AutoSaveEditLayerTimerTask extends TimerTask {
             }
             tmpFile.renameTo(file);
             System.out.println("AutoSaving finished");
-        } catch (IOException x) {
-            x.printStackTrace();
+        } catch (IOException ex) {
+            Logging.error(ex);
             JOptionPane.showMessageDialog(Main.parent,
-                tr("Error while exporting {0}: {1}", file.getAbsoluteFile(), x.getMessage()),
+                tr("Error while exporting {0}: {1}", file.getAbsoluteFile(), ex.getMessage()),
                 tr("Error"),
                 JOptionPane.ERROR_MESSAGE);
         }

@@ -12,10 +12,10 @@ import java.util.TimerTask;
 
 import javax.swing.AbstractButton;
 
-import livegps.LiveGpsLayer;
-
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.tools.Shortcut;
+
+import livegps.LiveGpsLayer;
 
 /**
  * @author cdaller

@@ -21,11 +21,11 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-import livegps.LiveGpsData;
-
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.tools.XmlObjectParser;
 import org.xml.sax.SAXException;
+
+import livegps.LiveGpsData;
 
 /**
  * @author cdaller

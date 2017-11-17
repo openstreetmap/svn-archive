@@ -5,10 +5,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.tools.Pair;
 
 import at.dallermassl.josm.plugin.surveyor.GpsActionEvent;
@@ -59,12 +59,12 @@ public class SetNodeAction implements SurveyorAction {
             node.put(entry.a, entry.b);
         }
         synchronized (SurveyorLock.class) {
-            DataSet ds = Main.getLayerManager().getEditDataSet();
+            DataSet ds = MainApplication.getLayerManager().getEditDataSet();
             if (ds != null) {
                 ds.addPrimitive(node);
                 ds.setSelected(node);
             }
         }
-        Main.map.repaint();
+        MainApplication.getMap().repaint();
     }
 }

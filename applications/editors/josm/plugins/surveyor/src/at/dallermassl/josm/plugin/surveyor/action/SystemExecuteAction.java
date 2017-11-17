@@ -6,7 +6,7 @@ import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.tools.Logging;
 
 import at.dallermassl.josm.plugin.surveyor.GpsActionEvent;
 
@@ -21,7 +21,7 @@ public class SystemExecuteAction extends AbstractSurveyorAction {
         final ProcessBuilder builder = new ProcessBuilder(getParameters());
         builder.directory(new File(System.getProperty("user.home")));
 
-        Main.debug("Directory : " + builder.directory());
+        Logging.debug("Directory : " + builder.directory());
         Thread executionThread = new Thread() {
 
             @Override
@@ -34,12 +34,12 @@ public class SystemExecuteAction extends AbstractSurveyorAction {
                     String line;
 
                     while ((line = br.readLine()) != null) {
-                        Main.info(getClass().getSimpleName() + ": " + line);
+                        Logging.info(getClass().getSimpleName() + ": " + line);
                     }
 
-                    Main.info(getClass().getSimpleName() + "Program terminated!");
+                    Logging.info(getClass().getSimpleName() + "Program terminated!");
                 } catch (Exception t) {
-                    Main.error(t);
+                    Logging.error(t);
                 }
             }
         };

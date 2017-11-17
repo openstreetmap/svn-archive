@@ -11,7 +11,7 @@ import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
-import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.tools.Logging;
 
 /**
  * @author cdaller
@@ -46,7 +46,7 @@ public class DialogClosingThread extends Thread implements KeyListener, Document
             try {
                 sleep(1000);
             } catch (InterruptedException ignore) {
-                Main.debug(ignore);
+                Logging.debug(ignore);
             }
         }
 
@@ -61,19 +61,19 @@ public class DialogClosingThread extends Thread implements KeyListener, Document
     @Override
     public void keyPressed(KeyEvent e) {
         reset();
-        Main.debug("keypressed: " + e.getKeyCode());
+        Logging.debug("keypressed: " + e.getKeyCode());
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
         reset();
-        Main.debug("keyreleased: " + e.getKeyCode());
+        Logging.debug("keyreleased: " + e.getKeyCode());
     }
 
     @Override
     public void keyTyped(KeyEvent e) {
         reset();
-        Main.debug("keytyped: " + e.getKeyCode());
+        Logging.debug("keytyped: " + e.getKeyCode());
     }
 
     public void observe(Container container) {
@@ -97,18 +97,18 @@ public class DialogClosingThread extends Thread implements KeyListener, Document
     @Override
     public void changedUpdate(DocumentEvent e) {
         reset();
-        Main.debug("changedUpdate: " + e);
+        Logging.debug("changedUpdate: " + e);
     }
 
     @Override
     public void insertUpdate(DocumentEvent e) {
         reset();
-        Main.debug("insertUpdate: " + e);
+        Logging.debug("insertUpdate: " + e);
     }
 
     @Override
     public void removeUpdate(DocumentEvent e) {
         reset();
-        Main.debug("removeUpdate: " + e);
+        Logging.debug("removeUpdate: " + e);
     }
 }

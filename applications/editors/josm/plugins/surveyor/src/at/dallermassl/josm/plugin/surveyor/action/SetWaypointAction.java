@@ -7,15 +7,14 @@ import java.util.Collection;
 
 import javax.swing.JToggleButton;
 
-import livegps.LiveGpsLayer;
-
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.gpx.GpxData;
 import org.openstreetmap.josm.data.gpx.WayPoint;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.layer.GpxLayer;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.gui.layer.markerlayer.Marker;
 import org.openstreetmap.josm.gui.layer.markerlayer.MarkerLayer;
+import org.openstreetmap.josm.tools.Logging;
 
 import at.dallermassl.josm.plugin.surveyor.GpsActionEvent;
 import at.dallermassl.josm.plugin.surveyor.SurveyorLock;
@@ -23,6 +22,7 @@ import at.dallermassl.josm.plugin.surveyor.SurveyorPlugin;
 import at.dallermassl.josm.plugin.surveyor.action.gui.DialogClosingThread;
 import at.dallermassl.josm.plugin.surveyor.action.gui.WaypointDialog;
 import at.dallermassl.josm.plugin.surveyor.util.LayerUtil;
+import livegps.LiveGpsLayer;
 
 /**
  * Action that sets a marker into a marker layer. The first parameter of the action
@@ -62,7 +62,7 @@ public class SetWaypointAction extends AbstractSurveyorAction {
             try {
                 timeout = Integer.parseInt(getParameters().get(2));
             } catch (NumberFormatException e) {
-                Main.error(e.getMessage());
+                Logging.error(e.getMessage());
             }
         }
         
@@ -95,7 +95,7 @@ public class SetWaypointAction extends AbstractSurveyorAction {
             }
         }
 
-        Main.map.repaint();
+        MainApplication.getMap().repaint();
     }
 
     /**
@@ -109,7 +109,7 @@ public class SetWaypointAction extends AbstractSurveyorAction {
             if (markerLayer == null) {
                 // not found, add a new one
                 markerLayer = new MarkerLayer(new GpxData(), MARKER_LAYER_NAME, null, null);
-                Main.getLayerManager().addLayer(markerLayer);
+                MainApplication.getLayerManager().addLayer(markerLayer);
             }
         }
         return markerLayer;
@@ -121,7 +121,7 @@ public class SetWaypointAction extends AbstractSurveyorAction {
      */
     public GpxLayer getGpxLayer() {
         if (liveGpsLayer == null) {
-            Collection<Layer> layers = Main.getLayerManager().getLayers();
+            Collection<Layer> layers = MainApplication.getLayerManager().getLayers();
             for (Layer layer : layers) {
                 if (layer instanceof LiveGpsLayer) {
                     liveGpsLayer = (LiveGpsLayer) layer;

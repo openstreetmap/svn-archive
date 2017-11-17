@@ -32,6 +32,7 @@ import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.gpx.GpxData;
 import org.openstreetmap.josm.data.gpx.ImmutableGpxTrack;
 import org.openstreetmap.josm.data.gpx.WayPoint;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.layer.GpxLayer;
 import org.openstreetmap.josm.gui.layer.Layer;
 
@@ -62,7 +63,7 @@ public class GameWindow extends JFrame implements ActionListener {
         screen = screen_image.getGraphics();
 
         this.ground = ground;
-        ground_view = new FakeMapView(Main.map.mapView, 0.0000001);
+        ground_view = new FakeMapView(MainApplication.getMap().mapView, 0.0000001);
 
         /* Retrieve start position */
         EastNorth start = ground_view.parent.getCenter();

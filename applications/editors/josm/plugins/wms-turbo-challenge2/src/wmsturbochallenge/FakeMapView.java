@@ -38,7 +38,7 @@ class FakeMapView extends MapView {
 
     FakeMapView(MapView parent, double scale) {
         // TODO: MapView constructor contains registering listeners and other code, that probably shouldn't be called in fake map view
-        super(null, null, null);
+        super(null, null);
         this.parent = parent;
         this.scale = scale;
 

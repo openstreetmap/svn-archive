@@ -10,8 +10,8 @@ import java.awt.event.ActionEvent;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.gui.layer.LayerManager.LayerAddEvent;
@@ -31,7 +31,7 @@ public class WMSRacer extends Plugin implements LayerChangeListener, ActiveLayer
         super(info);
         driveAction.updateEnabledState();
 
-        JMenu toolsMenu = Main.main.menu.toolsMenu;
+        JMenu toolsMenu = MainApplication.getMenu().toolsMenu;
         toolsMenu.addSeparator();
         toolsMenu.add(new JMenuItem(driveAction));
     }
@@ -104,22 +104,22 @@ public class WMSRacer extends Plugin implements LayerChangeListener, ActiveLayer
     @Override
     public void mapFrameInitialized(MapFrame oldFrame, MapFrame newFrame) {
         if (oldFrame != null) {
-            Main.getLayerManager().removeLayerChangeListener(this);
-            Main.getLayerManager().removeActiveLayerChangeListener(this);
+            MainApplication.getLayerManager().removeLayerChangeListener(this);
+            MainApplication.getLayerManager().removeActiveLayerChangeListener(this);
         }
 
         driveAction.frame = newFrame;
         driveAction.updateEnabledState();
 
         if (newFrame != null) {
-            Main.getLayerManager().addLayerChangeListener(this);
-            Main.getLayerManager().addActiveLayerChangeListener(this);
+            MainApplication.getLayerManager().addLayerChangeListener(this);
+            MainApplication.getLayerManager().addActiveLayerChangeListener(this);
         }
     }
 
     @Override
     public void activeOrEditLayerChanged(ActiveLayerChangeEvent e) {
-        driveAction.currentLayer = Main.getLayerManager().getActiveLayer();
+        driveAction.currentLayer = MainApplication.getLayerManager().getActiveLayer();
         driveAction.updateEnabledState();
     }
 

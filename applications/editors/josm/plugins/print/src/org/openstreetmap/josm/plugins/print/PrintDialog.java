@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Locale;
 
 import javax.print.PrintService;
@@ -164,7 +165,7 @@ public class PrintDialog extends JDialog implements ActionListener {
             ).applySafe(this);
         } else if (isShowing()) { // Avoid IllegalComponentStateException like in #8775
             new WindowGeometry(this).remember(getClass().getName() + ".geometry");
-            Main.pref.put("print.preview.enabled", previewCheckBox.isSelected());
+            Main.pref.putBoolean("print.preview.enabled", previewCheckBox.isSelected());
         }
         super.setVisible(visible);
     }
@@ -218,7 +219,7 @@ public class PrintDialog extends JDialog implements ActionListener {
         add(caption, std.grid(2, row));
         caption = new JLabel(" 1 :");
         add(caption, std.grid(GBC.RELATIVE, row));
-        int mapScale = Main.pref.getInteger("print.map-scale", PrintPlugin.DEF_MAP_SCALE);
+        int mapScale = Main.pref.getInt("print.map-scale", PrintPlugin.DEF_MAP_SCALE);
         mapView.setFixedMapScale(mapScale);
         scaleModel = new SpinnerNumberModel(mapScale, 250, 5000000, 250);
         final JSpinner scaleField = new JSpinner(scaleModel);
@@ -248,7 +249,7 @@ public class PrintDialog extends JDialog implements ActionListener {
         caption = new JLabel("ppi");
         add(caption, std.grid(GBC.RELATIVE, row));
         resolutionModel = new SpinnerNumberModel(
-          Main.pref.getInteger("print.resolution.dpi", PrintPlugin.DEF_RESOLUTION_DPI),
+          Main.pref.getInt("print.resolution.dpi", PrintPlugin.DEF_RESOLUTION_DPI),
           30, 1200, 10);
         final JSpinner resolutionField = new JSpinner(resolutionModel);
         resolutionField.addChangeListener(new ChangeListener() {
@@ -414,7 +415,7 @@ public class PrintDialog extends JDialog implements ActionListener {
                 savePrintSettings();
             }
         } else if ("toggle-preview".equals(cmd)) {
-            Main.pref.put("print.preview.enabled", previewCheckBox.isSelected());
+            Main.pref.putBoolean("print.preview.enabled", previewCheckBox.isSelected());
             if (previewCheckBox.isSelected()) {
                 printPreview.setPrintable(mapView);
             } else {
@@ -458,20 +459,20 @@ public class PrintDialog extends JDialog implements ActionListener {
         // Save only one printer service attribute: printer name
         PrintService service = job.getPrintService();
         if (service != null) {
-            Collection<Collection<String>> serviceAttributes = new ArrayList<>();
+            List<List<String>> serviceAttributes = new ArrayList<>();
             for (Attribute a : service.getAttributes().toArray()) {
                 if ("printer-name".equals(a.getName()) && a instanceof TextSyntax) {
                     serviceAttributes.add(marshallPrintSetting(a, TextSyntax.class, ((TextSyntax) a).getValue()));
                 }
             }
-            Main.pref.putArray("print.settings.service-attributes", serviceAttributes);
+            Main.pref.putListOfLists("print.settings.service-attributes", serviceAttributes);
         }
 
         // Save all request attributes
-        Collection<String> ignoredAttributes = Arrays.asList("media-printable-area");
-        Collection<Collection<String>> requestAttributes = new ArrayList<>();
+        List<String> ignoredAttributes = Arrays.asList("media-printable-area");
+        List<List<String>> requestAttributes = new ArrayList<>();
         for (Attribute a : attrs.toArray()) {
-            Collection<String> setting = null;
+            List<String> setting = null;
             if (a instanceof TextSyntax) {
                 setting = marshallPrintSetting(a, TextSyntax.class, ((TextSyntax) a).getValue());
             } else if (a instanceof EnumSyntax) {
@@ -486,10 +487,10 @@ public class PrintDialog extends JDialog implements ActionListener {
                 requestAttributes.add(setting);
             }
         }
-        Main.pref.putArray("print.settings.request-attributes", requestAttributes);
+        Main.pref.putListOfLists("print.settings.request-attributes", requestAttributes);
     }
 
-    protected Collection<String> marshallPrintSetting(Attribute a, Class<?> syntaxClass, String value) {
+    protected List<String> marshallPrintSetting(Attribute a, Class<?> syntaxClass, String value) {
         return new ArrayList<>(Arrays.asList(a.getCategory().getName(), a.getClass().getName(), syntaxClass.getName(), value));
     }
 
@@ -538,7 +539,7 @@ public class PrintDialog extends JDialog implements ActionListener {
     }
 
     protected void loadPrintSettings() {
-        for (Collection<String> setting : Main.pref.getArray("print.settings.service-attributes")) {
+        for (List<String> setting : Main.pref.getListOfLists("print.settings.service-attributes")) {
             try {
                 PrintServiceAttribute a = (PrintServiceAttribute) unmarshallPrintSetting(setting);
                 if ("printer-name".equals(a.getName())) {
@@ -548,7 +549,7 @@ public class PrintDialog extends JDialog implements ActionListener {
                 Logging.warn(e.getClass().getSimpleName()+": "+e.getMessage());
             }
         }
-        for (Collection<String> setting : Main.pref.getArray("print.settings.request-attributes")) {
+        for (List<String> setting : Main.pref.getListOfLists("print.settings.request-attributes")) {
             try {
                 attrs.add(unmarshallPrintSetting(setting));
             } catch (ReflectiveOperationException e) {

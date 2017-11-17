@@ -91,7 +91,7 @@ public class PrintPlugin extends Plugin {
      */
     public static void adjustPrefs() {
         if (!Main.pref.getBoolean("print.saved-prefs", false)) {
-            Main.pref.put("print.saved-prefs", true);
+            Main.pref.putBoolean("print.saved-prefs", true);
             adjustPref("draw.data.downloaded_area", false);
             adjustPref("mappaint.node.connection-size", 0);
             adjustPref("mappaint.node.selected-size", 0);
@@ -113,7 +113,7 @@ public class PrintPlugin extends Plugin {
         if (!Main.pref.get(key).isEmpty()) {
             Main.pref.put("print.saved-prefs."+key, Main.pref.get(key));
         }
-        Main.pref.putInteger(key, value);
+        Main.pref.putInt(key, value);
     }
 
     /**
@@ -128,7 +128,7 @@ public class PrintPlugin extends Plugin {
         if (!Main.pref.get(key).isEmpty()) {
             Main.pref.put("print.saved-prefs."+key, Main.pref.get(key));
         }
-        Main.pref.put(key, value);
+        Main.pref.putBoolean(key, value);
     }
 
     /**
@@ -157,7 +157,7 @@ public class PrintPlugin extends Plugin {
             restorePref("mappaint.node.tagged-size");
             restorePref("mappaint.node.unselected-size");
             restorePref("mappaint.node.virtual-size");
-            Main.pref.put("print.saved-prefs", false);
+            Main.pref.putBoolean("print.saved-prefs", false);
             //Main.main.map.mapView.repaint();
         }
     }

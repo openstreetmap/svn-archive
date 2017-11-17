@@ -109,7 +109,7 @@ public class PrintableMapView extends MapView implements Printable {
      * @param pageformat the size and orientation of the page being drawn
      */
     public void initialize(PageFormat pageFormat) {
-        int resolution = Main.pref.getInteger("print.resolution.dpi", PrintPlugin.DEF_RESOLUTION_DPI);
+        int resolution = Main.pref.getInt("print.resolution.dpi", PrintPlugin.DEF_RESOLUTION_DPI);
         g2dFactor = 72.0/resolution;
         setSize((int) (pageFormat.getImageableWidth()/g2dFactor), (int) (pageFormat.getImageableHeight()/g2dFactor));
     }

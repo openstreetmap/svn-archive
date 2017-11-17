@@ -14,10 +14,10 @@ import java.util.TreeSet;
 
 import javax.swing.Timer;
 
-import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.tools.Logging;
 
 public class TimedKeyReleaseListener implements AWTEventListener {
-    private final TreeSet<Integer> set = new TreeSet<Integer>();
+    private final TreeSet<Integer> set = new TreeSet<>();
     private Timer timer;
     protected KeyEvent releaseEvent;
 
@@ -36,7 +36,7 @@ public class TimedKeyReleaseListener implements AWTEventListener {
             Toolkit.getDefaultToolkit().addAWTEventListener(this,
                     AWTEvent.KEY_EVENT_MASK);
         } catch (SecurityException ex) {
-            Main.error(ex);
+            Logging.error(ex);
         }
     }
 
@@ -66,7 +66,7 @@ public class TimedKeyReleaseListener implements AWTEventListener {
         try {
             Toolkit.getDefaultToolkit().removeAWTEventListener(this);
         } catch (SecurityException ex) {
-            Main.error(ex);
+            Logging.error(ex);
         }
     }
 

@@ -1,7 +1,6 @@
 // License: GPL. For details, see LICENSE file.
 package touchscreenhelper;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.IconToggleButton;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.plugins.Plugin;
@@ -13,10 +12,9 @@ public class TouchScreenHelperPlugin extends Plugin {
     }
 
     @Override
-    public void mapFrameInitialized(MapFrame oldFrame,
-        MapFrame newFrame) {
+    public void mapFrameInitialized(MapFrame oldFrame, MapFrame newFrame) {
         if (oldFrame == null && newFrame != null) {
-            Main.map.addMapMode(new IconToggleButton(new BrowseAction(Main.map)));
+            newFrame.addMapMode(new IconToggleButton(new BrowseAction()));
         }
     }
 }

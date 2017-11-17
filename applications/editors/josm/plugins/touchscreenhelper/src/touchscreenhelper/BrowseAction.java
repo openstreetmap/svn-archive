@@ -9,9 +9,9 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.mapmode.MapMode;
 import org.openstreetmap.josm.data.coor.EastNorth;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.tools.Shortcut;
 
@@ -21,11 +21,11 @@ public class BrowseAction extends MapMode implements MouseListener,
     private MapMode oldMapMode;
     private TimedKeyReleaseListener listener;
 
-    public BrowseAction(MapFrame mapFrame) {
+    public BrowseAction() {
         super(tr("Browse"), "browse", tr("Browse map with left button"),
             Shortcut.registerShortcut("touchscreenhelper:browse", tr("Mode: {0}", tr("Browse map with left button")),
                 KeyEvent.VK_T, Shortcut.DIRECT),
-            mapFrame, Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
+            Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
         MapFrame.addMapModeChangeListener(this);
     }
 
@@ -36,15 +36,15 @@ public class BrowseAction extends MapMode implements MouseListener,
 
     @Override public void enterMode() {
         super.enterMode();
-        Main.map.mapView.addMouseListener(this);
-        Main.map.mapView.addMouseMotionListener(this);
+        MainApplication.getMap().mapView.addMouseListener(this);
+        MainApplication.getMap().mapView.addMouseMotionListener(this);
 
         listener = new TimedKeyReleaseListener() {
             @Override
             protected void doKeyReleaseEvent(KeyEvent evt) {
                 if (evt.getKeyCode() == getShortcut().getKeyStroke().getKeyCode()) {
                     if (oldMapMode != null && !(oldMapMode instanceof BrowseAction))
-                    Main.map.selectMapMode(oldMapMode);
+                    MainApplication.getMap().selectMapMode(oldMapMode);
                 }
             }
         };
@@ -53,8 +53,8 @@ public class BrowseAction extends MapMode implements MouseListener,
     @Override public void exitMode() {
         super.exitMode();
 
-        Main.map.mapView.removeMouseListener(this);
-        Main.map.mapView.removeMouseMotionListener(this);
+        MainApplication.getMap().mapView.removeMouseListener(this);
+        MainApplication.getMap().mapView.removeMouseMotionListener(this);
         listener.stop();
     }
 
@@ -68,9 +68,9 @@ public class BrowseAction extends MapMode implements MouseListener,
 
         if (mousePosMove == null)
             startMovement(e);
-        EastNorth center = Main.map.mapView.getCenter();
-        EastNorth mouseCenter = Main.map.mapView.getEastNorth(e.getX(), e.getY());
-        Main.map.mapView.zoomTo(new EastNorth(
+        EastNorth center = MainApplication.getMap().mapView.getCenter();
+        EastNorth mouseCenter = MainApplication.getMap().mapView.getEastNorth(e.getX(), e.getY());
+        MainApplication.getMap().mapView.zoomTo(new EastNorth(
             mousePosMove.east() + center.east() - mouseCenter.east(),
             mousePosMove.north() + center.north() - mouseCenter.north()));
     }
@@ -92,7 +92,7 @@ public class BrowseAction extends MapMode implements MouseListener,
         if (movementInPlace)
             return;
         movementInPlace = true;
-        mousePosMove = Main.map.mapView.getEastNorth(e.getX(), e.getY());
+        mousePosMove = MainApplication.getMap().mapView.getEastNorth(e.getX(), e.getY());
     }
 
     private void endMovement() {

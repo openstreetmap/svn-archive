@@ -444,8 +444,8 @@ public class HouseNumberInputHandler extends JosmAction implements ActionListene
      * Saves settings.
      */
     public void saveValues() {
-        Main.pref.put(HouseNumberInputDialog.HANDLE_RELATION, doHandleRelation());
-        Main.pref.put(HouseNumberInputDialog.KEEP_OUTLINE, doKeepOutline());
+        Main.pref.putBoolean(HouseNumberInputDialog.HANDLE_RELATION, doHandleRelation());
+        Main.pref.putBoolean(HouseNumberInputDialog.KEEP_OUTLINE, doKeepOutline());
         Main.pref.put(HouseNumberInputDialog.INTERPOLATION, stepSize().toString());
     }
 }

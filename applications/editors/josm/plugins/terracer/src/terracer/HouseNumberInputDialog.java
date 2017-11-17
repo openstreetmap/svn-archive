@@ -347,7 +347,7 @@ public class HouseNumberInputDialog extends ExtendedDialog {
             interpolation = new Choice();
             interpolation.add(tr("All"));
             interpolation.add(tr("Even/Odd"));
-            if (Main.pref.getInteger(INTERPOLATION, 2) == 1) {
+            if (Main.pref.getInt(INTERPOLATION, 2) == 1) {
                 interpolation.select(tr("All"));
             } else {
                 interpolation.select(tr("Even/Odd"));

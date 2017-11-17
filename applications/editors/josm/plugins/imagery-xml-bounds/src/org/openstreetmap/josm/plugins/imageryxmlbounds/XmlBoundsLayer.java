@@ -10,9 +10,9 @@ import java.util.Map;
 import javax.swing.Action;
 import javax.swing.Icon;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.data.osm.DataSet;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.gui.layer.LayerManager.LayerAddEvent;
 import org.openstreetmap.josm.gui.layer.LayerManager.LayerChangeListener;
@@ -55,15 +55,15 @@ public class XmlBoundsLayer extends OsmDataLayer implements LayerChangeListener,
     }
 
     private static final JosmAction[] ACTIONS_TO_DISABLE = new JosmAction[] {
-        Main.main.menu.download,
-        Main.main.menu.downloadPrimitive,
-        Main.main.menu.downloadReferrers,
-        Main.main.menu.upload,
-        Main.main.menu.uploadSelection,
-        Main.main.menu.update,
-        Main.main.menu.updateModified,
-        Main.main.menu.updateSelection,
-        Main.main.menu.openLocation
+        MainApplication.getMenu().download,
+        MainApplication.getMenu().downloadPrimitive,
+        MainApplication.getMenu().downloadReferrers,
+        MainApplication.getMenu().upload,
+        MainApplication.getMenu().uploadSelection,
+        MainApplication.getMenu().update,
+        MainApplication.getMenu().updateModified,
+        MainApplication.getMenu().updateSelection,
+        MainApplication.getMenu().openLocation
     };
 
     private static final Map<JosmAction, Boolean> ACTIONS_STATES = new HashMap<>();
@@ -84,8 +84,8 @@ public class XmlBoundsLayer extends OsmDataLayer implements LayerChangeListener,
      */
     public XmlBoundsLayer(DataSet data, String name, File associatedFile) {
         super(data, name, associatedFile);
-        Main.getLayerManager().addLayerChangeListener(this);
-        Main.getLayerManager().addActiveLayerChangeListener(this);
+        MainApplication.getLayerManager().addLayerChangeListener(this);
+        MainApplication.getLayerManager().addActiveLayerChangeListener(this);
     }
 
     @Override
@@ -105,7 +105,7 @@ public class XmlBoundsLayer extends OsmDataLayer implements LayerChangeListener,
 
     @Override
     public void activeOrEditLayerChanged(ActiveLayerChangeEvent e) {
-        Layer newLayer = Main.getLayerManager().getActiveLayer();
+        Layer newLayer = MainApplication.getLayerManager().getActiveLayer();
         Layer oldLayer = e.getPreviousActiveLayer();
         if (newLayer == this && !(oldLayer instanceof XmlBoundsLayer)) {
             for (JosmAction action : ACTIONS_TO_DISABLE) {
@@ -131,7 +131,7 @@ public class XmlBoundsLayer extends OsmDataLayer implements LayerChangeListener,
 
     @Override
     public void layerRemoving(LayerRemoveEvent e) {
-        if (Main.getLayerManager().getEditLayer() instanceof XmlBoundsLayer) {
+        if (MainApplication.getLayerManager().getEditLayer() instanceof XmlBoundsLayer) {
             for (JosmAction action : ACTIONS_TO_DISABLE) {
                 action.setEnabled(false);
             }

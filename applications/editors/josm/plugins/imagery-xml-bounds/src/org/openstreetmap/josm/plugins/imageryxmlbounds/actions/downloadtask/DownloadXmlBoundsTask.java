@@ -5,9 +5,9 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.util.concurrent.Future;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.downloadtasks.DownloadOsmTask;
 import org.openstreetmap.josm.data.Bounds;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
@@ -34,7 +34,7 @@ public class DownloadXmlBoundsTask extends DownloadOsmTask implements XmlBoundsC
                 new JosmServerLocationReader(url), progressMonitor);
         // We need submit instead of execute so we can wait for it to finish and get the error
         // message if necessary. If no one calls getErrorMessage() it just behaves like execute.
-        return Main.worker.submit(downloadTask);
+        return MainApplication.worker.submit(downloadTask);
     }
 
     @Override
@@ -71,8 +71,8 @@ public class DownloadXmlBoundsTask extends DownloadOsmTask implements XmlBoundsC
         @Override
         protected int getNumDataLayers() {
             int count = 0;
-            if (!Main.isDisplayingMapView()) return 0;
-            for (Layer layer : Main.getLayerManager().getLayers()) {
+            if (!MainApplication.isDisplayingMapView()) return 0;
+            for (Layer layer : MainApplication.getLayerManager().getLayers()) {
                 if (layer instanceof XmlBoundsLayer) {
                     count++;
                 }
@@ -82,8 +82,8 @@ public class DownloadXmlBoundsTask extends DownloadOsmTask implements XmlBoundsC
 
         @Override
         protected OsmDataLayer getFirstDataLayer() {
-            if (!Main.isDisplayingMapView()) return null;
-            for (Layer layer : Main.getLayerManager().getLayers()) {
+            if (!MainApplication.isDisplayingMapView()) return null;
+            for (Layer layer : MainApplication.getLayerManager().getLayers()) {
                 if (layer instanceof XmlBoundsLayer)
                     return (XmlBoundsLayer) layer;
             }

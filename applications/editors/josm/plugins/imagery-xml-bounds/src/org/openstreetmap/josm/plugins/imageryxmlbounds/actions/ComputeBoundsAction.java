@@ -22,7 +22,6 @@ import java.util.Set;
 
 import javax.swing.AbstractAction;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.BBox;
 import org.openstreetmap.josm.data.osm.Node;
@@ -36,6 +35,7 @@ import org.openstreetmap.josm.data.osm.visitor.paint.relations.Multipolygon.Poly
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import org.openstreetmap.josm.plugins.imageryxmlbounds.XmlBoundsConstants;
 import org.openstreetmap.josm.tools.ImageProvider;
+import org.openstreetmap.josm.tools.Logging;
 
 /**
  *
@@ -200,7 +200,7 @@ public class ComputeBoundsAction extends AbstractAction implements XmlBoundsCons
 	            version = p.getProperty("Revision");
             }
         } catch(IOException e) {
-        	Main.warn(e);
+        	Logging.warn(e);
         }
         StringBuilder result = new StringBuilder(256);
         result.append("<?xml version=\"1.0\" encoding=\"").append(ENCODING).append("\" ?>\n")
@@ -411,8 +411,8 @@ public class ComputeBoundsAction extends AbstractAction implements XmlBoundsCons
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (Main.isDebugEnabled()) {
-            Main.debug(getXml());
+        if (Logging.isDebugEnabled()) {
+            Logging.debug(getXml());
         }
     }
 }

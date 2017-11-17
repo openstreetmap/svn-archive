@@ -5,8 +5,8 @@ import java.util.List;
 
 import javax.swing.DefaultComboBoxModel;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.coor.LatLon;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.layer.LayerManager.LayerAddEvent;
 import org.openstreetmap.josm.gui.layer.LayerManager.LayerChangeListener;
 import org.openstreetmap.josm.gui.layer.LayerManager.LayerOrderChangeEvent;
@@ -16,7 +16,7 @@ import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 public class IndoorSweeplineController implements LayerChangeListener {
 
     public IndoorSweeplineController(OsmDataLayer activeLayer, LatLon center) {
-        Main.getLayerManager().addLayerChangeListener(this);
+        MainApplication.getLayerManager().addLayerChangeListener(this);
         layer = activeLayer;
         model = new IndoorSweeplineModel(activeLayer, center);
         dialog = new IndoorSweeplineWizardDialog(this);

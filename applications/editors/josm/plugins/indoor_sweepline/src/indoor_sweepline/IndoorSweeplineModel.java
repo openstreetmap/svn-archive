@@ -2,12 +2,13 @@
 package indoor_sweepline;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Vector;
 
 import javax.swing.DefaultComboBoxModel;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.coor.LatLon;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 
 /* TODO:
@@ -196,22 +197,33 @@ public class IndoorSweeplineModel {
 
     private void updateOsmModel() {
         distributeWays();
-        Main.map.mapView.repaint();
+        MainApplication.getMap().mapView.repaint();
     }
 
-    public class SweepPolygonCursor {
+    public static class SweepPolygonCursor {
+        public int stripIndex;
+        public int partIndex;
+
         public SweepPolygonCursor(int stripIndex, int partIndex) {
             this.stripIndex = stripIndex;
             this.partIndex = partIndex;
         }
 
-        public boolean equals(SweepPolygonCursor rhs) {
-            return rhs != null
-                    && stripIndex == rhs.stripIndex && partIndex == rhs.partIndex;
+        @Override
+        public int hashCode() {
+            return Objects.hash(stripIndex, partIndex);
         }
 
-        public int stripIndex;
-        public int partIndex;
+        @Override
+        public boolean equals(Object obj) {
+            if (this == obj)
+                return true;
+            if (obj == null || getClass() != obj.getClass())
+                return false;
+            SweepPolygonCursor other = (SweepPolygonCursor) obj;
+            return Objects.equals(partIndex, other.partIndex)
+                    && Objects.equals(stripIndex, other.stripIndex);
+        }
     }
 
     private void distributeWays() {
@@ -227,7 +239,7 @@ public class IndoorSweeplineModel {
             stripRefs.add(refs);
         }
 
-        Boolean truePtr = new Boolean(true);
+        Boolean truePtr = Boolean.TRUE;
         for (int i = 0; i < stripRefs.size(); ++i) {
             Vector<Boolean> refs = stripRefs.elementAt(i);
             for (int j = 0; j < refs.size(); ++j) {

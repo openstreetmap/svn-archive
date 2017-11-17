@@ -151,7 +151,7 @@ public class Beam {
         }
     }
 
-    private class StripPosition {
+    private static class StripPosition {
         StripPosition(int nodeIndex, double offset) {
             this.nodeIndex = nodeIndex;
             this.offset = offset;

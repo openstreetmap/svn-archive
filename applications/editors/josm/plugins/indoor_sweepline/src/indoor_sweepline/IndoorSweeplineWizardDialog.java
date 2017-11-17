@@ -32,6 +32,7 @@ import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 
 import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.tools.Logging;
 
 public class IndoorSweeplineWizardDialog extends JDialog {
 
@@ -89,13 +90,13 @@ public class IndoorSweeplineWizardDialog extends JDialog {
                 stripWidth.setText(Double.toString(controller.getStripWidth(beamIndex)));
             }
         } catch (IllegalStateException ex) {
-            Main.trace(ex);
+            Logging.trace(ex);
         }
 
         try {
             level.setText(controller.getLevel());
         } catch (IllegalStateException ex) {
-            Main.trace(ex);
+            Logging.trace(ex);
         }
 
         typeBoxModel.setSelectedItem(structureTypeToString(controller.getType()));
@@ -368,7 +369,7 @@ public class IndoorSweeplineWizardDialog extends JDialog {
                 else
                     controller.setStripWidth(beamIndex, Double.parseDouble(stripWidth.getText()));
             } catch (NumberFormatException ex) {
-                Main.trace(ex);
+                Logging.trace(ex);
             }
 
             refresh();
@@ -409,7 +410,7 @@ public class IndoorSweeplineWizardDialog extends JDialog {
         }
     }
 
-    private class StructureTableModel extends DefaultTableModel {
+    private static class StructureTableModel extends DefaultTableModel {
         @Override
         public boolean isCellEditable(int row, int column) {
             return isBeam || column == 1;
@@ -472,7 +473,7 @@ public class IndoorSweeplineWizardDialog extends JDialog {
                         controller.setCorridorPartWidth(beamIndex, row - 1,
                                 Double.parseDouble(((TableModel) e.getSource()).getValueAt(row, column).toString()));
                 } catch (NumberFormatException ex) {
-                    Main.trace(ex);
+                    Logging.trace(ex);
                 }
             } else if (column == 1 && beamIndex % 2 == 0) {
                 if (row > 0 && row < structureTableModel.getRowCount() - 1)
@@ -491,7 +492,7 @@ public class IndoorSweeplineWizardDialog extends JDialog {
         }
     }
 
-    private class GridbagPanel extends JPanel {
+    private static class GridbagPanel extends JPanel {
         GridbagPanel() {
             gridbag = new GridBagLayout();
             layoutCons = new GridBagConstraints();

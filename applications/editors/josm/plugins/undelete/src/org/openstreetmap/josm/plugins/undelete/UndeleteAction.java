@@ -30,11 +30,13 @@ import org.openstreetmap.josm.data.osm.history.HistoryNode;
 import org.openstreetmap.josm.data.osm.history.HistoryOsmPrimitive;
 import org.openstreetmap.josm.data.osm.history.HistoryRelation;
 import org.openstreetmap.josm.data.osm.history.HistoryWay;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.Notification;
 import org.openstreetmap.josm.gui.history.HistoryLoadTask;
 import org.openstreetmap.josm.gui.io.DownloadPrimitivesTask;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import org.openstreetmap.josm.gui.util.GuiHelper;
+import org.openstreetmap.josm.tools.Logging;
 import org.openstreetmap.josm.tools.Shortcut;
 
 public class UndeleteAction extends JosmAction {
@@ -65,7 +67,7 @@ public class UndeleteAction extends JosmAction {
                         History h = HistoryDataSet.getInstance().getHistory(id, type);
 
                         if (h == null) {
-                            Main.warn("Cannot find history for " + type + " " + id);
+                            Logging.warn("Cannot find history for " + type + " " + id);
                             return;
                         }
 
@@ -170,11 +172,11 @@ public class UndeleteAction extends JosmAction {
                                   ? tr("Unable to undelete relation {0}. Object has likely been redacted", id)
                                   : null;
                                 GuiHelper.runInEDT(() -> new Notification(msg).setIcon(JOptionPane.WARNING_MESSAGE).show());
-                                Main.warn(msg);
+                                Logging.warn(msg);
                             }
                         }
                     } catch (Exception t) {
-                        Main.error(t);
+                        Logging.error(t);
                     }
                 }
                 if (parent != null && primitive instanceof Node) {
@@ -183,7 +185,7 @@ public class UndeleteAction extends JosmAction {
             }
             if (parent instanceof Way && !nodes.isEmpty()) {
                 ((Way) parent).setNodes(nodes);
-                Main.map.repaint();
+                MainApplication.getMap().repaint();
             }
             GuiHelper.runInEDT(() -> AutoScaleAction.zoomTo(layer.data.allNonDeletedPrimitives()));
         }
@@ -199,7 +201,7 @@ public class UndeleteAction extends JosmAction {
         UndeleteDialog dialog = new UndeleteDialog(Main.parent);
         if (dialog.showDialog().getValue() != 1)
             return;
-        Main.pref.put("undelete.newlayer", dialog.isNewLayerSelected());
+        Main.pref.putBoolean("undelete.newlayer", dialog.isNewLayerSelected());
         Main.pref.put("undelete.osmid", dialog.getOsmIdsString());
         undelete(dialog.isNewLayerSelected(), dialog.getOsmIds(), null);
     }
@@ -209,12 +211,12 @@ public class UndeleteAction extends JosmAction {
      */
     public void undelete(boolean newLayer, final List<PrimitiveId> ids, final OsmPrimitive parent) {
 
-        Main.info("Undeleting "+ids+(parent == null ? "" : " with parent "+parent));
+        Logging.info("Undeleting "+ids+(parent == null ? "" : " with parent "+parent));
 
-        OsmDataLayer tmpLayer = Main.getLayerManager().getEditLayer();
+        OsmDataLayer tmpLayer = MainApplication.getLayerManager().getEditLayer();
         if ((tmpLayer == null) || newLayer) {
             tmpLayer = new OsmDataLayer(new DataSet(), OsmDataLayer.createNewName(), null);
-            Main.getLayerManager().addLayer(tmpLayer);
+            MainApplication.getLayerManager().addLayer(tmpLayer);
         }
 
         final OsmDataLayer layer = tmpLayer;
@@ -224,7 +226,7 @@ public class UndeleteAction extends JosmAction {
             task.add(id);
         }
 
-        Main.worker.execute(task);
-        Main.worker.submit(new Worker(parent, layer, ids));
+        MainApplication.worker.execute(task);
+        MainApplication.worker.submit(new Worker(parent, layer, ids));
     }
 }

@@ -8,12 +8,12 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.plugins.graphview.core.data.DataSource;
 import org.openstreetmap.josm.plugins.graphview.core.data.DataSourceObserver;
 import org.openstreetmap.josm.plugins.graphview.core.data.MapBasedTagGroup;
@@ -48,17 +48,17 @@ public class JOSMDataSource implements DataSource<Node, Way, Relation, RelationM
 
     @Override
     public Iterable<Node> getNodes() {
-        return new FilteredOsmPrimitiveIterable<>(Main.getLayerManager().getEditDataSet().getNodes());
+        return new FilteredOsmPrimitiveIterable<>(MainApplication.getLayerManager().getEditDataSet().getNodes());
     }
 
     @Override
     public Iterable<Relation> getRelations() {
-        return new FilteredRelationIterable(Main.getLayerManager().getEditDataSet().getRelations());
+        return new FilteredRelationIterable(MainApplication.getLayerManager().getEditDataSet().getRelations());
     }
 
     @Override
     public Iterable<Way> getWays() {
-        return new FilteredOsmPrimitiveIterable<>(Main.getLayerManager().getEditDataSet().getWays());
+        return new FilteredOsmPrimitiveIterable<>(MainApplication.getLayerManager().getEditDataSet().getWays());
     }
 
     @Override

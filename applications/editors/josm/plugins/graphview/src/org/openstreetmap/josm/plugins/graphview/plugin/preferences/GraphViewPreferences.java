@@ -25,6 +25,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.data.preferences.NamedColorProperty;
 import org.openstreetmap.josm.plugins.graphview.core.access.AccessParameters;
 import org.openstreetmap.josm.plugins.graphview.core.access.AccessType;
 import org.openstreetmap.josm.plugins.graphview.core.property.VehiclePropertyType;
@@ -257,7 +258,7 @@ public final class GraphViewPreferences extends Observable {
             Main.pref.put("graphview.activeBookmark", currentParameterBookmarkName);
         }
 
-        Main.pref.put("graphview.useInternalRulesets", useInternalRulesets);
+        Main.pref.putBoolean("graphview.useInternalRulesets", useInternalRulesets);
 
         Main.pref.put("graphview.rulesetFolder", rulesetFolder.getPath());
 
@@ -268,11 +269,7 @@ public final class GraphViewPreferences extends Observable {
             Main.pref.put("graphview.rulesetResource", currentInternalRuleset.toString());
         }
 
-        Main.pref.putColor(marktr("graphview default node"), Color.WHITE);
-        Main.pref.putColor(marktr("graphview default segment"), Color.WHITE);
-        Main.pref.putColor(marktr("graphview arrowhead core"), Color.BLACK);
-
-        Main.pref.put("graphview.separateDirections", separateDirections);
+        Main.pref.putBoolean("graphview.separateDirections", separateDirections);
 
         Main.pref.putDouble("graphview.arrowheadPlacement", arrowheadPlacement);
 
@@ -316,9 +313,9 @@ public final class GraphViewPreferences extends Observable {
             }
         }
 
-        nodeColor = Main.pref.getColor(marktr("graphview default node"), Color.WHITE);
-        segmentColor = Main.pref.getColor(marktr("graphview default segment"), Color.WHITE);
-        arrowheadFillColor = Main.pref.getColor(marktr("graphview arrowhead core"), Color.BLACK);
+        nodeColor = new NamedColorProperty(marktr("graphview default node"), Color.WHITE).get();
+        segmentColor = new NamedColorProperty(marktr("graphview default segment"), Color.WHITE).get();
+        arrowheadFillColor = new NamedColorProperty(marktr("graphview arrowhead core"), Color.BLACK).get();
         separateDirections = Main.pref.getBoolean("graphview.separateDirections", false);
 
         arrowheadPlacement = Main.pref.getDouble("graphview.arrowheadPlacement", 1.0);

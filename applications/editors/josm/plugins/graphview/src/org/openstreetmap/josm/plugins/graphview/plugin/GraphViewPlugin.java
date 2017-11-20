@@ -17,6 +17,7 @@ import java.util.Observer;
 import javax.swing.JOptionPane;
 
 import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.gui.layer.LayerManager.LayerAddEvent;
 import org.openstreetmap.josm.gui.layer.LayerManager.LayerChangeListener;
@@ -49,6 +50,7 @@ import org.openstreetmap.josm.plugins.graphview.plugin.dialogs.GraphViewPreferen
 import org.openstreetmap.josm.plugins.graphview.plugin.layer.GraphViewLayer;
 import org.openstreetmap.josm.plugins.graphview.plugin.preferences.GraphViewPreferences;
 import org.openstreetmap.josm.plugins.graphview.plugin.preferences.InternalRuleset;
+import org.openstreetmap.josm.tools.Logging;
 
 /**
  * A routing graph visualization tool for JOSM
@@ -122,18 +124,18 @@ public class GraphViewPlugin extends Plugin implements LayerChangeListener, Obse
                     graphViewLayer.setArrowheadPlacement(preferences.getArrowheadPlacement());
                     graphViewLayer.setNodePositioner(new DefaultNodePositioner());
 
-                    Main.getLayerManager().addLayer(graphViewLayer);
+                    MainApplication.getLayerManager().addLayer(graphViewLayer);
                 }
             }
         } catch (AccessRulesetSyntaxException e) {
             JOptionPane.showMessageDialog(Main.parent, tr("Syntax exception in access ruleset:\n{0}", e));
-            Main.error(e);
+            Logging.error(e);
         } catch (FileNotFoundException e) {
             JOptionPane.showMessageDialog(Main.parent, tr("File not found:\n{0}", e));
-            Main.error(e);
+            Logging.error(e);
         } catch (IOException e) {
             JOptionPane.showMessageDialog(Main.parent, tr("Problem when accessing a file:\n{0}", e));
-            Main.error(e);
+            Logging.error(e);
         }
     }
 
@@ -155,13 +157,13 @@ public class GraphViewPlugin extends Plugin implements LayerChangeListener, Obse
             }
         } catch (AccessRulesetSyntaxException e) {
             JOptionPane.showMessageDialog(Main.parent, tr("Syntax exception in access ruleset:\n{0}", e));
-            Main.error(e);
+            Logging.error(e);
         } catch (FileNotFoundException e) {
             JOptionPane.showMessageDialog(Main.parent, tr("File not found:\n", e));
-            Main.error(e);
+            Logging.error(e);
         } catch (IOException e) {
             JOptionPane.showMessageDialog(Main.parent, tr("Problem when accessing a file:\n{0}", e));
-            Main.error(e);
+            Logging.error(e);
         }
     }
 
@@ -224,9 +226,9 @@ public class GraphViewPlugin extends Plugin implements LayerChangeListener, Obse
                     = new GraphViewDialog(this);
                 newFrame.addToggleDialog(laneDialog);
             }
-            Main.getLayerManager().addLayerChangeListener(this);
+            MainApplication.getLayerManager().addLayerChangeListener(this);
         } else {
-            Main.getLayerManager().removeLayerChangeListener(this);
+            MainApplication.getLayerManager().removeLayerChangeListener(this);
         }
     }
 
@@ -234,9 +236,9 @@ public class GraphViewPlugin extends Plugin implements LayerChangeListener, Obse
     public void layerRemoving(LayerRemoveEvent e) {
         if (e.getRemovedLayer() == graphViewLayer) {
             graphViewLayer = null;
-        } else if (e.getRemovedLayer() == Main.getLayerManager().getEditLayer()) { //data layer removed
+        } else if (e.getRemovedLayer() == MainApplication.getLayerManager().getEditLayer()) { //data layer removed
             if (graphViewLayer != null) {
-                Main.getLayerManager().removeLayer(graphViewLayer);
+                MainApplication.getLayerManager().removeLayer(graphViewLayer);
                 graphViewLayer = null;
             }
         }

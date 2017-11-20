@@ -6,7 +6,7 @@ public enum InternalRuleset {
     DEFAULT("resources/accessRuleset.xml"),
     GERMANY("resources/accessRuleset_de.xml");
 
-    private String resourceName;
+    private final String resourceName;
 
     InternalRuleset(String resourceName) {
         this.resourceName = resourceName;

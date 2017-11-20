@@ -27,7 +27,6 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.SideButton;
 import org.openstreetmap.josm.gui.dialogs.ToggleDialog;
 import org.openstreetmap.josm.plugins.graphview.core.access.AccessRulesetReader;
@@ -41,6 +40,7 @@ import org.openstreetmap.josm.plugins.graphview.plugin.GraphViewPlugin;
 import org.openstreetmap.josm.plugins.graphview.plugin.layer.PreferencesColorScheme;
 import org.openstreetmap.josm.plugins.graphview.plugin.preferences.GraphViewPreferences;
 import org.openstreetmap.josm.plugins.graphview.plugin.preferences.InternalRuleset;
+import org.openstreetmap.josm.tools.Logging;
 import org.openstreetmap.josm.tools.Shortcut;
 
 /**
@@ -255,7 +255,7 @@ public class GraphViewDialog extends ToggleDialog implements Observer {
                         rulesetFiles.add(possibleRulesetFile);
                     } catch (IOException ioe) {
                         //don't add to rulesetFiles
-                        Main.debug(ioe);
+                        Logging.debug(ioe);
                     }
                 }
             }

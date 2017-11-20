@@ -14,7 +14,7 @@ public enum AccessType {
     NO("no"),
     UNDEFINED();
 
-    private String[] valueStrings;
+    private final String[] valueStrings;
     AccessType(String... valueStrings) {
         this.valueStrings = valueStrings;
     }

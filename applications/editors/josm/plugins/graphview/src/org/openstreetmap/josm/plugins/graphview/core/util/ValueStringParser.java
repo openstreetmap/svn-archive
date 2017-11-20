@@ -4,7 +4,7 @@ package org.openstreetmap.josm.plugins.graphview.core.util;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.tools.Logging;
 
 public final class ValueStringParser {
 
@@ -26,7 +26,7 @@ public final class ValueStringParser {
             }
 
         } catch (NumberFormatException nfe) {
-            Main.trace(nfe);
+            Logging.trace(nfe);
         }
 
         /* positive number with decimal point */
@@ -54,7 +54,7 @@ public final class ValueStringParser {
                     }
 
                 } catch (NumberFormatException nfe) {
-                    Main.trace(nfe);
+                    Logging.trace(nfe);
                 }
             }
         }
@@ -89,7 +89,7 @@ public final class ValueStringParser {
             try {
                 return (float) Integer.parseInt(kmhString);
             } catch (NumberFormatException nfe) {
-                Main.trace(nfe);
+                Logging.trace(nfe);
             }
         }
 
@@ -102,7 +102,7 @@ public final class ValueStringParser {
                 int mph = Integer.parseInt(mphString);
                 return KM_PER_MILE * mph;
             } catch (NumberFormatException nfe) {
-                Main.trace(nfe);
+                Logging.trace(nfe);
             }
         }
 
@@ -172,7 +172,7 @@ public final class ValueStringParser {
                     return (float) (M_PER_INCH * (12 * feet + inches));
                 }
             } catch (NumberFormatException nfe) {
-                Main.trace(nfe);
+                Logging.trace(nfe);
             }
         }
 

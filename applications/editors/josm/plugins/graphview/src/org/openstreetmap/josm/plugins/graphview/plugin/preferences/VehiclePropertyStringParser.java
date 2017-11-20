@@ -9,10 +9,10 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.plugins.graphview.core.property.VehiclePropertyType;
 import org.openstreetmap.josm.plugins.graphview.core.property.VehiclePropertyTypes;
 import org.openstreetmap.josm.plugins.graphview.core.util.ValueStringParser;
+import org.openstreetmap.josm.tools.Logging;
 
 /**
  * utility class for interpreting Strings as vehicle property values
@@ -127,7 +127,7 @@ public final class VehiclePropertyStringParser {
                     return result;
                 }
             } catch (NumberFormatException e) {
-                Main.trace(e);
+                Logging.trace(e);
             }
 
             throw new PropertyValueSyntaxException(ERROR_TRACKTYPE);

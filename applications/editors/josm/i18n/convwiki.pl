@@ -31,24 +31,24 @@ foreach my $name (glob "$dir/*")
 {
   if($name =~ /^(.*?)([^\/]+-preset\.xml)$/)
   {
-    system "mv $name $name.orig";
+    system "mv \"$name\" \"$name.orig\"";
     my ($path, $xmlname) = ($1, $2);
-    my $res = `xmllint --format --schema ../core/data/tagging-preset.xsd $name.orig --encode utf-8 --output $name 2>&1`;
+    my $res = `xmllint --format --schema ../core/data/tagging-preset.xsd \"$name.orig\" --encode utf-8 --output \"$name\" 2>&1`;
     print $res if $res !~ /\.orig validates/;
-    system "perl convpreset.pl $name >${path}trans_$xmlname";
+    system "perl convpreset.pl \"$name\" >\"${path}trans_$xmlname\"";
     unlink "$name.orig";
   }
   elsif($name =~ /^(.*?)([^\/]+-style\.xml$)/)
   {
-    system "perl convstyle.pl $name >${1}trans_$2";
+    system "perl convstyle.pl \"$name\" >${1}trans_$2";
   }
   elsif($name =~ /^(.*?)([^\/]+\.mapcss)$/)
   {
-    system "perl convcss.pl $name >${1}trans_$2";
+    system "perl convcss.pl \"$name\" >${1}trans_$2";
   }
   else
   {
-    die "Unknown file type $name.";
+    die "Unknown file type \"$name\".";
   }
   unlink $name;
 }

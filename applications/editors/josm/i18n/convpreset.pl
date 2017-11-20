@@ -37,6 +37,7 @@ sub infoblock
   $r .= " item $item" if $item;
   $r .= " chunk $chunk" if $chunk;
   $r .= " group $group" if $group;
+  $r .= " combo $combo_type $combo_n" if $combo_type;
   $r .= " $_[0]" if $_[0];
   return $r ? "/* $r */ " : "";
 }
@@ -47,7 +48,7 @@ while(my $line = <>)
   ++$linenr;
   chomp($line);
   print "tr(\"---DUMMY-MARKER---\"); ";
-  if($line =~ /<item\s+name=(".*?")/)
+  if($line =~ /<item\s+name=(".*?")/ || $line =~ /<item.* name=(".*?")/)
   {
     my $val = fix($1);
     $item = $group ? "$group$val" : $val;
@@ -172,20 +173,20 @@ while(my $line = <>)
   {
     my $vctxi = ($line =~ /value_context=(".*?")/) ? $1 : $vctx;
     my $value = ($line =~ /value=(".*?")/) ? $1 : undef;
-    if($line =~ /display_value=(".*?")/)
+    if($line =~ /[^.]display_value=(".*?")/)
     {
       my $val = fix($1);
-      print infoblock("$combo_type $combo_n entry $value display value") . ($vctxi ? " trc($vctxi, $val);" : " tr($val);");
+      print infoblock("entry $value display value") . ($vctxi ? " trc($vctxi, $val);" : " tr($val);");
     }
     else
     {
       my $val = fix($value);
-      print infoblock("$combo_type $combo_n entry $value display value") . ($vctxi ? " trc($vctxi, $val);" : " tr($val);");
+      print infoblock("entry $value display value") . ($vctxi ? " trc($vctxi, $val);" : " tr($val);");
     }
     if($line =~ /short_description=(".*?")/)
     {
       my $val = fix($1);
-      print infoblock("$combo_type $combo_n entry $value short description") . "tr($val);";
+      print infoblock("entry $value short description") . "tr($val);";
     }
     print "\n";
   }

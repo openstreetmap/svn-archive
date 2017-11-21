@@ -9,8 +9,8 @@ import java.io.InputStream;
 
 import org.junit.Rule;
 import org.junit.Test;
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.TestUtils;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import org.openstreetmap.josm.io.OsmReader;
 import org.openstreetmap.josm.testutils.JOSMTestRules;
@@ -33,13 +33,13 @@ public class ImageLayerTest {
      */
     @Test
     public void testTicket14894() throws Exception {
-        assertTrue(Main.getLayerManager().getLayers().isEmpty());
+        assertTrue(MainApplication.getLayerManager().getLayers().isEmpty());
         // Step 1: add .osm layer
         try (InputStream in = TestUtils.getRegressionDataStream(14894, "14894.osm")) {
-            Main.getLayerManager().addLayer(new OsmDataLayer(OsmReader.parseDataSet(in, null), "14894", null));
+            MainApplication.getLayerManager().addLayer(new OsmDataLayer(OsmReader.parseDataSet(in, null), "14894", null));
         }
         // Step 2: try to import image
-        Main.getLayerManager().addLayer(new ImageLayer(new File(TestUtils.getRegressionDataFile(14894, "14894.png"))));
-        assertEquals(2, Main.getLayerManager().getLayers().size());
+        MainApplication.getLayerManager().addLayer(new ImageLayer(new File(TestUtils.getRegressionDataFile(14894, "14894.png"))));
+        assertEquals(2, MainApplication.getLayerManager().getLayers().size());
     }
 }

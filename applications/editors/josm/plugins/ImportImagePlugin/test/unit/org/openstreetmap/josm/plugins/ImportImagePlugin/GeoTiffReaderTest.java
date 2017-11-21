@@ -16,9 +16,9 @@ import java.util.Collection;
 import org.geotools.coverage.grid.GridCoverage2D;
 import org.junit.Rule;
 import org.junit.Test;
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.TestUtils;
 import org.openstreetmap.josm.testutils.JOSMTestRules;
+import org.openstreetmap.josm.tools.Logging;
 
 /**
  * Test that some geotiff sample files can be read.
@@ -36,7 +36,7 @@ public class GeoTiffReaderTest {
     public void testReadGeoTiffFiles() throws IOException {
         for (Path p : listDataFiles("tif")) {
             File file = p.toFile();
-            Main.info("Testing reading file "+file.getPath());
+            Logging.info("Testing reading file "+file.getPath());
             GridCoverage2D grid = PluginOperations.createGridFromFile(file, null, false);
             assertNotNull(grid);
         }

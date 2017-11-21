@@ -69,9 +69,8 @@ public class TrustPreferenceEditor extends DefaultTabPreferenceSetting {
 
     @Override
     public boolean ok() {
-        Main.pref.put("trustosm.gpg.showSignedDeleted", showSignedDeleted.isSelected());
-        Main.pref.put("trustosm.gpg.separateHomedir", separateHomedir.isSelected());
-        //        TrustOSMplugin.gpg.refreshGpg();
+        Main.pref.putBoolean("trustosm.gpg.showSignedDeleted", showSignedDeleted.isSelected());
+        Main.pref.putBoolean("trustosm.gpg.separateHomedir", separateHomedir.isSelected());
         return false;
     }
 }

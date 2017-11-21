@@ -5,8 +5,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.bouncycastle.openpgp.PGPSignature;
-import org.openstreetmap.josm.data.coor.CoordinateFormat;
 import org.openstreetmap.josm.data.coor.LatLon;
+import org.openstreetmap.josm.data.coor.conversion.DecimalDegreesCoordinateFormat;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 
@@ -26,8 +26,8 @@ public class TrustNode extends TrustOsmPrimitive {
     public static String generateNodeSigtext(Node node) {
         LatLon point = node.getCoor();
         String sigtext = node.getUniqueId() + "(";
-        sigtext += point.latToString(CoordinateFormat.DECIMAL_DEGREES) + ",";
-        sigtext += point.lonToString(CoordinateFormat.DECIMAL_DEGREES) + ")";
+        sigtext += DecimalDegreesCoordinateFormat.INSTANCE.latToString(point) + ",";
+        sigtext += DecimalDegreesCoordinateFormat.INSTANCE.lonToString(point) + ")";
         return sigtext;
     }
 

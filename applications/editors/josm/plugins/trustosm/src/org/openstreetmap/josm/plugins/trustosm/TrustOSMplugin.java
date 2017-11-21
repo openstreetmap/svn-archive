@@ -269,7 +269,7 @@ public class TrustOSMplugin extends Plugin {
         // if setting isn't present, we set a default
         // This makes sense for example when we start the plugin for the first time
         if (!prefs.containsKey("trustosm.gpg")) Main.pref.put("trustosm.gpg", "gpg");
-        if (!prefs.containsKey("trustosm.gpg.separateHomedir")) Main.pref.put("trustosm.gpg.separateHomedir", true);
+        if (!prefs.containsKey("trustosm.gpg.separateHomedir")) Main.pref.putBoolean("trustosm.gpg.separateHomedir", true);
     }
 
     @Override

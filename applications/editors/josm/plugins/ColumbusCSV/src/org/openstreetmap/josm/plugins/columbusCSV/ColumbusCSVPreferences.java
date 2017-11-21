@@ -72,11 +72,11 @@ public class ColumbusCSVPreferences extends DefaultTabPreferenceSetting {
      */
     @Override
     public boolean ok() {
-        Main.pref.put(SHOW_SUMMARY, colCSVShowSummary.isSelected());
-        Main.pref.put(ZOOM_AFTER_IMPORT, colCSVDontZoomAfterImport.isSelected());
-        Main.pref.put(IGNORE_VDOP, colCSVIgnoreVDOP.isSelected());
-        Main.pref.put(WARN_CONVERSION_ERRORS, colCSVWarnConversionErrors.isSelected());
-        Main.pref.put(WARN_MISSING_AUDIO, colCSVWarnMissingAudio.isSelected());        
+        Main.pref.putBoolean(SHOW_SUMMARY, colCSVShowSummary.isSelected());
+        Main.pref.putBoolean(ZOOM_AFTER_IMPORT, colCSVDontZoomAfterImport.isSelected());
+        Main.pref.putBoolean(IGNORE_VDOP, colCSVIgnoreVDOP.isSelected());
+        Main.pref.putBoolean(WARN_CONVERSION_ERRORS, colCSVWarnConversionErrors.isSelected());
+        Main.pref.putBoolean(WARN_MISSING_AUDIO, colCSVWarnMissingAudio.isSelected());        
         return false;
     }
     

@@ -5,3 +5,4 @@
 /build
 /checkstyle-josm-ColumbusCSV.xml
 /findbugs-josm-ColumbusCSV.xml
+/spotbugs-josm-ColumbusCSV.xml

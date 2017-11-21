@@ -15,9 +15,11 @@ import org.openstreetmap.josm.command.AddCommand;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.SequenceCommand;
 import org.openstreetmap.josm.data.coor.LatLon;
+import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.tools.Shortcut;
 
 /**
@@ -45,7 +47,8 @@ public final class CreateGridOfWaysAction extends JosmAction {
      */
     @Override
     public void actionPerformed(ActionEvent e) {
-        Collection<OsmPrimitive> sel = Main.getLayerManager().getEditDataSet().getSelected();
+        DataSet ds = getLayerManager().getEditDataSet();
+        Collection<OsmPrimitive> sel = ds.getSelected();
         Collection<Node> nodesWay1 = new LinkedList<>();
         Collection<Node> nodesWay2 = new LinkedList<>();
         if ((sel.size() != 2) || !(sel.toArray()[0] instanceof Way) || !(sel.toArray()[1] instanceof Way)) {
@@ -89,7 +92,7 @@ public final class CreateGridOfWaysAction extends JosmAction {
                     continue;
                 }
                 Node nodeOfGrid = new Node(new LatLon(n2.getCoor().lat()+latDif,n2.getCoor().lon()+lonDif));
-                cmds.add(new AddCommand(nodeOfGrid));
+                cmds.add(new AddCommand(ds, nodeOfGrid));
                 w1[c1].addNode(nodeOfGrid);
                 w2[c2++].addNode(nodeOfGrid);
             }
@@ -97,10 +100,10 @@ public final class CreateGridOfWaysAction extends JosmAction {
                c1++;
         }
         for (int c=0;c<w1.length;c++)
-            cmds.add(new AddCommand(w1[c]));
+            cmds.add(new AddCommand(ds, w1[c]));
         for (int c=0;c<w2.length;c++)
-            cmds.add(new AddCommand(w2[c]));
+            cmds.add(new AddCommand(ds, w2[c]));
         Main.main.undoRedo.add(new SequenceCommand(tr("Create a grid of ways"), cmds));
-        Main.map.repaint();
+        MainApplication.getMap().repaint();
     }
 }

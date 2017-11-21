@@ -37,7 +37,7 @@ import gnu.io.UnsupportedCommOperationException;
  */
 public class GlobalsatDg100 {
 
-    public class ConnectionException extends Exception {
+    public static class ConnectionException extends Exception {
         ConnectionException(Exception cause) {
             super(cause);
         }

@@ -67,9 +67,7 @@ public class GpsRec
         copy(init);
     }
 
-    /**
-     * @see java.lang.Object#equals(java.lang.Object)
-     */
+    @Override
     public boolean equals(Object arg0)
     {
         boolean isEqual = false;
@@ -141,6 +139,7 @@ public class GpsRec
         return dg100TypeOfCurRec;
     }
 
+    @Override
     public String toString()
     {
         return "[GpsRec: "
@@ -229,8 +228,8 @@ public class GpsRec
     {
         int scale = 1000000;
         double deg = 9999.9999;
-        double degScaled = (double)(gsLatOrLon / scale);
-        double minScaled = ((double)(gsLatOrLon - degScaled * scale)) / 600000.0;
+        double degScaled = gsLatOrLon / scale;
+        double minScaled = (gsLatOrLon - degScaled * scale) / 600000.0;
         deg = degScaled + minScaled;
         return deg;
     }
@@ -431,12 +430,12 @@ public class GpsRec
 
     public double getAltitude()
     {
-        return dg100Altitude / (double)10000.0;
+        return dg100Altitude / 10000.0;
     }
 
     public double getSpeed()
     {
-        return dg100Speed / (double)360.0;
+        return dg100Speed / 360.0;
     }
 
 }

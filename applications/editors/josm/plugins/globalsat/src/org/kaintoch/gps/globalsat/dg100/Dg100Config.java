@@ -11,7 +11,7 @@ import java.io.OutputStream;
 import java.nio.ByteBuffer;
 import java.util.Properties;
 
-import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.tools.Logging;
 
 /**
  * @author skaintoch
@@ -465,7 +465,7 @@ public class Dg100Config
         try (OutputStream os = new FileOutputStream(fName)) {
             props.store(os, "dg100 config");
         } catch (Exception ex) {
-            Main.error(ex);
+            Logging.error(ex);
             throw ex;
         }
     }
@@ -476,7 +476,7 @@ public class Dg100Config
         try (InputStream is = new FileInputStream(fName)) {
             props.load(is);
         } catch (Exception ex) {
-            Main.error(ex);;
+            Logging.error(ex);;
             throw ex;
         }
         logFormat = Byte.parseByte(props.getProperty(propLogFormat, "2"));

@@ -14,11 +14,13 @@ import javax.swing.JOptionPane;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.data.gpx.GpxData;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.PleaseWaitRunnable;
 import org.openstreetmap.josm.gui.layer.GpxLayer;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
+import org.openstreetmap.josm.tools.Logging;
 import org.openstreetmap.josm.tools.Shortcut;
 import org.xml.sax.SAXException;
 
@@ -58,18 +60,18 @@ public class GlobalsatPlugin extends Plugin {
 
         @Override protected void finish() {
             if (deleteAfter && GlobalsatPlugin.dg100().isCanceled() == false) {
-                Main.pref.put("globalsat.deleteAfterDownload", true);
+                Main.pref.putBoolean("globalsat.deleteAfterDownload", true);
                 try {
                     GlobalsatPlugin.dg100().deleteData();
                 } catch (Exception ex) {
                     JOptionPane.showMessageDialog(Main.parent, tr("Error deleting data.") + " " + ex.toString());
                 }
             } else {
-                Main.pref.put("globalsat.deleteAfterDownload", false);
+                Main.pref.putBoolean("globalsat.deleteAfterDownload", false);
             }
             if (data != null && data.hasTrackPoints()) {
-                Main.getLayerManager().addLayer(new GpxLayer(data, tr("imported data from {0}", "DG 100")));
-                Main.map.repaint();
+                MainApplication.getLayerManager().addLayer(new GpxLayer(data, tr("imported data from {0}", "DG 100")));
+                MainApplication.getMap().repaint();
             } else {
                 JOptionPane.showMessageDialog(Main.parent, tr("No data found on device."));
             }
@@ -98,18 +100,18 @@ public class GlobalsatPlugin extends Plugin {
             // CHECKSTYLE.OFF: LineLength
             String msg = tr("Cannot load library rxtxSerial. If you need support to install it try Globalsat homepage at http://www.raphael-mack.de/josm-globalsat-gpx-import-plugin/");
             // CHECKSTYLE.ON: LineLength
-            Main.error(msg);
+            Logging.error(msg);
             if (!GraphicsEnvironment.isHeadless()) {
                 JOptionPane.showMessageDialog(Main.parent, "<html>" + msg + "</html>");
             }
         }
         if (!error) {
             importAction = new GlobalsatImportAction();
-            Main.main.menu.toolsMenu.add(importAction);
+            MainApplication.getMenu().toolsMenu.add(importAction);
         }
     }
 
-    class GlobalsatImportAction extends JosmAction {
+    static class GlobalsatImportAction extends JosmAction {
         GlobalsatImportAction() {
             super(tr("Globalsat Import"), "globalsatImport",
             tr("Import Data from Globalsat Datalogger DG100 into GPX layer."),
@@ -126,7 +128,7 @@ public class GlobalsatPlugin extends Plugin {
             if (((Integer) pane.getValue()) == JOptionPane.OK_OPTION) {
                 setPortIdent(dialog.getPort());
                 ImportTask task = new ImportTask(dialog.deleteFilesAfterDownload());
-                Main.worker.execute(task);
+                MainApplication.worker.execute(task);
             }
             dlg.dispose();
         }

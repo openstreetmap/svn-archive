@@ -32,7 +32,7 @@ import org.openstreetmap.josm.Main;
  */
 public class GlobalsatConfigDialog extends JPanel {
 
-    public class IntegerTextField extends JTextField {
+    public static class IntegerTextField extends JTextField {
 
         IntegerTextField() {
             setHorizontalAlignment(JTextField.RIGHT);

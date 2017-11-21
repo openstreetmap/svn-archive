@@ -17,7 +17,6 @@ import javax.swing.ButtonGroup;
 import javax.swing.JPanel;
 import javax.swing.JToggleButton;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.data.SelectionChangedListener;
 import org.openstreetmap.josm.data.osm.DataSet;
@@ -33,6 +32,7 @@ import org.openstreetmap.josm.data.osm.event.PrimitivesRemovedEvent;
 import org.openstreetmap.josm.data.osm.event.RelationMembersChangedEvent;
 import org.openstreetmap.josm.data.osm.event.TagsChangedEvent;
 import org.openstreetmap.josm.data.osm.event.WayNodesChangedEvent;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.dialogs.ToggleDialog;
 import org.openstreetmap.josm.gui.layer.MainLayerManager.ActiveLayerChangeEvent;
 import org.openstreetmap.josm.gui.layer.MainLayerManager.ActiveLayerChangeListener;
@@ -146,7 +146,7 @@ public class TurnLanesDialog extends ToggleDialog implements ActiveLayerChangeLi
     public TurnLanesDialog() {
         super(tr("Turn Lanes"), "turnlanes.png", tr("Edit turn lanes"), null, 200);
 
-        Main.getLayerManager().addActiveLayerChangeListener(this);
+        MainApplication.getLayerManager().addActiveLayerChangeListener(this);
         DataSet.addSelectionListener(this);
 
         final JPanel buttonPanel = new JPanel(new GridLayout(1, 2, 4, 4));
@@ -194,7 +194,7 @@ public class TurnLanesDialog extends ToggleDialog implements ActiveLayerChangeLi
         if (oldLayer != null) {
             oldLayer.data.removeDataSetListener(dataSetListener);
         }
-        OsmDataLayer newLayer = Main.getLayerManager().getEditLayer();
+        OsmDataLayer newLayer = MainApplication.getLayerManager().getEditLayer();
         if (newLayer != null) {
             newLayer.data.addDataSetListener(dataSetListener);
         }
@@ -214,7 +214,7 @@ public class TurnLanesDialog extends ToggleDialog implements ActiveLayerChangeLi
     @Override
     public void destroy() {
         super.destroy();
-        Main.getLayerManager().removeActiveLayerChangeListener(this);
+        MainApplication.getLayerManager().removeActiveLayerChangeListener(this);
         DataSet.removeSelectionListener(this);
         editAction.destroy();
         validateAction.destroy();

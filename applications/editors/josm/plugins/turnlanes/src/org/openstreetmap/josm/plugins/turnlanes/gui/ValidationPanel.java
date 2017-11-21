@@ -18,8 +18,8 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.SideButton;
 import org.openstreetmap.josm.plugins.turnlanes.model.Issue;
 import org.openstreetmap.josm.plugins.turnlanes.model.Validator;
@@ -37,7 +37,7 @@ class ValidationPanel extends JPanel {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            setIssues(new Validator().validate(Main.getLayerManager().getEditDataSet()));
+            setIssues(new Validator().validate(MainApplication.getLayerManager().getEditDataSet()));
         }
     };
 
@@ -62,9 +62,9 @@ class ValidationPanel extends JPanel {
         @Override
         public void actionPerformed(ActionEvent e) {
             if (selected.getRelation() == null) {
-                Main.getLayerManager().getEditDataSet().setSelected(selected.getPrimitives());
+                MainApplication.getLayerManager().getEditDataSet().setSelected(selected.getPrimitives());
             } else {
-                Main.getLayerManager().getEditDataSet().setSelected(selected.getRelation());
+                MainApplication.getLayerManager().getEditDataSet().setSelected(selected.getRelation());
             }
         }
     };

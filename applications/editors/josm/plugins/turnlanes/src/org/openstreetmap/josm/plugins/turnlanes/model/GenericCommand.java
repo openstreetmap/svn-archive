@@ -32,12 +32,11 @@ public class GenericCommand extends Command {
         }
     }
 
-    private final DataSet dataSet;
     private final String description;
     private final Map<OsmPrimitive, BeforeAfter> beforeAfters = new HashMap<>();
 
     public GenericCommand(DataSet dataSet, String description) {
-        this.dataSet = dataSet;
+        super(dataSet);
         this.description = description;
     }
 
@@ -70,7 +69,7 @@ public class GenericCommand extends Command {
     public boolean executeCommand() {
         for (Entry<OsmPrimitive, BeforeAfter> e : beforeAfters.entrySet()) {
             if (e.getValue().before == null) {
-                dataSet.addPrimitive(e.getValue().afterPrimitive());
+                getAffectedDataSet().addPrimitive(e.getValue().afterPrimitive());
             } else {
                 e.getKey().load(e.getValue().afterData());
             }
@@ -82,7 +81,7 @@ public class GenericCommand extends Command {
     public void undoCommand() {
         for (Entry<OsmPrimitive, BeforeAfter> e : beforeAfters.entrySet()) {
             if (e.getValue().before == null) {
-                dataSet.removePrimitive(e.getValue().afterPrimitive().getPrimitiveId());
+                getAffectedDataSet().removePrimitive(e.getValue().afterPrimitive().getPrimitiveId());
             } else {
                 e.getKey().load(e.getValue().before);
             }

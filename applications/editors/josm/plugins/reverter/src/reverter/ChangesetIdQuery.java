@@ -156,7 +156,7 @@ public class ChangesetIdQuery extends ExtendedDialog {
      */
     protected void restoreChangesetsHistory(HistoryComboBox cbHistory) {
         List<String> cmtHistory = new LinkedList<>(
-                Main.pref.getCollection(getClass().getName() + ".changesetsHistory", new LinkedList<String>()));
+                Main.pref.getList(getClass().getName() + ".changesetsHistory", new LinkedList<String>()));
         // we have to reverse the history, because ComboBoxHistory will reverse it again in addElement()
         Collections.reverse(cmtHistory);
         cbHistory.setPossibleItems(cmtHistory);
@@ -168,7 +168,7 @@ public class ChangesetIdQuery extends ExtendedDialog {
      */
     protected void remindChangesetsHistory(HistoryComboBox cbHistory) {
         cbHistory.addCurrentItemToHistory();
-        Main.pref.putCollection(getClass().getName() + ".changesetsHistory", cbHistory.getHistory());
+        Main.pref.putList(getClass().getName() + ".changesetsHistory", cbHistory.getHistory());
     }
 
     private class InternalWindowListener implements WindowListener {

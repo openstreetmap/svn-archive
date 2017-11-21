@@ -369,7 +369,7 @@ public class ChangesetReverter {
         HashSet<OsmPrimitive> conflicted = new HashSet<>();
 
         for (Conflict<? extends OsmPrimitive> conflict : merger.getConflicts()) {
-            cmds.add(new ConflictAddCommand(layer, conflict));
+            cmds.add(new ConflictAddCommand(layer.data, conflict));
         }
 
         // Check objects versions
@@ -389,7 +389,7 @@ public class ChangesetReverter {
                     !hasEqualSemanticAttributes(dp, hp)
                     /* Don't create conflict if the object has to be deleted but has already been deleted */
                     && !(toDelete.contains(dp) && dp.isDeleted())) {
-                cmds.add(new ConflictAddCommand(layer, CreateConflict(dp,
+                cmds.add(new ConflictAddCommand(layer.data, CreateConflict(dp,
                         entry.getModificationType() == ChangesetModificationType.CREATED)));
                 conflicted.add(dp);
             }
@@ -411,7 +411,7 @@ public class ChangesetReverter {
                                * objects created in changeset to be reverted
                                */
                 if (!conflicted.contains(p)) {
-                    cmds.add(new ConflictAddCommand(layer, CreateConflict(p, true)));
+                    cmds.add(new ConflictAddCommand(layer.data, CreateConflict(p, true)));
                     conflicted.add(p);
                 }
                 it.remove();

@@ -19,11 +19,13 @@ import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.command.AddCommand;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.SequenceCommand;
+import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MainMenu;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
@@ -42,10 +44,10 @@ public class MichiganLeft extends Plugin {
      */
     public MichiganLeft(PluginInformation info) {
         super(info);
-        MichiganLeft = MainMenu.add(Main.main.menu.dataMenu, new MichiganLeftAction());
+        MichiganLeft = MainMenu.add(MainApplication.getMenu().dataMenu, new MichiganLeftAction());
     }
 
-    private class MichiganLeftAction extends JosmAction {
+    private static class MichiganLeftAction extends JosmAction {
         private LinkedList<Command> cmds = new LinkedList<>();
 
         MichiganLeftAction() {
@@ -57,7 +59,8 @@ public class MichiganLeft extends Plugin {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            Collection<OsmPrimitive> mainSelection = Main.getLayerManager().getEditDataSet().getSelected();
+            DataSet ds = MainApplication.getLayerManager().getEditDataSet();
+            Collection<OsmPrimitive> mainSelection = ds.getSelected();
 
             ArrayList<OsmPrimitive> selection = new ArrayList<>();
 
@@ -124,7 +127,7 @@ public class MichiganLeft extends Plugin {
                     Way lastWay = orderedWays.get((index + 1) % 4);
                     Node lastNode = firstWay.lastNode();
 
-                    buildRelation(firstWay, lastWay, lastNode);
+                    cmds.add(new AddCommand(ds, buildRelation(firstWay, lastWay, lastNode)));
                 }
                 Command c = new SequenceCommand(tr("Create Michigan left turn restriction"), cmds);
                 Main.main.undoRedo.add(c);
@@ -202,13 +205,13 @@ public class MichiganLeft extends Plugin {
         public void incrementHashtable(Hashtable<Node, Integer> hash, Node node) {
             if (hash.containsKey(node)) {
                 Integer nb = hash.get(node);
-                hash.put(node, new Integer(nb.intValue() + 1));
+                hash.put(node, Integer.valueOf(nb.intValue() + 1));
             } else {
-                hash.put(node, new Integer(1));
+                hash.put(node, Integer.valueOf(1));
             }
         }
 
-        public void buildRelation(Way fromWay, Way toWay, Node viaNode) {
+        public Relation buildRelation(Way fromWay, Way toWay, Node viaNode) {
             Relation relation = new Relation();
 
             RelationMember from = new RelationMember("from", fromWay);
@@ -223,7 +226,7 @@ public class MichiganLeft extends Plugin {
             relation.put("type", "restriction");
             relation.put("restriction", "no_left_turn");
 
-            cmds.add(new AddCommand(relation));
+            return relation;
         }
 
         @Override

@@ -41,8 +41,10 @@ import javax.swing.KeyStroke;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.tagging.ac.AutoCompletingTextField;
 import org.openstreetmap.josm.gui.tagging.ac.AutoCompletionList;
+import org.openstreetmap.josm.gui.tagging.ac.AutoCompletionManager;
 import org.openstreetmap.josm.plugins.namemanager.countryData.Country;
 import org.openstreetmap.josm.plugins.namemanager.countryData.CountryDataMemory;
 import org.openstreetmap.josm.plugins.namemanager.utils.NameManagerUtils;
@@ -175,7 +177,7 @@ public final class NameManagerDialog extends JDialog {
         labelTagNameAM = new JLabel(tr(TAG_NAME));
         tagNameAM = new AutoCompletingTextField();
         AutoCompletionList list = new AutoCompletionList();
-        Main.getLayerManager().getEditLayer().data.getAutoCompletionManager().populateWithKeys(list);
+        AutoCompletionManager.of(MainApplication.getLayerManager().getEditLayer().data).populateWithKeys(list);
         tagNameAM.setAutoCompletionList(list);
         labelTagValueAM = new JLabel(tr(TAG_VALUE));
         tagValueAM = new AutoCompletingTextField();
@@ -188,7 +190,8 @@ public final class NameManagerDialog extends JDialog {
                         list = new AutoCompletionList();
                     }
                     list.clear();
-                    Main.getLayerManager().getEditLayer().data.getAutoCompletionManager().populateWithTagValues(list, tagNameAM.getText());
+                    AutoCompletionManager.of(MainApplication.getLayerManager().getEditLayer().data)
+                        .populateWithTagValues(list, tagNameAM.getText());
                     tagValueAM.setAutoCompletionList(list);
                 }
             }

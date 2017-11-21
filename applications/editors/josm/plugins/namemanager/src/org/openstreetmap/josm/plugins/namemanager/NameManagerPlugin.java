@@ -1,7 +1,7 @@
 // License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.namemanager;
 
-import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MainMenu;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
@@ -16,7 +16,7 @@ import org.openstreetmap.josm.plugins.namemanager.listeners.NameManagerAction;
 public class NameManagerPlugin extends Plugin {
     public NameManagerPlugin(PluginInformation info) {
         super(info);
-        MainMenu.add(Main.main.menu.dataMenu, new NameManagerAction());
+        MainMenu.add(MainApplication.getMenu().dataMenu, new NameManagerAction());
     }
 }
 

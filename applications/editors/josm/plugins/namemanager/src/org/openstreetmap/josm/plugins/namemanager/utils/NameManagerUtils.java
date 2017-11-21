@@ -17,6 +17,7 @@ import org.openstreetmap.gui.jmapviewer.Coordinate;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.plugins.namemanager.NameManagerPlugin;
 import org.openstreetmap.josm.plugins.namemanager.countryData.Country;
 import org.openstreetmap.josm.plugins.namemanager.countryData.CountryDataMemory;
@@ -52,7 +53,7 @@ public final class NameManagerUtils {
         if (areaBorder != null) {
             Coordinate topLeftCorner = getTopLeftCorener(areaBorder);
             List<Pair<Node, Node>> areaBorderLines = areaBorder.getNodePairs(true);
-            Collection<Way> ways = Main.getLayerManager().getEditDataSet().getWays();
+            Collection<Way> ways = MainApplication.getLayerManager().getEditDataSet().getWays();
             ways: for (Way way : ways) {
                 if (areaBorder == way) {
                     continue ways;

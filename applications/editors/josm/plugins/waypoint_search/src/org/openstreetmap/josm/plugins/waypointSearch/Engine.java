@@ -6,7 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.layer.markerlayer.Marker;
 import org.openstreetmap.josm.gui.layer.markerlayer.MarkerLayer;
 
@@ -20,7 +20,7 @@ final class Engine {
         List<Marker> returnList = new ArrayList<>();
         if (gpxLayersExist()) {
             //Loop over marker (waypoint) layers.. it could be more than one
-            for (Iterator<MarkerLayer> it = Main.getLayerManager().getLayersOfType(MarkerLayer.class).iterator(); it.hasNext();) {
+            for (Iterator<MarkerLayer> it = MainApplication.getLayerManager().getLayersOfType(MarkerLayer.class).iterator(); it.hasNext();) {
                 //loop over each marker (waypoint)
                 for (Iterator<Marker> markerIterator = it.next().data.iterator(); markerIterator.hasNext();) {
                     Marker marker = markerIterator.next();
@@ -34,6 +34,6 @@ final class Engine {
     }
 
     static boolean gpxLayersExist() {
-        return !Main.getLayerManager().getLayersOfType(MarkerLayer.class).isEmpty();
+        return !MainApplication.getLayerManager().getLayersOfType(MarkerLayer.class).isEmpty();
     }
 }

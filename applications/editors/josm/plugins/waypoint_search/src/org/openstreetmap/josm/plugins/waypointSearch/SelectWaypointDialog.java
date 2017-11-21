@@ -20,7 +20,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 
-import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.dialogs.ToggleDialog;
 import org.openstreetmap.josm.gui.layer.markerlayer.Marker;
 import org.openstreetmap.josm.tools.Shortcut;
@@ -101,7 +101,7 @@ class SelectWaypointDialog extends ToggleDialog implements KeyListener, MouseLis
             int idx = searchResult.getSelectedIndex();
             if (idx >= 0) {
                 Marker marker = searchResultObjectCache.get(idx);
-                Main.map.mapView.zoomTo(marker.getCoor());
+                MainApplication.getMap().mapView.zoomTo(marker.getCoor());
             }
         }
     }

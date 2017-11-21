@@ -15,13 +15,13 @@ import javax.swing.ListSelectionModel;
 
 import org.junit.Rule;
 import org.junit.Test;
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import org.openstreetmap.josm.testutils.JOSMTestRules;
 
@@ -136,30 +136,30 @@ public class JosmSelectionListModelTest {
         OsmDataLayer layer1 = new OsmDataLayer(ds, "layer1", null);
         OsmDataLayer layer2 = new OsmDataLayer(new DataSet(), "layer2", null);
 
-        Main.getLayerManager().addLayer(layer1);
-        Main.getLayerManager().addLayer(layer2);
+        MainApplication.getLayerManager().addLayer(layer1);
+        MainApplication.getLayerManager().addLayer(layer2);
 
         JosmSelectionListModel model = new JosmSelectionListModel(layer1);
-        Main.getLayerManager().addActiveLayerChangeListener(model);
+        MainApplication.getLayerManager().addActiveLayerChangeListener(model);
         // switch from edit layer1 to edit layer2. content of the JOSM selection
         // should be empty thereafter
-        Main.getLayerManager().setActiveLayer(layer1);
-        Main.getLayerManager().setActiveLayer(layer2);
+        MainApplication.getLayerManager().setActiveLayer(layer1);
+        MainApplication.getLayerManager().setActiveLayer(layer2);
         assertEquals(0, model.getSize());
 
         // switch from layer2 to layer1 which has one object selected. Object should
         // be displayed in the JOSM selection list
         ds.setSelected(Collections.singleton(objects.get(0)));
-        Main.getLayerManager().setActiveLayer(layer1);
+        MainApplication.getLayerManager().setActiveLayer(layer1);
         assertEquals(1, model.getSize());
         assertEquals(objects.get(0), model.getElementAt(0));
 
         // switch to a "null" edit layer (i.e. no edit layer)- nothing should
         // be displayed in the selection list
-        Main.getLayerManager().removeLayer(layer2);
-        Main.getLayerManager().removeLayer(layer1);
+        MainApplication.getLayerManager().removeLayer(layer2);
+        MainApplication.getLayerManager().removeLayer(layer1);
         assertEquals(0, model.getSize());
 
-        Main.getLayerManager().removeActiveLayerChangeListener(model);
+        MainApplication.getLayerManager().removeActiveLayerChangeListener(model);
     }
 }

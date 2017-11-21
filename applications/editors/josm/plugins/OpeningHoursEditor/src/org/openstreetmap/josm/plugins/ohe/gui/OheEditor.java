@@ -19,6 +19,7 @@ import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.plugins.ohe.ClockSystem;
 import org.openstreetmap.josm.plugins.ohe.OpeningTimeUtils;
 import org.openstreetmap.josm.plugins.ohe.parser.OpeningTimeCompiler;
+import org.openstreetmap.josm.tools.Logging;
 
 public class OheEditor extends JPanel implements MouseListener, MouseMotionListener {
     private final class OhePanel extends JPanel {
@@ -186,7 +187,7 @@ public class OheEditor extends JPanel implements MouseListener, MouseMotionListe
         try {
             time = dialog.getTime();
         } catch (Exception exc) {
-            Main.warn(exc, "Disable opening hours editor:");
+            Logging.log(Logging.LEVEL_WARN, "Disable opening hours editor:", exc);
             setEnabled(false);
             return;
         }

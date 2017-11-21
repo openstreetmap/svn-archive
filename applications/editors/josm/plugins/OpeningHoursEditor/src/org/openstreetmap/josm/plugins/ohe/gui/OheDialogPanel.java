@@ -26,6 +26,7 @@ import org.openstreetmap.josm.plugins.ohe.parser.ParseException;
 import org.openstreetmap.josm.plugins.ohe.parser.SyntaxException;
 import org.openstreetmap.josm.plugins.ohe.parser.TokenMgrError;
 import org.openstreetmap.josm.tools.GBC;
+import org.openstreetmap.josm.tools.Logging;
 
 public class OheDialogPanel extends JPanel {
 
@@ -132,7 +133,7 @@ public class OheDialogPanel extends JPanel {
             try {
                 time = OpeningTimeUtils.convert(compiler.startCompile());
             } catch (Exception | TokenMgrError t) {
-                Main.warn(t);
+                Logging.warn(t);
                 
                 int[] tColumns = null;
                 String info = t.getMessage();
@@ -152,9 +153,9 @@ public class OheDialogPanel extends JPanel {
                             tColumns = new int[] {col - 1, col + 1};
                         }
                     } catch (IndexOutOfBoundsException e) {
-                        Main.warn(e);
+                        Logging.warn(e);
                     } catch (NumberFormatException e) {
-                        Main.warn(e);
+                        Logging.warn(e);
                     }
                 }
 

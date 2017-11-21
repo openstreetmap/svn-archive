@@ -40,6 +40,7 @@ import org.openstreetmap.josm.command.ChangePropertyCommand;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.SequenceCommand;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MainMenu;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import org.openstreetmap.josm.plugins.Plugin;
@@ -76,7 +77,7 @@ public class OhePlugin extends Plugin {
      */
     public OhePlugin(PluginInformation info) {
         super(info);
-        MainMenu.add(Main.main.menu.dataMenu, new OheMenuAction(), false, 0);
+        MainMenu.add(MainApplication.getMenu().dataMenu, new OheMenuAction(), false, 0);
     }
 
     /**

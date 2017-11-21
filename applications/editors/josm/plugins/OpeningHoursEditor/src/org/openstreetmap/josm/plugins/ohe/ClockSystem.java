@@ -6,6 +6,7 @@ import java.text.ParseException;
 import java.util.Locale;
 
 import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.tools.Logging;
 
 /**
  * Clock system (12 or 24 hours).
@@ -29,7 +30,7 @@ public enum ClockSystem {
         try {
             midnight = localeFormat.format(stdFormat.parse("12:00 AM"));
         } catch (ParseException ignore) {
-            Main.trace(ignore);
+            Logging.trace(ignore);
         }
         if (midnight.contains("12"))
             return TWELVE_HOURS;

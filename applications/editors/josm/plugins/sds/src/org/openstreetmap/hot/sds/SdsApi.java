@@ -295,7 +295,7 @@ public class SdsApi extends SdsConnection {
      * @return the max number of retries
      */
     protected int getMaxRetries() {
-        int ret = Main.pref.getInteger("osm-server.max-num-retries", DEFAULT_MAX_NUM_RETRIES);
+        int ret = Main.pref.getInt("osm-server.max-num-retries", DEFAULT_MAX_NUM_RETRIES);
         return Math.max(ret, 0);
     }
 
@@ -347,7 +347,7 @@ public class SdsApi extends SdsConnection {
                 URL url = new URL(new URL(getBaseUrl()), urlSuffix);
                 System.out.print(requestMethod + " " + url + "... ");
                 activeConnection = (HttpURLConnection) url.openConnection();
-                activeConnection.setConnectTimeout(fastFail ? 1000 : Main.pref.getInteger("socket.timeout.connect", 15)*1000);
+                activeConnection.setConnectTimeout(fastFail ? 1000 : Main.pref.getInt("socket.timeout.connect", 15)*1000);
                 activeConnection.setRequestMethod(requestMethod);
                 if (doAuthenticate) {
                     addAuth(activeConnection);
@@ -474,7 +474,7 @@ public class SdsApi extends SdsConnection {
                 activeConnection.setRequestProperty("Accept-Encoding", "gzip, deflate");
             }
 
-            activeConnection.setConnectTimeout(Main.pref.getInteger("socket.timeout.connect", 15)*1000);
+            activeConnection.setConnectTimeout(Main.pref.getInt("socket.timeout.connect", 15)*1000);
 
             try {
                 System.out.println("GET " + url);

@@ -14,7 +14,8 @@ import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.Way;
-import org.openstreetmap.josm.gui.JosmUserIdentityManager;
+import org.openstreetmap.josm.data.UserIdentityManager;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.gui.layer.ImageryLayer;
 import org.openstreetmap.josm.gui.layer.Layer;
@@ -30,7 +31,7 @@ public class IRSRectifyPlugin extends Plugin {
 
     public IRSRectifyPlugin(PluginInformation info) {
         super(info);
-        Main.main.menu.toolsMenu.add(new IRSRectifyAction());
+        MainApplication.getMenu().toolsMenu.add(new IRSRectifyAction());
     }
 
     @Override
@@ -64,7 +65,7 @@ public class IRSRectifyPlugin extends Plugin {
             way.addNode(center);
             way.addNode(offset);
             way.put("timestamp", new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
-            String userName = JosmUserIdentityManager.getInstance().getUserName();
+            String userName = UserIdentityManager.getInstance().getUserName();
             if( userName != null )
                 way.put("user", userName);
 
@@ -73,13 +74,13 @@ public class IRSRectifyPlugin extends Plugin {
             data.data.addPrimitive(offset);
             data.data.addPrimitive(way);
             data.data.setSelected(way.getPrimitiveId());
-            Main.getLayerManager().setActiveLayer(data);
+            MainApplication.getLayerManager().setActiveLayer(data);
         }
 
         private ImageryLayer findImageryLayer() {
             if( frame == null || frame.mapView == null )
                 return null;
-            for( Layer l : Main.getLayerManager().getLayers() )
+            for( Layer l : MainApplication.getLayerManager().getLayers() )
                 if( l instanceof ImageryLayer )
                     return (ImageryLayer)l;
             return null;
@@ -89,12 +90,12 @@ public class IRSRectifyPlugin extends Plugin {
             if( frame == null || frame.mapView == null )
                 return null;
 
-            OsmDataLayer l = Main.getLayerManager().getEditLayer();
+            OsmDataLayer l = MainApplication.getLayerManager().getEditLayer();
             if( isOffsetLayer(l) )
                 return l;
 
             // try to find among all layers
-            for( Layer layer : Main.getLayerManager().getLayers() )
+            for( Layer layer : MainApplication.getLayerManager().getLayers() )
                 if( layer instanceof OsmDataLayer && isOffsetLayer((OsmDataLayer)layer) )
                     return (OsmDataLayer) layer;
 
@@ -103,7 +104,7 @@ public class IRSRectifyPlugin extends Plugin {
             if( ++newLayerNameCounter > 1 )
                 name = name + " " + newLayerNameCounter;
             l = new OsmDataLayer(new DataSet(), name, null);
-            Main.getLayerManager().addLayer(l);
+            MainApplication.getLayerManager().addLayer(l);
             return l;
         }
 

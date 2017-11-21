@@ -8,43 +8,36 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.swing.JOptionPane;
-
-import mergeoverlap.hack.MyCombinePrimitiveResolverDialog;
-
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
-import org.openstreetmap.josm.actions.SplitWayAction;
-import org.openstreetmap.josm.actions.SplitWayAction.SplitWayResult;
-import org.openstreetmap.josm.command.AddCommand;
 import org.openstreetmap.josm.command.ChangeCommand;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.DeleteCommand;
 import org.openstreetmap.josm.command.SequenceCommand;
+import org.openstreetmap.josm.command.SplitWayCommand;
 import org.openstreetmap.josm.corrector.ReverseWayTagCorrector;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.NodeGraph;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
-import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.data.osm.TagCollection;
 import org.openstreetmap.josm.data.osm.Way;
-import org.openstreetmap.josm.gui.layer.OsmDataLayer;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.tools.Pair;
 import org.openstreetmap.josm.tools.Shortcut;
 import org.openstreetmap.josm.tools.UserCancelException;
+
+import mergeoverlap.hack.MyCombinePrimitiveResolverDialog;
 
 /**
  * Merge overlapping part of ways.
@@ -161,10 +154,10 @@ public class MergeOverlapAction extends JosmAction {
                 }
             }
             if (!nodes.isEmpty() && !way.isClosed() || nodes.size() >= 2) {
-                List<List<Node>> wayChunks = SplitWayAction.buildSplitChunks(way, new ArrayList<>(nodes));
-                SplitWayResult result = splitWay(getLayerManager().getEditLayer(), way, wayChunks);
+                List<List<Node>> wayChunks = SplitWayCommand.buildSplitChunks(way, new ArrayList<>(nodes));
+                SplitWayCommand result = SplitWayCommand.splitWay(way, wayChunks, Collections.emptyList());
 
-                cmds.add(result.getCommand());
+                cmds.add(result);
                 sel.remove(way);
                 sel.add(result.getOriginalWay());
                 sel.addAll(result.getNewWays());
@@ -237,7 +230,7 @@ public class MergeOverlapAction extends JosmAction {
         // Commit
         Main.main.undoRedo.add(new SequenceCommand(tr("Merge Overlap (combine)"), cmds));
         getLayerManager().getEditDataSet().setSelected(sel);
-        Main.map.repaint();
+        MainApplication.getMap().repaint();
 
         relations.clear();
         newRelations.clear();
@@ -290,177 +283,6 @@ public class MergeOverlapAction extends JosmAction {
         } else {
             return np2.pos == np1.pos + 1 && np2.opositPos == np1.opositPos + incr;
         }
-    }
-
-    /**
-     * Splits a way
-     * 
-     * @param layer
-     * @param way
-     * @param wayChunks
-     * @return
-     */
-    private SplitWayResult splitWay(OsmDataLayer layer, Way way, List<List<Node>> wayChunks) {
-        // build a list of commands, and also a new selection list
-        Collection<Command> commandList = new ArrayList<>(wayChunks.size());
-
-        Iterator<List<Node>> chunkIt = wayChunks.iterator();
-        Collection<String> nowarnroles = Main.pref.getCollection("way.split.roles.nowarn",
-                Arrays.asList(new String[] { "outer", "inner", "forward", "backward" }));
-
-        // First, change the original way
-        Way changedWay = new Way(way);
-        oldWays.put(changedWay, way);
-        changedWay.setNodes(chunkIt.next());
-        commandList.add(new ChangeCommand(way, changedWay));
-
-        List<Way> newWays = new ArrayList<>();
-        // Second, create new ways
-        while (chunkIt.hasNext()) {
-            Way wayToAdd = new Way();
-            wayToAdd.setKeys(way.getKeys());
-            newWays.add(wayToAdd);
-            wayToAdd.setNodes(chunkIt.next());
-            commandList.add(new AddCommand(layer, wayToAdd));
-        }
-        boolean warnmerole = false;
-        boolean warnme = false;
-        // now copy all relations to new way also
-
-        for (Relation r : getParentRelations(way)) {
-            if (!r.isUsable()) {
-                continue;
-            }
-            Relation c = null;
-            String type = r.get("type");
-            if (type == null) {
-                type = "";
-            }
-
-            int ic = 0, ir = 0;
-            List<RelationMember> relationMembers = r.getMembers();
-            for (RelationMember rm : relationMembers) {
-                if (rm.isWay() && rm.getMember() == way) {
-                    boolean insert = true;
-                    if ("restriction".equals(type)) {
-                        /*
-                         * this code assumes the restriction is correct. No real
-                         * error checking done
-                         */
-                        String role = rm.getRole();
-                        if ("from".equals(role) || "to".equals(role)) {
-                            OsmPrimitive via = null;
-                            for (RelationMember rmv : r.getMembers()) {
-                                if ("via".equals(rmv.getRole())) {
-                                    via = rmv.getMember();
-                                }
-                            }
-                            List<Node> nodes = new ArrayList<>();
-                            if (via != null) {
-                                if (via instanceof Node) {
-                                    nodes.add((Node) via);
-                                } else if (via instanceof Way) {
-                                    nodes.add(((Way) via).lastNode());
-                                    nodes.add(((Way) via).firstNode());
-                                }
-                            }
-                            Way res = null;
-                            for (Node n : nodes) {
-                                if (changedWay.isFirstLastNode(n)) {
-                                    res = way;
-                                }
-                            }
-                            if (res == null) {
-                                for (Way wayToAdd : newWays) {
-                                    for (Node n : nodes) {
-                                        if (wayToAdd.isFirstLastNode(n)) {
-                                            res = wayToAdd;
-                                        }
-                                    }
-                                }
-                                if (res != null) {
-                                    if (c == null) {
-                                        c = getNew(r);
-                                    }
-                                    c.addMember(new RelationMember(role, res));
-                                    c.removeMembersFor(way);
-                                    insert = false;
-                                }
-                            } else {
-                                insert = false;
-                            }
-                        } else if (!"via".equals(role)) {
-                            warnme = true;
-                        }
-                    } else if (!("route".equals(type)) && !("multipolygon".equals(type))) {
-                        warnme = true;
-                    }
-                    if (c == null) {
-                        c = getNew(r);
-                    }
-
-                    if (insert) {
-                        if (rm.hasRole() && !nowarnroles.contains(rm.getRole())) {
-                            warnmerole = true;
-                        }
-
-                        Boolean backwards = null;
-                        int k = 1;
-                        while (ir - k >= 0 || ir + k < relationMembers.size()) {
-                            if ((ir - k >= 0) && relationMembers.get(ir - k).isWay()) {
-                                Way w = relationMembers.get(ir - k).getWay();
-                                if ((w.lastNode() == way.firstNode()) || w.firstNode() == way.firstNode()) {
-                                    backwards = false;
-                                } else if ((w.firstNode() == way.lastNode()) || w.lastNode() == way.lastNode()) {
-                                    backwards = true;
-                                }
-                                break;
-                            }
-                            if ((ir + k < relationMembers.size()) && relationMembers.get(ir + k).isWay()) {
-                                Way w = relationMembers.get(ir + k).getWay();
-                                if ((w.lastNode() == way.firstNode()) || w.firstNode() == way.firstNode()) {
-                                    backwards = true;
-                                } else if ((w.firstNode() == way.lastNode()) || w.lastNode() == way.lastNode()) {
-                                    backwards = false;
-                                }
-                                break;
-                            }
-                            k++;
-                        }
-
-                        int j = ic;
-                        for (Way wayToAdd : newWays) {
-                            RelationMember em = new RelationMember(rm.getRole(), wayToAdd);
-                            j++;
-                            if ((backwards != null) && backwards) {
-                                c.addMember(ic, em);
-                            } else {
-                                c.addMember(j, em);
-                            }
-                        }
-                        ic = j;
-                    }
-                }
-                ic++;
-                ir++;
-            }
-
-            if (c != null) {
-                // commandList.add(new ChangeCommand(layer, r, c));
-                newRelations.put(r, c);
-            }
-        }
-        if (warnmerole) {
-            JOptionPane.showMessageDialog(Main.parent,
-                tr("<html>A role based relation membership was copied to all new ways.<br>You should verify this and correct it when necessary.</html>"),
-                tr("Warning"), JOptionPane.WARNING_MESSAGE);
-        } else if (warnme) {
-            JOptionPane.showMessageDialog(Main.parent,
-                tr("<html>A relation membership was copied to all new ways.<br>You should verify this and correct it when necessary.</html>"),
-                tr("Warning"), JOptionPane.WARNING_MESSAGE);
-        }
-
-        return new SplitWayResult(new SequenceCommand(tr("Split way"), commandList), null, changedWay, newWays);
     }
 
     /**
@@ -636,10 +458,6 @@ public class MergeOverlapAction extends JosmAction {
             }
         }
         return rels;
-    }
-
-    private Relation getNew(Relation r) {
-        return getNew(r, newRelations);
     }
 
     public static Relation getNew(Relation r, Map<Relation, Relation> newRelations) {

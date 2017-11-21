@@ -1,24 +1,27 @@
 package org.openstreetmap.josm.plugins.directdownload;
 
-import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.io.OsmApi;
-import org.openstreetmap.josm.io.OsmConnection;
-import org.openstreetmap.josm.io.OsmTransferException;
-import org.openstreetmap.josm.tools.HttpClient;
-import org.xml.sax.Attributes;
-import org.xml.sax.SAXException;
-import org.xml.sax.helpers.DefaultHandler;
+import static org.openstreetmap.josm.tools.I18n.tr;
 
-import javax.swing.*;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
+import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.LinkedList;
 import java.util.List;
 
-import static org.openstreetmap.josm.tools.I18n.tr;
+import javax.swing.JOptionPane;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
+
+import org.openstreetmap.josm.io.OsmApi;
+import org.openstreetmap.josm.io.OsmConnection;
+import org.openstreetmap.josm.io.OsmTransferException;
+import org.openstreetmap.josm.tools.HttpClient;
+import org.openstreetmap.josm.tools.Logging;
+import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
+import org.xml.sax.helpers.DefaultHandler;
 
 public class UserTrackReader extends OsmConnection {
 
@@ -41,14 +44,14 @@ public class UserTrackReader extends OsmConnection {
             }
 
             return handler.getResult();
-        } catch (java.net.MalformedURLException e) {
-            Main.error(e);
+        } catch (MalformedURLException e) {
+            Logging.error(e);
             JOptionPane.showMessageDialog(null, tr("Invalid URL {0}", urlString));
-        } catch (java.io.IOException | OsmTransferException e) {
-            Main.error(e);
+        } catch (IOException | OsmTransferException e) {
+            Logging.error(e);
             JOptionPane.showMessageDialog(null, tr("Error fetching URL {0}", urlString));
         } catch (SAXException | ParserConfigurationException e) {
-            Main.error(e);
+            Logging.error(e);
             JOptionPane.showMessageDialog(null, tr("Error parsing data from URL {0}", urlString));
         }
 

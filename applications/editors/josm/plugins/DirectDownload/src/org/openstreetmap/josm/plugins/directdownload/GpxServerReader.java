@@ -7,6 +7,7 @@ import org.openstreetmap.josm.io.OsmApi;
 import org.openstreetmap.josm.io.OsmConnection;
 import org.openstreetmap.josm.io.OsmTransferException;
 import org.openstreetmap.josm.tools.HttpClient;
+import org.openstreetmap.josm.tools.Logging;
 import org.xml.sax.SAXException;
 
 import javax.swing.*;
@@ -35,15 +36,13 @@ public class GpxServerReader extends OsmConnection {
                 return r.getGpxData();
             }
         } catch (IOException | OsmTransferException e) {
-            Main.warn(e);
+            Logging.warn(e);
             JOptionPane.showMessageDialog(Main.parent, tr("Error fetching URL {0}", urlString));
             return null;
         } catch (SAXException e) {
-            Main.warn(e);
+            Logging.warn(e);
             JOptionPane.showMessageDialog(Main.parent, tr("Error parsing data from URL {0}", urlString));
             return null;
-
         }
     }
-
 }

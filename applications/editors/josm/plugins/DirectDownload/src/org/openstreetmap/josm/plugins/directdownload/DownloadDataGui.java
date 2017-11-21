@@ -16,8 +16,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.UIManager;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableColumnModel;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
@@ -147,12 +145,6 @@ public class DownloadDataGui extends ExtendedDialog {
 
         public NamedResultTableColumnModel() {
             createColumns();
-        }
-    }
-
-    class ListSelectionHandler implements ListSelectionListener {
-        @Override
-		public void valueChanged(ListSelectionEvent lse) {
         }
     }
 

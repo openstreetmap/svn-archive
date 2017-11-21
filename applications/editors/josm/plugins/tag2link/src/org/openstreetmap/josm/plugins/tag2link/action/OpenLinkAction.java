@@ -31,6 +31,7 @@ import org.openstreetmap.josm.plugins.tag2link.Tag2LinkConstants;
 import org.openstreetmap.josm.plugins.tag2link.data.Link;
 import org.openstreetmap.josm.plugins.tag2link.data.LinkPost;
 import org.openstreetmap.josm.tools.HttpClient;
+import org.openstreetmap.josm.tools.Logging;
 import org.openstreetmap.josm.tools.OpenBrowser;
 
 /**
@@ -70,19 +71,19 @@ public class OpenLinkAction extends JosmAction implements Tag2LinkConstants {
                     Files.copy(is, new File(filename).toPath());
                 }
                 
-                Main.info("Opening "+filename);
+                Logging.info("Opening "+filename);
                 String result = OpenBrowser.displayUrl("file://"+filename);
                 if (result != null) {
-                    Main.error(result);
+                    Logging.error(result);
                 }
             } catch (IOException ex) {
-                Main.error(ex);
+                Logging.error(ex);
             }
         } else {
-            Main.info("Opening "+link.url);
+            Logging.info("Opening "+link.url);
             String result = OpenBrowser.displayUrl(link.url);
             if (result != null) {
-                Main.error(result);
+                Logging.error(result);
             }
         }
     }

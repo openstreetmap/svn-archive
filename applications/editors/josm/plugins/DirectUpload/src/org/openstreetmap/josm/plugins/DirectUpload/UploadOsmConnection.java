@@ -6,7 +6,7 @@ import java.util.List;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.gpx.GpxData;
-import org.openstreetmap.josm.gui.MapView;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.dialogs.LayerListDialog;
 import org.openstreetmap.josm.gui.layer.GpxLayer;
 import org.openstreetmap.josm.gui.layer.Layer;
@@ -48,8 +48,8 @@ public class UploadOsmConnection extends OsmConnection {
      * @return data of the selected gpx layer, or null if there is none
      */
     GpxData autoSelectTrace() {
-        if (Main.map != null && Main.map.mapView != null) {
-            MainLayerManager lm = Main.getLayerManager();
+        if (MainApplication.getMap() != null && MainApplication.getMap().mapView != null) {
+            MainLayerManager lm = MainApplication.getLayerManager();
 //            List<Layer> allLayers = new ArrayList<Layer>(mv.getAllLayersAsList());  // modifiable
             List<Layer> selectedLayers = LayerListDialog.getInstance().getModel().getSelectedLayers();
             List<GpxLayer> gpxLayersRemaining = lm.getLayersOfType(GpxLayer.class);

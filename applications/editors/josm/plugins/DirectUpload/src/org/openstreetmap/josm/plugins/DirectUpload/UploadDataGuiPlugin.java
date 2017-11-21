@@ -11,8 +11,8 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MainMenu;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
@@ -29,10 +29,10 @@ public class UploadDataGuiPlugin extends Plugin {
     public UploadDataGuiPlugin(PluginInformation info) {
         super(info);
         openaction = new UploadAction();
-        MainMenu.add(Main.main.menu.gpsMenu, openaction);
+        MainMenu.add(MainApplication.getMenu().gpsMenu, openaction);
     }
 
-    class UploadAction extends JosmAction {
+    static class UploadAction extends JosmAction {
         
         public UploadAction(){
             super(tr("Upload Traces"), "UploadAction", tr("Uploads traces to openstreetmap.org"),
@@ -40,6 +40,7 @@ public class UploadDataGuiPlugin extends Plugin {
                 KeyEvent.VK_G, Shortcut.CTRL), false);
         }
         
+        @Override
         public void actionPerformed(ActionEvent e) {
             UploadDataGui go = new UploadDataGui();
             go.setVisible(true);

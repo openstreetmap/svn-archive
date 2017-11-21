@@ -87,8 +87,6 @@ public class FixTask extends PleaseWaitRunnable {
             SwingUtilities.invokeAndWait(() -> {
                 MainApplication.undoRedo.afterAdd();
                 MainApplication.getMap().repaint();
-                // tree.resetErrors();
-                MainApplication.getLayerManager().getEditDataSet().fireSelectionChanged();
             });
         } catch (InterruptedException | InvocationTargetException e) {
             // FIXME: signature of realRun should have a generic checked

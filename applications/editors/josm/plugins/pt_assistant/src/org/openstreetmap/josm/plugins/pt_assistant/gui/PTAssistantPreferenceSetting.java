@@ -59,8 +59,8 @@ public class PTAssistantPreferenceSetting implements SubPreferenceSetting {
      */
     @Override
     public boolean ok() {
-        Main.pref.put("pt_assistant.download-incomplete", this.downloadIncompleteMembers.isSelected());
-        Main.pref.put("pt_assistant.stop-area-tests", this.stopArea.isSelected());
+        Main.pref.putBoolean("pt_assistant.download-incomplete", this.downloadIncompleteMembers.isSelected());
+        Main.pref.putBoolean("pt_assistant.stop-area-tests", this.stopArea.isSelected());
         return false;
     }
 

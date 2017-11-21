@@ -34,6 +34,7 @@ import javax.swing.UIManager;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.ExtendedDialog;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.PleaseWaitRunnable;
 import org.openstreetmap.josm.gui.dialogs.LayerListDialog;
 import org.openstreetmap.josm.gui.layer.Layer;
@@ -43,6 +44,7 @@ import org.openstreetmap.josm.gui.layer.geoimage.ImageEntry;
 import org.openstreetmap.josm.tools.GBC;
 import org.openstreetmap.josm.tools.ImageProvider;
 import org.openstreetmap.josm.tools.JosmRuntimeException;
+import org.openstreetmap.josm.tools.Logging;
 
 /**
  * The action to ask the user for confirmation and then do the tagging.
@@ -143,8 +145,8 @@ class GeotaggingAction extends AbstractAction implements LayerAction {
 
         final boolean keep_backup = backups.isSelected();
         final boolean change_mtime = setMTime.isSelected();
-        Main.pref.put(KEEP_BACKUP, keep_backup);
-        Main.pref.put(CHANGE_MTIME, change_mtime);
+        Main.pref.putBoolean(KEEP_BACKUP, keep_backup);
+        Main.pref.putBoolean(CHANGE_MTIME, change_mtime);
         if (change_mtime) {
             String mTimeModePref;
             switch (mTimeMode.getSelectedIndex()) {
@@ -160,7 +162,7 @@ class GeotaggingAction extends AbstractAction implements LayerAction {
             Main.pref.put(MTIME_MODE, mTimeModePref);
         }
 
-        Main.worker.execute(new GeoTaggingRunnable(images, keep_backup, mTimeMode.getSelectedIndex()));
+        MainApplication.worker.execute(new GeoTaggingRunnable(images, keep_backup, mTimeMode.getSelectedIndex()));
     }
 
     static class GeoTaggingRunnable extends PleaseWaitRunnable {
@@ -329,7 +331,7 @@ class GeotaggingAction extends AbstractAction implements LayerAction {
             try {
                 Files.move(file.toPath(), fileTmp.toPath());
             } catch (IOException e) {
-                Main.error(tr("Could not rename file {0} to {1}!", file, fileTmp));
+                Logging.error(tr("Could not rename file {0} to {1}!", file, fileTmp));
                 throw e;
             }
             fileFrom = fileTmp;

@@ -27,6 +27,7 @@ import org.openstreetmap.josm.command.AddCommand;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.SequenceCommand;
 import org.openstreetmap.josm.data.coor.EastNorth;
+import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.DefaultNameFormatter;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
@@ -250,6 +251,7 @@ public class Spline {
         w.addNode(sn.node);
         EastNorth a = sn.node.getEastNorth();
         EastNorth ca = a.add(sn.cnext);
+        DataSet ds = MainApplication.getLayerManager().getEditDataSet();
         while (it.hasNext()) {
             sn = it.next();
             if (sn.node.isDeleted() && sn != nodes.get(0))
@@ -264,7 +266,7 @@ public class Spline {
                         JOptionPane.showMessageDialog(Main.parent, tr("Spline goes outside of the world."));
                         return;
                     }
-                    cmds.add(new AddCommand(n));
+                    cmds.add(new AddCommand(ds, n));
                     w.addNode(n);
                 }
             w.addNode(sn.node);
@@ -272,7 +274,7 @@ public class Spline {
             ca = a.add(sn.cnext);
         }
         if (!cmds.isEmpty())
-            cmds.add(new AddCommand(w));
+            cmds.add(new AddCommand(ds, w));
         MainApplication.undoRedo.add(new FinishSplineCommand(cmds));
     }
 
@@ -300,6 +302,7 @@ public class Spline {
         boolean affected;
 
         public AddSplineNodeCommand(SNode sn, boolean existing, int idx) {
+            super(MainApplication.getLayerManager().getEditDataSet());
             this.sn = sn;
             this.existing = existing;
             this.idx = idx;
@@ -361,6 +364,7 @@ public class Spline {
         boolean affected;
 
         public DeleteSplineNodeCommand(int idx) {
+            super(MainApplication.getLayerManager().getEditDataSet());
             this.idx = idx;
         }
 
@@ -418,6 +422,7 @@ public class Spline {
         SNode sn;
 
         public EditSplineCommand(SNode sn) {
+            super(MainApplication.getLayerManager().getEditDataSet());
             this.sn = sn;
             cprev = sn.cprev.add(0, 0);
             cnext = sn.cnext.add(0, 0);
@@ -457,6 +462,11 @@ public class Spline {
     }
 
     public class CloseSplineCommand extends Command {
+        
+        public CloseSplineCommand() {
+            super(MainApplication.getLayerManager().getEditDataSet());
+        }
+
         @Override
         public boolean executeCommand() {
             nodes.add(nodes.get(0));

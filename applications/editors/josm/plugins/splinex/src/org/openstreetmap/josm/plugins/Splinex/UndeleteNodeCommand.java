@@ -9,12 +9,14 @@ import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.data.osm.DefaultNameFormatter;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.gui.MainApplication;
 
 class UndeleteNodeCommand extends Command {
     Node n;
     boolean wasModified;
 
     UndeleteNodeCommand(Node n) {
+        super(MainApplication.getLayerManager().getEditDataSet());
         this.n = n;
     }
 

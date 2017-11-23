@@ -178,7 +178,7 @@ public class UploadDataGui extends ExtendedDialog {
     private void initTitleAndDescriptionFromGpxData(GpxData gpxData) {
       String description = "", title = "", tags = "";
       if (gpxData != null) {
-          GpxTrack firstTrack = gpxData.tracks.iterator().next();
+          GpxTrack firstTrack = gpxData.tracks.isEmpty() ? null : gpxData.tracks.iterator().next();
           Object meta_desc = gpxData.attr.get(GpxConstants.META_DESC);
           if (meta_desc != null) {
               description = meta_desc.toString();

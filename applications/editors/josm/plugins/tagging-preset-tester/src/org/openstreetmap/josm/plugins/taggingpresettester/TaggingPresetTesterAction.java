@@ -10,6 +10,7 @@ import javax.swing.JOptionPane;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MainMenu;
 import org.openstreetmap.josm.gui.tagging.presets.TaggingPresetReader;
 import org.openstreetmap.josm.plugins.PluginInformation;
@@ -27,7 +28,7 @@ public class TaggingPresetTesterAction extends JosmAction {
         Shortcut.registerShortcut("tools:taggingpresettester",
         tr("Tool: {0}", tr("Tagging Preset Tester")),
         KeyEvent.VK_T, Shortcut.ALT_CTRL_SHIFT), true);
-        MainMenu.addAfter(Main.main.menu.windowMenu, this, false, Main.main.menu.changesetManager);
+        MainMenu.addAfter(MainApplication.getMenu().windowMenu, this, false, MainApplication.getMenu().changesetManager);
     }
 
     public TaggingPresetTesterAction(PluginInformation info) {

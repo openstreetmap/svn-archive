@@ -13,6 +13,9 @@ import org.openstreetmap.josm.plugins.pt_assistant.AbstractTest;
 import org.openstreetmap.josm.plugins.pt_assistant.ImportUtils;
 import org.openstreetmap.josm.plugins.pt_assistant.utils.StopToWayAssigner;
 
+/**
+ * Unit tests of {@link StopToWayAssigner}.
+ */
 public class StopToWayAssignerTest extends AbstractTest {
 
     @Test

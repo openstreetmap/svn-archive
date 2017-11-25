@@ -3,7 +3,6 @@ package gpxfilter;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.gpx.GpxData;
 import org.openstreetmap.josm.gui.layer.GpxLayer;
@@ -28,7 +27,7 @@ public class EGpxLayer extends GpxLayer {
                         data.mergeFrom(newData);
                     }
 
-                    Main.map.repaint();
+                    invalidate();
                 }
                 grabber.cancel();
             }

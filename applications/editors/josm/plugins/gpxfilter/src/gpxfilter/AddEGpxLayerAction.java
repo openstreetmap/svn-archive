@@ -6,8 +6,8 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.tools.Shortcut;
 
 @SuppressWarnings("serial")
@@ -27,6 +27,6 @@ public class AddEGpxLayerAction extends JosmAction {
 
     @Override
     public void actionPerformed(ActionEvent arg0) {
-        getLayerManager().addLayer(new EGpxLayer(Main.map.mapView.getRealBounds()));
+        getLayerManager().addLayer(new EGpxLayer(MainApplication.getMap().mapView.getRealBounds()));
     }
 }

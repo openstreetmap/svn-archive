@@ -43,7 +43,7 @@ public class RasterFiltersPlugin extends Plugin implements LayerChangeListener, 
         super(info);
         Logging.debug("Loading RasterFiltersPlugin");
 
-        File file = new File(getPluginDir());
+        File file = getPluginDirs().getUserDataDirectory(false);
         if (file.mkdir()) {
 
             // opening file with last user's settings
@@ -57,7 +57,7 @@ public class RasterFiltersPlugin extends Plugin implements LayerChangeListener, 
             }
         }
 
-        FiltersDownloader.setPluginDir(getPluginDir());
+        FiltersDownloader.setPluginDir(file);
     }
 
     @Override

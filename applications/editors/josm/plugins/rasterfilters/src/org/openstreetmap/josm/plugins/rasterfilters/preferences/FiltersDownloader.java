@@ -48,11 +48,11 @@ import org.openstreetmap.josm.tools.Logging;
  * @author Nipel-Crumple
  */
 public class FiltersDownloader implements ActionListener {
-    private static volatile String pluginDir;
+    private static volatile File pluginDir;
 
     public static Set<JsonObject> filtersMeta = new HashSet<>();
     public static Set<String> filterTitles = new TreeSet<>();
-    public static Set<URL> binariesLocalUrls = new HashSet<>();
+    public static List<URL> binariesLocalUrls = new ArrayList<>();
     public static ClassLoader loader;
     public static Map<String, String> urlsMap = new HashMap<>();
 
@@ -311,7 +311,7 @@ public class FiltersDownloader implements ActionListener {
         }
     }
 
-    public static void setPluginDir(String dir) {
+    public static void setPluginDir(File dir) {
         pluginDir = dir;
     }
 
@@ -326,7 +326,7 @@ public class FiltersDownloader implements ActionListener {
         Matcher m = p.matcher(fromUrl);
 
         String localFile = null;
-        File plugin = new File(pluginDir);
+        File plugin = pluginDir;
         Logging.debug("plugin dir" + plugin.getAbsolutePath());
 
         if (m.find()) {

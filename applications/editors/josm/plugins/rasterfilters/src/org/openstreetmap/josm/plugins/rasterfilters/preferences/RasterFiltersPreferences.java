@@ -3,6 +3,7 @@ package org.openstreetmap.josm.plugins.rasterfilters.preferences;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.util.List;
+import java.util.Objects;
 
 import javax.json.JsonObject;
 import javax.swing.JButton;
@@ -89,7 +90,7 @@ public class RasterFiltersPreferences implements SubPreferenceSetting {
             JsonObject meta = temp.getMeta();
             String paramName = meta.getString("name");
             paramName = "rasterfilters." + paramName;
-            Main.pref.put(paramName, temp.isNeedToDownload());
+            Main.pref.putBoolean(paramName, temp.isNeedToDownload());
         }
 
         return false;
@@ -243,8 +244,12 @@ class FilterInfo {
 
     @Override
     public String toString() {
-        return "name: " + getName() + "\nDescription: " + getDescription()
-                + "\nMeta: " + getMeta();
+        return "name: " + getName() + "\nDescription: " + getDescription() + "\nMeta: " + getMeta();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, meta, description);
     }
 
     @Override

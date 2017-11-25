@@ -3,23 +3,23 @@ package org.openstreetmap.josm.plugins.rasterfilters.values;
 /**
  * @author Nipel-Crumple
  */
-public class SliderValue<Number> implements Value<Number> {
+public class SliderValue<T> implements Value<T> {
 
     private String parameterName;
-    private Number value;
+    private T value;
 
-    public SliderValue(String parameterName, Number value) {
+    public SliderValue(String parameterName, T value) {
         this.value = value;
         this.parameterName = parameterName;
     }
 
     @Override
-    public Number getValue() {
+    public T getValue() {
         return value;
     }
 
     @Override
-    public void setValue(Number value) {
+    public void setValue(T value) {
         this.value = value;
     }
 

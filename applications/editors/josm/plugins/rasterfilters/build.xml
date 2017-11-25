@@ -9,8 +9,8 @@
 	<property name="commit.message" value="Publishing RasterFilters plugin ver 1.0.1" />
 	
 	<!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
-	<property name="plugin.main.version" value="12782" />
-	<property name="plugin.version" value="1.0.2"/>
+	<property name="plugin.main.version" value="13007" />
+	<property name="plugin.version" value="1.0.3"/>
 
     <property name="plugin.icon" value="images/josm_filters_48.png"/>
 	<property name="plugin.author" value="Vadim Varnavsky" />

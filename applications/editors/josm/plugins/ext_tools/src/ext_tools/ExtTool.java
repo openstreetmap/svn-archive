@@ -4,9 +4,9 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.Cursor;
 import java.awt.GridBagLayout;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -186,7 +186,7 @@ public class ExtTool {
 
         ProcessBuilder builder;
         builder = new ProcessBuilder(cmdParams);
-        builder.directory(new File(ExtToolsPlugin.plugin.getPluginDir()));
+        builder.directory(ExtToolsPlugin.plugin.getPluginDirs().getUserDataDirectory(false));
 
         final StringBuilder debugstr = new StringBuilder();
 
@@ -218,7 +218,7 @@ public class ExtTool {
                 int len;
                 while ((len = errStream.read(buffer)) > 0) {
                     synchronized (debugstr) {
-                        debugstr.append(new String(buffer, 0, len));
+                        debugstr.append(new String(buffer, 0, len, StandardCharsets.UTF_8));
                     }
                     System.err.write(buffer, 0, len);
                 }

@@ -20,9 +20,7 @@ public class ExtToolsPlugin extends Plugin {
 
         plugin = this;
 
-        File plugindir = new File(this.getPluginDir());
-        if (!plugindir.exists())
-            plugindir.mkdirs();
+        File plugindir = getPluginDirs().getUserDataDirectory(true);
 
         myTools = new ToolsInformation(new File(plugindir, "tools.cfg").getAbsolutePath());
         repoTools = new ToolsInformation(new File(plugindir, "repo.cfg").getAbsolutePath());

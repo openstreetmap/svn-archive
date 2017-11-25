@@ -29,90 +29,90 @@ import org.openstreetmap.josm.tools.Logging;
 
 public class RoutesPlugin extends Plugin implements LayerChangeListener {
 
-	private final List<RouteLayer> routeLayers = new ArrayList<>();
+    private final List<RouteLayer> routeLayers = new ArrayList<>();
 
-	public RoutesPlugin(PluginInformation info) {
-		super(info);
-		MainApplication.getLayerManager().addLayerChangeListener(this);
+    public RoutesPlugin(PluginInformation info) {
+        super(info);
+        MainApplication.getLayerManager().addLayerChangeListener(this);
 
-		File routesFile = new File(getPluginDir() + File.separator + "routes.xml");
-		if (!routesFile.exists()) {
-			Logging.info("File with route definitions doesn't exist, using default");
+        File routesFile = new File(getPluginDirs().getUserDataDirectory(false), "routes.xml");
+        if (!routesFile.exists()) {
+            Logging.info("File with route definitions doesn't exist, using default");
 
-			try {
-				routesFile.getParentFile().mkdir();
-				try (
-						OutputStream outputStream = new FileOutputStream(routesFile);
-						InputStream inputStream = Routes.class.getResourceAsStream("routes.xml");
-						) {
-					byte[] b = new byte[512];
-					int read;
-					while ((read = inputStream.read(b)) != -1) {
-						outputStream.write(b, 0, read);
-					}
-				}
-			} catch (IOException e) {
-				Logging.error(e);
-			}
-		}
+            try {
+                routesFile.getParentFile().mkdir();
+                try (
+                        OutputStream outputStream = new FileOutputStream(routesFile);
+                        InputStream inputStream = Routes.class.getResourceAsStream("routes.xml");
+                        ) {
+                    byte[] b = new byte[512];
+                    int read;
+                    while ((read = inputStream.read(b)) != -1) {
+                        outputStream.write(b, 0, read);
+                    }
+                }
+            } catch (IOException e) {
+                Logging.error(e);
+            }
+        }
 
-		try {
-			JAXBContext context = JAXBContext.newInstance(
-					Routes.class.getPackage().getName(), Routes.class.getClassLoader());
-			Unmarshaller unmarshaller = context.createUnmarshaller();
-			Routes routes = (Routes)unmarshaller.unmarshal(
-					new FileInputStream(getPluginDir() + File.separator + "routes.xml"));
-			for (RoutesXMLLayer layer:routes.getLayer()) {
-				if (layer.isEnabled()) {
-					routeLayers.add(new RouteLayer(layer));
-				}
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+        try {
+            JAXBContext context = JAXBContext.newInstance(
+                    Routes.class.getPackage().getName(), Routes.class.getClassLoader());
+            Unmarshaller unmarshaller = context.createUnmarshaller();
+            Routes routes = (Routes)unmarshaller.unmarshal(
+                    new FileInputStream(getPluginDirs().getUserDataDirectory(false) + File.separator + "routes.xml"));
+            for (RoutesXMLLayer layer:routes.getLayer()) {
+                if (layer.isEnabled()) {
+                    routeLayers.add(new RouteLayer(layer));
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
-	public void activeLayerChange(Layer oldLayer, Layer newLayer) {
-		// Do nothing
-	}
+    public void activeLayerChange(Layer oldLayer, Layer newLayer) {
+        // Do nothing
+    }
 
-	@Override
-	public void layerAdded(LayerAddEvent e) {
-		Layer layer = e.getAddedLayer();
-		if (layer instanceof OsmDataLayer) {
-			LayerManager lm = e.getSource();
-			for (RouteLayer routeLayer : routeLayers) {
-				if (!lm.containsLayer(routeLayer)) {
-					SwingUtilities.invokeLater(() -> {
-						if (!lm.containsLayer(routeLayer)) {
-							lm.addLayer(routeLayer);
-						}
-					});
-				}
-			}
-		}
-	}
+    @Override
+    public void layerAdded(LayerAddEvent e) {
+        Layer layer = e.getAddedLayer();
+        if (layer instanceof OsmDataLayer) {
+            LayerManager lm = e.getSource();
+            for (RouteLayer routeLayer : routeLayers) {
+                if (!lm.containsLayer(routeLayer)) {
+                    SwingUtilities.invokeLater(() -> {
+                        if (!lm.containsLayer(routeLayer)) {
+                            lm.addLayer(routeLayer);
+                        }
+                    });
+                }
+            }
+        }
+    }
 
-	@Override
-	public void layerRemoving(LayerRemoveEvent e) {
-		for (Layer layer : e.getSource().getLayers()) {
-			if (layer instanceof OsmDataLayer)  {
-				return; /* at least one OSM layer left, do nothing */
-			}
-		}
-		if(!e.isLastLayer()) {
-			SwingUtilities.invokeLater(() -> {
-				for (RouteLayer routeLayer : routeLayers) {
-					if (e.getSource().containsLayer(routeLayer)) {
-						e.getSource().removeLayer(routeLayer);
-					}
-				}
-			});
-		}
-	}
+    @Override
+    public void layerRemoving(LayerRemoveEvent e) {
+        for (Layer layer : e.getSource().getLayers()) {
+            if (layer instanceof OsmDataLayer)  {
+                return; /* at least one OSM layer left, do nothing */
+            }
+        }
+        if(!e.isLastLayer()) {
+            SwingUtilities.invokeLater(() -> {
+                for (RouteLayer routeLayer : routeLayers) {
+                    if (e.getSource().containsLayer(routeLayer)) {
+                        e.getSource().removeLayer(routeLayer);
+                    }
+                }
+            });
+        }
+    }
 
-	@Override
-	public void layerOrderChanged(LayerOrderChangeEvent e) {
-		// Do nothing
-	}
+    @Override
+    public void layerOrderChanged(LayerOrderChangeEvent e) {
+        // Do nothing
+    }
 }

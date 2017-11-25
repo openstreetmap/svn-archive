@@ -72,7 +72,7 @@ public class TagDialog extends ExtendedDialog {
 
     private static final Logger LOGGER = Logger.getLogger(TagDialog.class.getName());
 
-    private String pluginDir;
+    private File pluginDir;
     private AutoCompletionManager acm;
     private OsmPrimitive selection;
 
@@ -101,7 +101,7 @@ public class TagDialog extends ExtendedDialog {
      * @param pluginDir plugin directory
      * @param selection selected primitive
      */
-    public TagDialog(String pluginDir, OsmPrimitive selection) {
+    public TagDialog(File pluginDir, OsmPrimitive selection) {
         super(Main.parent, tr("House Number Editor"), new String[] { tr("OK"), tr("Cancel") }, true);
         this.pluginDir = pluginDir;
         this.selection = selection;
@@ -403,7 +403,7 @@ public class TagDialog extends ExtendedDialog {
     }
 
     protected void saveDto(Dto dto) {
-        File path = new File(pluginDir);
+        File path = pluginDir;
         File fileName = new File(pluginDir + TagDialog.TEMPLATE_DATA);
 
         try {

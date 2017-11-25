@@ -2,6 +2,7 @@ package org.openstreetmap.josm.plugins.housenumbertool;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.io.File;
 import java.util.Collection;
 
 import org.openstreetmap.josm.actions.JosmAction;
@@ -14,13 +15,13 @@ public class LaunchAction extends JosmAction implements SelectionChangedListener
 
     private OsmPrimitive selection = null;
 
-    private String pluginDir;
+    private File pluginDir;
 
     /**
      * Constructs a new {@code LaunchAction}.
      * @param pluginDir plugin directory
      */
-    public LaunchAction(String pluginDir) {
+    public LaunchAction(File pluginDir) {
         super("HouseNumberTaggingTool", 
               "home-icon32", 
               "Launches the HouseNumberTaggingTool dialog", 

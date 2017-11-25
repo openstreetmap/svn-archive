@@ -17,7 +17,7 @@ public class HouseNumberTaggingToolPlugin extends Plugin {
      */
     public HouseNumberTaggingToolPlugin(PluginInformation info) {
         super(info);
-        action = new LaunchAction(getPluginDir());
+        action = new LaunchAction(getPluginDirs().getUserDataDirectory(false));
         MainMenu.add(MainApplication.getMenu().dataMenu, action, false,0);
     }
 }

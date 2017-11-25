@@ -4,11 +4,6 @@
  */
 package org.openstreetmap.josm.plugins.importvec;
 
-import com.kitfox.svg.Group;
-import com.kitfox.svg.SVGDiagram;
-import com.kitfox.svg.SVGElement;
-import com.kitfox.svg.SVGUniverse;
-import com.kitfox.svg.ShapeElement;
 import java.awt.Shape;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.PathIterator;
@@ -19,12 +14,14 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.command.AddCommand;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.SequenceCommand;
 import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.coor.LatLon;
+import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.data.projection.Projection;
@@ -33,6 +30,12 @@ import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.PleaseWaitRunnable;
 import org.openstreetmap.josm.io.OsmTransferException;
 import org.openstreetmap.josm.tools.I18n;
+
+import com.kitfox.svg.Group;
+import com.kitfox.svg.SVGDiagram;
+import com.kitfox.svg.SVGElement;
+import com.kitfox.svg.SVGUniverse;
+import com.kitfox.svg.ShapeElement;
 
 /**
  *
@@ -184,12 +187,13 @@ public class SvgImportTask extends PleaseWaitRunnable {
         } catch (Exception e) {
             throw new IOException(e);
         }
-        LinkedList<Command> cmds = new LinkedList<>();
+        DataSet ds = MainApplication.getLayerManager().getEditDataSet();
+        List<Command> cmds = new ArrayList<>();
         for (Node n : nodes) {
-            cmds.add(new AddCommand(n));
+            cmds.add(new AddCommand(ds, n));
         }
         for (Way w : ways) {
-            cmds.add(new AddCommand(w));
+            cmds.add(new AddCommand(ds, w));
         }
         MainApplication.undoRedo.add(new SequenceCommand("Import primitives", cmds));
     }

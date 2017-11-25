@@ -7,6 +7,7 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,7 +46,7 @@ public class ServerParamList {
     public void loadDefault() {
         try (
                 InputStream oIP = getClass().getResourceAsStream("/resources/serverParam.cfg");
-                BufferedReader oReader = new BufferedReader(new InputStreamReader(oIP));
+                BufferedReader oReader = new BufferedReader(new InputStreamReader(oIP, StandardCharsets.UTF_8));
                 ) {
             StringBuilder oBuilder = new StringBuilder();
             String strLine;

@@ -23,10 +23,7 @@ public class TracerPlugin extends Plugin {
 
         s_oPlugin = this;
 
-        File plugindir = new File(this.getPluginDir());
-        if (!plugindir.exists()) {
-            plugindir.mkdirs();
-        }
+        File plugindir = getPluginDirs().getUserDataDirectory(true);
 
         m_oParamList = new ServerParamList(new File(plugindir, "serverParam.cfg").getAbsolutePath());
     }

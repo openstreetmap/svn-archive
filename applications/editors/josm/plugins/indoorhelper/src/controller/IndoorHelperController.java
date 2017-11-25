@@ -36,6 +36,7 @@ import org.openstreetmap.josm.actions.ValidateAction;
 import org.openstreetmap.josm.data.osm.Tag;
 import org.openstreetmap.josm.data.validation.OsmValidator;
 import org.openstreetmap.josm.data.validation.tests.MapCSSTagChecker;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.dialogs.FilterDialog;
 import org.openstreetmap.josm.gui.dialogs.FilterTableModel;
 import org.openstreetmap.josm.gui.mappaint.MapPaintStyles;
@@ -76,7 +77,7 @@ public class IndoorHelperController {
         this.lastLevelIndex = 0;
 
         addToolboxListeners();
-        Main.map.addToggleDialog(toolboxView);
+        MainApplication.getMap().addToggleDialog(toolboxView);
     }
 
     /**
@@ -141,7 +142,7 @@ public class IndoorHelperController {
                 setPluginPreferences(false);
 
                 // Delete the indoor filters
-                FilterDialog filterDialog = Main.map.getToggleDialog(FilterDialog.class);
+                FilterDialog filterDialog = MainApplication.getMap().getToggleDialog(FilterDialog.class);
 
                 if (filterDialog != null) {
                     FilterTableModel filterTableModel = filterDialog.getFilterModel();
@@ -393,11 +394,11 @@ public class IndoorHelperController {
      * @param enabled Activates or disables the settings.
      */
     private void setPluginPreferences(boolean enabled) {
-        Collection<Map<String, String>> validatorMaps = 
-                Main.pref.getListOfStructs("validator.org.openstreetmap.josm.data.validation.tests.MapCSSTagChecker.entries",
+        Collection<Map<String, String>> validatorMaps =
+                Main.pref.getListOfMaps("validator.org.openstreetmap.josm.data.validation.tests.MapCSSTagChecker.entries",
                 new ArrayList<>());
-        Collection<Map<String, String>> styleMaps = 
-                Main.pref.getListOfStructs("mappaint.style.entries", new ArrayList<>());
+        Collection<Map<String, String>> styleMaps =
+                Main.pref.getListOfMaps("mappaint.style.entries", new ArrayList<>());
 
         if (enabled) {
             //set the validator active
@@ -417,11 +418,11 @@ public class IndoorHelperController {
             Map<String, String> indoorValidator = new HashMap<>();
             indoorValidator.put("title", "Indoor");
             indoorValidator.put("active", "true");
-            indoorValidator.put("url", Main.pref.getUserDataDirectory()+ sep +"validator" +
+            indoorValidator.put("url", Main.pref.getDirs().getUserDataDirectory(false)+ sep +"validator" +
                     sep + "indoorhelper.validator.mapcss");
 
             validatorMapsNew.add(indoorValidator);
-            Main.pref.putListOfStructs("validator.org.openstreetmap.josm.data.validation.tests.MapCSSTagChecker.entries",
+            Main.pref.putListOfMaps("validator.org.openstreetmap.josm.data.validation.tests.MapCSSTagChecker.entries",
                     validatorMapsNew);
 
             //set mappaint active
@@ -440,10 +441,10 @@ public class IndoorHelperController {
             Map<String, String> indoorMapPaint = new HashMap<>();
             indoorMapPaint.put("title", "Indoor");
             indoorMapPaint.put("active", "true");
-            indoorMapPaint.put("url", Main.pref.getUserDataDirectory() + sep + "styles"
+            indoorMapPaint.put("url", Main.pref.getDirs().getUserDataDirectory(false) + sep + "styles"
                     + sep + "indoor.mapcss");
             styleMapsNew.add(indoorMapPaint);
-            Main.pref.putListOfStructs("mappaint.style.entries", styleMapsNew);
+            Main.pref.putListOfMaps("mappaint.style.entries", styleMapsNew);
 
             updateSettings();
         } else {
@@ -464,11 +465,11 @@ public class IndoorHelperController {
             Map<String, String> indoorValidator = new HashMap<>();
             indoorValidator.put("title", "Indoor");
             indoorValidator.put("active", "false");
-            indoorValidator.put("url", Main.pref.getUserDataDirectory()+ sep +"validator" +
+            indoorValidator.put("url", Main.pref.getDirs().getUserDataDirectory(false)+ sep +"validator" +
                     sep + "indoorhelper.validator.mapcss");
 
             validatorMapsNew.add(indoorValidator);
-            Main.pref.putListOfStructs("validator.org.openstreetmap.josm.data.validation.tests.MapCSSTagChecker.entries",
+            Main.pref.putListOfMaps("validator.org.openstreetmap.josm.data.validation.tests.MapCSSTagChecker.entries",
                     validatorMapsNew);
 
 
@@ -488,10 +489,10 @@ public class IndoorHelperController {
             Map<String, String> indoorMapPaint = new HashMap<>();
             indoorMapPaint.put("title", "Indoor");
             indoorMapPaint.put("active", "false");
-            indoorMapPaint.put("url", Main.pref.getUserDataDirectory() + sep + "styles"
+            indoorMapPaint.put("url", Main.pref.getDirs().getUserDataDirectory(false) + sep + "styles"
                     + sep + "indoor.mapcss");
             styleMapsNew.add(indoorMapPaint);
-            Main.pref.putListOfStructs("mappaint.style.entries", styleMapsNew);
+            Main.pref.putListOfMaps("mappaint.style.entries", styleMapsNew);
 
             updateSettings();
         }

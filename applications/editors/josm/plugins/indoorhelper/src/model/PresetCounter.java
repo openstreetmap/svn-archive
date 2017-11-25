@@ -27,26 +27,26 @@ import model.TagCatalog.IndoorObject;
 
 /**
  * Counter for the calls of specific indoor objects, to track which items were used most frequently.
- * 
+ *
  * @author egru
  *
  */
 public class PresetCounter {
-    
+
     private List<IndoorObject> rankingList;
     private List<ObjectCounter> counterList;
-    
+
     /**
      * Initiates the counterList with the available IndoorObjects.
      */
-    
+
     public PresetCounter() {
         this.init();
     }
-    
+
     private void init() {
         counterList = new ArrayList<>();
-        
+
         counterList.add(new ObjectCounter(IndoorObject.CONCRETE_WALL, 0));
         counterList.add(new ObjectCounter(IndoorObject.DOOR, 0));
         counterList.add(new ObjectCounter(IndoorObject.ELEVATOR, 0));
@@ -59,63 +59,63 @@ public class PresetCounter {
         counterList.add(new ObjectCounter(IndoorObject.TOILET_FEMALE, 0));
         counterList.add(new ObjectCounter(IndoorObject.TOILET_MALE, 0));
     }
-    
+
     /**
      * Increments the counter of a specific IndoorObject in the list.
      * @param object the IndoorObject, which counter should be incremented
      */
     public void count(IndoorObject object) {
         ListIterator<ObjectCounter> iterator = this.counterList.listIterator();
-        
+
         // Go through the list and increment the corresponding objects counter value.
         while (iterator.hasNext()) {
             ObjectCounter counterTemp = iterator.next();
             if (counterTemp.getObject().equals(object)) {
-                    counterList.get(iterator.nextIndex()-1).increment();    
+                    counterList.get(iterator.nextIndex()-1).increment();
             }
         }
-        
+
         //Sort the list.
         this.sort();
     }
-    
+
     private void sort() {
         Collections.sort(counterList);
         Collections.reverse(counterList);
     }
-    
+
     public List<IndoorObject> getRanking() {
-        rankingList = new ArrayList<IndoorObject>();
-        
+        rankingList = new ArrayList<>();
+
         rankingList.add(counterList.get(0).getObject());
         rankingList.add(counterList.get(1).getObject());
         rankingList.add(counterList.get(2).getObject());
         rankingList.add(counterList.get(3).getObject());
-        
+
         return rankingList;
     }
-    
-    private class ObjectCounter implements Comparable<ObjectCounter> {
+
+    private static class ObjectCounter implements Comparable<ObjectCounter> {
         private IndoorObject object;
         private int count;
-        
+
         ObjectCounter(IndoorObject o, int c) {
             this.object = o;
             this.count = c;
         }
-        
+
         public int getCount() {
             return this.count;
         }
-        
+
         public IndoorObject getObject() {
             return this.object;
         }
-        
+
         public void increment() {
             this.count += 1;
         }
-        
+
         @Override
         public int compareTo(ObjectCounter o) {
             if (this.getCount() < o.getCount()) {
@@ -127,10 +127,10 @@ public class PresetCounter {
             if (this.getCount() > o.getCount()) {
                 return 1;
             }
-            
+
             return 0;
         }
-        
+
     }
-    
+
 }

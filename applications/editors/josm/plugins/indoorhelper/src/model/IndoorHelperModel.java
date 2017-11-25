@@ -28,6 +28,7 @@ import org.openstreetmap.josm.command.ChangePropertyCommand;
 import org.openstreetmap.josm.data.osm.Filter;
 import org.openstreetmap.josm.data.osm.Filter.FilterPreferenceEntry;
 import org.openstreetmap.josm.data.osm.Tag;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.dialogs.FilterDialog;
 import org.openstreetmap.josm.gui.dialogs.FilterTableModel;
 
@@ -77,7 +78,7 @@ public class IndoorHelperModel {
                 levelList.add(level);
 
                 // Get the filter dialog
-                FilterDialog filterDialog = Main.map.getToggleDialog(FilterDialog.class);
+                FilterDialog filterDialog = MainApplication.getMap().getToggleDialog(FilterDialog.class);
 
                 if (filterDialog != null) {
                     // Create a new filter
@@ -122,7 +123,7 @@ public class IndoorHelperModel {
             levelList.add(level);
 
             // Get the filter dialog
-            FilterDialog filterDialog = Main.map.getToggleDialog(FilterDialog.class);
+            FilterDialog filterDialog = MainApplication.getMap().getToggleDialog(FilterDialog.class);
 
             if (filterDialog != null) {
                 // Create a new filter
@@ -181,7 +182,7 @@ public class IndoorHelperModel {
         this.workingIndex = index;
         this.workingLevel = this.getLevelNumberFromIndex(index);
 
-        FilterDialog filterDialog = Main.map.getToggleDialog(FilterDialog.class);
+        FilterDialog filterDialog = MainApplication.getMap().getToggleDialog(FilterDialog.class);
         FilterTableModel filterTableModel = filterDialog.getFilterModel();
 
 
@@ -257,7 +258,7 @@ public class IndoorHelperModel {
      * @param userTags the tags which are given by the user input
      */
     public void addTagsToOSM(IndoorObject object, List<Tag> userTags) {
-        if (!Main.getLayerManager().getEditDataSet().selectionEmpty() && !Main.main.getInProgressSelection().isEmpty()) {
+        if (!MainApplication.getLayerManager().getEditDataSet().selectionEmpty() && !Main.main.getInProgressSelection().isEmpty()) {
 
             List<Tag> tags = this.getObjectTags(object);
             tags.addAll(userTags);
@@ -275,7 +276,7 @@ public class IndoorHelperModel {
                 Main.main.undoRedo.add(new ChangePropertyCommand(Main.main.getInProgressSelection(), t.getKey(), t.getValue()));
             }
 
-        } else if (Main.getLayerManager().getEditDataSet().selectionEmpty()) {
+        } else if (MainApplication.getLayerManager().getEditDataSet().selectionEmpty()) {
 
             JOptionPane.showMessageDialog(null, "No data selected.", "Error", JOptionPane.ERROR_MESSAGE);
         }
@@ -289,7 +290,7 @@ public class IndoorHelperModel {
      */
     public void addTagsToOSM(IndoorObject object) {
 
-        if (!Main.getLayerManager().getEditDataSet().selectionEmpty() && !Main.main.getInProgressSelection().isEmpty()) {
+        if (!MainApplication.getLayerManager().getEditDataSet().selectionEmpty() && !Main.main.getInProgressSelection().isEmpty()) {
             List<Tag> tags = this.getObjectTags(object);
             tags.add(new Tag("indoor:level", Integer.toString(workingLevel)));
 
@@ -300,7 +301,7 @@ public class IndoorHelperModel {
             for (Tag t : tags) {
                 Main.main.undoRedo.add(new ChangePropertyCommand(Main.main.getInProgressSelection(), t.getKey(), t.getValue()));
             }
-        } else if (Main.getLayerManager().getEditDataSet().selectionEmpty()) {
+        } else if (MainApplication.getLayerManager().getEditDataSet().selectionEmpty()) {
             JOptionPane.showMessageDialog(null, "No data selected.", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }

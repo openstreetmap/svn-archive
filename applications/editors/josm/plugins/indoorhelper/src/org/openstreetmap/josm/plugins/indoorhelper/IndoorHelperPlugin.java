@@ -22,6 +22,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
+
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.plugins.Plugin;
@@ -32,9 +33,9 @@ import controller.IndoorHelperController;
 
 /**
  * This is the main class for the indoorhelper plug-in.
- * 
+ *
  * @author egru
- * 
+ *
  */
 public class IndoorHelperPlugin extends Plugin {
 
@@ -45,13 +46,13 @@ public class IndoorHelperPlugin extends Plugin {
 
     /**
      * Constructor for the plug-in.
-     * 
+     *
      * Exports the needed files and adds them to the settings.
-     * 
+     *
      * @param info general information about the plug-in
      */
     public IndoorHelperPlugin(PluginInformation info) throws Exception {
-        super(info);    
+        super(info);
 
         this.exportValidator("/data/indoorhelper.validator.mapcss");
         this.exportStyleFile("indoor.mapcss");
@@ -71,7 +72,7 @@ public class IndoorHelperPlugin extends Plugin {
             controller = new IndoorHelperController();
         }
     }
-    
+
     /**
      * Exports the mapcss validator file to the preferences directory.
      */
@@ -91,7 +92,7 @@ public class IndoorHelperPlugin extends Plugin {
             int readBytes;
             byte[] buffer = new byte[4096];
 
-            String valDirPath = Main.pref.getUserDataDirectory() + sep + "validator";
+            String valDirPath = Main.pref.getDirs().getUserDataDirectory(false) + sep + "validator";
             File valDir = new File(valDirPath);
             valDir.mkdirs();
             outPath = valDir.getAbsolutePath() +sep+ "indoorhelper.validator.mapcss";
@@ -106,7 +107,7 @@ public class IndoorHelperPlugin extends Plugin {
             throw ex;
         } finally {
             stream.close();
-        }   
+        }
     }
 
     /**
@@ -127,7 +128,7 @@ public class IndoorHelperPlugin extends Plugin {
             int readBytes;
             byte[] buffer = new byte[4096];
 
-            String valDirPath = Main.pref.getUserDataDirectory() + sep + "styles";
+            String valDirPath = Main.pref.getDirs().getUserDataDirectory(false) + sep + "styles";
             File valDir = new File(valDirPath);
             valDir.mkdirs();
             outPath = valDir.getAbsolutePath() +sep+ resourceName;
@@ -142,9 +143,9 @@ public class IndoorHelperPlugin extends Plugin {
             throw ex;
         } finally {
             stream.close();
-        }   
+        }
     }
-    
+
     /**
      * Writes the indoor validator file in the user preferences if it isn't there
      * and activates it.
@@ -178,12 +179,12 @@ public class IndoorHelperPlugin extends Plugin {
 //            Map<String, String> indoorValidator = new HashMap<>();
 //            indoorValidator.put("title", "Indoor");
 //            indoorValidator.put("active", "true");
-//            indoorValidator.put("url", Main.pref.getUserDataDirectory()+ sep +"validator" + 
+//            indoorValidator.put("url", Main.pref.getUserDataDirectory()+ sep +"validator" +
 //                    sep + "indoorhelper.validator.mapcss");
 //
 //            validatorMapsNew.add(indoorValidator);
 //            Main.pref.putListOfStructs
-//            ("validator.org.openstreetmap.josm.data.validation.tests.MapCSSTagChecker.entries", 
+//            ("validator.org.openstreetmap.josm.data.validation.tests.MapCSSTagChecker.entries",
 //                    validatorMapsNew);
 //        }
 //    }

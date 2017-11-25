@@ -71,7 +71,7 @@ public class DistanceBetweenStops extends JosmAction {
         double totalLength = 0.0;
         int lengthN = 0;
         final boolean onlyLowerUnit = Main.pref.getBoolean("system_of_measurement.use_only_lower_unit", false);
-        Main.pref.put("system_of_measurement.use_only_lower_unit", true);
+        Main.pref.putBoolean("system_of_measurement.use_only_lower_unit", true);
         try {
             for (Node n : stopNodes) {
                 final double length;
@@ -101,7 +101,7 @@ public class DistanceBetweenStops extends JosmAction {
             sb.insert(0, "\t");
             sb.insert(0, SystemOfMeasurement.getSystemOfMeasurement().getDistText(totalLength / lengthN, new DecimalFormat("0"), -1));
         } finally {
-            Main.pref.put("system_of_measurement.use_only_lower_unit", onlyLowerUnit);
+            Main.pref.putBoolean("system_of_measurement.use_only_lower_unit", onlyLowerUnit);
         }
 
         return sb.toString();

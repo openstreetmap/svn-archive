@@ -190,10 +190,7 @@ class CanVecTile {
     }
 
     private ZipFile openZip() throws IOException {
-        File downloadPath = new File(layer.plugin.getPluginDir() + File.separator);
-        if (!downloadPath.mkdir() && Logging.isDebugEnabled()) {
-            Logging.debug("Unable to create directory: "+downloadPath);
-        }
+        File downloadPath = layer.plugin.getPluginDirs().getUserDataDirectory(true);
         CachedFile tileZip = new CachedFile(getDownloadUrl()).setDestDir(downloadPath.toString());
         return new ZipFile(tileZip.getFile());
     }

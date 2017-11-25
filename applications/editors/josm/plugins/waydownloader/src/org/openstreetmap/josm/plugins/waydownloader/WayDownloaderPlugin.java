@@ -175,7 +175,6 @@ public class WayDownloaderPlugin extends Plugin {
                     if (ret != JOptionPane.YES_OPTION)
                         return;
                     Command cmd = MergeNodesAction.mergeNodes(
-                    		MainApplication.getLayerManager().getEditLayer(),
                             Collections.singletonList(dupeNode),
                             selectedNode
                     );

@@ -46,6 +46,7 @@ public class IRSRectifyPlugin extends Plugin {
                     Shortcut.registerShortcut("menu:irsrectify", tr("Update IRS adjustment layer"), KeyEvent.VK_MULTIPLY, Shortcut.DIRECT), false);
         }
 
+        @Override
         public void actionPerformed(ActionEvent e) {
             ImageryLayer l = findImageryLayer();
             if( l == null )

@@ -1,7 +1,7 @@
 // License: GPL. For details, see LICENSE file.
 package smed;
 
-import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MainMenu;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.plugins.Plugin;
@@ -13,7 +13,7 @@ public class Smed extends Plugin {
 
     public Smed(PluginInformation info) {
         super(info);
-        MainMenu.add(Main.main.menu.toolsMenu, dialog);
+        MainMenu.add(MainApplication.getMenu().toolsMenu, dialog);
     }
 
     @Override

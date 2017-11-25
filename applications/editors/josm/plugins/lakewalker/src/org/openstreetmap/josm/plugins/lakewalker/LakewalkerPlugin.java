@@ -29,6 +29,6 @@ public class LakewalkerPlugin extends Plugin {
     }
 
     public static File getLakewalkerCacheDir() {
-        return new File(Main.pref.getCacheDirectory(true), "lakewalkerwms");
+        return new File(Main.pref.getDirs().getCacheDirectory(true), "lakewalkerwms");
     }
 }

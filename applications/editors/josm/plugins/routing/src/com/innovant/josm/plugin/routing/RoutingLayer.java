@@ -25,6 +25,7 @@ import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
+import org.openstreetmap.josm.data.preferences.NamedColorProperty;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.NavigatableComponent;
@@ -205,9 +206,9 @@ public class RoutingLayer extends Layer {
         // Color is different for active and inactive layers
         Color color;
         if (isActiveLayer) {
-            color = Main.pref.getColor(PreferencesKeys.KEY_ACTIVE_ROUTE_COLOR.key, Color.RED);
+            color = new NamedColorProperty(PreferencesKeys.KEY_ACTIVE_ROUTE_COLOR.key, Color.RED).get();
         } else {
-            color = Main.pref.getColor(PreferencesKeys.KEY_INACTIVE_ROUTE_COLOR.key, Color.decode("#dd2222"));
+            color = new NamedColorProperty(PreferencesKeys.KEY_INACTIVE_ROUTE_COLOR.key, Color.decode("#dd2222")).get();
         }
 
         // Get path stroke width from preferences

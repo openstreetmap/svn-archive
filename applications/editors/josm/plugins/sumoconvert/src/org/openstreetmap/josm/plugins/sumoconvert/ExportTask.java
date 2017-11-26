@@ -3,7 +3,6 @@
  */
 package org.openstreetmap.josm.plugins.sumoconvert;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.Properties;
 
@@ -15,7 +14,6 @@ import org.xml.sax.SAXException;
  * @author Ignacio Palermo - Julio Rivera
  *
  */
-
 public class ExportTask extends PleaseWaitRunnable {
 
 	static Properties sumoConvertProperties = new Properties();
@@ -29,42 +27,28 @@ public class ExportTask extends PleaseWaitRunnable {
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see org.openstreetmap.josm.gui.PleaseWaitRunnable#cancel()
-	 */
 	@Override
 	protected void cancel() {
 		// TODO Auto-generated method stub
-
 	}
 
-	/* (non-Javadoc)
-	 * @see org.openstreetmap.josm.gui.PleaseWaitRunnable#finish()
-	 */
 	@Override
 	protected void finish() {
 		// TODO Auto-generated method stub
-
 	}
 
-	/* (non-Javadoc)
-	 * @see org.openstreetmap.josm.gui.PleaseWaitRunnable#realRun()
-	 */
 	@Override
-	protected void realRun() throws SAXException, IOException,
-			OsmTransferException {
-		
+	protected void realRun() throws SAXException, IOException, OsmTransferException {
 		try {
 			Runtime.getRuntime().exec(sumoConvertProperties.getProperty("resources") +
 									  sumoConvertProperties.getProperty("netconvert") +
 									  sumoConvertProperties.getProperty("netconvert.osmfiles") +
 									  sumoConvertProperties.getProperty("netconvert.plainoutput"),
 									  null, 
-									  null//new File("C:\\Users\\ignacio_palermo\\AppData\\Roaming\\JOSM\\plugins\\sumoconvert")//resources
+									  null
 			); 			
 		} catch (IOException e) {
-		     e.printStackTrace();
-		    }
+		    e.printStackTrace();
+		}
 	}
-
 }

@@ -34,6 +34,7 @@ import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.OsmPrimitiveType;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.gui.HelpAwareOptionPane;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.HelpAwareOptionPane.ButtonSpec;
 import org.openstreetmap.josm.tools.ImageProvider;
 import org.openstreetmap.josm.tools.Shortcut;
@@ -47,7 +48,7 @@ public final class SimplifyAreaAction extends JosmAction {
     }
 
     private List<Bounds> getCurrentEditBounds() {
-        return Main.getLayerManager().getEditLayer().data.getDataSourceBounds();
+        return MainApplication.getLayerManager().getEditLayer().data.getDataSourceBounds();
     }
 
     private static boolean isInBounds(final Node node, final List<Bounds> bounds) {
@@ -65,7 +66,7 @@ public final class SimplifyAreaAction extends JosmAction {
         return 0 == HelpAwareOptionPane.showOptionDialog(
                 Main.parent,
                 "<html>" + trn("The selected way has nodes outside of the downloaded data region.", "The selected ways have nodes outside of the downloaded data region.", 
-                        Main.getLayerManager().getEditDataSet().getSelectedWays().size())
+                        MainApplication.getLayerManager().getEditDataSet().getSelectedWays().size())
                 + "<br>" + tr("This can lead to nodes being deleted accidentally.") + "<br>" + tr("Do you want to delete them anyway?") + "</html>",
                 tr("Delete nodes outside of data regions?"), JOptionPane.WARNING_MESSAGE, null, // no special icon
                 options, options[0], null);
@@ -173,7 +174,7 @@ public final class SimplifyAreaAction extends JosmAction {
         if (!allCommands.isEmpty()) {
             final SequenceCommand rootCommand = new SequenceCommand(trn("Simplify {0} way", "Simplify {0} ways", allCommands.size(), allCommands.size()), allCommands);
             Main.main.undoRedo.add(rootCommand);
-            Main.map.repaint();
+            MainApplication.getMap().repaint();
         }
     }
 

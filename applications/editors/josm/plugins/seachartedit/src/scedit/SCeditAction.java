@@ -21,7 +21,6 @@ import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.SelectionChangedListener;
@@ -151,13 +150,13 @@ public class SCeditAction extends JosmAction implements ActiveLayerChangeListene
         showFrame.setEnabled(true);
         showFrame.setVisible(false);
 
-        Main.getLayerManager().addAndFireActiveLayerChangeListener(this);
+        getLayerManager().addAndFireActiveLayerChangeListener(this);
         DataSet.addSelectionListener(this);
     }
 
     public void closeDialog() {
         if (isOpen) {
-                Main.getLayerManager().removeActiveLayerChangeListener(this);
+                getLayerManager().removeActiveLayerChangeListener(this);
             editFrame.setVisible(false);
             editFrame.dispose();
             data = null;
@@ -171,7 +170,7 @@ public class SCeditAction extends JosmAction implements ActiveLayerChangeListene
         if (e.getPreviousEditLayer() != null) {
             e.getPreviousEditLayer().data.removeDataSetListener(dataSetListener);
         }
-        OsmDataLayer newLayer = Main.getLayerManager().getEditLayer();
+        OsmDataLayer newLayer = getLayerManager().getEditLayer();
         if (newLayer != null) {
             newLayer.data.addDataSetListener(dataSetListener);
             data = newLayer.data;

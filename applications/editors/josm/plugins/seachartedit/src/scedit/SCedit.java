@@ -9,7 +9,7 @@
 
 package scedit;
 
-import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MainMenu;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
@@ -18,6 +18,6 @@ public class SCedit extends Plugin {
 
     public SCedit(PluginInformation info) {
         super(info);
-        MainMenu.add(Main.main.menu.toolsMenu, new SCeditAction());
+        MainMenu.add(MainApplication.getMenu().toolsMenu, new SCeditAction());
     }
 }

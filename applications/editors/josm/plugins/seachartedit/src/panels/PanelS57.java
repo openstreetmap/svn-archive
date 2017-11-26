@@ -26,12 +26,14 @@ import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.DataSet;
+import org.openstreetmap.josm.data.osm.DataSet.UploadPolicy;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.OsmPrimitiveType;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 
 import s57.S57att;
@@ -71,7 +73,7 @@ public class PanelS57 extends JPanel {
         int returnVal = ifc.showOpenDialog(Main.parent);
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             Main.pref.put("smed2plugin.typesfile", ifc.getSelectedFile().getPath());
-            Scanner tin = new Scanner(new FileInputStream(ifc.getSelectedFile()));
+            Scanner tin = new Scanner(new FileInputStream(ifc.getSelectedFile()), "UTF-8");
             while (tin.hasNext()) {
                 Obj type = S57obj.enumType(tin.next());
                 if (type != Obj.UNKOBJ)
@@ -85,7 +87,7 @@ public class PanelS57 extends JPanel {
         in.close();
 
         DataSet data = new DataSet();
-        data.setUploadDiscouraged(true);
+        data.setUploadPolicy(UploadPolicy.DISCOURAGED);
 
         for (long id : map.index.keySet()) {
             Feature feature = map.index.get(id);
@@ -200,8 +202,8 @@ public class PanelS57 extends JPanel {
         }
 
         OsmDataLayer layer = new OsmDataLayer(data, "S-57 Import", null);
-        Main.getLayerManager().addLayer(layer);
-        Main.map.mapView.zoomTo(new Bounds(Math.toDegrees(map.bounds.minlat), Math.toDegrees(map.bounds.minlon),
+        MainApplication.getLayerManager().addLayer(layer);
+        MainApplication.getMap().mapView.zoomTo(new Bounds(Math.toDegrees(map.bounds.minlat), Math.toDegrees(map.bounds.minlon),
                                            Math.toDegrees(map.bounds.maxlat), Math.toDegrees(map.bounds.maxlon)));
         PanelMain.setStatus("Import done", Color.green);
     }

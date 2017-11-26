@@ -237,7 +237,7 @@ public class CadastrePlugin extends Plugin {
 
     private static void initCacheDir() {
         if (Main.pref.get("cadastrewms.cacheDir").isEmpty()) {
-            cacheDir = new File(Main.pref.getCacheDirectory(true), "cadastrewms").getAbsolutePath();
+            cacheDir = new File(Main.pref.getDirs().getCacheDirectory(true), "cadastrewms").getAbsolutePath();
         } else {
             cacheDir = Main.pref.get("cadastrewms.cacheDir");
         }

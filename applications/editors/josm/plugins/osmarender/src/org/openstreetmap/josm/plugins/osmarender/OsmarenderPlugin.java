@@ -7,11 +7,13 @@ import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -32,8 +34,10 @@ import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MainMenu;
 import org.openstreetmap.josm.gui.MapFrame;
+import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.preferences.PreferenceSetting;
 import org.openstreetmap.josm.gui.preferences.PreferenceTabbedPane;
 import org.openstreetmap.josm.gui.preferences.SubPreferenceSetting;
@@ -43,6 +47,7 @@ import org.openstreetmap.josm.io.OsmWriterFactory;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
 import org.openstreetmap.josm.tools.GBC;
+import org.openstreetmap.josm.tools.Logging;
 import org.openstreetmap.josm.tools.PlatformHookWindows;
 
 public class OsmarenderPlugin extends Plugin {
@@ -55,26 +60,28 @@ public class OsmarenderPlugin extends Plugin {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            DataSet ds = Main.getLayerManager().getEditDataSet();
+            DataSet ds = MainApplication.getLayerManager().getEditDataSet();
             if (ds == null) {
                 return;
             }
 
             // get all stuff visible on screen
-            LatLon bottomLeft = Main.map.mapView.getLatLon(0,Main.map.mapView.getHeight());
-            LatLon topRight = Main.map.mapView.getLatLon(Main.map.mapView.getWidth(), 0);
+            MapView mapView = MainApplication.getMap().mapView;
+            LatLon bottomLeft = mapView.getLatLon(0, mapView.getHeight());
+            LatLon topRight = mapView.getLatLon(mapView.getWidth(), 0);
             Bounds b = new Bounds(bottomLeft, topRight);
 
             try {
                 writeGenerated(b);
             } catch (IOException ex) {
                 // how handle the exception?
-            	Main.error(ex);
+            	Logging.error(ex);
             }
 
             String firefox = Main.pref.get("osmarender.firefox", "firefox");
+            String pluginDir = getPluginDirs().getUserDataDirectory(false).getPath();
             try (OsmWriter w = OsmWriterFactory.createOsmWriter(new PrintWriter(new OutputStreamWriter(
-                    new FileOutputStream(getPluginDir()+File.separator+"data.osm"), "UTF-8")), false, "0.6")) {
+                    new FileOutputStream(pluginDir+File.separator+"data.osm"), "UTF-8")), false, "0.6")) {
                 // write to plugin dir
                 w.header();
 
@@ -117,9 +124,9 @@ public class OsmarenderPlugin extends Plugin {
                 // get the exec line
                 String argument;
                 if (Main.platform instanceof PlatformHookWindows)
-                    argument = "file:///"+getPluginDir().replace('\\','/').replace(" ","%20")+File.separator+"generated.xml\"";
+                    argument = "file:///"+pluginDir.replace('\\','/').replace(" ","%20")+File.separator+"generated.xml\"";
                 else
-                    argument = getPluginDir()+File.separator+"generated.xml";
+                    argument = pluginDir+File.separator+"generated.xml";
 
                 // launch up the viewer
                 Runtime.getRuntime().exec(new String[]{firefox, argument});
@@ -139,7 +146,7 @@ public class OsmarenderPlugin extends Plugin {
      */
     public OsmarenderPlugin(PluginInformation info) throws IOException {
         super(info);
-        osmarenderMenu = MainMenu.add(Main.main.menu.viewMenu, new Action());
+        osmarenderMenu = MainMenu.add(MainApplication.getMenu().viewMenu, new Action());
         osmarenderMenu.setVisible(false);
 
         // install the xsl and xml file
@@ -202,11 +209,12 @@ public class OsmarenderPlugin extends Plugin {
             "maxlat=\"" + b.getMax().lat() + "\" " +
             "minlon=\"" + b.getMin().lon() + "\" " +
             "maxlon=\"" + b.getMax().lon() + "\" " + "/>";
+        String pluginDir = getPluginDirs().getUserDataDirectory(false).getPath();
 
         try (
             BufferedReader reader = new BufferedReader(
-                    new FileReader( getPluginDir() + File.separator + "osm-map-features.xml") );
-            PrintWriter writer = new PrintWriter( getPluginDir() + File.separator + "generated.xml", "UTF-8");
+                    new InputStreamReader(new FileInputStream(pluginDir + File.separator + "osm-map-features.xml"), StandardCharsets.UTF_8));
+            PrintWriter writer = new PrintWriter( pluginDir + File.separator + "generated.xml", "UTF-8");
         ) {
             // osm-map-features.xml contain two placemark
             // (bounds_mkr1 and bounds_mkr2). We write the bounds tag between the two

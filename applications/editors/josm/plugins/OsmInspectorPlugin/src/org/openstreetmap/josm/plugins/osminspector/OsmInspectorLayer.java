@@ -52,16 +52,17 @@ import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.plugins.osminspector.gui.OsmInspectorDialog;
 import org.openstreetmap.josm.tools.ImageProvider;
+import org.openstreetmap.josm.tools.Logging;
 
 import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.io.ParseException;
 
-@SuppressWarnings({ "deprecation"})
 public class OsmInspectorLayer extends Layer {
 
 	private StyleFactory sf = CommonFactoryFinder.getStyleFactory(null);
@@ -365,7 +366,7 @@ public class OsmInspectorLayer extends Layer {
 					.getFeatures(typeName, monitor);
 			setGeometry(selectGeomType, typeName);
 
-			Main.info("Osm Inspector Features size: " + features.size());
+			Logging.info("Osm Inspector Features size: " + features.size());
 			Style style = createDefaultStyle(idx, selectedFeatures);
 
 			OSMIFeatureTracker tracker = new OSMIFeatureTracker(features);
@@ -409,7 +410,7 @@ public class OsmInspectorLayer extends Layer {
 		selectGeomType.clear();
 		selectGeomType.add(GeomType.POINT);
 
-		ProgressMonitor monitor = new ProgressMonitor(Main.map.mapView,
+		ProgressMonitor monitor = new ProgressMonitor(MainApplication.getMap().mapView,
 				"Loading features", "", 0, 100);
 
 		for (int idx = 1; idx < typeNames.length; ++idx) {
@@ -421,7 +422,7 @@ public class OsmInspectorLayer extends Layer {
 					.getFeatures(typeName, monitor);
 			setGeometry(selectGeomType, typeName);
 
-			Main.info("Osm Inspector Features size: " + features.size());
+			Logging.info("Osm Inspector Features size: " + features.size());
 
 			OSMIFeatureTracker tracker = arrFeatures.get(idx - layerOffset);
 			tracker.mergeFeatures(features);
@@ -511,7 +512,7 @@ public class OsmInspectorLayer extends Layer {
 	}
 
 	private void setGeometry(ArrayList<GeomType> selectedTypes, String typename) {
-	    Main.info("Passed type is" + typename);
+	    Logging.info("Passed type is" + typename);
 		if (typename.compareTo("duplicate_ways") == 0) {
 			geometryType = GeomType.LINE;
 		} else
@@ -576,15 +577,14 @@ public class OsmInspectorLayer extends Layer {
 
 	public void updateView() {
 		this.dialog.revalidate();
-		Main.map.mapView.revalidate();
-		Main.map.repaint();
+		invalidate();
 	}
 
 	public void selectFeatures(int x, int y) {
 		int pixelDelta = 2;
-		LatLon clickUL = Main.map.mapView.getLatLon(x - pixelDelta, y
+		LatLon clickUL = MainApplication.getMap().mapView.getLatLon(x - pixelDelta, y
 				- pixelDelta);
-		LatLon clickLR = Main.map.mapView.getLatLon(x + pixelDelta, y
+		LatLon clickLR = MainApplication.getMap().mapView.getLatLon(x + pixelDelta, y
 				+ pixelDelta);
 
 		Envelope envelope = new Envelope(
@@ -617,7 +617,7 @@ public class OsmInspectorLayer extends Layer {
 
 				try (FeatureIterator<SimpleFeature> iter = selectedFeatures.features()) {
     
-    				Main.info("Selected features " + selectedFeatures.size());
+    				Logging.info("Selected features " + selectedFeatures.size());
     
     				while (iter.hasNext()) {
     					SimpleFeature feature = iter.next();
@@ -629,7 +629,7 @@ public class OsmInspectorLayer extends Layer {
 				Style style = createDefaultStyle(idx + layerOffset, IDs);
 				content.addLayer(new FeatureLayer(features, style));
 			} catch (IOException e) {
-				Main.error(e);
+				Logging.error(e);
 			}
 		}
 
@@ -637,7 +637,7 @@ public class OsmInspectorLayer extends Layer {
 	}
 
 	public void selectFeatures(LatLon center) {
-		Point point = Main.map.mapView.getPoint(center);
+		Point point = MainApplication.getMap().mapView.getPoint(center);
 		selectFeatures(point.x, point.y);
 	}
 

@@ -13,7 +13,6 @@ import java.lang.reflect.Modifier;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.preferences.JosmBaseDirectories;
 import org.openstreetmap.josm.data.projection.Projections;
-import org.openstreetmap.josm.gui.preferences.ToolbarPreferences;
 import org.openstreetmap.josm.spi.preferences.Config;
 import org.openstreetmap.josm.tools.I18n;
 
@@ -49,9 +48,6 @@ public final class TestUtil {
       I18n.set(Main.pref.get("language", "en"));
       Main.setProjection(Projections.getProjectionByCode("EPSG:3857")); // Mercator
       isInitialized = true;
-      if (Main.toolbar == null) {
-        Main.toolbar = new ToolbarPreferences();
-      }
     }
   }
 

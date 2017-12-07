@@ -396,8 +396,10 @@ public class Signals extends Rules {
                 }
             }
         }
-        Renderer.symbol(Beacons.LightFlare, new Scheme(LightColours.get(col)),
+        if (!(hasAttribute(Obj.LIGHTS, Att.CATLIT) && (testAttribute(Obj.LIGHTS, Att.CATLIT, CatLIT.LIT_FLDL)))) {
+        	Renderer.symbol(Beacons.LightFlare, new Scheme(LightColours.get(col)),
                 new Delta(Handle.BC, AffineTransform.getRotateInstance(Math.toRadians(120))));
+        }
         if (Renderer.zoom >= 12) {
             String str = "";
             if (lights.get(1) != null) {

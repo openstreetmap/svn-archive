@@ -31,12 +31,22 @@ public final class Topmarks {
     // CHECKSTYLE.OFF: LineLength
     public static final Symbol RadarReflector = new Symbol();
     static {
-        RadarReflector.add(new Instr(Form.BBOX, new Rectangle2D.Double(-50, -40, 100, 40)));
-        RadarReflector.add(new Instr(Form.STRK, new BasicStroke(6, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
-        RadarReflector.add(new Instr(Form.FILL, Color.black));
-        Path2D.Double p = new Path2D.Double(); p.moveTo(-30, -3); p.quadTo(0, -40, 30, -3); p.moveTo(0, -20); p.lineTo(0, -37);
-        p.moveTo(-30, -3); p.lineTo(-43, -14); p.moveTo(30, -3); p.lineTo(44, -14); p.moveTo(-15, -14); p.lineTo(-25, -30); p.moveTo(15, -14); p.lineTo(25, -30);
-        RadarReflector.add(new Instr(Form.PLIN, p));
+      RadarReflector.add(new Instr(Form.BBOX, new Rectangle2D.Double(-50, -40, 100, 40)));
+      RadarReflector.add(new Instr(Form.STRK, new BasicStroke(6, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
+      RadarReflector.add(new Instr(Form.FILL, Color.black));
+      Path2D.Double p = new Path2D.Double(); p.moveTo(-30, -3); p.quadTo(0, -40, 30, -3); p.moveTo(0, -20); p.lineTo(0, -37);
+      p.moveTo(-30, -3); p.lineTo(-43, -14); p.moveTo(30, -3); p.lineTo(44, -14); p.moveTo(-15, -14); p.lineTo(-25, -30); p.moveTo(15, -14); p.lineTo(25, -30);
+      RadarReflector.add(new Instr(Form.PLIN, p));
+    }
+
+    public static final Symbol TopArrow = new Symbol();
+    static {
+    	TopArrow.add(new Instr(Form.BBOX, new Rectangle2D.Double(-20, -80, 40, 80)));
+    	TopArrow.add(new Instr(Form.STRK, new BasicStroke(4, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
+    	TopArrow.add(new Instr(Form.FILL, Color.black));
+      Path2D.Double p = new Path2D.Double(); p.moveTo(0, 0); p.lineTo(0, -25); p.lineTo(-10, -25); p.lineTo(-10, -43);
+      p.lineTo(0, -50); p.lineTo(10, -43); p.lineTo(10, -25); p.lineTo(0, -25);
+    	TopArrow.add(new Instr(Form.PLIN, p));
     }
 
     public static final Symbol TopBesom = new Symbol();
@@ -526,7 +536,7 @@ public final class Topmarks {
         Shapes.put(TopSHP.TOP_TRAP, TopTrapeziumU); Shapes.put(TopSHP.TOP_ITRAP, TopTrapeziumD); Shapes.put(TopSHP.TOP_COSP, TopConeSphere);
         Shapes.put(TopSHP.TOP_CIRC, TopCircle); Shapes.put(TopSHP.TOP_CRSS, TopCrosses); Shapes.put(TopSHP.TOP_T, TopT); Shapes.put(TopSHP.TOP_TRCL, TopTriangleCircle);
         Shapes.put(TopSHP.TOP_CRCL, TopCrossCircle); Shapes.put(TopSHP.TOP_RHCL, TopRhombusCircle); Shapes.put(TopSHP.TOP_CLTR, TopCircleTriangle);
-        Shapes.put(TopSHP.TOP_CYSP, TopCanSphere); Shapes.put(TopSHP.TOP_OTHR, TopOther);
+        Shapes.put(TopSHP.TOP_CYSP, TopCanSphere); Shapes.put(TopSHP.TOP_OTHR, TopOther); Shapes.put(TopSHP.TOP_ARRW, TopArrow);
     }
 
     // CHECKSTYLE.OFF: SingleSpaceSeparator
@@ -544,6 +554,5 @@ public final class Topmarks {
 
     public static final Delta FloatDelta  = new Delta(Handle.BC, AffineTransform.getTranslateInstance(0.0, -42.0));
     public static final Delta BeaconDelta = new Delta(Handle.BC, AffineTransform.getTranslateInstance(0.0, -70.0));
-    public static final Delta LightDelta  = new Delta(Handle.BC, AffineTransform.getTranslateInstance(0.0, -20.0));
     // CHECKSTYLE.ON: SingleSpaceSeparator
 }

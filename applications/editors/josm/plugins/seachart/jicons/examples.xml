@@ -13,8 +13,10 @@
     <tag k="seamark:topmark:colour" v="green" />
     <tag k="seamark:topmark:shape" v="cone, point up" />
   </icon>
-  <icon width="100" height="100" scale="1.0" file="notice" format="PNG" >
-    <tag k="seamark:type" v="small_craft_facility" />
-    <tag k="seamark:small_craft_facility:category" v="fuel_station" />
+  <icon width="100" height="100" scale="0.5" file="floodlight" format="PNG" >
+    <tag k="seamark:type" v="light_minor" />
+    <tag k="seamark:light:category" v="floodlight" />
+    <tag k="seamark:topmark:shape" v="arrow" />
+    <tag k="seamark:topmark:orientation" v="45" />
   </icon>
 </icons>

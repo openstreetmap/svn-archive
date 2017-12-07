@@ -230,7 +230,7 @@ public final class Harbours {
     public static final Symbol SignalStation = new Symbol();
     static {
         SignalStation.add(new Instr(Form.STRK, new BasicStroke(4, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
-        SignalStation.add(new Instr(Form.ELPS, new Ellipse2D.Double(-25, -25, 50, 50)));
+        SignalStation.add(new Instr(Form.ELPS, new Ellipse2D.Double(-20, -20, 40, 40)));
         SignalStation.add(new Instr(Form.RSHP, new Ellipse2D.Double(-4, -4, 8, 8)));
     }
 

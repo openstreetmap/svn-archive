@@ -31,6 +31,7 @@ import s57.S57val.CatCRN;
 import s57.S57val.CatDIS;
 import s57.S57val.CatHAF;
 import s57.S57val.CatLAM;
+import s57.S57val.CatLIT;
 import s57.S57val.CatLMK;
 import s57.S57val.CatMOR;
 import s57.S57val.CatNMK;
@@ -1057,25 +1058,39 @@ public class Rules {
         case LIGHTS:
         case PILPNT:
             if (Renderer.zoom >= 14) {
-                Renderer.symbol(Beacons.LightMinor);
-                ok = true;
+              if (hasAttribute(Obj.LIGHTS, Att.CATLIT) && (testAttribute(Obj.LIGHTS, Att.CATLIT, CatLIT.LIT_FLDL))) {
+              	Renderer.symbol(Beacons.Floodlight);
+              	Renderer.symbol(Harbours.SignalStation);
+              } else {
+              	Renderer.symbol(Beacons.LightMinor);
+              }
+              ok = true;
             }
             break;
         default:
             break;
         }
         if (ok) {
+        	AffineTransform tr = new AffineTransform();
             if (feature.objs.containsKey(Obj.TOPMAR)) {
                 AttMap topmap = feature.objs.get(Obj.TOPMAR).get(0);
                 if (topmap.containsKey(Att.TOPSHP)) {
-                    Renderer.symbol(Topmarks.Shapes.get(((ArrayList<TopSHP>) (topmap.get(Att.TOPSHP).val)).get(0)),
-                            getScheme(Obj.TOPMAR), Topmarks.LightDelta);
+                	if (hasAttribute(Obj.TOPMAR, Att.ORIENT)) {
+                		tr.rotate(Math.toRadians((Double)getAttVal(Obj.TOPMAR, Att.ORIENT)));
+                	}
+                	tr.translate(0, -20);
+                  Renderer.symbol(Topmarks.Shapes.get(((ArrayList<TopSHP>) (topmap.get(Att.TOPSHP).val)).get(0)),
+                  		getScheme(Obj.TOPMAR), new Delta(Handle.BC, tr));
                 }
             } else if (feature.objs.containsKey(Obj.DAYMAR)) {
                 AttMap topmap = feature.objs.get(Obj.DAYMAR).get(0);
                 if (topmap.containsKey(Att.TOPSHP)) {
-                    Renderer.symbol(Topmarks.Shapes.get(((ArrayList<TopSHP>) (topmap.get(Att.TOPSHP).val)).get(0)),
-                            getScheme(Obj.DAYMAR), Topmarks.LightDelta);
+                	if (hasAttribute(Obj.DAYMAR, Att.ORIENT)) {
+                		tr.rotate(Math.toRadians((Double)getAttVal(Obj.DAYMAR, Att.ORIENT)));
+                	}
+                	tr.translate(0, -20);
+                  Renderer.symbol(Topmarks.Shapes.get(((ArrayList<TopSHP>) (topmap.get(Att.TOPSHP).val)).get(0)),
+                  		getScheme(Obj.DAYMAR), new Delta(Handle.BC, tr));
                 }
             }
             Signals.addSignals();

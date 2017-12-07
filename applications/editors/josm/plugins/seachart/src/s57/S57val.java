@@ -985,7 +985,7 @@ public final class S57val { // S57 Attribute values lookup tables & methods
 
     public enum TopSHP { TOP_UNKN, TOP_CONE, TOP_ICONE, TOP_SPHR, TOP_ISD, TOP_CAN, TOP_BORD, TOP_SALT, TOP_CROS, TOP_CUBE, TOP_WEST, TOP_EAST, TOP_RHOM,
         TOP_NORTH, TOP_SOUTH, TOP_BESM, TOP_IBESM, TOP_FLAG, TOP_SPRH, TOP_SQUR, TOP_HRECT, TOP_VRECT, TOP_TRAP, TOP_ITRAP, TOP_TRI, TOP_ITRI, TOP_CIRC,
-        TOP_CRSS, TOP_T, TOP_TRCL, TOP_CRCL, TOP_RHCL, TOP_CLTR, TOP_OTHR, TOP_CYSP, TOP_COSP }
+        TOP_CRSS, TOP_T, TOP_TRCL, TOP_CRCL, TOP_RHCL, TOP_CLTR, TOP_OTHR, TOP_CYSP, TOP_COSP, TOP_ARRW }
 
     private static final EnumMap<TopSHP, S57enum> Topshp = new EnumMap<>(TopSHP.class); static {
         Topshp.put(TopSHP.TOP_UNKN, new S57enum(0, ""));
@@ -1000,7 +1000,7 @@ public final class S57val { // S57 Attribute values lookup tables & methods
         Topshp.put(TopSHP.TOP_ITRI, new S57enum(25, "triangle, point down")); Topshp.put(TopSHP.TOP_CIRC, new S57enum(26, "circle")); Topshp.put(TopSHP.TOP_CRSS, new S57enum(27, "2 upright crosses"));
         Topshp.put(TopSHP.TOP_T, new S57enum(28, "t-shape")); Topshp.put(TopSHP.TOP_TRCL, new S57enum(29, "triangle, point up over circle")); Topshp.put(TopSHP.TOP_CRCL, new S57enum(30, "upright cross over circle"));
         Topshp.put(TopSHP.TOP_RHCL, new S57enum(31, "rhombus over circle")); Topshp.put(TopSHP.TOP_CLTR, new S57enum(32, "circle over triangle, point up")); Topshp.put(TopSHP.TOP_OTHR, new S57enum(33, "other"));
-        Topshp.put(TopSHP.TOP_CYSP, new S57enum(34, "cylinder over sphere")); Topshp.put(TopSHP.TOP_COSP, new S57enum(35, "cone, point up over sphere"));
+        Topshp.put(TopSHP.TOP_CYSP, new S57enum(34, "cylinder over sphere")); Topshp.put(TopSHP.TOP_ARRW, new S57enum(99, "arrow"));
     }
 
     public enum TrfTRF { TRF_UNKN, TRF_INBD, TRF_OBND, TRF_ONEW, TRF_TWOW }

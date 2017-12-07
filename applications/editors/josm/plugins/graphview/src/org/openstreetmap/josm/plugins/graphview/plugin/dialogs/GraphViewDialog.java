@@ -40,6 +40,7 @@ import org.openstreetmap.josm.plugins.graphview.plugin.GraphViewPlugin;
 import org.openstreetmap.josm.plugins.graphview.plugin.layer.PreferencesColorScheme;
 import org.openstreetmap.josm.plugins.graphview.plugin.preferences.GraphViewPreferences;
 import org.openstreetmap.josm.plugins.graphview.plugin.preferences.InternalRuleset;
+import org.openstreetmap.josm.tools.ImageProvider;
 import org.openstreetmap.josm.tools.Logging;
 import org.openstreetmap.josm.tools.Shortcut;
 
@@ -153,17 +154,25 @@ public class GraphViewDialog extends ToggleDialog implements Observer {
             selectionPanel.add(colorSchemeComboBox);
         }
 
-        createLayout(selectionPanel, true, Arrays.asList(new SideButton[] {
-            new SideButton(new AbstractAction(tr("Create/update graph")) {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    plugin.createGraphViewLayer();
-                }
-            })
-        }));
+        createLayout(selectionPanel, true, Arrays.asList(
+            new SideButton(new GraphViewAction())
+        ));
 
         updateSelections();
         this.preferences.addObserver(this);
+    }
+
+    private class GraphViewAction extends AbstractAction {
+
+        GraphViewAction() {
+            super(tr("Create/update graph"));
+            new ImageProvider("graphview_no_shadow").getResource().attachImageIcon(this, true);
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            plugin.createGraphViewLayer();
+        }
     }
 
     private final ActionListener rulesetActionListener = new ActionListener() {

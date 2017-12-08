@@ -38,12 +38,14 @@ for my $line (@lines)
   {
     my $val = $1;
     $val =~ s/&amp;/&/g;
+    $val =~ s/"/\\"/g;
     print "tr(\"$val\"); /* $line */\n";
   }
   elsif($line =~ /<description +lang=['"]en['"]>(.*)<\/description>/)
   {
     my $val = $1;
     $val =~ s/&amp;/&/g;
+    $val =~ s/"/\\"/g;
     print "tr(\"$val\"); /* $line */\n";
   }
   elsif($line =~ /^[ \t]*$/)

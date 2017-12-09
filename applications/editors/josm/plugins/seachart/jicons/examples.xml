@@ -16,9 +16,8 @@
   <icon width="200" height="200" scale="0.5" file="hib" format="PNG" >
     <tag k="seamark:type" v="beacon_special_purpose" />
     <tag k="seamark:beacon_special_purpose:shape" v="stake" />
-    <tag k="seamark:topmark:shape" v="arrow" />
+    <tag k="seamark:topmark:shape" v="triangle, point up" />
     <tag k="seamark:topmark:status" v="illuminated" />
-    <tag k="seamark:topmark:orientation" v="45" />
   </icon>
   <icon width="100" height="100" scale="0.5" file="floodlight" format="PNG" >
     <tag k="seamark:type" v="light" />

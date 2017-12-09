@@ -557,6 +557,9 @@ public class Rules {
 				AffineTransform tr = new AffineTransform(Topmarks.BeaconDelta.t);
 				if (feature.objs.containsKey(Obj.TOPMAR)) {
 					AttMap topmap = feature.objs.get(Obj.TOPMAR).get(0);
+					if (topmap.containsKey(Att.STATUS) && (testAttribute(Obj.TOPMAR, Att.STATUS, StsSTS.STS_ILLD))) {
+						Renderer.symbol(Beacons.Floodlight);
+					}
 					if (topmap.containsKey(Att.TOPSHP)) {
 						if (topmap.containsKey(Att.ORIENT)) {
 							tr.rotate(Math.toRadians((Double)topmap.get(Att.ORIENT).val));
@@ -565,6 +568,9 @@ public class Rules {
 					}
 				} else if (feature.objs.containsKey(Obj.DAYMAR)) {
 					AttMap topmap = feature.objs.get(Obj.DAYMAR).get(0);
+					if (topmap.containsKey(Att.STATUS) && (testAttribute(Obj.DAYMAR, Att.STATUS, StsSTS.STS_ILLD))) {
+						Renderer.symbol(Beacons.Floodlight);
+					}
 					if (topmap.containsKey(Att.TOPSHP)) {
 						if (topmap.containsKey(Att.ORIENT)) {
 							tr.rotate(Math.toRadians((Double)topmap.get(Att.ORIENT).val));

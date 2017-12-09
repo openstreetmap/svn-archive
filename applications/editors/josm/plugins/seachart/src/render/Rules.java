@@ -554,15 +554,22 @@ public class Rules {
 				}
 			} else {
 				Renderer.symbol(Beacons.Shapes.get(shape), getScheme(feature.type));
+				AffineTransform tr = new AffineTransform(Topmarks.BeaconDelta.t);
 				if (feature.objs.containsKey(Obj.TOPMAR)) {
 					AttMap topmap = feature.objs.get(Obj.TOPMAR).get(0);
 					if (topmap.containsKey(Att.TOPSHP)) {
-						Renderer.symbol(Topmarks.Shapes.get(((ArrayList<TopSHP>) (topmap.get(Att.TOPSHP).val)).get(0)), getScheme(Obj.TOPMAR), Topmarks.BeaconDelta);
+						if (topmap.containsKey(Att.ORIENT)) {
+							tr.rotate(Math.toRadians((Double)topmap.get(Att.ORIENT).val));
+						}
+						Renderer.symbol(Topmarks.Shapes.get(((ArrayList<TopSHP>) (topmap.get(Att.TOPSHP).val)).get(0)), getScheme(Obj.TOPMAR), new Delta(Handle.BC, tr));
 					}
 				} else if (feature.objs.containsKey(Obj.DAYMAR)) {
 					AttMap topmap = feature.objs.get(Obj.DAYMAR).get(0);
 					if (topmap.containsKey(Att.TOPSHP)) {
-						Renderer.symbol(Topmarks.Shapes.get(((ArrayList<TopSHP>) (topmap.get(Att.TOPSHP).val)).get(0)), getScheme(Obj.DAYMAR), Topmarks.BeaconDelta);
+						if (topmap.containsKey(Att.ORIENT)) {
+							tr.rotate(Math.toRadians((Double)topmap.get(Att.ORIENT).val));
+						}
+						Renderer.symbol(Topmarks.Shapes.get(((ArrayList<TopSHP>) (topmap.get(Att.TOPSHP).val)).get(0)), getScheme(Obj.DAYMAR), new Delta(Handle.BC, tr));
 					}
 				}
 			}
@@ -977,45 +984,6 @@ public class Rules {
 	}
 
 	@SuppressWarnings("unchecked")
-	private static void points() {
-		boolean ok = false;
-		switch (feature.type) {
-		case FOGSIG:
-			if (Renderer.zoom >= 12) {
-				if (feature.objs.containsKey(Obj.LIGHTS))
-					lights();
-				else
-					Renderer.symbol(Harbours.Post);
-				ok = true;
-			}
-			break;
-		default:
-			if (Renderer.zoom >= 14) {
-				if (feature.objs.containsKey(Obj.LIGHTS))
-					lights();
-				else
-					Renderer.symbol(Harbours.Post);
-				ok = true;
-			}
-			break;
-		}
-		if (ok) {
-			if (feature.objs.containsKey(Obj.TOPMAR)) {
-				AttMap topmap = feature.objs.get(Obj.TOPMAR).get(0);
-				if (topmap.containsKey(Att.TOPSHP)) {
-					Renderer.symbol(Topmarks.Shapes.get(((ArrayList<TopSHP>) (topmap.get(Att.TOPSHP).val)).get(0)), getScheme(Obj.TOPMAR), null);
-				}
-			} else if (feature.objs.containsKey(Obj.DAYMAR)) {
-				AttMap topmap = feature.objs.get(Obj.DAYMAR).get(0);
-				if (topmap.containsKey(Att.TOPSHP)) {
-					Renderer.symbol(Topmarks.Shapes.get(((ArrayList<TopSHP>) (topmap.get(Att.TOPSHP).val)).get(0)), getScheme(Obj.DAYMAR), null);
-				}
-			}
-			Signals.addSignals();
-		}
-	}
-
-	@SuppressWarnings("unchecked")
 	private static void lights() {
 		boolean ok = false;
 		switch (feature.type) {
@@ -1050,10 +1018,10 @@ public class Rules {
 				}
 				AttMap topmap = feature.objs.get(Obj.TOPMAR).get(0);
 				if (topmap.containsKey(Att.TOPSHP)) {
-					if (hasAttribute(Obj.TOPMAR, Att.ORIENT)) {
-						tr.rotate(Math.toRadians((Double) getAttVal(Obj.TOPMAR, Att.ORIENT)));
+					if (topmap.containsKey(Att.ORIENT)) {
+						tr.rotate(Math.toRadians((Double)topmap.get(Att.ORIENT).val));
 					}
-					tr.translate(0, -20);
+					tr.concatenate(Topmarks.LightDelta.t);
 					Renderer.symbol(Topmarks.Shapes.get(((ArrayList<TopSHP>) (topmap.get(Att.TOPSHP).val)).get(0)), getScheme(Obj.TOPMAR), new Delta(Handle.BC, tr));
 				}
 			} else if (feature.objs.containsKey(Obj.DAYMAR)) {
@@ -1062,10 +1030,10 @@ public class Rules {
 				}
 				AttMap topmap = feature.objs.get(Obj.DAYMAR).get(0);
 				if (topmap.containsKey(Att.TOPSHP)) {
-					if (hasAttribute(Obj.DAYMAR, Att.ORIENT)) {
-						tr.rotate(Math.toRadians((Double) getAttVal(Obj.DAYMAR, Att.ORIENT)));
+					if (topmap.containsKey(Att.ORIENT)) {
+						tr.rotate(Math.toRadians((Double)topmap.get(Att.ORIENT).val));
 					}
-					tr.translate(0, -20);
+					tr.concatenate(Topmarks.LightDelta.t);
 					Renderer.symbol(Topmarks.Shapes.get(((ArrayList<TopSHP>) (topmap.get(Att.TOPSHP).val)).get(0)), getScheme(Obj.DAYMAR), new Delta(Handle.BC, tr));
 				}
 			}
@@ -1262,6 +1230,45 @@ public class Rules {
 			Renderer.symbol(Landmarks.Platform);
 		addName(15, new Font("Arial", Font.BOLD, 40), new Delta(Handle.BL, AffineTransform.getTranslateInstance(20, -50)));
 		Signals.addSignals();
+	}
+
+	@SuppressWarnings("unchecked")
+	private static void points() {
+		boolean ok = false;
+		switch (feature.type) {
+		case FOGSIG:
+			if (Renderer.zoom >= 12) {
+				if (feature.objs.containsKey(Obj.LIGHTS))
+					lights();
+				else
+					Renderer.symbol(Harbours.Post);
+				ok = true;
+			}
+			break;
+		default:
+			if (Renderer.zoom >= 14) {
+				if (feature.objs.containsKey(Obj.LIGHTS))
+					lights();
+				else
+					Renderer.symbol(Harbours.Post);
+				ok = true;
+			}
+			break;
+		}
+		if (ok) {
+			if (feature.objs.containsKey(Obj.TOPMAR)) {
+				AttMap topmap = feature.objs.get(Obj.TOPMAR).get(0);
+				if (topmap.containsKey(Att.TOPSHP)) {
+					Renderer.symbol(Topmarks.Shapes.get(((ArrayList<TopSHP>) (topmap.get(Att.TOPSHP).val)).get(0)), getScheme(Obj.TOPMAR), null);
+				}
+			} else if (feature.objs.containsKey(Obj.DAYMAR)) {
+				AttMap topmap = feature.objs.get(Obj.DAYMAR).get(0);
+				if (topmap.containsKey(Att.TOPSHP)) {
+					Renderer.symbol(Topmarks.Shapes.get(((ArrayList<TopSHP>) (topmap.get(Att.TOPSHP).val)).get(0)), getScheme(Obj.DAYMAR), null);
+				}
+			}
+			Signals.addSignals();
+		}
 	}
 
 	private static void ports() {

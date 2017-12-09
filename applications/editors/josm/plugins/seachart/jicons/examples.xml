@@ -20,4 +20,10 @@
     <tag k="seamark:topmark:status" v="illuminated" />
     <tag k="seamark:topmark:orientation" v="45" />
   </icon>
+  <icon width="100" height="100" scale="0.5" file="floodlight" format="PNG" >
+    <tag k="seamark:type" v="light" />
+    <tag k="seamark:light:category" v="floodlight" />
+    <tag k="seamark:topmark:shape" v="arrow" />
+    <tag k="seamark:topmark:orientation" v="45" />
+  </icon>
 </icons>

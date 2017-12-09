@@ -554,5 +554,6 @@ public final class Topmarks {
 
     public static final Delta FloatDelta  = new Delta(Handle.BC, AffineTransform.getTranslateInstance(0.0, -42.0));
     public static final Delta BeaconDelta = new Delta(Handle.BC, AffineTransform.getTranslateInstance(0.0, -70.0));
+    public static final Delta LightDelta  = new Delta(Handle.BC, AffineTransform.getTranslateInstance(0.0, -20.0));
     // CHECKSTYLE.ON: SingleSpaceSeparator
 }

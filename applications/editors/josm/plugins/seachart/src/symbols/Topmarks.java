@@ -44,8 +44,7 @@ public final class Topmarks {
     	TopArrow.add(new Instr(Form.BBOX, new Rectangle2D.Double(-20, -80, 40, 80)));
     	TopArrow.add(new Instr(Form.STRK, new BasicStroke(4, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
     	TopArrow.add(new Instr(Form.FILL, Color.black));
-      Path2D.Double p = new Path2D.Double(); p.moveTo(0, 0); p.lineTo(0, -25); p.lineTo(-10, -25); p.lineTo(-10, -43);
-      p.lineTo(0, -50); p.lineTo(10, -43); p.lineTo(10, -25); p.lineTo(0, -25);
+      Path2D.Double p = new Path2D.Double(); p.moveTo(0, 0); p.lineTo(0, -30); p.lineTo(-25, -30); p.lineTo(-30, -20); p.lineTo(-25, -10); p.lineTo(0, -10);
     	TopArrow.add(new Instr(Form.PLIN, p));
     }
 

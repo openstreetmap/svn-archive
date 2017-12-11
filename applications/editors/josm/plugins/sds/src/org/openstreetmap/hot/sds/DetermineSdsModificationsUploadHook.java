@@ -44,7 +44,7 @@ public class DetermineSdsModificationsUploadHook implements UploadHook {
         // check deleted primitives for special tags.
         for (OsmPrimitive del : apiDataSet.getPrimitivesToDelete()) {
             IPrimitive old = plugin.getOriginalPrimitive(del);
-            if (hasSpecialTags(old)) {
+            if (old != null && hasSpecialTags(old)) {
                 // request deletion of all tags for this object on special server.
                 plugin.enqueueForUpload(del, new HashMap<String, String>(), false);
             }

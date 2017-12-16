@@ -110,7 +110,7 @@ public class LiveGpsLayer extends GpxLayer implements PropertyChangeListener {
             if (lastData.isFix()) {
                 setCurrentPosition(lastData.getLatitude(), lastData.getLongitude());
                 if (allowRedraw())
-                    MainApplication.getMap().repaint();
+                    this.setFilterStateChanged();
             }
         }
     }

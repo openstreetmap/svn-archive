@@ -526,7 +526,11 @@ public class Rules {
 
 	@SuppressWarnings("unchecked")
 	private static void beacons() {
-		if ((Renderer.zoom >= 14) || ((Renderer.zoom >= 12) && ((feature.type == Obj.BCNLAT) || (feature.type == Obj.BCNCAR))) || ((Renderer.zoom >= 11) && ((feature.type == Obj.BCNSAW) || hasObject(Obj.RTPBCN)))) {
+		if ((Renderer.zoom >= 14) || ((Renderer.zoom >= 12) && ((feature.type == Obj.BCNLAT) || (feature.type == Obj.BCNCAR)))
+				|| ((Renderer.zoom >= 11) && ((feature.type == Obj.BCNSAW) || hasObject(Obj.RTPBCN)))) {
+			if (testAttribute(feature.type, Att.STATUS, StsSTS.STS_ILLD)) {
+				Renderer.symbol(Beacons.Floodlight);
+			}
 			BcnSHP shape = (BcnSHP) getAttEnum(feature.type, Att.BCNSHP);
 			if (shape == BcnSHP.BCN_UNKN)
 				shape = BcnSHP.BCN_PILE;
@@ -556,13 +560,10 @@ public class Rules {
 				Renderer.symbol(Beacons.Shapes.get(shape), getScheme(feature.type));
 				if (feature.objs.containsKey(Obj.TOPMAR)) {
 					AttMap topmap = feature.objs.get(Obj.TOPMAR).get(0);
-					if (topmap.containsKey(Att.STATUS) && (testAttribute(Obj.TOPMAR, Att.STATUS, StsSTS.STS_ILLD))) {
+					if (testAttribute(Obj.TOPMAR, Att.STATUS, StsSTS.STS_ILLD)) {
 						Renderer.symbol(Beacons.Floodlight);
 					}
 					if (topmap.containsKey(Att.TOPSHP)) {
-						if (topmap.containsKey(Att.ORIENT)) {
-//							tr.rotate(Math.toRadians((Double)topmap.get(Att.ORIENT).val));
-						}
 						Renderer.symbol(Topmarks.Shapes.get(((ArrayList<TopSHP>) (topmap.get(Att.TOPSHP).val)).get(0)), getScheme(Obj.TOPMAR), Topmarks.BeaconDelta);
 					}
 				} else if (feature.objs.containsKey(Obj.DAYMAR)) {
@@ -872,7 +873,7 @@ public class Rules {
 			break;
 		case BUISGL:
 			if (Renderer.zoom >= 16) {
-				if (hasAttribute(Obj.BUISGL, Att.STATUS) && (testAttribute(Obj.BUISGL, Att.STATUS, StsSTS.STS_ILLD))) {
+				if (testAttribute(Obj.BUISGL, Att.STATUS, StsSTS.STS_ILLD)) {
 					Renderer.symbol(Beacons.Floodlight);
 				}
 				ArrayList<Symbol> symbols = new ArrayList<>();
@@ -955,7 +956,7 @@ public class Rules {
 		else if (Renderer.zoom >= 12) {
 			switch (feature.type) {
 			case LNDMRK:
-				if (hasAttribute(Obj.LNDMRK, Att.STATUS) && (testAttribute(Obj.LNDMRK, Att.STATUS, StsSTS.STS_ILLD))) {
+				if (testAttribute(Obj.LNDMRK, Att.STATUS, StsSTS.STS_ILLD)) {
 					Renderer.symbol(Beacons.Floodlight);
 				}
 				ArrayList<CatLMK> cats = (ArrayList<CatLMK>) getAttList(feature.type, Att.CATLMK);
@@ -997,7 +998,7 @@ public class Rules {
 		case LIGHTS:
 		case PILPNT:
 			if (Renderer.zoom >= 14) {
-				if (hasAttribute(Obj.LIGHTS, Att.CATLIT) && (testAttribute(Obj.LIGHTS, Att.CATLIT, CatLIT.LIT_FLDL))) {
+				if (testAttribute(Obj.LIGHTS, Att.CATLIT, CatLIT.LIT_FLDL)) {
 					Renderer.symbol(Beacons.Floodlight, new Delta(Handle.CC, AffineTransform.getRotateInstance(Math.toRadians(180))));
 					Renderer.symbol(Harbours.SignalStation);
 				} else {
@@ -1011,7 +1012,7 @@ public class Rules {
 		}
 		if (ok) {
 			if (feature.objs.containsKey(Obj.TOPMAR)) {
-				if (hasAttribute(Obj.TOPMAR, Att.STATUS) && (testAttribute(Obj.TOPMAR, Att.STATUS, StsSTS.STS_ILLD))) {
+				if (testAttribute(Obj.TOPMAR, Att.STATUS, StsSTS.STS_ILLD)) {
 					Renderer.symbol(Beacons.Floodlight);
 				}
 				AttMap topmap = feature.objs.get(Obj.TOPMAR).get(0);
@@ -1215,6 +1216,9 @@ public class Rules {
 			Renderer.symbol(Buoys.Storage);
 		else
 			Renderer.symbol(Landmarks.Platform);
+		if (testAttribute(feature.type, Att.STATUS, StsSTS.STS_ILLD)) {
+			Renderer.symbol(Beacons.Floodlight);
+		}
 		addName(15, new Font("Arial", Font.BOLD, 40), new Delta(Handle.BL, AffineTransform.getTranslateInstance(20, -50)));
 		Signals.addSignals();
 	}
@@ -1234,6 +1238,9 @@ public class Rules {
 			break;
 		default:
 			if (Renderer.zoom >= 14) {
+				if (testAttribute(feature.type, Att.STATUS, StsSTS.STS_ILLD)) {
+					Renderer.symbol(Beacons.Floodlight);
+				}
 				if (feature.objs.containsKey(Obj.LIGHTS))
 					lights();
 				else

@@ -376,6 +376,8 @@ public class Signals extends Rules {
 
     @SuppressWarnings("unchecked")
     public static void lights() {
+      if ((hasAttribute(Obj.LIGHTS, Att.CATLIT) && (testAttribute(Obj.LIGHTS, Att.CATLIT, CatLIT.LIT_FLDL))))
+      	return;
         Enum<ColCOL> col = null;
         Enum<ColCOL> tcol = null;
         ObjTab lights = feature.objs.get(Obj.LIGHTS);
@@ -396,10 +398,8 @@ public class Signals extends Rules {
                 }
             }
         }
-        if (!(hasAttribute(Obj.LIGHTS, Att.CATLIT) && (testAttribute(Obj.LIGHTS, Att.CATLIT, CatLIT.LIT_FLDL)))) {
-        	Renderer.symbol(Beacons.LightFlare, new Scheme(LightColours.get(col)),
-                new Delta(Handle.BC, AffineTransform.getRotateInstance(Math.toRadians(120))));
-        }
+        Renderer.symbol(Beacons.LightFlare, new Scheme(LightColours.get(col)),
+        		new Delta(Handle.BC, AffineTransform.getRotateInstance(Math.toRadians(120))));
         if (Renderer.zoom >= 12) {
             String str = "";
             if (lights.get(1) != null) {
@@ -697,3 +697,4 @@ public class Signals extends Rules {
         }
     }
 }
+

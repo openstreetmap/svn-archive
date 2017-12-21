@@ -473,7 +473,7 @@
     </target>
     <target name="test-compile" depends="test-init,dist" if="test.present">
         <sequential>
-            <javac debug="on" srcdir="${plugin.test.dir}/unit" destdir="${plugin.test.dir}/build/unit" encoding="UTF-8">
+            <javac debug="on" includeantruntime="false" srcdir="${plugin.test.dir}/unit" destdir="${plugin.test.dir}/build/unit" encoding="UTF-8">
                 <classpath>
                     <fileset refid="plugin.requires.jars"/>
                     <path refid="test.classpath"/>

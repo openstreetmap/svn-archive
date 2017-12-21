@@ -11,6 +11,7 @@ import javax.imageio.spi.IIOServiceProvider;
 import javax.media.jai.JAI;
 import javax.media.jai.OperationRegistry;
 
+import org.geotools.image.ImageWorker;
 import org.geotools.referencing.CRS;
 import org.opengis.referencing.FactoryException;
 import org.opengis.referencing.NoSuchAuthorityCodeException;
@@ -40,6 +41,11 @@ public class GeoToolsPlugin extends Plugin {
         // Disable mediaLib searching that produces unwanted errors
         // See https://www.java.net/node/666373
         System.setProperty("com.sun.media.jai.disableMediaLib", "true");
+
+        // As JAI-Ext will replace the operation registry, it needs to be loaded before we modify it later on
+        if (ImageWorker.isJaiExtEnabled()) {
+            Logging.debug("geotools: load JAI-Ext operations");
+        }
 
         // As the JAI jars are bundled in the geotools plugin, JAI initialization does not work,
         // so we need to perform the tasks described here ("Initialization and automatic loading of registry objects"):

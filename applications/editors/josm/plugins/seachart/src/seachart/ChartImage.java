@@ -7,14 +7,16 @@ import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.geom.Point2D;
 import java.awt.geom.Point2D.Double;
+import java.util.Collections;
+import java.util.List;
 
 import javax.swing.Action;
 
-import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.imagery.ImageryInfo;
 import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.NavigatableComponent.ZoomChangeListener;
 import org.openstreetmap.josm.gui.layer.ImageryLayer;
@@ -51,6 +53,11 @@ public class ChartImage extends ImageryLayer implements ZoomChangeListener, Char
     @Override
     public Action[] getMenuEntries() {
         return null;
+    }
+
+    @Override
+    protected List<OffsetMenuEntry> getOffsetMenuEntries() {
+        return Collections.emptyList();
     }
 
     @Override

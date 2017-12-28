@@ -44,6 +44,7 @@ import org.openstreetmap.josm.plugins.fixAddresses.OSMAddress;
 import org.openstreetmap.josm.plugins.fixAddresses.OSMStreet;
 import org.openstreetmap.josm.plugins.fixAddresses.StringUtils;
 import org.openstreetmap.josm.plugins.fixAddresses.gui.actions.AbstractAddressEditAction;
+import org.openstreetmap.josm.plugins.fixAddresses.gui.actions.ApplyAllGuessesAction;
 import org.openstreetmap.josm.plugins.fixAddresses.gui.actions.AddressActions;
 import org.openstreetmap.josm.tools.ImageProvider;
 
@@ -60,14 +61,13 @@ public class AddressEditDialog extends JDialog implements ActionListener, ListSe
     private JTable unresolvedTable;
     private JTable streetTable;
 
+    private ApplyAllGuessesAction applyGuessesAction = AddressActions.getApplyGuessesAction();
     private AbstractAddressEditAction[] actions = new AbstractAddressEditAction[] {
         AddressActions.getResolveAction(),
         AddressActions.getGuessAddressAction(),
-        AddressActions.getApplyGuessesAction(),
-        AddressActions.getSelectAction(),
+        applyGuessesAction,
         AddressActions.getRemoveTagsAction(),
-        AddressActions.getConvertToRelationAction(),
-        AddressActions.getConvertAllToRelationAction()
+        AddressActions.getSelectAction()
     };
 
     private JLabel streetLabel;
@@ -125,7 +125,7 @@ public class AddressEditDialog extends JDialog implements ActionListener, ListSe
             unresolvedTable.getSelectionModel().setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
             unresolvedTable.getSelectionModel().addListSelectionListener(this);
             unresolvedTable.getSelectionModel().addListSelectionListener(new IncompleteAddressListener());
-            unresolvedTable.addMouseListener(AddressActions.getApplyGuessesAction());
+            unresolvedTable.addMouseListener(applyGuessesAction);
 
             JTableHeader header = unresolvedTable.getTableHeader();
             header.addMouseListener(uaModel.new ColumnListener(unresolvedTable));
@@ -145,21 +145,11 @@ public class AddressEditDialog extends JDialog implements ActionListener, ListSe
 
             try {
                 JPanel unresolvedButtons = new JPanel(new GridLayout(2, 5, 5, 5));
-                SideButton assign = new SideButton(AddressActions.getResolveAction());
-                unresolvedButtons.add(assign);
-
-                SideButton guess = new SideButton(AddressActions.getGuessAddressAction());
-                unresolvedButtons.add(guess);
-                SideButton applyAllGuesses = new SideButton(AddressActions.getApplyGuessesAction());
-                unresolvedButtons.add(applyAllGuesses);
-
-                SideButton removeAddressTags = new SideButton(AddressActions.getRemoveTagsAction());
-                unresolvedButtons.add(removeAddressTags);
-
-                unresolvedButtons.add(new JPanel());
-
-                SideButton selectInMap = new SideButton(AddressActions.getSelectAction());
-                unresolvedButtons.add(selectInMap);
+                for (AbstractAddressEditAction action : actions) {
+                    action.setContainer(addressEditContainer);
+                    SideButton button = new SideButton(action);
+                    unresolvedButtons.add(button);
+                }
                 headerPanel2.setMinimumSize(new Dimension(100, 70));
 
                 unresolvedPanel.add(unresolvedButtons, BorderLayout.SOUTH);
@@ -201,10 +191,6 @@ public class AddressEditDialog extends JDialog implements ActionListener, ListSe
             //this.getContentPane().add(mapPanel, BorderLayout.SOUTH);
         } else {
             this.getContentPane().add(new JLabel(tr("(No data)")), BorderLayout.CENTER);
-        }
-
-        for (int i = 0; i < actions.length; i++) {
-            actions[i].setContainer(addressEditContainer);
         }
 
         JPanel buttonPanel = new JPanel(new GridLayout(1, 10));

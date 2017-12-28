@@ -4,11 +4,8 @@ package org.openstreetmap.josm.plugins.fr.cadastre.wms;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.GridBagLayout;
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.net.CookieHandler;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
@@ -19,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map.Entry;
 
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
@@ -30,17 +28,17 @@ import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.validation.util.Entities;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.layer.Layer;
-import org.openstreetmap.josm.gui.progress.NullProgressMonitor;
 import org.openstreetmap.josm.gui.util.GuiHelper;
 import org.openstreetmap.josm.io.OsmTransferException;
-import org.openstreetmap.josm.io.ProgressInputStream;
 import org.openstreetmap.josm.plugins.fr.cadastre.CadastrePlugin;
 import org.openstreetmap.josm.tools.GBC;
+import org.openstreetmap.josm.tools.HttpClient;
+import org.openstreetmap.josm.tools.HttpClient.Response;
 import org.openstreetmap.josm.tools.Logging;
 
 public class CadastreInterface {
     public boolean downloadCanceled;
-    private HttpURLConnection urlConn;
+    private Response urlConn;
 
     private String csrfToken;
     private String cookie;
@@ -129,16 +127,10 @@ public class CadastreInterface {
         try {
             searchFormURL = new URL(BASE_URL + "/scpc/accueil.do");
             while (!success && retries > 0) {
-                urlConn = (HttpURLConnection) searchFormURL.openConnection();
-                urlConn.setRequestProperty("Connection", "close");
-                urlConn.setRequestMethod("GET");
-                urlConn.connect();
+                urlConn = getHttpClient(searchFormURL).setHeader("Connection", "close").connect();
                 if (urlConn.getResponseCode() == HttpURLConnection.HTTP_OK) {
-                    Logging.info("GET "+searchFormURL);
-                    BufferedReader in = new BufferedReader(new InputStreamReader(urlConn.getInputStream(), StandardCharsets.UTF_8));
-                    while (in.readLine() != null) {
-                        // read the buffer otherwise we sent POST too early
-                    }
+                    // read the buffer otherwise we sent POST too early
+                    urlConn.fetchContent();
                     success = true;
                     // See https://bugs.openjdk.java.net/browse/JDK-8036017
                     // When a cookie handler is setup, "Set-Cookie" header returns empty values
@@ -148,9 +140,9 @@ public class CadastreInterface {
                             break;
                         }
                     } else {
-                        String headerName;
-                        for (int i = 1; (headerName = urlConn.getHeaderFieldKey(i)) != null; i++) {
-                            if ("Set-Cookie".equals(headerName) && handleCookie(urlConn.getHeaderField(i))) {
+                        for (Entry<String, List<String>> e : urlConn.getHeaderFields().entrySet()) {
+                            if ("Set-Cookie".equals(e.getKey()) && e.getValue() != null && !e.getValue().isEmpty()
+                                    && handleCookie(e.getValue().get(0))) {
                                 break;
                             }
                         }
@@ -203,12 +195,12 @@ public class CadastreInterface {
         }
     }
 
-    private void setCookie() {
-        this.urlConn.setRequestProperty("Cookie", this.cookie);
+    public HttpClient getHttpClient(URL url) {
+        return HttpClient.create(url).setHeader("Cookie", cookie);
     }
 
-    public void setCookie(HttpURLConnection urlConn) {
-        urlConn.setRequestProperty("Cookie", this.cookie);
+    public HttpClient getHttpClient(URL url, String method) {
+        return HttpClient.create(url, method).setHeader("Cookie", cookie);
     }
 
     private void getInterface(WMSLayer wmsLayer) throws IOException, DuplicateLayerException {
@@ -254,23 +246,12 @@ public class CadastreInterface {
         try {
             // finally, open the interface on server side giving access to the wms server
             URL interfaceURL = new URL(BASE_URL + "/scpc/"+interfaceRef);
-            urlConn = (HttpURLConnection) interfaceURL.openConnection();
-            urlConn.setRequestMethod("GET");
-            setCookie();
-            urlConn.connect();
+            urlConn = getHttpClient(interfaceURL).connect();
             if (urlConn.getResponseCode() != HttpURLConnection.HTTP_OK) {
                 throw new IOException("Cannot open Cadastre interface. GET response:"+urlConn.getResponseCode());
             }
-            Logging.info("GET "+interfaceURL);
-            BufferedReader in = new BufferedReader(new InputStreamReader(urlConn.getInputStream(), StandardCharsets.UTF_8));
             // read the buffer otherwise we sent POST too early
-            StringBuilder lines = new StringBuilder();
-            String ln;
-            while ((ln = in.readLine()) != null) {
-                if (Logging.isDebugEnabled()) {
-                    lines.append(ln);
-                }
-            }
+            String lines = urlConn.fetchContent();
             if (Logging.isDebugEnabled()) {
                 Logging.debug(lines.toString());
             }
@@ -317,24 +298,8 @@ public class CadastreInterface {
             content += "&nbResultatParPage=10";
             content += "&x=0&y=0";
             searchFormURL = new URL(BASE_URL + "/scpc/rechercherPlan.do");
-            urlConn = (HttpURLConnection) searchFormURL.openConnection();
-            urlConn.setRequestMethod("POST");
-            urlConn.setDoOutput(true);
-            urlConn.setDoInput(true);
-            setCookie();
-            try (OutputStream wr = urlConn.getOutputStream()) {
-                wr.write(content.getBytes(StandardCharsets.UTF_8));
-                Logging.info("POST "+content);
-                wr.flush();
-            }
-            String ln;
-            StringBuilder sb = new StringBuilder();
-            try (BufferedReader rd = new BufferedReader(new InputStreamReader(urlConn.getInputStream(), StandardCharsets.UTF_8))) {
-                while ((ln = rd.readLine()) != null) {
-                    sb.append(ln);
-                }
-            }
-            String lines = sb.toString();
+            urlConn = getHttpClient(searchFormURL, "POST").setRequestBody(content.getBytes(StandardCharsets.UTF_8)).connect();
+            String lines = urlConn.fetchContent();
             urlConn.disconnect();
             if (lines != null) {
                 int i = lines.indexOf(C_IMAGE_FORMAT);
@@ -409,27 +374,15 @@ public class CadastreInterface {
 
     private String getFeuillesList(String csrfToken) {
         // get all images in one html page
-        String ln = null;
-        StringBuilder lines = new StringBuilder();
-        HttpURLConnection urlConn2 = null;
         try {
             URL getAllImagesURL = new URL(BASE_URL + "/scpc/listerFeuillesParcommune.do?CSRF_TOKEN=" +
                     csrfToken + "&keepVolatileSession=&offset=2000");
-            urlConn2 = (HttpURLConnection) getAllImagesURL.openConnection();
-            setCookie(urlConn2);
-            urlConn2.connect();
-            Logging.info("GET "+getAllImagesURL);
-            try (BufferedReader rd = new BufferedReader(new InputStreamReader(urlConn2.getInputStream(), StandardCharsets.UTF_8))) {
-                while ((ln = rd.readLine()) != null) {
-                    lines.append(ln);
-                }
-            }
-            urlConn2.disconnect();
+            return getHttpClient(getAllImagesURL).connect().fetchContent();
         } catch (IOException e) {
             listOfFeuilles.clear();
             Logging.error(e);
         }
-        return lines.toString();
+        return "";
     }
 
     private void parseFeuillesList(String input, String csrfToken) {
@@ -517,26 +470,8 @@ public class CadastreInterface {
         if (interfaceRef == null)
             return;
         // send GET opening normally the small window with the commune overview
-        String content = BASE_URL + "/scpc/" + interfaceRef;
-        content += "&dontSaveLastForward&keepVolatileSession=";
-        searchFormURL = new URL(content);
-        urlConn = (HttpURLConnection) searchFormURL.openConnection();
-        urlConn.setRequestMethod("GET");
-        setCookie();
-        urlConn.connect();
-        if (urlConn.getResponseCode() != HttpURLConnection.HTTP_OK) {
-            throw new IOException("Cannot get Cadastre response.");
-        }
-        Logging.info("GET "+searchFormURL);
-        String ln;
-        StringBuilder sb = new StringBuilder();
-        try (BufferedReader in = new BufferedReader(new InputStreamReader(urlConn.getInputStream(), StandardCharsets.UTF_8))) {
-            while ((ln = in.readLine()) != null) {
-                sb.append(ln);
-            }
-        }
-        urlConn.disconnect();
-        String line = sb.toString();
+        searchFormURL = new URL(BASE_URL + "/scpc/" + interfaceRef + "&dontSaveLastForward&keepVolatileSession=");
+        String line = getHttpClient(searchFormURL).connect().fetchContent();
         parseBBoxCommune(wmsLayer, line);
         if (wmsLayer.isRaster() && !wmsLayer.isAlreadyGeoreferenced()) {
             parseGeoreferences(wmsLayer, line);
@@ -609,18 +544,14 @@ public class CadastreInterface {
 
     public void cancel() {
         if (urlConn != null) {
-            urlConn.setConnectTimeout(1);
-            urlConn.setReadTimeout(1);
+            urlConn.disconnect();
         }
         downloadCanceled = true;
         lastWMSLayerName = null;
     }
 
     public InputStream getContent(URL url) throws IOException, OsmTransferException {
-        urlConn = (HttpURLConnection) url.openConnection();
-        urlConn.setRequestProperty("Connection", "close");
-        urlConn.setRequestMethod("GET");
-        setCookie();
-        return new ProgressInputStream(urlConn, NullProgressMonitor.INSTANCE);
+        urlConn = getHttpClient(url).setHeader("Connection", "close").connect();
+        return urlConn.getContent();
     }
 }

@@ -236,6 +236,8 @@ class GeotaggingAction extends AbstractAction implements LayerAction {
             progressMonitor.subTask(tr("Writing position information to image files..."));
             progressMonitor.setTicksCount(images.size());
 
+            final long startTime = System.currentTimeMillis();
+
             currentIndex = 0;
             while (currentIndex < images.size()) {
                 if (canceled) return;
@@ -275,6 +277,20 @@ class GeotaggingAction extends AbstractAction implements LayerAction {
                     }
                 }
                 progressMonitor.worked(1);
+
+               	float millisecsPerFile = ((float)(System.currentTimeMillis()-startTime))/((currentIndex+1)); // currentIndex starts at 0
+               	int filesLeft = images.size()-currentIndex-1;
+               	int secsLeft = (int)Math.ceil((millisecsPerFile*filesLeft/1000));
+               	String timeLeft;
+               	if (secsLeft < 60) {
+               		timeLeft = secsLeft + "s";
+               	} else if (secsLeft < 3600) {
+               		timeLeft = secsLeft/60 + "min " + secsLeft%60 + "s";
+               	} else {
+               		timeLeft = secsLeft/3600 + "h " + ((secsLeft)/60)%60 + "min " + secsLeft%60 + "s";
+               	}
+				progressMonitor.subTask(tr("Writing position information to image files... Estimated time left: {0}", timeLeft));
+
                 if (debug) {
                     System.err.println("finished " + e.getFile());
                 }

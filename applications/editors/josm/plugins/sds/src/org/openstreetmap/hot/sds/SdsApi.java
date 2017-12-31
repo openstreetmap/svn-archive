@@ -12,22 +12,15 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.ConnectException;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.net.UnknownHostException;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
-import java.util.zip.GZIPInputStream;
-import java.util.zip.Inflater;
-import java.util.zip.InflaterInputStream;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
-import org.openstreetmap.josm.io.OsmApiException;
-import org.openstreetmap.josm.io.OsmTransferCanceledException;
-import org.openstreetmap.josm.io.ProgressInputStream;
 import org.openstreetmap.josm.tools.CheckParameterUtil;
 import org.openstreetmap.josm.tools.Logging;
 
@@ -445,91 +438,5 @@ public class SdsApi extends SdsConnection {
                 throw e;
             }
         }
-    }
-
-    protected InputStream getInputStream(String urlStr, ProgressMonitor progressMonitor) throws SdsTransferException {
-        urlStr = getBaseUrl() + urlStr;
-        try {
-            URL url = null;
-            try {
-                url = new URL(urlStr.replace(" ", "%20"));
-            } catch (MalformedURLException e) {
-                throw new SdsTransferException(e);
-            }
-            try {
-                activeConnection = (HttpURLConnection) url.openConnection();
-            } catch (Exception e) {
-                throw new SdsTransferException(tr("Failed to open connection to API {0}.", url.toExternalForm()), e);
-            }
-            if (cancel) {
-                activeConnection.disconnect();
-                return null;
-            }
-
-            addAuth(activeConnection);
-
-            if (cancel)
-                throw new SdsTransferException();
-            if (Main.pref.getBoolean("osm-server.use-compression", true)) {
-                activeConnection.setRequestProperty("Accept-Encoding", "gzip, deflate");
-            }
-
-            activeConnection.setConnectTimeout(Main.pref.getInt("socket.timeout.connect", 15)*1000);
-
-            try {
-                System.out.println("GET " + url);
-                activeConnection.connect();
-            } catch (Exception e) {
-                e.printStackTrace();
-                throw new SdsTransferException(tr("Could not connect to the OSM server. Please check your internet connection."), e);
-            }
-            try {
-                if (activeConnection.getResponseCode() == HttpURLConnection.HTTP_UNAUTHORIZED)
-                    throw new OsmApiException(HttpURLConnection.HTTP_UNAUTHORIZED, null, null);
-
-                if (activeConnection.getResponseCode() == HttpURLConnection.HTTP_PROXY_AUTH)
-                    throw new OsmTransferCanceledException(tr("Proxy Authentication Required"));
-
-                String encoding = activeConnection.getContentEncoding();
-                if (activeConnection.getResponseCode() != HttpURLConnection.HTTP_OK) {
-                    String errorHeader = activeConnection.getHeaderField("Error");
-                    StringBuilder errorBody = new StringBuilder();
-                    try {
-                        InputStream i = FixEncoding(activeConnection.getErrorStream(), encoding);
-                        if (i != null) {
-                            BufferedReader in = new BufferedReader(new InputStreamReader(i, StandardCharsets.UTF_8));
-                            String s;
-                            while ((s = in.readLine()) != null) {
-                                errorBody.append(s);
-                                errorBody.append("\n");
-                            }
-                        }
-                    } catch (Exception e) {
-                        errorBody.append(tr("Reading error text failed."));
-                    }
-
-                    throw new OsmApiException(activeConnection.getResponseCode(), errorHeader, errorBody.toString());
-                }
-
-                return FixEncoding(new ProgressInputStream(activeConnection, progressMonitor), encoding);
-            } catch (Exception e) {
-                if (e instanceof SdsTransferException)
-                    throw (SdsTransferException) e;
-                else
-                    throw new SdsTransferException(e);
-
-            }
-        } finally {
-            progressMonitor.invalidate();
-        }
-    }
-
-    private InputStream FixEncoding(InputStream stream, String encoding) throws IOException {
-        if (encoding != null && encoding.equalsIgnoreCase("gzip")) {
-            stream = new GZIPInputStream(stream);
-        } else if (encoding != null && encoding.equalsIgnoreCase("deflate")) {
-            stream = new InflaterInputStream(stream, new Inflater(true));
-        }
-        return stream;
     }
 }

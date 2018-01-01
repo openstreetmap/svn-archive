@@ -12,7 +12,6 @@ JMapViewer Checkstyle rules
 <module name="Checker">
   <property name="severity" value="warning"/>
   <module name="TreeWalker">
-    <module name="FileContentsHolder"/>
     <module name="MissingDeprecated"/>
     <module name="MissingOverride"/>
     <module name="PackageAnnotation"/>
@@ -82,9 +81,7 @@ JMapViewer Checkstyle rules
       <property name="tokens" value="LITERAL_TRY,LITERAL_CATCH,LITERAL_FINALLY,LITERAL_DO,LITERAL_ELSE,LITERAL_FOR,INSTANCE_INIT,STATIC_INIT,LITERAL_SWITCH"/>
     </module>
     <module name="EmptyCatchBlock"/>
-    <module name="LeftCurly">
-      <property name="maxLineLength" value="140"/>
-    </module>
+    <module name="LeftCurly"/>
     <module name="RightCurly"/>
     <module name="NeedBraces">
       <property name="tokens" value="LITERAL_DO,LITERAL_FOR,LITERAL_WHILE"/>
@@ -95,6 +92,11 @@ JMapViewer Checkstyle rules
     <module name="OuterTypeFilename"/>
     <module name="FinalClass"/>
     <module name="HideUtilityClassConstructor"/>
+    <module name="SuppressionCommentFilter">
+      <property name="offCommentFormat" value="CHECKSTYLE\.OFF\: ([\w\|]+)"/>
+      <property name="onCommentFormat" value="CHECKSTYLE\.ON\: ([\w\|]+)"/>
+      <property name="checkFormat" value="$1"/>
+    </module>
   </module>
   <module name="Header">
     <property name="header" value="// License: GPL. For details, see Readme.txt file."/>
@@ -102,11 +104,6 @@ JMapViewer Checkstyle rules
   </module>
   <module name="FileLength">
     <property name="fileExtensions" value=".java"/>
-  </module>
-  <module name="SuppressionCommentFilter">
-    <property name="offCommentFormat" value="CHECKSTYLE\.OFF\: ([\w\|]+)"/>
-    <property name="onCommentFormat" value="CHECKSTYLE\.ON\: ([\w\|]+)"/>
-    <property name="checkFormat" value="$1"/>
   </module>
   <module name="FileTabCharacter"/>
   <module name="NewlineAtEndOfFile">

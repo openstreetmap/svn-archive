@@ -18,19 +18,22 @@
 
 package model;
 
-import java.util.ArrayList;
+import static org.openstreetmap.josm.tools.I18n.tr;
+
+import java.util.Collection;
 import java.util.List;
 
 import javax.swing.JOptionPane;
 
 import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.command.AddCommand;
 import org.openstreetmap.josm.command.ChangePropertyCommand;
-import org.openstreetmap.josm.data.osm.Filter;
-import org.openstreetmap.josm.data.osm.Filter.FilterPreferenceEntry;
+import org.openstreetmap.josm.data.osm.DataSet;
+import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.data.osm.Relation;
+import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.data.osm.Tag;
 import org.openstreetmap.josm.gui.MainApplication;
-import org.openstreetmap.josm.gui.dialogs.FilterDialog;
-import org.openstreetmap.josm.gui.dialogs.FilterTableModel;
 
 import model.TagCatalog.IndoorObject;
 
@@ -39,209 +42,25 @@ import model.TagCatalog.IndoorObject;
  * the functions to handle the plug-in
  *
  * @author egru
+ * @author rebsc
  */
-public class IndoorHelperModel {
+public class IndoorHelperModel{
 
-    private java.util.List<IndoorLevel> levelList;
-    private int workingLevel;
-    private int workingIndex;
     private TagCatalog tags;
     private PresetCounter counter;
 
     /**
-     * Constructor for the {@link IndoorHelperModel} which sets the current
-     * workingLevel to 0 and creates the {@link TagCatalog}.
+     * Constructor for the {@link IndoorHelperModel} which creates the {@link TagCatalog}
+     * and {@link PresetCounter}.
      */
     public IndoorHelperModel() {
-        this.workingLevel = 0;
-        this.levelList = new ArrayList<>();
         this.tags = new TagCatalog();
         this.counter = new PresetCounter();
     }
 
     /**
-     * Method to create a list of levels for the current building.
-     * It also creates the filters which are needed to execute the indoor mapping.
-     * minLevel should be lower than maxLevel or the same.
-     *
-     * @param minLevel the lowest level of the building
-     * @param maxLevel the highest level of the building
-     * @return boolean which indicates if the creation of the levelList was successful
-     */
-    public boolean setBuildingLevels(int minLevel, int maxLevel) {
-
-        if (minLevel < maxLevel) {
-
-            for (int i = minLevel; i <= maxLevel; i++) {
-
-                IndoorLevel level = new IndoorLevel(i);
-                levelList.add(level);
-
-                // Get the filter dialog
-                FilterDialog filterDialog = MainApplication.getMap().getToggleDialog(FilterDialog.class);
-
-                if (filterDialog != null) {
-                    // Create a new filter
-                    //Filter filter = new Filter("\"indoor:level\"=\""+i+"\"", SearchMode.add, false, false, false);
-                    FilterPreferenceEntry entry = new FilterPreferenceEntry();
-                    entry.case_sensitive = false;
-                    entry.enable = false;
-                    entry.hiding = false;
-                    entry.inverted = false;
-                    entry.mapCSS_search = false;
-                    entry.mode = "add";
-                    entry.text = "\"indoor:level\"=\""+i+"\"";
-                    Filter filter = new Filter(entry);
-
-                    FilterTableModel filterTableModel = filterDialog.getFilterModel();
-
-                    boolean exists = false;
-
-                    // Search if the filter exists already.
-                    for (Filter listFilter : filterTableModel.getFilters()) {
-                        if (listFilter.equals(filter)) {
-                            exists = true;
-                        }
-                    }
-
-                    // Only add the filter if it is not already in the filter dialog.
-                    if (exists == false) {
-                        filterTableModel.addFilter(filter);
-                    }
-
-                } else {
-                    //Show error message if filter dialog is null.
-                    JOptionPane.showMessageDialog(null, "Filter Dialog is null.", "Error", JOptionPane.ERROR_MESSAGE);
-                }
-            }
-
-            return true;
-
-        } else if (minLevel == maxLevel) {
-
-            IndoorLevel level = new IndoorLevel(minLevel);
-            levelList.add(level);
-
-            // Get the filter dialog
-            FilterDialog filterDialog = MainApplication.getMap().getToggleDialog(FilterDialog.class);
-
-            if (filterDialog != null) {
-                // Create a new filter
-                //Filter filter = new Filter("\"indoor:level\"=\""+minLevel+"\"", SearchMode.add, false, false, false);
-
-                FilterPreferenceEntry entry = new FilterPreferenceEntry();
-                entry.case_sensitive = false;
-                entry.enable = false;
-                entry.hiding = false;
-                entry.inverted = false;
-                entry.mapCSS_search = false;
-                entry.mode = "add";
-                entry.text = "\"indoor:level\"=\""+minLevel+"\"";
-                Filter filter = new Filter(entry);
-
-                FilterTableModel filterTableModel = filterDialog.getFilterModel();
-
-                boolean exists = false;
-
-                // Search if the filter exists already.
-                for (Filter listFilter : filterTableModel.getFilters()) {
-                    if (listFilter.equals(filter)) {
-                        exists = true;
-                    }
-                }
-
-                // Only add the filter if it is not already in the filter dialog.
-                if (exists == false) {
-                    filterTableModel.addFilter(filter);
-                }
-            } else {
-                JOptionPane.showMessageDialog(null, "Filter Dialog is null.", "Error", JOptionPane.ERROR_MESSAGE);
-            }
-
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * Getter for the levelList of the model.
-     *
-     * @return the levelList, or null if no levelList was created yet
-     */
-    public java.util.List<IndoorLevel> getLevelList() {
-        return this.levelList;
-    }
-
-    /**
-     * Function to set the level the user wants to work on (with the level index) and activates the corresponding filter.
-     *
-     * @param index the index of the level the user wants to work on
-     */
-    public void setWorkingLevel(int index) {
-        this.workingIndex = index;
-        this.workingLevel = this.getLevelNumberFromIndex(index);
-
-        FilterDialog filterDialog = MainApplication.getMap().getToggleDialog(FilterDialog.class);
-        FilterTableModel filterTableModel = filterDialog.getFilterModel();
-
-
-        for (Filter filter : filterTableModel.getFilters()) {
-            // disable the filter for the current level
-            if (filter.text.equals("\"indoor:level\"=\""+workingLevel+"\"")) {
-                filterTableModel.setValueAt(false, filterTableModel.getFilters().indexOf(filter), FilterTableModel.COL_ENABLED);
-                filterTableModel.setValueAt(false, filterTableModel.getFilters().indexOf(filter), FilterTableModel.COL_HIDING);
-            } else if (filter.text.startsWith("\"indoor:level\"=\"")) {
-                filterTableModel.setValueAt(true, filterTableModel.getFilters().indexOf(filter), FilterTableModel.COL_ENABLED);
-                filterTableModel.setValueAt(true, filterTableModel.getFilters().indexOf(filter), FilterTableModel.COL_HIDING);
-            }
-        }
-    }
-
-    /**
-     * Function to get the current working level of the plug-in
-     *
-     * @return {@link Integer} which represents the current working level
-     */
-    public int getWorkingLevel() {
-        return this.workingLevel;
-    }
-
-    /**
-     * Method to get the index of the current working level of the plug-in.
-     *
-     * @return {@link Integer} which represents the index
-     */
-    public int getWorkingIndex() {
-        return this.workingIndex;
-    }
-
-    /**
-     * Returns the level number which is corresponding to a specific index.
-     *
-     * @param index index of the level
-     * @return a level number as an {@link Integer}
-     */
-    public int getLevelNumberFromIndex(int index) {
-        return levelList.get(index).getLevelNumber();
-    }
-
-    /**
-     * Function to set the nameTag of a specific level.
-     *
-     * @param levelNumber number of the level
-     * @param levelName tag which the user wants to set
-     * @return boolean which indicates if the level was found in the levelList
-     */
-    public void setLevelName(int levelIndex, String levelName) {
-        if ((levelName.length() > 0) && (levelName != null)) {
-            levelList.get(levelIndex).setNameTag(levelName);
-        }
-    }
-
-    /**
      * Function to get a tag-set out of the {@link TagCatalog}.
-     *
+     * ClipboardUtils.copy(Main.getLayerManager().getEditDataSet(),Main.getLayerManager().getEditDataSet().getKey());
      * @param object the {@link IndoorObject} from which you want to get the tag-set
      * @return a {@link List} of {@link Tag}s
      */
@@ -249,64 +68,148 @@ public class IndoorHelperModel {
         return this.tags.getTags(object);
     }
 
-
     /**
-     * Method which adds the selected tag-set to the currently selected OSM data.
-     * It also adds the level tag corresponding to the current working level.
+     * Method which adds the selected tag-set to the currently selected OSM data. If OSM data is a relation add tag-set
+     * directly to the relation otherwise add it to nodes and/or ways.
      *
      * @param object the object which defines the tag-set you want to add
      * @param userTags the tags which are given by the user input
+     * @author rebsc
      */
-    public void addTagsToOSM(IndoorObject object, List<Tag> userTags) {
+	public void addTagsToOSM(IndoorObject object, List<Tag> userTags) {
         if (!MainApplication.getLayerManager().getEditDataSet().selectionEmpty() && !Main.main.getInProgressSelection().isEmpty()) {
 
+        	DataSet ds = Main.main.getEditDataSet();
             List<Tag> tags = this.getObjectTags(object);
-            tags.addAll(userTags);
-            tags.add(new Tag("indoor:level", Integer.toString(workingLevel)));
+            Collection<Relation> relations = ds.getRelations();
+            Relation relationToAdd = null;
 
-            if (!this.getLevelList().get(workingIndex).hasEmptyName()) {
-                tags.add(this.getLevelList().get(workingIndex).getNameTag());
-            }
+            tags.addAll(userTags);
 
             // Increment the counter for the presets
             this.counter.count(object);
 
-            //Add the tags to the current selection
-            for (Tag t : tags) {
-                Main.main.undoRedo.add(new ChangePropertyCommand(Main.main.getInProgressSelection(), t.getKey(), t.getValue()));
-            }
+            // Put value on {@link relationToAdd} if selected object is a relation.
+            relationToAdd = getRelationFromDataSet(ds,relations);
 
+            if(relationToAdd != null) {
+            	//Add tags to relation
+            	for (Tag t : tags) {
+            			Main.main.undoRedo.add(new ChangePropertyCommand(relationToAdd, t.getKey(), t.getValue()));
+            	}
+            }else{
+            	//Add tags to ways or nodes
+	            for (Tag t : tags) {
+	            	Main.main.undoRedo.add(new ChangePropertyCommand(Main.main.getInProgressSelection(), t.getKey(), t.getValue()));
+	            }
+            }
+        //If the selected dataset is empty
         } else if (MainApplication.getLayerManager().getEditDataSet().selectionEmpty()) {
 
-            JOptionPane.showMessageDialog(null, "No data selected.", "Error", JOptionPane.ERROR_MESSAGE);
+        	JOptionPane.showMessageDialog(null, tr("No data selected."), tr("Error"), JOptionPane.ERROR_MESSAGE);
         }
     }
 
     /**
-     * Method which adds the selected tag-set to the currently selected OSM data.
-     * It also adds the level tag corresponding to the current working level.
+     * Method which adds a object {@link IndoorObject} to the currently selected OSM data (to nodes and/or ways).
      *
      * @param object the object which defines the tag-set you want to add
      */
-    public void addTagsToOSM(IndoorObject object) {
+	public void addTagsToOSM(IndoorObject object) {
 
         if (!MainApplication.getLayerManager().getEditDataSet().selectionEmpty() && !Main.main.getInProgressSelection().isEmpty()) {
             List<Tag> tags = this.getObjectTags(object);
-            tags.add(new Tag("indoor:level", Integer.toString(workingLevel)));
 
-            // Increment the counter for the presets
+            //Increment the counter for the presets
             this.counter.count(object);
 
             //Add the tags to the current selection
             for (Tag t : tags) {
                 Main.main.undoRedo.add(new ChangePropertyCommand(Main.main.getInProgressSelection(), t.getKey(), t.getValue()));
             }
+        //If the selected dataset ist empty
         } else if (MainApplication.getLayerManager().getEditDataSet().selectionEmpty()) {
-            JOptionPane.showMessageDialog(null, "No data selected.", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, tr("No data selected."), tr("Error"), JOptionPane.ERROR_MESSAGE);
         }
     }
 
     /**
+     * Method which adds a list of tag-sets to the currently selected OSM data. Tags directly to ways and/or nodes.
+     *
+     * @param userTags the tags which are given by the user input
+     * @author rebsc
+     */
+	public void addTagsToOSM(List<Tag> userTags) {
+
+        if (!MainApplication.getLayerManager().getEditDataSet().selectionEmpty() && !Main.main.getInProgressSelection().isEmpty()) {
+
+            //Add the tags to the current selection
+            for (Tag t : userTags) {
+                Main.main.undoRedo.add(new ChangePropertyCommand(Main.main.getInProgressSelection(), t.getKey(), t.getValue()));
+            }
+        }
+        else if (MainApplication.getLayerManager().getEditDataSet().selectionEmpty()) {
+            JOptionPane.showMessageDialog(null, tr("No data selected."), tr("Error"), JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    /**
+     * Method which adds the relation to OSM data. Also adds the selected tag-set to relation object.
+     *
+     * @param String the Multipolygon Role as String
+     * @author rebsc
+     */
+	public void addRelation(String role){
+    	Relation newRelation = new Relation();
+    	RelationMember newMember;
+    	DataSet ds = Main.main.getEditDataSet();
+
+        // Create new relation and add a new member with specific role
+    	if(!MainApplication.getLayerManager().getEditDataSet().selectionEmpty()) {
+    		for (OsmPrimitive osm : ds.getSelected()) {
+                 newMember = new RelationMember(role == null ? "" : role, osm);
+                 newRelation.addMember(newMember);
+            }
+    	}
+    	// Add relation to OSM data
+        MainApplication.undoRedo.add(new AddCommand(MainApplication.getLayerManager().getEditDataSet(), newRelation));
+    }
+
+    /**
+     * Method which edits the selected object to the currently selected OSM data (relations).
+     *
+     * @param role The Multipolygon Role as String
+     * @param relation
+     * @author rebsc
+     */
+	public void editRelation(String role, Collection<OsmPrimitive> innerRelation){
+
+    	RelationMember newMember;
+    	DataSet ds = Main.main.getEditDataSet();
+    	Collection<Relation> relations = ds.getRelations();
+    	Relation relation = getRelationFromDataSet(ds,relations);
+
+        if (!MainApplication.getLayerManager().getEditDataSet().selectionEmpty() && !Main.main.getInProgressSelection().isEmpty() &&
+        		!innerRelation.isEmpty() && getRole(ds,relations).equals("outer")) {
+
+        	//Add new relation member to selected relation
+            for (OsmPrimitive osm : innerRelation) {
+                 newMember = new RelationMember(role == null ? "" : role, osm);
+                 relation.addMember(newMember);
+            };
+
+        //Check if dataset is not empty or if {@link innerRelation} has no value
+        }else if (MainApplication.getLayerManager().getEditDataSet().selectionEmpty() || innerRelation.isEmpty()) {
+            JOptionPane.showMessageDialog(null, tr("No data selected."), tr("Error"), JOptionPane.ERROR_MESSAGE);
+
+        //If selected object is not a relation member or not a relation member with role "outer"
+        }else if(!getRole(ds,relations).equals("outer")) {
+        	JOptionPane.showMessageDialog(null, tr("No relation or no relation member with role \"outer\" selected."), tr("Error"), JOptionPane.ERROR_MESSAGE);
+        }
+
+    }
+
+  /**
      * Returns the current ranking of the preset counter, which includes the 4 most used items.
      *
      * @return a list of the 4 most used IndoorObjects
@@ -314,4 +217,88 @@ public class IndoorHelperModel {
     public List<IndoorObject> getPresetRanking() {
         return counter.getRanking();
     }
+
+
+
+/*************************************************
+* HELPER METHODS
+*
+*/
+
+    /**
+     * Function which returns the the relation (if any) of the currently selected object.
+     * If not returns null.
+     * @param ds actual working dataset
+     * @param relations collection of relations in the dataset
+     * @return relation of currently selected dataset
+     * @author rebsc
+     */
+    private Relation getRelationFromDataSet(DataSet ds, Collection<Relation> relations) {
+    	for(Relation r: relations) {
+    		for(RelationMember rm: r.getMembers()) {
+    			for(OsmPrimitive osm: ds.getSelected()) {
+    				if(rm.refersTo(osm)) {
+    					return r;
+    				}
+    			}
+    		}
+    	}
+    	return null;
+    }
+
+    /**
+     * Function which returns the relation role (if any) of the currently selected object.
+     * If object is not a relation returns empty string.
+     * @param ds active dataset
+     * @param relations collection of relations in the dataset
+     * @return role of currently selected relation member if any
+     * @author rebsc
+     */
+    private String getRole(DataSet ds, Collection<Relation> relations) {
+
+    	if(isRelationMember(ds,relations)) {
+    		for(Relation r: relations) {
+    			for(RelationMember rm: r.getMembers()) {
+    				for(OsmPrimitive osm: ds.getSelected()) {
+    					if(rm.refersTo(osm)) {
+    						return rm.getRole();
+    					}
+    				}
+    			}
+    		}
+    	}
+    	return "";
+    }
+
+    /**
+     * Function which returns true if the currently selected object is a relation
+     * @param ds active dataset
+     * @return true if selected object is a relation
+     * @author rebsc
+     */
+    private boolean isRelationMember(DataSet ds, Collection<Relation> relations) {
+    	for(Relation r: relations) {
+    		for(RelationMember rm: r.getMembers()) {
+    			for(OsmPrimitive osm: ds.getSelected()) {
+    				if(rm.refersTo(osm)) {
+    					return true;
+    				}
+    			}
+    		}
+    	}
+    	return false;
+    }
+
+
+/**
+*
+*
+*
+*
+*
+*
+*
+*
+*
+*/
 }

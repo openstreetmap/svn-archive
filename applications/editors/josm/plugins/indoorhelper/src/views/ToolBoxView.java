@@ -21,6 +21,7 @@ package views;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -30,495 +31,643 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.ItemListener;
 import java.util.List;
-import java.util.ListIterator;
 
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
-import javax.swing.JToggleButton;
 import javax.swing.border.EmptyBorder;
 
 import org.openstreetmap.josm.gui.dialogs.ToggleDialog;
 import org.openstreetmap.josm.gui.widgets.DisableShortcutsOnFocusGainedTextField;
 import org.openstreetmap.josm.gui.widgets.JosmComboBox;
 
-import model.IndoorLevel;
 import model.TagCatalog;
 import model.TagCatalog.IndoorObject;
 
 /**
- *
- * This is the main toolbox of the indoorhelper plug-in.
- *
- * @author egru
- *
- */
+*
+* This is the main toolbox of the indoorhelper plug-in.
+*
+* @author egru
+* @author rebsc
+*
+*/
 @SuppressWarnings("serial")
 public class ToolBoxView extends ToggleDialog {
-    private JPanel dialogPane;
-    private JPanel contentPanel;
-    private JToggleButton powerButton;
-    private JLabel levelLabel;
-    private JosmComboBox<String> levelBox;
-    private JLabel levelTagLabel;
-    private DisableShortcutsOnFocusGainedTextField levelTagField;
-    private JLabel objectLabel;
-    private JosmComboBox<TagCatalog.IndoorObject> objectBox;
-    private JLabel nameLabel;
-    private DisableShortcutsOnFocusGainedTextField nameField;
-    private JLabel refLabel;
-    private DisableShortcutsOnFocusGainedTextField refField;
-    private JPanel buttonBar;
-    private JButton applyButton;
-    private JSeparator separator1;
-    private JSeparator separator2;
-    private PresetButton preset1;
-    private PresetButton preset2;
-    private PresetButton preset3;
-    private PresetButton preset4;
-
-    public ToolBoxView() {
-        super(tr("Indoor Mapping Helper"), "indoorhelper",
-                tr("Toolbox for indoor mapping assistance"), null, 300, true);
-
-        initComponents();
-    }
-
-    /**
-     * Creates the layout of the plug-in.
-     */
-    private void initComponents() {
-        dialogPane = new JPanel();
-        contentPanel = new JPanel();
-        powerButton = new JToggleButton();
-        levelLabel = new JLabel();
-        levelBox = new JosmComboBox<String>();
-        levelTagLabel = new JLabel();
-        levelTagField = new DisableShortcutsOnFocusGainedTextField();
-        objectLabel = new JLabel();
-        objectBox = new JosmComboBox<>(TagCatalog.IndoorObject.values());
-        nameLabel = new JLabel();
-        nameField = new DisableShortcutsOnFocusGainedTextField();
-        refLabel = new JLabel();
-        refField = new DisableShortcutsOnFocusGainedTextField();
-        buttonBar = new JPanel();
-        applyButton = new JButton();
-        separator1 = new JSeparator();
-        separator2 = new JSeparator();
-        preset1 = new PresetButton(IndoorObject.ROOM);
-        preset2 = new PresetButton(IndoorObject.SHELL);
-        preset3 = new PresetButton(IndoorObject.CONCRETE_WALL);
-        preset4 = new PresetButton(IndoorObject.GLASS_WALL);
-
-        //======== this ========
-        //Container contentPane = this.get;
-        //contentPane.setLayout(new BorderLayout());
-
-        //======== dialogPane ========
-        {
-            dialogPane.setBorder(new EmptyBorder(12, 12, 12, 12));
-            dialogPane.setLayout(new BorderLayout());
-
-            //======== contentPanel ========
-            {
-                contentPanel.setLayout(new GridBagLayout());
-                ((GridBagLayout) contentPanel.getLayout()).columnWidths = new int[] {
-                        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-                ((GridBagLayout) contentPanel.getLayout()).rowHeights = new int[] {0, 0, 0, 0, 0, 0, 0, 0};
-                ((GridBagLayout) contentPanel.getLayout()).columnWeights = new double[] {
-                        0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0E-4};
-                ((GridBagLayout) contentPanel.getLayout()).rowWeights = new double[] {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0E-4};
-
-                //---- powerButton ----
-                powerButton.setText(tr("POWER"));
-                powerButton.setToolTipText(tr("Activates the plug-in"));
-                contentPanel.add(powerButton, new GridBagConstraints(8, 0, 4, 1, 0.0, 0.0,
-                    GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-                    new Insets(0, 0, 5, 5), 0, 0));
-                contentPanel.add(separator1, new GridBagConstraints(1, 1, 12, 1, 0.0, 0.0,
-                    GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-                    new Insets(0, 0, 5, 5), 0, 0));
-
-                //---- levelLabel ----
-                levelLabel.setText(tr("Working Level"));
-                contentPanel.add(levelLabel, new GridBagConstraints(1, 2, 2, 1, 0.0, 0.0,
-                    GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-                    new Insets(0, 0, 5, 5), 0, 0));
-
-                //---- levelBox ----
-                levelBox.setEnabled(false);
-                levelBox.setEditable(false);
-                levelBox.setToolTipText(tr("Selects the working level."));
-                contentPanel.add(levelBox, new GridBagConstraints(3, 2, 3, 1, 0.0, 0.0,
-                    GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-                    new Insets(0, 0, 5, 5), 0, 0));
-
-                //---- levelTagLabel ----
-                levelTagLabel.setText(tr("Level Name"));
-                contentPanel.add(levelTagLabel, new GridBagConstraints(7, 2, 1, 1, 0.0, 0.0,
-                    GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-                    new Insets(0, 0, 5, 5), 0, 0));
-
-                //---- levelTagField ----
-                levelTagField.setEnabled(false);
-                levelTagField.setColumns(6);
-                levelTagField.setToolTipText(tr("Optional name-tag for a level."));
-                contentPanel.add(levelTagField, new GridBagConstraints(8, 2, 5, 1, 0.0, 0.0,
-                    GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-                    new Insets(0, 0, 5, 5), 0, 0));
-                contentPanel.add(separator2, new GridBagConstraints(1, 3, 12, 1, 0.0, 0.0,
-                    GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-                    new Insets(0, 0, 5, 5), 0, 0));
-
-                //---- objectLabel ----
-                objectLabel.setText(tr("Object"));
-                contentPanel.add(objectLabel, new GridBagConstraints(0, 4, 3, 1, 0.0, 0.0,
-                    GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-                    new Insets(0, 0, 5, 5), 0, 0));
-
-                //---- objectBox ----
-                objectBox.setEnabled(false);
-                objectBox.setPrototypeDisplayValue(IndoorObject.CONCRETE_WALL);
-                objectBox.setToolTipText(tr("The object preset you want to tag."));
-                contentPanel.add(objectBox, new GridBagConstraints(3, 4, 3, 1, 0.0, 0.0,
-                    GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-                    new Insets(0, 0, 5, 5), 0, 0));
-
-                //---- nameLabel ----
-                nameLabel.setText(tr("Name"));
-                contentPanel.add(nameLabel, new GridBagConstraints(0, 5, 3, 1, 0.0, 0.0,
-                    GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-                    new Insets(0, 0, 5, 5), 0, 0));
-
-                //---- nameField ----
-                nameField.setEnabled(false);
-                nameField.addFocusListener(new FocusListener() {
-
-                    @Override
-                    public void focusLost(FocusEvent e) {}
-
-                    @Override
-                    public void focusGained(FocusEvent e) {
-                        nameField.selectAll();
-                    }
-                });
-                nameField.setToolTipText(tr("Sets the name tag when the room-object is selected."));
-                contentPanel.add(nameField, new GridBagConstraints(3, 5, 3, 1, 0.0, 0.0,
-                    GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-                    new Insets(0, 0, 5, 5), 0, 0));
-
-                //---- refLabel ----
-                refLabel.setText(tr("Reference"));
-                contentPanel.add(refLabel, new GridBagConstraints(0, 6, 3, 1, 0.0, 0.0,
-                    GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-                    new Insets(0, 0, 0, 5), 0, 0));
-
-                //---- refField ----
-                refField.setEnabled(false);
-                refField.addFocusListener(new FocusListener() {
-
-                    @Override
-                    public void focusLost(FocusEvent e) {}
-
-                    @Override
-                    public void focusGained(FocusEvent e) {
-                        refField.selectAll();
-                    }
-                });
-                refField.setToolTipText(tr("Sets the ref tag when the room-object is selected."));
-                contentPanel.add(refField, new GridBagConstraints(3, 6, 3, 1, 0.0, 0.0,
-                    GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-                    new Insets(0, 0, 0, 5), 0, 0));
-
-                //---- preset1 ----
-                preset1.setEnabled(false);
-                contentPanel.add(preset1, new GridBagConstraints(16, 2, 1, 1, 0.0, 0.0,
-                    GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-                    new Insets(0, 0, 5, 5), 0, 0));
-                contentPanel.add(separator2, new GridBagConstraints(1, 3, 13, 1, 0.0, 0.0,
-                    GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-                    new Insets(0, 0, 5, 5), 0, 0));
-
-                //---- preset2 ----
-                preset2.setEnabled(false);
-                contentPanel.add(preset2, new GridBagConstraints(16, 3, 1, 1, 0.0, 0.0,
-                    GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-                    new Insets(0, 0, 5, 5), 0, 0));
-
-                //---- preset3 ----
-                preset3.setEnabled(false);
-                contentPanel.add(preset3, new GridBagConstraints(16, 4, 1, 1, 0.0, 0.0,
-                    GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-                    new Insets(0, 0, 5, 5), 0, 0));
-
-                //---- preset4 ----
-                preset4.setEnabled(false);
-                contentPanel.add(preset4, new GridBagConstraints(16, 5, 1, 1, 0.0, 0.0,
-                    GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-                    new Insets(0, 0, 5, 5), 0, 0));
-            }
-            dialogPane.add(contentPanel, BorderLayout.CENTER);
-
-            //======== buttonBar ========
-            {
-                buttonBar.setBorder(new EmptyBorder(12, 0, 0, 0));
-                buttonBar.setLayout(new GridBagLayout());
-                ((GridBagLayout) buttonBar.getLayout()).columnWidths = new int[] {0, 80};
-                ((GridBagLayout) buttonBar.getLayout()).columnWeights = new double[] {1.0, 0.0};
-
-                //---- applyButton ----
-                applyButton.setText(tr("Apply Tags"));
-                applyButton.setEnabled(false);
-                buttonBar.add(applyButton, new GridBagConstraints(0, 0, 2, 1, 0.0, 0.0,
-                    GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-                    new Insets(0, 0, 0, 0), 0, 0));
-            }
-            dialogPane.add(buttonBar, BorderLayout.SOUTH);
-        }
-        //contentPane.add(dialogPane, BorderLayout.CENTER);
-
-
-        this.createLayout(dialogPane, false, null);
-    }
-
-    /**
-     * Returns the state of the power button.
-     *
-     * @return boolean which is true when the button is selected
-     */
-    public boolean getPowerButtonState() {
-        return this.powerButton.isSelected();
-    }
-
-    /**
-     * Enables or disables the interactive UI elements of the toolbox.
-     *
-     * @param enabled set this true for enabled elements
-     */
-    public void setAllUiElementsEnabled(boolean enabled) {
-        this.applyButton.setEnabled(enabled);
-        this.levelBox.setEnabled(enabled);
-        this.objectBox.setEnabled(enabled);
-        this.nameField.setEnabled(enabled);
-        this.refField.setEnabled(enabled);
-        this.levelTagField.setEnabled(enabled);
-        this.preset1.setEnabled(enabled);
-        this.preset2.setEnabled(enabled);
-        this.preset3.setEnabled(enabled);
-        this.preset4.setEnabled(enabled);
-
-
-        if (enabled == false) {
-            resetUiElements();
-            this.levelTagField.setText("");
-        }
-    }
-
-    /**
-     * Enables or disables the interactive text box elements name and ref.
-     *
-     * @param enabled set this true for enabled elements
-     */
-    public void setTagUiElementsEnabled(boolean enabled) {
-        this.nameField.setEnabled(enabled);
-        this.refField.setEnabled(enabled);
-
-        if (enabled == false) resetUiElements();
-    }
-
-    /**
-     * Disables the power-button of the plug-in.
-     */
-    public void setPowerButtonDisabled() {
-        this.powerButton.setSelected(false);
-    }
-
-    /**
-     * Getter for the selected {@link IndoorObject} in the objectBox.
-     *
-     * @return the selected indoor object in the object ComboBox.
-     */
-    public IndoorObject getSelectedObject() {
-        return (IndoorObject) this.objectBox.getSelectedItem();
-    }
-
-
-    /**
-     * Sets the level list for the level selection comboBox.
-     *
-     * @param levelList the list of levels which you want to set
-     */
-    public void setLevelList(List<IndoorLevel> levelList) {
-        this.levelBox.removeAllItems();
-
-        ListIterator<IndoorLevel> listIterator = levelList.listIterator();
-
-        while (listIterator.hasNext()) {
-            IndoorLevel level = listIterator.next();
-            if (level.hasEmptyName()) {
-                this.levelBox.addItem(Integer.toString(level.getLevelNumber()));
-            } else {
-                this.levelBox.addItem(level.getName());
-            }
-        }
-    }
-
-    /**
-     * Getter for the selected working level.
-     *
-     * @return the index of the selected item in the level-box
-     */
-    public int getSelectedLevelIndex() {
-        return this.levelBox.getSelectedIndex();
-    }
-
-    /**
-     * Checks if the level list is empty.
-     *
-     * @return boolean which is true if the level-list is empty
-     */
-    public boolean levelListIsEmpty() {
-        if (this.levelBox.getItemCount() == 0) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    /**
-     * Getter for the level-name-field.
-     *
-     * @return the {@link String} of the levelTagField
-     */
-    public String getLevelName() {
-        return this.levelTagField.getText();
-    }
-
-    /**
-     * Setter for the level name field.
-     *
-     * @param name the String for the levelTagField
-     */
-    public void setLevelName(String name) {
-        this.levelTagField.setText(name);
-    }
-
-    /**
-     * Getter for the name {@link TextField}.
-     *
-     * @return {@link String} of the name text field
-     */
-    public String getNameText() {
-        return this.nameField.getText();
-    }
-
-    /**
-     * Getter for the ref {@link TextField}.
-     *
-     * @return {@link String} of the ref text field
-     */
-    public String getRefText() {
-        return this.refField.getText();
-    }
-
-    /**
-     * Resets the view by making the UI elements disabled and deleting the level list.
-     */
-    public void reset() {
-        this.setAllUiElementsEnabled(false);
-        this.levelBox.removeAllItems();
-    }
-
-    /**
-     * Clears the text boxes and sets an empty {@link String}.
-     */
-    public void resetUiElements() {
-        this.nameField.setText("");
-        this.refField.setText("");
-    }
-
-    /*
-     * ********************************
-     * SETTERS FOR THE BUTTON LISTENERS
-     * ********************************
-     */
-
-    /**
-     * Set the listener for the power button.
-     *
-     * @param l the listener to set
-     */
-    public void setPowerButtonListener(ActionListener l) {
-        this.powerButton.addActionListener(l);
-    }
-
-    /**
-     * Set the listener for the apply button.
-     *
-     * @param l the listener to set
-     */
-    public void setApplyButtonListener(ActionListener l) {
-        this.applyButton.addActionListener(l);
-    }
-
-    /**
-     * Set the listener which is called when a new item in the level list is selected.
-     *
-     * @param l the listener to set
-     */
-    public void setLevelItemListener(ItemListener l) {
-        this.levelBox.addItemListener(l);
-    }
-
-
-    /**
-     * Set the listener which is called when a new item in the object list is selected.
-     *
-     * @param l the listener to set
-     */
-    public void setObjectItemListener(ItemListener l) {
-        this.objectBox.addItemListener(l);
-    }
-
-    // Preset Button Functions
-
-    public void setPresetButtons(List<IndoorObject> objects) {
-        this.preset1.setIndoorObject(objects.get(0));
-        this.preset2.setIndoorObject(objects.get(1));
-        this.preset3.setIndoorObject(objects.get(2));
-        this.preset4.setIndoorObject(objects.get(3));
-    }
-
-    public void setPreset1Listener(ActionListener l) {
-        this.preset1.addActionListener(l);
-    }
-
-    public void setPreset2Listener(ActionListener l) {
-        this.preset2.addActionListener(l);
-    }
-
-    public void setPreset3Listener(ActionListener l) {
-        this.preset3.addActionListener(l);
-    }
-
-    public void setPreset4Listener(ActionListener l) {
-        this.preset4.addActionListener(l);
-    }
-
-    public IndoorObject getPreset1() {
-        return preset1.getIndoorObject();
-    }
-
-    public IndoorObject getPreset2() {
-        return preset2.getIndoorObject();
-    }
-
-    public IndoorObject getPreset3() {
-        return preset3.getIndoorObject();
-    }
-
-    public IndoorObject getPreset4() {
-        return preset4.getIndoorObject();
-    }
+	private JPanel dialogPanel;
+	private JPanel contentPanel;
+	private JLabel levelLabel;
+	private JCheckBox levelCheckBox;
+	private JLabel levelNameLabel;
+	private DisableShortcutsOnFocusGainedTextField levelNameField;
+	private JLabel repeatOnLabel;
+	private DisableShortcutsOnFocusGainedTextField repeatOnField;
+	private JLabel objectLabel;
+	private JosmComboBox<TagCatalog.IndoorObject> objectBox;
+	private JLabel nameLabel;
+	private DisableShortcutsOnFocusGainedTextField nameField;
+	private JLabel refLabel;
+	private DisableShortcutsOnFocusGainedTextField refField;
+	private JLabel multiLabel;
+	private JButton multiOuterButton;
+	private JButton multiInnerButton;
+	private JCheckBox multiCheckBox;
+	private JPanel buttonBar;
+	private JButton applyButton;
+	private JSeparator separator1;
+	private JSeparator separator2;
+	private PresetButton preset1;
+	private PresetButton preset2;
+	private PresetButton preset3;
+	private PresetButton preset4;
+	private JButton addLevelButton;
+	private JButton helpButton;
+
+
+   public ToolBoxView() {
+       super(tr("Indoor Mapping Helper"), "indoorhelper",
+               tr("Toolbox for indoor mapping assistance"), null, 300, true);
+
+       initComponents();
+   }
+
+/*************************************************
+* CREATES THE LAYOUT OF THE PLUG-IN.
+*
+*/
+   private void initComponents() {
+       dialogPanel = new JPanel();
+       contentPanel = new JPanel();
+       levelLabel = new JLabel();
+       levelCheckBox = new JCheckBox();
+       levelNameLabel = new JLabel();
+       levelNameField = new DisableShortcutsOnFocusGainedTextField();
+       repeatOnLabel = new JLabel();
+       repeatOnField = new DisableShortcutsOnFocusGainedTextField();
+       objectLabel = new JLabel();
+       objectBox = new JosmComboBox<>(TagCatalog.IndoorObject.values());
+       nameLabel = new JLabel();
+       nameField = new DisableShortcutsOnFocusGainedTextField();
+       refLabel = new JLabel();
+       refField = new DisableShortcutsOnFocusGainedTextField();
+       multiLabel = new JLabel();
+       multiOuterButton = new JButton();
+       multiInnerButton = new JButton();
+       multiCheckBox = new JCheckBox();
+       buttonBar = new JPanel();
+       applyButton = new JButton();
+       separator1 = new JSeparator();
+       separator2 = new JSeparator();
+       preset1 = new PresetButton(IndoorObject.ROOM);
+       preset2 = new PresetButton(IndoorObject.STEPS);
+       preset3 = new PresetButton(IndoorObject.CONCRETE_WALL);
+       preset4 = new PresetButton(IndoorObject.GLASS_WALL);
+       addLevelButton = new JButton();
+       helpButton = new JButton();
+
+       //======== this ========
+       //Container contentPane = this.get;
+       //contentPane.setLayout(new BorderLayout());
+
+       //======== dialogPane ========
+       {
+           dialogPanel.setBorder(new EmptyBorder(12, 12, 12, 12));
+           dialogPanel.setLayout(new BorderLayout());
+
+           //======== contentPanel ========
+           {
+               contentPanel.setLayout(new GridBagLayout());
+               ((GridBagLayout) contentPanel.getLayout()).columnWidths = new int[] {
+                       0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+               ((GridBagLayout) contentPanel.getLayout()).rowHeights = new int[] {0, 0, 0, 0, 0, 0, 0, 0};
+               ((GridBagLayout) contentPanel.getLayout()).columnWeights = new double[] {
+                       0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0E-4};
+               ((GridBagLayout) contentPanel.getLayout()).rowWeights = new double[] {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0E-4};
+
+
+               //---- addLevelButton ----
+               addLevelButton.setText(tr("Insert level"));
+               addLevelButton.setToolTipText(tr("Add a new level to layer."));
+               addLevelButton.setEnabled(false);
+               contentPanel.add(addLevelButton, new GridBagConstraints(12, 1, 3, 1, 0.0, 1.0,
+                       GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+                       new Insets(0, 0, 5, 30), 0, 0));
+
+               //---- helpButton ----
+               helpButton.setText(tr("<html><b>?</strong></b>"));
+               helpButton.setToolTipText(tr("Show Help-Browser."));
+               helpButton.setBackground(Color.LIGHT_GRAY);
+               helpButton.setEnabled(false);
+               contentPanel.add(helpButton, new GridBagConstraints(0, 0, 1, 1, 0.0, 1.0,
+                   GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+                   new Insets(0, 0, 5, 0), 0, 0));
+
+               //---- levelNameLabel ----
+               levelNameLabel.setText(tr("Level name"));
+               contentPanel.add(levelNameLabel, new GridBagConstraints(0, 1, 3, 1, 0.0, 1.0,
+                   GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+                   new Insets(0, 0, 5, 5), 0, 0));
+
+               //---- levelNameField ----
+               levelNameField.setEnabled(false);
+               levelNameField.setToolTipText(tr("Sets optional name tag for a level."));
+               contentPanel.add(levelNameField, new GridBagConstraints(3, 1, 3, 1, 0.0, 1.0,
+                   GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+                   new Insets(0, 0, 5, 30), 0, 0));
+
+               //---- levelLabel ----
+              levelLabel.setText(tr("Working level: NONE"));
+              levelLabel.setToolTipText(tr("Shows the current working level."));
+               contentPanel.add(levelLabel, new GridBagConstraints(6, 1, 3, 1, 0.0, 1.0,
+                   GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+                   new Insets(0, 0, 5, 5), 0, 0));
+
+               //---- levelCheckBox ----
+               levelCheckBox.setToolTipText(tr("Deactivate automatic level tagging."));
+               contentPanel.add(levelCheckBox, new GridBagConstraints(9, 1, 1, 1, 0.0, 1.0,
+                   GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+                   new Insets(0, 0, 5, 5), 0, 0));
+               contentPanel.add(separator1, new GridBagConstraints(0, 2, 0, 1, 0.0, 0.0,
+                       GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+                       new Insets(0, 0, 5, 5), 0, 0));
+
+               //---- objectLabel ----
+               objectLabel.setText(tr("Object"));
+               contentPanel.add(objectLabel, new GridBagConstraints(0, 3, 3, 1, 0.0, 1.0,
+                   GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+                   new Insets(0, 0, 5, 5), 0, 0));
+
+               //---- objectBox ----
+               objectBox.setEnabled(false);
+               objectBox.setPrototypeDisplayValue(IndoorObject.CONCRETE_WALL);
+               objectBox.setToolTipText(tr("The object preset you want to tag."));
+               contentPanel.add(objectBox, new GridBagConstraints(3, 3, 3, 1, 0.0, 1.0,
+                   GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+                   new Insets(0, 0, 5, 30), 0, 0));
+
+               //---- nameLabel ----
+               nameLabel.setText(tr("Name"));
+               contentPanel.add(nameLabel, new GridBagConstraints(0, 4, 3, 1, 0.0, 1.0,
+                   GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+                   new Insets(0, 0, 5, 5), 0, 0));
+
+               //---- nameField ----
+               nameField.setEnabled(false);
+               nameField.addFocusListener(new FocusListener() {
+
+                   @Override
+                   public void focusLost(FocusEvent e) {}
+
+                   @Override
+                   public void focusGained(FocusEvent e) {
+                       nameField.selectAll();
+                   }
+               });
+               nameField.setToolTipText(tr("Sets the name tag."));
+               contentPanel.add(nameField, new GridBagConstraints(3, 4, 3, 1, 0.0, 1.0,
+                   GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+                   new Insets(0, 0, 5, 30), 0, 0));
+
+               //---- refLabel ----
+               refLabel.setText(tr("Reference"));
+               contentPanel.add(refLabel, new GridBagConstraints(0, 5, 3, 1, 0.0, 1.0,
+                   GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+                   new Insets(0, 0, 5, 5), 0, 0));
+
+               //---- refField ----
+               refField.setEnabled(false);
+               refField.addFocusListener(new FocusListener() {
+
+                   @Override
+                   public void focusLost(FocusEvent e) {}
+
+                   @Override
+                   public void focusGained(FocusEvent e) {
+                       refField.selectAll();
+                   }
+               });
+               refField.setToolTipText(tr("Sets the referance tag."));
+               contentPanel.add(refField, new GridBagConstraints(3, 5, 3, 1, 0.0, 1.0,
+                   GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+                   new Insets(0, 0, 5, 30), 0, 0));
+
+               //---- repeatOnLabel ----
+               repeatOnLabel.setText(tr("Repeat on"));
+               contentPanel.add(repeatOnLabel, new GridBagConstraints(0, 6, 3, 1, 0.0, 1.0,
+               	GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+                   new Insets(0, 0, 5, 5), 0, 0));
+
+               //---- repeatOnField ----
+               repeatOnField.setEnabled(false);
+               repeatOnField.addFocusListener(new FocusListener() {
+
+               	@Override
+               	public void focusLost(FocusEvent e) {}
+
+               	@Override
+               	public void focusGained(FocusEvent e) {
+               		repeatOnField.selectAll();
+               	}
+               });
+               repeatOnField.setToolTipText(tr("Sets the repeat on tag when highway objects are selected. Please tag like this: -3-4 or -2--3 or 5-6 ."));
+               contentPanel.add(repeatOnField, new GridBagConstraints(3, 6, 3, 1, 0.0, 1.0,
+                   GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+                   new Insets(0, 0, 5, 30), 0, 0));
+               contentPanel.add(separator2, new GridBagConstraints(0, 7, 0, 1, 0.0, 1.0,
+                       GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+                       new Insets(0, 0, 5, 5), 0, 0));
+
+               //---- preset1 ----
+               preset1.setEnabled(false);
+               contentPanel.add(preset1, new GridBagConstraints(6, 3, 1, 1, 0.0, 0.0,
+                   GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+                   new Insets(0, 0, 5, 5), 0, 0));
+               //---- preset2 ----
+               preset2.setEnabled(false);
+               contentPanel.add(preset2, new GridBagConstraints(6, 4, 1, 1, 0.0, 0.0,
+                   GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+                   new Insets(0, 0, 5, 5), 0, 0));
+
+               //---- preset3 ----
+               preset3.setEnabled(false);
+               contentPanel.add(preset3, new GridBagConstraints(6, 5, 1, 1, 0.0, 0.0,
+                   GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+                   new Insets(0, 0, 5, 5), 0, 0));
+
+               //---- preset4 ----
+               preset4.setEnabled(false);
+               contentPanel.add(preset4, new GridBagConstraints(6, 6, 1, 1, 0.0, 0.0,
+                   GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+                   new Insets(0, 0, 5, 5), 0, 0));
+
+               //---- multiLabel ----
+               multiLabel.setText(tr("Multipolygon"));
+               contentPanel.add(multiLabel, new GridBagConstraints(0, 8, 3, 1, 0.0, 1.0,
+                   GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+                   new Insets(0, 0, 5, 5), 0, 0));
+
+               //---- multiOuterButton ----
+               multiOuterButton.setText(tr("OUTER"));
+               multiOuterButton.setToolTipText(tr("Creation-Tool for multipolygon with role: outer. To finish press the spacebar."));
+               multiOuterButton.setEnabled(false);
+               contentPanel.add(multiOuterButton, new GridBagConstraints(3, 8, 3, 1, 0.0, 1.0,
+                   GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+                   new Insets(0, 0, 5, 30), 0, 0));
+
+               //---- multiInnerButton ----
+               multiInnerButton.setText(tr("INNER"));
+               multiInnerButton.setToolTipText(tr("Creation-Tool for multipolygons with role: inner. To finish press spacebar. To add to relation select \"outer\" and press enter."));
+               multiInnerButton.setEnabled(false);
+               contentPanel.add(multiInnerButton, new GridBagConstraints(6, 8, 1, 1, 0.0, 0.0,
+                   GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+                   new Insets(0, 0, 5, 5), 0, 0));
+
+             //---- multiCheckBox ----
+               multiCheckBox.setToolTipText(tr("Deactivate multipolygon function."));
+               contentPanel.add(multiCheckBox, new GridBagConstraints(9, 8, 1, 1, 0.0, 1.0,
+                   GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+                   new Insets(0, 0, 5, 5), 0, 0));
+           }
+           dialogPanel.add(contentPanel, BorderLayout.CENTER);
+
+           //======== buttonBar ========
+           {
+               buttonBar.setBorder(new EmptyBorder(12, 0, 0, 0));
+               buttonBar.setLayout(new GridBagLayout());
+               ((GridBagLayout) buttonBar.getLayout()).columnWidths = new int[] {0, 80};
+               ((GridBagLayout) buttonBar.getLayout()).columnWeights = new double[] {1.0, 0.0};
+
+               //---- applyButton ----
+               applyButton.setText(tr("Apply"));
+               applyButton.setToolTipText(tr("Add selected tags and/or relations to obeject."));
+               applyButton.setEnabled(false);
+               buttonBar.add(applyButton, new GridBagConstraints(0, 1, 2, 1, 0.0, 0.0,
+                   GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+                   new Insets(0, 0, 0, 0), 0, 0));
+           }
+           dialogPanel.add(buttonBar, BorderLayout.SOUTH);
+       }
+       this.createLayout(dialogPanel, true, null);
+
+   }
+
+/*************************************************
+* ENABLES OR DISABLES UI ELEMENTS
+*
+*/
+   /**
+    * Enables or disables the interactive UI elements of the toolbox.
+    *
+    * @param enabled set this true for enabled elements
+    */
+   public void setAllUiElementsEnabled(boolean enabled) {
+	   this.applyButton.setEnabled(enabled);
+	   this.levelCheckBox.setEnabled(enabled);
+	   this.helpButton.setEnabled(enabled);
+       this.objectBox.setEnabled(enabled);
+       this.levelNameField.setEnabled(enabled);
+       this.nameField.setEnabled(enabled);
+       this.refField.setEnabled(enabled);
+       this.levelNameField.setEnabled(enabled);
+       this.repeatOnField.setEnabled(enabled);
+       this.multiOuterButton.setEnabled(enabled);
+       this.multiInnerButton.setEnabled(enabled);
+       this.multiCheckBox.setEnabled(enabled);
+       this.helpButton.setEnabled(enabled);
+       this.addLevelButton.setEnabled(enabled);
+       this.preset1.setEnabled(enabled);
+       this.preset2.setEnabled(enabled);
+       this.preset3.setEnabled(enabled);
+       this.preset4.setEnabled(enabled);
+
+       if (enabled == false) {
+           resetUiElements();
+       }
+   }
+
+   /**
+    * Enables or disables the interactive text box elements {@link #name} and {@link #ref}.
+    *
+    * @param enabled set this true for enabled elements
+    */
+   public void setNRUiElementsEnabled(boolean enabled) {
+       this.nameField.setEnabled(enabled);
+       this.refField.setEnabled(enabled);
+
+   }
+
+   /**
+    * Enables or disables the interactive text box element {@link #repeatOn}.
+    * @param enabled set this true for enabled elements
+	*/
+   public void setROUiElementsEnabled(boolean enabled){
+   		this.repeatOnField.setEnabled(enabled);
+
+   }
+
+   /**
+    * Enables or disables the interactive text box element {@link #levelName}.
+    * @param enabled set this true for enabled elements
+	*/
+   public void setLVLUiElementsEnabled(boolean enabled) {
+	   this.levelNameField.setEnabled(enabled);
+	   this.addLevelButton.setEnabled(enabled);
+
+   }
+
+   /**
+    * Enables or disables the interactive ComboBoxes {@link #multiRoleBox} and {@link #multiEditBox }.
+    * @param enabled set this true for enabled elements
+	*/
+   public void setMultiUiElementsEnabled(boolean enabled) {
+	   this.multiOuterButton.setEnabled(enabled);
+	   this.multiInnerButton.setEnabled(enabled);
+
+	   if (enabled == false) resetUiElements();
+   }
+
+   /**
+    * Resets the view by making the UI elements disabled and deleting the level list.
+    */
+   public void reset() {
+       this.setAllUiElementsEnabled(false);
+   }
+
+
+/*************************************************
+* GETTER and SETTER FOR THE INTERACTIVE UI BOXES
+*
+*/
+   /**
+    * Getter for the selected {@link IndoorObject} in the objectBox.
+    *
+    * @return the selected indoor object in the object ComboBox.
+    */
+   public IndoorObject getSelectedObject() {
+       return (IndoorObject) this.objectBox.getSelectedItem();
+   }
+
+   /**
+    * Getter for the level name field.
+    *
+    * @return the {@link String} of the {@link #levelNameField}
+    */
+   public String getLevelNameText() {
+       return this.levelNameField.getText();
+   }
+
+   /**
+    * Setter for the level name field.
+    *
+    * @param name the String for the {@link #levelNameField}
+    */
+   public void setLevelNameText(String name) {
+       this.levelNameField.setText(name);
+   }
+
+   /**
+    * Getter for the  name tag {@link TextField}.
+    *
+    * @return {@link String} of the name text field
+    */
+   public String getNameText() {
+       return this.nameField.getText();
+   }
+
+   /**
+    * Setter for the current level value tag
+    *
+    * @param current level value as String
+    * @author rebsc
+    */
+   public void setLevelLabel(String levelTag) {
+	   if (getLevelCheckBoxStatus() == false) {
+		  if(!levelTag.equals("")) {
+			  this.levelLabel.setText((tr("Working level: {0}",levelTag)));
+		  }
+		  else {
+			  this.levelLabel.setText((tr("Working level: NONE")));
+		  }
+	   }
+	   else {
+		   this.levelLabel.setText((tr("Working level: NONE")));
+	   }
+   }
+
+   /**
+    * Getter for the CheckBox Status
+    *
+    * @return boolean which tells if box is selected or not.
+    */
+   public boolean getLevelCheckBoxStatus() {
+	   return this.levelCheckBox.isSelected();
+   }
+
+   /**
+    * Getter for the ref {@link TextField}.
+    *
+    * @return {@link String} of the ref text field
+    */
+   public String getRefText() {
+       return this.refField.getText();
+   }
+
+   /**
+    * Getter for the repeat on {@link TextField}.
+    * @return {@link String} of the repeat on text field
+    */
+   public String getRepeatOnText() {
+       return this.repeatOnField.getText();
+   }
+
+
+/*************************************************
+* RESETER FOR THE INTERACTIVE UI BOXES
+*
+*/
+
+   /**
+    * Clears the text boxes and sets an empty {@link String}.
+    */
+   public void resetUiElements() {
+       this.nameField.setText(tr(""));
+       this.levelNameField.setText(tr(""));
+       this.refField.setText(tr(""));
+       this.repeatOnField.setText(tr(""));
+       this.levelNameField.setText(tr(""));
+   }
+
+
+/*************************************************
+* SETTERS FOR THE BUTTON LISTENER
+*
+*/
+
+   /**
+    * Set the listener for the apply button.
+    *
+    * @param l the listener to set
+    */
+   public void setApplyButtonListener(ActionListener l) {
+       this.applyButton.addActionListener(l);
+   }
+
+   /**
+    * Set the listener for CheckBox.
+    * @param l the listener to set
+    */
+   public void setLevelCheckBoxListener(ItemListener l) {
+	   this.levelCheckBox.addItemListener(l);
+   }
+
+   /**
+    * Set the listener for helpButton.
+    * @param l the listener to set
+    */
+   public void setHelpButtonListener(ActionListener l) {
+	   this.helpButton.addActionListener(l);
+   }
+
+   /**
+    * Set the listener for addLevelButton.
+    * @param l the listener to set
+    */
+   public void setAddLevelButtonListener(ActionListener l) {
+	   this.addLevelButton.addActionListener(l);
+   }
+
+
+   /**
+    * Set the listener for object box.
+    *
+    * @param l the listener to set
+    */
+   public void setObjectItemListener(ItemListener l) {
+       this.objectBox.addItemListener(l);
+   }
+
+   /**
+    * Set the listener for the OUTTER button.
+    *
+    * @param l the listener to set
+    */
+   public void setOuterButtonListener(ActionListener l) {
+       this.multiOuterButton.addActionListener(l);
+   }
+
+   /**
+    * Set the listener for the INNER button.
+    *
+    * @param l the listener to set
+    */
+   public void setInnerButtonListener(ActionListener l) {
+       this.multiInnerButton.addActionListener(l);
+   }
+
+   /**
+    * Set the listener for the multi checkbox.
+    *
+    * @param l the listener to set
+    */
+   public void setMultiCheckBoxListener(ItemListener l) {
+       this.multiCheckBox.addItemListener(l);
+   }
+
+/*************************************************
+* PRESET BUTTON FUNCTION
+*
+*/
+   public void setPresetButtons(List<IndoorObject> objects) {
+       this.preset1.setIndoorObject(objects.get(0));
+       this.preset2.setIndoorObject(objects.get(1));
+       this.preset3.setIndoorObject(objects.get(2));
+       this.preset4.setIndoorObject(objects.get(3));
+   }
+
+   public void setPreset1Listener(ActionListener l) {
+       this.preset1.addActionListener(l);
+   }
+
+   public void setPreset2Listener(ActionListener l) {
+       this.preset2.addActionListener(l);
+   }
+
+   public void setPreset3Listener(ActionListener l) {
+       this.preset3.addActionListener(l);
+   }
+
+   public void setPreset4Listener(ActionListener l) {
+       this.preset4.addActionListener(l);
+   }
+
+   public IndoorObject getPreset1() {
+       return preset1.getIndoorObject();
+   }
+
+   public IndoorObject getPreset2() {
+       return preset2.getIndoorObject();
+   }
+
+   public IndoorObject getPreset3() {
+       return preset3.getIndoorObject();
+   }
+
+   public IndoorObject getPreset4() {
+       return preset4.getIndoorObject();
+   }
+
+
+/**
+*
+*
+*
+*
+*
+*
+*
+*
+*
+*/
 }

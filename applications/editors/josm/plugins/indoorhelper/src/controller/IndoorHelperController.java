@@ -18,67 +18,118 @@
 
 package controller;
 
+import static org.openstreetmap.josm.tools.I18n.tr;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
+import javax.swing.AbstractAction;
 import javax.swing.JOptionPane;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.ValidateAction;
+import org.openstreetmap.josm.actions.mapmode.DrawAction;
+import org.openstreetmap.josm.actions.mapmode.SelectAction;
+import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Tag;
 import org.openstreetmap.josm.data.validation.OsmValidator;
 import org.openstreetmap.josm.data.validation.tests.MapCSSTagChecker;
 import org.openstreetmap.josm.gui.MainApplication;
-import org.openstreetmap.josm.gui.dialogs.FilterDialog;
-import org.openstreetmap.josm.gui.dialogs.FilterTableModel;
+import org.openstreetmap.josm.gui.MapFrame;
+import org.openstreetmap.josm.gui.help.HelpBrowser;
 import org.openstreetmap.josm.gui.mappaint.MapPaintStyles;
+import org.openstreetmap.josm.spi.preferences.MapListSetting;
+import org.openstreetmap.josm.spi.preferences.Setting;
+import org.openstreetmap.josm.tools.Shortcut;
 
 import model.IndoorHelperModel;
 import model.TagCatalog.IndoorObject;
-import views.FittingView;
 import views.LevelSelectorView;
 import views.ToolBoxView;
 
 /**
- *
- * Class for the Controller which provides the communication between
- * the IndoorHelperModel and the different views.
- *
- * @author egru
- *
- */
+*
+* Class for the Controller which provides the communication between
+* the IndoorHelperModel and the different views.
+*
+* @author egru
+* @author rebsc
+*
+*/
 public class IndoorHelperController {
 
-    private IndoorHelperModel model;
-    private ToolBoxView toolboxView;
-    private FittingView fittingView;
-    private LevelSelectorView selectorView;
-    private String sep = System.getProperty("file.separator");
+   private IndoorHelperModel model;
+   private ToolBoxView toolboxView;
+   private String sep;
+   private String levelValue, levelNum;
+   private MapFrame map;
+   private DrawAction drawAction;
+   private SelectAction selectAction;
+   private SpaceAction SpaceAction;
+   private transient Shortcut SpaceShortcut;
+   private EnterAction EnterAction;
+   private transient Shortcut EnterShortcut;
+   private boolean OuterHelp,InnerHelp,LevelHelp;
+   private Collection<OsmPrimitive> innerRelation;
+   private LevelSelectorView selectorView;
 
+   /**
+    * Constructor for the {@link IndoorHelperController} which initiates model and views.
+    *
+    */
+   public IndoorHelperController() {
 
-    private int lastLevelIndex;
+	   this.model = new IndoorHelperModel();
+       this.toolboxView = new ToolBoxView();
 
-    /**
-     * Constructor for the {@link IndoorHelperController} which initiates model and views.
-     *
-     */
-    public IndoorHelperController() {
-        this.model = new IndoorHelperModel();
-        this.toolboxView = new ToolBoxView();
+       this.sep = System.getProperty("file.separator");
+       setPluginPreferences(true);
 
-        this.lastLevelIndex = 0;
+       // Multipolygon actions
+       this.drawAction = new DrawAction();
+       this.map = MainApplication.getMap();
+       this.selectAction = new SelectAction(map);
 
-        addToolboxListeners();
-        MainApplication.getMap().addToggleDialog(toolboxView);
-    }
+       // Ui elements
+       toolboxView.setAllUiElementsEnabled(true);
+       toolboxView.setROUiElementsEnabled(false);
+
+       addToolboxListeners();
+       MainApplication.getMap().addToggleDialog(toolboxView);
+
+       // Shortcuts
+       SpaceShortcut = Shortcut.registerShortcut("mapmode:space",
+               tr(""), KeyEvent.VK_SPACE, Shortcut.DIRECT);
+       this.SpaceAction = new SpaceAction();
+       MainApplication.registerActionShortcut(SpaceAction,SpaceShortcut);
+
+       EnterShortcut = Shortcut.registerShortcut("mapmode:ALT",
+               tr(""), KeyEvent.VK_ENTER, Shortcut.DIRECT);
+       this.EnterAction = new EnterAction();
+       MainApplication.registerActionShortcut(EnterAction,EnterShortcut);
+
+       // Helper
+       OuterHelp = false;
+       InnerHelp = false;
+       LevelHelp = false;
+	   innerRelation = null;
+	   levelValue = new String();
+	   levelNum = new String();
+
+   }
+
 
     /**
      * Adds the button- and box-listeners to the {@link ToolBoxView}.
@@ -86,10 +137,14 @@ public class IndoorHelperController {
     private void addToolboxListeners() {
 
         if (this.toolboxView != null) {
-            this.toolboxView.setPowerButtonListener(new ToolPowerButtonListener());
             this.toolboxView.setApplyButtonListener(new ToolApplyButtonListener());
-            this.toolboxView.setLevelItemListener(new ToolLevelItemListener());
+            this.toolboxView.setLevelCheckBoxListener(new ToolLevelCheckBoxListener());
+            this.toolboxView.setHelpButtonListener(new ToolHelpButtonListener());
+            this.toolboxView.setAddLevelButtonListener(new ToolAddLevelButtonListener());
             this.toolboxView.setObjectItemListener(new ToolObjectItemListener());
+            this.toolboxView.setOuterButtonListener(new ToolOuterButtonListener());
+            this.toolboxView.setInnerButtonListener(new ToolInnerButtonListener());
+            this.toolboxView.setMultiCheckBoxListener(new ToolMultiCheckBoxListener());
             this.toolboxView.setPreset1Listener(new Preset1Listener());
             this.toolboxView.setPreset2Listener(new Preset2Listener());
             this.toolboxView.setPreset3Listener(new Preset3Listener());
@@ -102,401 +157,518 @@ public class IndoorHelperController {
      */
     private void addLevelSelectorListeners() {
         if (this.selectorView != null) {
-            this.selectorView.setOkButtonListener(new LevelOkButtonListener());
-            this.selectorView.setCancelButtonListener(new LevelCancelButtonListener());
-        }
-    }
-
-    /**
-     * Adds the button-listeners to the {@link FittingView}.
-     */
-    private void addFittingListeners() {
-        if (this.fittingView != null) {
-            this.fittingView.setOkButtonListener(new FittingOkButtonListener());
-        }
-    }
-
-    //********************************************************************
-    //*********************   TOOLBOX LISTENERS   ************************
-    //********************************************************************
-
-    /**
-     * The listener which handles the power button.
-     *
-     * @author egru
-     *
-     */
-    class ToolPowerButtonListener implements ActionListener {
-
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            if (toolboxView.getPowerButtonState()) {
-                selectorView = new LevelSelectorView();
-                addLevelSelectorListeners();
-                selectorView.setVisible(true);
-                setPluginPreferences(true);
-            } else if (!toolboxView.getPowerButtonState()) {
-                model = new IndoorHelperModel();
-                selectorView.dispose();
-                toolboxView.reset();
-                setPluginPreferences(false);
-
-                // Delete the indoor filters
-                FilterDialog filterDialog = MainApplication.getMap().getToggleDialog(FilterDialog.class);
-
-                if (filterDialog != null) {
-                    FilterTableModel filterTableModel = filterDialog.getFilterModel();
-
-                    for (int i = filterTableModel.getRowCount()-1; i > -1; i--) {
-                        if (filterTableModel.getFilter(i).text.startsWith("\"indoor:level\"=\"")) {
-                            filterTableModel.removeFilter(i);
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    /**
-     * The listener which provides the handling of the apply button.
-     * Gets the texts which were written by the user and writes them to the OSM-data.
-     * After that it checks the tagged data  with the built-in validator file.
-     *
-     * @author egru
-     */
-    class ToolApplyButtonListener implements ActionListener {
-
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            IndoorObject indoorObject = toolboxView.getSelectedObject();
-            if (toolboxView.getNameText().isEmpty() && toolboxView.getRefText().isEmpty() && toolboxView.getLevelName().isEmpty()) {
-                model.addTagsToOSM(indoorObject);
-            } else {
-                List<Tag> tags = new ArrayList<>();
-                if (!toolboxView.getLevelName().isEmpty()) {
-                    model.getLevelList().get(toolboxView.getSelectedLevelIndex()).setNameTag(toolboxView.getLevelName());
-                }
-                if (!toolboxView.getNameText().isEmpty()) {
-                    tags.add(new Tag("name", toolboxView.getNameText()));
-                }
-                if (!toolboxView.getRefText().isEmpty()) {
-                    tags.add(new Tag("ref", toolboxView.getRefText()));
-                }
-                model.addTagsToOSM(indoorObject, tags);
-            }
-            //Do the validation process
-            ValidateAction validateAction = new ValidateAction();
-            validateAction.doValidate(true);
-
-            refreshPresets();
-        }
-    }
-
-    /**
-     * <pre>The listener which is called when a new item in the level list is selected.
-     *It also sets the name-tag for a level, if the user has done an input in the textbox.
-     * </pre>
-     * @author egru
-     *
-     */
-    class ToolLevelItemListener implements ItemListener {
-
-        @Override
-        public void itemStateChanged(ItemEvent e) {
-            if (!toolboxView.levelListIsEmpty()) {
-
-                if (!toolboxView.getLevelName().isEmpty()) {
-                    model.getLevelList().get(lastLevelIndex).setNameTag(toolboxView.getLevelName());
-                }
-
-                if (!model.getLevelList().get(toolboxView.getSelectedLevelIndex()).hasEmptyName()) {
-                    toolboxView.setLevelName(model.getLevelList().get(toolboxView.getSelectedLevelIndex()).getName());
-                } else {
-                    toolboxView.setLevelName("");
-                }
-                model.setWorkingLevel(toolboxView.getSelectedLevelIndex());
-
-                lastLevelIndex = toolboxView.getSelectedLevelIndex();
-            }
-        }
-    }
-
-
-
-    /**
-     * The listener which is called when a new item in the object list is selected.
-     *
-     * @author egru
-     *
-     */
-    class ToolObjectItemListener implements ItemListener {
-
-        @Override
-        public void itemStateChanged(ItemEvent e) {
-            if (toolboxView.getSelectedObject().equals(IndoorObject.ROOM)) {
-                toolboxView.setTagUiElementsEnabled(true);
-            } else {
-                toolboxView.setTagUiElementsEnabled(false);
-            }
-        }
-    }
-
-    /**
-     * Listener for preset button 1.
-     * @author egru
-     *
-     */
-    class Preset1Listener implements ActionListener {
-
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            model.addTagsToOSM(toolboxView.getPreset1());
-
-        }
-    }
-
-    /**
-     * Listener for preset button 2.
-     * @author egru
-     *
-     */
-    class Preset2Listener implements ActionListener {
-
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            model.addTagsToOSM(toolboxView.getPreset2());
-
+            this.selectorView.setOkButtonListener(new ToolLevelOkButtonListener());
+            this.selectorView.setCancelButtonListener(new ToolLevelCancelButtonListener());
+            this.selectorView.setSelectorWindowListener(new ToolSelectorWindowSListener());
         }
 
     }
 
-    /**
-     * Listener for preset button 3.
-     * @author egru
-     *
-     */
-    class Preset3Listener implements ActionListener {
+/*************************************************
+* TOOLBOX LISTENER
+*
+*/
 
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            model.addTagsToOSM(toolboxView.getPreset3());
-
-        }
-
-    }
-
-    /**
-     * Listener for preset button 4.
-     * @author egru
-     *
-     */
-    class Preset4Listener implements ActionListener {
-
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            model.addTagsToOSM(toolboxView.getPreset4());
-
-        }
-
-    }
-
-    /**
-     * Updates the preset button from the current ranking.
-     */
-    private void refreshPresets() {
-        toolboxView.setPresetButtons(model.getPresetRanking());
-    }
-
-
-    //*******************
-    // SELECTOR LISTENERS
-    //*******************
-
-    /**
-     * <pre>
-     * The listener which handles the click on the OK-button of the {@link LevelSelectorView}.
-     * It sends the data of the view to the model and displays an error message,
-     * if the level-list couldn't be created.
-     * </pre>
-     * @author egru
-     *
-     */
-    class LevelOkButtonListener implements ActionListener {
-
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            boolean levelSuccess = model.setBuildingLevels(selectorView.getMin(), selectorView.getMax());
-
-            if (levelSuccess) {
-                toolboxView.setLevelList(model.getLevelList());                //set the levels to the ComboBox and
-                model.setWorkingLevel(toolboxView.getSelectedLevelIndex());        //sets the working level in the model
-
-                selectorView.dispose();
-
-                fittingView = new FittingView();
-                addFittingListeners();
-                fittingView.setVisible(true);
-            } else {
-
-                JOptionPane.showMessageDialog(null, "Lowest Level has to be lower than the highest level",
-                        "Error", JOptionPane.ERROR_MESSAGE);
-            }
-        }
-    }
-
-    /**
-     * Closes the level selection view if the user hits the cancel button.
-     *
-     * @author egru
-     *
-     */
-    class LevelCancelButtonListener implements ActionListener {
-
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            selectorView.dispose();
-            toolboxView.setPowerButtonDisabled();
-            setPluginPreferences(false);
-        }
-
-    }
-
-
-
-    //*******************
-    // FITTING LISTENERS
-    //*******************
-    /**
-     * Closes the {@link FittingView} if the OK-Button is clicked.
-     * Enables the UI elements of the toolbox
-     *
-     * @author egru
-     *
-     */
-    class FittingOkButtonListener implements ActionListener {
-
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            fittingView.dispose();
-            toolboxView.setAllUiElementsEnabled(true);
-            toolboxView.setTagUiElementsEnabled(false);
-        }
-
-    }
-
-    /*
-    HELPER METHODS
+   /**
+    * The listener which provides the handling of the apply button.
+    * Gets the texts which were written by the user and writes them to the OSM-data.
+    * After that it checks the tagged data  with the built-in validator file.
+    *
+    * @author egru
+    * @author rebsc
     */
+   class ToolApplyButtonListener implements ActionListener {
 
-    /**
-     * Enables or disables the preferences for the mapcss-style and the validator.
-     *
-     * @param enabled Activates or disables the settings.
-     */
-    private void setPluginPreferences(boolean enabled) {
-        Collection<Map<String, String>> validatorMaps =
-                Main.pref.getListOfMaps("validator.org.openstreetmap.josm.data.validation.tests.MapCSSTagChecker.entries",
-                new ArrayList<>());
-        Collection<Map<String, String>> styleMaps =
-                Main.pref.getListOfMaps("mappaint.style.entries", new ArrayList<>());
+       @Override
+       public void actionPerformed(ActionEvent e) {
 
-        if (enabled) {
-            //set the validator active
+           IndoorObject indoorObject = toolboxView.getSelectedObject();
 
-            List<Map<String, String>> validatorMapsNew = new ArrayList<>();
-            if (!validatorMaps.isEmpty()) {
-                validatorMapsNew.addAll(validatorMaps);
-            }
+        	   // collecting all tags
+               List<Tag> tags = new ArrayList<>();
+               if (toolboxView.getLevelCheckBoxStatus() == false && !levelValue.equals("")) {
+            	   tags.add(new Tag(tr("level"),levelValue));
+               }
+           	   if (!toolboxView.getLevelNameText().isEmpty() && !toolboxView.getLevelCheckBoxStatus()) {
+           		   tags.add(new Tag(tr("level_name"),toolboxView.getLevelNameText()));
+           	   }
+               if (!toolboxView.getNameText().isEmpty()) {
+                   tags.add(new Tag(tr("name"), toolboxView.getNameText()));
+               }
+               if (!toolboxView.getRefText().isEmpty()) {
+                   tags.add(new Tag(tr("ref"), toolboxView.getRefText()));
+               }
+               if (!toolboxView.getRepeatOnText().isEmpty()){
+           			tags.add(new Tag(tr("repeat_on"),toolboxView.getRepeatOnText()));
+           	   }
+           	   if (!toolboxView.getLevelNameText().isEmpty() && !toolboxView.getLevelCheckBoxStatus()) {
+           		   tags.add(new Tag(tr("level_name"),toolboxView.getLevelNameText()));
+           	   }
 
-            for (Map<String, String> map : validatorMapsNew) {
-                if (map.containsValue("Indoor")) {
-                    validatorMapsNew.remove(map);
-                    break;
-                }
-            }
+           // Tagging to OSM Data
+           model.addTagsToOSM(indoorObject, tags);
 
-            Map<String, String> indoorValidator = new HashMap<>();
-            indoorValidator.put("title", "Indoor");
-            indoorValidator.put("active", "true");
-            indoorValidator.put("url", Main.pref.getDirs().getUserDataDirectory(false)+ sep +"validator" +
-                    sep + "indoorhelper.validator.mapcss");
+           // Reset ui elements
+           toolboxView.resetUiElements();
 
-            validatorMapsNew.add(indoorValidator);
-            Main.pref.putListOfMaps("validator.org.openstreetmap.josm.data.validation.tests.MapCSSTagChecker.entries",
-                    validatorMapsNew);
+           //Do the validation process
+           ValidateAction validateAction = new ValidateAction();
+           validateAction.doValidate(true);
 
-            //set mappaint active
+           refreshPresets();
 
-            List<Map<String, String>> styleMapsNew = new ArrayList<>();
-            if (!styleMaps.isEmpty()) {
-                styleMapsNew.addAll(styleMaps);
-            }
+       }
+   }
 
-            for (Map<String, String> map : styleMapsNew) {
-                if (map.containsValue("Indoor")) {
-                    styleMapsNew.remove(map);
-                    break;
-                }
-            }
-            Map<String, String> indoorMapPaint = new HashMap<>();
-            indoorMapPaint.put("title", "Indoor");
-            indoorMapPaint.put("active", "true");
-            indoorMapPaint.put("url", Main.pref.getDirs().getUserDataDirectory(false) + sep + "styles"
-                    + sep + "indoor.mapcss");
-            styleMapsNew.add(indoorMapPaint);
-            Main.pref.putListOfMaps("mappaint.style.entries", styleMapsNew);
+   /**
+    * The listener which is called when a new item in the object list is selected.
+    *
+    * @author egru
+    * @author rebsc
+    *
+    */
+   class ToolObjectItemListener implements ItemListener {
 
-            updateSettings();
-        } else {
-            //set the validator inactive
+       @Override
+       public void itemStateChanged(ItemEvent e) {
+           if (toolboxView.getSelectedObject().equals(IndoorObject.ROOM)) {
+               toolboxView.setNRUiElementsEnabled(true);
+               toolboxView.setROUiElementsEnabled(false);
+           }
+           else if (toolboxView.getSelectedObject().equals(IndoorObject.STEPS) ||
+           		toolboxView.getSelectedObject().equals(IndoorObject.ELEVATOR)) {
+       	 		toolboxView.setROUiElementsEnabled(true);
+       	 		toolboxView.setNRUiElementsEnabled(true);
+        	}
+           else {
+               toolboxView.setROUiElementsEnabled(false);
+           }
+       }
+   }
+
+   /**
+    * The listener which is called when the LevelCheckBox is selected.
+    *
+    * @author rebsc
+    */
+   class ToolLevelCheckBoxListener implements ItemListener{
+       @Override
+       public void itemStateChanged(ItemEvent e) {
+    	   if(e.getStateChange() == ItemEvent.SELECTED) {
+    		   toolboxView.setLVLUiElementsEnabled(false);
+    	   }
+    	   else {
+    		   toolboxView.setLVLUiElementsEnabled(true);
+    	   }
+       }
+   }
+
+   /**
+    * The listener which is called when the helpbutton got pushed.
+    *
+    * @author rebsc
+    */
+   static class ToolHelpButtonListener implements ActionListener{
+
+	   @Override
+	   public void actionPerformed(ActionEvent e) {
+		   String topic = tr("ToolB");
+		   HelpBrowser.setUrlForHelpTopic(Optional.ofNullable(topic).orElse(tr("/")));
+	   }
+   }
+
+   /**
+    * The listener which is called when the addlevelbutton got pushed.
+    *
+    * @author rebsc
+    */
+   class ToolAddLevelButtonListener implements ActionListener{
+
+	   @Override
+	   public void actionPerformed(ActionEvent e) {
+
+		   if(selectorView == null) {
+			   selectorView = new LevelSelectorView();
+			   addLevelSelectorListeners();
+
+			   //Show LevelSelectorView
+			   selectorView.setVisible(true);
+		   } else {
+			   //Put focus back on LevelSelectorView
+			   selectorView.toFront();
+		   }
+
+	   }
+   }
+
+   /**
+    * The listener which is called when the MultiCheckBox is selected.
+    *
+    * @author rebsc
+    */
+   class ToolMultiCheckBoxListener implements ItemListener{
+       @Override
+       public void itemStateChanged(ItemEvent e) {
+    	   if(e.getStateChange() == ItemEvent.SELECTED) {
+    		   toolboxView.setMultiUiElementsEnabled(false);
+    	   }
+    	   else {
+    		   toolboxView.setMultiUiElementsEnabled(true);
+    	   }
+       }
+   }
+
+   /**
+    * The listener which is called when the OUTER Button got pushed.
+    *
+    * @author rebsc
+    */
+   class ToolOuterButtonListener implements ActionListener{
+
+	   @Override
+	   public void actionPerformed(ActionEvent e) {
+		   // Select drawing action
+		   map.selectMapMode(drawAction);
+
+		   // For space shortcut to add the relation after spacebar got pushed {@link SpaceAction}
+		   OuterHelp = true;
+		   InnerHelp = false;
+	   }
+   }
+
+   /**
+    * The listener which is called when the INNER Button got pushed.
+    *
+    * @author rebsc
+    */
+   class ToolInnerButtonListener implements ActionListener {
+	   @Override
+	   public void actionPerformed(ActionEvent e) {
+		   // Select drawing action
+		   map.selectMapMode(drawAction);
+
+		   // For space shortcut to edit the relation after enter got pushed {@link SpaceAction}{@link EnterAction}
+		   InnerHelp = true;
+		   OuterHelp = false;
+
+	   }
+   }
+
+   /**
+    * Listener for preset button 1.
+    * @author egru
+    *
+    */
+   class Preset1Listener implements ActionListener {
+
+       @Override
+       public void actionPerformed(ActionEvent e) {
+           model.addTagsToOSM(toolboxView.getPreset1());
+       }
+   }
+
+   /**
+    * Listener for preset button 2.
+    * @author egru
+    *
+    */
+   class Preset2Listener implements ActionListener {
+
+       @Override
+       public void actionPerformed(ActionEvent e) {
+           model.addTagsToOSM(toolboxView.getPreset2());
+       }
+   }
+
+   /**
+    * Listener for preset button 3.
+    * @author egru
+    *
+    */
+   class Preset3Listener implements ActionListener {
+
+       @Override
+       public void actionPerformed(ActionEvent e) {
+           model.addTagsToOSM(toolboxView.getPreset3());
+       }
+   }
+
+   /**
+    * Listener for preset button 4.
+    * @author egru
+    *
+    */
+   class Preset4Listener implements ActionListener {
+
+       @Override
+       public void actionPerformed(ActionEvent e) {
+           model.addTagsToOSM(toolboxView.getPreset4());
+       }
+   }
+
+   /**
+    * Updates the preset button from the current ranking.
+    */
+   private void refreshPresets() {
+       toolboxView.setPresetButtons(model.getPresetRanking());
+   }
+
+/*************************************************
+* LEVEL SELCTOR VIEW LISTENER
+*
+*/
+   /**
+    * Specific listener for the applyButton
+    * @author rebsc
+    *
+    */
+   class ToolLevelOkButtonListener implements ActionListener {
+
+       @Override
+       public void actionPerformed(ActionEvent e) {
+    	   LevelHelp = true;
+
+    	   //Get insert level number out of SelectorView
+    	   if(!selectorView.getLevelNumber().equals("")) {
+    		   levelNum = selectorView.getLevelNumber();
+
+    		   //Unset visibility
+    		   selectorView.dispose();
+    		   //Select draw-action
+    		   map.selectMapMode(drawAction);
+
+    	   }else {
+    		   JOptionPane.showMessageDialog(null, tr("Please insert a value."), tr("Error"), JOptionPane.ERROR_MESSAGE);
+    	   }
+
+    	   selectorView = null;
+       }
+   }
+
+   /**
+    * Specific listener for the cancelButton
+    * @author rebsc
+    *
+    */
+   class ToolLevelCancelButtonListener implements ActionListener {
+
+       @Override
+       public void actionPerformed(ActionEvent e) {
+           selectorView.dispose();
+           selectorView = null;
+       }
+   }
+
+   /**
+    * General listener for LevelSelectorView window
+    * @author rebsc
+    *
+    */
+   class ToolSelectorWindowSListener implements WindowListener{
+
+	@Override
+	public void windowClosed(WindowEvent e) {
+		selectorView = null;
+	}
+
+	@Override
+	public void windowClosing(WindowEvent e) {
+		selectorView = null;
+	}
+
+	@Override
+	public void windowActivated(WindowEvent arg0) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void windowDeactivated(WindowEvent arg0) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void windowDeiconified(WindowEvent arg0) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void windowIconified(WindowEvent arg0) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void windowOpened(WindowEvent arg0) {
+		// TODO Auto-generated method stub
+
+	}
+   }
 
 
-            List<Map<String, String>> validatorMapsNew = new ArrayList<>();
-            if (!validatorMaps.isEmpty()) {
-                validatorMapsNew.addAll(validatorMaps);
-            }
+/*************************************************
+* SHORTCUT METHODS
+*
+*/
+   /**
+    * Shortcut for Spacebar
+    * @author rebsc
+    */
+   private class SpaceAction extends AbstractAction {
 
-            for (Map<String, String> map : validatorMapsNew) {
-                if (map.containsValue("Indoor")) {
-                    validatorMapsNew.remove(map);
-                    break;
-                }
-            }
-            Map<String, String> indoorValidator = new HashMap<>();
-            indoorValidator.put("title", "Indoor");
-            indoorValidator.put("active", "false");
-            indoorValidator.put("url", Main.pref.getDirs().getUserDataDirectory(false)+ sep +"validator" +
-                    sep + "indoorhelper.validator.mapcss");
+	private static final long serialVersionUID = 1L;
 
-            validatorMapsNew.add(indoorValidator);
-            Main.pref.putListOfMaps("validator.org.openstreetmap.josm.data.validation.tests.MapCSSTagChecker.entries",
-                    validatorMapsNew);
+	@Override
+       public void actionPerformed(ActionEvent e) {
+           if(OuterHelp) {
 
+        	   //Create new relation and add the currently drawn object to it
+        	   model.addRelation("outer");
+        	   map.selectMapMode(selectAction);
+        	   OuterHelp = false;
 
-            //set mappaint inactive
+        	   //Clear currently selection
+        	   MainApplication.getLayerManager().getEditDataSet().clearSelection();
+           }
+           else if(InnerHelp) {
 
+        	   //Save new drawn relation for adding
+        	   innerRelation = MainApplication.getLayerManager().getEditDataSet().getAllSelected();
+   		   	   map.selectMapMode(selectAction);
 
-            List<Map<String, String>> styleMapsNew = new ArrayList<>();
-            if (!styleMaps.isEmpty()) {
-                styleMapsNew.addAll(styleMaps);
-            }
-            for (Map<String, String> map : styleMapsNew) {
-                if (map.containsValue("Indoor")) {
-                    styleMapsNew.remove(map);
-                    break;
-                }
-            }
-            Map<String, String> indoorMapPaint = new HashMap<>();
-            indoorMapPaint.put("title", "Indoor");
-            indoorMapPaint.put("active", "false");
-            indoorMapPaint.put("url", Main.pref.getDirs().getUserDataDirectory(false) + sep + "styles"
-                    + sep + "indoor.mapcss");
-            styleMapsNew.add(indoorMapPaint);
-            Main.pref.putListOfMaps("mappaint.style.entries", styleMapsNew);
+        	   //Clear currently selection
+        	   MainApplication.getLayerManager().getEditDataSet().clearSelection();
+           }
+           else if(LevelHelp) {
 
-            updateSettings();
-        }
+               List<Tag> tags = new ArrayList<>();
+        	   tags.add(new Tag(tr("level"),levelNum));
+
+        	   //Add level tag
+        	   model.addTagsToOSM(tags);
+
+        	   //Change action
+        	   map.selectMapMode(selectAction);
+        	   LevelHelp = false;
+           }
+       }
+   }
+
+   /**
+    * Shortcut for Enter
+    * @author rebsc
+    */
+   private class EnterAction extends AbstractAction {
+
+	private static final long serialVersionUID = 1L;
+
+	@Override
+       public void actionPerformed(ActionEvent e) {
+
+    	   if(InnerHelp && !OuterHelp) {
+
+    		   // Edit the new drawn relation member to selected relation
+    		   model.editRelation("inner", innerRelation);
+    		   InnerHelp = false;
+
+    	   }else if((InnerHelp && OuterHelp) || (OuterHelp && !InnerHelp)){
+    		   JOptionPane.showMessageDialog(null, tr("Please press spacebar first to add \"outer\" object to relation."), tr("Relation-Error"), JOptionPane.ERROR_MESSAGE);
+    		   resetHelper();
+    	   }
+       }
+   }
+
+/*************************************************
+* FILTER METHODS
+*
+*/
+   /**
+    * Function which unset the disabled state of currently hidden and/or disabled objects which have a
+    * specific tag (key). Just unsets the disabled state if object has a tag-value which is part of the
+    * current working level.
+    * Specific example: key: repeat_on ; value: 1-4;
+    * 					If current selected workinglevel is "3" all objects with the leveltag "level=3" are hidden but the
+    * 					objects with the key "repeat_on" and the value which includes "3" or is (minValue+1) - maxValue (4-...),
+    * 					because repeat_on tag starts on the current workinglevel+1.
+    * @param key sepcific key to unset hidden objects which contains it
+    * @author rebsc
+    */
+   public void unsetSpecificKeyFilter(String key) {
+
+	 Collection<OsmPrimitive> p = Main.main.getEditDataSet().allPrimitives();
+	 Map<String, String> tags = new HashMap<>();
+	 Integer level = Integer.parseInt(levelValue);
+	 Integer firstVal, secVal;
+
+	 //Find all primitives with the specific tag and check if value is part of the current
+	 //workinglevel. After that unset the disabled status.
+	 for(OsmPrimitive osm: p) {
+		 if((osm.isDisabledAndHidden() || osm.isDisabled()) && osm.hasKey(key)) {
+
+			 tags = osm.getInterestingTags();
+
+			 for(Map.Entry<String, String> e: tags.entrySet()) {
+				if(e.getKey().equals(key)) {
+					String val = e.getValue();
+
+					//Extract values
+					if(val.indexOf("-") == 0) {
+						firstVal = (Integer.parseInt(val.split("-",2)[1].split("-",2)[0]))*-1;
+						secVal = Integer.parseInt(val.split("-",2)[1].split("-",2)[1]);
+					}else {
+						firstVal = Integer.parseInt(val.split("-")[0]);
+						secVal = Integer.parseInt(val.split("-")[1]);
+					}
+
+					//Compare values to current working level
+					if(level >= ((firstVal)-1) && level <= secVal) {
+						osm.unsetDisabledState();
+					}else {
+						osm.setDisabledState(true);
+					}
+				}
+
+			 }
+
+		 }
+	 }
+
+   }
+
+  /**
+   * Function which updates the current working level tag
+   *
+   * @param indoorLevel: current working level
+   */
+   public void setIndoorLevel(String indoorLevel) {
+	   this.toolboxView.setLevelLabel(indoorLevel);
+   }
+
+   /**
+    * Function which gets the current working level tag
+    *
+    * @param indoorLevel: current working level
+    */
+    public void getIndoorLevel(String indoorLevel) {
+    	levelValue = indoorLevel;
+
     }
+
+
+/*************************************************
+* HELPER METHODS
+*
+*/
+
+   /**
+    * Function which resets the helper for relation adding
+    */
+   private void resetHelper() {
+	   InnerHelp = false;
+	   OuterHelp = false;
+   }
 
     /**
      * Forces JOSM to load the validator and mappaint settings.
@@ -510,6 +682,141 @@ public class IndoorHelperController {
 
             MapPaintStyles.readFromPreferences();
     }
+
+   /**
+    * Enables or disables the preferences for the mapcss-style and the validator.
+    *
+    * @param enabled Activates or disables the settings.
+    */
+	@SuppressWarnings("deprecation")
+	private void setPluginPreferences(boolean enabled) {
+       Map<String, Setting<?>> settings = Main.pref.getAllSettings();
+
+       MapListSetting validatorMapListSetting = (MapListSetting) settings.
+               get("validator.org.openstreetmap.josm.data.validation.tests.MapCSSTagChecker.entries");
+       List<Map<String, String>> validatorMaps = new ArrayList<>();
+       if (validatorMapListSetting != null) {
+           validatorMaps = validatorMapListSetting.getValue();
+       }
+
+       MapListSetting styleMapListSetting = (MapListSetting) settings.
+               get("mappaint.style.entries");
+       List<Map<String, String>> styleMaps = new ArrayList<>();
+       if (styleMapListSetting != null) {
+           styleMaps = styleMapListSetting.getValue();
+       }
+
+       if (enabled) {
+           //set the validator active
+
+           List<Map<String, String>> validatorMapsNew = new ArrayList<>();
+           if (!validatorMaps.isEmpty()) {
+               validatorMapsNew.addAll(validatorMaps);
+           }
+
+           for (Map<String, String> map : validatorMapsNew) {
+               if (map.containsValue(tr("Indoor"))) {
+                   validatorMapsNew.remove(map);
+                   break;
+               }
+           }
+
+           Map<String, String> indoorValidator = new HashMap<>();
+           indoorValidator.put("title", "Indoor");
+           indoorValidator.put("active", "true");
+           indoorValidator.put("url", Main.pref.getUserDataDirectory()+ sep +"validator" +
+                   sep + "indoorhelper.validator.mapcss");
+
+           validatorMapsNew.add(indoorValidator);
+           Main.pref.putListOfMaps("validator.org.openstreetmap.josm.data.validation.tests.MapCSSTagChecker.entries",
+                   validatorMapsNew);
+
+           //set mappaint active
+
+           List<Map<String, String>> styleMapsNew = new ArrayList<>();
+           if (!styleMaps.isEmpty()) {
+               styleMapsNew.addAll(styleMaps);
+           }
+
+           for (Map<String, String> map : styleMapsNew) {
+               if (map.containsValue(tr("Indoor"))) {
+                   styleMapsNew.remove(map);
+                   break;
+               }
+           }
+           Map<String, String> indoorMapPaint = new HashMap<>();
+           indoorMapPaint.put("title", tr("Indoor"));
+           indoorMapPaint.put("active", "true");
+           indoorMapPaint.put("url", Main.pref.getUserDataDirectory() + sep + "styles"
+                   + sep + "sit.mapcss");
+           styleMapsNew.add(indoorMapPaint);
+           Main.pref.putListOfMaps("mappaint.style.entries", styleMapsNew);
+
+           updateSettings();
+       } else {
+           //set the validator inactive
+
+
+           List<Map<String, String>> validatorMapsNew = new ArrayList<>();
+           if (!validatorMaps.isEmpty()) {
+               validatorMapsNew.addAll(validatorMaps);
+           }
+
+           for (Map<String, String> map : validatorMapsNew) {
+               if (map.containsValue(tr("Indoor"))) {
+                   validatorMapsNew.remove(map);
+                   break;
+               }
+           }
+           Map<String, String> indoorValidator = new HashMap<>();
+           indoorValidator.put("title", tr("Indoor"));
+           indoorValidator.put("active", "false");
+           indoorValidator.put("url", Main.pref.getUserDataDirectory()+ sep +"validator" +
+                   sep + "indoorhelper.validator.mapcss");
+
+           validatorMapsNew.add(indoorValidator);
+           Main.pref.putListOfMaps("validator.org.openstreetmap.josm.data.validation.tests.MapCSSTagChecker.entries",
+                   validatorMapsNew);
+
+
+           //set mappaint inactive
+
+
+           List<Map<String, String>> styleMapsNew = new ArrayList<>();
+           if (!styleMaps.isEmpty()) {
+               styleMapsNew.addAll(styleMaps);
+           }
+           for (Map<String, String> map : styleMapsNew) {
+               if (map.containsValue(tr("Indoor"))) {
+                   styleMapsNew.remove(map);
+                   break;
+               }
+           }
+           Map<String, String> indoorMapPaint = new HashMap<>();
+           indoorMapPaint.put("title", tr("Indoor"));
+           indoorMapPaint.put("active", "false");
+           indoorMapPaint.put("url", Main.pref.getUserDataDirectory() + sep + "styles"
+                   + sep + "sit.mapcss");
+           styleMapsNew.add(indoorMapPaint);
+           Main.pref.putListOfMaps("mappaint.style.entries", styleMapsNew);
+
+           updateSettings();
+       }
+   }
+
+
+
+
+
+/**
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ */
 }
-
-

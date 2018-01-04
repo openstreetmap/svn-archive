@@ -24,7 +24,15 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MapFrame;
+import org.openstreetmap.josm.gui.autofilter.AutoFilter;
+import org.openstreetmap.josm.gui.autofilter.AutoFilterManager;
+import org.openstreetmap.josm.gui.layer.MainLayerManager.ActiveLayerChangeEvent;
+import org.openstreetmap.josm.gui.layer.MainLayerManager.ActiveLayerChangeListener;
+import org.openstreetmap.josm.gui.layer.MapViewPaintable.PaintableInvalidationEvent;
+import org.openstreetmap.josm.gui.layer.MapViewPaintable.PaintableInvalidationListener;
+import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
 
@@ -35,12 +43,13 @@ import controller.IndoorHelperController;
  * This is the main class for the indoorhelper plug-in.
  *
  * @author egru
+ * @author rebsc
  *
  */
-public class IndoorHelperPlugin extends Plugin {
+public class IndoorHelperPlugin extends Plugin implements PaintableInvalidationListener, ActiveLayerChangeListener {
 
 
-    @SuppressWarnings("unused")
+	@SuppressWarnings("unused")
     private IndoorHelperController controller;
     String sep = System.getProperty("file.separator");
 
@@ -53,13 +62,16 @@ public class IndoorHelperPlugin extends Plugin {
      */
     public IndoorHelperPlugin(PluginInformation info) throws Exception {
         super(info);
-
+        MainApplication.getLayerManager().addAndFireActiveLayerChangeListener(this);
         this.exportValidator("/data/indoorhelper.validator.mapcss");
-        this.exportStyleFile("indoor.mapcss");
+        this.exportStyleFile("sit.mapcss");
         this.exportStyleFile("entrance_door_icon.png");
         this.exportStyleFile("entrance_icon.png");
-//        this.setIndoorValidator();
+        this.exportStyleFile("elevator_icon.png");
+
+        //this.setIndoorValidator();
     }
+
 
     /**
      * Secures that the plug-in is only loaded, if a new MapFrame is created.
@@ -73,13 +85,14 @@ public class IndoorHelperPlugin extends Plugin {
         }
     }
 
+
     /**
      * Exports the mapcss validator file to the preferences directory.
      */
-    private void exportValidator(String resourceName) throws Exception {
+    @SuppressWarnings("deprecation")
+	private void exportValidator(String resourceName) throws Exception {
         InputStream stream = null;
         OutputStream resStreamOut = null;
-
 
         try {
             stream = IndoorHelperPlugin.class.getResourceAsStream(resourceName);
@@ -92,7 +105,7 @@ public class IndoorHelperPlugin extends Plugin {
             int readBytes;
             byte[] buffer = new byte[4096];
 
-            String valDirPath = Main.pref.getDirs().getUserDataDirectory(false) + sep + "validator";
+            String valDirPath = Main.pref.getUserDataDirectory() + sep + "validator";
             File valDir = new File(valDirPath);
             valDir.mkdirs();
             outPath = valDir.getAbsolutePath() +sep+ "indoorhelper.validator.mapcss";
@@ -128,7 +141,8 @@ public class IndoorHelperPlugin extends Plugin {
             int readBytes;
             byte[] buffer = new byte[4096];
 
-            String valDirPath = Main.pref.getDirs().getUserDataDirectory(false) + sep + "styles";
+            @SuppressWarnings("deprecation")
+			String valDirPath = Main.pref.getUserDataDirectory() + sep + "styles";
             File valDir = new File(valDirPath);
             valDir.mkdirs();
             outPath = valDir.getAbsolutePath() +sep+ resourceName;
@@ -145,6 +159,34 @@ public class IndoorHelperPlugin extends Plugin {
             stream.close();
         }
     }
+
+	@Override
+	public void activeOrEditLayerChanged(ActiveLayerChangeEvent e) {
+		OsmDataLayer editLayer = MainApplication.getLayerManager().getEditLayer();
+        if (editLayer != null) {
+            editLayer.addInvalidationListener(this);
+        }
+	}
+
+	@Override
+	public void paintableInvalidated(PaintableInvalidationEvent event){
+		AutoFilter currentAutoFilter = AutoFilterManager.getInstance().getCurrentAutoFilter();
+		String currentFilterValue = new String();
+
+		if(currentAutoFilter != null) {
+			currentFilterValue = currentAutoFilter.getFilter().text.split("=")[1];
+
+			this.controller.setIndoorLevel(currentFilterValue);
+			this.controller.getIndoorLevel(currentFilterValue);
+			this.controller.unsetSpecificKeyFilter("repeat_on");
+
+		}else{
+			currentFilterValue = "";
+			this.controller.setIndoorLevel(currentFilterValue);
+			this.controller.getIndoorLevel(currentFilterValue);
+		};
+
+	}
 
     /**
      * Writes the indoor validator file in the user preferences if it isn't there
@@ -188,4 +230,16 @@ public class IndoorHelperPlugin extends Plugin {
 //                    validatorMapsNew);
 //        }
 //    }
+
+/**
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ */
 }

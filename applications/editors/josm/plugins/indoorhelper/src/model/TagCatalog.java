@@ -18,84 +18,127 @@
 
 package model;
 
+/**
+ * Class to provide the indoor tagging catalog.
+ *
+ * @author egru
+ * @author rebsc
+ *
+ */
+
+/**
+ * Class to provide the indoor tagging catalog.
+ *
+ * @author egru
+ * @author rebsc
+ *
+ */
+import static org.openstreetmap.josm.tools.I18n.tr;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import org.openstreetmap.josm.data.osm.Tag;
 
-/**
- * Class to provide the indoor tagging catalog.
- * 
- * @author egru
- *
- */
-
 public final class TagCatalog {
-    
+
     /**
-     * Function to get a specific tag-set out of the {@link TagCatalog}. 
-     * 
+     * Function to get a specific tag-set out of the {@link TagCatalog}.
+     *
      * @param o the object for which you want the tag-set
      * @return a list of tags for the specified object
-     */    
+     */
     public List<Tag> getTags(IndoorObject o) {
-        
-        List<Tag> tagList = new ArrayList<Tag>();
-        
+
+        List<Tag> tagList = new ArrayList<>();
+
         switch(o) {
         case CONCRETE_WALL:
-            tagList.add(new Tag("indoor:area", "wall"));
-            tagList.add(new Tag("indoor:wall:material", "concrete"));
+            tagList.add(new Tag(tr("indoor"), tr("wall")));
+            tagList.add(new Tag(tr("material"), tr("concrete")));
             return tagList;
-        case DOOR:
-            tagList.add(new Tag("indoor:door", "yes"));
+        case DOOR_PRIVATE:
+            tagList.add(new Tag(tr("door"), tr("yes")));
+            tagList.add(new Tag ("access","private"));
+            return tagList;
+        case DOOR_PUBLIC:
+            tagList.add(new Tag(tr("door"), tr("yes")));
+            tagList.add(new Tag (tr("access"),tr("public")));
             return tagList;
         case ELEVATOR:
-            tagList.add(new Tag("indoor:area", "elevator"));
+            tagList.add(new Tag(tr("highway"), tr("elevator")));
             return tagList;
         case ENTRANCE:
-            tagList.add(new Tag("indoor:entrance", "yes"));
+            tagList.add(new Tag(tr("entrance"), tr("yes")));
             return tagList;
+        case ENTRANCE_EXIT_ONLY:
+            tagList.add(new Tag(tr("entrance"), tr("exit")));
+            return tagList;
+        case ACCESS_PRIVATE:
+        	tagList.add(new Tag(tr("access"),tr("private")));
+        	return tagList;
+        case ACCESS_PUBLIC:
+        	tagList.add(new Tag(tr("access"),tr("public")));
+        	return tagList;
         case TOILET_FEMALE:
-            tagList.add(new Tag("indoor:area", "room"));
-            tagList.add(new Tag("amenity", "toilets"));
-            tagList.add(new Tag("female", "yes"));
+            tagList.add(new Tag(tr("indoor"), tr("room")));
+            tagList.add(new Tag(tr("amenity"), tr("toilets")));
+            tagList.add(new Tag(tr("female"), tr("yes")));
             return tagList;
         case GLASS_WALL:
-            tagList.add(new Tag("indoor:area", "wall"));
-            tagList.add(new Tag("indoor:wall:material", "glass"));
+            tagList.add(new Tag(tr("indoor"), tr("wall")));
+            tagList.add(new Tag(tr("material"), tr("glass")));
             return tagList;
         case TOILET_MALE:
-            tagList.add(new Tag("indoor:area", "room"));
-            tagList.add(new Tag("amenity", "toilets"));
-            tagList.add(new Tag("male", "yes"));
+            tagList.add(new Tag(tr("indoor"), tr("room")));
+            tagList.add(new Tag(tr("amenity"), tr("toilets")));
+            tagList.add(new Tag(tr("male"), tr("yes")));
             return tagList;
         case ROOM:
-            tagList.add(new Tag("indoor:area", "room"));
-            return tagList;
-        case SHELL:
-            tagList.add(new Tag("indoor:area", "shell"));
-            return tagList;
-        case STAIRWAYS:
-            tagList.add(new Tag("indoor:area", "stairways"));
+            tagList.add(new Tag(tr("indoor"), tr("room")));
             return tagList;
         case STEPS:
-            tagList.add(new Tag("indoor:highway", "steps"));
+            tagList.add(new Tag(tr("highway"), tr("steps")));
             return tagList;
+        case CORRIDOR:
+        	tagList.add(new Tag(tr("indoor"), tr("corridor")));
+        	return tagList;
+        case BENCH:
+        	tagList.add(new Tag(tr("amenity"),tr("bench")));
+        	return tagList;
+        case ZONE:
+        	tagList.add(new Tag(tr("area"),tr("zone")));
+        	return tagList;
+        case NONE:
+        	return tagList;
         default:
             tagList = null;
             return tagList;
         }
     }
-    
+
     /**
      * {@link Enum} class for an easier access of elements in the {@link TagCatalog}
-     * 
+     *
      * @author egru
+     * @author rebsc
      *
      */
     public enum IndoorObject {
-        SHELL, CONCRETE_WALL, GLASS_WALL, ROOM, TOILET_MALE, TOILET_FEMALE, ELEVATOR, STAIRWAYS, STEPS, DOOR, ENTRANCE;
+        CONCRETE_WALL, GLASS_WALL, ROOM, TOILET_MALE, TOILET_FEMALE, ELEVATOR, DOOR_PRIVATE, DOOR_PUBLIC, ENTRANCE,
+        ENTRANCE_EXIT_ONLY,ACCESS_PRIVATE,ACCESS_PUBLIC,STEPS,CORRIDOR,BENCH,ZONE,NONE;
     }
 
+
+/**
+*
+*
+*
+*
+*
+*
+*
+*
+*
+*/
 }

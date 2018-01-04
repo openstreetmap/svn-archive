@@ -44,7 +44,18 @@ class PresetButton extends JButton {
     public void setIndoorObject(IndoorObject object) {
         this.indoorObject = object;
         this.setText(indoorObject.toString());
-        this.setToolTipText(indoorObject.toString());
+        this.setToolTipText("Fast Tag: "+indoorObject.toString());
     }
 
+
+/**
+*
+*
+*
+*
+*
+*
+*
+*
+*/
 }

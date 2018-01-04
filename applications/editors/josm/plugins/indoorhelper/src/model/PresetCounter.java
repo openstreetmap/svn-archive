@@ -29,7 +29,7 @@ import model.TagCatalog.IndoorObject;
  * Counter for the calls of specific indoor objects, to track which items were used most frequently.
  *
  * @author egru
- *
+ * @author rebsc
  */
 public class PresetCounter {
 
@@ -48,16 +48,21 @@ public class PresetCounter {
         counterList = new ArrayList<>();
 
         counterList.add(new ObjectCounter(IndoorObject.CONCRETE_WALL, 0));
-        counterList.add(new ObjectCounter(IndoorObject.DOOR, 0));
+        counterList.add(new ObjectCounter(IndoorObject.DOOR_PRIVATE, 0));
+        counterList.add(new ObjectCounter(IndoorObject.DOOR_PUBLIC, 0));
         counterList.add(new ObjectCounter(IndoorObject.ELEVATOR, 0));
         counterList.add(new ObjectCounter(IndoorObject.ENTRANCE, 0));
+        counterList.add(new ObjectCounter(IndoorObject.ENTRANCE_EXIT_ONLY, 0));
+        counterList.add(new ObjectCounter(IndoorObject.ACCESS_PRIVATE, 0));
+        counterList.add(new ObjectCounter(IndoorObject.ACCESS_PUBLIC, 0));
         counterList.add(new ObjectCounter(IndoorObject.GLASS_WALL, 0));
         counterList.add(new ObjectCounter(IndoorObject.ROOM, 0));
-        counterList.add(new ObjectCounter(IndoorObject.SHELL, 0));
-        counterList.add(new ObjectCounter(IndoorObject.STAIRWAYS, 0));
         counterList.add(new ObjectCounter(IndoorObject.STEPS, 0));
+        counterList.add(new ObjectCounter(IndoorObject.CORRIDOR, 0));
         counterList.add(new ObjectCounter(IndoorObject.TOILET_FEMALE, 0));
         counterList.add(new ObjectCounter(IndoorObject.TOILET_MALE, 0));
+        counterList.add(new ObjectCounter(IndoorObject.ZONE, 0));
+        counterList.add(new ObjectCounter(IndoorObject.BENCH, 0));
     }
 
     /**
@@ -133,4 +138,17 @@ public class PresetCounter {
 
     }
 
+
+
+/**
+*
+*
+*
+*
+*
+*
+*
+*
+*
+*/
 }

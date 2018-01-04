@@ -111,12 +111,12 @@ public class IndoorHelperController {
 
        // Shortcuts
        SpaceShortcut = Shortcut.registerShortcut("mapmode:space",
-               tr(""), KeyEvent.VK_SPACE, Shortcut.DIRECT);
+               tr("IndoorHelper <SPACE> Shortcut"), KeyEvent.VK_SPACE, Shortcut.DIRECT);
        this.SpaceAction = new SpaceAction();
        MainApplication.registerActionShortcut(SpaceAction,SpaceShortcut);
 
        EnterShortcut = Shortcut.registerShortcut("mapmode:ALT",
-               tr(""), KeyEvent.VK_ENTER, Shortcut.DIRECT);
+               tr("IndoorHelper <ENTER> Shortcut"), KeyEvent.VK_ENTER, Shortcut.DIRECT);
        this.EnterAction = new EnterAction();
        MainApplication.registerActionShortcut(EnterAction,EnterShortcut);
 

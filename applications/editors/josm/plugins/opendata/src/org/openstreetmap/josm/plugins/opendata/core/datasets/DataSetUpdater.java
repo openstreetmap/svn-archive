@@ -18,6 +18,7 @@ import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.io.Capabilities;
 import org.openstreetmap.josm.io.OsmApi;
 import org.openstreetmap.josm.plugins.opendata.core.OdConstants;
 
@@ -47,7 +48,9 @@ public abstract class DataSetUpdater {
                 }
             }
             // Split ways exceeding 90% of the API limit (currently 2000 nodes)
-            int max = (int) (0.9 * OsmApi.getOsmApi().getCapabilities().getMaxWayNodes());
+            Capabilities capabilities = OsmApi.getOsmApi().getCapabilities();
+            long maxwaynodes = capabilities != null ? capabilities.getMaxWayNodes() : 2000L;
+            int max = (int) (0.9 * maxwaynodes);
             for (Way w : dataSet.getWays().stream()
                     .filter(w -> w.getNodesCount() > max)
                     .collect(Collectors.toList())) {

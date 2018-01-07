@@ -21,7 +21,7 @@ import org.openstreetmap.josm.gui.widgets.OsmIdTextField;
 
 public class UndeleteDialog extends ExtendedDialog {
 
-    private final JCheckBox layer = new JCheckBox(tr("Separate Layer"));
+    private final JCheckBox layer = new JCheckBox(tr("Download as new layer"));
     private final OsmIdTextField tfId = new OsmIdTextField();
 
     public UndeleteDialog(Component parent) {

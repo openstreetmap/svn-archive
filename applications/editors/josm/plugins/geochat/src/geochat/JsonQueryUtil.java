@@ -31,7 +31,7 @@ public final class JsonQueryUtil implements Runnable {
      */
     public static JsonObject query(String query) throws IOException {
         try {
-            String serverURL = Main.pref.get("geochat.server", "http://zverik.dev.openstreetmap.org/osmochat.php?action=");
+            String serverURL = Main.pref.get("geochat.server", "https://zverik.dev.openstreetmap.org/osmochat.php?action=");
             URL url = new URL(serverURL + query);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.connect();

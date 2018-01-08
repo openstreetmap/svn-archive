@@ -93,7 +93,6 @@ public class PointAction extends MapMode implements AWTEventListener {
                 int maxInstances = parentPlugin.currentCommand.parameters.get(parentPlugin.currentCommand.currentParameterNum).maxInstances;
                 if (maxInstances == 1) {
                     parentPlugin.loadParameter(point, true);
-                    MainApplication.getMap().selectSelectTool(false);
                 } else {
                     if (pointList.size() < maxInstances || maxInstances == 0) {
                         pointList.add(point);

@@ -91,7 +91,6 @@ public abstract class AbstractOsmAction<T extends OsmPrimitive> extends MapMode 
                     ds.addSelected(nearestPrimitive);
                     map.mapView.repaint();
                     parentPlugin.loadParameter(nearestPrimitive, true);
-                    map.selectSelectTool(false);
                     break;
                 default:
                     if (ds.getSelected().size() < maxInstances) {

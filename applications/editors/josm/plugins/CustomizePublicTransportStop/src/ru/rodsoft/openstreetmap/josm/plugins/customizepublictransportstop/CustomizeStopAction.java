@@ -60,8 +60,9 @@ public class CustomizeStopAction extends JosmAction implements IStopAreaCustomiz
     	CustomizeStopAction action = new CustomizeStopAction(
                 tr(CUSTOMIZE_STOP_ACTION_MENU_NAME), CUSTOMIZE_STOP_ACTION_ICON_NAME,
                 tr(CUSTOMIZE_STOP_ACTION_MENU_TOOLTIP),
-                Shortcut.registerShortcut("tools:customizestop", tr("Tool: {0}", tr(CUSTOMIZE_STOP_ACTION_MENU_NAME)),
-                		KeyEvent.VK_U, Shortcut.DIRECT), true);
+                // CHECKSTYLE.OFF: LineLength
+                Shortcut.registerShortcut("tools:customizestop", tr("Tool: {0}", tr(CUSTOMIZE_STOP_ACTION_MENU_NAME)), KeyEvent.VK_U, Shortcut.DIRECT), true);
+    	        // CHECKSTYLE.ON: LineLength
         action.putValue("help", ht("/Action/CustomizeStopAction"));
         return action;
     }

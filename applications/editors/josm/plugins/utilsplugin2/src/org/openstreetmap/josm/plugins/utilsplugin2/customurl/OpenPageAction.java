@@ -65,7 +65,12 @@ public final class OpenPageAction extends JosmAction {
             while (m.find()) {
                 key = m.group(1); val = null;
                 if (key.equals("#id")) {
-                    if (p != null) val = Long.toString(p.getId());
+                    if (p != null) {
+                        val = Long.toString(p.getId());
+                    } else {
+                        // id without anything selected does not make any sense, do nothing
+                        return;
+                    }
                 } else if (key.equals("#type")) {
                     if (p != null) val = OsmPrimitiveType.from(p).getAPIName();
                 } else if (key.equals("#lat")) {

@@ -31,8 +31,7 @@ public class EditHighlightedRelationsAction extends JosmAction {
      */
     public EditHighlightedRelationsAction() {
         super(tr(actionName), new ImageProvider("dialogs", "edit"), tr(actionName),
-                Shortcut.registerShortcut("Edit Highlighted Relation", tr(actionName),
-                        KeyEvent.VK_K, Shortcut.ALT),
+                Shortcut.registerShortcut("Edit Highlighted Relation", tr(actionName), KeyEvent.VK_K, Shortcut.ALT),
                 false, "editHighlightedRelations", false);
     }
 

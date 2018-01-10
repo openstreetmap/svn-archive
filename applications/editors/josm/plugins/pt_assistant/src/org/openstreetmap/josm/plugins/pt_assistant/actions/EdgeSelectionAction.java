@@ -43,9 +43,7 @@ public class EdgeSelectionAction extends MapMode {
 
     public EdgeSelectionAction() {
         super(tr(MAP_MODE_NAME), "edgeSelection", tr(MAP_MODE_NAME),
-                Shortcut.registerShortcut("mapmode:edge_selection",
-                        tr("Mode: {0}", tr(MAP_MODE_NAME)),
-                        KeyEvent.VK_K, Shortcut.CTRL),
+                Shortcut.registerShortcut("mapmode:edge_selection", tr("Mode: {0}", tr(MAP_MODE_NAME)), KeyEvent.VK_K, Shortcut.CTRL),
                 ImageProvider.getCursor("normal", "selection"));
         highlighted = new HashSet<>();
 

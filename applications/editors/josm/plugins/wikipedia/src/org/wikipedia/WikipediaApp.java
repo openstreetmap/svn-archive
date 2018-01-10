@@ -34,6 +34,7 @@ import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.gui.datatransfer.ClipboardUtils;
 import org.openstreetmap.josm.tools.HttpClient;
 import org.openstreetmap.josm.tools.Logging;
+import org.openstreetmap.josm.tools.Pair;
 import org.openstreetmap.josm.tools.Utils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -257,15 +258,36 @@ public final class WikipediaApp {
                 .filter(title -> !result.containsKey(title))
                 .collect(Collectors.toList());
         if (!unresolved.isEmpty()) {
-            final Map<String, String> redirects = resolveRedirectsForArticles(unresolved);
-            final Map<String, String> result2 = getWikidataForArticles0(redirects.values());
+            doResolveWikidataItems(unresolved, result);
+        }
+        return result;
+    }
+
+    private Pair<Map<String, String>, Map<String, String>> doResolveWikidataItems(List<String> unresolved, Map<String, String> result) {
+        final Map<String, String> redirects = resolveRedirectsForArticles(unresolved);
+        final Map<String, String> result2 = getWikidataForArticles0(redirects.values());
+        final List<String> unresolved2 = new ArrayList<>();
+        redirects.forEach((original, resolved) -> {
+            if (result2.containsKey(resolved)) {
+                result.put(original, result2.get(resolved));
+            } else if (!Objects.equals(original, resolved)) {
+                // Handle double redirection like USA -> United States of America -> United States (as of 9th January 2018)
+                unresolved2.add(resolved);
+            }
+        });
+        if (!unresolved2.isEmpty()) {
+            Pair<Map<String, String>, Map<String, String>> p = doResolveWikidataItems(unresolved2, result);
             redirects.forEach((original, resolved) -> {
-                if (result2.containsKey(resolved)) {
-                    result.put(original, result2.get(resolved));
+                if (!result2.containsKey(resolved)) {
+                    p.a.forEach((original2, resolved2) -> {
+                        if (p.b.containsKey(resolved2)) {
+                            result.put(original, p.b.get(resolved2));
+                        }
+                    });
                 }
             });
         }
-        return result;
+        return Pair.create(redirects, result2);
     }
 
     private Map<String, String> getWikidataForArticles0(Collection<String> articles) {

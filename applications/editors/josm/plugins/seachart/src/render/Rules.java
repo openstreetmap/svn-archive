@@ -999,7 +999,7 @@ public class Rules {
 		case PILPNT:
 			if (Renderer.zoom >= 14) {
 				if (testAttribute(Obj.LIGHTS, Att.CATLIT, CatLIT.LIT_FLDL)) {
-					Renderer.symbol(Beacons.Floodlight, new Delta(Handle.CC, AffineTransform.getRotateInstance(Math.toRadians(180))));
+					Renderer.symbol(Beacons.Floodlight, new Delta(Handle.CC, AffineTransform.getRotateInstance(Math.toRadians(90))));
 					Renderer.symbol(Harbours.SignalStation);
 				} else {
 					Renderer.symbol(Beacons.LightMinor);

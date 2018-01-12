@@ -1,6 +1,7 @@
 /*
  * Indoorhelper is a JOSM plug-in to support users when creating their own indoor maps.
  *  Copyright (C) 2016  Erik Gruschka
+ *  Copyright (C) 2018  Rebecca Schmidt
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -111,12 +112,12 @@ public class IndoorHelperController {
 
        // Shortcuts
        SpaceShortcut = Shortcut.registerShortcut("mapmode:space",
-               tr("IndoorHelper <SPACE> Shortcut"), KeyEvent.VK_SPACE, Shortcut.DIRECT);
+               "", KeyEvent.VK_SPACE, Shortcut.DIRECT);
        this.SpaceAction = new SpaceAction();
        MainApplication.registerActionShortcut(SpaceAction,SpaceShortcut);
 
        EnterShortcut = Shortcut.registerShortcut("mapmode:ALT",
-               tr("IndoorHelper <ENTER> Shortcut"), KeyEvent.VK_ENTER, Shortcut.DIRECT);
+               "", KeyEvent.VK_ENTER, Shortcut.DIRECT);
        this.EnterAction = new EnterAction();
        MainApplication.registerActionShortcut(EnterAction,EnterShortcut);
 
@@ -187,22 +188,22 @@ public class IndoorHelperController {
         	   // collecting all tags
                List<Tag> tags = new ArrayList<>();
                if (toolboxView.getLevelCheckBoxStatus() == false && !levelValue.equals("")) {
-            	   tags.add(new Tag(tr("level"),levelValue));
+            	   tags.add(new Tag("level",levelValue));
                }
            	   if (!toolboxView.getLevelNameText().isEmpty() && !toolboxView.getLevelCheckBoxStatus()) {
-           		   tags.add(new Tag(tr("level_name"),toolboxView.getLevelNameText()));
+           		   tags.add(new Tag("level_name",toolboxView.getLevelNameText()));
            	   }
                if (!toolboxView.getNameText().isEmpty()) {
-                   tags.add(new Tag(tr("name"), toolboxView.getNameText()));
+                   tags.add(new Tag("name", toolboxView.getNameText()));
                }
                if (!toolboxView.getRefText().isEmpty()) {
-                   tags.add(new Tag(tr("ref"), toolboxView.getRefText()));
+                   tags.add(new Tag("ref", toolboxView.getRefText()));
                }
                if (!toolboxView.getRepeatOnText().isEmpty()){
-           			tags.add(new Tag(tr("repeat_on"),toolboxView.getRepeatOnText()));
+           			tags.add(new Tag("repeat_on",toolboxView.getRepeatOnText()));
            	   }
            	   if (!toolboxView.getLevelNameText().isEmpty() && !toolboxView.getLevelCheckBoxStatus()) {
-           		   tags.add(new Tag(tr("level_name"),toolboxView.getLevelNameText()));
+           		   tags.add(new Tag("level_name",toolboxView.getLevelNameText()));
            	   }
 
            // Tagging to OSM Data
@@ -272,8 +273,9 @@ public class IndoorHelperController {
 
 	   @Override
 	   public void actionPerformed(ActionEvent e) {
-		   String topic = tr("ToolB");
-		   HelpBrowser.setUrlForHelpTopic(Optional.ofNullable(topic).orElse(tr("/")));
+		   String topic = "indoorHelper";
+		   //Open HelpBrowser for short description about the plugin
+		   HelpBrowser.setUrlForHelpTopic(Optional.ofNullable(topic).orElse("/"));
 	   }
    }
 
@@ -544,7 +546,7 @@ public class IndoorHelperController {
            else if(LevelHelp) {
 
                List<Tag> tags = new ArrayList<>();
-        	   tags.add(new Tag(tr("level"),levelNum));
+        	   tags.add(new Tag("level",levelNum));
 
         	   //Add level tag
         	   model.addTagsToOSM(tags);

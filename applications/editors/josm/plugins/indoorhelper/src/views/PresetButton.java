@@ -1,6 +1,7 @@
 /*
  * Indoorhelper is a JOSM plug-in to support users when creating their own indoor maps.
  *  Copyright (C) 2016  Erik Gruschka
+ *  Copyright (C) 2018  Rebecca Schmidt
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by

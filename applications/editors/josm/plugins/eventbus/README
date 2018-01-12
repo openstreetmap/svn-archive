@@ -1,0 +1,12 @@
+README 
+======
+
+Readme for the Event Bus plugin.
+Provides an event bus more powerful than the traditional listeners registration.
+
+Inspired by the Google Guava EventBus https://github.com/google/guava/wiki/EventBusExplained
+
+    * Author: Vincent Privat <vincent.privat@gmail.com>
+    
+    * License: JOSM license ("GPL v2 or later").
+ 

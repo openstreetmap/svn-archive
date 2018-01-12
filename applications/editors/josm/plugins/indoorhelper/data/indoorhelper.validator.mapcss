@@ -3,7 +3,6 @@
 /* rule which checks if every way and every POI has a level-tag */
 way[!level], node:unconnected[!level]{
 	throwWarning: tr("This object has no level tag.");
-	fixAdd: tr("level=*");
 	suggestAlternative: "Delete the object or use the plug-in to add a POI tag!";
 }
 

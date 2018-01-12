@@ -6,7 +6,5 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/JOSM-piclayer"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
-	<classpathentry kind="lib" path="/afs/tu-chemnitz.de/home/urz/r/rebsc/projects/josm/dist/PicLayer.jar"/>
-	<classpathentry kind="lib" path="/afs/tu-chemnitz.de/home/urz/r/rebsc/projects/josm/core/dist/josm-custom.jar" sourcepath="/JOSM/src"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

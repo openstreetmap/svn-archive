@@ -123,7 +123,7 @@ public class WikipediaAppTest {
                 .getWikidataForArticles(Arrays.asList("einstein", "USA"));
         assertThat(map.get("einstein"), is("Q937"));
         assertThat(map.get("USA"), is("Q30"));
-        assertThat(map.size(), is(3));
+        assertThat(map.size(), is(2));
     }
 
     @Test

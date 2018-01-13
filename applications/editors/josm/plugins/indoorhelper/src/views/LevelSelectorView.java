@@ -45,8 +45,8 @@ import org.openstreetmap.josm.gui.widgets.DisableShortcutsOnFocusGainedTextField
  */
 public class LevelSelectorView extends JFrame {
 
-	private static final long serialVersionUID = 1L;
-	private JPanel dialogPane;
+    private static final long serialVersionUID = 1L;
+    private JPanel dialogPane;
     private JPanel contentPanel;
     private JPanel infoBar;
     private JPanel buttonBar;
@@ -77,88 +77,77 @@ public class LevelSelectorView extends JFrame {
         contentPane.setLayout(new BorderLayout());
 
         //======== dialogPane ========
-        {
-            dialogPane.setBorder(new EmptyBorder(12, 12, 12, 12));
-            dialogPane.setLayout(new BorderLayout());
 
+        dialogPane.setBorder(new EmptyBorder(12, 12, 12, 12));
+        dialogPane.setLayout(new BorderLayout());
 
-          	//======== infoBar ========
-        	{
+        //======== infoBar ========
 
-        		//---- Label1 ----
-        		label1.setText(tr("<html> Please insert the new level number you want to add.<br> "
-        				+ " <i>Info</i>: <br> If the OK button got pressed you will switch to the drawing action.<br>"
-        				+ "To finish the new object please press the spacebar. The new level<br>will be tagged automatically. </html>"));
-        		infoBar.add(label1);
-        	}
-        	dialogPane.add(infoBar,BorderLayout.NORTH);
+        //---- Label1 ----
+        label1.setText(tr("<html> Please insert the new level number you want to add.<br> "
+                + " <i>Info</i>: <br> If the OK button got pressed you will switch to the drawing action.<br>"
+                + "To finish the new object please press the spacebar. The new level<br>will be tagged automatically. </html>"));
+        infoBar.add(label1);
+        dialogPane.add(infoBar, BorderLayout.NORTH);
 
+        //======== contentPanel ========
 
-            //======== contentPanel ========
-            {
-            	contentPanel.setLayout(new GridBagLayout());
-                ((GridBagLayout) contentPanel.getLayout()).columnWidths = new int[] {0, 0, 0, 0, 0};
-                ((GridBagLayout) contentPanel.getLayout()).rowHeights = new int[] {0, 0, 0, 0, 0, 0};
-                ((GridBagLayout) contentPanel.getLayout()).columnWeights = new double[] {0.0, 0.0, 0.0, 0.0, 1.0E-4};
-                ((GridBagLayout) contentPanel.getLayout()).rowWeights = new double[] {0.0, 0.0, 0.0, 0.0, 0.0, 1.0E-4};
+        contentPanel.setLayout(new GridBagLayout());
+        ((GridBagLayout) contentPanel.getLayout()).columnWidths = new int[] {0, 0, 0, 0, 0};
+        ((GridBagLayout) contentPanel.getLayout()).rowHeights = new int[] {0, 0, 0, 0, 0, 0};
+        ((GridBagLayout) contentPanel.getLayout()).columnWeights = new double[] {0.0, 0.0, 0.0, 0.0, 1.0E-4};
+        ((GridBagLayout) contentPanel.getLayout()).rowWeights = new double[] {0.0, 0.0, 0.0, 0.0, 0.0, 1.0E-4};
 
+        //---- Label2 ----
+        label2.setText(tr("level number:"));
+        contentPanel.add(label2, new GridBagConstraints(0, 0, 3, 1, 0.0, 0.0,
+                GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+                new Insets(5, 5, 5, 30), 0, 0));
 
-                //---- Label2 ----
-                label2.setText(tr("level number:"));
-                contentPanel.add(label2,new GridBagConstraints(0, 0, 3, 1, 0.0, 0.0,
-                        GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-                        new Insets(5, 5, 5, 30), 0, 0));
+        //---- Field ----
+        field.setToolTipText(tr("Example: '2' or '3'"));
+        field.addFocusListener(new FocusListener() {
 
-                //---- Field ----
-                field.setToolTipText(tr("Example: '2' or '3'"));
-                field.addFocusListener(new FocusListener() {
+            @Override
+            public void focusLost(FocusEvent e) {}
 
-                    @Override
-                    public void focusLost(FocusEvent e) {}
-
-                    @Override
-                    public void focusGained(FocusEvent e) {
-                    	field.selectAll();
-                    }
-                });
-                contentPanel.add(field, new GridBagConstraints(3, 0, 2, 1, 0.0, 0.0,
-                        GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-                        new Insets(5, 0, 5, 200), 0, 0));
-
+            @Override
+            public void focusGained(FocusEvent e) {
+                field.selectAll();
             }
-            dialogPane.add(contentPanel, BorderLayout.CENTER);
+        });
+        contentPanel.add(field, new GridBagConstraints(3, 0, 2, 1, 0.0, 0.0,
+                GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+                new Insets(5, 0, 5, 200), 0, 0));
 
-            //======== buttonBar ========
-            {
-                buttonBar.setBorder(new EmptyBorder(12, 0, 0, 0));
-                buttonBar.setLayout(new GridBagLayout());
-                ((GridBagLayout) buttonBar.getLayout()).columnWidths = new int[] {0, 85, 80};
-                ((GridBagLayout) buttonBar.getLayout()).columnWeights = new double[] {1.0, 0.0, 0.0};
+        dialogPane.add(contentPanel, BorderLayout.CENTER);
 
-                //---- okButton ----
-                okButton.setText(tr("OK"));
-                buttonBar.add(okButton, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0,
-                        GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-                        new Insets(0, 0, 0, 5), 0, 0));
+        //======== buttonBar ========
 
-                //---- Button ----
-               cancelButton.setText(tr("Cancel"));
-                buttonBar.add(cancelButton, new GridBagConstraints(2, 0, 1, 1, 0.0, 0.0,
-                        GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-                        new Insets(0, 0, 0, 0), 0, 0));
-            }
-            dialogPane.add(buttonBar, BorderLayout.SOUTH);
-        }
+        buttonBar.setBorder(new EmptyBorder(12, 0, 0, 0));
+        buttonBar.setLayout(new GridBagLayout());
+        ((GridBagLayout) buttonBar.getLayout()).columnWidths = new int[] {0, 85, 80};
+        ((GridBagLayout) buttonBar.getLayout()).columnWeights = new double[] {1.0, 0.0, 0.0};
+
+        //---- okButton ----
+        okButton.setText(tr("OK"));
+        buttonBar.add(okButton, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0,
+                GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+                new Insets(0, 0, 0, 5), 0, 0));
+
+        //---- Button ----
+        cancelButton.setText(tr("Cancel"));
+        buttonBar.add(cancelButton, new GridBagConstraints(2, 0, 1, 1, 0.0, 0.0,
+                GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+                new Insets(0, 0, 0, 0), 0, 0));
+
+        dialogPane.add(buttonBar, BorderLayout.SOUTH);
+
         contentPane.add(dialogPane, BorderLayout.CENTER);
         pack();
         setLocationRelativeTo(getOwner());
-
     }
 
-/*************************************************
-* GETTER
-*
-*/
     /**
      * Getter for the level number field.
      *
@@ -168,12 +157,7 @@ public class LevelSelectorView extends JFrame {
         return this.field.getText();
     }
 
-/*************************************************
-* SELECTOR VIEW LISTENER
-*
-*/
-
-	/**
+    /**
      * Set the listener for the OK button.
      *
      * @param l the listener to set
@@ -182,7 +166,7 @@ public class LevelSelectorView extends JFrame {
         this.okButton.addActionListener(l);
     }
 
-	/**
+    /**
      * Set the listener for the Cancel button.
      *
      * @param l the listener to set
@@ -197,17 +181,6 @@ public class LevelSelectorView extends JFrame {
      * @param l the listener to set
      */
     public void setSelectorWindowListener(WindowListener l) {
-    	this.addWindowListener(l);
+        this.addWindowListener(l);
     }
-
-/**
-*
-*
-*
-*
-*
-*
-*
-*
-*/
 }

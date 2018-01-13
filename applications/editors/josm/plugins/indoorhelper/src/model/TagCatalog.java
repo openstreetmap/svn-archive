@@ -19,15 +19,6 @@
 
 package model;
 
-/**
- * Class to provide the indoor tagging catalog.
- *
- * @author egru
- * @author rebsc
- *
- */
-import static org.openstreetmap.josm.tools.I18n.tr;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,11 +43,11 @@ public final class TagCatalog {
             return tagList;
         case DOOR_PRIVATE:
             tagList.add(new Tag("door", "yes"));
-            tagList.add(new Tag ("access","private"));
+            tagList.add(new Tag("access", "private"));
             return tagList;
         case DOOR_PUBLIC:
             tagList.add(new Tag("door", "yes"));
-            tagList.add(new Tag ("access","public"));
+            tagList.add(new Tag("access", "public"));
             return tagList;
         case ELEVATOR:
             tagList.add(new Tag("highway", "elevator"));
@@ -68,11 +59,11 @@ public final class TagCatalog {
             tagList.add(new Tag("entrance", "exit"));
             return tagList;
         case ACCESS_PRIVATE:
-        	tagList.add(new Tag("access","private"));
-        	return tagList;
+            tagList.add(new Tag("access", "private"));
+            return tagList;
         case ACCESS_PUBLIC:
-        	tagList.add(new Tag("access","public"));
-        	return tagList;
+            tagList.add(new Tag("access", "public"));
+            return tagList;
         case TOILET_FEMALE:
             tagList.add(new Tag("indoor", "room"));
             tagList.add(new Tag("amenity", "toilets"));
@@ -94,16 +85,16 @@ public final class TagCatalog {
             tagList.add(new Tag("highway", "steps"));
             return tagList;
         case CORRIDOR:
-        	tagList.add(new Tag("indoor", "corridor"));
-        	return tagList;
+            tagList.add(new Tag("indoor", "corridor"));
+            return tagList;
         case BENCH:
-        	tagList.add(new Tag("amenity","bench"));
-        	return tagList;
+            tagList.add(new Tag("amenity", "bench"));
+            return tagList;
         case ZONE:
-        	tagList.add(new Tag("area","zone"));
-        	return tagList;
+            tagList.add(new Tag("area", "zone"));
+            return tagList;
         case NONE:
-        	return tagList;
+            return tagList;
         default:
             tagList = null;
             return tagList;
@@ -115,23 +106,9 @@ public final class TagCatalog {
      *
      * @author egru
      * @author rebsc
-     *
      */
     public enum IndoorObject {
         CONCRETE_WALL, GLASS_WALL, ROOM, TOILET_MALE, TOILET_FEMALE, ELEVATOR, DOOR_PRIVATE, DOOR_PUBLIC, ENTRANCE,
-        ENTRANCE_EXIT_ONLY,ACCESS_PRIVATE,ACCESS_PUBLIC,STEPS,CORRIDOR,BENCH,ZONE,NONE;
+        ENTRANCE_EXIT_ONLY, ACCESS_PRIVATE, ACCESS_PUBLIC, STEPS, CORRIDOR, BENCH, ZONE, NONE;
     }
-
-
-/**
-*
-*
-*
-*
-*
-*
-*
-*
-*
-*/
 }

@@ -67,37 +67,37 @@ public class FittingView extends JFrame {
         contentPane.setLayout(new BorderLayout());
 
         //======== dialogPane ========
-        {
-            dialogPane.setBorder(new EmptyBorder(12, 12, 12, 12));
-            dialogPane.setLayout(new BorderLayout());
 
-            //======== contentPanel ========
-            {
-                contentPanel.setLayout(new FlowLayout());
+        dialogPane.setBorder(new EmptyBorder(12, 12, 12, 12));
+        dialogPane.setLayout(new BorderLayout());
 
-                //---- label1 ----
-                label1.setText(tr("<html>Please mind to start fitting your building-plans now.<br>" +
-                        "To do so, use the PicLayer plug-in, which you can install<br>" +
-                        "using the JOSM plug-in management.</html>"));
-                contentPanel.add(label1);
-            }
-            dialogPane.add(contentPanel, BorderLayout.CENTER);
+        //======== contentPanel ========
 
-            //======== buttonBar ========
-            {
-                buttonBar.setBorder(new EmptyBorder(12, 0, 0, 0));
-                buttonBar.setLayout(new GridBagLayout());
-                ((GridBagLayout) buttonBar.getLayout()).columnWidths = new int[] {0, 80};
-                ((GridBagLayout) buttonBar.getLayout()).columnWeights = new double[] {1.0, 0.0};
+        contentPanel.setLayout(new FlowLayout());
 
-                //---- okButton ----
-                okButton.setText(tr("OK"));
-                buttonBar.add(okButton, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0,
-                    GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-                    new Insets(0, 0, 0, 0), 0, 0));
-            }
-            dialogPane.add(buttonBar, BorderLayout.SOUTH);
-        }
+        //---- label1 ----
+        label1.setText(tr("<html>Please mind to start fitting your building-plans now.<br>" +
+                "To do so, use the PicLayer plug-in, which you can install<br>" +
+                "using the JOSM plug-in management.</html>"));
+        contentPanel.add(label1);
+
+        dialogPane.add(contentPanel, BorderLayout.CENTER);
+
+        //======== buttonBar ========
+
+        buttonBar.setBorder(new EmptyBorder(12, 0, 0, 0));
+        buttonBar.setLayout(new GridBagLayout());
+        ((GridBagLayout) buttonBar.getLayout()).columnWidths = new int[] {0, 80};
+        ((GridBagLayout) buttonBar.getLayout()).columnWeights = new double[] {1.0, 0.0};
+
+        //---- okButton ----
+        okButton.setText(tr("OK"));
+        buttonBar.add(okButton, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0,
+            GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+            new Insets(0, 0, 0, 0), 0, 0));
+
+        dialogPane.add(buttonBar, BorderLayout.SOUTH);
+
         contentPane.add(dialogPane, BorderLayout.CENTER);
         pack();
         setLocationRelativeTo(getOwner());

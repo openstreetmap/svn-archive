@@ -82,7 +82,7 @@ public class IndoorHelperController {
    private transient Shortcut SpaceShortcut;
    private EnterAction EnterAction;
    private transient Shortcut EnterShortcut;
-   private boolean OuterHelp,InnerHelp,LevelHelp;
+   private boolean OuterHelp, InnerHelp, LevelHelp;
    private Collection<OsmPrimitive> innerRelation;
    private LevelSelectorView selectorView;
 
@@ -92,7 +92,7 @@ public class IndoorHelperController {
     */
    public IndoorHelperController() {
 
-	   this.model = new IndoorHelperModel();
+       this.model = new IndoorHelperModel();
        this.toolboxView = new ToolBoxView();
 
        this.sep = System.getProperty("file.separator");
@@ -114,20 +114,20 @@ public class IndoorHelperController {
        SpaceShortcut = Shortcut.registerShortcut("mapmode:space",
                "", KeyEvent.VK_SPACE, Shortcut.DIRECT);
        this.SpaceAction = new SpaceAction();
-       MainApplication.registerActionShortcut(SpaceAction,SpaceShortcut);
+       MainApplication.registerActionShortcut(SpaceAction, SpaceShortcut);
 
        EnterShortcut = Shortcut.registerShortcut("mapmode:ALT",
                "", KeyEvent.VK_ENTER, Shortcut.DIRECT);
        this.EnterAction = new EnterAction();
-       MainApplication.registerActionShortcut(EnterAction,EnterShortcut);
+       MainApplication.registerActionShortcut(EnterAction, EnterShortcut);
 
        // Helper
        OuterHelp = false;
        InnerHelp = false;
        LevelHelp = false;
-	   innerRelation = null;
-	   levelValue = new String();
-	   levelNum = new String();
+       innerRelation = null;
+       levelValue = new String();
+       levelNum = new String();
 
    }
 
@@ -165,11 +165,6 @@ public class IndoorHelperController {
 
     }
 
-/*************************************************
-* TOOLBOX LISTENER
-*
-*/
-
    /**
     * The listener which provides the handling of the apply button.
     * Gets the texts which were written by the user and writes them to the OSM-data.
@@ -185,26 +180,26 @@ public class IndoorHelperController {
 
            IndoorObject indoorObject = toolboxView.getSelectedObject();
 
-        	   // collecting all tags
+               // collecting all tags
                List<Tag> tags = new ArrayList<>();
                if (toolboxView.getLevelCheckBoxStatus() == false && !levelValue.equals("")) {
-            	   tags.add(new Tag("level",levelValue));
+                   tags.add(new Tag("level", levelValue));
                }
-           	   if (!toolboxView.getLevelNameText().isEmpty() && !toolboxView.getLevelCheckBoxStatus()) {
-           		   tags.add(new Tag("level_name",toolboxView.getLevelNameText()));
-           	   }
+                  if (!toolboxView.getLevelNameText().isEmpty() && !toolboxView.getLevelCheckBoxStatus()) {
+                      tags.add(new Tag("level_name", toolboxView.getLevelNameText()));
+                  }
                if (!toolboxView.getNameText().isEmpty()) {
                    tags.add(new Tag("name", toolboxView.getNameText()));
                }
                if (!toolboxView.getRefText().isEmpty()) {
                    tags.add(new Tag("ref", toolboxView.getRefText()));
                }
-               if (!toolboxView.getRepeatOnText().isEmpty()){
-           			tags.add(new Tag("repeat_on",toolboxView.getRepeatOnText()));
-           	   }
-           	   if (!toolboxView.getLevelNameText().isEmpty() && !toolboxView.getLevelCheckBoxStatus()) {
-           		   tags.add(new Tag("level_name",toolboxView.getLevelNameText()));
-           	   }
+               if (!toolboxView.getRepeatOnText().isEmpty()) {
+                       tags.add(new Tag("repeat_on", toolboxView.getRepeatOnText()));
+                  }
+                  if (!toolboxView.getLevelNameText().isEmpty() && !toolboxView.getLevelCheckBoxStatus()) {
+                      tags.add(new Tag("level_name", toolboxView.getLevelNameText()));
+                  }
 
            // Tagging to OSM Data
            model.addTagsToOSM(indoorObject, tags);
@@ -235,13 +230,11 @@ public class IndoorHelperController {
            if (toolboxView.getSelectedObject().equals(IndoorObject.ROOM)) {
                toolboxView.setNRUiElementsEnabled(true);
                toolboxView.setROUiElementsEnabled(false);
-           }
-           else if (toolboxView.getSelectedObject().equals(IndoorObject.STEPS) ||
-           		toolboxView.getSelectedObject().equals(IndoorObject.ELEVATOR)) {
-       	 		toolboxView.setROUiElementsEnabled(true);
-       	 		toolboxView.setNRUiElementsEnabled(true);
-        	}
-           else {
+           } else if (toolboxView.getSelectedObject().equals(IndoorObject.STEPS) ||
+                   toolboxView.getSelectedObject().equals(IndoorObject.ELEVATOR)) {
+                    toolboxView.setROUiElementsEnabled(true);
+                    toolboxView.setNRUiElementsEnabled(true);
+           } else {
                toolboxView.setROUiElementsEnabled(false);
            }
        }
@@ -252,15 +245,14 @@ public class IndoorHelperController {
     *
     * @author rebsc
     */
-   class ToolLevelCheckBoxListener implements ItemListener{
+   class ToolLevelCheckBoxListener implements ItemListener {
        @Override
        public void itemStateChanged(ItemEvent e) {
-    	   if(e.getStateChange() == ItemEvent.SELECTED) {
-    		   toolboxView.setLVLUiElementsEnabled(false);
-    	   }
-    	   else {
-    		   toolboxView.setLVLUiElementsEnabled(true);
-    	   }
+           if (e.getStateChange() == ItemEvent.SELECTED) {
+               toolboxView.setLVLUiElementsEnabled(false);
+           } else {
+               toolboxView.setLVLUiElementsEnabled(true);
+           }
        }
    }
 
@@ -269,14 +261,14 @@ public class IndoorHelperController {
     *
     * @author rebsc
     */
-   static class ToolHelpButtonListener implements ActionListener{
+   static class ToolHelpButtonListener implements ActionListener {
 
-	   @Override
-	   public void actionPerformed(ActionEvent e) {
-		   String topic = "indoorHelper";
-		   //Open HelpBrowser for short description about the plugin
-		   HelpBrowser.setUrlForHelpTopic(Optional.ofNullable(topic).orElse("/"));
-	   }
+       @Override
+       public void actionPerformed(ActionEvent e) {
+           String topic = "indoorHelper";
+           //Open HelpBrowser for short description about the plugin
+           HelpBrowser.setUrlForHelpTopic(Optional.ofNullable(topic).orElse("/"));
+       }
    }
 
    /**
@@ -284,23 +276,23 @@ public class IndoorHelperController {
     *
     * @author rebsc
     */
-   class ToolAddLevelButtonListener implements ActionListener{
+   class ToolAddLevelButtonListener implements ActionListener {
 
-	   @Override
-	   public void actionPerformed(ActionEvent e) {
+       @Override
+       public void actionPerformed(ActionEvent e) {
 
-		   if(selectorView == null) {
-			   selectorView = new LevelSelectorView();
-			   addLevelSelectorListeners();
+           if (selectorView == null) {
+               selectorView = new LevelSelectorView();
+               addLevelSelectorListeners();
 
-			   //Show LevelSelectorView
-			   selectorView.setVisible(true);
-		   } else {
-			   //Put focus back on LevelSelectorView
-			   selectorView.toFront();
-		   }
+               //Show LevelSelectorView
+               selectorView.setVisible(true);
+           } else {
+               //Put focus back on LevelSelectorView
+               selectorView.toFront();
+           }
 
-	   }
+       }
    }
 
    /**
@@ -308,15 +300,14 @@ public class IndoorHelperController {
     *
     * @author rebsc
     */
-   class ToolMultiCheckBoxListener implements ItemListener{
+   class ToolMultiCheckBoxListener implements ItemListener {
        @Override
        public void itemStateChanged(ItemEvent e) {
-    	   if(e.getStateChange() == ItemEvent.SELECTED) {
-    		   toolboxView.setMultiUiElementsEnabled(false);
-    	   }
-    	   else {
-    		   toolboxView.setMultiUiElementsEnabled(true);
-    	   }
+           if (e.getStateChange() == ItemEvent.SELECTED) {
+               toolboxView.setMultiUiElementsEnabled(false);
+           } else {
+               toolboxView.setMultiUiElementsEnabled(true);
+           }
        }
    }
 
@@ -325,17 +316,17 @@ public class IndoorHelperController {
     *
     * @author rebsc
     */
-   class ToolOuterButtonListener implements ActionListener{
+   class ToolOuterButtonListener implements ActionListener {
 
-	   @Override
-	   public void actionPerformed(ActionEvent e) {
-		   // Select drawing action
-		   map.selectMapMode(drawAction);
+       @Override
+       public void actionPerformed(ActionEvent e) {
+           // Select drawing action
+           map.selectMapMode(drawAction);
 
-		   // For space shortcut to add the relation after spacebar got pushed {@link SpaceAction}
-		   OuterHelp = true;
-		   InnerHelp = false;
-	   }
+           // For space shortcut to add the relation after spacebar got pushed {@link SpaceAction}
+           OuterHelp = true;
+           InnerHelp = false;
+       }
    }
 
    /**
@@ -344,16 +335,16 @@ public class IndoorHelperController {
     * @author rebsc
     */
    class ToolInnerButtonListener implements ActionListener {
-	   @Override
-	   public void actionPerformed(ActionEvent e) {
-		   // Select drawing action
-		   map.selectMapMode(drawAction);
+       @Override
+       public void actionPerformed(ActionEvent e) {
+           // Select drawing action
+           map.selectMapMode(drawAction);
 
-		   // For space shortcut to edit the relation after enter got pushed {@link SpaceAction}{@link EnterAction}
-		   InnerHelp = true;
-		   OuterHelp = false;
+           // For space shortcut to edit the relation after enter got pushed {@link SpaceAction}{@link EnterAction}
+           InnerHelp = true;
+           OuterHelp = false;
 
-	   }
+       }
    }
 
    /**
@@ -415,10 +406,6 @@ public class IndoorHelperController {
        toolboxView.setPresetButtons(model.getPresetRanking());
    }
 
-/*************************************************
-* LEVEL SELCTOR VIEW LISTENER
-*
-*/
    /**
     * Specific listener for the applyButton
     * @author rebsc
@@ -428,22 +415,22 @@ public class IndoorHelperController {
 
        @Override
        public void actionPerformed(ActionEvent e) {
-    	   LevelHelp = true;
+           LevelHelp = true;
 
-    	   //Get insert level number out of SelectorView
-    	   if(!selectorView.getLevelNumber().equals("")) {
-    		   levelNum = selectorView.getLevelNumber();
+           // Get insert level number out of SelectorView
+           if (!selectorView.getLevelNumber().equals("")) {
+               levelNum = selectorView.getLevelNumber();
 
-    		   //Unset visibility
-    		   selectorView.dispose();
-    		   //Select draw-action
-    		   map.selectMapMode(drawAction);
+               //Unset visibility
+               selectorView.dispose();
+               //Select draw-action
+               map.selectMapMode(drawAction);
 
-    	   }else {
-    		   JOptionPane.showMessageDialog(null, tr("Please insert a value."), tr("Error"), JOptionPane.ERROR_MESSAGE);
-    	   }
+           } else {
+               JOptionPane.showMessageDialog(null, tr("Please insert a value."), tr("Error"), JOptionPane.ERROR_MESSAGE);
+           }
 
-    	   selectorView = null;
+           selectorView = null;
        }
    }
 
@@ -466,94 +453,87 @@ public class IndoorHelperController {
     * @author rebsc
     *
     */
-   class ToolSelectorWindowSListener implements WindowListener{
+   class ToolSelectorWindowSListener implements WindowListener {
 
-	@Override
-	public void windowClosed(WindowEvent e) {
-		selectorView = null;
-	}
+    @Override
+    public void windowClosed(WindowEvent e) {
+        selectorView = null;
+    }
 
-	@Override
-	public void windowClosing(WindowEvent e) {
-		selectorView = null;
-	}
+    @Override
+    public void windowClosing(WindowEvent e) {
+        selectorView = null;
+    }
 
-	@Override
-	public void windowActivated(WindowEvent arg0) {
-		// TODO Auto-generated method stub
+    @Override
+    public void windowActivated(WindowEvent arg0) {
+        // TODO Auto-generated method stub
 
-	}
+    }
 
-	@Override
-	public void windowDeactivated(WindowEvent arg0) {
-		// TODO Auto-generated method stub
+    @Override
+    public void windowDeactivated(WindowEvent arg0) {
+        // TODO Auto-generated method stub
 
-	}
+    }
 
-	@Override
-	public void windowDeiconified(WindowEvent arg0) {
-		// TODO Auto-generated method stub
+    @Override
+    public void windowDeiconified(WindowEvent arg0) {
+        // TODO Auto-generated method stub
 
-	}
+    }
 
-	@Override
-	public void windowIconified(WindowEvent arg0) {
-		// TODO Auto-generated method stub
+    @Override
+    public void windowIconified(WindowEvent arg0) {
+        // TODO Auto-generated method stub
 
-	}
+    }
 
-	@Override
-	public void windowOpened(WindowEvent arg0) {
-		// TODO Auto-generated method stub
+    @Override
+    public void windowOpened(WindowEvent arg0) {
+        // TODO Auto-generated method stub
 
-	}
+    }
    }
 
-
-/*************************************************
-* SHORTCUT METHODS
-*
-*/
    /**
     * Shortcut for Spacebar
     * @author rebsc
     */
    private class SpaceAction extends AbstractAction {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	@Override
+    @Override
        public void actionPerformed(ActionEvent e) {
-           if(OuterHelp) {
+           if (OuterHelp) {
 
-        	   //Create new relation and add the currently drawn object to it
-        	   model.addRelation("outer");
-        	   map.selectMapMode(selectAction);
-        	   OuterHelp = false;
+               //Create new relation and add the currently drawn object to it
+               model.addRelation("outer");
+               map.selectMapMode(selectAction);
+               OuterHelp = false;
 
-        	   //Clear currently selection
-        	   MainApplication.getLayerManager().getEditDataSet().clearSelection();
-           }
-           else if(InnerHelp) {
+               //Clear currently selection
+               MainApplication.getLayerManager().getEditDataSet().clearSelection();
+           } else if (InnerHelp) {
 
-        	   //Save new drawn relation for adding
-        	   innerRelation = MainApplication.getLayerManager().getEditDataSet().getAllSelected();
-   		   	   map.selectMapMode(selectAction);
+               //Save new drawn relation for adding
+               innerRelation = MainApplication.getLayerManager().getEditDataSet().getAllSelected();
+                     map.selectMapMode(selectAction);
 
-        	   //Clear currently selection
-        	   MainApplication.getLayerManager().getEditDataSet().clearSelection();
-           }
-           else if(LevelHelp) {
+               //Clear currently selection
+               MainApplication.getLayerManager().getEditDataSet().clearSelection();
+           } else if (LevelHelp) {
 
                List<Tag> tags = new ArrayList<>();
-        	   tags.add(new Tag("level",levelNum));
+               tags.add(new Tag("level", levelNum));
 
-        	   //Add level tag
-        	   model.addTagsToOSM(tags);
+               //Add level tag
+               model.addTagsToOSM(tags);
 
-        	   //Change action
-        	   map.selectMapMode(selectAction);
-        	   LevelHelp = false;
+               //Change action
+               map.selectMapMode(selectAction);
+               LevelHelp = false;
            }
        }
    }
@@ -564,113 +544,97 @@ public class IndoorHelperController {
     */
    private class EnterAction extends AbstractAction {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	@Override
+       @Override
        public void actionPerformed(ActionEvent e) {
-
-    	   if(InnerHelp && !OuterHelp) {
-
-    		   // Edit the new drawn relation member to selected relation
-    		   model.editRelation("inner", innerRelation);
-    		   InnerHelp = false;
-
-    	   }else if((InnerHelp && OuterHelp) || (OuterHelp && !InnerHelp)){
-    		   JOptionPane.showMessageDialog(null, tr("Please press spacebar first to add \"outer\" object to relation."), tr("Relation-Error"), JOptionPane.ERROR_MESSAGE);
-    		   resetHelper();
-    	   }
+           if (InnerHelp && !OuterHelp) {
+               // Edit the new drawn relation member to selected relation
+               model.editRelation("inner", innerRelation);
+               InnerHelp = false;
+           } else if ((InnerHelp && OuterHelp) || (OuterHelp && !InnerHelp)) {
+               JOptionPane.showMessageDialog(null,
+                       tr("Please press spacebar first to add \"outer\" object to relation."), tr("Relation-Error"), JOptionPane.ERROR_MESSAGE);
+               resetHelper();
+           }
        }
    }
 
-/*************************************************
-* FILTER METHODS
-*
-*/
    /**
     * Function which unset the disabled state of currently hidden and/or disabled objects which have a
     * specific tag (key). Just unsets the disabled state if object has a tag-value which is part of the
     * current working level.
     * Specific example: key: repeat_on ; value: 1-4;
-    * 					If current selected workinglevel is "3" all objects with the leveltag "level=3" are hidden but the
-    * 					objects with the key "repeat_on" and the value which includes "3" or is (minValue+1) - maxValue (4-...),
-    * 					because repeat_on tag starts on the current workinglevel+1.
-    * @param key sepcific key to unset hidden objects which contains it
+    *                     If current selected workinglevel is "3" all objects with the leveltag "level=3" are hidden but the
+    *                     objects with the key "repeat_on" and the value which includes "3" or is (minValue+1) - maxValue (4-...),
+    *                     because repeat_on tag starts on the current workinglevel+1.
     * @author rebsc
+    * @param key sepcific key to unset hidden objects which contains it
     */
    public void unsetSpecificKeyFilter(String key) {
 
-	 Collection<OsmPrimitive> p = Main.main.getEditDataSet().allPrimitives();
-	 Map<String, String> tags = new HashMap<>();
-	 Integer level = Integer.parseInt(levelValue);
-	 Integer firstVal, secVal;
+     Collection<OsmPrimitive> p = Main.main.getEditDataSet().allPrimitives();
+     Map<String, String> tags = new HashMap<>();
+     Integer level = Integer.parseInt(levelValue);
+     Integer firstVal, secVal;
 
-	 //Find all primitives with the specific tag and check if value is part of the current
-	 //workinglevel. After that unset the disabled status.
-	 for(OsmPrimitive osm: p) {
-		 if((osm.isDisabledAndHidden() || osm.isDisabled()) && osm.hasKey(key)) {
+     //Find all primitives with the specific tag and check if value is part of the current
+     //workinglevel. After that unset the disabled status.
+     for (OsmPrimitive osm: p) {
+         if ((osm.isDisabledAndHidden() || osm.isDisabled()) && osm.hasKey(key)) {
 
-			 tags = osm.getInterestingTags();
+             tags = osm.getInterestingTags();
 
-			 for(Map.Entry<String, String> e: tags.entrySet()) {
-				if(e.getKey().equals(key)) {
-					String val = e.getValue();
+             for (Map.Entry<String, String> e: tags.entrySet()) {
+                if (e.getKey().equals(key)) {
+                    String val = e.getValue();
 
-					//Extract values
-					if(val.indexOf("-") == 0) {
-						firstVal = (Integer.parseInt(val.split("-",2)[1].split("-",2)[0]))*-1;
-						secVal = Integer.parseInt(val.split("-",2)[1].split("-",2)[1]);
-					}else {
-						firstVal = Integer.parseInt(val.split("-")[0]);
-						secVal = Integer.parseInt(val.split("-")[1]);
-					}
+                    //Extract values
+                    if (val.indexOf("-") == 0) {
+                        firstVal = (Integer.parseInt(val.split("-", 2)[1].split("-", 2)[0]))*-1;
+                        secVal = Integer.parseInt(val.split("-", 2)[1].split("-", 2)[1]);
+                    } else {
+                        firstVal = Integer.parseInt(val.split("-")[0]);
+                        secVal = Integer.parseInt(val.split("-")[1]);
+                    }
 
-					//Compare values to current working level
-					if(level >= ((firstVal)-1) && level <= secVal) {
-						osm.unsetDisabledState();
-					}else {
-						osm.setDisabledState(true);
-					}
-				}
-
-			 }
-
-		 }
-	 }
-
+                    //Compare values to current working level
+                    if (level >= ((firstVal)-1) && level <= secVal) {
+                        osm.unsetDisabledState();
+                    } else {
+                        osm.setDisabledState(true);
+                    }
+                }
+             }
+         }
+     }
    }
 
-  /**
-   * Function which updates the current working level tag
-   *
-   * @param indoorLevel: current working level
-   */
-   public void setIndoorLevel(String indoorLevel) {
-	   this.toolboxView.setLevelLabel(indoorLevel);
-   }
-
-   /**
-    * Function which gets the current working level tag
-    *
-    * @param indoorLevel: current working level
-    */
-    public void getIndoorLevel(String indoorLevel) {
-    	levelValue = indoorLevel;
-
+    /**
+     * Function which updates the current working level tag
+     *
+     * @param indoorLevel current working level
+     */
+    public void setIndoorLevel(String indoorLevel) {
+       this.toolboxView.setLevelLabel(indoorLevel);
     }
 
+    /**
+     * Function which gets the current working level tag
+     *
+     * @param indoorLevel current working level
+     */
+    public void getIndoorLevel(String indoorLevel) {
+        levelValue = indoorLevel;
+    }
 
-/*************************************************
-* HELPER METHODS
-*
-*/
-
-   /**
-    * Function which resets the helper for relation adding
-    */
-   private void resetHelper() {
-	   InnerHelp = false;
-	   OuterHelp = false;
-   }
+    /**
+     * Function which resets the helper for relation adding
+     */
+    private void resetHelper() {
+        InnerHelp = false;
+        OuterHelp = false;
+    }
 
     /**
      * Forces JOSM to load the validator and mappaint settings.
@@ -685,13 +649,12 @@ public class IndoorHelperController {
             MapPaintStyles.readFromPreferences();
     }
 
-   /**
-    * Enables or disables the preferences for the mapcss-style and the validator.
-    *
-    * @param enabled Activates or disables the settings.
-    */
-	@SuppressWarnings("deprecation")
-	private void setPluginPreferences(boolean enabled) {
+    /**
+     * Enables or disables the preferences for the mapcss-style and the validator.
+     *
+     * @param enabled Activates or disables the settings.
+     */
+    private void setPluginPreferences(boolean enabled) {
        Map<String, Setting<?>> settings = Main.pref.getAllSettings();
 
        MapListSetting validatorMapListSetting = (MapListSetting) settings.
@@ -726,7 +689,7 @@ public class IndoorHelperController {
            Map<String, String> indoorValidator = new HashMap<>();
            indoorValidator.put("title", "Indoor");
            indoorValidator.put("active", "true");
-           indoorValidator.put("url", Main.pref.getUserDataDirectory()+ sep +"validator" +
+           indoorValidator.put("url", Main.pref.getDirs().getUserDataDirectory(true)+ sep +"validator" +
                    sep + "indoorhelper.validator.mapcss");
 
            validatorMapsNew.add(indoorValidator);
@@ -749,7 +712,7 @@ public class IndoorHelperController {
            Map<String, String> indoorMapPaint = new HashMap<>();
            indoorMapPaint.put("title", tr("Indoor"));
            indoorMapPaint.put("active", "true");
-           indoorMapPaint.put("url", Main.pref.getUserDataDirectory() + sep + "styles"
+           indoorMapPaint.put("url", Main.pref.getDirs().getUserDataDirectory(true) + sep + "styles"
                    + sep + "sit.mapcss");
            styleMapsNew.add(indoorMapPaint);
            Main.pref.putListOfMaps("mappaint.style.entries", styleMapsNew);
@@ -773,7 +736,7 @@ public class IndoorHelperController {
            Map<String, String> indoorValidator = new HashMap<>();
            indoorValidator.put("title", tr("Indoor"));
            indoorValidator.put("active", "false");
-           indoorValidator.put("url", Main.pref.getUserDataDirectory()+ sep +"validator" +
+           indoorValidator.put("url", Main.pref.getDirs().getUserDataDirectory(true)+ sep +"validator" +
                    sep + "indoorhelper.validator.mapcss");
 
            validatorMapsNew.add(indoorValidator);
@@ -797,7 +760,7 @@ public class IndoorHelperController {
            Map<String, String> indoorMapPaint = new HashMap<>();
            indoorMapPaint.put("title", tr("Indoor"));
            indoorMapPaint.put("active", "false");
-           indoorMapPaint.put("url", Main.pref.getUserDataDirectory() + sep + "styles"
+           indoorMapPaint.put("url", Main.pref.getDirs().getUserDataDirectory(true) + sep + "styles"
                    + sep + "sit.mapcss");
            styleMapsNew.add(indoorMapPaint);
            Main.pref.putListOfMaps("mappaint.style.entries", styleMapsNew);
@@ -805,20 +768,4 @@ public class IndoorHelperController {
            updateSettings();
        }
    }
-
-
-
-
-
-/**
- *
- *
- *
- *
- *
- *
- *
- *
- *
- */
 }

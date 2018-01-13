@@ -28,7 +28,6 @@ import model.TagCatalog.IndoorObject;
  * @author egru
  *
  */
-
 @SuppressWarnings("serial")
 class PresetButton extends JButton {
 
@@ -47,16 +46,4 @@ class PresetButton extends JButton {
         this.setText(indoorObject.toString());
         this.setToolTipText("Fast Tag: "+indoorObject.toString());
     }
-
-
-/**
-*
-*
-*
-*
-*
-*
-*
-*
-*/
 }

@@ -39,7 +39,6 @@ import org.openstreetmap.josm.plugins.PluginInformation;
 
 import controller.IndoorHelperController;
 
-
 /**
  * This is the main class for the indoorhelper plug-in.
  *
@@ -49,8 +48,7 @@ import controller.IndoorHelperController;
  */
 public class IndoorHelperPlugin extends Plugin implements PaintableInvalidationListener, ActiveLayerChangeListener {
 
-
-	@SuppressWarnings("unused")
+    @SuppressWarnings("unused")
     private IndoorHelperController controller;
     String sep = System.getProperty("file.separator");
 
@@ -90,8 +88,7 @@ public class IndoorHelperPlugin extends Plugin implements PaintableInvalidationL
     /**
      * Exports the mapcss validator file to the preferences directory.
      */
-    @SuppressWarnings("deprecation")
-	private void exportValidator(String resourceName) throws Exception {
+    private void exportValidator(String resourceName) throws Exception {
         InputStream stream = null;
         OutputStream resStreamOut = null;
 
@@ -106,7 +103,7 @@ public class IndoorHelperPlugin extends Plugin implements PaintableInvalidationL
             int readBytes;
             byte[] buffer = new byte[4096];
 
-            String valDirPath = Main.pref.getUserDataDirectory() + sep + "validator";
+            String valDirPath = Main.pref.getDirs().getUserDataDirectory(true) + sep + "validator";
             File valDir = new File(valDirPath);
             valDir.mkdirs();
             outPath = valDir.getAbsolutePath() +sep+ "indoorhelper.validator.mapcss";
@@ -128,11 +125,7 @@ public class IndoorHelperPlugin extends Plugin implements PaintableInvalidationL
      * Exports the mapCSS file to the preferences directory.
      */
     private void exportStyleFile(String resourceName) throws Exception {
-        InputStream stream = null;
-        OutputStream resStreamOut = null;
-
-        try {
-            stream = IndoorHelperPlugin.class.getResourceAsStream("/data/" + resourceName);
+        try (InputStream stream = IndoorHelperPlugin.class.getResourceAsStream("/data/" + resourceName)) {
             if (stream == null) {
                 System.out.println("MapPaint: stream is null");
                 throw new Exception("Cannot get resource \"" + resourceName + "\" from Jar file.");
@@ -142,52 +135,47 @@ public class IndoorHelperPlugin extends Plugin implements PaintableInvalidationL
             int readBytes;
             byte[] buffer = new byte[4096];
 
-            @SuppressWarnings("deprecation")
-			String valDirPath = Main.pref.getUserDataDirectory() + sep + "styles";
+            String valDirPath = Main.pref.getDirs().getUserDataDirectory(true) + sep + "styles";
             File valDir = new File(valDirPath);
             valDir.mkdirs();
             outPath = valDir.getAbsolutePath() +sep+ resourceName;
-            System.out.println("MapPaint"+outPath);
 
-            resStreamOut = new FileOutputStream(outPath);
-            while ((readBytes = stream.read(buffer)) > 0) {
-                resStreamOut.write(buffer, 0, readBytes);
+            try (OutputStream resStreamOut = new FileOutputStream(outPath)) {
+                while ((readBytes = stream.read(buffer)) > 0) {
+                    resStreamOut.write(buffer, 0, readBytes);
+                }
             }
-            resStreamOut.close();
         } catch (Exception ex) {
             throw ex;
-        } finally {
-            stream.close();
         }
     }
 
-	@Override
-	public void activeOrEditLayerChanged(ActiveLayerChangeEvent e) {
-		OsmDataLayer editLayer = MainApplication.getLayerManager().getEditLayer();
+    @Override
+    public void activeOrEditLayerChanged(ActiveLayerChangeEvent e) {
+        OsmDataLayer editLayer = MainApplication.getLayerManager().getEditLayer();
         if (editLayer != null) {
             editLayer.addInvalidationListener(this);
         }
-	}
+    }
 
-	@Override
-	public void paintableInvalidated(PaintableInvalidationEvent event){
-		AutoFilter currentAutoFilter = AutoFilterManager.getInstance().getCurrentAutoFilter();
-		String currentFilterValue = new String();
+    @Override
+    public void paintableInvalidated(PaintableInvalidationEvent event) {
+        AutoFilter currentAutoFilter = AutoFilterManager.getInstance().getCurrentAutoFilter();
+        String currentFilterValue = new String();
 
-		if(currentAutoFilter != null) {
-			currentFilterValue = currentAutoFilter.getFilter().text.split("=")[1];
+        if (currentAutoFilter != null) {
+            currentFilterValue = currentAutoFilter.getFilter().text.split("=")[1];
 
-			this.controller.setIndoorLevel(currentFilterValue);
-			this.controller.getIndoorLevel(currentFilterValue);
-			this.controller.unsetSpecificKeyFilter("repeat_on");
+            this.controller.setIndoorLevel(currentFilterValue);
+            this.controller.getIndoorLevel(currentFilterValue);
+            this.controller.unsetSpecificKeyFilter("repeat_on");
 
-		}else{
-			currentFilterValue = "";
-			this.controller.setIndoorLevel(currentFilterValue);
-			this.controller.getIndoorLevel(currentFilterValue);
-		};
-
-	}
+        } else {
+            currentFilterValue = "";
+            this.controller.setIndoorLevel(currentFilterValue);
+            this.controller.getIndoorLevel(currentFilterValue);
+        }
+    }
 
     /**
      * Writes the indoor validator file in the user preferences if it isn't there
@@ -231,16 +219,4 @@ public class IndoorHelperPlugin extends Plugin implements PaintableInvalidationL
 //                    validatorMapsNew);
 //        }
 //    }
-
-/**
- *
- *
- *
- *
- *
- *
- *
- *
- *
- */
 }

@@ -422,12 +422,18 @@ public class EventBusPlugin extends Plugin {
     public void mapFrameInitialized(MapFrame oldFrame, MapFrame newFrame) {
         post(new MapFrameInitializedEvent(this, oldFrame, newFrame));
         if (newFrame != null) {
-            newFrame.getToggleDialog(LayerListDialog.class).getModel().addLayerListModelListener(layerListModelListener);
+            LayerListDialog dlg = newFrame.getToggleDialog(LayerListDialog.class);
+            if (dlg != null) {
+                dlg.getModel().addLayerListModelListener(layerListModelListener);
+            }
             newFrame.keyDetector.addKeyListener(keyPressReleaseListener);
             newFrame.keyDetector.addModifierExListener(modifierExListener);
         }
         if (oldFrame != null) {
-            oldFrame.getToggleDialog(LayerListDialog.class).getModel().removeLayerListModelListener(layerListModelListener);
+            LayerListDialog dlg = oldFrame.getToggleDialog(LayerListDialog.class);
+            if (dlg != null) {
+                dlg.getModel().removeLayerListModelListener(layerListModelListener);
+            }
             oldFrame.keyDetector.removeKeyListener(keyPressReleaseListener);
             oldFrame.keyDetector.removeModifierExListener(modifierExListener);
         }

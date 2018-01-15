@@ -63,7 +63,7 @@ public class IndoorHelperPlugin extends Plugin implements PaintableInvalidationL
         super(info);
         MainApplication.getLayerManager().addAndFireActiveLayerChangeListener(this);
         this.exportValidator("/data/indoorhelper.validator.mapcss");
-        this.exportStyleFile("indoor.mapcss");
+        this.exportStyleFile("sit.mapcss");
         this.exportStyleFile("entrance_door_icon.png");
         this.exportStyleFile("entrance_icon.png");
         this.exportStyleFile("elevator_icon.png");

@@ -713,7 +713,7 @@ public class IndoorHelperController {
            indoorMapPaint.put("title", tr("Indoor"));
            indoorMapPaint.put("active", "true");
            indoorMapPaint.put("url", Main.pref.getDirs().getUserDataDirectory(true) + sep + "styles"
-                   + sep + "indoor.mapcss");
+                   + sep + "sit.mapcss");
            styleMapsNew.add(indoorMapPaint);
            Main.pref.putListOfMaps("mappaint.style.entries", styleMapsNew);
 
@@ -761,7 +761,7 @@ public class IndoorHelperController {
            indoorMapPaint.put("title", tr("Indoor"));
            indoorMapPaint.put("active", "false");
            indoorMapPaint.put("url", Main.pref.getDirs().getUserDataDirectory(true) + sep + "styles"
-                   + sep + "indoor.mapcss");
+                   + sep + "sit.mapcss");
            styleMapsNew.add(indoorMapPaint);
            Main.pref.putListOfMaps("mappaint.style.entries", styleMapsNew);
 

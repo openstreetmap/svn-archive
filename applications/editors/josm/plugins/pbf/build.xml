@@ -22,10 +22,17 @@
     <target name="compile" depends="init">
         <echo message="compiling sources for ${plugin.jar} ... "/>
         <javac classpath="${josm}" debug="true" destdir="${plugin.build.dir}" includeAntRuntime="false">
+            <!-- get rid of "internal proprietary API" warning -->
+            <compilerarg value="-XDignore.symbol.file"/>
+            <src path="src" />
+            <src path="gen" />
+            <exclude name="org/**"/>
+        </javac>
+        <javac classpath="${josm}" debug="true" destdir="${plugin.build.dir}" includeAntRuntime="false">
             <compilerarg value="-Xlint:deprecation"/>
             <compilerarg value="-Xlint:unchecked"/>
             <src path="src" />
-            <src path="gen" />
+            <include name="org/**"/>
         </javac>
     </target>
 </project>

@@ -1,0 +1,271 @@
+/* building shells and walls */
+
+way[indoor=corridor] 
+{
+	width:			1;
+	color:			#000000;
+	fill-color:		#e3e3e3;
+	fill-opacity: 	1.0;
+	z-index:		1;
+}	
+
+way[indoor=wall][material=concrete]
+{
+	width: 			3;
+	color: 			#000000;
+	opacity: 		1.0;
+	fill-color: 	#BEBEBE;
+	fill-opacity: 	1.0;
+	z-index:		5;
+}
+
+way[indoor=wall][material=glass]
+{
+	width: 			3;
+	color: 			#000000;
+	opacity: 		1.0;
+	fill-color: 	#00BFFF;
+	fill-opacity: 	1.0;
+	z-index:		5;
+}
+
+/*entrance*/
+node[entrance=public]
+{
+	icon-image:	"entrance_icon.png";
+	icon-width:	30;
+	z-index:  	3;
+}
+
+node[entrance=private]
+{
+	icon-image:	"entrance_icon.png";
+	icon-width:	30;
+	z-index:  	3;
+}
+
+way[entrance=public]
+{
+	icon-image:	"entrance_icon.png";
+	icon-width:	30;
+	z-index:  	3;
+}
+
+way[entrance=private]
+{
+	icon-image:	"entrance_icon.png";
+	icon-width:	30;
+	z-index:  	3;
+}
+
+node[entrance=exit]
+{
+	icon-image:	"entrance_icon.png";
+	icon-width:	30;
+	z-index:  	3;
+}
+
+way[entrance=exit]
+{
+	icon-image:	"entrance_icon.png";
+	icon-width:	30;
+	z-index:  	3;
+}
+
+node[entrance=service]
+{
+	icon-image:	"entrance_icon.png";
+	icon-width:	30;
+	z-index:  	3;
+}
+
+way[entrance=service]
+{
+	icon-image:	"entrance_icon.png";
+	icon-width:	30;
+	z-index: 	 3;
+}
+
+
+/* windows and doors */
+
+way[window=glass]
+{
+	width:		3;
+	color:		#00BFFF; 
+	opacity:	1.0;  
+	z-index:  	1;
+}
+
+node[door=yes]
+{
+	icon-image:	"entrance_door_icon.png";
+	icon-width:	30;
+	z-index:  	3;
+}
+
+way[door=yes]
+{
+	icon-image:	"entrance_door_icon.png";
+	icon-width:	30;
+	z-index:  	3;
+}
+
+
+/* vertical passages & parking */
+way[highway=steps]
+{
+	width: 			1;
+	color: 			#000000;
+	opacity:		1.0;
+	dashes:			15, 5;
+	fill-color: 	#a6ff96;
+	fill-opacity:	1.0;
+	z-index:		2;
+}
+
+way[highway=elevator]
+{
+	width: 			1;
+	color: 			#000000;
+	opacity:		1.0;
+	dashes:			5, 5;
+	fill-color: 	#c3e5fa;
+	fill-opacity:	1.0;
+	icon-image:		"elevator_icon.png";
+	icon-width:		30;
+	z-index:		2;
+}
+
+way[highway=service]
+{
+	width:			10;
+	color:			#ffffff;
+	opacity:		1.0;
+	casing-width:	2;
+	casing-color:	#000000;
+	z-index:		2;
+}
+
+way[highway=parking]
+{
+	width:			5;
+	color:			#0000ff;
+	opacity:		1.0;
+	casing-width:	5;
+	casing-color:	#ffffff;
+	z-index:		3;
+}
+
+way[area=parkinglot]
+{
+	width: 			1;
+	color: 			#000000;
+	opacity:		1.0;
+	fill-color: 	#FFFF5C;
+	fill-opacity:	1.0;
+	z-index:		2;
+}
+
+/* rooms */
+
+way[indoor=room]
+{
+	width:			1;
+	color:			#2E2E2E;
+	fill-color: 	#ffffa1;
+	fill-opacity: 	1.0;
+	z-index:		1; 
+}
+
+way[ref][indoor=room]
+{
+	text:		ref;
+	text-position:  center;
+	font-size: 	12;
+	text-color: 	#000000;
+	z-index:	1;
+}
+
+way[name][indoor=room]
+{
+	text:			name;
+	text-position:  center;
+	font-size: 		12;
+	text-color: 	#000000;
+	z-index:		1;
+}
+
+/* zones */
+
+way[area=zone]
+{
+	fill-color: 	#FFDAB9;
+	fill-opacity: 	1.0;
+	z-index:		1;
+}
+
+way[name][area=zone]
+{
+	text:			name;
+	text-position:  center;
+	font-size: 		12;
+	text-color: 	#000000;
+	fill-color: 	#FFDAB9;
+	fill-opacity: 	1.0;
+	z-index:		1;
+}
+
+way[ref][area=zone]
+{
+	text:			name;
+	text-position:  center;
+	font-size: 		12;
+	text-color: 	#000000;
+	fill-color: 	#FFDAB9;
+	fill-opacity: 	1.0;
+	z-index:		1;
+}
+
+/*amenity*/
+
+node[amenity=toilets][male=yes]
+{
+	icon-image:	"toilet_man_icon.png";
+	icon-width:	30;
+	z-index: 	3;
+}
+
+node[amenity=toilets][female=yes]
+{
+	icon-image:	"toilet_woman_icon.png";
+	icon-width:	30;
+	z-index:  	3;
+}
+
+node[amenity=toilets][wheelchair=yes]
+{
+	icon-image:	"toilet_wheelchair_icon.png";
+	icon-width:	30;
+	z-index:  	3;
+}
+
+wa[amenity=bench]
+{
+    width:			1;
+	color:			#000000;
+	fill-color: 	#a3a3a3;
+	fill-opacity: 	1.0;
+	z-index:		2;  
+}  
+
+/*multipolygon*/
+
+relation[type=multipolygon]
+{
+	width:			1;
+	color:			#000000;
+	fill-color:		#e3e3e3;
+	fill-opacity: 	1.0;
+	z-index:		1;
+}

@@ -13,9 +13,9 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import org.geotools.data.DataUtilities;
 import org.geotools.data.shapefile.files.ShpFileType;
 import org.geotools.data.shapefile.files.ShpFiles;
+import org.geotools.util.URLs;
 import org.openstreetmap.josm.tools.JosmRuntimeException;
 import org.openstreetmap.josm.tools.Logging;
 import org.openstreetmap.josm.tools.Utils;
@@ -45,15 +45,15 @@ public class TabFiles extends ShpFiles {
             throw new JosmRuntimeException(e);
         }
 
-        init(DataUtilities.fileToURL(headerFile));
-        urls.put(ShpFileType.DBF, DataUtilities.fileToURL(dataFile));
+        init(URLs.fileToUrl(headerFile));
+        urls.put(ShpFileType.DBF, URLs.fileToUrl(dataFile));
     }
 
     /**
      * Used only to give a fake shp file to ShpFiles constructor to avoid IllegalArgument at initialization.
      */
     private static URL fakeShpFile(File headerFile) {
-        return DataUtilities.fileToURL(new File(headerFile.getAbsolutePath()+".shp"));
+        return URLs.fileToUrl(new File(headerFile.getAbsolutePath()+".shp"));
     }
 
     private String baseName(Object obj) {
@@ -121,7 +121,7 @@ public class TabFiles extends ShpFiles {
     }
 
     private URL findExistingFile(ShpFileType shpFileType, URL value) {
-        final File file = DataUtilities.urlToFile(value);
+        final File file = URLs.urlToFile(value);
         File directory = file.getParentFile();
         if (directory != null && directory.exists()) {
             File[] files = directory.listFiles((FilenameFilter) (dir, name) -> file.getName().equalsIgnoreCase(name));

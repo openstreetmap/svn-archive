@@ -53,7 +53,7 @@ public abstract class OdConstants {
     public static final String[] DEFAULT_MODULE_SITES = {OSM_SITE + "modules.txt%<?modules=>"};
 
     public static final String PREF_CRS_COMPARISON_TOLERANCE = "opendata.crs.comparison_tolerance";
-    public static final Double DEFAULT_CRS_COMPARISON_TOLERANCE = 0.00000001;
+    public static final Double DEFAULT_CRS_COMPARISON_TOLERANCE = 0.00000002;
 
     public static final String PREF_CRS_COMPARISON_DEBUG = "opendata.crs.comparison_debug";
 

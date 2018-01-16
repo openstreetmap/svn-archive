@@ -17,6 +17,7 @@ import java.nio.charset.UnsupportedCharsetException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -191,7 +192,22 @@ public class ShpReader extends GeographicReader {
                     Path cpg = new File(path).toPath();
                     if (Files.exists(cpg)) {
                         try (BufferedReader reader = Files.newBufferedReader(cpg, StandardCharsets.UTF_8)) {
-                            charset = Charset.forName(reader.readLine());
+                            String cs = reader.readLine();
+                            if (cs.matches("\\d+")) {
+                                // We only have the code page number, we need to find the good alias for java.nio API
+                                // see https://docs.oracle.com/javase/8/docs/technotes/guides/intl/encoding.doc.html
+                                for (String prefix : Arrays.asList("IBM", "IBM0", "IBM00", "x-IBM", "ISO-", "windows-", "x-windows-")) {
+                                    try {
+                                        charset = Charset.forName(prefix+cs);
+                                        break;
+                                    } catch (UnsupportedCharsetException | IllegalCharsetNameException e) {
+                                        Logging.trace(e);
+                                    }
+                                }
+                            } else {
+                                // We may have a charset name, such as "UTF-8"
+                                charset = Charset.forName(cs);
+                            }
                         } catch (IOException | UnsupportedCharsetException | IllegalCharsetNameException e) {
                             Logging.warn(e);
                         }

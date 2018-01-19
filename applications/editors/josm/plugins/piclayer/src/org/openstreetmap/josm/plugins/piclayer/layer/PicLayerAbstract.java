@@ -457,6 +457,9 @@ public abstract class PicLayerAbstract extends Layer {
             double[] e = new double[6];
             for (int i = 0; i < 6; ++i) {
                 String line = br.readLine();
+                if (line == null) {
+                    throw new IOException("Unable to read line " + (i+1));
+                }
                 e[i] = JosmDecimalFormatSymbolsProvider.parseDouble(line);
             }
             double sx = e[0], ry = e[1], rx = e[2], sy = e[3], dx = e[4], dy = e[5];

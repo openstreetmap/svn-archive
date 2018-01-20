@@ -44,7 +44,28 @@
         </exec>
         <copy file="specialmessages.java" todir="${i18n.build.dir}"/>
     </target>
-    <target name="po/josm.pot" description="Extracts message keys from the source code" depends="trans_.java,init">
+    <!-- Create the file build/pluginSrc.txt, which contains a list of include patterns for all *.java files that should be translated relative to "${plugin.dir}" -->
+    <target name="filterpluginsources" depends="init">
+        <delete file="${po.build.dir}/pluginSrc.txt"/>
+        <foreach param="path" target="filterpluginsource">
+            <path>
+                <dirset dir="${plugin.dir}" includes="*" excludes="00_*" />
+            </path>
+        </foreach>
+    </target>
+    <!-- Helper task for `filterpluginsources`: Appends an include pattern to the file `build/pluginSrc.txt` if there is no file `.tx/config` for a plugin -->
+    <target name="filterpluginsource">
+      <if>
+          <not>
+              <available file="${path}/.tx/config" type="file" />
+          </not>
+          <then>
+              <basename file="${path}" property="dir"/>
+              <echo file="${po.build.dir}/pluginSrc.txt" append="true" message="${dir}/**/*.java&#xa;"></echo>
+          </then>
+      </if>
+    </target>
+    <target name="po/josm.pot" description="Extracts message keys from the source code" depends="trans_.java,init,filterpluginsources">
         <gettext-extract keysFile="josm.raw.pot" poDirectory="po" keywords="-k -ktrc:1c,2 -kmarktrc:1c,2 -ktr -kmarktr -ktrn:1,2 -ktrnc:1c,2,3">
             <!-- core.port -->
             <fileset dir="${josm.build.dir}/src" includes="**/*.java"/>
@@ -57,7 +78,7 @@
             <fileset dir="${i18n.build.dir}" includes="trans_plugins.java"/>
             <!-- <fileset dir="${i18n.build.dir}/josmfiles" includes="trans_*.*"/> disable for now -->
             <!-- plugins.pot -->
-            <fileset dir="${plugin.dir}" includes="**/*.java"/>
+            <fileset dir="${plugin.dir}" includesfile="${po.build.dir}/pluginSrc.txt"/>
             <fileset dir="${i18n.build.dir}" includes="trans_surveyor.java"/>
             <fileset dir="${i18n.build.dir}" includes="trans_tag2link.java"/>
         </gettext-extract>
@@ -93,7 +114,7 @@
     </target>
     <target name="po/plugins.pot" description="Extracts message keys from the plugins source code (minus core and data strings)" depends="trans_.java,po/core.pot,po/data.pot,init">
         <gettext-extract keysFile="plugins.raw.pot" poDirectory="${i18n.build.dir}" keywords="-k -ktrc:1c,2 -kmarktrc:1c,2 -ktr -kmarktr -ktrn:1,2 -ktrnc:1c,2,3">
-            <fileset dir="${plugin.dir}" includes="**/*.java"/>
+            <fileset dir="${plugin.dir}" includesfile="${po.build.dir}/pluginSrc.txt"/>
             <fileset dir="${i18n.build.dir}" includes="trans_surveyor.java"/>
             <fileset dir="${i18n.build.dir}" includes="trans_tag2link.java"/>
         </gettext-extract>
@@ -138,6 +159,7 @@
             <arg line="i18n.pl --potfile=po/data.pot --basedir=${i18n_data.install.dir}/ po/*.po"/>
         </exec>
     </target>
+    <!-- If the file `josm.pot` is present and the plugin has a `data/` directory, update its *.po files based on the ones in the `po/` directory. -->
     <target name="plugintrans">
         <basename file="${path}" property="dir"/>
         <mkdir dir="${po.build.dir}/plugin_${dir}"/>
@@ -150,7 +172,10 @@
             <fileset dir="${i18n.build.dir}" includes="trans_${dir}.java"/> <!-- include plugin specific translation -->
         </gettext-extract>
         <if>
-            <available file="${po.build.dir}/plugin_${dir}/josm.pot"/>
+            <and>
+                <available file="${po.build.dir}/plugin_${dir}/josm.pot" type="file"/>
+                <available file="${plugin.dir}/${dir}/data/" type="dir"/>
+            </and>
             <then>
                 <exec executable="perl" failonerror="true">
                     <arg line="i18n.pl --potfile=${po.build.dir}/plugin_${dir}/josm.pot --basedir=${plugin.dir}/${dir}/data/ po/*.po"/>
@@ -181,12 +206,12 @@
         <exec executable="perl" failonerror="true">
             <arg line="launchpad.pl bzronly"/>
         </exec>
-        <antcall target="build"/>       
+        <antcall target="build"/>
     </target>
     <target name="updatecore">
         <exec executable="perl" failonerror="true">
             <arg line="launchpad.pl bzronly"/>
         </exec>
-        <antcall target="buildcore"/>       
+        <antcall target="buildcore"/>
     </target>
 </project>

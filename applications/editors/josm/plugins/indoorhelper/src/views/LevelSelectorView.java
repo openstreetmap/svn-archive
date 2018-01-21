@@ -105,7 +105,7 @@ public class LevelSelectorView extends JFrame {
                 new Insets(5, 5, 5, 30), 0, 0));
 
         //---- Field ----
-        field.setToolTipText(tr("Example: '2' or '3'"));
+        field.setToolTipText(tr("Example: ''2'' or ''3''"));
         field.addFocusListener(new FocusListener() {
 
             @Override

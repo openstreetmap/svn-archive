@@ -1,4 +1,5 @@
 #! /usr/bin/perl -w -CDSL
+# fileformat documentation: JOSM I18n.java function load()
 
 use Term::ReadKey;
 use strict;

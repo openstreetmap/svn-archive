@@ -1,4 +1,5 @@
 #! /usr/bin/perl -w
+# fileformat documentation: JOSM I18n.java function load()
 
 use utf8;
 use strict;

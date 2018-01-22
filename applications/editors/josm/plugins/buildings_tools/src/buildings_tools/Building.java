@@ -8,7 +8,9 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.geom.GeneralPath;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map.Entry;
@@ -16,6 +18,7 @@ import java.util.Map.Entry;
 import javax.swing.JOptionPane;
 
 import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.actions.CreateCircleAction;
 import org.openstreetmap.josm.command.AddCommand;
 import org.openstreetmap.josm.command.ChangeCommand;
 import org.openstreetmap.josm.command.Command;
@@ -70,7 +73,8 @@ class Building {
     }
 
     public boolean isRectDrawing() {
-        return drawingAngle != null && ToolSettings.getWidth() == 0 && ToolSettings.getLenStep() == 0;
+        return drawingAngle != null && ToolSettings.getWidth() == 0 && ToolSettings.getLenStep() == 0
+                && ToolSettings.Shape.RECTANGLE.equals(ToolSettings.getShape());
     }
 
     public Double getDrawingAngle() {
@@ -130,10 +134,12 @@ class Building {
             return;
         final EastNorth p1 = en[0];
         en[1] = new EastNorth(p1.east() + Math.sin(heading) * len * meter, p1.north() + Math.cos(heading) * len * meter);
-        en[2] = new EastNorth(p1.east() + Math.sin(heading) * len * meter + Math.cos(heading) * width * meter,
-                p1.north() + Math.cos(heading) * len * meter - Math.sin(heading) * width * meter);
-        en[3] = new EastNorth(p1.east() + Math.cos(heading) * width * meter,
-                p1.north() - Math.sin(heading) * width * meter);
+        if (ToolSettings.Shape.RECTANGLE.equals(ToolSettings.getShape())) {
+            en[2] = new EastNorth(p1.east() + Math.sin(heading) * len * meter + Math.cos(heading) * width * meter,
+                    p1.north() + Math.cos(heading) * len * meter - Math.sin(heading) * width * meter);
+            en[3] = new EastNorth(p1.east() + Math.cos(heading) * width * meter,
+                    p1.north() - Math.sin(heading) * width * meter);
+        }
     }
 
     public void setLengthWidth(double length, double width) {
@@ -172,6 +178,17 @@ class Building {
         }
     }
 
+    public void setPlaceCircle(EastNorth p2, double width, boolean ignoreConstraints) {
+        if (en[0] == null)
+            throw new IllegalStateException("setPlace() called without the base point");
+        this.heading = en[0].heading(p2);
+        if (!ignoreConstraints)
+            this.heading = angleSnap.snapAngle(this.heading);
+        this.len = width;
+
+        updatePos();
+    }
+
     public void setPlaceRect(EastNorth p2) {
         if (en[0] == null)
             throw new IllegalStateException("SetPlaceRect() called without the base point");
@@ -198,13 +215,14 @@ class Building {
         GeneralPath b = new GeneralPath();
         Point pp1 = mv.getPoint(eastNorth2latlon(en[0]));
         Point pp2 = mv.getPoint(eastNorth2latlon(en[1]));
-        Point pp3 = mv.getPoint(eastNorth2latlon(en[2]));
-        Point pp4 = mv.getPoint(eastNorth2latlon(en[3]));
-
         b.moveTo(pp1.x, pp1.y);
         b.lineTo(pp2.x, pp2.y);
-        b.lineTo(pp3.x, pp3.y);
-        b.lineTo(pp4.x, pp4.y);
+        if (ToolSettings.Shape.RECTANGLE.equals(ToolSettings.getShape())) {
+            Point pp3 = mv.getPoint(eastNorth2latlon(en[2]));
+            Point pp4 = mv.getPoint(eastNorth2latlon(en[3]));
+            b.lineTo(pp3.x, pp3.y);
+            b.lineTo(pp4.x, pp4.y);
+        }
         b.lineTo(pp1.x, pp1.y);
         g.draw(b);
     }
@@ -233,8 +251,10 @@ class Building {
      */
     private Node getAddressNode() {
         BBox bbox = new BBox(eastNorth2latlon(en[0]), eastNorth2latlon(en[1]));
-        bbox.add(eastNorth2latlon(en[2]));
-        bbox.add(eastNorth2latlon(en[3]));
+        if (ToolSettings.Shape.RECTANGLE.equals(ToolSettings.getShape())) {
+            bbox.add(eastNorth2latlon(en[2]));
+            bbox.add(eastNorth2latlon(en[3]));
+        }
         List<Node> nodes = new LinkedList<>();
         nodesloop:
         for (Node n : MainApplication.getLayerManager().getEditDataSet().searchNodes(bbox)) {
@@ -265,7 +285,75 @@ class Building {
         return nodes.get(0);
     }
 
-    public Way create() {
+    public Way createCircle() {
+        DataSet ds = MainApplication.getLayerManager().getEditDataSet();
+        Collection<OsmPrimitive> selectedPrimitives = ds.getAllSelected();
+        ds.clearSelection();
+
+        if (len == 0)
+            return null;
+        final boolean[] created = new boolean[2];
+        final Node[] nodes = new Node[2];
+        for (int i = 0; i < 2; i++) {
+
+            Node n = findNode(en[i]);
+            if (n == null) {
+                nodes[i] = new Node(eastNorth2latlon(en[i]));
+                created[i] = true;
+            } else {
+                nodes[i] = n;
+                created[i] = false;
+            }
+            if (nodes[i].getCoor().isOutSideWorld()) {
+                JOptionPane.showMessageDialog(Main.parent,
+                        tr("Cannot place building outside of the world."));
+                return null;
+            }
+        }
+        Way w = new Way();
+        w.addNode(nodes[0]);
+        w.addNode(nodes[1]);
+
+        Collection<Command> addNodesCmd = new LinkedList<>();
+
+        for (int i = 0; i < 2; i++) {
+            if (created[i]) {
+                AddCommand addNode = new AddCommand(ds, nodes[i]);
+                addNodesCmd.add(addNode);
+            }
+        }
+
+        if (addNodesCmd.size() > 0) {
+            Command addNodes = new SequenceCommand(tr("Add nodes for building"), addNodesCmd);
+            Main.main.undoRedo.add(addNodes);
+        }
+
+        // Nodes must be selected for create circle action
+        for (int i = 0; i < 2; i++) {
+            if (created[i]) {
+                ds.addSelected(nodes[i]);
+            }
+        }
+
+        CreateCircleAction action = new CreateCircleAction();
+        action.setEnabled(true);
+        action.actionPerformed(null);
+
+        ds.clearSelection();
+        ds.addSelected(selectedPrimitives);
+
+        // get the way with the smallest id with the assumption that it is
+        // newest way created by CreateCirclAction
+        List<Way> ways = new ArrayList<>(ds.getWays());
+        Collections.sort(ways);
+        w = ways.get(0);
+
+        addAddress(w);
+
+        return w;
+    }
+
+    public Way createRectangle() {
         if (len == 0)
             return null;
         final boolean[] created = new boolean[4];
@@ -306,9 +394,18 @@ class Building {
         }
         cmds.add(new AddCommand(ds, w));
 
+        addAddress(w);
+
+        Command c = new SequenceCommand(tr("Create building"), cmds);
+        Main.main.undoRedo.add(c);
+        return w;
+    }
+
+    private void addAddress(Way w) {
         if (ToolSettings.PROP_USE_ADDR_NODE.get()) {
             Node addrNode = getAddressNode();
             if (addrNode != null) {
+                Collection<Command> addressCmds = new LinkedList<>();
                 for (Entry<String, String> entry : addrNode.getKeys().entrySet()) {
                     w.put(entry.getKey(), entry.getValue());
                 }
@@ -322,13 +419,12 @@ class Building {
                             rnew.addMember(i, new RelationMember(member.getRole(), w));
                         }
                     }
-                    cmds.add(new ChangeCommand(r, rnew));
+                    addressCmds.add(new ChangeCommand(r, rnew));
                 }
-                cmds.add(new DeleteCommand(addrNode));
+                addressCmds.add(new DeleteCommand(addrNode));
+                Command c = new SequenceCommand(tr("Add address for building"), addressCmds);
+                Main.main.undoRedo.add(c);
             }
         }
-        Command c = new SequenceCommand(tr("Create building"), cmds);
-        Main.main.undoRedo.add(c);
-        return w;
     }
 }

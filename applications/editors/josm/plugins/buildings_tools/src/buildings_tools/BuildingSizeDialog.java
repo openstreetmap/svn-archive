@@ -8,9 +8,11 @@ import java.awt.event.ActionListener;
 import java.text.NumberFormat;
 import java.text.ParseException;
 
+import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JFormattedTextField;
+import javax.swing.JRadioButton;
 
 import org.openstreetmap.josm.tools.GBC;
 
@@ -21,11 +23,22 @@ public class BuildingSizeDialog extends MyDialog {
     private final JCheckBox caddr = new JCheckBox(tr("Use Address dialog"));
     private final JCheckBox cAutoSelect = new JCheckBox(tr("Auto-select building"));
     private final JCheckBox cAddrNode = new JCheckBox(tr("Use address nodes under buildings"));
+    private final JRadioButton circleRadio = new JRadioButton(tr("Circle"));
+    private final JRadioButton rectangleRadio = new JRadioButton(tr("Rectangle"));
 
     public BuildingSizeDialog() {
-        super(tr("Set buildings size"));
+        super(tr("Set buildings size and shape"));
 
-        addLabelled(tr("Buildings width:"), twidth);
+        ButtonGroup shapeGroup = new ButtonGroup();
+        shapeGroup.add(circleRadio);
+        shapeGroup.add(rectangleRadio);
+        circleRadio.setSelected(ToolSettings.Shape.CIRCLE.equals(ToolSettings.getShape()));
+        rectangleRadio.setSelected(ToolSettings.Shape.RECTANGLE.equals(ToolSettings.getShape()));
+
+        panel.add(rectangleRadio, GBC.eol().fill(GBC.HORIZONTAL));
+        panel.add(circleRadio, GBC.eol().fill(GBC.HORIZONTAL));
+
+        addLabelled(tr("Buildings width/diameter:"), twidth);
         addLabelled(tr("Length step:"), tlenstep);
         panel.add(caddr, GBC.eol().fill(GBC.HORIZONTAL));
         panel.add(cAutoSelect, GBC.eol().fill(GBC.HORIZONTAL));
@@ -74,6 +87,11 @@ public class BuildingSizeDialog extends MyDialog {
     }
 
     public final void saveSettings() {
+        if (circleRadio.isSelected()) {
+            ToolSettings.saveShape(ToolSettings.Shape.CIRCLE);
+        } else if (rectangleRadio.isSelected()) {
+            ToolSettings.saveShape(ToolSettings.Shape.RECTANGLE);
+        }
         ToolSettings.setSizes(width(), lenstep());
         ToolSettings.setAddrDialog(useAddr());
         ToolSettings.setAutoSelect(cAutoSelect.isSelected());

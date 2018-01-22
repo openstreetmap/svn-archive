@@ -21,11 +21,22 @@ public final class ToolSettings {
     }
 
     public static final BooleanProperty PROP_USE_ADDR_NODE = new BooleanProperty("buildings_tools.addrNode", false);
+
+    public enum Shape {
+            CIRCLE, RECTANGLE
+    }
+
+    private static Shape shape = loadShape();
     private static double width = 0;
     private static double lenstep = 0;
     private static boolean useAddr;
     private static final Map<String, String> TAGS = new HashMap<>();
     private static boolean autoSelect;
+
+    public static Shape getShape() {
+        loadShape();
+        return shape;
+    }
 
     public static void setAddrDialog(boolean _useAddr) {
         useAddr = _useAddr;
@@ -74,6 +85,21 @@ public final class ToolSettings {
             }
         } catch (NoSuchElementException e) {
             Logging.warn(e);
+        }
+    }
+
+    public static void saveShape(Shape shape) {
+        Main.pref.put("buildings_tool.shape", shape.name());
+    }
+
+    private static Shape loadShape() {
+        String shape = Main.pref.get("buildings_tool.shape");
+        if (ToolSettings.Shape.CIRCLE.name().equals(shape)) {
+            ToolSettings.shape = Shape.CIRCLE;
+            return Shape.CIRCLE;
+        } else {
+            ToolSettings.shape = Shape.RECTANGLE;
+            return (Shape.RECTANGLE);
         }
     }
 

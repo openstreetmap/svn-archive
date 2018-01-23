@@ -13,19 +13,16 @@ import org.openstreetmap.josm.tools.Shortcut;
 
 import reverter.ChangesetReverter.RevertType;
 
-@SuppressWarnings("serial")
 public class RevertChangesetAction extends JosmAction {
 
     public RevertChangesetAction() {
         super(tr("Revert changeset"), "revert-changeset", tr("Revert changeset"),
-            Shortcut.registerShortcut("tool:revert",
-                tr("Tool: {0}", tr("Revert changeset")),
-                KeyEvent.VK_T, Shortcut.CTRL_SHIFT),
+            Shortcut.registerShortcut("tool:revert", tr("Tool: {0}", tr("Revert changeset")), KeyEvent.VK_T, Shortcut.CTRL_SHIFT),
                 true);
     }
 
     @Override
-    public void actionPerformed(ActionEvent arg0) {
+    public void actionPerformed(ActionEvent e) {
         final ChangesetIdQuery dlg = new ChangesetIdQuery();
         if (dlg.showDialog().getValue() != 1) return;
         final Collection<Integer> changesetIds = dlg.getIdsInReverseOrder();
@@ -34,9 +31,6 @@ public class RevertChangesetAction extends JosmAction {
 
         boolean newLayer = dlg.isNewLayerRequired();
         final boolean autoConfirmDownload = newLayer || changesetIds.size() > 1;
-        for (Integer changesetId : changesetIds) {
-            MainApplication.worker.submit(new RevertChangesetTask(changesetId, revertType, autoConfirmDownload, newLayer));
-            newLayer = false; // reuse layer for subsequent reverts
-        }
+        MainApplication.worker.submit(new RevertChangesetTask(changesetIds, revertType, autoConfirmDownload, newLayer));
     }
 }

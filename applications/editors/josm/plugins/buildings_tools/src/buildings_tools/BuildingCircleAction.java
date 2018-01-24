@@ -13,7 +13,7 @@ import org.openstreetmap.josm.tools.Shortcut;
 public class BuildingCircleAction extends JosmAction {
 
     public BuildingCircleAction() {
-        super(tr("Set building shape to circle"), "mapmode/building", tr("Set buildings shape to circle"),
+        super(tr("Set building shape to circle"), "mapmode/silo", tr("Set buildings shape to circle"),
                 Shortcut.registerShortcut("buildings_tools:circle",
                         tr("Data: {0}", tr("Set buildings shape to circle")),
                         KeyEvent.VK_Z, Shortcut.ALT),

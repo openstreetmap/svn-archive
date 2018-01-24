@@ -13,7 +13,7 @@ import org.openstreetmap.josm.tools.Shortcut;
 public class BuildingRectangleAction extends JosmAction {
 
     public BuildingRectangleAction() {
-        super(tr("Set building shape to rectangle"), "mapmode/building", tr("Set buildings shape to rectangle"),
+        super(tr("Set building shape to rectangle"), "mapmode/rectangular", tr("Set buildings shape to rectangle"),
                 Shortcut.registerShortcut("buildings_tools:rectangle",
                         tr("Data: {0}", tr("Set buildings shape to rectangle")),
                         KeyEvent.VK_R, Shortcut.ALT),

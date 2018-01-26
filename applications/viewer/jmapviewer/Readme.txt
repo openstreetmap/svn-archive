@@ -2,7 +2,7 @@ JMapViewer
 
 (c) 2007, Tim Haussmann
 (c) 2008-2012, Jan Peter Stotz
-(c) 2009-2016, Dirk Stöcker
+(c) 2009-2018, Dirk Stöcker
 (c) 2009, Stefan Zeller
 (c) 2009, Karl Guggisberg
 (c) 2009, Dave Hansen

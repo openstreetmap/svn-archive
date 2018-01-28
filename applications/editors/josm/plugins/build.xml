@@ -47,4 +47,7 @@
     <target name="spotbugs">
         <iterate target="spotbugs"/>
     </target>
+    <target name="javadoc">
+        <iterate target="javadoc"/>
+    </target>
 </project>

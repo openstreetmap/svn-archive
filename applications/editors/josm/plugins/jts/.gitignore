@@ -3,3 +3,5 @@
 /checkstyle-josm-jts.xml
 /findbugs-josm-jts.xml
 /MANIFEST
+/spotbugs-josm-jts.xml
+/javadoc

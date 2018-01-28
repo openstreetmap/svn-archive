@@ -2,3 +2,5 @@
 /build
 /checkstyle-josm-jna.xml
 /findbugs-josm-jna.xml
+/spotbugs-josm-jna.xml
+/javadoc

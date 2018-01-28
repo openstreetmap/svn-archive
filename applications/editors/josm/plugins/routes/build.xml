@@ -43,6 +43,7 @@
     <target name="test"/>
     <target name="checkstyle"/>
     <target name="spotbugs"/>
+    <target name="javadoc"/>
     <target name="revision">
         <exec append="false" output="REVISION" executable="svn" failifexecutionfails="false">
             <env key="LANG" value="C"/>

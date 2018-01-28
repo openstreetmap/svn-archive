@@ -34,6 +34,22 @@
             <compilerarg value="-Xlint:unchecked" />
         </javac>
     </target>
+    <target name="javadoc" depends="init">
+        <javadoc destdir="javadoc"
+                sourcepath="${plugin.src.dir}"
+                encoding="UTF-8"
+                windowtitle="${ant.project.name}"
+                use="true"
+                private="true"
+                linksource="true"
+                author="false">
+            <classpath refid="compile.path"/>
+            <link href="http://docs.oracle.com/javase/8/docs/api"/>
+            <link href="https://josm.openstreetmap.de/doc"/>
+            <doctitle><![CDATA[<h2>${ant.project.name} - Javadoc</h2>]]></doctitle>
+            <bottom><![CDATA[<a href="https://josm.openstreetmap.de/wiki/Plugins">JOSM Plugins</a>]]></bottom>
+        </javadoc>
+    </target>
 
     <target name="dist" depends="clean,init,compile" description="Create the plugin jar">
         <tstamp>

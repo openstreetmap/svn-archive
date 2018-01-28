@@ -22,17 +22,6 @@
         <delete file="${plugin.jar}"/>
     </target>
 
-    <!-- creates the javadocs -->
-    <target name="javadoc">
-        <mkdir dir="${apidoc.dir}"/>
-        <javadoc destdir="${apidoc.dir}" source="1.8" classpathref="classpath" windowtitle="MapDust plugin API">
-            <link href="http://java.sun.com/javase/8/docs/api/"/>
-            <link href="http://docs.jboss.org/hibernate/stable/core/api/"/>
-            <packageset dir="${plugin.src.dir}">
-            </packageset>
-        </javadoc>
-    </target>
-
     <!-- creates the .jar file of the plugin -->
     <target name="dist" depends="compile,revision">
         <echo message="creating ${ant.project.name}.jar ... "/>

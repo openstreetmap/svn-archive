@@ -2,3 +2,4 @@
 /build
 /checkstyle-josm-eventbus.xml
 /spotbugs-josm-eventbus.xml
+/javadoc

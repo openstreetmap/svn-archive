@@ -2,3 +2,5 @@
 /build
 /checkstyle-josm-apache-http.xml
 /findbugs-josm-apache-http.xml
+/spotbugs-josm-apache-http.xml
+/javadoc

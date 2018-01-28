@@ -209,6 +209,24 @@
             </and>
         </condition>
     </target>
+    <target name="javadoc">
+        <javadoc destdir="javadoc"
+                sourcepath="${plugin.src.dir}"
+                encoding="UTF-8"
+                windowtitle="JOSM-${ant.project.name}"
+                use="true"
+                private="true"
+                linksource="true"
+                author="false">
+            <classpath refid="plugin.classpath"/>
+            <link href="http://docs.oracle.com/javase/8/docs/api"/>
+            <link href="https://josm.openstreetmap.de/doc"/>
+            <doctitle><![CDATA[<h2>JOSM-${ant.project.name} - Javadoc</h2>]]></doctitle>
+            <bottom><![CDATA[<a href="https://josm.openstreetmap.de/wiki/Plugins">JOSM Plugins</a>]]></bottom>
+            <arg value="--add-exports" if:set="isJava9" />
+            <arg value="javafx.graphics/com.sun.javafx.application=ALL-UNNAMED" if:set="isJava9" />
+        </javadoc>
+    </target>
     <!--
     **********************************************************
     ** revision - extracts the current revision number for the

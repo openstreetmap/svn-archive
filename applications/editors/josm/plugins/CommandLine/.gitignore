@@ -2,3 +2,4 @@
 /checkstyle-josm-CommandLine.xml
 /findbugs-josm-CommandLine.xml
 /spotbugs-josm-CommandLine.xml
+/javadoc

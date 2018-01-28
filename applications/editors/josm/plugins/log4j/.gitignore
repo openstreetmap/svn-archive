@@ -3,3 +3,5 @@
 /bin
 /checkstyle-josm-log4j.xml
 /findbugs-josm-log4j.xml
+/spotbugs-josm-log4j.xml
+/javadoc

@@ -580,7 +580,7 @@
                 classpath="${spotbugs-classpath}"
                 pluginList=""
                 excludeFilter="../spotbugs-filter.xml"
-                effort="default"
+                effort="less"
                 reportLevel="low"
                 jvmargs="-Xmx2048m"
                 >

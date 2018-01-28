@@ -9,6 +9,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Callable;
+import java.util.stream.Collectors;
 
 import javax.swing.JOptionPane;
 
@@ -86,12 +87,16 @@ public class RevertChangesetTask extends PleaseWaitRunnable {
     protected void realRun() throws OsmTransferException {
         numberOfConflicts = 0;
         final List<Command> allcmds = new ArrayList<>();
-        Logging.info("Reverting {0} changeset(s): {1}", changesetIds.size(), changesetIds);
+        Logging.info("Reverting {0} changeset(s): {1}",
+                changesetIds.size(), changesetIds.stream().map(Long::toString).collect(Collectors.toList()));
         for (int changesetId : changesetIds) {
             try {
-                Logging.info("Reverting changeset {0}", changesetId);
-                allcmds.add(revertChangeset(changesetId));
-                Logging.info("Reverted changeset {0}", changesetId);
+                Logging.info("Reverting changeset {0}", Long.toString(changesetId));
+                RevertChangesetCommand cmd = revertChangeset(changesetId);
+                if (cmd != null) {
+                    allcmds.add(cmd);
+                }
+                Logging.info("Reverted changeset {0}", Long.toString(changesetId));
                 newLayer = false; // reuse layer for subsequent reverts
             } catch (OsmTransferException e) {
                 Logging.error(e);
@@ -153,9 +158,8 @@ public class RevertChangesetTask extends PleaseWaitRunnable {
         rev.fixNodesWithoutCoordinates(progressMonitor);
         List<Command> cmds = rev.getCommands();
         if (cmds.isEmpty()) {
-            String msg = MessageFormat.format("No revert commands found for changeset {0}", changesetId);
-            Logging.warn(msg);
-            throw new OsmTransferException(msg);
+            Logging.warn(MessageFormat.format("No revert commands found for changeset {0}", Long.toString(changesetId)));
+            return null;
         }
         for (Command c : cmds) {
             if (c instanceof ConflictAddCommand) {

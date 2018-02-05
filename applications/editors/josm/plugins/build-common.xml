@@ -22,12 +22,15 @@
     <property name="plugin.build.dir"       location="build"/>
     <property name="plugin.test.dir"        location="test"/>
     <property name="plugin.src.dir"         location="src"/>
+    <property name="plugin.doc.dir"         location="javadoc"/>
     <property name="plugin.lib.dir"         location="lib"/>
     <!-- this is the directory where the plugin jar is copied to -->
     <property name="plugin.dist.dir"        location="../../dist"/>
     <property name="ant.build.javac.target" value="1.8"/>
     <property name="ant.build.javac.source" value="1.8"/>
     <property name="plugin.jar"             location="${plugin.dist.dir}/${ant.project.name}.jar"/>
+    <property name="plugin.sources.jar"     location="${plugin.dist.dir}/${ant.project.name}-sources.jar"/>
+    <property name="plugin.javadoc.jar"     location="${plugin.dist.dir}/${ant.project.name}-javadoc.jar"/>
     <property name="javac.compiler"         value="com.google.errorprone.ErrorProneAntCompilerAdapter" />
 
     <!-- For Windows-specific stuff -->
@@ -119,10 +122,10 @@
     </target>
     <!--
     **********************************************************
-    ** dist - creates the plugin jar
+    ** dist - creates the plugin jars
     **********************************************************
     -->
-    <target name="dist" depends="compile,revision" unless="skip-dist">
+    <target name="dist" depends="compile,javadoc,revision" unless="skip-dist">
         <echo message="creating ${ant.project.name}.jar ... "/>
         <antcall target="setup-dist" />
         <delete file="MANIFEST" failonerror="no"/>
@@ -182,6 +185,8 @@
                 </archives>
             </restrict>
         </jar>
+        <jar destfile="${plugin.sources.jar}" basedir="${plugin.src.dir}"/>
+        <jar destfile="${plugin.javadoc.jar}" basedir="${plugin.doc.dir}"/>
         <delete file="MANIFEST" failonerror="no"/>
         <antcall target="post-dist" />
     </target>
@@ -210,7 +215,7 @@
         </condition>
     </target>
     <target name="javadoc">
-        <javadoc destdir="javadoc"
+        <javadoc destdir="${plugin.doc.dir}"
                 sourcepath="${plugin.src.dir}"
                 encoding="UTF-8"
                 windowtitle="JOSM-${ant.project.name}"
@@ -219,7 +224,7 @@
                 linksource="true"
                 author="false">
             <classpath refid="plugin.classpath"/>
-            <link href="http://docs.oracle.com/javase/8/docs/api"/>
+            <link href="https://docs.oracle.com/javase/8/docs/api"/>
             <link href="https://josm.openstreetmap.de/doc"/>
             <doctitle><![CDATA[<h2>JOSM-${ant.project.name} - Javadoc</h2>]]></doctitle>
             <bottom><![CDATA[<a href="https://josm.openstreetmap.de/wiki/Plugins">JOSM Plugins</a>]]></bottom>
@@ -322,8 +327,11 @@
     -->
     <target name="clean">
         <delete dir="${plugin.build.dir}"/>
+        <delete dir="${plugin.doc.dir}"/>
         <delete dir="${checkstyle-build.dir}"/>
         <delete file="${plugin.jar}"/>
+        <delete file="${plugin.sources.jar}"/>
+        <delete file="${plugin.javadoc.jar}"/>
     </target>
     <!--
     **********************************************************
@@ -398,6 +406,8 @@
             <env key="LANG" value="C"/>
             <arg value="up"/>
             <arg value="../dist/${plugin.jar}"/>
+            <arg value="../dist/${plugin.javadoc.jar}"/>
+            <arg value="../dist/${plugin.sources.jar}"/>
         </exec>
     </target>
     <!--
@@ -420,6 +430,8 @@
             <arg value="${commit.message}"/>
             <arg value="commit"/>
             <arg value="${plugin.jar}"/>
+            <arg value="${plugin.sources.jar}"/>
+            <arg value="${plugin.javadoc.jar}"/>
         </exec>
     </target>
     <!-- ** make sure svn is present as a command line tool ** -->

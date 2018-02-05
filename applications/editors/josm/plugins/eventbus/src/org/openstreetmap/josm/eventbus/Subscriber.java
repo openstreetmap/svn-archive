@@ -30,7 +30,13 @@ import java.util.concurrent.Executor;
  */
 class Subscriber {
 
-  /** Creates a {@code Subscriber} for {@code method} on {@code listener}. */
+  /**
+   * Creates a {@code Subscriber} for {@code method} on {@code listener}.
+   * @param bus event bus
+   * @param listener listener
+   * @param method method
+   * @return subscriber
+   */
   static Subscriber create(EventBus bus, Object listener, Method method) {
     return isDeclaredThreadSafe(method)
         ? new Subscriber(bus, listener, method)
@@ -58,24 +64,26 @@ class Subscriber {
     this.executor = bus.executor();
   }
 
-  /** Dispatches {@code event} to this subscriber using the proper executor. */
+  /**
+   * Dispatches {@code event} to this subscriber using the proper executor.
+   * @param event event to dispatch
+   */
   final void dispatchEvent(final Object event) {
     executor.execute(
-        new Runnable() {
-          @Override
-          public void run() {
+        () -> {
             try {
               invokeSubscriberMethod(event);
             } catch (InvocationTargetException e) {
               bus.handleSubscriberException(e.getCause(), context(event));
             }
-          }
-        });
+          });
   }
 
   /**
    * Invokes the subscriber method. This method can be overridden to make the invocation
    * synchronized.
+   * @param event event to dispatch
+   * @throws InvocationTargetException if the invocation fails
    */
   void invokeSubscriberMethod(Object event) throws InvocationTargetException {
     try {
@@ -92,7 +100,11 @@ class Subscriber {
     }
   }
 
-  /** Gets the context for the given event. */
+  /**
+   * Gets the context for the given event.
+   * @param event event
+   * @return context for the given event
+   */
   private SubscriberExceptionContext context(Object event) {
     return new SubscriberExceptionContext(bus, event, target, method);
   }
@@ -117,6 +129,8 @@ class Subscriber {
   /**
    * Checks whether {@code method} is thread-safe, as indicated by the presence of the {@link
    * AllowConcurrentEvents} annotation.
+   * @param method method to check
+   * @return {@code true} if {@code method} is thread-safe
    */
   private static boolean isDeclaredThreadSafe(Method method) {
     return method.getAnnotation(AllowConcurrentEvents.class) != null;

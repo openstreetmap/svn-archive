@@ -41,6 +41,7 @@ abstract class Dispatcher {
    * the same thread that posts the event), this yields a breadth-first dispatch order on each
    * thread. That is, all subscribers to a single event A will be called before any subscribers to
    * any events B and C that are posted to the event bus by the subscribers to A.
+   * @return dispatcher
    */
   static Dispatcher perThreadDispatchQueue() {
     return new PerThreadQueuedDispatcher();
@@ -51,6 +52,7 @@ abstract class Dispatcher {
    * matches the original behavior of AsyncEventBus exactly, but is otherwise not especially useful.
    * For async dispatch, an {@linkplain #immediate() immediate} dispatcher should generally be
    * preferable.
+   * @return dispatcher
    */
   static Dispatcher legacyAsync() {
     return new LegacyAsyncDispatcher();
@@ -60,12 +62,17 @@ abstract class Dispatcher {
    * Returns a dispatcher that dispatches events to subscribers immediately as they're posted
    * without using an intermediate queue to change the dispatch order. This is effectively a
    * depth-first dispatch order, vs. breadth-first when using a queue.
+   * @return dispatcher
    */
   static Dispatcher immediate() {
     return ImmediateDispatcher.INSTANCE;
   }
 
-  /** Dispatches the given {@code event} to the given {@code subscribers}. */
+  /**
+   * Dispatches the given {@code event} to the given {@code subscribers}.
+   * @param event event to dispatch
+   * @param subscribers subscribers to notify
+   */
   abstract void dispatch(Object event, Iterator<Subscriber> subscribers);
 
   /** Implementation of a {@link #perThreadDispatchQueue()} dispatcher. */

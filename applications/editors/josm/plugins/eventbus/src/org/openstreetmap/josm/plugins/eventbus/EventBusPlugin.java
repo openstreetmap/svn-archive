@@ -378,6 +378,9 @@ public class EventBusPlugin extends Plugin {
         Logging.debug("TODO: add" + cancelListener);
     }
 
+    /**
+     * Registers all JOSM listeners.
+     */
     void registerAllJosmListeners() {
         Main.addProjectionChangeListener(projectionChangeListener);
         MainApplication.getLayerManager().addLayerChangeListener(layerChangeListener);
@@ -398,6 +401,9 @@ public class EventBusPlugin extends Plugin {
         Config.getPref().addPreferenceChangeListener(preferenceChangedListener);
     }
 
+    /**
+     * Unregisters all JOSM listeners.
+     */
     void unregisterAllJosmListeners() {
         Main.removeProjectionChangeListener(projectionChangeListener);
         MainApplication.getLayerManager().removeLayerChangeListener(layerChangeListener);

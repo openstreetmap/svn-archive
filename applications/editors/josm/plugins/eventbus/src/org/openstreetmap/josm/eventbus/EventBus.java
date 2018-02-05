@@ -99,7 +99,11 @@ public class EventBus {
   private final SubscriberRegistry subscribers = new SubscriberRegistry(this);
   private final Dispatcher dispatcher;
 
+  /**
+   * Simple executor singleton that runs commands in the same thread.
+   */
   enum DirectExecutor implements Executor {
+    /** unique instance */
     INSTANCE;
 
     @Override
@@ -141,6 +145,13 @@ public class EventBus {
         exceptionHandler);
   }
 
+  /**
+   * Constructs a new {@code EventBus}.
+   * @param identifier the identifier for this event bus. Must not be null
+   * @param executor the default executor to use for dispatching events to subscribers. Must not be null
+   * @param dispatcher the event dispatcher. Must not be null
+   * @param exceptionHandler handles the exceptions thrown by a subscriber. Must not be null
+   */
   EventBus(
       String identifier,
       Executor executor,
@@ -162,12 +173,19 @@ public class EventBus {
     return identifier;
   }
 
-  /** Returns the default executor this event bus uses for dispatching events to subscribers. */
+  /**
+   * Returns the default executor this event bus uses for dispatching events to subscribers.
+   * @return the default executor this event bus uses for dispatching events to subscribers
+   */
   final Executor executor() {
     return executor;
   }
 
-  /** Handles the given exception thrown by a subscriber with the given context. */
+  /**
+   * Handles the given exception thrown by a subscriber with the given context.
+   * @param e exception thrown by a subscriber
+   * @param context subscriber context
+   */
   void handleSubscriberException(Throwable e, SubscriberExceptionContext context) {
     Objects.requireNonNull(e);
     Objects.requireNonNull(context);
@@ -228,6 +246,7 @@ public class EventBus {
 
   /** Simple logging handler for subscriber exceptions. */
   static final class LoggingHandler implements SubscriberExceptionHandler {
+    /** unique instance */
     static final LoggingHandler INSTANCE = new LoggingHandler();
 
     @Override

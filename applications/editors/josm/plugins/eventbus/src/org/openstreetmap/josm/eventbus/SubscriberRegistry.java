@@ -53,11 +53,18 @@ final class SubscriberRegistry {
   /** The event bus this registry belongs to. */
   private final EventBus bus;
 
+  /**
+   * Constructs a new {@code SubscriberRegistry}.
+   * @param bus event bus
+   */
   SubscriberRegistry(EventBus bus) {
     this.bus = Objects.requireNonNull(bus);
   }
 
-  /** Registers all subscriber methods on the given listener object. */
+  /**
+   * Registers all subscriber methods on the given listener object.
+   * @param listener listener
+   */
   void register(Object listener) {
     MultiMap<Class<?>, Subscriber> listenerMethods = findAllSubscribers(listener);
 
@@ -77,7 +84,9 @@ final class SubscriberRegistry {
     }
   }
 
-  /** Unregisters all subscribers on the given listener object. */
+  /** Unregisters all subscribers on the given listener object.
+   * @param listener listener
+   */
   void unregister(Object listener) {
     MultiMap<Class<?>, Subscriber> listenerMethods = findAllSubscribers(listener);
 
@@ -100,6 +109,11 @@ final class SubscriberRegistry {
     }
   }
 
+  /**
+   * Returns subscribers for given {@code eventType}. Only used for unit tests.
+   * @param eventType event type
+   * @return subscribers for given {@code eventType}. Can be empty, but never null
+   */
   Set<Subscriber> getSubscribersForTesting(Class<?> eventType) {
     return firstNonNull(subscribers.get(eventType), new HashSet<Subscriber>());
   }
@@ -107,6 +121,8 @@ final class SubscriberRegistry {
   /**
    * Gets an iterator representing an immutable snapshot of all subscribers to the given event at
    * the time this method is called.
+   * @param event event
+   * @return subscribers iterator
    */
   Iterator<Subscriber> getSubscribers(Object event) {
     Set<Class<?>> eventTypes = flattenHierarchy(event.getClass());
@@ -126,6 +142,8 @@ final class SubscriberRegistry {
 
   /**
    * Returns all subscribers for the given listener grouped by the type of event they subscribe to.
+   * @param listener listener
+   * @return all subscribers for the given listener
    */
   private MultiMap<Class<?>, Subscriber> findAllSubscribers(Object listener) {
     MultiMap<Class<?>, Subscriber> methodsInListener = new MultiMap<>();
@@ -174,6 +192,8 @@ final class SubscriberRegistry {
   /**
    * Flattens a class's type hierarchy into a set of {@code Class} objects including all
    * superclasses (transitively) and all interfaces implemented by these superclasses.
+   * @param concreteClass concrete class
+   * @return set of {@code Class} objects including all superclasses and interfaces
    */
   static Set<Class<?>> flattenHierarchy(Class<?> concreteClass) {
       return flattenHierarchyCache.computeIfAbsent(
@@ -204,7 +224,7 @@ final class SubscriberRegistry {
       return false;
     }
   }
-  
+
   /**
    * Returns the first of two given parameters that is not {@code null}, if either is, or otherwise
    * throws a {@link NullPointerException}.
@@ -213,10 +233,9 @@ final class SubscriberRegistry {
    * Predicates.notNull())}. For varargs, use {@code Iterables.find(Arrays.asList(a, b, c, ...),
    * Predicates.notNull())}, static importing as necessary.
    *
-   * <p><b>Note:</b> if {@code first} is represented as an {@link Optional}, this can be
-   * accomplished with {@link Optional#or(Object) first.or(second)}. That approach also allows for
-   * lazy evaluation of the fallback instance, using {@link Optional#or(Supplier)
-   * first.or(supplier)}.
+   * @param <T> object type
+   * @param first first object
+   * @param second second object
    *
    * @return {@code first} if it is non-null; otherwise {@code second} if it is non-null
    * @throws NullPointerException if both {@code first} and {@code second} are null
@@ -231,7 +250,7 @@ final class SubscriberRegistry {
     }
     throw new NullPointerException("Both parameters are null");
   }
-  
+
   private static Set<Class<?>> getClassesAndInterfaces(Class<?> clazz) {
       Set<Class<?>> result = new HashSet<>();
       Class<?> c = clazz;

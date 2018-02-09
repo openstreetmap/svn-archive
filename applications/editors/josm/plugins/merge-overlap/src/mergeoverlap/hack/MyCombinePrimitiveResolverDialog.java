@@ -7,8 +7,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import javax.swing.JPanel;
-
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.command.ChangePropertyCommand;
 import org.openstreetmap.josm.command.Command;
@@ -17,7 +15,7 @@ import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.TagCollection;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.gui.conflict.tags.CombinePrimitiveResolverDialog;
-import org.openstreetmap.josm.gui.conflict.tags.RelationMemberConflictResolver;
+import org.openstreetmap.josm.gui.conflict.tags.TagConflictResolverModel;
 import org.openstreetmap.josm.gui.util.GuiHelper;
 
 /**
@@ -57,7 +55,7 @@ public class MyCombinePrimitiveResolverDialog extends CombinePrimitiveResolverDi
      * @param parent The parent component in which this dialog will be displayed.
      */
     public MyCombinePrimitiveResolverDialog(Component parent) {
-        super(parent);
+        super(parent, new TagConflictResolverModel(), new MyRelationMemberConflictResolverModel());
     }
 
     /**
@@ -70,12 +68,6 @@ public class MyCombinePrimitiveResolverDialog extends CombinePrimitiveResolverDi
             GuiHelper.runInEDTAndWait(() -> instance = new MyCombinePrimitiveResolverDialog(Main.parent));
         }
         return instance;
-    }
-
-    @Override
-    protected JPanel buildRelationMemberConflictResolverPanel() {
-        pnlRelationMemberConflictResolver = new RelationMemberConflictResolver(new MyRelationMemberConflictResolverModel());
-        return pnlRelationMemberConflictResolver;
     }
 
     @Override

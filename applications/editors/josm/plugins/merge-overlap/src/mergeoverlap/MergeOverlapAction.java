@@ -388,7 +388,7 @@ public class MergeOverlapAction extends JosmAction {
         deletes.addAll(ways);
         deletes.remove(targetWay);
 
-        cmds.add(new ChangeCommand(targetWay, modifiedTargetWay));
+        cmds.add(new ChangeCommand(getLayerManager().getEditDataSet(), targetWay, modifiedTargetWay));
         cmds.addAll(dialog.buildWayResolutionCommands());
         dialog.buildRelationCorrespondance(newRelations, oldWays);
 

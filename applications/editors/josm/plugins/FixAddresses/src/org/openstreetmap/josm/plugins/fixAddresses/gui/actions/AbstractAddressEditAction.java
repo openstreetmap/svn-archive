@@ -82,7 +82,7 @@ public abstract class AbstractAddressEditAction extends JosmAction implements IA
     }
 
     @Override
-    public void actionPerformed(ActionEvent arg0) {
+    public void actionPerformed(ActionEvent e) {
         if (event != null) { // use the event acquired previously.
             addressEditActionPerformed(event);
             event = null; // consume event

@@ -24,7 +24,7 @@ public class SelectIncompleteAddressesAction extends JosmAction {
     }
 
     @Override
-    public void actionPerformed(ActionEvent arg0) {
+    public void actionPerformed(ActionEvent e) {
         addressEditContainer = new AddressEditContainer();
         addressEditContainer.invalidate();
 

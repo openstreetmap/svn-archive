@@ -173,6 +173,6 @@ public abstract class AddressEditTableModel extends DefaultTableModel implements
         }
 
         @Override
-        public abstract int compare(E arg0, E arg1);
+        public abstract int compare(E o1, E o2);
     }
 }

@@ -44,8 +44,8 @@ import org.openstreetmap.josm.plugins.fixAddresses.OSMAddress;
 import org.openstreetmap.josm.plugins.fixAddresses.OSMStreet;
 import org.openstreetmap.josm.plugins.fixAddresses.StringUtils;
 import org.openstreetmap.josm.plugins.fixAddresses.gui.actions.AbstractAddressEditAction;
-import org.openstreetmap.josm.plugins.fixAddresses.gui.actions.ApplyAllGuessesAction;
 import org.openstreetmap.josm.plugins.fixAddresses.gui.actions.AddressActions;
+import org.openstreetmap.josm.plugins.fixAddresses.gui.actions.ApplyAllGuessesAction;
 import org.openstreetmap.josm.tools.ImageProvider;
 
 @SuppressWarnings("serial")
@@ -380,16 +380,16 @@ public class AddressEditDialog extends JDialog implements ActionListener, ListSe
         }
 
         @Override
-        public void keyPressed(KeyEvent arg0) {
+        public void keyPressed(KeyEvent e) {
         }
 
         @Override
-        public void keyReleased(KeyEvent arg0) {
+        public void keyReleased(KeyEvent e) {
         }
 
         @Override
-        public void keyTyped(KeyEvent arg0) {
-            JTable table = (JTable) arg0.getSource();
+        public void keyTyped(KeyEvent e) {
+            JTable table = (JTable) e.getSource();
 
             if (table == null) return;
 
@@ -403,7 +403,7 @@ public class AddressEditDialog extends JDialog implements ActionListener, ListSe
                 column = 0; // use the first column
             }
 
-            char firstChar = Character.toLowerCase(arg0.getKeyChar());
+            char firstChar = Character.toLowerCase(e.getKeyChar());
 
             // visit every row and find a matching entry
             for (int i = 0; i < model.getRowCount(); i++) {

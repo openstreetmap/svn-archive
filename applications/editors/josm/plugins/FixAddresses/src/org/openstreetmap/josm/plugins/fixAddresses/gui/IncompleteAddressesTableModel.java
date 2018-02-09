@@ -77,8 +77,8 @@ public class IncompleteAddressesTableModel extends AddressEditTableModel {
     }
 
     @Override
-    public Class<?> getColumnClass(int arg0) {
-        return COLUMN_CLASSES[arg0];
+    public Class<?> getColumnClass(int columnIndex) {
+        return COLUMN_CLASSES[columnIndex];
     }
 
     @Override
@@ -130,24 +130,24 @@ public class IncompleteAddressesTableModel extends AddressEditTableModel {
         }
 
         @Override
-        public int compare(OSMAddress arg0, OSMAddress arg1) {
+        public int compare(OSMAddress o1, OSMAddress o2) {
             int cc = 0;
 
             switch (getColumn()) {
             case 0:
-                cc = arg0.getCountry().compareTo(arg1.getCountry());
+                cc = o1.getCountry().compareTo(o2.getCountry());
                 break;
             case 1:
-                cc = arg0.getCity().compareTo(arg1.getCity());
+                cc = o1.getCity().compareTo(o2.getCity());
                 break;
             case 2:
-                cc = arg0.getPostalCode().compareTo(arg1.getPostalCode());
+                cc = o1.getPostalCode().compareTo(o2.getPostalCode());
                 break;
             case 3:
-                cc = arg0.getStreetName().compareTo(arg1.getStreetName());
+                cc = o1.getStreetName().compareTo(o2.getStreetName());
                 break;
             case 4:
-                cc = arg0.getHouseNumber().compareTo(arg1.getHouseNumber());
+                cc = o1.getHouseNumber().compareTo(o2.getHouseNumber());
                 break;
             default:
                 throw new RuntimeException("Invalid column index: " + getColumn());

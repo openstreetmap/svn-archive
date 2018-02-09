@@ -28,9 +28,9 @@ public class FixAddressesPlugin extends Plugin {
         FixUnresolvedStreetsAction action = new FixUnresolvedStreetsAction();
         SelectIncompleteAddressesAction incAddrAction = new SelectIncompleteAddressesAction();
 
-        // ... and add them to the tools menu in main
-        MainMenu.add(MainApplication.getMenu().toolsMenu, action, false, 0);
-        MainMenu.add(MainApplication.getMenu().toolsMenu, incAddrAction);
+        // ... and add them to JOSM menus
+        MainMenu.add(MainApplication.getMenu().dataMenu, action, false);
+        MainMenu.add(MainApplication.getMenu().selectionMenu, incAddrAction);
 
         // create preferences instance
         preferences = (FixAddressesPreferences) new FixAddressesPreferences.Factory().createPreferenceSetting();

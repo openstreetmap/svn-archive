@@ -108,25 +108,25 @@ public class StreetTableModel extends AddressEditTableModel {
         }
 
         @Override
-        public int compare(OSMStreet arg0, OSMStreet arg1) {
-            if (arg0 == null || arg1 == null) return 0;
+        public int compare(OSMStreet o1, OSMStreet o2) {
+            if (o1 == null || o2 == null) return 0;
 
             switch (getColumn()) {
             case 0:
-                if (arg0.getType() != null) {
-                    return arg0.getType().compareTo(arg1.getType());
+                if (o1.getType() != null) {
+                    return o1.getType().compareTo(o2.getType());
                 } else {
-                    return arg1.hasName() ? -1 : 0;
+                    return o2.hasName() ? -1 : 0;
                 }
             case 1:
-                if (arg0.hasName()) {
-                    return arg0.getName().compareTo(arg1.getName());
+                if (o1.hasName()) {
+                    return o1.getName().compareTo(o2.getName());
                 } else {
-                    return arg1.hasName() ? -1 : 0;
+                    return o2.hasName() ? -1 : 0;
                 }
             case 2:
-                return Integer.valueOf(arg0.getNumberOfAddresses()).
-                                compareTo(Integer.valueOf(arg1.getNumberOfAddresses()));
+                return Integer.valueOf(o1.getNumberOfAddresses()).
+                                compareTo(Integer.valueOf(o2.getNumberOfAddresses()));
             default:
             }
             return 0;

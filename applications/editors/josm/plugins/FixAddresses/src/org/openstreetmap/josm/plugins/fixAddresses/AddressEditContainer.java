@@ -736,10 +736,10 @@ public class AddressEditContainer implements OsmPrimitiveVisitor, DataSetListene
         }
 
         @Override
-        public int compareTo(StreetScore arg0) {
-            if (arg0 == null) return 1;
+        public int compareTo(StreetScore o) {
+            if (o == null) return 1;
 
-            return Integer.valueOf(score).compareTo(Integer.valueOf(arg0.score));
+            return Integer.valueOf(score).compareTo(Integer.valueOf(o.score));
         }
     }
 }

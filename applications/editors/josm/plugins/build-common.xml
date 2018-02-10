@@ -79,7 +79,7 @@
     </target>
     <target name="compile" depends="init, pre-compile" unless="skip-compile">
         <echo message="compiling sources for ${plugin.jar} ..."/>
-        <javac compiler="${javac.compiler}" srcdir="src" debug="true" destdir="${plugin.build.dir}" includeantruntime="false" encoding="UTF-8">
+        <javac compiler="${javac.compiler}" srcdir="${plugin.src.dir}" debug="true" destdir="${plugin.build.dir}" includeantruntime="false" encoding="UTF-8">
             <compilerclasspath>
                 <pathelement location="${error_prone_ant.jar}"/>
             </compilerclasspath>

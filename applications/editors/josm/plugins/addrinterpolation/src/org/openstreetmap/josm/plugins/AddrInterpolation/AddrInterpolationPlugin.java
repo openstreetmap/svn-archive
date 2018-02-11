@@ -10,6 +10,7 @@ public class AddrInterpolationPlugin extends Plugin {
 
     /**
      * constructor
+     * @param info plugin information
      */
     public AddrInterpolationPlugin(PluginInformation info) {
         super(info);

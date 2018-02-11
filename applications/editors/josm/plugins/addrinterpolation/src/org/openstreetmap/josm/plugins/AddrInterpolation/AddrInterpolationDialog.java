@@ -648,6 +648,9 @@ public class AddrInterpolationDialog extends JDialog implements ActionListener {
     /**
      * Add rows of edit controls - with labels in the left column, and controls in the right
      * column on the gridbag of the specified container.
+     * @param labels labels on left column
+     * @param editFields edit fields on the right column
+     * @param container container
      */
     private void AddEditControlRows(JLabel[] labels,
             Component[] editFields,

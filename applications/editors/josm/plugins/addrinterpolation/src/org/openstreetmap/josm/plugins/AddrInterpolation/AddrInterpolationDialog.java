@@ -1088,11 +1088,13 @@ public class AddrInterpolationDialog extends JDialog implements ActionListener {
         }
 
         if (relationChanged) {
-            commandGroup.add(new ChangeCommand(associatedStreetRelation, editedRelation));
+            commandGroup.add(new ChangeCommand(currentDataSet, associatedStreetRelation, editedRelation));
         }
 
-        Main.main.undoRedo.add(new SequenceCommand(tr("Address Interpolation"), commandGroup));
-        MainApplication.getLayerManager().getEditLayer().invalidate();
+        if (!commandGroup.isEmpty()) {
+            Main.main.undoRedo.add(new SequenceCommand(tr("Address Interpolation"), commandGroup));
+            MainApplication.getLayerManager().getEditLayer().invalidate();
+        }
 
         return true;
     }

@@ -654,6 +654,10 @@ LAYER
 
   INCLUDE "raba/raba3000.map"
   INCLUDE "raba/raba.map"
+  INCLUDE "raba/rabaSplits.map"
+
+  INCLUDE "gurs/building-outlines.map"
+  INCLUDE "gurs/road-lines.map"
 
 
 ###################

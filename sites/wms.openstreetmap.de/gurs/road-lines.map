@@ -1,0 +1,25 @@
+  LAYER
+    NAME "GURS-road-lines"
+    METADATA
+     "wms_title"  "GURS road lines 2018-01-28"
+     "wms_extent" "13.3 45.4 16.6 46.9"
+     "wms_srs"    "EPSG:4326"
+     "copyright"  "CC-BY GURS 2018 - http://egp.gu.gov.si"
+     "wiki"       "https://forum.openstreetmap.org/viewtopic.php?pid=685315#p685315"
+     END
+    STATUS ON
+    TYPE LINE
+    DATA "gurs/1100_SLO_SHP-etrs89/1100_ILL_20180128-etrs89.shp"
+    PROJECTION
+          "init=epsg:4326"
+    END
+    CLASS
+      #EXPRESSION ([RABA_ID] = 3000)
+      STYLE
+        #OUTLINEWIDTH 1
+        COLOR 50 255 255
+        ANTIALIAS true
+      END
+    END
+
+  END

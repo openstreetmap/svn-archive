@@ -1,0 +1,25 @@
+  LAYER
+    NAME "RABAsplits"
+    METADATA
+     "wms_title"  "Raba import splits 2016-09-01"
+     "wms_extent" "13.3 45.4 16.6 46.9"
+     "wms_srs"    "EPSG:4326"
+     "copyright"  "raba import splits ©20160901 OSM"
+     "wiki"       "http://wiki.openstreetmap.org/wiki/Slovenia_Landcover_Import_-_RABA-KGZ"
+     END
+    STATUS ON
+    TYPE LINE
+    DATA "raba/newSplitID_improve1_EPSG4326/newSplitID_improve1_EPSG4326.shp"
+    PROJECTION
+          "init=epsg:4326"
+    END
+    CLASS
+      #EXPRESSION ([RABA_ID] = 3000)
+      STYLE
+        #OUTLINEWIDTH 1
+        COLOR 255 50 50
+        ANTIALIAS true
+      END
+    END
+
+  END

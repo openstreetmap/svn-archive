@@ -71,9 +71,9 @@
             <fileset dir="${josm.build.dir}/src" includes="**/*.java"/>
             <fileset dir="${i18n.build.dir}" includes="specialmessages.java"/>
             <fileset dir="${i18n.build.dir}" includes="trans_presets.java"/>
-            <fileset dir="${i18n.build.dir}" includes="trans_maps.java"/>
             <fileset dir="${josm.build.dir}/data/validator" includes="*.mapcss"/>
             <fileset dir="${josm.build.dir}/styles/standard" includes="*.mapcss"/>
+            <fileset dir="${i18n.build.dir}" includes="trans_maps.java"/>
             <!-- data.pot -->
             <fileset dir="${i18n.build.dir}" includes="trans_plugins.java"/>
             <!-- <fileset dir="${i18n.build.dir}/josmfiles" includes="trans_*.*"/> disable for now -->

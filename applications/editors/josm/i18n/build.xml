@@ -92,10 +92,10 @@
             <fileset dir="${josm.build.dir}/src" includes="**/*.java"/>
             <fileset dir="${i18n.build.dir}" includes="specialmessages.java"/>
             <fileset dir="${i18n.build.dir}" includes="trans_presets.java"/>
-            <!-- maps should be in data instead, but that requires language file loading support in trac python code -->
-            <fileset dir="${i18n.build.dir}" includes="trans_maps.java"/>
             <fileset dir="${josm.build.dir}/data/validator" includes="*.mapcss"/>
             <fileset dir="${josm.build.dir}/styles/standard" includes="*.mapcss"/>
+            <!-- maps should be in data instead, but that requires language file loading support in trac python code -->
+            <fileset dir="${i18n.build.dir}" includes="trans_maps.java"/>
         </gettext-extract>
     </target>
     <target name="po/data.pot" description="Extracts message keys from data files, e.g., presets, imagery (minus core strings)" depends="trans_.java,po/core.pot,init">

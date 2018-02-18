@@ -4,7 +4,7 @@ package org.openstreetmap.josm.plugins.housenumbertool;
 import java.io.Serializable;
 
 /**
- * @author Oliver Raupach 18.01.2012 <http://www.oliver-raupach.de>
+ * @author Oliver Raupach 18.01.2012
  */
 public class Dto implements Serializable {
 

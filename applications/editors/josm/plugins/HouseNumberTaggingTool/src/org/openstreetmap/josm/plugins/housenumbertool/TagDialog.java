@@ -48,8 +48,8 @@ import org.openstreetmap.josm.gui.tagging.ac.AutoCompletingComboBox;
 import org.openstreetmap.josm.gui.tagging.ac.AutoCompletionManager;
 
 /**
- * @author Oliver Raupach 09.01.2012 <http://www.oliver-raupach.de>
- * @author Victor Kropp 10.03.2012 <http://victor.kropp.name>
+ * @author Oliver Raupach 09.01.2012
+ * @author Victor Kropp 10.03.2012
  */
 public class TagDialog extends ExtendedDialog {
     private static final String APPLY_CHANGES = tr("Apply Changes");

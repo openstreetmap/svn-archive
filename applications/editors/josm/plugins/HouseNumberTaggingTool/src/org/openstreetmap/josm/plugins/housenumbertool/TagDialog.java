@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.housenumbertool;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -22,6 +23,8 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JCheckBox;
@@ -319,14 +322,9 @@ public class TagDialog extends ExtendedDialog {
         housnumber = new JTextField();
         housnumber.setPreferredSize(new Dimension(200, 24));
 
-        int number = 0;
-        try {
-            number = Integer.valueOf(dto.getHousenumber()) + dto.getHousenumberChangeValue();
-        } catch (NumberFormatException e)  {
-            // Do nothing
-        }
-        if (number > 0) {
-            housnumber.setText(String.valueOf(number));
+        String number = incrementHouseNumber(dto.getHousenumber(), dto.getHousenumberChangeValue());
+        if (number != null) {
+            housnumber.setText(number);
         }
 
         c.fill = GridBagConstraints.HORIZONTAL;
@@ -357,6 +355,21 @@ public class TagDialog extends ExtendedDialog {
         editPanel.add(housenumberChangeSequence, c);
 
         return editPanel;
+    }
+
+    static String incrementHouseNumber(String number, int increment) {
+        try {
+            Matcher m = Pattern.compile("([^\\pN]+)?(\\pN+)([^\\pN]+)?").matcher(number);
+            if (m.matches()) {
+                String prefix = m.group(1) != null ? m.group(1) : "";
+                int n = Integer.valueOf(m.group(2)) + increment;
+                String suffix = m.group(3) != null ? m.group(3) : "";
+                return prefix + n + suffix;
+            }
+        } catch (NumberFormatException e)  {
+            // Do nothing
+        }
+        return null;
     }
 
     @Override

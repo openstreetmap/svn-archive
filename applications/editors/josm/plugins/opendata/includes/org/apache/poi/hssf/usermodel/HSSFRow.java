@@ -17,13 +17,9 @@
 
 package org.apache.poi.hssf.usermodel;
 
-import java.util.Iterator;
-import java.util.NoSuchElementException;
-
 import org.apache.poi.hssf.record.CellValueRecordInterface;
 import org.apache.poi.hssf.record.RowRecord;
 import org.apache.poi.ss.SpreadsheetVersion;
-import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 
 /**
@@ -101,6 +97,7 @@ public final class HSSFRow implements Row {
      * @throws IllegalArgumentException if columnIndex < 0 or greater than 255,
      *   the maximum number of columns supported by the Excel binary format (.xls)
      */
+    @Override
     public HSSFCell createCell(int column)
     {
         return this.createCell(column,HSSFCell.CELL_TYPE_BLANK);
@@ -118,6 +115,7 @@ public final class HSSFRow implements Row {
      * @throws IllegalArgumentException if columnIndex < 0 or greater than 255,
      *   the maximum number of columns supported by the Excel binary format (.xls)
      */
+    @Override
     public HSSFCell createCell(int columnIndex, int type)
     {
         short shortCellNum = (short)columnIndex;
@@ -163,6 +161,7 @@ public final class HSSFRow implements Row {
      * @param rowIndex  the row number (0-based)
      * @throws IndexOutOfBoundsException if the row number is not within the range 0-65535.
      */
+    @Override
     public void setRowNum(int rowIndex) {
         int maxrow = SpreadsheetVersion.EXCEL97.getLastRowIndex();
         if ((rowIndex < 0) || (rowIndex > maxrow)) {
@@ -179,6 +178,7 @@ public final class HSSFRow implements Row {
      * get row number this row represents
      * @return the row number (0 based)
      */
+    @Override
     public int getRowNum()
     {
         return rowNum;
@@ -189,11 +189,11 @@ public final class HSSFRow implements Row {
      *
      * @return the HSSFSheet that owns this row
      */
+    @Override
     public HSSFSheet getSheet()
     {
         return sheet;
     }
-
 
     /**
      * used internally to add a cell.
@@ -239,7 +239,6 @@ public final class HSSFRow implements Row {
         return cells[cellIndex];
     }
 
-
     /**
      * Get the hssfcell representing a given column (logical cell)
      *  0-based.  If you ask for a cell that is not defined then
@@ -249,6 +248,7 @@ public final class HSSFRow implements Row {
      * @param cellnum  0 based column number
      * @return HSSFCell representing that column or null if undefined.
      */
+    @Override
     public HSSFCell getCell(int cellnum) {
         return getCell(cellnum, book.getMissingCellPolicy());
     }
@@ -262,6 +262,7 @@ public final class HSSFRow implements Row {
      * @param policy Policy on blank / missing cells
      * @return representing that column or null if undefined + policy allows.
      */
+    @Override
     public HSSFCell getCell(int cellnum, MissingCellPolicy policy) {
         HSSFCell cell = retrieveCell(cellnum);
         if(policy == RETURN_NULL_AND_BLANK) {
@@ -284,81 +285,44 @@ public final class HSSFRow implements Row {
     }
 
     /**
+     * Gets the index of the last cell contained in this row <b>PLUS ONE</b>. The result also
+     * happens to be the 1-based column number of the last cell.  This value can be used as a
+     * standard upper bound when iterating over cells:
+     * <pre>
+     * short minColIx = row.getFirstCellNum();
+     * short maxColIx = row.getLastCellNum();
+     * for(short colIx=minColIx; colIx&lt;maxColIx; colIx++) {
+     *   HSSFCell cell = row.getCell(colIx);
+     *   if(cell == null) {
+     *     continue;
+     *   }
+     *   //... do something with cell
+     * }
+     * </pre>
+     *
+     * @return short representing the last logical cell in the row <b>PLUS ONE</b>, or -1 if the
+     *  row does not contain any cells.
+     */
+    @Override
+    public short getLastCellNum() {
+        if (row.isEmpty()) {
+            return -1;
+        }
+        return (short) row.getLastCol();
+    }
+
+    /**
      * get the lowlevel RowRecord represented by this object - should only be called
      * by other parts of the high level API
      *
      * @return RowRecord this row represents
      */
-
     protected RowRecord getRowRecord()
     {
         return row;
     }
 
-    /**
-     * @return cell iterator of the physically defined cells.
-     * Note that the 4th element might well not be cell 4, as the iterator
-     *  will not return un-defined (null) cells.
-     * Call getCellNum() on the returned cells to know which cell they are.
-     * As this only ever works on physically defined cells,
-     *  the {@link org.apache.poi.ss.usermodel.Row.MissingCellPolicy} has no effect.
-     */
-    public Iterator<Cell> cellIterator()
-    {
-      return new CellIterator();
-    }
-    /**
-     * Alias for {@link #cellIterator} to allow
-     *  foreach loops
-     */
-    public Iterator<Cell> iterator() {
-       return cellIterator();
-    }
-
-    /**
-     * An iterator over the (physical) cells in the row.
-     */
-    private class CellIterator implements Iterator<Cell> {
-      int thisId=-1;
-      int nextId=-1;
-
-      public CellIterator()
-      {
-        findNext();
-      }
-
-      public boolean hasNext() {
-        return nextId<cells.length;
-      }
-
-      public Cell next() {
-          if (!hasNext())
-              throw new NoSuchElementException("At last element");
-        HSSFCell cell=cells[nextId];
-        thisId=nextId;
-        findNext();
-        return cell;
-      }
-
-      public void remove() {
-          if (thisId == -1)
-              throw new IllegalStateException("remove() called before next()");
-        cells[thisId]=null;
-      }
-
-      private void findNext()
-      {
-        int i=nextId+1;
-        for(;i<cells.length;i++)
-        {
-          if(cells[i]!=null) break;
-        }
-        nextId=i;
-      }
-
-    }
-
-
+    @Override
     public boolean equals(Object obj)
     {
         if (!(obj instanceof HSSFRow))

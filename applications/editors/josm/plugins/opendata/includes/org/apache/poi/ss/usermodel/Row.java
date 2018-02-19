@@ -17,12 +17,10 @@
 
 package org.apache.poi.ss.usermodel;
 
-import java.util.Iterator;
-
 /**
  * High level representation of a row of a spreadsheet.
  */
-public interface Row extends Iterable<Cell> {
+public interface Row {
 
     /**
      * Use this to create new cells within the row and return it.
@@ -74,7 +72,7 @@ public interface Row extends Iterable<Cell> {
      * @see #getCell(int, org.apache.poi.ss.usermodel.Row.MissingCellPolicy)
      */
     Cell getCell(int cellnum);
-    
+
     /**
      * Returns the cell at the given (0 based) index, with the specified {@link org.apache.poi.ss.usermodel.Row.MissingCellPolicy}
      *
@@ -87,10 +85,25 @@ public interface Row extends Iterable<Cell> {
     Cell getCell(int cellnum, MissingCellPolicy policy);
 
     /**
-     * @return Cell iterator of the physically defined cells.  Note element 4 may
-     * actually be row cell depending on how many are defined!
+     * Gets the index of the last cell contained in this row <b>PLUS ONE</b>. The result also
+     * happens to be the 1-based column number of the last cell.  This value can be used as a
+     * standard upper bound when iterating over cells:
+     * <pre>
+     * short minColIx = row.getFirstCellNum();
+     * short maxColIx = row.getLastCellNum();
+     * for(short colIx=minColIx; colIx&lt;maxColIx; colIx++) {
+     *   Cell cell = row.getCell(colIx);
+     *   if(cell == null) {
+     *     continue;
+     *   }
+     *   //... do something with cell
+     * }
+     * </pre>
+     *
+     * @return short representing the last logical cell in the row <b>PLUS ONE</b>,
+     *   or -1 if the row does not contain any cells.
      */
-    Iterator<Cell> cellIterator();
+    short getLastCellNum();
 
     /**
      * Returns the Sheet this row belongs to

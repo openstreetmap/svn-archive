@@ -57,26 +57,32 @@ public class XlsReader extends SpreadSheetReader {
             Row row = sheet.getRow(rowIndex++);
             if (row != null) {
                 List<String> result = new ArrayList<>();
-                for (Cell cell : row) {
-                    switch (cell.getCellType()) {
-                        case Cell.CELL_TYPE_STRING:
-                            result.add(cell.getRichStringCellValue().getString());
-                            break;
-                        case Cell.CELL_TYPE_NUMERIC:
-                            if (DateUtil.isCellDateFormatted(cell)) {
-                                result.add(cell.getDateCellValue().toString());
-                            } else {
-                                result.add(Double.toString(cell.getNumericCellValue()));
-                            }
-                            break;
-                        case Cell.CELL_TYPE_BOOLEAN:
-                            result.add(Boolean.toString(cell.getBooleanCellValue()));
-                            break;
-                        case Cell.CELL_TYPE_FORMULA:
-                            result.add(cell.getCellFormula());
-                            break;
-                        default:
-                            result.add("");
+                // Do not use iterator! It skips null values
+                for (int i = 0; i < row.getLastCellNum(); i++) {
+                    Cell cell = row.getCell(i);
+                    if (cell != null) {
+                        switch (cell.getCellType()) {
+                            case Cell.CELL_TYPE_STRING:
+                                result.add(cell.getRichStringCellValue().getString());
+                                break;
+                            case Cell.CELL_TYPE_NUMERIC:
+                                if (DateUtil.isCellDateFormatted(cell)) {
+                                    result.add(cell.getDateCellValue().toString());
+                                } else {
+                                    result.add(Double.toString(cell.getNumericCellValue()));
+                                }
+                                break;
+                            case Cell.CELL_TYPE_BOOLEAN:
+                                result.add(Boolean.toString(cell.getBooleanCellValue()));
+                                break;
+                            case Cell.CELL_TYPE_FORMULA:
+                                result.add(cell.getCellFormula());
+                                break;
+                            default:
+                                result.add("");
+                        }
+                    } else {
+                        result.add("");
                     }
                 }
                 return result.toArray(new String[0]);

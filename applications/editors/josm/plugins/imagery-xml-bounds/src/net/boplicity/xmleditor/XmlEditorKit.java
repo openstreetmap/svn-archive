@@ -20,7 +20,6 @@ import javax.swing.text.ViewFactory;
 
 /**
  * @author kees
- * @date 12-jan-2006
  */
 public class XmlEditorKit extends StyledEditorKit {
 

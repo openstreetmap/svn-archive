@@ -21,8 +21,6 @@ import javax.swing.text.ViewFactory;
 
 /**
  * @author kees
- * @date 13-jan-2006
- *
  */
 public class XmlViewFactory extends Object implements ViewFactory {
 

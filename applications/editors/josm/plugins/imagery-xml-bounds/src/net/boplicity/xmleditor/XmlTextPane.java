@@ -23,14 +23,11 @@ import java.util.logging.Logger;
 import javax.swing.JTextPane;
 import javax.swing.text.BadLocationException;
 
-
 /**
  * JTextPane implementation that can handle xml text. The IndentKeyListener
  * implements smart indenting.
  *
  * @author kees
- * @date 27-jan-2006
- *
  */
 public class XmlTextPane extends JTextPane {
 

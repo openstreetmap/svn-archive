@@ -41,8 +41,6 @@ import javax.swing.text.Utilities;
  * Using PlainView here because we don't want line wrapping to occur.
  *
  * @author kees
- * @date 13-jan-2006
- *
  */
 public class XmlView extends PlainView {
 

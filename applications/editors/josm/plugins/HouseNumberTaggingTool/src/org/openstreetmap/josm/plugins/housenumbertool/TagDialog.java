@@ -358,16 +358,18 @@ public class TagDialog extends ExtendedDialog {
     }
 
     static String incrementHouseNumber(String number, int increment) {
-        try {
-            Matcher m = Pattern.compile("([^\\pN]+)?(\\pN+)([^\\pN]+)?").matcher(number);
-            if (m.matches()) {
-                String prefix = m.group(1) != null ? m.group(1) : "";
-                int n = Integer.valueOf(m.group(2)) + increment;
-                String suffix = m.group(3) != null ? m.group(3) : "";
-                return prefix + n + suffix;
+        if (number != null) {
+            try {
+                Matcher m = Pattern.compile("([^\\pN]+)?(\\pN+)([^\\pN]+)?").matcher(number);
+                if (m.matches()) {
+                    String prefix = m.group(1) != null ? m.group(1) : "";
+                    int n = Integer.valueOf(m.group(2)) + increment;
+                    String suffix = m.group(3) != null ? m.group(3) : "";
+                    return prefix + n + suffix;
+                }
+            } catch (NumberFormatException e)  {
+                // Do nothing
             }
-        } catch (NumberFormatException e)  {
-            // Do nothing
         }
         return null;
     }

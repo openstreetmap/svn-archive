@@ -2,6 +2,7 @@
 package org.openstreetmap.josm.plugins.housenumbertool;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 import org.junit.Test;
 
@@ -21,5 +22,6 @@ public class TagDialogTest {
         assertEquals("E2", TagDialog.incrementHouseNumber("E1", 1));
         //assertEquals("۲", TagDialog.incrementHouseNumber("۱", 1)); // FIXME: how to increment persian numbers ?
         assertEquals("2", TagDialog.incrementHouseNumber("۱", 1));
+        assertNull(TagDialog.incrementHouseNumber(null, 1));
     }
 }

@@ -28,7 +28,6 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.gui.datatransfer.ClipboardUtils;
@@ -221,6 +220,8 @@ public final class WikipediaApp {
 
     /**
      * Returns a map mapping wikipedia articles to wikidata ids.
+     * @param articles wikipedia article names
+     * @return article / wikidata id map
      */
     public Map<String, String> getWikidataForArticles(Collection<String> articles) {
         return articles.stream()
@@ -251,6 +252,8 @@ public final class WikipediaApp {
     /**
      * Get Wikidata IDs. For any unknown IDs, resolve them (normalize and get redirects),
      * and try getting Wikidata IDs again
+     * @param articles wikipedia article names
+     * @return article / wikidata id map
      */
     private Map<String, String> resolveWikidataItems(Collection<String> articles) {
         final Map<String, String> result = getWikidataForArticles0(articles);
@@ -322,6 +325,8 @@ public final class WikipediaApp {
     /**
      * Given a list of wikipedia titles, returns a map of corresponding normalized title names,
      * or if the title is a redirect page, the result is the redirect target.
+     * @param articles wikipedia articles
+     * @return article / wikidata id map
      */
     private Map<String, String> resolveRedirectsForArticles(Collection<String> articles) {
         try {

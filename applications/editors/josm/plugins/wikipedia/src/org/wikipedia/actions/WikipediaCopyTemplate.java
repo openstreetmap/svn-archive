@@ -46,7 +46,7 @@ public class WikipediaCopyTemplate {
 
     /**
      * Class to hold copy templates for serialization using {@link Preferences}.
-     * Public visibility is needed for reflection used in {@link Preferences#getListOfStructs}.
+     * Public visibility is needed for reflection used in {@link Preferences#getListOfMaps}.
      */
     @SuppressWarnings("WeakerAccess")
     public static class CoordCopyTemplateEntry {

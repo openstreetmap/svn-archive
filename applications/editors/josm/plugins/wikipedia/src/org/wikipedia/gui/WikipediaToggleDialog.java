@@ -1,6 +1,7 @@
 // License: GPL. For details, see LICENSE file.
 package org.wikipedia.gui;
 
+import static org.openstreetmap.josm.gui.help.HelpUtil.ht;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.event.ActionEvent;
@@ -364,6 +365,11 @@ public class WikipediaToggleDialog extends ToggleDialog implements ActiveLayerCh
     }
 
     private final DataSetListenerAdapter dataChangedAdapter = new DataSetListenerAdapter(this);
+
+    @Override
+    public String helpTopic() {
+        return ht("/Plugin/Wikipedia");
+    }
 
     @Override
     public void showNotify() {

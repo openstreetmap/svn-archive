@@ -25,6 +25,7 @@ import org.openstreetmap.josm.gui.layer.gpx.DownloadAlongPanel;
 import org.openstreetmap.josm.gui.progress.NullProgressMonitor;
 import org.openstreetmap.josm.tools.Logging;
 import org.openstreetmap.josm.tools.Shortcut;
+import org.openstreetmap.josm.tools.Utils;
 
 class DownloadAlongWayAction extends DownloadAlongAction {
 
@@ -56,6 +57,9 @@ class DownloadAlongWayAction extends DownloadAlongAction {
         if (0 != panel.showInDownloadDialog(tr("Download from OSM along selected ways"), HelpUtil.ht("/Tools/DownloadAlong"))) {
             return;
         }
+
+        Logging.info("Starting area computation");
+        long start = System.currentTimeMillis();
 
         /*
          * Find the average latitude for the data we're contemplating, so we
@@ -102,16 +106,19 @@ class DownloadAlongWayAction extends DownloadAlongAction {
                 if (previous != null && c.greatCircleDistance(previous) > buffer_dist) {
                     Double d = c.greatCircleDistance(previous) / buffer_dist;
                     int nbNodes = d.intValue();
-                    Logging.info(tr("{0} intermediate nodes to download.", nbNodes));
-                    Logging.info(tr("between {0} {1} and {2} {3}", c.lat(), c.lon(), previous.lat(),
-                            previous.lon()));
+                    if (Logging.isDebugEnabled()) {
+                        Logging.debug(tr("{0} intermediate nodes to download.", nbNodes));
+                        Logging.debug(tr("between {0} {1} and {2} {3}", c.lat(), c.lon(), previous.lat(), previous.lon()));
+                    }
                     for (int i = 1; i < nbNodes; i++) {
                         intermediateNodes.add(new LatLon(previous.lat()
                                 + (i * (c.lat() - previous.lat()) / (nbNodes + 1)), previous.lon()
                                 + (i * (c.lon() - previous.lon()) / (nbNodes + 1))));
-                        Logging.info(tr("  adding {0} {1}", previous.lat()
-                                + (i * (c.lat() - previous.lat()) / (nbNodes + 1)), previous.lon()
-                                + (i * (c.lon() - previous.lon()) / (nbNodes + 1))));
+                        if (Logging.isTraceEnabled()) {
+                            Logging.trace(tr("  adding {0} {1}", previous.lat()
+                                    + (i * (c.lat() - previous.lat()) / (nbNodes + 1)), previous.lon()
+                                    + (i * (c.lon() - previous.lon()) / (nbNodes + 1))));
+                        }
                     }
                 }
                 intermediateNodes.add(c);
@@ -127,6 +134,7 @@ class DownloadAlongWayAction extends DownloadAlongAction {
             }
         }
         Area a = new Area(path);
+        Logging.info("Area computed in " + Utils.getDurationString(System.currentTimeMillis() - start));
         confirmAndDownloadAreas(a, max_area, panel.isDownloadOsmData(), panel.isDownloadGpxData(), 
                 tr("Download from OSM along selected ways"), NullProgressMonitor.INSTANCE);
     }

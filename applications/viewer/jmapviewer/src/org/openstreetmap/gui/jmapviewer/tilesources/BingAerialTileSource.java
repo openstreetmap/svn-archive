@@ -161,9 +161,7 @@ public class BingAerialTileSource extends TMSTileSource {
         } catch (SAXException e) {
             System.err.println("Could not parse Bing aerials attribution metadata.");
             e.printStackTrace();
-        } catch (ParserConfigurationException e) {
-            e.printStackTrace();
-        } catch (XPathExpressionException e) {
+        } catch (ParserConfigurationException | XPathExpressionException | NumberFormatException e) {
             e.printStackTrace();
         }
         return null;

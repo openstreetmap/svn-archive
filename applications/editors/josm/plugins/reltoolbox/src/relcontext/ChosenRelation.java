@@ -125,7 +125,7 @@ public class ChosenRelation implements ActiveLayerChangeListener, MapViewPaintab
         // todo: check this WTF!
         OsmDataLayer newLayer = MainApplication.getLayerManager().getEditLayer();
         clear();
-        if (newLayer != null && e.getPreviousEditLayer() == null) {
+        if (newLayer != null && e.getPreviousDataLayer() == null) {
             MainApplication.getMap().mapView.addTemporaryLayer(this);
         } else if (newLayer == null) {
             MainApplication.getMap().mapView.removeTemporaryLayer(this);

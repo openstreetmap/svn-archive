@@ -99,6 +99,7 @@ public class KmlReader extends AbstractReader {
         List<OsmPrimitive> list = new ArrayList<>();
         long when = 0;
         Way way = null;
+        List<Node> wayNodes = null;
         Node node = null;
         Relation relation = null;
         String role = "";
@@ -130,18 +131,20 @@ public class KmlReader extends AbstractReader {
                 } else if (parser.getLocalName().equals(KML_LINEAR_RING)) {
                     if (relation != null) {
                         ds.addPrimitive(way = new Way());
+                        wayNodes = new ArrayList<>();
                         relation.addMember(new RelationMember(role, way));
                     }
                 } else if (parser.getLocalName().equals(KML_LINE_STRING) || parser.getLocalName().equals(KML_EXT_TRACK)) {
                     ds.addPrimitive(way = new Way());
+                    wayNodes = new ArrayList<>();
                     list.add(way);
                 } else if (parser.getLocalName().equals(KML_COORDINATES)) {
                     String[] tab = parser.getElementText().trim().split("\\s");
                     for (int i = 0; i < tab.length; i++) {
-                        node = parseNode(ds, way, node, tab[i].split(","));
+                        node = parseNode(ds, wayNodes, node, tab[i].split(","));
                     }
                 } else if (parser.getLocalName().equals(KML_EXT_COORD)) {
-                    node = parseNode(ds, way, node, parser.getElementText().trim().split("\\s"));
+                    node = parseNode(ds, wayNodes, node, parser.getElementText().trim().split("\\s"));
                     if (node != null && when > 0) {
                         node.setRawTimestamp((int) when);
                     }
@@ -153,6 +156,12 @@ public class KmlReader extends AbstractReader {
                     break;
                 } else if (parser.getLocalName().equals(KML_POINT)) {
                     list.add(node);
+                } else if (parser.getLocalName().equals(KML_LINE_STRING)
+                        || parser.getLocalName().equals(KML_EXT_TRACK) 
+                        || parser.getLocalName().equals(KML_LINEAR_RING)) {
+                    if (way != null && wayNodes != null)
+                        way.setNodes(wayNodes);
+                    wayNodes = new ArrayList<>();
                 }
             }
         }
@@ -163,7 +172,7 @@ public class KmlReader extends AbstractReader {
         }
     }
 
-    private Node parseNode(DataSet ds, Way way, Node node, String[] values) {
+    private Node parseNode(DataSet ds, List<Node> wayNodes, Node node, String[] values) {
         if (values.length >= 2) {
             LatLon ll = new LatLon(Double.valueOf(values[1]), Double.valueOf(values[0])).getRoundedToOsmPrecision();
             node = nodes.get(ll);
@@ -174,8 +183,8 @@ public class KmlReader extends AbstractReader {
                     node.put("ele", values[2]);
                 }
             }
-            if (way != null) {
-                way.addNode(node);
+            if (wayNodes != null) {
+                wayNodes.add(node);
             }
         }
         return node;

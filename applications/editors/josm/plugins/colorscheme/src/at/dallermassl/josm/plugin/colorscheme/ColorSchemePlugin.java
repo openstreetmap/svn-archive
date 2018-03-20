@@ -11,12 +11,12 @@ import org.openstreetmap.josm.plugins.PluginInformation;
 /**
  * ColorScheme Plugin for JOSM.
  * @author cdaller
- *
  */
 public class ColorSchemePlugin extends Plugin {
 
     /**
      * Default Constructor
+     * @param info plugin information
      */
     public ColorSchemePlugin(PluginInformation info) {
         super(info);
@@ -26,7 +26,4 @@ public class ColorSchemePlugin extends Plugin {
     public PreferenceSetting getPreferenceSetting() {
         return new ColorSchemePreference();
     }
-
-
-
 }

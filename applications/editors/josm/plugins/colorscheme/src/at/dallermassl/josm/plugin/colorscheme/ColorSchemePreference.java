@@ -7,9 +7,8 @@ package at.dallermassl.josm.plugin.colorscheme;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.GridBagLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -27,11 +26,13 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.data.preferences.ColorInfo;
 import org.openstreetmap.josm.gui.preferences.PreferenceSetting;
 import org.openstreetmap.josm.gui.preferences.PreferenceTabbedPane;
 import org.openstreetmap.josm.gui.preferences.SubPreferenceSetting;
 import org.openstreetmap.josm.gui.preferences.TabPreferenceSetting;
 import org.openstreetmap.josm.gui.preferences.display.ColorPreference;
+import org.openstreetmap.josm.tools.ColorHelper;
 import org.openstreetmap.josm.tools.GBC;
 
 public class ColorSchemePreference implements SubPreferenceSetting {
@@ -68,40 +69,34 @@ public class ColorSchemePreference implements SubPreferenceSetting {
         }
 
         JButton useScheme = new JButton(tr("Use"));
-        useScheme.addActionListener(new ActionListener(){
-            public void actionPerformed(ActionEvent e) {
-                if (schemesList.getSelectedIndex() == -1)
-                    JOptionPane.showMessageDialog(Main.parent, tr("Please select a scheme to use."));
-                else {
-                    String schemeName = (String) listModel.get(schemesList.getSelectedIndex());
-                    getColorPreference(gui).setColorModel(getColorMap(schemeName));
-                }
+        useScheme.addActionListener(e -> {
+            if (schemesList.getSelectedIndex() == -1)
+                JOptionPane.showMessageDialog(Main.parent, tr("Please select a scheme to use."));
+            else {
+                String schemeName1 = (String) listModel.get(schemesList.getSelectedIndex());
+                getColorPreference(gui).setColors(getColorMap(schemeName1));
             }
         });
         JButton addScheme = new JButton(tr("Add"));
-        addScheme.addActionListener(new ActionListener(){
-            public void actionPerformed(ActionEvent e) {
-                String schemeName = JOptionPane.showInputDialog(Main.parent, tr("Color Scheme"));
-                if (schemeName == null)
-                    return;
-                schemeName = schemeName.replaceAll("\\.", "_");
-                setColorScheme(schemeName, getColorPreference(gui).getColorModel());
-                listModel.addElement(schemeName);
-                saveSchemeNamesToPref();
-            }
+        addScheme.addActionListener(e -> {
+            String schemeName1 = JOptionPane.showInputDialog(Main.parent, tr("Color Scheme"));
+            if (schemeName1 == null)
+                return;
+            schemeName1 = schemeName1.replaceAll("\\.", "_");
+            setColorScheme(schemeName1, getColorPreference(gui).getColors());
+            listModel.addElement(schemeName1);
+            saveSchemeNamesToPref();
         });
 
         JButton deleteScheme = new JButton(tr("Delete"));
-        deleteScheme.addActionListener(new ActionListener(){
-            public void actionPerformed(ActionEvent e) {
-                if (schemesList.getSelectedIndex() == -1)
-                    JOptionPane.showMessageDialog(Main.parent, tr("Please select the scheme to delete."));
-                else {
-                    String schemeName = (String) listModel.get(schemesList.getSelectedIndex());
-                    removeColorSchemeFromPreferences(schemeName);
-                    listModel.remove(schemesList.getSelectedIndex());
-                    saveSchemeNamesToPref();
-                }
+        deleteScheme.addActionListener(e -> {
+            if (schemesList.getSelectedIndex() == -1)
+                JOptionPane.showMessageDialog(Main.parent, tr("Please select the scheme to delete."));
+            else {
+                String schemeName1 = (String) listModel.get(schemesList.getSelectedIndex());
+                removeColorSchemeFromPreferences(schemeName1);
+                listModel.remove(schemesList.getSelectedIndex());
+                saveSchemeNamesToPref();
             }
         });
         schemesList.setVisibleRowCount(3);
@@ -168,13 +163,13 @@ public class ColorSchemePreference implements SubPreferenceSetting {
     /**
      * Copy all color entries from the given map to entries in preferences with the scheme name.
      * @param schemeName the name of the scheme.
-     * @param the map containing the color key (without prefix) and the html color values.
+     * @param colorMap the map containing the color key (without prefix) and the html color values.
      */
-    public void setColorScheme(String schemeName, Map<String, String> colorMap) {
+    public void setColorScheme(String schemeName, Map<String, ColorInfo> colorMap) {
         String key;
         for(String colorKey : colorMap.keySet()) {
             key = PREF_KEY_SCHEMES_PREFIX + schemeName + "." + PREF_KEY_COLOR_PREFIX + colorKey;
-            Main.pref.put(key, colorMap.get(colorKey));
+            Main.pref.put(key, ColorHelper.color2html(colorMap.get(colorKey).getValue()));
         }
     }
 
@@ -182,14 +177,17 @@ public class ColorSchemePreference implements SubPreferenceSetting {
      * Reads all colors for a scheme and returns them in a map (key = color key without prefix,
      * value = html color code).
      * @param schemeName the name of the scheme.
+     * @return color map for the given scheme name 
      */
-    public Map<String, String> getColorMap(String schemeName) {
+    public Map<String, ColorInfo> getColorMap(String schemeName) {
         String colorKey;
         String prefix = PREF_KEY_SCHEMES_PREFIX + schemeName + "." + PREF_KEY_COLOR_PREFIX;
-        Map<String, String>colorMap = new HashMap<>();
+        Map<String, ColorInfo> colorMap = new HashMap<>();
         for(String schemeColorKey : Main.pref.getAllPrefix(prefix).keySet()) {
             colorKey = schemeColorKey.substring(prefix.length());
-            colorMap.put(colorKey, Main.pref.get(schemeColorKey));
+            colorMap.put(colorKey, ColorInfo.fromPref(Arrays.asList(
+                    // FIXME: does not work, corrupts the color table ? See #16110
+                    Main.pref.get(schemeColorKey), "", "", ""), false));
         }
         return colorMap;
     }

@@ -26,6 +26,7 @@ import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.search.SearchAction;
 import org.openstreetmap.josm.command.ChangePropertyCommand;
 import org.openstreetmap.josm.data.coor.LatLon;
+import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Tag;
 import org.openstreetmap.josm.data.osm.event.AbstractDatasetChangedEvent;
@@ -315,10 +316,11 @@ public class WikipediaToggleDialog extends ToggleDialog implements ActiveLayerCh
         }
 
         static void addTag(Tag tag) {
-            if (tag == null) {
+            final DataSet editDataSet = MainApplication.getLayerManager().getEditDataSet();
+            if (tag == null || editDataSet == null) {
                 return;
             }
-            final Collection<OsmPrimitive> selected = MainApplication.getLayerManager().getEditDataSet().getSelected();
+            final Collection<OsmPrimitive> selected = editDataSet.getSelected();
             if (selected.isEmpty() || !GuiUtils.confirmOverwrite(tag.getKey(), tag.getValue(), selected)) {
                 return;
             }

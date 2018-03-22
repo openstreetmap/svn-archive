@@ -214,7 +214,7 @@ public class BingAerialTileSource extends TMSTileSource {
 
     @Override
     public String getAttributionImageURL() {
-        return "http://opengeodata.org/microsoft-imagery-details";
+        return "https://opengeodata.org/microsoft-imagery-details";
     }
 
     @Override
@@ -224,7 +224,7 @@ public class BingAerialTileSource extends TMSTileSource {
 
     @Override
     public String getTermsOfUseURL() {
-        return "http://opengeodata.org/microsoft-imagery-details";
+        return "https://opengeodata.org/microsoft-imagery-details";
     }
 
     protected Callable<List<Attribution>> getAttributionLoaderCallable() {

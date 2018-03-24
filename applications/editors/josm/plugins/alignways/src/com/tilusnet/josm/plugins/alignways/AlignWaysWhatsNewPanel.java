@@ -132,7 +132,7 @@ public class AlignWaysWhatsNewPanel extends JPanel {
     private void openURI()  {
         if (Desktop.isDesktopSupported()) {
           try {
-            URI uri = new URI("http://wiki.openstreetmap.org/wiki/JOSM/Plugins/AlignWayS#Preserving_angles");
+            URI uri = new URI("https://wiki.openstreetmap.org/wiki/JOSM/Plugins/AlignWayS#Preserving_angles");
             Desktop.getDesktop().browse(uri);
           } catch (URISyntaxException ex) {
                 Logger.getLogger(AlignWaysWhatsNewPanel.class.getName()).log(Level.SEVERE, null, ex);

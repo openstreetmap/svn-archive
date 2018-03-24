@@ -13,7 +13,7 @@ import org.openstreetmap.josm.gui.MainApplication;
 import relcontext.actions.PublicTransportHelper;
 
 /**
- * @see http://wiki.openstreetmap.org/wiki/Key:public_transport
+ * @see https://wiki.openstreetmap.org/wiki/Key:public_transport
  */
 
 /**

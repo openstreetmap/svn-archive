@@ -19,7 +19,7 @@ import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.gui.MainApplication;
 
 /**
- * @see http://wiki.openstreetmap.org/wiki/Relation:multipolygon
+ * @see https://wiki.openstreetmap.org/wiki/Relation:multipolygon
  */
 public class MultipolygonFixer extends RelationFixer {
 

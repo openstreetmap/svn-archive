@@ -5,7 +5,7 @@ Readme for JOSM o5m plugin
 
     * Author: Gerd Petermann  
     * License: GPL v3 (see GPL-v3.0.txt) (all sources)
-    * the o5m format is described at http://wiki.openstreetmap.org/wiki/O5m
+    * the o5m format is described at https://wiki.openstreetmap.org/wiki/O5m
     * the source contains ported parts of the osmconvert tool written by
       Markus Weber. He allows to use his code for reading or writing
       the o5m format.            

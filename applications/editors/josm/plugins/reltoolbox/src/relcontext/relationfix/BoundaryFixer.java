@@ -13,7 +13,7 @@ import org.openstreetmap.josm.gui.MainApplication;
 
 
 /**
- * @see http://wiki.openstreetmap.org/wiki/Relation:boundary
+ * @see https://wiki.openstreetmap.org/wiki/Relation:boundary
  */
 public class BoundaryFixer extends MultipolygonFixer {
 
@@ -24,7 +24,7 @@ public class BoundaryFixer extends MultipolygonFixer {
     /**
      * For boundary relations both "boundary" and "multipolygon" types are applicable, but
      * it should also have key boundary=administrative to be fully boundary.
-     * @see http://wiki.openstreetmap.org/wiki/Relation:boundary
+     * @see https://wiki.openstreetmap.org/wiki/Relation:boundary
      */
     @Override
     public boolean isFixerApplicable(Relation rel) {

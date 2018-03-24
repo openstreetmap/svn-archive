@@ -14,7 +14,7 @@
     <property name="plugin.class" value="org.openstreetmap.josm.plugins.o5m.O5mPlugin"/>
     <property name="plugin.description" value="Import OSM data in o5m format"/>
     <!--<property name="plugin.icon" value="..."/>-->
-    <property name="plugin.link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/o5m"/>
+    <property name="plugin.link" value="https://wiki.openstreetmap.org/wiki/JOSM/Plugins/o5m"/>
     <!--<property name="plugin.early" value="..."/>-->
     <!--<property name="plugin.requires" value="..."/>-->
     <!--<property name="plugin.stage" value="..."/>-->

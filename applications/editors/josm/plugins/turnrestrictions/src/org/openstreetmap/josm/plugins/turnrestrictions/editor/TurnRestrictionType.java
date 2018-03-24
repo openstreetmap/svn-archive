@@ -5,7 +5,7 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 
 /**
  * This is the enumeration of turn restriction types, see
- * <a href="http://wiki.openstreetmap.org/wiki/Turn_restriction">OSM Wiki</a>
+ * <a href="https://wiki.openstreetmap.org/wiki/Turn_restriction">OSM Wiki</a>
  *
  */
 public enum TurnRestrictionType {

@@ -7,14 +7,14 @@
     <property name="plugin.main.version" value="13265"/>
 
     <!-- Configure these properties (replace "..." accordingly).
-         See http://josm.openstreetmap.de/wiki/DevelopersGuide/DevelopingPlugins
+         See https://josm.openstreetmap.de/wiki/DevelopersGuide/DevelopingPlugins
     -->
     <property name="plugin.author" value="Erik Gruschka, Rebecca Schmidt"/>
     <property name="plugin.class" value="org.openstreetmap.josm.plugins.indoorhelper.IndoorHelperPlugin"/>
     <property name="plugin.description" value="Gives assistance for the mapping process of indoor OSM building data. Includes a validator and a mappaint style for indoor-data."/>
     <property name="de_plugin.description" value="Plug-In zur Hilfe bei der Erstellung von Innenraumdaten. Beinhaltet einen Validator für die erstellten Daten und einen Renderstil um diese übersichtlich darzustellen."/>	
     <property name="plugin.icon" value="images/dialogs/indoorhelper.png"/>
-    <property name="plugin.link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/indoorhelper"/>
+    <property name="plugin.link" value="https://wiki.openstreetmap.org/wiki/JOSM/Plugins/indoorhelper"/>
     <property name="plugin.early" value="true"/>
     <!-- <property name="plugin.requires" value="PicLayer"/> -->
     <property name="plugin.stage" value="50"/>

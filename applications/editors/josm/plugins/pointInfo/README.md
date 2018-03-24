@@ -26,7 +26,7 @@ Plugin could be easy extend to show another data source.
 ---
 ###The RUIAN module
 
- * Shows data about building, addresses, streets,  parcels and cadastral area from Czech RUIAN registry (http://wiki.openstreetmap.org/wiki/RUIAN)
+ * Shows data about building, addresses, streets,  parcels and cadastral area from Czech RUIAN registry (https://wiki.openstreetmap.org/wiki/RUIAN)
 
  * Additional actions are available :
     * [![](https://raw.githubusercontent.com/mkyral/josm-pointInfo/master/images/dialogs/open-external-link.png)] Open external site

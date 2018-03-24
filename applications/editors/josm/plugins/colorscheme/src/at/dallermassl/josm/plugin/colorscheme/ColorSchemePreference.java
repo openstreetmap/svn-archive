@@ -101,7 +101,6 @@ public class ColorSchemePreference implements SubPreferenceSetting {
         });
         schemesList.setVisibleRowCount(3);
 
-        //schemesList.setToolTipText(tr("The sources (url or filename) of annotation preset definition files. See http://josm.eigenheimstrasse.de/wiki/AnnotationPresets for help."));
         useScheme.setToolTipText(tr("Use the selected scheme from the list."));
         addScheme.setToolTipText(tr("Use the current colors as a new color scheme."));
         deleteScheme.setToolTipText(tr("Delete the selected scheme from the list."));

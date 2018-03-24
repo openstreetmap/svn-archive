@@ -3,7 +3,7 @@ README
 
 This plugin shows the elevation profile of a GPX track.
 
-For detailed instructions please refer to http://wiki.openstreetmap.org/wiki/JOSM/Plugins/ElevationProfile.
+For detailed instructions please refer to https://wiki.openstreetmap.org/wiki/JOSM/Plugins/ElevationProfile.
 
 SRTM data in test/data is downloaded from http://dds.cr.usgs.gov/srtm/version2_1/SRTM3/Eurasia/
 

@@ -66,7 +66,7 @@ There are two versions maintained with each plugin:
  Making your plugin available to JOSM users
  ===========================================
  When a plugin jar is checked into SVN a script updates the plugins list on the JOSM wiki:
-   http://josm.openstreetmap.de/wiki/Plugins
+   https://josm.openstreetmap.de/wiki/Plugins
  JOSM retrieves the list of available plugins and their build versions from this list.
 
             commit      publish               read
@@ -83,10 +83,10 @@ There are two versions maintained with each plugin:
 See also
 ========
 * Developing Plugins 
-  http://josm.openstreetmap.de/wiki/DevelopersGuide/DevelopingPlugins
+  https://josm.openstreetmap.de/wiki/DevelopersGuide/DevelopingPlugins
   
 * List of JOSM Plugins
-  http://josm.openstreetmap.de/wiki/Plugins
+  https://josm.openstreetmap.de/wiki/Plugins
   
   
  

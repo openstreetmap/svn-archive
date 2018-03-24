@@ -331,7 +331,7 @@ public class OffsetDialog extends JDialog implements ActionListener, ZoomChangeL
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            String base = Main.pref.get("url.openstreetmap-wiki", "http://wiki.openstreetmap.org/wiki/");
+            String base = Main.pref.get("url.openstreetmap-wiki", "https://wiki.openstreetmap.org/wiki/");
             String lang = LanguageInfo.getWikiLanguagePrefix();
             String page = "Imagery_Offset_Database";
             try {

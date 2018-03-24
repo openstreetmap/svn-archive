@@ -16,7 +16,7 @@ public interface ToulouseConstants extends FrenchConstants {
     /**
      * Wiki
      */
-    public static final String WIKI = "http://wiki.openstreetmap.org/wiki/Toulouse/ToulouseMetropoleData";
+    public static final String WIKI = "https://wiki.openstreetmap.org/wiki/Toulouse/ToulouseMetropoleData";
 
     /**
      * Portal

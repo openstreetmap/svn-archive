@@ -7,7 +7,7 @@ import org.openstreetmap.josm.data.osm.RelationMember;
 
 /**
  * @author freeExec
- * @see http://wiki.openstreetmap.org/wiki/Key:public_transport
+ * @see https://wiki.openstreetmap.org/wiki/Key:public_transport
  */
 public final class PublicTransportHelper {
 

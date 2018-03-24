@@ -4,7 +4,7 @@ README
 How to install it and run it (On MacOS X and possibly *nix systems)
 
 
-*Download and install JOSM from http://josm.openstreetmap.de/
+*Download and install JOSM from https://josm.openstreetmap.de/
 *svn co http://svn.telenav.com/map/JavaProjects/OSMInspectorPlugin/trunk/ OSMInspectorPlugin
 *cd OsmInspectorPlugin
 *ant install

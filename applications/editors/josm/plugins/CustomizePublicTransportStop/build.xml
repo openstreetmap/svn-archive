@@ -84,7 +84,7 @@
                 <attribute name="Plugin-Date" value="${plugin.build.date}" />
                 <attribute name="Plugin-Description" value="Customization of public public transport stops." />
                 <attribute name="Plugin-Icon" value="images/bus.png"/>
-                <attribute name="Plugin-Link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/CustomizePublicTransportStop" />
+                <attribute name="Plugin-Link" value="https://wiki.openstreetmap.org/wiki/JOSM/Plugins/CustomizePublicTransportStop" />
                 <attribute name="Plugin-Mainversion" value="${josm.required.version}" />
                 <attribute name="Plugin-Version" value="0.4" />	
                 <attribute name="ru_Plugin-Description" value="Настройка остановки общественного транспорта в соответствии со стандартом" />

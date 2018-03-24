@@ -815,7 +815,7 @@ class RoadSignInputDialog extends ExtendedDialog {
             }
 
             if (sign.wiki != null || sign.loc_wiki != null) {
-                String wikiPrefix = Main.pref.get("plugin.roadsigns.wikiprefix", "http://wiki.openstreetmap.org/wiki/");
+                String wikiPrefix = Main.pref.get("plugin.roadsigns.wikiprefix", "https://wiki.openstreetmap.org/wiki/");
                 txt.append("<p>");
                 if (sign.loc_wiki != null) {
                     String link = wikiPrefix+sign.loc_wiki;

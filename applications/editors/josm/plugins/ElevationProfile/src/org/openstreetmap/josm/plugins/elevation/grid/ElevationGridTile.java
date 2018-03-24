@@ -120,7 +120,7 @@ public class ElevationGridTile extends Tile {
     }
 
     /**
-     * See also <a href="http://wiki.openstreetmap.org/wiki/Slippy_map_tilenames#Tile_bounding_box">OSM Wiki</a>
+     * See also <a href="https://wiki.openstreetmap.org/wiki/Slippy_map_tilenames#Tile_bounding_box">OSM Wiki</a>
      * @param x the x
      * @param y the y
      * @param zoom the zoom

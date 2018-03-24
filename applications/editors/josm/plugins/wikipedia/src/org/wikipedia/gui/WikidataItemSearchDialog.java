@@ -80,7 +80,7 @@ public final class WikidataItemSearchDialog extends ExtendedDialog {
             return;
         }
         final Collection<AutoCompletionItem> keys = new TreeSet<>();
-        // from http://wiki.openstreetmap.org/wiki/Proposed_features/Wikidata#Tagging
+        // from https://wiki.openstreetmap.org/wiki/Proposed_features/Wikidata#Tagging
         keys.add(new AutoCompletionItem("wikidata"));
         keys.add(new AutoCompletionItem("operator:wikidata"));
         keys.add(new AutoCompletionItem("brand:wikidata"));

@@ -234,7 +234,7 @@
     <tag k='name' v='Donnerstraße' />
     <tag k='note' v='Großbaustelle L 433. Quelle: http://velbert.de/aktuelles/presse/pressemeldungen/default.asp?details=1&amp;Id=9146' />
     <tag k='ref' v='L 433' />
-    <tag k='source' v='http://wiki.openstreetmap.org/wiki/Import/Catalogue/Strassen_NRW' />
+    <tag k='source' v='https://wiki.openstreetmap.org/wiki/Import/Catalogue/Strassen_NRW' />
     <tag k='surface' v='asphalt' />
     <tag k='turn:lanes:backward' v='left|through;right' />
   </way>
@@ -248,7 +248,7 @@
     <tag k='name' v='Hauptstraße' />
     <tag k='ref' v='L 107' />
     <tag k='sidewalk' v='both' />
-    <tag k='source' v='http://wiki.openstreetmap.org/wiki/Import/Catalogue/Strassen_NRW' />
+    <tag k='source' v='https://wiki.openstreetmap.org/wiki/Import/Catalogue/Strassen_NRW' />
     <tag k='strassen-nrw:abs' v='4608038O4608035O' />
     <tag k='surface' v='asphalt' />
   </way>
@@ -321,7 +321,7 @@
     <tag k='name' v='Hauptstraße' />
     <tag k='ref' v='L 107' />
     <tag k='sidewalk' v='both' />
-    <tag k='source' v='http://wiki.openstreetmap.org/wiki/Import/Catalogue/Strassen_NRW' />
+    <tag k='source' v='https://wiki.openstreetmap.org/wiki/Import/Catalogue/Strassen_NRW' />
     <tag k='strassen-nrw:abs' v='4608035O4608044O' />
     <tag k='surface' v='asphalt' />
   </way>
@@ -346,7 +346,7 @@
     <tag k='name' v='Hauptstraße' />
     <tag k='ref' v='L 107' />
     <tag k='sidewalk' v='both' />
-    <tag k='source' v='http://wiki.openstreetmap.org/wiki/Import/Catalogue/Strassen_NRW' />
+    <tag k='source' v='https://wiki.openstreetmap.org/wiki/Import/Catalogue/Strassen_NRW' />
     <tag k='strassen-nrw:abs' v='4608035O4608044O' />
     <tag k='surface' v='asphalt' />
   </way>
@@ -406,7 +406,7 @@
     <tag k='maxweight' v='3.5' />
     <tag k='name' v='Donnerstraße' />
     <tag k='ref' v='L 433' />
-    <tag k='source' v='http://wiki.openstreetmap.org/wiki/Import/Catalogue/Strassen_NRW' />
+    <tag k='source' v='https://wiki.openstreetmap.org/wiki/Import/Catalogue/Strassen_NRW' />
   </way>
   <way id='41965630' timestamp='2015-01-14T12:16:24Z' uid='16314' user='mighty_eighty' visible='true' version='6' changeset='28133035'>
     <nd ref='264127669' />
@@ -501,7 +501,7 @@
     <tag k='name' v='Hauptstraße' />
     <tag k='ref' v='L 107' />
     <tag k='sidewalk' v='both' />
-    <tag k='source' v='http://wiki.openstreetmap.org/wiki/Import/Catalogue/Strassen_NRW' />
+    <tag k='source' v='https://wiki.openstreetmap.org/wiki/Import/Catalogue/Strassen_NRW' />
     <tag k='strassen-nrw:abs' v='4608038O4608035O' />
     <tag k='surface' v='asphalt' />
     <tag k='turn:lanes:forward' v='left|through' />
@@ -520,7 +520,7 @@
     <tag k='name' v='Hauptstraße' />
     <tag k='ref' v='L 107' />
     <tag k='sidewalk' v='both' />
-    <tag k='source' v='http://wiki.openstreetmap.org/wiki/Import/Catalogue/Strassen_NRW' />
+    <tag k='source' v='https://wiki.openstreetmap.org/wiki/Import/Catalogue/Strassen_NRW' />
     <tag k='strassen-nrw:abs' v='4608038O4608035O' />
     <tag k='surface' v='asphalt' />
   </way>
@@ -534,7 +534,7 @@
     <tag k='name' v='Hauptstraße' />
     <tag k='ref' v='L 107' />
     <tag k='sidewalk' v='both' />
-    <tag k='source' v='http://wiki.openstreetmap.org/wiki/Import/Catalogue/Strassen_NRW' />
+    <tag k='source' v='https://wiki.openstreetmap.org/wiki/Import/Catalogue/Strassen_NRW' />
     <tag k='strassen-nrw:abs' v='4608035O4608044O' />
     <tag k='surface' v='asphalt' />
   </way>
@@ -561,7 +561,7 @@
     <tag k='name' v='Donnerstraße' />
     <tag k='note' v='Großbaustelle L 433. Quelle: http://velbert.de/aktuelles/presse/pressemeldungen/default.asp?details=1&amp;Id=9146' />
     <tag k='ref' v='L 433' />
-    <tag k='source' v='http://wiki.openstreetmap.org/wiki/Import/Catalogue/Strassen_NRW' />
+    <tag k='source' v='https://wiki.openstreetmap.org/wiki/Import/Catalogue/Strassen_NRW' />
   </way>
   <way id='302370902' timestamp='2015-12-02T19:25:27Z' uid='16314' user='mighty_eighty' visible='true' version='3' changeset='35712982'>
     <nd ref='1081928586' />
@@ -575,7 +575,7 @@
     <tag k='maxweight' v='3.5' />
     <tag k='name' v='Donnerstraße' />
     <tag k='ref' v='L 433' />
-    <tag k='source' v='http://wiki.openstreetmap.org/wiki/Import/Catalogue/Strassen_NRW' />
+    <tag k='source' v='https://wiki.openstreetmap.org/wiki/Import/Catalogue/Strassen_NRW' />
     <tag k='turn:lanes:forward' v='left|none' />
   </way>
   <way id='324748770' timestamp='2015-01-30T08:20:43Z' uid='105462' user='Weide' visible='true' version='2' changeset='28500192'>

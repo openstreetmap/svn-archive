@@ -9,6 +9,6 @@ Readme for JOSM PBF plugin
     
 This plugin allows to import OSM data in PBF format.
 
-See http://wiki.openstreetmap.org/wiki/PBF
+See https://wiki.openstreetmap.org/wiki/PBF
 
 The source code in package crosby.binary has been copied from https://github.com/scrosby/OSM-binary.

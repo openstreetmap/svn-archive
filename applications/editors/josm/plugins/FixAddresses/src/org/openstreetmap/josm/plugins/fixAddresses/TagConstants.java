@@ -129,7 +129,7 @@ public final class TagConstants {
 
     /* Relation keys */
 
-    // Associated street: See http://wiki.openstreetmap.org/wiki/Proposed_features/De:Hausnummern
+    // Associated street: See https://wiki.openstreetmap.org/wiki/Proposed_features/De:Hausnummern
     public static final String RELATION_TYPE = "type";
     public static final String ASSOCIATEDSTREET_RELATION_TYPE = "associatedStreet";
     public static final String STREET_RELATION_ROLE = "street";

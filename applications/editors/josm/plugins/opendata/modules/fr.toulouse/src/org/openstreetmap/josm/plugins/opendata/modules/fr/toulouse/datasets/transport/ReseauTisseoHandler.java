@@ -42,7 +42,7 @@ public class ReseauTisseoHandler extends ToulouseDataSetHandler {
     @Override
     public URL getWikiURL() {
         try {
-            return new URL("http://wiki.openstreetmap.org/wiki/Toulouse/Transports_en_commun#Réseau_Tisséo");
+            return new URL("https://wiki.openstreetmap.org/wiki/Toulouse/Transports_en_commun#Réseau_Tisséo");
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }

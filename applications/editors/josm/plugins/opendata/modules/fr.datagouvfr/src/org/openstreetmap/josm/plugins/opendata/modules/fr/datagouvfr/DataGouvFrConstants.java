@@ -8,7 +8,7 @@ public interface DataGouvFrConstants extends FrenchConstants {
     /**
      * Wiki
      */
-    public static final String WIKI = "http://wiki.openstreetmap.org/wiki/WikiProject_France/data.gouv.fr";
+    public static final String WIKI = "https://wiki.openstreetmap.org/wiki/WikiProject_France/data.gouv.fr";
 
     /**
      * Source

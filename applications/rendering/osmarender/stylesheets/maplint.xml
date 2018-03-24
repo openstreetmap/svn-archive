@@ -2,7 +2,7 @@
 <?xml-stylesheet type="text/xsl" href="osmarender.xsl"?>
 
 <!-- This file should be used with Osmarender 4 -->
-<!-- This rule file is for use with Maplint. See http://wiki.openstreetmap.org/index.php/Maplint for details -->
+<!-- This rule file is for use with Maplint. See https://wiki.openstreetmap.org/index.php/Maplint for details -->
 
 <!-- A scale of 0.1 will make fat roads on a small map, a scale of 5 will draw very thin roads on a large scale map -->
 <!-- minimumMapWidth/Height is in kilometres -->

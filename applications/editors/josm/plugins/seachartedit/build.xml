@@ -12,7 +12,7 @@
     <property name="plugin.class" value="scedit.SCedit"/>
     <property name="plugin.description" value="Edit features for Sea Charts"/>
     <property name="plugin.icon" value="images/SC.png"/>
-    <property name="plugin.link" value="http://openseamap.org/"/>
+    <property name="plugin.link" value="https://openseamap.org/"/>
     <property name="plugin.requires" value="seachart"/>
 
     <property name="josm" location="../../core/dist/josm-custom.jar"/>

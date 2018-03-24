@@ -13,7 +13,7 @@
     <property name="plugin.class" value="irsrectify.IRSRectifyPlugin"/>
     <property name="plugin.description" value="A helper for IRS satellite adjustment."/>
     <property name="plugin.icon" value="images/irsrectify.png"/>
-    <property name="plugin.link" value="http://forum.openstreetmap.org/viewtopic.php?id=6817"/>
+    <property name="plugin.link" value="https://forum.openstreetmap.org/viewtopic.php?id=6817"/>
     <!--<property name="plugin.early" value="..."/>-->
     <!--<property name="plugin.requires" value="..."/>-->
     <!--<property name="plugin.stage" value="..."/>-->

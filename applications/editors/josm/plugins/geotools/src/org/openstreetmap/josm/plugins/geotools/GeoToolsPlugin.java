@@ -49,7 +49,7 @@ public class GeoToolsPlugin extends Plugin {
 
         // As the JAI jars are bundled in the geotools plugin, JAI initialization does not work,
         // so we need to perform the tasks described here ("Initialization and automatic loading of registry objects"):
-        // http://docs.oracle.com/cd/E17802_01/products/products/java-media/jai/forDevelopers/jai-apidocs/javax/media/jai/OperationRegistry.html
+        // https://docs.oracle.com//cd/E17802_01/products/products/java-media/jai/forDevelopers/jai-apidocs/javax/media/jai/OperationRegistry.html
         OperationRegistry registry = JAI.getDefaultInstance().getOperationRegistry();
         if (registry == null) {
             Logging.error("geotools: error in JAI initialization. Cannot access default operation registry");

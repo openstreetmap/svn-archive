@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<project default="all" name="Compile and build java classes plus jar archives">
+<project default="all" name="jmapviewer" xmlns:if="ant:if" xmlns:unless="ant:unless">
+
+	<property name="java.lang.version" value="1.8" />
+	<!-- For Java9-specific stuff -->
+	<condition property="isJava9">
+		<matches string="${ant.java.version}" pattern="(1.)?(9|1[0-9])" />
+	</condition>
 
 	<target name="all" depends="clean,build,svn_info,pack,create_run_jar,spotbugs,checkstyle,javadoc,create_release_zip,create_source_release_zip" />
 
@@ -14,7 +20,7 @@
 	</target>
 
 	<target name="build">
-		<javac srcdir="src" destdir="bin" source="1.8" target="1.8" debug="true" includeantruntime="false" encoding="UTF-8">
+		<javac srcdir="src" destdir="bin" source="${java.lang.version}" target="${java.lang.version}" debug="true" includeantruntime="false" encoding="UTF-8">
 			<include name="org/openstreetmap/gui/jmapviewer/**" />
 		</javac>
 
@@ -24,7 +30,7 @@
 			</fileset>
 		</copy>
 	</target>
-	
+
     <target name="svn_info" description="Get SVN info for use in JAR/ZIP filenames.">
         <!-- Get the svn ReleaseVersion property -->
         <exec executable="svn" outputproperty="svnReleaseVersion">
@@ -116,6 +122,7 @@
             <link href="http://docs.oracle.com/javase/8/docs/api"/>
             <doctitle><![CDATA[<h2>JMapViewer - Javadoc</h2>]]></doctitle>
             <bottom><![CDATA[<a href="https://josm.openstreetmap.de/">JMapViewer</a>]]></bottom>
+            <arg value="-html5" if:set="isJava9" />
         </javadoc>
     </target>
 

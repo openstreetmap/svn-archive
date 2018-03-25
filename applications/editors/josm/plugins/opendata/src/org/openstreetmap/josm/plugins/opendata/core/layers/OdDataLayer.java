@@ -33,7 +33,6 @@ import org.openstreetmap.josm.tools.ImageProvider;
 
 public class OdDataLayer extends OsmDataLayer implements OdLayer, LayerChangeListener, ActiveLayerChangeListener {
 
-    public OdDiffLayer diffLayer;
     public OdOsmDataLayer osmLayer;
 
     public final AbstractDataSetHandler handler;
@@ -74,19 +73,6 @@ public class OdDataLayer extends OsmDataLayer implements OdLayer, LayerChangeLis
         }
     }
 
-    public void addDiffLayer(OdDiffLayer layer) {
-        removeDiffLayer();
-        diffLayer = layer;
-        MainApplication.getLayerManager().addLayer(diffLayer);
-    }
-
-    public void removeDiffLayer() {
-        if (diffLayer != null) {
-            MainApplication.getLayerManager().removeLayer(diffLayer);
-            diffLayer = null;
-        }
-    }
-
     public final void downloadOsmData() {
         if (handler != null) {
             String oapiReq = handler.getOverpassApiRequest(bounds);
@@ -122,11 +108,8 @@ public class OdDataLayer extends OsmDataLayer implements OdLayer, LayerChangeLis
     public void layerRemoving(LayerRemoveEvent e) {
         if (e.getRemovedLayer() == this) {
             removeOsmLayer();
-            removeDiffLayer();
         } else if (e.getRemovedLayer() == osmLayer) {
             osmLayer = null;
-        } else if (e.getRemovedLayer() == diffLayer) {
-            diffLayer = null;
         }
     }
 
@@ -178,11 +161,5 @@ public class OdDataLayer extends OsmDataLayer implements OdLayer, LayerChangeLis
     @Override
     public OdDataLayer getDataLayer() {
         return this;
-    }
-
-    public void makeDiff() {
-        final OdDiffLayer layer = new OdDiffLayer(this, getName()+"/Diff");
-        addDiffLayer(layer);
-        MainApplication.getLayerManager().setActiveLayer(diffLayer);
     }
 }

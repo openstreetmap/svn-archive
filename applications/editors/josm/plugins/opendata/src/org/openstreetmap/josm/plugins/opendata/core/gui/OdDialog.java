@@ -75,9 +75,7 @@ public class OdDialog extends ToggleDialog implements ActiveLayerChangeListener 
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            if (MainApplication.getLayerManager().getEditLayer() instanceof OdLayer) {
-                dataLayer.makeDiff();
-            }
+            // TODO
         }
     }
 
@@ -145,8 +143,6 @@ public class OdDialog extends ToggleDialog implements ActiveLayerChangeListener 
         if (dataLayer != null) {
             if (dataLayer.osmLayer == null) {
                 downloadButton.setEnabled(true);
-            } else if (dataLayer.diffLayer == null) {
-                diffButton.setEnabled(true);
             }
             toolsButton.setEnabled(dataLayer.handler != null && !dataLayer.handler.getTools().isEmpty());
         } else {

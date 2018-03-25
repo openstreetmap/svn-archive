@@ -19,7 +19,7 @@ import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.data.osm.Way;
-import org.openstreetmap.josm.data.osm.DataSet.UploadPolicy;
+import org.openstreetmap.josm.data.osm.UploadPolicy;
 import org.openstreetmap.josm.gui.io.importexport.OsmImporter;
 import org.openstreetmap.josm.gui.progress.NullProgressMonitor;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;

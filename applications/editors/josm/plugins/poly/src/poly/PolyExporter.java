@@ -38,7 +38,7 @@ public class PolyExporter extends OsmExporter {
     public void exportData(File file, Layer layer) throws IOException {
         if (layer instanceof OsmDataLayer) {
             try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), "UTF8"))) {
-                DataSet ds = ((OsmDataLayer) layer).data;
+                DataSet ds = ((OsmDataLayer) layer).getDataSet();
                 Map<Way, Boolean> ways = new TreeMap<>();
                 String polygonName = file.getName();
                 if (polygonName.indexOf('.') > 0)

@@ -167,13 +167,13 @@ public class SCeditAction extends JosmAction implements ActiveLayerChangeListene
 
     @Override
     public void activeOrEditLayerChanged(ActiveLayerChangeEvent e) {
-        if (e.getPreviousEditLayer() != null) {
-            e.getPreviousEditLayer().data.removeDataSetListener(dataSetListener);
+        if (e.getPreviousDataLayer() != null) {
+            e.getPreviousDataLayer().getDataSet().removeDataSetListener(dataSetListener);
         }
         OsmDataLayer newLayer = getLayerManager().getEditLayer();
         if (newLayer != null) {
-            newLayer.data.addDataSetListener(dataSetListener);
-            data = newLayer.data;
+            newLayer.getDataSet().addDataSetListener(dataSetListener);
+            data = newLayer.getDataSet();
             makeMap();
         } else {
             data = null;

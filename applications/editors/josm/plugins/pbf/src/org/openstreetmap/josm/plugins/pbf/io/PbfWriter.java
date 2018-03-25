@@ -506,7 +506,7 @@ public class PbfWriter implements Closeable {
      * @param layer data layer
      */
     public void writeLayer(OsmDataLayer layer) {
-        writeData(layer.data);
+        writeData(layer.getDataSet());
     }
 
     /**

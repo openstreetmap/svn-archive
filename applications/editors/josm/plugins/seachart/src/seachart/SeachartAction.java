@@ -6,7 +6,6 @@ import java.util.Map.Entry;
 
 import javax.swing.SwingUtilities;
 
-import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.coor.LatLon;
@@ -26,6 +25,7 @@ import org.openstreetmap.josm.data.osm.event.PrimitivesRemovedEvent;
 import org.openstreetmap.josm.data.osm.event.RelationMembersChangedEvent;
 import org.openstreetmap.josm.data.osm.event.TagsChangedEvent;
 import org.openstreetmap.josm.data.osm.event.WayNodesChangedEvent;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.layer.LayerManager.LayerAddEvent;
 import org.openstreetmap.josm.gui.layer.LayerManager.LayerChangeListener;
 import org.openstreetmap.josm.gui.layer.LayerManager.LayerOrderChangeEvent;
@@ -144,14 +144,14 @@ public class SeachartAction extends JosmAction implements ActiveLayerChangeListe
 
     @Override
     public void activeOrEditLayerChanged(ActiveLayerChangeEvent e) {
-        OsmDataLayer oldLayer = e.getPreviousEditLayer();
+        OsmDataLayer oldLayer = e.getPreviousDataLayer();
         if (oldLayer != null) {
-            oldLayer.data.removeDataSetListener(dataSetListener);
+            oldLayer.getDataSet().removeDataSetListener(dataSetListener);
         }
         OsmDataLayer newLayer = MainApplication.getLayerManager().getEditLayer();
         if (newLayer != null) {
-            newLayer.data.addDataSetListener(dataSetListener);
-            data = newLayer.data;
+            newLayer.getDataSet().addDataSetListener(dataSetListener);
+            data = newLayer.getDataSet();
             makeChart();
         } else {
             data = null;

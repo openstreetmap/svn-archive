@@ -179,7 +179,7 @@ public class EventBusPlugin extends Plugin {
             layer.addInvalidationListener(paintableInvalidationListener);
             if (layer instanceof OsmDataLayer) {
                 ((OsmDataLayer) layer).addLayerStateChangeListener(layerStateChangeListener);
-                DataSet ds = ((OsmDataLayer) layer).data;
+                DataSet ds = ((OsmDataLayer) layer).getDataSet();
                 ds.addDataSetListener(dataSetListener);
                 ds.addHighlightUpdateListener(highlightUpdateListener);
                 ds.addSelectionListener(selectionListener);
@@ -207,7 +207,7 @@ public class EventBusPlugin extends Plugin {
             layer.removeInvalidationListener(paintableInvalidationListener);
             if (layer instanceof OsmDataLayer) {
                 ((OsmDataLayer) layer).removeLayerStateChangeListener(layerStateChangeListener);
-                DataSet ds = ((OsmDataLayer) layer).data;
+                DataSet ds = ((OsmDataLayer) layer).getDataSet();
                 ds.removeDataSetListener(dataSetListener);
                 ds.removeHighlightUpdateListener(highlightUpdateListener);
                 ds.removeSelectionListener(selectionListener);

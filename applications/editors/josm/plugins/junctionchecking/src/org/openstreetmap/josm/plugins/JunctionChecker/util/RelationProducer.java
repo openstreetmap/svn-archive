@@ -43,7 +43,7 @@ public class RelationProducer {
             }
         }
         MainApplication.getLayerManager().setActiveLayer(plugin.getOsmlayer());
-        plugin.getOsmlayer().data.setSelected(ways);
+        plugin.getOsmlayer().getDataSet().setSelected(ways);
 
         Relation jrelation = new Relation();
         jrelation.put("type", "junction");

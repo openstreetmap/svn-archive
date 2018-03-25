@@ -134,7 +134,7 @@ public class EdgeSelectionAction extends MapMode {
     @Override
     public void mouseClicked(MouseEvent e) {
 
-        DataSet ds = MainApplication.getLayerManager().getEditLayer().data;
+        DataSet ds = MainApplication.getLayerManager().getEditDataSet();
         Way initial = MainApplication.getMap().mapView.getNearestWay(e.getPoint(), OsmPrimitive::isUsable);
         if (initial != null) {
             List<Way> edge = getEdgeFromWay(initial, getModeOfTravel());

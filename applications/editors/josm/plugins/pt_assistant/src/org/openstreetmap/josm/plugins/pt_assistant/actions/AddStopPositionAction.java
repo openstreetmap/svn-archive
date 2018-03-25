@@ -138,7 +138,7 @@ public class AddStopPositionAction extends MapMode {
             newStopPos = n;
         }
 
-        MainApplication.getLayerManager().getEditLayer().data.setSelected(newStopPos);
+        MainApplication.getLayerManager().getEditDataSet().setSelected(newStopPos);
 
         //join the node to the way only if the node is new
         if (newNode) {

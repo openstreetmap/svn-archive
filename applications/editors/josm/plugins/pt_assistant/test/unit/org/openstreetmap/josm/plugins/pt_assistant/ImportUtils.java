@@ -32,7 +32,7 @@ public final class ImportUtils {
             InputStream in = new FileInputStream(file);
             OsmImporterData oid = importer.loadLayer(in, file, layerName, progressMonitor);
             OsmDataLayer layer = oid.getLayer();
-            return layer.data;
+            return layer.getDataSet();
 
         } catch (FileNotFoundException e) {
             // TODO Auto-generated catch block

@@ -215,7 +215,7 @@ public class CadastreDownloadSourcePanel extends AbstractDownloadSourcePanel<Cad
     }
 
     @Override
-    public void boudingBoxChanged(Bounds bbox) {
+    public void boundingBoxChanged(Bounds bbox) {
         updateSizeCheck(bbox);
     }
 

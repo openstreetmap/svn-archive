@@ -113,7 +113,7 @@ public class GpsRec
 
     /**
      * Shows wether this is a valid GPS record.
-     * @return true if GPS record is valid; otherwise false.
+     * @return <code>true</code> if GPS record is valid; otherwise <code>false</code>.
      */
     public boolean isValid()
     {
@@ -156,7 +156,8 @@ public class GpsRec
     }
 
     /**
-     * @return Returns the dg100Latitude.
+     * Get latitude value
+     * @return Returns the dg100Latitude value.
      */
     public int getDg100Latitude()
     {
@@ -254,8 +255,8 @@ public class GpsRec
 
     /**
      * Gets dg100Date and time as a String in given format.
-     * @param dateTimeFormat
-     * @return
+     * @param dateTimeFormat format string for date and time
+     * @return formated date and time
      */
     private String getStringDateTime(String dateTimeFormat)
     {
@@ -270,6 +271,7 @@ public class GpsRec
     }
 
     /**
+     * Get the altitude value
      * @return Returns the dg100Altitude.
      */
     public int getDg100Altitude()
@@ -278,7 +280,8 @@ public class GpsRec
     }
 
     /**
-     * @param dg100Altitude The dg100Altitude to set.
+     * Set the altitude value
+     * @param altitude The dg100Altitude to set.
      */
     private void setDg100Altitude(int altitude)
     {
@@ -286,6 +289,7 @@ public class GpsRec
     }
 
     /**
+     * Get date information
      * @return Returns the dg100Date.
      */
     public int getDg100Date()
@@ -294,7 +298,8 @@ public class GpsRec
     }
 
     /**
-     * @param dg100Date The dg100Date to set.
+     * Set date information
+     * @param date The dg100Date to set.
      */
     private void setDg100Date(int date)
     {
@@ -303,7 +308,7 @@ public class GpsRec
     }
 
     /**
-     * @return
+     * calculate date and time from individual components
      */
     private void calcDateTime()
     {
@@ -318,6 +323,7 @@ public class GpsRec
     }
 
     /**
+     * Get longitude value
      * @return Returns the dg100Longitude.
      */
     public int getDg100Longitude()
@@ -326,7 +332,8 @@ public class GpsRec
     }
 
     /**
-     * @param dg100Longitude The dg100Longitude to set.
+     * Set longitude value
+     * @param longitude The dg100Longitude to set.
      */
     private void setDg100Longitude(int longitude)
     {
@@ -334,6 +341,7 @@ public class GpsRec
     }
 
     /**
+     * Get speed value
      * @return Returns the dg100Speed.
      */
     public int getDg100Speed()
@@ -342,7 +350,8 @@ public class GpsRec
     }
 
     /**
-     * @param dg100Speed The dg100Speed to set.
+     * Set speed value
+     * @param speed The dg100Speed to set.
      */
     private void setDg100Speed(int speed)
     {
@@ -350,6 +359,7 @@ public class GpsRec
     }
 
     /**
+     * Get timezone value
      * @return Returns the dg100TimeZ.
      */
     public int getDg100TimeZ()
@@ -358,7 +368,8 @@ public class GpsRec
     }
 
     /**
-     * @param dg100TimeZ The dg100TimeZ to set.
+     * Set timezone value
+     * @param timeZ The dg100TimeZ to set.
      */
     private void setDg100TimeZ(int timeZ)
     {
@@ -367,7 +378,8 @@ public class GpsRec
     }
 
     /**
-     * @param dg100Latitude The dg100Latitude to set.
+     * Set latitude value
+     * @param latitude The dg100Latitude to set.
      */
     private void setDg100Latitude(int latitude)
     {

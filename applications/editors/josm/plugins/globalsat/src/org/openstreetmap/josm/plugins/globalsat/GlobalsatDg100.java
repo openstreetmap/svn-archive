@@ -132,8 +132,8 @@ public class GlobalsatDg100 {
     }
 
     /**
-     * Export DG-100's complete data to a GPX file.
-     * @param port DG-100 is connected to port.
+     * Import DG-100's complete data
+     * @param progressMonitor user progress interface 
      */
     public GpxData readData(ProgressMonitor progressMonitor) throws ConnectionException {
         progressMonitor.beginTask(null);

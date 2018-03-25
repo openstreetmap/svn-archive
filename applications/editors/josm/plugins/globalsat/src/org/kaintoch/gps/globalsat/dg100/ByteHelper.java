@@ -12,13 +12,13 @@ public class ByteHelper
 {
 
     /**
-     *
-     * @param src
-     * @param startS
-     * @param len
-     * @param dest
-     * @param startD
-     * @return
+     * Copy one byte array into another
+     * @param src the array to copy data from
+     * @param startS start index in source array
+     * @param len number of entries to copy
+     * @param dest the array to copy into
+     * @param startD start index in target array
+     * @return the index pointer behind the last target array copied
      */
     public static int copyByteArr2ByteArr(byte src[], int startS, int len, byte dest[], int startD)
     {
@@ -32,9 +32,9 @@ public class ByteHelper
     }
 
     /**
-     *
-     * @param byt
-     * @return
+     * Convert byte to unsigned integer
+     * @param byt byte value to convert
+     * @return unsigned integer
      */
     public static int byte2IntUnsigned(byte byt)
     {
@@ -42,8 +42,9 @@ public class ByteHelper
     }
 
     /**
-     *
-     * @param nibble
+     * Convert 4 bit into hexadecimal character
+     * @param nibble value to convert (only last 4 bit used)
+     * @return character in range of 0 to F
      */
     private static char nibble2Char(int nibble)
     {
@@ -72,8 +73,9 @@ public class ByteHelper
     }
 
     /**
-     *
-     * @return
+     * Convert byte to unsigned hexadecimal string
+     * @param byt byte value to convert
+     * @return 2 character string representing the last 8 bit
      */
     public static String byte2StringUnsigned(byte byt)
     {
@@ -86,8 +88,9 @@ public class ByteHelper
     }
 
     /**
-     *
-     * @param byt
+     * Convert byte array to unsigned hexadecimal string
+     * @param byt array of bytes to convert
+     * @return hexadecimal string representing the byte array
      */
     public static String byteArray2String(byte byt[])
     {
@@ -95,9 +98,10 @@ public class ByteHelper
     }
 
     /**
-     *
-     * @param byt
-     * @param cnt
+     * Convert byte array to unsigned hexadecimal string
+     * @param byt array of bytes to convert
+     * @param cnt number of entries to convert
+     * @return hexadecimal string representing the byte array
      */
     public static String byteArray2String(byte byt[], int cnt)
     {

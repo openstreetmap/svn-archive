@@ -67,7 +67,6 @@ public abstract class EdigeoLotFile<B extends ChildBlock> extends EdigeoFile {
      * <li>subset identifier</li>
      * <li>Descriptor type</li>
      * <li>Descriptor identifier</li></ol>
-     * @param klass descriptor class
      * @return found descriptor
      */
     public final B find(List<String> values) {

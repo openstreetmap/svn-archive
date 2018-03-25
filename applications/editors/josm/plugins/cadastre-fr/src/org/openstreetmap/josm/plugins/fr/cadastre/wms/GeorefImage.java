@@ -307,7 +307,6 @@ public class GeorefImage implements Serializable, ImageObserver, Cloneable {
     /**
      * Rotate this image and its min/max coordinates around anchor point
      * @param anchor anchor of rotation
-     * @param old_ang previous angle of image before rotation (0 the first time)(in radian)
      * @param delta_ang angle of rotation (in radian)
      */
     public void rotate(EastNorth anchor, double delta_ang) {

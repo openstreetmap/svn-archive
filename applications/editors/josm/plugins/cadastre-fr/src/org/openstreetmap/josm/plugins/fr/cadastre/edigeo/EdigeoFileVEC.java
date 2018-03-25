@@ -497,7 +497,6 @@ public class EdigeoFileVEC extends EdigeoLotFile<VecBlock<?>> {
 
     /**
      * Adds a data postprocessor based on a SYM_id specific value.
-     * @param consumer consumer that will update OSM primitive accordingly
      * @param symId value for "SYM_id" attribute.
      * @param keyValues OSM attribute key/values (int the form {@code foo=bar;bar=baz})
      */

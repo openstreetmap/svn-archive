@@ -117,9 +117,8 @@ public class CadastreInterface {
     }
 
     /**
-     *
-     * @return true if a cookie is delivered by WMS and false is WMS is not opening a client session
-     *         (too many clients or in maintenance)
+     * Returns if a cookie is delivered by WMS, throws exception if WMS is not opening a client session
+     * (too many clients or in maintenance)
      */
     private void getCookie() throws IOException {
         boolean success = false;

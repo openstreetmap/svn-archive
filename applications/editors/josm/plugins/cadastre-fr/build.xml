@@ -19,27 +19,10 @@
     <!-- ** include targets that all plugins have in common ** -->
     <import file="../build-common.xml"/>
 
-    <property name="jts" location="${plugin.dist.dir}/jts.jar"/>
-    <property name="geotools" location="${plugin.dist.dir}/geotools.jar"/>
-    <property name="apache-commons" location="${plugin.dist.dir}/apache-commons.jar"/>
-
-    <!--
-    **********************************************************
-    ** compile - compiles the source tree
-    **********************************************************
-    -->
-    <target name="compile" depends="init">
-        <echo message="compiling sources for ${plugin.jar} ... "/>
-        <javac srcdir="src" debug="true" destdir="${plugin.build.dir}" includeAntRuntime="false" encoding="UTF-8">
-            <classpath>
-                <pathelement path="${plugin.build.dir}"/>
-                <pathelement location="${josm}"/>
-                <pathelement location="${jts}"/>
-                <pathelement location="${geotools}"/>
-                <pathelement location="${apache-commons}"/>
-             </classpath>
-            <compilerarg value="-Xlint:deprecation"/>
-            <compilerarg value="-Xlint:unchecked"/>
-        </javac>
-    </target>
+	<fileset id="plugin.requires.jars" dir="${plugin.dist.dir}">
+        <include name="apache-commons.jar"/>
+        <include name="ejml.jar"/>
+        <include name="jts.jar"/>
+        <include name="geotools.jar"/>
+    </fileset>
 </project>

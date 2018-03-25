@@ -37,7 +37,7 @@ public class MenuActionSaveRasterAs extends JosmAction {
 
     private WMSLayer wmsLayer;
 
-    public class FiltrePng extends FileFilter {
+    public static class FiltrePng extends FileFilter {
         @Override
         public boolean accept(File file) {
             if (file.isDirectory()) {
@@ -52,7 +52,7 @@ public class MenuActionSaveRasterAs extends JosmAction {
         }
     }
 
-    public class FiltreTiff extends FileFilter {
+    public static class FiltreTiff extends FileFilter {
         @Override
         public boolean accept(File file) {
             if (file.isDirectory()) {

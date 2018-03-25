@@ -52,7 +52,7 @@ public class RasterImageModifier extends ImageModifier {
         int g = col.getGreen();
         int b = col.getBlue();
         if ((b == r) && (b == g)) {
-            pixel = (0x00 << 32) + ((byte) (255 - r) << 16) + ((byte) (255 - r) << 8) + ((byte) (255 - r));
+            pixel = (0x00 << 24) + ((byte) (255 - r) << 16) + ((byte) (255 - r) << 8) + ((byte) (255 - r));
         }
         return pixel;
     }

@@ -62,7 +62,7 @@ public abstract class EdigeoLotFile<B extends ChildBlock> extends EdigeoFile {
 
     /**
      * Finds a descriptor by its identifier.
-     * @param values 4 values obtained from a {@link EdigeoRecord}:<ol>
+     * @param values 4 values obtained from a {@code EdigeoRecord}:<ol>
      * <li>Lot identifier</li>
      * <li>subset identifier</li>
      * <li>Descriptor type</li>
@@ -76,7 +76,7 @@ public abstract class EdigeoLotFile<B extends ChildBlock> extends EdigeoFile {
 
     /**
      * Finds a descriptor by its identifier.
-     * @param values 4 values obtained from a {@link EdigeoRecord}:<ol>
+     * @param values 4 values obtained from a {@code EdigeoRecord}:<ol>
      * <li>Lot identifier</li>
      * <li>subset identifier</li>
      * <li>Descriptor type</li>

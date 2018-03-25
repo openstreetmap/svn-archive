@@ -142,7 +142,7 @@ public class WMSLayer extends Layer implements ImageObserver {
     }
 
     @Override
-    public void destroy() {
+    public synchronized void destroy() {
         // if the layer is currently saving the images in the cache, wait until it's finished
         if (grabThread != null)
                 grabThread.cancel();

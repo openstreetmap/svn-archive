@@ -481,9 +481,10 @@ public class CadastrePlugin extends Plugin {
     }
 
     /**
-     * Adds the WMSLayer following this rule:<br/>
-     * - if a WMSLayer exists place this new layer just before this layer<br/>
-     * - Otherwise place it at the bottom
+     * Adds the WMSLayer following this rule:<ul>
+     * <li>if a WMSLayer exists place this new layer just before this layer</li>
+     * <li>Otherwise place it at the bottom</li>
+     * </ul>
      * @param wmsLayer the wmsLayer to add
      */
     public static void addWMSLayer(WMSLayer wmsLayer) {

@@ -22,8 +22,8 @@ import org.apache.commons.compress.utils.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.WordUtils;
 import org.openstreetmap.josm.data.osm.DataSet;
-import org.openstreetmap.josm.data.osm.UploadPolicy;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.data.osm.UploadPolicy;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.io.AbstractReader;
@@ -256,7 +256,7 @@ public class EdigeoPciReader extends AbstractReader {
                         File file = tmpDir.resolve(entry.getName()).toFile();
                         try (FileOutputStream out = new FileOutputStream(file)) {
                             if (IOUtils.copy(tar, out) < entry.getSize()) {
-                                throw new IOException(String.format("Unable to write ''{0}'' entirely", file));
+                                throw new IOException(String.format("Unable to write ''%s'' entirely", file));
                             } else if (file.toString().endsWith(".THF")) {
                                 thfPath = file.toPath();
                             }

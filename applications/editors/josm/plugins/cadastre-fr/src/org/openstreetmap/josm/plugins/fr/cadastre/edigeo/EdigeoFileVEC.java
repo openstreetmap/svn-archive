@@ -185,7 +185,7 @@ public class EdigeoFileVEC extends EdigeoLotFile<VecBlock<?>> {
             INITIAL_OR_FINAL(1),
             ISOLATED(2);
 
-            int code;
+            final int code;
             NodeType(int code) {
                 this.code = code;
             }

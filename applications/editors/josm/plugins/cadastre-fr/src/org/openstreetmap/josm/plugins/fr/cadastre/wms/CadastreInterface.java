@@ -266,12 +266,12 @@ public class CadastreInterface {
      * for the next releases.
      * Two possibilities :
      * - either the commune name matches and we receive an URL starting with "afficherCarteCommune.do" or
-     * - we don't receive a single answer but a list of possible values. This answer looks like:
-     *   <select name="codeCommune" class="long erreur" id="codeCommune">
+     * - we don't receive a single answer but a list of possible values. This answer looks like:<pre>{@code
+     * <select name="codeCommune" class="long erreur" id="codeCommune">
      *   <option value="">Choisir</option>
      *   <option value="50061" >COLMARS - 04370</option>
      *   <option value="QK066" >COLMAR - 68000</option>
-     *   </select>
+     * </select>}</pre>
      * The returned string is the interface name used in further requests, e.g. "afficherCarteCommune.do?c=QP224"
      * where QP224 is the code commune known by the WMS (or "afficherCarteTa.do?c=..." for raster images).
      *

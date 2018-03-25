@@ -133,6 +133,7 @@ public class UploadDataGui extends ExtendedDialog {
             visibilityCombo.addItem(v.description);
         }
         visibilityCombo.setSelectedItem(visibility.valueOf(Main.pref.get("directupload.visibility.last-used", visibility.PRIVATE.name())).description);
+        /* I18n: either copy the link verbose or replace it by the translated version from the wiki for already translated languages */
         UrlLabel visiUrl = new UrlLabel(tr("https://wiki.openstreetmap.org/wiki/Visibility_of_GPS_traces"), tr("(What does that mean?)"), 2);
 
         // description

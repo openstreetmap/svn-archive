@@ -22,7 +22,7 @@ public class IndoorSweeplineModel {
     }
 
     public IndoorSweeplineModel(OsmDataLayer activeLayer, LatLon center) {
-        target = new ModelGeography(activeLayer.data, center);
+        target = new ModelGeography(activeLayer.getDataSet(), center);
 
         beams = new Vector<>();
         strips = new Vector<>();

@@ -73,7 +73,8 @@ public class StoreImageryOffsetAction extends JosmAction {
             Collection<OsmPrimitive> selectedObjects = getLayerManager().getEditDataSet().getSelected();
             if (selectedObjects.size() == 1) {
                 OsmPrimitive selection = selectedObjects.iterator().next();
-                if ((selection instanceof Node || selection instanceof Way) && !selection.isIncomplete() && !selection.isReferredByWays(1)) {
+                if (!selection.isIncomplete() && (selection instanceof Way ||
+                        (selection instanceof Node && !((Node) selection).isReferredByWays(1)))) {
                     String[] options = new String[] {tr("Store calibration geometry"), tr("Store imagery offset")};
                     int result = JOptionPane.showOptionDialog(Main.parent,
                             tr("The selected object can be used as a calibration geometry. What do you intend to do?"),

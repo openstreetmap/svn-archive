@@ -13,7 +13,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.DataSource;
 import org.openstreetmap.josm.data.coor.LatLon;
@@ -209,7 +208,6 @@ public class O5mReader extends AbstractReader {
         
         /**
          * read the bounding box data set
-         * @throws IOException in case of I/O error
          */
         private void readBBox() {
             double minlon = FACTOR * 100L * readSignedNum32();
@@ -472,6 +470,7 @@ public class O5mReader extends AbstractReader {
         /**
          * read object type ("0".."2") concatenated with role (single string) 
          * @return 0..3 for type (3 means unknown)
+         * @throws IOException in case of I/O error
          */
         private int readRelRef() throws IOException {
             int refType = -1;
@@ -565,7 +564,6 @@ public class O5mReader extends AbstractReader {
         /**
          * read a varying length signed number (see o5m definition)
          * @return the number
-         * @throws IOException in case of I/O error
          */
         private int readSignedNum32() {
             int result;
@@ -596,7 +594,6 @@ public class O5mReader extends AbstractReader {
         /**
          * read a varying length signed number (see o5m definition)
          * @return the number
-         * @throws IOException in case of I/O error
          */
         private long readSignedNum64() {
             long result;
@@ -652,7 +649,6 @@ public class O5mReader extends AbstractReader {
         /**
          * read a varying length unsigned number (see o5m definition)
          * @return a long
-         * @throws IOException in case of I/O error
          */
         private long readUnsignedNum64() {
             int b = ioBuf[ioPos++];
@@ -677,7 +673,6 @@ public class O5mReader extends AbstractReader {
          * read a varying length unsigned number (see o5m definition)
          * is similar to the 64 bit version.
          * @return an int 
-         * @throws IOException in case of I/O error
          */
         private int readUnsignedNum32() {
             int b = ioBuf[ioPos++];
@@ -704,7 +699,7 @@ public class O5mReader extends AbstractReader {
      * Parse the given input source and return the dataset.
      *
      * @param source the source input stream. Must not be null.
-     * @param progressMonitor  the progress monitor. If null, {@see NullProgressMonitor#INSTANCE} is assumed
+     * @param progressMonitor  the progress monitor. If null, {@link NullProgressMonitor#INSTANCE} is assumed
      *
      * @return the dataset with the parsed data
      * @throws IllegalDataException thrown if the an error was found while parsing the data from the source

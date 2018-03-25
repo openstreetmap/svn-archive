@@ -1,116 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="josm-CustomizePublicTransportStop-plugin" default="dist" basedir=".">
+<project name="CustomizePublicTransportStop" default="dist" basedir=".">
 
-    <property name="ant.build.javac.target" value="1.8"/>
-    <property name="ant.build.javac.source" value="1.8"/>
+    <!-- enter the SVN commit message -->
+    <property name="commit.message" value="Commit message"/>
+    <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
+    <property name="plugin.main.version" value="12840"/>
 
-    <property name="plugin.build.dir" value="build" />
-    <property name="plugin.src.dir" value="src" />
-    <property name="plugin.dist.dir" value="../../dist" />
-    <property name="plugin.jar" value="${plugin.dist.dir}/CustomizePublicTransportStop.jar" />
-    <property name="josm" location="../../core/dist/josm-custom.jar"/>
-	
-    <target name="init">
-        <available file="build.properties" property="build.properties.present" />
-        <fail unless="build.properties.present">**				
-            ** Property file 'build.properties' doesn't exist.
-            ** Create a copy from 'build.properties.template' and update the properties
-            ** according to your local environment.
-        </fail>
-        <property file="build.properties" />
-		
-        <path id="compile.path">
-            <pathelement location="${josm}" />
-        </path>
-		
-        <mkdir dir="${plugin.build.dir}" />
-    </target>
+    <!-- ** include targets that all plugins have in common ** -->
+    <import file="../build-common.xml"/>
 
-    <target name="compile" depends="init">
-        <echo message="compiling sources for  ${plugin.jar} ... " />
-        <echo>Classpath includes ${josm}</echo>
-        <javac srcdir="src" classpathref="compile.path" debug="true" destdir="${plugin.build.dir}" includeantruntime="false" encoding="UTF-8">
-            <compilerarg value="-Xlint:deprecation" />
-            <compilerarg value="-Xlint:unchecked" />
-        </javac>
-    </target>
-    <target name="javadoc" depends="init">
-        <javadoc destdir="javadoc"
-                sourcepath="${plugin.src.dir}"
-                encoding="UTF-8"
-                windowtitle="${ant.project.name}"
-                use="true"
-                private="true"
-                linksource="true"
-                author="false">
-            <classpath refid="compile.path"/>
-            <link href="https://docs.oracle.com//javase/8/docs/api"/>
-            <link href="https://josm.openstreetmap.de/doc"/>
-            <doctitle><![CDATA[<h2>${ant.project.name} - Javadoc</h2>]]></doctitle>
-            <bottom><![CDATA[<a href="https://josm.openstreetmap.de/wiki/Plugins">JOSM Plugins</a>]]></bottom>
-        </javadoc>
-    </target>
-
-    <target name="dist" depends="clean,init,compile" description="Create the plugin jar">
-        <tstamp>
-            <format property="plugin.build.date" pattern="yyyy-MM-dd hh:mm aa" />
-        </tstamp>
-
+    <!-- creates the .jar file of the plugin -->
+    <target name="dist" depends="compile,revision">
+        <echo message="creating ${ant.project.name}.jar ... "/>
         <copy todir="${plugin.build.dir}/images">
-            <fileset dir="images">
-                <include name="**/*.png" />
-            </fileset>
+            <fileset dir="images"/>
         </copy>
         <copy todir="${plugin.build.dir}/data">
-            <fileset dir="data">
-                <include name="**/*.*" />
-            </fileset>
+            <fileset dir="data"/>
         </copy>
-
         <copy todir="${plugin.build.dir}">
             <fileset dir=".">
-                <include name="README" />
-                <include name="LICENSE" />
-                <include name="README.*" />
                 <include name="GPL-v3.0.txt" />
                 <include name="GPL-v2.0.txt" />
             </fileset>
         </copy>
-
-        <jar destfile="${plugin.jar}" basedir="${plugin.build.dir}">
+        <jar destfile="${plugin.jar}" basedir="${plugin.build.dir}" manifestencoding="UTF-8">
             <manifest>
-                <attribute name="Author" value="Rodion Scherbakov" />
-                <attribute name="Plugin-Class" value="ru.rodsoft.openstreetmap.josm.plugins.customizepublictransportstop.CustomizePublicTransportStopPlugin" />
-                <attribute name="Plugin-Date" value="${plugin.build.date}" />
-                <attribute name="Plugin-Description" value="Customization of public public transport stops." />
+                <attribute name="Author" value="Rodion Scherbakov"/>
+                <attribute name="Plugin-Class" value="ru.rodsoft.openstreetmap.josm.plugins.customizepublictransportstop.CustomizePublicTransportStopPlugin"/>
+                <attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
+                <attribute name="Plugin-Description" value="Customization of public public transport stops."/>
+                <attribute name="Plugin-Link" value="https://wiki.openstreetmap.org/wiki/JOSM/Plugins/CustomizePublicTransportStop"/>
+                <attribute name="Plugin-Mainversion" value="${plugin.main.version}"/>
+                <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
                 <attribute name="Plugin-Icon" value="images/bus.png"/>
-                <attribute name="Plugin-Link" value="https://wiki.openstreetmap.org/wiki/JOSM/Plugins/CustomizePublicTransportStop" />
-                <attribute name="Plugin-Mainversion" value="${josm.required.version}" />
-                <attribute name="Plugin-Version" value="0.4" />	
                 <attribute name="ru_Plugin-Description" value="Настройка остановки общественного транспорта в соответствии со стандартом" />
             </manifest>
-        </jar> 
+        </jar>
     </target>
 
-    <target name="clean" description="Clean the build environment">
-        <delete dir="${plugin.build.dir}" />
-    </target>
-
-    <target name="osm-svn-install" depends="">
-        <echo>Installing the plugin in ${local.osm.svn.path}</echo>
-        <copy file="${plugin.jar}" todir="${local.osm.svn.path}" />
-    </target>
-
-    <!-- ************************************************************************************ -->
-    <!-- * Targets for compiling and running tests                                            -->
-    <!-- ************************************************************************************ -->
-
-    <target name="dev-install" depends="dist">
-        <echo>Installing the plugin in ${local.install.path}</echo>
-        <copy file="${plugin.jar}" todir="C:\Users\bwr57_000\AppData\Roaming\JOSM\plugins" />
-    </target>
-	
-    <target name="test"/> 
-	<target name="checkstyle"/>
-	<target name="spotbugs"/>
 </project>

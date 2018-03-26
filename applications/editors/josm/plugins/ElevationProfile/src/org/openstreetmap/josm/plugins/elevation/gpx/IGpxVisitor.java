@@ -54,7 +54,6 @@ public interface IGpxVisitor extends IGpxWaypointVisitor {
 
     /**
      * Visits a way point within a GPX route.
-     * @param route The route containing the way point.
      * @param wp The way point to visit.
      */
     @Override

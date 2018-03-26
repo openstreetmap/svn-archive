@@ -12,8 +12,9 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 
 /**
+ * Class to represent a triangle shape.
  * @author Oliver Wieland &lt;oliver.wieland@online.de&gt;
- * Class to represent a triangle shape. {@see java.awt.Shape}.
+ * @see java.awt.Shape
  */
 public class Triangle implements Shape {
     private final Polygon poly;

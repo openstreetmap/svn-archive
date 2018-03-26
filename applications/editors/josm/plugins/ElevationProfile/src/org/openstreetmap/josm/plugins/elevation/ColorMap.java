@@ -98,11 +98,9 @@ public final class ColorMap {
         return colorMaps != null ? colorMaps.size() : 0;
     }
 
-
     /**
      * Gets the available color map names.
      *
-     * @param name the name
      * @return the map or <code>null</code>, if no such map exists
      */
     public static String[] getNames() {

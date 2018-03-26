@@ -20,7 +20,7 @@ import org.openstreetmap.josm.tools.CheckParameterUtil;
  * breaks done into the tracks/routes of a GPX file.
  *
  * @author Oliver Wieland &lt;oliver.wieland@online.de&gt;
- * @see IElevationModelTrackListener
+ * @see IElevationModel
  */
 public class ElevationModel implements IGpxVisitor, IElevationModel {
     // private int sliceSize;
@@ -215,8 +215,6 @@ public class ElevationModel implements IGpxVisitor, IElevationModel {
 
     /**
      * Adds a track or route to the internal track list.
-     *
-     * @param trackName the track name
      */
     private void commitProfile() {
         if (buffer.size() > 0) {

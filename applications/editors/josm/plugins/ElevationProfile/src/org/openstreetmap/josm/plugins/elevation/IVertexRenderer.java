@@ -24,7 +24,7 @@ public interface IVertexRenderer {
      * Selects color map with the given name. If no
      * such color map exists, the old color map is kept.
      *
-     * @param mapToUse the map to use
+     * @param name the map to use
      */
     void selectColorMap(String name);
 }

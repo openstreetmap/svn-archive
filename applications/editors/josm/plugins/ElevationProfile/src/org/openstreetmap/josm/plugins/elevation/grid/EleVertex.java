@@ -95,7 +95,7 @@ public class EleVertex {
 
     /**
      * Checks if vertex requires further processing or is finished. Currently this
-     * method returns <code>true</code>, if the average deviation is < 5m
+     * method returns <code>true</code>, if the average deviation is &lt; 5m
      *
      * @return true, if is finished
      */
@@ -148,7 +148,7 @@ public class EleVertex {
      *
      * @param index the index between 0 and NPOINTS:
      * @return the elevation coordinate instance
-     * @throws IllegalArgumentException, if index is invalid
+     * @throws IllegalArgumentException if index is invalid
      */
     public EleCoordinate get(int index) {
         if (index < 0 || index >= NPOINTS) throw new IllegalArgumentException("Invalid index: " + index);

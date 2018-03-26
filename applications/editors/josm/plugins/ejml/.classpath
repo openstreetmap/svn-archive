@@ -3,8 +3,45 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/JOSM"/>
-	<classpathentry exported="true" kind="lib" path="lib/EJML-core-0.26.jar" sourcepath="lib/EJML-core-0.26-sources.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/EJML-equation-0.26.jar" sourcepath="lib/EJML-equation-0.26-sources.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/EJML-experimental-0.26.jar" sourcepath="lib/EJML-experimental-0.26-sources.jar"/>
+	<classpathentry kind="lib" path="lib/ejml-cdense-0.32.jar" sourcepath="lib/ejml-cdense-0.32-sources.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:platform:/resource/JOSM-EJML/lib/ejml-cdense-0.32-javadoc.jar!/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="lib/ejml-core-0.32.jar" sourcepath="lib/ejml-core-0.32-sources.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:platform:/resource/JOSM-EJML/lib/ejml-core-0.32-javadoc.jar!/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="lib/ejml-ddense-0.32.jar" sourcepath="lib/ejml-ddense-0.32-sources.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:platform:/resource/JOSM-EJML/lib/ejml-ddense-0.32-javadoc.jar!/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="lib/ejml-dsparse-0.32.jar" sourcepath="lib/ejml-dsparse-0.32-sources.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:platform:/resource/JOSM-EJML/lib/ejml-dsparse-0.32-javadoc.jar!/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="lib/ejml-experimental-0.32.jar" sourcepath="lib/ejml-experimental-0.32-sources.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:platform:/resource/JOSM-EJML/lib/ejml-experimental-0.32-javadoc.jar!/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="lib/ejml-fdense-0.32.jar" sourcepath="lib/ejml-fdense-0.32-sources.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:platform:/resource/JOSM-EJML/lib/ejml-fdense-0.32-javadoc.jar!/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="lib/ejml-simple-0.32.jar" sourcepath="lib/ejml-simple-0.32-sources.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:platform:/resource/JOSM-EJML/lib/ejml-simple-0.32-javadoc.jar!/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="lib/ejml-zdense-0.32.jar" sourcepath="lib/ejml-zdense-0.32-sources.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:platform:/resource/JOSM-EJML/lib/ejml-zdense-0.32-javadoc.jar!/"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

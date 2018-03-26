@@ -170,7 +170,7 @@ public class ViaListModel extends AbstractListModel<OsmPrimitive> implements Pri
     public void insertVias(List<PrimitiveId> idsToInsert) {
         if (idsToInsert == null) return;
         List<OsmPrimitive> primitives = new ArrayList<>(idsToInsert.size());
-        DataSet ds = model.getLayer().data;
+        DataSet ds = model.getLayer().getDataSet();
         for (PrimitiveId id: idsToInsert) {
             OsmPrimitive p = ds.getPrimitiveById(id);
             if (p == null) {

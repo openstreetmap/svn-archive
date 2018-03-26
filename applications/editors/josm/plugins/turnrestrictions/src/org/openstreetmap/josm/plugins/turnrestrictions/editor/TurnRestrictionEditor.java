@@ -545,7 +545,7 @@ public class TurnRestrictionEditor extends JDialog implements NavigationControle
                 removeDeletedMembers(newTurnRestriction);
             }
 
-            MainApplication.undoRedo.add(new AddCommand(getLayer().data, newTurnRestriction));
+            MainApplication.undoRedo.add(new AddCommand(getLayer().getDataSet(), newTurnRestriction));
 
             // make sure everybody is notified about the changes
             //
@@ -567,7 +567,7 @@ public class TurnRestrictionEditor extends JDialog implements NavigationControle
             Relation toUpdate = new Relation(getTurnRestriction());
             editorModel.apply(toUpdate);
             Conflict<Relation> conflict = new Conflict<>(getTurnRestriction(), toUpdate);
-            MainApplication.undoRedo.add(new ConflictAddCommand(getLayer().data, conflict));
+            MainApplication.undoRedo.add(new ConflictAddCommand(getLayer().getDataSet(), conflict));
         }
 
         /**
@@ -577,7 +577,7 @@ public class TurnRestrictionEditor extends JDialog implements NavigationControle
         protected void applyExistingNonConflictingTurnRestriction() {
             if (getTurnRestriction().getDataSet() == null) {
                 editorModel.apply(getTurnRestriction());
-                MainApplication.undoRedo.add(new AddCommand(getLayer().data, getTurnRestriction()));
+                MainApplication.undoRedo.add(new AddCommand(getLayer().getDataSet(), getTurnRestriction()));
             } else {
                 Relation toUpdate = new Relation(getTurnRestriction());
                 editorModel.apply(toUpdate);

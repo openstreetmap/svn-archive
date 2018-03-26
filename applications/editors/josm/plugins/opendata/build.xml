@@ -43,8 +43,8 @@
         <echo message="compiling JOpenDocument ... "/>
         <javac srcdir="includes/org/jopendocument" debug="false" destdir="${plugin.build.dir}" includeAntRuntime="false" encoding="ISO-8859-1" >
             <classpath>
-                <!-- JDOM is required and embedded in geotools jar -->
-                <pathelement location="${geotools}"/>
+                <!-- JDOM is required in an older version than the one embedded in geotools jar -->
+                <pathelement location="lib/jdom-1.1.3.jar"/>
                 <pathelement location="${apache-commons}"/>
             </classpath>
         </javac>
@@ -98,5 +98,25 @@
             <arg value="UTF-8"/>
             <arg value="resources/neptune/neptune.xsd"/>
         </exec>
+    </target>
+
+	<target name="javadoc">
+        <javadoc destdir="${plugin.doc.dir}"
+                encoding="UTF-8"
+                windowtitle="JOSM-${ant.project.name}"
+                use="true"
+                private="true"
+                linksource="true"
+                author="false">
+            <sourcepath>
+            	<pathelement location="${plugin.src.dir}"/>
+            	<pathelement location="includes"/>
+            </sourcepath>
+        	<classpath refid="plugin.classpath"/>
+            <link href="https://docs.oracle.com/javase/8/docs/api"/>
+            <link href="https://josm.openstreetmap.de/doc"/>
+            <doctitle><![CDATA[<h2>JOSM-${ant.project.name} - Javadoc</h2>]]></doctitle>
+            <bottom><![CDATA[<a href="https://josm.openstreetmap.de/wiki/Plugins">JOSM Plugins</a>]]></bottom>
+        </javadoc>
     </target>
 </project>

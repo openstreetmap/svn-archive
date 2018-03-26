@@ -26,7 +26,7 @@ import org.openstreetmap.josm.data.osm.event.DatasetEventManager;
 import org.openstreetmap.josm.data.osm.event.DatasetEventManager.FireMode;
 import org.openstreetmap.josm.data.osm.event.SelectionEventManager;
 import org.openstreetmap.josm.gui.MainApplication;
-import org.openstreetmap.josm.gui.OsmPrimitivRenderer;
+import org.openstreetmap.josm.gui.PrimitiveRenderer;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import org.openstreetmap.josm.gui.widgets.PopupMenuLauncher;
 import org.openstreetmap.josm.plugins.turnrestrictions.dnd.PrimitiveIdListProvider;
@@ -57,7 +57,7 @@ public class JosmSelectionPanel extends JPanel {
         lstSelection = new JList<>(model);
         lstSelection.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
         lstSelection.setSelectionModel(model.getListSelectionModel());
-        lstSelection.setCellRenderer(new OsmPrimitivRenderer());
+        lstSelection.setCellRenderer(new PrimitiveRenderer());
         lstSelection.setTransferHandler(transferHandler = new JosmSelectionTransferHandler(model));
         lstSelection.setDragEnabled(true);
 

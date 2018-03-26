@@ -31,7 +31,7 @@ import javax.swing.event.ListSelectionListener;
 
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.PrimitiveId;
-import org.openstreetmap.josm.gui.OsmPrimitivRenderer;
+import org.openstreetmap.josm.gui.PrimitiveRenderer;
 import org.openstreetmap.josm.gui.widgets.PopupMenuLauncher;
 import org.openstreetmap.josm.plugins.turnrestrictions.dnd.PrimitiveIdListProvider;
 import org.openstreetmap.josm.plugins.turnrestrictions.dnd.PrimitiveIdListTransferHandler;
@@ -70,7 +70,7 @@ public class ViaList extends JList<OsmPrimitive> {
         this.model = model;
         setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
         setSelectionModel(selectionModel);
-        setCellRenderer(new OsmPrimitivRenderer());
+        setCellRenderer(new PrimitiveRenderer());
         setDragEnabled(true);
         setTransferHandler(transferHandler = new ViaListTransferHandler(model));
         setVisibleRowCount(4);

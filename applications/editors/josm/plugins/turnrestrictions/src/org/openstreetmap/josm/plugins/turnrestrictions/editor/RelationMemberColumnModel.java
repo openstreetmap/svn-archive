@@ -7,7 +7,7 @@ import javax.swing.DefaultListSelectionModel;
 import javax.swing.table.DefaultTableColumnModel;
 import javax.swing.table.TableColumn;
 
-import org.openstreetmap.josm.gui.OsmPrimitivRenderer;
+import org.openstreetmap.josm.gui.PrimitiveRenderer;
 import org.openstreetmap.josm.tools.CheckParameterUtil;
 
 /**
@@ -30,7 +30,7 @@ public class RelationMemberColumnModel extends DefaultTableColumnModel {
           col.setHeaderValue(tr("Refers to"));
           col.setResizable(true);
           col.setPreferredWidth(300);
-          col.setCellRenderer(new OsmPrimitivRenderer());
+          col.setCellRenderer(new PrimitiveRenderer());
           addColumn(col);
     }
 

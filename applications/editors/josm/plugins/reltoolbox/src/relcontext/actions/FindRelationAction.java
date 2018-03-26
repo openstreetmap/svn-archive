@@ -32,7 +32,7 @@ import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.data.osm.DefaultNameFormatter;
 import org.openstreetmap.josm.data.osm.Relation;
-import org.openstreetmap.josm.gui.OsmPrimitivRenderer;
+import org.openstreetmap.josm.gui.PrimitiveRenderer;
 import org.openstreetmap.josm.tools.Logging;
 import org.openstreetmap.josm.tools.Shortcut;
 
@@ -62,7 +62,7 @@ public class FindRelationAction extends JosmAction {
         final JList<Relation> relationsList = new JList<>(relationsData);
         relationsList.setSelectionModel(relationsData.getSelectionModel());
         relationsList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        relationsList.setCellRenderer(new OsmPrimitivRenderer());
+        relationsList.setCellRenderer(new PrimitiveRenderer());
         panel.add(new JScrollPane(relationsList,
                 JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER), BorderLayout.CENTER);
         panel.setPreferredSize(new Dimension(400, 400));

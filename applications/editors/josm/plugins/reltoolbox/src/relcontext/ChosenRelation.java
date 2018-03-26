@@ -81,6 +81,7 @@ public class ChosenRelation implements ActiveLayerChangeListener, MapViewPaintab
 
     /**
      * Check if the relation type assumes all ways inside it form a multipolygon.
+     * @return true if the relation type assumes all ways inside it form a multipolygon
      */
     public boolean isMultipolygon() {
         return isMultipolygon(chosenRelation);

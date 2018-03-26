@@ -64,6 +64,7 @@ import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.SequenceCommand;
 import org.openstreetmap.josm.data.SelectionChangedListener;
 import org.openstreetmap.josm.data.osm.DefaultNameFormatter;
+import org.openstreetmap.josm.data.osm.IPrimitive;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.RelationMember;
@@ -71,7 +72,7 @@ import org.openstreetmap.josm.data.osm.event.DatasetEventManager;
 import org.openstreetmap.josm.data.osm.event.DatasetEventManager.FireMode;
 import org.openstreetmap.josm.data.osm.event.SelectionEventManager;
 import org.openstreetmap.josm.gui.MainApplication;
-import org.openstreetmap.josm.gui.OsmPrimitivRenderer;
+import org.openstreetmap.josm.gui.PrimitiveRenderer;
 import org.openstreetmap.josm.gui.dialogs.ToggleDialog;
 import org.openstreetmap.josm.gui.layer.MainLayerManager.ActiveLayerChangeEvent;
 import org.openstreetmap.josm.gui.layer.MainLayerManager.ActiveLayerChangeListener;
@@ -283,9 +284,9 @@ public class RelContextDialog extends ToggleDialog implements ActiveLayerChangeL
         });
 
         TableColumnModel columns = relationsTable.getColumnModel();
-        columns.getColumn(0).setCellRenderer(new OsmPrimitivRenderer() {
+        columns.getColumn(0).setCellRenderer(new PrimitiveRenderer() {
             @Override
-            protected String getComponentToolTipText(OsmPrimitive value) {
+            protected String getComponentToolTipText(IPrimitive value) {
                 return null;
             }
 

@@ -336,7 +336,7 @@ public class ToolBoxView extends ToggleDialog {
        ((GridBagLayout) buttonBar.getLayout()).columnWeights = new double[] {1.0, 0.0};
 
        //---- applyButton ----
-       applyButton.setText(tr("Apply"));
+       applyButton.setText("Apply");
        applyButton.setToolTipText(tr("Add selected tags and/or relations to obeject."));
        applyButton.setEnabled(false);
        buttonBar.add(applyButton, new GridBagConstraints(0, 1, 2, 1, 0.0, 0.0,
@@ -349,7 +349,7 @@ public class ToolBoxView extends ToggleDialog {
    }
 
    /**
-    * Enables or disables the interactive UI elements of the toolbox.
+    * Enables or disables the interactive UI elements of {@link #ToolBoxView}.
     *
     * @param enabled set this true for enabled elements
     */
@@ -379,7 +379,7 @@ public class ToolBoxView extends ToggleDialog {
    }
 
    /**
-    * Enables or disables the interactive text box elements {@link #name} and {@link #ref}.
+    * Enables or disables the interactive text box elements {@link #nameField} and {@link #refField}.
     *
     * @param enabled set this true for enabled elements
     */
@@ -390,7 +390,7 @@ public class ToolBoxView extends ToggleDialog {
    }
 
    /**
-    * Enables or disables the interactive text box element {@link #repeatOn}.
+    * Enables or disables the interactive text box element {@link #repeatOnField}.
     * @param enabled set this true for enabled elements
     */
    public void setROUiElementsEnabled(boolean enabled) {
@@ -398,7 +398,7 @@ public class ToolBoxView extends ToggleDialog {
    }
 
    /**
-    * Enables or disables the interactive text box element {@link #levelName}.
+    * Enables or disables the interactive text box element {@link #levelNameField} and {@link #addLevelButton}.
     * @param enabled set this true for enabled elements
     */
    public void setLVLUiElementsEnabled(boolean enabled) {
@@ -408,7 +408,7 @@ public class ToolBoxView extends ToggleDialog {
    }
 
    /**
-    * Enables or disables the interactive ComboBoxes {@link #multiRoleBox} and {@link #multiEditBox }.
+    * Enables or disables the interactive ComboBoxes {@link #multiOuterButton} and {@link #multiInnerButton}.
     * @param enabled set this true for enabled elements
     */
    public void setMultiUiElementsEnabled(boolean enabled) {
@@ -419,14 +419,14 @@ public class ToolBoxView extends ToggleDialog {
    }
 
    /**
-    * Resets the view by making the UI elements disabled and deleting the level list.
+    * Resets the view by making the UI elements disabled.
     */
    public void reset() {
        this.setAllUiElementsEnabled(false);
    }
 
    /**
-    * Getter for the selected {@link IndoorObject} in the objectBox.
+    * Getter for the selected {@link IndoorObject} in the {@link #objectBox}.
     *
     * @return the selected indoor object in the object ComboBox.
     */
@@ -444,7 +444,7 @@ public class ToolBoxView extends ToggleDialog {
    }
 
    /**
-    * Setter for the level name field.
+    * Setter for the {@link #levelNameField}.
     *
     * @param name the String for the {@link #levelNameField}
     */
@@ -453,19 +453,19 @@ public class ToolBoxView extends ToggleDialog {
    }
 
    /**
-    * Getter for the  name tag {@link TextField}.
+    * Getter for the  {@link #nameField}.
     *
-    * @return {@link String} of the name text field
+    * @return String of the name text field
     */
    public String getNameText() {
        return this.nameField.getText();
    }
 
    /**
-    * Setter for the current level value tag
+    * Setter for the current level value tag {@link #levelLabel}.
     *
     * @author rebsc
-    * @param current level value as String
+    * @param levelTag level value as String
     */
    public void setLevelLabel(String levelTag) {
        if (getLevelCheckBoxStatus() == false) {
@@ -480,7 +480,7 @@ public class ToolBoxView extends ToggleDialog {
    }
 
    /**
-    * Getter for the CheckBox Status
+    * Getter for the {@link #levelCheckBox} status.
     *
     * @return boolean which tells if box is selected or not.
     */
@@ -489,24 +489,24 @@ public class ToolBoxView extends ToggleDialog {
    }
 
    /**
-    * Getter for the ref {@link TextField}.
+    * Getter for the {@link #refField}.
     *
-    * @return {@link String} of the ref text field
+    * @return String of the ref text field
     */
    public String getRefText() {
        return this.refField.getText();
    }
 
    /**
-    * Getter for the repeat on {@link TextField}.
-    * @return {@link String} of the repeat on text field
+    * Getter for the repeat on TextField.
+    * @return String of the repeat on text field
     */
    public String getRepeatOnText() {
        return this.repeatOnField.getText();
    }
 
    /**
-    * Clears the text boxes and sets an empty {@link String}.
+    * Clears the text boxes and sets an empty String.
     */
    public void resetUiElements() {
        this.nameField.setText(tr(""));
@@ -517,7 +517,7 @@ public class ToolBoxView extends ToggleDialog {
    }
 
    /**
-    * Set the listener for the apply button.
+    * Set the listener for the {@link #applyButton}.
     *
     * @param l the listener to set
     */
@@ -526,7 +526,7 @@ public class ToolBoxView extends ToggleDialog {
    }
 
    /**
-    * Set the listener for CheckBox.
+    * Set the listener for {@link #levelCheckBox}.
     * @param l the listener to set
     */
    public void setLevelCheckBoxListener(ItemListener l) {
@@ -534,7 +534,7 @@ public class ToolBoxView extends ToggleDialog {
    }
 
    /**
-    * Set the listener for helpButton.
+    * Set the listener for {@link #helpButton}.
     * @param l the listener to set
     */
    public void setHelpButtonListener(ActionListener l) {
@@ -542,7 +542,7 @@ public class ToolBoxView extends ToggleDialog {
    }
 
    /**
-    * Set the listener for addLevelButton.
+    * Set the listener for {@link #addLevelButton}.
     * @param l the listener to set
     */
    public void setAddLevelButtonListener(ActionListener l) {
@@ -551,7 +551,7 @@ public class ToolBoxView extends ToggleDialog {
 
 
    /**
-    * Set the listener for object box.
+    * Set the listener for {@link #objectBox}.
     *
     * @param l the listener to set
     */
@@ -560,7 +560,7 @@ public class ToolBoxView extends ToggleDialog {
    }
 
    /**
-    * Set the listener for the OUTTER button.
+    * Set the listener for the {@link #multiOuterButton}.
     *
     * @param l the listener to set
     */
@@ -569,7 +569,7 @@ public class ToolBoxView extends ToggleDialog {
    }
 
    /**
-    * Set the listener for the INNER button.
+    * Set the listener for the {@link #multiInnerButton}.
     *
     * @param l the listener to set
     */
@@ -578,7 +578,7 @@ public class ToolBoxView extends ToggleDialog {
    }
 
    /**
-    * Set the listener for the multi checkbox.
+    * Set the listener for the {@link #multiCheckBox}.
     *
     * @param l the listener to set
     */

@@ -112,12 +112,12 @@ public class IndoorHelperController {
 
        // Shortcuts
        SpaceShortcut = Shortcut.registerShortcut("mapmode:space",
-               tr("ConfirmObjectDrawing"), KeyEvent.VK_SPACE, Shortcut.DIRECT);
+               "ConfirmObjectDrawing", KeyEvent.VK_SPACE, Shortcut.DIRECT);
        this.SpaceAction = new SpaceAction();
        MainApplication.registerActionShortcut(SpaceAction, SpaceShortcut);
 
        EnterShortcut = Shortcut.registerShortcut("mapmode:enter",
-               tr("ConfirmMultipolygonSelection"), KeyEvent.VK_ENTER, Shortcut.DIRECT);
+               "ConfirmMultipolygonSelection", KeyEvent.VK_ENTER, Shortcut.DIRECT);
        this.EnterAction = new EnterAction();
        MainApplication.registerActionShortcut(EnterAction, EnterShortcut);
 
@@ -166,7 +166,7 @@ public class IndoorHelperController {
     }
 
    /**
-    * The listener which provides the handling of the apply button.
+    * The listener which provides the handling of the applyButton.
     * Gets the texts which were written by the user and writes them to the OSM-data.
     * After that it checks the tagged data  with the built-in validator file.
     *
@@ -257,7 +257,7 @@ public class IndoorHelperController {
    }
 
    /**
-    * The listener which is called when the helpbutton got pushed.
+    * The listener which is called when the helpButton got pushed.
     *
     * @author rebsc
     */
@@ -265,14 +265,14 @@ public class IndoorHelperController {
 
 	   @Override
 	   public void actionPerformed(ActionEvent e) {
-		   String topic = "Plugin/indoorHelper";
+		   String topic = "Plugin/IndoorHelper";
 		   //Open HelpBrowser for short description about the plugin
 		   HelpBrowser.setUrlForHelpTopic(Optional.ofNullable(topic).orElse("/"));
 	   }
    }
 
    /**
-    * The listener which is called when the addlevelbutton got pushed.
+    * The listener which is called when the addLevelButton got pushed.
     *
     * @author rebsc
     */
@@ -497,7 +497,7 @@ public class IndoorHelperController {
    }
 
    /**
-    * Shortcut for Spacebar
+    * Shortcut for spacebar
     * @author rebsc
     */
    private class SpaceAction extends AbstractAction {
@@ -539,7 +539,7 @@ public class IndoorHelperController {
    }
 
    /**
-    * Shortcut for Enter
+    * Shortcut for enter
     * @author rebsc
     */
    private class EnterAction extends AbstractAction {
@@ -561,13 +561,10 @@ public class IndoorHelperController {
    }
 
    /**
-    * Function which unset the disabled state of currently hidden and/or disabled objects which have a
+    * Function which unsets the disabled state of currently hidden and/or disabled objects which have a
     * specific tag (key). Just unsets the disabled state if object has a tag-value which is part of the
     * current working level.
-    * Specific example: key: repeat_on ; value: 1-4;
-    *                     If current selected workinglevel is "3" all objects with the leveltag "level=3" are hidden but the
-    *                     objects with the key "repeat_on" and the value which includes "3" or is (minValue+1) - maxValue (4-...),
-    *                     because repeat_on tag starts on the current workinglevel+1.
+    * 
     * @author rebsc
     * @param key sepcific key to unset hidden objects which contains it
     */

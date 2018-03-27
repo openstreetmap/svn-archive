@@ -84,9 +84,9 @@ public class LevelSelectorView extends JFrame {
         //======== infoBar ========
 
         //---- Label1 ----
-        label1.setText(tr("<html> Please insert the new level number you want to add.<br> "
+        label1.setText(tr("<html> Please insert the new level-tag number you want to add.<br> "
                 + " <i>Info</i>: <br> If the OK button got pressed you will switch to the drawing action.<br>"
-                + "To finish the new object please press the spacebar. The new level<br>will be tagged automatically. </html>"));
+                + "To finish the new object please press spacebar. The new level<br>will be tagged automatically. </html>"));
         infoBar.add(label1);
         dialogPane.add(infoBar, BorderLayout.NORTH);
 
@@ -176,7 +176,7 @@ public class LevelSelectorView extends JFrame {
     }
 
     /**
-     * Set the listener for window {@Link LevelSelectorView}
+     * Set the listener for window {@link LevelSelectorView}
      *
      * @param l the listener to set
      */

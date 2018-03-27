@@ -157,7 +157,7 @@ public class IndoorHelperModel {
      * Method which adds the relation to OSM data. Also adds the selected tag-set to relation object.
      *
      * @author rebsc
-     * @param String the Multipolygon Role as String
+     * @param role the Multipolygon Role as String
      */
     public void addRelation(String role) {
         Relation newRelation = new Relation();

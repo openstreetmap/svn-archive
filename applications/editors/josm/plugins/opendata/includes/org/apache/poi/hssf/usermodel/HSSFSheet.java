@@ -68,7 +68,6 @@ public final class HSSFSheet implements org.apache.poi.ss.usermodel.Sheet {
      *
      * @param workbook - The HSSF Workbook object associated with the sheet.
      * @param sheet - lowlevel Sheet object this sheet will represent
-     * @see org.apache.poi.hssf.usermodel.HSSFWorkbook#createSheet()
      */
     protected HSSFSheet(HSSFWorkbook workbook, InternalSheet sheet) {
         this._sheet = sheet;

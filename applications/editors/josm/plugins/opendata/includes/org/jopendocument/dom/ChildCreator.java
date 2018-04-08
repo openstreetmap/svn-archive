@@ -1,16 +1,16 @@
 /*
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
- * 
+ *
  * Copyright 2008 jOpenDocument, by ILM Informatique. All rights reserved.
- * 
+ *
  * The contents of this file are subject to the terms of the GNU
- * General Public License Version 3 only ("GPL").  
- * You may not use this file except in compliance with the License. 
+ * General Public License Version 3 only ("GPL").
+ * You may not use this file except in compliance with the License.
  * You can obtain a copy of the License at http://www.gnu.org/licenses/gpl-3.0.html
  * See the License for the specific language governing permissions and limitations under the License.
- * 
+ *
  * When distributing the software, include this License Header Notice in each file.
- * 
+ *
  */
 
 package org.jopendocument.dom;
@@ -24,7 +24,7 @@ import org.jdom.Namespace;
 
 /**
  * A helper to create children in the schema order.
- * 
+ *
  * @author Sylvain CUAZ
  */
 public class ChildCreator {
@@ -64,10 +64,9 @@ public class ChildCreator {
 
     /**
      * Trouve l'index ou il faut insérer le fils dans ce document.
-     * 
+     *
      * @param childName le nom du fils que l'on veut insérer.
      * @return l'index ou il faut l'insérer (s'il est déjà présent son index actuel +1).
-     * @throws IllegalArgumentException if childName is not in {@link #getChildren()}.
      */
     @SuppressWarnings("unchecked")
     private final int findInsertIndex(Namespace childNS, String childName) {
@@ -93,7 +92,7 @@ public class ChildCreator {
 
     /**
      * Insère cet élément à la bonne place. The child should not be already present.
-     * 
+     *
      * @param child l'élément à insérer, doit être dans TOP_ELEMENTS.
      */
     @SuppressWarnings("unchecked")
@@ -104,7 +103,7 @@ public class ChildCreator {
 
     /**
      * Return the asked child, optionally creating it.
-     * 
+     *
      * @param childNS the namespace of the child.
      * @param childName the name of the child.
      * @param create whether it should be created in case it doesn't exist.

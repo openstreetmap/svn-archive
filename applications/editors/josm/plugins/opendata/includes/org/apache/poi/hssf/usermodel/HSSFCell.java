@@ -104,7 +104,6 @@ public class HSSFCell implements Cell {
      * @param type  - CELL_TYPE_NUMERIC, CELL_TYPE_STRING, CELL_TYPE_FORMULA, CELL_TYPE_BLANK,
      *                CELL_TYPE_BOOLEAN, CELL_TYPE_ERROR
      *                Type of cell
-     * @see org.apache.poi.hssf.usermodel.HSSFRow#createCell(short,int)
      */
     protected HSSFCell(HSSFWorkbook book, HSSFSheet sheet, int row, short col,
                        int type)
@@ -715,11 +714,6 @@ public class HSSFCell implements Cell {
      * </p>
      *
      * @see #setCellType(int)
-     * @see #setCellFormula(String)
-     * @see HSSFRow#removeCell(org.apache.poi.ss.usermodel.Cell)
-     * @see org.apache.poi.hssf.usermodel.HSSFSheet#removeRow(org.apache.poi.ss.usermodel.Row)
-     * @see org.apache.poi.hssf.usermodel.HSSFSheet#shiftRows(int, int, int)
-     * @see org.apache.poi.hssf.usermodel.HSSFSheet#addMergedRegion(org.apache.poi.ss.util.CellRangeAddress)
      * @throws IllegalStateException if modification is not allowed
      */
     void notifyArrayFormulaChanging(){

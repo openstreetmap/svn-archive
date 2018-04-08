@@ -362,7 +362,7 @@ public class Section
     /**
      * <p>Returns the value of the numeric property with the specified
      * ID. If the property is not available, 0 is returned. A
-     * subsequent call to {@link #wasNull} will return
+     * subsequent call to {@code #wasNull} will return
      * <code>true</code> to let the caller distinguish that case from
      * a real property value of 0.</p>
      *
@@ -389,7 +389,7 @@ public class Section
     /**
      * <p>Returns the value of the boolean property with the specified
      * ID. If the property is not available, <code>false</code> is
-     * returned. A subsequent call to {@link #wasNull} will return
+     * returned. A subsequent call to {@code #wasNull} will return
      * <code>true</code> to let the caller distinguish that case from
      * a real property value of <code>false</code>.</p>
      *

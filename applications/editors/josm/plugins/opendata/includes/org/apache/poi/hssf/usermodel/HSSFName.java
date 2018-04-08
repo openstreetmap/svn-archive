@@ -28,11 +28,10 @@ import org.apache.poi.hssf.record.NameRecord;
 public final class HSSFName {
     private NameRecord _definedNameRec;
 
-    /** 
+    /**
      * Creates new HSSFName   - called by HSSFWorkbook to create a name from
      * scratch.
      *
-     * @see org.apache.poi.hssf.usermodel.HSSFWorkbook#createName()
      * @param name the Name Record
      * @param book workbook object associated with the sheet.
      */
@@ -41,6 +40,7 @@ public final class HSSFName {
     }
 
 
+    @Override
     public String toString() {
         StringBuffer sb = new StringBuffer(64);
         sb.append(getClass().getName()).append(" [");

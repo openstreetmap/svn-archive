@@ -23,7 +23,7 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.formula.FormulaRenderer;
 
 /**
- * HSSF wrapper for the {@link FormulaParser} and {@link FormulaRenderer}
+ * HSSF wrapper for the {@link FormulaRenderer}
  *
  * @author Josh Micich
  */

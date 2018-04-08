@@ -23,7 +23,7 @@ import org.apache.poi.util.LittleEndianByteArrayOutputStream;
 import org.apache.poi.util.LittleEndianOutput;
 /**
  * Allows the writing of BIFF records when the 'ushort size' header field is not known in advance.
- * When the client is finished writing data, it calls {@link #terminate()}, at which point this
+ * When the client is finished writing data, it calls {@code terminate()}, at which point this
  * class updates the 'ushort size' with its final value.
  *
  * @author Josh Micich
@@ -68,7 +68,7 @@ final class UnknownLengthRecordOutput implements LittleEndianOutput {
 	}
 	/**
 	 * Finishes writing the current record and updates 'ushort size' field.<br/>
-	 * After this method is called, only {@link #getTotalSize()} may be called.
+	 * After this method is called, only {@code getTotalSize()} may be called.
 	 */
 	public void terminate() {
 		if (_out == null) {
@@ -83,31 +83,38 @@ final class UnknownLengthRecordOutput implements LittleEndianOutput {
 		_out = null;
 	}
 
-	public void write(byte[] b) {
+	@Override
+    public void write(byte[] b) {
 		_out.write(b);
 		_size += b.length;
 	}
-	public void write(byte[] b, int offset, int len) {
+	@Override
+    public void write(byte[] b, int offset, int len) {
 		_out.write(b, offset, len);
 		_size += len;
 	}
-	public void writeByte(int v) {
+	@Override
+    public void writeByte(int v) {
 		_out.writeByte(v);
 		_size += 1;
 	}
-	public void writeDouble(double v) {
+	@Override
+    public void writeDouble(double v) {
 		_out.writeDouble(v);
 		_size += 8;
 	}
-	public void writeInt(int v) {
+	@Override
+    public void writeInt(int v) {
 		_out.writeInt(v);
 		_size += 4;
 	}
-	public void writeLong(long v) {
+	@Override
+    public void writeLong(long v) {
 		_out.writeLong(v);
 		_size += 8;
 	}
-	public void writeShort(int v) {
+	@Override
+    public void writeShort(int v) {
 		_out.writeShort(v);
 		_size += 2;
 	}

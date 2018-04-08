@@ -35,7 +35,6 @@ public interface Sheet extends Iterable<Row> {
      *
      * @param rownum  row number
      * @return high level Row object representing a row in the sheet
-     * @see #removeRow(Row)
      */
     Row createRow(int rownum);
 
@@ -79,6 +78,6 @@ public interface Sheet extends Iterable<Row> {
      * @return the {@link CellRange} of cells affected by this change
      */
     CellRange<? extends Cell> removeArrayFormula(Cell cell);
-    
-    
+
+
 }

@@ -20,13 +20,11 @@ package org.apache.poi.hpsf;
 /**
  * <p>This exception is thrown if a {@link MutablePropertySet} is to be written
  * but does not have a formatID set (see {@link
- * MutableSection#setFormatID(ClassID)} or
- * {@link org.apache.poi.hpsf.MutableSection#setFormatID(byte[])}. 
+ * MutableSection#setFormatID(ClassID)}.
  *
  * @author Rainer Klute <a
  * href="mailto:klute@rainer-klute.de">&lt;klute@rainer-klute.de&gt;</a>
  */
-@SuppressWarnings("serial")
 public class NoFormatIDException extends HPSFRuntimeException
 {
 

@@ -67,16 +67,19 @@ public final class LabelRecord extends Record implements CellValueRecordInterfac
 /*
  * READ ONLY ACCESS... THIS IS FOR COMPATIBILITY ONLY...USE LABELSST! public
  */
+    @Override
     public int getRow()
     {
         return field_1_row;
     }
 
+    @Override
     public short getColumn()
     {
         return field_2_column;
     }
 
+    @Override
     public short getXFIndex()
     {
         return field_3_xf_index;
@@ -95,7 +98,6 @@ public final class LabelRecord extends Record implements CellValueRecordInterfac
      * get the value
      *
      * @return the text string
-     * @see #getStringLength()
      */
     public String getValue()
     {
@@ -105,18 +107,22 @@ public final class LabelRecord extends Record implements CellValueRecordInterfac
     /**
      * THROWS A RUNTIME EXCEPTION..  USE LABELSSTRecords.  YOU HAVE NO REASON to use LABELRecord!!
      */
+    @Override
     public int serialize(int offset, byte [] data) {
         throw new RecordFormatException("Label Records are supported READ ONLY...convert to LabelSST");
     }
+    @Override
     public int getRecordSize() {
         throw new RecordFormatException("Label Records are supported READ ONLY...convert to LabelSST");
     }
 
+    @Override
     public short getSid()
     {
         return sid;
     }
 
+    @Override
     public String toString()
     {
         StringBuffer sb = new StringBuffer();
@@ -134,6 +140,7 @@ public final class LabelRecord extends Record implements CellValueRecordInterfac
     /**
 	 * NO-OP!
 	 */
+    @Override
     public void setColumn(short col)
     {
     }
@@ -141,6 +148,7 @@ public final class LabelRecord extends Record implements CellValueRecordInterfac
     /**
      * NO-OP!
      */
+    @Override
     public void setRow(int row)
     {
     }
@@ -148,10 +156,12 @@ public final class LabelRecord extends Record implements CellValueRecordInterfac
     /**
      * no op!
      */
+    @Override
     public void setXFIndex(short xf)
     {
     }
 
+    @Override
     public Object clone() {
       LabelRecord rec = new LabelRecord();
       rec.field_1_row = field_1_row;

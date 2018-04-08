@@ -26,9 +26,6 @@ import java.util.List;
  * This handles reading from a RecordInputStream, turning
  * the data into full records, processing continue records
  * etc.
- * Most users should use {@link HSSFEventFactory} /
- * {@link HSSFListener} and have new records pushed to
- * them, but this does allow for a "pull" style of coding.
  */
 public final class RecordFactoryInputStream {
 

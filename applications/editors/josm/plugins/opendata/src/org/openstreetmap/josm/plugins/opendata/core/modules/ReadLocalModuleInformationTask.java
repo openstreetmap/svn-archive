@@ -16,6 +16,7 @@ import java.util.Map;
 import org.openstreetmap.josm.gui.PleaseWaitRunnable;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.io.OsmTransferException;
+import org.openstreetmap.josm.plugins.opendata.OdPlugin;
 import org.openstreetmap.josm.tools.ImageProvider;
 import org.openstreetmap.josm.tools.Logging;
 import org.xml.sax.SAXException;
@@ -24,7 +25,7 @@ import org.xml.sax.SAXException;
  * This is an asynchronous task for reading module information from the files
  * in the local module repositories.
  *
- * It scans the files in the local modules repository (see {@see Preferences#getModulesDirectory()}
+ * It scans the files in the local modules repository (see {@link OdPlugin#getModulesDirectory()}
  * and extracts module information from three kind of files:
  * <ul>
  *   <li>.jar-files, assuming that they represent module jars</li>

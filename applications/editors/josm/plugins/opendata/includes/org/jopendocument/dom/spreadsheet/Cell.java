@@ -1,16 +1,16 @@
 /*
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
- * 
+ *
  * Copyright 2008 jOpenDocument, by ILM Informatique. All rights reserved.
- * 
+ *
  * The contents of this file are subject to the terms of the GNU
- * General Public License Version 3 only ("GPL").  
- * You may not use this file except in compliance with the License. 
+ * General Public License Version 3 only ("GPL").
+ * You may not use this file except in compliance with the License.
  * You can obtain a copy of the License at http://www.gnu.org/licenses/gpl-3.0.html
  * See the License for the specific language governing permissions and limitations under the License.
- * 
+ *
  * When distributing the software, include this License Header Notice in each file.
- * 
+ *
  */
 
 /*
@@ -34,7 +34,7 @@ import org.jopendocument.util.CollectionUtils;
 
 /**
  * A cell in a calc document. If you want to change a cell value you must obtain a MutableCell.
- * 
+ *
  * @author Sylvain
  * @param <D> type of document
  */
@@ -43,17 +43,6 @@ public class Cell<D extends ODDocument> extends TableCalcNode<CellStyle, D> {
     // see 5.1.1
     private static final Pattern multiSpacePattern = Pattern.compile("[\t\r\n ]+");
     private static boolean OO_MODE = true;
-
-    /**
-     * Set whether {@link #getTextValue()} parses strings using the standard way or using the
-     * OpenOffice.org way.
-     * 
-     * @param ooMode <code>true</code> if strings should be parsed the OO way.
-     * @see #getTextValue(boolean)
-     */
-    /*public static void setTextValueMode(boolean ooMode) {
-        OO_MODE = ooMode;
-    }*/
 
     public static boolean getTextValueMode() {
         return OO_MODE;
@@ -117,7 +106,7 @@ public class Cell<D extends ODDocument> extends TableCalcNode<CellStyle, D> {
 
     /**
      * Calls {@link #getTextValue(boolean)} using {@link #getTextValueMode()}.
-     * 
+     *
      * @return a string for the content of this cell.
      */
     public String getTextValue() {
@@ -130,7 +119,7 @@ public class Cell<D extends ODDocument> extends TableCalcNode<CellStyle, D> {
      * parses XML elements (like paragraphs, tabs and line-breaks). For the differences between the
      * OO way (as of 3.1) and the OpenDocument way see section 5.1.1 White-space Characters of
      * OpenDocument-v1.0-os and OpenDocument-v1.2-part1. In essence OpenOffice never trim strings.
-     * 
+     *
      * @param ooMode whether to use the OO way or the standard way.
      * @return a string for the content of this cell.
      */

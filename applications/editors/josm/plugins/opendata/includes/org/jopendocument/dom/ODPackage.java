@@ -1,35 +1,33 @@
 /*
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
- * 
+ *
  * Copyright 2008 jOpenDocument, by ILM Informatique. All rights reserved.
- * 
+ *
  * The contents of this file are subject to the terms of the GNU
- * General Public License Version 3 only ("GPL").  
- * You may not use this file except in compliance with the License. 
+ * General Public License Version 3 only ("GPL").
+ * You may not use this file except in compliance with the License.
  * You can obtain a copy of the License at http://www.gnu.org/licenses/gpl-3.0.html
  * See the License for the specific language governing permissions and limitations under the License.
- * 
+ *
  * When distributing the software, include this License Header Notice in each file.
- * 
+ *
  */
 
 package org.jopendocument.dom;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
 import org.jdom.Document;
-import org.jdom.JDOMException;
 import org.jopendocument.util.CopyUtils;
 import org.jopendocument.util.FileUtils;
 
 /**
  * An OpenDocument package, ie a zip containing XML documents and their associated files.
- * 
+ *
  * @author ILM Informatique 2 août 2004
  */
 public class ODPackage {
@@ -75,7 +73,7 @@ public class ODPackage {
     /**
      * The version of this package, <code>null</code> if it cannot be found (eg this package is
      * empty, or contains no xml).
-     * 
+     *
      * @return the version of this package, can be <code>null</code>.
      */
     public final XMLVersion getVersion() {
@@ -129,13 +127,11 @@ public class ODPackage {
         return meta;
     }
 
-    /** 
+    /**
      * Return an XML document.
-     * 
+     *
      * @param xmlEntry the filename, eg "styles.xml".
      * @return the matching document, or <code>null</code> if there's none.
-     * @throws JDOMException if error about the XML.
-     * @throws IOException if an error occurs while reading the file.
      */
     public Document getDocument(String xmlEntry) {
         final ODXMLDocument xml = this.getXMLFile(xmlEntry);

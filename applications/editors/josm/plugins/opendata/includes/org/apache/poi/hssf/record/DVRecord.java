@@ -36,7 +36,7 @@ import org.apache.poi.util.StringUtil;
  */
 public final class DVRecord extends StandardRecord {
 	public final static short sid = 0x01BE;
-	
+
 	/** Option flags */
 	private int _option_flags;
 	/** Title of the prompt box */
@@ -60,8 +60,6 @@ public final class DVRecord extends StandardRecord {
 
 	/**
 	 * Option flags field
-	 * 
-	 * @see HSSFDataValidation utility class
 	 */
 
 	public DVRecord(RecordInputStream in) { // NO_UCD
@@ -91,7 +89,8 @@ public final class DVRecord extends StandardRecord {
 		_regions = new CellRangeAddressList(in);
 	}
 
-	public String toString() {
+	@Override
+    public String toString() {
 		StringBuffer sb = new StringBuffer();
 		sb.append("[DV]\n");
 		sb.append(" options=").append(Integer.toHexString(_option_flags));
@@ -128,7 +127,7 @@ public final class DVRecord extends StandardRecord {
 
 	private static void appendFormula(StringBuffer sb, String label, Formula f) {
 		sb.append(label);
-		
+
 		if (f == null) {
 			sb.append("<empty>\n");
 			return;
@@ -140,10 +139,11 @@ public final class DVRecord extends StandardRecord {
 		}
 	}
 
-	public void serialize(LittleEndianOutput out) {
+	@Override
+    public void serialize(LittleEndianOutput out) {
 
 		out.writeInt(_option_flags);
-		
+
 		serializeUnicodeString(_promptTitle, out);
 		serializeUnicodeString(_errorTitle, out);
 		serializeUnicodeString(_promptText, out);
@@ -151,11 +151,11 @@ public final class DVRecord extends StandardRecord {
 		out.writeShort(_formula1.getEncodedTokenSize());
 		out.writeShort(_not_used_1);
 		_formula1.serializeTokens(out);
-		
+
 		out.writeShort(_formula2.getEncodedTokenSize());
 		out.writeShort(_not_used_2);
 		_formula2.serializeTokens(out);
-		
+
 		_regions.serialize(out);
 	}
 
@@ -171,7 +171,8 @@ public final class DVRecord extends StandardRecord {
 		return 3 + str.length() * (StringUtil.hasMultibyte(str) ? 2 : 1);
 	}
 
-	protected int getDataSize() {
+	@Override
+    protected int getDataSize() {
 		int size = 4+2+2+2+2;//options_field+first_formula_size+first_unused+sec_formula_size+sec+unused;
 		size += getUnicodeStringSize(_promptTitle);
 		size += getUnicodeStringSize(_errorTitle);
@@ -183,15 +184,17 @@ public final class DVRecord extends StandardRecord {
 		return size;
 	}
 
-	public short getSid() {
+	@Override
+    public short getSid() {
 		return sid;
 	}
-	
+
 	/**
 	 * Clones the object. Uses serialisation, as the
 	 *  contents are somewhat complex
 	 */
-	public Object clone() {
+	@Override
+    public Object clone() {
 		return cloneViaReserialise();
 	}
 }

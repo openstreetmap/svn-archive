@@ -33,7 +33,7 @@ import java.math.BigInteger;
  * <p/>
  * This class does not handle negative numbers or zero.
  * <p/>
- * The value of a {@link NormalisedDecimal} is given by<br/>
+ * The value of a {@code NormalisedDecimal} is given by<br/>
  * <tt> significand &times; 10<sup>decimalExponent</sup></tt>
  * <br/>
  * where:<br/>

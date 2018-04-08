@@ -27,8 +27,6 @@ import org.apache.poi.ss.usermodel.CellStyle;
  *
  * @author  Andrew C. Oliver (acoliver at apache dot org)
  * @author Jason Height (jheight at chariot dot net dot au)
- * @see org.apache.poi.hssf.usermodel.HSSFWorkbook#createCellStyle()
- * @see org.apache.poi.hssf.usermodel.HSSFWorkbook#getCellStyleAt(short)
  * @see org.apache.poi.hssf.usermodel.HSSFCell#setCellStyle(HSSFCellStyle)
  */
 public final class HSSFCellStyle implements CellStyle {
@@ -54,6 +52,7 @@ public final class HSSFCellStyle implements CellStyle {
      * @return unique index number of the underlying record this style represents (probably you don't care
      *  unless you're comparing which one is which)
      */
+    @Override
     public short getIndex()
     {
         return _index;
@@ -64,6 +63,7 @@ public final class HSSFCellStyle implements CellStyle {
      * @see org.apache.poi.hssf.usermodel.HSSFDataFormat
      */
 
+    @Override
     public short getDataFormat()
     {
         return _format.getFormatIndex();
@@ -75,6 +75,7 @@ public final class HSSFCellStyle implements CellStyle {
      * @see org.apache.poi.hssf.usermodel.HSSFDataFormat
      * @return the format string or "General" if not found
      */
+    @Override
     public String getDataFormatString() {
         return getDataFormatString(_workbook);
     }
@@ -106,7 +107,8 @@ public final class HSSFCellStyle implements CellStyle {
 
 
 
-	public int hashCode() {
+	@Override
+    public int hashCode() {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((_format == null) ? 0 : _format.hashCode());
@@ -114,7 +116,8 @@ public final class HSSFCellStyle implements CellStyle {
 		return result;
 	}
 
-	public boolean equals(Object obj) {
+	@Override
+    public boolean equals(Object obj) {
 		if (this == obj) return true;
 		if (obj == null) return false;
 		if (obj instanceof HSSFCellStyle) {

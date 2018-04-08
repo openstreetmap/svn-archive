@@ -54,7 +54,7 @@ public final class BOFRecord extends StandardRecord {
      */
     public BOFRecord() {
     }
-    
+
     public BOFRecord(RecordInputStream in) { // NO_UCD
         field_1_version  = in.readShort();
         field_2_type     = in.readShort();
@@ -77,7 +77,6 @@ public final class BOFRecord extends StandardRecord {
 
     /**
      * Version number - for BIFF8 should be 0x06
-     * @see #VERSION
      * @param version version to be set
      */
     public void setVersion(int version) {
@@ -100,7 +99,6 @@ public final class BOFRecord extends StandardRecord {
 
     /**
      * build that wrote this file
-     * @see #BUILD
      * @param build build number to set
      */
     public void setBuild(int build) {
@@ -109,7 +107,6 @@ public final class BOFRecord extends StandardRecord {
 
     /**
      * Year of the build that wrote this file
-     * @see #BUILD_YEAR
      * @param year build year to set
      */
     public void setBuildYear(int year) {
@@ -118,7 +115,6 @@ public final class BOFRecord extends StandardRecord {
 
     /**
      * set the history bit mask (not very useful)
-     * @see #HISTORY_MASK
      * @param bitmask bitmask to set for the history
      */
     public void setHistoryBitMask(int bitmask) {
@@ -128,7 +124,6 @@ public final class BOFRecord extends StandardRecord {
     /**
      * set the minimum version required to read this file
      *
-     * @see #VERSION
      * @param version version to set
      */
     public void setRequiredVersion(int version) {
@@ -137,7 +132,6 @@ public final class BOFRecord extends StandardRecord {
 
     /**
      * Version number - for BIFF8 should be 0x06
-     * @see #VERSION
      * @return version number of the generator of this file
      */
     public int getVersion() {
@@ -160,7 +154,6 @@ public final class BOFRecord extends StandardRecord {
 
     /**
      * get the build that wrote this file
-     * @see #BUILD
      * @return short build number of the generator of this file
      */
     public int getBuild() {
@@ -169,7 +162,6 @@ public final class BOFRecord extends StandardRecord {
 
     /**
      * Year of the build that wrote this file
-     * @see #BUILD_YEAR
      * @return short build year of the generator of this file
      */
     public int getBuildYear() {
@@ -178,7 +170,6 @@ public final class BOFRecord extends StandardRecord {
 
     /**
      * get the history bit mask (not very useful)
-     * @see #HISTORY_MASK
      * @return int bitmask showing the history of the file (who cares!)
      */
     public int getHistoryBitMask() {
@@ -188,13 +179,13 @@ public final class BOFRecord extends StandardRecord {
     /**
      * get the minimum version required to read this file
      *
-     * @see #VERSION
      * @return int least version that can read the file
      */
     public int getRequiredVersion() {
         return field_6_rversion;
     }
 
+    @Override
     public String toString() {
         StringBuffer buffer = new StringBuffer();
 
@@ -222,6 +213,7 @@ public final class BOFRecord extends StandardRecord {
         return "#error unknown type#";
     }
 
+    @Override
     public void serialize(LittleEndianOutput out) {
         out.writeShort(getVersion());
         out.writeShort(getType());
@@ -231,14 +223,17 @@ public final class BOFRecord extends StandardRecord {
         out.writeInt(getRequiredVersion());
     }
 
+    @Override
     protected int getDataSize() {
         return 16;
     }
 
+    @Override
     public short getSid(){
         return sid;
     }
 
+    @Override
     public Object clone() {
       BOFRecord rec = new BOFRecord();
       rec.field_1_version = field_1_version;

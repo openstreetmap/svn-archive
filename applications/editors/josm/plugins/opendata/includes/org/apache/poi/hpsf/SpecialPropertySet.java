@@ -84,6 +84,7 @@ public abstract class SpecialPropertySet extends MutablePropertySet
     /**
      * @see PropertySet#getByteOrder
      */
+    @Override
     public int getByteOrder()
     {
         return delegate.getByteOrder();
@@ -94,6 +95,7 @@ public abstract class SpecialPropertySet extends MutablePropertySet
     /**
      * @see PropertySet#getFormat
      */
+    @Override
     public int getFormat()
     {
         return delegate.getFormat();
@@ -104,6 +106,7 @@ public abstract class SpecialPropertySet extends MutablePropertySet
     /**
      * @see PropertySet#getOSVersion
      */
+    @Override
     public int getOSVersion()
     {
         return delegate.getOSVersion();
@@ -114,6 +117,7 @@ public abstract class SpecialPropertySet extends MutablePropertySet
     /**
      * @see PropertySet#getClassID
      */
+    @Override
     public ClassID getClassID()
     {
         return delegate.getClassID();
@@ -124,6 +128,7 @@ public abstract class SpecialPropertySet extends MutablePropertySet
     /**
      * @see PropertySet#getSectionCount
      */
+    @Override
     public int getSectionCount()
     {
         return delegate.getSectionCount();
@@ -134,6 +139,7 @@ public abstract class SpecialPropertySet extends MutablePropertySet
     /**
      * @see PropertySet#getSections
      */
+    @Override
     public List<Section> getSections()
     {
         return delegate.getSections();
@@ -144,6 +150,7 @@ public abstract class SpecialPropertySet extends MutablePropertySet
     /**
      * @see PropertySet#isSummaryInformation
      */
+    @Override
     public boolean isSummaryInformation()
     {
         return delegate.isSummaryInformation();
@@ -154,6 +161,7 @@ public abstract class SpecialPropertySet extends MutablePropertySet
     /**
      * @see PropertySet#isDocumentSummaryInformation
      */
+    @Override
     public boolean isDocumentSummaryInformation()
     {
         return delegate.isDocumentSummaryInformation();
@@ -162,8 +170,9 @@ public abstract class SpecialPropertySet extends MutablePropertySet
 
 
     /**
-     * @see PropertySet#getSingleSection
+     * @see PropertySet
      */
+    @Override
     public Section getFirstSection()
     {
         return delegate.getFirstSection();
@@ -173,6 +182,7 @@ public abstract class SpecialPropertySet extends MutablePropertySet
     /**
      * @see org.apache.poi.hpsf.MutablePropertySet#addSection(org.apache.poi.hpsf.Section)
      */
+    @Override
     public void addSection(final Section section)
     {
         delegate.addSection(section);
@@ -183,6 +193,7 @@ public abstract class SpecialPropertySet extends MutablePropertySet
     /**
      * @see org.apache.poi.hpsf.MutablePropertySet#clearSections()
      */
+    @Override
     public void clearSections()
     {
         delegate.clearSections();
@@ -193,6 +204,7 @@ public abstract class SpecialPropertySet extends MutablePropertySet
     /**
      * @see org.apache.poi.hpsf.MutablePropertySet#setByteOrder(int)
      */
+    @Override
     public void setByteOrder(final int byteOrder)
     {
         delegate.setByteOrder(byteOrder);
@@ -203,6 +215,7 @@ public abstract class SpecialPropertySet extends MutablePropertySet
     /**
      * @see org.apache.poi.hpsf.MutablePropertySet#setClassID(org.apache.poi.hpsf.ClassID)
      */
+    @Override
     public void setClassID(final ClassID classID)
     {
         delegate.setClassID(classID);
@@ -213,6 +226,7 @@ public abstract class SpecialPropertySet extends MutablePropertySet
     /**
      * @see org.apache.poi.hpsf.MutablePropertySet#setFormat(int)
      */
+    @Override
     public void setFormat(final int format)
     {
         delegate.setFormat(format);
@@ -223,6 +237,7 @@ public abstract class SpecialPropertySet extends MutablePropertySet
     /**
      * @see org.apache.poi.hpsf.MutablePropertySet#setOSVersion(int)
      */
+    @Override
     public void setOSVersion(final int osVersion)
     {
         delegate.setOSVersion(osVersion);
@@ -233,6 +248,7 @@ public abstract class SpecialPropertySet extends MutablePropertySet
     /**
      * @see org.apache.poi.hpsf.MutablePropertySet#toInputStream()
      */
+    @Override
     public InputStream toInputStream() throws IOException, WritingNotSupportedException
     {
         return delegate.toInputStream();
@@ -243,6 +259,7 @@ public abstract class SpecialPropertySet extends MutablePropertySet
     /**
      * @see org.apache.poi.hpsf.MutablePropertySet#write(org.apache.poi.poifs.filesystem.DirectoryEntry, java.lang.String)
      */
+    @Override
     public void write(final DirectoryEntry dir, final String name) throws WritingNotSupportedException, IOException
     {
         delegate.write(dir, name);
@@ -253,6 +270,7 @@ public abstract class SpecialPropertySet extends MutablePropertySet
     /**
      * @see org.apache.poi.hpsf.MutablePropertySet#write(java.io.OutputStream)
      */
+    @Override
     public void write(final OutputStream out) throws WritingNotSupportedException, IOException
     {
         delegate.write(out);
@@ -263,6 +281,7 @@ public abstract class SpecialPropertySet extends MutablePropertySet
     /**
      * @see org.apache.poi.hpsf.PropertySet#equals(java.lang.Object)
      */
+    @Override
     public boolean equals(final Object o)
     {
         return delegate.equals(o);
@@ -273,6 +292,7 @@ public abstract class SpecialPropertySet extends MutablePropertySet
     /**
      * @see org.apache.poi.hpsf.PropertySet#getProperties()
      */
+    @Override
     public Property[] getProperties() throws NoSingleSectionException
     {
         return delegate.getProperties();
@@ -283,6 +303,7 @@ public abstract class SpecialPropertySet extends MutablePropertySet
     /**
      * @see org.apache.poi.hpsf.PropertySet#getProperty(int)
      */
+    @Override
     protected Object getProperty(final int id) throws NoSingleSectionException
     {
         return delegate.getProperty(id);
@@ -293,6 +314,7 @@ public abstract class SpecialPropertySet extends MutablePropertySet
     /**
      * @see org.apache.poi.hpsf.PropertySet#getPropertyBooleanValue(int)
      */
+    @Override
     protected boolean getPropertyBooleanValue(final int id) throws NoSingleSectionException
     {
         return delegate.getPropertyBooleanValue(id);
@@ -303,6 +325,7 @@ public abstract class SpecialPropertySet extends MutablePropertySet
     /**
      * @see org.apache.poi.hpsf.PropertySet#getPropertyIntValue(int)
      */
+    @Override
     protected int getPropertyIntValue(final int id) throws NoSingleSectionException
     {
         return delegate.getPropertyIntValue(id);
@@ -313,6 +336,7 @@ public abstract class SpecialPropertySet extends MutablePropertySet
     /**
      * @see org.apache.poi.hpsf.PropertySet#hashCode()
      */
+    @Override
     public int hashCode()
     {
         return delegate.hashCode();
@@ -323,6 +347,7 @@ public abstract class SpecialPropertySet extends MutablePropertySet
     /**
      * @see org.apache.poi.hpsf.PropertySet#toString()
      */
+    @Override
     public String toString()
     {
         return delegate.toString();
@@ -333,6 +358,7 @@ public abstract class SpecialPropertySet extends MutablePropertySet
     /**
      * @see org.apache.poi.hpsf.PropertySet#wasNull()
      */
+    @Override
     public boolean wasNull() throws NoSingleSectionException
     {
         return delegate.wasNull();

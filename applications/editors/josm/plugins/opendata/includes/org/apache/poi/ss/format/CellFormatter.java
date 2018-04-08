@@ -34,7 +34,7 @@ public abstract class CellFormatter {
     public static final Locale LOCALE = Locale.US;
 
     /**
-     * Creates a new formatter object, storing the format in {@link #format}.
+     * Creates a new formatter object, storing the format in {@code #format}.
      *
      * @param format The format.
      */

@@ -26,7 +26,7 @@ import java.math.BigInteger;
  * Represents a 64 bit IEEE double quantity expressed with both decimal and binary exponents
  * Does not handle negative numbers or zero
  * <p/>
- * The value of a {@link ExpandedDouble} is given by<br/>
+ * The value of a {@code ExpandedDouble} is given by<br/>
  * <tt> a &times; 2<sup>b</sup></tt>
  * <br/>
  * where:<br/>
@@ -66,7 +66,7 @@ final class ExpandedDouble {
 	}
 
 	/**
-	 * Convert to an equivalent {@link NormalisedDecimal} representation having 15 decimal digits of precision in the
+	 * Convert to an equivalent {@code NormalisedDecimal} representation having 15 decimal digits of precision in the
 	 * non-fractional bits of the significand.
 	 */
 	public NormalisedDecimal normaliseBaseTen() {

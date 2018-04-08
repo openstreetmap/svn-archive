@@ -340,7 +340,7 @@ public class Section
     /**
      * <p>Returns the value of the property with the specified ID. If
      * the property is not available, <code>null</code> is returned
-     * and a subsequent call to {@link #wasNull} will return
+     * and a subsequent call to {@code #wasNull} will return
      * <code>true</code>.</p>
      *
      * @param id The property's ID
@@ -421,7 +421,7 @@ public class Section
      * #getPropertyIntValue} or {@link #getProperty} tried to access
      * was available or not. This information might be important for
      * callers of {@link #getPropertyIntValue} since the latter
-     * returns 0 if the property does not exist. Using {@link
+     * returns 0 if the property does not exist. Using {@code
      * #wasNull} the caller can distiguish this case from a property's
      * real value of 0.</p>
      *

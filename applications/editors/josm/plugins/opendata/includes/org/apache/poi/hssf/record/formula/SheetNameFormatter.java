@@ -25,13 +25,13 @@ import org.apache.poi.ss.SpreadsheetVersion;
 
 /**
  * Formats sheet names for use in formula expressions.
- * 
+ *
  * @author Josh Micich
  */
 public final class SheetNameFormatter {
-	
+
 	private static final char DELIMITER = '\'';
-	
+
 	/**
 	 * Matches a single cell ref with no absolute ('$') markers
 	 */
@@ -40,12 +40,12 @@ public final class SheetNameFormatter {
 	private SheetNameFormatter() {
 		// no instances of this class
 	}
-	
-	
+
+
 	/**
-	 * Convenience method for ({@link #format(String)}) when a StringBuffer is already available.
-	 * 
-	 * @param out - sheet name will be appended here possibly with delimiting quotes 
+	 * Convenience method for ({@code #format(String)}) when a StringBuffer is already available.
+	 *
+	 * @param out - sheet name will be appended here possibly with delimiting quotes
 	 */
 	public static void appendFormat(StringBuffer out, String rawSheetName) {
 		boolean needsQuotes = needsDelimiting(rawSheetName);
@@ -103,7 +103,7 @@ public final class SheetNameFormatter {
 		}
 		if(Character.isLetter(rawSheetName.charAt(0))
 				&& Character.isDigit(rawSheetName.charAt(len-1))) {
-			// note - values like "A$1:$C$20" don't get this far 
+			// note - values like "A$1:$C$20" don't get this far
 			if(nameLooksLikePlainCellReference(rawSheetName)) {
 				return true;
 			}
@@ -115,7 +115,7 @@ public final class SheetNameFormatter {
 		// so they don't get this far
 		return false;
 	}
-	
+
 	private static boolean nameLooksLikeBooleanLiteral(String rawSheetName) {
 		switch(rawSheetName.charAt(0)) {
 			case 'T': case 't':
@@ -126,8 +126,8 @@ public final class SheetNameFormatter {
 		return false;
 	}
 	/**
-	 * @return <code>true</code> if the presence of the specified character in a sheet name would 
-	 * require the sheet name to be delimited in formulas.  This includes every non-alphanumeric 
+	 * @return <code>true</code> if the presence of the specified character in a sheet name would
+	 * require the sheet name to be delimited in formulas.  This includes every non-alphanumeric
 	 * character besides underscore '_' and dot '.'.
 	 */
 	/* package */ static boolean isSpecialChar(char ch) {
@@ -142,20 +142,20 @@ public final class SheetNameFormatter {
 			case '\n':
 			case '\r':
 			case '\t':
-				throw new RuntimeException("Illegal character (0x" 
+				throw new RuntimeException("Illegal character (0x"
 						+ Integer.toHexString(ch) + ") found in sheet name");
 		}
 		return true;
 	}
-	
+
 
 	/**
-	 * Used to decide whether sheet names like 'AB123' need delimiting due to the fact that they 
+	 * Used to decide whether sheet names like 'AB123' need delimiting due to the fact that they
 	 * look like cell references.
 	 * <p/>
 	 * This code is currently being used for translating formulas represented with <code>Ptg</code>
-	 * tokens into human readable text form.  In formula expressions, a sheet name always has a 
-	 * trailing '!' so there is little chance for ambiguity.  It doesn't matter too much what this 
+	 * tokens into human readable text form.  In formula expressions, a sheet name always has a
+	 * trailing '!' so there is little chance for ambiguity.  It doesn't matter too much what this
 	 * method returns but it is worth noting the likely consumers of these formula text strings:
 	 * <ol>
 	 * <li>POI's own formula parser</li>
@@ -164,9 +164,9 @@ public final class SheetNameFormatter {
 	 * <li>Manual entry into Excel cell contents</li>
 	 * <li>Some third party formula parser</li>
 	 * </ol>
-	 * 
+	 *
 	 * At the time of writing, POI's formula parser tolerates cell-like sheet names in formulas
-	 * with or without delimiters.  The same goes for Excel(2007), both manual and automated entry.  
+	 * with or without delimiters.  The same goes for Excel(2007), both manual and automated entry.
 	 * <p/>
 	 * For better or worse this implementation attempts to replicate Excel's formula renderer.
 	 * Excel uses range checking on the apparent 'row' and 'column' components.  Note however that
@@ -178,11 +178,11 @@ public final class SheetNameFormatter {
 	}
 
 	/**
-	 * Note - this method assumes the specified rawSheetName has only letters and digits.  It 
+	 * Note - this method assumes the specified rawSheetName has only letters and digits.  It
 	 * cannot be used to match absolute or range references (using the dollar or colon char).
 	 * <p/>
 	 * Some notable cases:
-	 *    <blockquote><table border="0" cellpadding="1" cellspacing="0" 
+	 *    <blockquote><table border="0" cellpadding="1" cellspacing="0"
 	 *                 summary="Notable cases.">
 	 *      <tr><th>Input&nbsp;</th><th>Result&nbsp;</th><th>Comments</th></tr>
 	 *      <tr><td>"A1"&nbsp;&nbsp;</td><td>true</td><td>&nbsp;</td></tr>
@@ -195,7 +195,7 @@ public final class SheetNameFormatter {
 	 *      <tr><td>"SALES20080101"&nbsp;&nbsp;</td><td>true</td>
 	 *      		<td>Still needs delimiting even though well out of range</td></tr>
 	 *    </table></blockquote>
-	 *  
+	 *
 	 * @return <code>true</code> if there is any possible ambiguity that the specified rawSheetName
 	 * could be interpreted as a valid cell name.
 	 */
@@ -204,7 +204,7 @@ public final class SheetNameFormatter {
 		if(!matcher.matches()) {
 			return false;
 		}
-		
+
 		// rawSheetName == "Sheet1" gets this far.
 		String lettersPrefix = matcher.group(1);
 		String numbersSuffix = matcher.group(2);

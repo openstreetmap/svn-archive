@@ -37,8 +37,8 @@ import org.apache.poi.util.LittleEndian;
  * the information its needs by calling appropriate methods.</p>
  *
  * <p>{@link PropertySetFactory#create} does its work by calling one
- * of the constructors {@link PropertySet#PropertySet(InputStream)} or
- * {@link PropertySet#PropertySet(byte[])}. If the constructor's
+ * of the constructor {@link PropertySet#PropertySet(InputStream)}.
+ * If the constructor's
  * argument is not in the Horrible Property Set Format, i.e. not a
  * property set stream, or if any other error occurs, an appropriate
  * exception is thrown.</p>
@@ -110,7 +110,7 @@ public class PropertySet
     }
 
 
- 
+
     /**
      * <p>Specifies the version of the operating system that created
      * this {@link PropertySet}. See the HPFS documentation for
@@ -351,7 +351,7 @@ public class PropertySet
     throws UnsupportedEncodingException
     {
         /* FIXME (3): Ensure that at most "length" bytes are read. */
-        
+
         /*
          * Read the stream's header fields.
          */
@@ -551,10 +551,11 @@ public class PropertySet
      * to the specified parameter, else <code>false</code>.</p>
      *
      * @param o the object to compare this <code>PropertySet</code> with
-     * 
+     *
      * @return <code>true</code> if the objects are equal, <code>false</code>
      * if not
      */
+    @Override
     public boolean equals(final Object o)
     {
         if (o == null || !(o instanceof PropertySet))
@@ -586,6 +587,7 @@ public class PropertySet
     /**
      * @see Object#hashCode()
      */
+    @Override
     public int hashCode()
     {
         throw new UnsupportedOperationException("FIXME: Not yet implemented.");
@@ -596,6 +598,7 @@ public class PropertySet
     /**
      * @see Object#toString()
      */
+    @Override
     public String toString()
     {
         final StringBuffer b = new StringBuffer();

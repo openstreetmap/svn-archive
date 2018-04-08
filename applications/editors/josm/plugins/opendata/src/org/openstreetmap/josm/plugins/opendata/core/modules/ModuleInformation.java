@@ -220,7 +220,7 @@ public class ModuleInformation {
     /**
      * Load and instantiate the module
      *
-     * @param the module class
+     * @param klass the module class
      * @return the instantiated and initialized module
      */
     public Module load(Class<? extends Module> klass) throws ModuleException {

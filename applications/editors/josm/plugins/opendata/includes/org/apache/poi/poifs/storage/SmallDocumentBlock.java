@@ -52,7 +52,7 @@ public final class SmallDocumentBlock implements BlockWritable, ListManagedBlock
     {
         _data = new byte[ _block_size ];
     }
-    
+
     private static int getBlocksPerBigBlock(final POIFSBigBlockSize bigBlockSize)
     {
        return bigBlockSize.getBigBlockSize() / _block_size;
@@ -145,7 +145,7 @@ public final class SmallDocumentBlock implements BlockWritable, ListManagedBlock
         throws IOException
     {
         int _blocks_per_big_block = getBlocksPerBigBlock(bigBlockSize);
-        
+
         List<SmallDocumentBlock> sdbs = new ArrayList<>();
 
         for (int j = 0; j < blocks.length; j++)
@@ -192,6 +192,7 @@ public final class SmallDocumentBlock implements BlockWritable, ListManagedBlock
      * @exception IOException on problems writing to the specified
      *            stream
      */
+    @Override
     public void writeBlocks(OutputStream stream)
         throws IOException
     {
@@ -202,9 +203,8 @@ public final class SmallDocumentBlock implements BlockWritable, ListManagedBlock
      * Get the data from the block
      *
      * @return the block's data as a byte array
-     *
-     * @exception IOException if there is no data
      */
+    @Override
     public byte [] getData() {
         return _data;
     }

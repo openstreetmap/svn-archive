@@ -15,7 +15,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 ==================================================================== */
-        
+
 
 package org.apache.poi.hssf.record;
 
@@ -52,10 +52,6 @@ public final class CalcModeRecord
     /**
      * set the calc mode flag for formulas
      *
-     * @see #MANUAL
-     * @see #AUTOMATIC
-     * @see #AUTOMATIC_EXCEPT_TABLES
-     *
      * @param calcmode one of the three flags above
      */
 
@@ -67,10 +63,6 @@ public final class CalcModeRecord
     /**
      * get the calc mode flag for formulas
      *
-     * @see #MANUAL
-     * @see #AUTOMATIC
-     * @see #AUTOMATIC_EXCEPT_TABLES
-     *
      * @return calcmode one of the three flags above
      */
 
@@ -79,6 +71,7 @@ public final class CalcModeRecord
         return field_1_calcmode;
     }
 
+    @Override
     public String toString()
     {
         StringBuffer buffer = new StringBuffer();
@@ -90,19 +83,23 @@ public final class CalcModeRecord
         return buffer.toString();
     }
 
+    @Override
     public void serialize(LittleEndianOutput out) {
         out.writeShort(getCalcMode());
     }
 
+    @Override
     protected int getDataSize() {
         return 2;
     }
 
+    @Override
     public short getSid()
     {
         return sid;
     }
 
+    @Override
     public Object clone() {
       CalcModeRecord rec = new CalcModeRecord();
       rec.field_1_calcmode = field_1_calcmode;

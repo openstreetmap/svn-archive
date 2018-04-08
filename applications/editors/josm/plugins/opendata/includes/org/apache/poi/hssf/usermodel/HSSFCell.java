@@ -77,6 +77,7 @@ public class HSSFCell implements Cell {
      *
      * @return the HSSFSheet that owns this cell
      */
+    @Override
     public HSSFSheet getSheet() {
         return _sheet;
     }
@@ -86,6 +87,7 @@ public class HSSFCell implements Cell {
      *
      * @return the HSSFRow that owns this cell
      */
+    @Override
     public HSSFRow getRow() {
         int rowIndex = getRowIndex();
         return _sheet.getRow(rowIndex);
@@ -178,10 +180,12 @@ public class HSSFCell implements Cell {
     /**
      * @return the (zero based) index of the row containing this cell
      */
+    @Override
     public int getRowIndex() {
         return _record.getRow();
     }
 
+    @Override
     public int getColumnIndex() {
         return _record.getColumn() & 0xFFFF;
     }
@@ -195,6 +199,7 @@ public class HSSFCell implements Cell {
      * @see #CELL_TYPE_BOOLEAN
      * @see #CELL_TYPE_ERROR
      */
+    @Override
     public void setCellType(int cellType) {
         notifyFormulaChanging();
         if(isPartOfArrayFormulaGroup()){
@@ -364,6 +369,7 @@ public class HSSFCell implements Cell {
      * @see #CELL_TYPE_ERROR
      */
 
+    @Override
     public int getCellType()
     {
         return _cellType;
@@ -380,6 +386,7 @@ public class HSSFCell implements Cell {
         }
     }
 
+    @Override
     public String getCellFormula() {
         if (!(_record instanceof FormulaRecordAggregate)) {
             throw typeMismatch(CELL_TYPE_FORMULA, _cellType, true);
@@ -419,10 +426,10 @@ public class HSSFCell implements Cell {
      * Get the value of the cell as a number.
      * For strings we throw an exception.
      * For blank cells we return a 0.
-     * See {@link HSSFDataFormatter} for turning this
      *  number into a string similar to that which
      *  Excel would render this number as.
      */
+    @Override
     public double getNumericCellValue() {
 
         switch(_cellType) {
@@ -444,9 +451,9 @@ public class HSSFCell implements Cell {
      * Get the value of the cell as a date.
      * For strings we throw an exception.
      * For blank cells we return a null.
-     * See {@link HSSFDataFormatter} for formatting
      *  this date into a string similar to how excel does.
      */
+    @Override
     public Date getDateCellValue() {
 
         if (_cellType == CELL_TYPE_BLANK) {
@@ -464,6 +471,7 @@ public class HSSFCell implements Cell {
      * For blank cells we return an empty string.
      * For formulaCells that are not string Formulas, we throw an exception
      */
+    @Override
     public String getStringCellValue()
     {
       HSSFRichTextString str = getRichStringCellValue();
@@ -475,6 +483,7 @@ public class HSSFCell implements Cell {
      * For blank cells we return an empty string.
      * For formulaCells that are not string Formulas, we throw an exception
      */
+    @Override
     public HSSFRichTextString getRichStringCellValue() {
 
         switch(_cellType) {
@@ -568,6 +577,7 @@ public class HSSFCell implements Cell {
      * get the value of the cell as a boolean.  For strings, numbers, and errors, we throw an exception.
      * For blank cells we return a false.
      */
+    @Override
     public boolean getBooleanCellValue() {
 
         switch(_cellType) {
@@ -596,8 +606,9 @@ public class HSSFCell implements Cell {
     /**
      * get the style for the cell.  This is a reference to a cell style contained in the workbook
      * object.
-     * @see org.apache.poi.hssf.usermodel.HSSFWorkbook#getCellStyleAt(short)
+     * @see org.apache.poi.hssf.usermodel.HSSFWorkbook
      */
+    @Override
     public HSSFCellStyle getCellStyle()
     {
       short styleIndex=_record.getXFIndex();
@@ -640,6 +651,7 @@ public class HSSFCell implements Cell {
      * Dates are displayed in dd-MMM-yyyy format
      * Errors are displayed as #ERR&lt;errIdx&gt;
      */
+    @Override
     public String toString() {
         switch (getCellType()) {
             case CELL_TYPE_BLANK:
@@ -664,6 +676,7 @@ public class HSSFCell implements Cell {
         }
     }
 
+    @Override
     public CellRangeAddress getArrayFormulaRange() {
         if (_cellType != CELL_TYPE_FORMULA) {
             String ref = new CellReference(this).formatAsString();
@@ -673,6 +686,7 @@ public class HSSFCell implements Cell {
         return ((FormulaRecordAggregate)_record).getArrayFormulaRange();
     }
 
+    @Override
     public boolean isPartOfArrayFormulaGroup() {
         if (_cellType != CELL_TYPE_FORMULA) {
             return false;

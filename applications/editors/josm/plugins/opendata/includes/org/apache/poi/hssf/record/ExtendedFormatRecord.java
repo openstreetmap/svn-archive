@@ -15,7 +15,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 ==================================================================== */
-        
+
 
 package org.apache.poi.hssf.record;
 
@@ -160,7 +160,6 @@ public final class ExtendedFormatRecord
      *
      *
      * @return index to the font
-     * @see org.apache.poi.hssf.record.FontRecord
      */
 
     public short getFontIndex()
@@ -244,7 +243,6 @@ public final class ExtendedFormatRecord
      * style this should be NULL.
      *
      * @return index of parent XF
-     * @see #NULL
      * @see #getCellOptions()
      */
 
@@ -275,13 +273,6 @@ public final class ExtendedFormatRecord
      *
      *
      * @return align - how to align the cell (see constants)
-     * @see #GENERAL
-     * @see #LEFT
-     * @see #CENTER
-     * @see #RIGHT
-     * @see #FILL
-     * @see #JUSTIFY
-     * @see #CENTER_SELECTION
      * @see #getAlignmentOptions()
      */
 
@@ -308,10 +299,6 @@ public final class ExtendedFormatRecord
      *
      *
      * @return where to align the text
-     * @see #VERTICAL_TOP
-     * @see #VERTICAL_CENTER
-     * @see #VERTICAL_BOTTOM
-     * @see #VERTICAL_JUSTIFY
      *
      * @see #getAlignmentOptions()
      */
@@ -525,20 +512,6 @@ public final class ExtendedFormatRecord
      *
      *
      * @return border - type of border for the left side of the cell
-     * @see     #NONE
-     * @see     #THIN
-     * @see     #MEDIUM
-     * @see     #DASHED
-     * @see     #DOTTED
-     * @see     #THICK
-     * @see     #DOUBLE
-     * @see     #HAIR
-     * @see     #MEDIUM_DASHED
-     * @see     #DASH_DOT
-     * @see     #MEDIUM_DASH_DOT
-     * @see     #DASH_DOT_DOT
-     * @see     #MEDIUM_DASH_DOT_DOT
-     * @see     #SLANTED_DASH_DOT
      * @see #getBorderOptions()
      */
 
@@ -552,20 +525,6 @@ public final class ExtendedFormatRecord
      *
      *
      * @return  border - type of border for the right side of the cell
-     * @see     #NONE
-     * @see     #THIN
-     * @see     #MEDIUM
-     * @see     #DASHED
-     * @see     #DOTTED
-     * @see     #THICK
-     * @see     #DOUBLE
-     * @see     #HAIR
-     * @see     #MEDIUM_DASHED
-     * @see     #DASH_DOT
-     * @see     #MEDIUM_DASH_DOT
-     * @see     #DASH_DOT_DOT
-     * @see     #MEDIUM_DASH_DOT_DOT
-     * @see     #SLANTED_DASH_DOT
      * @see #getBorderOptions()
      */
 
@@ -579,20 +538,6 @@ public final class ExtendedFormatRecord
      *
      *
      * @return border - type of border for the top of the cell
-     * @see     #NONE
-     * @see     #THIN
-     * @see     #MEDIUM
-     * @see     #DASHED
-     * @see     #DOTTED
-     * @see     #THICK
-     * @see     #DOUBLE
-     * @see     #HAIR
-     * @see     #MEDIUM_DASHED
-     * @see     #DASH_DOT
-     * @see     #MEDIUM_DASH_DOT
-     * @see     #DASH_DOT_DOT
-     * @see     #MEDIUM_DASH_DOT_DOT
-     * @see     #SLANTED_DASH_DOT
      * @see #getBorderOptions()
      */
 
@@ -606,20 +551,6 @@ public final class ExtendedFormatRecord
      *
      *
      * @return border - type of border for the bottom of the cell
-     * @see     #NONE
-     * @see     #THIN
-     * @see     #MEDIUM
-     * @see     #DASHED
-     * @see     #DOTTED
-     * @see     #THICK
-     * @see     #DOUBLE
-     * @see     #HAIR
-     * @see     #MEDIUM_DASHED
-     * @see     #DASH_DOT
-     * @see     #MEDIUM_DASH_DOT
-     * @see     #DASH_DOT_DOT
-     * @see     #MEDIUM_DASH_DOT_DOT
-     * @see     #SLANTED_DASH_DOT
      * @see #getBorderOptions()
      */
 
@@ -756,20 +687,6 @@ public final class ExtendedFormatRecord
      *
      *
      * @return diag - the line style
-     * @see     #NONE
-     * @see     #THIN
-     * @see     #MEDIUM
-     * @see     #DASHED
-     * @see     #DOTTED
-     * @see     #THICK
-     * @see     #DOUBLE
-     * @see     #HAIR
-     * @see     #MEDIUM_DASHED
-     * @see     #DASH_DOT
-     * @see     #MEDIUM_DASH_DOT
-     * @see     #DASH_DOT_DOT
-     * @see     #MEDIUM_DASH_DOT_DOT
-     * @see     #SLANTED_DASH_DOT
      * @see #getAdtlPaletteOptions()
      */
 
@@ -781,24 +698,6 @@ public final class ExtendedFormatRecord
 
     /**
      * get the additional fill pattern
-     *
-     * @see #NO_FILL
-     * @see #SOLID_FILL
-     * @see #FINE_DOTS
-     * @see #ALT_BARS
-     * @see #SPARSE_DOTS
-     * @see #THICK_HORZ_BANDS
-     * @see #THICK_VERT_BANDS
-     * @see #THICK_BACKWARD_DIAG
-     * @see #THICK_FORWARD_DIAG
-     * @see #BIG_SPOTS
-     * @see #BRICKS
-     * @see #THIN_HORZ_BANDS
-     * @see #THIN_VERT_BANDS
-     * @see #THIN_BACKWARD_DIAG
-     * @see #THIN_FORWARD_DIAG
-     * @see #SQUARES
-     * @see #DIAMONDS
      *
      * @return fill - fill pattern??
      * @see #getAdtlPaletteOptions()
@@ -853,6 +752,7 @@ public final class ExtendedFormatRecord
         return _fill_background.getShortValue(field_9_fill_palette_options);
     }
 
+    @Override
     public String toString()
     {
         StringBuffer buffer = new StringBuffer();
@@ -960,6 +860,7 @@ public final class ExtendedFormatRecord
         return buffer.toString();
     }
 
+    @Override
     public void serialize(LittleEndianOutput out) {
         out.writeShort(getFontIndex());
         out.writeShort(getFormatIndex());
@@ -972,17 +873,20 @@ public final class ExtendedFormatRecord
         out.writeShort(getFillPaletteOptions());
     }
 
+    @Override
     protected int getDataSize() {
         return 20;
     }
 
+    @Override
     public short getSid()
     {
         return sid;
     }
-    
 
-	public int hashCode() {
+
+	@Override
+    public int hashCode() {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + field_1_font_index;
@@ -1002,7 +906,8 @@ public final class ExtendedFormatRecord
 	 *  contents as equals, as the various indexes
 	 *  that matter are embedded in the records
 	 */
-	public boolean equals(Object obj) {
+	@Override
+    public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)
@@ -1031,6 +936,6 @@ public final class ExtendedFormatRecord
 		}
 		return false;
 	}
-    
-    
+
+
 }

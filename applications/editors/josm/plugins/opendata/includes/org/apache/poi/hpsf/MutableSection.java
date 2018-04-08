@@ -104,7 +104,6 @@ public class MutableSection extends Section
      *
      * @param formatID The section's format ID
      *
-     * @see #setFormatID(byte[])
      * @see Section#getFormatID
      */
     public void setFormatID(final ClassID formatID)
@@ -141,7 +140,6 @@ public class MutableSection extends Section
      * @param variantType The property's variant type.
      * @param value The property's value.
      *
-     * @see #setProperty(int, String)
      * @see #getProperty
      * @see Variant
      */

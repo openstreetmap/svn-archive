@@ -141,8 +141,8 @@ public final class HSSFSheet implements org.apache.poi.ss.usermodel.Sheet {
      * @param rownum  row number
      * @return High level HSSFRow object representing a row in the sheet
      * @see org.apache.poi.hssf.usermodel.HSSFRow
-     * @see #removeRow(org.apache.poi.ss.usermodel.Row)
      */
+    @Override
     public HSSFRow createRow(int rownum)
     {
         HSSFRow row = new HSSFRow(_workbook, this, rownum);
@@ -197,6 +197,7 @@ public final class HSSFSheet implements org.apache.poi.ss.usermodel.Sheet {
      * @param rowIndex  row to get
      * @return HSSFRow representing the row number or null if its not defined on the sheet
      */
+    @Override
     public HSSFRow getRow(int rowIndex) {
         return _rows.get(Integer.valueOf(rowIndex));
     }
@@ -205,6 +206,7 @@ public final class HSSFSheet implements org.apache.poi.ss.usermodel.Sheet {
      * Gets the first row on the sheet
      * @return the number of the first logical row on the sheet, zero based
      */
+    @Override
     public int getFirstRowNum() {
         return _firstrow;
     }
@@ -216,11 +218,12 @@ public final class HSSFSheet implements org.apache.poi.ss.usermodel.Sheet {
      *  is zero, you can't tell if that means there
      *  are zero rows on the sheet, or one at
      *  position zero. For that case, additionally
-     *  call {@link #getPhysicalNumberOfRows()} to
+     *  call {@code #getPhysicalNumberOfRows()} to
      *  tell if there is a row at position zero
      *  or not.
      * @return the number of the last row contained in this sheet, zero based.
      */
+    @Override
     public int getLastRowNum() {
         return _lastrow;
     }
@@ -230,6 +233,7 @@ public final class HSSFSheet implements org.apache.poi.ss.usermodel.Sheet {
      * be the third row if say for instance the second row is undefined.
      * Call getRowNum() on each row if you care which one it is.
      */
+    @Override
     public Iterator<Row> rowIterator() {
         @SuppressWarnings("unchecked") // can this clumsy generic syntax be improved?
         Iterator<Row> result = (Iterator<Row>)(Iterator<? extends Row>)_rows.values().iterator();
@@ -239,6 +243,7 @@ public final class HSSFSheet implements org.apache.poi.ss.usermodel.Sheet {
      * Alias for {@link #rowIterator()} to allow
      *  foreach loops
      */
+    @Override
     public Iterator<Row> iterator() {
         return rowIterator();
     }
@@ -280,6 +285,7 @@ public final class HSSFSheet implements org.apache.poi.ss.usermodel.Sheet {
         return SSCellRange.create(firstRow, firstColumn, height, width, temp, HSSFCell.class);
     }
 
+    @Override
     public CellRange<HSSFCell> removeArrayFormula(Cell cell) {
         if (cell.getSheet() != this) {
             throw new IllegalArgumentException("Specified cell does not belong to this sheet.");
@@ -299,6 +305,6 @@ public final class HSSFSheet implements org.apache.poi.ss.usermodel.Sheet {
         }
         return result;
     }
-    
+
 
 }

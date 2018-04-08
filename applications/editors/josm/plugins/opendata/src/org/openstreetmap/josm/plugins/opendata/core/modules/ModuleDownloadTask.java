@@ -16,6 +16,7 @@ import java.util.Collection;
 import java.util.LinkedList;
 
 import org.openstreetmap.josm.data.Version;
+import org.openstreetmap.josm.gui.PleaseWaitDialog;
 import org.openstreetmap.josm.gui.PleaseWaitRunnable;
 import org.openstreetmap.josm.gui.progress.NullProgressMonitor;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
@@ -27,8 +28,8 @@ import org.xml.sax.SAXException;
 /**
  * Asynchronous task for downloading a collection of modules.
  *
- * When the task is finished {@see #getDownloadedModules()} replies the list of downloaded modules
- * and {@see #getFailedModules()} replies the list of failed modules.
+ * When the task is finished {@link #getDownloadedModules()} replies the list of downloaded modules
+ * and {@link #getFailedModules()} replies the list of failed modules.
  *
  */
 public class ModuleDownloadTask extends PleaseWaitRunnable {
@@ -42,9 +43,9 @@ public class ModuleDownloadTask extends PleaseWaitRunnable {
     /**
      * Creates the download task
      *
-     * @param parent the parent component relative to which the {@see PleaseWaitDialog} is displayed
+     * @param parent the parent component relative to which the {@link PleaseWaitDialog} is displayed
      * @param toUpdate a collection of module descriptions for modules to update/download. Must not be null.
-     * @param title the title to display in the {@see PleaseWaitDialog}
+     * @param title the title to display in the {@link PleaseWaitDialog}
      * @throws IllegalArgumentException thrown if toUpdate is null
      */
     public ModuleDownloadTask(Component parent, Collection<ModuleInformation> toUpdate, String title) throws IllegalArgumentException {
@@ -56,9 +57,9 @@ public class ModuleDownloadTask extends PleaseWaitRunnable {
     /**
      * Creates the task
      *
-     * @param monitor a progress monitor. Defaults to {@see NullProgressMonitor#INSTANCE} if null
+     * @param monitor a progress monitor. Defaults to {@link NullProgressMonitor#INSTANCE} if null
      * @param toUpdate a collection of module descriptions for modules to update/download. Must not be null.
-     * @param title the title to display in the {@see PleaseWaitDialog}
+     * @param title the title to display in the {@link PleaseWaitDialog}
      * @throws IllegalArgumentException thrown if toUpdate is null
      */
     public ModuleDownloadTask(ProgressMonitor monitor, Collection<ModuleInformation> toUpdate, String title) {

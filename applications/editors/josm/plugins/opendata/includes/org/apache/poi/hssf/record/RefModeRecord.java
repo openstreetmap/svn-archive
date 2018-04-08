@@ -15,7 +15,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 ==================================================================== */
-        
+
 
 package org.apache.poi.hssf.record;
 
@@ -50,7 +50,6 @@ public final class RefModeRecord
      * set the reference mode to use (HSSF uses/assumes A1)
      * @param mode the mode to use
      * @see #USE_A1_MODE
-     * @see #USE_R1C1_MODE
      *
      */
 
@@ -63,7 +62,6 @@ public final class RefModeRecord
      * get the reference mode to use (HSSF uses/assumes A1)
      * @return mode to use
      * @see #USE_A1_MODE
-     * @see #USE_R1C1_MODE
      */
 
     public short getMode()
@@ -71,6 +69,7 @@ public final class RefModeRecord
         return field_1_mode;
     }
 
+    @Override
     public String toString()
     {
         StringBuffer buffer = new StringBuffer();
@@ -82,19 +81,23 @@ public final class RefModeRecord
         return buffer.toString();
     }
 
+    @Override
     public void serialize(LittleEndianOutput out) {
         out.writeShort(getMode());
     }
 
+    @Override
     protected int getDataSize() {
         return 2;
     }
 
+    @Override
     public short getSid()
     {
         return sid;
     }
 
+    @Override
     public Object clone() {
       RefModeRecord rec = new RefModeRecord();
       rec.field_1_mode = field_1_mode;

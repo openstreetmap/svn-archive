@@ -265,7 +265,7 @@ public final class ModuleHandler {
      * memory.
      *
      * @param modules the list of modules
-     * @param monitor the progress monitor. Defaults to {@see NullProgressMonitor#INSTANCE} if null.
+     * @param monitor the progress monitor. Defaults to {@link NullProgressMonitor#INSTANCE} if null.
      */
     public static void loadModules(Component parent, Collection<ModuleInformation> modules, ProgressMonitor monitor) {
         if (monitor == null) {
@@ -301,7 +301,7 @@ public final class ModuleHandler {
      * Loads locally available module information from local module jars and from cached
      * module lists.
      *
-     * @param monitor the progress monitor. Defaults to {@see NullProgressMonitor#INSTANCE} if null.
+     * @param monitor the progress monitor. Defaults to {@link NullProgressMonitor#INSTANCE} if null.
      * @return the list of locally available module information
      *
      */
@@ -415,7 +415,7 @@ public final class ModuleHandler {
      *
      * @param parent the parent window for message boxes
      * @param modules the collection of modules to update. Must not be null.
-     * @param monitor the progress monitor. Defaults to {@see NullProgressMonitor#INSTANCE} if null.
+     * @param monitor the progress monitor. Defaults to {@link NullProgressMonitor#INSTANCE} if null.
      * @throws IllegalArgumentException thrown if modules is null
      */
     public static List<ModuleInformation> updateModules(Component parent,
@@ -621,7 +621,7 @@ public final class ModuleHandler {
         return ret == 0;
     }*/
 
-    /**
+    /*
      * Replies the module which most likely threw the exception <code>ex</code>.
      *
      * @param ex the exception
@@ -646,7 +646,7 @@ public final class ModuleHandler {
         return err;
     }*/
 
-    /**
+    /*
      * Checks whether the exception <code>e</code> was thrown by a module. If so,
      * conditionally deactivates the module, but asks the user first.
      *

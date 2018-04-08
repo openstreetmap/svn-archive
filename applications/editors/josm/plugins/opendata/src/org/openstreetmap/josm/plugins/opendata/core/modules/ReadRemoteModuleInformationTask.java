@@ -68,7 +68,7 @@ public class ReadRemoteModuleInformationTask extends PleaseWaitRunnable {
     /**
      * Creates the task
      *
-     * @param monitor the progress monitor. Defaults to {@see NullProgressMonitor#INSTANCE} if null
+     * @param monitor the progress monitor. Defaults to {@link NullProgressMonitor#INSTANCE} if null
      * @param sites the collection of download sites. Defaults to the empty collection if null.
      */
     public ReadRemoteModuleInformationTask(ProgressMonitor monitor, Collection<String> sites) {

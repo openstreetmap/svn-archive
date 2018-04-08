@@ -91,7 +91,7 @@ public class LbsDataSubRecord extends SubRecord {
     /**
      * @param in the stream to read data from
      * @param cbFContinued the seconf short in the record header
-     * @param cmoOt the containing Obj's {@link CommonObjectDataSubRecord#field_1_objectType}
+     * @param cmoOt the containing Obj's {@code CommonObjectDataSubRecord#field_1_objectType}
      */
     public LbsDataSubRecord(LittleEndianInput in, int cbFContinued, int cmoOt) {
         _cbFContinued = cbFContinued;
@@ -266,7 +266,7 @@ public class LbsDataSubRecord extends SubRecord {
     public static class LbsDropData {
 
         /**
-         *  An unsigned integer that specifies the style of this dropdown. 
+         *  An unsigned integer that specifies the style of this dropdown.
          */
         private int _wStyle;
 

@@ -149,7 +149,6 @@ public interface Cell {
      * @return the value of the cell as a number
      * @throws IllegalStateException if the cell type returned by {@link #getCellType()} is CELL_TYPE_STRING
      * @exception NumberFormatException if the cell value isn't a parsable <code>double</code>.
-     * @see DataFormatter for turning this number into a string similar to that which Excel would render this number as.
      */
     double getNumericCellValue();
 
@@ -161,7 +160,6 @@ public interface Cell {
      * @return the value of the cell as a date
      * @throws IllegalStateException if the cell type returned by {@link #getCellType()} is CELL_TYPE_STRING
      * @exception NumberFormatException if the cell value isn't a parsable <code>double</code>.
-     * @see DataFormatter for formatting  this date into a string similar to how excel does.
      */
     Date getDateCellValue();
 
@@ -201,7 +199,6 @@ public interface Cell {
      *
      * @return the cell's style. Always not-null. Default cell style has zero index and can be obtained as
      * <code>workbook.getCellStyleAt(0)</code>
-     * @see Workbook#getCellStyleAt(short)
      */
     CellStyle getCellStyle();
 

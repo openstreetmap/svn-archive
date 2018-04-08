@@ -124,6 +124,7 @@ import org.openstreetmap.josm.plugins.osmrec.personalization.UserDataExtractAndT
 import org.openstreetmap.josm.tools.GBC;
 import org.openstreetmap.josm.tools.Logging;
 import org.openstreetmap.josm.tools.Shortcut;
+import org.openstreetmap.josm.tools.Utils;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
@@ -1812,8 +1813,8 @@ class OSMRecPluginHelper {
          * Read tags from comboboxes and add it to all selected objects
          */
         public final void performTagAdding() {
-            String key = Tag.removeWhiteSpaces(keys.getEditor().getItem().toString());
-            String value = Tag.removeWhiteSpaces(values.getEditor().getItem().toString());
+            String key = Utils.removeWhiteSpaces(keys.getEditor().getItem().toString());
+            String value = Utils.removeWhiteSpaces(values.getEditor().getItem().toString());
             if (key.isEmpty() || value.isEmpty()) return;
             for (OsmPrimitive osm: sel) {
                 String val = osm.get(key);

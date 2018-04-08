@@ -584,6 +584,7 @@ public class CustomizePublicTransportStopDialog implements ActionListener, ItemL
     /**
      * Callback method for buttons event
      */
+    @Override
     public void actionPerformed(ActionEvent event) {
         if (SAVE_COMMAND.equals(event.getActionCommand())) {
             setVisible(false);

@@ -355,7 +355,8 @@ public class OsmInspectorLayer extends Layer {
 		renderer = new StreamingRenderer();
 		CRS.decode(Main.getProjection().toCode());
 		crsOSMI = CRS.decode("EPSG:4326");
-		content = new MapContent(crsOSMI);
+		content = new MapContent();
+		content.getViewport().setCoordinateReferenceSystem(crsOSMI);
 
 		selectGeomType.add(GeomType.POINT);
 		for (int idx = 1; idx < typeNames.length; ++idx) {

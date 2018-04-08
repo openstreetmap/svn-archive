@@ -4,11 +4,7 @@ package org.openstreetmap.josm.plugins.opendata.core.io.tabular;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-import java.io.IOException;
 import java.io.InputStream;
-
-import javax.xml.stream.FactoryConfigurationError;
-import javax.xml.stream.XMLStreamException;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -60,10 +56,10 @@ public class XlsReaderTest {
 
     /**
      * Non-regression test for ticket <a href="https://josm.openstreetmap.de/ticket/15980">#15980</a>
-     * @throws IOException if an error occurs during reading
+     * @throws Exception if an error occurs during reading
      */
     @Test
-    public void testTicket15980() throws IOException, XMLStreamException, FactoryConfigurationError {
+    public void testTicket15980() throws Exception {
         try (InputStream is = TestUtils.getRegressionDataStream(15980, "qry_OSM_Import_Orte.xls")) {
             DataSet ds = XlsReader.parseDataSet(is, newHandler("EPSG:4326"), null);
             NonRegFunctionalTests.testGeneric("#15980", ds);

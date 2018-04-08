@@ -3,11 +3,7 @@ package org.openstreetmap.josm.plugins.opendata.core.io.geographic;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.io.InputStream;
-
-import javax.xml.stream.FactoryConfigurationError;
-import javax.xml.stream.XMLStreamException;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -28,10 +24,10 @@ public class TabReaderTest {
 
     /**
      * Non-regression test for ticket <a href="https://josm.openstreetmap.de/ticket/15159">#15159</a>
-     * @throws IOException if an error occurs during reading
+     * @throws Exception if an error occurs during reading
      */
     @Test
-    public void testTicket15159() throws IOException, XMLStreamException, FactoryConfigurationError {
+    public void testTicket15159() throws Exception {
         File file = new File(TestUtils.getRegressionDataFile(15159, "Sanisette.tab"));
         try (InputStream is = new FileInputStream(file)) {
             NonRegFunctionalTests.testGeneric("#15159", TabReader.parseDataSet(is, file, null, null));

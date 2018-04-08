@@ -22,10 +22,15 @@ import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.tools.CheckParameterUtil;
 
+/**
+ * Superclass of non-reg functional tests.
+ */
 public abstract class NonRegFunctionalTests {
 
     /**
      * Non-regression generic test.
+     * @param context context
+     * @param ds data set
      */
     public static void testGeneric(String context, DataSet ds) {
         CheckParameterUtil.ensureParameterNotNull(ds, "ds");
@@ -51,6 +56,7 @@ public abstract class NonRegFunctionalTests {
 
     /**
      * Non-regression test for ticket <a href="https://josm.openstreetmap.de/ticket/10214">#10214</a>
+     * @param ds data set
      */
     public static void testTicket10214(DataSet ds) {
         testGeneric("#10214", ds);
@@ -69,6 +75,7 @@ public abstract class NonRegFunctionalTests {
     /**
      * Lists all datasets files matching given extension.
      * @param ext file extension to search for
+     * @return all datasets files matching given extension
      * @returns List of all datasets files matching given extension
      * @throws IOException in case of I/O error
      */

@@ -4,11 +4,7 @@ package org.openstreetmap.josm.plugins.opendata.core.io.geographic;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import java.io.IOException;
 import java.io.InputStream;
-
-import javax.xml.stream.FactoryConfigurationError;
-import javax.xml.stream.XMLStreamException;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -45,10 +41,10 @@ public class KmlReaderTest {
 
     /**
      * Non-regression test for ticket <a href="https://josm.openstreetmap.de/ticket/12694">#12694</a>
-     * @throws IOException if an error occurs during reading
+     * @throws Exception if an error occurs during reading
      */
     @Test
-    public void testTicket12694() throws IOException, XMLStreamException, FactoryConfigurationError {
+    public void testTicket12694() throws Exception {
         try (InputStream is = TestUtils.getRegressionDataStream(12694, "Alvinรณpolis_314946.kml")) {
             NonRegFunctionalTests.testGeneric("#12694", KmlReader.parseDataSet(is, null));
         }
@@ -56,10 +52,10 @@ public class KmlReaderTest {
 
     /**
      * Non-regression test for ticket <a href="https://josm.openstreetmap.de/ticket/10214">#10214</a>
-     * @throws IOException if an error occurs during reading
+     * @throws Exception if an error occurs during reading
      */
     @Test
-    public void testTicket10214() throws IOException, XMLStreamException, FactoryConfigurationError {
+    public void testTicket10214() throws Exception {
         try (InputStream is = TestUtils.getRegressionDataStream(10214, "utf8_test.kml")) {
             NonRegFunctionalTests.testTicket10214(KmlReader.parseDataSet(is, null));
         }
@@ -67,10 +63,10 @@ public class KmlReaderTest {
 
     /**
      * Non-regression test for ticket <a href="https://josm.openstreetmap.de/ticket/7714">#7714</a>
-     * @throws IOException if an error occurs during reading
+     * @throws Exception if an error occurs during reading
      */
     @Test
-    public void testTicket7714() throws IOException, XMLStreamException, FactoryConfigurationError {
+    public void testTicket7714() throws Exception {
         try (InputStream is = TestUtils.getRegressionDataStream(7714, "doc.kml")) {
             NonRegFunctionalTests.testGeneric("#7714", KmlReader.parseDataSet(is, null));
         }

@@ -186,6 +186,7 @@ public final class ModuleHandler {
      * current JOSM version must be compatible with the module and no other modules this module
      * depends on should be missing.
      *
+     * @param parent parent component
      * @param modules the collection of all loaded modules
      * @param module the module for which preconditions are checked
      * @return true, if the preconditions are met; false otherwise
@@ -197,8 +198,7 @@ public final class ModuleHandler {
     /**
      * Creates a class loader for loading module code.
      *
-     * @param modules the collection of modules which are going to be loaded with this
-     * class loader
+     * @param modules the collection of modules which are going to be loaded with this class loader
      * @return the class loader
      */
     public static ClassLoader createClassLoader(Collection<ModuleInformation> modules) {
@@ -224,6 +224,7 @@ public final class ModuleHandler {
      * Loads and instantiates the module described by <code>module</code> using
      * the class loader <code>moduleClassLoader</code>.
      *
+     * @param parent parent component
      * @param module the module
      * @param moduleClassLoader the module class loader
      */
@@ -261,9 +262,9 @@ public final class ModuleHandler {
     }
 
     /**
-     * Loads the module in <code>modules</code> from locally available jar files into
-     * memory.
+     * Loads the module in <code>modules</code> from locally available jar files into memory.
      *
+     * @param parent parent component
      * @param modules the list of modules
      * @param monitor the progress monitor. Defaults to {@link NullProgressMonitor#INSTANCE} if null.
      */
@@ -355,9 +356,9 @@ public final class ModuleHandler {
 
     /**
      * Builds the set of modules to load. Deprecated and unmaintained modules are filtered
-     * out. This involves user interaction. This method displays alert and confirmation
-     * messages.
+     * out. This involves user interaction. This method displays alert and confirmation messages.
      *
+     * @param parent parent component
      * @return the set of modules to load (as set of module names)
      */
     public static List<ModuleInformation> buildListOfModulesToLoad(Component parent) {
@@ -416,6 +417,7 @@ public final class ModuleHandler {
      * @param parent the parent window for message boxes
      * @param modules the collection of modules to update. Must not be null.
      * @param monitor the progress monitor. Defaults to {@link NullProgressMonitor#INSTANCE} if null.
+     * @return list of modules
      * @throws IllegalArgumentException thrown if modules is null
      */
     public static List<ModuleInformation> updateModules(Component parent,
@@ -498,6 +500,7 @@ public final class ModuleHandler {
     /**
      * Ask the user for confirmation that a module shall be disabled.
      *
+     * @param parent parent component
      * @param reason the reason for disabling the module
      * @param name the module name
      * @return true, if the module shall be disabled; false, otherwise

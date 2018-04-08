@@ -222,6 +222,7 @@ public class ModuleInformation {
      *
      * @param klass the module class
      * @return the instantiated and initialized module
+     * @throws ModuleException if the module cannot be loaded or initialized
      */
     public Module load(Class<? extends Module> klass) throws ModuleException {
         try {
@@ -236,6 +237,7 @@ public class ModuleInformation {
      *
      * @param classLoader the class loader to use
      * @return the loaded class
+     * @throws ModuleException if the class cannot be found
      */
     @SuppressWarnings("unchecked")
     public Class<? extends Module> loadClass(ClassLoader classLoader) throws ModuleException {
@@ -325,6 +327,7 @@ public class ModuleInformation {
 
     /**
      * Replies the name of the module
+     * @return the name of the module
      */
     public String getName() {
         return name;

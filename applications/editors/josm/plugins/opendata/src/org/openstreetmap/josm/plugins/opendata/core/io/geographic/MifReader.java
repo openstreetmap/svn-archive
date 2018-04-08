@@ -618,7 +618,12 @@ public final class MifReader extends AbstractMapInfoReader {
         return node;
     }
 
-    /** Compare two doubles within a default epsilon */
+    /**
+     * Compare two doubles within a default epsilon
+     * @param a first double
+     * @param b second double
+     * @return {@code true} if {@code a} and {@code b} are equals
+     */
     public static boolean equals(Double a, Double b) {
         if (a == b) return true;
         // If the difference is less than epsilon, treat as equal.

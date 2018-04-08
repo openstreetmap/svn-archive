@@ -1,11 +1,7 @@
 // License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.opendata.core.io.tabular;
 
-import java.io.IOException;
 import java.io.InputStream;
-
-import javax.xml.stream.FactoryConfigurationError;
-import javax.xml.stream.XMLStreamException;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -56,10 +52,10 @@ public class CsvReaderTest {
 
     /**
      * Non-regression test for ticket <a href="https://josm.openstreetmap.de/ticket/13508">#13508</a>
-     * @throws IOException if an error occurs during reading
+     * @throws Exception if an error occurs during reading
      */
     @Test
-    public void testTicket13508() throws IOException, XMLStreamException, FactoryConfigurationError {
+    public void testTicket13508() throws Exception {
         try (InputStream is = TestUtils.getRegressionDataStream(13508, "arrets-de-bus0.csv")) {
             NonRegFunctionalTests.testGeneric("#13508", CsvReader.parseDataSet(is, newHandler("EPSG:4326"), null));
         }
@@ -67,10 +63,10 @@ public class CsvReaderTest {
 
     /**
      * Non-regression test for ticket <a href="https://josm.openstreetmap.de/ticket/10214">#10214</a>
-     * @throws IOException if an error occurs during reading
+     * @throws Exception if an error occurs during reading
      */
     @Test
-    public void testTicket10214() throws IOException, XMLStreamException, FactoryConfigurationError {
+    public void testTicket10214() throws Exception {
         try (InputStream is = TestUtils.getRegressionDataStream(10214, "utf8_test.csv")) {
             NonRegFunctionalTests.testTicket10214(CsvReader.parseDataSet(is, newHandler("EPSG:4326"), null));
         }
@@ -78,10 +74,10 @@ public class CsvReaderTest {
 
     /**
      * Non-regression test for ticket <a href="https://josm.openstreetmap.de/ticket/8805">#8805</a>
-     * @throws IOException if an error occurs during reading
+     * @throws Exception if an error occurs during reading
      */
     @Test
-    public void testTicket8805() throws IOException, XMLStreamException, FactoryConfigurationError {
+    public void testTicket8805() throws Exception {
         try (InputStream is = TestUtils.getRegressionDataStream(8805, "XXX.csv")) {
             NonRegFunctionalTests.testGeneric("#8805", CsvReader.parseDataSet(is, newHandler("EPSG:4326"), null));
         }

@@ -24,7 +24,7 @@ import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.PrimitiveId;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.Way;
-import org.openstreetmap.josm.gui.OsmPrimitivRenderer;
+import org.openstreetmap.josm.gui.PrimitiveRenderer;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import org.openstreetmap.josm.plugins.turnrestrictions.dnd.PrimitiveIdListProvider;
 import org.openstreetmap.josm.plugins.turnrestrictions.dnd.PrimitiveIdListTransferHandler;
@@ -80,7 +80,7 @@ public class TurnRestrictionLegEditorTest extends JFrame {
         JPanel pnl = new JPanel(new BorderLayout());
         listModel = new DefaultListModel<>();
         pnl.add(new JScrollPane(lstObjects = new JList<>(listModel)), BorderLayout.CENTER);
-        lstObjects.setCellRenderer(new OsmPrimitivRenderer());
+        lstObjects.setCellRenderer(new PrimitiveRenderer());
 
         PrimitiveIdListProvider provider = new PrimitiveIdListProvider() {
             @Override

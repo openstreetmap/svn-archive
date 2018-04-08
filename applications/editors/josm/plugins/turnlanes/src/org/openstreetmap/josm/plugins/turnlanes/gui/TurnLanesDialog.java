@@ -190,13 +190,13 @@ public class TurnLanesDialog extends ToggleDialog implements ActiveLayerChangeLi
 
     @Override
     public void activeOrEditLayerChanged(ActiveLayerChangeEvent e) {
-        OsmDataLayer oldLayer = e.getPreviousEditLayer();
+        OsmDataLayer oldLayer = e.getPreviousDataLayer();
         if (oldLayer != null) {
-            oldLayer.data.removeDataSetListener(dataSetListener);
+            oldLayer.getDataSet().removeDataSetListener(dataSetListener);
         }
         OsmDataLayer newLayer = MainApplication.getLayerManager().getEditLayer();
         if (newLayer != null) {
-            newLayer.data.addDataSetListener(dataSetListener);
+            newLayer.getDataSet().addDataSetListener(dataSetListener);
         }
     }
 

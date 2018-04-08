@@ -264,7 +264,7 @@ public class EdigeoFileVEC extends EdigeoLotFile<VecBlock<?>> {
             CIRCLE_ARC(2),
             CURVE(3);
 
-            int code;
+            final int code;
             ArcType(int code) {
                 this.code = code;
             }

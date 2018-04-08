@@ -120,37 +120,4 @@ public class GeoFabrikWFSClient {
 	public void setData(DataStore data) {
 		this.data = data;
 	}
-
-	/**
-	 * @param args
-	 */
-	public static void main(String[] args) {
-
-		// try {
-		// CoordinateReferenceSystem targetCRS = CRS.decode("EPSG:4326");
-		// GeoFabrikWFSClient theTest = new GeoFabrikWFSClient( new
-		// Bounds(-124.0, -120.0, 32.0, 36.0));
-		// theTest.initializeDataStore();
-		// FeatureCollection<SimpleFeatureType, SimpleFeature> features =
-		// theTest.getFeatures();
-		// OsmInspectorLayer inspector = new OsmInspectorLayer(
-		// theTest.getData());
-		// inspector.setVisible(true);
-
-		// ReferencedEnvelope bounds = new ReferencedEnvelope();
-		// Iterator<SimpleFeature> iterator = features.iterator();
-		// try {
-		// while (iterator.hasNext()) {
-		// Feature feature = iterator.next();
-		// bounds.include(feature.getBounds());
-		// }
-		// Main.info("Calculated Bounds:" + bounds);
-		// } finally {
-		// features.close(iterator);
-		// }
-		// } catch (Exception e) {
-		// // TODO Auto-generated catch block
-		// e.printStackTrace();
-		// }
-	}
 }

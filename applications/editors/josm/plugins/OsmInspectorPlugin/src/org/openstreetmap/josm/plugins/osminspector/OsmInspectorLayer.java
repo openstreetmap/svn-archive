@@ -330,15 +330,6 @@ public class OsmInspectorLayer extends Layer {
 	private static final float LINE_WIDTH = 1.0f;
 	private static final float POINT_SIZE = 10.0f;
 
-	/**
-	 * 
-	 * @param wfsClient
-	 * @throws NoSuchAuthorityCodeException
-	 * @throws FactoryException
-	 * @throws IOException
-	 * @throws IndexOutOfBoundsException
-	 * @throws ParseException
-	 */
 	public OsmInspectorLayer(GeoFabrikWFSClient wfsClient,
 			ProgressMonitor monitor) throws NoSuchAuthorityCodeException,
 			FactoryException, IOException, IndexOutOfBoundsException,
@@ -392,16 +383,6 @@ public class OsmInspectorLayer extends Layer {
 		this.updateView();
 	}
 
-	/**
-	 * 
-	 * @param wfsClient
-	 * @throws NoSuchAuthorityCodeException
-	 * @throws FactoryException
-	 * @throws IOException
-	 * @throws ParseException
-	 * @throws NoSuchElementException
-	 * @throws IndexOutOfBoundsException
-	 */
 	public void loadFeatures(GeoFabrikWFSClient wfsClient)
 			throws NoSuchAuthorityCodeException, FactoryException, IOException,
 			IndexOutOfBoundsException, NoSuchElementException, ParseException {

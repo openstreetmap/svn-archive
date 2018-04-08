@@ -20,6 +20,7 @@ import javax.xml.parsers.SAXParserFactory;
 import org.bouncycastle.bcpg.ArmoredInputStream;
 import org.bouncycastle.openpgp.PGPObjectFactory;
 import org.bouncycastle.openpgp.PGPSignatureList;
+import org.bouncycastle.openpgp.operator.bc.BcKeyFingerprintCalculator;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.OsmPrimitiveType;
@@ -160,7 +161,7 @@ public class SigReader {
             String plain = "";
 
             ArmoredInputStream aIn = new ArmoredInputStream(new ByteArrayInputStream(clearsigned.getBytes(Charset.forName("UTF-8"))));
-            PGPObjectFactory pgpFact = new PGPObjectFactory(aIn);
+            PGPObjectFactory pgpFact = new PGPObjectFactory(aIn, new BcKeyFingerprintCalculator());
             // read plain text
             ByteArrayOutputStream bout = new ByteArrayOutputStream();
             if (aIn.isClearText()) {

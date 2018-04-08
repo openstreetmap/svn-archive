@@ -1,16 +1,17 @@
+// License: GPL. For details, see LICENSE file.
 package ru.rodsoft.openstreetmap.josm.plugins.customizepublictransportstop;
 
 /**
+ * Interface of operation of stop area customizing
  * 
  * @author Rodion Scherbakov
- * Interface of operation of stop area customizing
  */
-public interface IStopAreaCustomizer 
-{
-	/**
-	 * Perform operation of customizing of stop area
-	 * @param stopArea Stop area
-	 * @return Stop area after customizing
-	 */
-	public StopArea performCustomizing(StopArea stopArea);
+public interface IStopAreaCustomizer {
+    /**
+     * Perform operation of customizing of stop area
+     * 
+     * @param stopArea Stop area
+     * @return Stop area after customizing
+     */
+    StopArea performCustomizing(StopArea stopArea);
 }

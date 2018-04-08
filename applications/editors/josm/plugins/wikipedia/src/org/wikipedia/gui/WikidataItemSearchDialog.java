@@ -30,6 +30,7 @@ import org.openstreetmap.josm.gui.tagging.ac.AutoCompletingComboBox;
 import org.openstreetmap.josm.gui.tagging.ac.AutoCompletionManager;
 import org.openstreetmap.josm.gui.util.GuiHelper;
 import org.openstreetmap.josm.tools.GBC;
+import org.openstreetmap.josm.tools.Utils;
 import org.wikipedia.WikipediaApp;
 import org.wikipedia.data.WikidataEntry;
 
@@ -104,7 +105,7 @@ public final class WikidataItemSearchDialog extends ExtendedDialog {
         if (selected == null) {
             return;
         }
-        final String key = Tag.removeWhiteSpaces(targetKey.getEditor().getItem().toString());
+        final String key = Utils.removeWhiteSpaces(targetKey.getEditor().getItem().toString());
         final String value = selected.createWikipediaTag().getValue();
         WikipediaToggleDialog.AddWikipediaTagAction.addTag(new Tag(key, value));
     }

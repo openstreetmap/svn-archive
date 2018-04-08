@@ -21,7 +21,7 @@ import org.openstreetmap.josm.data.APIDataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Way;
-import org.openstreetmap.josm.gui.OsmPrimitivRenderer;
+import org.openstreetmap.josm.gui.PrimitiveRenderer;
 import org.openstreetmap.josm.plugins.fr.cadastre.CadastrePlugin;
 import org.openstreetmap.josm.tools.GBC;
 
@@ -73,7 +73,7 @@ public class CheckSourceUploadHook implements UploadHook {
     private void displaySource(Collection<OsmPrimitive> sel) {
         if (!sel.isEmpty()) {
             JPanel p = new JPanel(new GridBagLayout());
-            OsmPrimitivRenderer renderer = new OsmPrimitivRenderer();
+            PrimitiveRenderer renderer = new PrimitiveRenderer();
             p.add(new JLabel(tr("Add \"source=...\" to elements?")), GBC.eol());
             JTextField tf = new JTextField(CadastrePlugin.source);
             p.add(tf, GBC.eol());

@@ -56,7 +56,9 @@ public class WikidataTagCellRenderer extends DefaultTableCellRenderer {
 
         ids.forEach(id ->
                 labelCache.computeIfAbsent(id, x ->
-                        CompletableFuture.supplyAsync(() -> WikipediaApp.getLabelForWikidata(x, Locale.getDefault())))
+                        CompletableFuture.supplyAsync(() -> WikipediaApp.getLabelForWikidata(x, Locale.getDefault()),
+                        // See #16204#comment:10 - Don't use ForkJoinPool#commonPool(), does not work with WebStart
+                        Utils.newForkJoinPool("wikipedia.wikidata.renderer.numberOfThreads", "wikidata-renderer-%d", Thread.NORM_PRIORITY)))
         );
 
         final Collection<String> texts = new ArrayList<>(ids.size());

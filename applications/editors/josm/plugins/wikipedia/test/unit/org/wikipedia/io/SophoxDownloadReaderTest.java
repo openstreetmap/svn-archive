@@ -35,7 +35,7 @@ public class SophoxDownloadReaderTest {
      * Tests point generation
      */
     @Test
-    public void testPoint() throws UnsupportedEncodingException {
+    public void testPoint() {
         assertThat(SophoxDownloadReader.point(9.5, 47.16),
                 is("\"Point(9.5 47.16)\"^^geo:wktLiteral"));
         assertThat(SophoxDownloadReader.boxParams(1.1, 2.2, 3.3, 4.4),
@@ -45,6 +45,7 @@ public class SophoxDownloadReaderTest {
 
     /**
      * Tests server response parsing
+     * @throws UnsupportedEncodingException if an error occurs
      */
     @Test
     public void testIdParsing() throws UnsupportedEncodingException {

@@ -28,6 +28,9 @@ import org.openstreetmap.josm.gui.widgets.JosmTextArea;
 import org.openstreetmap.josm.tools.CheckParameterUtil;
 import org.openstreetmap.josm.tools.Utils;
 
+/**
+ * Computes and displays the distance between stops.
+ */
 public class DistanceBetweenStops extends JosmAction {
 
     public DistanceBetweenStops() {

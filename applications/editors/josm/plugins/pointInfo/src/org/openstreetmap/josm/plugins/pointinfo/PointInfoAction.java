@@ -24,7 +24,7 @@ import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.gui.PleaseWaitRunnable;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.gui.util.GuiHelper;
-import org.openstreetmap.josm.plugins.pointinfo.ruian.RuianModule;
+import org.openstreetmap.josm.plugins.pointinfo.AbstractPointInfoModule;
 import org.openstreetmap.josm.tools.ImageProvider;
 import org.openstreetmap.josm.tools.Logging;
 import org.openstreetmap.josm.tools.OpenBrowser;
@@ -36,7 +36,7 @@ class PointInfoAction extends MapMode implements MouseListener {
     private static final long serialVersionUID = 1L;
 
     protected boolean cancel;
-    protected RuianModule mRuian = new RuianModule();
+    protected AbstractPointInfoModule module;
 
     private String htmlText = "";
     private String coordinatesText = "";
@@ -75,6 +75,7 @@ class PointInfoAction extends MapMode implements MouseListener {
         final LatLon pos = MainApplication.getMap().mapView.getLatLon(clickPoint.x, clickPoint.y);
 
         try {
+            module = PointInfoPlugin.getModule(pos);
             PleaseWaitRunnable infoTask = new PleaseWaitRunnable(tr("Connecting server")) {
                 @Override
                 protected void realRun() throws SAXException {
@@ -94,12 +95,12 @@ class PointInfoAction extends MapMode implements MouseListener {
                         msgLabel.setOpaque(false);
                         msgLabel.addHyperlinkListener(hle -> {
                             if (HyperlinkEvent.EventType.ACTIVATED.equals(hle.getEventType())) {
+                                Logging.info(hle.getURL().toString());
                                 if (hle.getURL() == null || hle.getURL().toString().isEmpty()) {
                                     return;
                                 }
-                                System.out.println("URL: "+ hle.getURL());
                                 if (!hle.getURL().toString().startsWith("http")) {
-                                    mRuian.performAction(hle.getURL().toString());
+                                    module.performAction(hle.getURL().toString());
                                 } else {
                                     String ret = OpenBrowser.displayUrl(hle.getURL().toString());
                                     if (ret != null) {
@@ -131,8 +132,8 @@ class PointInfoAction extends MapMode implements MouseListener {
 
         progressMonitor.beginTask(null, 3);
         try {
-            mRuian.prepareData(pos);
-            htmlText = mRuian.getHtml();
+            module.prepareData(pos);
+            htmlText = module.getHtml();
             coordinatesText = PointInfoUtils.formatCoordinates(pos.lat(), pos.lon());
 
         } finally {

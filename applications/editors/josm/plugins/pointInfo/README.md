@@ -5,26 +5,30 @@
 # PointInfo plugin
 
 This plugin shows all available information for clicked point from external database.
-There is only a Czech RUIAN module available at this moment.
+Only Czech RUIAN and Spanish Cadastre Web Services modules are available at this moment.
 
 Plugin could be easy extend to show another data source.
 
-##Author
+## Author
 
  * Marián Kyral <mkyral@email.cz>
 
-##Websites
+## Contributors
+
+  * Javier Sánchez Portero <javiersanp@gmail.com> (Spanish Cadastre Web Services module)
+
+## Websites
 
  * OSM wiki - not available yet
  * [JOSM svn](https://trac.openstreetmap.org/browser/subversion/applications/editors/josm/plugins/pointInfo)
  * [Github](https://github.com/mkyral/josm-pointInfo)
 
-##Licence:
+## Licence:
 
  * GPL v2 or later
 
 ---
-###The RUIAN module
+### The RUIAN module
 
  * Shows data about building, addresses, streets,  parcels and cadastral area from Czech RUIAN registry (https://wiki.openstreetmap.org/wiki/RUIAN)
 
@@ -36,8 +40,12 @@ Plugin could be easy extend to show another data source.
     * [![](https://raw.githubusercontent.com/mkyral/josm-pointInfo/master/images/dialogs/create-addr-ruian.png)] Create an address point on position defined in RUIAN
     * [![](https://raw.githubusercontent.com/mkyral/josm-pointInfo/master/images/dialogs/create-bug-report.png)] Report an issue with building
 
+### The Spanish Cadastre Web Services module
+
+  * Easy access the Spanish Cadastre Web Services (only Cadastre photographs at the moment).
+
 ---
-###The interface:
+### The interface:
 
 - Input is position, output html string that is shown on message.
 - Optionally you can define special links (file://...) that will be sent back to the module to the performAction method

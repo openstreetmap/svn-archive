@@ -2,7 +2,7 @@
 <project name="pointInfo" default="dist" basedir=".">
 
     <!-- enter the SVN commit message -->
-    <property name="commit.message" value="PointInfo: Replace depricated AddCommand function."/>
+    <property name="commit.message" value="PointInfo: Add Spanish Cadastre Web Services module. Patch by Javier Sánchez Portero."/>
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
     <property name="plugin.main.version" value="12666"/>
 
@@ -14,7 +14,7 @@
     -->
     <property name="plugin.author" value="Marián Kyral"/>
     <property name="plugin.class" value="org.openstreetmap.josm.plugins.pointinfo.PointInfoPlugin"/>
-    <property name="plugin.description" value="Shows an additional information about point on map. There is only a Czech RUIAN module available at this moment."/>
+    <property name="plugin.description" value="Shows an additional information about point on map. Only Czech RUIAN and Spanish Cadastre Web Services modules are available at this moment."/>
     <property name="plugin.icon" value="images/mapmode/info-sml.png"/>
     <property name="plugin.link" value="https://github.com/mkyral/josm-pointInfo"/>
     <!--<property name="plugin.early" value="..."/>-->

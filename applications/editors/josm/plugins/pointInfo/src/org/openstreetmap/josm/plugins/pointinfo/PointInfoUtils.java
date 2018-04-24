@@ -37,8 +37,8 @@ public final class PointInfoUtils {
 
     /**
      * Return text representation of coordinates.
-     # @param  lat Lat coordinate
-     # @param  lon Lon coordinate
+     * @param lat the lat part of coordinates
+     * @param lon the lon part of coordinates
      * @return String coordinatesText
      */
     public static String formatCoordinates(double lat, double lon) {

@@ -6,8 +6,6 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 import java.util.Iterator;
 import java.util.Vector;
 
-import javax.swing.event.TableModelEvent;
-import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
 
 import org.openstreetmap.josm.data.DataSource;
@@ -17,8 +15,10 @@ import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.plugins.public_transport.actions.GTFSImporterAction;
 
-public class GTFSStopTableModel extends DefaultTableModel implements TableModelListener {
-    private GTFSImporterAction controller = null;
+/**
+ * GTFS stop table model
+ */
+public class GTFSStopTableModel extends DefaultTableModel {
 
     public Vector<Node> nodes = new Vector<>();
 
@@ -70,11 +70,9 @@ public class GTFSStopTableModel extends DefaultTableModel implements TableModelL
         else if ("stop_lon".equals(title))
             lonCol = i;
 
-        this.controller = controller;
         addColumn(tr("Id"));
         addColumn(tr("Name"));
         addColumn(tr("State"));
-        addTableModelListener(this);
     }
 
     @Override
@@ -102,9 +100,10 @@ public class GTFSStopTableModel extends DefaultTableModel implements TableModelL
 
     /**
      * tokenizes a line as follows: any comma outside a pair of double quotation marks is taken as field separator.
-     * In particular, neither \" nor \, have a special meaning. Returns the position of the next field separator, if any.
-     * Otherwise it returns -1. s - the string to tokenize. startPos
-     * - the position of the last field separator plus 1 or the value 0.
+     * In particular, neither \" nor \, have a special meaning.
+     * @param s the string to tokenize
+     * @param startPos  the position of the last field separator plus 1 or the value 0
+     * @return the position of the next field separator, if any. Otherwise it returns -1
      */
     private int tokenize(String s, int startPos) {
         int pos = startPos;
@@ -212,9 +211,5 @@ public class GTFSStopTableModel extends DefaultTableModel implements TableModelL
     public void clear() {
         nodes.clear();
         super.setRowCount(0);
-    }
-
-    @Override
-    public void tableChanged(TableModelEvent e) {
     }
 }

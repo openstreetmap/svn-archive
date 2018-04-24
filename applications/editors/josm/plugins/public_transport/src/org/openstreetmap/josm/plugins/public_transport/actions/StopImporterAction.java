@@ -50,6 +50,9 @@ import org.openstreetmap.josm.plugins.public_transport.models.WaypointTableModel
 import org.openstreetmap.josm.plugins.public_transport.refs.TrackReference;
 import org.xml.sax.SAXException;
 
+/**
+ * Create Stops from GPX
+ */
 public class StopImporterAction extends JosmAction {
     private static StopImporterDialog dialog = null;
 
@@ -269,7 +272,11 @@ public class StopImporterAction extends JosmAction {
         return node;
     }
 
-    /** sets the tags of the node according to the type */
+    /**
+     * sets the tags of the node according to the type
+     * @param node node
+     * @param type type
+     */
     public static void setTagsWrtType(Node node, String type) {
         node.remove("highway");
         node.remove("railway");
@@ -287,6 +294,8 @@ public class StopImporterAction extends JosmAction {
 
     /**
      * returns a collection of all selected lines or a collection of all lines otherwise
+     * @param table table
+     * @return all selected lines or a collection of all lines otherwise
      */
     public static Vector<Integer> getConsideredLines(JTable table) {
         int[] selectedLines = table.getSelectedRows();
@@ -303,7 +312,11 @@ public class StopImporterAction extends JosmAction {
         return consideredLines;
     }
 
-    /** marks the table items whose nodes are marked on the map */
+    /**
+     * marks the table items whose nodes are marked on the map
+     * @param table table
+     * @param nodes nodes
+     */
     public static void findNodesInTable(JTable table, Vector<Node> nodes) {
         DataSet ds = MainApplication.getLayerManager().getEditDataSet();
         if (ds == null)
@@ -319,6 +332,8 @@ public class StopImporterAction extends JosmAction {
 
     /**
      * shows the nodes that correspond to the marked lines in the table. If no lines are marked in the table, show all nodes from the vector
+     * @param table table
+     * @param nodes nodes
      */
     public static void showNodesFromTable(JTable table, Vector<Node> nodes) {
         BoundingXYVisitor box = new BoundingXYVisitor();
@@ -336,6 +351,8 @@ public class StopImporterAction extends JosmAction {
 
     /**
      * marks the nodes that correspond to the marked lines in the table. If no lines are marked in the table, mark all nodes from the vector
+     * @param table table
+     * @param nodes nodes
      */
     public static void markNodesFromTable(JTable table, Vector<Node> nodes) {
         OsmPrimitive[] osmp = {null};

@@ -39,6 +39,9 @@ import org.openstreetmap.josm.plugins.public_transport.models.GTFSStopTableModel
 import org.openstreetmap.josm.plugins.public_transport.refs.TrackReference;
 import org.openstreetmap.josm.tools.Logging;
 
+/**
+ * Create Stops from GTFS
+ */
 public class GTFSImporterAction extends JosmAction {
     private static GTFSImporterDialog dialog = null;
 
@@ -259,6 +262,8 @@ public class GTFSImporterAction extends JosmAction {
 
     /**
      * returns a collection of all selected lines or a collection of all lines otherwise
+     * @param table table
+     * @return all selected lines or a collection of all lines otherwise
      */
     public static Vector<Integer> getConsideredLines(JTable table) {
         int[] selectedLines = table.getSelectedRows();
@@ -275,7 +280,11 @@ public class GTFSImporterAction extends JosmAction {
         return consideredLines;
     }
 
-    /** marks the table items whose nodes are marked on the map */
+    /**
+     * marks the table items whose nodes are marked on the map
+     * @param table table
+     * @param nodes nodes
+     */
     public static void findNodesInTable(JTable table, Vector<Node> nodes) {
         DataSet ds = MainApplication.getLayerManager().getEditDataSet();
         if (ds == null)
@@ -292,6 +301,8 @@ public class GTFSImporterAction extends JosmAction {
     /**
      * shows the nodes that correspond to the marked lines in the table.
      * If no lines are marked in the table, show all nodes from the vector
+     * @param table table
+     * @param nodes nodes
      */
     public static void showNodesFromTable(JTable table, Vector<Node> nodes) {
         BoundingXYVisitor box = new BoundingXYVisitor();
@@ -310,6 +321,8 @@ public class GTFSImporterAction extends JosmAction {
     /**
      * marks the nodes that correspond to the marked lines in the table.
      * If no lines are marked in the table, mark all nodes from the vector
+     * @param table table
+     * @param nodes nodes
      */
     public static void markNodesFromTable(JTable table, Vector<Node> nodes) {
         OsmPrimitive[] osmp = {null};

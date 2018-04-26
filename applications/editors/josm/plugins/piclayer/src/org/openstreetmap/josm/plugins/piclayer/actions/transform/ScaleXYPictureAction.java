@@ -8,22 +8,20 @@ import java.awt.event.MouseEvent;
 import java.awt.geom.Point2D;
 
 import org.openstreetmap.josm.gui.MainApplication;
-import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.plugins.piclayer.actions.GenericPicTransformAction;
 import org.openstreetmap.josm.tools.ImageProvider;
 
 /**
  * This class handles the input during scaling the picture.
  */
-@SuppressWarnings("serial")
 public class ScaleXYPictureAction extends GenericPicTransformAction {
 
     /**
      * Constructor
      */
-    public ScaleXYPictureAction(MapFrame frame) {
+    public ScaleXYPictureAction() {
         super(tr("PicLayer scale"), tr("Scaled"), "scale", tr("Drag to scale the picture in the X and Y Axis"),
-                frame, ImageProvider.getCursor("crosshair", null));
+                ImageProvider.getCursor("crosshair", null));
     }
 
     @Override

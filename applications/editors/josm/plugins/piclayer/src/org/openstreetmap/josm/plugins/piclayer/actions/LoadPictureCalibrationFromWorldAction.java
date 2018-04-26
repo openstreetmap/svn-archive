@@ -13,7 +13,9 @@ import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.plugins.piclayer.layer.PicLayerAbstract;
 
-@SuppressWarnings("serial")
+/**
+ * Action to import World File Calibration.
+ */
 public class LoadPictureCalibrationFromWorldAction extends JosmAction {
 
     private PicLayerAbstract layer;

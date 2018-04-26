@@ -17,7 +17,9 @@ import org.openstreetmap.josm.plugins.piclayer.command.TransformCommand;
 import org.openstreetmap.josm.plugins.piclayer.layer.PicLayerAbstract;
 import org.openstreetmap.josm.tools.Shortcut;
 
-@SuppressWarnings("serial")
+/**
+ * Superclass of transformation actions.
+ */
 public abstract class GenericPicTransformAction extends MapMode implements MouseListener, MouseMotionListener {
 
     protected boolean isDragging = false;
@@ -34,8 +36,7 @@ public abstract class GenericPicTransformAction extends MapMode implements Mouse
         this.actionName = actionName;
     }
 
-    public GenericPicTransformAction(String name, String actionName, String iconName,
-            String tooltip, MapFrame mapFrame, Cursor cursor) {
+    public GenericPicTransformAction(String name, String actionName, String iconName, String tooltip, Cursor cursor) {
         super(name, iconName, tooltip, cursor);
         this.actionName = actionName;
     }

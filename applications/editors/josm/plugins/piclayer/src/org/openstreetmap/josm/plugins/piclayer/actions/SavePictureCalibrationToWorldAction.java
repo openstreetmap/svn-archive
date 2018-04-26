@@ -16,6 +16,9 @@ import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.plugins.piclayer.layer.PicLayerAbstract;
 
+/**
+ * Action to export World file Calibration.
+ */
 public class SavePictureCalibrationToWorldAction extends JosmAction {
 
     // Owner layer of the action
@@ -54,7 +57,7 @@ public class SavePictureCalibrationToWorldAction extends JosmAction {
                 default: wext = "wld";
             }
         }
-        
+
         // Save dialog
         final JFileChooser fc = new JFileChooser();
         fc.setAcceptAllFileFilterUsed(true);
@@ -72,7 +75,7 @@ public class SavePictureCalibrationToWorldAction extends JosmAction {
             try (BufferedWriter bw = new BufferedWriter(new FileWriter(file))) {
                 for (int i = 0; i < 6; i++) {
                     bw.write(Double.toString(values[i]));
-                    if (i<5) {
+                    if (i < 5) {
                         bw.newLine();
                     }
                 }

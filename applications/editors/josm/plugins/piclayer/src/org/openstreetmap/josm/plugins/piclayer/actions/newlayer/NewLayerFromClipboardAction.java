@@ -16,7 +16,6 @@ import org.openstreetmap.josm.plugins.piclayer.layer.PicLayerFromClipboard;
  * Action responsible for creation of a new layer based on
  * the content of the clipboard.
  */
-@SuppressWarnings("serial")
 public class NewLayerFromClipboardAction extends JosmAction {
 
     /**

@@ -54,7 +54,7 @@ public class PictureTransform {
     }
 
     /**
-     * updates pair of points (suppose that other pairs are (origin=>origin) points are the same),
+     * updates pair of points (suppose that other pairs are (origin=&gt;origin) points are the same),
      * solves equation,
      * applies transform matrix to the existing cachedTransform
      *

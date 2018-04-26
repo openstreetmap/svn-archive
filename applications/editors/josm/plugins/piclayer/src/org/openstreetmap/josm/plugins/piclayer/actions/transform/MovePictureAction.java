@@ -7,22 +7,20 @@ import java.awt.event.MouseEvent;
 
 import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.gui.MainApplication;
-import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.plugins.piclayer.actions.GenericPicTransformAction;
 import org.openstreetmap.josm.tools.ImageProvider;
 
 /**
  * This class handles the input during moving the picture.
  */
-@SuppressWarnings("serial")
 public class MovePictureAction extends GenericPicTransformAction {
 
     /**
      * Constructor
      */
-    public MovePictureAction(MapFrame frame) {
+    public MovePictureAction() {
         super(tr("PicLayer move"), tr("Moved"), "move", tr("Drag to move the picture"),
-                frame, ImageProvider.getCursor("crosshair", null));
+                ImageProvider.getCursor("crosshair", null));
     }
 
     @Override

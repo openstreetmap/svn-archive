@@ -8,22 +8,20 @@ import java.awt.event.MouseEvent;
 import java.awt.geom.Point2D;
 
 import org.openstreetmap.josm.gui.MainApplication;
-import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.plugins.piclayer.actions.GenericPicTransformAction;
 import org.openstreetmap.josm.tools.ImageProvider;
 
 /**
  * This class handles the input during rotating the picture.
  */
-@SuppressWarnings("serial")
 public class RotatePictureAction extends GenericPicTransformAction {
 
     /**
      * Constructor
      */
-    public RotatePictureAction(MapFrame frame) {
+    public RotatePictureAction() {
         super(tr("PicLayer rotate"), tr("Rotated"), "rotate", tr("Drag to rotate the picture"),
-                frame, ImageProvider.getCursor("crosshair", null));
+                ImageProvider.getCursor("crosshair", null));
     }
 
     @Override

@@ -28,7 +28,6 @@ import org.openstreetmap.josm.plugins.piclayer.layer.kml.KMLReader;
 /**
  * Action responsible for creation of new layers based on image files.
  */
-@SuppressWarnings("serial")
 public class NewLayerFromFileAction extends JosmAction {
 
     String m_lastdirprefname = "piclayer.lastdir";

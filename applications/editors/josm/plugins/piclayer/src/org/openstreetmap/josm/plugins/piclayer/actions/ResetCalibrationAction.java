@@ -10,7 +10,9 @@ import org.openstreetmap.josm.plugins.piclayer.command.TransformCommand;
 import org.openstreetmap.josm.plugins.piclayer.layer.PicLayerAbstract;
 import org.openstreetmap.josm.plugins.piclayer.transform.PictureTransform;
 
-@SuppressWarnings("serial")
+/**
+ * Action to reset Calibration.
+ */
 public class ResetCalibrationAction extends JosmAction {
 
     private PicLayerAbstract layer;

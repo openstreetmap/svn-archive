@@ -7,17 +7,17 @@ import java.awt.event.MouseEvent;
 import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
 
-import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.plugins.piclayer.actions.GenericPicTransformAction;
 import org.openstreetmap.josm.tools.ImageProvider;
 
-// old version - ctrl move point (not transforming picture)
-@SuppressWarnings("serial")
+/**
+ * old version - ctrl move point (not transforming picture)
+ */
 public class MovePointAction extends GenericPicTransformAction {
 
-    public MovePointAction(MapFrame frame) {
+    public MovePointAction() {
         super(tr("PicLayer Move point"), tr("Point added/moved"), "movepoint", tr("Drag or create point on the picture"),
-                frame, ImageProvider.getCursor("crosshair", null));
+                ImageProvider.getCursor("crosshair", null));
     }
 
     @Override

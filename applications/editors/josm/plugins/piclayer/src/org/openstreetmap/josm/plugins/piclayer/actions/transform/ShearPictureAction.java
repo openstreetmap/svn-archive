@@ -7,21 +7,19 @@ import java.awt.event.MouseEvent;
 
 import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.gui.MainApplication;
-import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.plugins.piclayer.actions.GenericPicTransformAction;
 import org.openstreetmap.josm.tools.ImageProvider;
 
 /**
  * This class handles the input during shearing of the picture.
  */
-@SuppressWarnings("serial")
 public class ShearPictureAction extends GenericPicTransformAction {
 
     /**
      * Constructor
      */
-    public ShearPictureAction(MapFrame frame) {
-        super(tr("PicLayer shear"), tr("Sheared"), "shear", tr("Drag to shear the picture"), frame, ImageProvider.getCursor("crosshair", null));
+    public ShearPictureAction() {
+        super(tr("PicLayer shear"), tr("Sheared"), "shear", tr("Drag to shear the picture"), ImageProvider.getCursor("crosshair", null));
     }
 
     @Override

@@ -48,8 +48,10 @@ public class PicLayerPlugin extends Plugin implements LayerChangeListener, Activ
     // Plugin menu
     JosmAction newLayerFromFileAction = new NewLayerFromFileAction();
     JosmAction newLayerFromClipboardAction = new NewLayerFromClipboardAction();
+
     /**
-     * Constructor...
+     * Constructor.
+     * @param info plugin info
      */
     public PicLayerPlugin(PluginInformation info) {
         super(info);
@@ -72,16 +74,16 @@ public class PicLayerPlugin extends Plugin implements LayerChangeListener, Activ
     public void mapFrameInitialized(MapFrame oldFrame, MapFrame newFrame) {
         if (newFrame != null) {
             // Create plugin map modes
-            MovePictureAction movePictureAction = new MovePictureAction(newFrame);
-            MovePointAction movePointAction = new MovePointAction(newFrame);
-            TransformPointAction transformPointAction = new TransformPointAction(newFrame);
-            RemovePointAction removePointAction = new RemovePointAction(newFrame);
+            MovePictureAction movePictureAction = new MovePictureAction();
+            MovePointAction movePointAction = new MovePointAction();
+            TransformPointAction transformPointAction = new TransformPointAction();
+            RemovePointAction removePointAction = new RemovePointAction();
 
-            RotatePictureAction rotatePictureAction = new RotatePictureAction(newFrame);
-            ScaleXYPictureAction scaleXYPictureAction = new ScaleXYPictureAction(newFrame);
-            ScaleXPictureAction scaleXPictureAction = new ScaleXPictureAction(newFrame);
-            ScaleYPictureAction scaleYPictureAction = new ScaleYPictureAction(newFrame);
-            ShearPictureAction shearPictureAction = new ShearPictureAction(newFrame);
+            RotatePictureAction rotatePictureAction = new RotatePictureAction();
+            ScaleXYPictureAction scaleXYPictureAction = new ScaleXYPictureAction();
+            ScaleXPictureAction scaleXPictureAction = new ScaleXPictureAction();
+            ScaleYPictureAction scaleYPictureAction = new ScaleYPictureAction();
+            ShearPictureAction shearPictureAction = new ShearPictureAction();
             // Create plugin buttons and add them to the toolbar
 
             buttonList = new ArrayList<>(7);

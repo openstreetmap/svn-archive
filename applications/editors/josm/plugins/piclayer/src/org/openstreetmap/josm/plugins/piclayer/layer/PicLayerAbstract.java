@@ -58,7 +58,7 @@ public abstract class PicLayerAbstract extends Layer {
     private static Image pinTiledImage;
 
     // Initial position of the image in the real world
-//    protected EastNorth initialImagePosition;
+    // protected EastNorth initialImagePosition;
 
     // Position of the image in the real world
     //protected EastNorth imagePosition;
@@ -132,6 +132,7 @@ public abstract class PicLayerAbstract extends Layer {
     /**
      * Initializes the image. Gets the image from a subclass and stores some
      * initial parameters. Throws exception if something fails.
+     * @throws IOException in case of error
      */
     public void initialize() throws IOException {
         // First, we initialize the calibration, so that createImage() can rely on it
@@ -168,6 +169,8 @@ public abstract class PicLayerAbstract extends Layer {
      * Throws exception if something does not work.
      *
      * TODO: Replace the IOException by our own exception.
+     * @return created image
+     * @throws IOException in case of error
      */
     protected abstract Image createImage() throws IOException;
 
@@ -175,6 +178,7 @@ public abstract class PicLayerAbstract extends Layer {
 
     /**
      * To be overridden by subclasses. Returns the user readable name of the layer.
+     * @return the user readable name of the layer
      */
     public abstract String getPicLayerName();
 
@@ -293,11 +297,11 @@ public abstract class PicLayerAbstract extends Layer {
     }
 
     /**
-     * Returns the distance in meter, that corresponds to one unit in east north
-     * space. For normal projections, it is about 1 (but usually changing with
-     * latitude).
-     * For EPSG:4326, it is the distance from one meridian of full degree to the
-     * next (a couple of kilometers).
+     * Returns the distance in meter, that corresponds to one unit in east north space.
+     * For normal projections, it is about 1 (but usually changing with latitude).
+     * For EPSG:4326, it is the distance from one meridian of full degree to the next (a couple of kilometers).
+     * @param en east/north
+     * @return the distance in meter, that corresponds to one unit in east north space
      */
     protected double getMetersPerEasting(EastNorth en) {
         /* Natural scale in east/north units per pixel.
@@ -397,7 +401,8 @@ public abstract class PicLayerAbstract extends Layer {
 
     /**
      * Loads calibration data from file
-     * @param file The file to read from
+     * @param is The input stream to read from
+     * @throws IOException in case of error
      */
     public void loadCalibration(InputStream is) throws IOException {
         Properties props = new Properties();
@@ -549,6 +554,8 @@ public abstract class PicLayerAbstract extends Layer {
 
     /**
      * Moves the picture. Scaled in EastNorth...
+     * @param x The offset to add in east direction
+     * @param y The offset to add in north direction
      */
     public void movePictureBy(double x, double y) {
         transformer.setImagePosition(transformer.getImagePosition().add(x, y));

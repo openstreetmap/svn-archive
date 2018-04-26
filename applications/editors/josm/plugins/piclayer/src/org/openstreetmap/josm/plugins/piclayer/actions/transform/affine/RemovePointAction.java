@@ -5,16 +5,17 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.event.MouseEvent;
 
-import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.plugins.piclayer.actions.GenericPicTransformAction;
 import org.openstreetmap.josm.tools.ImageProvider;
 
-@SuppressWarnings("serial")
+/**
+ * Remove point on the picture
+ */
 public class RemovePointAction extends GenericPicTransformAction {
 
-    public RemovePointAction(MapFrame frame) {
+    public RemovePointAction() {
         super(tr("PicLayer Remove point"), tr("Point removed"), "removepoint", tr("Remove point on the picture"),
-                frame, ImageProvider.getCursor("crosshair", null));
+                ImageProvider.getCursor("crosshair", null));
     }
 
     @Override

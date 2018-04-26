@@ -21,7 +21,6 @@ import org.openstreetmap.josm.plugins.piclayer.layer.PicLayerAbstract;
  *
  * TODO Four almost identical classes. Refactoring needed.
  */
-@SuppressWarnings("serial")
 public class SavePictureCalibrationAction extends JosmAction {
 
     // Owner layer of the action
@@ -29,6 +28,7 @@ public class SavePictureCalibrationAction extends JosmAction {
 
     /**
      * Constructor
+     * @param owner Owner layer of the action
      */
     public SavePictureCalibrationAction(PicLayerAbstract owner) {
         super(tr("Save Picture Calibration..."), null, tr("Saves calibration data to a file"), null, false);

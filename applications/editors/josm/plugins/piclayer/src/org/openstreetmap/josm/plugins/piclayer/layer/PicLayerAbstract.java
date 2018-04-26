@@ -248,16 +248,22 @@ public abstract class PicLayerAbstract extends Layer {
             g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
 
             // Draw picture
-            g.drawImage(image, -image.getWidth(null) / 2, -image.getHeight(null) / 2, null);
+            int width = image.getWidth(null);
+            int height = image.getHeight(null);
+            try {
+                g.drawImage(image, -width / 2, -height / 2, null);
+            } catch (RuntimeException e) {
+                Logging.error(e);
+            }
 
             // Draw additional rectangle for the active pic layer
             if (mv.getLayerManager().getActiveLayer() == this) {
                 g.setColor(new Color(0xFF0000));
                 g.drawRect(
-                    -image.getWidth(null) / 2,
-                    -image.getHeight(null) / 2,
-                    image.getWidth(null),
-                    image.getHeight(null)
+                    -width / 2,
+                    -height / 2,
+                    width,
+                    height
                 );
             }
             if (drawMarkers) {
@@ -282,8 +288,7 @@ public abstract class PicLayerAbstract extends Layer {
                 }
             }
         } else {
-            // TODO: proper logging
-            System.out.println("PicLayerAbstract::paint - general drawing error (image is null or Graphics not 2D");
+            Logging.error("PicLayerAbstract::paint - general drawing error (image is null or Graphics not 2D");
         }
     }
 

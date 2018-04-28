@@ -1,3 +1,5 @@
+import java.util.regex.Pattern
+
 plugins {
   id "java"
   id "eclipse"
@@ -83,7 +85,7 @@ dependencies {
   testImplementation("org.openstreetmap.josm:josm-unittest:"){changing=true}
 }
 
-version = "34161"
+version = getVersion()
 josm {
   josmCompileVersion = "13600"
   manifest {
@@ -92,4 +94,57 @@ josm {
     oldVersionDownloadLink 12900, "34109", new URL("https://svn.openstreetmap.org/applications/editors/josm/dist/wikipedia.jar?p=34113")
     oldVersionDownloadLink 12878, "33635", new URL("https://svn.openstreetmap.org/applications/editors/josm/dist/wikipedia.jar?p=33636")
   }
+}
+
+/**
+ * @return the current version of the repo as determined by the first of these commands that returns a valid result:
+ *   <ul>
+ *     <li>`git log` Search for a line with a git-svn-id in the current commit (append "-dirty" if working tree differs)</li>
+ *     <li>`git describe` Let git describe the current commit, should only fail, if this is not a git repo</li>
+ *     <li>`svn info` take the revision number from the SVN info command</li>
+ *   </ul>
+ */
+def getVersion() {
+  // First attempt: Check if the commit has a git-svn-id, return SVN revision
+  def result = getVersion("git-svn-id: .*@([1-9][0-9]*) .*", "git", "log", "-1", "--format=%b")
+  if (result == null) {
+    // Second attempt: Check if the commit can be git-described, return the description by git
+    result = getVersion("(.+)", "git", "describe", "--always", "--long", "--dirty")
+    if (result == null) {
+      // Third attempt: Check if we are in an SVN repo, return revision number
+      result = getVersion("Revision: ([1-9][0-9]*)", "svn", "info")
+      if (result == null) {
+        result = "UNKNOWN"
+      } else {
+        result = "r$result"
+      }
+    }
+  } else {
+    result = "r$result"
+    def dirtyProcess = new ProcessBuilder("git", "diff-index", "--quiet", "HEAD").start()
+    if (dirtyProcess.waitFor() != 0) {
+      result += "-dirty"
+    }
+  }
+  return result
+}
+
+/**
+ * Runs the specified command, matches the lines of the output with the given linePattern.
+ * @param linePattern the linePattern to match the lines against
+ * @param command the command to execute
+ * @return if a line matches, return the first RegEx group, else return null
+ */
+def getVersion(String linePattern, String... command) {
+  def process = new ProcessBuilder(command).directory(project.projectDir).start()
+  if (process.waitFor() != 0) {
+    return null
+  }
+  def pattern = Pattern.compile(linePattern)
+  return Arrays.stream(process.inputStream.text.split("\n"))
+    .map { pattern.matcher(it)}
+    .filter { it.matches() }
+    .map { it.group(1).trim() }
+    .findFirst()
+    .orElse(null)
 }

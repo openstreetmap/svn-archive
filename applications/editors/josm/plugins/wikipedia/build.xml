@@ -3,15 +3,11 @@
 
     <!-- enter the SVN commit message -->
     <property name="commit.message" value="Commit message"/>
-    <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
-    <property name="plugin.main.version" value="13597"/>
-    <property name="plugin.canloadatruntime" value="true"/>
 
-    <property name="plugin.author" value="simon04"/>
-    <property name="plugin.class" value="org.wikipedia.WikipediaPlugin"/>
+    <!-- edit the properties of this plugin in the file `gradle.properties` -->
+    <property file="${basedir}/gradle.properties"/>
+    <!-- The description has to stay here AND in the build.gradle, so Ant can sync the description to Launchpad and Gradle can also pick it up. -->
     <property name="plugin.description" value="Simplifies linking OSM objects to Wikipedia articles and Wikidata items"/>
-    <property name="plugin.icon" value="images/dialogs/wikipedia.png"/>
-    <property name="plugin.link" value="https://josm.openstreetmap.de/wiki/Help/Plugin/Wikipedia"/>
 
     <!-- ** include targets that all plugins have in common ** -->
     <import file="../build-common.xml"/>

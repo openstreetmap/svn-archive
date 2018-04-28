@@ -1,0 +1,95 @@
+plugins {
+  id "java"
+  id "eclipse"
+  id "pmd"
+  id "com.github.ben-manes.versions" version "0.17.0"
+  id "com.github.spotbugs" version "1.6.1"
+  id "net.ltgt.errorprone" version "0.0.13"
+  id "org.openstreetmap.josm" version "0.4.0"
+}
+def versions = [
+    errorprone: "2.3.1",
+    junit: "5.1.1",
+    pmd: "6.2.0",
+    spotbugs: "3.1.3"
+]
+
+// Set up ErrorProne
+dependencies.errorprone "com.google.errorprone:error_prone_core:${versions.errorprone}"
+tasks.withType(JavaCompile) {
+  options.compilerArgs += [
+    '-Xep:DefaultCharset:ERROR',
+    '-Xep:ClassCanBeStatic:ERROR',
+    '-Xep:StringEquality:ERROR',
+    '-Xep:WildcardImport:WARN',
+    '-Xep:MethodCanBeStatic:WARN',
+    '-Xep:RemoveUnusedImports:WARN',
+    '-Xep:PrivateConstructorForUtilityClass:WARN',
+    '-Xep:LambdaFunctionalInterface:WARN',
+    '-Xep:ConstantField:WARN'
+  ]
+}
+
+pmd {
+  toolVersion = versions.pmd
+  ignoreFailures true
+  ruleSets = []
+  ruleSetConfig = resources.text.fromFile("$projectDir/config/pmd/ruleset.xml")
+  sourceSets = [sourceSets.main]
+}
+
+spotbugs {
+  toolVersion = versions.spotbugs
+  ignoreFailures = true
+  sourceSets = [sourceSets.main]
+}
+tasks.withType(com.github.spotbugs.SpotBugsTask) {
+  reports {
+    xml.enabled = false
+    html.enabled = true
+  }
+}
+
+sourceSets {
+  main {
+    java {
+      srcDirs = ["src"]
+    }
+    lang {
+      srcDirs = ["data"]
+    }
+    resources {
+      srcDirs = ["$projectDir"]
+      include "images/**"
+      include "GPL-v2.0.txt"
+      include "README"
+    }
+  }
+  test {
+    java {
+      srcDirs = ["test/unit"]
+    }
+  }
+}
+
+repositories {
+  jcenter()
+}
+dependencies {
+  testImplementation "org.junit.jupiter:junit-jupiter-api:${versions.junit}"
+  testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:${versions.junit}"
+  testImplementation "org.junit.vintage:junit-vintage-engine:${versions.junit}"
+  testImplementation "com.github.spotbugs:spotbugs-annotations:${versions.spotbugs}"
+  testImplementation("org.openstreetmap.josm:josm-unittest:"){changing=true}
+}
+
+version = "34161"
+josm {
+  josmCompileVersion = "13600"
+  manifest {
+    // Description is duplicated in build.xml, because only there it is synced to Launchpad for translation
+    description = "Simplifies linking OSM objects to Wikipedia articles and Wikidata items"
+    oldVersionDownloadLink 12900, "34109", new URL("https://svn.openstreetmap.org/applications/editors/josm/dist/wikipedia.jar?p=34113")
+    oldVersionDownloadLink 12878, "33635", new URL("https://svn.openstreetmap.org/applications/editors/josm/dist/wikipedia.jar?p=33636")
+  }
+}

@@ -13,7 +13,6 @@ import javax.swing.JTable;
 import org.junit.Rule;
 import org.junit.Test;
 import org.openstreetmap.josm.testutils.JOSMTestRules;
-import org.wikipedia.gui.WikidataTagCellRenderer;
 
 public class WikidataTagCellRendererTest {
 
@@ -21,7 +20,7 @@ public class WikidataTagCellRendererTest {
      * Setup test.
      */
     @Rule
-    public JOSMTestRules rules = new JOSMTestRules().preferences();
+    public JOSMTestRules rules = new JOSMTestRules().preferences().i18n("en");
 
     @Test
     public void testRenderLabel() throws Exception {

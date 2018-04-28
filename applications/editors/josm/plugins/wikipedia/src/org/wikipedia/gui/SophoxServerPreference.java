@@ -31,7 +31,7 @@ public class SophoxServerPreference implements SubPreferenceSetting {
      */
     public static class Factory implements PreferenceSettingFactory {
         @Override
-        public PreferenceSetting createPreferenceSetting() {
+        public SophoxServerPreference createPreferenceSetting() {
             return new SophoxServerPreference();
         }
     }

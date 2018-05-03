@@ -90,15 +90,16 @@ public final class TagCatalog {
         case BENCH:
             tagList.add(new Tag("amenity", "bench"));
             return tagList;
-        case ZONE:
-            tagList.add(new Tag("area", "zone"));
+        case AREA:
+            tagList.add(new Tag("indoor", "area"));
             return tagList;
-        case NONE:
+        case NONE :
             return tagList;
         default:
             tagList = null;
             return tagList;
         }
+        
     }
 
     /**
@@ -108,7 +109,7 @@ public final class TagCatalog {
      * @author rebsc
      */
     public enum IndoorObject {
-        CONCRETE_WALL, GLASS_WALL, ROOM, TOILET_MALE, TOILET_FEMALE, ELEVATOR, DOOR_PRIVATE, DOOR_PUBLIC, ENTRANCE,
-        ENTRANCE_EXIT_ONLY, ACCESS_PRIVATE, ACCESS_PUBLIC, STEPS, CORRIDOR, BENCH, ZONE, NONE;
+		        CONCRETE_WALL, GLASS_WALL, ROOM, TOILET_MALE, TOILET_FEMALE, ELEVATOR, DOOR_PRIVATE, DOOR_PUBLIC, ENTRANCE,
+		        ENTRANCE_EXIT_ONLY, ACCESS_PRIVATE, ACCESS_PUBLIC, STEPS, CORRIDOR, BENCH, AREA, NONE;
     }
 }

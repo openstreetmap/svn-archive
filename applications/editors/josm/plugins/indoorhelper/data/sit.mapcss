@@ -1,89 +1,23 @@
 /* building shells and walls */
 
-way[indoor=corridor] 
-{
-	width:			1;
-	color:			#000000;
-	fill-color:		#e3e3e3;
-	fill-opacity: 	1.0;
-	z-index:		1;
-}	
-
 way[indoor=wall][material=concrete]
 {
-	width: 			3;
-	color: 			#000000;
-	opacity: 		1.0;
-	fill-color: 	#BEBEBE;
+	width:		1;	
+	color:		#000000;	
+	fill-color: 	#a49f9f;
 	fill-opacity: 	1.0;
-	z-index:		5;
+
+	z-index:	5;
 }
 
 way[indoor=wall][material=glass]
 {
-	width: 			3;
-	color: 			#000000;
-	opacity: 		1.0;
+	width:		1;	
+	color:		#000000;
 	fill-color: 	#00BFFF;
 	fill-opacity: 	1.0;
-	z-index:		5;
-}
 
-/*entrance*/
-node[entrance=public]
-{
-	icon-image:	"entrance_icon.png";
-	icon-width:	30;
-	z-index:  	3;
-}
-
-node[entrance=private]
-{
-	icon-image:	"entrance_icon.png";
-	icon-width:	30;
-	z-index:  	3;
-}
-
-way[entrance=public]
-{
-	icon-image:	"entrance_icon.png";
-	icon-width:	30;
-	z-index:  	3;
-}
-
-way[entrance=private]
-{
-	icon-image:	"entrance_icon.png";
-	icon-width:	30;
-	z-index:  	3;
-}
-
-node[entrance=exit]
-{
-	icon-image:	"entrance_icon.png";
-	icon-width:	30;
-	z-index:  	3;
-}
-
-way[entrance=exit]
-{
-	icon-image:	"entrance_icon.png";
-	icon-width:	30;
-	z-index:  	3;
-}
-
-node[entrance=service]
-{
-	icon-image:	"entrance_icon.png";
-	icon-width:	30;
-	z-index:  	3;
-}
-
-way[entrance=service]
-{
-	icon-image:	"entrance_icon.png";
-	icon-width:	30;
-	z-index: 	 3;
+	z-index:	5;
 }
 
 
@@ -92,180 +26,323 @@ way[entrance=service]
 way[window=glass]
 {
 	width:		3;
-	color:		#00BFFF; 
-	opacity:	1.0;  
+	color:		#00BFFF;
+	opacity:	1.0;
+
 	z-index:  	1;
 }
 
-node[door=yes]
+
+node|z21-[door],
+way|z21-[door]
 {
 	icon-image:	"entrance_door_icon.png";
 	icon-width:	30;
-	z-index:  	3;
+
+	z-index: 	 4;
 }
 
-way[door=yes]
+way[door]
 {
-	icon-image:	"entrance_door_icon.png";
-	icon-width:	30;
-	z-index:  	3;
+	fill-color: 	#7d530b;
+	fill-opacity: 	1.0;
+
+	z-index:	3;
 }
 
 
-/* vertical passages & parking */
+/*entrance*/
+
+way[entrance]
+{
+	fill-color: 	#525252;
+	fill-opacity: 	1.0;
+
+	z-index:	3;
+}
+
+
+node|z20-[entrance],
+way|z20-[entrance]
+{
+	icon-image:	"entrance_icon.png";
+	icon-width:	30;
+
+	z-index: 	 4;
+}
+
+
+/* highways */
+
 way[highway=steps]
 {
-	width: 			1;
-	color: 			#000000;
-	opacity:		1.0;
-	dashes:			15, 5;
+	width: 		1;
+	color: 		#000000;
+	opacity:	1.0;
+	dashes:		15, 5;
 	fill-color: 	#a6ff96;
 	fill-opacity:	1.0;
-	z-index:		2;
+
+	z-index:	2;
 }
 
 way[highway=elevator]
 {
-	width: 			1;
-	color: 			#000000;
-	opacity:		1.0;
-	dashes:			5, 5;
+	width: 		1;
+	color: 		#000000;
+	opacity:	1.0;
+	dashes:		5, 5;
 	fill-color: 	#c3e5fa;
 	fill-opacity:	1.0;
-	icon-image:		"elevator_icon.png";
-	icon-width:		30;
-	z-index:		2;
+
+	z-index:	2;
+}
+
+way|z20-[highway=elevator]
+{
+	icon-image:	"elevator_icon.png";
+	icon-width:	30;
+
+	z-index:	3;
 }
 
 way[highway=service]
 {
-	width:			10;
-	color:			#ffffff;
-	opacity:		1.0;
+	width:		10;
+	color:		#ffffff;
+	opacity:	1.0;
 	casing-width:	2;
 	casing-color:	#000000;
-	z-index:		2;
+	z-index:	2;
 }
 
 way[highway=parking]
 {
-	width:			5;
-	color:			#0000ff;
-	opacity:		1.0;
+	width:		5;
+	color:		#0000ff;
+	opacity:	1.0;
 	casing-width:	5;
 	casing-color:	#ffffff;
-	z-index:		3;
+
+	z-index:	3;
 }
 
 way[area=parkinglot]
 {
-	width: 			1;
-	color: 			#000000;
-	opacity:		1.0;
+	width: 		1;
+	color: 		#000000;
+	opacity:	1.0;
+
 	fill-color: 	#FFFF5C;
 	fill-opacity:	1.0;
-	z-index:		2;
+
+	z-index:	1;
 }
 
 /* rooms */
-
 way[indoor=room]
 {
-	width:			1;
-	color:			#2E2E2E;
+	width:		1;
+	color:		#a49f9f;
 	fill-color: 	#ffffa1;
 	fill-opacity: 	1.0;
-	z-index:		1; 
+	
+	z-index:	1;
 }
 
-way[ref][indoor=room]
+way|z19-20[ref]
 {
 	text:		ref;
 	text-position:  center;
 	font-size: 	12;
 	text-color: 	#000000;
+
+	z-index:	3;
+}
+way|z21-[ref][!name]
+{
+	text:		ref;
+	text-position:  center;
+	font-size: 	12;
+	text-color: 	#000000;
+
+	z-index:	3;
+}
+
+way|z21-[name]
+{
+	text:		name;
+	text-position:  center;
+	font-size: 	12;
+	text-color: 	#000000;
+
+	z-index:	3;
+}
+
+/* corridor */
+
+way[indoor=corridor]
+{
+	width:		1;
+	color:		#a49f9f;
+
+	fill-color:	#e3e3e3;
+	fill-opacity: 	1.0;
+
 	z-index:	1;
 }
 
-way[name][indoor=room]
-{
-	text:			name;
-	text-position:  center;
-	font-size: 		12;
-	text-color: 	#000000;
-	z-index:		1;
-}
 
-/* zones */
-
-way[area=zone]
+/* areas */
+way|z18-[indoor=area]
 {
 	fill-color: 	#FFDAB9;
 	fill-opacity: 	1.0;
-	z-index:		1;
+
+	z-index:	1;
 }
 
-way[name][area=zone]
+way[indoor=area][landuse=ground]
 {
-	text:			name;
-	text-position:  center;
-	font-size: 		12;
-	text-color: 	#000000;
-	fill-color: 	#FFDAB9;
+	width:		1;
+	color:		#a49f9f;
+
+	fill-color:	#e3e3e3;
 	fill-opacity: 	1.0;
-	z-index:		1;
+
+	z-index:	1;
 }
 
-way[ref][area=zone]
+way[indoor=area][landuse=x]
 {
-	text:			name;
-	text-position:  center;
-	font-size: 		12;
-	text-color: 	#000000;
-	fill-color: 	#FFDAB9;
+	width:		1;
+	color:		#000000;
+
+	fill-color:	#8FBC8F;
 	fill-opacity: 	1.0;
-	z-index:		1;
+
+	z-index:	2;
+}
+
+way[indoor=area][landuse=loading]
+{
+	width:		1;
+	color:		#000000;
+
+	fill-color:	#A78866;
+	fill-opacity: 	1.0;
+
+	z-index:	2;
+}
+
+way[indoor=area][landuse=rack]
+{
+	width:		1;
+	color:		#000000;
+
+	fill-color:	#A78866;
+	fill-opacity: 	1.0;
+
+	z-index:	2;
+}
+
+way[indoor=area][landuse=machine]
+{
+	width:		1;
+	color:		#000000;
+
+	fill-color:	#bfbfbf;
+	fill-opacity: 	1.0;
+
+	z-index:	2;
+}
+
+way[indoor=area][landuse=workspace]
+{
+	width:		1;
+	color:		#000000;
+
+	fill-color:	#819FF7;
+	fill-opacity: 	1.0;
+
+	z-index:	2;
+}
+
+way[indoor=area][landuse=workfield]
+{
+	width:		1;
+	color:		#FFFFFF;
+	dashes:		15, 5;
+
+	fill-color:	#F30307;
+	fill-opacity: 	0.3;
+
+	z-index:	3;
+}
+
+way[indoor=area][landuse=storage]
+{
+	width:		1;
+	color:		#FFFFFF;
+	dashes:		15, 5;
+
+	fill-color:	#F30307;
+	fill-opacity: 	0.3;
+
+	z-index:	2;
+}
+
+way[indoor=area][leisure=pitch]
+{
+	width:		1;
+	color:		#000000;
+	fill-color:	#ebba72;
+	fill-opacity: 	1.0;
+
+	z-index:	1;
+}
+
+way|z19-[name][use=sports]
+{
+	text:		name;
+	font-size: 	12;
+	text-color: 	#000000;
+
+	z-index:	2;
 }
 
 /*amenity*/
-
-node[amenity=toilets][male=yes]
+node|z21-[amenity=toilets][male=yes]
 {
 	icon-image:	"toilet_man_icon.png";
 	icon-width:	30;
-	z-index: 	3;
+
+	z-index:  3;
 }
 
-node[amenity=toilets][female=yes]
+node|z21-[amenity=toilets][female=yes]
 {
 	icon-image:	"toilet_woman_icon.png";
 	icon-width:	30;
-	z-index:  	3;
+
+	z-index:  3;
 }
 
-node[amenity=toilets][wheelchair=yes]
+node|z21-[amenity=toilets][wheelchair=yes]
 {
 	icon-image:	"toilet_wheelchair_icon.png";
 	icon-width:	30;
-	z-index:  	3;
+
+	z-index:  3;
 }
 
-wa[amenity=bench]
+/* specific objects */
+way[amenity=bench]
 {
-    width:			1;
-	color:			#000000;
+    	width:		1;
+	color:		#000000;
 	fill-color: 	#a3a3a3;
 	fill-opacity: 	1.0;
-	z-index:		2;  
-}  
 
-/*multipolygon*/
-
-relation[type=multipolygon]
-{
-	width:			1;
-	color:			#000000;
-	fill-color:		#e3e3e3;
-	fill-opacity: 	1.0;
-	z-index:		1;
+	z-index:	2;
 }

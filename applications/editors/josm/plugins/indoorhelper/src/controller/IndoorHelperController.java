@@ -182,12 +182,12 @@ public class IndoorHelperController {
 
                // collecting all tags
                List<Tag> tags = new ArrayList<>();
-               if (toolboxView.getLevelCheckBoxStatus() == false && !levelValue.equals("")) {
+               if (!toolboxView.getLevelCheckBoxStatus() && !levelValue.equals("")) {
                    tags.add(new Tag("level", levelValue));
                }
-                  if (!toolboxView.getLevelNameText().isEmpty() && !toolboxView.getLevelCheckBoxStatus()) {
+               if (!toolboxView.getLevelNameText().isEmpty() && !toolboxView.getLevelCheckBoxStatus()) {
                       tags.add(new Tag("level_name", toolboxView.getLevelNameText()));
-                  }
+               }
                if (!toolboxView.getNameText().isEmpty()) {
                    tags.add(new Tag("name", toolboxView.getNameText()));
                }
@@ -195,16 +195,16 @@ public class IndoorHelperController {
                    tags.add(new Tag("ref", toolboxView.getRefText()));
                }
                if (!toolboxView.getRepeatOnText().isEmpty()) {
-                       tags.add(new Tag("repeat_on", toolboxView.getRepeatOnText()));
-                  }
-                  if (!toolboxView.getLevelNameText().isEmpty() && !toolboxView.getLevelCheckBoxStatus()) {
-                      tags.add(new Tag("level_name", toolboxView.getLevelNameText()));
-                  }
+                   tags.add(new Tag("repeat_on", toolboxView.getRepeatOnText()));
+               }
+               if (!toolboxView.getLevelNameText().isEmpty() && !toolboxView.getLevelCheckBoxStatus()) {
+                   tags.add(new Tag("level_name", toolboxView.getLevelNameText()));
+               }
 
            // Tagging to OSM Data
            model.addTagsToOSM(indoorObject, tags);
 
-           // Reset ui elements
+           // Reset UI elements
            toolboxView.resetUiElements();
 
            //Do the validation process

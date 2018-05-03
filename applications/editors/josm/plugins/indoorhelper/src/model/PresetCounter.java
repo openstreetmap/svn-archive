@@ -62,7 +62,7 @@ public class PresetCounter {
         counterList.add(new ObjectCounter(IndoorObject.CORRIDOR, 0));
         counterList.add(new ObjectCounter(IndoorObject.TOILET_FEMALE, 0));
         counterList.add(new ObjectCounter(IndoorObject.TOILET_MALE, 0));
-        counterList.add(new ObjectCounter(IndoorObject.ZONE, 0));
+        counterList.add(new ObjectCounter(IndoorObject.AREA, 0));
         counterList.add(new ObjectCounter(IndoorObject.BENCH, 0));
     }
 
@@ -137,4 +137,6 @@ public class PresetCounter {
             return 0;
         }
     }
+    
+    
 }

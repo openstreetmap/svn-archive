@@ -285,7 +285,6 @@ public class ToolBoxView extends ToggleDialog {
        contentPanel.add(preset2, new GridBagConstraints(6, 4, 1, 1, 0.0, 0.0,
            GridBagConstraints.CENTER, GridBagConstraints.BOTH,
            new Insets(0, 0, 5, 5), 0, 0));
-
        //---- preset3 ----
        preset3.setEnabled(false);
        contentPanel.add(preset3, new GridBagConstraints(6, 5, 1, 1, 0.0, 0.0,
@@ -336,7 +335,7 @@ public class ToolBoxView extends ToggleDialog {
        ((GridBagLayout) buttonBar.getLayout()).columnWeights = new double[] {1.0, 0.0};
 
        //---- applyButton ----
-       applyButton.setText("Apply");
+       applyButton.setText(tr("Apply"));
        applyButton.setToolTipText(tr("Add selected tags and/or relations to obeject."));
        applyButton.setEnabled(false);
        buttonBar.add(applyButton, new GridBagConstraints(0, 1, 2, 1, 0.0, 0.0,
@@ -505,15 +504,16 @@ public class ToolBoxView extends ToggleDialog {
        return this.repeatOnField.getText();
    }
 
+   
    /**
     * Clears the text boxes and sets an empty String.
     */
    public void resetUiElements() {
-       this.nameField.setText(tr(""));
-       this.levelNameField.setText(tr(""));
-       this.refField.setText(tr(""));
-       this.repeatOnField.setText(tr(""));
-       this.levelNameField.setText(tr(""));
+       this.nameField.setText("");
+       this.levelNameField.setText("");
+       this.refField.setText("");
+       this.repeatOnField.setText("");
+       this.levelNameField.setText("");
    }
 
    /**

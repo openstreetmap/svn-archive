@@ -9,6 +9,7 @@ import java.nio.charset.Charset;
 
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
+import org.openstreetmap.josm.io.IllegalDataException;
 import org.openstreetmap.josm.plugins.opendata.core.OdConstants;
 import org.openstreetmap.josm.plugins.opendata.core.datasets.AbstractDataSetHandler;
 import org.openstreetmap.josm.plugins.opendata.core.util.OdUtils;
@@ -32,7 +33,8 @@ public class CsvReader extends SpreadSheetReader {
         this.sep = handler != null && handler.getSeparator() != null ? handler.getSeparator() : defaultSep;
     }
 
-    public static DataSet parseDataSet(InputStream in, AbstractDataSetHandler handler, ProgressMonitor instance) throws IOException {
+    public static DataSet parseDataSet(InputStream in, AbstractDataSetHandler handler, ProgressMonitor instance)
+            throws IOException, IllegalDataException {
         CsvHandler csvHandler = null;
         if (handler != null && handler.getSpreadSheetHandler() instanceof CsvHandler) {
             csvHandler = (CsvHandler) handler.getSpreadSheetHandler();

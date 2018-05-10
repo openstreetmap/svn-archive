@@ -14,6 +14,7 @@ import org.jopendocument.model.table.TableTableRow;
 import org.jopendocument.model.text.TextP;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
+import org.openstreetmap.josm.io.IllegalDataException;
 import org.openstreetmap.josm.plugins.opendata.core.datasets.AbstractDataSetHandler;
 import org.openstreetmap.josm.tools.Logging;
 
@@ -31,7 +32,7 @@ public class OdsReader extends SpreadSheetReader {
     }
 
     public static DataSet parseDataSet(InputStream in,
-            AbstractDataSetHandler handler, ProgressMonitor instance) throws IOException {
+            AbstractDataSetHandler handler, ProgressMonitor instance) throws IOException, IllegalDataException {
         return new OdsReader(handler != null ? handler.getSpreadSheetHandler() : null).parse(in, instance);
     }
 

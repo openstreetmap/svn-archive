@@ -16,6 +16,7 @@ import org.geotools.data.shapefile.dbf.DbaseFileReader;
 import org.geotools.data.shapefile.dbf.DbaseFileReader.Row;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
+import org.openstreetmap.josm.io.IllegalDataException;
 import org.openstreetmap.josm.plugins.opendata.core.OdConstants;
 import org.openstreetmap.josm.plugins.opendata.core.datasets.AbstractDataSetHandler;
 import org.openstreetmap.josm.plugins.opendata.core.io.tabular.SpreadSheetHandler;
@@ -36,7 +37,7 @@ public class TabReader extends AbstractMapInfoReader {
     }
 
     public static DataSet parseDataSet(InputStream in, File file,
-            AbstractDataSetHandler handler, ProgressMonitor instance) throws IOException {
+            AbstractDataSetHandler handler, ProgressMonitor instance) throws IOException, IllegalDataException {
         return new TabReader(handler).parse(in, file, instance, Charset.forName(OdConstants.ISO8859_15));
     }
 
@@ -73,7 +74,7 @@ public class TabReader extends AbstractMapInfoReader {
         }
     }
 
-    private DataSet parse(InputStream in, File file, ProgressMonitor instance, Charset charset) throws IOException {
+    private DataSet parse(InputStream in, File file, ProgressMonitor instance, Charset charset) throws IOException, IllegalDataException {
         headerReader = new BufferedReader(new InputStreamReader(in, charset));
         parseHeader();
         try {

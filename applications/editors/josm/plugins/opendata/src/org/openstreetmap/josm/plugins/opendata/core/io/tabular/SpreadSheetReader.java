@@ -93,7 +93,7 @@ public abstract class SpreadSheetReader extends AbstractReader {
         return null;
     }
 
-    public DataSet doParse(String[] header, ProgressMonitor progressMonitor) throws IOException {
+    public DataSet doParse(String[] header, ProgressMonitor progressMonitor) throws IOException, IllegalDataException {
         Logging.info("Header: "+Arrays.toString(header));
 
         Map<ProjectionPatterns, List<CoordinateColumns>> projColumns = new HashMap<>();
@@ -149,7 +149,7 @@ public abstract class SpreadSheetReader extends AbstractReader {
         } else if (!columns.isEmpty()) {
             if (!handlerOK) {
                 if (GraphicsEnvironment.isHeadless()) {
-                    throw new IllegalArgumentException("No valid coordinates have been found and cannot prompt user in headless mode.");
+                    throw new IllegalDataException("No valid coordinates have been found and cannot prompt user in headless mode.");
                 }
                 // TODO: filter proposed projections with min/max values ?
                 Projection p = ChooserLauncher.askForProjection(progressMonitor);
@@ -162,7 +162,7 @@ public abstract class SpreadSheetReader extends AbstractReader {
             }
 
         } else {
-            throw new IllegalArgumentException(tr("No valid coordinates have been found."));
+            throw new IllegalDataException(tr("No valid coordinates have been found."));
         }
 
         String message = "";
@@ -194,7 +194,8 @@ public abstract class SpreadSheetReader extends AbstractReader {
             }
 
             if (fields.length > header.length) {
-                Logging.warn(tr("Invalid file. Bad length on line {0}. Expected {1} columns, got {2}.", lineNumber, header.length, fields.length));
+                Logging.warn(
+                        tr("Invalid file. Bad length on line {0}. Expected {1} columns, got {2}.", lineNumber, header.length, fields.length));
                 Logging.warn(Arrays.toString(fields));
             }
 
@@ -267,7 +268,7 @@ public abstract class SpreadSheetReader extends AbstractReader {
         return ds;
     }
 
-    public final DataSet parse(InputStream in, ProgressMonitor progressMonitor) throws IOException {
+    public final DataSet parse(InputStream in, ProgressMonitor progressMonitor) throws IOException, IllegalDataException {
 
         initResources(in, progressMonitor);
 

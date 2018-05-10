@@ -15,6 +15,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
+import org.openstreetmap.josm.io.IllegalDataException;
 import org.openstreetmap.josm.plugins.opendata.core.datasets.AbstractDataSetHandler;
 import org.openstreetmap.josm.tools.Logging;
 
@@ -29,7 +30,7 @@ public class XlsReader extends SpreadSheetReader {
     }
 
     public static DataSet parseDataSet(InputStream in,
-            AbstractDataSetHandler handler, ProgressMonitor instance) throws IOException {
+            AbstractDataSetHandler handler, ProgressMonitor instance) throws IOException, IllegalDataException {
         return new XlsReader(handler != null ? handler.getSpreadSheetHandler() : null).parse(in, instance);
     }
 

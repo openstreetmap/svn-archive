@@ -12,7 +12,6 @@ import org.jgrapht.Graph;
 import org.jgrapht.alg.BellmanFordShortestPath;
 import org.jgrapht.alg.DijkstraShortestPath;
 import org.jgrapht.graph.DirectedWeightedMultigraph;
-import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.Way;
@@ -218,9 +217,7 @@ public class RoutingGraph {
      * Compute weight and add edge to the graph
      */
     private void addEdge(Way way, Node from, Node to) {
-        LatLon fromLL = from.getCoor();
-        LatLon toLL = from.getCoor();
-        if (fromLL == null || toLL == null) {
+        if (!from.isLatLonKnown() || !to.isLatLonKnown()) {
             return;
         }
 

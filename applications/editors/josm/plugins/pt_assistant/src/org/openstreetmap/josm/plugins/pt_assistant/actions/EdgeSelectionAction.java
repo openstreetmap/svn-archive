@@ -40,12 +40,14 @@ public class EdgeSelectionAction extends MapMode {
 
     private Cursor selectionCursor;
     private Cursor waySelectCursor;
+    private List<Way> edgeList;
 
     public EdgeSelectionAction() {
         super(tr(MAP_MODE_NAME), "edgeSelection", tr(MAP_MODE_NAME),
                 Shortcut.registerShortcut("mapmode:edge_selection", tr("Mode: {0}", tr(MAP_MODE_NAME)), KeyEvent.VK_K, Shortcut.CTRL),
                 ImageProvider.getCursor("normal", "selection"));
         highlighted = new HashSet<>();
+        edgeList = new ArrayList<>();
 
         selectionCursor = ImageProvider.getCursor("normal", "selection");
         waySelectCursor = ImageProvider.getCursor("normal", "select_way");
@@ -132,19 +134,74 @@ public class EdgeSelectionAction extends MapMode {
     }
 
     @Override
-    public void mouseClicked(MouseEvent e) {
+	public void mouseClicked(MouseEvent e) {
 
         DataSet ds = MainApplication.getLayerManager().getEditDataSet();
         Way initial = MainApplication.getMap().mapView.getNearestWay(e.getPoint(), OsmPrimitive::isUsable);
-        if (initial != null) {
-            List<Way> edge = getEdgeFromWay(initial, getModeOfTravel());
-            ds.setSelected(edge);
-            AutoScaleAction.zoomTo(
+        updateKeyModifiers(e);
+        if(!shift && !ctrl) {
+        			/*
+        			 * remove all previous selection and just add the latest selection
+        			 */
+        			edgeList.clear();
+        		    ds.clearSelection();
+        		    if (initial != null) {
+        	            List<Way> edge = getEdgeFromWay(initial, getModeOfTravel());
+        	            for(Way way:edge) {
+        	            		if (!edgeList.contains(way))
+        	            			edgeList.add(way);
+        	            }
+        	            edgeList.addAll(edge);
+        	            ds.setSelected(edgeList);
+        	            AutoScaleAction.zoomTo(
+        	                    edge.stream()
+        	                    .map(w -> (OsmPrimitive) w)
+        	                    .collect(Collectors.toList()));
+        	        }
+
+        } else if (!shift && ctrl) {
+        	    /*
+        	     * toggle mode where we can individually select and deselect the edges
+        	     */
+            	List<Way> edge = getEdgeFromWay(initial, getModeOfTravel());
+			if (edgeList.containsAll(edge)) {
+				System.out.println(edgeList.size());
+				for(Way way:edge) {
+            		if (edgeList.contains(way))
+            			edgeList.remove(way);
+                }
+			} else {
+				for(Way way:edge) {
+            		if (!edgeList.contains(way))
+            			edgeList.add(way);
+                }
+			}
+			ds.clearSelection();
+			ds.setSelected(edgeList);
+			AutoScaleAction.zoomTo(
                     edge.stream()
                     .map(w -> (OsmPrimitive) w)
-                    .collect(Collectors.toList()));
-        } else
-            ds.clearSelection();
+                    .collect(Collectors.toList())
+                    );
+        } else if (shift && !ctrl) {
+        		/*
+        		 * add new selection to existing edges
+        		 */
+        	    if (initial != null) {
+                List<Way> edge = getEdgeFromWay(initial, getModeOfTravel());
+                for(Way way:edge) {
+                		if (!edgeList.contains(way))
+                			edgeList.add(way);
+                }
+                edgeList.addAll(edge);
+                ds.setSelected(edgeList);
+                AutoScaleAction.zoomTo(
+                        edge.stream()
+                        .map(w -> (OsmPrimitive) w)
+                        .collect(Collectors.toList()));
+            }
+        }
+
     }
 
     @Override
@@ -182,4 +239,5 @@ public class EdgeSelectionAction extends MapMode {
         MainApplication.getMap().mapView.removeMouseListener(this);
         MainApplication.getMap().mapView.removeMouseMotionListener(this);
     }
+
 }

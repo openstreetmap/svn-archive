@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24" height="24" version="1.1" viewBox="0 0 6.35 6.35" xmlns="http://www.w3.org/2000/svg">
+	<g transform="translate(0 -290.65)">
+		<path d="m3.8359 292.6-0.27905 0.28112-1.3245 1.3224-0.27905 0.28112h0.18552l0.18707-0.18759 1.3224-1.3224 0.18759-0.18758zm0.37517 0.56224-1.51 1.51-0.18759 0.18707v0.18604l0.28164-0.27957 1.3219-1.324 0.28112-0.27957z" style="color-rendering:auto;color:#000000;dominant-baseline:auto;fill:#00f;font-feature-settings:normal;font-variant-alternates:normal;font-variant-caps:normal;font-variant-ligatures:normal;font-variant-numeric:normal;font-variant-position:normal;image-rendering:auto;isolation:auto;mix-blend-mode:normal;paint-order:stroke fill markers;shape-padding:0;shape-rendering:auto;solid-color:#000000;text-decoration-color:#000000;text-decoration-line:none;text-decoration-style:solid;text-indent:0;text-orientation:mixed;text-transform:none;white-space:normal"/>
+		<path d="m2.5135 294.49 1.3229-1.3229" style="fill:none;paint-order:stroke fill markers;stroke-linecap:square;stroke-linejoin:round;stroke-width:.26458;stroke:#000"/>
+		<g style="opacity:.45">
+			<path d="m0.92604 296.07 0.52917-0.52917" style="fill:none;opacity:1;paint-order:stroke fill markers;stroke-linecap:square;stroke-linejoin:round;stroke-width:.26458;stroke:#000"/>
+			<path d="m4.8948 292.11 0.52917-0.52917" style="fill:none;opacity:1;paint-order:stroke fill markers;stroke-linecap:square;stroke-linejoin:round;stroke-width:.26458;stroke:#000"/>
+			<rect x=".13229" y="296.07" width=".79375" height=".79373" style="fill:#fff;opacity:1;paint-order:normal;stroke-width:.26458;stroke:#df421e"/>
+			<rect x="5.424" y="290.78" width=".79375" height=".79374" style="fill:#fff;opacity:1;paint-order:normal;stroke-width:.26458;stroke:#df421e"/>
+		</g>
+		<rect x="1.4552" y="294.49" width="1.0583" height="1.0583" style="fill:#fff;paint-order:normal;stroke-width:.26458;stroke:#df421e"/>
+		<rect x="3.8365" y="292.11" width="1.0583" height="1.0583" style="fill:#fff;paint-order:normal;stroke-width:.26458;stroke:#df421e"/>
+	</g>
+</svg>

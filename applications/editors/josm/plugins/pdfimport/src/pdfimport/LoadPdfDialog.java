@@ -11,7 +11,6 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -60,6 +59,7 @@ import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.gui.progress.ProgressRenderer;
 import org.openstreetmap.josm.gui.progress.swing.SwingRenderingProgressMonitor;
 import org.openstreetmap.josm.gui.util.WindowGeometry;
+import org.openstreetmap.josm.spi.preferences.Config;
 import org.openstreetmap.josm.tools.ImageProvider;
 import org.openstreetmap.josm.tools.Logging;
 
@@ -114,7 +114,7 @@ public class LoadPdfDialog extends JFrame {
 
     }
 
-    private File fileName;
+    private File pdfFile;
     private PathOptimizer data;
     private OsmDataLayer layer;
 
@@ -241,9 +241,14 @@ public class LoadPdfDialog extends JFrame {
         });
     }
 
+    JPanel projectionPanel = null;
+    JPanel okCancelPanel = null;
+
     private void buildGUI() {
         GridBagConstraints c = new GridBagConstraints();
         c.gridheight = 1; c.gridwidth = 1; c.weightx = 1; c.weighty = 1; c.fill = GridBagConstraints.BOTH;
+        c.insets = new java.awt.Insets(0,0,0,0);
+//        c.ipadx = 1; c.ipady = 1;
 
         this.projectionCombo = new JComboBox<>();
         for (ProjectionChoice p: ProjectionPreference.getProjectionChoices()) {
@@ -355,8 +360,9 @@ public class LoadPdfDialog extends JFrame {
         configPanel.add(this.splitOnOrthogonalCheck, c);
 
 
-        JPanel projectionPanel = new JPanel(new GridBagLayout());
+        projectionPanel = new JPanel(new GridBagLayout());
         projectionPanel.setBorder(BorderFactory.createTitledBorder(tr("Bind to coordinates")));
+//        projectionPanel.setVisible(false);
 
         JPanel projectionSubPanel = new JPanel();
         projectionSubPanel.setLayout(new BoxLayout(projectionSubPanel, BoxLayout.X_AXIS));
@@ -364,6 +370,8 @@ public class LoadPdfDialog extends JFrame {
         projectionSubPanel.add(new JLabel(tr("Projection:")));
         projectionSubPanel.add(this.projectionCombo);
         projectionSubPanel.add(this.projectionPreferencesButton);
+        this.projectionPreferencesButton.setEnabled(false); // ToDo: disabled do avoid bugs
+
         c.gridx = 0; c.gridy = 0; c.gridwidth = 3;
         projectionPanel.add(projectionSubPanel, c);
 
@@ -402,7 +410,8 @@ public class LoadPdfDialog extends JFrame {
         c.gridx = 0; c.gridy = 10; c.gridwidth = 1;
         projectionPanel.add(this.getMaxButton, c);
 
-        JPanel okCancelPanel = new JPanel(new GridLayout(1, 3));
+        okCancelPanel = new JPanel(new FlowLayout());
+//        okCancelPanel.setVisible(false);
         okCancelPanel.add(this.cancelButton);
         okCancelPanel.add(this.showButton);
         okCancelPanel.add(this.okButton);
@@ -411,13 +420,13 @@ public class LoadPdfDialog extends JFrame {
         JPanel panel = new JPanel(new GridBagLayout());
         c.gridx = 0; c.gridy = 0; c.gridwidth = 1;
         panel.add(configPanel, c);
-        c.gridx = 0; c.gridy = 1; c.gridwidth = 1;
+        c.gridx = 0; c.gridy = 1; c.gridwidth = 1; c.fill = GridBagConstraints.HORIZONTAL;
         panel.add(loadFileButton, c);
         c.gridx = 0; c.gridy = 2; c.gridwidth = 1;
         panel.add(projectionPanel, c);
         c.gridx = 0; c.gridy = 3; c.gridwidth = 1;
         panel.add(okCancelPanel, c);
-        c.gridx = 0; c.gridy = 4; c.gridwidth = 1;
+        c.gridx = 0; c.gridy = 4; c.gridwidth = 1; c.anchor = GridBagConstraints.NORTH; c.fill = GridBagConstraints.HORIZONTAL;
         panel.add(this.loadProgress, c);
 
         this.setSize(450, 550);
@@ -555,6 +564,7 @@ public class LoadPdfDialog extends JFrame {
                     @Override
                     public void run() {
                         //async part
+                        LoadPdfDialog.this.loadProgress.setVisible(true);
                         SwingRenderingProgressMonitor monitor = new SwingRenderingProgressMonitor(progressRenderer);
                         monitor.beginTask("Loading file", 1000);
                         data = loadPDF(newFileName, monitor.createSubTaskMonitor(500, false));
@@ -576,9 +586,9 @@ public class LoadPdfDialog extends JFrame {
                         //sync part
                         if (data != null) {
                             LoadPdfDialog.this.placeLayer(newLayer, new FilePlacement());
-                            fileName = newFileName;
+                            pdfFile = newFileName;
                             newLayer = null;
-                            LoadPdfDialog.this.loadFileButton.setText(tr("Loaded"));
+                            LoadPdfDialog.this.loadFileButton.setText(tr("Loaded") + ": " + LoadPdfDialog.this.pdfFile.getName());
                             LoadPdfDialog.this.loadFileButton.setEnabled(true);
                             FilePlacement placement = LoadPdfDialog.this.loadPlacement();
                             LoadPdfDialog.this.setPlacement(placement);
@@ -618,9 +628,10 @@ public class LoadPdfDialog extends JFrame {
                     @Override
                     public void run() {
                         //async part
+                        LoadPdfDialog.this.loadProgress.setVisible(true);
                         SwingRenderingProgressMonitor monitor = new SwingRenderingProgressMonitor(progressRenderer);
                         LoadPdfDialog.this.newLayer = LoadPdfDialog.this.makeLayer(
-                                tr("Imported PDF: ") + fileName, placement, OsmBuilder.Mode.Final, monitor);
+                                tr("Imported PDF: ") + pdfFile, placement, OsmBuilder.Mode.Final, monitor);
                         progressRenderer.finish();
                     }
                 },
@@ -721,29 +732,34 @@ public class LoadPdfDialog extends JFrame {
         return pl.reverseTransform(ll);
     }
 
-    private java.io.File chooseFile() {
-        //get file name
-        JFileChooser fc = new JFileChooser();
-        fc.setAcceptAllFileFilterUsed(false);
-        fc.setMultiSelectionEnabled(false);
-        fc.setSelectedFile(this.fileName);
-        fc.setFileFilter(new FileFilter() {
-            @Override
-            public boolean accept(java.io.File pathname) {
-                return pathname.isDirectory() || pathname.getName().endsWith(".pdf");
-            }
+    private static JFileChooser loadChooser = null;
 
-            @Override
-            public String getDescription() {
-                return tr("PDF files");
-            }
-        });
-        int result = fc.showOpenDialog(Main.parent);
+    private java.io.File chooseFile() {
+        //get PDF file to load
+    	if (loadChooser == null) {
+    		loadChooser = new JFileChooser(Config.getPref().get("plugins.pdfimport.loadDir"));
+    		loadChooser.setAcceptAllFileFilterUsed(false);
+    		loadChooser.setMultiSelectionEnabled(false);
+    		loadChooser.setFileFilter(new FileFilter() {
+    			@Override
+    			public boolean accept(java.io.File pathname) {
+    				return pathname.isDirectory() || pathname.getName().endsWith(".pdf");
+    			}
+
+    			@Override
+    			public String getDescription() {
+    				return tr("PDF files");
+    			}
+    		});
+    	} else {
+    		loadChooser.rescanCurrentDirectory();
+    	}
+        int result = loadChooser.showOpenDialog(this);
 
         if (result != JFileChooser.APPROVE_OPTION) {
             return null;
         } else {
-            return fc.getSelectedFile();
+            return loadChooser.getSelectedFile();
         }
     }
 
@@ -992,12 +1008,19 @@ public class LoadPdfDialog extends JFrame {
         this.maxEastField.setText(Double.toString(placement.maxEast));
         this.minNorthField.setText(Double.toString(placement.minNorth));
         this.maxNorthField.setText(Double.toString(placement.maxNorth));
+        projectionPanel.setEnabled(true);
+        okCancelPanel.setEnabled(true);;
+        this.showButton.setEnabled(true);
+        this.saveButton.setEnabled(true);
+        this.okButton.setEnabled(true);
+        this.getMaxButton.setEnabled(true);
+        this.getMinButton.setEnabled(true);
     }
 
     private FilePlacement loadPlacement() {
         FilePlacement pl = null;
         //load saved transformation
-        File propertiesFile = new File(fileName.getAbsoluteFile()+ ".placement");
+        File propertiesFile = new File(pdfFile.getAbsoluteFile() + ".placement");
         try {
 
             if (propertiesFile.exists()) {
@@ -1016,7 +1039,7 @@ public class LoadPdfDialog extends JFrame {
 
     private void savePlacement(FilePlacement pl) {
         //load saved transformation
-        File propertiesFile = new File(fileName.getAbsoluteFile()+ ".placement");
+        File propertiesFile = new File(pdfFile.getAbsoluteFile()+ ".placement");
         try {
             Properties p = pl.toProperties();
             p.store(new FileOutputStream(propertiesFile), "PDF file placement on OSM");
@@ -1051,6 +1074,15 @@ public class LoadPdfDialog extends JFrame {
             this.layer.data.clear(); //saves memory
             this.layer = null;
         }
+//        projectionPanel.setVisible(false);
+//        okCancelPanel.setVisible(false);
+//        loadProgress.setVisible(false);
+        this.showButton.setEnabled(false);
+        this.saveButton.setEnabled(false);
+        this.okButton.setEnabled(false);
+        this.getMaxButton.setEnabled(false);
+        this.getMinButton.setEnabled(false);
+
     }
 
     private void saveLayer(java.io.File file, FilePlacement placement, ProgressMonitor monitor) {

@@ -36,7 +36,6 @@ import org.openstreetmap.josm.plugins.opendata.core.datasets.fr.FrenchConstants;
 import org.openstreetmap.josm.tools.Logging;
 import org.xml.sax.SAXException;
 
-import neptune.ChouetteAreaType;
 import neptune.ChouettePTNetworkType;
 import neptune.ChouettePTNetworkType.ChouetteArea.AreaCentroid;
 import neptune.ChouettePTNetworkType.ChouetteArea.StopArea;
@@ -255,69 +254,16 @@ public class NeptuneReader extends AbstractReader implements FrenchConstants {
 
         // Parsing Stop areas
         for (StopArea sa : root.getChouetteArea().getStopArea()) {
-            if (sa.getStopAreaExtension().getAreaType().equals(ChouetteAreaType.COMMERCIAL_STOP_POINT)) {
-                Relation stopArea = createStopArea(sa);
-                stopArea.put("name", sa.getName());
-                for (String childId : sa.getContains()) {
-                    if (childId.contains("StopArea")) {
-                        StopArea child = findStopArea(childId);
-                        if (child == null) {
-                            Logging.warn("Cannot find StopArea: "+childId);
-                        } else {
-                            if (child.getStopAreaExtension().getAreaType().equals(ChouetteAreaType.BOARDING_POSITION)) {
-                                for (String grandchildId : child.getContains()) {
-                                    if (grandchildId.contains("StopPoint")) {
-                                        StopPoint grandchild = findStopPoint(grandchildId);
-                                        if (grandchild == null) {
-                                            Logging.warn("Cannot find StopPoint: "+grandchildId);
-                                        } else {
-                                            if (grandchild.getLongLatType().equals(LongLatTypeType.WGS_84)) {
-                                                Node platform = createPlatform(grandchild);
-                                                stopArea.addMember(new RelationMember(OSM_PLATFORM, platform));
-                                            } else {
-                                                Logging.warn("Unsupported long/lat type: "+grandchild.getLongLatType());
-                                            }
-                                        }
-                                    } else {
-                                        Logging.warn("Unsupported grandchild: "+grandchildId);
-                                    }
-                                }
-                                String centroidId = child.getCentroidOfArea();
-                                AreaCentroid areaCentroid = findAreaCentroid(centroidId);
-                                if (areaCentroid == null) {
-                                    Logging.warn("Cannot find AreaCentroid: "+centroidId);
-                                } else if (!areaCentroid.getLongLatType().equals(LongLatTypeType.WGS_84)) {
-                                    Logging.warn("Unsupported long/lat type: "+areaCentroid.getLongLatType());
-                                } else {
-                                    for (RelationMember member : stopArea.getMembers()) {
-                                        // Fix stop coordinates if needed
-                                        if (member.getRole().equals(OSM_PLATFORM) && isNullLatLon(member.getNode().getCoor())) {
-                                            member.getNode().setCoor(createLatLon(areaCentroid));
-                                        }
-                                    }
-                                }
-                            } else {
-                                Logging.warn("Unsupported child type: "+child.getStopAreaExtension().getAreaType());
-                            }
-                        }
-
-                    } else if (childId.contains("StopPoint")) {
-                        StopPoint child = findStopPoint(childId);
-                        if (child == null) {
-                            Logging.warn("Cannot find StopPoint: "+childId);
-                        } else {
-                            // TODO
-                            Logging.info("TODO: handle StopPoint "+childId);
-                        }
-
-                    } else {
-                        Logging.warn("Unsupported child: "+childId);
-                    }
-                }
-            } else if (sa.getStopAreaExtension().getAreaType().equals(ChouetteAreaType.BOARDING_POSITION)) {
-                //Main.info("skipping StopArea with type "+sa.getStopAreaExtension().getAreaType()+": "+sa.getObjectId());
-            } else {
-                Logging.warn("Unsupported StopArea type: "+sa.getStopAreaExtension().getAreaType());
+            switch (sa.getStopAreaExtension().getAreaType()) {
+                case COMMERCIAL_STOP_POINT:
+                case QUAY:
+                    parseStopArea(sa);
+                    break;
+                case BOARDING_POSITION:
+                    //Main.info("skipping StopArea with type "+sa.getStopAreaExtension().getAreaType()+": "+sa.getObjectId());
+                    break;
+                default:
+                    Logging.warn("Unsupported StopArea type: "+sa.getStopAreaExtension().getAreaType());
             }
         }
 
@@ -352,6 +298,74 @@ public class NeptuneReader extends AbstractReader implements FrenchConstants {
         }
 
         return ds;
+    }
+
+    private void parseStopArea(StopArea sa) {
+        Relation stopArea = createStopArea(sa);
+        stopArea.put("name", sa.getName());
+        for (String childId : sa.getContains()) {
+            if (childId.contains("StopArea")) {
+                StopArea child = findStopArea(childId);
+                if (child == null) {
+                    Logging.warn("Cannot find StopArea: "+childId);
+                } else {
+                    switch (child.getStopAreaExtension().getAreaType()) {
+                        case BOARDING_POSITION:
+                        case QUAY:
+                            parseStopAreaChild(stopArea, child);
+                            break;
+                        default:
+                            Logging.warn("Unsupported child type: "+child.getStopAreaExtension().getAreaType());
+                    }
+                }
+
+            } else if (childId.contains("StopPoint")) {
+                StopPoint child = findStopPoint(childId);
+                if (child == null) {
+                    Logging.warn("Cannot find StopPoint: "+childId);
+                } else {
+                    // TODO
+                    Logging.info("TODO: handle StopPoint "+childId);
+                }
+
+            } else {
+                Logging.warn("Unsupported child: "+childId);
+            }
+        }
+    }
+
+    private void parseStopAreaChild(Relation stopArea, StopArea child) {
+        for (String grandchildId : child.getContains()) {
+            if (grandchildId.contains("StopPoint")) {
+                StopPoint grandchild = findStopPoint(grandchildId);
+                if (grandchild == null) {
+                    Logging.warn("Cannot find StopPoint: "+grandchildId);
+                } else {
+                    if (grandchild.getLongLatType().equals(LongLatTypeType.WGS_84)) {
+                        Node platform = createPlatform(grandchild);
+                        stopArea.addMember(new RelationMember(OSM_PLATFORM, platform));
+                    } else {
+                        Logging.warn("Unsupported long/lat type: "+grandchild.getLongLatType());
+                    }
+                }
+            } else {
+                Logging.warn("Unsupported grandchild: "+grandchildId);
+            }
+        }
+        String centroidId = child.getCentroidOfArea();
+        AreaCentroid areaCentroid = findAreaCentroid(centroidId);
+        if (areaCentroid == null) {
+            Logging.warn("Cannot find AreaCentroid: "+centroidId);
+        } else if (!areaCentroid.getLongLatType().equals(LongLatTypeType.WGS_84)) {
+            Logging.warn("Unsupported long/lat type: "+areaCentroid.getLongLatType());
+        } else {
+            for (RelationMember member : stopArea.getMembers()) {
+                // Fix stop coordinates if needed
+                if (member.getRole().equals(OSM_PLATFORM) && isNullLatLon(member.getNode().getCoor())) {
+                    member.getNode().setCoor(createLatLon(areaCentroid));
+                }
+            }
+        }
     }
 
     private static boolean addStopToRoute(Relation route, OsmPrimitive stop) {

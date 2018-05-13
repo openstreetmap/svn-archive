@@ -42,7 +42,7 @@ public class CsvReader extends SpreadSheetReader {
         CsvReader csvReader = new CsvReader(csvHandler);
         try {
             return csvReader.parse(in, instance);
-        } catch (IllegalArgumentException e) {
+        } catch (IllegalArgumentException | IllegalDataException e) {
             if (csvHandler == null || csvHandler.getSeparator() == null || ";".equals(csvHandler.getSeparator())) {
                 // If default sep has been used, try comma
                 Logging.warn(e.getMessage());

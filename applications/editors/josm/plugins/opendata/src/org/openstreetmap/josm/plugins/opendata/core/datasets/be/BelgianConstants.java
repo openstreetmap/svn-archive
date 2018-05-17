@@ -8,7 +8,7 @@ public interface BelgianConstants {
     /**
      * Portal
      */
-    String BELGIAN_PORTAL = "http://data.gov.be/"+OdConstants.PATTERN_LANG+"/dataset/";
+    String BELGIAN_PORTAL = "https://data.gov.be/"+OdConstants.PATTERN_LANG+"/dataset/";
 
     /**
      * Icon

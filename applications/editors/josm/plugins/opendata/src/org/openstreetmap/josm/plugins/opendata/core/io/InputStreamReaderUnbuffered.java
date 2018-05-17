@@ -11,10 +11,10 @@ import java.nio.charset.CharsetDecoder;
 
 /**
  * An InputStreamReader that only consumes as many bytes as is necessary.
- * It does not do any read-ahead. From http://stackoverflow.com/q/2631507/2257172
+ * It does not do any read-ahead. From https://stackoverflow.com/q/2631507/2257172
  */
 public class InputStreamReaderUnbuffered extends Reader {
-    
+
     private final CharsetDecoder charsetDecoder;
     private final InputStream inputStream;
     private final ByteBuffer byteBuffer = ByteBuffer.allocate(1);
@@ -58,6 +58,7 @@ public class InputStreamReaderUnbuffered extends Reader {
         }
     }
 
+    @Override
     public int read(char[] cbuf, int off, int len) throws IOException {
         for (int i = 0; i < len; i++) {
             int ch = read();
@@ -71,6 +72,7 @@ public class InputStreamReaderUnbuffered extends Reader {
         return len;
     }
 
+    @Override
     public void close() throws IOException {
         inputStream.close();
     }

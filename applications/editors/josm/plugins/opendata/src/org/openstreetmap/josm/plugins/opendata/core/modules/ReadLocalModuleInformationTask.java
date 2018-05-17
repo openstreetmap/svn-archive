@@ -31,7 +31,7 @@ import org.xml.sax.SAXException;
  *   <li>.jar-files, assuming that they represent module jars</li>
  *   <li>.jar.new-files, assuming that these are downloaded but not yet installed modules</li>
  *   <li>cached lists of available modules, downloaded for instance from
- *   <a href="http://svn.openstreetmap.org/applications/editors/josm/plugins/opendata/modules.txt">OSM SVN</a></li>
+ *   <a href="https://svn.openstreetmap.org/applications/editors/josm/plugins/opendata/modules.txt">OSM SVN</a></li>
  * </ul>
  */
 public class ReadLocalModuleInformationTask extends PleaseWaitRunnable {

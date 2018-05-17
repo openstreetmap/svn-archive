@@ -15,7 +15,7 @@ import java.util.List;
 /**
  * A parser for the module list provided by an opendata Module Download Site.
  *
- * See <a href="http://svn.openstreetmap.org/applications/editors/josm/plugins/opendata/modules.txt">OSM SVN</a>
+ * See <a href="https://svn.openstreetmap.org/applications/editors/josm/plugins/opendata/modules.txt">OSM SVN</a>
  * for a sample of the document. The format is a custom format, kind of mix of CSV and RFC822 style
  * name/value-pairs.
  *
@@ -48,7 +48,7 @@ public class ModuleListParser {
     /**
      * Parses a module information document and replies a list of module information objects.
      *
-     * See <a href="http://svn.openstreetmap.org/applications/editors/josm/plugins/opendata/modules.txt">OSM SVN</a>
+     * See <a href="https://svn.openstreetmap.org/applications/editors/josm/plugins/opendata/modules.txt">OSM SVN</a>
      * for a sample of the document. The format is a custom format, kind of mix of CSV and RFC822 style
      * name/value-pairs.
      *

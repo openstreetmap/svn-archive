@@ -33,10 +33,10 @@ public abstract class OdConstants {
     public static final String VALUE_WGS84 = "wgs84";*/
 
     public static final String PREF_OAPI = "opendata.oapi";
-    public static final String DEFAULT_OAPI = "http://www.overpass-api.de/api/interpreter?";
+    public static final String DEFAULT_OAPI = "https://www.overpass-api.de/api/interpreter?";
 
     public static final String PREF_XAPI = "opendata.xapi";
-    public static final String DEFAULT_XAPI = "http://www.overpass-api.de/api/xapi?";
+    public static final String DEFAULT_XAPI = "https://www.overpass-api.de/api/xapi?";
 
     public static final String PREF_RAWDATA = "opendata.rawdata";
     public static final boolean DEFAULT_RAWDATA = false;
@@ -49,7 +49,7 @@ public abstract class OdConstants {
 
     public static final String PREF_MODULES = "opendata.modules";
     public static final String PREF_MODULES_SITES = "opendata.modules.sites";
-    public static final String OSM_SITE = "http://svn.openstreetmap.org/applications/editors/josm/plugins/opendata/";
+    public static final String OSM_SITE = "https://svn.openstreetmap.org/applications/editors/josm/plugins/opendata/";
     public static final String[] DEFAULT_MODULE_SITES = {OSM_SITE + "modules.txt%<?modules=>"};
 
     public static final String PREF_CRS_COMPARISON_TOLERANCE = "opendata.crs.comparison_tolerance";

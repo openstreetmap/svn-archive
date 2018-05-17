@@ -187,7 +187,7 @@ public class ShpReader extends GeographicReader {
                     charset = handler.getDbfCharset();
                 } else {
                     String path = file.getAbsolutePath();
-                    // See http://gis.stackexchange.com/a/3663/17245
+                    // See https://gis.stackexchange.com/a/3663/17245
                     path = path.substring(0, path.lastIndexOf('.')) + ".cpg";
                     Path cpg = new File(path).toPath();
                     if (Files.exists(cpg)) {

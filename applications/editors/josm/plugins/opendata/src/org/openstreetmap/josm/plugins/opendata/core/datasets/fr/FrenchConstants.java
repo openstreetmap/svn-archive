@@ -6,7 +6,7 @@ public interface FrenchConstants {
     /**
      * Portal
      */
-    String FRENCH_PORTAL = "http://www.data.gouv.fr/";
+    String FRENCH_PORTAL = "https://www.data.gouv.fr/";
 
     /**
      * Icon

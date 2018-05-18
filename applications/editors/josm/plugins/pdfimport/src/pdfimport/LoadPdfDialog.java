@@ -49,6 +49,7 @@ import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.data.osm.UploadPolicy;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.SideButton;
 import org.openstreetmap.josm.gui.io.importexport.OsmExporter;
@@ -569,10 +570,11 @@ public class LoadPdfDialog extends JFrame {
                         monitor.beginTask("Loading file", 1000);
                         data = loadPDF(newFileName, monitor.createSubTaskMonitor(500, false));
                         OsmBuilder.Mode mode = LoadPdfDialog.this.debugModeCheck.isSelected() ? OsmBuilder.Mode.Debug : OsmBuilder.Mode.Draft;
+//                        OsmBuilder.Mode mode = Logging.isDebugEnabled() ? OsmBuilder.Mode.Debug : OsmBuilder.Mode.Draft;
 
                         if (data != null) {
                             LoadPdfDialog.this.newLayer = LoadPdfDialog.this.makeLayer(
-                                    tr("PDF file preview"), new FilePlacement(), mode, monitor.createSubTaskMonitor(500, false));
+                                    tr("PDF preview: ") + newFileName.getName(), new FilePlacement(), mode, monitor.createSubTaskMonitor(500, false));
                         }
 
                         monitor.finishTask();
@@ -631,7 +633,7 @@ public class LoadPdfDialog extends JFrame {
                         LoadPdfDialog.this.loadProgress.setVisible(true);
                         SwingRenderingProgressMonitor monitor = new SwingRenderingProgressMonitor(progressRenderer);
                         LoadPdfDialog.this.newLayer = LoadPdfDialog.this.makeLayer(
-                                tr("Imported PDF: ") + pdfFile, placement, OsmBuilder.Mode.Final, monitor);
+                                tr("PDF: ") + pdfFile.getName(), placement, OsmBuilder.Mode.Final, monitor);
                         progressRenderer.finish();
                     }
                 },
@@ -737,7 +739,7 @@ public class LoadPdfDialog extends JFrame {
     private java.io.File chooseFile() {
         //get PDF file to load
     	if (loadChooser == null) {
-    		loadChooser = new JFileChooser(Config.getPref().get("plugins.pdfimport.loadDir"));
+    		loadChooser = new JFileChooser(Config.getPref().get("pdfimport.loadDir"));
     		loadChooser.setAcceptAllFileFilterUsed(false);
     		loadChooser.setMultiSelectionEnabled(false);
     		loadChooser.setFileFilter(new FileFilter() {
@@ -1055,6 +1057,9 @@ public class LoadPdfDialog extends JFrame {
         monitor.setTicks(50);
         monitor.setCustomText(tr("Postprocessing layer"));
         OsmDataLayer result = new OsmDataLayer(data, name, null);
+        data.setUploadPolicy(UploadPolicy.BLOCKED);
+        result.setUploadDiscouraged(true);
+        result.setBackgroundLayer(true);
         result.onPostLoadFromFile();
 
         monitor.finishTask();

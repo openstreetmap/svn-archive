@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <project name="pdfimport" default="dist" basedir=".">
     <!-- enter the SVN commit message -->
-    <property name="commit.message" value="Initial pdfimport version"/>
+    <property name="commit.message" value=""/>
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
     <property name="plugin.main.version" value="12678"/>
     
@@ -10,7 +10,7 @@
     -->
     <property name="plugin.author" value="extropy"/>
     <property name="plugin.class" value="pdfimport.PdfImportPlugin"/>
-    <property name="plugin.description" value="Import PDF file and convert to ways."/>
+    <property name="plugin.description" value="Import PDF file into a layer and convert pdf lines to ways."/>
     <property name="plugin.icon" value="images/pdf_import.png"/>
     <!--<property name="plugin.link" value="..."/>-->
     <property name="plugin.requires" value="apache-commons"/>

@@ -1,8 +1,6 @@
 // License: GPL. For details, see LICENSE file.
 package pdfimport;
 
-import static org.openstreetmap.josm.tools.I18n.tr;
-
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MainMenu;
 import org.openstreetmap.josm.plugins.Plugin;
@@ -13,11 +11,8 @@ import org.openstreetmap.josm.plugins.PluginInformation;
  */
 public class PdfImportPlugin extends Plugin {
 
-    protected String name;
-
     public PdfImportPlugin(PluginInformation info) {
         super(info);
-        name = tr("Import PDF file");
         MainMenu.add(MainApplication.getMenu().imagerySubMenu, new PdfImportAction());
     }
 }

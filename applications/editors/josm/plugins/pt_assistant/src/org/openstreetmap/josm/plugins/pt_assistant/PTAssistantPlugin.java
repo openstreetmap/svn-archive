@@ -20,9 +20,10 @@ import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
 import org.openstreetmap.josm.plugins.pt_assistant.actions.AddStopPositionAction;
 import org.openstreetmap.josm.plugins.pt_assistant.actions.CreatePlatformNodeAction;
-import org.openstreetmap.josm.plugins.pt_assistant.actions.EdgeSelectionAction;
 import org.openstreetmap.josm.plugins.pt_assistant.actions.DoubleSplitAction;
+import org.openstreetmap.josm.plugins.pt_assistant.actions.EdgeSelectionAction;
 import org.openstreetmap.josm.plugins.pt_assistant.actions.EditHighlightedRelationsAction;
+import org.openstreetmap.josm.plugins.pt_assistant.actions.PTWizardAction;
 import org.openstreetmap.josm.plugins.pt_assistant.actions.RepeatLastFixAction;
 import org.openstreetmap.josm.plugins.pt_assistant.actions.SortPTRouteMembersAction;
 import org.openstreetmap.josm.plugins.pt_assistant.actions.SplitRoundaboutAction;
@@ -74,8 +75,10 @@ public class PTAssistantPlugin extends Plugin {
         repeatLastFixMenu = MainMenu.add(MainApplication.getMenu().toolsMenu, repeatLastFixAction);
         editHighlightedRelationsMenu = MainMenu.add(MainApplication.getMenu().toolsMenu, editHighlightedRelationsAction);
         MainMenu.add(MainApplication.getMenu().toolsMenu, new SplitRoundaboutAction());
-        MainMenu.add(MainApplication.getMenu().toolsMenu, new SortPTRouteMembersAction());
         MainMenu.add(MainApplication.getMenu().toolsMenu, new CreatePlatformNodeAction());
+        MainMenu.add(MainApplication.getMenu().toolsMenu, new SortPTRouteMembersAction());
+        MainMenu.add(MainApplication.getMenu().helpMenu, new PTWizardAction());
+        initialiseWizard();
     }
 
     /**
@@ -144,5 +147,11 @@ public class PTAssistantPlugin extends Plugin {
         highlightedRelations.clear();
         SwingUtilities.invokeLater(() ->
         editHighlightedRelationsMenu.setEnabled(false));
+    }
+
+    private static void initialiseWizard() {
+    	    PTWizardAction wizard = new PTWizardAction();
+    	    wizard.noDialogBox = true;
+        wizard.actionPerformed(null);
     }
 }

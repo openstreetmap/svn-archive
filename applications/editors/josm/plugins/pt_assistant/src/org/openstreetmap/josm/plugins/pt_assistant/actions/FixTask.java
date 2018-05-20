@@ -85,7 +85,7 @@ public class FixTask extends PleaseWaitRunnable {
             }
             monitor.subTask(tr("Updating map ..."));
             SwingUtilities.invokeAndWait(() -> {
-                MainApplication.undoRedo.afterAdd();
+                MainApplication.undoRedo.afterAdd(null);
                 MainApplication.getMap().repaint();
             });
         } catch (InterruptedException | InvocationTargetException e) {

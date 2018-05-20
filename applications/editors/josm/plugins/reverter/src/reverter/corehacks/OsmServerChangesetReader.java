@@ -146,7 +146,7 @@ public class OsmServerChangesetReader extends OsmServerReader {
                 InputStream in = getInputStream(sb.toString(), monitor.createSubTaskMonitor(1, true));
                 if (in == null)
                     return null;
-                monitor.indeterminateSubTask(tr("({0}/{1}) Downloading changeset {2} ...", i, ids.size(), id));
+                monitor.indeterminateSubTask(tr("({0}/{1}) Downloading changeset {2}...", i, ids.size(), id));
                 List<Changeset> changesets = OsmChangesetParser.parse(in, monitor.createSubTaskMonitor(1, true));
                 if (changesets == null || changesets.isEmpty()) {
                     continue;

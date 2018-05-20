@@ -503,8 +503,8 @@ public class CommandLine extends Plugin {
         } catch (final IOException e) {
             synchronized (debugstr) {
                 Logging.error(
-                        tr("Error executing the script: ") +
-                        debugstr.toString() + e.getMessage() + "\n" + Arrays.toString(e.getStackTrace()));
+                        tr("Error executing the script:") + ' ' +
+                        debugstr.toString() + e.getMessage() + '\n' + Arrays.toString(e.getStackTrace()));
             }
             return;
         }

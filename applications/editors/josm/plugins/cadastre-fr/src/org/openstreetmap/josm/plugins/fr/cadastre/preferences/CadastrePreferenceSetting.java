@@ -51,7 +51,7 @@ public class CadastrePreferenceSetting extends DefaultTabPreferenceSetting {
 
     private JCheckBox transparency = new JCheckBox(tr("Set background transparent."));
 
-    private JCheckBox drawBoundaries = new JCheckBox(tr("Draw boundaries of downloaded data."));
+    private JCheckBox drawBoundaries = new JCheckBox(tr("Draw boundaries of downloaded data"));
 
     private JComboBox<String> imageInterpolationMethod = new JComboBox<>();
 

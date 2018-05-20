@@ -52,7 +52,7 @@ public class OsmBuilder {
             }
         }
 
-        monitor.beginTask(tr("Building JOSM layer."), this.monitorTotal);
+        monitor.beginTask(tr("Building JOSM layer"), this.monitorTotal);
 
 
         for (LayerContents layer: data) {

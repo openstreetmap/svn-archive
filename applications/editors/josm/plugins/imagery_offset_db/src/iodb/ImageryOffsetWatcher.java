@@ -260,7 +260,7 @@ public final class ImageryOffsetWatcher implements ZoomChangeListener, LayerChan
                 if (lastPos.greatCircleDistance(ImageryOffsetTools.getMapCenter()) < Math.max(maxDistance, 3.0) * 1000) {
                     // apply offset
                     OffsetBookmark bookmark = new OffsetBookmark(Main.getProjection().toCode(),
-                            layer.getName(), "Restored", dparts[2], dparts[3]);
+                            null, layer.getName(), "Restored", dparts[2], dparts[3]);
                     layer.getDisplaySettings().setOffsetBookmark(bookmark);
                     return;
                 }

@@ -13,6 +13,8 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -41,6 +43,7 @@ import javax.swing.JProgressBar;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
+import javax.swing.border.Border;
 import javax.swing.filechooser.FileFilter;
 
 import org.openstreetmap.josm.Main;
@@ -60,7 +63,6 @@ import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.gui.progress.ProgressRenderer;
 import org.openstreetmap.josm.gui.progress.swing.SwingRenderingProgressMonitor;
 import org.openstreetmap.josm.gui.util.WindowGeometry;
-import org.openstreetmap.josm.spi.preferences.Config;
 import org.openstreetmap.josm.tools.ImageProvider;
 import org.openstreetmap.josm.tools.Logging;
 
@@ -160,8 +162,10 @@ public class LoadPdfDialog extends JFrame {
     private JCheckBox splitOnShapeClosedCheck;
     private JCheckBox splitOnSingleSegmentCheck;
     private JCheckBox splitOnOrthogonalCheck;
+    private Border  defaulfBorder = (new JTextField()).getBorder();
 
     public LoadPdfDialog() {
+    	Logging.debug("PdfImport:LoadPdfDialog");
         this.buildGUI();
         FilePlacement pl = new FilePlacement();
         this.setPlacement(pl);
@@ -169,78 +173,157 @@ public class LoadPdfDialog extends JFrame {
         this.removeLayer();
     }
 
-     private void addListeners() {
+	private class CheckDouble implements FocusListener {
 
-        this.projectionCombo.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                updateProjectionPrefButton();
-            }
+		@Override
+		public void focusGained(FocusEvent e) {
+		}
 
-        });
-        this.projectionPreferencesButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                showProjectionPreferences();
-            }
-        });
+		@Override
+		public void focusLost(FocusEvent event) {
+			check((JTextField) event.getSource());
+		}
 
-        this.loadFileButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                loadFilePressed();
-            }
-        });
+		public void check(JTextField t) {
+			try {
+				Double.valueOf(t.getText());
+				t.setBorder((LoadPdfDialog.this.defaulfBorder));
+			} catch (NumberFormatException e) {
+				t.setBorder(BorderFactory.createLineBorder(Color.red));
+			}
+		}
+	}
 
-        this.okButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                okPressed();
-            }
-        });
+private CheckDouble doublelistener = new CheckDouble();
 
-        this.saveButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                savePressed();
-            }
-        });
+	private void addListeners() {
 
-        this.showButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                showPressed();
-            }
-        });
+		this.maxEastField.addFocusListener(doublelistener);
+		this.maxEastField.addFocusListener(new FocusListener() {
+			@Override
+			public void focusLost(FocusEvent e) {
+				checkCoords(LoadPdfDialog.this.maxEastField, LoadPdfDialog.this.maxNorthField);
+			}
 
-        this.cancelButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                cancelPressed();
-            }
-        });
+			@Override
+			public void focusGained(FocusEvent e) {
+			}
+		});
+		this.maxNorthField.addFocusListener(doublelistener);
 
-        this.addWindowListener(new WindowAdapter() {
-            @Override
-            public void windowClosing(WindowEvent e) {
-                cancelPressed();
-            }
-        });
+		this.minEastField.addFocusListener(doublelistener);
+		this.minEastField.addFocusListener(new FocusListener() {
+			@Override
+			public void focusLost(FocusEvent e) {
+				checkCoords(LoadPdfDialog.this.minEastField, LoadPdfDialog.this.minNorthField);
+			}
 
-        this.getMinButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                getMinPressed();
-            }
-        });
+			@Override
+			public void focusGained(FocusEvent e) {
+			}
+		});
 
-        this.getMaxButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                getMaxPressed();
-            }
-        });
-    }
+		this.minNorthField.addFocusListener(doublelistener);
+
+		this.minXField.addFocusListener(doublelistener);
+		this.minXField.addFocusListener(doublelistener);
+		this.minXField.addFocusListener(new FocusListener() {
+			@Override
+			public void focusLost(FocusEvent e) {
+				checkCoords(LoadPdfDialog.this.minXField, LoadPdfDialog.this.minYField);
+			}
+
+			@Override
+			public void focusGained(FocusEvent e) {
+			}
+		});
+
+		this.minYField.addFocusListener(doublelistener);
+
+		this.maxXField.addFocusListener(doublelistener);
+		this.maxXField.addFocusListener(new FocusListener() {
+			@Override
+			public void focusLost(FocusEvent e) {
+				checkCoords(LoadPdfDialog.this.maxXField, LoadPdfDialog.this.maxYField);
+			}
+
+			@Override
+			public void focusGained(FocusEvent e) {
+			}
+		});
+
+		this.maxYField.addFocusListener(doublelistener);
+
+		this.projectionCombo.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				updateProjectionPrefButton();
+			}
+
+		});
+		this.projectionPreferencesButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				showProjectionPreferences();
+			}
+		});
+
+		this.loadFileButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				loadFilePressed();
+			}
+		});
+
+		this.okButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				okPressed();
+			}
+		});
+
+		this.saveButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				savePressed();
+			}
+		});
+
+		this.showButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				showPressed();
+			}
+		});
+
+		this.cancelButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				cancelPressed();
+			}
+		});
+
+		this.addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				cancelPressed();
+			}
+		});
+
+		this.getMinButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				getMinPressed();
+			}
+		});
+
+		this.getMaxButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				getMaxPressed();
+			}
+		});
+	}
 
     JPanel projectionPanel = null;
     JPanel okCancelPanel = null;
@@ -259,11 +342,11 @@ public class LoadPdfDialog extends JFrame {
         this.projectionPreferencesButton = new JButton(tr("Prefs"));
         updateProjectionPrefButton();
 
-        this.loadFileButton = new JButton(tr("Load file..."));
-        this.okButton = new JButton(tr("Place"));
+        this.loadFileButton = new JButton(tr("Load preview ..."));
+        this.okButton = new JButton(tr("Import"));
         this.saveButton = new JButton(tr("Save"));
         this.showButton = new JButton(tr("Show target"));
-        this.cancelButton = new JButton(tr("Discard"));
+        this.cancelButton = new JButton(tr("Cancel"));
         this.loadProgress = new JProgressBar();
         this.progressRenderer = new LoadProgressRenderer(this.loadProgress);
 
@@ -279,30 +362,30 @@ public class LoadPdfDialog extends JFrame {
         this.maxNorthField = new JTextField("");
         this.getMaxButton = new JButton(tr("Take X and Y from selected node"));
 
-        this.debugModeCheck = new JCheckBox(tr("Debug info"));
-        this.mergeCloseNodesCheck = new JCheckBox(tr("Merge close nodes"));
-        this.mergeCloseNodesTolerance = new JTextField("1e-3");
+        this.debugModeCheck = new JCheckBox(tr("Debug info"),PdfImportPlugin.Preferences.DebugTags);
+        this.mergeCloseNodesCheck = new JCheckBox(tr("Merge close nodes"),PdfImportPlugin.Preferences.MergeNodes);
+        this.mergeCloseNodesTolerance = new JTextField(Double.toString(PdfImportPlugin.Preferences.MergeNodesValue));
 
-        this.removeSmallObjectsCheck = new JCheckBox(tr("Remove objects smaller than"));
-        this.removeSmallObjectsSize = new JTextField("1");
+        this.removeSmallObjectsCheck = new JCheckBox(tr("Remove objects smaller than"),PdfImportPlugin.Preferences.RemoveSmall);
+        this.removeSmallObjectsSize = new JTextField(Double.toString(PdfImportPlugin.Preferences.RemoveSmallValue));
 
-        this.removeLargeObjectsCheck = new JCheckBox(tr("Remove objects larger than"));
-        this.removeLargeObjectsSize = new JTextField("10");
+        this.removeLargeObjectsCheck = new JCheckBox(tr("Remove objects larger than"),PdfImportPlugin.Preferences.RemoveLarge);
+        this.removeLargeObjectsSize = new JTextField(Double.toString(PdfImportPlugin.Preferences.RemoveLargeValue));
 
 
-        this.colorFilterCheck = new JCheckBox(tr("Only this color"));
-        this.colorFilterColor = new JTextField("#000000");
+        this.colorFilterCheck = new JCheckBox(tr("Only this color"),PdfImportPlugin.Preferences.LimitColor);
+        this.colorFilterColor = new JTextField(PdfImportPlugin.Preferences.LimitColorValue);
 
-        this.removeParallelSegmentsCheck = new JCheckBox(tr("Remove parallel lines"));
-        this.removeParallelSegmentsTolerance = new JTextField("3");
+        this.removeParallelSegmentsCheck = new JCheckBox(tr("Remove parallel lines"),PdfImportPlugin.Preferences.RemoveParallel);
+        this.removeParallelSegmentsTolerance = new JTextField(Double.toString(PdfImportPlugin.Preferences.RemoveParallelValue));
 
-        this.limitPathCountCheck = new JCheckBox(tr("Take only first X paths"));
-        this.limitPathCount = new JTextField("10000");
+        this.limitPathCountCheck = new JCheckBox(tr("Take only first X paths"),PdfImportPlugin.Preferences.LimitPath);
+        this.limitPathCount = new JTextField(Integer.toString(PdfImportPlugin.Preferences.LimitPathValue));
 
-        this.splitOnColorChangeCheck = new JCheckBox(tr("Color/width change"));
-        this.splitOnShapeClosedCheck = new JCheckBox(tr("Shape closed"));
-        this.splitOnSingleSegmentCheck = new JCheckBox(tr("Single segments"));
-        this.splitOnOrthogonalCheck = new JCheckBox(tr("Orthogonal shapes"));
+        this.splitOnColorChangeCheck = new JCheckBox(tr("Color/width change"),PdfImportPlugin.Preferences.LayerAttribChange);
+        this.splitOnShapeClosedCheck = new JCheckBox(tr("Shape closed"),PdfImportPlugin.Preferences.LayerClosed);
+        this.splitOnSingleSegmentCheck = new JCheckBox(tr("Single segments",PdfImportPlugin.Preferences.LayerSegment));
+        this.splitOnOrthogonalCheck = new JCheckBox(tr("Orthogonal shapes",PdfImportPlugin.Preferences.LayerOrtho));
 
         JPanel configPanel = new JPanel(new GridBagLayout());
         configPanel.setBorder(BorderFactory.createTitledBorder(tr("Import settings")));
@@ -540,6 +623,18 @@ public class LoadPdfDialog extends JFrame {
 //        }
     }
 
+	private void checkCoords(JTextField x, JTextField y) {
+		int splitpos = 0;
+		String eastVal = x.getText().trim();
+		if ((splitpos = eastVal.indexOf(';')) >= 0) {
+			// Split a coordinate into its parts for easy of data entry
+			y.setText(eastVal.substring(splitpos + 1).trim());
+			x.setText(eastVal.substring(0, splitpos).trim());
+		}
+		doublelistener.check(x);
+		doublelistener.check(y);
+	}
+
     private void showProjectionPreferences() {
         ProjectionChoice proj = (ProjectionChoice) projectionCombo.getSelectedItem();
 
@@ -554,7 +649,7 @@ public class LoadPdfDialog extends JFrame {
         if (newFileName == null) {
             return;
         }
-
+        Logging.debug("PdfImport: Load Preview");
         this.removeLayer();
 
         this.loadFileButton.setEnabled(false);
@@ -590,9 +685,9 @@ public class LoadPdfDialog extends JFrame {
                             LoadPdfDialog.this.placeLayer(newLayer, new FilePlacement());
                             pdfFile = newFileName;
                             newLayer = null;
-                            LoadPdfDialog.this.loadFileButton.setText(tr("Loaded") + ": " + LoadPdfDialog.this.pdfFile.getName());
+                            LoadPdfDialog.this.loadFileButton.setText(tr("Preview") + ": " + LoadPdfDialog.this.pdfFile.getName());
                             LoadPdfDialog.this.loadFileButton.setEnabled(true);
-                            FilePlacement placement = LoadPdfDialog.this.loadPlacement();
+                            FilePlacement placement = LoadPdfDialog.this.loadPlacement(pdfFile);
                             LoadPdfDialog.this.setPlacement(placement);
                         }
                     }
@@ -622,7 +717,7 @@ public class LoadPdfDialog extends JFrame {
         if (placement == null) {
             return;
         }
-
+        Logging.debug("PdfImport: Import");
         this.removeLayer();
 
         this.runAsBackgroundTask(
@@ -739,7 +834,7 @@ public class LoadPdfDialog extends JFrame {
     private java.io.File chooseFile() {
         //get PDF file to load
     	if (loadChooser == null) {
-    		loadChooser = new JFileChooser(Config.getPref().get("pdfimport.loadDir"));
+    		loadChooser = new JFileChooser(PdfImportPlugin.Preferences.LoadDir);
     		loadChooser.setAcceptAllFileFilterUsed(false);
     		loadChooser.setMultiSelectionEnabled(false);
     		loadChooser.setFileFilter(new FileFilter() {
@@ -756,8 +851,7 @@ public class LoadPdfDialog extends JFrame {
     	} else {
     		loadChooser.rescanCurrentDirectory();
     	}
-        int result = loadChooser.showOpenDialog(this);
-
+        int result = loadChooser.showDialog(this, tr("Preview"));
         if (result != JFileChooser.APPROVE_OPTION) {
             return null;
         } else {
@@ -1019,10 +1113,10 @@ public class LoadPdfDialog extends JFrame {
         this.getMinButton.setEnabled(true);
     }
 
-    private FilePlacement loadPlacement() {
+    private FilePlacement loadPlacement(File BaseFile) {
         FilePlacement pl = null;
         //load saved transformation
-        File propertiesFile = new File(pdfFile.getAbsoluteFile() + ".placement");
+        File propertiesFile = new File(BaseFile.getAbsoluteFile() + ".placement");
         try {
 
             if (propertiesFile.exists()) {

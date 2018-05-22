@@ -35,6 +35,9 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
@@ -77,6 +80,10 @@ import org.openstreetmap.josm.tools.Shortcut;
 public class MapdustPlugin extends Plugin implements LayerChangeListener,
         ZoomChangeListener, PreferenceChangedListener, MouseListener,
         MapdustUpdateObserver, MapdustBugObserver {
+
+    /** Executor that will run the updates. */
+    private static ThreadPoolExecutor executor = new ThreadPoolExecutor(
+      3, 5, 100, TimeUnit.SECONDS, new ArrayBlockingQueue<>(100), new ThreadPoolExecutor.DiscardPolicy());
 
     /** The graphical user interface of the plug-in */
     private MapdustGUI mapdustGUI;
@@ -531,12 +538,7 @@ public class MapdustPlugin extends Plugin implements LayerChangeListener,
      * <code>MapdustGUI</code> and the map with the new data.
      */
     private void updatePluginData() {
-        MainApplication.worker.execute(new Runnable() {
-            @Override
-            public void run() {
-                updateMapdustData();
-            }
-        });
+        executor.execute(() -> updateMapdustData());
     }
 
     /**
@@ -595,7 +597,7 @@ public class MapdustPlugin extends Plugin implements LayerChangeListener,
                 if (mapdustLayer != null) {
                     /* MapDust data was changed */
                     mapdustGUI.update(mapdustBugList, this);
-                    mapdustLayer.destroy();
+                    mapdustLayer.invalidate();
                     mapdustLayer.update(mapdustGUI, mapdustBugList);
                     needRepaint = true;
                 }

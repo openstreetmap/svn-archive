@@ -31,6 +31,7 @@ class CatastroRecord {
         "OVCWcfLibres/OVCFotoFachada.svc/RecuperarFotoFachadaGet?ReferenciaCatastral=";
     public static final String cURL = "http://www.catastro.meh.es/";
     public static final String cSource = "Dirección General del Catastro";
+    public static final String eURL = "https://www.verexif.com/ver.php?foto_file=&foto_url=";
 
     private ArrayList<JsonObject> errors;
     private ArrayList<JsonObject> coords;
@@ -132,7 +133,9 @@ class CatastroRecord {
             r.append("<b>Dirección: </b>" + coord.getString("address") + "<br/>");
             r.append("<b>Fotografía de fachada:</b> <a href=\"" 
                 + fURL + coord.getString("ref") + "\">"
-                + "Enlace a web de Catastro</a><br/><br/>");
+                + "Enlace a web de Catastro</a> (<a href=\""
+                + eURL + fURL + coord.getString("ref")
+                + "\">metadatos</a>)<br/><br/>");
         }
         if (errors.size() > 0) {
             r.append("<i><u>Errores</u></i><br/>");

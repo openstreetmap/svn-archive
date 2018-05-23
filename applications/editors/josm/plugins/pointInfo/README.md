@@ -19,7 +19,7 @@ Plugin could be easy extend to show another data source.
 
 ## Websites
 
- * OSM wiki - not available yet
+ * [OSM wiki](https://wiki.openstreetmap.org/wiki/JOSM/Plugins/pointinfo)
  * [JOSM svn](https://trac.openstreetmap.org/browser/subversion/applications/editors/josm/plugins/pointInfo)
  * [Github](https://github.com/mkyral/josm-pointInfo)
 

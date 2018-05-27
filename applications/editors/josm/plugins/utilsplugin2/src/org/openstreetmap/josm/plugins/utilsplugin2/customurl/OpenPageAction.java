@@ -49,8 +49,9 @@ public final class OpenPageAction extends JosmAction {
             p = sel.iterator().next();
         }
 
-        if (Main.pref.getBoolean("utilsplugin2.askurl", false) == true)
-            ChooseURLAction.showConfigDialog(true);
+        if (Main.pref.getBoolean("utilsplugin2.askurl", false) && 1 != ChooseURLAction.showConfigDialog(true)) {
+            return;
+        }
 
         MapView mv = MainApplication.getMap().mapView;
         LatLon center = mv.getLatLon(mv.getWidth()/2, mv.getHeight()/2);

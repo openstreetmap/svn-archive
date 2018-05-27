@@ -37,7 +37,7 @@ public class ChooseURLAction extends JosmAction {
         setEnabled(getLayerManager().getEditDataSet() != null);
     }
 
-    public static void showConfigDialog(final boolean fast) {
+    public static int showConfigDialog(final boolean fast) {
         JPanel all = new JPanel(new GridBagLayout());
 
         List<String> items = URLList.getURLList();
@@ -77,16 +77,17 @@ public class ChooseURLAction extends JosmAction {
         all.add(editField, GBC.eop().fill(GBC.HORIZONTAL).insets(5, 5, 0, 0));
         all.add(check1, GBC.eop().fill(GBC.HORIZONTAL).insets(5, 5, 0, 0));
 
-
-        dialog.setContent(all, false);
-        dialog.setButtonIcons(new String[] {"ok.png", "cancel.png"});
-        dialog.setDefaultButton(1);
-        dialog.showDialog();
+        int ret = dialog.setContent(all, false)
+              .setButtonIcons(new String[] {"ok", "cancel"})
+              .setDefaultButton(1)
+              .showDialog()
+              .getValue();
 
         int idx = list1.getSelectedIndex();
-        if (dialog.getValue() == 1 && idx >= 0) {
+        if (ret == 1 && idx >= 0) {
             URLList.select(vals[idx]);
             Main.pref.putBoolean("utilsplugin2.askurl", check1.isSelected());
         }
+        return ret;
     }
 }

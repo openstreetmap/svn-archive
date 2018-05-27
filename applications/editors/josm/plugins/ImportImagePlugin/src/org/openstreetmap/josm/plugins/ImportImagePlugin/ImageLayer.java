@@ -5,9 +5,9 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.Graphics2D;
 import java.awt.GraphicsEnvironment;
-import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.image.BufferedImage;
+import java.awt.image.RenderedImage;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -38,6 +38,7 @@ import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.dialogs.LayerListDialog;
 import org.openstreetmap.josm.gui.dialogs.LayerListPopup;
 import org.openstreetmap.josm.gui.layer.Layer;
+import org.openstreetmap.josm.tools.Logging;
 
 /**
  *  Layer which contains spatial referenced image data.
@@ -74,8 +75,8 @@ public class ImageLayer extends Layer {
         super(file.getName());
 
         this.imageFile = file;
-        this.image = (BufferedImage) createImage();
-        URL iconURL = ImportImagePlugin.pluginClassLoader.getResource("images/layericon.png");
+        this.image = createImage();
+        URL iconURL = getClass().getResource("images/layericon.png");
         if (iconURL != null) {
             layericon = new ImageIcon(iconURL);
         }
@@ -84,7 +85,7 @@ public class ImageLayer extends Layer {
     /**
      * create spatial referenced image.
      */
-    private Image createImage() throws IOException {
+    private BufferedImage createImage() throws IOException {
 
         // geotools type for images and value coverages
         GridCoverage2D coverage = null;
@@ -143,19 +144,28 @@ public class ImageLayer extends Layer {
         }
         logger.debug("Coverage created: " + coverage);
 
-        // TODO
         upperLeft = new EastNorth(coverage.getEnvelope2D().x,
                 coverage.getEnvelope2D().y + coverage.getEnvelope2D().height);
         angle = 0;
         bbox = coverage.getEnvelope2D();
 
-        // Refresh
-        // Main.map.mapView.repaint();
-//      PlanarImage image = (PlanarImage) coverage.getRenderedImage();
-//      logger.info("Color Model: " + coverage.getRenderedImage().getColorModel());
-        ImageWorker worker = new ImageWorker(coverage.getRenderedImage());
-
-        return worker.getBufferedImage();
+        RenderedImage img = coverage.getRenderedImage();
+        try {
+            BufferedImage bi = new ImageWorker(img).getBufferedImage();
+            BufferedImage dst = new BufferedImage(bi.getWidth(), bi.getHeight(), BufferedImage.TYPE_INT_ARGB);
+            Graphics2D g2d = dst.createGraphics();
+            try {
+                // Check image can be drawn correctly
+                g2d.drawImage(bi, 0, 0, null);
+            } finally {
+                g2d.dispose();
+            }
+            return bi;
+        } catch (ArrayIndexOutOfBoundsException e) {
+            Logging.debug(e);
+            // See #12108 - rescale to bytes in case of ComponentColorModel index error
+            return new ImageWorker(img).rescaleToBytes().getBufferedImage();
+        }
     }
 
     @Override

@@ -4,9 +4,7 @@ package org.openstreetmap.josm.plugins.ImportImagePlugin;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLClassLoader;
 import java.util.Properties;
 
 import javax.swing.JMenu;
@@ -20,7 +18,6 @@ import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MainMenu;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
-import org.openstreetmap.josm.tools.JosmRuntimeException;
 import org.openstreetmap.josm.tools.Utils;
 
 /**
@@ -38,10 +35,7 @@ public class ImportImagePlugin extends Plugin {
     JMenu mainmenu = null;
     JosmAction loadFileAction = null;
 
-    // custom Classloader to load resources from the main JAR
-    static ClassLoader pluginClassLoader = createPluginClassLoader();
-
-    // plugin proerties
+    // plugin properties
     static Properties pluginProps;
 
     // path constants
@@ -65,7 +59,7 @@ public class ImportImagePlugin extends Plugin {
 
         try {
             // Initialize logger
-            initializeLogger(pluginClassLoader);
+            initializeLogger();
 
             // Check whether plugin has already been installed. Otherwise install
             checkInstallation();
@@ -93,8 +87,6 @@ public class ImportImagePlugin extends Plugin {
             logger.fatal("Error while loading plugin", e);
             throw e;
         }
-
-        logger.info("Plugin successfully loaded.");
     }
 
     /**
@@ -130,7 +122,7 @@ public class ImportImagePlugin extends Plugin {
             // create local properties file
             if (pluginProps == null || pluginProps.isEmpty()) {
                 try (FileWriter fw = new FileWriter(new File(PLUGINPROPERTIES_PATH))) {
-                    URL propertiesURL = pluginClassLoader.getResource("resources/" + PLUGINPROPERTIES_FILENAME);
+                    URL propertiesURL = getClass().getResource("resources/" + PLUGINPROPERTIES_FILENAME);
                     pluginProps = new Properties();
                     pluginProps.load(propertiesURL.openStream());
                     pluginProps.store(fw, null);
@@ -140,7 +132,7 @@ public class ImportImagePlugin extends Plugin {
 
             if (!new File(LOGGING_PROPERTIES_FILEPATH).exists()) {
                 try (FileWriter fw = new FileWriter(new File(LOGGING_PROPERTIES_FILEPATH))) {
-                    URL propertiesURL = pluginClassLoader.getResource("resources/log4j.properties");
+                    URL propertiesURL = getClass().getResource("resources/log4j.properties");
                     Properties loggingProps = new Properties();
                     loggingProps.load(propertiesURL.openStream());
                     loggingProps.store(fw, null);
@@ -153,9 +145,9 @@ public class ImportImagePlugin extends Plugin {
     }
 
     /**
-     * Initialize logger using plugin classloader.
+     * Initialize logger.
      */
-    private void initializeLogger(ClassLoader cl) {
+    private void initializeLogger() {
 
         Properties props = new Properties();
         try {
@@ -193,21 +185,5 @@ public class ImportImagePlugin extends Plugin {
 
         PropertyConfigurator.configure(props);
         logger = Logger.getLogger(ImportImagePlugin.class);
-        logger.info("Logger successfully initialized with standard settings.");
-
-    }
-
-    /**
-     * get a plugin-specific classloader.
-     */
-    private static ClassLoader createPluginClassLoader() {
-        try {
-            return URLClassLoader.newInstance(
-                    new URL[] {new File(Main.pref.getPluginsDirectory().getAbsolutePath() + "/ImportImagePlugin.jar").toURI().toURL()},
-                    ImportImagePlugin.class.getClassLoader()
-                    );
-        } catch (MalformedURLException e) {
-            throw new JosmRuntimeException(e);
-        }
     }
 }

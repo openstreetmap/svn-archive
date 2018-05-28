@@ -76,6 +76,7 @@ public abstract class EdigeoLotFile<B extends ChildBlock> extends EdigeoFile {
 
     /**
      * Finds a descriptor by its identifier.
+     * @param <T> block type
      * @param values 4 values obtained from a {@code EdigeoRecord}:<ol>
      * <li>Lot identifier</li>
      * <li>subset identifier</li>

@@ -15,6 +15,9 @@ public final class CacheFileUTM20NFilter extends FileFilter {
     private final String extension;
     private final String description;
 
+    /**
+     * Filters for each one of the 4 French UTM zones.
+     */
     public static CacheFileUTM20NFilter[] filters = {
         new CacheFileUTM20NFilter("utm1", tr("Guadeloupe Fort-Marigot cache file (.UTM1)")),
         new CacheFileUTM20NFilter("utm2", tr("Guadeloupe Ste-Anne cache file (.UTM2)")),
@@ -24,14 +27,15 @@ public final class CacheFileUTM20NFilter extends FileFilter {
 
     /**
      * Construct an extension file filter by giving the extension to check after.
-     *
+     * @param extension file extension
+     * @param description file description
      */
     private CacheFileUTM20NFilter(String extension, String description) {
         this.extension = extension;
         this.description = description;
     }
 
-    public boolean acceptName(String filename) {
+    boolean acceptName(String filename) {
         String name = filename.toLowerCase();
         for (String ext : extension.split(",")) {
             if (name.endsWith("." + ext))
@@ -51,5 +55,4 @@ public final class CacheFileUTM20NFilter extends FileFilter {
     public String getDescription() {
         return description;
     }
-
 }

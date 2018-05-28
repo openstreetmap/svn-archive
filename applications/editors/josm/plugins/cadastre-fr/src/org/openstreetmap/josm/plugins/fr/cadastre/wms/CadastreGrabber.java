@@ -20,7 +20,7 @@ public class CadastreGrabber {
 
     private CadastreInterface wmsInterface = new CadastreInterface();
 
-    public GeorefImage grab(WMSLayer wmsLayer, EastNorth lambertMin, EastNorth lambertMax)
+    GeorefImage grab(WMSLayer wmsLayer, EastNorth lambertMin, EastNorth lambertMax)
             throws IOException, OsmTransferException {
         try {
             URL url = null;
@@ -88,7 +88,7 @@ public class CadastreGrabber {
         }
     }
 
-    public CadastreInterface getWmsInterface() {
+    CadastreInterface getWmsInterface() {
         return wmsInterface;
     }
 }

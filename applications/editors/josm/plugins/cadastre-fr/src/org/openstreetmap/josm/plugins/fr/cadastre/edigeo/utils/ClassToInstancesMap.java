@@ -19,6 +19,7 @@ public interface ClassToInstancesMap<B> extends Map<Class<? extends B>, List<B>>
      * Returns the values the specified class is mapped to, or {@code null} if no
      * entry for this class is present. This will only return values that were
      * bound to this specific class, not values that may have been bound to a subtype.
+     * @param <T> block type
      * @param type type
      * @return the values the specified class is mapped to, or {@code null}
      */
@@ -27,6 +28,7 @@ public interface ClassToInstancesMap<B> extends Map<Class<? extends B>, List<B>>
     /**
      * Maps the specified class to the specified values. Does <i>not</i> associate
      * these values with any of the class's supertypes.
+     * @param <T> block type
      * @param type type
      * @param values new values
      *
@@ -37,6 +39,7 @@ public interface ClassToInstancesMap<B> extends Map<Class<? extends B>, List<B>>
 
     /**
      * Adds a new value to the list mapped to the specified class.
+     * @param <T> block type
      * @param type type
      * @param value value to add
      * @return {@code true}

@@ -37,7 +37,7 @@ import org.openstreetmap.josm.tools.HttpClient.Response;
 import org.openstreetmap.josm.tools.Logging;
 
 public class CadastreInterface {
-    public boolean downloadCanceled;
+    boolean downloadCanceled;
     private Response urlConn;
 
     private String csrfToken;
@@ -59,7 +59,7 @@ public class CadastreInterface {
     private List<PlanImage> listOfFeuilles = new ArrayList<>();
     private long cookieTimestamp;
 
-    public static final String BASE_URL = "https://www.cadastre.gouv.fr";
+    static final String BASE_URL = "https://www.cadastre.gouv.fr";
     static final String C_IMAGE_FORMAT = "Cette commune est au format ";
     static final String C_COMMUNE_LIST_START = "<select name=\"codeCommune\"";
     static final String C_COMMUNE_LIST_END = "</select>";
@@ -83,7 +83,7 @@ public class CadastreInterface {
 
     static final int RETRIES_GET_COOKIE = 10; // 10 times every 3 seconds means 30 seconds trying to get a cookie
 
-    public boolean retrieveInterface(WMSLayer wmsLayer) throws DuplicateLayerException, WMSException {
+    boolean retrieveInterface(WMSLayer wmsLayer) throws DuplicateLayerException, WMSException {
         if (wmsLayer.getName().isEmpty())
             return false;
         boolean isCookieExpired = isCookieExpired();
@@ -119,6 +119,7 @@ public class CadastreInterface {
     /**
      * Returns if a cookie is delivered by WMS, throws exception if WMS is not opening a client session
      * (too many clients or in maintenance)
+     * @throws IOException if an I/O error occurs
      */
     private void getCookie() throws IOException {
         boolean success = false;
@@ -173,12 +174,12 @@ public class CadastreInterface {
         return cookie != null;
     }
 
-    public void resetCookie() {
+    void resetCookie() {
         lastWMSLayerName = null;
         cookie = null;
     }
 
-    public boolean isCookieExpired() {
+    boolean isCookieExpired() {
         long now = new Date().getTime();
         if ((now - cookieTimestamp) > COOKIE_EXPIRATION) {
             Logging.info("cookie received at "+new Date(cookieTimestamp)+" expired (now is "+new Date(now)+")");
@@ -187,18 +188,18 @@ public class CadastreInterface {
         return false;
     }
 
-    public void resetInterfaceRefIfNewLayer(String newWMSLayerName) {
+    void resetInterfaceRefIfNewLayer(String newWMSLayerName) {
         if (!newWMSLayerName.equals(lastWMSLayerName)) {
             interfaceRef = null;
             cookie = null; // new since WMS server requires that we come back to the main form
         }
     }
 
-    public HttpClient getHttpClient(URL url) {
+    HttpClient getHttpClient(URL url) {
         return HttpClient.create(url).setHeader("Cookie", cookie);
     }
 
-    public HttpClient getHttpClient(URL url, String method) {
+    HttpClient getHttpClient(URL url, String method) {
         return HttpClient.create(url, method).setHeader("Cookie", cookie);
     }
 
@@ -274,8 +275,11 @@ public class CadastreInterface {
      * </select>}</pre>
      * The returned string is the interface name used in further requests, e.g. "afficherCarteCommune.do?c=QP224"
      * where QP224 is the code commune known by the WMS (or "afficherCarteTa.do?c=..." for raster images).
+     * @param wmsLayer WMS layer
+     * @param codeCommune Commune code
      *
      * @return retURL url to available code commune in the cadastre; "" if not found
+     * @throws IOException if an I/O error occurs
      */
     private String postForm(WMSLayer wmsLayer, String codeCommune) throws IOException {
         try {
@@ -465,7 +469,7 @@ public class CadastreInterface {
      * @param wmsLayer the WMSLayer where the commune data and images are stored
      * @throws IOException if any I/O error occurs
      */
-    public void retrieveCommuneBBox(WMSLayer wmsLayer) throws IOException {
+    void retrieveCommuneBBox(WMSLayer wmsLayer) throws IOException {
         if (interfaceRef == null)
             return;
         // send GET opening normally the small window with the commune overview
@@ -541,7 +545,7 @@ public class CadastreInterface {
         }
     }
 
-    public void cancel() {
+    void cancel() {
         if (urlConn != null) {
             urlConn.disconnect();
         }
@@ -549,7 +553,7 @@ public class CadastreInterface {
         lastWMSLayerName = null;
     }
 
-    public InputStream getContent(URL url) throws IOException, OsmTransferException {
+    InputStream getContent(URL url) throws IOException, OsmTransferException {
         urlConn = getHttpClient(url).setHeader("Connection", "close").connect();
         return urlConn.getContent();
     }

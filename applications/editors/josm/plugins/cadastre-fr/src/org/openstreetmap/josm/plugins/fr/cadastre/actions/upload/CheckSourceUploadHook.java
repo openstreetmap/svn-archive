@@ -54,15 +54,11 @@ public class CheckSourceUploadHook implements UploadHook {
 
     /**
      * Check whenever one of the keys of the object is "source"
+     * @param osm primitive to check
      * @return true if one of keys is "source"
      */
     private boolean tagSourceExist(OsmPrimitive osm) {
-        for (String key : osm.keySet()) {
-            if (key.equals("source")) {
-                return true;
-            }
-        }
-        return false;
+        return osm.hasKey("source");
     }
 
     /**

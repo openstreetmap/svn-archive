@@ -88,8 +88,6 @@ public class Address extends MapMode {
     final JTextField inputStreet = new JTextField();
     JLabel link = new JLabel();
     private transient Way selectedWay;
-    private boolean shift;
-    private boolean ctrl;
 
     /**
      * Constructs a new {@code Address} map mode.
@@ -128,8 +126,7 @@ public class Address extends MapMode {
     public void mousePressed(MouseEvent e) {
         if (e.getButton() != MouseEvent.BUTTON1)
             return;
-        shift = (e.getModifiers() & ActionEvent.SHIFT_MASK) != 0;
-        ctrl = (e.getModifiers() & ActionEvent.CTRL_MASK) != 0;
+        updateKeyModifiers(e);
         MapView mv = MainApplication.getMap().mapView;
         Point mousePos = e.getPoint();
         List<Way> mouseOnExistingWays = new ArrayList<>();
@@ -378,11 +375,12 @@ public class Address extends MapMode {
             // only adjust to intersection if within snapToIntersectionThreshold pixel of mouse click; otherwise
             // fall through to default action.
             // (for semi-parallel lines, intersection might be miles away!)
-            if (MainApplication.getMap().mapView.getPoint(n).distance(MainApplication.getMap().mapView.getPoint(intersection)) < snapToIntersectionThreshold) {
+            MapView mv = MainApplication.getMap().mapView;
+            if (mv.getPoint(n).distance(mv.getPoint(intersection)) < snapToIntersectionThreshold) {
                 n.setEastNorth(intersection);
                 return;
             }
-
+            // fall through
         default:
             EastNorth P = n.getEastNorth();
             seg = segs.iterator().next();

@@ -17,6 +17,15 @@ public class CadastreDownloadData {
 
     /**
      * Constructs a new {@code CadastreDownloadData}.
+     * @param downloadWater whether to download water layer
+     * @param downloadBuilding whether to download building layer
+     * @param downloadSymbol whether to download symbol layer
+     * @param downloadParcel whether to download parcel layer
+     * @param downloadParcelNumber whether to download parcel number layer
+     * @param downloadAddress whether to download address layer
+     * @param downloadLocality whether to download locality layer
+     * @param downloadSection whether to download section layer
+     * @param downloadCommune whether to download communal layer
      */
     CadastreDownloadData(boolean downloadWater, boolean downloadBuilding, boolean downloadSymbol,
             boolean downloadParcel, boolean downloadParcelNumber, boolean downloadAddress, boolean downloadLocality,

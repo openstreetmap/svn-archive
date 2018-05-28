@@ -19,8 +19,8 @@ public abstract class ImageModifier {
 
     protected BufferedImage bufferedImage;
 
-    public static int[] cRoofColors = new int[] {-197380, -592138};
-    public static int[] cBuilingFootColors = new int[] {-256};
+    private static int[] cRoofColors = new int[] {-197380, -592138};
+    private static int[] cBuilingFootColors = new int[] {-256};
 
     protected BufferedImage convert1(BufferedImage src) {
         IndexColorModel icm = new IndexColorModel(
@@ -69,16 +69,16 @@ public abstract class ImageModifier {
           0x0000FF, 0xFF00FF, 0x00FFFF, 0xFFFFFF
         };
         return convert4(src, cmap);
-      }
+    }
 
-      /**
-       * Converts the source image to 4-bit colour
-       * using the given colour map.  No transparency.
-       * @param src the source image to convert
-       * @param cmap the colour map, which should contain no more than 16 entries
-       * The entries are in the form RRGGBB (hex).
-       * @return a copy of the source image with a 4-bit colour depth, with the custom colour pallette
-       */
+    /**
+     * Converts the source image to 4-bit colour
+     * using the given colour map.  No transparency.
+     * @param src the source image to convert
+     * @param cmap the colour map, which should contain no more than 16 entries
+     * The entries are in the form RRGGBB (hex).
+     * @return a copy of the source image with a 4-bit colour depth, with the custom colour pallette
+     */
     protected BufferedImage convert4(BufferedImage src, int[] cmap) {
         IndexColorModel icm = new IndexColorModel(
             4, cmap.length, cmap, 0, false, Transparency.OPAQUE, DataBuffer.TYPE_BYTE
@@ -155,6 +155,10 @@ public abstract class ImageModifier {
 
     /**
      * Checks if the rgb value is the black background color
+     * @param img image
+     * @param x X coordinate
+     * @param y Y coordinate
+     * @return {@code true} if the rgb value is the black background color
      */
     public boolean isBackgroundColor(BufferedImage img, int x, int y) {
         return (img.getRGB(x, y) == -1);

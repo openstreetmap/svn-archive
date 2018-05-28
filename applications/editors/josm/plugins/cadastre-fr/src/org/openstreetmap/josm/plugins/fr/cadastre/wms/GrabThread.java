@@ -35,8 +35,9 @@ public class GrabThread extends Thread {
 
     /**
      * Call directly grabber for raster images or prepare thread for vector images
+     * @param moreImages more images to grab
      */
-    public void addImages(ArrayList<EastNorthBound> moreImages) {
+    void addImages(ArrayList<EastNorthBound> moreImages) {
         lockImagesToGrag.lock();
         imagesToGrab.addAll(moreImages);
         lockImagesToGrag.unlock();
@@ -56,7 +57,7 @@ public class GrabThread extends Thread {
         return size;
     }
 
-    public ArrayList<EastNorthBound> getImagesToGrabCopy() {
+    ArrayList<EastNorthBound> getImagesToGrabCopy() {
         ArrayList<EastNorthBound> copyList = new ArrayList<>();
         lockImagesToGrag.lock();
         for (EastNorthBound img : imagesToGrab) {
@@ -67,7 +68,7 @@ public class GrabThread extends Thread {
         return copyList;
     }
 
-    public void clearImagesToGrab() {
+    void clearImagesToGrab() {
         lockImagesToGrag.lock();
         imagesToGrab.clear();
         lockImagesToGrag.unlock();
@@ -142,7 +143,7 @@ public class GrabThread extends Thread {
         }
     }
 
-    public void saveToCache(GeorefImage image) {
+    void saveToCache(GeorefImage image) {
         if (CacheControl.cacheEnabled && !wmsLayer.isRaster()) {
             getCacheControl().saveCache(image);
         }
@@ -159,6 +160,9 @@ public class GrabThread extends Thread {
         }
     }
 
+    /**
+     * Cancel grab.
+     */
     public void cancel() {
         clearImagesToGrab();
         if (cacheControl != null) {
@@ -169,17 +173,21 @@ public class GrabThread extends Thread {
         }
     }
 
+    /**
+     * Returns the Cache control.
+     * @return the Cache control
+     */
     public CacheControl getCacheControl() {
         if (cacheControl == null)
             cacheControl = new CacheControl(wmsLayer);
         return cacheControl;
     }
 
-    public GrabThread(WMSLayer wmsLayer) {
+    GrabThread(WMSLayer wmsLayer) {
         this.wmsLayer = wmsLayer;
     }
 
-    public void paintBoxesToGrab(Graphics g, MapView mv) {
+    void paintBoxesToGrab(Graphics g, MapView mv) {
         if (getImagesToGrabSize() > 0) {
             ArrayList<EastNorthBound> imagesToGrab = getImagesToGrabCopy();
             for (EastNorthBound img : imagesToGrab) {
@@ -206,19 +214,19 @@ public class GrabThread extends Thread {
         }
     }
 
-    public boolean isCanceled() {
+    boolean isCanceled() {
         return canceled;
     }
 
-    public void setCanceled(boolean canceled) {
+    void setCanceled(boolean canceled) {
         this.canceled = canceled;
     }
 
-    public CadastreGrabber getGrabber() {
+    CadastreGrabber getGrabber() {
         return grabber;
     }
 
-    public void setGrabber(CadastreGrabber grabber) {
+    void setGrabber(CadastreGrabber grabber) {
         this.grabber = grabber;
     }
 

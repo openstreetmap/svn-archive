@@ -15,6 +15,9 @@ public final class CacheFileLambert9ZoneFilter extends FileFilter {
     private final String extension;
     private final String description;
 
+    /**
+     * Filters for each one of the 9 Lambert zones.
+     */
     public static CacheFileLambert9ZoneFilter[] filters = {
         new CacheFileLambert9ZoneFilter("cc1", tr("Lambert CC9 Zone {0} cache file (.CC{0})", 1)),
         new CacheFileLambert9ZoneFilter("cc2", tr("Lambert CC9 Zone {0} cache file (.CC{0})", 2)),
@@ -29,14 +32,15 @@ public final class CacheFileLambert9ZoneFilter extends FileFilter {
 
     /**
      * Construct an extension file filter by giving the extension to check after.
-     *
+     * @param extension file extension
+     * @param description file description
      */
     private CacheFileLambert9ZoneFilter(String extension, String description) {
         this.extension = extension;
         this.description = description;
     }
 
-    public boolean acceptName(String filename) {
+    boolean acceptName(String filename) {
         String name = filename.toLowerCase();
         for (String ext : extension.split(",")) {
             if (name.endsWith("." + ext))
@@ -56,5 +60,4 @@ public final class CacheFileLambert9ZoneFilter extends FileFilter {
     public String getDescription() {
         return description;
     }
-
 }

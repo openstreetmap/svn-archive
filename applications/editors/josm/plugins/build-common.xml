@@ -405,9 +405,9 @@
         <exec append="true" output="svn.log" executable="svn" failifexecutionfails="false">
             <env key="LANG" value="C"/>
             <arg value="up"/>
-            <arg value="../dist/${plugin.jar}"/>
-            <arg value="../dist/${plugin.javadoc.jar}"/>
-            <arg value="../dist/${plugin.sources.jar}"/>
+            <arg value="${plugin.jar}"/>
+            <arg value="${plugin.javadoc.jar}"/>
+            <arg value="${plugin.sources.jar}"/>
         </exec>
     </target>
     <!--

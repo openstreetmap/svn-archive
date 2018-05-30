@@ -593,9 +593,9 @@ public class DoubleSplitAction extends MapMode implements KeyListener {
 				}
 				if (type != 2) {
 //					selectedWay.get(1).setKeys(newKeys2);
-					MainApplication.undoRedo.add(new ChangePropertyCommand(Collections.singleton(selectedWay.get(0)), newKeys2));
+					MainApplication.undoRedo.add(new ChangePropertyCommand(Collections.singleton(selectedWay.get(1)), newKeys2));
 				} else {
-					MainApplication.undoRedo.add(new ChangePropertyCommand(Collections.singleton(selectedWay.get(0)), newKeys2));
+					MainApplication.undoRedo.add(new ChangePropertyCommand(Collections.singleton(selectedWay.get(1)), newKeys2));
 				}
 			}
 		}

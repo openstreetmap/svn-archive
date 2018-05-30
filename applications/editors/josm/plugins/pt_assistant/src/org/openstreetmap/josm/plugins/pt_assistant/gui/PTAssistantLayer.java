@@ -38,209 +38,222 @@ import org.openstreetmap.josm.tools.ImageProvider;
  * @author darya
  *
  */
-public final class PTAssistantLayer extends Layer
-        implements LayerChangeListener {
+public final class PTAssistantLayer extends Layer implements LayerChangeListener {
 
-    private List<OsmPrimitive> primitives = new ArrayList<>();
-    private PTAssistantPaintVisitor paintVisitor;
-    private HashMap<Character, List<PTWay>> fixVariants = new HashMap<>();
-    private HashMap<Way, List<Character>> wayColoring = new HashMap<>();
+	private List<OsmPrimitive> primitives = new ArrayList<>();
+	private PTAssistantPaintVisitor paintVisitor;
+	private HashMap<Character, List<PTWay>> fixVariants = new HashMap<>();
+	private HashMap<Way, List<Character>> wayColoring = new HashMap<>();
+	public String modeOfTravel = null;
 
-    public PTAssistantLayer() {
-        super("pt_assistant layer");
-        MainApplication.getLayerManager().addLayerChangeListener(this);
-        MainApplication.getLayerManager().addLayer(this);
-    }
+	public PTAssistantLayer() {
+		super("pt_assistant layer");
+		MainApplication.getLayerManager().addLayerChangeListener(this);
+		MainApplication.getLayerManager().addLayer(this);
+	}
 
-    /**
-     * Adds a primitive (route) to be displayed in this layer
-     *
-     * @param primitive primitive (route)
-     */
-    public void addPrimitive(OsmPrimitive primitive) {
-        this.primitives.add(primitive);
-    }
+	/**
+	 * Adds a primitive (route) to be displayed in this layer
+	 *
+	 * @param primitive
+	 *            primitive (route)
+	 */
+	public void addPrimitive(OsmPrimitive primitive) {
+		this.primitives.add(primitive);
+	}
 
-    /**
-     * Clears all primitives (routes) from being displayed.
-     */
-    public void clear() {
-        this.primitives.clear();
-    }
+	/**
+	 * Clears all primitives (routes) from being displayed.
+	 */
+	public void clear() {
+		this.primitives.clear();
+	}
 
-    public void clearFixVariants() {
-        fixVariants.clear();
-        wayColoring.clear();
-        MainApplication.getMap().mapView.repaint();
-    }
+	public void clearFixVariants() {
+		fixVariants.clear();
+		wayColoring.clear();
+		MainApplication.getMap().mapView.repaint();
+	}
 
-    /**
-     * Adds the first 5 fix variants to be displayed in the pt_assistant layer
-     *
-     * @param fixVariants fix variants
-     */
-    public void addFixVariants(List<List<PTWay>> fixVariants) {
-        HashMap<List<PTWay>, Character> fixVariantLetterMap = new HashMap<>();
+	/**
+	 * Adds the first 5 fix variants to be displayed in the pt_assistant layer
+	 *
+	 * @param fixVariants
+	 *            fix variants
+	 */
+	public void addFixVariants(List<List<PTWay>> fixVariants) {
+		HashMap<List<PTWay>, Character> fixVariantLetterMap = new HashMap<>();
 
-        char alphabet = 'A';
-        for (int i = 0; i < 5 && i < fixVariants.size(); i++) {
-            List<PTWay> fixVariant = fixVariants.get(i);
-            this.fixVariants.put(alphabet, fixVariant);
-            fixVariantLetterMap.put(fixVariant, alphabet);
-            alphabet++;
-        }
+		char alphabet = 'A';
+		for (int i = 0; i < 5 && i < fixVariants.size(); i++) {
+			List<PTWay> fixVariant = fixVariants.get(i);
+			this.fixVariants.put(alphabet, fixVariant);
+			fixVariantLetterMap.put(fixVariant, alphabet);
+			alphabet++;
+		}
 
-        for (Entry<Character, List<PTWay>> entry : this.fixVariants.entrySet()) {
-            Character currentFixVariantLetter = entry.getKey();
-            List<PTWay> fixVariant = entry.getValue();
-            for (PTWay ptway : fixVariant) {
-                for (Way way : ptway.getWays()) {
-                    if (wayColoring.containsKey(way)) {
-                        if (!wayColoring.get(way).contains(currentFixVariantLetter)) {
-                            wayColoring.get(way).add(currentFixVariantLetter);
-                        }
-                    } else {
-                        List<Character> letterList = new ArrayList<>();
-                        letterList.add(currentFixVariantLetter);
-                        wayColoring.put(way, letterList);
-                    }
-                }
-            }
-        }
-    }
+		for (Entry<Character, List<PTWay>> entry : this.fixVariants.entrySet()) {
+			Character currentFixVariantLetter = entry.getKey();
+			List<PTWay> fixVariant = entry.getValue();
+			for (PTWay ptway : fixVariant) {
+				for (Way way : ptway.getWays()) {
+					if (wayColoring.containsKey(way)) {
+						if (!wayColoring.get(way).contains(currentFixVariantLetter)) {
+							wayColoring.get(way).add(currentFixVariantLetter);
+						}
+					} else {
+						List<Character> letterList = new ArrayList<>();
+						letterList.add(currentFixVariantLetter);
+						wayColoring.put(way, letterList);
+					}
+				}
+			}
+		}
+	}
 
-    /**
-     * Returns fix variant (represented by a list of PTWays) that corresponds to
-     * the given character.
-     *
-     * @param c character
-     * @return fix variant
-     */
-    public List<PTWay> getFixVariant(char c) {
-        return fixVariants.get(Character.toUpperCase(c));
-    }
+	/**
+	 * Returns fix variant (represented by a list of PTWays) that corresponds to the
+	 * given character.
+	 *
+	 * @param c
+	 *            character
+	 * @return fix variant
+	 */
+	public List<PTWay> getFixVariant(char c) {
+		return fixVariants.get(Character.toUpperCase(c));
+	}
 
-    public void setPrimitives(List<OsmPrimitive> newPrimitives) {
-        primitives = new ArrayList<>(newPrimitives);
-    }
+	public void setPrimitives(List<OsmPrimitive> newPrimitives) {
+		primitives = new ArrayList<>(newPrimitives);
+	}
 
-    @Override
-    public void paint(final Graphics2D g, final MapView mv, Bounds bounds) {
+	@Override
+	public void paint(final Graphics2D g, final MapView mv, Bounds bounds) {
 
-        paintVisitor = new PTAssistantPaintVisitor(g, mv);
+		paintVisitor = new PTAssistantPaintVisitor(g, mv);
 
-        for (OsmPrimitive primitive : primitives) {
-            paintVisitor.visit(primitive);
-        }
+		for (OsmPrimitive primitive : primitives) {
+			paintVisitor.visit(primitive);
+		}
 
-        paintVisitor.visitFixVariants(fixVariants, wayColoring);
+		paintVisitor.visitFixVariants(fixVariants, wayColoring);
+	}
 
-    }
+	@Override
+	public Icon getIcon() {
+		return ImageProvider.get("layer", "osmdata_small");
+	}
 
-    @Override
-    public Icon getIcon() {
-        return ImageProvider.get("layer", "osmdata_small");
-    }
+	@Override
+	public Object getInfoComponent() {
+		return getToolTipText();
+	}
 
-    @Override
-    public Object getInfoComponent() {
-        return getToolTipText();
-    }
+	@Override
+	public Action[] getMenuEntries() {
+		return new Action[] { LayerListDialog.getInstance().createShowHideLayerAction(),
+				LayerListDialog.getInstance().createDeleteLayerAction(), SeparatorLayerAction.INSTANCE,
+				new RenameLayerAction(null, this), SeparatorLayerAction.INSTANCE, new LayerListPopup.InfoAction(this) };
+	}
 
-    @Override
-    public Action[] getMenuEntries() {
-        return new Action[] {LayerListDialog.getInstance().createShowHideLayerAction(),
-                LayerListDialog.getInstance().createDeleteLayerAction(), SeparatorLayerAction.INSTANCE,
-                new RenameLayerAction(null, this), SeparatorLayerAction.INSTANCE, new LayerListPopup.InfoAction(this)};
-    }
+	@Override
+	public String getToolTipText() {
+		return "pt_assistant layer";
+	}
 
-    @Override
-    public String getToolTipText() {
-        return "pt_assistant layer";
-    }
+	@Override
+	public boolean isMergable(Layer arg0) {
+		return false;
+	}
 
-    @Override
-    public boolean isMergable(Layer arg0) {
-        return false;
-    }
+	@Override
+	public void mergeFrom(Layer arg0) {
+		// do nothing
 
-    @Override
-    public void mergeFrom(Layer arg0) {
-        // do nothing
+	}
 
-    }
+	@Override
+	public void visitBoundingBox(BoundingXYVisitor arg0) {
+		// do nothing
 
-    @Override
-    public void visitBoundingBox(BoundingXYVisitor arg0) {
-        // do nothing
+	}
 
-    }
+	@Override
+	public LayerPositionStrategy getDefaultLayerPosition() {
+		return LayerPositionStrategy.IN_FRONT;
+	}
 
-    @Override
-    public LayerPositionStrategy getDefaultLayerPosition() {
-        return LayerPositionStrategy.IN_FRONT;
-    }
+	/**
+	 * Repaints the layer in cases when there was no selection change
+	 *
+	 * @param relation
+	 *            relation
+	 */
+	public void repaint(Relation relation) {
+		primitives.clear();
+		primitives.add(relation);
+		if (!MainApplication.getLayerManager().containsLayer(this)) {
+			MainApplication.getLayerManager().addLayer(this);
+		}
 
-    /**
-     * Repaints the layer in cases when there was no selection change
-     *
-     * @param relation relation
-     */
-    public void repaint(Relation relation) {
-        primitives.clear();
-        primitives.add(relation);
-        if (!MainApplication.getLayerManager().containsLayer(this)) {
-            MainApplication.getLayerManager().addLayer(this);
-        }
+		if (paintVisitor == null) {
+			MapView mv = MainApplication.getMap().mapView;
+			paintVisitor = new PTAssistantPaintVisitor(mv.getGraphics(), mv);
+		}
 
-        if (paintVisitor == null) {
-            MapView mv = MainApplication.getMap().mapView;
-            paintVisitor = new PTAssistantPaintVisitor(mv.getGraphics(), mv);
-        }
+		for (OsmPrimitive primitive : primitives) {
+			paintVisitor.visit(primitive);
+		}
 
-        for (OsmPrimitive primitive : primitives) {
-            paintVisitor.visit(primitive);
-        }
+		paintVisitor.visitFixVariants(fixVariants, wayColoring);
 
-        paintVisitor.visitFixVariants(fixVariants, wayColoring);
+		MainApplication.getMap().mapView.repaint();
+		setModeOfTravel(relation);
+	}
 
-        MainApplication.getMap().mapView.repaint();
-    }
+	private void setModeOfTravel(Relation relation) {
+		if (relation.hasKey("route"))
+			modeOfTravel = relation.get("route");
+	}
 
-    @Override
-    public void layerAdded(LayerAddEvent arg0) {
-        // do nothing
-    }
+	public String getModeOfTravel() {
+		return modeOfTravel;
+	}
 
-    @Override
-    public void layerOrderChanged(LayerOrderChangeEvent arg0) {
-        // do nothing
+	@Override
+	public void layerAdded(LayerAddEvent arg0) {
+		// do nothing
+	}
 
-    }
+	@Override
+	public void layerOrderChanged(LayerOrderChangeEvent arg0) {
+		// do nothing
 
-    @Override
-    public void layerRemoving(LayerRemoveEvent event) {
+	}
 
-        if (event.getRemovedLayer() instanceof OsmDataLayer) {
-            primitives.clear();
-            fixVariants.clear();
-            wayColoring.clear();
-            MainApplication.getMap().mapView.repaint();
-        }
+	@Override
+	public void layerRemoving(LayerRemoveEvent event) {
 
-        if (event.getRemovedLayer() instanceof OsmDataLayer
-                && event.getSource().getLayersOfType(OsmDataLayer.class).isEmpty())
-            event.scheduleRemoval(Collections.singleton(this));
+		if (event.getRemovedLayer() instanceof OsmDataLayer) {
+			primitives.clear();
+			fixVariants.clear();
+			wayColoring.clear();
+			MainApplication.getMap().mapView.repaint();
+		}
 
-        if (event.getRemovedLayer() == this) {
-            PTAssistantLayerManager.PTLM.resetLayer();
-            PTAssistantPlugin.clearHighlightedRelations();
-        }
-    }
+		if (event.getRemovedLayer() instanceof OsmDataLayer
+				&& event.getSource().getLayersOfType(OsmDataLayer.class).isEmpty())
+			event.scheduleRemoval(Collections.singleton(this));
 
-    @Override
-    public synchronized void destroy() {
-        MainApplication.getLayerManager().removeLayerChangeListener(this);
-        super.destroy();
-    }
+		if (event.getRemovedLayer() == this) {
+			PTAssistantLayerManager.PTLM.resetLayer();
+			PTAssistantPlugin.clearHighlightedRelations();
+		}
+	}
+
+	@Override
+	public synchronized void destroy() {
+		MainApplication.getLayerManager().removeLayerChangeListener(this);
+		super.destroy();
+	}
 }

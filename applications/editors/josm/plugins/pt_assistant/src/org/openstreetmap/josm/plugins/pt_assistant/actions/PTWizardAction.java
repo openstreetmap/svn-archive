@@ -31,6 +31,7 @@ import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
@@ -45,6 +46,7 @@ import org.openstreetmap.josm.data.preferences.sources.SourceType;
 import org.openstreetmap.josm.gui.ExtendedDialog;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MainMenu;
+import org.openstreetmap.josm.gui.Notification;
 import org.openstreetmap.josm.gui.download.UserQueryList.SelectorItem;
 import org.openstreetmap.josm.gui.io.CustomConfigurator;
 import org.openstreetmap.josm.gui.mappaint.MapPaintStyles;
@@ -57,6 +59,7 @@ import org.openstreetmap.josm.tools.GBC;;
 public final class PTWizardAction extends JosmAction {
 
 	public boolean noDialogBox;
+	private int closeCheck = 0;
 	/**
      * Constructs a new {@code PTWizardAction}
      */
@@ -96,6 +99,11 @@ public final class PTWizardAction extends JosmAction {
 			this.noDialogBox = false;
 		} else {
 			action = true;
+			String pages = Main.pref.get("pt_assistant.wizard.pages");
+			if (pages.isEmpty()) {
+				readPreferencesFromXML();
+				addDefaultValues();
+			}
 		}
 
 		if (action) {
@@ -103,22 +111,21 @@ public final class PTWizardAction extends JosmAction {
 	        JPanel panel = new JPanel(new GridBagLayout());
 	        panel.setBorder(BorderFactory.createEmptyBorder(0,10,10,10));
 
-	        ExtendedDialog ed = new ExtendedDialog(Main.parent,
-	                tr("PT Wizard"),
-	                tr("OK"), tr("Close"));
-	        ed.setPreferredSize(new Dimension(250, 300));
-	        ed.setButtonIcons("ok", "cancel");
+	        DoubleSplitDialog dsd = new DoubleSplitDialog();
+	        dsd.setPreferredSize(new Dimension(250, 300));
+	        dsd.setButtonIcons("ok", "cancel");
 	        JScrollPane scrollPanel = new JScrollPane(panel);
-	        ed.setContent(scrollPanel, false);
-    		    ed.setUndecorated(true);
-
+	        dsd.setContent(scrollPanel, false);
 	        nextAct(0, panel);
-
 	        String pages = Main.pref.get("pt_assistant.wizard.pages");
-
+	        int lastCheck = -1;
 	        try {
 	        		for(int i=1;i<=Integer.parseInt(pages)+1;i++) {
-	        			ExtendedDialog dialog = ed.showDialog();
+	        			if (lastCheck == closeCheck)
+		        			return;
+	        			else
+	        				lastCheck = closeCheck;
+	        			ExtendedDialog dialog = dsd.showDialog();
 	        			switch (dialog.getValue()) {
 	        				case 1: nextAct(i, panel); break;
 	        				default: return; // Do nothing
@@ -135,6 +142,8 @@ public final class PTWizardAction extends JosmAction {
 
 		try {
 			CachedFile cf = getCachedFile();
+			if (cf == null)
+				return;
 			List<String> lines = new ArrayList<>();
 			try (BufferedReader in = cf.getContentReader()){
 				String line;
@@ -165,8 +174,13 @@ public final class PTWizardAction extends JosmAction {
     }
 
 	@SuppressWarnings("resource")
-    public CachedFile getCachedFile() throws IOException {
-        return new CachedFile("https://josm.openstreetmap.de/wiki/Plugin/PT_Assistant/Wizard?format=txt").setHttpAccept("text");
+    public CachedFile getCachedFile() {
+		try {
+			return new CachedFile("https://josm.openstreetmap.de/wiki/Plugin/PT_Assistant/Wizard?format=txt").setHttpAccept("text");
+		} catch (Exception e) {
+			new Notification(tr("Unable to connect to https://josm.openstreetmap.de/wiki/Plugin/PT_Assistant/Wizard")).setIcon(JOptionPane.WARNING_MESSAGE).show();
+		}
+		return null;
     }
 
 
@@ -356,7 +370,6 @@ public final class PTWizardAction extends JosmAction {
 
         panel.add(new JLabel("<html><br></html>"),GBC.eol().fill(GBC.HORIZONTAL));
         panel.add(checkBoxPanel, GBC.eol().fill(GBC.HORIZONTAL));
-
 	}
 
 	private void question1Action(JPanel panel) {
@@ -632,4 +645,19 @@ public final class PTWizardAction extends JosmAction {
 	        default : // Do nothing
 	    }
 	}
+
+    private class DoubleSplitDialog extends ExtendedDialog {
+
+		public DoubleSplitDialog() {
+			super(Main.parent, tr("PT Wizard"), new String[] { tr("Ok"), tr("Cancel") },
+					true);
+		}
+
+		@Override
+		protected void buttonAction(int buttonIndex, ActionEvent evt) {
+			closeCheck++;
+			super.buttonAction(buttonIndex, evt);
+		}
+
+    }
 }

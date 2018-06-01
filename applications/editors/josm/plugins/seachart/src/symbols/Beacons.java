@@ -66,7 +66,7 @@ public final class Beacons {
     static {
     	Floodlight.add(new Instr(Form.BBOX, new Rectangle2D.Double(-50, -50, 100, 100)));
     	Floodlight.add(new Instr(Form.STRK, new BasicStroke(4, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND)));
-    	Floodlight.add(new Instr(Form.FILL, new Color(0xffa000)));
+    	Floodlight.add(new Instr(Form.FILL, new Color(0xffff00)));
       Path2D.Double p = new Path2D.Double(); p.moveTo(0, 0); p.lineTo(-34, -15); p.quadTo(-35, -31, -20, -31); p.lineTo(0, 0);
       p.moveTo(-20, -31); p.quadTo(-13, -44, 0, -36); p.lineTo(0, 0);
       p.moveTo(0, -36); p.quadTo(13, -44, 20, -31); p.lineTo(0, 0);

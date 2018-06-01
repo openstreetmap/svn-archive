@@ -403,7 +403,8 @@ public class Signals extends Rules {
 			}
 		}
 		if (col != null) {
-			Renderer.symbol(Beacons.LightFlare, new Scheme(LightColours.get(col)), new Delta(Handle.BC, AffineTransform.getRotateInstance(Math.toRadians(120))));
+			Renderer.symbol(Beacons.LightFlare, new Scheme(LightColours.get(col)),
+					new Delta(Handle.BC, AffineTransform.getRotateInstance(Math.toRadians(120))));
 		}
 		if (Renderer.zoom >= 12) {
 			String str = "";

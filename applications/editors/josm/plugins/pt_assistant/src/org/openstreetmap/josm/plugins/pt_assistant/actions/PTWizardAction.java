@@ -67,7 +67,7 @@ public final class PTWizardAction extends JosmAction {
         super(
                 tr("PT Wizard"),
                 "clock",
-                tr("Set up PT Assistant for more convinient use"),
+                tr("Set up PT Assistant for more convenient use"),
                 null, false);
 
         putValue("help", ht("/Action/PTWizard"));

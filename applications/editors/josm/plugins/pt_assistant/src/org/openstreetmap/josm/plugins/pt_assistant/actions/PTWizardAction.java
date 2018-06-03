@@ -178,7 +178,8 @@ public final class PTWizardAction extends JosmAction {
 		try {
 			return new CachedFile("https://josm.openstreetmap.de/wiki/Plugin/PT_Assistant/Wizard?format=txt").setHttpAccept("text");
 		} catch (Exception e) {
-			new Notification(tr("Unable to connect to https://josm.openstreetmap.de/wiki/Plugin/PT_Assistant/Wizard")).setIcon(JOptionPane.WARNING_MESSAGE).show();
+			new Notification(tr("Unable to connect to {0}",
+			        "https://josm.openstreetmap.de/wiki/Plugin/PT_Assistant/Wizard")).setIcon(JOptionPane.WARNING_MESSAGE).show();
 		}
 		return null;
     }

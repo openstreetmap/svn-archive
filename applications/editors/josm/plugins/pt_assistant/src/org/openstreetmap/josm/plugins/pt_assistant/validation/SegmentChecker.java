@@ -941,7 +941,7 @@ public class SegmentChecker extends Checker {
         modifiedRelation.setMembers(getModifiedRelationMembers(testError, fix));
         ChangeCommand changeCommand = new ChangeCommand(originalRelation, modifiedRelation);
         MainApplication.undoRedo.addNoRedraw(changeCommand);
-        MainApplication.undoRedo.afterAdd(changeCommand);
+        MainApplication.undoRedo.afterAdd();
         PTRouteSegment wrongSegment = wrongSegments.get(testError);
         wrongSegments.remove(testError);
         wrongSegment.setPTWays(fix);
@@ -1076,7 +1076,7 @@ public class SegmentChecker extends Checker {
                 modifiedRelation.setMembers(getModifiedRelationMembers(testError, segment.getPTWays()));
                 ChangeCommand changeCommand = new ChangeCommand(originalRelation, modifiedRelation);
                 MainApplication.undoRedo.addNoRedraw(changeCommand);
-                MainApplication.undoRedo.afterAdd(changeCommand);
+                MainApplication.undoRedo.afterAdd();
                 wrongSegmentsToRemove.add(testError);
             }
         }

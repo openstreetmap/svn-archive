@@ -16,9 +16,11 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 import javax.swing.DefaultComboBoxModel;
@@ -34,7 +36,6 @@ import org.openstreetmap.josm.command.ChangeCommand;
 import org.openstreetmap.josm.command.ChangePropertyCommand;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.SequenceCommand;
-//import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.SplitWayCommand;
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.coor.ILatLon;
@@ -53,10 +54,11 @@ import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.layer.AbstractMapViewPaintable;
 import org.openstreetmap.josm.plugins.pt_assistant.utils.RouteUtils;
-import org.openstreetmap.josm.plugins.utilsplugin2.selection.NodeWayUtils;
 import org.openstreetmap.josm.tools.CheckParameterUtil;
 import org.openstreetmap.josm.tools.GBC;
+import org.openstreetmap.josm.tools.Geometry;
 import org.openstreetmap.josm.tools.ImageProvider;
+import org.openstreetmap.josm.tools.Pair;
 import org.openstreetmap.josm.tools.RightAndLefthandTraffic;
 
 /**
@@ -598,6 +600,72 @@ public class DoubleSplitAction extends MapMode implements KeyListener {
 		resetLayer();
 	}
 
+	// to find if there is any highway, railway, waterway crossing the way
+	private void findIntersection(Set<Way> newWays) {
+		try {
+			DataSet ds = getLayerManager().getEditDataSet();
+			addWaysIntersectingWays(ds.getWays(), Arrays.asList(previousAffectedWay, affected), newWays);
+			Node n1 = previousAffectedWay.firstNode();
+			Node n2 = previousAffectedWay.lastNode();
+			Node n3 = affected.firstNode();
+			Node n4 = affected.lastNode();
+			List<Way> waysToBeRemoved = new ArrayList<>();
+			for (Way way : newWays) {
+				int count = 0;
+				if (way.containsNode(n1))
+					count++;
+				if (way.containsNode(n2))
+					count++;
+				if (!previousAffectedWay.equals(affected)) {
+					if (way.containsNode(n3))
+						count++;
+					if (way.containsNode(n4))
+						count++;
+				}
+				if (count == 1) {
+					waysToBeRemoved.add(way);
+				} else {
+					if (!way.hasKey("highway") && !way.hasKey("waterway") && !way.hasKey("railway")) {
+						waysToBeRemoved.add(way);
+					}
+				}
+			}
+			newWays.removeAll(waysToBeRemoved);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	int addWaysIntersectingWay(Collection<Way> ways, Way w, Set<Way> newWays) {
+        List<Pair<Node, Node>> nodePairs = w.getNodePairs(false);
+        int count = 0;
+        for (Way anyway: ways) {
+            if (Objects.equals(anyway, w)) continue;
+            if (newWays.contains(anyway)) continue;
+            List<Pair<Node, Node>> nodePairs2 = anyway.getNodePairs(false);
+            loop: for (Pair<Node, Node> p1 : nodePairs) {
+                for (Pair<Node, Node> p2 : nodePairs2) {
+                    if (null != Geometry.getSegmentSegmentIntersection(
+                            p1.a.getEastNorth(), p1.b.getEastNorth(),
+                            p2.a.getEastNorth(), p2.b.getEastNorth())) {
+                        newWays.add(anyway);
+                        count++;
+                        break loop;
+                    }
+                }
+            }
+        }
+        return count;
+    }
+
+	int addWaysIntersectingWays(Collection<Way> allWays, Collection<Way> initWays, Set<Way> newWays) {
+        int count = 0;
+        for (Way w : initWays) {
+            count += addWaysIntersectingWay(allWays, w, newWays);
+        }
+        return count;
+    }
+
 	@Override
 	public void mouseMoved(MouseEvent e) {
 
@@ -653,6 +721,10 @@ public class DoubleSplitAction extends MapMode implements KeyListener {
 	// turn off what has been highlighted on last mouse move and highlight what has
 	// to be highlighted now
 	private void updateHighlights() {
+		if (oldHighlights == null && newHighlights == null) {
+			return;
+		}
+
 		if (oldHighlights.isEmpty() && newHighlights.isEmpty()) {
 			return;
 		}
@@ -740,7 +812,7 @@ public class DoubleSplitAction extends MapMode implements KeyListener {
 
 			if (previousAffectedWay.hasKey("waterway") || affected.hasKey("waterway")) {
 				setOptionsWithTunnel();
-			} else if (newWays.size() != 0) {
+			} else if (newWays != null && newWays.size() != 0) {
 				setOptionsWithBridge();
 			} else {
 				setOptionsDefault();
@@ -844,37 +916,6 @@ public class DoubleSplitAction extends MapMode implements KeyListener {
 					}
 				}
 			});
-		}
-
-		private void findIntersection(Set<Way> newWays) {
-			DataSet ds = getLayerManager().getEditDataSet();
-			NodeWayUtils.addWaysIntersectingWays(ds.getWays(), Arrays.asList(previousAffectedWay, affected), newWays);
-			Node n1 = previousAffectedWay.firstNode();
-			Node n2 = previousAffectedWay.lastNode();
-			Node n3 = affected.firstNode();
-			Node n4 = affected.lastNode();
-			List<Way> waysToBeRemoved = new ArrayList<>();
-			for (Way way : newWays) {
-				int count = 0;
-				if (way.containsNode(n1))
-					count++;
-				if (way.containsNode(n2))
-					count++;
-				if (!previousAffectedWay.equals(affected)) {
-					if (way.containsNode(n3))
-						count++;
-					if (way.containsNode(n4))
-						count++;
-				}
-				if (count == 1) {
-					waysToBeRemoved.add(way);
-				} else {
-					if (!way.hasKey("highway") && !way.hasKey("waterway") && !way.hasKey("railway")) {
-						waysToBeRemoved.add(way);
-					}
-				}
-			}
-			newWays.removeAll(waysToBeRemoved);
 		}
 
 		@Override

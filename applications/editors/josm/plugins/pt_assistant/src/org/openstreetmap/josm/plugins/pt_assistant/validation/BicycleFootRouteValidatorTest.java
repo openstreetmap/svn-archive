@@ -45,7 +45,7 @@ public class BicycleFootRouteValidatorTest extends Test {
         for (Integer i : getGaps(links)) {
             Builder builder = TestError.builder(this, Severity.WARNING,
                     ERROR_CODE_CONTINUITY);
-            builder.message(tr("PT: There is a gap in the " + r.get("route") + " route"));
+            builder.message(tr("PT: There is a gap in the {0} route", r.get("route")));
             builder.primitives(members.get(i).getWay(), members.get(i+1).getWay(), r);
             errors.add(builder.build());
         }

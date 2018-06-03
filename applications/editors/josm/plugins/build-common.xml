@@ -29,6 +29,8 @@
     <property name="ant.build.javac.target" value="1.8"/>
     <property name="ant.build.javac.source" value="1.8"/>
     <property name="plugin.jar"             location="${plugin.dist.dir}/${ant.project.name}.jar"/>
+    <property name="plugin.sources.jar"     location="${plugin.dist.dir}/${ant.project.name}-sources.jar"/>
+    <property name="plugin.javadoc.jar"     location="${plugin.dist.dir}/${ant.project.name}-javadoc.jar"/>
     <property name="javac.compiler"         value="com.google.errorprone.ErrorProneAntCompilerAdapter" />
 
     <!-- For Windows-specific stuff -->
@@ -120,10 +122,10 @@
     </target>
     <!--
     **********************************************************
-    ** dist - creates the plugin jar
+    ** dist - creates the plugin jars
     **********************************************************
     -->
-    <target name="dist" depends="compile,revision" unless="skip-dist">
+    <target name="dist" depends="compile,javadoc,revision" unless="skip-dist">
         <echo message="creating ${ant.project.name}.jar ... "/>
         <antcall target="setup-dist" />
         <delete file="MANIFEST" failonerror="no"/>
@@ -183,6 +185,8 @@
                 </archives>
             </restrict>
         </jar>
+        <jar destfile="${plugin.sources.jar}" basedir="${plugin.src.dir}"/>
+        <jar destfile="${plugin.javadoc.jar}" basedir="${plugin.doc.dir}"/>
         <delete file="MANIFEST" failonerror="no"/>
         <antcall target="post-dist" />
     </target>
@@ -326,6 +330,8 @@
         <delete dir="${plugin.doc.dir}"/>
         <delete dir="${checkstyle-build.dir}"/>
         <delete file="${plugin.jar}"/>
+        <delete file="${plugin.sources.jar}"/>
+        <delete file="${plugin.javadoc.jar}"/>
     </target>
     <!--
     **********************************************************

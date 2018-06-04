@@ -143,11 +143,23 @@ public class PTAssistantPaintVisitor extends PaintVisitor {
 			WayConnectionType link = links.get(i);
 			Way way = members.get(i).getWay();
 			if (!link.isOnewayLoopForwardPart && !link.isOnewayLoopBackwardPart) {
-				drawWay(way, new Color(0, 255, 255, 100));
+				if (way.isSelected()) {
+					drawWay(way, new Color(0, 255, 0, 100));
+				} else {
+					drawWay(way, new Color(0, 255, 255, 100));
+				}
 			} else if (link.isOnewayLoopForwardPart) {
-				drawWay(way, new Color(255, 0, 0, 100));
+				if (way.isSelected()) {
+					drawWay(way, new Color(255, 20, 147, 100));
+				} else {
+					drawWay(way, new Color(255, 0, 0, 100));
+				}
 			} else {
-				drawWay(way, new Color(0, 0, 255, 100));
+				if (way.isSelected()) {
+					drawWay(way, new Color(128, 0, 128, 100));
+				} else {
+					drawWay(way, new Color(0, 0, 255, 100));
+				}
 			}
 		}
 	}

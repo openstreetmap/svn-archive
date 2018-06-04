@@ -110,12 +110,21 @@ public class EdgeSelectionAction extends MapMode {
 		if ("bus".equals(modeOfTravel))
 			return RouteUtils.isWaySuitableForBuses(way);
 
-		if ("bicycle".equals(modeOfTravel))
-			return RouteUtils.isWaySuitableForBicycle(way);
+		if ("bicycle".equals(modeOfTravel)) {
+			if (way.hasTag("bicycle", "yes"))
+				return true;
+			if (way.hasTag("bicycle", "no") || way.hasTag("bicycle", "side_path"))
+				return false;
+			if (way.hasTag("highway", "motorway") || way.hasTag("highway", "trunk") || way.hasTag("highway", "footway")
+					|| way.hasTag("highway", "pedestrian"))
+				return false;
+
+			return true;
+		}
 
 		if ("foot".equals(modeOfTravel)) {
-			return way.hasTag("highway", "footway") || !(way.hasKey("highway", "motorway") || way.hasKey("foot", "no")
-					|| way.hasKey("foot", "use_sidepath"));
+			return (way.hasTag("highway", "footway") || !(way.hasKey("highway", "motorway") || way.hasKey("foot", "no")
+					|| way.hasKey("foot", "use_sidepath")));
 		}
 
 		// if ("hiking".equals(modeOfTravel))

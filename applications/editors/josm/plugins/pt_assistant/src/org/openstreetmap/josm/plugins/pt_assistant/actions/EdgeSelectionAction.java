@@ -12,6 +12,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import javax.swing.JOptionPane;
+
 import org.openstreetmap.josm.actions.AutoScaleAction;
 import org.openstreetmap.josm.actions.mapmode.MapMode;
 import org.openstreetmap.josm.data.osm.DataSet;
@@ -20,6 +22,7 @@ import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.gui.MainApplication;
+import org.openstreetmap.josm.gui.Notification;
 import org.openstreetmap.josm.gui.dialogs.relation.sort.RelationSorter;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.plugins.pt_assistant.gui.PTAssistantLayer;
@@ -155,13 +158,6 @@ public class EdgeSelectionAction extends MapMode {
 
 		Way theChoosenOne = null;
 
-		// if ("bus".equals(modeOfTravel)) {
-		//
-		// }
-		// if ("tram".equals(modeOfTravel)) {
-		//
-		// }
-
 		return theChoosenOne;
 	}
 
@@ -201,6 +197,11 @@ public class EdgeSelectionAction extends MapMode {
 						edgeList.add(way);
 				}
 				edgeList.addAll(edge);
+				// set for a more accurate count
+				Set<Way> edgeSet = new HashSet<>(edgeList);
+				new Notification(
+						tr("Mode of Travel -> {0} \n total ways selected -> {1}", modeOfTravel, edgeSet.size()))
+								.setIcon(JOptionPane.INFORMATION_MESSAGE).setDuration(1200).show();
 				ds.setSelected(edgeList);
 				AutoScaleAction.zoomTo(edge.stream().map(w -> (OsmPrimitive) w).collect(Collectors.toList()));
 			}
@@ -228,7 +229,6 @@ public class EdgeSelectionAction extends MapMode {
 					}
 				}
 				if (newEdges != null) {
-					System.out.println("new"+newEdges.size());
 					List<Way> waysToBeRemoved = waysToBeRemoved(newEdges);
 					if (waysToBeRemoved != null) {
 						newEdges.removeAll(waysToBeRemoved);
@@ -237,6 +237,9 @@ public class EdgeSelectionAction extends MapMode {
 				}
 			}
 			ds.clearSelection();
+			Set<Way> edgeSet = new HashSet<>(edgeList);
+			new Notification(tr("Mode of Travel -> {0} \n total ways selected -> {1}", modeOfTravel, edgeSet.size()))
+					.setIcon(JOptionPane.INFORMATION_MESSAGE).setDuration(900).show();
 			ds.setSelected(edgeList);
 			AutoScaleAction.zoomTo(edge.stream().map(w -> (OsmPrimitive) w).collect(Collectors.toList()));
 		} else if (shift && !ctrl && initial != null) {
@@ -258,7 +261,6 @@ public class EdgeSelectionAction extends MapMode {
 				}
 
 				if (newEdges != null) {
-					System.out.println("new"+newEdges.size());
 					List<Way> waysToBeRemoved = waysToBeRemoved(newEdges);
 					if (waysToBeRemoved != null) {
 						newEdges.removeAll(waysToBeRemoved);
@@ -266,6 +268,10 @@ public class EdgeSelectionAction extends MapMode {
 					edgeList.addAll(newEdges);
 				}
 
+				Set<Way> edgeSet = new HashSet<>(edgeList);
+				new Notification(
+						tr("Mode of Travel -> {0} \n total ways selected -> {1}", modeOfTravel, edgeSet.size()))
+								.setIcon(JOptionPane.INFORMATION_MESSAGE).setDuration(900).show();
 				ds.setSelected(edgeList);
 				AutoScaleAction.zoomTo(edge.stream().map(w -> (OsmPrimitive) w).collect(Collectors.toList()));
 			}
@@ -300,7 +306,6 @@ public class EdgeSelectionAction extends MapMode {
 				}
 			}
 		}
-		System.out.println("remove"+waysToBeRemoved.size());
 		return waysToBeRemoved;
 	}
 

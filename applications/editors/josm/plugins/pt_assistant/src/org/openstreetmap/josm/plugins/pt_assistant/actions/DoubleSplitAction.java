@@ -138,6 +138,7 @@ public class DoubleSplitAction extends MapMode implements KeyListener {
 		temporaryLayer.invalidate();
 	}
 
+	// check if both the nodes are starting and ending nodes of same way
 	private boolean startEndPoints(List<Command> commandList) {
 
 		try {
@@ -295,20 +296,19 @@ public class DoubleSplitAction extends MapMode implements KeyListener {
 		}
 	}
 
+	// calls the dialog box
 	private void dialogBox(int type, Node commonNode, Way affected, Way previousAffectedWay,
 			List<Command> commandList) {
 
 		final ExtendedDialog dialog = new SelectFromOptionDialog(type, commonNode, affected, previousAffectedWay,
 				commandList, atNodes);
-		dialog.toggleEnable("way.split.segment-selection-dialog");
-		if (!dialog.toggleCheckState()) {
-			dialog.setModal(false);
-			dialog.showDialog();
-			return; // splitting is performed in SegmentToKeepSelectionDialog.buttonAction()
-		}
+		dialog.setModal(false);
+		dialog.showDialog();
+		return; // splitting is performed in SegmentToKeepSelectionDialog.buttonAction()
 
 	}
 
+	// create a node in the position that the user has marked
 	private Node createNode(ILatLon Pos, List<Command> commandList) {
 		Boolean newNode = false;
 		Node newStopPos;
@@ -335,6 +335,11 @@ public class DoubleSplitAction extends MapMode implements KeyListener {
 		return newStopPos;
 	}
 
+	/*
+	 * the function works if we have both nodes on a single way. It adds the nodes
+	 * in the undoRedo, splits the ways if required, collects the existing keys of
+	 * the ways and sends to addTags function
+	 */
 	private void addKeys(Way affected, List<Command> commandList, JComboBox<String> keys, JComboBox<String> values) {
 		List<TagMap> affectedKeysList = new ArrayList<>();
 		Way selectedWay = null;
@@ -366,6 +371,7 @@ public class DoubleSplitAction extends MapMode implements KeyListener {
 			}
 		}
 
+		// add the existing keys of the selected way to affectedKeysList
 		if (selectedWay != null) {
 			affectedKeysList.add(affected.getKeys());
 			addTags(affectedKeysList, Arrays.asList(selectedWay), keys, values, 0);
@@ -377,6 +383,7 @@ public class DoubleSplitAction extends MapMode implements KeyListener {
 		}
 	}
 
+	// this function is called when both nodes are in 2 adjacent ways
 	private void addKeysOnBothWays(Node commonNode, Way affected, Way previousAffectedWay, List<Command> commandList,
 			JComboBox<String> keys, JComboBox<String> values) {
 		List<TagMap> affectedKeysList = new ArrayList<>();
@@ -481,6 +488,8 @@ public class DoubleSplitAction extends MapMode implements KeyListener {
 		}
 	}
 
+	// this function is called when both nodes are starting and ending points of
+	// same way, we dont split anything here
 	private void addKeysWhenStartEndPoint(Way affected, List<Command> commandList, JComboBox<String> keys,
 			JComboBox<String> values) {
 		List<TagMap> affectedKeysList = new ArrayList<>();
@@ -497,15 +506,16 @@ public class DoubleSplitAction extends MapMode implements KeyListener {
 		}
 	}
 
+	// join the node to the way only if the node is new
 	private void addParentWay(Node node) {
 		if (node.getParentWays().size() == 0) {
 			MainApplication.getLayerManager().getEditLayer().data.setSelected(node);
-			// join the node to the way only if the node is new
 			JoinNodeWayAction joinNodeWayAction = JoinNodeWayAction.createMoveNodeOntoWayAction();
 			joinNodeWayAction.actionPerformed(null);
 		}
 	}
 
+	// check if a way is present in a relation, if not then add it
 	private void checkMembership(Way way, List<Relation> referrers, int Index) {
 		for (Relation r : referrers) {
 			boolean isMember = false;
@@ -522,6 +532,7 @@ public class DoubleSplitAction extends MapMode implements KeyListener {
 		}
 	}
 
+	// get index where the way is present in a relation
 	private int getIndex(Way way, List<Relation> referrers, Way previousAffectedWay) {
 		int Index = -1;
 		for (Relation r : referrers) {
@@ -534,6 +545,7 @@ public class DoubleSplitAction extends MapMode implements KeyListener {
 		return Index;
 	}
 
+	// take key value pair from the dialog box and add it to the existing ways
 	private void addTags(List<TagMap> affectedKeysList, List<Way> selectedWay, JComboBox<String> keys,
 			JComboBox<String> values, int type) {
 		TagMap newKeys1 = affectedKeysList.get(0);
@@ -553,13 +565,6 @@ public class DoubleSplitAction extends MapMode implements KeyListener {
 			} else {
 				newKeys1.put(keys.getSelectedItem().toString(), values.getSelectedItem().toString());
 			}
-			// if (type != 2) {
-			// selectedWay.get(0).setKeys(newKeys1);
-			//
-			// } else {
-			// MainApplication.undoRedo.add(new
-			// ChangePropertyCommand(Collections.singleton(selectedWay.get(0)), newKeys1));
-			// }
 		}
 
 		if (affectedKeysList.size() == 2) {
@@ -636,35 +641,31 @@ public class DoubleSplitAction extends MapMode implements KeyListener {
 		}
 	}
 
-	int addWaysIntersectingWay(Collection<Way> ways, Way w, Set<Way> newWays) {
-        List<Pair<Node, Node>> nodePairs = w.getNodePairs(false);
-        int count = 0;
-        for (Way anyway: ways) {
-            if (Objects.equals(anyway, w)) continue;
-            if (newWays.contains(anyway)) continue;
-            List<Pair<Node, Node>> nodePairs2 = anyway.getNodePairs(false);
-            loop: for (Pair<Node, Node> p1 : nodePairs) {
-                for (Pair<Node, Node> p2 : nodePairs2) {
-                    if (null != Geometry.getSegmentSegmentIntersection(
-                            p1.a.getEastNorth(), p1.b.getEastNorth(),
-                            p2.a.getEastNorth(), p2.b.getEastNorth())) {
-                        newWays.add(anyway);
-                        count++;
-                        break loop;
-                    }
-                }
-            }
-        }
-        return count;
-    }
+	void addWaysIntersectingWay(Collection<Way> ways, Way w, Set<Way> newWays) {
+		List<Pair<Node, Node>> nodePairs = w.getNodePairs(false);
+		for (Way anyway : ways) {
+			if (Objects.equals(anyway, w))
+				continue;
+			if (newWays.contains(anyway))
+				continue;
+			List<Pair<Node, Node>> nodePairs2 = anyway.getNodePairs(false);
+			loop: for (Pair<Node, Node> p1 : nodePairs) {
+				for (Pair<Node, Node> p2 : nodePairs2) {
+					if (null != Geometry.getSegmentSegmentIntersection(p1.a.getEastNorth(), p1.b.getEastNorth(),
+							p2.a.getEastNorth(), p2.b.getEastNorth())) {
+						newWays.add(anyway);
+						break loop;
+					}
+				}
+			}
+		}
+	}
 
-	int addWaysIntersectingWays(Collection<Way> allWays, Collection<Way> initWays, Set<Way> newWays) {
-        int count = 0;
-        for (Way w : initWays) {
-            count += addWaysIntersectingWay(allWays, w, newWays);
-        }
-        return count;
-    }
+	void addWaysIntersectingWays(Collection<Way> allWays, Collection<Way> initWays, Set<Way> newWays) {
+		for (Way w : initWays) {
+			addWaysIntersectingWay(allWays, w, newWays);
+		}
+	}
 
 	@Override
 	public void mouseMoved(MouseEvent e) {
@@ -812,10 +813,12 @@ public class DoubleSplitAction extends MapMode implements KeyListener {
 
 			if (previousAffectedWay.hasKey("waterway") || affected.hasKey("waterway")) {
 				setOptionsWithTunnel();
+			} else if (previousAffectedWay.hasKey("bus_bay") || affected.hasKey("bus_bay")) {
+				setOptionsWithBusBay();
 			} else if (newWays != null && newWays.size() != 0) {
 				setOptionsWithBridge();
 			} else {
-				setOptionsDefault();
+				setOptionsWithBusBay();
 			}
 
 			pane.add(keys, GBC.eop().fill(GBC.HORIZONTAL));
@@ -825,13 +828,18 @@ public class DoubleSplitAction extends MapMode implements KeyListener {
 			setDefaultCloseOperation(HIDE_ON_CLOSE);
 		}
 
-		private void setOptionsDefault() {
+		private void setOptionsWithBusBay() {
 			keys.setModel(new DefaultComboBoxModel<>(new String[] { "bus_bay", "bridge", "tunnel" }));
 
-			if (rightHandTraffic)
-				values.setModel(new DefaultComboBoxModel<>(new String[] { "right", "left", "both" }));
-			else
+			if (affected.hasTag("bus_bay", "right") || previousAffectedWay.hasTag("bus_bay", "right")) {
 				values.setModel(new DefaultComboBoxModel<>(new String[] { "left", "right", "both" }));
+			} else if (affected.hasTag("bus_bay", "left") || previousAffectedWay.hasTag("bus_bay", "left")) {
+				values.setModel(new DefaultComboBoxModel<>(new String[] { "right", "left", "both" }));
+			} else if (rightHandTraffic) {
+				values.setModel(new DefaultComboBoxModel<>(new String[] { "right", "left", "both" }));
+			} else {
+				values.setModel(new DefaultComboBoxModel<>(new String[] { "left", "right", "both" }));
+			}
 
 			// below code changes the list in values on the basis of key
 			keys.addActionListener(new ActionListener() {

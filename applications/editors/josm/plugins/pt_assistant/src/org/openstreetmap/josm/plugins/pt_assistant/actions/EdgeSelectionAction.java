@@ -107,7 +107,7 @@ public class EdgeSelectionAction extends MapMode {
 	}
 
 	private Boolean isWaySuitableForMode(Way way, String modeOfTravel) {
-		if ("bus".equals(modeOfTravel))
+		if ("bus".equals(modeOfTravel) )
 			return RouteUtils.isWaySuitableForBuses(way);
 
 		if ("bicycle".equals(modeOfTravel)) {
@@ -200,6 +200,8 @@ public class EdgeSelectionAction extends MapMode {
 			ds.clearSelection();
 			if (initial != null) {
 				modeOfTravel = getModeOfTravel(initial);
+				if ("mtb".equals(modeOfTravel))
+					modeOfTravel = "bicycle";
 				List<Way> edge = getEdgeFromWay(initial, modeOfTravel);
 				for (Way way : edge) {
 					if (!edgeList.contains(way))
@@ -221,6 +223,8 @@ public class EdgeSelectionAction extends MapMode {
 			 */
 			if (edgeList.size() == 0 || modeOfTravel == null) {
 				modeOfTravel = getModeOfTravel(initial);
+				if ("mtb".equals(modeOfTravel))
+					modeOfTravel = "bicycle";
 			}
 
 			List<Way> edge = getEdgeFromWay(initial, modeOfTravel);
@@ -257,6 +261,8 @@ public class EdgeSelectionAction extends MapMode {
 			 */
 			if (edgeList.size() == 0 || modeOfTravel == null) {
 				modeOfTravel = getModeOfTravel(initial);
+				if ("mtb".equals(modeOfTravel))
+					modeOfTravel = "bicycle";
 			}
 			if (initial != null) {
 				List<Way> edge = getEdgeFromWay(initial, modeOfTravel);

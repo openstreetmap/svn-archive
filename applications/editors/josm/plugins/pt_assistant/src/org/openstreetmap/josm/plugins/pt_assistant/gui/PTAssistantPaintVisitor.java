@@ -150,7 +150,7 @@ public class PTAssistantPaintVisitor extends PaintVisitor {
 				}
 			} else if (link.isOnewayLoopForwardPart) {
 				if (way.isSelected()) {
-					drawWay(way, new Color(255, 20, 147, 100));
+					drawWay(way, new Color(255, 255, 0, 100));
 				} else {
 					drawWay(way, new Color(255, 0, 0, 100));
 				}

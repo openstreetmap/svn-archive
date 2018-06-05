@@ -268,7 +268,7 @@ public final class RouteUtils {
             return false;
         }
 
-        return r.hasTag(TAG_ROUTE, "bicycle");
+        return r.hasTag(TAG_ROUTE, "bicycle", "mtb");
     }
 
 

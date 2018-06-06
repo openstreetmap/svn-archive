@@ -67,7 +67,7 @@
     </target>
     <target name="po/josm.pot" description="Extracts message keys from the source code" depends="trans_.java,init,filterpluginsources">
         <gettext-extract keysFile="josm.raw.pot" poDirectory="po" keywords="-k -ktrc:1c,2 -kmarktrc:1c,2 -ktr -kmarktr -ktrn:1,2 -ktrnc:1c,2,3">
-            <!-- core.port -->
+            <!-- core.pot -->
             <fileset dir="${josm.build.dir}/src" includes="**/*.java"/>
             <fileset dir="${i18n.build.dir}" includes="specialmessages.java"/>
             <fileset dir="${i18n.build.dir}" includes="trans_presets.java"/>
@@ -160,29 +160,38 @@
         </exec>
     </target>
     <!-- If the file `josm.pot` is present and the plugin has a `data/` directory, update its *.po files based on the ones in the `po/` directory. -->
+    <!-- If the plugin has a Transifex config file `.tx/config`, skip this target altogether -->
     <target name="plugintrans">
-        <basename file="${path}" property="dir"/>
-        <mkdir dir="${po.build.dir}/plugin_${dir}"/>
-        <exec executable="perl" failonerror="true" output="${po.build.dir}/plugin_${dir}/trans_plugin.java">
-            <arg line="convplugins.pl ${plugin.dir}/${dir}/build.xml"/>
-        </exec>
-        <gettext-extract keysFile="josm.pot" poDirectory="${po.build.dir}/plugin_${dir}" keywords="-k -ktrc:1c,2 -kmarktrc:1c,2 -ktr -kmarktr -ktrn:1,2 -ktrnc:1c,2,3">
-            <fileset dir="${plugin.dir}/${dir}" includes="**/*.java"/>
-            <fileset dir="${po.build.dir}/plugin_${dir}" includes="trans_*.java"/>
-            <fileset dir="${i18n.build.dir}" includes="trans_${dir}.java"/> <!-- include plugin specific translation -->
-        </gettext-extract>
         <if>
-            <and>
-                <available file="${po.build.dir}/plugin_${dir}/josm.pot" type="file"/>
-                <available file="${plugin.dir}/${dir}/data/" type="dir"/>
-            </and>
+            <available file="${plugin.dir}/${path}/.tx/config" type="file"/>
             <then>
-                <exec executable="perl" failonerror="true">
-                    <arg line="i18n.pl --potfile=${po.build.dir}/plugin_${dir}/josm.pot --basedir=${plugin.dir}/${dir}/data/ po/*.po"/>
-                </exec>
+                <echo message="Skip plugin ${path}, because it is translated with Transifex!"/>
             </then>
+            <else>
+                <basename file="${path}" property="dir"/>
+                <mkdir dir="${po.build.dir}/plugin_${dir}"/>
+                <exec executable="perl" failonerror="true" output="${po.build.dir}/plugin_${dir}/trans_plugin.java">
+                    <arg line="convplugins.pl ${plugin.dir}/${dir}/build.xml"/>
+                </exec>
+                <gettext-extract keysFile="josm.pot" poDirectory="${po.build.dir}/plugin_${dir}" keywords="-k -ktrc:1c,2 -kmarktrc:1c,2 -ktr -kmarktr -ktrn:1,2 -ktrnc:1c,2,3">
+                    <fileset dir="${plugin.dir}/${dir}" includes="**/*.java"/>
+                    <fileset dir="${po.build.dir}/plugin_${dir}" includes="trans_*.java"/>
+                    <fileset dir="${i18n.build.dir}" includes="trans_${dir}.java"/> <!-- include plugin specific translation -->
+                </gettext-extract>
+                <if>
+                    <and>
+                        <available file="${po.build.dir}/plugin_${dir}/josm.pot" type="file"/>
+                        <available file="${plugin.dir}/${dir}/data/" type="dir"/>
+                    </and>
+                    <then>
+                        <exec executable="perl" failonerror="true">
+                            <arg line="i18n.pl --potfile=${po.build.dir}/plugin_${dir}/josm.pot --basedir=${plugin.dir}/${dir}/data/ po/*.po"/>
+                        </exec>
+                    </then>
+                </if>
+                <delete dir="${po.build.dir}/plugin_${dir}"/>
+            </else>
         </if>
-        <delete dir="${po.build.dir}/plugin_${dir}"/>
     </target>
     <target name="clean">
         <delete dir="${i18n.build.dir}"/>

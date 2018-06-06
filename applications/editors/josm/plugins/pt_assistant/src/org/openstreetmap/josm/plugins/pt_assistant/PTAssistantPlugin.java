@@ -78,8 +78,7 @@ public class PTAssistantPlugin extends Plugin {
 		OsmValidator.addTest(BicycleFootRouteValidatorTest.class);
 
 		MainMenu menu = MainApplication.getMenu();
-		JMenu PublicTransportMenu = menu.addMenu("File", /* I18N: mnemonic: F */ trc("menu", "Public Transport"),
-				KeyEvent.VK_P, 5, ht("/Menu/Public Transport"));
+		JMenu PublicTransportMenu = menu.addMenu("File", trc("menu", "Public Transport"), KeyEvent.VK_P, 5, ht("/Menu/Public Transport"));
 
 		DataSet.addSelectionListener(PTAssistantLayerManager.PTLM);
 		KeyboardFocusManager.getCurrentKeyboardFocusManager().addPropertyChangeListener(PTAssistantLayerManager.PTLM);

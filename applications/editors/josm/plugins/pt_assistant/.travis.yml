@@ -1,0 +1,38 @@
+# Default settings for build stages
+language: java
+jdk:
+  - openjdk8
+  - oraclejdk8
+  - oraclejdk9
+
+script: ./gradlew build minJosmVersionClasses
+
+deploy:
+  provider: releases
+  file_glob: true
+  api_key: "$GITHUB_TOKEN"
+  file:
+    - "build/dist/pt_assistant.jar"
+    - "build/tmp/jar/MANIFEST.MF"
+  skip_cleanup: true
+  on:
+    condition: -n $GITHUB_TOKEN
+    tags: true
+    jdk: openjdk8
+
+jobs:
+  include:
+    - stage: i18n
+      language: python
+      python: "3.6"
+      install: pip install git+https://github.com/transifex/transifex-client.git
+      script: |
+        if [ ! -z "$TRANSIFEX_TOKEN" ]; then
+          ./gradlew generatePot
+          TX_TOKEN="$TRANSIFEX_TOKEN" tx push -s --no-interactive
+        fi
+
+stages:
+  - test
+  - name: i18n
+    if: type = push AND branch = trunk

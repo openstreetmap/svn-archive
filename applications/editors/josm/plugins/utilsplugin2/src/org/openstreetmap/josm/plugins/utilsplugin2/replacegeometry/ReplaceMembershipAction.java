@@ -42,7 +42,7 @@ public class ReplaceMembershipAction extends JosmAction {
         final OsmPrimitive secondObject = selection.next();
 
         final ReplaceGeometryCommand command = getReplaceGeometryCommand(firstObject, secondObject);
-        final int affectedRelations = command.getChildren().size();
+        final int affectedRelations = command != null ? command.getChildren().size() : 0;
         if (affectedRelations > 0) {
             MainApplication.undoRedo.add(command);
             new Notification(trn("Replaced ''{0}'' by ''{1}'' in {2} relation", "Replaced ''{0}'' by ''{1}'' in {2} relations",
@@ -74,7 +74,7 @@ public class ReplaceMembershipAction extends JosmAction {
             commands.add(new ChangeCommand(oldRelation, newRelation));
         }
 
-        return new ReplaceGeometryCommand(tr("Replace Membership"), commands);
+        return commands.isEmpty() ? null : new ReplaceGeometryCommand(tr("Replace Membership"), commands);
     }
 
     @Override

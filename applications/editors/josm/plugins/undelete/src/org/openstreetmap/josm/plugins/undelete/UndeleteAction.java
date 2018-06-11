@@ -206,11 +206,9 @@ public class UndeleteAction extends JosmAction {
         undelete(dialog.isNewLayerSelected(), dialog.getOsmIds(), null);
     }
 
-    /**
-     * // TODO: undelete relation members if necessary
-     */
     public void undelete(boolean newLayer, final List<PrimitiveId> ids, final OsmPrimitive parent) {
 
+        // TODO: undelete relation members if necessary
         Logging.info("Undeleting "+ids+(parent == null ? "" : " with parent "+parent));
 
         OsmDataLayer tmpLayer = MainApplication.getLayerManager().getEditLayer();

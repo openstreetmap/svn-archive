@@ -21,12 +21,15 @@
         <sequential>
             <subant target="@{target}" inheritall="true">
                 <filelist dir="." files="${ordered_plugins}"/>
-                <fileset  dir="." includes="*/build.xml" excludes="00_*/build.xml ${ordered_plugins}"/>
+                <fileset  dir="." includes="*/build.xml" excludes="00_*/build.xml *.wip/build.xml ${ordered_plugins}"/>
             </subant>
         </sequential>
     </macrodef>
     <target name="clean">
         <iterate target="clean"/>
+    </target>
+    <target name="compile">
+        <iterate target="compile"/>
     </target>
     <target name="dist" depends="compile_josm">
         <mkdir dir="../dist"/>

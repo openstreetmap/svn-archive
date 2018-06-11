@@ -286,6 +286,7 @@ public class OsmChangesetContentParser {
      *
      * @param source the input stream with the changeset content as XML document. Must not be null.
      * @throws IllegalArgumentException thrown if source is null.
+     * @throws UnsupportedEncodingException if the named charset is not supported
      */
     public OsmChangesetContentParser(InputStream source) throws UnsupportedEncodingException {
         CheckParameterUtil.ensureParameterNotNull(source, "source");
@@ -302,7 +303,7 @@ public class OsmChangesetContentParser {
     /**
      * Parses the content
      *
-     * @param progressMonitor the progress monitor. Set to {@see NullProgressMonitor#INSTANCE}
+     * @param progressMonitor the progress monitor. Set to {@link NullProgressMonitor#INSTANCE}
      * if null
      * @return the parsed data
      * @throws XmlParsingException if something went wrong. Check for chained exceptions.

@@ -29,6 +29,7 @@ import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
+import org.openstreetmap.josm.data.osm.visitor.PrimitiveVisitor;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.plugins.public_transport.commands.GTFSAddCommand;
 import org.openstreetmap.josm.plugins.public_transport.commands.GTFSCatchCommand;
@@ -310,7 +311,7 @@ public class GTFSImporterAction extends JosmAction {
         for (int i = 0; i < consideredLines.size(); ++i) {
             int j = consideredLines.elementAt(i);
             if (nodes.elementAt(j) != null)
-                nodes.elementAt(j).accept(box);
+                nodes.elementAt(j).accept((PrimitiveVisitor) box);
         }
         if (box.getBounds() == null)
             return;

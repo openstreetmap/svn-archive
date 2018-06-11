@@ -52,6 +52,7 @@ import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
+import org.openstreetmap.josm.data.osm.visitor.PrimitiveVisitor;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.plugins.public_transport.models.ItineraryTableModel;
 import org.openstreetmap.josm.plugins.public_transport.refs.RouteReference;
@@ -1091,13 +1092,13 @@ public class RoutePatternAction extends JosmAction {
                 for (int i = 0; i < itineraryData.getRowCount(); ++i) {
                     if ((itineraryTable.isRowSelected(i))
                             && (itineraryData.ways.elementAt(i) != null)) {
-                        itineraryData.ways.elementAt(i).accept(box);
+                        itineraryData.ways.elementAt(i).accept((PrimitiveVisitor) box);
                     }
                 }
             } else {
                 for (int i = 0; i < itineraryData.getRowCount(); ++i) {
                     if (itineraryData.ways.elementAt(i) != null) {
-                        itineraryData.ways.elementAt(i).accept(box);
+                        itineraryData.ways.elementAt(i).accept((PrimitiveVisitor) box);
                     }
                 }
             }
@@ -1323,12 +1324,12 @@ public class RoutePatternAction extends JosmAction {
             if (stoplistTable.getSelectedRowCount() > 0) {
                 for (int i = 0; i < stoplistData.getRowCount(); ++i) {
                     if (stoplistTable.isRowSelected(i)) {
-                        stoplistData.nodes.elementAt(i).accept(box);
+                        stoplistData.nodes.elementAt(i).accept((PrimitiveVisitor) box);
                     }
                 }
             } else {
                 for (int i = 0; i < stoplistData.getRowCount(); ++i) {
-                    stoplistData.nodes.elementAt(i).accept(box);
+                    stoplistData.nodes.elementAt(i).accept((PrimitiveVisitor) box);
                 }
             }
             if (box.getBounds() == null)

@@ -18,8 +18,7 @@ import javax.swing.JPanel;
 import javax.swing.JToggleButton;
 
 import org.openstreetmap.josm.actions.JosmAction;
-import org.openstreetmap.josm.data.SelectionChangedListener;
-import org.openstreetmap.josm.data.osm.DataSet;
+import org.openstreetmap.josm.data.osm.DataSelectionListener;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Way;
@@ -30,6 +29,7 @@ import org.openstreetmap.josm.data.osm.event.NodeMovedEvent;
 import org.openstreetmap.josm.data.osm.event.PrimitivesAddedEvent;
 import org.openstreetmap.josm.data.osm.event.PrimitivesRemovedEvent;
 import org.openstreetmap.josm.data.osm.event.RelationMembersChangedEvent;
+import org.openstreetmap.josm.data.osm.event.SelectionEventManager;
 import org.openstreetmap.josm.data.osm.event.TagsChangedEvent;
 import org.openstreetmap.josm.data.osm.event.WayNodesChangedEvent;
 import org.openstreetmap.josm.gui.MainApplication;
@@ -39,7 +39,7 @@ import org.openstreetmap.josm.gui.layer.MainLayerManager.ActiveLayerChangeListen
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import org.openstreetmap.josm.plugins.turnlanes.model.ModelContainer;
 
-public class TurnLanesDialog extends ToggleDialog implements ActiveLayerChangeListener, SelectionChangedListener {
+public class TurnLanesDialog extends ToggleDialog implements ActiveLayerChangeListener, DataSelectionListener {
     private class EditAction extends JosmAction {
         private static final long serialVersionUID = 4114119073563457706L;
 
@@ -147,7 +147,7 @@ public class TurnLanesDialog extends ToggleDialog implements ActiveLayerChangeLi
         super(tr("Turn Lanes"), "turnlanes.png", tr("Edit turn lanes"), null, 200);
 
         MainApplication.getLayerManager().addActiveLayerChangeListener(this);
-        DataSet.addSelectionListener(this);
+        SelectionEventManager.getInstance().addSelectionListener(this);
 
         final JPanel buttonPanel = new JPanel(new GridLayout(1, 2, 4, 4));
         final ButtonGroup group = new ButtonGroup();
@@ -201,12 +201,12 @@ public class TurnLanesDialog extends ToggleDialog implements ActiveLayerChangeLi
     }
 
     @Override
-    public void selectionChanged(Collection<? extends OsmPrimitive> newSelection) {
-        if (selected.equals(new HashSet<>(newSelection))) {
+    public void selectionChanged(SelectionChangeEvent event) {
+        if (selected.equals(new HashSet<>(event.getSelection()))) {
             return;
         }
         selected.clear();
-        selected.addAll(newSelection);
+        selected.addAll(event.getSelection());
 
         refresh();
     }
@@ -215,7 +215,7 @@ public class TurnLanesDialog extends ToggleDialog implements ActiveLayerChangeLi
     public void destroy() {
         super.destroy();
         MainApplication.getLayerManager().removeActiveLayerChangeListener(this);
-        DataSet.removeSelectionListener(this);
+        SelectionEventManager.getInstance().removeSelectionListener(this);
         editAction.destroy();
         validateAction.destroy();
     }

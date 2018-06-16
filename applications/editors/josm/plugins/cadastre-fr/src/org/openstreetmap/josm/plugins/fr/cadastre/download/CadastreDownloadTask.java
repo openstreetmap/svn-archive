@@ -6,6 +6,7 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 import java.util.concurrent.Future;
 
 import org.openstreetmap.josm.actions.downloadtasks.DownloadOsmTask;
+import org.openstreetmap.josm.actions.downloadtasks.DownloadParams;
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
@@ -22,8 +23,8 @@ public class CadastreDownloadTask extends DownloadOsmTask {
     }
 
     @Override
-    public Future<?> loadUrl(boolean newLayer, String url, ProgressMonitor progressMonitor) {
-        downloadTask = new InternalDownloadTask(newLayer, url, progressMonitor);
+    public Future<?> loadUrl(DownloadParams settings, String url, ProgressMonitor progressMonitor) {
+        downloadTask = new InternalDownloadTask(settings, url, progressMonitor);
         currentBounds = null;
         return MainApplication.worker.submit(downloadTask);
     }
@@ -42,8 +43,8 @@ public class CadastreDownloadTask extends DownloadOsmTask {
 
         private final String url;
 
-        InternalDownloadTask(boolean newLayer, String url, ProgressMonitor progressMonitor) {
-            super(newLayer, new CadastreServerReader(url), progressMonitor);
+        InternalDownloadTask(DownloadParams settings, String url, ProgressMonitor progressMonitor) {
+            super(settings, new CadastreServerReader(url), progressMonitor);
             this.url = url;
         }
 

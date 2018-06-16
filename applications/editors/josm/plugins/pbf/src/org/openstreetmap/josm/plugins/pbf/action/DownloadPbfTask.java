@@ -19,7 +19,7 @@ import org.openstreetmap.josm.plugins.pbf.io.PbfServerReader;
 public class DownloadPbfTask extends DownloadOsmTask implements PbfConstants {
 
     @Override
-    public Future<?> download(boolean newLayer, Bounds downloadArea, ProgressMonitor progressMonitor) {
+    public Future<?> download(DownloadParams settings, Bounds downloadArea, ProgressMonitor progressMonitor) {
         return null;
     }
 

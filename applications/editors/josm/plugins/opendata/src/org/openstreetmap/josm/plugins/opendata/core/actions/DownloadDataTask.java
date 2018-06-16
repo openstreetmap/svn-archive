@@ -12,6 +12,7 @@ import javax.swing.JOptionPane;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.downloadtasks.DownloadOsmTask;
+import org.openstreetmap.josm.actions.downloadtasks.DownloadParams;
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
@@ -35,8 +36,8 @@ public class DownloadDataTask extends DownloadOsmTask {
     }
 
     @Override
-    public Future<?> loadUrl(boolean newLayer, String url, ProgressMonitor progressMonitor) {
-        downloadTask = new InternalDownloadTasK(newLayer, new NetworkReader(url, handler, true), progressMonitor);
+    public Future<?> loadUrl(DownloadParams settings, String url, ProgressMonitor progressMonitor) {
+        downloadTask = new InternalDownloadTasK(settings, new NetworkReader(url, handler, true), progressMonitor);
         currentBounds = null;
         if (handler == null || !handler.hasLicenseToBeAccepted() || askLicenseAgreement(handler.getLicense())) {
             return MainApplication.worker.submit(downloadTask);
@@ -83,8 +84,8 @@ public class DownloadDataTask extends DownloadOsmTask {
 
     protected class InternalDownloadTasK extends DownloadTask {
 
-        public InternalDownloadTasK(boolean newLayer, NetworkReader reader, ProgressMonitor progressMonitor) {
-            super(newLayer, reader, progressMonitor);
+        public InternalDownloadTasK(DownloadParams settings, NetworkReader reader, ProgressMonitor progressMonitor) {
+            super(settings, reader, progressMonitor);
         }
 
         @Override

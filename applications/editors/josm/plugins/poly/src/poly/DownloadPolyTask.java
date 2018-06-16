@@ -6,6 +6,7 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 import java.util.concurrent.Future;
 
 import org.openstreetmap.josm.actions.downloadtasks.DownloadOsmTask;
+import org.openstreetmap.josm.actions.downloadtasks.DownloadParams;
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.gui.MainApplication;
@@ -21,13 +22,13 @@ import org.openstreetmap.josm.io.OsmTransferException;
 public class DownloadPolyTask extends DownloadOsmTask {
 
     @Override
-    public Future<?> download(boolean newLayer, Bounds downloadArea, ProgressMonitor progressMonitor) {
+    public Future<?> download(DownloadParams settings, Bounds downloadArea, ProgressMonitor progressMonitor) {
         return null;
     }
 
     @Override
-    public Future<?> loadUrl(boolean new_layer, String url, ProgressMonitor progressMonitor) {
-        downloadTask = new DownloadTask(new_layer, new ServerPolyReader(url), progressMonitor);
+    public Future<?> loadUrl(DownloadParams settings, String url, ProgressMonitor progressMonitor) {
+        downloadTask = new DownloadTask(settings, new ServerPolyReader(url), progressMonitor);
         return MainApplication.worker.submit(downloadTask);
     }
 

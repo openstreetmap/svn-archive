@@ -114,4 +114,29 @@ public class IndoorLevel {
             return false;
         }
     }
+
+    public static boolean isPartOfWorkingLevel(String vals, int level) {
+        for (String val : vals.split(";")) {
+            int firstVal, secVal;
+
+            //Extract values
+            if (val.indexOf("-") == 0) {
+                firstVal = (Integer.parseInt(val.split("-", 2)[1].split("-", 2)[0]))*-1;
+                secVal = Integer.parseInt(val.split("-", 2)[1].split("-", 2)[1]);
+            } else if (val.contains("-")) {
+                firstVal = Integer.parseInt(val.split("-")[0]);
+                secVal = Integer.parseInt(val.split("-")[1]);
+            } else {
+                firstVal = Integer.parseInt(val);
+                secVal = firstVal;
+            }
+
+            // Compare values to current working level
+            if (level >= firstVal && level <= secVal) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }

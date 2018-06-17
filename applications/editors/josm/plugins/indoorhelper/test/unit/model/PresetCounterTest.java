@@ -1,3 +1,6 @@
+// License: GPL. For details, see LICENSE file.
+package model;
+
 import static org.junit.Assert.assertEquals;
 
 import java.util.ArrayList;
@@ -5,9 +8,11 @@ import java.util.List;
 
 import org.junit.Test;
 
-import model.PresetCounter;
 import model.TagCatalog.IndoorObject;
 
+/**
+ * Unit tests of {@link PresetCounter} class.
+ */
 public class PresetCounterTest {
 
     /**
@@ -35,13 +40,10 @@ public class PresetCounterTest {
         expectedList.add(IndoorObject.TOILET_MALE);
         expectedList.add(IndoorObject.STEPS);
 
-
         //assertion
         assertEquals(expectedList.get(0), actualList.get(0));
         assertEquals(expectedList.get(1), actualList.get(1));
         assertEquals(expectedList.get(2), actualList.get(2));
         assertEquals(expectedList.get(3), actualList.get(3));
-
-
     }
 }

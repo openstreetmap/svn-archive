@@ -56,6 +56,7 @@ import org.openstreetmap.josm.spi.preferences.Setting;
 import org.openstreetmap.josm.tools.Shortcut;
 
 import model.IndoorHelperModel;
+import model.IndoorLevel;
 import model.TagCatalog.IndoorObject;
 import views.LevelSelectorView;
 import views.ToolBoxView;
@@ -263,12 +264,12 @@ public class IndoorHelperController {
     */
    static class ToolHelpButtonListener implements ActionListener {
 
-	   @Override
-	   public void actionPerformed(ActionEvent e) {
-		   String topic = "Plugin/IndoorHelper";
-		   //Open HelpBrowser for short description about the plugin
-		   HelpBrowser.setUrlForHelpTopic(Optional.ofNullable(topic).orElse("/"));
-	   }
+       @Override
+       public void actionPerformed(ActionEvent e) {
+           String topic = "Plugin/IndoorHelper";
+           //Open HelpBrowser for short description about the plugin
+           HelpBrowser.setUrlForHelpTopic(Optional.ofNullable(topic).orElse("/"));
+       }
    }
 
    /**
@@ -564,39 +565,23 @@ public class IndoorHelperController {
     * Function which unsets the disabled state of currently hidden and/or disabled objects which have a
     * specific tag (key). Just unsets the disabled state if object has a tag-value which is part of the
     * current working level.
-    * 
+    *
     * @author rebsc
     * @param key sepcific key to unset hidden objects which contains it
     */
    public void unsetSpecificKeyFilter(String key) {
 
      Collection<OsmPrimitive> p = Main.main.getEditDataSet().allPrimitives();
-     Map<String, String> tags = new HashMap<>();
-     Integer level = Integer.parseInt(levelValue);
-     Integer firstVal, secVal;
+     int level = Integer.parseInt(levelValue);
 
      //Find all primitives with the specific tag and check if value is part of the current
      //workinglevel. After that unset the disabled status.
      for (OsmPrimitive osm: p) {
          if ((osm.isDisabledAndHidden() || osm.isDisabled()) && osm.hasKey(key)) {
-
-             tags = osm.getInterestingTags();
-
-             for (Map.Entry<String, String> e: tags.entrySet()) {
+             for (Map.Entry<String, String> e: osm.getInterestingTags().entrySet()) {
                 if (e.getKey().equals(key)) {
-                    String val = e.getValue();
-
-                    //Extract values
-                    if (val.indexOf("-") == 0) {
-                        firstVal = (Integer.parseInt(val.split("-", 2)[1].split("-", 2)[0]))*-1;
-                        secVal = Integer.parseInt(val.split("-", 2)[1].split("-", 2)[1]);
-                    } else {
-                        firstVal = Integer.parseInt(val.split("-")[0]);
-                        secVal = Integer.parseInt(val.split("-")[1]);
-                    }
-
                     //Compare values to current working level
-                    if (level >= ((firstVal)-1) && level <= secVal) {
+                    if (IndoorLevel.isPartOfWorkingLevel(e.getValue(), level)) {
                         osm.unsetDisabledState();
                     } else {
                         osm.setDisabledState(true);

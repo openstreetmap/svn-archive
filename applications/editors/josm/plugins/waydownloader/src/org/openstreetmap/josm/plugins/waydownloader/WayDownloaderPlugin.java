@@ -17,6 +17,7 @@ import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.actions.MergeNodesAction;
 import org.openstreetmap.josm.actions.downloadtasks.DownloadOsmTask;
+import org.openstreetmap.josm.actions.downloadtasks.DownloadParams;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.DataSource;
@@ -106,7 +107,7 @@ public class WayDownloaderPlugin extends Plugin {
             final PleaseWaitProgressMonitor monitor = new PleaseWaitProgressMonitor();
             LatLon ll = selectedNode.getCoor();
             final Future<?> future = downloadTask.download(
-                    false /* no new layer */,
+                    new DownloadParams(),
                     new Bounds(
                             ll.lat()- latbuffer,
                             ll.lon()- lonbuffer,

@@ -2,7 +2,7 @@
 package org.openstreetmap.josm.plugins.imageryxmlbounds;
 
 import org.openstreetmap.josm.actions.ExtensionFileFilter;
-import org.openstreetmap.josm.data.osm.DataSet;
+import org.openstreetmap.josm.data.osm.event.SelectionEventManager;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.gui.preferences.PreferenceSetting;
@@ -58,7 +58,7 @@ public class ImageryXmlBoundsPlugin extends Plugin {
         ExtensionFileFilter.addExporterFirst(new XmlBoundsExporter());
         // Initialize the selection action
         ShowBoundsSelectionAction selectionAction = new ShowBoundsSelectionAction();
-        DataSet.addSelectionListener(selectionAction);
+        SelectionEventManager.getInstance().addSelectionListener(selectionAction);
         MainApplication.getToolbar().register(selectionAction);
         // Allow JOSM to download *.imagery.xml files
         MainApplication.getMenu().openLocation.addDownloadTaskClass(DownloadXmlBoundsTask.class);

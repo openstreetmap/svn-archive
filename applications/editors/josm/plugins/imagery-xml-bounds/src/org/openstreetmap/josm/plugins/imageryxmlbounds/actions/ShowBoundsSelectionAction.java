@@ -1,17 +1,14 @@
 // License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.imageryxmlbounds.actions;
 
-import java.util.Collection;
-
-import org.openstreetmap.josm.data.SelectionChangedListener;
-import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.data.osm.DataSelectionListener;
 
 /**
  *
  * @author Don-vip
  *
  */
-public class ShowBoundsSelectionAction extends ShowBoundsAction implements SelectionChangedListener {
+public class ShowBoundsSelectionAction extends ShowBoundsAction implements DataSelectionListener {
 
     /**
      * Constructs a new {@code ShowBoundsSelectionAction}.
@@ -21,7 +18,7 @@ public class ShowBoundsSelectionAction extends ShowBoundsAction implements Selec
     }
 
     @Override
-    public void selectionChanged(Collection<? extends OsmPrimitive> newSelection) {
-        updateOsmPrimitives(newSelection);
+    public void selectionChanged(SelectionChangeEvent event) {
+        updateOsmPrimitives(event.getSelection());
     }
 }

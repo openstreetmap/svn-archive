@@ -21,6 +21,7 @@ package org.openstreetmap.josm.plugins.indoorhelper;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
@@ -44,11 +45,9 @@ import controller.IndoorHelperController;
  *
  * @author egru
  * @author rebsc
- *
  */
 public class IndoorHelperPlugin extends Plugin implements PaintableInvalidationListener, ActiveLayerChangeListener {
 
-    @SuppressWarnings("unused")
     private IndoorHelperController controller;
     String sep = System.getProperty("file.separator");
 
@@ -58,8 +57,9 @@ public class IndoorHelperPlugin extends Plugin implements PaintableInvalidationL
      * Exports the needed files and adds them to the settings.
      *
      * @param info general information about the plug-in
+     * @throws IOException if any I/O error occurs
      */
-    public IndoorHelperPlugin(PluginInformation info) throws Exception {
+    public IndoorHelperPlugin(PluginInformation info) throws IOException {
         super(info);
         MainApplication.getLayerManager().addAndFireActiveLayerChangeListener(this);
         this.exportValidator("/data/indoorhelper.validator.mapcss");
@@ -67,68 +67,58 @@ public class IndoorHelperPlugin extends Plugin implements PaintableInvalidationL
         this.exportStyleFile("entrance_door_icon.png");
         this.exportStyleFile("entrance_icon.png");
         this.exportStyleFile("elevator_icon.png");
-
-        //this.setIndoorValidator();
     }
 
-
-    /**
-     * Secures that the plug-in is only loaded, if a new MapFrame is created.
-     */
     @Override
     public void mapFrameInitialized(MapFrame oldFrame, MapFrame newFrame) {
         super.mapFrameInitialized(oldFrame, newFrame);
 
         if (oldFrame == null && newFrame != null) {
+            // Secures that the plug-in is only loaded, if a new MapFrame is created.
             controller = new IndoorHelperController();
         }
     }
 
-
     /**
      * Exports the mapcss validator file to the preferences directory.
+     * @param resourceName resource name
+     * @throws IOException if any I/O error occurs
      */
-    private void exportValidator(String resourceName) throws Exception {
-        InputStream stream = null;
+    private void exportValidator(String resourceName) throws IOException {
         OutputStream resStreamOut = null;
 
-        try {
-            stream = IndoorHelperPlugin.class.getResourceAsStream(resourceName);
+        try (InputStream stream = IndoorHelperPlugin.class.getResourceAsStream(resourceName)) {
             if (stream == null) {
                 System.out.println("Validator: stream is null");
-                throw new Exception("Cannot get resource \"" + resourceName + "\" from Jar file.");
+                throw new IOException("Cannot get resource \"" + resourceName + "\" from Jar file.");
             }
 
-            String outPath;
             int readBytes;
             byte[] buffer = new byte[4096];
 
             String valDirPath = Main.pref.getDirs().getUserDataDirectory(true) + sep + "validator";
             File valDir = new File(valDirPath);
             valDir.mkdirs();
-            outPath = valDir.getAbsolutePath() +sep+ "indoorhelper.validator.mapcss";
-            System.out.println("Validator:"+outPath);
+            String outPath = valDir.getAbsolutePath() +sep+ "indoorhelper.validator.mapcss";
 
             resStreamOut = new FileOutputStream(outPath);
             while ((readBytes = stream.read(buffer)) > 0) {
                 resStreamOut.write(buffer, 0, readBytes);
             }
             resStreamOut.close();
-        } catch (Exception ex) {
-            throw ex;
-        } finally {
-            stream.close();
         }
     }
 
     /**
      * Exports the mapCSS file to the preferences directory.
+     * @param resourceName resource name
+     * @throws IOException if any I/O error occurs
      */
-    private void exportStyleFile(String resourceName) throws Exception {
+    private void exportStyleFile(String resourceName) throws IOException {
         try (InputStream stream = IndoorHelperPlugin.class.getResourceAsStream("/data/" + resourceName)) {
             if (stream == null) {
                 System.out.println("MapPaint: stream is null");
-                throw new Exception("Cannot get resource \"" + resourceName + "\" from Jar file.");
+                throw new IOException("Cannot get resource \"" + resourceName + "\" from Jar file.");
             }
 
             String outPath;
@@ -145,8 +135,6 @@ public class IndoorHelperPlugin extends Plugin implements PaintableInvalidationL
                     resStreamOut.write(buffer, 0, readBytes);
                 }
             }
-        } catch (Exception ex) {
-            throw ex;
         }
     }
 

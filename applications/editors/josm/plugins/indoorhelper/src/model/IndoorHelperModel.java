@@ -180,6 +180,7 @@ public class IndoorHelperModel {
      *
      * @author rebsc
      * @param role The Multipolygon Role as String
+     * @param innerRelation inner relation
      */
     public void editRelation(String role, Collection<OsmPrimitive> innerRelation) {
 
@@ -266,6 +267,7 @@ public class IndoorHelperModel {
      * Function which returns true if the currently selected object is a relation
      * @author rebsc
      * @param ds active dataset
+     * @param relations relations
      * @return true if selected object is a relation
      */
     private boolean isRelationMember(DataSet ds, Collection<Relation> relations) {

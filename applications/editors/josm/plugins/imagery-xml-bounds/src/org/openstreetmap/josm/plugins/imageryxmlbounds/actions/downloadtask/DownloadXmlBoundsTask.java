@@ -6,6 +6,7 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 import java.util.concurrent.Future;
 
 import org.openstreetmap.josm.actions.downloadtasks.DownloadOsmTask;
+import org.openstreetmap.josm.actions.downloadtasks.DownloadParams;
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.layer.Layer;
@@ -22,15 +23,15 @@ import org.openstreetmap.josm.plugins.imageryxmlbounds.io.JosmServerLocationRead
 public class DownloadXmlBoundsTask extends DownloadOsmTask implements XmlBoundsConstants {
 
     @Override
-    public Future<?> download(boolean newLayer, Bounds downloadArea,
+    public Future<?> download(DownloadParams settings, Bounds downloadArea,
             ProgressMonitor progressMonitor) {
         return null;
     }
 
     @Override
-    public Future<?> loadUrl(boolean newLayer, String url,
+    public Future<?> loadUrl(DownloadParams settings, String url,
             ProgressMonitor progressMonitor) {
-        downloadTask = new InternalDownloadTask(newLayer,
+        downloadTask = new InternalDownloadTask(settings,
                 new JosmServerLocationReader(url), progressMonitor);
         // We need submit instead of execute so we can wait for it to finish and get the error
         // message if necessary. If no one calls getErrorMessage() it just behaves like execute.
@@ -54,12 +55,12 @@ public class DownloadXmlBoundsTask extends DownloadOsmTask implements XmlBoundsC
 
         /**
          * Constructs a new {@code DownloadTask}.
-         * @param newLayer if {@code true}, download to a new layer
+         * @param settings download settings
          * @param reader server reader
          * @param progressMonitor progress monitor
          */
-        public InternalDownloadTask(boolean newLayer, OsmServerReader reader, ProgressMonitor progressMonitor) {
-            super(newLayer, reader, progressMonitor);
+        public InternalDownloadTask(DownloadParams settings, OsmServerReader reader, ProgressMonitor progressMonitor) {
+            super(settings, reader, progressMonitor);
         }
 
         @Override

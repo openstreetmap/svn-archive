@@ -47,7 +47,10 @@ public class WayDownloaderPlugin extends Plugin {
     private Way priorConnectedWay = null;
     private Node selectedNode = null;
 
-    /** Plugin constructor called at JOSM startup */
+    /** 
+     * Plugin constructor called at JOSM startup 
+     * @param info plugin info
+     */
     public WayDownloaderPlugin(PluginInformation info) {
         super(info);
         //add WayDownloadAction to tools menu
@@ -246,7 +249,12 @@ public class WayDownloaderPlugin extends Plugin {
         return null;
     }
 
-    /** Given the node on one end of the way, return the node on the other end */
+    /** 
+     * Given the node on one end of the way, return the node on the other end 
+     * @param way way
+     * @param firstEnd one end
+     * @return other end
+     */
     private Node findOtherEnd(Way way, Node firstEnd) {
         Node otherEnd = way.firstNode();
         if (otherEnd.equals(firstEnd)) otherEnd = way.lastNode();
@@ -276,6 +284,8 @@ public class WayDownloaderPlugin extends Plugin {
     /**
      * given a selected way, select a node on the end of the way which is not in a downloaded area
      * return true if this worked
+     * @param selection selected way
+     * @return true if a node has been selected
      */
     private boolean workFromWaySelection(Collection<? extends OsmPrimitive> selection) {
         if (selection.size() != 1)

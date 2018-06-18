@@ -1,0 +1,12 @@
+<ivy-module version="2.0">
+	<info organisation="org.openstreetmap.josm.plugins" module="MicrosoftStreetside" revision="0.0.1" />
+	<configurations defaultconf="default" defaultconfmapping="default->default">
+		<conf name="default" />
+	</configurations>
+	<dependencies>
+		<dependency org="com.fasterxml.jackson.core" name="jackson-core" rev="2.2.4"/>
+        <dependency org="com.fasterxml.jackson.core" name="jackson-databind" rev="2.2.4"/>
+        <dependency org="com.fasterxml.jackson.core" name="jackson-annotations" rev="2.2.4"/>
+        <dependency org="us.monoid.web" name="resty" rev="0.3.2"/>
+	</dependencies>
+</ivy-module>

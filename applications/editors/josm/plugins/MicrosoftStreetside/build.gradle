@@ -1,0 +1,122 @@
+plugins {
+  id "org.sonarqube" version "2.6.2"
+  id "org.kordamp.markdown.convert" version "1.1.0"
+  id 'org.openstreetmap.josm' version "0.4.0"
+  id "com.github.ben-manes.versions" version "0.17.0"
+  id 'com.github.spotbugs' version '1.6.0'
+  id "net.ltgt.errorprone" version "0.0.13"
+
+  id 'eclipse'
+  id 'idea'
+  id 'jacoco'
+  id 'java'
+  id 'pmd'
+}
+
+apply from: 'gradle/tool-config.gradle'
+//apply from: 'gradle/markdown.gradle'
+
+sourceCompatibility = '1.8'
+
+def versionProcess = new ProcessBuilder("git", "describe", "--always", "--dirty").start()
+versionProcess.waitFor()
+if (versionProcess.exitValue() != 0) {
+  logger.error("Could not determine the current version of this JOSM plugin!")
+  version = "‹unknown›"
+} else {
+  version = versionProcess.in.text.trim()
+}
+archivesBaseName = 'MicrosoftStreetside'
+
+repositories {
+  jcenter()
+  mavenCentral()
+}
+
+dependencies {
+  compile 'com.fasterxml.jackson.core:jackson-core:2.2.4'
+  compile 'com.fasterxml.jackson.core:jackson-databind:2.2.4'
+  compile 'com.fasterxml.jackson.core:jackson-annotations:2.2.4'
+  compile 'us.monoid.web:resty:0.3.2'
+  testImplementation ('org.openstreetmap.josm:josm-unittest'){changing=true}
+  testImplementation 'junit:junit:4.12'
+}
+
+sourceSets {
+  main {
+    java {
+      srcDirs = ['src']
+    }
+    po {
+      srcDirs = ['poSrc']
+    }
+    resources {
+      srcDirs = ["$projectDir"]
+      include 'data/**'
+      include 'images/**'
+      include 'LICENSE'
+      include 'LICENSE_*'
+    }
+  }
+  test {
+    java {
+      srcDirs = ['test/unit']
+    }
+    resources{
+      srcDirs = ['test/data']
+    }
+  }
+}
+
+josm {
+  debugPort = 7051
+  manifest {
+  }
+  i18n {
+    //pathTransformer = getGithubPathTransformer('JOSM/Mapillary')
+  }
+}
+
+eclipse {
+  project {
+    name = 'MicrosoftStreetside'
+    comment = josm.manifest.description
+    natures 'org.sonarlint.eclipse.core.sonarlintNature', 'ch.acanda.eclipse.pmd.builder.PMDNature', 'org.eclipse.buildship.core.gradleprojectnature'
+    buildCommand 'org.sonarlint.eclipse.core.sonarlintBuilder'
+    buildCommand 'ch.acanda.eclipse.pmd.builder.PMDBuilder'
+    buildCommand 'org.eclipse.buildship.core.gradleprojectbuilder'
+  }
+}
+eclipseClasspath.dependsOn cleanEclipseClasspath
+eclipseProject.dependsOn cleanEclipseProject
+tasks.eclipse.dependsOn = ['eclipseClasspath', 'eclipseProject']
+
+tasks.withType(JavaCompile) {
+  // Character encoding of Java files
+  options.encoding = 'UTF-8'
+}
+tasks.withType(Javadoc) {
+  failOnError false
+}
+tasks.withType(com.github.spotbugs.SpotBugsTask) {
+  reports {
+    xml.enabled = false
+    html.enabled = true
+  }
+}
+
+import org.gradle.api.tasks.testing.logging.TestLogEvent
+
+test {
+  testLogging {
+    exceptionFormat "full"
+    events TestLogEvent.FAILED, TestLogEvent.SKIPPED
+    showCauses true
+
+    info {
+      events TestLogEvent.STARTED, TestLogEvent.PASSED, TestLogEvent.SKIPPED, TestLogEvent.FAILED, TestLogEvent.STANDARD_OUT, TestLogEvent.STANDARD_ERROR
+      showStandardStreams = true
+    }
+  }
+}
+

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
 	<name>MicrosoftStreetside</name>
-	<comment>Project MicrosoftStreetside created by Buildship.</comment>
+	<comment>Allows the user to work with pictures hosted at mapillary.com</comment>
 	<projects>
 	</projects>
 	<buildSpec>
@@ -28,6 +28,8 @@
 	</buildSpec>
 	<natures>
 		<nature>org.eclipse.jdt.core.javanature</nature>
+		<nature>org.sonarlint.eclipse.core.sonarlintNature</nature>
+		<nature>ch.acanda.eclipse.pmd.builder.PMDNature</nature>
 		<nature>org.eclipse.buildship.core.gradleprojectnature</nature>
 	</natures>
 </projectDescription>

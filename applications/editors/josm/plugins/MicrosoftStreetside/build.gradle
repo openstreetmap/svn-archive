@@ -38,6 +38,7 @@ dependencies {
   compile 'com.fasterxml.jackson.core:jackson-databind:2.2.4'
   compile 'com.fasterxml.jackson.core:jackson-annotations:2.2.4'
   compile 'us.monoid.web:resty:0.3.2'
+  compile 'us.monoid.web:resty:0.3.2'
   testImplementation ('org.openstreetmap.josm:josm-unittest'){changing=true}
   testImplementation 'junit:junit:4.12'
 }

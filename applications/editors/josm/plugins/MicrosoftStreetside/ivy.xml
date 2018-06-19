@@ -1,5 +1,6 @@
 <ivy-module version="2.0">
 	<info organisation="org.openstreetmap.josm.plugins" module="MicrosoftStreetside" revision="0.0.1" />
+	<!--  configurations defaultconf="default" defaultconfmapping="default->default,sources,javadoc"-->
 	<configurations defaultconf="default" defaultconfmapping="default->default">
 		<conf name="default" />
 	</configurations>

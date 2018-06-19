@@ -52,7 +52,7 @@ public static void downloadPicture(StreetsideImage img) {
 * Downloads the the thumbnail and the full resolution picture of the given
 * image. Does nothing if it is already in cache.
 *
-* @param img
+* @param cm
 *          The image whose picture is going to be downloaded.
 */
 public static void downloadCubemap(StreetsideImage cm) {

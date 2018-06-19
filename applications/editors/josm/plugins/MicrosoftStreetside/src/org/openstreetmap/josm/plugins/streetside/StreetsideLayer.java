@@ -217,7 +217,7 @@ ActiveLayerChangeListener, StreetsideDataListener {
 	   * Returns the {@link StreetsideLocationChangeset} object, which acts as the database of the
 	   * Layer.
 	   *
-	   * @return The {@link MapillaryData} object that stores the database.
+	   * @return The {@link StreetsideData} object that stores the database.
 	   */
 	  public StreetsideLocationChangeset getLocationChangeset() {
 	    return locationChangeset;
@@ -332,7 +332,7 @@ ActiveLayerChangeListener, StreetsideDataListener {
 		}
 	}
 
-	/**
+	/*
 	 * Draws an image marker onto the given Graphics context.
 	 * @param g the Graphics context
 	 * @param img the image to be drawn onto the Graphics context
@@ -523,7 +523,7 @@ ActiveLayerChangeListener, StreetsideDataListener {
 				.toArray(StreetsideImage[]::new);
 	}
 
-	/**
+	/*
 	 * Returns the closest images belonging to a different sequence and
 	 * different from the specified target image.
 	 *

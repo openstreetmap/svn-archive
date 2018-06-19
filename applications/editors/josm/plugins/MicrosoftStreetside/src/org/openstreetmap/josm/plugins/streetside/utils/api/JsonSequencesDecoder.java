@@ -27,7 +27,7 @@ public final class JsonSequencesDecoder {
   /**
    * Parses a given {@link JsonObject} as a GeoJSON Feature into a {@link StreetsideSequence}.
    * @param json the {@link JsonObject} to be parsed
-   * @return a {@link Streetsideequence} that is parsed from the given {@link JsonObject}. If mandatory information is
+   * @return a {@link StreetsideSequence} that is parsed from the given {@link JsonObject}. If mandatory information is
    *         missing from the JSON or it's not meeting the expecting format in another way, <code>null</code> will be
    *         returned.
    */
@@ -71,6 +71,7 @@ public final class JsonSequencesDecoder {
   /**
    * Converts a {@link JsonArray} to a java array.
    * The conversion from {@link JsonValue} to a java type is done by the supplied function.
+   * @param <T> object type
    * @param array the array to be converted
    * @param decodeValueFunction the function used for conversion from {@link JsonValue} to the desired type.
    * @param clazz the desired type that the elements of the resulting array should have
@@ -97,6 +98,7 @@ public final class JsonSequencesDecoder {
    *
    * For example this is used to convert the `image_keys` JSON array to a String[] array or the `cas` JSON array to a
    * Double[] array.
+   * @param <T> object type
    * @param json the JSON object representing the `properties` of a sequence
    * @param key the key, which identifies the desired array inside the `coordinateProperties` object to be converted
    * @param decodeValueFunction a function that converts the {@link JsonValue}s in the JSON array to java objects of the

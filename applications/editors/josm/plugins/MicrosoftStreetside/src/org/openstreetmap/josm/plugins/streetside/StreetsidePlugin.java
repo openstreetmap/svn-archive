@@ -1,8 +1,6 @@
 // License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.streetside;
 
-import java.io.IOException;
-
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MainMenu;
@@ -58,9 +56,8 @@ public class StreetsidePlugin extends Plugin {
    *
    * @param info
    *          Required information of the plugin. Obtained from the jar file.
-   * @throws IOException if the streetside cache directory is not found
    */
-  public StreetsidePlugin(PluginInformation info) /*throws IOException*/ {
+  public StreetsidePlugin(PluginInformation info) {
     super(info);
 
     if (StreetsideProperties.ACCESS_TOKEN.get() == null) {

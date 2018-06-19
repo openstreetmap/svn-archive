@@ -17,10 +17,10 @@ import javax.swing.JTextPane;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.openstreetmap.josm.data.SelectionChangedListener;
-import org.openstreetmap.josm.data.osm.DataSet;
+import org.openstreetmap.josm.data.osm.DataSelectionListener;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Tag;
+import org.openstreetmap.josm.data.osm.event.SelectionEventManager;
 import org.openstreetmap.josm.data.preferences.AbstractProperty.ValueChangeListener;
 import org.openstreetmap.josm.gui.dialogs.ToggleDialog;
 import org.openstreetmap.josm.plugins.streetside.StreetsideAbstractImage;
@@ -33,7 +33,7 @@ import org.openstreetmap.josm.plugins.streetside.utils.StreetsideProperties;
 import org.openstreetmap.josm.plugins.streetside.utils.StreetsideURL;
 import org.openstreetmap.josm.tools.I18n;
 
-public final class ImageInfoPanel extends ToggleDialog implements StreetsideDataListener, SelectionChangedListener {
+public final class ImageInfoPanel extends ToggleDialog implements StreetsideDataListener, DataSelectionListener {
   private static final long serialVersionUID = 4141847503072417190L;
   private static final Log L = LogFactory.getLog(ImageInfoPanel.class);
   private static ImageInfoPanel instance;
@@ -58,7 +58,7 @@ public final class ImageInfoPanel extends ToggleDialog implements StreetsideData
       null,
       150
     );
-    DataSet.addSelectionListener(this);
+    SelectionEventManager.getInstance().addSelectionListener(this);
 
     //numDetectionsLabel = new JLabel();
     //numDetectionsLabel.setFont(numDetectionsLabel.getFont().deriveFont(Font.PLAIN));
@@ -231,7 +231,8 @@ public final class ImageInfoPanel extends ToggleDialog implements StreetsideData
    * @see org.openstreetmap.josm.data.SelectionChangedListener#selectionChanged(java.util.Collection)
    */
   @Override
-  public synchronized void selectionChanged(final Collection<? extends OsmPrimitive> sel) {
+  public synchronized void selectionChanged(final SelectionChangeEvent event) {
+    final Collection<? extends OsmPrimitive> sel = event.getSelection();
     L.debug(String.format("Selection changed. %d primitives are selected.", sel == null ? 0 : sel.size()));
     addStreetsideTagAction.setTarget(sel != null && sel.size() == 1 ? sel.iterator().next() : null);
   }

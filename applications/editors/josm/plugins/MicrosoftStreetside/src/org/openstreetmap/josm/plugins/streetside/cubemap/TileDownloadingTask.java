@@ -55,7 +55,7 @@ public class TileDownloadingTask implements Callable<String> {
 	}
 
 	/**
-	 * @param tileId the tileId to set
+	 * @param id the tileId to set
 	 */
 	public void setId(String id) {
 		tileId = id;

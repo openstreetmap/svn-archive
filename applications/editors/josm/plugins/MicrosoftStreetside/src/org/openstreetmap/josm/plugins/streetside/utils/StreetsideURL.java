@@ -192,7 +192,7 @@ public final class StreetsideURL {
 
 		/**
 		 * Gives you the URL for the blur editor of the image with the given key.
-		 * @param key the key of the image for which you want to open the blur editor
+		 * @param id the key of the image for which you want to open the blur editor
 		 * @return the URL of the blur editor
 		 * @throws IllegalArgumentException if the image key is <code>null</code>
 		 */
@@ -333,9 +333,6 @@ public final class StreetsideURL {
 		return ret.toString();
 	}
 
-	/**
-	 *
-	 */
 	static String queryByIdString(Map<String, String> parts) {
 		final StringBuilder ret = new StringBuilder("?id=");
 		try {

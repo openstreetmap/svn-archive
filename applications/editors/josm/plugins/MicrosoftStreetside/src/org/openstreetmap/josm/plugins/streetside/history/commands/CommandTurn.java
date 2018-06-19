@@ -22,7 +22,7 @@ public class CommandTurn extends StreetsideCommand {
    *
    * @param images
    *          Set of images that is turned.
-   * @param cd
+   * @param ca
    *          How much the images turn.
    */
   public CommandTurn(Set<StreetsideAbstractImage> images, double ca) {

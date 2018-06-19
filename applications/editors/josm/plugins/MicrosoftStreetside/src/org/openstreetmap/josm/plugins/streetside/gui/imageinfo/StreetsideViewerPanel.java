@@ -2,15 +2,11 @@
 package org.openstreetmap.josm.plugins.streetside.gui.imageinfo;
 
 import java.awt.BorderLayout;
-import java.util.Collection;
 
 import javax.swing.JCheckBox;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
-import org.openstreetmap.josm.data.SelectionChangedListener;
-import org.openstreetmap.josm.data.osm.DataSet;
-import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.preferences.AbstractProperty.ValueChangeListener;
 import org.openstreetmap.josm.plugins.streetside.StreetsideAbstractImage;
 import org.openstreetmap.josm.plugins.streetside.StreetsideDataListener;
@@ -27,7 +23,7 @@ import org.openstreetmap.josm.tools.Logging;
 
 
 public final class StreetsideViewerPanel extends JPanel
-		implements StreetsideDataListener, SelectionChangedListener {
+		implements StreetsideDataListener {
 
 	private static final long serialVersionUID = 4141847503072417190L;
 
@@ -55,8 +51,6 @@ public final class StreetsideViewerPanel extends JPanel
 	}
 
 	private void initializeAndStartGUI() {
-
-		DataSet.addSelectionListener(this);
 
 		threeSixtyDegreeViewerPanel = new ThreeSixtyDegreeViewerPanel();
 
@@ -147,18 +141,6 @@ public final class StreetsideViewerPanel extends JPanel
 		      imgLinkAction.setURL(null);
 		    }
 		  }
-	}
-
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see
-	 * org.openstreetmap.josm.data.SelectionChangedListener#selectionChanged(java.
-	 * util.Collection)
-	 */
-	@Override
-	public synchronized void selectionChanged(final Collection<? extends OsmPrimitive> sel) {
-		Logging.debug(String.format("Selection changed. %d primitives are selected.", sel == null ? 0 : sel.size()));
 	}
 
 	public CubemapBox getCubemapBox() {

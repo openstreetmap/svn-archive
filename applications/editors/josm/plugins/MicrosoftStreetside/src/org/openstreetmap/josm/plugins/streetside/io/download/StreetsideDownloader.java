@@ -197,6 +197,8 @@ public final class StreetsideDownloader {
    * Checks if the area for which Streetside images should be downloaded is too big. This means that probably
    * lots of Streetside images are going to be downloaded, slowing down the
    * program too much. A notification is shown when the download has stopped or continued.
+   * @param area area to check 
+   * @return {@code true} if the area is too big
    */
   private static boolean isAreaTooBig(final double area) {
     final boolean tooBig = area > MAX_AREA;

@@ -36,26 +36,12 @@ public class StreetsideSequence {
    */
   private List<StreetsideAbstractImage> images;
 
-  /**
-   * Unique identifier. Used only for {@link StreetsideImage} sequences.
-   */
-
-  /**
-   * @param string
-   * @param string2
-   * @param capturedAt2
-   */
   public StreetsideSequence(String id, Long ca) {
 	this.id = id;
     cd = ca;
     images = new CopyOnWriteArrayList<>();
   }
 
-  /**
-   * @param string
-   * @param la
-   * @param lo
-   */
   public StreetsideSequence(String id, double la, double lo) {
     this.id = id;
     this.la = la;
@@ -64,7 +50,7 @@ public class StreetsideSequence {
   }
 
   /**
-   * 	No argument constructor for StreetsideSequence - necessary for JSON serialization
+   * No argument constructor for StreetsideSequence - necessary for JSON serialization
    */
   public StreetsideSequence() {
 	  images = new CopyOnWriteArrayList<>();
@@ -84,7 +70,7 @@ public StreetsideSequence(String id) {
 	images = new CopyOnWriteArrayList<>();
 }
 
-/**
+  /**
    * Adds a new {@link StreetsideAbstractImage} object to the database.
    *
    * @param image The {@link StreetsideAbstractImage} object to be added

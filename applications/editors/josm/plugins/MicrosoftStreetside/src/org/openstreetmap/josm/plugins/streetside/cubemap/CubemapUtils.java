@@ -16,7 +16,7 @@ public class CubemapUtils {
 		    FOUR(4),
 		    SIXTEEN(16);
 
-		    private int value;
+		    private final int value;
 		    private static Map<Integer, CubefaceType> map = new HashMap<>();
 
 		    private CubefaceType(int value) {

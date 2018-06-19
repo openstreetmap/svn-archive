@@ -8,8 +8,8 @@ import org.openstreetmap.josm.data.preferences.DoubleProperty;
 import org.openstreetmap.josm.data.preferences.IntegerProperty;
 import org.openstreetmap.josm.data.preferences.NamedColorProperty;
 import org.openstreetmap.josm.data.preferences.StringProperty;
-import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import org.openstreetmap.josm.plugins.streetside.gui.imageinfo.ImageInfoPanel;
+import org.openstreetmap.josm.plugins.streetside.gui.imageinfo.StreetsideViewerPanel;
 import org.openstreetmap.josm.plugins.streetside.io.download.StreetsideDownloader;
 
 public final class StreetsideProperties {
@@ -36,11 +36,11 @@ public final class StreetsideProperties {
   public static final BooleanProperty SHOW_HIGH_RES_STREETSIDE_IMAGERY = new BooleanProperty("streetside.show-high-res-streetside-imagery", true);
 
   /**
-   * @see OsmDataLayer#PROPERTY_BACKGROUND_COLOR
+   * See {@code OsmDataLayer#PROPERTY_BACKGROUND_COLOR}
    */
   public static final NamedColorProperty BACKGROUND = new NamedColorProperty("background", Color.BLACK);
   /**
-   * @see OsmDataLayer#PROPERTY_OUTSIDE_COLOR
+   * See {@code OsmDataLayer#PROPERTY_OUTSIDE_COLOR}
    */
   public static final NamedColorProperty OUTSIDE_DOWNLOADED_AREA = new NamedColorProperty("outside downloaded area", Color.YELLOW);
 

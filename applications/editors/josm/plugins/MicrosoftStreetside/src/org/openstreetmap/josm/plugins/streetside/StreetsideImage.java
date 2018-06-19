@@ -64,11 +64,10 @@ public class StreetsideImage extends StreetsideAbstractImage {
   /**
    * Main constructor of the class StreetsideImage
    *
-   * @param key    The unique identifier of the image.
+   * @param id     The unique identifier of the image.
    * @param latLon The latitude and longitude where it is positioned.
-   * @param cd     The direction of the images in degrees, meaning 0 north.
+   * @param he     The direction of the images in degrees, meaning 0 north.
    */
-
   public StreetsideImage(String id, LatLon latLon, double he) {
     super(id, latLon, he);
   }
@@ -204,7 +203,7 @@ public String getId() {
   }
 
   /**
-   * @param pi the pi to set
+   * @param pitch the pi to set
    */
   public void setPi(double pitch) {
     pi = pitch;
@@ -218,7 +217,7 @@ public String getId() {
   }
 
   /**
-   * @param burringl the burringl to set
+   * @param blurring the blurring to set
    */
   public void setBl(String blurring) {
     bl = blurring;

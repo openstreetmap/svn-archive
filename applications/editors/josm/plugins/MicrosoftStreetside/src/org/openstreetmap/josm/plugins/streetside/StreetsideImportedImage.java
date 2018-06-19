@@ -33,8 +33,9 @@ public class StreetsideImportedImage extends StreetsideAbstractImage {
    * Creates a new StreetsideImportedImage object using as date the current date.
    * Using when the EXIF tags doesn't contain that info.
    *
+   * @param id  The Streetside image id
    * @param latLon  The latitude and longitude where the picture was taken.
-   * @param cd  Direction of the picture (0 means north).
+   * @param ca  Direction of the picture (0 means north).
    * @param file  The file containing the picture.
    */
   public StreetsideImportedImage(final String id, final LatLon latLon, final double ca, final File file) {
@@ -44,8 +45,9 @@ public class StreetsideImportedImage extends StreetsideAbstractImage {
   /**
    * Main constructor of the class.
    *
+   * @param id  The Streetside image id
    * @param latLon  Latitude and Longitude where the picture was taken.
-   * @param cd  Direction of the picture (0 means north),
+   * @param ca  Direction of the picture (0 means north),
    * @param file  The file containing the picture.
    * @param datetimeOriginal  The date the picture was taken.
    */

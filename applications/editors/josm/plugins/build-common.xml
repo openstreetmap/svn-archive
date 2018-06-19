@@ -114,6 +114,7 @@
                 <include name="README"/>
                 <include name="LICENSE*"/>
                 <include name="*GPL*"/>
+                <exclude name="*.md"/>
             </fileset>
         </copy>
     </target>

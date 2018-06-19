@@ -10,18 +10,18 @@ import javax.swing.Box;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 
-import net.boplicity.xmleditor.XmlTextPane;
-
 import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.actions.OsmPrimitiveAction;
-import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.actions.IPrimitiveAction;
+import org.openstreetmap.josm.data.osm.IPrimitive;
 import org.openstreetmap.josm.plugins.imageryxmlbounds.XmlBoundsLayer;
+
+import net.boplicity.xmleditor.XmlTextPane;
 
 /**
  * Show XML bounds.
  * @author Don-vip
  */
-public class ShowBoundsAction extends ComputeBoundsAction implements OsmPrimitiveAction {
+public class ShowBoundsAction extends ComputeBoundsAction implements IPrimitiveAction {
 
     /**
      * Constructs a new {@code ShowBoundsAction}.
@@ -54,7 +54,7 @@ public class ShowBoundsAction extends ComputeBoundsAction implements OsmPrimitiv
     }
 
     @Override
-    public void setPrimitives(Collection<? extends OsmPrimitive> primitives) {
+    public void setPrimitives(Collection<? extends IPrimitive> primitives) {
         updateOsmPrimitives(primitives);
     }
 }

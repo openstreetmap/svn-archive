@@ -24,6 +24,10 @@ import javax.swing.AbstractAction;
 
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.BBox;
+import org.openstreetmap.josm.data.osm.IPrimitive;
+import org.openstreetmap.josm.data.osm.IRelation;
+import org.openstreetmap.josm.data.osm.IRelationMember;
+import org.openstreetmap.josm.data.osm.IWay;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
@@ -50,8 +54,8 @@ public class ComputeBoundsAction extends AbstractAction implements XmlBoundsCons
 
     protected static final String EIGHT_SP = "        ";
 
-    private final Set<Relation> multipolygons;
-    private final Set<Way> closedWays;
+    private final Set<IRelation<?>> multipolygons;
+    private final Set<IWay<?>> closedWays;
 
     static { DF.setRoundingMode(RoundingMode.CEILING); }
     /**
@@ -82,35 +86,35 @@ public class ComputeBoundsAction extends AbstractAction implements XmlBoundsCons
         }
     }
 
-    protected void updateOsmPrimitives(Collection<? extends OsmPrimitive> primitives) {
+    protected void updateOsmPrimitives(Collection<? extends IPrimitive> primitives) {
         multipolygons.clear();
         closedWays.clear();
         // Store selected multipolygons and closed ways
-        for (OsmPrimitive value : primitives) {
-            if (value instanceof Relation) {
-                Relation r = (Relation) value;
+        for (IPrimitive value : primitives) {
+            if (value instanceof IRelation) {
+                IRelation<?> r = (IRelation<?>) value;
                 if (r.isMultipolygon()) {
                     multipolygons.add(r);
                 }
-            } else if (value instanceof Way) {
-                Way w = (Way) value;
+            } else if (value instanceof IWay) {
+                IWay<?> w = (IWay<?>) value;
                 if (w.isClosed()) {
                     closedWays.add(w);
                 }
             }
         }
         // Remove closed ways already inside a selected multipolygon
-        for (Iterator<Way> it = closedWays.iterator(); it.hasNext();) {
+        for (Iterator<IWay<?>> it = closedWays.iterator(); it.hasNext();) {
             processIterator(it);
         }
         // Enable the action if at least one area is found
         setEnabled(!multipolygons.isEmpty() || !closedWays.isEmpty());
     }
 
-    private void processIterator(Iterator<Way> it) {
-        Way way = it.next();
-        for (Relation mp : multipolygons) {
-            for (RelationMember mb : mp.getMembers()) {
+    private void processIterator(Iterator<IWay<?>> it) {
+        IWay<?> way = it.next();
+        for (IRelation<?> mp : multipolygons) {
+            for (IRelationMember<?> mb : mp.getMembers()) {
                 if (mb.getMember().equals(way)) {
                     it.remove();
                     return;
@@ -124,7 +128,7 @@ public class ComputeBoundsAction extends AbstractAction implements XmlBoundsCons
      * @return XML code
      */
     public final String getXml() {
-        List<OsmPrimitive> primitives = new ArrayList<>();
+        List<IPrimitive> primitives = new ArrayList<>();
         primitives.addAll(multipolygons);
         primitives.addAll(closedWays);
         return getXml(primitives.toArray(new OsmPrimitive[primitives.size()]));

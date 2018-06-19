@@ -18,9 +18,9 @@ Checkout the JOSM source, compile it and checkout the plugin source:
     cd josm/core
     ant clean dist
     cd ../plugins
-    rm -rf areaselector
-    git clone https://github.com/JOSM/JOSM-areaselector.git areaselector
-    cd areaselector
+    rm -rf MicrosoftStreetside
+    git clone https://github.com/JOSM/MicrosoftStreetside.git MicrosoftStreetside
+    cd MicrosoftStreetside
     ant clean install
     
 Now Restart JOSM and activate the MicrosoftStreeside plugin in your preferences. 

@@ -61,7 +61,7 @@
 	</target>
 
 	<target name="install-plugin" depends="clean, dist, install">
-		<echo>Installed areaselector plugin</echo>
+		<echo>Installed MicrosoftStreetside plugin</echo>
 	</target>
 
 	<target name="test-run" depends="install-plugin, runjosm">

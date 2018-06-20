@@ -29,6 +29,7 @@ import org.openstreetmap.josm.io.IllegalDataException;
 import org.openstreetmap.josm.io.UTFInputStreamReader;
 import org.openstreetmap.josm.plugins.opendata.core.OdConstants;
 import org.openstreetmap.josm.plugins.opendata.core.io.ProjectionPatterns;
+import org.openstreetmap.josm.tools.Logging;
 import org.openstreetmap.josm.tools.date.DateUtils;
 
 public class KmlReader extends AbstractReader {
@@ -49,6 +50,7 @@ public class KmlReader extends AbstractReader {
 
     public static final String KML_EXT_TRACK = "Track";
     public static final String KML_EXT_COORD = "coord";
+    public static final String KML_EXT_LANG = "lang";
     // CHECKSTYLE.ON: SingleSpaceSeparator
 
     public static Pattern COLOR_PATTERN = Pattern.compile("\\p{XDigit}{8}");
@@ -103,6 +105,7 @@ public class KmlReader extends AbstractReader {
         Node node = null;
         Relation relation = null;
         String role = "";
+        String previousName = null;
         Map<String, String> tags = new HashMap<>();
         while (parser.hasNext()) {
             int event = parser.next();
@@ -114,7 +117,11 @@ public class KmlReader extends AbstractReader {
                         tags.put(KML_COLOR, '#'+s.substring(6, 8)+s.substring(4, 6)+s.substring(2, 4));
                     }
                 } else if (parser.getLocalName().equals(KML_NAME)) {
-                    tags.put(KML_NAME, parser.getElementText());
+                    try {
+                        tags.put(KML_NAME, parser.getElementText());
+                    } catch (XMLStreamException e) {
+                        Logging.trace(e);
+                    }
                 } else if (parser.getLocalName().equals(KML_SIMPLE_DATA)) {
                     String key = parser.getAttributeValue(null, "name");
                     if (!keyIsIgnored(key)) {
@@ -150,14 +157,19 @@ public class KmlReader extends AbstractReader {
                     }
                 } else if (parser.getLocalName().equals(KML_WHEN)) {
                     when = DateUtils.tsFromString(parser.getElementText().trim());
+                } else if (parser.getLocalName().equals(KML_EXT_LANG)) {
+                    if (KML_NAME.equals(previousName)) {
+                        tags.put(KML_NAME, parser.getElementText());
+                    }
                 }
+                previousName = parser.getLocalName();
             } else if (event == XMLStreamConstants.END_ELEMENT) {
                 if (parser.getLocalName().equals(KML_PLACEMARK)) {
                     break;
                 } else if (parser.getLocalName().equals(KML_POINT)) {
                     list.add(node);
                 } else if (parser.getLocalName().equals(KML_LINE_STRING)
-                        || parser.getLocalName().equals(KML_EXT_TRACK) 
+                        || parser.getLocalName().equals(KML_EXT_TRACK)
                         || parser.getLocalName().equals(KML_LINEAR_RING)) {
                     if (way != null && wayNodes != null)
                         way.setNodes(wayNodes);

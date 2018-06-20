@@ -1,0 +1,947 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://earth.google.com/kml/2.2">
+<Document>
+  <Style id="placemark-red">
+    <IconStyle>
+      <Icon>
+        <href>http://maps.me/placemarks/placemark-red.png</href>
+      </Icon>
+    </IconStyle>
+  </Style>
+  <Style id="placemark-blue">
+    <IconStyle>
+      <Icon>
+        <href>http://maps.me/placemarks/placemark-blue.png</href>
+      </Icon>
+    </IconStyle>
+  </Style>
+  <Style id="placemark-purple">
+    <IconStyle>
+      <Icon>
+        <href>http://maps.me/placemarks/placemark-purple.png</href>
+      </Icon>
+    </IconStyle>
+  </Style>
+  <Style id="placemark-yellow">
+    <IconStyle>
+      <Icon>
+        <href>http://maps.me/placemarks/placemark-yellow.png</href>
+      </Icon>
+    </IconStyle>
+  </Style>
+  <Style id="placemark-pink">
+    <IconStyle>
+      <Icon>
+        <href>http://maps.me/placemarks/placemark-pink.png</href>
+      </Icon>
+    </IconStyle>
+  </Style>
+  <Style id="placemark-brown">
+    <IconStyle>
+      <Icon>
+        <href>http://maps.me/placemarks/placemark-brown.png</href>
+      </Icon>
+    </IconStyle>
+  </Style>
+  <Style id="placemark-green">
+    <IconStyle>
+      <Icon>
+        <href>http://maps.me/placemarks/placemark-green.png</href>
+      </Icon>
+    </IconStyle>
+  </Style>
+  <Style id="placemark-orange">
+    <IconStyle>
+      <Icon>
+        <href>http://maps.me/placemarks/placemark-orange.png</href>
+      </Icon>
+    </IconStyle>
+  </Style>
+  <name>Мои Метки</name>
+  <visibility>1</visibility>
+  <ExtendedData xmlns:mwm="https://maps.me">
+    <mwm:name>
+      <mwm:lang code="default">Мои Метки</mwm:lang>
+    </mwm:name>
+    <mwm:annotation>
+    </mwm:annotation>
+    <mwm:description>
+    </mwm:description>
+    <mwm:lastModified>2018-06-16T05:32:32Z</mwm:lastModified>
+    <mwm:accessRules>Private</mwm:accessRules>
+  </ExtendedData>
+  <Placemark>
+    <name>Eingang</name>
+    <TimeStamp><when>2018-06-16T03:00:04Z</when></TimeStamp>
+    <styleUrl>#placemark-red</styleUrl>
+    <Point><coordinates>37.727709,55.617287</coordinates></Point>
+    <ExtendedData xmlns:mwm="https://maps.me">
+      <mwm:name>
+      </mwm:name>
+      <mwm:description>
+      </mwm:description>
+      <mwm:featureTypes>
+        <mwm:value>entrance</mwm:value>
+      </mwm:featureTypes>
+      <mwm:scale>18</mwm:scale>
+    </ExtendedData>
+  </Placemark>
+  <Placemark>
+    <name>2:65-128/lpbw</name>
+    <description></description>
+    <TimeStamp><when>2018-06-16T03:00:42Z</when></TimeStamp>
+    <styleUrl>#placemark-red</styleUrl>
+    <Point><coordinates>37.727302,55.617241</coordinates></Point>
+    <ExtendedData xmlns:mwm="https://maps.me">
+      <mwm:name>
+      </mwm:name>
+      <mwm:description>
+        <mwm:lang code="default"></mwm:lang>
+      </mwm:description>
+      <mwm:featureTypes>
+        <mwm:value>entrance</mwm:value>
+      </mwm:featureTypes>
+      <mwm:customName>
+        <mwm:lang code="default">2:65-128/lpbw</mwm:lang>
+      </mwm:customName>
+      <mwm:scale>18</mwm:scale>
+    </ExtendedData>
+  </Placemark>
+  <Placemark>
+    <name>1:1-36/ltbw</name>
+    <description></description>
+    <TimeStamp><when>2018-06-16T03:02:06Z</when></TimeStamp>
+    <styleUrl>#placemark-red</styleUrl>
+    <Point><coordinates>37.726842,55.617982</coordinates></Point>
+    <ExtendedData xmlns:mwm="https://maps.me">
+      <mwm:name>
+        <mwm:lang code="default">Неизвестное место</mwm:lang>
+      </mwm:name>
+      <mwm:description>
+        <mwm:lang code="default"></mwm:lang>
+      </mwm:description>
+      <mwm:customName>
+        <mwm:lang code="default">1:1-36/ltbw</mwm:lang>
+      </mwm:customName>
+      <mwm:scale>18</mwm:scale>
+    </ExtendedData>
+  </Placemark>
+  <Placemark>
+    <name>2:37-72/ltbwrtb</name>
+    <description></description>
+    <TimeStamp><when>2018-06-16T03:02:40Z</when></TimeStamp>
+    <styleUrl>#placemark-red</styleUrl>
+    <Point><coordinates>37.726662,55.618152</coordinates></Point>
+    <ExtendedData xmlns:mwm="https://maps.me">
+      <mwm:name>
+      </mwm:name>
+      <mwm:description>
+        <mwm:lang code="default"></mwm:lang>
+      </mwm:description>
+      <mwm:featureTypes>
+        <mwm:value>highway-service</mwm:value>
+      </mwm:featureTypes>
+      <mwm:customName>
+        <mwm:lang code="default">2:37-72/ltbwrtb</mwm:lang>
+      </mwm:customName>
+      <mwm:scale>18</mwm:scale>
+    </ExtendedData>
+  </Placemark>
+  <Placemark>
+    <name>3:73-108/lw</name>
+    <description></description>
+    <TimeStamp><when>2018-06-16T03:03:24Z</when></TimeStamp>
+    <styleUrl>#placemark-red</styleUrl>
+    <Point><coordinates>37.726481,55.618348</coordinates></Point>
+    <ExtendedData xmlns:mwm="https://maps.me">
+      <mwm:name>
+      </mwm:name>
+      <mwm:description>
+        <mwm:lang code="default"></mwm:lang>
+      </mwm:description>
+      <mwm:featureTypes>
+        <mwm:value>highway-service</mwm:value>
+      </mwm:featureTypes>
+      <mwm:customName>
+        <mwm:lang code="default">3:73-108/lw</mwm:lang>
+      </mwm:customName>
+      <mwm:scale>18</mwm:scale>
+    </ExtendedData>
+  </Placemark>
+  <Placemark>
+    <name>4:109-144/rw</name>
+    <description></description>
+    <TimeStamp><when>2018-06-16T03:03:52Z</when></TimeStamp>
+    <styleUrl>#placemark-red</styleUrl>
+    <Point><coordinates>37.726305,55.618485</coordinates></Point>
+    <ExtendedData xmlns:mwm="https://maps.me">
+      <mwm:name>
+      </mwm:name>
+      <mwm:description>
+        <mwm:lang code="default"></mwm:lang>
+      </mwm:description>
+      <mwm:featureTypes>
+        <mwm:value>highway-service</mwm:value>
+      </mwm:featureTypes>
+      <mwm:customName>
+        <mwm:lang code="default">4:109-144/rw</mwm:lang>
+      </mwm:customName>
+      <mwm:scale>18</mwm:scale>
+    </ExtendedData>
+  </Placemark>
+  <Placemark>
+    <name>5:145-179/rw</name>
+    <description></description>
+    <TimeStamp><when>2018-06-16T03:04:27Z</when></TimeStamp>
+    <styleUrl>#placemark-red</styleUrl>
+    <Point><coordinates>37.726154,55.618609</coordinates></Point>
+    <ExtendedData xmlns:mwm="https://maps.me">
+      <mwm:name>
+      </mwm:name>
+      <mwm:description>
+        <mwm:lang code="default"></mwm:lang>
+      </mwm:description>
+      <mwm:featureTypes>
+        <mwm:value>highway-service</mwm:value>
+      </mwm:featureTypes>
+      <mwm:customName>
+        <mwm:lang code="default">5:145-179/rw</mwm:lang>
+      </mwm:customName>
+      <mwm:scale>18</mwm:scale>
+    </ExtendedData>
+  </Placemark>
+  <Placemark>
+    <name>6:180-215/rw</name>
+    <description></description>
+    <TimeStamp><when>2018-06-16T03:04:48Z</when></TimeStamp>
+    <styleUrl>#placemark-red</styleUrl>
+    <Point><coordinates>37.725983,55.618758</coordinates></Point>
+    <ExtendedData xmlns:mwm="https://maps.me">
+      <mwm:name>
+      </mwm:name>
+      <mwm:description>
+        <mwm:lang code="default"></mwm:lang>
+      </mwm:description>
+      <mwm:featureTypes>
+        <mwm:value>highway-service</mwm:value>
+      </mwm:featureTypes>
+      <mwm:customName>
+        <mwm:lang code="default">6:180-215/rw</mwm:lang>
+      </mwm:customName>
+      <mwm:scale>18</mwm:scale>
+    </ExtendedData>
+  </Placemark>
+  <Placemark>
+    <name>7:216-251/rtblw</name>
+    <description></description>
+    <TimeStamp><when>2018-06-16T03:05:25Z</when></TimeStamp>
+    <styleUrl>#placemark-red</styleUrl>
+    <Point><coordinates>37.725683,55.618804</coordinates></Point>
+    <ExtendedData xmlns:mwm="https://maps.me">
+      <mwm:name>
+        <mwm:lang code="default">Неизвестное место</mwm:lang>
+      </mwm:name>
+      <mwm:description>
+        <mwm:lang code="default"></mwm:lang>
+      </mwm:description>
+      <mwm:customName>
+        <mwm:lang code="default">7:216-251/rtblw</mwm:lang>
+      </mwm:customName>
+      <mwm:scale>19</mwm:scale>
+    </ExtendedData>
+  </Placemark>
+  <Placemark>
+    <name>8:252-287/rw</name>
+    <description></description>
+    <TimeStamp><when>2018-06-16T03:06:00Z</when></TimeStamp>
+    <styleUrl>#placemark-red</styleUrl>
+    <Point><coordinates>37.72558,55.618905</coordinates></Point>
+    <ExtendedData xmlns:mwm="https://maps.me">
+      <mwm:name>
+        <mwm:lang code="default">Неизвестное место</mwm:lang>
+      </mwm:name>
+      <mwm:description>
+        <mwm:lang code="default"></mwm:lang>
+      </mwm:description>
+      <mwm:customName>
+        <mwm:lang code="default">8:252-287/rw</mwm:lang>
+      </mwm:customName>
+      <mwm:scale>19</mwm:scale>
+    </ExtendedData>
+  </Placemark>
+  <Placemark>
+    <name>9:288-322/rw</name>
+    <description></description>
+    <TimeStamp><when>2018-06-16T03:06:26Z</when></TimeStamp>
+    <styleUrl>#placemark-red</styleUrl>
+    <Point><coordinates>37.725478,55.619006</coordinates></Point>
+    <ExtendedData xmlns:mwm="https://maps.me">
+      <mwm:name>
+      </mwm:name>
+      <mwm:description>
+        <mwm:lang code="default"></mwm:lang>
+      </mwm:description>
+      <mwm:featureTypes>
+        <mwm:value>highway-service</mwm:value>
+      </mwm:featureTypes>
+      <mwm:customName>
+        <mwm:lang code="default">9:288-322/rw</mwm:lang>
+      </mwm:customName>
+      <mwm:scale>19</mwm:scale>
+    </ExtendedData>
+  </Placemark>
+  <Placemark>
+    <name>20:323-358/rw</name>
+    <description></description>
+    <TimeStamp><when>2018-06-16T03:06:55Z</when></TimeStamp>
+    <styleUrl>#placemark-red</styleUrl>
+    <Point><coordinates>37.725394,55.619085</coordinates></Point>
+    <ExtendedData xmlns:mwm="https://maps.me">
+      <mwm:name>
+      </mwm:name>
+      <mwm:description>
+        <mwm:lang code="default"></mwm:lang>
+      </mwm:description>
+      <mwm:featureTypes>
+        <mwm:value>highway-service</mwm:value>
+      </mwm:featureTypes>
+      <mwm:customName>
+        <mwm:lang code="default">20:323-358/rw</mwm:lang>
+      </mwm:customName>
+      <mwm:scale>19</mwm:scale>
+    </ExtendedData>
+  </Placemark>
+  <Placemark>
+    <name>11:359-394/rw</name>
+    <description></description>
+    <TimeStamp><when>2018-06-16T03:07:27Z</when></TimeStamp>
+    <styleUrl>#placemark-red</styleUrl>
+    <Point><coordinates>37.725305,55.619177</coordinates></Point>
+    <ExtendedData xmlns:mwm="https://maps.me">
+      <mwm:name>
+      </mwm:name>
+      <mwm:description>
+        <mwm:lang code="default"></mwm:lang>
+      </mwm:description>
+      <mwm:featureTypes>
+        <mwm:value>highway-service</mwm:value>
+      </mwm:featureTypes>
+      <mwm:customName>
+        <mwm:lang code="default">11:359-394/rw</mwm:lang>
+      </mwm:customName>
+      <mwm:scale>19</mwm:scale>
+    </ExtendedData>
+  </Placemark>
+  <Placemark>
+    <name>12:395-430/rw</name>
+    <description></description>
+    <TimeStamp><when>2018-06-16T03:07:48Z</when></TimeStamp>
+    <styleUrl>#placemark-red</styleUrl>
+    <Point><coordinates>37.725123,55.619342</coordinates></Point>
+    <ExtendedData xmlns:mwm="https://maps.me">
+      <mwm:name>
+      </mwm:name>
+      <mwm:description>
+        <mwm:lang code="default"></mwm:lang>
+      </mwm:description>
+      <mwm:featureTypes>
+        <mwm:value>highway-service</mwm:value>
+      </mwm:featureTypes>
+      <mwm:customName>
+        <mwm:lang code="default">12:395-430/rw</mwm:lang>
+      </mwm:customName>
+      <mwm:scale>19</mwm:scale>
+    </ExtendedData>
+  </Placemark>
+  <Placemark>
+    <name>1:1-36/lw</name>
+    <description></description>
+    <TimeStamp><when>2018-06-16T03:09:16Z</when></TimeStamp>
+    <styleUrl>#placemark-red</styleUrl>
+    <Point><coordinates>37.724146,55.619814</coordinates></Point>
+    <ExtendedData xmlns:mwm="https://maps.me">
+      <mwm:name>
+      </mwm:name>
+      <mwm:description>
+        <mwm:lang code="default"></mwm:lang>
+      </mwm:description>
+      <mwm:featureTypes>
+        <mwm:value>highway-service</mwm:value>
+      </mwm:featureTypes>
+      <mwm:customName>
+        <mwm:lang code="default">1:1-36/lw</mwm:lang>
+      </mwm:customName>
+      <mwm:scale>19</mwm:scale>
+    </ExtendedData>
+  </Placemark>
+  <Placemark>
+    <name>2:37-72/rw</name>
+    <description></description>
+    <TimeStamp><when>2018-06-16T03:09:49Z</when></TimeStamp>
+    <styleUrl>#placemark-red</styleUrl>
+    <Point><coordinates>37.723986,55.619842</coordinates></Point>
+    <ExtendedData xmlns:mwm="https://maps.me">
+      <mwm:name>
+      </mwm:name>
+      <mwm:description>
+        <mwm:lang code="default"></mwm:lang>
+      </mwm:description>
+      <mwm:featureTypes>
+        <mwm:value>highway-service</mwm:value>
+      </mwm:featureTypes>
+      <mwm:customName>
+        <mwm:lang code="default">2:37-72/rw</mwm:lang>
+      </mwm:customName>
+      <mwm:scale>19</mwm:scale>
+    </ExtendedData>
+  </Placemark>
+  <Placemark>
+    <name>3:73-107/rw</name>
+    <description></description>
+    <TimeStamp><when>2018-06-16T03:10:17Z</when></TimeStamp>
+    <styleUrl>#placemark-red</styleUrl>
+    <Point><coordinates>37.723839,55.61987</coordinates></Point>
+    <ExtendedData xmlns:mwm="https://maps.me">
+      <mwm:name>
+      </mwm:name>
+      <mwm:description>
+        <mwm:lang code="default"></mwm:lang>
+      </mwm:description>
+      <mwm:featureTypes>
+        <mwm:value>highway-service</mwm:value>
+      </mwm:featureTypes>
+      <mwm:customName>
+        <mwm:lang code="default">3:73-107/rw</mwm:lang>
+      </mwm:customName>
+      <mwm:scale>19</mwm:scale>
+    </ExtendedData>
+  </Placemark>
+  <Placemark>
+    <name>4:108-143/rw</name>
+    <description></description>
+    <TimeStamp><when>2018-06-16T03:10:44Z</when></TimeStamp>
+    <styleUrl>#placemark-red</styleUrl>
+    <Point><coordinates>37.723636,55.619897</coordinates></Point>
+    <ExtendedData xmlns:mwm="https://maps.me">
+      <mwm:name>
+      </mwm:name>
+      <mwm:description>
+        <mwm:lang code="default"></mwm:lang>
+      </mwm:description>
+      <mwm:featureTypes>
+        <mwm:value>highway-service</mwm:value>
+      </mwm:featureTypes>
+      <mwm:customName>
+        <mwm:lang code="default">4:108-143/rw</mwm:lang>
+      </mwm:customName>
+      <mwm:scale>19</mwm:scale>
+    </ExtendedData>
+  </Placemark>
+  <Placemark>
+    <name>5:144-179/rw</name>
+    <description></description>
+    <TimeStamp><when>2018-06-16T03:11:11Z</when></TimeStamp>
+    <styleUrl>#placemark-red</styleUrl>
+    <Point><coordinates>37.723449,55.619928</coordinates></Point>
+    <ExtendedData xmlns:mwm="https://maps.me">
+      <mwm:name>
+      </mwm:name>
+      <mwm:description>
+        <mwm:lang code="default"></mwm:lang>
+      </mwm:description>
+      <mwm:featureTypes>
+        <mwm:value>highway-service</mwm:value>
+      </mwm:featureTypes>
+      <mwm:customName>
+        <mwm:lang code="default">5:144-179/rw</mwm:lang>
+      </mwm:customName>
+      <mwm:scale>19</mwm:scale>
+    </ExtendedData>
+  </Placemark>
+  <Placemark>
+    <name>6:180-215/rw</name>
+    <description></description>
+    <TimeStamp><when>2018-06-16T03:11:35Z</when></TimeStamp>
+    <styleUrl>#placemark-red</styleUrl>
+    <Point><coordinates>37.723249,55.619957</coordinates></Point>
+    <ExtendedData xmlns:mwm="https://maps.me">
+      <mwm:name>
+      </mwm:name>
+      <mwm:description>
+        <mwm:lang code="default"></mwm:lang>
+      </mwm:description>
+      <mwm:featureTypes>
+        <mwm:value>highway-service</mwm:value>
+      </mwm:featureTypes>
+      <mwm:customName>
+        <mwm:lang code="default">6:180-215/rw</mwm:lang>
+      </mwm:customName>
+      <mwm:scale>19</mwm:scale>
+    </ExtendedData>
+  </Placemark>
+  <Placemark>
+    <name>7:216-251/lw</name>
+    <description></description>
+    <TimeStamp><when>2018-06-16T03:13:05Z</when></TimeStamp>
+    <styleUrl>#placemark-red</styleUrl>
+    <Point><coordinates>37.722097,55.620029</coordinates></Point>
+    <ExtendedData xmlns:mwm="https://maps.me">
+      <mwm:name>
+      </mwm:name>
+      <mwm:description>
+        <mwm:lang code="default"></mwm:lang>
+      </mwm:description>
+      <mwm:featureTypes>
+        <mwm:value>highway-service</mwm:value>
+      </mwm:featureTypes>
+      <mwm:customName>
+        <mwm:lang code="default">7:216-251/lw</mwm:lang>
+      </mwm:customName>
+      <mwm:scale>19</mwm:scale>
+    </ExtendedData>
+  </Placemark>
+  <Placemark>
+    <name>8:252-287/lw</name>
+    <description></description>
+    <TimeStamp><when>2018-06-16T03:13:58Z</when></TimeStamp>
+    <styleUrl>#placemark-red</styleUrl>
+    <Point><coordinates>37.72191,55.619983</coordinates></Point>
+    <ExtendedData xmlns:mwm="https://maps.me">
+      <mwm:name>
+        <mwm:lang code="default">Неизвестное место</mwm:lang>
+      </mwm:name>
+      <mwm:description>
+        <mwm:lang code="default"></mwm:lang>
+      </mwm:description>
+      <mwm:customName>
+        <mwm:lang code="default">8:252-287/lw</mwm:lang>
+      </mwm:customName>
+      <mwm:scale>19</mwm:scale>
+    </ExtendedData>
+  </Placemark>
+  <Placemark>
+    <name>9:288-323/lw</name>
+    <description></description>
+    <TimeStamp><when>2018-06-16T03:14:26Z</when></TimeStamp>
+    <styleUrl>#placemark-red</styleUrl>
+    <Point><coordinates>37.721696,55.619955</coordinates></Point>
+    <ExtendedData xmlns:mwm="https://maps.me">
+      <mwm:name>
+      </mwm:name>
+      <mwm:description>
+        <mwm:lang code="default"></mwm:lang>
+      </mwm:description>
+      <mwm:featureTypes>
+        <mwm:value>highway-service</mwm:value>
+      </mwm:featureTypes>
+      <mwm:customName>
+        <mwm:lang code="default">9:288-323/lw</mwm:lang>
+      </mwm:customName>
+      <mwm:scale>19</mwm:scale>
+    </ExtendedData>
+  </Placemark>
+  <Placemark>
+    <name>10:324-359/lw</name>
+    <description></description>
+    <TimeStamp><when>2018-06-16T03:14:51Z</when></TimeStamp>
+    <styleUrl>#placemark-red</styleUrl>
+    <Point><coordinates>37.721513,55.619945</coordinates></Point>
+    <ExtendedData xmlns:mwm="https://maps.me">
+      <mwm:name>
+      </mwm:name>
+      <mwm:description>
+        <mwm:lang code="default"></mwm:lang>
+      </mwm:description>
+      <mwm:featureTypes>
+        <mwm:value>highway-service</mwm:value>
+      </mwm:featureTypes>
+      <mwm:customName>
+        <mwm:lang code="default">10:324-359/lw</mwm:lang>
+      </mwm:customName>
+      <mwm:scale>19</mwm:scale>
+    </ExtendedData>
+  </Placemark>
+  <Placemark>
+    <name>Service substation 1 level</name>
+    <description></description>
+    <TimeStamp><when>2018-06-16T03:16:41Z</when></TimeStamp>
+    <styleUrl>#placemark-red</styleUrl>
+    <Point><coordinates>37.720441,55.619906</coordinates></Point>
+    <ExtendedData xmlns:mwm="https://maps.me">
+      <mwm:name>
+        <mwm:lang code="default">Неизвестное место</mwm:lang>
+      </mwm:name>
+      <mwm:description>
+        <mwm:lang code="default"></mwm:lang>
+      </mwm:description>
+      <mwm:customName>
+        <mwm:lang code="default">Service substation 1 level</mwm:lang>
+      </mwm:customName>
+      <mwm:scale>19</mwm:scale>
+    </ExtendedData>
+  </Placemark>
+  <Placemark>
+    <name>1:169-228/ltrw</name>
+    <description></description>
+    <TimeStamp><when>2018-06-16T03:49:55Z</when></TimeStamp>
+    <styleUrl>#placemark-red</styleUrl>
+    <Point><coordinates>37.736095,55.623574</coordinates></Point>
+    <ExtendedData xmlns:mwm="https://maps.me">
+      <mwm:name>
+        <mwm:lang code="default">Неизвестное место</mwm:lang>
+      </mwm:name>
+      <mwm:description>
+        <mwm:lang code="default"></mwm:lang>
+      </mwm:description>
+      <mwm:customName>
+        <mwm:lang code="default">1:169-228/ltrw</mwm:lang>
+      </mwm:customName>
+      <mwm:scale>19</mwm:scale>
+    </ExtendedData>
+  </Placemark>
+  <Placemark>
+    <name>1:1-48/lpw</name>
+    <description></description>
+    <TimeStamp><when>2018-06-16T03:52:30Z</when></TimeStamp>
+    <styleUrl>#placemark-red</styleUrl>
+    <Point><coordinates>37.735686,55.62467</coordinates></Point>
+    <ExtendedData xmlns:mwm="https://maps.me">
+      <mwm:name>
+      </mwm:name>
+      <mwm:description>
+        <mwm:lang code="default"></mwm:lang>
+      </mwm:description>
+      <mwm:featureTypes>
+        <mwm:value>entrance</mwm:value>
+      </mwm:featureTypes>
+      <mwm:customName>
+        <mwm:lang code="default">1:1-48/lpw</mwm:lang>
+      </mwm:customName>
+      <mwm:scale>18</mwm:scale>
+    </ExtendedData>
+  </Placemark>
+  <Placemark>
+    <name>2:49-96/lwp</name>
+    <description></description>
+    <TimeStamp><when>2018-06-16T03:53:06Z</when></TimeStamp>
+    <styleUrl>#placemark-red</styleUrl>
+    <Point><coordinates>37.735319,55.624665</coordinates></Point>
+    <ExtendedData xmlns:mwm="https://maps.me">
+      <mwm:name>
+      </mwm:name>
+      <mwm:description>
+        <mwm:lang code="default"></mwm:lang>
+      </mwm:description>
+      <mwm:featureTypes>
+        <mwm:value>entrance</mwm:value>
+      </mwm:featureTypes>
+      <mwm:customName>
+        <mwm:lang code="default">2:49-96/lwp</mwm:lang>
+      </mwm:customName>
+      <mwm:scale>18</mwm:scale>
+    </ExtendedData>
+  </Placemark>
+  <Placemark>
+    <name>3:97-142/lpw</name>
+    <description></description>
+    <TimeStamp><when>2018-06-16T03:53:55Z</when></TimeStamp>
+    <styleUrl>#placemark-red</styleUrl>
+    <Point><coordinates>37.734949,55.624659</coordinates></Point>
+    <ExtendedData xmlns:mwm="https://maps.me">
+      <mwm:name>
+      </mwm:name>
+      <mwm:description>
+        <mwm:lang code="default"></mwm:lang>
+      </mwm:description>
+      <mwm:featureTypes>
+        <mwm:value>entrance</mwm:value>
+      </mwm:featureTypes>
+      <mwm:customName>
+        <mwm:lang code="default">3:97-142/lpw</mwm:lang>
+      </mwm:customName>
+      <mwm:scale>18</mwm:scale>
+    </ExtendedData>
+  </Placemark>
+  <Placemark>
+    <name>4:143-190/lwp</name>
+    <description></description>
+    <TimeStamp><when>2018-06-16T03:54:25Z</when></TimeStamp>
+    <styleUrl>#placemark-red</styleUrl>
+    <Point><coordinates>37.734579,55.624653</coordinates></Point>
+    <ExtendedData xmlns:mwm="https://maps.me">
+      <mwm:name>
+      </mwm:name>
+      <mwm:description>
+        <mwm:lang code="default"></mwm:lang>
+      </mwm:description>
+      <mwm:featureTypes>
+        <mwm:value>entrance</mwm:value>
+      </mwm:featureTypes>
+      <mwm:customName>
+        <mwm:lang code="default">4:143-190/lwp</mwm:lang>
+      </mwm:customName>
+      <mwm:scale>18</mwm:scale>
+    </ExtendedData>
+  </Placemark>
+  <Placemark>
+    <name>5:191-238/lpw</name>
+    <description></description>
+    <TimeStamp><when>2018-06-16T03:54:45Z</when></TimeStamp>
+    <styleUrl>#placemark-red</styleUrl>
+    <Point><coordinates>37.734208,55.624647</coordinates></Point>
+    <ExtendedData xmlns:mwm="https://maps.me">
+      <mwm:name>
+      </mwm:name>
+      <mwm:description>
+        <mwm:lang code="default"></mwm:lang>
+      </mwm:description>
+      <mwm:featureTypes>
+        <mwm:value>entrance</mwm:value>
+      </mwm:featureTypes>
+      <mwm:customName>
+        <mwm:lang code="default">5:191-238/lpw</mwm:lang>
+      </mwm:customName>
+      <mwm:scale>18</mwm:scale>
+    </ExtendedData>
+  </Placemark>
+  <Placemark>
+    <name>6:239-284lpw</name>
+    <description></description>
+    <TimeStamp><when>2018-06-16T03:55:13Z</when></TimeStamp>
+    <styleUrl>#placemark-red</styleUrl>
+    <Point><coordinates>37.733841,55.624641</coordinates></Point>
+    <ExtendedData xmlns:mwm="https://maps.me">
+      <mwm:name>
+      </mwm:name>
+      <mwm:description>
+        <mwm:lang code="default"></mwm:lang>
+      </mwm:description>
+      <mwm:featureTypes>
+        <mwm:value>entrance</mwm:value>
+      </mwm:featureTypes>
+      <mwm:customName>
+        <mwm:lang code="default">6:239-284lpw</mwm:lang>
+      </mwm:customName>
+      <mwm:scale>18</mwm:scale>
+    </ExtendedData>
+  </Placemark>
+  <Placemark>
+    <name>7:285-332/lpw</name>
+    <description></description>
+    <TimeStamp><when>2018-06-16T03:55:55Z</when></TimeStamp>
+    <styleUrl>#placemark-red</styleUrl>
+    <Point><coordinates>37.733479,55.624638</coordinates></Point>
+    <ExtendedData xmlns:mwm="https://maps.me">
+      <mwm:name>
+      </mwm:name>
+      <mwm:description>
+        <mwm:lang code="default"></mwm:lang>
+      </mwm:description>
+      <mwm:featureTypes>
+        <mwm:value>entrance</mwm:value>
+      </mwm:featureTypes>
+      <mwm:customName>
+        <mwm:lang code="default">7:285-332/lpw</mwm:lang>
+      </mwm:customName>
+      <mwm:scale>18</mwm:scale>
+    </ExtendedData>
+  </Placemark>
+  <Placemark>
+    <name>8:333-380/lpw</name>
+    <description></description>
+    <TimeStamp><when>2018-06-16T03:56:21Z</when></TimeStamp>
+    <styleUrl>#placemark-red</styleUrl>
+    <Point><coordinates>37.733101,55.624629</coordinates></Point>
+    <ExtendedData xmlns:mwm="https://maps.me">
+      <mwm:name>
+        <mwm:lang code="default">8</mwm:lang>
+      </mwm:name>
+      <mwm:description>
+        <mwm:lang code="default"></mwm:lang>
+      </mwm:description>
+      <mwm:featureTypes>
+        <mwm:value>entrance</mwm:value>
+      </mwm:featureTypes>
+      <mwm:customName>
+        <mwm:lang code="default">8:333-380/lpw</mwm:lang>
+      </mwm:customName>
+      <mwm:scale>18</mwm:scale>
+    </ExtendedData>
+  </Placemark>
+  <Placemark>
+    <name>1:1-48</name>
+    <description></description>
+    <TimeStamp><when>2018-06-16T03:58:13Z</when></TimeStamp>
+    <styleUrl>#placemark-red</styleUrl>
+    <Point><coordinates>37.733919,55.625108</coordinates></Point>
+    <ExtendedData xmlns:mwm="https://maps.me">
+      <mwm:name>
+        <mwm:lang code="default">Неизвестное место</mwm:lang>
+      </mwm:name>
+      <mwm:description>
+        <mwm:lang code="default"></mwm:lang>
+      </mwm:description>
+      <mwm:customName>
+        <mwm:lang code="default">1:1-48</mwm:lang>
+      </mwm:customName>
+      <mwm:scale>19</mwm:scale>
+    </ExtendedData>
+  </Placemark>
+  <Placemark>
+    <name>1:1-44/rw</name>
+    <description></description>
+    <TimeStamp><when>2018-06-16T04:02:07Z</when></TimeStamp>
+    <styleUrl>#placemark-red</styleUrl>
+    <Point><coordinates>37.735342,55.625566</coordinates></Point>
+    <ExtendedData xmlns:mwm="https://maps.me">
+      <mwm:name>
+        <mwm:lang code="default">Неизвестное место</mwm:lang>
+      </mwm:name>
+      <mwm:description>
+        <mwm:lang code="default"></mwm:lang>
+      </mwm:description>
+      <mwm:customName>
+        <mwm:lang code="default">1:1-44/rw</mwm:lang>
+      </mwm:customName>
+      <mwm:scale>19</mwm:scale>
+    </ExtendedData>
+  </Placemark>
+  <Placemark>
+    <name>Сервис 1</name>
+    <description></description>
+    <TimeStamp><when>2018-06-16T04:04:59Z</when></TimeStamp>
+    <styleUrl>#placemark-red</styleUrl>
+    <Point><coordinates>37.735937,55.625487</coordinates></Point>
+    <ExtendedData xmlns:mwm="https://maps.me">
+      <mwm:name>
+        <mwm:lang code="default">Неизвестное место</mwm:lang>
+      </mwm:name>
+      <mwm:description>
+        <mwm:lang code="default"></mwm:lang>
+      </mwm:description>
+      <mwm:customName>
+        <mwm:lang code="default">Сервис 1</mwm:lang>
+      </mwm:customName>
+      <mwm:scale>18</mwm:scale>
+    </ExtendedData>
+  </Placemark>
+  <Placemark>
+    <name>1:112-222/лпв</name>
+    <description></description>
+    <TimeStamp><when>2018-06-16T04:06:59Z</when></TimeStamp>
+    <styleUrl>#placemark-red</styleUrl>
+    <Point><coordinates>37.737367,55.625499</coordinates></Point>
+    <ExtendedData xmlns:mwm="https://maps.me">
+      <mwm:name>
+        <mwm:lang code="default">Неизвестное место</mwm:lang>
+      </mwm:name>
+      <mwm:description>
+        <mwm:lang code="default"></mwm:lang>
+      </mwm:description>
+      <mwm:customName>
+        <mwm:lang code="default">1:112-222/лпв</mwm:lang>
+      </mwm:customName>
+      <mwm:scale>18</mwm:scale>
+    </ExtendedData>
+  </Placemark>
+  <Placemark>
+    <name>1:223-333/лп</name>
+    <description></description>
+    <TimeStamp><when>2018-06-16T04:08:22Z</when></TimeStamp>
+    <styleUrl>#placemark-red</styleUrl>
+    <Point><coordinates>37.73776,55.625903</coordinates></Point>
+    <ExtendedData xmlns:mwm="https://maps.me">
+      <mwm:name>
+      </mwm:name>
+      <mwm:description>
+        <mwm:lang code="default"></mwm:lang>
+      </mwm:description>
+      <mwm:featureTypes>
+        <mwm:value>highway-service</mwm:value>
+      </mwm:featureTypes>
+      <mwm:customName>
+        <mwm:lang code="default">1:223-333/лп</mwm:lang>
+      </mwm:customName>
+      <mwm:scale>19</mwm:scale>
+    </ExtendedData>
+  </Placemark>
+  <Placemark>
+    <name>1:1-48/lwp 2:49-96/lp 3:97-144/lp 4:145-190/lpw 5:191-238/lpw 6:239-286/lpw</name>
+    <description></description>
+    <TimeStamp><when>2018-06-16T04:11:40Z</when></TimeStamp>
+    <styleUrl>#placemark-red</styleUrl>
+    <Point><coordinates>37.741062,55.625708</coordinates></Point>
+    <ExtendedData xmlns:mwm="https://maps.me">
+      <mwm:name>
+        <mwm:lang code="default">Неизвестное место</mwm:lang>
+      </mwm:name>
+      <mwm:description>
+        <mwm:lang code="default"></mwm:lang>
+      </mwm:description>
+      <mwm:customName>
+        <mwm:lang code="default">1:1-48/lwp 2:49-96/lp 3:97-144/lp 4:145-190/lpw 5:191-238/lpw 6:239-286/lpw</mwm:lang>
+      </mwm:customName>
+      <mwm:scale>18</mwm:scale>
+    </ExtendedData>
+  </Placemark>
+  <Placemark>
+    <name>1:1-36/lt</name>
+    <description></description>
+    <TimeStamp><when>2018-06-16T04:14:21Z</when></TimeStamp>
+    <styleUrl>#placemark-red</styleUrl>
+    <Point><coordinates>37.74114,55.624155</coordinates></Point>
+    <ExtendedData xmlns:mwm="https://maps.me">
+      <mwm:name>
+        <mwm:lang code="default">Неизвестное место</mwm:lang>
+      </mwm:name>
+      <mwm:description>
+        <mwm:lang code="default"></mwm:lang>
+      </mwm:description>
+      <mwm:customName>
+        <mwm:lang code="default">1:1-36/lt</mwm:lang>
+      </mwm:customName>
+      <mwm:scale>18</mwm:scale>
+    </ExtendedData>
+  </Placemark>
+  <Placemark>
+    <name>2:97-207/rtw</name>
+    <description></description>
+    <TimeStamp><when>2018-06-16T04:15:42Z</when></TimeStamp>
+    <styleUrl>#placemark-red</styleUrl>
+    <Point><coordinates>37.741765,55.623742</coordinates></Point>
+    <ExtendedData xmlns:mwm="https://maps.me">
+      <mwm:name>
+      </mwm:name>
+      <mwm:description>
+        <mwm:lang code="default"></mwm:lang>
+      </mwm:description>
+      <mwm:featureTypes>
+        <mwm:value>highway-service</mwm:value>
+      </mwm:featureTypes>
+      <mwm:customName>
+        <mwm:lang code="default">2:97-207/rtw</mwm:lang>
+      </mwm:customName>
+      <mwm:scale>19</mwm:scale>
+    </ExtendedData>
+  </Placemark>
+  <Placemark>
+    <name>Ulmus shersh</name>
+    <description></description>
+    <TimeStamp><when>2018-06-16T04:18:47Z</when></TimeStamp>
+    <styleUrl>#placemark-red</styleUrl>
+    <Point><coordinates>37.742801,55.622454</coordinates></Point>
+    <ExtendedData xmlns:mwm="https://maps.me">
+      <mwm:name>
+        <mwm:lang code="default">Неизвестное место</mwm:lang>
+      </mwm:name>
+      <mwm:description>
+        <mwm:lang code="default"></mwm:lang>
+      </mwm:description>
+      <mwm:customName>
+        <mwm:lang code="default">Ulmus shersh</mwm:lang>
+      </mwm:customName>
+      <mwm:scale>19</mwm:scale>
+    </ExtendedData>
+  </Placemark>
+</Document>
+</kml>

@@ -40,6 +40,17 @@ public class KmlReaderTest {
     }
 
     /**
+     * Non-regression test for ticket <a href="https://josm.openstreetmap.de/ticket/16402">#16402</a>
+     * @throws Exception if an error occurs during reading
+     */
+    @Test
+    public void testTicket16402() throws Exception {
+        try (InputStream is = TestUtils.getRegressionDataStream(16402, "MapsMe-new.kml")) {
+            NonRegFunctionalTests.testGeneric("#16402", KmlReader.parseDataSet(is, null));
+        }
+    }
+
+    /**
      * Non-regression test for ticket <a href="https://josm.openstreetmap.de/ticket/12694">#12694</a>
      * @throws Exception if an error occurs during reading
      */

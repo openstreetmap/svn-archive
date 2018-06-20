@@ -1,30 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry including="data/**|images/**|LICENSE|LICENSE_*" kind="src" output="bin" path="">
+	<classpathentry including="data/**|images/**|LICENSE|LICENSE_*" kind="src" output="bin/main" path="">
 		<attributes>
 			<attribute name="gradle_scope" value="main"/>
 			<attribute name="gradle_used_by_scope" value="main,test"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="src" output="bin" path="src">
+	<classpathentry kind="src" output="bin/minJosmVersion" path="src">
 		<attributes>
 			<attribute name="gradle_scope" value="minJosmVersion"/>
 			<attribute name="gradle_used_by_scope" value="minJosmVersion"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="src" output="bin" path="test/unit">
+	<classpathentry kind="src" output="bin/test" path="test/unit">
 		<attributes>
 			<attribute name="gradle_scope" value="test"/>
 			<attribute name="gradle_used_by_scope" value="test"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry including="**/*.po" kind="src" output="bin" path="poSrc">
+	<classpathentry including="**/*.po" kind="src" output="bin/main" path="poSrc">
 		<attributes>
 			<attribute name="gradle_scope" value="main"/>
 			<attribute name="gradle_used_by_scope" value="main,test"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="src" output="bin" path="test/data">
+	<classpathentry kind="src" output="bin/test" path="test/data">
 		<attributes>
 			<attribute name="gradle_scope" value="test"/>
 			<attribute name="gradle_used_by_scope" value="test"/>

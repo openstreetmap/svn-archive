@@ -48,6 +48,7 @@ public class StreetsidePlugin extends Plugin {
       MainMenu.add(MainApplication.getMenu().dataMenu, new StreetsideJoinAction(), false);
       MainMenu.add(MainApplication.getMenu().moreToolsMenu, WALK_ACTION, false);
       //MainMenu.add(MainApplication.getMenu().imagerySubMenu, new MapObjectLayerAction(), false);
+      //MainMenu.add(MainApplication.getMenu().imagerySubMenu, new MapObjectLayerAction(), false);
     }
   }
 
@@ -66,7 +67,7 @@ public class StreetsidePlugin extends Plugin {
   }
 
   static StreetsideDataListener[] getStreetsideDataListeners() {
-	return new StreetsideDataListener[]{/*UPLOAD_ACTION,*/ WALK_ACTION, ZOOM_ACTION, CubemapBuilder.getInstance()};
+	return new StreetsideDataListener[]{WALK_ACTION, ZOOM_ACTION, CubemapBuilder.getInstance()};
   }
 
 

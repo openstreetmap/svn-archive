@@ -8,5 +8,5 @@ coverage:
 flags:
   model_and_api:
     paths:
-      - src/org/openstreetmap/josm/plugins/ms-streetside-josm-plugin/utils/api/
-      - src/org/openstreetmap/josm/plugins/ms-streetside-josm-plugin/model/
+      - src/org/openstreetmap/josm/plugins/streetside/utils/api/
+      - src/org/openstreetmap/josm/plugins/streetside/model/

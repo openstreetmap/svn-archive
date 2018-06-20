@@ -1,45 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<!--  -classpathentry including="data/**|images/**|LICENSE|LICENSE_*" kind="src" path=""/>
-	<classpathentry kind="src" path="src"/>
-	<classpathentry including="**/*.po" kind="src" path="poSrc"/>
-	<classpathentry kind="src" path="test/data"/>
-	<classpathentry kind="src" path="test/unit"/>
+	<classpathentry including="data/**|images/**|LICENSE|LICENSE_*" kind="src" output="bin" path="">
+		<attributes>
+			<attribute name="gradle_scope" value="main"/>
+			<attribute name="gradle_used_by_scope" value="main,test"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="src" output="bin" path="src">
+		<attributes>
+			<attribute name="gradle_scope" value="minJosmVersion"/>
+			<attribute name="gradle_used_by_scope" value="minJosmVersion"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="src" output="bin" path="test/unit">
+		<attributes>
+			<attribute name="gradle_scope" value="test"/>
+			<attribute name="gradle_used_by_scope" value="test"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry including="**/*.po" kind="src" output="bin" path="poSrc">
+		<attributes>
+			<attribute name="gradle_scope" value="main"/>
+			<attribute name="gradle_used_by_scope" value="main,test"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="src" output="bin" path="test/data">
+		<attributes>
+			<attribute name="gradle_scope" value="test"/>
+			<attribute name="gradle_used_by_scope" value="test"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8/"/>
 	<classpathentry kind="con" path="org.eclipse.buildship.core.gradleclasspathcontainer"/>
-	<classpathentry kind="output" path="bin"/ -->
-	
-	<classpathentry including="data/**|images/**|LICENSE|LICENSE_*" kind="src" output="bin/main" path="">
-        <attributes>
-            <attribute name="gradle_scope" value="main"/>
-            <attribute name="gradle_used_by_scope" value="main,test"/>
-        </attributes>
-    </classpathentry>
-    <classpathentry kind="src" output="bin/minJosmVersion" path="src">
-        <attributes>
-            <attribute name="gradle_scope" value="minJosmVersion"/>
-            <attribute name="gradle_used_by_scope" value="minJosmVersion"/>
-        </attributes>
-    </classpathentry>
-    <classpathentry kind="src" output="bin/test" path="test/unit">
-        <attributes>
-            <attribute name="gradle_scope" value="test"/>
-            <attribute name="gradle_used_by_scope" value="test"/>
-        </attributes>
-    </classpathentry>
-    <classpathentry including="**/*.po" kind="src" output="bin/main" path="poSrc">
-        <attributes>
-            <attribute name="gradle_scope" value="main"/>
-            <attribute name="gradle_used_by_scope" value="main,test"/>
-        </attributes>
-    </classpathentry>
-    <classpathentry kind="src" output="bin/test" path="test/data">
-        <attributes>
-            <attribute name="gradle_scope" value="test"/>
-            <attribute name="gradle_used_by_scope" value="test"/>
-        </attributes>
-    </classpathentry>
-    <classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8/"/>
-    <classpathentry kind="con" path="org.eclipse.buildship.core.gradleclasspathcontainer"/>
-    <classpathentry kind="output" path="bin/default"/>
+	<classpathentry kind="output" path="bin/default"/>
 </classpath>

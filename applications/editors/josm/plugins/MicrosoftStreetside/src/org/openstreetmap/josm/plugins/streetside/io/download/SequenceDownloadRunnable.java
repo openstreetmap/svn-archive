@@ -47,7 +47,9 @@ public final class SequenceDownloadRunnable extends BoundsDownloadRunnable {
       return;
     }
 
-    StreetsideSequence seq = new StreetsideSequence(StreetsideSequenceIdGenerator.generateId());
+    StreetsideSequence seq = new StreetsideSequence(null);
+    // TODO: re-add sequenceID
+    //StreetsideSequence seq = new StreetsideSequence(StreetsideSequenceIdGenerator.generateId());
 
     // TODO: how can LatLon and heading / camera angles (he attribute) be set for a sequence?
     // and does it make sense? @rrh

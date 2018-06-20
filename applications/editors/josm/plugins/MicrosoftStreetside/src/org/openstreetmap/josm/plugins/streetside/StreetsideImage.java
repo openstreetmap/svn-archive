@@ -1,11 +1,17 @@
 // License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.streetside;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.plugins.streetside.cubemap.CubemapUtils;
 import org.openstreetmap.josm.plugins.streetside.model.UserProfile;
+import org.openstreetmap.josm.tools.Logging;
+
+import org.openstreetmap.josm.plugins.streetside.model.ImageDetection;
 
 /**
  * A StreetsideImage object represents each of the images stored in Streetside.
@@ -58,9 +64,9 @@ public class StreetsideImage extends StreetsideAbstractImage {
 
   /**
    * Set of traffic signs in the image.
-   *//*
+   */
   private final List<ImageDetection> detections = Collections.synchronizedList(new ArrayList<>());
-*/
+
   /**
    * Main constructor of the class StreetsideImage
    *
@@ -99,17 +105,17 @@ public String getId() {
     return String.valueOf(id);
   }
 
-  /*public List<ImageDetection> getDetections() {
+  public List<ImageDetection> getDetections() {
     return detections;
-  }*/
+  }
 
-  /*public void setAllDetections(Collection<ImageDetection> newDetections) {
+  public void setAllDetections(Collection<ImageDetection> newDetections) {
     Logging.debug("Add {0} detections to image {1}", newDetections.size(), getId());
     synchronized (detections) {
       detections.clear();
       detections.addAll(newDetections);
     }
-  }*/
+  }
 
   public UserProfile getUser() {
 	    return getSequence().getUser();
@@ -118,7 +124,6 @@ public String getId() {
   @Override
   public String toString() {
     return String.format(
-      // TODO: format date cd (Gradle build error command line)
       "Image[id=%s,lat=%f,lon=%f,he=%f,user=%s]",
       id, latLon.lat(), latLon.lon(), he, "null"//, cd
     );

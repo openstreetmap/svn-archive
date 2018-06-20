@@ -133,8 +133,7 @@ public class StreetsideExportDialog extends JPanel implements ActionListener {
   public class RewriteButtonAction extends AbstractAction {
 
     private static final long serialVersionUID = 1035332841101190301L;
-
-	private String lastPath;
+    private String lastPath;
     private final StreetsideExportDialog dlg;
 
     /**

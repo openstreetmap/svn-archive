@@ -1,18 +1,21 @@
 // License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.streetside.actions;
 
-import java.awt.image.BufferedImage;
-
 import javax.swing.SwingUtilities;
 
+import org.openstreetmap.josm.gui.Notification;
 import org.openstreetmap.josm.plugins.streetside.StreetsideAbstractImage;
 import org.openstreetmap.josm.plugins.streetside.StreetsideData;
 import org.openstreetmap.josm.plugins.streetside.StreetsideDataListener;
-import org.openstreetmap.josm.plugins.streetside.StreetsideImage;
 import org.openstreetmap.josm.plugins.streetside.StreetsideLayer;
+import org.openstreetmap.josm.plugins.streetside.StreetsidePlugin;
 import org.openstreetmap.josm.plugins.streetside.cache.CacheUtils;
+import org.openstreetmap.josm.plugins.streetside.cache.StreetsideCache;
 import org.openstreetmap.josm.plugins.streetside.gui.StreetsideMainDialog;
+import org.openstreetmap.josm.tools.I18n;
+import org.openstreetmap.josm.tools.Logging;
 
+import org.openstreetmap.josm.plugins.streetside.StreetsideImage;
 
 /**
  * Thread containing the walk process.
@@ -26,7 +29,6 @@ public class WalkThread extends Thread implements StreetsideDataListener {
   private final boolean waitForFullQuality;
   private final boolean followSelected;
   private final boolean goForward;
-  private BufferedImage lastImage;
   private volatile boolean paused;
 
   /**
@@ -51,132 +53,74 @@ public class WalkThread extends Thread implements StreetsideDataListener {
   @Override
   public void run() {
     try {
-      while (!end && data.getSelectedImage().next() != null) {
-        StreetsideAbstractImage image = data.getSelectedImage();
-        if (image != null && image.next() instanceof StreetsideImage) {
-          // Predownload next 10 thumbnails.
-          preDownloadImages((StreetsideImage) image.next(), 10, CacheUtils.PICTURE.THUMBNAIL);
-          // TODO: WalkThread for cubemaps? @rrh
-      	  //preDownloadCubemaps((StreetsideImage) image.next(), 10, CacheUtils.PICTURE.CUBEMAP);
-          if (waitForFullQuality) {
-            // Start downloading 3 next full images.
-            StreetsideAbstractImage currentImage = image.next();
-        	preDownloadImages((StreetsideImage) currentImage, 3, CacheUtils.PICTURE.FULL_IMAGE);
-        	// TODO: WalkThread for cubemaps? @rrh
-        	/*if (StreetsideProperties.PREDOWNLOAD_CUBEMAPS.get().booleanValue()) {
-          	  preDownloadCubemaps((StreetsideImage) currentImage, 3, CacheUtils.PICTURE.CUBEMAP);
-            }*/
-          }
+      StreetsideAbstractImage curSelection;
+      StreetsideImage curImage;
+      while (
+          !end &&
+          (curSelection = data.getSelectedImage().next()) != null &&
+          (curImage = curSelection instanceof StreetsideImage ? (StreetsideImage) curSelection : null) != null
+      ) {
+        // Predownload next 10 thumbnails.
+        preDownloadImages(curImage, 10, CacheUtils.PICTURE.THUMBNAIL, goForward);
+        if (waitForFullQuality) {
+          // Start downloading 3 next full images.
+          preDownloadImages(curImage, 3, CacheUtils.PICTURE.FULL_IMAGE, goForward);
         }
         try {
-          // Waits for full quality picture.
-          final BufferedImage displayImage = StreetsideMainDialog.getInstance().getStreetsideImageDisplay().getImage();
-          if (waitForFullQuality && image instanceof StreetsideImage) {
-            while (displayImage == lastImage || displayImage == null || displayImage.getWidth() < 2048) {
-              Thread.sleep(100);
-            }
-          } else { // Waits for thumbnail.
-            while (displayImage == lastImage || displayImage == null || displayImage.getWidth() < 320) {
-              Thread.sleep(100);
+          // Wait for picture for 1 minute.
+          final StreetsideCache cache = new StreetsideCache(curImage.getId(), waitForFullQuality ? StreetsideCache.Type.FULL_IMAGE : StreetsideCache.Type.THUMBNAIL);
+          int limit = 240; // 240 * 250 = 60000 ms
+          while (cache.get() == null) {
+            Thread.sleep(250);
+            if (limit-- < 0) {
+              new Notification(I18n.tr("Walk mode: Waiting for next image takes too long! Exiting walk mode…"))
+                  .setIcon(StreetsidePlugin.LOGO.get())
+                  .show();
+              end();
+              return;
             }
           }
           while (paused) {
             Thread.sleep(100);
           }
-          wait(interval);
+          Thread.sleep(interval);
           while (paused) {
             Thread.sleep(100);
           }
-          lastImage = StreetsideMainDialog.getInstance().getStreetsideImageDisplay().getImage();
           if (goForward) {
             data.selectNext(followSelected);
           } else {
             data.selectPrevious(followSelected);
           }
         } catch (InterruptedException e) {
+          end();
           return;
         }
+
       }
-
-    	// TODO: WalkThread for cubemaps? @rrh
-      	/*while (!end && data.getSelectedImage().next() != null) {
-            StreetsideAbstractImage cubemap = data.getSelectedImage();
-            if (cubemap != null && cubemap.next() instanceof StreetsideCubemap) {
-              if (waitForFullQuality) {
-                // Start downloading 3 next full images.
-
-            	// TODO: cubemap handling @rrh
-            	preDownloadCubemaps((StreetsideCubemap) cubemap.next(), 6, CacheUtils.PICTURE.CUBEMAP);
-              }
-            }
-            try {
-              // Waits for full quality picture.
-              final BufferedImage[] displayCubemap = StreetsideMainDialog.getInstance().streetsideViewerDisplay.getCubemap();
-              if (waitForFullQuality && cubemap instanceof StreetsideCubemap) {
-                  // TODO: handle cubemap width? @rrh
-            	  while (displayCubemap == lastCubemap || displayCubemap == null || displayCubemap.getWidth() < 2048) {
-                  Thread.sleep(100);
-                }
-              } else { // Waits for thumbnail.
-            	  // TODO: handle cubemap width? @rrh
-            	  while (displayCubemap == lastCubemap || displayCubemap == null || displayCubemap.getWidth() < 320) {
-                  Thread.sleep(100);
-                }
-              }
-              while (paused) {
-                Thread.sleep(100);
-              }
-              wait(interval);
-              while (paused) {
-                Thread.sleep(100);
-              }
-              lastCubemap = StreetsideMainDialog.getInstance().streetsideViewerDisplay.getCubemap();
-              // TODO: forward / previous for cubemap? @rrh
-              if (goForward) {
-                data.selectNext(followSelected);
-              } else {
-                data.selectPrevious(followSelected);
-              }
-            } catch (InterruptedException e) {
-              return;
-            }
-          }*/
     } catch (NullPointerException e) {
+      Logging.warn(e);
+      end();
       // TODO: Avoid NPEs instead of waiting until they are thrown and then catching them
       return;
     }
     end();
   }
 
-  private void preDownloadCubemaps(StreetsideImage startImage, int n, CacheUtils.PICTURE type) {
-	  if (n >= 1 && startImage != null) {
-
-		  for (int i = 0; i < 6; i++) {
-				for (int j = 0; j < 4; j++) {
-					for (int k = 0; k < 4; k++) {
-
-						CacheUtils.downloadPicture(startImage, type);
-						if (startImage.next() instanceof StreetsideImage && n >= 2) {
-							preDownloadImages((StreetsideImage) startImage.next(), n - 1, type);
-						}
-					}
-				}
-		  }
-	  }
-  }
-
-/**
+  /**
    * Downloads n images into the cache beginning from the supplied start-image (including the start-image itself).
    *
    * @param startImage the image to start with (this and the next n-1 images in the same sequence are downloaded)
    * @param n the number of images to download
    * @param type the quality of the image (full or thumbnail)
+   * @param goForward true if the next images, false if the previous ones should be downloaded
    */
-  private static void preDownloadImages(StreetsideImage startImage, int n, CacheUtils.PICTURE type) {
+  private static void preDownloadImages(StreetsideImage startImage, int n, CacheUtils.PICTURE type, final boolean goForward) {
     if (n >= 1 && startImage != null) {
       CacheUtils.downloadPicture(startImage, type);
-      if (startImage.next() instanceof StreetsideImage && n >= 2) {
-        preDownloadImages((StreetsideImage) startImage.next(), n - 1, type);
+      final StreetsideAbstractImage nextImg = goForward ? startImage.next() : startImage.previous();
+      if (nextImg instanceof StreetsideImage && n >= 2) {
+        preDownloadImages((StreetsideImage) nextImg, n - 1, type, goForward);
       }
     }
   }
@@ -223,7 +167,7 @@ public class WalkThread extends Thread implements StreetsideDataListener {
   /**
    * Called when the walk stops by itself of forcefully.
    */
-  public void end() {
+  private void end() {
     if (SwingUtilities.isEventDispatchThread()) {
       end = true;
       data.removeListener(this);
@@ -231,13 +175,5 @@ public class WalkThread extends Thread implements StreetsideDataListener {
     } else {
       SwingUtilities.invokeLater(this::end);
     }
-    // TODO: WalkThread for Cubemaps? @rrh
-    /*if (Platform.isEventDispatchThread()) {
-        end = true;
-        data.removeListener(this);
-        StreetsideViewerDialog.getInstance().setMode(StreetsideViewerDialog.MODE.NORMAL);
-      } else {
-        Platform.invokeLater(this::end);
-      }*/
   }
 }

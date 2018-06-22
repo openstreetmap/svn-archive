@@ -129,7 +129,7 @@ public final class Correlator {
 
         Integer direction = null;
         if (prevWp != null) {
-            direction = Long.valueOf(Math.round(180.0 / Math.PI * prevWp.getCoor().heading(curWp.getCoor()))).intValue();
+            direction = Long.valueOf(Math.round(180.0 / Math.PI * -prevWp.getCoor().bearing(curWp.getCoor()))).intValue();
         }
 
         // First trackpoint, then interval is set to five seconds, i.e. photos up to five seconds

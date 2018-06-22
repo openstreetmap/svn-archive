@@ -8,6 +8,7 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -138,7 +139,7 @@ class SimpleOffsetQueryTask extends PleaseWaitRunnable {
     protected void processResponse(InputStream inp) throws UploadException {
         String response = "";
         if (inp != null) {
-            Scanner sc = new Scanner(inp).useDelimiter("\\A");
+            Scanner sc = new Scanner(inp, StandardCharsets.UTF_8.name()).useDelimiter("\\A");
             response = sc.hasNext() ? sc.next() : "";
         }
         Pattern p = Pattern.compile("<(\\w+)>([^<]+)</\\1>");

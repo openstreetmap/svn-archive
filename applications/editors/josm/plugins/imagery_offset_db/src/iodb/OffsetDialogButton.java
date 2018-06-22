@@ -126,7 +126,7 @@ public class OffsetDialogButton extends JButton {
      * @see #getLengthAndDirection(iodb.ImageryOffset, double, double)
      */
     private double[] getLengthAndDirection(ImageryOffset offset) {
-        AbstractTileSourceLayer layer = ImageryOffsetTools.getTopImageryLayer();
+        AbstractTileSourceLayer<?> layer = ImageryOffsetTools.getTopImageryLayer();
         double[] dxy = layer == null ? new double[] {0.0, 0.0} :
                 new double[] {layer.getDisplaySettings().getDx(), layer.getDisplaySettings().getDy()};
         return getLengthAndDirection(offset, dxy[0], dxy[1]);
@@ -143,7 +143,7 @@ public class OffsetDialogButton extends JButton {
         EastNorth pos = proj.latlon2eastNorth(offset.getPosition());
         LatLon correctedCenterLL = proj.eastNorth2latlon(pos.add(-dx, -dy));
         double length = correctedCenterLL.greatCircleDistance(offset.getImageryPos());
-        double direction = length < 1e-2 ? 0.0 : correctedCenterLL.heading(offset.getImageryPos());
+        double direction = length < 1e-2 ? 0.0 : -correctedCenterLL.bearing(offset.getImageryPos());
         if (direction < 0)
             direction += Math.PI * 2;
         return new double[] {length, direction};
@@ -252,7 +252,7 @@ public class OffsetDialogButton extends JButton {
 
         public void updateIcon(LatLon from) {
             distance = from.greatCircleDistance(to);
-            direction = to.heading(from);
+            direction = -to.bearing(from);
         }
 
         /**

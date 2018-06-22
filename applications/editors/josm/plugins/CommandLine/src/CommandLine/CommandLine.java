@@ -46,6 +46,7 @@ import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MainMenu;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.gui.PleaseWaitRunnable;
+import org.openstreetmap.josm.gui.layer.AbstractTileSourceLayer;
 import org.openstreetmap.josm.gui.layer.GpxLayer;
 import org.openstreetmap.josm.gui.layer.ImageryLayer;
 import org.openstreetmap.josm.gui.layer.Layer;
@@ -75,7 +76,6 @@ public class CommandLine extends Plugin {
 
     static final String pluginDir = Main.pref.getPluginsDirectory().getAbsolutePath() + "/CommandLine/";
 
-    @SuppressWarnings("serial")
     public CommandLine(PluginInformation info) {
         super(info);
         commandSymbol = ": ";
@@ -281,8 +281,10 @@ public class CommandLine extends Plugin {
             case IMAGERYOFFSET:
                 Layer olayer = MainApplication.getLayerManager().getActiveLayer();
                 if (olayer != null) {
-                    if (!(olayer instanceof ImageryLayer)) {
-                        List<ImageryLayer> imageryLayers = MainApplication.getLayerManager().getLayersOfType(ImageryLayer.class);
+                    if (!(olayer instanceof AbstractTileSourceLayer)) {
+                        @SuppressWarnings("rawtypes")
+                        List<AbstractTileSourceLayer> imageryLayers = MainApplication.getLayerManager().getLayersOfType(
+                                AbstractTileSourceLayer.class);
                         if (imageryLayers.size() == 1) {
                             olayer = imageryLayers.get(0);
                         } else {
@@ -291,7 +293,8 @@ public class CommandLine extends Plugin {
                         }
                     }
                 }
-                loadParameter((String.valueOf(((ImageryLayer) olayer).getDx()) + "," + String.valueOf(((ImageryLayer) olayer).getDy())), true);
+                loadParameter((String.valueOf(((AbstractTileSourceLayer<?>) olayer).getDisplaySettings().getDx()) + "," +
+                               String.valueOf(((AbstractTileSourceLayer<?>) olayer).getDisplaySettings().getDy())), true);
                 action = new DummyAction(this);
                 break;
             default:

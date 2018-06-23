@@ -62,7 +62,8 @@ import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.command.ChangeRelationMemberRoleCommand;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.SequenceCommand;
-import org.openstreetmap.josm.data.SelectionChangedListener;
+import org.openstreetmap.josm.data.osm.DataSelectionListener;
+import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.DefaultNameFormatter;
 import org.openstreetmap.josm.data.osm.IPrimitive;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
@@ -104,7 +105,7 @@ import relcontext.actions.SortAndFixAction;
  *
  * @author Zverik
  */
-public class RelContextDialog extends ToggleDialog implements ActiveLayerChangeListener, ChosenRelationListener, SelectionChangedListener {
+public class RelContextDialog extends ToggleDialog implements ActiveLayerChangeListener, ChosenRelationListener, DataSelectionListener {
 
     public static final String PREF_PREFIX = "reltoolbox";
 
@@ -346,7 +347,7 @@ public class RelContextDialog extends ToggleDialog implements ActiveLayerChangeL
 
     @Override
     public void showNotify() {
-        SelectionEventManager.getInstance().addSelectionListener(this, FireMode.IN_EDT_CONSOLIDATED);
+        SelectionEventManager.getInstance().addSelectionListenerForEdt(this);
         MainApplication.getLayerManager().addActiveLayerChangeListener(this);
         DatasetEventManager.getInstance().addDatasetListener(chosenRelation, FireMode.IN_EDT);
     }
@@ -360,14 +361,19 @@ public class RelContextDialog extends ToggleDialog implements ActiveLayerChangeL
         if (chosenRelationPanel != null && Main.pref.getBoolean(PREF_PREFIX + ".hidetopline", false)) {
             chosenRelationPanel.setVisible(newRelation != null);
         }
-        if (MainApplication.getLayerManager().getEditDataSet() != null) {
-            selectionChanged(MainApplication.getLayerManager().getEditDataSet().getSelected());
+        DataSet ds = MainApplication.getLayerManager().getEditDataSet();
+        if (ds != null) {
+            doSelectionChanged(ds.getSelected());
         }
         roleBoxModel.update();
     }
 
     @Override
-    public void selectionChanged(Collection<? extends OsmPrimitive> newSelection) {
+    public void selectionChanged(SelectionChangeEvent event) {
+        doSelectionChanged(event.getSelection());
+    }
+
+    private void doSelectionChanged(Collection<? extends OsmPrimitive> newSelection) {
         if (!isVisible() || relationsData == null)
             return;
         roleBoxModel.update();
@@ -412,9 +418,9 @@ public class RelContextDialog extends ToggleDialog implements ActiveLayerChangeL
 
     private void updateSelection() {
         if (MainApplication.getLayerManager().getEditDataSet() == null) {
-            selectionChanged(Collections.<OsmPrimitive>emptyList());
+            doSelectionChanged(Collections.<OsmPrimitive>emptyList());
         } else {
-            selectionChanged(MainApplication.getLayerManager().getEditDataSet().getSelected());
+            doSelectionChanged(MainApplication.getLayerManager().getEditDataSet().getSelected());
         }
     }
 

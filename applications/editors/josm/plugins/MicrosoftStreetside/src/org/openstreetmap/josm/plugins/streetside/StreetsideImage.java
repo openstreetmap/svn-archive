@@ -47,9 +47,6 @@ public class StreetsideImage extends StreetsideAbstractImage {
   // Pitch
   private double pi;
 
-  // Heading (equivalent to Mapillary cd attribute - not currently supported.
-  private double he;
-
   // Blurring instructions - not currently used by the plugin
   private String bl;
 

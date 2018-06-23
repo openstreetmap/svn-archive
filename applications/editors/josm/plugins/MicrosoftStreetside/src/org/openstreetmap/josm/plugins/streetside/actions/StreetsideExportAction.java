@@ -62,8 +62,8 @@ public class StreetsideExportAction extends JosmAction {
     JButton cancel = new JButton(tr("Cancel"));
     cancel.addActionListener(e -> pane.setValue(JOptionPane.CANCEL_OPTION));
 
-    dialog = new StreetsideExportDialog(ok);
-    pane.setMessage(dialog);
+    this.dialog = new StreetsideExportDialog(ok);
+    pane.setMessage(this.dialog);
     pane.setOptions(new JButton[] {ok, cancel});
 
     JDialog dlg = pane.createDialog(Main.parent, tr("Export Streetside images"));
@@ -73,10 +73,10 @@ public class StreetsideExportAction extends JosmAction {
     // Checks if the inputs are correct and starts the export process.
     if (pane.getValue() != null
         && (int) pane.getValue() == JOptionPane.OK_OPTION
-        && dialog.chooser != null) {
-      if (dialog.group.isSelected(dialog.all.getModel())) {
+        && this.dialog.chooser != null) {
+      if (this.dialog.group.isSelected(this.dialog.all.getModel())) {
         export(StreetsideLayer.getInstance().getData().getImages());
-      } else if (dialog.group.isSelected(dialog.sequence.getModel())) {
+      } else if (this.dialog.group.isSelected(this.dialog.sequence.getModel())) {
         Set<StreetsideAbstractImage> images = new ConcurrentSkipListSet<>();
         for (StreetsideAbstractImage image : StreetsideLayer.getInstance().getData().getMultiSelectedImages()) {
           if (image instanceof StreetsideImage) {
@@ -88,11 +88,11 @@ public class StreetsideExportAction extends JosmAction {
           }
         }
         export(images);
-      } else if (dialog.group.isSelected(dialog.selected.getModel())) {
+      } else if (this.dialog.group.isSelected(dialog.selected.getModel())) {
         export(StreetsideLayer.getInstance().getData().getMultiSelectedImages());
       }
       // This option ignores the selected directory.
-    } else if (dialog.group.isSelected(dialog.rewrite.getModel())) {
+    } else if (this.dialog.group.isSelected(dialog.rewrite.getModel())) {
       ArrayList<StreetsideImportedImage> images = new ArrayList<>();
       StreetsideLayer.getInstance().getData().getImages().stream().filter(img -> img instanceof StreetsideImportedImage).forEach(img -> images.add((StreetsideImportedImage) img));
       try {
@@ -112,7 +112,7 @@ public class StreetsideExportAction extends JosmAction {
    */
   public void export(Set<StreetsideAbstractImage> images) {
     MainApplication.worker.execute(new StreetsideExportManager(images,
-        dialog.chooser.getSelectedFile().toString()));
+        this.dialog.chooser.getSelectedFile().toString()));
   }
 
   @Override

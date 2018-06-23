@@ -46,11 +46,7 @@ public class StreetsideDownloadAction extends JosmAction {
 
   @Override
   public void actionPerformed(ActionEvent ae) {
-    if (!StreetsideLayer.hasInstance()) {
-      // A new streetside layer is created, so the active layer is not changed
-      StreetsideLayer.getInstance();
-      return;
-    } else if (!MainApplication.getLayerManager().containsLayer(StreetsideLayer.getInstance())) {
+    if (!StreetsideLayer.hasInstance() || !MainApplication.getLayerManager().containsLayer(StreetsideLayer.getInstance())) {
       MainApplication.getLayerManager().addLayer(StreetsideLayer.getInstance());
       return;
     }

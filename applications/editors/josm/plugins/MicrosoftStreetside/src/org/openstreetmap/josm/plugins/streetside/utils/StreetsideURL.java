@@ -235,52 +235,52 @@ public final class StreetsideURL {
 		// Private constructor to avoid instantiation
 	}
 
-	public static URL[] string2URLs(String baseUrlPrefix, String cubemapImageId, String baseUrlSuffix) {
-		List<URL> res = new ArrayList<>();
+  public static URL[] string2URLs(String baseUrlPrefix, String cubemapImageId, String baseUrlSuffix) {
+    List<URL> res = new ArrayList<>();
 
-		switch (StreetsideProperties.SHOW_HIGH_RES_STREETSIDE_IMAGERY.get() ? 16 : 4) {
+    switch (StreetsideProperties.SHOW_HIGH_RES_STREETSIDE_IMAGERY.get() ? 16 : 4) {
 
-		case 16:
+    case 16:
 
-			EnumSet.allOf(CubemapUtils.CubemapFaces.class).forEach(face -> {
-				for (int i = 0; i < 4; i++) {
-					for (int j = 0; j < 4; j++) {
-						try {
-							final String urlStr = baseUrlPrefix + cubemapImageId
-									+ CubemapUtils.rowCol2StreetsideCellAddressMap
-											.get(String.valueOf(i) + String.valueOf(j))
-									+ baseUrlSuffix;
-							res.add(new URL(urlStr));
-						} catch (final MalformedURLException e) {
-							Logging.error(I18n.tr("Error creating URL String for cubemap {0}", cubemapImageId));
-							e.printStackTrace();
-						}
+      EnumSet.allOf(CubemapUtils.CubemapFaces.class).forEach(face -> {
+        for (int i = 0; i < 4; i++) {
+          for (int j = 0; j < 4; j++) {
+            try {
+              final String urlStr = baseUrlPrefix + cubemapImageId + CubemapUtils.rowCol2StreetsideCellAddressMap
+                .get(String.valueOf(i) + String.valueOf(j)) + baseUrlSuffix;
+              res.add(new URL(urlStr));
+            } catch (final MalformedURLException e) {
+              Logging.error(I18n.tr("Error creating URL String for cubemap {0}", cubemapImageId));
+              e.printStackTrace();
+            }
 
-					}
-				}
-			});
+          }
+        }
+      });
 
-		case 4:
-			EnumSet.allOf(CubemapUtils.CubemapFaces.class).forEach(face -> {
-				for (int i = 0; i < 4; i++) {
+      break;
 
-					try {
-						final String urlStr = baseUrlPrefix + cubemapImageId
-								+ CubemapUtils.rowCol2StreetsideCellAddressMap.get(String.valueOf(i)) + baseUrlSuffix;
-						res.add(new URL(urlStr));
-					} catch (final MalformedURLException e) {
-						Logging.error(I18n.tr("Error creating URL String for cubemap {0}", cubemapImageId));
-						e.printStackTrace();
-					}
+    case 4:
+      EnumSet.allOf(CubemapUtils.CubemapFaces.class).forEach(face -> {
+        for (int i = 0; i < 4; i++) {
 
-				}
-			});
-			break; // break is optional
-		default:
-			// Statements
-		}
-		return res.stream().toArray(URL[]::new);
-	}
+          try {
+            final String urlStr = baseUrlPrefix + cubemapImageId
+              + CubemapUtils.rowCol2StreetsideCellAddressMap.get(String.valueOf(i)) + baseUrlSuffix;
+            res.add(new URL(urlStr));
+          } catch (final MalformedURLException e) {
+            Logging.error(I18n.tr("Error creating URL String for cubemap {0}", cubemapImageId));
+            e.printStackTrace();
+          }
+
+        }
+      });
+      break; // break is optional
+    default:
+      // Statements
+    }
+    return res.stream().toArray(URL[]::new);
+  }
 
 	/**
 	 * @return the URL where you'll find the upload secrets as JSON

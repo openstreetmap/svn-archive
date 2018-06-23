@@ -54,7 +54,7 @@ public class StreetsideWalkAction extends JosmAction implements StreetsideDataLi
     dlg.setVisible(true);
     if (pane.getValue() != null
         && (int) pane.getValue() == JOptionPane.OK_OPTION) {
-      thread = new WalkThread((int) dialog.spin.getValue(),
+      this.thread = new WalkThread((int) dialog.spin.getValue(),
           dialog.waitForPicture.isSelected(),
           dialog.followSelection.isSelected(), dialog.goForward.isSelected());
       fireWalkStarted();
@@ -75,7 +75,7 @@ public class StreetsideWalkAction extends JosmAction implements StreetsideDataLi
    *          The listener to be added.
    */
   public void addListener(WalkListener lis) {
-    listeners.add(lis);
+    this.listeners.add(lis);
   }
 
   /**
@@ -85,15 +85,15 @@ public class StreetsideWalkAction extends JosmAction implements StreetsideDataLi
    *          The listener to be added.
    */
   public void removeListener(WalkListener lis) {
-    listeners.remove(lis);
+    this.listeners.remove(lis);
   }
 
   private void fireWalkStarted() {
-    if (listeners.isEmpty()) {
+    if (this.listeners.isEmpty()) {
       return;
     }
-    for (WalkListener lis : listeners) {
-      lis.walkStarted(thread);
+    for (WalkListener lis : this.listeners) {
+      lis.walkStarted(this.thread);
     }
   }
 

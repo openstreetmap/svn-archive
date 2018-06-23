@@ -43,66 +43,58 @@ public class GraphicsUtils {
 
 		BufferedImage res = null;
 
-		int pixelBuffer = StreetsideProperties.SHOW_HIGH_RES_STREETSIDE_IMAGERY.get()?2:1;
+		int pixelBuffer = StreetsideProperties.SHOW_HIGH_RES_STREETSIDE_IMAGERY.get() ? 2 : 1;
 
 		tiles = cropMultiTiledImages(tiles, pixelBuffer);
 
-		int rows = StreetsideProperties.SHOW_HIGH_RES_STREETSIDE_IMAGERY.get()?4:2; //we assume the no. of rows and cols are known and each chunk has equal width and height
-        int cols = StreetsideProperties.SHOW_HIGH_RES_STREETSIDE_IMAGERY.get()?4:2;
+		int rows = StreetsideProperties.SHOW_HIGH_RES_STREETSIDE_IMAGERY.get() ? 4 : 2; // we assume the no. of rows and
+																						// cols are known and each chunk
+																						// has
+																						// equal width and height
+		int cols = StreetsideProperties.SHOW_HIGH_RES_STREETSIDE_IMAGERY.get() ? 4 : 2;
 
-        int chunkWidth, chunkHeight;
+		int chunkWidth, chunkHeight;
 
-        chunkWidth = tiles[0].getWidth();
-        chunkHeight = tiles[0].getHeight();
+		chunkWidth = tiles[0].getWidth();
+		chunkHeight = tiles[0].getHeight();
 
-        //Initializing the final image
-        BufferedImage img = new BufferedImage(chunkWidth*cols, chunkHeight*rows, BufferedImage.TYPE_INT_ARGB);
+		// Initializing the final image
+		BufferedImage img = new BufferedImage(chunkWidth * cols, chunkHeight * rows, BufferedImage.TYPE_INT_ARGB);
 
-        int num = 0;
-        for (int i = 0; i < rows; i++) {
-            for (int j = 0; j < cols; j++) {
-                // TODO: this makes the image a mirror image. why!?!
-            	img.createGraphics().drawImage(tiles[num], chunkWidth * j, chunkHeight * i, null);
+		int num = 0;
+		for (int i = 0; i < rows; i++) {
+			for (int j = 0; j < cols; j++) {
+				// TODO: mirror image
+				img.createGraphics().drawImage(tiles[num], chunkWidth * j, chunkHeight * i, null);
 
-            	// TODO: remove file test!
-            	/*try {
-        			ImageIO.write(img, "jpeg", new File("/Users/renerr18/Desktop/TileImagesTest/tile16b" + Long.valueOf(System.currentTimeMillis()).toString() + "createGraphicsAfter.jpeg"));
-        			//ImageIO.write(res[i], "jpeg", outputfileAfter);
-        		} catch (IOException e) {
-        			// TODO Auto-generated catch block
-        			e.printStackTrace();
-        		}*/
+				int width = StreetsideProperties.SHOW_HIGH_RES_STREETSIDE_IMAGERY.get() ? 1014 : 510;
+				int height = StreetsideProperties.SHOW_HIGH_RES_STREETSIDE_IMAGERY.get() ? 1014 : 510;
 
-                int width = StreetsideProperties.SHOW_HIGH_RES_STREETSIDE_IMAGERY.get()?1014:510;
-                int height = StreetsideProperties.SHOW_HIGH_RES_STREETSIDE_IMAGERY.get()?1014:510;
+				res = new BufferedImage(StreetsideProperties.SHOW_HIGH_RES_STREETSIDE_IMAGERY.get() ? 1014 : 510,
+						StreetsideProperties.SHOW_HIGH_RES_STREETSIDE_IMAGERY.get() ? 1014 : 510,
+						BufferedImage.TYPE_INT_ARGB);
 
-                // BufferedImage for mirror image
-                res = new BufferedImage(StreetsideProperties.SHOW_HIGH_RES_STREETSIDE_IMAGERY.get()?1014:510, StreetsideProperties.SHOW_HIGH_RES_STREETSIDE_IMAGERY.get()?1014:510,
-                                                BufferedImage.TYPE_INT_ARGB);
+				// Create mirror image pixel by pixel
+				for (int y = 0; y < height; y++) {
+					for (int lx = 0, rx = width - 1; lx < width; lx++, rx--) {
+						// lx starts from the left side of the image
+						// rx starts from the right side of the image
+						// lx is used since we are getting pixel from left side
+						// rx is used to set from right side
+						// get source pixel value
+						int p = img.getRGB(lx, y);
 
-                // Create mirror image pixel by pixel
-                for (int y = 0; y < height; y++)
-                {
-                    for (int lx = 0, rx = width - 1; lx < width; lx++, rx--)
-                    {
-                        // lx starts from the left side of the image
-                        // rx starts from the right side of the image
-                        // lx is used since we are getting pixel from left side
-                        // rx is used to set from right side
-                        // get source pixel value
-                        int p = img.getRGB(lx, y);
+						// set mirror image pixel value
+						res.setRGB(rx, y, p);
+					}
+				}
+				num++;
+			}
+		}
 
-                        // set mirror image pixel value
-                        res.setRGB(rx, y, p);
-                    }
-                }
-                num++;
-            }
-        }
+		Logging.debug("Image concatenated.....");
 
-        Logging.info("Image concatenated.....");
-
-        return res;
+		return res;
 	}
 
 	public static BufferedImage rotateImage(BufferedImage bufImg) {

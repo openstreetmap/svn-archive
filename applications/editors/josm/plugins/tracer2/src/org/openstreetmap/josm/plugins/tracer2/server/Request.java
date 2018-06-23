@@ -3,14 +3,13 @@ package org.openstreetmap.josm.plugins.tracer2.server;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.ConnectException;
+import java.io.IOException;
 import java.net.URL;
 
 import javax.swing.JOptionPane;
 
 import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.tools.HttpClient;
 
 public class Request extends Thread {
 
@@ -26,15 +25,8 @@ public class Request extends Thread {
      */
     protected String callServer(String strUrl) {
         try {
-            URL oUrl = new URL(URL + strUrl);
-            BufferedReader oReader = new BufferedReader(new InputStreamReader(oUrl.openStream()));
-            StringBuilder oBuilder = new StringBuilder();
-            String strLine;
-            while ((strLine = oReader.readLine()) != null) {
-                oBuilder.append(strLine);
-            }
-            return oBuilder.toString();
-        } catch (ConnectException e) {
+            return HttpClient.create(new URL(URL + strUrl)).connect().fetchContent();
+        } catch (IOException e) {
             JOptionPane.showMessageDialog(Main.parent,
                     tr("Tracer2Server isn''t running. Please start the Server.\nIf you don''t have the server, please download it from\n{0}.",
                             "http://sourceforge.net/projects/tracer2server/"), tr("Error"), JOptionPane.ERROR_MESSAGE);

@@ -190,7 +190,7 @@ public final class SequenceDownloadRunnable extends BoundsDownloadRunnable {
     }
 
     final long endTime = System.currentTimeMillis();
-    Logging.info(I18n.tr("Sucessfully loaded {0} Microsoft Streetside images in {0} ",seq.getImages().size(),endTime-startTime%60));
+    Logging.debug(I18n.tr("Sucessfully loaded {0} Microsoft Streetside images in {0} ",seq.getImages().size(),endTime-startTime%60));
   }
 
   @Override

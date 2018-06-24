@@ -123,7 +123,7 @@ public class CubemapBuilder implements ITileDownloadingTaskListener, StreetsideD
 
 				List<Future<String>> results = pool.invokeAll(tasks);
 				for (Future<String> ff : results) {
-					Logging.info(I18n.tr("Completed tile downloading task {0} in {1}", ff.get(),
+					Logging.debug(I18n.tr("Completed tile downloading task {0} in {1}", ff.get(),
 							CubemapUtils.msToString(startTime - System.currentTimeMillis())));
 				}
 			}
@@ -136,7 +136,7 @@ public class CubemapBuilder implements ITileDownloadingTaskListener, StreetsideD
 		long stopTime = System.currentTimeMillis();
 		long runTime = stopTime - startTime;
 
-		Logging.info(I18n.tr("Tile imagery downloading tasks completed in {0}", CubemapUtils.msToString(runTime)));
+		Logging.debug(I18n.tr("Tile imagery downloading tasks completed in {0}", CubemapUtils.msToString(runTime)));
 
 		if (fails > 0) {
 			Logging.error(I18n.tr("{0} downloading tasks failed.", Integer.valueOf(fails)));
@@ -163,12 +163,12 @@ public class CubemapBuilder implements ITileDownloadingTaskListener, StreetsideD
 		int maxRows = StreetsideProperties.SHOW_HIGH_RES_STREETSIDE_IMAGERY.get() ? 4 : 2;
 
 		if (tileCount == (CubemapUtils.NUM_SIDES * maxCols * maxRows)) {
-			Logging.info(I18n.tr("{0} tile images ready for building cumbemap faces for cubemap {0}", tileCount,
+			Logging.debug(I18n.tr("{0} tile images ready for building cumbemap faces for cubemap {0}", tileCount,
 					CubemapBuilder.getInstance().getCubemap().getId()));
 
 			buildCubemapFaces();
 		} else {
-			Logging.info(I18n.tr("{0} tile images received for cubemap {1}", Integer.valueOf(tileCount).toString(),
+			Logging.debug(I18n.tr("{0} tile images received for cubemap {1}", Integer.valueOf(tileCount).toString(),
 					CubemapBuilder.getInstance().getCubemap().getId()));
 		}
 	}
@@ -247,7 +247,7 @@ public class CubemapBuilder implements ITileDownloadingTaskListener, StreetsideD
 
 		long endTime = System.currentTimeMillis();
 		long runTime = endTime - startTime;
-		Logging.info(I18n.tr("Completed downloading, assembling and setting cubemap imagery for cubemap {0} in {1}",
+		Logging.debug(I18n.tr("Completed downloading, assembling and setting cubemap imagery for cubemap {0} in {1}",
 				cubemap.getId(), CubemapUtils.msToString(runTime)));
 	}
 

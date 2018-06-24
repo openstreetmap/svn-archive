@@ -100,7 +100,7 @@ public class GraphicsUtils {
             }
         }
 
-        Logging.info("Image concatenated.....");
+        Logging.debug("Image concatenated.....");
 
         return res;
 	}

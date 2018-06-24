@@ -11,16 +11,13 @@ import java.awt.image.BufferedImage;
 import java.util.Collection;
 
 import javax.swing.ImageIcon;
-import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextPane;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
-import org.openstreetmap.josm.data.SelectionChangedListener;
-import org.openstreetmap.josm.data.osm.DataSet;
+import org.openstreetmap.josm.data.osm.DataSelectionListener;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Tag;
 import org.openstreetmap.josm.data.osm.event.SelectionEventManager;
@@ -36,14 +33,14 @@ import org.openstreetmap.josm.plugins.streetside.utils.StreetsideProperties;
 import org.openstreetmap.josm.plugins.streetside.utils.StreetsideURL;
 import org.openstreetmap.josm.tools.I18n;
 
-public final class ImageInfoPanel extends ToggleDialog implements StreetsideDataListener, SelectionChangedListener {
+public final class ImageInfoPanel extends ToggleDialog implements StreetsideDataListener, DataSelectionListener {
   private static final long serialVersionUID = 4141847503072417190L;
   private static final Log L = LogFactory.getLog(ImageInfoPanel.class);
   private static ImageInfoPanel instance;
   private static final ImageIcon EMPTY_USER_AVATAR = new ImageIcon(new BufferedImage(32, 32, BufferedImage.TYPE_INT_ARGB));
 
-  private final JLabel numDetectionsLabel;
-  private final JCheckBox showDetectionsCheck;
+  //private final JLabel numDetectionsLabel;
+  //private final JCheckBox showDetectionsCheck;
   private final JLabel usernameLabel;
   private final JTextPane imgKeyValue;
   private final WebLinkAction imgLinkAction;
@@ -61,15 +58,19 @@ public final class ImageInfoPanel extends ToggleDialog implements StreetsideData
       null,
       150
     );
-    DataSet.addSelectionListener(this);
+    SelectionEventManager.getInstance().addSelectionListener(this);
 
-    numDetectionsLabel = new JLabel();
-    numDetectionsLabel.setFont(numDetectionsLabel.getFont().deriveFont(Font.PLAIN));
+    //numDetectionsLabel = new JLabel();
+    //numDetectionsLabel.setFont(numDetectionsLabel.getFont().deriveFont(Font.PLAIN));
 
-    showDetectionsCheck = new JCheckBox(I18n.tr("Show detections on top of image"));
-
-    // no selections currently available for Streetside
-    showDetectionsCheck.setSelected(false);
+    //showDetectionsCheck = new JCheckBox(I18n.tr("Show detections on top of image"));
+    //showDetectionsCheck.setSelected(StreetsideProperties.SHOW_DETECTED_SIGNS.get());
+    /*showDetectionsCheck.addActionListener(
+      action -> StreetsideProperties.SHOW_DETECTED_SIGNS.put(showDetectionsCheck.isSelected())
+    );
+    StreetsideProperties.SHOW_DETECTED_SIGNS.addListener(
+      valueChange -> showDetectionsCheck.setSelected(StreetsideProperties.SHOW_DETECTED_SIGNS.get())
+    );*/
 
     usernameLabel = new JLabel();
     usernameLabel.setFont(usernameLabel.getFont().deriveFont(Font.PLAIN));
@@ -118,10 +119,10 @@ public final class ImageInfoPanel extends ToggleDialog implements StreetsideData
     gbc.gridx++;
     gbc.gridy = 0;
     gbc.anchor = GridBagConstraints.LINE_START;
-    root.add(numDetectionsLabel, gbc);
-    gbc.gridy++;
-    root.add(showDetectionsCheck, gbc);
-    gbc.gridy++;
+    //root.add(numDetectionsLabel, gbc);
+    //gbc.gridy++;
+    //root.add(showDetectionsCheck, gbc);
+    //gbc.gridy++;
     root.add(usernameLabel, gbc);
     gbc.gridy++;
     root.add(imgButtons, gbc);
@@ -170,7 +171,7 @@ public final class ImageInfoPanel extends ToggleDialog implements StreetsideData
   }
 
   /* (non-Javadoc)
-   * @see org.openstreetmap.josm.plugins.mapillary.MapillaryDataListener#selectedImageChanged(org.openstreetmap.josm.plugins.mapillary.MapillaryAbstractImage, org.openstreetmap.josm.plugins.mapillary.MapillaryAbstractImage)
+   * @see org.openstreetmap.josm.plugins.streetside.StreetsideDataListener#selectedImageChanged(org.openstreetmap.josm.plugins.streetside.StreetsideAbstractImage, org.openstreetmap.josm.plugins.streetside.StreetsideAbstractImage)
    */
   @Override
   public synchronized void selectedImageChanged(final StreetsideAbstractImage oldImage, final StreetsideAbstractImage newImage) {
@@ -180,7 +181,7 @@ public final class ImageInfoPanel extends ToggleDialog implements StreetsideData
       newImage instanceof StreetsideImage ? ((StreetsideImage) newImage).getId() : "‹none›"
     ));
 
-    numDetectionsLabel.setText(I18n.tr("{0} detections", newImage instanceof StreetsideImage ? ((StreetsideImage) newImage).getDetections().size() : 0));
+    //numDetectionsLabel.setText(I18n.tr("{0} detections", newImage instanceof StreetsideImage ? ((StreetsideImage) newImage).getDetections().size() : 0));
     imgKeyValue.setEnabled(newImage instanceof StreetsideImage);
     final String newImageKey = newImage instanceof StreetsideImage ? ((StreetsideImage) newImage).getId(): null;
     if (newImageKey != null) {
@@ -207,8 +208,7 @@ public final class ImageInfoPanel extends ToggleDialog implements StreetsideData
       addStreetsideTagAction.setTag(null);
     }
 
-    // Currently no user info supported in Streetside plugin
-    final UserProfile user = null;
+    final UserProfile user = newImage instanceof StreetsideImage ? ((StreetsideImage) newImage).getUser() : null;
     usernameLabel.setEnabled(user != null);
     if (user != null) {
       usernameLabel.setText(user.getUsername());
@@ -231,7 +231,8 @@ public final class ImageInfoPanel extends ToggleDialog implements StreetsideData
    * @see org.openstreetmap.josm.data.SelectionChangedListener#selectionChanged(java.util.Collection)
    */
   @Override
-  public synchronized void selectionChanged(final Collection<? extends OsmPrimitive> sel) {
+  public synchronized void selectionChanged(final SelectionChangeEvent event) {
+    final Collection<? extends OsmPrimitive> sel = event.getSelection();
     L.debug(String.format("Selection changed. %d primitives are selected.", sel == null ? 0 : sel.size()));
     addStreetsideTagAction.setTarget(sel != null && sel.size() == 1 ? sel.iterator().next() : null);
   }

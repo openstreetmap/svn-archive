@@ -25,6 +25,7 @@ import org.openstreetmap.josm.tools.Shortcut;
 public class StreetsideDownloadViewAction extends JosmAction implements ValueChangeListener<String> {
 
   private static final long serialVersionUID = 6738276777802831669L;
+
   private static final String DESCRIPTION = I18n.marktr("Download Streetside images in current view");
 
   /**

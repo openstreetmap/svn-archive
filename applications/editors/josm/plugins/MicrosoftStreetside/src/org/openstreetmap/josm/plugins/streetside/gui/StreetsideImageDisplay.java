@@ -38,8 +38,6 @@ import org.openstreetmap.josm.plugins.streetside.utils.StreetsideProperties;
  * included in a {@link StreetsideMainDialog} object.
  *
  * @author nokutu
- * @author renerr18
- * 
  * @see StreetsideImageDisplay
  * @see StreetsideMainDialog
  */
@@ -81,7 +79,7 @@ public class StreetsideImageDisplay extends JComponent {
         image = getImage();
         visibleRect = StreetsideImageDisplay.this.visibleRect;
       }
-      this.mouseIsDragging = false;
+      mouseIsDragging = false;
       selectedRect = null;
       if (image != null && Math.min(getSize().getWidth(), getSize().getHeight()) > 0) {
         // Calculate the mouse cursor position in image coordinates, so that
@@ -90,9 +88,9 @@ public class StreetsideImageDisplay extends JComponent {
         // To avoid issues when the user tries to zoom in on the image
         // borders, this point is not calculated
         // again if there was less than 1.5seconds since the last event.
-        if (e.getWhen() - this.lastTimeForMousePoint > 1500 || this.mousePointInImg == null) {
-          this.lastTimeForMousePoint = e.getWhen();
-          this.mousePointInImg = comp2imgCoord(visibleRect, e.getX(), e.getY());
+        if (e.getWhen() - lastTimeForMousePoint > 1500 || mousePointInImg == null) {
+          lastTimeForMousePoint = e.getWhen();
+          mousePointInImg = comp2imgCoord(visibleRect, e.getX(), e.getY());
         }
         // Set the zoom to the visible rectangle in image coordinates
         if (e.getWheelRotation() > 0) {
@@ -122,9 +120,9 @@ public class StreetsideImageDisplay extends JComponent {
         // Set the position of the visible rectangle, so that the mouse
         // cursor doesn't move on the image.
         Rectangle drawRect = calculateDrawImageRectangle(visibleRect);
-        visibleRect.x = this.mousePointInImg.x
+        visibleRect.x = mousePointInImg.x
             + ((drawRect.x - e.getX()) * visibleRect.width) / drawRect.width;
-        visibleRect.y = this.mousePointInImg.y
+        visibleRect.y = mousePointInImg.y
             + ((drawRect.y - e.getY()) * visibleRect.height) / drawRect.height;
         // The position is also limited by the image size
         checkVisibleRectPos(image, visibleRect);
@@ -186,8 +184,8 @@ public class StreetsideImageDisplay extends JComponent {
     @Override
     public void mousePressed(MouseEvent e) {
       if (getImage() == null) {
-        this.mouseIsDragging = false;
-       StreetsideImageDisplay.this.selectedRect = null;
+        mouseIsDragging = false;
+        selectedRect = null;
         return;
       }
       Image image;
@@ -199,24 +197,24 @@ public class StreetsideImageDisplay extends JComponent {
       if (image == null)
         return;
       if (e.getButton() == StreetsideProperties.PICTURE_DRAG_BUTTON.get()) {
-        this.mousePointInImg = comp2imgCoord(visibleRect, e.getX(), e.getY());
-        this.mouseIsDragging = true;
-        StreetsideImageDisplay.this.selectedRect = null;
+        mousePointInImg = comp2imgCoord(visibleRect, e.getX(), e.getY());
+        mouseIsDragging = true;
+        selectedRect = null;
       } else if (e.getButton() == StreetsideProperties.PICTURE_ZOOM_BUTTON.get()) {
         mousePointInImg = comp2imgCoord(visibleRect, e.getX(), e.getY());
-        checkPointInVisibleRect(this.mousePointInImg, visibleRect);
-        this.mouseIsDragging = false;
-        StreetsideImageDisplay.this.selectedRect = new Rectangle(mousePointInImg.x, mousePointInImg.y, 0, 0);
+        checkPointInVisibleRect(mousePointInImg, visibleRect);
+        mouseIsDragging = false;
+        selectedRect = new Rectangle(mousePointInImg.x, mousePointInImg.y, 0, 0);
         StreetsideImageDisplay.this.repaint();
       } else {
-        this.mouseIsDragging = false;
-        StreetsideImageDisplay.this.selectedRect = null;
+        mouseIsDragging = false;
+        selectedRect = null;
       }
     }
 
     @Override
     public void mouseDragged(MouseEvent e) {
-      if (!this.mouseIsDragging && StreetsideImageDisplay.this.selectedRect == null)
+      if (!mouseIsDragging && selectedRect == null)
         return;
       Image image;
       Rectangle visibleRect;
@@ -225,82 +223,82 @@ public class StreetsideImageDisplay extends JComponent {
         visibleRect = StreetsideImageDisplay.this.visibleRect;
       }
       if (image == null) {
-        this.mouseIsDragging = false;
-        StreetsideImageDisplay.this.selectedRect = null;
+        mouseIsDragging = false;
+        selectedRect = null;
         return;
       }
-      if (this.mouseIsDragging) {
+      if (mouseIsDragging) {
         Point p = comp2imgCoord(visibleRect, e.getX(), e.getY());
-        visibleRect.x += this.mousePointInImg.x - p.x;
-        visibleRect.y += this.mousePointInImg.y - p.y;
+        visibleRect.x += mousePointInImg.x - p.x;
+        visibleRect.y += mousePointInImg.y - p.y;
         checkVisibleRectPos(image, visibleRect);
         synchronized (StreetsideImageDisplay.this) {
           StreetsideImageDisplay.this.visibleRect = visibleRect;
         }
         StreetsideImageDisplay.this.repaint();
-      } else if (StreetsideImageDisplay.this.selectedRect != null) {
+      } else if (selectedRect != null) {
         Point p = comp2imgCoord(visibleRect, e.getX(), e.getY());
         checkPointInVisibleRect(p, visibleRect);
-        Rectangle rect = new Rectangle(p.x < this.mousePointInImg.x ? p.x
-            : this.mousePointInImg.x, p.y < this.mousePointInImg.y ? p.y
-            : this.mousePointInImg.y, p.x < this.mousePointInImg.x ? this.mousePointInImg.x
-            - p.x : p.x - this.mousePointInImg.x,
-            p.y < this.mousePointInImg.y ? this.mousePointInImg.y - p.y : p.y
-                - this.mousePointInImg.y);
+        Rectangle rect = new Rectangle(p.x < mousePointInImg.x ? p.x
+            : mousePointInImg.x, p.y < mousePointInImg.y ? p.y
+            : mousePointInImg.y, p.x < mousePointInImg.x ? mousePointInImg.x
+            - p.x : p.x - mousePointInImg.x,
+            p.y < mousePointInImg.y ? mousePointInImg.y - p.y : p.y
+                - mousePointInImg.y);
         checkVisibleRectSize(image, rect);
         checkVisibleRectPos(image, rect);
-        StreetsideImageDisplay.this.selectedRect = rect;
+        selectedRect = rect;
         StreetsideImageDisplay.this.repaint();
       }
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
-      if (!this.mouseIsDragging && StreetsideImageDisplay.this.selectedRect == null)
+      if (!mouseIsDragging && selectedRect == null)
         return;
       Image image;
       synchronized (StreetsideImageDisplay.this) {
         image = getImage();
       }
       if (image == null) {
-        this.mouseIsDragging = false;
-        StreetsideImageDisplay.this.selectedRect = null;
+        mouseIsDragging = false;
+        selectedRect = null;
         return;
       }
-      if (this.mouseIsDragging) {
-        this.mouseIsDragging = false;
-      } else if (StreetsideImageDisplay.this.selectedRect != null) {
-        int oldWidth = StreetsideImageDisplay.this.selectedRect.width;
-        int oldHeight = StreetsideImageDisplay.this.selectedRect.height;
+      if (mouseIsDragging) {
+        mouseIsDragging = false;
+      } else if (selectedRect != null) {
+        int oldWidth = selectedRect.width;
+        int oldHeight = selectedRect.height;
         // Check that the zoom doesn't exceed 2:1
-        if (StreetsideImageDisplay.this.selectedRect.width < getSize().width / 2) {
-        	StreetsideImageDisplay.this.selectedRect.width = getSize().width / 2;
+        if (selectedRect.width < getSize().width / 2) {
+        	selectedRect.width = getSize().width / 2;
         }
-        if (StreetsideImageDisplay.this.selectedRect.height < getSize().height / 2) {
-        	StreetsideImageDisplay.this.selectedRect.height = getSize().height / 2;
+        if (selectedRect.height < getSize().height / 2) {
+        	selectedRect.height = getSize().height / 2;
         }
         // Set the same ratio for the visible rectangle and the display
         // area
-        int hFact = StreetsideImageDisplay.this.selectedRect.height * getSize().width;
-        int wFact = StreetsideImageDisplay.this.selectedRect.width * getSize().height;
+        int hFact = selectedRect.height * getSize().width;
+        int wFact = selectedRect.width * getSize().height;
         if (hFact > wFact) {
-        	StreetsideImageDisplay.this.selectedRect.width = hFact / getSize().height;
+          selectedRect.width = hFact / getSize().height;
         } else {
-        	StreetsideImageDisplay.this.selectedRect.height = wFact / getSize().width;
+          selectedRect.height = wFact / getSize().width;
         }
         // Keep the center of the selection
-        if (StreetsideImageDisplay.this.selectedRect.width != oldWidth) {
-        	StreetsideImageDisplay.this.selectedRect.x -= (StreetsideImageDisplay.this.selectedRect.width - oldWidth) / 2;
+        if (selectedRect.width != oldWidth) {
+        	selectedRect.x -= (selectedRect.width - oldWidth) / 2;
         }
-        if (StreetsideImageDisplay.this.selectedRect.height != oldHeight) {
-        	StreetsideImageDisplay.this.selectedRect.y -= (StreetsideImageDisplay.this.selectedRect.height - oldHeight) / 2;
+        if (selectedRect.height != oldHeight) {
+        	selectedRect.y -= (selectedRect.height - oldHeight) / 2;
         }
-        checkVisibleRectSize(image, StreetsideImageDisplay.this.selectedRect);
-        checkVisibleRectPos(image, StreetsideImageDisplay.this.selectedRect);
+        checkVisibleRectSize(image, selectedRect);
+        checkVisibleRectPos(image, selectedRect);
         synchronized (StreetsideImageDisplay.this) {
-          StreetsideImageDisplay.this.visibleRect = StreetsideImageDisplay.this.selectedRect;
+          visibleRect = selectedRect;
         }
-        StreetsideImageDisplay.this.selectedRect = null;
+        selectedRect = null;
         StreetsideImageDisplay.this.repaint();
       }
     }
@@ -361,9 +359,9 @@ public class StreetsideImageDisplay extends JComponent {
       if (detections != null) {
         this.detections.addAll(detections);
       }
-      this.selectedRect = null;
+      selectedRect = null;
       if (image != null)
-        this.visibleRect = new Rectangle(0, 0, image.getWidth(null),
+        visibleRect = new Rectangle(0, 0, image.getWidth(null),
             image.getHeight(null));
     }
     repaint();
@@ -375,7 +373,7 @@ public class StreetsideImageDisplay extends JComponent {
    * @return The picture that is being displayed.
    */
   public BufferedImage getImage() {
-    return this.image;
+    return image;
   }
 
   /**
@@ -403,11 +401,11 @@ public class StreetsideImageDisplay extends JComponent {
       g.drawImage(image, target.x, target.y, target.x + target.width, target.y
           + target.height, visibleRect.x, visibleRect.y, visibleRect.x
           + visibleRect.width, visibleRect.y + visibleRect.height, null);
-      if (this.selectedRect != null) {
-        Point topLeft = img2compCoord(visibleRect, this.selectedRect.x,
-            this.selectedRect.y);
-        Point bottomRight = img2compCoord(visibleRect, this.selectedRect.x
-            + this.selectedRect.width, this.selectedRect.y + this.selectedRect.height);
+      if (selectedRect != null) {
+        Point topLeft = img2compCoord(visibleRect, selectedRect.x,
+            selectedRect.y);
+        Point bottomRight = img2compCoord(visibleRect, selectedRect.x
+            + selectedRect.width, selectedRect.y + selectedRect.height);
         g.setColor(new Color(128, 128, 128, 180));
         g.fillRect(target.x, target.y, target.width, topLeft.y - target.y);
         g.fillRect(target.x, target.y, topLeft.x - target.x, target.height);

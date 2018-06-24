@@ -80,13 +80,14 @@ ActiveLayerChangeListener, StreetsideDataListener {
     Math.pow(TRAFFIC_SIGN_SIZE, 2) - Math.pow(TRAFFIC_SIGN_SIZE / 2d, 2)
   ) / 3;
 
-  private static final DataSetListenerAdapter DATASET_LISTENER = new DataSetListenerAdapter(e -> {
-    if (e instanceof DataChangedEvent && StreetsideDownloader.getMode() == DOWNLOAD_MODE.OSM_AREA) {
-      // When more data is downloaded, a delayed update is thrown, in order to
-      // wait for the data bounds to be set.
-      MainApplication.worker.execute(StreetsideDownloader::downloadOSMArea);
-    }
-  });
+	private static final DataSetListenerAdapter DATASET_LISTENER =
+			new DataSetListenerAdapter(e -> {
+				if (e instanceof DataChangedEvent && StreetsideDownloader.getMode() == DOWNLOAD_MODE.OSM_AREA) {
+					// When more data is downloaded, a delayed update is thrown, in order to
+					// wait for the data bounds to be set.
+					MainApplication.worker.execute(StreetsideDownloader::downloadOSMArea);
+				}
+			});
 
 	/** Unique instance of the class. */
 	private static StreetsideLayer instance;
@@ -257,7 +258,7 @@ ActiveLayerChangeListener, StreetsideDataListener {
   }
 
 
-  @Override
+	@Override
   public boolean isModified() {
     return data.getImages().parallelStream().anyMatch(StreetsideAbstractImage::isModified);
   }
@@ -312,7 +313,6 @@ ActiveLayerChangeListener, StreetsideDataListener {
     }
 
     // Draw sequence line
-    // TODO: reimplement sequence lines for Streetside
     /*g.setStroke(new BasicStroke(2));
     final StreetsideAbstractImage selectedImage = getData().getSelectedImage();
     for (StreetsideSequence seq : getData().getSequences()) {
@@ -391,8 +391,8 @@ ActiveLayerChangeListener, StreetsideDataListener {
     }
 
 
-		if (img instanceof StreetsideImage && !((StreetsideImage) img).getDetections().isEmpty()) {
-			Path2D trafficSign = new Path2D.Double();
+		/*if (img instanceof StreetsideImage && !((StreetsideImage) img).getDetections().isEmpty()) {
+			final Path2D trafficSign = new Path2D.Double();
 			trafficSign.moveTo(p.getX() - StreetsideLayer.TRAFFIC_SIGN_SIZE / 2d, p.getY() - StreetsideLayer.TRAFFIC_SIGN_HEIGHT_3RD);
 			trafficSign.lineTo(p.getX() + StreetsideLayer.TRAFFIC_SIGN_SIZE / 2d, p.getY() - StreetsideLayer.TRAFFIC_SIGN_HEIGHT_3RD);
 			trafficSign.lineTo(p.getX(), p.getY() + 2 * StreetsideLayer.TRAFFIC_SIGN_HEIGHT_3RD);
@@ -402,7 +402,7 @@ ActiveLayerChangeListener, StreetsideDataListener {
 			g.setStroke(new BasicStroke(1));
 			g.setColor(Color.RED);
 			g.draw(trafficSign);
-		}
+		}*/
 	}
 
   @Override

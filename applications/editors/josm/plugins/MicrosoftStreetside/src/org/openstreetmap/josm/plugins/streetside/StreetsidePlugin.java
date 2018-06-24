@@ -25,8 +25,6 @@ import org.openstreetmap.josm.plugins.streetside.oauth.StreetsideUser;
 import org.openstreetmap.josm.plugins.streetside.utils.StreetsideProperties;
 import org.openstreetmap.josm.tools.ImageProvider;
 
-import org.openstreetmap.josm.plugins.streetside.gui.StreetsideChangesetDialog;
-
 /**
  * This is the main class of the Streetside plugin.
  */
@@ -49,6 +47,7 @@ public class StreetsidePlugin extends Plugin {
       MainMenu.add(MainApplication.getMenu().fileMenu, new StreetsideDownloadViewAction(), false, 14);
       MainMenu.add(MainApplication.getMenu().dataMenu, new StreetsideJoinAction(), false);
       MainMenu.add(MainApplication.getMenu().moreToolsMenu, WALK_ACTION, false);
+      //MainMenu.add(MainApplication.getMenu().imagerySubMenu, new MapObjectLayerAction(), false);
       //MainMenu.add(MainApplication.getMenu().imagerySubMenu, new MapObjectLayerAction(), false);
     }
   }
@@ -75,7 +74,7 @@ public class StreetsidePlugin extends Plugin {
   /**
    * @return the {@link StreetsideWalkAction} for the plugin
    */
-  public static StreetsideWalkAction getWalkAction() {
+  public static StreetsideWalkAction getStreetsideWalkAction() {
     return WALK_ACTION;
   }
 
@@ -91,13 +90,13 @@ public class StreetsidePlugin extends Plugin {
       ));
       MainApplication.getMap().addToggleDialog(StreetsideViewerDialog.getInstance(), false);
       //MainApplication.getMap().addToggleDialog(StreetsideHistoryDialog.getInstance(), false);
-      MainApplication.getMap().addToggleDialog(StreetsideChangesetDialog.getInstance(), false);
+      //MainApplication.getMap().addToggleDialog(StreetsideChangesetDialog.getInstance(), false);
       //MainApplication.getMap().addToggleDialog(StreetsideFilterDialog.getInstance(), false);
     }
     if (oldFrame != null && newFrame == null) { // map frame destroyed
       StreetsideMainDialog.destroyInstance();
       //StreetsideHistoryDialog.destroyInstance();
-      StreetsideChangesetDialog.destroyInstance();
+      //StreetsideChangesetDialog.destroyInstance();
       //StreetsideFilterDialog.destroyInstance();
       ImageInfoPanel.destroyInstance();
       CubemapBuilder.destroyInstance();
@@ -131,8 +130,7 @@ public class StreetsidePlugin extends Plugin {
   /**
    * @return the {@link StreetsideZoomAction} for the plugin
    */
-  public static StreetsideZoomAction getZoomAction() {
+  /*public static StreetsideZoomAction getZoomAction() {
     return ZOOM_ACTION;
+  }*/
   }
-
-}

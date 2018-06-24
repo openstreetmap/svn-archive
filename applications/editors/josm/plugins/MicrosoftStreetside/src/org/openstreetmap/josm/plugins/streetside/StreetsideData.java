@@ -289,7 +289,7 @@ public class StreetsideData {
     if (getSelectedImage().getSequence() == null) {
 		throw new IllegalStateException();
 	}
-    StreetsideAbstractImage tempImage = this.selectedImage;
+    StreetsideAbstractImage tempImage = selectedImage;
     while (tempImage.previous() != null) {
       tempImage = tempImage.previous();
       if (tempImage.isVisible()) {

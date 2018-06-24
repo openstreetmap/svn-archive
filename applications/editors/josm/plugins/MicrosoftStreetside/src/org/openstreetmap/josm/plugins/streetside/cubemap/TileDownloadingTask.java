@@ -21,7 +21,7 @@ import us.monoid.web.Resty;
 public class TileDownloadingTask implements Callable<String> {
 
 	private String tileId;
-	private final long startTime = System.nanoTime();
+	private final long startTime = System.currentTimeMillis();
 	private StreetsideCache cache;
 	protected CubemapBuilder cb;
 
@@ -119,9 +119,9 @@ public class TileDownloadingTask implements Callable<String> {
 
 		fireTileAdded(tileId);
 
-		long endTime = System.nanoTime();
-		long runTime = endTime - startTime;
-		Logging.info("Loaded image for tile {0} in {1} seconds", tileId, runTime);
+		long endTime = System.currentTimeMillis();
+		long runTime = startTime - endTime;
+		Logging.debug("Loaded image for tile {0} in {1} seconds", tileId, CubemapUtils.msToString(runTime));
 
 		return tileId;
 	}

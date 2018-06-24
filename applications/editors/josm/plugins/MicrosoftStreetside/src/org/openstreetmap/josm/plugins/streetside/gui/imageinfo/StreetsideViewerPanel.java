@@ -83,7 +83,7 @@ public final class StreetsideViewerPanel extends JPanel
 	    privacyLink.add(new StreetsideButton(imgLinkAction, true));
 	    checkPanel.add(privacyLink, BorderLayout.PAGE_END);
 
-	    add(checkPanel, BorderLayout.SOUTH);
+	    add(checkPanel, BorderLayout.PAGE_START);
 	    add(threeSixtyDegreeViewerPanel, BorderLayout.CENTER);
 
 	    add(privacyLink, BorderLayout.PAGE_END);

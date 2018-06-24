@@ -5,11 +5,12 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.event.ActionEvent;
 
+import org.openstreetmap.josm.plugins.streetside.StreetsideLayer;
+
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.plugins.streetside.StreetsideAbstractImage;
 import org.openstreetmap.josm.plugins.streetside.StreetsideDataListener;
-import org.openstreetmap.josm.plugins.streetside.StreetsideLayer;
 import org.openstreetmap.josm.plugins.streetside.StreetsidePlugin;
 import org.openstreetmap.josm.tools.ImageProvider;
 import org.openstreetmap.josm.tools.ImageProvider.ImageSizes;

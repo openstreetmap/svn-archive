@@ -1,0 +1,345 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+<head>
+<title>Source code</title>
+<link rel="stylesheet" type="text/css" href="../../../../../../../stylesheet.css" title="Style">
+</head>
+<body>
+<div class="sourceContainer">
+<pre><span class="sourceLineNo">001</span>// License: GPL. For details, see LICENSE file.<a name="line.1"></a>
+<span class="sourceLineNo">002</span>package org.openstreetmap.josm.plugins.streetside.cache;<a name="line.2"></a>
+<span class="sourceLineNo">003</span><a name="line.3"></a>
+<span class="sourceLineNo">004</span><a name="line.4"></a>
+<span class="sourceLineNo">005</span>import java.io.IOException;<a name="line.5"></a>
+<span class="sourceLineNo">006</span><a name="line.6"></a>
+<span class="sourceLineNo">007</span>import org.openstreetmap.josm.data.cache.CacheEntry;<a name="line.7"></a>
+<span class="sourceLineNo">008</span>import org.openstreetmap.josm.data.cache.CacheEntryAttributes;<a name="line.8"></a>
+<span class="sourceLineNo">009</span>import org.openstreetmap.josm.data.cache.ICachedLoaderListener;<a name="line.9"></a>
+<span class="sourceLineNo">010</span>import org.openstreetmap.josm.plugins.streetside.StreetsideImage;<a name="line.10"></a>
+<span class="sourceLineNo">011</span>import org.openstreetmap.josm.plugins.streetside.cubemap.CubemapBuilder;<a name="line.11"></a>
+<span class="sourceLineNo">012</span>import org.openstreetmap.josm.tools.Logging;<a name="line.12"></a>
+<span class="sourceLineNo">013</span><a name="line.13"></a>
+<span class="sourceLineNo">014</span>/**<a name="line.14"></a>
+<span class="sourceLineNo">015</span>* Utility methods for working with cache.<a name="line.15"></a>
+<span class="sourceLineNo">016</span>*<a name="line.16"></a>
+<span class="sourceLineNo">017</span>* @author nokutu<a name="line.17"></a>
+<span class="sourceLineNo">018</span>*<a name="line.18"></a>
+<span class="sourceLineNo">019</span>*/<a name="line.19"></a>
+<span class="sourceLineNo">020</span>public final class CacheUtils {<a name="line.20"></a>
+<span class="sourceLineNo">021</span><a name="line.21"></a>
+<span class="sourceLineNo">022</span>private static IgnoreDownload ignoreDownload = new IgnoreDownload();<a name="line.22"></a>
+<span class="sourceLineNo">023</span><a name="line.23"></a>
+<span class="sourceLineNo">024</span>/** Picture quality */<a name="line.24"></a>
+<span class="sourceLineNo">025</span>public enum PICTURE {<a name="line.25"></a>
+<span class="sourceLineNo">026</span> /** Thumbnail quality picture (320 p) */<a name="line.26"></a>
+<span class="sourceLineNo">027</span> THUMBNAIL,<a name="line.27"></a>
+<span class="sourceLineNo">028</span> /** Full quality picture (2048 p) */<a name="line.28"></a>
+<span class="sourceLineNo">029</span> FULL_IMAGE,<a name="line.29"></a>
+<span class="sourceLineNo">030</span> /** Both of them */<a name="line.30"></a>
+<span class="sourceLineNo">031</span> BOTH,<a name="line.31"></a>
+<span class="sourceLineNo">032</span> /** Streetside cubemap */<a name="line.32"></a>
+<span class="sourceLineNo">033</span> CUBEMAP<a name="line.33"></a>
+<span class="sourceLineNo">034</span>}<a name="line.34"></a>
+<span class="sourceLineNo">035</span><a name="line.35"></a>
+<span class="sourceLineNo">036</span>private CacheUtils() {<a name="line.36"></a>
+<span class="sourceLineNo">037</span> // Private constructor to avoid instantiation<a name="line.37"></a>
+<span class="sourceLineNo">038</span>}<a name="line.38"></a>
+<span class="sourceLineNo">039</span><a name="line.39"></a>
+<span class="sourceLineNo">040</span>/**<a name="line.40"></a>
+<span class="sourceLineNo">041</span>* Downloads the the thumbnail and the full resolution picture of the given<a name="line.41"></a>
+<span class="sourceLineNo">042</span>* image. Does nothing if it is already in cache.<a name="line.42"></a>
+<span class="sourceLineNo">043</span>*<a name="line.43"></a>
+<span class="sourceLineNo">044</span>* @param img<a name="line.44"></a>
+<span class="sourceLineNo">045</span>*          The image whose picture is going to be downloaded.<a name="line.45"></a>
+<span class="sourceLineNo">046</span>*/<a name="line.46"></a>
+<span class="sourceLineNo">047</span>public static void downloadPicture(StreetsideImage img) {<a name="line.47"></a>
+<span class="sourceLineNo">048</span> downloadPicture(img, PICTURE.BOTH);<a name="line.48"></a>
+<span class="sourceLineNo">049</span>}<a name="line.49"></a>
+<span class="sourceLineNo">050</span><a name="line.50"></a>
+<span class="sourceLineNo">051</span>/**<a name="line.51"></a>
+<span class="sourceLineNo">052</span>* Downloads the the thumbnail and the full resolution picture of the given<a name="line.52"></a>
+<span class="sourceLineNo">053</span>* image. Does nothing if it is already in cache.<a name="line.53"></a>
+<span class="sourceLineNo">054</span>*<a name="line.54"></a>
+<span class="sourceLineNo">055</span>* @param cm<a name="line.55"></a>
+<span class="sourceLineNo">056</span>*          The image whose picture is going to be downloaded.<a name="line.56"></a>
+<span class="sourceLineNo">057</span>*/<a name="line.57"></a>
+<span class="sourceLineNo">058</span>public static void downloadCubemap(StreetsideImage cm) {<a name="line.58"></a>
+<span class="sourceLineNo">059</span>        // TODO: causes errors. Analyze @rrh<a name="line.59"></a>
+<span class="sourceLineNo">060</span>        //downloadPicture(cm, PICTURE.CUBEMAP);<a name="line.60"></a>
+<span class="sourceLineNo">061</span>}<a name="line.61"></a>
+<span class="sourceLineNo">062</span><a name="line.62"></a>
+<span class="sourceLineNo">063</span>/**<a name="line.63"></a>
+<span class="sourceLineNo">064</span>* Downloads the picture of the given image. Does nothing when it is already<a name="line.64"></a>
+<span class="sourceLineNo">065</span>* in cache.<a name="line.65"></a>
+<span class="sourceLineNo">066</span>*<a name="line.66"></a>
+<span class="sourceLineNo">067</span>* @param img<a name="line.67"></a>
+<span class="sourceLineNo">068</span>*          The image to be downloaded.<a name="line.68"></a>
+<span class="sourceLineNo">069</span>* @param pic<a name="line.69"></a>
+<span class="sourceLineNo">070</span>*          The picture type to be downloaded (full quality, thumbnail or<a name="line.70"></a>
+<span class="sourceLineNo">071</span>*          both.)<a name="line.71"></a>
+<span class="sourceLineNo">072</span>*/<a name="line.72"></a>
+<span class="sourceLineNo">073</span>public static void downloadPicture(StreetsideImage img, PICTURE pic) {<a name="line.73"></a>
+<span class="sourceLineNo">074</span> switch (pic) {<a name="line.74"></a>
+<span class="sourceLineNo">075</span>   case BOTH:<a name="line.75"></a>
+<span class="sourceLineNo">076</span>     if (new StreetsideCache(img.getId(), StreetsideCache.Type.THUMBNAIL).get() == null)<a name="line.76"></a>
+<span class="sourceLineNo">077</span>       submit(img.getId(), StreetsideCache.Type.THUMBNAIL, ignoreDownload);<a name="line.77"></a>
+<span class="sourceLineNo">078</span>     if (new StreetsideCache(img.getId(), StreetsideCache.Type.FULL_IMAGE).get() == null)<a name="line.78"></a>
+<span class="sourceLineNo">079</span>       submit(img.getId(), StreetsideCache.Type.FULL_IMAGE, ignoreDownload);<a name="line.79"></a>
+<span class="sourceLineNo">080</span>     break;<a name="line.80"></a>
+<span class="sourceLineNo">081</span>   case THUMBNAIL:<a name="line.81"></a>
+<span class="sourceLineNo">082</span>     submit(img.getId(), StreetsideCache.Type.THUMBNAIL, ignoreDownload);<a name="line.82"></a>
+<span class="sourceLineNo">083</span>     break;<a name="line.83"></a>
+<span class="sourceLineNo">084</span>   case FULL_IMAGE:<a name="line.84"></a>
+<span class="sourceLineNo">085</span>   // TODO: is this still useful? @rrh<a name="line.85"></a>
+<span class="sourceLineNo">086</span>   case CUBEMAP:<a name="line.86"></a>
+<span class="sourceLineNo">087</span>           if(img.getId()==null) {<a name="line.87"></a>
+<span class="sourceLineNo">088</span>                   Logging.error("Download cancelled. Image id is null.");<a name="line.88"></a>
+<span class="sourceLineNo">089</span>           } else {<a name="line.89"></a>
+<span class="sourceLineNo">090</span>                   CubemapBuilder.getInstance().downloadCubemapImages(img.getId());<a name="line.90"></a>
+<span class="sourceLineNo">091</span>           }<a name="line.91"></a>
+<span class="sourceLineNo">092</span>           break;<a name="line.92"></a>
+<span class="sourceLineNo">093</span>   default:<a name="line.93"></a>
+<span class="sourceLineNo">094</span>     submit(img.getId(), StreetsideCache.Type.FULL_IMAGE, ignoreDownload);<a name="line.94"></a>
+<span class="sourceLineNo">095</span>     break;<a name="line.95"></a>
+<span class="sourceLineNo">096</span> }<a name="line.96"></a>
+<span class="sourceLineNo">097</span>}<a name="line.97"></a>
+<span class="sourceLineNo">098</span><a name="line.98"></a>
+<span class="sourceLineNo">099</span>/**<a name="line.99"></a>
+<span class="sourceLineNo">100</span>* Downloads the picture of the given image. Does nothing when it is already<a name="line.100"></a>
+<span class="sourceLineNo">101</span>* in cache.<a name="line.101"></a>
+<span class="sourceLineNo">102</span>*<a name="line.102"></a>
+<span class="sourceLineNo">103</span>* @param cm<a name="line.103"></a>
+<span class="sourceLineNo">104</span>*          The cubemap to be downloaded.<a name="line.104"></a>
+<span class="sourceLineNo">105</span>* @param pic<a name="line.105"></a>
+<span class="sourceLineNo">106</span>*          The picture type to be downloaded (full quality, thumbnail, both, or cubemap.)<a name="line.106"></a>
+<span class="sourceLineNo">107</span>*/<a name="line.107"></a>
+<span class="sourceLineNo">108</span>/*public static void downloadCubemapFront(StreetsideImage cm, PICTURE pic) {<a name="line.108"></a>
+<span class="sourceLineNo">109</span> switch (pic) {<a name="line.109"></a>
+<span class="sourceLineNo">110</span>   case CUBEMAP:<a name="line.110"></a>
+<span class="sourceLineNo">111</span>           for (int i = 0; i &lt; 6; i++) {<a name="line.111"></a>
+<span class="sourceLineNo">112</span>                        for (int j = 0; j &lt; 4; j++) {<a name="line.112"></a>
+<span class="sourceLineNo">113</span>                                for (int k = 0; k &lt; 4; k++) {<a name="line.113"></a>
+<span class="sourceLineNo">114</span>                                        String cubeface = CubemapUtils.getFaceNumberForCount(i);<a name="line.114"></a>
+<span class="sourceLineNo">115</span>                                        String tileNr = CubemapUtils.rowCol2StreetsideCellAddressMap<a name="line.115"></a>
+<span class="sourceLineNo">116</span>                                                        .get(Integer.toString(j) + Integer.toString(k));<a name="line.116"></a>
+<span class="sourceLineNo">117</span>                                        long tileId = Long.parseLong(cm.getId() + cubeface + tileNr);<a name="line.117"></a>
+<span class="sourceLineNo">118</span><a name="line.118"></a>
+<span class="sourceLineNo">119</span>                                        submit(cm.getId(), StreetsideCache.Type.CUBEMAP_FRONT, ignoreDownload);<a name="line.119"></a>
+<span class="sourceLineNo">120</span><a name="line.120"></a>
+<span class="sourceLineNo">121</span>                                }<a name="line.121"></a>
+<span class="sourceLineNo">122</span>                        }<a name="line.122"></a>
+<span class="sourceLineNo">123</span>                }<a name="line.123"></a>
+<span class="sourceLineNo">124</span>           break;<a name="line.124"></a>
+<span class="sourceLineNo">125</span>   default:<a name="line.125"></a>
+<span class="sourceLineNo">126</span>     submit(cm.getId(), StreetsideCache.Type.CUBEMAP_FRONT, ignoreDownload);<a name="line.126"></a>
+<span class="sourceLineNo">127</span>     break;<a name="line.127"></a>
+<span class="sourceLineNo">128</span> }<a name="line.128"></a>
+<span class="sourceLineNo">129</span>}*/<a name="line.129"></a>
+<span class="sourceLineNo">130</span><a name="line.130"></a>
+<span class="sourceLineNo">131</span>/*public static void downloadCubemapRight(StreetsideImage cm, PICTURE pic) {<a name="line.131"></a>
+<span class="sourceLineNo">132</span>         switch (pic) {<a name="line.132"></a>
+<span class="sourceLineNo">133</span>           case CUBEMAP:<a name="line.133"></a>
+<span class="sourceLineNo">134</span>                   for (int i = 0; i &lt; 6; i++) {<a name="line.134"></a>
+<span class="sourceLineNo">135</span>                                for (int j = 0; j &lt; 4; j++) {<a name="line.135"></a>
+<span class="sourceLineNo">136</span>                                        for (int k = 0; k &lt; 4; k++) {<a name="line.136"></a>
+<span class="sourceLineNo">137</span>                                                String cubeface = CubemapUtils.getFaceNumberForCount(i);<a name="line.137"></a>
+<span class="sourceLineNo">138</span>                                                String tileNr = CubemapUtils.rowCol2StreetsideCellAddressMap<a name="line.138"></a>
+<span class="sourceLineNo">139</span>                                                                .get(Integer.toString(j) + Integer.toString(k));<a name="line.139"></a>
+<span class="sourceLineNo">140</span>                                                long tileId = Long.parseLong(cm.getId() + cubeface + tileNr);<a name="line.140"></a>
+<span class="sourceLineNo">141</span><a name="line.141"></a>
+<span class="sourceLineNo">142</span>                                                submit(cm.getId(), StreetsideCache.Type.CUBEMAP_RIGHT, ignoreDownload);<a name="line.142"></a>
+<span class="sourceLineNo">143</span><a name="line.143"></a>
+<span class="sourceLineNo">144</span>                                        }<a name="line.144"></a>
+<span class="sourceLineNo">145</span>                                }<a name="line.145"></a>
+<span class="sourceLineNo">146</span>                        }<a name="line.146"></a>
+<span class="sourceLineNo">147</span>                   break;<a name="line.147"></a>
+<span class="sourceLineNo">148</span>           default:<a name="line.148"></a>
+<span class="sourceLineNo">149</span>             submit(cm.getId(), StreetsideCache.Type.CUBEMAP_RIGHT, ignoreDownload);<a name="line.149"></a>
+<span class="sourceLineNo">150</span>             break;<a name="line.150"></a>
+<span class="sourceLineNo">151</span>         }<a name="line.151"></a>
+<span class="sourceLineNo">152</span>        }*/<a name="line.152"></a>
+<span class="sourceLineNo">153</span><a name="line.153"></a>
+<span class="sourceLineNo">154</span>/*public static void downloadCubemapBack(StreetsideImage cm, PICTURE pic) {<a name="line.154"></a>
+<span class="sourceLineNo">155</span>         switch (pic) {<a name="line.155"></a>
+<span class="sourceLineNo">156</span>           case CUBEMAP:<a name="line.156"></a>
+<span class="sourceLineNo">157</span>                   for (int i = 0; i &lt; 6; i++) {<a name="line.157"></a>
+<span class="sourceLineNo">158</span>                                for (int j = 0; j &lt; 4; j++) {<a name="line.158"></a>
+<span class="sourceLineNo">159</span>                                        for (int k = 0; k &lt; 4; k++) {<a name="line.159"></a>
+<span class="sourceLineNo">160</span>                                                String cubeface = CubemapUtils.getFaceNumberForCount(i);<a name="line.160"></a>
+<span class="sourceLineNo">161</span>                                                String tileNr = CubemapUtils.rowCol2StreetsideCellAddressMap<a name="line.161"></a>
+<span class="sourceLineNo">162</span>                                                                .get(Integer.toString(j) + Integer.toString(k));<a name="line.162"></a>
+<span class="sourceLineNo">163</span>                                                long tileId = Long.parseLong(cm.getId() + cubeface + tileNr);<a name="line.163"></a>
+<span class="sourceLineNo">164</span><a name="line.164"></a>
+<span class="sourceLineNo">165</span>                                                submit(cm.getId(), StreetsideCache.Type.CUBEMAP_BACK, ignoreDownload);<a name="line.165"></a>
+<span class="sourceLineNo">166</span><a name="line.166"></a>
+<span class="sourceLineNo">167</span>                                        }<a name="line.167"></a>
+<span class="sourceLineNo">168</span>                                }<a name="line.168"></a>
+<span class="sourceLineNo">169</span>                        }<a name="line.169"></a>
+<span class="sourceLineNo">170</span>                   break;<a name="line.170"></a>
+<span class="sourceLineNo">171</span>           default:<a name="line.171"></a>
+<span class="sourceLineNo">172</span>             submit(cm.getId(), StreetsideCache.Type.CUBEMAP_BACK, ignoreDownload);<a name="line.172"></a>
+<span class="sourceLineNo">173</span>             break;<a name="line.173"></a>
+<span class="sourceLineNo">174</span>         }<a name="line.174"></a>
+<span class="sourceLineNo">175</span>        }*/<a name="line.175"></a>
+<span class="sourceLineNo">176</span><a name="line.176"></a>
+<span class="sourceLineNo">177</span>/*public static void downloadCubemapLeft(StreetsideImage cm, PICTURE pic) {<a name="line.177"></a>
+<span class="sourceLineNo">178</span>         switch (pic) {<a name="line.178"></a>
+<span class="sourceLineNo">179</span>           case CUBEMAP:<a name="line.179"></a>
+<span class="sourceLineNo">180</span>                   for (int i = 0; i &lt; 6; i++) {<a name="line.180"></a>
+<span class="sourceLineNo">181</span>                                for (int j = 0; j &lt; 4; j++) {<a name="line.181"></a>
+<span class="sourceLineNo">182</span>                                        for (int k = 0; k &lt; 4; k++) {<a name="line.182"></a>
+<span class="sourceLineNo">183</span>                                                String cubeface = CubemapUtils.getFaceNumberForCount(i);<a name="line.183"></a>
+<span class="sourceLineNo">184</span>                                                String tileNr = CubemapUtils.rowCol2StreetsideCellAddressMap<a name="line.184"></a>
+<span class="sourceLineNo">185</span>                                                                .get(Integer.toString(j) + Integer.toString(k));<a name="line.185"></a>
+<span class="sourceLineNo">186</span>                                                long tileId = Long.parseLong(cm.getId() + cubeface + tileNr);<a name="line.186"></a>
+<span class="sourceLineNo">187</span><a name="line.187"></a>
+<span class="sourceLineNo">188</span>                                                submit(cm.getId(), StreetsideCache.Type.CUBEMAP_LEFT, ignoreDownload);<a name="line.188"></a>
+<span class="sourceLineNo">189</span><a name="line.189"></a>
+<span class="sourceLineNo">190</span>                                        }<a name="line.190"></a>
+<span class="sourceLineNo">191</span>                                }<a name="line.191"></a>
+<span class="sourceLineNo">192</span>                        }<a name="line.192"></a>
+<span class="sourceLineNo">193</span>                   break;<a name="line.193"></a>
+<span class="sourceLineNo">194</span>           default:<a name="line.194"></a>
+<span class="sourceLineNo">195</span>             submit(cm.getId(), StreetsideCache.Type.CUBEMAP_LEFT, ignoreDownload);<a name="line.195"></a>
+<span class="sourceLineNo">196</span>             break;<a name="line.196"></a>
+<span class="sourceLineNo">197</span>         }<a name="line.197"></a>
+<span class="sourceLineNo">198</span>        }*/<a name="line.198"></a>
+<span class="sourceLineNo">199</span><a name="line.199"></a>
+<span class="sourceLineNo">200</span>/*public static void downloadCubemapUp(StreetsideImage cm, PICTURE pic) {<a name="line.200"></a>
+<span class="sourceLineNo">201</span>         switch (pic) {<a name="line.201"></a>
+<span class="sourceLineNo">202</span>           case CUBEMAP:<a name="line.202"></a>
+<span class="sourceLineNo">203</span>                   for (int i = 0; i &lt; 6; i++) {<a name="line.203"></a>
+<span class="sourceLineNo">204</span>                                for (int j = 0; j &lt; 4; j++) {<a name="line.204"></a>
+<span class="sourceLineNo">205</span>                                        for (int k = 0; k &lt; 4; k++) {<a name="line.205"></a>
+<span class="sourceLineNo">206</span>                                                String cubeface = CubemapUtils.getFaceNumberForCount(i);<a name="line.206"></a>
+<span class="sourceLineNo">207</span>                                                String tileNr = CubemapUtils.rowCol2StreetsideCellAddressMap<a name="line.207"></a>
+<span class="sourceLineNo">208</span>                                                                .get(Integer.toString(j) + Integer.toString(k));<a name="line.208"></a>
+<span class="sourceLineNo">209</span>                                                long tileId = Long.parseLong(cm.getId() + cubeface + tileNr);<a name="line.209"></a>
+<span class="sourceLineNo">210</span><a name="line.210"></a>
+<span class="sourceLineNo">211</span>                                                submit(cm.getId(), StreetsideCache.Type.CUBEMAP_UP, ignoreDownload);<a name="line.211"></a>
+<span class="sourceLineNo">212</span><a name="line.212"></a>
+<span class="sourceLineNo">213</span>                                        }<a name="line.213"></a>
+<span class="sourceLineNo">214</span>                                }<a name="line.214"></a>
+<span class="sourceLineNo">215</span>                        }<a name="line.215"></a>
+<span class="sourceLineNo">216</span>                   break;<a name="line.216"></a>
+<span class="sourceLineNo">217</span>           default:<a name="line.217"></a>
+<span class="sourceLineNo">218</span>             submit(cm.getId(), StreetsideCache.Type.CUBEMAP_UP, ignoreDownload);<a name="line.218"></a>
+<span class="sourceLineNo">219</span>             break;<a name="line.219"></a>
+<span class="sourceLineNo">220</span>         }<a name="line.220"></a>
+<span class="sourceLineNo">221</span>        }*/<a name="line.221"></a>
+<span class="sourceLineNo">222</span><a name="line.222"></a>
+<span class="sourceLineNo">223</span>/*public static void downloadCubemapDown(StreetsideImage cm, PICTURE pic) {<a name="line.223"></a>
+<span class="sourceLineNo">224</span>         switch (pic) {<a name="line.224"></a>
+<span class="sourceLineNo">225</span>           case CUBEMAP:<a name="line.225"></a>
+<span class="sourceLineNo">226</span>                   for (int i = 0; i &lt; 6; i++) {<a name="line.226"></a>
+<span class="sourceLineNo">227</span>                                for (int j = 0; j &lt; 4; j++) {<a name="line.227"></a>
+<span class="sourceLineNo">228</span>                                        for (int k = 0; k &lt; 4; k++) {<a name="line.228"></a>
+<span class="sourceLineNo">229</span>                                                String cubeface = CubemapUtils.getFaceNumberForCount(i);<a name="line.229"></a>
+<span class="sourceLineNo">230</span>                                                String tileNr = CubemapUtils.rowCol2StreetsideCellAddressMap<a name="line.230"></a>
+<span class="sourceLineNo">231</span>                                                                .get(Integer.toString(j) + Integer.toString(k));<a name="line.231"></a>
+<span class="sourceLineNo">232</span>                                                long tileId = Long.parseLong(cm.getId() + cubeface + tileNr);<a name="line.232"></a>
+<span class="sourceLineNo">233</span><a name="line.233"></a>
+<span class="sourceLineNo">234</span>                                                submit(cm.getId(), StreetsideCache.Type.CUBEMAP_DOWN, ignoreDownload);<a name="line.234"></a>
+<span class="sourceLineNo">235</span><a name="line.235"></a>
+<span class="sourceLineNo">236</span>                                        }<a name="line.236"></a>
+<span class="sourceLineNo">237</span>                                }<a name="line.237"></a>
+<span class="sourceLineNo">238</span>                        }<a name="line.238"></a>
+<span class="sourceLineNo">239</span>                   break;<a name="line.239"></a>
+<span class="sourceLineNo">240</span>           default:<a name="line.240"></a>
+<span class="sourceLineNo">241</span>             submit(cm.getId(), StreetsideCache.Type.CUBEMAP_DOWN, ignoreDownload);<a name="line.241"></a>
+<span class="sourceLineNo">242</span>             break;<a name="line.242"></a>
+<span class="sourceLineNo">243</span>         }<a name="line.243"></a>
+<span class="sourceLineNo">244</span>        }*/<a name="line.244"></a>
+<span class="sourceLineNo">245</span><a name="line.245"></a>
+<span class="sourceLineNo">246</span>/**<a name="line.246"></a>
+<span class="sourceLineNo">247</span>* Requests the picture with the given key and quality and uses the given<a name="line.247"></a>
+<span class="sourceLineNo">248</span>* listener.<a name="line.248"></a>
+<span class="sourceLineNo">249</span>*<a name="line.249"></a>
+<span class="sourceLineNo">250</span>* @param key<a name="line.250"></a>
+<span class="sourceLineNo">251</span>*          The key of the picture to be requested.<a name="line.251"></a>
+<span class="sourceLineNo">252</span>* @param type<a name="line.252"></a>
+<span class="sourceLineNo">253</span>*          The quality of the picture to be requested.<a name="line.253"></a>
+<span class="sourceLineNo">254</span>* @param lis<a name="line.254"></a>
+<span class="sourceLineNo">255</span>*          The listener that is going to receive the picture.<a name="line.255"></a>
+<span class="sourceLineNo">256</span>*/<a name="line.256"></a>
+<span class="sourceLineNo">257</span>public static void submit(String key, StreetsideCache.Type type,<a name="line.257"></a>
+<span class="sourceLineNo">258</span>   ICachedLoaderListener lis) {<a name="line.258"></a>
+<span class="sourceLineNo">259</span> try {<a name="line.259"></a>
+<span class="sourceLineNo">260</span>   new StreetsideCache(key, type).submit(lis, false);<a name="line.260"></a>
+<span class="sourceLineNo">261</span> } catch (IOException e) {<a name="line.261"></a>
+<span class="sourceLineNo">262</span>   Logging.error(e);<a name="line.262"></a>
+<span class="sourceLineNo">263</span> }<a name="line.263"></a>
+<span class="sourceLineNo">264</span>}<a name="line.264"></a>
+<span class="sourceLineNo">265</span><a name="line.265"></a>
+<span class="sourceLineNo">266</span>private static class IgnoreDownload implements ICachedLoaderListener {<a name="line.266"></a>
+<span class="sourceLineNo">267</span><a name="line.267"></a>
+<span class="sourceLineNo">268</span> @Override<a name="line.268"></a>
+<span class="sourceLineNo">269</span> public void loadingFinished(CacheEntry arg0, CacheEntryAttributes arg1, LoadResult arg2) {<a name="line.269"></a>
+<span class="sourceLineNo">270</span>   // Ignore download<a name="line.270"></a>
+<span class="sourceLineNo">271</span> }<a name="line.271"></a>
+<span class="sourceLineNo">272</span>}<a name="line.272"></a>
+<span class="sourceLineNo">273</span>}<a name="line.273"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</pre>
+</div>
+</body>
+</html>

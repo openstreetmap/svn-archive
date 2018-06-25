@@ -1,0 +1,262 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+<head>
+<title>Source code</title>
+<link rel="stylesheet" type="text/css" href="../../../../../../../../stylesheet.css" title="Style">
+</head>
+<body>
+<div class="sourceContainer">
+<pre><span class="sourceLineNo">001</span>// License: GPL. For details, see LICENSE file.<a name="line.1"></a>
+<span class="sourceLineNo">002</span>package org.openstreetmap.josm.plugins.streetside.utils.api;<a name="line.2"></a>
+<span class="sourceLineNo">003</span><a name="line.3"></a>
+<span class="sourceLineNo">004</span>import java.lang.reflect.Array;<a name="line.4"></a>
+<span class="sourceLineNo">005</span>import java.util.function.Function;<a name="line.5"></a>
+<span class="sourceLineNo">006</span><a name="line.6"></a>
+<span class="sourceLineNo">007</span>import javax.json.JsonArray;<a name="line.7"></a>
+<span class="sourceLineNo">008</span>import javax.json.JsonNumber;<a name="line.8"></a>
+<span class="sourceLineNo">009</span>import javax.json.JsonObject;<a name="line.9"></a>
+<span class="sourceLineNo">010</span>import javax.json.JsonString;<a name="line.10"></a>
+<span class="sourceLineNo">011</span>import javax.json.JsonValue;<a name="line.11"></a>
+<span class="sourceLineNo">012</span><a name="line.12"></a>
+<span class="sourceLineNo">013</span>import org.openstreetmap.josm.data.coor.LatLon;<a name="line.13"></a>
+<span class="sourceLineNo">014</span>import org.openstreetmap.josm.plugins.streetside.StreetsideImage;<a name="line.14"></a>
+<span class="sourceLineNo">015</span>import org.openstreetmap.josm.plugins.streetside.StreetsideSequence;<a name="line.15"></a>
+<span class="sourceLineNo">016</span>import org.openstreetmap.josm.plugins.streetside.utils.StreetsideURL.APIv3;<a name="line.16"></a>
+<span class="sourceLineNo">017</span><a name="line.17"></a>
+<span class="sourceLineNo">018</span>/**<a name="line.18"></a>
+<span class="sourceLineNo">019</span> * Decodes the JSON returned by {@link APIv3} into Java objects.<a name="line.19"></a>
+<span class="sourceLineNo">020</span> * Takes a {@link JsonObject} and {@link #decodeSequence(JsonObject)} tries to convert it to a {@link StreetsideSequence}.<a name="line.20"></a>
+<span class="sourceLineNo">021</span> */<a name="line.21"></a>
+<span class="sourceLineNo">022</span>public final class JsonStreetsideSequencesDecoder {<a name="line.22"></a>
+<span class="sourceLineNo">023</span>  private JsonStreetsideSequencesDecoder() {<a name="line.23"></a>
+<span class="sourceLineNo">024</span>    // Private constructor to avoid instantiation<a name="line.24"></a>
+<span class="sourceLineNo">025</span>  }<a name="line.25"></a>
+<span class="sourceLineNo">026</span><a name="line.26"></a>
+<span class="sourceLineNo">027</span>  /**<a name="line.27"></a>
+<span class="sourceLineNo">028</span>   * Parses a given {@link JsonObject} as a GeoJSON Feature into a {@link StreetsideSequence}.<a name="line.28"></a>
+<span class="sourceLineNo">029</span>   * @param json the {@link JsonObject} to be parsed<a name="line.29"></a>
+<span class="sourceLineNo">030</span>   * @return a {@link StreetsideSequence} that is parsed from the given {@link JsonObject}. If mandatory information is<a name="line.30"></a>
+<span class="sourceLineNo">031</span>   *         missing from the JSON or it's not meeting the expecting format in another way, &lt;code&gt;null&lt;/code&gt; will be<a name="line.31"></a>
+<span class="sourceLineNo">032</span>   *         returned.<a name="line.32"></a>
+<span class="sourceLineNo">033</span>   */<a name="line.33"></a>
+<span class="sourceLineNo">034</span>  public static StreetsideSequence decodeSequence(final JsonObject json) {<a name="line.34"></a>
+<span class="sourceLineNo">035</span>    if (json == null || !"Feature".equals(json.getString("type", null))) {<a name="line.35"></a>
+<span class="sourceLineNo">036</span>      return null;<a name="line.36"></a>
+<span class="sourceLineNo">037</span>    }<a name="line.37"></a>
+<span class="sourceLineNo">038</span>    StreetsideSequence result = null;<a name="line.38"></a>
+<span class="sourceLineNo">039</span>    final JsonObject properties = json.getJsonObject("properties");<a name="line.39"></a>
+<span class="sourceLineNo">040</span>    final Long ca = properties == null ? null : JsonDecoder.decodeTimestamp(properties.getString("cd", null));<a name="line.40"></a>
+<span class="sourceLineNo">041</span>    if (properties != null &amp;&amp; properties.getString("id", null) != null &amp;&amp; ca != null) {<a name="line.41"></a>
+<span class="sourceLineNo">042</span>      result = new StreetsideSequence(properties.getString("id", null), ca);<a name="line.42"></a>
+<span class="sourceLineNo">043</span><a name="line.43"></a>
+<span class="sourceLineNo">044</span>      final Double[] cas = decodeCoordinateProperty(<a name="line.44"></a>
+<span class="sourceLineNo">045</span>        properties,<a name="line.45"></a>
+<span class="sourceLineNo">046</span>        "hes",<a name="line.46"></a>
+<span class="sourceLineNo">047</span>        val -&gt;  val instanceof JsonNumber ? ((JsonNumber) val).doubleValue() : null,<a name="line.47"></a>
+<span class="sourceLineNo">048</span>        Double.class<a name="line.48"></a>
+<span class="sourceLineNo">049</span>      );<a name="line.49"></a>
+<span class="sourceLineNo">050</span>      final String[] imageIds = decodeCoordinateProperty(<a name="line.50"></a>
+<span class="sourceLineNo">051</span>        properties,<a name="line.51"></a>
+<span class="sourceLineNo">052</span>        "image_ids",<a name="line.52"></a>
+<span class="sourceLineNo">053</span>        val -&gt; val instanceof JsonString ? ((JsonString) val).getString() : null,<a name="line.53"></a>
+<span class="sourceLineNo">054</span>        String.class<a name="line.54"></a>
+<span class="sourceLineNo">055</span>      );<a name="line.55"></a>
+<span class="sourceLineNo">056</span>      final LatLon[] geometry = decodeLatLons(json.getJsonObject("geometry"));<a name="line.56"></a>
+<span class="sourceLineNo">057</span>      final int sequenceLength = Math.min(Math.min(cas.length, imageIds.length), geometry.length);<a name="line.57"></a>
+<span class="sourceLineNo">058</span>      for (int i = 0; i &lt; sequenceLength; i++) {<a name="line.58"></a>
+<span class="sourceLineNo">059</span>        if (cas[i] != null &amp;&amp; imageIds[i] != null &amp;&amp; geometry[i] != null) {<a name="line.59"></a>
+<span class="sourceLineNo">060</span>          final StreetsideImage img = new StreetsideImage(imageIds[i], geometry[i], cas[i]);<a name="line.60"></a>
+<span class="sourceLineNo">061</span>          result.add(img);<a name="line.61"></a>
+<span class="sourceLineNo">062</span>        }<a name="line.62"></a>
+<span class="sourceLineNo">063</span>      }<a name="line.63"></a>
+<span class="sourceLineNo">064</span>      if (result.getImages().isEmpty()) {<a name="line.64"></a>
+<span class="sourceLineNo">065</span>        result = null;<a name="line.65"></a>
+<span class="sourceLineNo">066</span>      }<a name="line.66"></a>
+<span class="sourceLineNo">067</span>    }<a name="line.67"></a>
+<span class="sourceLineNo">068</span>    return result;<a name="line.68"></a>
+<span class="sourceLineNo">069</span>  }<a name="line.69"></a>
+<span class="sourceLineNo">070</span><a name="line.70"></a>
+<span class="sourceLineNo">071</span>  /**<a name="line.71"></a>
+<span class="sourceLineNo">072</span>   * Parses a given {@link StreetsideImage} as a GeoJSON Feature into a {@link StreetsideSequence}.<a name="line.72"></a>
+<span class="sourceLineNo">073</span>   * @param image the {@link StreetsideImage} to be parsed<a name="line.73"></a>
+<span class="sourceLineNo">074</span>   * @return a {@link StreetsideSequence} that is parsed from the given {@link JsonObject}. If mandatory information is<a name="line.74"></a>
+<span class="sourceLineNo">075</span>   *         missing from the JSON or it's not meeting the expecting format in another way, &lt;code&gt;null&lt;/code&gt; will be<a name="line.75"></a>
+<span class="sourceLineNo">076</span>   *         returned.<a name="line.76"></a>
+<span class="sourceLineNo">077</span>   */<a name="line.77"></a>
+<span class="sourceLineNo">078</span>  public static StreetsideImage decodeBubbleData(final StreetsideImage image) {<a name="line.78"></a>
+<span class="sourceLineNo">079</span>    if (image == null) {<a name="line.79"></a>
+<span class="sourceLineNo">080</span>      return null;<a name="line.80"></a>
+<span class="sourceLineNo">081</span>    }<a name="line.81"></a>
+<span class="sourceLineNo">082</span>    // Declare and instantiate new Streetside object to ensure proper setting of superclass attributes<a name="line.82"></a>
+<span class="sourceLineNo">083</span>    StreetsideImage result = null;<a name="line.83"></a>
+<span class="sourceLineNo">084</span>    if(image.getId() != null ) {<a name="line.84"></a>
+<span class="sourceLineNo">085</span>      result = new StreetsideImage(image.getId(), new LatLon(image.getLa(), image.getLo()), 0.0);<a name="line.85"></a>
+<span class="sourceLineNo">086</span>      result.setAl(image.getAl());<a name="line.86"></a>
+<span class="sourceLineNo">087</span>      result.setRo(image.getRo());<a name="line.87"></a>
+<span class="sourceLineNo">088</span>      result.setPi(image.getPi());<a name="line.88"></a>
+<span class="sourceLineNo">089</span>      result.setHe(image.getHe());<a name="line.89"></a>
+<span class="sourceLineNo">090</span>      result.setBl(image.getBl());<a name="line.90"></a>
+<span class="sourceLineNo">091</span>      result.setMl(image.getMl());<a name="line.91"></a>
+<span class="sourceLineNo">092</span>      result.setNe(image.getNe());<a name="line.92"></a>
+<span class="sourceLineNo">093</span>      result.setPr(image.getPr());<a name="line.93"></a>
+<span class="sourceLineNo">094</span>      result.setNbn(image.getNbn());<a name="line.94"></a>
+<span class="sourceLineNo">095</span>      result.setPbn(image.getPbn());<a name="line.95"></a>
+<span class="sourceLineNo">096</span>      result.setRn(image.getRn());<a name="line.96"></a>
+<span class="sourceLineNo">097</span>      result.setCd(image.getCd());<a name="line.97"></a>
+<span class="sourceLineNo">098</span>    }<a name="line.98"></a>
+<span class="sourceLineNo">099</span>    return result;<a name="line.99"></a>
+<span class="sourceLineNo">100</span>  }<a name="line.100"></a>
+<span class="sourceLineNo">101</span><a name="line.101"></a>
+<span class="sourceLineNo">102</span>  /**<a name="line.102"></a>
+<span class="sourceLineNo">103</span>   * Parses a given {@link JsonObject} as a GeoJSON Feature into a {@link StreetsideSequence}.<a name="line.103"></a>
+<span class="sourceLineNo">104</span>   * @param json the {@link JsonObject} to be parsed<a name="line.104"></a>
+<span class="sourceLineNo">105</span>   * @return a {@link StreetsideSequence} that is parsed from the given {@link JsonObject}. If mandatory information is<a name="line.105"></a>
+<span class="sourceLineNo">106</span>   *         missing from the JSON or it's not meeting the expecting format in another way, &lt;code&gt;null&lt;/code&gt; will be<a name="line.106"></a>
+<span class="sourceLineNo">107</span>   *         returned.<a name="line.107"></a>
+<span class="sourceLineNo">108</span>   */<a name="line.108"></a>
+<span class="sourceLineNo">109</span>  public static StreetsideSequence decodeStreetsideSequence(final JsonObject json) {<a name="line.109"></a>
+<span class="sourceLineNo">110</span>    if (json == null) {<a name="line.110"></a>
+<span class="sourceLineNo">111</span>      return null;<a name="line.111"></a>
+<span class="sourceLineNo">112</span>    }<a name="line.112"></a>
+<span class="sourceLineNo">113</span>    StreetsideSequence result = null;<a name="line.113"></a>
+<span class="sourceLineNo">114</span><a name="line.114"></a>
+<span class="sourceLineNo">115</span>    if (json.getString("id", null) != null &amp;&amp; json.getString("la", null) != null &amp;&amp; json.getString("lo", null) != null) {<a name="line.115"></a>
+<span class="sourceLineNo">116</span>        result = new StreetsideSequence(json.getString("id", null), json.getJsonNumber("la").doubleValue(), json.getJsonNumber("lo").doubleValue(), json.getJsonNumber("cd").longValue());<a name="line.116"></a>
+<span class="sourceLineNo">117</span>    }<a name="line.117"></a>
+<span class="sourceLineNo">118</span><a name="line.118"></a>
+<span class="sourceLineNo">119</span>    return result;<a name="line.119"></a>
+<span class="sourceLineNo">120</span>  }<a name="line.120"></a>
+<span class="sourceLineNo">121</span><a name="line.121"></a>
+<span class="sourceLineNo">122</span>  /**<a name="line.122"></a>
+<span class="sourceLineNo">123</span>   * Converts a {@link JsonArray} to a java array.<a name="line.123"></a>
+<span class="sourceLineNo">124</span>   * The conversion from {@link JsonValue} to a java type is done by the supplied function.<a name="line.124"></a>
+<span class="sourceLineNo">125</span>   * @param &lt;T&gt; object type<a name="line.125"></a>
+<span class="sourceLineNo">126</span>   * @param array the array to be converted<a name="line.126"></a>
+<span class="sourceLineNo">127</span>   * @param decodeValueFunction the function used for conversion from {@link JsonValue} to the desired type.<a name="line.127"></a>
+<span class="sourceLineNo">128</span>   * @param clazz the desired type that the elements of the resulting array should have<a name="line.128"></a>
+<span class="sourceLineNo">129</span>   * @return the supplied array converted from {@link JsonArray} to a java array of the supplied type, converted using<a name="line.129"></a>
+<span class="sourceLineNo">130</span>   *         the supplied function. Never &lt;code&gt;null&lt;/code&gt;, in case of array==null, an array of length 0 is returned.<a name="line.130"></a>
+<span class="sourceLineNo">131</span>   */<a name="line.131"></a>
+<span class="sourceLineNo">132</span>  @SuppressWarnings("unchecked")<a name="line.132"></a>
+<span class="sourceLineNo">133</span>  private static &lt;T&gt; T[] decodeJsonArray(final JsonArray array, final Function&lt;JsonValue, T&gt; decodeValueFunction, final Class&lt;T&gt; clazz) {<a name="line.133"></a>
+<span class="sourceLineNo">134</span>    final T[] result;<a name="line.134"></a>
+<span class="sourceLineNo">135</span>    if (array == null) {<a name="line.135"></a>
+<span class="sourceLineNo">136</span>      result =  (T[]) Array.newInstance(clazz, 0);<a name="line.136"></a>
+<span class="sourceLineNo">137</span>    } else {<a name="line.137"></a>
+<span class="sourceLineNo">138</span>      result = (T[]) Array.newInstance(clazz, array.size());<a name="line.138"></a>
+<span class="sourceLineNo">139</span>      for (int i = 0; i &lt; result.length; i++) {<a name="line.139"></a>
+<span class="sourceLineNo">140</span>        result[i] = decodeValueFunction.apply(array.get(i));<a name="line.140"></a>
+<span class="sourceLineNo">141</span>      }<a name="line.141"></a>
+<span class="sourceLineNo">142</span>    }<a name="line.142"></a>
+<span class="sourceLineNo">143</span>    return result;<a name="line.143"></a>
+<span class="sourceLineNo">144</span>  }<a name="line.144"></a>
+<span class="sourceLineNo">145</span><a name="line.145"></a>
+<span class="sourceLineNo">146</span>  /**<a name="line.146"></a>
+<span class="sourceLineNo">147</span>   * Given the JSON object representing the `properties` of a sequence, this method converts you one attribute from the<a name="line.147"></a>
+<span class="sourceLineNo">148</span>   * `coordinateProperties` object to an array of appropriate type.<a name="line.148"></a>
+<span class="sourceLineNo">149</span>   *<a name="line.149"></a>
+<span class="sourceLineNo">150</span>   * For example this is used to convert the `image_keys` JSON array to a String[] array or the `cas` JSON array to a<a name="line.150"></a>
+<span class="sourceLineNo">151</span>   * Double[] array.<a name="line.151"></a>
+<span class="sourceLineNo">152</span>   * @param &lt;T&gt; object type<a name="line.152"></a>
+<span class="sourceLineNo">153</span>   * @param json the JSON object representing the `properties` of a sequence<a name="line.153"></a>
+<span class="sourceLineNo">154</span>   * @param key the key, which identifies the desired array inside the `coordinateProperties` object to be converted<a name="line.154"></a>
+<span class="sourceLineNo">155</span>   * @param decodeValueFunction a function that converts the {@link JsonValue}s in the JSON array to java objects of the<a name="line.155"></a>
+<span class="sourceLineNo">156</span>   *        desired type<a name="line.156"></a>
+<span class="sourceLineNo">157</span>   * @param clazz the {@link Class} object of the desired type, that the entries of the resulting array should have<a name="line.157"></a>
+<span class="sourceLineNo">158</span>   * @return the resulting array, when converting the desired entry of the `coordinateProperties`.<a name="line.158"></a>
+<span class="sourceLineNo">159</span>   *         Never &lt;code&gt;null&lt;/code&gt;. If no `coordinateProperties` are set, or if the desired key is not set or is not<a name="line.159"></a>
+<span class="sourceLineNo">160</span>   *         an array, then an empty array of the desired type is returned.<a name="line.160"></a>
+<span class="sourceLineNo">161</span>   */<a name="line.161"></a>
+<span class="sourceLineNo">162</span>  @SuppressWarnings("unchecked")<a name="line.162"></a>
+<span class="sourceLineNo">163</span>  private static &lt;T&gt; T[] decodeCoordinateProperty(<a name="line.163"></a>
+<span class="sourceLineNo">164</span>    final JsonObject json, final String key, final Function&lt;JsonValue, T&gt; decodeValueFunction, final Class&lt;T&gt; clazz<a name="line.164"></a>
+<span class="sourceLineNo">165</span>  ) {<a name="line.165"></a>
+<span class="sourceLineNo">166</span>    final JsonValue coordinateProperties = json == null ? null : json.get("coordinateProperties");<a name="line.166"></a>
+<span class="sourceLineNo">167</span>    if (coordinateProperties instanceof JsonObject) {<a name="line.167"></a>
+<span class="sourceLineNo">168</span>      JsonValue valueArray = ((JsonObject) coordinateProperties).get(key);<a name="line.168"></a>
+<span class="sourceLineNo">169</span>      if (valueArray instanceof JsonArray) {<a name="line.169"></a>
+<span class="sourceLineNo">170</span>        return decodeJsonArray((JsonArray) valueArray, decodeValueFunction, clazz);<a name="line.170"></a>
+<span class="sourceLineNo">171</span>      }<a name="line.171"></a>
+<span class="sourceLineNo">172</span>    }<a name="line.172"></a>
+<span class="sourceLineNo">173</span>    return (T[]) Array.newInstance(clazz, 0);<a name="line.173"></a>
+<span class="sourceLineNo">174</span>  }<a name="line.174"></a>
+<span class="sourceLineNo">175</span><a name="line.175"></a>
+<span class="sourceLineNo">176</span>  private static LatLon[] decodeLatLons(final JsonObject json) {<a name="line.176"></a>
+<span class="sourceLineNo">177</span>    final JsonValue coords = json == null ? null : json.get("coordinates");<a name="line.177"></a>
+<span class="sourceLineNo">178</span>    if (coords instanceof JsonArray &amp;&amp; "LineString".equals(json.getString("type", null))) {<a name="line.178"></a>
+<span class="sourceLineNo">179</span>      final LatLon[] result = new LatLon[((JsonArray) coords).size()];<a name="line.179"></a>
+<span class="sourceLineNo">180</span>      for (int i = 0; i &lt; ((JsonArray) coords).size(); i++) {<a name="line.180"></a>
+<span class="sourceLineNo">181</span>        final JsonValue coord = ((JsonArray) coords).get(i);<a name="line.181"></a>
+<span class="sourceLineNo">182</span>        if (coord instanceof JsonArray) {<a name="line.182"></a>
+<span class="sourceLineNo">183</span>          result[i] = JsonDecoder.decodeLatLon((JsonArray) coord);<a name="line.183"></a>
+<span class="sourceLineNo">184</span>        }<a name="line.184"></a>
+<span class="sourceLineNo">185</span>      }<a name="line.185"></a>
+<span class="sourceLineNo">186</span>      return result;<a name="line.186"></a>
+<span class="sourceLineNo">187</span>    }<a name="line.187"></a>
+<span class="sourceLineNo">188</span>    return new LatLon[0];<a name="line.188"></a>
+<span class="sourceLineNo">189</span>  }<a name="line.189"></a>
+<span class="sourceLineNo">190</span>}<a name="line.190"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</pre>
+</div>
+</body>
+</html>

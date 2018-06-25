@@ -1,0 +1,202 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+<head>
+<title>Source code</title>
+<link rel="stylesheet" type="text/css" href="../../../../../../../stylesheet.css" title="Style">
+</head>
+<body>
+<div class="sourceContainer">
+<pre><span class="sourceLineNo">001</span>// License: GPL. For details, see LICENSE file.<a name="line.1"></a>
+<span class="sourceLineNo">002</span>package org.openstreetmap.josm.plugins.streetside.cubemap;<a name="line.2"></a>
+<span class="sourceLineNo">003</span><a name="line.3"></a>
+<span class="sourceLineNo">004</span>import java.awt.geom.AffineTransform;<a name="line.4"></a>
+<span class="sourceLineNo">005</span>import java.awt.image.AffineTransformOp;<a name="line.5"></a>
+<span class="sourceLineNo">006</span>import java.awt.image.BufferedImage;<a name="line.6"></a>
+<span class="sourceLineNo">007</span><a name="line.7"></a>
+<span class="sourceLineNo">008</span>import org.openstreetmap.josm.plugins.streetside.utils.StreetsideProperties;<a name="line.8"></a>
+<span class="sourceLineNo">009</span>import org.openstreetmap.josm.tools.Logging;<a name="line.9"></a>
+<span class="sourceLineNo">010</span><a name="line.10"></a>
+<span class="sourceLineNo">011</span>import javafx.application.Platform;<a name="line.11"></a>
+<span class="sourceLineNo">012</span>import javafx.scene.image.PixelWriter;<a name="line.12"></a>
+<span class="sourceLineNo">013</span>import javafx.scene.image.WritableImage;<a name="line.13"></a>
+<span class="sourceLineNo">014</span><a name="line.14"></a>
+<span class="sourceLineNo">015</span>@SuppressWarnings({ "restriction"})<a name="line.15"></a>
+<span class="sourceLineNo">016</span>public class GraphicsUtils {<a name="line.16"></a>
+<span class="sourceLineNo">017</span><a name="line.17"></a>
+<span class="sourceLineNo">018</span>        public static javafx.scene.image.Image convertBufferedImage2JavaFXImage(BufferedImage bf) {<a name="line.18"></a>
+<span class="sourceLineNo">019</span>                WritableImage wr = null;<a name="line.19"></a>
+<span class="sourceLineNo">020</span>                if (bf != null) {<a name="line.20"></a>
+<span class="sourceLineNo">021</span>                        wr = new WritableImage(bf.getWidth(), bf.getHeight());<a name="line.21"></a>
+<span class="sourceLineNo">022</span>                        PixelWriter pw = wr.getPixelWriter();<a name="line.22"></a>
+<span class="sourceLineNo">023</span>                        for (int x = 0; x &lt; bf.getWidth(); x++) {<a name="line.23"></a>
+<span class="sourceLineNo">024</span>                                for (int y = 0; y &lt; bf.getHeight(); y++) {<a name="line.24"></a>
+<span class="sourceLineNo">025</span>                                        pw.setArgb(x, y, bf.getRGB(x, y));<a name="line.25"></a>
+<span class="sourceLineNo">026</span>                                }<a name="line.26"></a>
+<span class="sourceLineNo">027</span>                        }<a name="line.27"></a>
+<span class="sourceLineNo">028</span>                }<a name="line.28"></a>
+<span class="sourceLineNo">029</span>                return wr;<a name="line.29"></a>
+<span class="sourceLineNo">030</span>        }<a name="line.30"></a>
+<span class="sourceLineNo">031</span><a name="line.31"></a>
+<span class="sourceLineNo">032</span>        public static class PlatformHelper {<a name="line.32"></a>
+<span class="sourceLineNo">033</span><a name="line.33"></a>
+<span class="sourceLineNo">034</span>        public static void run(Runnable treatment) {<a name="line.34"></a>
+<span class="sourceLineNo">035</span>            if(treatment == null) throw new IllegalArgumentException("The treatment to perform can not be null");<a name="line.35"></a>
+<span class="sourceLineNo">036</span><a name="line.36"></a>
+<span class="sourceLineNo">037</span>            if(Platform.isFxApplicationThread()) treatment.run();<a name="line.37"></a>
+<span class="sourceLineNo">038</span>            else Platform.runLater(treatment);<a name="line.38"></a>
+<span class="sourceLineNo">039</span>        }<a name="line.39"></a>
+<span class="sourceLineNo">040</span>    }<a name="line.40"></a>
+<span class="sourceLineNo">041</span><a name="line.41"></a>
+<span class="sourceLineNo">042</span>        public static BufferedImage buildMultiTiledCubemapFaceImage(BufferedImage[] tiles) {<a name="line.42"></a>
+<span class="sourceLineNo">043</span><a name="line.43"></a>
+<span class="sourceLineNo">044</span>                BufferedImage res = null;<a name="line.44"></a>
+<span class="sourceLineNo">045</span><a name="line.45"></a>
+<span class="sourceLineNo">046</span>                int pixelBuffer = StreetsideProperties.SHOW_HIGH_RES_STREETSIDE_IMAGERY.get()?2:1;<a name="line.46"></a>
+<span class="sourceLineNo">047</span><a name="line.47"></a>
+<span class="sourceLineNo">048</span>                tiles = cropMultiTiledImages(tiles, pixelBuffer);<a name="line.48"></a>
+<span class="sourceLineNo">049</span><a name="line.49"></a>
+<span class="sourceLineNo">050</span>                int rows = StreetsideProperties.SHOW_HIGH_RES_STREETSIDE_IMAGERY.get()?4:2; //we assume the no. of rows and cols are known and each chunk has equal width and height<a name="line.50"></a>
+<span class="sourceLineNo">051</span>        int cols = StreetsideProperties.SHOW_HIGH_RES_STREETSIDE_IMAGERY.get()?4:2;<a name="line.51"></a>
+<span class="sourceLineNo">052</span><a name="line.52"></a>
+<span class="sourceLineNo">053</span>        int chunkWidth, chunkHeight;<a name="line.53"></a>
+<span class="sourceLineNo">054</span><a name="line.54"></a>
+<span class="sourceLineNo">055</span>        chunkWidth = tiles[0].getWidth();<a name="line.55"></a>
+<span class="sourceLineNo">056</span>        chunkHeight = tiles[0].getHeight();<a name="line.56"></a>
+<span class="sourceLineNo">057</span><a name="line.57"></a>
+<span class="sourceLineNo">058</span>        //Initializing the final image<a name="line.58"></a>
+<span class="sourceLineNo">059</span>        BufferedImage img = new BufferedImage(chunkWidth*cols, chunkHeight*rows, BufferedImage.TYPE_INT_ARGB);<a name="line.59"></a>
+<span class="sourceLineNo">060</span><a name="line.60"></a>
+<span class="sourceLineNo">061</span>        int num = 0;<a name="line.61"></a>
+<span class="sourceLineNo">062</span>        for (int i = 0; i &lt; rows; i++) {<a name="line.62"></a>
+<span class="sourceLineNo">063</span>            for (int j = 0; j &lt; cols; j++) {<a name="line.63"></a>
+<span class="sourceLineNo">064</span>                // TODO: this makes the image a mirror image. why!?!<a name="line.64"></a>
+<span class="sourceLineNo">065</span>                img.createGraphics().drawImage(tiles[num], chunkWidth * j, chunkHeight * i, null);<a name="line.65"></a>
+<span class="sourceLineNo">066</span><a name="line.66"></a>
+<span class="sourceLineNo">067</span>                // TODO: remove file test!<a name="line.67"></a>
+<span class="sourceLineNo">068</span>                /*try {<a name="line.68"></a>
+<span class="sourceLineNo">069</span>                                ImageIO.write(img, "jpeg", new File("/Users/renerr18/Desktop/TileImagesTest/tile16b" + Long.valueOf(System.currentTimeMillis()).toString() + "createGraphicsAfter.jpeg"));<a name="line.69"></a>
+<span class="sourceLineNo">070</span>                                //ImageIO.write(res[i], "jpeg", outputfileAfter);<a name="line.70"></a>
+<span class="sourceLineNo">071</span>                        } catch (IOException e) {<a name="line.71"></a>
+<span class="sourceLineNo">072</span>                                // TODO Auto-generated catch block<a name="line.72"></a>
+<span class="sourceLineNo">073</span>                                e.printStackTrace();<a name="line.73"></a>
+<span class="sourceLineNo">074</span>                        }*/<a name="line.74"></a>
+<span class="sourceLineNo">075</span><a name="line.75"></a>
+<span class="sourceLineNo">076</span>                int width = StreetsideProperties.SHOW_HIGH_RES_STREETSIDE_IMAGERY.get()?1014:510;<a name="line.76"></a>
+<span class="sourceLineNo">077</span>                int height = StreetsideProperties.SHOW_HIGH_RES_STREETSIDE_IMAGERY.get()?1014:510;<a name="line.77"></a>
+<span class="sourceLineNo">078</span><a name="line.78"></a>
+<span class="sourceLineNo">079</span>                // BufferedImage for mirror image<a name="line.79"></a>
+<span class="sourceLineNo">080</span>                res = new BufferedImage(StreetsideProperties.SHOW_HIGH_RES_STREETSIDE_IMAGERY.get()?1014:510, StreetsideProperties.SHOW_HIGH_RES_STREETSIDE_IMAGERY.get()?1014:510,<a name="line.80"></a>
+<span class="sourceLineNo">081</span>                                                BufferedImage.TYPE_INT_ARGB);<a name="line.81"></a>
+<span class="sourceLineNo">082</span><a name="line.82"></a>
+<span class="sourceLineNo">083</span>                // Create mirror image pixel by pixel<a name="line.83"></a>
+<span class="sourceLineNo">084</span>                for (int y = 0; y &lt; height; y++)<a name="line.84"></a>
+<span class="sourceLineNo">085</span>                {<a name="line.85"></a>
+<span class="sourceLineNo">086</span>                    for (int lx = 0, rx = width - 1; lx &lt; width; lx++, rx--)<a name="line.86"></a>
+<span class="sourceLineNo">087</span>                    {<a name="line.87"></a>
+<span class="sourceLineNo">088</span>                        // lx starts from the left side of the image<a name="line.88"></a>
+<span class="sourceLineNo">089</span>                        // rx starts from the right side of the image<a name="line.89"></a>
+<span class="sourceLineNo">090</span>                        // lx is used since we are getting pixel from left side<a name="line.90"></a>
+<span class="sourceLineNo">091</span>                        // rx is used to set from right side<a name="line.91"></a>
+<span class="sourceLineNo">092</span>                        // get source pixel value<a name="line.92"></a>
+<span class="sourceLineNo">093</span>                        int p = img.getRGB(lx, y);<a name="line.93"></a>
+<span class="sourceLineNo">094</span><a name="line.94"></a>
+<span class="sourceLineNo">095</span>                        // set mirror image pixel value<a name="line.95"></a>
+<span class="sourceLineNo">096</span>                        res.setRGB(rx, y, p);<a name="line.96"></a>
+<span class="sourceLineNo">097</span>                    }<a name="line.97"></a>
+<span class="sourceLineNo">098</span>                }<a name="line.98"></a>
+<span class="sourceLineNo">099</span>                num++;<a name="line.99"></a>
+<span class="sourceLineNo">100</span>            }<a name="line.100"></a>
+<span class="sourceLineNo">101</span>        }<a name="line.101"></a>
+<span class="sourceLineNo">102</span><a name="line.102"></a>
+<span class="sourceLineNo">103</span>        Logging.debug("Image concatenated.....");<a name="line.103"></a>
+<span class="sourceLineNo">104</span><a name="line.104"></a>
+<span class="sourceLineNo">105</span>        return res;<a name="line.105"></a>
+<span class="sourceLineNo">106</span>        }<a name="line.106"></a>
+<span class="sourceLineNo">107</span><a name="line.107"></a>
+<span class="sourceLineNo">108</span>        public static BufferedImage rotateImage(BufferedImage bufImg) {<a name="line.108"></a>
+<span class="sourceLineNo">109</span>                AffineTransform tx = AffineTransform.getScaleInstance(-1, -1);<a name="line.109"></a>
+<span class="sourceLineNo">110</span>            tx.translate(-bufImg.getWidth(null), -bufImg.getHeight(null));<a name="line.110"></a>
+<span class="sourceLineNo">111</span>            AffineTransformOp op = new AffineTransformOp(tx,<a name="line.111"></a>
+<span class="sourceLineNo">112</span>                AffineTransformOp.TYPE_NEAREST_NEIGHBOR);<a name="line.112"></a>
+<span class="sourceLineNo">113</span>            bufImg = op.filter(bufImg, null);<a name="line.113"></a>
+<span class="sourceLineNo">114</span>            return bufImg;<a name="line.114"></a>
+<span class="sourceLineNo">115</span>        }<a name="line.115"></a>
+<span class="sourceLineNo">116</span><a name="line.116"></a>
+<span class="sourceLineNo">117</span>        private static BufferedImage[] cropMultiTiledImages(BufferedImage[] tiles, int pixelBuffer) {<a name="line.117"></a>
+<span class="sourceLineNo">118</span><a name="line.118"></a>
+<span class="sourceLineNo">119</span>                BufferedImage[] res = new BufferedImage[tiles.length];<a name="line.119"></a>
+<span class="sourceLineNo">120</span><a name="line.120"></a>
+<span class="sourceLineNo">121</span>                        for(int i=0; i&lt;tiles.length;i++) {<a name="line.121"></a>
+<span class="sourceLineNo">122</span>                                if(StreetsideProperties.SHOW_HIGH_RES_STREETSIDE_IMAGERY.get()) {<a name="line.122"></a>
+<span class="sourceLineNo">123</span>                                        res[i] = tiles[i].getSubimage(pixelBuffer, pixelBuffer, 256-pixelBuffer, 256-pixelBuffer);<a name="line.123"></a>
+<span class="sourceLineNo">124</span>                                } else {<a name="line.124"></a>
+<span class="sourceLineNo">125</span>                                        res[i] = tiles[i].getSubimage(pixelBuffer, pixelBuffer, 256-pixelBuffer, 256-pixelBuffer);<a name="line.125"></a>
+<span class="sourceLineNo">126</span>                                }<a name="line.126"></a>
+<span class="sourceLineNo">127</span>                        }<a name="line.127"></a>
+<span class="sourceLineNo">128</span>                return res;<a name="line.128"></a>
+<span class="sourceLineNo">129</span>        }<a name="line.129"></a>
+<span class="sourceLineNo">130</span>}<a name="line.130"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</pre>
+</div>
+</body>
+</html>

@@ -16,6 +16,7 @@ import java.util.function.Consumer;
 
 import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.osm.DataSet;
+import org.openstreetmap.josm.plugins.fr.cadastre.download.CadastreDownloadData;
 import org.openstreetmap.josm.tools.Logging;
 
 /**
@@ -211,7 +212,7 @@ abstract class EdigeoFile {
         // To be overriden if relevant
     }
 
-    EdigeoFile fill(DataSet ds) {
+    EdigeoFile fill(DataSet ds, CadastreDownloadData data) {
         // To be overriden if relevant
         return this;
     }

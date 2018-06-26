@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
@@ -28,14 +29,26 @@ import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.io.AbstractReader;
 import org.openstreetmap.josm.io.IllegalDataException;
+import org.openstreetmap.josm.plugins.fr.cadastre.download.CadastreDownloadData;
 import org.openstreetmap.josm.plugins.fr.cadastre.edigeo.EdigeoFileTHF;
 import org.openstreetmap.josm.plugins.fr.cadastre.edigeo.EdigeoFileVEC;
+import org.openstreetmap.josm.tools.Logging;
 import org.openstreetmap.josm.tools.Utils;
 
 /**
  * Reader for French Cadastre - Edigéo files.
  */
 public class EdigeoPciReader extends AbstractReader {
+
+    private static final BiPredicate<CadastreDownloadData, OsmPrimitive> water = (x, p) -> !x.isDownloadWater();
+    private static final BiPredicate<CadastreDownloadData, OsmPrimitive> build = (x, p) -> !x.isDownloadBuilding();
+    private static final BiPredicate<CadastreDownloadData, OsmPrimitive> symbo = (x, p) -> !x.isDownloadSymbol();
+    private static final BiPredicate<CadastreDownloadData, OsmPrimitive> parce = (x, p) -> !x.isDownloadParcel();
+    private static final BiPredicate<CadastreDownloadData, OsmPrimitive> parcn = (x, p) -> !x.isDownloadParcelNumber();
+    private static final BiPredicate<CadastreDownloadData, OsmPrimitive> addre = (x, p) -> !x.isDownloadAddress();
+    private static final BiPredicate<CadastreDownloadData, OsmPrimitive> local = (x, p) -> !x.isDownloadLocality();
+    private static final BiPredicate<CadastreDownloadData, OsmPrimitive> secti = (x, p) -> !x.isDownloadSection();
+    private static final BiPredicate<CadastreDownloadData, OsmPrimitive> commu = (x, p) -> !x.isDownloadCommune();
 
     private static final Map<String, List<String>> highways = new HashMap<>();
     static {
@@ -55,19 +68,20 @@ public class EdigeoPciReader extends AbstractReader {
                 "30", // Water stream arrow
                 "31", // Connecting arrows between parcelles and numbers
                 "62", // "Sports ground, small streams". What the fuck France?
-                "64"  // "parking, terrace, overhang". What the fuck France?
+                "64", // "parking, terrace, overhang". What the fuck France?
+                "98"  // "various punctual objects". What the fuck France?
         );
 
         // SYM_id mapping
-        EdigeoFileVEC.addObjectPostProcessor("12", "historic=wayside_cross"); // Calvaire
-        EdigeoFileVEC.addObjectPostProcessor("14", "amenity=place_of_worship;religion=christian"); // Church
-        EdigeoFileVEC.addObjectPostProcessor("15", "amenity=place_of_worship;religion=muslim"); // Mosque
-        EdigeoFileVEC.addObjectPostProcessor("16", "amenity=place_of_worship;religion=jewish"); // Synagogue
-        EdigeoFileVEC.addObjectPostProcessor("17", "boundary=administrative;admin_level=2"); // State limit
-        EdigeoFileVEC.addObjectPostProcessor("18", "boundary=administrative;admin_level=6"); // Department limit
-        EdigeoFileVEC.addObjectPostProcessor("19", "boundary=administrative;admin_level=8"); // Municipality limit trigger
-        EdigeoFileVEC.addObjectPostProcessor("21", "highway=road"); // Way
-        EdigeoFileVEC.addObjectPostProcessor("22", "highway=road"); // Road trigger
+        EdigeoFileVEC.addObjectPostProcessor("12", symbo, "historic=wayside_cross"); // Calvaire
+        EdigeoFileVEC.addObjectPostProcessor("14", symbo, "amenity=place_of_worship;religion=christian"); // Church
+        EdigeoFileVEC.addObjectPostProcessor("15", symbo, "amenity=place_of_worship;religion=muslim"); // Mosque
+        EdigeoFileVEC.addObjectPostProcessor("16", symbo, "amenity=place_of_worship;religion=jewish"); // Synagogue
+        EdigeoFileVEC.addObjectPostProcessor("17", commu, "boundary=administrative;admin_level=2"); // State limit
+        EdigeoFileVEC.addObjectPostProcessor("18", commu, "boundary=administrative;admin_level=6"); // Department limit
+        EdigeoFileVEC.addObjectPostProcessor("19", commu, "boundary=administrative;admin_level=8"); // Municipality limit trigger
+        EdigeoFileVEC.addObjectPostProcessor("21", symbo, "highway=road"); // Way
+        EdigeoFileVEC.addObjectPostProcessor("22", symbo, "highway=road"); // Road trigger
         EdigeoFileVEC.addObjectPostProcessor((o, p) -> { // Path / Footway
             String highwayValue = "path";
             if (p instanceof Way) {
@@ -80,24 +94,24 @@ public class EdigeoPciReader extends AbstractReader {
             }
             p.put("highway", highwayValue);
             p.remove("SYM_id");
-        }, "SYM_id", "23"); // Path / Footway
-        EdigeoFileVEC.addObjectPostProcessor("24", "man_made=pipeline"); // Pipeline
-        EdigeoFileVEC.addObjectPostProcessor("25", "man_made=pipeline"); // Aqueduct
-        EdigeoFileVEC.addObjectPostProcessor("26", "aerialway=cable_car"); // Aerialway
-        EdigeoFileVEC.addObjectPostProcessor("27", "power=line"); // Force transport line
-        EdigeoFileVEC.addObjectPostProcessor("29", "railway=rail"); // Railway
-        EdigeoFileVEC.addObjectPostProcessor("33", "bridge=yes"); // Bridge
-        EdigeoFileVEC.addObjectPostProcessor("34", "landuse=reservoir;natural=water;water=reservoir"); // reservoir, lake
-        EdigeoFileVEC.addObjectPostProcessor("37", "tunnel=yes"); // Tunnel
-        EdigeoFileVEC.addObjectPostProcessor("47", "railway=halt"); // Halt
-        EdigeoFileVEC.addObjectPostProcessor("48", "railway=stop"); // Stop
-        EdigeoFileVEC.addObjectPostProcessor("49", "railway=station"); // Station
-        EdigeoFileVEC.addObjectPostProcessor("50", "man_made=mast"); // Pylon
-        EdigeoFileVEC.addObjectPostProcessor("51", "landuse=cemetery;religion=christian"); // Christian cemetery
-        EdigeoFileVEC.addObjectPostProcessor("52", "landuse=cemetery;religion=muslim"); // Muslim cemetery
-        EdigeoFileVEC.addObjectPostProcessor("53", "landuse=cemetery;religion=jewish"); // Jewish cemetery
-        EdigeoFileVEC.addObjectPostProcessor("63", "man_made=water_well"); // Well
-        EdigeoFileVEC.addObjectPostProcessor("65", "leisure=swimming_pool;access=private"); // Swimming pool
+        }, symbo, "SYM_id", "23"); // Path / Footway
+        EdigeoFileVEC.addObjectPostProcessor("24", symbo, "man_made=pipeline"); // Pipeline
+        EdigeoFileVEC.addObjectPostProcessor("25", symbo, "man_made=pipeline"); // Aqueduct
+        EdigeoFileVEC.addObjectPostProcessor("26", symbo, "aerialway=cable_car"); // Aerialway
+        EdigeoFileVEC.addObjectPostProcessor("27", symbo, "power=line"); // Force transport line
+        EdigeoFileVEC.addObjectPostProcessor("29", symbo, "railway=rail"); // Railway
+        EdigeoFileVEC.addObjectPostProcessor("33", symbo, "bridge=yes"); // Bridge
+        EdigeoFileVEC.addObjectPostProcessor("34", water, "landuse=reservoir;natural=water;water=reservoir"); // reservoir, lake
+        EdigeoFileVEC.addObjectPostProcessor("37", symbo, "tunnel=yes"); // Tunnel
+        EdigeoFileVEC.addObjectPostProcessor("47", symbo, "railway=halt"); // Halt
+        EdigeoFileVEC.addObjectPostProcessor("48", symbo, "railway=stop"); // Stop
+        EdigeoFileVEC.addObjectPostProcessor("49", symbo, "railway=station"); // Station
+        EdigeoFileVEC.addObjectPostProcessor("50", symbo, "man_made=mast"); // Pylon
+        EdigeoFileVEC.addObjectPostProcessor("51", symbo, "landuse=cemetery;religion=christian"); // Christian cemetery
+        EdigeoFileVEC.addObjectPostProcessor("52", symbo, "landuse=cemetery;religion=muslim"); // Muslim cemetery
+        EdigeoFileVEC.addObjectPostProcessor("53", symbo, "landuse=cemetery;religion=jewish"); // Jewish cemetery
+        EdigeoFileVEC.addObjectPostProcessor("63", symbo, "man_made=water_well"); // Well
+        EdigeoFileVEC.addObjectPostProcessor("65", water, "leisure=swimming_pool;access=private"); // Swimming pool
 
         // Mapping TEX*_id => name (first step)
         EdigeoFileVEC.addObjectPostProcessor((o, p) -> {
@@ -112,7 +126,7 @@ public class EdigeoPciReader extends AbstractReader {
                 p.remove(t);
             }
             setName(p, sb.toString());
-        }, "TEX_id");
+        }, (x, p) -> false, "TEX_id");
 
         // Objects mapping
         EdigeoFileVEC.addObjectPostProcessor((o, p) -> {
@@ -130,7 +144,7 @@ public class EdigeoPciReader extends AbstractReader {
                     }
                 }
             }
-        }, o -> o.hasScdIdentifier("ZONCOMMUNI_id"));
+        }, o -> o.hasScdIdentifier("ZONCOMMUNI_id"), symbo);
 
         EdigeoFileVEC.addObjectPostProcessor((o, p) -> {
             p.put("boundary", "administrative");
@@ -139,7 +153,7 @@ public class EdigeoPciReader extends AbstractReader {
             p.put("name", WordUtils.capitalizeFully(p.get("TEX2_id")));
             p.remove("IDU_id");
             p.remove("TEX2_id");
-        }, o -> o.hasScdIdentifier("COMMUNE_id"));
+        }, o -> o.hasScdIdentifier("COMMUNE_id"), commu);
 
         EdigeoFileVEC.addObjectPostProcessor((o, p) -> {
             p.put("boundary", "cadastral");
@@ -157,44 +171,68 @@ public class EdigeoPciReader extends AbstractReader {
             p.remove("QUPL_id");
             p.remove("SUPF_id");
         }, o -> o.hasScdIdentifier("SECTION_id") || o.hasScdIdentifier("SUBDSECT_id")
-             || o.hasScdIdentifier("PARCELLE_id") || o.hasScdIdentifier("SUBDFISC_id") || o.hasScdIdentifier("CHARGE_id"));
+             || o.hasScdIdentifier("PARCELLE_id") || o.hasScdIdentifier("SUBDFISC_id") || o.hasScdIdentifier("CHARGE_id"), parce);
 
-        EdigeoFileVEC.addObjectPostProcessor((o, p) -> p.put("wall", "no"), "DUR_id", "02");
+        EdigeoFileVEC.addObjectPostProcessor((o, p) -> p.put("wall", "no"), build, "DUR_id", "02");
         EdigeoFileVEC.addObjectPostProcessor((o, p) -> {
             p.put("building", "yes");
             p.remove("DUR_id");
-        }, o -> o.hasScdIdentifier("BATIMENT_id"));
+        }, o -> o.hasScdIdentifier("BATIMENT_id"), build);
 
         EdigeoFileVEC.addObjectPostProcessor((o, p) -> {
             p.put("addr:housenumber", p.get("name"));
             p.remove("name");
-        }, o -> o.hasScdIdentifier("NUMVOIE_id"));
+        }, o -> o.hasScdIdentifier("NUMVOIE_id"), addre);
 
         EdigeoFileVEC.addObjectPostProcessor((o, p) -> {
             p.put("place", "unknown");
             p.put("fixme", "place type");
-        }, o -> o.hasScdIdentifier("LIEUDIT_id"));
+        }, o -> o.hasScdIdentifier("LIEUDIT_id"), local);
 
         EdigeoFileVEC.addObjectPostProcessor((o, p) -> {
             p.remove("ORI_id");
-        }, o -> o.hasScdIdentifier("TPOINT_id"));
+        }, o -> o.hasScdIdentifier("TPOINT_id"), (x, p) -> false);
 
         EdigeoFileVEC.addObjectPostProcessor((o, p) -> {
             p.put("highway", "road");
             p.put("area", "yes");
-        }, o -> o.hasScdIdentifier("TRONROUTE_id"));
+        }, o -> o.hasScdIdentifier("TRONROUTE_id"), symbo);
 
         EdigeoFileVEC.addObjectPostProcessor((o, p) -> {
             p.put("waterway", "riverbank");
-        }, o -> o.hasScdIdentifier("TRONFLUV_id"));
+        }, o -> o.hasScdIdentifier("TRONFLUV_id"), water);
 
         // Mapping TEX*_id => name (last step)
         for (String t : Arrays.asList("TEX2_id", "TEX3_id", "TEX4_id", "TEX5_id", "TEX6_id", "TEX7_id", "TEX8_id", "TEX9_id")) {
             EdigeoFileVEC.addObjectPostProcessor((o, p) -> {
                 setName(p, p.get(t));
                 p.remove(t);
-            }, t);
+            }, (x, p) -> false, t);
         }
+
+        // Allow to filter parcel numbers
+        EdigeoFileVEC.addObjectPostProcessor((o, p) -> {
+            // Do nothing
+        }, o -> true, (x, p) -> {
+            try {
+                return !x.isDownloadParcelNumber() && p.getNumKeys() == 1 && p.hasKey("name") && Integer.parseInt(p.get("name")) > -1;
+            } catch (NumberFormatException e) {
+                Logging.trace(e);
+                return false;
+            }
+        });
+
+        // Allow to filter labels
+        EdigeoFileVEC.addObjectPostProcessor((o, p) -> {
+            // Do nothing
+        }, o -> true, (x, p) -> {
+            try {
+                return !x.isDownloadSymbol() && p.getNumKeys() == 1 && p.hasKey("name") && Integer.parseInt(p.get("name")) <= -1;
+            } catch (NumberFormatException e) {
+                Logging.trace(e);
+                return true;
+            }
+        });
     }
 
     private static void setName(OsmPrimitive p, String input) {
@@ -227,12 +265,12 @@ public class EdigeoPciReader extends AbstractReader {
     public EdigeoPciReader() {
     }
 
-    static DataSet parseDataSet(InputStream in, File file, ProgressMonitor instance) throws IOException {
+    static DataSet parseDataSet(InputStream in, File file, CadastreDownloadData data, ProgressMonitor instance) throws IOException {
         if (in != null) {
             in.close();
         }
         try {
-            return new EdigeoPciReader().parse(file.toPath(), instance);
+            return new EdigeoPciReader().parse(file.toPath(), data, instance);
         } catch (IOException e) {
             throw e;
         } catch (Exception | AssertionError e) {
@@ -240,7 +278,7 @@ public class EdigeoPciReader extends AbstractReader {
         }
     }
 
-    DataSet parse(Path path, ProgressMonitor instance) throws IOException, ReflectiveOperationException {
+    DataSet parse(Path path, CadastreDownloadData data, ProgressMonitor instance) throws IOException, ReflectiveOperationException {
         Path tmpDir = null;
         Path thfPath = path;
         try {
@@ -264,11 +302,11 @@ public class EdigeoPciReader extends AbstractReader {
                     }
                 }
             }
-            DataSet data = new DataSet();
-            data.setUploadPolicy(UploadPolicy.DISCOURAGED);
-            EdigeoFileTHF thf = new EdigeoFileTHF(thfPath).read().fill(data);
-            data.setName(thf.getSupport().getBlockIdentifier());
-            return data;
+            DataSet ds = new DataSet();
+            ds.setUploadPolicy(UploadPolicy.BLOCKED);
+            EdigeoFileTHF thf = new EdigeoFileTHF(thfPath).read().fill(ds, data);
+            ds.setName(thf.getSupport().getBlockIdentifier());
+            return ds;
         } finally {
             if (tmpDir != null) {
                 Utils.deleteDirectory(tmpDir.toFile());

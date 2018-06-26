@@ -3,6 +3,8 @@ package org.openstreetmap.josm.plugins.fr.cadastre.download;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
+import org.openstreetmap.josm.actions.downloadtasks.DownloadParams;
+import org.openstreetmap.josm.data.osm.UploadPolicy;
 import org.openstreetmap.josm.gui.download.AbstractDownloadSourcePanel;
 import org.openstreetmap.josm.gui.download.DownloadDialog;
 import org.openstreetmap.josm.gui.download.DownloadSettings;
@@ -20,7 +22,11 @@ public class CadastreDownloadSource implements DownloadSource<CadastreDownloadDa
 
     @Override
     public void doDownload(CadastreDownloadData data, DownloadSettings settings) {
-        // TODO download from cadastre API
+        if (settings.getDownloadBounds().isPresent()) {
+            new CadastreDownloadTask(data).download(
+                    new DownloadParams().withUploadPolicy(UploadPolicy.BLOCKED).withNewLayer(settings.asNewLayer()),
+                    settings.getDownloadBounds().get(), null);
+        }
     }
 
     @Override

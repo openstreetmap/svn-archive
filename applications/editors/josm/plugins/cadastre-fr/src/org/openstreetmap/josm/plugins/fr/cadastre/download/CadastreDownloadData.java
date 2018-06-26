@@ -41,39 +41,39 @@ public class CadastreDownloadData {
         this.downloadCommune = downloadCommune;
     }
 
-    final boolean isDownloadWater() {
+    public final boolean isDownloadWater() {
         return downloadWater;
     }
 
-    final boolean isDownloadBuilding() {
+    public final boolean isDownloadBuilding() {
         return downloadBuilding;
     }
 
-    final boolean isDownloadSymbol() {
+    public final boolean isDownloadSymbol() {
         return downloadSymbol;
     }
 
-    final boolean isDownloadParcel() {
+    public final boolean isDownloadParcel() {
         return downloadParcel;
     }
 
-    final boolean isDownloadParcelNumber() {
+    public final boolean isDownloadParcelNumber() {
         return downloadParcelNumber;
     }
 
-    final boolean isDownloadAddress() {
+    public final boolean isDownloadAddress() {
         return downloadAddress;
     }
 
-    final boolean isDownloadLocality() {
+    public final boolean isDownloadLocality() {
         return downloadLocality;
     }
 
-    final boolean isDownloadSection() {
+    public final boolean isDownloadSection() {
         return downloadSection;
     }
 
-    final boolean isDownloadCommune() {
+    public final boolean isDownloadCommune() {
         return downloadCommune;
     }
 }

@@ -14,6 +14,7 @@ import java.util.Objects;
 import org.openstreetmap.josm.actions.SimplifyWayAction;
 import org.openstreetmap.josm.command.SequenceCommand;
 import org.openstreetmap.josm.data.osm.DataSet;
+import org.openstreetmap.josm.plugins.fr.cadastre.download.CadastreDownloadData;
 import org.openstreetmap.josm.tools.Logging;
 
 /**
@@ -277,8 +278,8 @@ public class EdigeoFileTHF extends EdigeoFile {
             }
         }
 
-        void fill(DataSet ds) {
-            allFiles.forEach(f -> f.fill(ds));
+        void fill(DataSet ds, CadastreDownloadData data) {
+            allFiles.forEach(f -> f.fill(ds, data));
         }
 
         @Override
@@ -486,11 +487,11 @@ public class EdigeoFileTHF extends EdigeoFile {
     }
 
     @Override
-    public EdigeoFileTHF fill(DataSet ds) {
-        super.fill(ds);
+    public EdigeoFileTHF fill(DataSet ds, CadastreDownloadData data) {
+        super.fill(ds, data);
         for (Lot lot : getLots()) {
             //ds.addDataSource(new DataSource(lot.gen.getGeoBounds().getBounds(), support.author));
-            lot.fill(ds);
+            lot.fill(ds, data);
         }
         ds.getWays().forEach(w -> {
             SequenceCommand command = SimplifyWayAction.simplifyWay(w, 0.25);

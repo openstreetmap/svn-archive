@@ -32,6 +32,7 @@ import org.openstreetmap.josm.gui.IconToggleButton;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MainMenu;
 import org.openstreetmap.josm.gui.MapFrame;
+import org.openstreetmap.josm.gui.download.DownloadDialog;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.gui.preferences.PreferenceDialog;
 import org.openstreetmap.josm.gui.preferences.PreferenceSetting;
@@ -48,6 +49,7 @@ import org.openstreetmap.josm.plugins.fr.cadastre.actions.MenuActionOpenPreferen
 import org.openstreetmap.josm.plugins.fr.cadastre.actions.mapmode.Address;
 import org.openstreetmap.josm.plugins.fr.cadastre.actions.mapmode.WMSAdjustAction;
 import org.openstreetmap.josm.plugins.fr.cadastre.actions.upload.CheckSourceUploadHook;
+import org.openstreetmap.josm.plugins.fr.cadastre.download.CadastreDownloadSource;
 import org.openstreetmap.josm.plugins.fr.cadastre.download.CadastreDownloadTask;
 import org.openstreetmap.josm.plugins.fr.cadastre.edigeo.pci.EdigeoPciImporter;
 import org.openstreetmap.josm.plugins.fr.cadastre.preferences.CadastrePreferenceSetting;
@@ -232,7 +234,7 @@ public class CadastrePlugin extends Plugin {
         registerSessionLayerImporter("cadastre-fr", CadastreSessionImporter.class);
 
         MainApplication.getMenu().openLocation.addDownloadTaskClass(CadastreDownloadTask.class);
-        //DownloadDialog.addDownloadSource(new CadastreDownloadSource());
+        DownloadDialog.addDownloadSource(new CadastreDownloadSource());
     }
 
     private static void initCacheDir() {

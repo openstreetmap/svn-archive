@@ -11,11 +11,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.BiConsumer;
+import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.openstreetmap.josm.actions.CreateMultipolygonAction;
+import org.openstreetmap.josm.command.PurgeCommand;
 import org.openstreetmap.josm.command.SequenceCommand;
 import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.coor.LatLon;
@@ -28,6 +30,7 @@ import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.data.projection.Projection;
 import org.openstreetmap.josm.plugins.fr.cadastre.CadastrePlugin;
+import org.openstreetmap.josm.plugins.fr.cadastre.download.CadastreDownloadData;
 import org.openstreetmap.josm.plugins.fr.cadastre.edigeo.EdigeoFileSCD.McdAttributeDef;
 import org.openstreetmap.josm.plugins.fr.cadastre.edigeo.EdigeoFileSCD.McdConstructionRelationDef;
 import org.openstreetmap.josm.plugins.fr.cadastre.edigeo.EdigeoFileSCD.McdConstructionRelationDef.RelationKind;
@@ -436,7 +439,7 @@ public class EdigeoFileVEC extends EdigeoLotFile<VecBlock<?>> {
     }
 
     private static final List<Predicate<ObjectBlock>> ignoredObjects = new ArrayList<>();
-    private static final List<Pair<Predicate<ObjectBlock>, BiConsumer<ObjectBlock, OsmPrimitive>>> postProcessors = new ArrayList<>();
+    private static final List<EdigeoPostProcessor> postProcessors = new ArrayList<>();
 
     /**
      * Adds a predicate to ignore a special type of object.
@@ -481,8 +484,10 @@ public class EdigeoFileVEC extends EdigeoLotFile<VecBlock<?>> {
      * @param consumer consumer that will update OSM primitive accordingly
      * @param predicate predicate to match
      */
-    public static void addObjectPostProcessor(BiConsumer<ObjectBlock, OsmPrimitive> consumer, Predicate<ObjectBlock> predicate) {
-        postProcessors.add(new Pair<>(Objects.requireNonNull(predicate, "predicate"), Objects.requireNonNull(consumer, "consumer")));
+    public static void addObjectPostProcessor(
+            BiConsumer<ObjectBlock, OsmPrimitive> consumer,
+            Predicate<ObjectBlock> predicate, BiPredicate<CadastreDownloadData, OsmPrimitive> filter) {
+        postProcessors.add(new EdigeoPostProcessor(predicate, filter, consumer));
     }
 
     /**
@@ -491,8 +496,10 @@ public class EdigeoFileVEC extends EdigeoLotFile<VecBlock<?>> {
      * @param key attribute key
      * @param values attribute values
      */
-    public static void addObjectPostProcessor(BiConsumer<ObjectBlock, OsmPrimitive> consumer, String key, String... values) {
-        postProcessors.add(new Pair<>(predicate(key, values), Objects.requireNonNull(consumer, "consumer")));
+    public static void addObjectPostProcessor(
+            BiConsumer<ObjectBlock, OsmPrimitive> consumer,
+            BiPredicate<CadastreDownloadData, OsmPrimitive> filter, String key, String... values) {
+        postProcessors.add(new EdigeoPostProcessor(predicate(key, values), filter, consumer));
     }
 
     /**
@@ -500,8 +507,8 @@ public class EdigeoFileVEC extends EdigeoLotFile<VecBlock<?>> {
      * @param symId value for "SYM_id" attribute.
      * @param keyValues OSM attribute key/values (int the form {@code foo=bar;bar=baz})
      */
-    public static void addObjectPostProcessor(String symId, String keyValues) {
-        postProcessors.add(new Pair<>(predicate("SYM_id", symId), (o, p) -> {
+    public static void addObjectPostProcessor(String symId, BiPredicate<CadastreDownloadData, OsmPrimitive> filter, String keyValues) {
+        postProcessors.add(new EdigeoPostProcessor(predicate("SYM_id", symId), filter, (o, p) -> {
             p.remove("SYM_id");
             for (String tag : keyValues.split(";")) {
                 String[] kv = tag.split("=");
@@ -544,9 +551,10 @@ public class EdigeoFileVEC extends EdigeoLotFile<VecBlock<?>> {
     }
 
     @Override
-    EdigeoFileVEC fill(DataSet ds) {
-        super.fill(ds);
+    EdigeoFileVEC fill(DataSet ds, CadastreDownloadData data) {
+        super.fill(ds, data);
         Projection proj = lot.geo.getCoorReference().getProjection();
+        List<OsmPrimitive> toPurge = new ArrayList<>();
         for (ObjectBlock obj : getObjects()) {
             if (!ignoredObjects.stream().anyMatch(p -> p.test(obj))) {
                 OsmPrimitive p;
@@ -558,16 +566,27 @@ public class EdigeoFileVEC extends EdigeoLotFile<VecBlock<?>> {
                     default: throw new IllegalArgumentException(obj.toString());
                 }
                 if (p != null) {
-                    for (Pair<Predicate<ObjectBlock>, BiConsumer<ObjectBlock, OsmPrimitive>> e : postProcessors) {
-                        if (e.a.test(obj)) {
-                            e.b.accept(obj, p);
+                    boolean purged = false;
+                    for (EdigeoPostProcessor e : postProcessors) {
+                        if (e.predicate.test(obj)) {
+                            if (e.filter.test(data, p)) {
+                                purged = toPurge.add(p);
+                                if (p instanceof Relation) {
+                                    toPurge.addAll(((Relation) p).getMemberPrimitivesList());
+                                }
+                            } else {
+                                e.consumer.accept(obj, p);
+                            }
                         }
                     }
-                    if (p.isTagged()) {
+                    if (!purged && p.isTagged()) {
                         p.put("source", CadastrePlugin.source);
                     }
                 }
             }
+        }
+        if (!toPurge.isEmpty()) {
+            PurgeCommand.build(toPurge, null).executeCommand();
         }
         return this;
     }

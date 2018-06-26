@@ -67,6 +67,7 @@ public class EdigeoPciReader extends AbstractReader {
         EdigeoFileVEC.addIgnoredObject("SYM_id",
                 "30", // Water stream arrow
                 "31", // Connecting arrows between parcelles and numbers
+                "32", // Surface boundary not forming parcel
                 "62", // "Sports ground, small streams". What the fuck France?
                 "64", // "parking, terrace, overhang". What the fuck France?
                 "98"  // "various punctual objects". What the fuck France?

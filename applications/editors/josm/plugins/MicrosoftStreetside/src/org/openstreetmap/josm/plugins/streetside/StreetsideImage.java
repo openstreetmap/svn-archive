@@ -41,16 +41,11 @@ public class StreetsideImage extends StreetsideAbstractImage {
   // Pitch
   private double pi;
 
-  // Heading (equivalent to Mapillary cd attribute - not currently supported.
-  private double he;
-
   // Blurring instructions - not currently used by the plugin
   private String bl;
 
   // Undocumented Attributes
   private int ml;
-  private long ne;
-  private long pr;
   private List<String> nbn;
   private List<String> pbn;
   private int ad;
@@ -235,34 +230,6 @@ public String getId() {
    */
   public void setMl(int ml) {
     this.ml = ml;
-  }
-
-  /**
-   * @return the ne
-   */
-  public long getNe() {
-    return ne;
-  }
-
-  /**
-   * @param ne the ne to set
-   */
-  public void setNe(long ne) {
-    this.ne = ne;
-  }
-
-  /**
-   * @return the pr
-   */
-  public long getPr() {
-    return pr;
-  }
-
-  /**
-   * @param pr the pr to set
-   */
-  public void setPr(long pr) {
-    this.pr = pr;
   }
 
   /**

@@ -25,6 +25,10 @@ public abstract class StreetsideAbstractImage implements Comparable<StreetsideAb
 
 	protected String id;
 
+	private long ne;
+  private long pr;
+
+
 	/** The time the image was captured, in Epoch format. */
 	protected long cd;
 	/** Sequence of pictures containing this object. */
@@ -336,4 +340,34 @@ public abstract class StreetsideAbstractImage implements Comparable<StreetsideAb
 	public void turn(final double ca) {
 		movingHe = tempHe + ca;
 	}
+
+	/**
+   * @return the ne
+   */
+  public long getNe() {
+    return ne;
+  }
+
+  /**
+   * @param ne the ne to set
+   */
+  public void setNe(long ne) {
+    this.ne = ne;
+  }
+
+  /**
+   * @return the pr
+   */
+  public long getPr() {
+    return pr;
+  }
+
+  /**
+   * @param pr the pr to set
+   */
+  public void setPr(long pr) {
+    this.pr = pr;
+  }
+
+
 }

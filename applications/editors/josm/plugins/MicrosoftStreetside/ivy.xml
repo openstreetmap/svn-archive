@@ -8,5 +8,6 @@
         <dependency org="com.fasterxml.jackson.core" name="jackson-databind" rev="2.2.4"/>
         <dependency org="com.fasterxml.jackson.core" name="jackson-annotations" rev="2.2.4"/>
         <dependency org="us.monoid.web" name="resty" rev="0.3.2"/>
+        <dependency org="log4j" name="log4j" rev="1.2.17"/>
 	</dependencies>
 </ivy-module>

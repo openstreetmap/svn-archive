@@ -78,7 +78,6 @@ public final class StreetsideViewerDialog extends ToggleDialog
 	}
 
 	public StreetsideViewerPanel getStreetsideViewerPanel() {
-		// TODO: check if it's null @rrhs
 		return streetsideViewerPanel;
 	}
 

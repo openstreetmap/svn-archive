@@ -56,8 +56,7 @@ public static void downloadPicture(StreetsideImage img) {
 *          The image whose picture is going to be downloaded.
 */
 public static void downloadCubemap(StreetsideImage cm) {
-	// TODO: causes errors. Analyze @rrh
-	//downloadPicture(cm, PICTURE.CUBEMAP);
+	downloadPicture(cm, PICTURE.CUBEMAP);
 }
 
 /**

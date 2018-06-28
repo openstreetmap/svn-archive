@@ -12,7 +12,6 @@ import org.openstreetmap.josm.plugins.streetside.utils.StreetsideURL.APIv3;
 
 
 public class ImageDetailsDownloadRunnable extends BoundsDownloadRunnable {
-  //private static final Function<Bounds, URL> URL_GEN = APIv3::searchImages;
   private static final Function<Bounds, URL> URL_GEN = APIv3::searchStreetsideImages;
 
   private final StreetsideData data;

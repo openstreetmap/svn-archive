@@ -194,9 +194,9 @@
 <span class="sourceLineNo">186</span>    final String newImageKey = newImage instanceof StreetsideImage ? ((StreetsideImage) newImage).getId(): null;<a name="line.186"></a>
 <span class="sourceLineNo">187</span>    if (newImageKey != null) {<a name="line.187"></a>
 <span class="sourceLineNo">188</span>      imageLinkChangeListener = b -&gt; imgLinkAction.setURL(<a name="line.188"></a>
-<span class="sourceLineNo">189</span>        StreetsideProperties.IMAGE_LINK_TO_BLUR_EDITOR.get()<a name="line.189"></a>
+<span class="sourceLineNo">189</span>        /*StreetsideProperties.IMAGE_LINK_TO_BLUR_EDITOR.get()<a name="line.189"></a>
 <span class="sourceLineNo">190</span>        ? StreetsideURL.MainWebsite.blurEditImage(newImageKey)<a name="line.190"></a>
-<span class="sourceLineNo">191</span>        : StreetsideURL.MainWebsite.browseImage(newImageKey)<a name="line.191"></a>
+<span class="sourceLineNo">191</span>        :*/ StreetsideURL.MainWebsite.browseImage(newImageKey)<a name="line.191"></a>
 <span class="sourceLineNo">192</span>      );<a name="line.192"></a>
 <span class="sourceLineNo">193</span>      imageLinkChangeListener.valueChanged(null);<a name="line.193"></a>
 <span class="sourceLineNo">194</span>      StreetsideProperties.IMAGE_LINK_TO_BLUR_EDITOR.addListener(imageLinkChangeListener);<a name="line.194"></a>

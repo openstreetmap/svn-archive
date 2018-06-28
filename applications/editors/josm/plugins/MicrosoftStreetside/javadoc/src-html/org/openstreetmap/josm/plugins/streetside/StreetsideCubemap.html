@@ -27,7 +27,7 @@
 <span class="sourceLineNo">019</span> */<a name="line.19"></a>
 <span class="sourceLineNo">020</span>public class StreetsideCubemap extends StreetsideAbstractImage implements Comparable&lt;StreetsideAbstractImage&gt;{<a name="line.20"></a>
 <span class="sourceLineNo">021</span><a name="line.21"></a>
-<span class="sourceLineNo">022</span>        private static Map&lt;String,Map&lt;String,BufferedImage&gt;&gt; face2TilesMap = new HashMap&lt;String,Map&lt;String,BufferedImage&gt;&gt;();<a name="line.22"></a>
+<span class="sourceLineNo">022</span>        //private static Map&lt;String,Map&lt;String,BufferedImage&gt;&gt; face2TilesMap = new HashMap&lt;String,Map&lt;String,BufferedImage&gt;&gt;();<a name="line.22"></a>
 <span class="sourceLineNo">023</span><a name="line.23"></a>
 <span class="sourceLineNo">024</span>        /**<a name="line.24"></a>
 <span class="sourceLineNo">025</span>        * If two values for field cd differ by less than EPSILON both values are considered equal.<a name="line.25"></a>
@@ -50,11 +50,11 @@
 <span class="sourceLineNo">042</span>    @SuppressWarnings({ "unchecked", "rawtypes" })<a name="line.42"></a>
 <span class="sourceLineNo">043</span>        public StreetsideCubemap(String quadId, LatLon latLon, double he) {<a name="line.43"></a>
 <span class="sourceLineNo">044</span>                super(quadId, latLon, he);<a name="line.44"></a>
-<span class="sourceLineNo">045</span>                face2TilesMap = new HashMap();<a name="line.45"></a>
+<span class="sourceLineNo">045</span>                /*face2TilesMap = new HashMap();<a name="line.45"></a>
 <span class="sourceLineNo">046</span><a name="line.46"></a>
 <span class="sourceLineNo">047</span>                EnumSet.allOf(CubemapUtils.CubemapFaces.class).forEach(face -&gt; {<a name="line.47"></a>
 <span class="sourceLineNo">048</span>                        face2TilesMap.put(face.getValue(), new HashMap&lt;String, BufferedImage&gt;());<a name="line.48"></a>
-<span class="sourceLineNo">049</span>                });<a name="line.49"></a>
+<span class="sourceLineNo">049</span>                });*/<a name="line.49"></a>
 <span class="sourceLineNo">050</span><a name="line.50"></a>
 <span class="sourceLineNo">051</span>        }<a name="line.51"></a>
 <span class="sourceLineNo">052</span><a name="line.52"></a>
@@ -69,10 +69,10 @@
 <span class="sourceLineNo">061</span>        *<a name="line.61"></a>
 <span class="sourceLineNo">062</span>        * @return the face2TilesMap<a name="line.62"></a>
 <span class="sourceLineNo">063</span>        */<a name="line.63"></a>
-<span class="sourceLineNo">064</span>        public Map&lt;String, Map&lt;String,BufferedImage&gt;&gt; getFace2TilesMap() {<a name="line.64"></a>
+<span class="sourceLineNo">064</span>        /*public Map&lt;String, Map&lt;String,BufferedImage&gt;&gt; getFace2TilesMap() {<a name="line.64"></a>
 <span class="sourceLineNo">065</span>                return face2TilesMap;<a name="line.65"></a>
 <span class="sourceLineNo">066</span>        }<a name="line.66"></a>
-<span class="sourceLineNo">067</span><a name="line.67"></a>
+<span class="sourceLineNo">067</span>*/<a name="line.67"></a>
 <span class="sourceLineNo">068</span>        /**<a name="line.68"></a>
 <span class="sourceLineNo">069</span>         * Comparison method for the StreetsideCubemap object.<a name="line.69"></a>
 <span class="sourceLineNo">070</span>         *<a name="line.70"></a>
@@ -139,13 +139,13 @@
 <span class="sourceLineNo">131</span>        /**<a name="line.131"></a>
 <span class="sourceLineNo">132</span>         * resets the faces2TilesMap, emptying it for a new set of cubemap imagery<a name="line.132"></a>
 <span class="sourceLineNo">133</span>         */<a name="line.133"></a>
-<span class="sourceLineNo">134</span>        public void resetFaces2TileMap() {<a name="line.134"></a>
+<span class="sourceLineNo">134</span>        /*public void resetFaces2TileMap() {<a name="line.134"></a>
 <span class="sourceLineNo">135</span>                face2TilesMap = new HashMap&lt;&gt;();<a name="line.135"></a>
 <span class="sourceLineNo">136</span><a name="line.136"></a>
 <span class="sourceLineNo">137</span>                EnumSet.allOf(CubemapUtils.CubemapFaces.class).forEach(face -&gt; {<a name="line.137"></a>
 <span class="sourceLineNo">138</span>                        face2TilesMap.put(face.getValue(), new HashMap&lt;String, BufferedImage&gt;());<a name="line.138"></a>
 <span class="sourceLineNo">139</span>                });<a name="line.139"></a>
-<span class="sourceLineNo">140</span>        }<a name="line.140"></a>
+<span class="sourceLineNo">140</span>        }*/<a name="line.140"></a>
 <span class="sourceLineNo">141</span>}<a name="line.141"></a>
 
 

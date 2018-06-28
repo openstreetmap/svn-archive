@@ -29,6 +29,7 @@ public abstract class BoundsDownloadRunnable implements Runnable {
   @Override
   public void run() {
     URL nextURL = getUrlGenerator().apply(bounds);
+    Logging.debug("nextURL: {0}", nextURL.toString());
     try {
       while (nextURL != null) {
         if (Thread.interrupted()) {
@@ -72,7 +73,7 @@ public abstract class BoundsDownloadRunnable implements Runnable {
     if (info != null && info.length() >= 1) {
       message.append(" (").append(info).append(')');
     }
-    Logging.info(message.toString());
+    Logging.debug(message.toString());
   }
 
   public abstract void run(final URLConnection connection) throws IOException;

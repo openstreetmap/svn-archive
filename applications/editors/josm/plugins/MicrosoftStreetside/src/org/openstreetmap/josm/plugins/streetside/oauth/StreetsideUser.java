@@ -32,10 +32,10 @@ private StreetsideUser() {
 * @return The username of the logged in user.
 */
 public static synchronized String getUsername() {
- if (!isTokenValid) {
+ //if (!isTokenValid) {
    return null;
- }
- if (username == null) {
+ //}
+ /*if (username == null) {
    try {
      username = OAuthUtils
          .getWithHeader(StreetsideURL.APIv3.userURL())
@@ -45,7 +45,7 @@ public static synchronized String getUsername() {
      reset();
    }
  }
- return username;
+ return username;*/
 }
 
 /**
@@ -53,9 +53,9 @@ public static synchronized String getUsername() {
 *         strings.
 */
 public static synchronized Map<String, String> getSecrets() {
- if (!isTokenValid)
+ //if (!isTokenValid)
    return null;
- Map<String, String> hash = new HashMap<>();
+ /*Map<String, String> hash = new HashMap<>();
  try {
    if (imagesHash == null)
      imagesHash = OAuthUtils
@@ -71,7 +71,7 @@ public static synchronized Map<String, String> getSecrets() {
    reset();
  }
  hash.put("images_policy", imagesPolicy);
- return hash;
+ return hash;*/
 }
 
 /**

@@ -11,19 +11,14 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.TexturePaint;
-import java.awt.event.ActionEvent;
 import java.awt.geom.Line2D;
-import java.awt.geom.Path2D;
 import java.awt.image.BufferedImage;
 import java.util.Comparator;
 import java.util.IntSummaryStatistics;
 import java.util.Optional;
 
-import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.Icon;
-import javax.swing.JComponent;
-import javax.swing.KeyStroke;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.Bounds;
@@ -41,8 +36,8 @@ import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.gui.layer.MainLayerManager.ActiveLayerChangeEvent;
 import org.openstreetmap.josm.gui.layer.MainLayerManager.ActiveLayerChangeListener;
 import org.openstreetmap.josm.plugins.streetside.cache.CacheUtils;
-import org.openstreetmap.josm.plugins.streetside.gui.StreetsideChangesetDialog;
 import org.openstreetmap.josm.plugins.streetside.gui.StreetsideMainDialog;
+import org.openstreetmap.josm.plugins.streetside.history.StreetsideRecord;
 import org.openstreetmap.josm.plugins.streetside.io.download.StreetsideDownloader;
 import org.openstreetmap.josm.plugins.streetside.io.download.StreetsideDownloader.DOWNLOAD_MODE;
 import org.openstreetmap.josm.plugins.streetside.mode.AbstractMode;
@@ -55,8 +50,6 @@ import org.openstreetmap.josm.plugins.streetside.utils.StreetsideUtils;
 import org.openstreetmap.josm.tools.I18n;
 import org.openstreetmap.josm.tools.ImageProvider.ImageSizes;
 import org.openstreetmap.josm.tools.Logging;
-
-import org.openstreetmap.josm.plugins.streetside.history.StreetsideRecord;
 
 /**
  * This class represents the layer shown in JOSM. There can only exist one
@@ -139,7 +132,7 @@ ActiveLayerChangeListener, StreetsideDataListener {
         .put("StreetsideDel", new DeleteImageAction());*/
 
 			// There is no delete image action for Streetside (Streetside functionality here removed).
-			getLocationChangeset().addChangesetListener(StreetsideChangesetDialog.getInstance());
+			//getLocationChangeset().addChangesetListener(StreetsideChangesetDialog.getInstance());
 		}
 		createHatchTexture();
 		invalidate();

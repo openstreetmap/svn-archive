@@ -22,22 +22,22 @@ public class StreetsideURLTest {
     @Ignore
 	@Test
     public void testSearchDetections() {
-      assertUrlEquals(StreetsideURL.APIv3.searchDetections(null), "https://a.streetside.com/v3/detections", CLIENT_ID_QUERY_PART);
+      //assertUrlEquals(StreetsideURL.APIv3.searchDetections(null), "https://a.streetside.com/v3/detections", CLIENT_ID_QUERY_PART);
     }
 
     @Ignore
     @Test
     public void testSearchImages() {
-      assertUrlEquals(StreetsideURL.APIv3.searchImages(null), "https://a.streetside.com/v3/images", CLIENT_ID_QUERY_PART);
+      //assertUrlEquals(StreetsideURL.APIv3.searchImages(null), "https://a.streetside.com/v3/images", CLIENT_ID_QUERY_PART);
     }
 
     @Ignore
     @Test
     public void testSubmitChangeset() throws MalformedURLException {
-      assertEquals(
+      /*assertEquals(
         new URL("https://a.streetside.com/v3/changesets?" + CLIENT_ID_QUERY_PART),
         StreetsideURL.APIv3.submitChangeset()
-      );
+      );*/
     }
 
     @Test
@@ -99,7 +99,7 @@ public class StreetsideURLTest {
   @Ignore
   @Test
   public void testConnectURL() {
-    assertUrlEquals(
+   /* assertUrlEquals(
         StreetsideURL.MainWebsite.connect("http://redirect-host/ä"),
         "https://www.streetside.com/connect",
         CLIENT_ID_QUERY_PART,
@@ -122,25 +122,25 @@ public class StreetsideURLTest {
         CLIENT_ID_QUERY_PART,
         "scope=user%3Aread+public%3Aupload+public%3Awrite",
         "response_type=token"
-    );
+    );*/
   }
 
   @Ignore
   @Test
   public void testUploadSecretsURL() throws MalformedURLException {
-    assertEquals(
+    /*assertEquals(
         new URL("https://a.streetside.com/v2/me/uploads/secrets?"+CLIENT_ID_QUERY_PART),
         StreetsideURL.uploadSecretsURL()
-    );
+    );*/
   }
 
   @Ignore
   @Test
   public void testUserURL() throws MalformedURLException {
-    assertEquals(
+    /*assertEquals(
         new URL("https://a.streetside.com/v3/me?"+CLIENT_ID_QUERY_PART),
         StreetsideURL.APIv3.userURL()
-    );
+    );*/
   }
 
   @Test

@@ -22,7 +22,7 @@ import org.openstreetmap.josm.tools.Logging;
 public final class StreetsideURL {
 	/** Base URL of the Bing Bubble API. */
 	private static final String STREETSIDE_BASE_URL = "https://dev.virtualearth.net/mapcontrol/HumanScaleServices/GetBubbles.ashx";
-	private static final String BASE_API_V2_URL = "https://a.mapillary.com/v2/";
+	//private static final String BASE_API_V2_URL = "https://a.mapillary.com/v2/";
 	private static final String CLIENT_ID = "T1Fzd20xZjdtR0s1VDk5OFNIOXpYdzoxNDYyOGRkYzUyYTFiMzgz";
 	private static final String BING_MAPS_KEY = "AuftgJsO0Xs8Ts4M1xZUQJQXJNsvmh3IV8DkNieCiy3tCwCUMq76-WpkrBtNAuEm";
 	private static final String TEST_BUBBLE_ID = "80848005";
@@ -35,19 +35,19 @@ public final class StreetsideURL {
 	private static final int OSM_BBOX_WEST = 0;
 
 	public static final class APIv3 {
-		private static final String BASE_URL = "https://a.mapillary.com/v3/";
+		//private static final String BASE_URL = "https://a.mapillary.com/v3/";
 
 		private APIv3() {
 			// Private constructor to avoid instantiation
 		}
 
-		public static URL getUser(String key) {
+		/*public static URL getUser(String key) {
 			return StreetsideURL.string2URL(APIv3.BASE_URL, "users/", key, StreetsideURL.queryString(null));
 		}
 
-		/**
+		*//**
 		 * @return the URL where you can create, get and approve changesets
-		 */
+		 *//*
 		public static URL submitChangeset() {
 			return StreetsideURL.string2URL(APIv3.BASE_URL, "changesets", APIv3.queryString(null));
 		}
@@ -58,15 +58,15 @@ public final class StreetsideURL {
 
 		public static URL searchImages(Bounds bounds) {
 			return StreetsideURL.string2URL(APIv3.BASE_URL, "images", APIv3.queryStreetsideString(bounds));
-		}
+		}*/
 
 		public static URL searchStreetsideImages(Bounds bounds) {
 			return StreetsideURL.string2URL(StreetsideURL.STREETSIDE_BASE_URL, APIv3.queryStreetsideString(bounds));
 		}
 
-		public static URL searchMapObjects(final Bounds bounds) {
+		/*public static URL searchMapObjects(final Bounds bounds) {
 			return StreetsideURL.string2URL(APIv3.BASE_URL, "objects", APIv3.queryString(bounds));
-		}
+		}*/
 
 		public static URL searchStreetsideSequences(final Bounds bounds) {
 			return StreetsideURL.string2URL(StreetsideURL.STREETSIDE_BASE_URL, APIv3.queryStreetsideString(bounds));
@@ -127,9 +127,9 @@ public final class StreetsideURL {
 		/**
 		 * @return the URL where you'll find information about the user account as JSON
 		 */
-		public static URL userURL() {
+		/*public static URL userURL() {
 			return StreetsideURL.string2URL(APIv3.BASE_URL, "me", StreetsideURL.queryString(null));
-		}
+		}*/
 	}
 
 	public static final class VirtualEarth {
@@ -151,7 +151,7 @@ public final class StreetsideURL {
 	}
 
 	public static final class MainWebsite {
-		private static final String BASE_URL = "https://www.mapillary.com/";
+		//private static final String BASE_URL = "https://www.mapillary.com/";
 
 		private MainWebsite() {
 			// Private constructor to avoid instantiation
@@ -176,7 +176,7 @@ public final class StreetsideURL {
 		 * @return the URL of the blur editor
 		 * @throws IllegalArgumentException if the image key is <code>null</code>
 		 */
-		public static URL blurEditImage(final String key) {
+		/*public static URL blurEditImage(final String key) {
 			if (key == null) {
 				throw new IllegalArgumentException("The image key must not be null!");
 			}
@@ -188,7 +188,7 @@ public final class StreetsideURL {
 				urlEncodedKey = key;
 			}
 			return StreetsideURL.string2URL(MainWebsite.BASE_URL, "app/blur?focus=photo&pKey=", urlEncodedKey);
-		}
+		}*/
 
 		/**
 		 * Gives you the URL for the blur editor of the image with the given key.
@@ -216,7 +216,7 @@ public final class StreetsideURL {
 		 *        When this is <code>null</code>, it's omitted from the query string.
 		 * @return the URL that the user should visit to start the OAuth authentication
 		 */
-		public static URL connect(String redirectURI) {
+		/*public static URL connect(String redirectURI) {
 			final HashMap<String, String> parts = new HashMap<>();
 			if (redirectURI != null && redirectURI.length() >= 1) {
 				parts.put("redirect_uri", redirectURI);
@@ -228,7 +228,7 @@ public final class StreetsideURL {
 
 		public static URL mapObjectIcon(String key) {
 			return StreetsideURL.string2URL(MainWebsite.BASE_URL, "developer/api-documentation/images/traffic_sign/" + key + ".png");
-		}
+		}*/
 	}
 
 	private StreetsideURL() {
@@ -285,9 +285,9 @@ public final class StreetsideURL {
 	/**
 	 * @return the URL where you'll find the upload secrets as JSON
 	 */
-	public static URL uploadSecretsURL() {
+	/*public static URL uploadSecretsURL() {
 		return StreetsideURL.string2URL(StreetsideURL.BASE_API_V2_URL, "me/uploads/secrets", StreetsideURL.queryString(null));
-	}
+	}*/
 
 	/**
 	 * Builds a query string from it's parts that are supplied as a {@link Map}
@@ -308,6 +308,9 @@ public final class StreetsideURL {
 				}
 			}
 		}
+
+		Logging.info(I18n.tr("queryString result: {0}", ret.toString()));
+
 		return ret.toString();
 	}
 
@@ -330,6 +333,8 @@ public final class StreetsideURL {
 				Logging.error(e); // This should not happen, as the encoding is hard-coded
 			}
 		}
+		Logging.info(I18n.tr("queryStreetsideBoundsString result: {0}", ret.toString()));
+
 		return ret.toString();
 	}
 
@@ -342,6 +347,7 @@ public final class StreetsideURL {
 		} catch (final UnsupportedEncodingException e) {
 			Logging.error(e); // This should not happen, as the encoding is hard-coded
 		}
+		Logging.info(I18n.tr("queryById result: {0}", ret.toString()));
 		return ret.toString();
 	}
 

@@ -65,13 +65,11 @@ public final class SequenceDownloadRunnable extends BoundsDownloadRunnable {
     mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
     try {
-
-    JsonParser parser = mapper.getFactory().createParser(new BufferedInputStream(con.getInputStream()));
+      JsonParser parser = mapper.getFactory().createParser(new BufferedInputStream(con.getInputStream()));
     if(parser.nextToken() != JsonToken.START_ARRAY) {
       parser.close();
       throw new IllegalStateException("Expected an array");
     }
-
 
     StreetsideImage previous = null;
 
@@ -104,38 +102,37 @@ public final class SequenceDownloadRunnable extends BoundsDownloadRunnable {
           // Add list of cubemap tile images to images
           List<StreetsideImage> tiles = new ArrayList<StreetsideImage>();
 
-        // TODO: set previous and next @rrh
+          EnumSet.allOf(CubemapUtils.CubemapFaces.class).forEach(face -> {
 
-					EnumSet.allOf(CubemapUtils.CubemapFaces.class).forEach(face -> {
-
-							for (int i = 0; i < 4; i++) {
-								// Initialize four-tiled cubemap faces (four images per cube side with 18-length
-								// Quadkey)
-								//if (StreetsideProperties.CUBEFACE_SIZE.get().intValue() == 4) {
-								if (!StreetsideProperties.SHOW_HIGH_RES_STREETSIDE_IMAGERY.get()) {
-									StreetsideImage tile = new StreetsideImage(
-											String.valueOf(image.getId() + Integer.valueOf(i)));
-									tiles.add(tile);
-								}
-								// Initialize four-tiled cubemap faces (four images per cub eside with 20-length
-								// Quadkey)
-								//if (StreetsideProperties.CUBEFACE_SIZE.get().intValue() == 16) {
-								if (StreetsideProperties.SHOW_HIGH_RES_STREETSIDE_IMAGERY.get()) {
-									for (int j = 0; j < 4; j++) {
-										StreetsideImage tile = new StreetsideImage(String.valueOf(image.getId()
-												+ face.getValue() + CubemapUtils.rowCol2StreetsideCellAddressMap
-														.get(String.valueOf(Integer.valueOf(i).toString() + Integer.valueOf(j).toString()))));
-										tiles.add(tile);
-									}
-								}
-							}
-					});
+            for (int i = 0; i < 4; i++) {
+              // Initialize four-tiled cubemap faces (four images per cube side with 18-length
+              // Quadkey)
+              // if (StreetsideProperties.CUBEFACE_SIZE.get().intValue() == 4) {
+              if (!StreetsideProperties.SHOW_HIGH_RES_STREETSIDE_IMAGERY.get()) {
+                StreetsideImage tile = new StreetsideImage(String.valueOf(image.getId() + Integer.valueOf(i)));
+                tiles.add(tile);
+              }
+              // Initialize four-tiled cubemap faces (four images per cub eside with 20-length
+              // Quadkey)
+              // if (StreetsideProperties.CUBEFACE_SIZE.get().intValue() == 16) {
+              if (StreetsideProperties.SHOW_HIGH_RES_STREETSIDE_IMAGERY.get()) {
+                for (int j = 0; j < 4; j++) {
+                  StreetsideImage tile = new StreetsideImage(
+                    String.valueOf(
+                      image.getId() + face.getValue() + CubemapUtils.rowCol2StreetsideCellAddressMap
+                        .get(String.valueOf(Integer.valueOf(i).toString() + Integer.valueOf(j).toString()))
+                      ));
+                  tiles.add(tile);
+                }
+              }
+            }
+          });
 
       	  bubbleImages.add(image);
           Logging.info("Added image with id <" + image.getId() + ">");
-          // TODO: double check whether this pre-caches successfullly @rrh
-          //StreetsideData.downloadSurroundingCubemaps(image);
-
+          if (StreetsideProperties.PREDOWNLOAD_CUBEMAPS.get()) {
+            StreetsideData.downloadSurroundingCubemaps(image);
+          }
         }
       }
 

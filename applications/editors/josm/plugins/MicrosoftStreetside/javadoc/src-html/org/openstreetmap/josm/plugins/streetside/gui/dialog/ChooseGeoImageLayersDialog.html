@@ -66,7 +66,7 @@
 <span class="sourceLineNo">058</span>    cancelButton.requestFocus();<a name="line.58"></a>
 <span class="sourceLineNo">059</span>    buttonPanel.add(cancelButton);<a name="line.59"></a>
 <span class="sourceLineNo">060</span>    final JButton importButton = new JButton(I18n.tr("Import"), new ImageProvider("copy").get());<a name="line.60"></a>
-<span class="sourceLineNo">061</span>    importButton.addActionListener(e -&gt; {<a name="line.61"></a>
+<span class="sourceLineNo">061</span>    /*importButton.addActionListener(e -&gt; {<a name="line.61"></a>
 <span class="sourceLineNo">062</span>      list.getSelectedValuesList().parallelStream().map(gil -&gt; {<a name="line.62"></a>
 <span class="sourceLineNo">063</span>        StreetsideSequence seq = new StreetsideSequence();<a name="line.63"></a>
 <span class="sourceLineNo">064</span>        seq.add(<a name="line.64"></a>
@@ -95,7 +95,7 @@
 <span class="sourceLineNo">087</span>      });<a name="line.87"></a>
 <span class="sourceLineNo">088</span>      StreetsideLayer.invalidateInstance();<a name="line.88"></a>
 <span class="sourceLineNo">089</span>      dispose();<a name="line.89"></a>
-<span class="sourceLineNo">090</span>    });<a name="line.90"></a>
+<span class="sourceLineNo">090</span>    });*/<a name="line.90"></a>
 <span class="sourceLineNo">091</span>    buttonPanel.add(importButton);<a name="line.91"></a>
 <span class="sourceLineNo">092</span>    c.add(buttonPanel, BorderLayout.SOUTH);<a name="line.92"></a>
 <span class="sourceLineNo">093</span><a name="line.93"></a>

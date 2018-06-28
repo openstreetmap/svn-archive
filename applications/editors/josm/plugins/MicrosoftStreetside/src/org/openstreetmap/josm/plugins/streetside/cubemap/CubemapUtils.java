@@ -1,6 +1,9 @@
 // License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.streetside.cubemap;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Stream;
@@ -96,6 +99,9 @@ public class CubemapUtils {
 		String res = null;
 		final StringBuilder sb = new StringBuilder();
 
+		Logging.debug(I18n.tr("convertDecimal2Quaternary input: {0}", Long.toString(inputNum)));
+
+
 		while (inputNum > 0) {
 			sb.append(inputNum % CubemapUtils.NUM_BASE);
 			inputNum /= CubemapUtils.NUM_BASE;
@@ -103,6 +109,8 @@ public class CubemapUtils {
 
 		sb.append("0");
 		res = sb.reverse().toString();
+
+		Logging.debug(I18n.tr("convertDecimal2Quaternary output: {0}", res));
 
 		return res;
 	}
@@ -214,28 +222,6 @@ public class CubemapUtils {
 		// magic numbers - the face id is contained in the 16th and 17th positions
 		return tileId.substring(16, 18);
 	}
-
-	public static String msToString(long ms) {
-        long totalSecs = ms/1000;
-        long hours = (totalSecs / 3600);
-        long mins = (totalSecs / 60) % 60;
-        long secs = totalSecs % 60;
-        String minsString = (mins == 0)
-            ? "00"
-            : ((mins < 10)
-               ? "0" + mins
-               : "" + mins);
-        String secsString = (secs == 0)
-            ? "00"
-            : ((secs < 10)
-               ? "0" + secs
-               : "" + secs);
-        if (hours > 0)
-            return hours + ":" + minsString + ":" + secsString;
-        else if (mins > 0)
-            return mins + ":" + secsString;
-        else return ":" + secsString;
-    }
 
 	public static String convertDoubleCountNrto16TileNr(String countNr) {
 		String tileAddress;

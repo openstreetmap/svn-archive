@@ -19,7 +19,7 @@ import org.openstreetmap.josm.plugins.streetside.cubemap.CubemapUtils.CubemapFac
  */
 public class StreetsideCubemap extends StreetsideAbstractImage implements Comparable<StreetsideAbstractImage>{
 
-	private static Map<String,Map<String,BufferedImage>> face2TilesMap = new HashMap<String,Map<String,BufferedImage>>();
+	//private static Map<String,Map<String,BufferedImage>> face2TilesMap = new HashMap<String,Map<String,BufferedImage>>();
 
 	/**
 	* If two values for field cd differ by less than EPSILON both values are considered equal.
@@ -42,11 +42,11 @@ public class StreetsideCubemap extends StreetsideAbstractImage implements Compar
     @SuppressWarnings({ "unchecked", "rawtypes" })
 	public StreetsideCubemap(String quadId, LatLon latLon, double he) {
 		super(quadId, latLon, he);
-		face2TilesMap = new HashMap();
+		/*face2TilesMap = new HashMap();
 
 		EnumSet.allOf(CubemapUtils.CubemapFaces.class).forEach(face -> {
 			face2TilesMap.put(face.getValue(), new HashMap<String, BufferedImage>());
-		});
+		});*/
 
 	}
 
@@ -61,10 +61,10 @@ public class StreetsideCubemap extends StreetsideAbstractImage implements Compar
  	*
  	* @return the face2TilesMap
  	*/
-	public Map<String, Map<String,BufferedImage>> getFace2TilesMap() {
+	/*public Map<String, Map<String,BufferedImage>> getFace2TilesMap() {
 		return face2TilesMap;
 	}
-
+*/
 	/**
 	 * Comparison method for the StreetsideCubemap object.
 	 *
@@ -131,11 +131,11 @@ public class StreetsideCubemap extends StreetsideAbstractImage implements Compar
 	/**
 	 * resets the faces2TilesMap, emptying it for a new set of cubemap imagery
 	 */
-	public void resetFaces2TileMap() {
+	/*public void resetFaces2TileMap() {
 		face2TilesMap = new HashMap<>();
 
 		EnumSet.allOf(CubemapUtils.CubemapFaces.class).forEach(face -> {
 			face2TilesMap.put(face.getValue(), new HashMap<String, BufferedImage>());
 		});
-	}
+	}*/
 }

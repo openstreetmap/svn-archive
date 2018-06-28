@@ -3,6 +3,7 @@ package org.openstreetmap.josm.plugins.streetside.cubemap;
 
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
@@ -33,8 +34,37 @@ public class CubemapBuilder implements ITileDownloadingTaskListener, StreetsideD
 	private StreetsideCubemap cubemap;
 	protected boolean cancelled;
 	private long startTime;
+  private Map<String, BufferedImage> tileImages = new HashMap<String,BufferedImage>();
 
-	private CubemapBuilder() {
+  /**
+   * @return the tileImages
+   */
+  public Map<String, BufferedImage> getTileImages() {
+    return tileImages;
+  }
+
+  /**
+   * @param tileImages the tileImages to set
+   */
+  public void setTileImages(Map<String, BufferedImage> tileImages) {
+    this.tileImages = tileImages;
+  }
+
+  /**
+   * @return the tileImages
+   */
+  /*public Map<String, BufferedImage> getTileImages() {
+    return tileImages;
+  }
+
+  *//**
+   * @param tileImages the tileImages to set
+   *//*
+  public void setTileImages(Map<String, BufferedImage> tileImages) {
+    this.tileImages = tileImages;
+  }*/
+
+  private CubemapBuilder() {
 		// private constructor to avoid instantiation
 	}
 
@@ -56,12 +86,16 @@ public class CubemapBuilder implements ITileDownloadingTaskListener, StreetsideD
 			// download cubemap images in different threads and then subsequently
 			// set the cubeface images in JavaFX
 			downloadCubemapImages(cubemap.getId());
+
+			long runTime = (System.currentTimeMillis()-startTime)/1000;
+			Logging.debug("Completed downloading tiles for {0} in {1} seconds.",newImage.getId(),runTime);
 		}
 	}
 
 	public void reload(String imageId) {
 		if (cubemap != null && imageId.equals(cubemap.getId())) {
-			CubemapBuilder.getInstance().getCubemap().resetFaces2TileMap();
+			tileImages = new HashMap<String,BufferedImage>();
+		  //CubemapBuilder.getInstance().getCubemap().resetFaces2TileMap();
 			downloadCubemapImages(imageId);
 		}
 	}
@@ -102,7 +136,7 @@ public class CubemapBuilder implements ITileDownloadingTaskListener, StreetsideD
 				for (Future<String> ff : results) {
 
 					Logging.debug(I18n.tr("Completed tile downloading task {0} in {1}", ff.get(),
-							CubemapUtils.msToString(startTime - System.currentTimeMillis())));
+							(startTime - System.currentTimeMillis())/ 1000));
 				}
 
 				// launch 16-tiled (high-res) downloading tasks
@@ -124,7 +158,7 @@ public class CubemapBuilder implements ITileDownloadingTaskListener, StreetsideD
 				List<Future<String>> results = pool.invokeAll(tasks);
 				for (Future<String> ff : results) {
 					Logging.debug(I18n.tr("Completed tile downloading task {0} in {1}", ff.get(),
-							CubemapUtils.msToString(startTime - System.currentTimeMillis())));
+							(startTime - System.currentTimeMillis())/ 1000));
 				}
 			}
 		} catch (Exception ee) {
@@ -136,7 +170,7 @@ public class CubemapBuilder implements ITileDownloadingTaskListener, StreetsideD
 		long stopTime = System.currentTimeMillis();
 		long runTime = stopTime - startTime;
 
-		Logging.debug(I18n.tr("Tile imagery downloading tasks completed in {0}", CubemapUtils.msToString(runTime)));
+		Logging.debug(I18n.tr("Tile imagery downloading tasks completed in {0}", runTime/1000000));
 
 		if (fails > 0) {
 			Logging.error(I18n.tr("{0} downloading tasks failed.", Integer.valueOf(fails)));
@@ -152,12 +186,14 @@ public class CubemapBuilder implements ITileDownloadingTaskListener, StreetsideD
 
 		int tileCount = 0;
 
-		for (int i = 0; i < CubemapUtils.NUM_SIDES; i++) {
+		/*for (int i = 0; i < CubemapUtils.NUM_SIDES; i++) {
 			String faceNumber = CubemapUtils.getFaceNumberForCount(i);
 			Map<String, BufferedImage> faceTileImages = CubemapBuilder.getInstance().getCubemap().getFace2TilesMap()
 					.get(faceNumber);
 			tileCount += faceTileImages.values().size();
-		}
+		}*/
+
+		tileCount = CubemapBuilder.getInstance().getTileImages().keySet().size();
 
 		int maxCols = StreetsideProperties.SHOW_HIGH_RES_STREETSIDE_IMAGERY.get() ? 4 : 2;
 		int maxRows = StreetsideProperties.SHOW_HIGH_RES_STREETSIDE_IMAGERY.get() ? 4 : 2;
@@ -167,14 +203,13 @@ public class CubemapBuilder implements ITileDownloadingTaskListener, StreetsideD
 					CubemapBuilder.getInstance().getCubemap().getId()));
 
 			buildCubemapFaces();
-		} else {
-			Logging.debug(I18n.tr("{0} tile images received for cubemap {1}", Integer.valueOf(tileCount).toString(),
-					CubemapBuilder.getInstance().getCubemap().getId()));
 		}
 	}
 
 	private void buildCubemapFaces() {
-		CubemapBox cmb = StreetsideViewerDialog.getInstance().getStreetsideViewerPanel().getCubemapBox();
+
+	  Logging.debug("Assembling cubemap tile images");
+	  CubemapBox cmb = StreetsideViewerDialog.getInstance().getStreetsideViewerPanel().getCubemapBox();
 		ImageView[] views = cmb.getViews();
 
 		final int maxCols = StreetsideProperties.SHOW_HIGH_RES_STREETSIDE_IMAGERY.get() ? 4 : 2;
@@ -186,9 +221,10 @@ public class CubemapBuilder implements ITileDownloadingTaskListener, StreetsideD
 		if (!StreetsideProperties.SHOW_HIGH_RES_STREETSIDE_IMAGERY.get()) {
 			for (int i = 0; i < CubemapUtils.NUM_SIDES; i++) {
 
-				Map<String, BufferedImage> tileImages = CubemapBuilder.getInstance().getCubemap().getFace2TilesMap()
-						.get(CubemapUtils.getFaceNumberForCount(i));
-				BufferedImage[] faceTileImages = new BufferedImage[maxCols * maxRows];
+				/*Map<String, BufferedImage> tileImages = CubemapBuilder.getInstance().getCubemap().getFace2TilesMap()
+						.get(CubemapUtils.getFaceNumberForCount(i));*/
+
+			  BufferedImage[] faceTileImages = new BufferedImage[maxCols * maxRows];
 
 				for (int j = 0; j < (maxCols * maxRows); j++) {
 					String tileId = String.valueOf(getCubemap().getId() + CubemapUtils.getFaceNumberForCount(i)
@@ -202,7 +238,9 @@ public class CubemapBuilder implements ITileDownloadingTaskListener, StreetsideD
 
 				// rotate top cubeface 180 degrees - misalignment workaround
 				if (i == 4) {
+				  final long start = System.nanoTime();
 					finalImg = GraphicsUtils.rotateImage(finalImg);
+					Logging.debug(I18n.tr("Rotation took {0}", System.nanoTime() - start));
 				}
 				finalImages[i] = GraphicsUtils.convertBufferedImage2JavaFXImage(finalImg);
 			}
@@ -212,9 +250,9 @@ public class CubemapBuilder implements ITileDownloadingTaskListener, StreetsideD
 
 				int tileCount = 0;
 
-				Map<String, Map<String, BufferedImage>> face2TilesMap = CubemapBuilder.getInstance().getCubemap()
-						.getFace2TilesMap();
-				Map<String, BufferedImage> tileImages = face2TilesMap.get(CubemapUtils.getFaceNumberForCount(i));
+				/*Map<String, Map<String, BufferedImage>> face2TilesMap = CubemapBuilder.getInstance().getCubemap()
+						.getFace2TilesMap();*/
+				//Map<String, BufferedImage> tileImages = face2TilesMap.get(CubemapUtils.getFaceNumberForCount(i));
 				BufferedImage[] faceTileImages = new BufferedImage[StreetsideProperties.SHOW_HIGH_RES_STREETSIDE_IMAGERY
 						.get() ? 16 : 4];
 
@@ -240,15 +278,40 @@ public class CubemapBuilder implements ITileDownloadingTaskListener, StreetsideD
 			views[i].setImage(finalImages[i]);
 		}
 
-		StreetsideViewerDialog.getInstance().getStreetsideViewerPanel().revalidate();
-		StreetsideViewerDialog.getInstance().getStreetsideViewerPanel().repaint();
-		StreetsideViewerPanel.getThreeSixtyDegreeViewerPanel().revalidate();
-		StreetsideViewerPanel.getThreeSixtyDegreeViewerPanel().repaint();
+    StreetsideViewerDialog.getInstance().getStreetsideViewerPanel().revalidate();
+    StreetsideViewerDialog.getInstance().getStreetsideViewerPanel().repaint();
 
-		long endTime = System.currentTimeMillis();
-		long runTime = endTime - startTime;
-		Logging.debug(I18n.tr("Completed downloading, assembling and setting cubemap imagery for cubemap {0} in {1}",
-				cubemap.getId(), CubemapUtils.msToString(runTime)));
+    /*if (!Platform.isFxApplicationThread()) {
+      Platform.runLater(new Runnable() {
+        @Override
+        public void run() {*/
+
+           //try {
+             /* GraphicsUtils.PlatformHelper.run(() -> {
+                StreetsideViewerPanel.getThreeSixtyDegreeViewerPanel().initialize();
+            });*/
+             //StreetsideViewerPanel.getThreeSixtyDegreeViewerPanel().initialize();
+             StreetsideViewerPanel.getThreeSixtyDegreeViewerPanel()
+                .setScene(StreetsideViewerPanel.getThreeSixtyDegreeViewerPanel().getCubemapScene());
+            /*} catch (NonInvertibleTransformException nite) {
+              // TODO Auto-generated catch block
+              Logging.error(I18n.tr("Error setting scene in 360 viewer panel {0}", nite.getMessage()));
+            }*/
+        /*}
+      });
+    }*/
+
+    StreetsideViewerPanel.getThreeSixtyDegreeViewerPanel().revalidate();
+    StreetsideViewerPanel.getThreeSixtyDegreeViewerPanel().repaint();
+
+    long endTime = System.currentTimeMillis();
+    long runTime = (endTime - startTime) / 1000;
+    Logging.debug(
+      I18n.tr(
+        "Completed downloading, assembling and setting cubemap imagery for cubemap {0} in {1}", cubemap.getId(), runTime
+        )
+      );
+      CubemapBuilder.getInstance().setTileImages(new HashMap<String, BufferedImage>());
 	}
 
 	/**

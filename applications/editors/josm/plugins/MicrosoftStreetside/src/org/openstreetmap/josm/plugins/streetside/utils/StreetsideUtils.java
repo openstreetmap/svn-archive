@@ -7,7 +7,10 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
@@ -15,7 +18,6 @@ import javax.swing.SwingUtilities;
 
 import org.apache.commons.imaging.common.RationalNumber;
 import org.apache.commons.imaging.formats.tiff.constants.GpsTagConstants;
-
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.gui.MainApplication;
@@ -281,5 +283,26 @@ public final class StreetsideUtils {
       ret.append(" — ").append(PluginState.getUploadString());
     }
     MainApplication.getMap().statusLine.setHelpText(ret.toString());
+  }
+
+  public static List<StreetsideAbstractImage> sortImagesInSequence(List<StreetsideAbstractImage> images) {
+    List<StreetsideAbstractImage> res = new ArrayList<StreetsideAbstractImage>();
+    if (images != null && images.size() > 0) {
+      res.add(images.get(0));
+      images.remove(0);
+      String nextImageId = Long.toString(images.get(0).getNe());
+      if (nextImageId != null) {
+        Iterator<StreetsideAbstractImage> iter = images.iterator();
+        while (iter.hasNext()) {
+          StreetsideAbstractImage current = (StreetsideAbstractImage) iter.next();
+          if (nextImageId.equals(current.getId())) {
+            res.add(current);
+            images.remove(current);
+          }
+        }
+      }
+    }
+
+    return res;
   }
 }

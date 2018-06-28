@@ -16,7 +16,7 @@ import org.openstreetmap.josm.tools.Logging;
 
 public class MapObject extends KeyIndexedObject {
   private static final ImageIcon ICON_UNKNOWN_TYPE = ImageProvider.get("unknown-mapobject-type");
-  private static Function<String, URL> iconUrlGen = MainWebsite::mapObjectIcon;
+  //private static Function<String, URL> iconUrlGen = MainWebsite::mapObjectIcon;
 
   private final LatLon coordinate;
   private final String objPackage;
@@ -55,14 +55,14 @@ public class MapObject extends KeyIndexedObject {
     if ("not-in-set".equals(objectTypeID)) {
       return ICON_UNKNOWN_TYPE;
     } else if (cachedIcon == null) {
-      try {
+      /*try {
         final ImageIcon downloadedIcon = new ImageIcon(ImageIO.read(iconUrlGen.apply(objectTypeID)));
         MapObjectIconCache.getInstance().put(objectTypeID, downloadedIcon);
         return downloadedIcon;
       } catch (IOException e) {
         Logging.log(Logging.LEVEL_WARN, "Failed to download icon " + objectTypeID, e);
         return ICON_UNKNOWN_TYPE;
-      }
+      }*/
     }
     return cachedIcon;
   }

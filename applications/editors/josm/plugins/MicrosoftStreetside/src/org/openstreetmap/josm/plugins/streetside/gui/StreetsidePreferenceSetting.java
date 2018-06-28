@@ -247,12 +247,12 @@ public class StreetsidePreferenceSetting implements SubPreferenceSetting, Street
     public void actionPerformed(ActionEvent arg0) {
       OAuthPortListener portListener = new OAuthPortListener(callback);
       portListener.start();
-      try {
+      /*try {
         // TODO: change URL RRH
         StreetsideUtils.browse(StreetsideURL.MainWebsite.connect("http://localhost:"+OAuthPortListener.PORT+'/'));
       } catch (IOException e) {
         Logging.error(e);
-      }
+      }*/
     }
   }
 

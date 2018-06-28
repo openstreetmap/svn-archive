@@ -186,9 +186,9 @@ public final class ImageInfoPanel extends ToggleDialog implements StreetsideData
     final String newImageKey = newImage instanceof StreetsideImage ? ((StreetsideImage) newImage).getId(): null;
     if (newImageKey != null) {
       imageLinkChangeListener = b -> imgLinkAction.setURL(
-        StreetsideProperties.IMAGE_LINK_TO_BLUR_EDITOR.get()
+        /*StreetsideProperties.IMAGE_LINK_TO_BLUR_EDITOR.get()
         ? StreetsideURL.MainWebsite.blurEditImage(newImageKey)
-        : StreetsideURL.MainWebsite.browseImage(newImageKey)
+        :*/ StreetsideURL.MainWebsite.browseImage(newImageKey)
       );
       imageLinkChangeListener.valueChanged(null);
       StreetsideProperties.IMAGE_LINK_TO_BLUR_EDITOR.addListener(imageLinkChangeListener);

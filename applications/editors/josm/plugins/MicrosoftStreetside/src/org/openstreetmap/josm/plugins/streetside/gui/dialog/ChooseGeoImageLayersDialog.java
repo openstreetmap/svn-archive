@@ -58,7 +58,7 @@ public class ChooseGeoImageLayersDialog extends JDialog {
     cancelButton.requestFocus();
     buttonPanel.add(cancelButton);
     final JButton importButton = new JButton(I18n.tr("Import"), new ImageProvider("copy").get());
-    importButton.addActionListener(e -> {
+    /*importButton.addActionListener(e -> {
       list.getSelectedValuesList().parallelStream().map(gil -> {
         StreetsideSequence seq = new StreetsideSequence();
         seq.add(
@@ -87,7 +87,7 @@ public class ChooseGeoImageLayersDialog extends JDialog {
       });
       StreetsideLayer.invalidateInstance();
       dispose();
-    });
+    });*/
     buttonPanel.add(importButton);
     c.add(buttonPanel, BorderLayout.SOUTH);
 

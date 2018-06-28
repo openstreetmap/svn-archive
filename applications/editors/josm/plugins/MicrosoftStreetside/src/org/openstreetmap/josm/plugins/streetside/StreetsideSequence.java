@@ -7,6 +7,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.openstreetmap.josm.plugins.streetside.model.UserProfile;
 
+import org.openstreetmap.josm.plugins.streetside.utils.StreetsideUtils;
+
 /**
  * Class that stores a sequence of {@link StreetsideAbstractImage} objects.
  *
@@ -85,7 +87,10 @@ public StreetsideSequence(String id) {
    *
    * @param images The set of {@link StreetsideAbstractImage} objects to be added.
    */
-  public synchronized void add(Collection<? extends StreetsideAbstractImage> images) {
+  @SuppressWarnings("unchecked")
+  public synchronized void add(final Collection<? extends StreetsideAbstractImage> images) {
+    Collection<? extends StreetsideAbstractImage> res = images;
+    res = StreetsideUtils.sortImagesInSequence((List<StreetsideAbstractImage>) images);
     this.images.addAll(images);
     images.forEach(img -> img.setSequence(this));
   }

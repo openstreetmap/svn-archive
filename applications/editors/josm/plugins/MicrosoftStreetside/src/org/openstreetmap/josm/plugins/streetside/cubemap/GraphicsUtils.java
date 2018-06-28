@@ -6,6 +6,7 @@ import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 
 import org.openstreetmap.josm.plugins.streetside.utils.StreetsideProperties;
+import org.openstreetmap.josm.tools.I18n;
 import org.openstreetmap.josm.tools.Logging;
 
 import javafx.application.Platform;
@@ -41,7 +42,9 @@ public class GraphicsUtils {
 
 	public static BufferedImage buildMultiTiledCubemapFaceImage(BufferedImage[] tiles) {
 
-		BufferedImage res = null;
+		long start = System.currentTimeMillis();
+
+	  BufferedImage res = null;
 
 		int pixelBuffer = StreetsideProperties.SHOW_HIGH_RES_STREETSIDE_IMAGERY.get()?2:1;
 
@@ -62,7 +65,7 @@ public class GraphicsUtils {
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
                 // TODO: this makes the image a mirror image. why!?!
-            	img.createGraphics().drawImage(tiles[num], chunkWidth * j, chunkHeight * i, null);
+            	img.createGraphics().drawImage(tiles[num], chunkWidth * j, (chunkHeight * i), null);
 
             	// TODO: remove file test!
             	/*try {
@@ -100,8 +103,7 @@ public class GraphicsUtils {
             }
         }
 
-        Logging.debug("Image concatenated.....");
-
+        Logging.debug(I18n.tr("Image concatenated in {0} millisecs.",(System.currentTimeMillis()-start)));
         return res;
 	}
 
@@ -116,7 +118,9 @@ public class GraphicsUtils {
 
 	private static BufferedImage[] cropMultiTiledImages(BufferedImage[] tiles, int pixelBuffer) {
 
-		BufferedImage[] res = new BufferedImage[tiles.length];
+		long start = System.currentTimeMillis();
+
+	  BufferedImage[] res = new BufferedImage[tiles.length];
 
 			for(int i=0; i<tiles.length;i++) {
 				if(StreetsideProperties.SHOW_HIGH_RES_STREETSIDE_IMAGERY.get()) {
@@ -125,6 +129,9 @@ public class GraphicsUtils {
 					res[i] = tiles[i].getSubimage(pixelBuffer, pixelBuffer, 256-pixelBuffer, 256-pixelBuffer);
 				}
 			}
+
+		Logging.debug("Images cropped in {0} millisecs.",(System.currentTimeMillis()-start));
+
 		return res;
 	}
 }

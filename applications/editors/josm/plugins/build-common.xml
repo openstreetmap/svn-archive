@@ -101,6 +101,8 @@
             <compilerclasspath>
                 <pathelement location="${error_prone_ant.jar}"/>
             </compilerclasspath>
+            <compilerarg value="--add-modules" if:set="isJava9" unless:set="isJava11" />
+            <compilerarg value="java.activation,java.se.ee" if:set="isJava9" unless:set="isJava11" />
             <compilerarg value="-Xlint:deprecation"/>
             <compilerarg value="-Xlint:unchecked"/>
             <compilerarg value="-Xep:StringSplitter:OFF" compiler="com.google.errorprone.ErrorProneAntCompilerAdapter"/>
@@ -528,6 +530,8 @@
                     <fileset refid="plugin.requires.jars"/>
                     <path refid="test.classpath"/>
                 </classpath>
+                <compilerarg value="--add-modules" if:set="isJava9" unless:set="isJava11" />
+                <compilerarg value="java.activation,java.se.ee" if:set="isJava9" unless:set="isJava11" />
 				<compilerarg value="-Xlint:all"/>
 				<compilerarg value="-Xlint:-serial"/>
             </javac>
@@ -541,6 +545,8 @@
             <jacoco:coverage destfile="${plugin.test.dir}/jacoco.exec" enabled="${coverageByDefault}">
                 <junit printsummary="yes" fork="true" forkmode="once" dir="${basedir}">
                     <jvmarg value="-Dfile.encoding=UTF-8"/>
+                    <jvmarg value="--add-modules" if:set="isJava9" unless:set="isJava11" />
+                    <jvmarg value="java.activation,java.se.ee" if:set="isJava9" unless:set="isJava11" />
                     <jvmarg value="--add-opens" if:set="isJava9" />
                     <jvmarg value="java.base/java.lang.reflect=ALL-UNNAMED" if:set="isJava9" />
                     <jvmarg value="--add-opens" if:set="isJava9" />

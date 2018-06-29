@@ -26,8 +26,7 @@
     <property name="plugin.lib.dir"         location="lib"/>
     <!-- this is the directory where the plugin jar is copied to -->
     <property name="plugin.dist.dir"        location="../../dist"/>
-    <property name="ant.build.javac.target" value="1.8"/>
-    <property name="ant.build.javac.source" value="1.8"/>
+    <property name="java.lang.version"      value="1.8" />
     <property name="plugin.jar"             location="${plugin.dist.dir}/${ant.project.name}.jar"/>
     <property name="plugin.sources.jar"     location="${plugin.dist.dir}/${ant.project.name}-sources.jar"/>
     <property name="plugin.javadoc.jar"     location="${plugin.dist.dir}/${ant.project.name}-javadoc.jar"/>
@@ -97,7 +96,8 @@
     </target>
     <target name="compile" depends="init, pre-compile" unless="skip-compile">
         <echo message="compiling sources for ${plugin.jar} ..."/>
-        <javac compiler="${javac.compiler}" srcdir="${plugin.src.dir}" debug="true" destdir="${plugin.build.dir}" includeantruntime="false" encoding="UTF-8">
+        <javac compiler="${javac.compiler}" srcdir="${plugin.src.dir}" debug="true" destdir="${plugin.build.dir}" includeantruntime="false"
+            encoding="UTF-8" target="${java.lang.version}" source="${java.lang.version}">
             <compilerclasspath>
                 <pathelement location="${error_prone_ant.jar}"/>
             </compilerclasspath>
@@ -520,7 +520,8 @@
     </target>
     <target name="test-compile" depends="test-init,dist" if="test.present">
         <sequential>
-            <javac debug="on" includeantruntime="false" srcdir="${plugin.test.dir}/unit" destdir="${plugin.test.dir}/build/unit" encoding="UTF-8">
+            <javac debug="on" includeantruntime="false" srcdir="${plugin.test.dir}/unit" destdir="${plugin.test.dir}/build/unit" encoding="UTF-8"
+                target="${java.lang.version}" source="${java.lang.version}">
                 <classpath>
                     <fileset refid="plugin.requires.jars"/>
                     <path refid="test.classpath"/>
@@ -566,7 +567,7 @@
     <target name="checkstyle-compile">
         <mkdir dir="${checkstyle-build.dir}"/>
         <javac sourcepath="" srcdir="../00_core_tools/checkstyle/src" failonerror="true"
-            destdir="${checkstyle-build.dir}" target="${ant.build.javac.target}" source="${ant.build.javac.source}" debug="on"
+            destdir="${checkstyle-build.dir}" target="${java.lang.version}" source="${java.lang.version}" debug="on"
             includeantruntime="false" createMissingPackageInfoClass="false"
             encoding="UTF-8" classpath="${checkstyle.jar}">
         </javac>

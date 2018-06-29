@@ -15,6 +15,7 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 
+import org.apache.log4j.Logger;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.gui.MainApplication;
@@ -39,6 +40,8 @@ import org.openstreetmap.josm.tools.Shortcut;
 public class StreetsideExportAction extends JosmAction {
 
   private static final long serialVersionUID = 6131359489725632369L;
+
+  final static Logger logger = Logger.getLogger(StreetsideExportAction.class);
 
   private StreetsideExportDialog dialog;
 
@@ -98,7 +101,7 @@ public class StreetsideExportAction extends JosmAction {
       try {
         MainApplication.worker.execute(new StreetsideExportManager(images));
       } catch (IOException e1) {
-        Logging.error(e1);
+        logger.error(e1);
       }
     }
     dlg.dispose();

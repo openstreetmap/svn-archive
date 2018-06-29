@@ -95,7 +95,7 @@ public class ThreeSixtyDegreeViewerPanel extends JFXPanel {
 					setScene(createDefaultScene());
 				  //setScene(createScene());
 				/*} catch (NonInvertibleTransformException e) {
-					Logging.error(I18n.tr("Error initializing StreetsideViewerPanel - JavaFX {0}", e.getMessage()));
+					logger.error(I18n.tr("Error initializing StreetsideViewerPanel - JavaFX {0}", e.getMessage()));
 				}*/
 			}
 		});
@@ -492,7 +492,7 @@ public class ThreeSixtyDegreeViewerPanel extends JFXPanel {
 					scene = createScene(img, img1, img2, img3, img4, img5);
 					setScene(scene);
 				} catch (NonInvertibleTransformException e) {
-					Logging.error(I18n.tr("Error initializing StreetsideViewerPanel - JavaFX {0}", e.getMessage()));
+					logger.error(I18n.tr("Error initializing StreetsideViewerPanel - JavaFX {0}", e.getMessage()));
 				}
 			}
 		});

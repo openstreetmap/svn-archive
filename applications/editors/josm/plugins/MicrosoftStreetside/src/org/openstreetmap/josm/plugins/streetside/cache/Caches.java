@@ -9,7 +9,7 @@ import javax.swing.ImageIcon;
 
 import org.apache.commons.jcs.access.CacheAccess;
 import org.apache.commons.jcs.engine.behavior.IElementAttributes;
-
+import org.apache.log4j.Logger;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.cache.BufferedImageCacheEntry;
 import org.openstreetmap.josm.data.cache.JCSCacheManager;
@@ -17,6 +17,8 @@ import org.openstreetmap.josm.plugins.streetside.model.UserProfile;
 import org.openstreetmap.josm.tools.Logging;
 
 public final class Caches {
+
+  final static Logger logger = Logger.getLogger(Caches.class);
 
 	private Caches() {
 		// Private constructor to avoid instantiation
@@ -38,7 +40,7 @@ public final class Caches {
 			try {
 				c = createNewCache();
 			} catch (IOException e) {
-				Logging.log(Logging.LEVEL_WARN, "Could not initialize cache for " + getClass().getName(), e);
+				logger.warn("Could not initialize cache for " + getClass().getName(), e);
 				c = null;
 			}
 			cache = c;
@@ -95,7 +97,7 @@ public final class Caches {
 			try {
 				c = JCSCacheManager.getCache("streetside", 10, 10000, Caches.getCacheDirectory().getPath());
 			} catch (Exception e) {
-				Logging.log(Logging.LEVEL_WARN, "Could not initialize the Streetside cubemap cache.", e);
+				logger.warn("Could not initialize the Streetside cubemap cache.", e);
 				c = null;
 			}
 			cache = c;

@@ -5,9 +5,13 @@ import java.awt.Image;
 
 import javax.swing.ImageIcon;
 
-import org.openstreetmap.josm.tools.Logging;
+import org.apache.log4j.Logger;
+import org.openstreetmap.josm.tools.I18n;
 
 public final class ImageUtil {
+
+  final static Logger logger = Logger.getLogger(ImageUtil.class);
+
   private ImageUtil() {
     // Private constructor to avoid instantiation
   }
@@ -20,7 +24,9 @@ public final class ImageUtil {
    *         only the contained {@link Image} is exchanged.
    */
   public static ImageIcon scaleImageIcon(final ImageIcon icon, int size) {
-    Logging.debug("Scale icon {0} → {1}", icon.getIconWidth(), size);
+    if(StreetsideProperties.DEBUGING_ENABLED.get()) {
+      logger.debug(I18n.tr("Scale icon {0} → {1}", icon.getIconWidth(), size));
+    }
     return new ImageIcon(icon.getImage().getScaledInstance(
       icon.getIconWidth() >= icon.getIconHeight() ? size : Math.max(1, Math.round(icon.getIconWidth() / (float) icon.getIconHeight() * size)),
       icon.getIconHeight() >= icon.getIconWidth() ? size : Math.max(1, Math.round(icon.getIconHeight() / (float) icon.getIconWidth() * size)),

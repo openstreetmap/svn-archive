@@ -31,7 +31,6 @@ import org.openstreetmap.josm.plugins.streetside.StreetsidePlugin;
 import org.openstreetmap.josm.plugins.streetside.StreetsideSequence;
 import org.openstreetmap.josm.tools.I18n;
 import org.openstreetmap.josm.tools.ImageProvider;
-import org.openstreetmap.josm.tools.Logging;
 
 public class ChooseGeoImageLayersDialog extends JDialog {
   private static final long serialVersionUID = -1793622345412435234L;
@@ -68,7 +67,7 @@ public class ChooseGeoImageLayersDialog extends JDialog {
                 return StreetsideImportedImage.createInstance(img);
               } catch (IllegalArgumentException iae) {
                 final String message = I18n.tr("Could not import a geotagged image to the Streetside layer!");
-                Logging.log(Logging.LEVEL_WARN, message, iae);
+                logger.warn(I18n.tr(message, iae));
                 if (!GraphicsEnvironment.isHeadless()) {
                   new Notification(message).setIcon(StreetsidePlugin.LOGO.get()).show();
                 }

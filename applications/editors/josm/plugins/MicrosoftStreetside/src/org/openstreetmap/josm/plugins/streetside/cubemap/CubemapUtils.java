@@ -1,18 +1,19 @@
 // License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.streetside.cubemap;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Stream;
 
+import org.apache.log4j.Logger;
 import org.openstreetmap.josm.plugins.streetside.utils.StreetsideProperties;
 import org.openstreetmap.josm.tools.I18n;
 import org.openstreetmap.josm.tools.Logging;
 
 public class CubemapUtils {
+
+  final static Logger logger = Logger.getLogger(CubemapUtils.class);
+
 
 	public enum CubefaceType {
 		    ONE(1),
@@ -99,18 +100,22 @@ public class CubemapUtils {
 		String res = null;
 		final StringBuilder sb = new StringBuilder();
 
-		Logging.debug(I18n.tr("convertDecimal2Quaternary input: {0}", Long.toString(inputNum)));
-
+		if (StreetsideProperties.DEBUGING_ENABLED.get()) {
+      logger.debug(I18n.tr("convertDecimal2Quaternary input: {0}", Long.toString(inputNum)));
+		}
 
 		while (inputNum > 0) {
 			sb.append(inputNum % CubemapUtils.NUM_BASE);
 			inputNum /= CubemapUtils.NUM_BASE;
 		}
 
-		sb.append("0");
+		// TODO: leading zeros added in StreetsideURL now
+		//sb.append("0");
 		res = sb.reverse().toString();
 
-		Logging.debug(I18n.tr("convertDecimal2Quaternary output: {0}", res));
+		if (StreetsideProperties.DEBUGING_ENABLED.get()) {
+      logger.debug(I18n.tr("convertDecimal2Quaternary output: {0}", res));
+		}
 
 		return res;
 	}
@@ -128,7 +133,7 @@ public class CubemapUtils {
 			// less than number's base
 			int current = Integer.valueOf(String.valueOf(inputNum.substring(i,i+1)));
 			if ( current >= 4) {
-				Logging.error(I18n.tr("Invalid bubbleId {0}", inputNum));
+				logger.error(I18n.tr("Invalid bubbleId {0}", inputNum));
 				return "-1";
 			}
 

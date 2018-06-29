@@ -4,6 +4,7 @@ package org.openstreetmap.josm.plugins.streetside.cache;
 
 import java.io.IOException;
 
+import org.apache.log4j.Logger;
 import org.openstreetmap.josm.data.cache.CacheEntry;
 import org.openstreetmap.josm.data.cache.CacheEntryAttributes;
 import org.openstreetmap.josm.data.cache.ICachedLoaderListener;
@@ -18,6 +19,8 @@ import org.openstreetmap.josm.tools.Logging;
 *
 */
 public final class CacheUtils {
+
+final static Logger logger = Logger.getLogger(CacheUtils.class);
 
 private static IgnoreDownload ignoreDownload = new IgnoreDownload();
 
@@ -84,7 +87,7 @@ public static void downloadPicture(StreetsideImage img, PICTURE pic) {
    // TODO: is this still useful? @rrh
    case CUBEMAP:
 	   if(img.getId()==null) {
-		   Logging.error("Download cancelled. Image id is null.");
+		   logger.error("Download cancelled. Image id is null.");
 	   } else {
 		   CubemapBuilder.getInstance().downloadCubemapImages(img.getId());
 	   }
@@ -258,7 +261,7 @@ public static void submit(String key, StreetsideCache.Type type,
  try {
    new StreetsideCache(key, type).submit(lis, false);
  } catch (IOException e) {
-   Logging.error(e);
+   logger.error(e);
  }
 }
 

@@ -20,7 +20,6 @@ import org.openstreetmap.josm.plugins.streetside.utils.StreetsideProperties;
 import org.openstreetmap.josm.plugins.streetside.utils.StreetsideSequenceIdGenerator;
 import org.openstreetmap.josm.plugins.streetside.utils.StreetsideURL.APIv3;
 import org.openstreetmap.josm.tools.I18n;
-import org.openstreetmap.josm.tools.Logging;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonParser;
@@ -129,7 +128,7 @@ public final class SequenceDownloadRunnable extends BoundsDownloadRunnable {
           });
 
       	  bubbleImages.add(image);
-          Logging.info("Added image with id <" + image.getId() + ">");
+          logger.info(I18n.tr("Added image with id <" + image.getId() + ">"));
           if (StreetsideProperties.PREDOWNLOAD_CUBEMAPS.get()) {
             StreetsideData.downloadSurroundingCubemaps(image);
           }
@@ -187,7 +186,7 @@ public final class SequenceDownloadRunnable extends BoundsDownloadRunnable {
     }
 
     final long endTime = System.currentTimeMillis();
-    Logging.debug(I18n.tr("Sucessfully loaded {0} Microsoft Streetside images in {0} ",seq.getImages().size(),endTime-startTime%60));
+    logger.info(I18n.tr("Sucessfully loaded {0} Microsoft Streetside images in {0} ",seq.getImages().size(),endTime-startTime%60));
   }
 
   @Override

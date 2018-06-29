@@ -9,16 +9,18 @@ import javax.json.JsonNumber;
 import javax.json.JsonObject;
 import javax.json.JsonValue;
 
+import org.apache.log4j.Logger;
 import org.openstreetmap.josm.plugins.streetside.model.ImageDetection;
 import org.openstreetmap.josm.plugins.streetside.utils.StreetsideURL.APIv3;
-import org.openstreetmap.josm.tools.Logging;
-
 
 /**
  * Decodes the JSON returned by {@link APIv3} into Java objects.
  * Takes a {@link JsonObject} and {@link #decodeImageDetection(JsonObject)} tries to convert it to a {@link ImageDetection}.
  */
 public final class JsonImageDetectionDecoder {
+
+  final static Logger logger = Logger.getLogger(JsonImageDetectionDecoder.class);
+
   private JsonImageDetectionDecoder() {
     // Private constructor to avoid instantiation
   }
@@ -48,7 +50,7 @@ public final class JsonImageDetectionDecoder {
   private static Shape decodeShape(JsonValue json) {
     if (json instanceof JsonObject) {
       if (!"Polygon".equals(((JsonObject) json).getString("type", null))) {
-        Logging.warn(
+        logger.warn(
           String.format("Image detections using shapes with type=%s are currently not supported!",
           ((JsonObject) json).getString("type", "‹no type set›"))
         );

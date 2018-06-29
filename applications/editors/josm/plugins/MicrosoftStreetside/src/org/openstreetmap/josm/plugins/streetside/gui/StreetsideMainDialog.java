@@ -18,6 +18,7 @@ import javax.swing.JComponent;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 
+import org.apache.log4j.Logger;
 import org.openstreetmap.josm.data.cache.CacheEntry;
 import org.openstreetmap.josm.data.cache.CacheEntryAttributes;
 import org.openstreetmap.josm.data.cache.ICachedLoaderListener;
@@ -50,7 +51,10 @@ public final class StreetsideMainDialog extends ToggleDialog implements
 
 	private static final long serialVersionUID = 2645654786827812861L;
 
-	public static final String BASE_TITLE = I18n.marktr("Microsoft Streetside image");
+  final static Logger logger = Logger.getLogger(StreetsideMainDialog.class);
+
+  public static final String BASE_TITLE = I18n.marktr("Microsoft Streetside image");
+
 	private static final String MESSAGE_SEPARATOR = " — ";
 
 	private static StreetsideMainDialog instance;
@@ -268,7 +272,7 @@ public final class StreetsideMainDialog extends ToggleDialog implements
 				try {
 					thumbnailCache.submit(this, false);
 				} catch (final IOException e) {
-					Logging.error(e);
+					logger.error(e);
 				}
 
 				// Downloads the full resolution image.
@@ -282,7 +286,7 @@ public final class StreetsideMainDialog extends ToggleDialog implements
 					try {
 						imageCache.submit(this, false);
 					} catch (final IOException e) {
-						Logging.error(e);
+						logger.error(e);
 					}
 				}
 			// TODO: handle/convert/remove "imported images"
@@ -291,7 +295,7 @@ public final class StreetsideMainDialog extends ToggleDialog implements
 				try {
 					streetsideImageDisplay.setImage(streetsideImage.getImage(), null);
 				} catch (final IOException e) {
-					Logging.error(e);
+					logger.error(e);
 				}
 			}*/
 			updateTitle();
@@ -571,7 +575,7 @@ public final class StreetsideMainDialog extends ToggleDialog implements
 							null);
 				}
 			} catch (final IOException e) {
-				Logging.error(e);
+				logger.error(e);
 			}
 		}
 	}

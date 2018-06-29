@@ -13,10 +13,14 @@ import javax.json.JsonNumber;
 import javax.json.JsonObject;
 import javax.json.JsonValue;
 
+import org.apache.log4j.Logger;
 import org.openstreetmap.josm.data.coor.LatLon;
-import org.openstreetmap.josm.tools.Logging;
+import org.openstreetmap.josm.tools.I18n;
 
 public final class JsonStreetsideDecoder {
+
+  final static Logger logger = Logger.getLogger(JsonStreetsideDecoder.class);
+
   private JsonStreetsideDecoder() {
     // Private constructor to avoid instantiation
   }
@@ -91,7 +95,7 @@ public final class JsonStreetsideDecoder {
    * @param timestamp the timestamp formatted according to the format <code>yyyy-MM-dd'T'HH:mm:ss.SSSX</code>
    * @return the point in time as a {@link Long} value representing the UNIX epoch time, or <code>null</code> if the
    *   parameter does not match the required format (this also triggers a warning via
-   *   {@link Logging#warn(Throwable)}), or the parameter is <code>null</code>.
+   *   {@link logger#warn(Throwable)}), or the parameter is <code>null</code>.
    */
   static Long decodeTimestamp(final String timestamp) {
     if (timestamp != null) {
@@ -99,10 +103,10 @@ public final class JsonStreetsideDecoder {
         return new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX", Locale.UK).parse(timestamp).getTime();
       } catch (ParseException e) {
         StackTraceElement calledBy = e.getStackTrace()[Math.min(e.getStackTrace().length - 1, 2)];
-        Logging.log(Logging.LEVEL_WARN,String.format(
+        logger.warn(I18n.tr(String.format(
           "Could not decode time from the timestamp `%s` (called by %s.%s:%d)",
           timestamp, calledBy.getClassName(), calledBy.getMethodName(), calledBy.getLineNumber()
-        ), e);
+        ), e));
       }
     }
     return null;

@@ -23,13 +23,12 @@ import org.apache.commons.imaging.formats.tiff.constants.ExifTagConstants;
 import org.apache.commons.imaging.formats.tiff.constants.GpsTagConstants;
 import org.apache.commons.imaging.formats.tiff.write.TiffOutputDirectory;
 import org.apache.commons.imaging.formats.tiff.write.TiffOutputSet;
-
+import org.apache.log4j.Logger;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.gui.progress.swing.PleaseWaitProgressMonitor;
 import org.openstreetmap.josm.plugins.streetside.StreetsideAbstractImage;
 import org.openstreetmap.josm.plugins.streetside.StreetsideImage;
 import org.openstreetmap.josm.plugins.streetside.StreetsideImportedImage;
-import org.openstreetmap.josm.tools.Logging;
 
 /**
  * Writes the images from the queue in the file system.
@@ -38,6 +37,8 @@ import org.openstreetmap.josm.tools.Logging;
  * @see StreetsideExportManager
  */
 public class StreetsideExportWriterThread extends Thread {
+
+  final static Logger logger = Logger.getLogger(StreetsideExportWriterThread.class);
 
   private final String path;
   private final ArrayBlockingQueue<BufferedImage> queue;
@@ -138,10 +139,10 @@ public class StreetsideExportWriterThread extends Thread {
 
         os.close();
       } catch (InterruptedException e) {
-        Logging.info("Streetside export cancelled");
+        logger.info("Streetside export cancelled");
         return;
       } catch (IOException | ImageReadException | ImageWriteException e) {
-        Logging.error(e);
+        logger.error(e);
       }
 
       // Increases the progress bar.

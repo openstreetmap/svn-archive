@@ -13,17 +13,19 @@ import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JTextPane;
 
+import org.apache.log4j.Logger;
 import org.openstreetmap.josm.plugins.streetside.gui.boilerplate.SelectableLabel;
 import org.openstreetmap.josm.plugins.streetside.gui.boilerplate.StreetsideButton;
 import org.openstreetmap.josm.plugins.streetside.utils.StreetsideColorScheme;
 import org.openstreetmap.josm.plugins.streetside.utils.StreetsideProperties;
 import org.openstreetmap.josm.tools.I18n;
 import org.openstreetmap.josm.tools.ImageProvider;
-import org.openstreetmap.josm.tools.Logging;
 
 public class ImageInfoHelpPopup extends JPopupMenu {
 
   private static final long serialVersionUID = -1721594904273820586L;
+
+  final static Logger logger = Logger.getLogger(ImageInfoHelpPopup.class);
 
   private final Component invokerComp;
   private boolean alreadyDisplayed;
@@ -84,7 +86,7 @@ public class ImageInfoHelpPopup extends JPopupMenu {
         alreadyDisplayed = true;
         return true;
       } catch (IllegalComponentStateException e) {
-        Logging.log(Logging.LEVEL_WARN, "Could not show ImageInfoHelpPopup, because probably the invoker component has disappeared from screen.", e);
+        logger.warn(I18n.tr("Could not show ImageInfoHelpPopup, because probably the invoker component has disappeared from screen.", e));
       }
     }
     return false;

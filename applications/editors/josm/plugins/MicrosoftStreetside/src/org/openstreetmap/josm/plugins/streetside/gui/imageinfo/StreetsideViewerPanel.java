@@ -7,6 +7,7 @@ import javax.swing.JCheckBox;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
+import org.apache.log4j.Logger;
 import org.openstreetmap.josm.data.preferences.AbstractProperty.ValueChangeListener;
 import org.openstreetmap.josm.plugins.streetside.StreetsideAbstractImage;
 import org.openstreetmap.josm.plugins.streetside.StreetsideDataListener;
@@ -22,11 +23,12 @@ import org.openstreetmap.josm.plugins.streetside.utils.StreetsideURL;
 import org.openstreetmap.josm.tools.I18n;
 import org.openstreetmap.josm.tools.Logging;
 
-
 public final class StreetsideViewerPanel extends JPanel
 		implements StreetsideDataListener {
 
 	private static final long serialVersionUID = 4141847503072417190L;
+
+	final static Logger logger = Logger.getLogger(StreetsideViewerPanel.class);
 
 	private JCheckBox highResImageryCheck;
 	private WebLinkAction imgLinkAction;
@@ -121,7 +123,7 @@ public final class StreetsideViewerPanel extends JPanel
 		// method is invoked with null initially by framework
 		if(newImage!=null) {
 
-		    Logging.debug(String.format(
+		    logger.info(String.format(
 		      "Selected Streetside image changed from %s to %s.",
 		      oldImage instanceof StreetsideImage ? ((StreetsideImage) oldImage).getId() : "‹none›",
 		      newImage instanceof StreetsideImage ? ((StreetsideImage) newImage).getId() : "‹none›"
@@ -136,7 +138,7 @@ public final class StreetsideViewerPanel extends JPanel
 		        StreetsideURL.MainWebsite.streetsidePrivacyLink(bubbleId)
 		      );
 
-		      Logging.debug(I18n.tr("Privacy link invoked for Streetside image {0}", bubbleId));
+		      logger.debug(I18n.tr("Privacy link set for Streetside image {0} quadKey {1}", bubbleId, newImageId));
 
 		      imageLinkChangeListener.valueChanged(null);
 		      StreetsideProperties.CUBEMAP_LINK_TO_BLUR_EDITOR.addListener(imageLinkChangeListener);

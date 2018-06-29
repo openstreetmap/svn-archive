@@ -25,6 +25,7 @@ import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingUtilities;
 
+import org.apache.log4j.Logger;
 import org.openstreetmap.josm.actions.ExpertToggleAction;
 import org.openstreetmap.josm.gui.preferences.PreferenceTabbedPane;
 import org.openstreetmap.josm.gui.preferences.SubPreferenceSetting;
@@ -37,11 +38,8 @@ import org.openstreetmap.josm.plugins.streetside.oauth.StreetsideLoginListener;
 import org.openstreetmap.josm.plugins.streetside.oauth.StreetsideUser;
 import org.openstreetmap.josm.plugins.streetside.utils.StreetsideColorScheme;
 import org.openstreetmap.josm.plugins.streetside.utils.StreetsideProperties;
-import org.openstreetmap.josm.plugins.streetside.utils.StreetsideURL;
-import org.openstreetmap.josm.plugins.streetside.utils.StreetsideUtils;
 import org.openstreetmap.josm.tools.GBC;
 import org.openstreetmap.josm.tools.I18n;
-import org.openstreetmap.josm.tools.Logging;
 
 /**
  * Creates the preferences panel for the plugin.
@@ -50,6 +48,9 @@ import org.openstreetmap.josm.tools.Logging;
  *
  */
 public class StreetsidePreferenceSetting implements SubPreferenceSetting, StreetsideLoginListener {
+
+  final static Logger logger = Logger.getLogger(StreetsidePreferenceSetting.class);
+
   private final JComboBox<String> downloadModeComboBox = new JComboBox<>(new String[]{
       DOWNLOAD_MODE.VISIBLE_AREA.getLabel(),
       DOWNLOAD_MODE.OSM_AREA.getLabel(),
@@ -116,10 +117,10 @@ public class StreetsidePreferenceSetting implements SubPreferenceSetting, Street
       if (is != null) {
         brandImage.setIcon(new ImageIcon(ImageIO.read(is)));
       } else {
-        Logging.warn("Could not load Streetside brand image!");
+        logger.warn("Could not load Streetside brand image!");
       }
     } catch (IOException e) {
-      Logging.warn("While reading Streetside brand image, an IO-exception occured!");
+      logger.warn("While reading Streetside brand image, an IO-exception occured!");
     }
     loginPanel.add(brandImage, 0);
     loginPanel.add(Box.createHorizontalGlue(), 1);
@@ -251,7 +252,7 @@ public class StreetsidePreferenceSetting implements SubPreferenceSetting, Street
         // TODO: change URL RRH
         StreetsideUtils.browse(StreetsideURL.MainWebsite.connect("http://localhost:"+OAuthPortListener.PORT+'/'));
       } catch (IOException e) {
-        Logging.error(e);
+        logger.error(e);
       }*/
     }
   }

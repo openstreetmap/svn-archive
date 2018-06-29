@@ -12,12 +12,12 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.log4j.Logger;
 import org.openstreetmap.josm.gui.PleaseWaitRunnable;
 import org.openstreetmap.josm.gui.progress.swing.PleaseWaitProgressMonitor;
 import org.openstreetmap.josm.plugins.streetside.StreetsideAbstractImage;
 import org.openstreetmap.josm.plugins.streetside.StreetsideImage;
 import org.openstreetmap.josm.plugins.streetside.StreetsideImportedImage;
-import org.openstreetmap.josm.tools.Logging;
 
 /**
  * Export main thread. Exportation works by creating a
@@ -32,6 +32,8 @@ import org.openstreetmap.josm.tools.Logging;
  * @see StreetsideExportDownloadThread
  */
 public class StreetsideExportManager extends PleaseWaitRunnable {
+
+  final static Logger logger = Logger.getLogger(StreetsideExportManager.class);
 
   private final ArrayBlockingQueue<BufferedImage> queue = new ArrayBlockingQueue<>(10);
   private final ArrayBlockingQueue<StreetsideAbstractImage> queueImages = new ArrayBlockingQueue<>(10);
@@ -57,7 +59,7 @@ public class StreetsideExportManager extends PleaseWaitRunnable {
     );
     this.images = images == null ? new HashSet<>() : images;
     this.path = path;
-    this.amount = this.images.size();
+    amount = this.images.size();
   }
 
   /**
@@ -73,64 +75,64 @@ public class StreetsideExportManager extends PleaseWaitRunnable {
   public StreetsideExportManager(List<StreetsideImportedImage> images) throws IOException {
     this(null, null);
     for (StreetsideImportedImage image : images) {
-      this.queue.add(image.getImage());
-      this.queueImages.add(image);
+      queue.add(image.getImage());
+      queueImages.add(image);
     }
-    this.amount = images.size();
+    amount = images.size();
   }
 
   @Override
   protected void cancel() {
-    this.writer.interrupt();
-    this.ex.shutdown();
+    writer.interrupt();
+    ex.shutdown();
   }
 
   @Override
   protected void realRun() throws IOException {
     // Starts a writer thread in order to write the pictures on the disk.
-    this.writer = new StreetsideExportWriterThread(this.path, this.queue,
-        this.queueImages, this.amount, this.getProgressMonitor());
-    this.writer.start();
-    if (this.path == null) {
+    writer = new StreetsideExportWriterThread(path, queue,
+        queueImages, amount, getProgressMonitor());
+    writer.start();
+    if (path == null) {
       try {
-        this.writer.join();
+        writer.join();
       } catch (InterruptedException e) {
-        Logging.error(e);
+        logger.error(e);
       }
       return;
     }
-    this.ex = new ThreadPoolExecutor(20, 35, 25, TimeUnit.SECONDS,
+    ex = new ThreadPoolExecutor(20, 35, 25, TimeUnit.SECONDS,
       new ArrayBlockingQueue<>(10));
-    for (StreetsideAbstractImage image : this.images) {
+    for (StreetsideAbstractImage image : images) {
       if (image instanceof StreetsideImage) {
         try {
-          this.ex.execute(new StreetsideExportDownloadThread(
-              (StreetsideImage) image, this.queue, this.queueImages));
+          ex.execute(new StreetsideExportDownloadThread(
+              (StreetsideImage) image, queue, queueImages));
         } catch (Exception e) {
-          Logging.error(e);
+          logger.error(e);
         }
       } else if (image instanceof StreetsideImportedImage) {
         try {
-          this.queue.put(((StreetsideImportedImage) image).getImage());
-          this.queueImages.put(image);
+          queue.put(((StreetsideImportedImage) image).getImage());
+          queueImages.put(image);
         } catch (InterruptedException e) {
-          Logging.error(e);
+          logger.error(e);
         }
       }
       try {
         // If the queue is full, waits for it to have more space
         // available before executing anything else.
-        while (this.ex.getQueue().remainingCapacity() == 0) {
+        while (ex.getQueue().remainingCapacity() == 0) {
           Thread.sleep(100);
         }
       } catch (Exception e) {
-        Logging.error(e);
+        logger.error(e);
       }
     }
     try {
-      this.writer.join();
+      writer.join();
     } catch (InterruptedException e) {
-      Logging.error(e);
+      logger.error(e);
     }
   }
 

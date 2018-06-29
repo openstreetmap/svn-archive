@@ -20,6 +20,7 @@ import java.util.Optional;
 import javax.swing.Action;
 import javax.swing.Icon;
 
+import org.apache.log4j.Logger;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.osm.DataSet;
@@ -49,7 +50,6 @@ import org.openstreetmap.josm.plugins.streetside.utils.StreetsideProperties;
 import org.openstreetmap.josm.plugins.streetside.utils.StreetsideUtils;
 import org.openstreetmap.josm.tools.I18n;
 import org.openstreetmap.josm.tools.ImageProvider.ImageSizes;
-import org.openstreetmap.josm.tools.Logging;
 
 /**
  * This class represents the layer shown in JOSM. There can only exist one
@@ -59,6 +59,8 @@ import org.openstreetmap.josm.tools.Logging;
  */
 public final class StreetsideLayer extends AbstractModifiableLayer implements
 ActiveLayerChangeListener, StreetsideDataListener {
+
+  final static Logger logger = Logger.getLogger(StreetsideLayer.class);
 
   /** The radius of the image marker */
   private static final int IMG_MARKER_RADIUS = 7;
@@ -337,7 +339,7 @@ ActiveLayerChangeListener, StreetsideDataListener {
    */
   private void drawImageMarker(final Graphics2D g, final StreetsideAbstractImage img) {
     if (img == null || img.getLatLon() == null) {
-      Logging.warn("An image is not painted, because it is null or has no LatLon!");
+      logger.warn("An image is not painted, because it is null or has no LatLon!");
       return;
     }
     final StreetsideAbstractImage selectedImg = getData().getSelectedImage();

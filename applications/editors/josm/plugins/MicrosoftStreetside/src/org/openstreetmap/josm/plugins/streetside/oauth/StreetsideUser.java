@@ -41,7 +41,7 @@ public static synchronized String getUsername() {
          .getWithHeader(StreetsideURL.APIv3.userURL())
          .getString("username");
    } catch (IOException e) {
-     Logging.log(Logging.LEVEL_WARN, "Invalid Streetside token, resetting field", e);
+     logger.warn(I18n.tr("Invalid Streetside token, resetting field", e));
      reset();
    }
  }
@@ -67,7 +67,7 @@ public static synchronized Map<String, String> getSecrets() {
          .getWithHeader(StreetsideURL.uploadSecretsURL())
          .getString("images_policy");
  } catch (IOException e) {
-   Logging.log(Logging.LEVEL_WARN, "Invalid Streetside token, resetting field", e);
+   logger.warn(I18n.tr("Invalid Streetside token, resetting field", e));
    reset();
  }
  hash.put("images_policy", imagesPolicy);

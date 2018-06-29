@@ -8,16 +8,18 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.function.Function;
 
-import org.openstreetmap.josm.plugins.streetside.utils.StreetsideURL.APIv3;
-
+import org.apache.log4j.Logger;
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.gui.Notification;
 import org.openstreetmap.josm.plugins.streetside.StreetsidePlugin;
+import org.openstreetmap.josm.plugins.streetside.utils.StreetsideURL.APIv3;
 import org.openstreetmap.josm.tools.I18n;
 import org.openstreetmap.josm.tools.ImageProvider.ImageSizes;
 import org.openstreetmap.josm.tools.Logging;
 
 public abstract class BoundsDownloadRunnable implements Runnable {
+
+  final static Logger logger = Logger.getLogger(BoundsDownloadRunnable.class);
 
   protected Bounds bounds;
   protected abstract Function<Bounds, URL> getUrlGenerator();
@@ -29,11 +31,11 @@ public abstract class BoundsDownloadRunnable implements Runnable {
   @Override
   public void run() {
     URL nextURL = getUrlGenerator().apply(bounds);
-    Logging.debug("nextURL: {0}", nextURL.toString());
+    logger.info(I18n.tr("nextURL: {0}", nextURL.toString()));
     try {
       while (nextURL != null) {
         if (Thread.interrupted()) {
-          Logging.debug("{} for {} interrupted!", getClass().getSimpleName(), bounds.toString());
+          logger.info(I18n.tr("{} for {} interrupted!", getClass().getSimpleName(), bounds.toString()));
           return;
         }
         final URLConnection con = nextURL.openConnection();
@@ -42,7 +44,7 @@ public abstract class BoundsDownloadRunnable implements Runnable {
       }
     } catch (IOException e) {
       String message = I18n.tr("Could not read from URL {0}!", nextURL.toString());
-      Logging.log(Logging.LEVEL_WARN, message, e);
+      logger.warn(message, e);
       if (!GraphicsEnvironment.isHeadless()) {
         new Notification(message)
           .setIcon(StreetsidePlugin.LOGO.setSize(ImageSizes.LARGEICON).get())
@@ -54,7 +56,7 @@ public abstract class BoundsDownloadRunnable implements Runnable {
   }
 
   /**
-   * Logs information about the given connection via {@link Logging#info(String)}.
+   * Logs information about the given connection via {@link logger#info(String)}.
    * If it's a {@link HttpURLConnection}, the request method, the response code and the URL itself are logged.
    * Otherwise only the URL is logged.
    * @param con the {@link URLConnection} for which information is logged
@@ -73,7 +75,7 @@ public abstract class BoundsDownloadRunnable implements Runnable {
     if (info != null && info.length() >= 1) {
       message.append(" (").append(info).append(')');
     }
-    Logging.debug(message.toString());
+    logger.info(message.toString());
   }
 
   public abstract void run(final URLConnection connection) throws IOException;

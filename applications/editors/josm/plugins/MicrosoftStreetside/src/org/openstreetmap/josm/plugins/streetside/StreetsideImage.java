@@ -99,7 +99,7 @@ public String getId() {
   }*/
 
   /*public void setAllDetections(Collection<ImageDetection> newDetections) {
-    Logging.debug("Add {0} detections to image {1}", newDetections.size(), getId());
+    logger.debug("Add {0} detections to image {1}", newDetections.size(), getId());
     synchronized (detections) {
       detections.clear();
       detections.addAll(newDetections);

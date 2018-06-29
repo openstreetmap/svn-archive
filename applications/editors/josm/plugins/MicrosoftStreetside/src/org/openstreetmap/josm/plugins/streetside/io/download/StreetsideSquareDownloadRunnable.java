@@ -1,14 +1,18 @@
 // License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.streetside.io.download;
 
+import org.apache.log4j.Logger;
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.plugins.streetside.StreetsideLayer;
 import org.openstreetmap.josm.plugins.streetside.gui.StreetsideMainDialog;
 import org.openstreetmap.josm.plugins.streetside.utils.PluginState;
 import org.openstreetmap.josm.plugins.streetside.utils.StreetsideUtils;
+import org.openstreetmap.josm.tools.I18n;
 import org.openstreetmap.josm.tools.Logging;
 
 public class StreetsideSquareDownloadRunnable implements Runnable {
+
+  final static Logger logger = Logger.getLogger(StreetsideSquareDownloadRunnable.class);
 
   private final Bounds bounds;
 
@@ -47,7 +51,7 @@ public class StreetsideSquareDownloadRunnable implements Runnable {
       imgDetailsThread.join();
       //detectionsThread.join();
     } catch (InterruptedException e) {
-      Logging.log(Logging.LEVEL_WARN, "Streetside download interrupted (probably because of closing the layer).", e);
+      logger.warn(I18n.tr("Streetside download interrupted (probably because of closing the layer).", e));
       Thread.currentThread().interrupt();
     } finally {
       PluginState.finishDownload();

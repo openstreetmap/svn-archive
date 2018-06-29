@@ -5,6 +5,7 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.log4j.Logger;
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.gui.MainApplication;
@@ -13,7 +14,6 @@ import org.openstreetmap.josm.plugins.streetside.StreetsideLayer;
 import org.openstreetmap.josm.plugins.streetside.StreetsidePlugin;
 import org.openstreetmap.josm.plugins.streetside.utils.StreetsideProperties;
 import org.openstreetmap.josm.tools.I18n;
-import org.openstreetmap.josm.tools.Logging;
 
 /**
  * Class that concentrates all the ways of downloading of the plugin. All the
@@ -22,6 +22,8 @@ import org.openstreetmap.josm.tools.Logging;
  * @author nokutu
  */
 public final class StreetsideDownloader {
+
+  final static Logger logger = Logger.getLogger(StreetsideDownloader.class);
 
   /** Possible download modes. */
   public enum DOWNLOAD_MODE {
@@ -197,7 +199,7 @@ public final class StreetsideDownloader {
    * Checks if the area for which Streetside images should be downloaded is too big. This means that probably
    * lots of Streetside images are going to be downloaded, slowing down the
    * program too much. A notification is shown when the download has stopped or continued.
-   * @param area area to check 
+   * @param area area to check
    * @return {@code true} if the area is too big
    */
   private static boolean isAreaTooBig(final double area) {
@@ -226,7 +228,7 @@ public final class StreetsideDownloader {
     try {
       executor.awaitTermination(30, TimeUnit.SECONDS);
     } catch (InterruptedException e) {
-      Logging.error(e);
+      logger.error(e);
     }
     executor = new ThreadPoolExecutor(3, 5, 100, TimeUnit.SECONDS,
       new ArrayBlockingQueue<>(100), new ThreadPoolExecutor.DiscardPolicy());

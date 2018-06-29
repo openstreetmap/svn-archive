@@ -6,15 +6,14 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 
-import org.openstreetmap.josm.plugins.streetside.StreetsideLayer;
-
+import org.apache.log4j.Logger;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
+import org.openstreetmap.josm.plugins.streetside.StreetsideLayer;
 import org.openstreetmap.josm.plugins.streetside.StreetsidePlugin;
 import org.openstreetmap.josm.tools.ImageProvider;
 import org.openstreetmap.josm.tools.ImageProvider.ImageSizes;
-import org.openstreetmap.josm.tools.Logging;
 import org.openstreetmap.josm.tools.Shortcut;
 
 /**
@@ -28,6 +27,8 @@ public class StreetsideDownloadAction extends JosmAction {
 
   private static final long serialVersionUID = 4426446157849005029L;
   public static final Shortcut SHORTCUT = Shortcut.registerShortcut("Streetside", tr("Open Streetside layer"), KeyEvent.VK_COMMA, Shortcut.SHIFT);
+
+  final static Logger logger = Logger.getLogger(StreetsideDownloadAction.class);
 
   /**
    * Main constructor.
@@ -61,7 +62,7 @@ public class StreetsideDownloadAction extends JosmAction {
       }
     } catch (IllegalArgumentException e) {
       // If the StreetsideLayer is not managed by LayerManager but you try to set it as active layer
-      Logging.warn(e);
+      logger.warn(e);
     }
   }
 }

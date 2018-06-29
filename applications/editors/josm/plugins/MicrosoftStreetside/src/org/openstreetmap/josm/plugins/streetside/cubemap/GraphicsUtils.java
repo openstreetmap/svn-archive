@@ -5,6 +5,7 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 
+import org.apache.log4j.Logger;
 import org.openstreetmap.josm.plugins.streetside.utils.StreetsideProperties;
 import org.openstreetmap.josm.tools.I18n;
 import org.openstreetmap.josm.tools.Logging;
@@ -15,6 +16,8 @@ import javafx.scene.image.WritableImage;
 
 @SuppressWarnings({ "restriction"})
 public class GraphicsUtils {
+
+  final static Logger logger = Logger.getLogger(GraphicsUtils.class);
 
 	public static javafx.scene.image.Image convertBufferedImage2JavaFXImage(BufferedImage bf) {
 		WritableImage wr = null;
@@ -103,7 +106,7 @@ public class GraphicsUtils {
             }
         }
 
-        Logging.debug(I18n.tr("Image concatenated in {0} millisecs.",(System.currentTimeMillis()-start)));
+        logger.info(I18n.tr("Image concatenated in {0} millisecs.",(System.currentTimeMillis()-start)));
         return res;
 	}
 
@@ -130,7 +133,7 @@ public class GraphicsUtils {
 				}
 			}
 
-		Logging.debug("Images cropped in {0} millisecs.",(System.currentTimeMillis()-start));
+		logger.info(I18n.tr("Images cropped in {0} millisecs.",(System.currentTimeMillis()-start)));
 
 		return res;
 	}

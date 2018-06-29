@@ -14,15 +14,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.apache.log4j.Logger;
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.plugins.streetside.cubemap.CubemapUtils;
 import org.openstreetmap.josm.tools.I18n;
 import org.openstreetmap.josm.tools.Logging;
 
 public final class StreetsideURL {
+
+  final static Logger logger = Logger.getLogger(StreetsideURL.class);
+
 	/** Base URL of the Bing Bubble API. */
 	private static final String STREETSIDE_BASE_URL = "https://dev.virtualearth.net/mapcontrol/HumanScaleServices/GetBubbles.ashx";
-	//private static final String BASE_API_V2_URL = "https://a.mapillary.com/v2/";
 	private static final String CLIENT_ID = "T1Fzd20xZjdtR0s1VDk5OFNIOXpYdzoxNDYyOGRkYzUyYTFiMzgz";
 	private static final String BING_MAPS_KEY = "AuftgJsO0Xs8Ts4M1xZUQJQXJNsvmh3IV8DkNieCiy3tCwCUMq76-WpkrBtNAuEm";
 	private static final String TEST_BUBBLE_ID = "80848005";
@@ -134,18 +137,43 @@ public final class StreetsideURL {
 
 	public static final class VirtualEarth {
 		private static final String BASE_URL_PREFIX = "https://t.ssl.ak.tiles.virtualearth.net/tiles/hs";
-		private static final String BASE_URL_SUFFIX = ".jpg?g=6338&n=z";
+		private static final String BASE_URL_SUFFIX = ".jpg?g=6528&n=z";
 
 		private VirtualEarth() {
 			// Private constructor to avoid instantiation
 		}
 
-		public static URL streetsideTile(String id, boolean thumbnail) {
-			if(thumbnail) {
-				id = id + "01";
-			}
-			URL url = StreetsideURL.string2URL(VirtualEarth.BASE_URL_PREFIX + id + VirtualEarth.BASE_URL_SUFFIX);
-			Logging.info("Tile task URL {0} invoked.", url.toString());
+		public static URL streetsideTile(final String id, boolean thumbnail) {
+			StringBuilder modifiedId = new StringBuilder();
+
+			// TODO: make code more elegant
+			if (thumbnail) {
+        // pad thumbnail imagery with leading zeros
+        if (id.length() < 16) {
+          for (int i = 0; i < 16 - id.length(); i++) {
+            modifiedId.append("0");
+          }
+        }
+        modifiedId.append(id).append("01");
+      } else if(StreetsideProperties.SHOW_HIGH_RES_STREETSIDE_IMAGERY.get()){
+        // pad 16-tiled imagery with leading zeros
+        if (id.length() < 20) {
+          for (int i = 0; i < 20 - id.length(); i++) {
+            modifiedId.append("0");
+          }
+          modifiedId.append(id);
+        }
+      } else if(!StreetsideProperties.SHOW_HIGH_RES_STREETSIDE_IMAGERY.get()) {
+        // pad 4-tiled imagery with leading zeros
+        if (id.length() < 19) {
+          for (int i = 0; i < 19 - id.length(); i++) {
+            modifiedId.append("0");
+          }
+          modifiedId.append(id);
+        }
+      }
+		  URL url = StreetsideURL.string2URL(VirtualEarth.BASE_URL_PREFIX + modifiedId.toString() + VirtualEarth.BASE_URL_SUFFIX);
+	    logger.info(I18n.tr("Tile task URL {0} invoked.", url.toString()));
 			return url;
 		}
 	}
@@ -165,7 +193,7 @@ public final class StreetsideURL {
 		 */
 		public static URL browseImage(String id) {
 			if (id == null) {
-				throw new IllegalArgumentException("The image key must not be null!");
+				throw new IllegalArgumentException("The image id may not be null!");
 			}
 			return StreetsideURL.string2URL(VirtualEarth.BASE_URL_PREFIX + id + VirtualEarth.BASE_URL_SUFFIX);
 		}
@@ -184,7 +212,7 @@ public final class StreetsideURL {
 			try {
 				urlEncodedKey = URLEncoder.encode(key, StandardCharsets.UTF_8.name());
 			} catch (final UnsupportedEncodingException e) {
-				Logging.log(Logging.LEVEL_ERROR, "Unsupported encoding when URL encoding", e);
+				logger.error(I18n.tr("Unsupported encoding when URL encoding", e));
 				urlEncodedKey = key;
 			}
 			return StreetsideURL.string2URL(MainWebsite.BASE_URL, "app/blur?focus=photo&pKey=", urlEncodedKey);
@@ -204,7 +232,7 @@ public final class StreetsideURL {
 			try {
 				urlEncodedId = URLEncoder.encode(id, StandardCharsets.UTF_8.name());
 			} catch (final UnsupportedEncodingException e) {
-				Logging.log(Logging.LEVEL_ERROR, "Unsupported encoding when URL encoding", e);
+				logger.error(I18n.tr("Unsupported encoding when URL encoding", e));
 				urlEncodedId = id;
 			}
 			return StreetsideURL.string2URL(StreetsideURL.STREETSIDE_PRIVACY_URL, urlEncodedId);
@@ -252,7 +280,7 @@ public final class StreetsideURL {
 									+ baseUrlSuffix;
 							res.add(new URL(urlStr));
 						} catch (final MalformedURLException e) {
-							Logging.error(I18n.tr("Error creating URL String for cubemap {0}", cubemapImageId));
+							logger.error(I18n.tr("Error creating URL String for cubemap {0}", cubemapImageId));
 							e.printStackTrace();
 						}
 
@@ -269,7 +297,7 @@ public final class StreetsideURL {
 								+ CubemapUtils.rowCol2StreetsideCellAddressMap.get(String.valueOf(i)) + baseUrlSuffix;
 						res.add(new URL(urlStr));
 					} catch (final MalformedURLException e) {
-						Logging.error(I18n.tr("Error creating URL String for cubemap {0}", cubemapImageId));
+						logger.error(I18n.tr("Error creating URL String for cubemap {0}", cubemapImageId));
 						e.printStackTrace();
 					}
 
@@ -304,12 +332,12 @@ public final class StreetsideURL {
 					.append('=')
 					.append(URLEncoder.encode(entry.getValue(), StandardCharsets.UTF_8.name()));
 				} catch (final UnsupportedEncodingException e) {
-					Logging.error(e); // This should not happen, as the encoding is hard-coded
+					logger.error(e); // This should not happen, as the encoding is hard-coded
 				}
 			}
 		}
 
-		Logging.info(I18n.tr("queryString result: {0}", ret.toString()));
+		logger.info(I18n.tr("queryString result: {0}", ret.toString()));
 
 		return ret.toString();
 	}
@@ -330,10 +358,10 @@ public final class StreetsideURL {
 				.append("&appkey=")
 				.append(StreetsideURL.BING_MAPS_KEY);
 			} catch (final UnsupportedEncodingException e) {
-				Logging.error(e); // This should not happen, as the encoding is hard-coded
+				logger.error(e); // This should not happen, as the encoding is hard-coded
 			}
 		}
-		Logging.info(I18n.tr("queryStreetsideBoundsString result: {0}", ret.toString()));
+		logger.info(I18n.tr("queryStreetsideBoundsString result: {0}", ret.toString()));
 
 		return ret.toString();
 	}
@@ -345,15 +373,15 @@ public final class StreetsideURL {
 			ret.append('&').append(URLEncoder.encode("appkey=", StandardCharsets.UTF_8.name())).append('=')
 			.append(URLEncoder.encode(StreetsideURL.BING_MAPS_KEY, StandardCharsets.UTF_8.name()));
 		} catch (final UnsupportedEncodingException e) {
-			Logging.error(e); // This should not happen, as the encoding is hard-coded
+			logger.error(e); // This should not happen, as the encoding is hard-coded
 		}
-		Logging.info(I18n.tr("queryById result: {0}", ret.toString()));
+		logger.info(I18n.tr("queryById result: {0}", ret.toString()));
 		return ret.toString();
 	}
 
 	/**
 	 * Converts a {@link String} into a {@link URL} without throwing a {@link MalformedURLException}.
-	 * Instead such an exception will lead to an {@link Logging#error(Throwable)}.
+	 * Instead such an exception will lead to an {@link logger#error(Throwable)}.
 	 * So you should be very confident that your URL is well-formed when calling this method.
 	 * @param strings the Strings describing the URL
 	 * @return the URL that is constructed from the given string
@@ -366,11 +394,11 @@ public final class StreetsideURL {
 		try {
 			return new URL(builder.toString());
 		} catch (final MalformedURLException e) {
-			Logging.log(Logging.LEVEL_ERROR, String.format(
+			logger.error(I18n.tr(String.format(
 					"The class '%s' produces malformed URLs like '%s'!",
 					StreetsideURL.class.getName(),
 					builder
-					), e);
+					), e));
 			return null;
 		}
 	}

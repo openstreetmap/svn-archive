@@ -13,11 +13,10 @@ import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.openstreetmap.josm.plugins.streetside.utils.StreetsideProperties;
-
+import org.apache.log4j.Logger;
 import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.plugins.streetside.utils.StreetsideProperties;
 import org.openstreetmap.josm.tools.I18n;
-import org.openstreetmap.josm.tools.Logging;
 
 /**
 * Listens to the OAuth port (8763) in order to get the access token and sends
@@ -29,6 +28,8 @@ import org.openstreetmap.josm.tools.Logging;
 public class OAuthPortListener extends Thread {
 public static final int PORT = 8763;
 
+final static Logger logger = Logger.getLogger(OAuthPortListener.class);
+
 protected static final String RESPONSE = String.format(
    "<!DOCTYPE html><html><head><meta charset=\"utf8\"><title>%s</title></head><body>%s</body></html>",
    I18n.tr("Mapillary login"),
@@ -37,7 +38,7 @@ protected static final String RESPONSE = String.format(
 private final StreetsideLoginListener callback;
 
 public OAuthPortListener(StreetsideLoginListener loginCallback) {
- this.callback = loginCallback;
+ callback = loginCallback;
 }
 
 @Override
@@ -66,21 +67,21 @@ public void run() {
 
    StreetsideUser.reset();
 
-   Logging.info("Successful login with Mapillary, the access token is: {0}", accessToken);
+   logger.info(I18n.tr("Successful login with Mapillary, the access token is: {0}", accessToken));
    // Saves the access token in preferences.
    StreetsideUser.setTokenValid(true);
    if (Main.main != null) {
      StreetsideProperties.ACCESS_TOKEN.put(accessToken);
      String username = StreetsideUser.getUsername();
-     Logging.info("The username is: {0}", username);
+     logger.info(I18n.tr("The username is: {0}", username));
      if (callback != null) {
        callback.onLogin(username);
      }
    }
  } catch (BindException e) {
-   Logging.warn(e);
+   logger.warn(e);
  } catch (IOException e) {
-   Logging.error(e);
+   logger.error(e);
  }
 }
 

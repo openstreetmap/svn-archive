@@ -97,7 +97,7 @@
     <target name="compile" depends="init, pre-compile" unless="skip-compile">
         <echo message="compiling sources for ${plugin.jar} ..."/>
         <javac compiler="${javac.compiler}" srcdir="${plugin.src.dir}" debug="true" destdir="${plugin.build.dir}" includeantruntime="false"
-            encoding="UTF-8" target="${java.lang.version}" source="${java.lang.version}">
+            encoding="UTF-8" source="${java.lang.version}">
             <compilerclasspath>
                 <pathelement location="${error_prone_ant.jar}"/>
             </compilerclasspath>
@@ -525,7 +525,7 @@
     <target name="test-compile" depends="test-init,dist" if="test.present">
         <sequential>
             <javac debug="on" includeantruntime="false" srcdir="${plugin.test.dir}/unit" destdir="${plugin.test.dir}/build/unit" encoding="UTF-8"
-                target="${java.lang.version}" source="${java.lang.version}">
+                source="${java.lang.version}">
                 <classpath>
                     <fileset refid="plugin.requires.jars"/>
                     <path refid="test.classpath"/>

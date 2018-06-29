@@ -10,7 +10,7 @@
 ** Paths are relative to the build.xml that imports this template.
 **
 -->
-<project name="plugin_common" basedir="." xmlns:jacoco="antlib:org.jacoco.ant" xmlns:if="ant:if">
+<project name="plugin_common" basedir="." xmlns:jacoco="antlib:org.jacoco.ant" xmlns:if="ant:if" xmlns:unless="ant:unless">
 
     <property name="josm"                   location="../../core/dist/josm-custom.jar"/>
     <property name="josm.test.build.dir"    location="../../core/test/build"/>
@@ -39,7 +39,25 @@
     </condition>
     <!-- For Java9-specific stuff -->
     <condition property="isJava9">
-        <matches string="${ant.java.version}" pattern="(1.)?9" />
+        <matches string="${ant.java.version}" pattern="(1.)?(9|1[0-9])" />
+    </condition>
+    <!-- For Java10-specific stuff -->
+    <condition property="isJava10">
+        <matches string="${ant.java.version}" pattern="1[0-9]" />
+    </condition>
+    <!-- For Java11-specific stuff -->
+    <condition property="isJava11">
+        <matches string="${ant.java.version}" pattern="1[1-9]" />
+    </condition>
+    <!-- Disable error_prone on Java 10+, see https://github.com/google/error-prone/issues/860 -->
+    <condition property="javac.compiler" value="modern" else="com.google.errorprone.ErrorProneAntCompilerAdapter">
+        <isset property="isJava10"/>
+    </condition>
+    <!-- Disable jacoco on Java 11+, see https://github.com/jacoco/jacoco/issues/629 -->
+    <condition property="coverageByDefault">
+        <not>
+            <isset property="isJava11"/>
+        </not>
     </condition>
     <target name="-jaxb_before9" unless="isJava9">
         <property name="xjc" value="${java.home}${file.separator}..${file.separator}bin${file.separator}xjc" />
@@ -230,8 +248,8 @@
             <doctitle><![CDATA[<h2>JOSM-${ant.project.name} - Javadoc</h2>]]></doctitle>
             <bottom><![CDATA[<a href="https://josm.openstreetmap.de/wiki/Plugins">JOSM Plugins</a>]]></bottom>
             <arg value="-html5" if:set="isJava9" />
-            <arg value="--add-exports" if:set="isJava9" />
-            <arg value="javafx.graphics/com.sun.javafx.application=ALL-UNNAMED" if:set="isJava9" />
+            <arg value="--add-exports" if:set="isJava9" unless:set="noJavaFX" />
+            <arg value="javafx.graphics/com.sun.javafx.application=ALL-UNNAMED" if:set="isJava9" unless:set="noJavaFX" />
         </javadoc>
     </target>
     <!--
@@ -517,7 +535,7 @@
         <taskdef uri="antlib:org.jacoco.ant" resource="org/jacoco/ant/antlib.xml" classpath="../00_core_tools/jacocoant.jar" />
         <sequential>
             <echo message="Running unit tests with JUnit"/>
-            <jacoco:coverage destfile="${plugin.test.dir}/jacoco.exec">
+            <jacoco:coverage destfile="${plugin.test.dir}/jacoco.exec" enabled="${coverageByDefault}">
                 <junit printsummary="yes" fork="true" forkmode="once" dir="${basedir}">
                     <jvmarg value="-Dfile.encoding=UTF-8"/>
                     <jvmarg value="--add-opens" if:set="isJava9" />

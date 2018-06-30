@@ -58,8 +58,11 @@
             <isset property="isJava11"/>
         </not>
     </condition>
-    <target name="-jaxb">
-        <property name="xjc" value="..${file.separator}00_tools${file.separator}jaxb-ri${file.separator}bin${file.separator}xjc" />
+    <target name="-jaxb_windows" if="isWindows">
+        <property name="xjc" value="..${file.separator}00_tools${file.separator}jaxb-ri${file.separator}bin${file.separator}xjc.bat" />
+    </target>
+    <target name="-jaxb_linux" unless="isWindows">
+        <property name="xjc" value="..${file.separator}00_tools${file.separator}jaxb-ri${file.separator}bin${file.separator}xjc.sh" />
     </target>
 
     <!-- To be overriden in plugin build file before inclusion if other plugins are required -->

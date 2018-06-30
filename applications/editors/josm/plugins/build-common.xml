@@ -58,11 +58,8 @@
             <isset property="isJava11"/>
         </not>
     </condition>
-    <target name="-jaxb_before9" unless="isJava9">
-        <property name="xjc" value="${java.home}${file.separator}..${file.separator}bin${file.separator}xjc" />
-    </target>
-    <target name="-jaxb_after9" if="isJava9">
-        <property name="xjc" value="${java.home}${file.separator}bin${file.separator}xjc" />
+    <target name="-jaxb">
+        <property name="xjc" value="..${file.separator}00_tools${file.separator}jaxb-ri${file.separator}bin${file.separator}xjc" />
     </target>
 
     <!-- To be overriden in plugin build file before inclusion if other plugins are required -->

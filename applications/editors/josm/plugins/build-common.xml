@@ -578,7 +578,7 @@
     </target>
     <target name="checkstyle" depends="checkstyle-compile">
         <taskdef resource="com/puppycrawl/tools/checkstyle/ant/checkstyle-ant-task.properties" classpath="${checkstyle.jar}:${checkstyle-build.dir}"/>
-        <checkstyle config="${basedir}/../00_core_tools/checkstyle/josm_checks.xml">
+        <checkstyle config="${basedir}/../checkstyle-config.xml">
             <fileset dir="${basedir}/src" includes="**/*.java" excludes="boofcv/**/*.java,
                                                                          com/google/**/*.java,
                                                                          crosby/**/*.java,

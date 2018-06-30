@@ -99,24 +99,4 @@
             <arg value="resources/neptune/neptune.xsd"/>
         </exec>
     </target>
-
-	<target name="javadoc">
-        <javadoc destdir="${plugin.doc.dir}"
-                encoding="UTF-8"
-                windowtitle="JOSM-${ant.project.name}"
-                use="true"
-                private="true"
-                linksource="true"
-                author="false">
-            <sourcepath>
-            	<pathelement location="${plugin.src.dir}"/>
-            	<pathelement location="includes"/>
-            </sourcepath>
-        	<classpath refid="plugin.classpath"/>
-            <link href="https://docs.oracle.com/javase/8/docs/api"/>
-            <link href="https://josm.openstreetmap.de/doc"/>
-            <doctitle><![CDATA[<h2>JOSM-${ant.project.name} - Javadoc</h2>]]></doctitle>
-            <bottom><![CDATA[<a href="https://josm.openstreetmap.de/wiki/Plugins">JOSM Plugins</a>]]></bottom>
-        </javadoc>
-    </target>
 </project>

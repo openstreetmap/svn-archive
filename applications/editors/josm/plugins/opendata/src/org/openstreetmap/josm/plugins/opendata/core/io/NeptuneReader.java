@@ -51,7 +51,7 @@ import neptune.StopPointType;
 import neptune.TridentObjectType;
 
 /**
- * NEPTUNE -> OSM converter
+ * NEPTUNE -&gt; OSM converter
  * See http://www.chouette.mobi/IMG/pdf/NF__F_-Neptune-maj.pdf
  */
 public class NeptuneReader extends AbstractReader implements FrenchConstants {

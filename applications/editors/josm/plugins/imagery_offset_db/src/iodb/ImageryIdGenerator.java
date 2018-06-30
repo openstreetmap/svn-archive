@@ -41,7 +41,9 @@ public final class ImageryIdGenerator {
 
         // Remove protocol
         int i = url.indexOf("://");
-        url = url.substring(i + 3);
+        if (i > 0) {
+            url = url.substring(i + 3);
+        }
 
         // Split URL into address and query string
         i = url.indexOf('?');

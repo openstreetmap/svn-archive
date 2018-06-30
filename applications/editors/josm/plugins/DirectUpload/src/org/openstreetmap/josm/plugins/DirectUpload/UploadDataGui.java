@@ -1,11 +1,4 @@
-/*
- * UploadDataGui.java
- *
- * Created on August 17, 2008, 6:56 PM
- * Copyright by Subhodip Biswas
- * This program is free software and licensed under GPL.
- */
-
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.DirectUpload;
 
 import static org.openstreetmap.josm.tools.I18n.tr;

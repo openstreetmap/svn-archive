@@ -1,10 +1,8 @@
-// ...
-
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.DirectUpload;
 
 import java.util.List;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.gpx.GpxData;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.dialogs.LayerListDialog;

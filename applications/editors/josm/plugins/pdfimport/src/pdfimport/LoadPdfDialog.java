@@ -171,6 +171,7 @@ public class LoadPdfDialog extends JFrame {
         this.setPlacement(pl);
         this.addListeners();
         this.removeLayer();
+        if (PdfImportPlugin.Preferences.guiMode == PdfImportPlugin.GuiMode.Simple) this.loadFilePressed();;
     }
 
 	private class CheckDouble implements FocusListener {
@@ -442,7 +443,7 @@ private CheckDouble doublelistener = new CheckDouble();
         configPanel.add(this.splitOnColorChangeCheck, c);
         c.gridx = 2; c.gridy = 8; c.gridwidth = 1;
         configPanel.add(this.splitOnOrthogonalCheck, c);
-
+        if (PdfImportPlugin.Preferences.guiMode == PdfImportPlugin.GuiMode.Simple) configPanel.setVisible(false);
 
         projectionPanel = new JPanel(new GridBagLayout());
         projectionPanel.setBorder(BorderFactory.createTitledBorder(tr("Bind to coordinates")));
@@ -515,6 +516,12 @@ private CheckDouble doublelistener = new CheckDouble();
 
         this.setSize(450, 550);
         this.setContentPane(panel);
+        if (PdfImportPlugin.Preferences.guiMode == PdfImportPlugin.GuiMode.Simple) {
+        	loadFileButton.setVisible(false);
+        	configPanel.setVisible(false);
+        	saveButton.setVisible(false);
+        	showButton.setVisible(false);
+        }
     }
 
     private class ProjectionSubPrefsDialog extends JDialog {

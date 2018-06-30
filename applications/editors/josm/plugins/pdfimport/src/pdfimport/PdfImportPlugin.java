@@ -54,8 +54,10 @@ public class PdfImportPlugin extends Plugin {
 			switch (Preferences.GuiCode) {
 			case 1:
 				Preferences.guiMode = GuiMode.Expert;
+				break;
 			case 2:
 				Preferences.guiMode = GuiMode.Simple;
+				break;
 			default:
 				Preferences.guiMode = GuiMode.Expert;
 			}

@@ -243,7 +243,7 @@
                 author="false">
             <classpath refid="plugin.classpath"/>
             <sourcepath>
-                <pathelement path="src" />
+                <pathelement path="${plugin.src.dir}" />
                 <pathelement path="gen" />
                 <pathelement path="includes" />
             </sourcepath>

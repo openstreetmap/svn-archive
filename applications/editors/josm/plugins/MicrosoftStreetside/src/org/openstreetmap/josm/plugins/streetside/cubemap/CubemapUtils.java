@@ -1,6 +1,7 @@
 // License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.streetside.cubemap;
 
+import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Stream;
@@ -100,7 +101,7 @@ public class CubemapUtils {
 		final StringBuilder sb = new StringBuilder();
 
 		if (StreetsideProperties.DEBUGING_ENABLED.get()) {
-      logger.debug(I18n.tr("convertDecimal2Quaternary input: {0}", Long.toString(inputNum)));
+      logger.debug(MessageFormat.format("convertDecimal2Quaternary input: {0}", Long.toString(inputNum)));
 		}
 
 		while (inputNum > 0) {
@@ -113,7 +114,7 @@ public class CubemapUtils {
 		res = sb.reverse().toString();
 
 		if (StreetsideProperties.DEBUGING_ENABLED.get()) {
-      logger.debug(I18n.tr("convertDecimal2Quaternary output: {0}", res));
+      logger.debug(MessageFormat.format("convertDecimal2Quaternary output: {0}", res));
 		}
 
 		return res;
@@ -124,7 +125,7 @@ public class CubemapUtils {
 	  final String res;
 
 	  if (StreetsideProperties.DEBUGING_ENABLED.get()) {
-      logger.debug(I18n.tr("convertQuaternary2Decimal input: {0}", inputNum));
+      logger.debug(MessageFormat.format("convertQuaternary2Decimal input: {0}", inputNum));
     }
 
 	  int len = inputNum.length();
@@ -147,7 +148,7 @@ public class CubemapUtils {
 		res = Integer.toString(num);
 
 		if (StreetsideProperties.DEBUGING_ENABLED.get()) {
-      logger.debug(I18n.tr("convertQuaternary2Decimal output: {0}", res));
+      logger.debug(MessageFormat.format("convertQuaternary2Decimal output: {0}", res));
     }
 
 		return res;

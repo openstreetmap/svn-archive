@@ -104,12 +104,12 @@ public final class ImageInfoPanel extends ToggleDialog implements StreetsideData
     gbc.anchor = GridBagConstraints.LINE_END;
     gbc.gridwidth = 1;
     gbc.gridheight = 2;
-    root.add(new JLabel(I18n.tr("Placeholder2 label")), gbc);
+    root.add(new JLabel(("Placeholder2 label")), gbc);
     gbc.gridy += 2;
     gbc.gridheight = 1;
-    root.add(new JLabel(I18n.tr("Blah")), gbc);
+    root.add(new JLabel(("Blah")), gbc);
     gbc.gridy++;
-    root.add(new JLabel(I18n.tr("Blee")), gbc);
+    root.add(new JLabel(("Blee")), gbc);
     gbc.gridy++;
     root.add(new JLabel(I18n.tr("Image key")), gbc);
     gbc.gridy++;

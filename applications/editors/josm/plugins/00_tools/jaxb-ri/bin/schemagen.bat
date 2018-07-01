@@ -66,11 +66,11 @@ goto SETCLASSPATH
 
 :SETCLASSPATH
 if "%CLASSPATH%" == "" goto NOUSERCLASSPATH
-set LOCALCLASSPATH=%JAXB_HOME%\lib\jaxb-core.jar;%JAXB_HOME%\lib\jaxb-xjc.jar;%JAXB_HOME%\lib\jaxb-jxc.jar;%JAXB_HOME%\lib\jaxb-impl.jar;%CLASSPATH%
+set LOCALCLASSPATH=%JAXB_HOME%\lib\jaxb-core.jar;%JAXB_HOME%\lib\jaxb-xjc.jar;%JAXB_HOME%\lib\jaxb-jxc.jar;%JAXB_HOME%\lib\jaxb-impl.jar;%JAXB_HOME%\lib\javax.activation.jar;%CLASSPATH%
 goto LAUNCHSCHEMAGEN
 
 :NOUSERCLASSPATH
-set LOCALCLASSPATH=%JAXB_HOME%\lib\jaxb-core.jar;%JAXB_HOME%\lib\jaxb-xjc.jar;%JAXB_HOME%\lib\jaxb-jxc.jar;%JAXB_HOME%\lib\jaxb-impl.jar
+set LOCALCLASSPATH=%JAXB_HOME%\lib\jaxb-core.jar;%JAXB_HOME%\lib\jaxb-xjc.jar;%JAXB_HOME%\lib\jaxb-jxc.jar;%JAXB_HOME%\lib\jaxb-impl.jar;%JAXB_HOME%\lib\javax.activation.jar
 goto LAUNCHSCHEMAGEN
 
 :LAUNCHSCHEMAGEN

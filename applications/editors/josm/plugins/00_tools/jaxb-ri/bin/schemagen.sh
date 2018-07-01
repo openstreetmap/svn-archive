@@ -78,9 +78,9 @@ fi
 
 # add the api jar file
 if [ -z "$LOCALCLASSPATH" ] ; then
-    LOCALCLASSPATH="$JAXB_HOME"/lib/jaxb-api.jar:"$JAXB_HOME"/lib/jaxb-core.jar:"$JAXB_HOME"/lib/jaxb-xjc.jar:"$JAXB_HOME"/lib/jaxb-jxc.jar:"$JAXB_HOME"/lib/jaxb-impl.jar
+    LOCALCLASSPATH="$JAXB_HOME"/lib/jaxb-api.jar:"$JAXB_HOME"/lib/jaxb-core.jar:"$JAXB_HOME"/lib/jaxb-xjc.jar:"$JAXB_HOME"/lib/jaxb-jxc.jar:"$JAXB_HOME"/lib/jaxb-impl.jar:"$JAXB_HOME"/lib/javax.activation.jar
 else
-    LOCALCLASSPATH="$JAXB_HOME"/lib/jaxb-api.jar:"$JAXB_HOME"/lib/jaxb-core.jar:"$JAXB_HOME"/lib/jaxb-xjc.jar:"$JAXB_HOME"/lib/jaxb-jxc.jar:"$JAXB_HOME"/lib/jaxb-impl.jar:"$LOCALCLASSPATH"
+    LOCALCLASSPATH="$JAXB_HOME"/lib/jaxb-api.jar:"$JAXB_HOME"/lib/jaxb-core.jar:"$JAXB_HOME"/lib/jaxb-xjc.jar:"$JAXB_HOME"/lib/jaxb-jxc.jar:"$JAXB_HOME"/lib/jaxb-impl.jar:"$JAXB_HOME"/lib/javax.activation.jar:"$LOCALCLASSPATH"
 fi
 
 

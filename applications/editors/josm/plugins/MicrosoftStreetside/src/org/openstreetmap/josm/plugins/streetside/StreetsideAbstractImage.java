@@ -10,10 +10,11 @@ import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.plugins.streetside.utils.StreetsideProperties;
 
 /**
- * Abstract superclass for all image objects. At the moment there are just 2,
- * {@link StreetsideImportedImage} and {@link StreetsideImage}.
+ * Abstract superclass for all image objects. At the moment there are 3,
+ * {@link StreetsideImportedImage}, {@link StreetsideImage}, & {@link StreetsideCubemap}.
  *
  * @author nokutu
+ * @author renerr18
  *
  */
 public abstract class StreetsideAbstractImage implements Comparable<StreetsideAbstractImage> {
@@ -368,6 +369,5 @@ public abstract class StreetsideAbstractImage implements Comparable<StreetsideAb
   public void setPr(long pr) {
     this.pr = pr;
   }
-
 
 }

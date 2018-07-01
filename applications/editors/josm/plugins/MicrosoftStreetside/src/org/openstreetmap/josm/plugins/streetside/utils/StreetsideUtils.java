@@ -289,6 +289,7 @@ public final class StreetsideUtils {
     List<StreetsideAbstractImage> res = new ArrayList<StreetsideAbstractImage>();
     if (images != null && images.size() > 0) {
       res.add(images.get(0));
+      try {
       images.remove(0);
       String nextImageId = Long.toString(images.get(0).getNe());
       if (nextImageId != null) {
@@ -300,6 +301,9 @@ public final class StreetsideUtils {
             images.remove(current);
           }
         }
+      }
+      } catch (java.lang.UnsupportedOperationException uoe) {
+        // ignore
       }
     }
 

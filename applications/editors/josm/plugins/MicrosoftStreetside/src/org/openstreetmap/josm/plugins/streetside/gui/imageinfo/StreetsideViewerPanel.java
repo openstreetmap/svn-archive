@@ -142,8 +142,6 @@ public final class StreetsideViewerPanel extends JPanel
 
 		      imageLinkChangeListener.valueChanged(null);
 		      StreetsideProperties.CUBEMAP_LINK_TO_BLUR_EDITOR.addListener(imageLinkChangeListener);
-
-
 		    } else {
 		      if (imageLinkChangeListener != null) {
 		        StreetsideProperties.CUBEMAP_LINK_TO_BLUR_EDITOR.removeListener(imageLinkChangeListener);

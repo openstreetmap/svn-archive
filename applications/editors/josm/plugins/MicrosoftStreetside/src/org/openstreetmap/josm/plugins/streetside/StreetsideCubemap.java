@@ -1,23 +1,15 @@
 // License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.streetside;
 
-import java.awt.image.BufferedImage;
-import java.util.EnumSet;
-import java.util.HashMap;
-import java.util.Map;
-
 import org.openstreetmap.josm.data.coor.LatLon;
-import org.openstreetmap.josm.plugins.streetside.cubemap.CubemapUtils;
 import org.openstreetmap.josm.plugins.streetside.utils.StreetsideProperties;
-
-import org.openstreetmap.josm.plugins.streetside.cubemap.CubemapUtils.CubemapFaces;
 
 /**
  * @author renerr18
  *
  *
  */
-public class StreetsideCubemap extends StreetsideAbstractImage implements Comparable<StreetsideAbstractImage>{
+public class StreetsideCubemap extends StreetsideAbstractImage /*implements Comparable<StreetsideAbstractImage>*/{
 
 	//private static Map<String,Map<String,BufferedImage>> face2TilesMap = new HashMap<String,Map<String,BufferedImage>>();
 
@@ -39,32 +31,10 @@ public class StreetsideCubemap extends StreetsideAbstractImage implements Compar
 	 *            The direction of the images in degrees, meaning 0 north (camera
 	 *            direction is not yet supported in the Streetside plugin).
 	 */
-    @SuppressWarnings({ "unchecked", "rawtypes" })
-	public StreetsideCubemap(String quadId, LatLon latLon, double he) {
-		super(quadId, latLon, he);
-		/*face2TilesMap = new HashMap();
+   public StreetsideCubemap(String quadId, LatLon latLon, double he) {
+	   super(quadId, latLon, he);
+	 }
 
-		EnumSet.allOf(CubemapUtils.CubemapFaces.class).forEach(face -> {
-			face2TilesMap.put(face.getValue(), new HashMap<String, BufferedImage>());
-		});*/
-
-	}
-
-	/**
-	* Returns a Map object containing a keyset of cubemap face numbers
-	*
-	* {@link CubemapFaces}
-	*
-	* for each cubeface number corresponding map if cubemap tile ids and buffered
-	* cubemap tile imagery is stored until assembly by the CubemapBuilder
-	* @see org.openstreetmap.josm.plugins.streetside.cubemap.CubemapBuilder
- 	*
- 	* @return the face2TilesMap
- 	*/
-	/*public Map<String, Map<String,BufferedImage>> getFace2TilesMap() {
-		return face2TilesMap;
-	}
-*/
 	/**
 	 * Comparison method for the StreetsideCubemap object.
 	 *
@@ -128,14 +98,4 @@ public class StreetsideCubemap extends StreetsideAbstractImage implements Compar
 		return StreetsideProperties.SHOW_HIGH_RES_STREETSIDE_IMAGERY.get().booleanValue()?1016:510;
 	}
 
-	/**
-	 * resets the faces2TilesMap, emptying it for a new set of cubemap imagery
-	 */
-	/*public void resetFaces2TileMap() {
-		face2TilesMap = new HashMap<>();
-
-		EnumSet.allOf(CubemapUtils.CubemapFaces.class).forEach(face -> {
-			face2TilesMap.put(face.getValue(), new HashMap<String, BufferedImage>());
-		});
-	}*/
 }

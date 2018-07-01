@@ -1,6 +1,7 @@
 // License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.streetside.gui.imageinfo;
 
+import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -36,9 +37,10 @@ public final class ImageInfoPanel extends ToggleDialog implements StreetsideData
   private static ImageInfoPanel instance;
   private static final ImageIcon EMPTY_USER_AVATAR = new ImageIcon(new BufferedImage(32, 32, BufferedImage.TYPE_INT_ARGB));
 
-  //private final JLabel numDetectionsLabel;
+  private final JLabel numDetectionsLabel;
   //private final JCheckBox showDetectionsCheck;
-  //private final JLabel usernameLabel;
+  private final JLabel placeholder1Label;
+  private final JLabel usernameLabel;
   private final JTextPane imgKeyValue;
   private final WebLinkAction imgLinkAction;
   private final ClipboardAction copyImgKeyAction;
@@ -57,8 +59,10 @@ public final class ImageInfoPanel extends ToggleDialog implements StreetsideData
     );
     SelectionEventManager.getInstance().addSelectionListener(this);
 
-    //numDetectionsLabel = new JLabel();
-    //numDetectionsLabel.setFont(numDetectionsLabel.getFont().deriveFont(Font.PLAIN));
+    numDetectionsLabel = new JLabel();
+    numDetectionsLabel.setFont(numDetectionsLabel.getFont().deriveFont(Font.PLAIN));
+
+    placeholder1Label = new JLabel();
 
     //showDetectionsCheck = new JCheckBox(I18n.tr("Show detections on top of image"));
     //showDetectionsCheck.setSelected(StreetsideProperties.SHOW_DETECTED_SIGNS.get());
@@ -69,8 +73,8 @@ public final class ImageInfoPanel extends ToggleDialog implements StreetsideData
       valueChange -> showDetectionsCheck.setSelected(StreetsideProperties.SHOW_DETECTED_SIGNS.get())
     );*/
 
-    //usernameLabel = new JLabel();
-    //usernameLabel.setFont(usernameLabel.getFont().deriveFont(Font.PLAIN));
+    usernameLabel = new JLabel();
+    usernameLabel.setFont(usernameLabel.getFont().deriveFont(Font.PLAIN));
 
     imgKeyValue = new SelectableLabel();
 
@@ -100,13 +104,13 @@ public final class ImageInfoPanel extends ToggleDialog implements StreetsideData
     gbc.anchor = GridBagConstraints.LINE_END;
     gbc.gridwidth = 1;
     gbc.gridheight = 2;
-    //root.add(new JLabel(I18n.tr("Image detections")), gbc);
-    //gbc.gridy += 2;
-    //gbc.gridheight = 1;
-    //root.add(new JLabel(I18n.tr("User")), gbc);
-    //gbc.gridy++;
-    //root.add(new JLabel(I18n.tr("Image actions")), gbc);
-    //gbc.gridy++;
+    root.add(new JLabel(I18n.tr("Placeholder2 label")), gbc);
+    gbc.gridy += 2;
+    gbc.gridheight = 1;
+    root.add(new JLabel(I18n.tr("Blah")), gbc);
+    gbc.gridy++;
+    root.add(new JLabel(I18n.tr("Blee")), gbc);
+    gbc.gridy++;
     root.add(new JLabel(I18n.tr("Image key")), gbc);
     gbc.gridy++;
     root.add(new JLabel(I18n.tr("Sequence key")), gbc);
@@ -116,12 +120,14 @@ public final class ImageInfoPanel extends ToggleDialog implements StreetsideData
     gbc.gridx++;
     gbc.gridy = 0;
     gbc.anchor = GridBagConstraints.LINE_START;
-    //root.add(numDetectionsLabel, gbc);
-    //gbc.gridy++;
+    root.add(numDetectionsLabel, gbc);
+    gbc.gridy++;
     //root.add(showDetectionsCheck, gbc);
     //gbc.gridy++;
-    //root.add(usernameLabel, gbc);
-    //gbc.gridy++;
+    root.add(placeholder1Label, gbc);
+     gbc.gridy++;
+    root.add(usernameLabel, gbc);
+    gbc.gridy++;
     root.add(imgButtons, gbc);
     gbc.gridy++;
     root.add(imgKey, gbc);

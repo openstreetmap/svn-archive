@@ -31,8 +31,6 @@ public class CubemapBuilder implements ITileDownloadingTaskListener, StreetsideD
   final static Logger logger = Logger.getLogger(CubemapBuilder.class);
 
 	private static CubemapBuilder instance;
-	// TODO: Help Pop-up
-	private StreetsideViewerHelpPopup streetsideViewerHelp;
 	private StreetsideCubemap cubemap;
 	protected boolean cancelled;
 	private long startTime;
@@ -51,20 +49,6 @@ public class CubemapBuilder implements ITileDownloadingTaskListener, StreetsideD
   public void setTileImages(Map<String, BufferedImage> tileImages) {
     this.tileImages = tileImages;
   }
-
-  /**
-   * @return the tileImages
-   */
-  /*public Map<String, BufferedImage> getTileImages() {
-    return tileImages;
-  }
-
-  *//**
-   * @param tileImages the tileImages to set
-   *//*
-  public void setTileImages(Map<String, BufferedImage> tileImages) {
-    this.tileImages = tileImages;
-  }*/
 
   private CubemapBuilder() {
 		// private constructor to avoid instantiation
@@ -97,8 +81,7 @@ public class CubemapBuilder implements ITileDownloadingTaskListener, StreetsideD
 	public void reload(String imageId) {
 		if (cubemap != null && imageId.equals(cubemap.getId())) {
 			tileImages = new HashMap<String,BufferedImage>();
-		  //CubemapBuilder.getInstance().getCubemap().resetFaces2TileMap();
-			downloadCubemapImages(imageId);
+		  downloadCubemapImages(imageId);
 		}
 	}
 
@@ -188,18 +171,11 @@ public class CubemapBuilder implements ITileDownloadingTaskListener, StreetsideD
 
 	@Override
 	public void tileAdded(String tileId) {
-		// determine whether four tiles have been set for each of the
+		// determine whether all tiles have been set for each of the
 		// six cubemap faces. If so, build the images for the faces
 		// and set the views in the cubemap box.
 
 		int tileCount = 0;
-
-		/*for (int i = 0; i < CubemapUtils.NUM_SIDES; i++) {
-			String faceNumber = CubemapUtils.getFaceNumberForCount(i);
-			Map<String, BufferedImage> faceTileImages = CubemapBuilder.getInstance().getCubemap().getFace2TilesMap()
-					.get(faceNumber);
-			tileCount += faceTileImages.values().size();
-		}*/
 
 		tileCount = CubemapBuilder.getInstance().getTileImages().keySet().size();
 
@@ -234,10 +210,7 @@ public class CubemapBuilder implements ITileDownloadingTaskListener, StreetsideD
 		if (!StreetsideProperties.SHOW_HIGH_RES_STREETSIDE_IMAGERY.get()) {
 			for (int i = 0; i < CubemapUtils.NUM_SIDES; i++) {
 
-				/*Map<String, BufferedImage> tileImages = CubemapBuilder.getInstance().getCubemap().getFace2TilesMap()
-						.get(CubemapUtils.getFaceNumberForCount(i));*/
-
-			  BufferedImage[] faceTileImages = new BufferedImage[maxCols * maxRows];
+				BufferedImage[] faceTileImages = new BufferedImage[maxCols * maxRows];
 
 				for (int j = 0; j < (maxCols * maxRows); j++) {
 					String tileId = String.valueOf(getCubemap().getId() + CubemapUtils.getFaceNumberForCount(i)
@@ -265,9 +238,6 @@ public class CubemapBuilder implements ITileDownloadingTaskListener, StreetsideD
 
 				int tileCount = 0;
 
-				/*Map<String, Map<String, BufferedImage>> face2TilesMap = CubemapBuilder.getInstance().getCubemap()
-						.getFace2TilesMap();*/
-				//Map<String, BufferedImage> tileImages = face2TilesMap.get(CubemapUtils.getFaceNumberForCount(i));
 				BufferedImage[] faceTileImages = new BufferedImage[StreetsideProperties.SHOW_HIGH_RES_STREETSIDE_IMAGERY
 						.get() ? 16 : 4];
 
@@ -296,26 +266,8 @@ public class CubemapBuilder implements ITileDownloadingTaskListener, StreetsideD
     StreetsideViewerDialog.getInstance().getStreetsideViewerPanel().revalidate();
     StreetsideViewerDialog.getInstance().getStreetsideViewerPanel().repaint();
 
-    /*if (!Platform.isFxApplicationThread()) {
-      Platform.runLater(new Runnable() {
-        @Override
-        public void run() {*/
-
-           //try {
-             /* GraphicsUtils.PlatformHelper.run(() -> {
-                StreetsideViewerPanel.getThreeSixtyDegreeViewerPanel().initialize();
-            });*/
-             //StreetsideViewerPanel.getThreeSixtyDegreeViewerPanel().initialize();
-             StreetsideViewerPanel.getThreeSixtyDegreeViewerPanel()
+    StreetsideViewerPanel.getThreeSixtyDegreeViewerPanel()
                 .setScene(StreetsideViewerPanel.getThreeSixtyDegreeViewerPanel().getCubemapScene());
-            /*} catch (NonInvertibleTransformException nite) {
-              if (StreetsideProperties.DEBUGING_ENABLED.get()) {
-                logger.debug(I18n.tr("Error setting scene in 360 viewer panel {0}", nite.getMessage()));
-              }
-            }*/
-        /*}
-      });
-    }*/
 
     StreetsideViewerPanel.getThreeSixtyDegreeViewerPanel().revalidate();
     StreetsideViewerPanel.getThreeSixtyDegreeViewerPanel().repaint();

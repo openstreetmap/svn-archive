@@ -4,12 +4,14 @@ package org.openstreetmap.josm.plugins.streetside.gui.imageinfo;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Image;
 import java.awt.Insets;
 import java.awt.datatransfer.StringSelection;
 import java.awt.image.BufferedImage;
 import java.util.Collection;
 
 import javax.swing.ImageIcon;
+import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextPane;
@@ -17,6 +19,7 @@ import javax.swing.JTextPane;
 import org.apache.log4j.Logger;
 import org.openstreetmap.josm.data.osm.DataSelectionListener;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.data.osm.Tag;
 import org.openstreetmap.josm.data.osm.event.SelectionEventManager;
 import org.openstreetmap.josm.data.preferences.AbstractProperty.ValueChangeListener;
 import org.openstreetmap.josm.gui.dialogs.ToggleDialog;
@@ -25,6 +28,7 @@ import org.openstreetmap.josm.plugins.streetside.StreetsideDataListener;
 import org.openstreetmap.josm.plugins.streetside.StreetsideImage;
 import org.openstreetmap.josm.plugins.streetside.gui.boilerplate.SelectableLabel;
 import org.openstreetmap.josm.plugins.streetside.gui.boilerplate.StreetsideButton;
+import org.openstreetmap.josm.plugins.streetside.model.UserProfile;
 import org.openstreetmap.josm.plugins.streetside.utils.StreetsideProperties;
 import org.openstreetmap.josm.plugins.streetside.utils.StreetsideURL;
 import org.openstreetmap.josm.tools.I18n;
@@ -38,13 +42,12 @@ public final class ImageInfoPanel extends ToggleDialog implements StreetsideData
   private static final ImageIcon EMPTY_USER_AVATAR = new ImageIcon(new BufferedImage(32, 32, BufferedImage.TYPE_INT_ARGB));
 
   private final JLabel numDetectionsLabel;
-  //private final JCheckBox showDetectionsCheck;
-  private final JLabel placeholder1Label;
+  private final JCheckBox showDetectionsCheck;
   private final JLabel usernameLabel;
   private final JTextPane imgKeyValue;
   private final WebLinkAction imgLinkAction;
   private final ClipboardAction copyImgKeyAction;
-  //private final AddTagToPrimitiveAction addStreetsideTagAction;
+  private final AddTagToPrimitiveAction addStreetsideTagAction;
   private final JTextPane seqKeyValue;
 
   private ValueChangeListener<Boolean> imageLinkChangeListener;
@@ -62,16 +65,14 @@ public final class ImageInfoPanel extends ToggleDialog implements StreetsideData
     numDetectionsLabel = new JLabel();
     numDetectionsLabel.setFont(numDetectionsLabel.getFont().deriveFont(Font.PLAIN));
 
-    placeholder1Label = new JLabel();
-
-    //showDetectionsCheck = new JCheckBox(I18n.tr("Show detections on top of image"));
-    //showDetectionsCheck.setSelected(StreetsideProperties.SHOW_DETECTED_SIGNS.get());
-    /*showDetectionsCheck.addActionListener(
+    showDetectionsCheck = new JCheckBox(I18n.tr("Show detections on top of image"));
+     showDetectionsCheck.setSelected(StreetsideProperties.SHOW_DETECTED_SIGNS.get());
+     showDetectionsCheck.addActionListener(
       action -> StreetsideProperties.SHOW_DETECTED_SIGNS.put(showDetectionsCheck.isSelected())
     );
     StreetsideProperties.SHOW_DETECTED_SIGNS.addListener(
       valueChange -> showDetectionsCheck.setSelected(StreetsideProperties.SHOW_DETECTED_SIGNS.get())
-    );*/
+    );
 
     usernameLabel = new JLabel();
     usernameLabel.setFont(usernameLabel.getFont().deriveFont(Font.PLAIN));
@@ -84,14 +85,14 @@ public final class ImageInfoPanel extends ToggleDialog implements StreetsideData
     StreetsideButton copyButton = new StreetsideButton(copyImgKeyAction, true);
     copyImgKeyAction.setPopupParent(copyButton);
 
-    //addStreetsideTagAction = new AddTagToPrimitiveAction(I18n.tr("Add Streetside tag"));
+    addStreetsideTagAction = new AddTagToPrimitiveAction(I18n.tr("Add Streetside tag"));
 
     JPanel imgKey = new JPanel();
     imgKey.add(imgKeyValue);
     imgKey.add(copyButton);
     JPanel imgButtons = new JPanel();
     imgButtons.add(new StreetsideButton(imgLinkAction, true));
-    //imgButtons.add(new StreetsideButton(addStreetsideTagAction, true));
+    imgButtons.add(new StreetsideButton(null/*addStreetsideTagAction*/, true));
     seqKeyValue = new SelectableLabel();
 
     JPanel root = new JPanel(new GridBagLayout());
@@ -104,12 +105,12 @@ public final class ImageInfoPanel extends ToggleDialog implements StreetsideData
     gbc.anchor = GridBagConstraints.LINE_END;
     gbc.gridwidth = 1;
     gbc.gridheight = 2;
-    root.add(new JLabel(("Placeholder2 label")), gbc);
+    root.add(new JLabel(I18n.tr("Image detections")), gbc);
     gbc.gridy += 2;
     gbc.gridheight = 1;
-    root.add(new JLabel(("Blah")), gbc);
+    root.add(new JLabel(I18n.tr("User")), gbc);
     gbc.gridy++;
-    root.add(new JLabel(("Blee")), gbc);
+    root.add(new JLabel(I18n.tr("Image actions")), gbc);
     gbc.gridy++;
     root.add(new JLabel(I18n.tr("Image key")), gbc);
     gbc.gridy++;
@@ -122,10 +123,8 @@ public final class ImageInfoPanel extends ToggleDialog implements StreetsideData
     gbc.anchor = GridBagConstraints.LINE_START;
     root.add(numDetectionsLabel, gbc);
     gbc.gridy++;
-    //root.add(showDetectionsCheck, gbc);
-    //gbc.gridy++;
-    root.add(placeholder1Label, gbc);
-     gbc.gridy++;
+    root.add(showDetectionsCheck, gbc);
+    gbc.gridy++;
     root.add(usernameLabel, gbc);
     gbc.gridy++;
     root.add(imgButtons, gbc);
@@ -184,7 +183,7 @@ public final class ImageInfoPanel extends ToggleDialog implements StreetsideData
       newImage instanceof StreetsideImage ? ((StreetsideImage) newImage).getId() : "‹none›"
     ));
 
-    //numDetectionsLabel.setText(I18n.tr("{0} detections", newImage instanceof StreetsideImage ? ((StreetsideImage) newImage).getDetections().size() : 0));
+    numDetectionsLabel.setText(I18n.tr("{0} detections", newImage instanceof StreetsideImage ? /*((StreetsideImage) newImage).getDetections().size()*/0 : 0));
     imgKeyValue.setEnabled(newImage instanceof StreetsideImage);
     final String newImageKey = newImage instanceof StreetsideImage ? ((StreetsideImage) newImage).getId(): null;
     if (newImageKey != null) {
@@ -198,7 +197,7 @@ public final class ImageInfoPanel extends ToggleDialog implements StreetsideData
 
       imgKeyValue.setText(newImageKey);
       copyImgKeyAction.setContents(new StringSelection(newImageKey));
-      //addStreetsideTagAction.setTag(new Tag("streetside", newImageKey));
+      addStreetsideTagAction.setTag(new Tag("streetside", newImageKey));
     } else {
       if (imageLinkChangeListener != null) {
         StreetsideProperties.IMAGE_LINK_TO_BLUR_EDITOR.removeListener(imageLinkChangeListener);
@@ -208,10 +207,10 @@ public final class ImageInfoPanel extends ToggleDialog implements StreetsideData
 
       imgKeyValue.setText('‹' + I18n.tr("image has no key") + '›');
       copyImgKeyAction.setContents(null);
-      //addStreetsideTagAction.setTag(null);
+      addStreetsideTagAction.setTag(null);
     }
 
-    /*final UserProfile user = newImage instanceof StreetsideImage ? ((StreetsideImage) newImage).getUser() : null;
+    final UserProfile user = newImage instanceof StreetsideImage ? ((StreetsideImage) newImage).getUser() : null;
     usernameLabel.setEnabled(user != null);
     if (user != null) {
       usernameLabel.setText(user.getUsername());
@@ -219,7 +218,7 @@ public final class ImageInfoPanel extends ToggleDialog implements StreetsideData
     } else {
       usernameLabel.setText("‹" + I18n.tr("unknown user") + "›");
       usernameLabel.setIcon(EMPTY_USER_AVATAR);
-    }*/
+    }
 
     final boolean partOfSequence = newImage != null && newImage.getSequence() != null && newImage.getSequence().getId() != null;
     seqKeyValue.setEnabled(partOfSequence);
@@ -239,6 +238,6 @@ public final class ImageInfoPanel extends ToggleDialog implements StreetsideData
     if (StreetsideProperties.DEBUGING_ENABLED.get()) {
       logger.debug(String.format("Selection changed. %d primitives are selected.", sel == null ? 0 : sel.size()));
     }
-    //addStreetsideTagAction.setTarget(sel != null && sel.size() == 1 ? sel.iterator().next() : null);
+    addStreetsideTagAction.setTarget(sel != null && sel.size() == 1 ? sel.iterator().next() : null);
   }
 }

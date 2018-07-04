@@ -137,7 +137,7 @@ public class CubemapUtils {
     {
         if (Integer.parseInt(inputNum.substring(i,i+1)) >= CubemapUtils.NUM_BASE)
         {
-           logger.error(I18n.tr("Error converting quadkey {0} to decimal.", inputNum));
+           logger.error("Error converting quadkey " + inputNum + " to decimal.");
            return "000000000";
         }
 

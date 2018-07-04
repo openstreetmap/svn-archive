@@ -12,6 +12,7 @@ import org.apache.log4j.Logger;
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.gui.Notification;
 import org.openstreetmap.josm.plugins.streetside.StreetsidePlugin;
+import org.openstreetmap.josm.plugins.streetside.utils.StreetsideProperties;
 import org.openstreetmap.josm.plugins.streetside.utils.StreetsideURL.APIv3;
 import org.openstreetmap.josm.tools.I18n;
 import org.openstreetmap.josm.tools.ImageProvider.ImageSizes;
@@ -31,11 +32,13 @@ public abstract class BoundsDownloadRunnable implements Runnable {
   @Override
   public void run() {
     URL nextURL = getUrlGenerator().apply(bounds);
-    logger.info(I18n.tr("nextURL: {0}", nextURL.toString()));
+    if(StreetsideProperties.DEBUGING_ENABLED.get()) {
+      logger.debug("nextURL: " + nextURL.toString());
+    }
     try {
       while (nextURL != null) {
         if (Thread.interrupted()) {
-          logger.info(I18n.tr("{} for {} interrupted!", getClass().getSimpleName(), bounds.toString()));
+          logger.error(getClass().getSimpleName() + " for " +  bounds.toString() + " interrupted!");
           return;
         }
         final URLConnection con = nextURL.openConnection();
@@ -43,7 +46,7 @@ public abstract class BoundsDownloadRunnable implements Runnable {
         nextURL = APIv3.parseNextFromLinkHeaderValue(con.getHeaderField("Link"));
       }
     } catch (IOException e) {
-      String message = I18n.tr("Could not read from URL {0}!", nextURL.toString());
+      String message = "Could not read from URL " +  nextURL.toString() + "!";
       logger.warn(message, e);
       if (!GraphicsEnvironment.isHeadless()) {
         new Notification(message)

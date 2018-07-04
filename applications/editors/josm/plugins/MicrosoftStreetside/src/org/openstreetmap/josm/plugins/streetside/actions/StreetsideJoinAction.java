@@ -27,8 +27,8 @@ public class StreetsideJoinAction extends JosmAction {
    * Main constructor.
    */
   public StreetsideJoinAction() {
-    super(tr("Join mode"), new ImageProvider("mapmode", "mapillary-join").setSize(ImageSizes.DEFAULT),
-        tr("Join/unjoin pictures"), null, false, "mapillaryJoin", true);
+    super(tr("Join mode"), new ImageProvider("mapmode", "streetside-join").setSize(ImageSizes.DEFAULT),
+        tr("Join/unjoin pictures"), null, false, "streetsideJoin", true);
   }
 
   @Override

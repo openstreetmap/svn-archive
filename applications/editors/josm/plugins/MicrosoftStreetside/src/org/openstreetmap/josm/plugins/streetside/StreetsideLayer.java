@@ -68,12 +68,6 @@ ActiveLayerChangeListener, StreetsideDataListener {
   private static final int CA_INDICATOR_RADIUS = 15;
   /** The angle of the circular sector that indicates the camera angle */
   private static final int CA_INDICATOR_ANGLE = 40;
-  /** Length of the edge of the small sign, which indicates that traffic signs have been found in an image. */
-  private static final int TRAFFIC_SIGN_SIZE = 6;
-  /** A third of the height of the sign, for easier calculations */
-  private static final double TRAFFIC_SIGN_HEIGHT_3RD = Math.sqrt(
-    Math.pow(TRAFFIC_SIGN_SIZE, 2) - Math.pow(TRAFFIC_SIGN_SIZE / 2d, 2)
-  ) / 3;
 
 	private static final DataSetListenerAdapter DATASET_LISTENER =
 			new DataSetListenerAdapter(e -> {

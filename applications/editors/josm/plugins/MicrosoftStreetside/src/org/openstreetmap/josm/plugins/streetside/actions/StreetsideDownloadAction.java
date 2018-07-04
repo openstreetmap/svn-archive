@@ -26,7 +26,9 @@ import org.openstreetmap.josm.tools.Shortcut;
 public class StreetsideDownloadAction extends JosmAction {
 
   private static final long serialVersionUID = 4426446157849005029L;
-  public static final Shortcut SHORTCUT = Shortcut.registerShortcut("Streetside", tr("Open Streetside layer"), KeyEvent.VK_COMMA, Shortcut.SHIFT);
+
+  // TODO: I18n "Open Streeside Layer"
+  public static final Shortcut SHORTCUT = Shortcut.registerShortcut("Streetside", /*tr(*/"Open Streetside layer"/*)*/, KeyEvent.VK_COMMA, Shortcut.SHIFT);
 
   final static Logger logger = Logger.getLogger(StreetsideDownloadAction.class);
 

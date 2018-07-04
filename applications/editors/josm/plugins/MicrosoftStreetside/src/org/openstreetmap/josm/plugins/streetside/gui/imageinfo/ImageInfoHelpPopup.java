@@ -43,12 +43,12 @@ public class ImageInfoHelpPopup extends JPopupMenu {
     JTextPane mainText = new JTextPane();
     mainText.setContentType("text/html");
     mainText.setFont(SelectableLabel.DEFAULT_FONT);
-    // TODO: tr( RRH
+    // TODO: Translate into all supported languages
     mainText.setText(
       "<html><div style='width:250px'>" +
-      I18n.tr("The Streetside plugin now uses a separate panel to display extra information (like the image key) and actions for the currently selected Streetside image (like viewing it in a browser).") +
+      /*I18n.tr(*/"The Streetside plugin now uses a separate panel to display extra information (like the image key) and actions for the currently selected Streetside image (like viewing it in a browser)."/*)*/ +
       "<br><br>" +
-      I18n.tr("It can be activated by clicking the left button at the bottom of this message or the button in the toolbar on the left, which uses the same icon.") +
+      /*I18n.tr(*/"It can be activated by clicking the left button at the bottom of this message or the button in the toolbar on the left, which uses the same icon."/*)*/ +
       "</div></html>"
     );
     add(mainText, BorderLayout.CENTER);

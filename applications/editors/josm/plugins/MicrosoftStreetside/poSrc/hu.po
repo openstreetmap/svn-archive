@@ -1,12 +1,12 @@
-# Translations for the JOSM plugin 'Mapillary' (hu)
+# Translations for the JOSM plugin 'MicrosoftStreetside' (hu)
 # Copyright (C) 2018 
-# This file is distributed under the same license as the josm-plugin_Mapillary package.
+# This file is distributed under the same license as the MicrosoftStreetside packages.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: josm-plugin_Mapillary v1.5.10\n"
+"Project-Id-Version: MicrosoftStreetside v0.0.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-01-21 21:47+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
@@ -24,8 +24,8 @@ msgstr "2 két összekapcsolva"
 msgid "2 images unjoined"
 msgstr "2 kép szétválasztva"
 
-msgid "Add Mapillary tag"
-msgstr "Mapillary címke hozzáadása"
+msgid "Add Streetside tag"
+msgstr "Streetside címke hozzáadása"
 
 msgid "All images in a directory"
 msgstr "Egy könyvtár összes képe"
@@ -49,8 +49,8 @@ msgstr "Folytatja a szüneteltetett sétát."
 msgid "Copy key"
 msgstr "Kulcs másolása"
 
-msgid "Could not import a geotagged image to the Mapillary layer!"
-msgstr "Nem sikerült a geocímkézett kép importlása a Mapillary rétegre!"
+msgid "Could not import a geotagged image to the Streetside layer!"
+msgstr "Nem sikerült a geocímkézett kép importlása a Streetside rétegre!"
 
 #, java-format
 msgid "Could not import the directory ''{0}''!"
@@ -64,8 +64,8 @@ msgstr "A(z) „{0}” kép nem importálható."
 msgid "Could not open the URL {0} in a browser"
 msgstr "A(z) {0} URL nem nyitható meg böngészőben"
 
-msgid "Current Mapillary changeset"
-msgstr "Jelenlegi Mapillary módosításcsomag"
+msgid "Current Streetside changeset"
+msgstr "Jelenlegi Streetside módosításcsomag"
 
 msgid "Days"
 msgstr "Nap"
@@ -83,11 +83,11 @@ msgstr[1] "{0} kép törölve"
 msgid "Display hour when the picture was taken"
 msgstr "Kép készítési idejének megjelenítése"
 
-msgid "Displays the layer displaying the map objects detected by Mapillary"
-msgstr "Megjeleníti a Mapillary által észlelt térképobjektumokat"
+msgid "Displays the layer displaying the map objects detected by Streetside"
+msgstr "Megjeleníti a Streetside által észlelt térképobjektumokat"
 
-msgid "Download Mapillary images in current view"
-msgstr "Mapillary képek letöltése a jelenlegi nézetben"
+msgid "Download Streetside images in current view"
+msgstr "Streetside képek letöltése a jelenlegi nézetben"
 
 msgid "Download mode"
 msgstr "Letöltési mód"
@@ -98,8 +98,8 @@ msgstr "Letöltött képek"
 msgid "Downloading"
 msgstr "Letöltés"
 
-msgid "Downloading Mapillary images"
-msgstr "Mapillary képek letöltése"
+msgid "Downloading Streetside images"
+msgstr "Streetside képek letöltése"
 
 msgid "Downloading map objects failed!"
 msgstr "A térképobjektumok letöltése sikertelen."
@@ -114,8 +114,8 @@ msgstr "Kísérleti béta funkciók engedélyezése (lehet hogy nem stabilak)"
 msgid "Explore"
 msgstr "Böngészés"
 
-msgid "Export Mapillary images"
-msgstr "Mapillary képek exportálása"
+msgid "Export Streetside images"
+msgstr "Streetside képek exportálása"
 
 msgid "Export all images"
 msgstr "Összes kép exportálása"
@@ -135,8 +135,8 @@ msgstr "Kijelölt kép követése"
 msgid "From existing image layer"
 msgstr "Létező képrétegről"
 
-msgid "From which source do you want to import images to the Mapillary layer?"
-msgstr "Melyik forrásból akarsz képeket importálni a Mapillary rétegre?"
+msgid "From which source do you want to import images to the Streetside layer?"
+msgstr "Melyik forrásból akarsz képeket importálni a Streetside rétegre?"
 
 #. i18n: traffic sign
 msgid "Give way"
@@ -145,9 +145,9 @@ msgstr "Elsőbbségadás kötelező"
 msgid "Go forward"
 msgstr "Előre"
 
-msgid "Go to setting and log in to Mapillary before uploading."
+msgid "Go to setting and log in to Streetside before uploading."
 msgstr ""
-"A feltöltés előtt menj a beállításokba és jelentkezz be a Mapillary "
+"A feltöltés előtt menj a beállításokba és jelentkezz be a Streetside "
 "fiókodba."
 
 msgid "I got it, close this."
@@ -180,8 +180,8 @@ msgstr "Helyi képek importálása"
 msgid "Import pictures"
 msgstr "Képek importálása"
 
-msgid "Import pictures into Mapillary layer"
-msgstr "Képek importálása a Mapillary rétegre"
+msgid "Import pictures into Streetside layer"
+msgstr "Képek importálása a Streetside rétegre"
 
 msgid "Imported images"
 msgstr "Importált képek"
@@ -230,35 +230,32 @@ msgstr "Kijelentkezés"
 msgid "Mandatory direction (any)"
 msgstr "Kötelező haladási irány"
 
-msgid "Mapillary"
-msgstr "Mapillary"
-
 msgid "Streetside"
 msgstr "Streetside"
 
-msgid "Mapillary Images"
-msgstr "Mapillary képek"
+msgid "Streetside Images"
+msgstr "Streetside képek"
 
-msgid "Mapillary changeset"
-msgstr "Mapillary módosításcsomag"
+msgid "Streetside changeset"
+msgstr "Streetside módosításcsomag"
 
-msgid "Mapillary filter"
-msgstr "Mapillary szűrő"
+msgid "Streetside filter"
+msgstr "Streetside szűrő"
 
-msgid "Mapillary history"
-msgstr "Mapillary előzmények"
+msgid "Streetside history"
+msgstr "Streetside előzmények"
 
-msgid "Mapillary layer"
-msgstr "Mapillary réteg"
+msgid "Streetside layer"
+msgstr "Streetside réteg"
 
-msgid "Mapillary login"
-msgstr "Mapillary bejelentkezés"
+msgid "Streetside login"
+msgstr "Streetside bejelentkezés"
 
-msgid "Mapillary object layer"
-msgstr "Mapillary objektumréteg"
+msgid "Streetside object layer"
+msgstr "Streetside objektumréteg"
 
-msgid "Mapillary objects"
-msgstr "Mapillary objektumok"
+msgid "Streetside objects"
+msgstr "Streetside objektumok"
 
 msgid "Months"
 msgstr "Hónap"
@@ -298,8 +295,8 @@ msgstr "Várakozni tilos"
 msgid "No turn"
 msgstr "Bekanyarodni tilos"
 
-msgid "Not Logged in to Mapillary"
-msgstr "Nem vagy bejelentkezve Mapillary-be"
+msgid "Not Logged in to Streetside"
+msgstr "Nem vagy bejelentkezve Streetside-be"
 
 msgid "Not older than: "
 msgstr "Nem régebbi mint: "
@@ -311,20 +308,20 @@ msgstr "Előtöltendő képek száma (előre és hátra)"
 msgid "Only images with signs"
 msgstr "Csak jelzőtáblás képek"
 
-msgid "Open Mapillary changeset dialog"
-msgstr "Mapillary módosításcsomag párbeszédablak megnyitása"
+msgid "Open Streetside changeset dialog"
+msgstr "Streetside módosításcsomag párbeszédablak megnyitása"
 
-msgid "Open Mapillary filter dialog"
-msgstr "Mapillary szűrő párbeszédablak megnyitása"
+msgid "Open Streetside filter dialog"
+msgstr "Streetside szűrő párbeszédablak megnyitása"
 
-msgid "Open Mapillary history dialog"
-msgstr "Mapillary előzmény-párbeszédablak megnyitása"
+msgid "Open Streetside history dialog"
+msgstr "Streetside előzmény-párbeszédablak megnyitása"
 
-msgid "Open Mapillary layer"
-msgstr "Mapillary réteg megnyitása"
+msgid "Open Streetside layer"
+msgstr "Streetside réteg megnyitása"
 
-msgid "Open Mapillary window"
-msgstr "Mapillary-ablak megnyitása"
+msgid "Open Streetside window"
+msgstr "Streetside-ablak megnyitása"
 
 msgid "Pause"
 msgstr "Szünet"
@@ -405,11 +402,11 @@ msgid "Submit the current changeset"
 msgstr "Jelenlegi módosításcsomag beküldése"
 
 #. CHECKSTYLE.OFF: LineLength
-msgid "Submit the current changeset to Mapillary"
-msgstr "Jelenlegi módosításcsomag beküldése a Mapillary-re"
+msgid "Submit the current changeset to Streetside"
+msgstr "Jelenlegi módosításcsomag beküldése a Streetside-re"
 
-msgid "Submitting Mapillary Changeset"
-msgstr "Mapillary módosításcsomagok beküldése"
+msgid "Submitting Streetside Changeset"
+msgstr "Streetside módosításcsomagok beküldése"
 
 msgid "Submitting changeset to server…"
 msgstr "Módosításcsomag elküldése a kiszolgálónak…"
@@ -427,8 +424,8 @@ msgid "Too many map objects, zoom in to see all."
 msgstr "Túl sok térképobjektum, nagyíts hogy lásd mindet."
 
 #, java-format
-msgid "Total Mapillary images: {0}"
-msgstr "Összes Mapillary kép: {0}"
+msgid "Total Streetside images: {0}"
+msgstr "Összes Streetside kép: {0}"
 
 #, java-format
 msgid "Turned {0} image"
@@ -469,8 +466,8 @@ msgstr "Várj a teljes minőségű képekre"
 msgid "Walk mode"
 msgstr "Gyalogos mód"
 
-msgid "Which image layers do you want to import into the Mapillary layer?"
-msgstr "Melyik képréteget akarod beimportálni a Mapillary rétegre?"
+msgid "Which image layers do you want to import into the Streetside layer?"
+msgstr "Melyik képréteget akarod beimportálni a Streetside rétegre?"
 
 msgid "Years"
 msgstr "Év"
@@ -482,35 +479,35 @@ msgstr "Jelenleg nem vagy bejelentkezve."
 msgid "You are logged in as ''{0}''."
 msgstr "Be vagy jelentkezve „{0}” néven."
 
-msgid "You are not logged in, please log in to Mapillary in the preferences"
+msgid "You are not logged in, please log in to Streetside in the preferences"
 msgstr ""
-"Nem vagy bejelentkezve. Kérlek jelentkezz be Mapillary-be a beállításokban"
+"Nem vagy bejelentkezve. Kérlek jelentkezz be Streetside-be a beállításokban"
 
 #, java-format
-msgid "You have successfully uploaded {0} images to mapillary.com"
-msgstr "Sikeresen feltöltöttél {0} képet a mapillary.com-ra"
+msgid "You have successfully uploaded {0} images to Bing.com"
+msgstr "Sikeresen feltöltöttél {0} képet a Bing.com-ra"
 
 msgid "Zoom to selected image"
 msgstr "Nagyítás a kijelölt képre"
 
-msgid "Zoom to the currently selected Mapillary image"
-msgstr "Nagyítás a jelenleg kijelölt Mapillary képre"
+msgid "Zoom to the currently selected Streetside image"
+msgstr "Nagyítás a jelenleg kijelölt Streetside képre"
 
 msgid "approved"
 msgstr "elfogadva"
 
-#. i18n: download mode for Mapillary images
+#. i18n: download mode for Streetside images
 msgid "areas with downloaded OSM-data"
 msgstr "letöltött OSM-adatokat tartalmazó területek"
 
-#. i18n: download mode for Mapillary images
+#. i18n: download mode for Streetside images
 msgid "everything in the visible area"
 msgstr "minden, a látható területen"
 
 msgid "image has no key"
 msgstr "a képnek nincs kulcsa"
 
-#. i18n: download mode for Mapillary images
+#. i18n: download mode for Streetside images
 msgid "only when manually requested"
 msgstr "csak kézi lekérésre"
 
@@ -556,6 +553,6 @@ msgstr "{0} importált kép"
 msgid "{0} sequences, each containing between {1} and {2} images (ø {3})"
 msgstr "{0} sorozat, egyenként {1} és {2} közti képpel (ø {3})"
 
-#. Plugin description for Mapillary
-msgid "Allows the user to work with pictures hosted at mapillary.com"
-msgstr "Lehetővé teszi a mapillary.com fotóinak használatát"
+#. Plugin description for Streetside
+msgid "Allows the user to work with pictures hosted at Bing.com"
+msgstr "Lehetővé teszi a Bing.com fotóinak használatát"

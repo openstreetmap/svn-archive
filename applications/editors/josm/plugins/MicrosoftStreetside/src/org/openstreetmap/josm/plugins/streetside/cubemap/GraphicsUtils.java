@@ -106,7 +106,9 @@ public class GraphicsUtils {
             }
         }
 
-        logger.info(I18n.tr("Image concatenated in {0} millisecs.",(System.currentTimeMillis()-start)));
+        if(StreetsideProperties.DEBUGING_ENABLED.get()) {
+          logger.debug("Image concatenated in " + (System.currentTimeMillis()-start) + " millisecs.");
+        }
         return res;
 	}
 
@@ -133,7 +135,9 @@ public class GraphicsUtils {
 				}
 			}
 
-		logger.info(I18n.tr("Images cropped in {0} millisecs.",(System.currentTimeMillis()-start)));
+		if(StreetsideProperties.DEBUGING_ENABLED.get()) {
+			logger.debug("Images cropped in " + (System.currentTimeMillis()-start) + " millisecs.");
+		}
 
 		return res;
 	}

@@ -173,7 +173,9 @@ public final class StreetsideURL {
         }
       }
 		  URL url = StreetsideURL.string2URL(VirtualEarth.BASE_URL_PREFIX + modifiedId.toString() + VirtualEarth.BASE_URL_SUFFIX);
-	    logger.info(I18n.tr("Tile task URL {0} invoked.", url.toString()));
+	    if(StreetsideProperties.DEBUGING_ENABLED.get()) {
+		    logger.debug("Tile task URL " + url.toString() + " invoked.");
+	    }
 			return url;
 		}
 	}
@@ -197,26 +199,6 @@ public final class StreetsideURL {
 			}
 			return StreetsideURL.string2URL(VirtualEarth.BASE_URL_PREFIX + id + VirtualEarth.BASE_URL_SUFFIX);
 		}
-
-		/**
-		 * Gives you the URL for the blur editor of the image with the given key.
-		 * @param key the key of the image for which you want to open the blur editor
-		 * @return the URL of the blur editor
-		 * @throws IllegalArgumentException if the image key is <code>null</code>
-		 */
-		/*public static URL blurEditImage(final String key) {
-			if (key == null) {
-				throw new IllegalArgumentException("The image key must not be null!");
-			}
-			String urlEncodedKey;
-			try {
-				urlEncodedKey = URLEncoder.encode(key, StandardCharsets.UTF_8.name());
-			} catch (final UnsupportedEncodingException e) {
-				logger.error(I18n.tr("Unsupported encoding when URL encoding", e));
-				urlEncodedKey = key;
-			}
-			return StreetsideURL.string2URL(MainWebsite.BASE_URL, "app/blur?focus=photo&pKey=", urlEncodedKey);
-		}*/
 
 		/**
 		 * Gives you the URL for the blur editor of the image with the given key.
@@ -280,7 +262,7 @@ public final class StreetsideURL {
 									+ baseUrlSuffix;
 							res.add(new URL(urlStr));
 						} catch (final MalformedURLException e) {
-							logger.error(I18n.tr("Error creating URL String for cubemap {0}", cubemapImageId));
+							logger.error("Error creating URL String for cubemap " + cubemapImageId);
 							e.printStackTrace();
 						}
 
@@ -297,7 +279,7 @@ public final class StreetsideURL {
 								+ CubemapUtils.rowCol2StreetsideCellAddressMap.get(String.valueOf(i)) + baseUrlSuffix;
 						res.add(new URL(urlStr));
 					} catch (final MalformedURLException e) {
-						logger.error(I18n.tr("Error creating URL String for cubemap {0}", cubemapImageId));
+						logger.error("Error creating URL String for cubemap " + cubemapImageId);
 						e.printStackTrace();
 					}
 
@@ -337,7 +319,9 @@ public final class StreetsideURL {
 			}
 		}
 
-		logger.info(I18n.tr("queryString result: {0}", ret.toString()));
+		if(StreetsideProperties.DEBUGING_ENABLED.get()) {
+		  logger.debug("queryString result: " + ret.toString());
+		}
 
 		return ret.toString();
 	}
@@ -361,7 +345,10 @@ public final class StreetsideURL {
 				logger.error(e); // This should not happen, as the encoding is hard-coded
 			}
 		}
-		logger.info(I18n.tr("queryStreetsideBoundsString result: {0}", ret.toString()));
+
+		if(StreetsideProperties.DEBUGING_ENABLED.get()) {
+		  logger.debug("queryStreetsideBoundsString result: " + ret.toString());
+		}
 
 		return ret.toString();
 	}
@@ -375,7 +362,10 @@ public final class StreetsideURL {
 		} catch (final UnsupportedEncodingException e) {
 			logger.error(e); // This should not happen, as the encoding is hard-coded
 		}
-		logger.info(I18n.tr("queryById result: {0}", ret.toString()));
+
+		if(StreetsideProperties.DEBUGING_ENABLED.get()) {
+		  logger.info("queryById result: " + ret.toString());
+		}
 		return ret.toString();
 	}
 

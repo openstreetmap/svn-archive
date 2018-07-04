@@ -19,7 +19,6 @@ import org.openstreetmap.josm.plugins.streetside.cubemap.CubemapUtils;
 import org.openstreetmap.josm.plugins.streetside.utils.StreetsideProperties;
 import org.openstreetmap.josm.plugins.streetside.utils.StreetsideSequenceIdGenerator;
 import org.openstreetmap.josm.plugins.streetside.utils.StreetsideURL.APIv3;
-import org.openstreetmap.josm.tools.I18n;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonParser;
@@ -99,7 +98,7 @@ public final class SequenceDownloadRunnable extends BoundsDownloadRunnable {
           image.setRo(node.path("ro").asDouble());
 
           // Add list of cubemap tile images to images
-          List<StreetsideImage> tiles = new ArrayList<StreetsideImage>();
+          List<StreetsideImage> tiles = new ArrayList<>();
 
           EnumSet.allOf(CubemapUtils.CubemapFaces.class).forEach(face -> {
 
@@ -128,7 +127,7 @@ public final class SequenceDownloadRunnable extends BoundsDownloadRunnable {
           });
 
       	  bubbleImages.add(image);
-          logger.info(I18n.tr("Added image with id <" + image.getId() + ">"));
+          logger.info("Added image with id <" + image.getId() + ">");
           if (StreetsideProperties.PREDOWNLOAD_CUBEMAPS.get()) {
             StreetsideData.downloadSurroundingCubemaps(image);
           }
@@ -136,21 +135,6 @@ public final class SequenceDownloadRunnable extends BoundsDownloadRunnable {
       }
 
     parser.close();
-
-    //StreetsideImage[] images;
-
-      // First load all of the 'bubbles' from the request as Streetside Images
-      /*List<StreetsideImage> images = mapper
-        .readValue(new BufferedInputStream(con.getInputStream()), new TypeReference<List<StreetsideImage>>() {});
-      */
-
-
-      //images = mapper.readValue(new BufferedInputStream(con.getInputStream()), StreetsideImage[].class);
-
-      /*for (StreetsideImage image : bubbleImages) {
-        image = JsonStreetsideSequencesDecoder.decodeBubbleData(image);
-        if(image != null) bubbleImages.add(image);
-      }*/
 
     } catch (JsonParseException e) {
       e.printStackTrace();
@@ -186,7 +170,7 @@ public final class SequenceDownloadRunnable extends BoundsDownloadRunnable {
     }
 
     final long endTime = System.currentTimeMillis();
-    logger.info(I18n.tr("Sucessfully loaded {0} Microsoft Streetside images in {0} ",seq.getImages().size(),endTime-startTime%60));
+    logger.info("Sucessfully loaded " + seq.getImages().size() + " Microsoft Streetside images in " + (endTime-startTime/1000));
   }
 
   @Override

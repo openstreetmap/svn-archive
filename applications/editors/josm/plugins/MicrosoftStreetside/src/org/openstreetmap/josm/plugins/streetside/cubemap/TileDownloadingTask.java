@@ -106,17 +106,9 @@ public class TileDownloadingTask implements Callable<String> {
 				.stream());
 
 		if (img == null) {
-			logger.error(I18n.tr("Download of BufferedImage {0} is null!", tileId));
+			logger.error("Download of BufferedImage " + tileId + " is null!");
 		}
 
-		//String faceId = CubemapUtils.getFaceIdFromTileId(tileId);
-
-		/*Map<String, Map<String, BufferedImage>> faces2TilesMap = CubemapBuilder
-				.getInstance().getCubemap().getFace2TilesMap();*/
-
-		/*if(CubemapBuilder.getInstance().getTileImages().get(tileId)==null) {
-		  CubemapBuilder.getInstance().getTileImages().put(tileId, new HashMap<String,BufferedImage>());
-		}*/
 		CubemapBuilder.getInstance().getTileImages().put(tileId, img);
 
 		fireTileAdded(tileId);
@@ -124,7 +116,7 @@ public class TileDownloadingTask implements Callable<String> {
 		if (StreetsideProperties.DEBUGING_ENABLED.get()) {
 		  long endTime = System.currentTimeMillis();
 	    long runTime = (endTime-startTime)/1000;
-	    logger.debug(I18n.tr("Loaded image for tile {0} in {1} seconds", tileId, runTime));
+	    logger.debug("Loaded image for " + tileId + " in " + runTime + " seconds");
 		}
 
 		return tileId;

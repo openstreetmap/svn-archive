@@ -91,12 +91,7 @@ public class ThreeSixtyDegreeViewerPanel extends JFXPanel {
 		Platform.runLater(new Runnable() {
 			@Override
 			public void run() {
-				//try {
-					setScene(createDefaultScene());
-				  //setScene(createScene());
-				/*} catch (NonInvertibleTransformException e) {
-					logger.error(I18n.tr("Error initializing StreetsideViewerPanel - JavaFX {0}", e.getMessage()));
-				}*/
+				setScene(createDefaultScene());
 			}
 		});
 	}
@@ -479,24 +474,6 @@ public class ThreeSixtyDegreeViewerPanel extends JFXPanel {
 
 		return scene;
 	}
-
-	/*public void setCubemapImages(BufferedImage img, BufferedImage img1, BufferedImage img2, BufferedImage img3,
-			BufferedImage img4, BufferedImage img5) {
-		cubemapBox = null;
-
-		GraphicsUtils.PlatformHelper.run(new Runnable() {
-			@Override
-			public void run() {
-				try {
-					// initialize without imagery.
-					scene = createScene(img, img1, img2, img3, img4, img5);
-					setScene(scene);
-				} catch (NonInvertibleTransformException e) {
-					logger.error(I18n.tr("Error initializing StreetsideViewerPanel - JavaFX {0}", e.getMessage()));
-				}
-			}
-		});
-	}*/
 
 	public CubemapBox getCubemapBox() {
 		if (cubemapBox == null) {

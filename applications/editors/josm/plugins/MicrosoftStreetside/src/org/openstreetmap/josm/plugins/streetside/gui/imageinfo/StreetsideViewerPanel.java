@@ -66,10 +66,13 @@ public final class StreetsideViewerPanel extends JPanel
 		repaint();
 	    JPanel checkPanel = new JPanel();
 
-	    imgReloadAction = new ImageReloadAction(I18n.tr("Reload"));
+	    // TODO: I18n for all languages?
+	    imgReloadAction = new ImageReloadAction(/*I18n.tr(*/"Reload"/*)*/);
 
 	    StreetsideButton imgReloadButton = new StreetsideButton(imgReloadAction);
-		  highResImageryCheck = new JCheckBox(I18n.tr("High resolution"));
+
+	    // TODO: I18n for all languages?
+      highResImageryCheck = new JCheckBox(/*I18n.tr(*/"High resolution"/*)*/);
 	    highResImageryCheck.setSelected(StreetsideProperties.SHOW_HIGH_RES_STREETSIDE_IMAGERY.get());
 	    highResImageryCheck.addActionListener(
 	      action -> StreetsideProperties.SHOW_HIGH_RES_STREETSIDE_IMAGERY.put(highResImageryCheck.isSelected())
@@ -82,7 +85,8 @@ public final class StreetsideViewerPanel extends JPanel
 
 	    JPanel privacyLink = new JPanel();
 
-	    imgLinkAction = new WebLinkAction(I18n.tr("Report a privacy concern with this image"), null);
+	    // TODO: I18n for all languages?
+	    imgLinkAction = new WebLinkAction(/*I18n.tr(*/"Report a privacy concern with this image"/*)*/, null);
 	    privacyLink.add(new StreetsideButton(imgLinkAction, true));
 	    checkPanel.add(privacyLink, BorderLayout.PAGE_END);
 
@@ -138,7 +142,9 @@ public final class StreetsideViewerPanel extends JPanel
 		        StreetsideURL.MainWebsite.streetsidePrivacyLink(bubbleId)
 		      );
 
-		      logger.debug(I18n.tr("Privacy link set for Streetside image {0} quadKey {1}", bubbleId, newImageId));
+		      if(StreetsideProperties.DEBUGING_ENABLED.get()) {
+		        logger.debug(/*I18n.tr(*/"Privacy link set for Streetside image " + bubbleId + " quadKey " + newImageId/*)*/);
+		      }
 
 		      imageLinkChangeListener.valueChanged(null);
 		      StreetsideProperties.CUBEMAP_LINK_TO_BLUR_EDITOR.addListener(imageLinkChangeListener);

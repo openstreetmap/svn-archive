@@ -1,12 +1,12 @@
-# Translations for the JOSM plugin 'Mapillary' (pt_BR)
+# Translations for the JOSM plugin 'MicrosoftStreetside' (pt_BR)
 # Copyright (C) 2018 
-# This file is distributed under the same license as the josm-plugin_Mapillary package.
+# This file is distributed under the same license as the MicrosoftStreetside packages.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: josm-plugin_Mapillary v1.5.10\n"
+"Project-Id-Version: MicrosoftStreetside v0.0.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-01-21 21:47+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
@@ -48,8 +48,8 @@ msgstr "Escolha placas"
 msgid "Continues with the paused walk."
 msgstr "Continua com a caminhada pausada."
 
-msgid "Current Mapillary changeset"
-msgstr "Conjunto de Alterações Mapillary atual"
+msgid "Current Streetside changeset"
+msgstr "Conjunto de Alterações Streetside atual"
 
 #. i18n: Checkbox label in JOSM settings
 msgid "Cut off sequences at download bounds"
@@ -71,11 +71,11 @@ msgstr[1] "Apagar {0} imagens"
 msgid "Display hour when the picture was taken"
 msgstr "Mostra hora quando a foto foi tirada"
 
-msgid "Displays the layer displaying the map objects detected by Mapillary"
-msgstr "Mostra a camada do mapa de objetos detectados pela Mapillary"
+msgid "Displays the layer displaying the map objects detected by Streetside"
+msgstr "Mostra a camada do mapa de objetos detectados pela Streetside"
 
-msgid "Download Mapillary images in current view"
-msgstr "Obtendo imagens do Mapillary na visão atual"
+msgid "Download Streetside images in current view"
+msgstr "Obtendo imagens do Streetside na visão atual"
 
 msgid "Download mode"
 msgstr "Modo de download"
@@ -86,8 +86,8 @@ msgstr "Imagens baixadas"
 msgid "Downloading"
 msgstr "Baixando"
 
-msgid "Downloading Mapillary images"
-msgstr "Baixar imagens do Mapillary"
+msgid "Downloading Streetside images"
+msgstr "Baixar imagens do Streetside"
 
 #. i18n: Checkbox label in JOSM settings
 msgid "Enable experimental beta-features (might be unstable)"
@@ -96,8 +96,8 @@ msgstr "Ativar funcionalidades beta e experimentais (pode ser instável)"
 msgid "Explore"
 msgstr "Explorar"
 
-msgid "Export Mapillary images"
-msgstr "Exportar imagens Mapillary"
+msgid "Export Streetside images"
+msgstr "Exportar imagens Streetside"
 
 msgid "Export all images"
 msgstr "Exportar todas as imagens"
@@ -121,9 +121,9 @@ msgstr "Dê a preferência"
 msgid "Go forward"
 msgstr "Ir para a frente"
 
-msgid "Go to setting and log in to Mapillary before uploading."
+msgid "Go to setting and log in to Streetside before uploading."
 msgstr ""
-"Vá para configuração e faça login no Mapillary antes de fazer o upload."
+"Vá para configuração e faça login no Streetside antes de fazer o upload."
 
 msgid "Import"
 msgstr "Importar"
@@ -134,8 +134,8 @@ msgstr "Importar imagens locais"
 msgid "Import pictures"
 msgstr "Importar imagens"
 
-msgid "Import pictures into Mapillary layer"
-msgstr "Importar imagens na camada do Mapillary"
+msgid "Import pictures into Streetside layer"
+msgstr "Importar imagens na camada do Streetside"
 
 msgid "Imported images"
 msgstr "Imagens importadas"
@@ -181,35 +181,32 @@ msgstr "Logout"
 msgid "Mandatory direction (any)"
 msgstr "Sentido obrigatório (qualquer)"
 
-msgid "Mapillary"
-msgstr "Mapillary"
-
 msgid "Streetside"
 msgstr "Streetside"
 
-msgid "Mapillary Images"
-msgstr "Mapillary Imagens"
+msgid "Streetside Images"
+msgstr "Streetside Imagens"
 
-msgid "Mapillary changeset"
-msgstr "Conjunto de alterações Mapillary"
+msgid "Streetside changeset"
+msgstr "Conjunto de alterações Streetside"
 
-msgid "Mapillary filter"
-msgstr "Mapillary filtro"
+msgid "Streetside filter"
+msgstr "Streetside filtro"
 
-msgid "Mapillary history"
-msgstr "Mapillary história"
+msgid "Streetside history"
+msgstr "Streetside história"
 
-msgid "Mapillary image"
-msgstr "Imagem Mapillary"
+msgid "Streetside image"
+msgstr "Imagem Streetside"
 
-msgid "Mapillary layer"
-msgstr "Mapillary camada"
+msgid "Streetside layer"
+msgstr "Streetside camada"
 
-msgid "Mapillary login"
-msgstr "Mapillary login"
+msgid "Streetside login"
+msgstr "Streetside login"
 
-msgid "Mapillary object layer"
-msgstr "Camada de objetos do Mapillary"
+msgid "Streetside object layer"
+msgstr "Camada de objetos do Streetside"
 
 msgid "Months"
 msgstr "Meses"
@@ -255,20 +252,20 @@ msgstr "Não mais velho do que: "
 msgid "Only images with signs"
 msgstr "Somente imagens com placas"
 
-msgid "Open Mapillary changeset dialog"
-msgstr "Abrir caixa de diálogo do conjunto de alterações Mapillary"
+msgid "Open Streetside changeset dialog"
+msgstr "Abrir caixa de diálogo do conjunto de alterações Streetside"
 
-msgid "Open Mapillary filter dialog"
-msgstr "Abrir filtro Mapillary"
+msgid "Open Streetside filter dialog"
+msgstr "Abrir filtro Streetside"
 
-msgid "Open Mapillary history dialog"
-msgstr "Abrir histórico Mapillary"
+msgid "Open Streetside history dialog"
+msgstr "Abrir histórico Streetside"
 
-msgid "Open Mapillary layer"
-msgstr "Abrir camada Mapillary"
+msgid "Open Streetside layer"
+msgstr "Abrir camada Streetside"
 
-msgid "Open Mapillary window"
-msgstr "Abrir janela Mapillary"
+msgid "Open Streetside window"
+msgstr "Abrir janela Streetside"
 
 msgid "Pause"
 msgstr "Pausar"
@@ -337,8 +334,8 @@ msgid "Submit the current changeset"
 msgstr "Enviar o conjunto de alterações atual"
 
 #. CHECKSTYLE.OFF: LineLength
-msgid "Submit the current changeset to Mapillary"
-msgstr "Enviar o conjunto de alterações atual para a Mapillary"
+msgid "Submit the current changeset to Streetside"
+msgstr "Enviar o conjunto de alterações atual para a Streetside"
 
 msgid "Submitting changeset to server…"
 msgstr "Enviando conjunto de alterações para o servidor..."
@@ -347,8 +344,8 @@ msgid "Supported image formats (JPG and PNG)"
 msgstr "Formatos de imagens suportado (JPG e PNG)"
 
 #, java-format
-msgid "Total Mapillary images: {0}"
-msgstr "Total de imagens Mapillary: {0}"
+msgid "Total Streetside images: {0}"
+msgstr "Total de imagens Streetside: {0}"
 
 #, java-format
 msgid "Turned {0} image"
@@ -385,10 +382,10 @@ msgstr "Modo caminhada"
 
 #. i18n: Checkbox label in JOSM settings
 msgid ""
-"When opening Mapillary image in web browser, show the blur editor instead of"
+"When opening Streetside image in web browser, show the blur editor instead of"
 " the image viewer"
 msgstr ""
-"Ao abrir a imagem Mapillary no navegador da web, mostrar o editor de "
+"Ao abrir a imagem Streetside no navegador da web, mostrar o editor de "
 "desfocagem ao invés do visualizador de imagens"
 
 msgid "Years"
@@ -404,8 +401,8 @@ msgstr "Você está logado como ''{0}''."
 msgid "Zoom to selected image"
 msgstr "Zoom para a imagem selecionada"
 
-msgid "Zoom to the currently selected Mapillary image"
-msgstr "Zoom para a imagem selecionada no Mapillary no momento"
+msgid "Zoom to the currently selected Streetside image"
+msgstr "Zoom para a imagem selecionada no Streetside no momento"
 
 msgid "approved"
 msgstr "aprovado"
@@ -437,6 +434,6 @@ msgstr ""
 msgid "{0} imported images"
 msgstr "{0} imagens importadas"
 
-#. Plugin description for Mapillary
-msgid "Allows the user to work with pictures hosted at mapillary.com"
-msgstr "Permite o usuário trabalhar com imagens hospedadas em mapillary.com"
+#. Plugin description for Streetside
+msgid "Allows the user to work with pictures hosted at Bing.com"
+msgstr "Permite o usuário trabalhar com imagens hospedadas em Bing.com"

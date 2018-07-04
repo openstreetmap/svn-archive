@@ -32,7 +32,7 @@ final static Logger logger = Logger.getLogger(OAuthPortListener.class);
 
 protected static final String RESPONSE = String.format(
    "<!DOCTYPE html><html><head><meta charset=\"utf8\"><title>%s</title></head><body>%s</body></html>",
-   I18n.tr("Mapillary login"),
+   I18n.tr("Streetside login"),
    I18n.tr("Login successful, return to JOSM.")
 );
 private final StreetsideLoginListener callback;
@@ -67,7 +67,7 @@ public void run() {
 
    StreetsideUser.reset();
 
-   logger.info(I18n.tr("Successful login with Mapillary, the access token is: {0}", accessToken));
+   logger.info(I18n.tr("Successful login with Streetside, the access token is: {0}", accessToken));
    // Saves the access token in preferences.
    StreetsideUser.setTokenValid(true);
    if (Main.main != null) {

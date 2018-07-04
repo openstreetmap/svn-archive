@@ -108,7 +108,7 @@ public final class PluginState {
   private static void finishedUploadDialog(int numImages) {
     JOptionPane.showMessageDialog(
       Main.parent,
-      tr("You have successfully uploaded {0} images to mapillary.com", numImages),
+      tr("You have successfully uploaded {0} images to Bing.com", numImages),
       tr("Finished upload"),
       JOptionPane.INFORMATION_MESSAGE
     );
@@ -120,8 +120,8 @@ public final class PluginState {
     }
     JOptionPane.showMessageDialog(
         Main.parent,
-        tr("You are not logged in, please log in to Mapillary in the preferences"),
-        tr("Not Logged in to Mapillary"),
+        tr("You are not logged in, please log in to Streetside in the preferences"),
+        tr("Not Logged in to Streetside"),
         JOptionPane.WARNING_MESSAGE
     );
   }

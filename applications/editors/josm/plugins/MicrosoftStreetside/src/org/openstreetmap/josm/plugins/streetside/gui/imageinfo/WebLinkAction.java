@@ -44,7 +44,7 @@ public class WebLinkAction extends AbstractAction {
     try {
       StreetsideUtils.browse(url);
     } catch (IOException e1) {
-      String msg = I18n.tr("Could not open the URL {0} in a browser", url == null ? "‹null›" : url);
+      String msg = "Could not open the URL " + url == null ? "‹null›" : url + " in a browser";
       logger.warn(msg, e1);
       new Notification(msg).setIcon(JOptionPane.WARNING_MESSAGE).show();
     }

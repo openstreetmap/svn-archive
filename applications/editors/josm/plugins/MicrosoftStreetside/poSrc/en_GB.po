@@ -1,12 +1,12 @@
-# Translations for the JOSM plugin 'MS-Streetside-JOSM-Plugin' (en_GB)
+# Translations for the JOSM plugin 'MicrosoftStreetside' (en_GB)
 # Copyright (C) 2018 
-# This file is distributed under the same license as the josm-plugin_Mapillary package.
+# This file is distributed under the same license as the MicrosoftStreetside packages.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: josm-plugin_Mapillary v1.5.10\n"
+"Project-Id-Version: MicrosoftStreetside v0.0.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-01-21 21:47+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
@@ -33,9 +33,6 @@ msgstr "Choose signs"
 msgid "Continues with the paused walk."
 msgstr "Continues with the paused walk."
 
-msgid "Current Mapillary changeset"
-msgstr "Current Mapillary changeset"
-
 msgid "Current Streetside changeset"
 msgstr "Current Streetside changeset"
 
@@ -55,8 +52,8 @@ msgstr[1] "Deleted {0} images"
 msgid "Display hour when the picture was taken"
 msgstr "Display hour when the picture was taken"
 
-msgid "Download Mapillary images in current view"
-msgstr "Download Mapillary images in current view"
+msgid "Download Streetside images in current view"
+msgstr "Download Streetside images in current view"
 
 msgid "Download mode"
 msgstr "Download mode"
@@ -66,9 +63,6 @@ msgstr "Downloaded images"
 
 msgid "Downloading"
 msgstr "Downloading"
-
-msgid "Downloading Mapillary images"
-msgstr "Downloading Mapillary images"
 
 msgid "Downloading Streetside images"
 msgstr "Downloading Streetside images"
@@ -98,9 +92,6 @@ msgstr "Give way"
 msgid "Go forward"
 msgstr "Go forward"
 
-msgid "Go to setting and log in to Mapillary before uploading."
-msgstr "Go to setting and log in to Mapillary before uploading."
-
 msgid "Go to setting and log in to Streetside before uploading."
 msgstr "Go to setting and log in to Streetside before uploading."
 
@@ -113,8 +104,8 @@ msgstr "Import local pictures"
 msgid "Import pictures"
 msgstr "Import pictures"
 
-msgid "Import pictures into Mapillary layer"
-msgstr "Import pictures into Mapillary layer"
+msgid "Import pictures into Streetside layer"
+msgstr "Import pictures into Streetside layer"
 
 msgid "Imported images"
 msgstr "Imported images"
@@ -160,44 +151,20 @@ msgstr "Logout"
 msgid "Mandatory direction (any)"
 msgstr "Mandatory direction (any)"
 
-msgid "Mapillary"
-msgstr "Mapillary"
-
 msgid "Streetside"
 msgstr "Streetside"
-
-msgid "Mapillary Images"
-msgstr "Mapillary Images"
 
 msgid "Microsoft Streetside Images"
 msgstr "Microsoft Streetside Images"
 
-msgid "Mapillary changeset"
-msgstr "Mapillary changeset"
-
-msgid "Streetside changeset"
-msgstr "Streetside changeset"
-
-msgid "Mapillary filter"
-msgstr "Mapillary filter"
-
 msgid "Streetside filter"
 msgstr "Streetside filter"
-
-msgid "Mapillary history"
-msgstr "Mapillary history"
 
 msgid "Streetside history"
 msgstr "Streetside history"
 
-msgid "Mapillary layer"
-msgstr "Mapillary layer"
-
 msgid "Streetside layer"
 msgstr "Streetside layer"
-
-msgid "Mapillary login"
-msgstr "Mapillary login"
 
 msgid "Streetside login"
 msgstr "Streetside login"
@@ -240,9 +207,6 @@ msgstr "No parking"
 msgid "No turn"
 msgstr "No turn"
 
-msgid "Not Logged in to Mapillary"
-msgstr "Not Logged in to Mapillary"
-
 msgid "Not Logged in to Streetside"
 msgstr "Not Logged in to Streetside"
 
@@ -252,26 +216,14 @@ msgstr "Not older than: "
 msgid "Only images with signs"
 msgstr "Only images with signs"
 
-msgid "Open Mapillary changeset dialog"
-msgstr "Open Mapillary changeset dialogue"
-
 msgid "Open Streetside changeset dialog"
 msgstr "Open Streetside changeset dialogue"
-
-msgid "Open Mapillary filter dialog"
-msgstr "Open Mapillary filter dialog"
 
 msgid "Open Streetside filter dialog"
 msgstr "Open Streetside filter dialog"
 
-msgid "Open Mapillary history dialog"
-msgstr "Open Mapillary history dialog"
-
 msgid "Open Streetside history dialog"
 msgstr "Open Streetside history dialog"
-
-msgid "Open Mapillary window"
-msgstr "Open Mapillary window"
 
 msgid "Open Streetside window"
 msgstr "Open Streetside window"
@@ -301,9 +253,6 @@ msgstr "Redo"
 
 msgid "Reset"
 msgstr "Reset"
-
-msgid "Rewrite imported images"
-msgstr "Rewrite imported images"
 
 #. i18n: traffic sign
 msgid "Roundabout"
@@ -339,25 +288,14 @@ msgid "Submit the current changeset"
 msgstr "Submit the current changeset"
 
 #. CHECKSTYLE.OFF: LineLength
-msgid "Submit the current changeset to Mapillary"
-msgstr "Submit the current changeset to Mapillary"
-
-#. CHECKSTYLE.OFF: LineLength
 msgid "Submit the current changeset to Streetside"
 msgstr "Submit the current changeset to Streetside"
-
-msgid "Submitting Mapillary Changeset"
-msgstr "Submitting Mapillary Changeset"
 
 msgid "Submitting Streetside Changeset"
 msgstr "Submitting Streetside Changeset"
 
 msgid "Supported image formats (JPG and PNG)"
 msgstr "Supported image formats (JPG and PNG)"
-
-#, java-format
-msgid "Total Mapillary images: {0}"
-msgstr "Total Mapillary images: {0}"
 
 #, java-format
 msgid "Total Streetside images: {0}"
@@ -409,41 +347,35 @@ msgstr "You are currently not logged in."
 msgid "You are logged in as ''{0}''."
 msgstr "You are logged in as ''{0}''."
 
-msgid "You are not logged in, please log in to Mapillary in the preferences"
-msgstr "You are not logged in, please log in to Mapillary in the preferences"
-
 msgid "You are not logged in, please log in to Streetside in the preferences"
 msgstr "You are not logged in, please log in to Streetside in the preferences"
 
 msgid "Zoom to selected image"
 msgstr "Zoom to selected image"
 
-msgid "Zoom to the currently selected Mapillary image"
-msgstr "Zoom to the currently selected Mapillary image"
-
 msgid "Zoom to the currently selected Streetside image"
 msgstr "Zoom to the currently selected Streetside image"
 
-#. i18n: download mode for Mapillary images
+#. i18n: download mode for Streetside images
 msgid "areas with downloaded OSM-data"
 msgstr "areas with downloaded OSM-data"
 
-#. i18n: download mode for Mapillary images
+#. i18n: download mode for Streetside images
 msgid "everything in the visible area"
 msgstr "everything in the visible area"
 
-#. i18n: download mode for Mapillary images
+#. i18n: download mode for Streetside images
 msgid "only when manually requested"
 msgstr "only when manually requested"
 
 msgid "pending"
 msgstr "pending"
 
-#. Plugin description for Mapillary
-msgid "Allows the user to work with pictures hosted at mapillary.com"
-msgstr "Allows the user to work with pictures hosted at mapillary.com"
+#. Plugin description for Streetside
+msgid "Allows the user to work with pictures hosted at Bing.com"
+msgstr "Allows the user to work with pictures hosted at Bing.com"
 
 #. Plugin description for Streetside
-msgid "Allows the user to work with pictures hosted at streetside.com"
-msgstr "Allows the user to work with pictures hosted at streetside.com"
+msgid "Allows the user to work with pictures hosted at Bing.com"
+msgstr "Allows the user to work with pictures hosted at Bing.com"
 

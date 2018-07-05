@@ -8,12 +8,16 @@ import java.awt.event.ActionEvent;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -49,6 +53,7 @@ import org.openstreetmap.josm.plugins.PluginInformation;
 import org.openstreetmap.josm.tools.GBC;
 import org.openstreetmap.josm.tools.Logging;
 import org.openstreetmap.josm.tools.PlatformHookWindows;
+import org.openstreetmap.josm.tools.Utils;
 
 public class OsmarenderPlugin extends Plugin {
 
@@ -150,8 +155,43 @@ public class OsmarenderPlugin extends Plugin {
         osmarenderMenu.setVisible(false);
 
         // install the xsl and xml file
-        copy("/osmarender.xsl", "osmarender.xsl");
-        copy("/osm-map-features.xml", "osm-map-features.xml");
+        _copy("/osmarender.xsl", "osmarender.xsl");
+        _copy("/osm-map-features.xml", "osm-map-features.xml");
+    }
+
+    /**
+     * @return The directory for the plugin to store all kind of stuff.
+     * @deprecated (since 13007) to get the same directory as this method, use {@code getPluginDirs().getUserDataDirectory(false)}.
+     * However, for files that can be characterized as cache or preferences, you are encouraged to use the appropriate
+     * {@link org.openstreetmap.josm.spi.preferences.IBaseDirectories} method from {@link #getPluginDirs()}.
+     */
+    @Deprecated
+    public String _getPluginDir() {
+        return new File(Main.pref.getPluginsDirectory(), getPluginInformation().name).getPath();
+    }
+
+    /**
+     * Copies the resource 'from' to the file in the plugin directory named 'to'.
+     * @param from source file
+     * @param to target file
+     * @throws FileNotFoundException if the file exists but is a directory rather than a regular file,
+     * does not exist but cannot be created, or cannot be opened for any other reason
+     * @throws IOException if any other I/O error occurs
+     * @deprecated without replacement
+     */
+    @Deprecated
+    public void _copy(String from, String to) throws IOException {
+        String pluginDirName = _getPluginDir();
+        File pluginDir = new File(pluginDirName);
+        if (!pluginDir.exists()) {
+            Utils.mkDirs(pluginDir);
+        }
+        try (InputStream in = getClass().getResourceAsStream(from)) {
+            if (in == null) {
+                throw new IOException("Resource not found: "+from);
+            }
+            Files.copy(in, new File(pluginDirName, to).toPath(), StandardCopyOption.REPLACE_EXISTING);
+        }
     }
 
     @Override

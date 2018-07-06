@@ -28,7 +28,6 @@ import org.openstreetmap.josm.plugins.streetside.gui.StreetsideExportDialog;
 import org.openstreetmap.josm.plugins.streetside.io.export.StreetsideExportManager;
 import org.openstreetmap.josm.tools.ImageProvider;
 import org.openstreetmap.josm.tools.ImageProvider.ImageSizes;
-import org.openstreetmap.josm.tools.Logging;
 import org.openstreetmap.josm.tools.Shortcut;
 
 /**

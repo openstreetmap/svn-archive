@@ -8,7 +8,6 @@ import java.util.List;
 import org.openstreetmap.josm.gui.SideButton;
 import org.openstreetmap.josm.gui.dialogs.ToggleDialog;
 import org.openstreetmap.josm.plugins.streetside.gui.imageinfo.StreetsideViewerPanel;
-import org.openstreetmap.josm.tools.I18n;
 
 /**
  * Toggle dialog that shows an image and some buttons.
@@ -21,8 +20,7 @@ public final class StreetsideViewerDialog extends ToggleDialog
 
 	private static final long serialVersionUID = -8983900297628236197L;
 
-	// TODO: I18n support in all languages?
-	private static final String BASE_TITLE = /*I18n.marktr(*/"360° Streetside Viewer"/*)*/;
+	private static final String BASE_TITLE = "360° Streetside Viewer";
 
 	private static StreetsideViewerDialog instance;
 
@@ -33,7 +31,7 @@ public final class StreetsideViewerDialog extends ToggleDialog
 
 	private StreetsideViewerDialog() {
 	  // TODO: I18n support in all languages?
-	  super(/*I18n.tr(*/StreetsideViewerDialog.BASE_TITLE/*)*/, "streetside-viewer", /*I18n.tr(*/"Open Streetside Viewer window"/*)*/,
+	  super(StreetsideViewerDialog.BASE_TITLE, "streetside-viewer", "Open Streetside Viewer window",
 				null, 200, true, StreetsidePreferenceSetting.class);
 		streetsideViewerPanel = new StreetsideViewerPanel();
 		createLayout(streetsideViewerPanel, true, null);

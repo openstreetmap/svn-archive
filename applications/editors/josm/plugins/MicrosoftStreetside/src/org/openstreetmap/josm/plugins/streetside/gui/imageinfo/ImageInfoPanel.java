@@ -92,7 +92,7 @@ public final class ImageInfoPanel extends ToggleDialog implements StreetsideData
     imgKey.add(copyButton);
     JPanel imgButtons = new JPanel();
     imgButtons.add(new StreetsideButton(imgLinkAction, true));
-    imgButtons.add(new StreetsideButton(null/*addStreetsideTagAction*/, true));
+    imgButtons.add(new StreetsideButton(addStreetsideTagAction, true));
     seqKeyValue = new SelectableLabel();
 
     JPanel root = new JPanel(new GridBagLayout());

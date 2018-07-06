@@ -2,6 +2,7 @@
 package org.openstreetmap.josm.plugins.streetside.cubemap;
 
 import java.awt.image.BufferedImage;
+import java.text.MessageFormat;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.Callable;
@@ -13,8 +14,6 @@ import org.apache.log4j.Logger;
 import org.openstreetmap.josm.plugins.streetside.cache.StreetsideCache;
 import org.openstreetmap.josm.plugins.streetside.utils.StreetsideProperties;
 import org.openstreetmap.josm.plugins.streetside.utils.StreetsideURL;
-import org.openstreetmap.josm.tools.I18n;
-import org.openstreetmap.josm.tools.Logging;
 
 import us.monoid.web.Resty;
 
@@ -116,7 +115,7 @@ public class TileDownloadingTask implements Callable<String> {
 		if (StreetsideProperties.DEBUGING_ENABLED.get()) {
 		  long endTime = System.currentTimeMillis();
 	    long runTime = (endTime-startTime)/1000;
-	    logger.debug("Loaded image for " + tileId + " in " + runTime + " seconds");
+	    logger.debug(MessageFormat.format("Loaded image for {0} in {1} seconds.", tileId, runTime));
 		}
 
 		return tileId;

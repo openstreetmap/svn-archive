@@ -16,7 +16,6 @@ import javax.json.JsonValue;
 import org.apache.log4j.Logger;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.tools.I18n;
-import org.openstreetmap.josm.tools.Logging;
 
 public final class JsonDecoder {
 

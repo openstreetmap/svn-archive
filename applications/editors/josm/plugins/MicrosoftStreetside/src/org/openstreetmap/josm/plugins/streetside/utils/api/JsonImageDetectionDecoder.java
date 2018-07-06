@@ -25,7 +25,6 @@ public final class JsonImageDetectionDecoder {
     // Private constructor to avoid instantiation
   }
 
-  // TODO: Image detections? Keep? @rrh
   public static ImageDetection decodeImageDetection(final JsonObject json) {
     if (json == null || !"Feature".equals(json.getString("type", null))) {
       return null;

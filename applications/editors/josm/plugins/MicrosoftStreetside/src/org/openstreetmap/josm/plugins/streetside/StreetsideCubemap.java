@@ -9,9 +9,7 @@ import org.openstreetmap.josm.plugins.streetside.utils.StreetsideProperties;
  *
  *
  */
-public class StreetsideCubemap extends StreetsideAbstractImage /*implements Comparable<StreetsideAbstractImage>*/{
-
-	//private static Map<String,Map<String,BufferedImage>> face2TilesMap = new HashMap<String,Map<String,BufferedImage>>();
+public class StreetsideCubemap extends StreetsideAbstractImage {
 
 	/**
 	* If two values for field cd differ by less than EPSILON both values are considered equal.

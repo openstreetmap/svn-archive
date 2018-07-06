@@ -5,11 +5,8 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.FlowLayout;
-import java.awt.GraphicsEnvironment;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
 
 import javax.swing.AbstractListModel;
 import javax.swing.JButton;
@@ -22,13 +19,8 @@ import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 
-import org.openstreetmap.josm.gui.Notification;
 import org.openstreetmap.josm.gui.layer.geoimage.GeoImageLayer;
 import org.openstreetmap.josm.gui.util.GuiHelper;
-import org.openstreetmap.josm.plugins.streetside.StreetsideImportedImage;
-import org.openstreetmap.josm.plugins.streetside.StreetsideLayer;
-import org.openstreetmap.josm.plugins.streetside.StreetsidePlugin;
-import org.openstreetmap.josm.plugins.streetside.StreetsideSequence;
 import org.openstreetmap.josm.tools.I18n;
 import org.openstreetmap.josm.tools.ImageProvider;
 
@@ -57,36 +49,10 @@ public class ChooseGeoImageLayersDialog extends JDialog {
     cancelButton.requestFocus();
     buttonPanel.add(cancelButton);
     final JButton importButton = new JButton(I18n.tr("Import"), new ImageProvider("copy").get());
-    /*importButton.addActionListener(e -> {
-      list.getSelectedValuesList().parallelStream().map(gil -> {
-        StreetsideSequence seq = new StreetsideSequence();
-        seq.add(
-          gil.getImages().parallelStream()
-            .map(img -> {
-              try {
-                return StreetsideImportedImage.createInstance(img);
-              } catch (IllegalArgumentException iae) {
-                final String message = I18n.tr("Could not import a geotagged image to the Streetside layer!");
-                logger.warn(I18n.tr(message, iae));
-                if (!GraphicsEnvironment.isHeadless()) {
-                  new Notification(message).setIcon(StreetsidePlugin.LOGO.get()).show();
-                }
-                return null;
-              }
-            })
-            .filter(Objects::nonNull)
-            .sorted((o1, o2) -> (int) Math.signum(o1.getCd() - o2.getCd())) // order by capture date timestamp (ascending)
-            .collect(Collectors.toList())
-        );
-        return seq;
-      }).forEach(seq -> {
-        StreetsideLayer.getInstance().getData().addAll(seq.getImages(), false);
-        // TODO: @rrh
-        //StreetsideImportAction.recordChanges(seq.getImages());
-      });
-      StreetsideLayer.invalidateInstance();
-      dispose();
-    });*/
+
+    // Streetside does not support importing images (Mapillary relic)
+    importButton.setEnabled(false);
+
     buttonPanel.add(importButton);
     c.add(buttonPanel, BorderLayout.SOUTH);
 

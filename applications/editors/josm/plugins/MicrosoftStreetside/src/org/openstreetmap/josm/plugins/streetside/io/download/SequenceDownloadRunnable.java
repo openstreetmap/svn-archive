@@ -47,9 +47,6 @@ public final class SequenceDownloadRunnable extends BoundsDownloadRunnable {
 
     StreetsideSequence seq = new StreetsideSequence(StreetsideSequenceIdGenerator.generateId());
 
-    // TODO: how can LatLon and heading / camera angles (he attribute) be set for a sequence?
-    // and does it make sense? @rrh
-
     List<StreetsideImage> bubbleImages = new ArrayList<>();
 
     final long startTime = System.currentTimeMillis();
@@ -93,8 +90,6 @@ public final class SequenceDownloadRunnable extends BoundsDownloadRunnable {
           image.setPbn(node.findValuesAsText("pbn"));
           image.setPi(node.path("pi").asDouble());
           image.setPr(node.path("pr").asLong());
-          // TODO: inner class @rrh
-          // image.setRn(node.path("rn").asText());
           image.setRo(node.path("ro").asDouble());
 
           // Add list of cubemap tile images to images
@@ -105,14 +100,12 @@ public final class SequenceDownloadRunnable extends BoundsDownloadRunnable {
             for (int i = 0; i < 4; i++) {
               // Initialize four-tiled cubemap faces (four images per cube side with 18-length
               // Quadkey)
-              // if (StreetsideProperties.CUBEFACE_SIZE.get().intValue() == 4) {
               if (!StreetsideProperties.SHOW_HIGH_RES_STREETSIDE_IMAGERY.get()) {
                 StreetsideImage tile = new StreetsideImage(String.valueOf(image.getId() + Integer.valueOf(i)));
                 tiles.add(tile);
               }
               // Initialize four-tiled cubemap faces (four images per cub eside with 20-length
               // Quadkey)
-              // if (StreetsideProperties.CUBEFACE_SIZE.get().intValue() == 16) {
               if (StreetsideProperties.SHOW_HIGH_RES_STREETSIDE_IMAGERY.get()) {
                 for (int j = 0; j < 4; j++) {
                   StreetsideImage tile = new StreetsideImage(

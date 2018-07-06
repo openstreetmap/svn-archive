@@ -121,14 +121,6 @@ ActiveLayerChangeListener, StreetsideDataListener {
     }
     if (StreetsidePlugin.getMapView() != null) {
       StreetsideMainDialog.getInstance().streetsideImageDisplay.repaint();
-      /*StreetsideMainDialog.getInstance()
-        .getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
-        .put(KeyStroke.getKeyStroke("DELETE"), "StreetsideDel");
-      StreetsideMainDialog.getInstance().getActionMap()
-        .put("StreetsideDel", new DeleteImageAction());*/
-
-			// There is no delete image action for Streetside (Streetside functionality here removed).
-			//getLocationChangeset().addChangesetListener(StreetsideChangesetDialog.getInstance());
 		}
 		createHatchTexture();
 		invalidate();
@@ -256,9 +248,6 @@ ActiveLayerChangeListener, StreetsideDataListener {
   public void setVisible(boolean visible) {
     super.setVisible(visible);
     getData().getImages().parallelStream().forEach(img -> img.setVisible(visible));
-    if (MainApplication.getMap() != null) {
-      //StreetsideFilterDialog.getInstance().refresh();
-    }
   }
 
   /**
@@ -300,6 +289,10 @@ ActiveLayerChangeListener, StreetsideDataListener {
         g.draw(new Line2D.Double(p.getX(), p.getY(), selected.getX(), selected.getY()));
       }
     }
+
+    // TODO: Sequence lines removed because Streetside imagery is organized
+    // such that the images are sorted by the distance from the center of
+    // the bounding box - Redefine sequences?
 
     // Draw sequence line
     /*g.setStroke(new BasicStroke(2));
@@ -378,20 +371,6 @@ ActiveLayerChangeListener, StreetsideDataListener {
       g.setStroke(new BasicStroke(2));
       g.drawOval(p.x - IMG_MARKER_RADIUS, p.y - IMG_MARKER_RADIUS, 2 * IMG_MARKER_RADIUS, 2 * IMG_MARKER_RADIUS);
     }
-
-
-		/*if (img instanceof StreetsideImage && !((StreetsideImage) img).getDetections().isEmpty()) {
-			final Path2D trafficSign = new Path2D.Double();
-			trafficSign.moveTo(p.getX() - StreetsideLayer.TRAFFIC_SIGN_SIZE / 2d, p.getY() - StreetsideLayer.TRAFFIC_SIGN_HEIGHT_3RD);
-			trafficSign.lineTo(p.getX() + StreetsideLayer.TRAFFIC_SIGN_SIZE / 2d, p.getY() - StreetsideLayer.TRAFFIC_SIGN_HEIGHT_3RD);
-			trafficSign.lineTo(p.getX(), p.getY() + 2 * StreetsideLayer.TRAFFIC_SIGN_HEIGHT_3RD);
-			trafficSign.closePath();
-			g.setColor(Color.WHITE);
-			g.fill(trafficSign);
-			g.setStroke(new BasicStroke(1));
-			g.setColor(Color.RED);
-			g.draw(trafficSign);
-		}*/
 	}
 
   @Override
@@ -534,23 +513,6 @@ ActiveLayerChangeListener, StreetsideDataListener {
       }
     }
   }
-
-  /**
-   * Action used to delete images.
-   *
-   * @author nokutu
-   */
-  /*private class DeleteImageAction extends AbstractAction {
-
-    private static final long serialVersionUID = -982809854631863962L;
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-      if (instance != null)
-        StreetsideRecord.getInstance().addCommand(
-          new CommandDelete(getData().getMultiSelectedImages()));
-    }
-  }*/
 
   private static class NearestImgToTargetComparator implements Comparator<StreetsideAbstractImage> {
     private final StreetsideAbstractImage target;

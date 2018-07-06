@@ -38,7 +38,6 @@ import org.openstreetmap.josm.plugins.streetside.gui.imageinfo.StreetsideViewerH
 import org.openstreetmap.josm.plugins.streetside.utils.StreetsideProperties;
 import org.openstreetmap.josm.tools.I18n;
 import org.openstreetmap.josm.tools.ImageProvider;
-import org.openstreetmap.josm.tools.Logging;
 
 /**
  * Toggle dialog that shows an image and some buttons.
@@ -289,15 +288,7 @@ public final class StreetsideMainDialog extends ToggleDialog implements
 						logger.error(e);
 					}
 				}
-			// TODO: handle/convert/remove "imported images"
-			} /*else if (image instanceof StreetsideImportedImage) {
-				final StreetsideImportedImage streetsideImage = (StreetsideImportedImage) image;
-				try {
-					streetsideImageDisplay.setImage(streetsideImage.getImage(), null);
-				} catch (final IOException e) {
-					logger.error(e);
-				}
-			}*/
+			}
 			updateTitle();
 		}
 	}

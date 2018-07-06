@@ -1,5 +1,5 @@
 
-This directory includes the test resources for the streetside plugin.
+This directory includes the test resources for the Microsoft Streetside plugin.
 
 
 unit/            test sources (Unit tests, functional tests)

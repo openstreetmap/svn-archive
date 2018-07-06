@@ -8,7 +8,6 @@ import org.openstreetmap.josm.plugins.streetside.gui.StreetsideMainDialog;
 import org.openstreetmap.josm.plugins.streetside.utils.PluginState;
 import org.openstreetmap.josm.plugins.streetside.utils.StreetsideUtils;
 import org.openstreetmap.josm.tools.I18n;
-import org.openstreetmap.josm.tools.Logging;
 
 public class StreetsideSquareDownloadRunnable implements Runnable {
 
@@ -38,18 +37,13 @@ public class StreetsideSquareDownloadRunnable implements Runnable {
       return;
     }
 
-    // TODO: Revamp image details for Streetside RRH
-    // Asynchronously load the rest of the image details
     Thread imgDetailsThread = new Thread(new ImageDetailsDownloadRunnable(StreetsideLayer.getInstance().getData(), bounds));
     imgDetailsThread.start();
 
-    // TODO: Do we support detections? RRH
-    /*Thread detectionsThread = new Thread(new DetectionsDownloadRunnable(StreetsideLayer.getInstance().getData(), bounds));
-    detectionsThread.start();*/
+    // Image detections are not currently supported for Streetside (Mapillary code removed)
 
     try {
       imgDetailsThread.join();
-      //detectionsThread.join();
     } catch (InterruptedException e) {
       logger.warn(I18n.tr("Streetside download interrupted (probably because of closing the layer).", e));
       Thread.currentThread().interrupt();
@@ -59,7 +53,6 @@ public class StreetsideSquareDownloadRunnable implements Runnable {
 
     StreetsideUtils.updateHelpText();
     StreetsideLayer.invalidateInstance();
-    //StreetsideFilterDialog.getInstance().refresh();
     StreetsideMainDialog.getInstance().updateImage();
   }
 }

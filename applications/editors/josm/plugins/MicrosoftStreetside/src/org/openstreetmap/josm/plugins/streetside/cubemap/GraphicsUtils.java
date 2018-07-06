@@ -4,11 +4,10 @@ package org.openstreetmap.josm.plugins.streetside.cubemap;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
+import java.text.MessageFormat;
 
 import org.apache.log4j.Logger;
 import org.openstreetmap.josm.plugins.streetside.utils.StreetsideProperties;
-import org.openstreetmap.josm.tools.I18n;
-import org.openstreetmap.josm.tools.Logging;
 
 import javafx.application.Platform;
 import javafx.scene.image.PixelWriter;
@@ -67,49 +66,41 @@ public class GraphicsUtils {
         int num = 0;
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
-                // TODO: this makes the image a mirror image. why!?!
-            	img.createGraphics().drawImage(tiles[num], chunkWidth * j, (chunkHeight * i), null);
+        // TODO: unintended mirror image created with draw call - requires
+        // extra reversal step - fix!
+        img.createGraphics().drawImage(tiles[num], chunkWidth * j, (chunkHeight * i), null);
 
-            	// TODO: remove file test!
-            	/*try {
-        			ImageIO.write(img, "jpeg", new File("/Users/renerr18/Desktop/TileImagesTest/tile16b" + Long.valueOf(System.currentTimeMillis()).toString() + "createGraphicsAfter.jpeg"));
-        			//ImageIO.write(res[i], "jpeg", outputfileAfter);
-        		} catch (IOException e) {
-        			// TODO Auto-generated catch block
-        			e.printStackTrace();
-        		}*/
+        int width = StreetsideProperties.SHOW_HIGH_RES_STREETSIDE_IMAGERY.get() ? 1014 : 510;
+        int height = StreetsideProperties.SHOW_HIGH_RES_STREETSIDE_IMAGERY.get() ? 1014 : 510;
 
-                int width = StreetsideProperties.SHOW_HIGH_RES_STREETSIDE_IMAGERY.get()?1014:510;
-                int height = StreetsideProperties.SHOW_HIGH_RES_STREETSIDE_IMAGERY.get()?1014:510;
+        // BufferedImage for mirror image
+        res = new BufferedImage(
+          StreetsideProperties.SHOW_HIGH_RES_STREETSIDE_IMAGERY.get() ? 1014 : 510,
+          StreetsideProperties.SHOW_HIGH_RES_STREETSIDE_IMAGERY.get() ? 1014 : 510, BufferedImage.TYPE_INT_ARGB);
 
-                // BufferedImage for mirror image
-                res = new BufferedImage(StreetsideProperties.SHOW_HIGH_RES_STREETSIDE_IMAGERY.get()?1014:510, StreetsideProperties.SHOW_HIGH_RES_STREETSIDE_IMAGERY.get()?1014:510,
-                                                BufferedImage.TYPE_INT_ARGB);
+        // Create mirror image pixel by pixel
+        for (int y = 0; y < height; y++) {
+          for (int lx = 0, rx = width - 1; lx < width; lx++, rx--) {
+            // lx starts from the left side of the image
+            // rx starts from the right side of the image
+            // lx is used since we are getting pixel from left side
+            // rx is used to set from right side
+            // get source pixel value
+            int p = img.getRGB(lx, y);
 
-                // Create mirror image pixel by pixel
-                for (int y = 0; y < height; y++)
-                {
-                    for (int lx = 0, rx = width - 1; lx < width; lx++, rx--)
-                    {
-                        // lx starts from the left side of the image
-                        // rx starts from the right side of the image
-                        // lx is used since we are getting pixel from left side
-                        // rx is used to set from right side
-                        // get source pixel value
-                        int p = img.getRGB(lx, y);
-
-                        // set mirror image pixel value
-                        res.setRGB(rx, y, p);
-                    }
-                }
-                num++;
-            }
+            // set mirror image pixel value
+            res.setRGB(rx, y, p);
+          }
         }
+        num++;
+      }
+    }
 
-        if(StreetsideProperties.DEBUGING_ENABLED.get()) {
-          logger.debug("Image concatenated in " + (System.currentTimeMillis()-start) + " millisecs.");
-        }
-        return res;
+    if (StreetsideProperties.DEBUGING_ENABLED.get()) {
+      logger
+        .debug(MessageFormat.format("Image concatenated in {0} seconds.", (System.currentTimeMillis() - start) / 1000));
+    }
+    return res;
 	}
 
 	public static BufferedImage rotateImage(BufferedImage bufImg) {
@@ -136,7 +127,7 @@ public class GraphicsUtils {
 			}
 
 		if(StreetsideProperties.DEBUGING_ENABLED.get()) {
-			logger.debug("Images cropped in " + (System.currentTimeMillis()-start) + " millisecs.");
+			logger.debug(MessageFormat.format("Images cropped in {0}", (System.currentTimeMillis()-start) + " millisecs."));
 		}
 
 		return res;

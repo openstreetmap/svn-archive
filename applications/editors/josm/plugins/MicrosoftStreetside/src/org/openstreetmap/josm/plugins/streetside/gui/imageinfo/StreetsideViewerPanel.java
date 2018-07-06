@@ -2,6 +2,7 @@
 package org.openstreetmap.josm.plugins.streetside.gui.imageinfo;
 
 import java.awt.BorderLayout;
+import java.text.MessageFormat;
 
 import javax.swing.JCheckBox;
 import javax.swing.JPanel;
@@ -21,7 +22,6 @@ import org.openstreetmap.josm.plugins.streetside.utils.CubemapBox;
 import org.openstreetmap.josm.plugins.streetside.utils.StreetsideProperties;
 import org.openstreetmap.josm.plugins.streetside.utils.StreetsideURL;
 import org.openstreetmap.josm.tools.I18n;
-import org.openstreetmap.josm.tools.Logging;
 
 public final class StreetsideViewerPanel extends JPanel
 		implements StreetsideDataListener {
@@ -85,12 +85,10 @@ public final class StreetsideViewerPanel extends JPanel
 
 	    JPanel privacyLink = new JPanel();
 
-	    // TODO: I18n for all languages?
-	    imgLinkAction = new WebLinkAction(/*I18n.tr(*/"Report a privacy concern with this image"/*)*/, null);
+	    imgLinkAction = new WebLinkAction("Report a privacy concern with this image", null);
 	    privacyLink.add(new StreetsideButton(imgLinkAction, true));
 	    checkPanel.add(privacyLink, BorderLayout.PAGE_END);
 
-	    //add(checkPanel, BorderLayout.PAGE_START);
 	    add(threeSixtyDegreeViewerPanel, BorderLayout.CENTER);
 
 	    JPanel bottomPanel = new JPanel();
@@ -133,9 +131,7 @@ public final class StreetsideViewerPanel extends JPanel
 		      newImage instanceof StreetsideImage ? ((StreetsideImage) newImage).getId() : "‹none›"
 		    ));
 
-		    //imgIdValue.setEnabled(newImage instanceof StreetsideImage);
-		    //final String newImageId = newImage instanceof StreetsideImage ? ((StreetsideImage) newImage).getId(): null;
-		    final String newImageId = CubemapBuilder.getInstance().getCubemap() !=null ? CubemapBuilder.getInstance().getCubemap().getId() : newImage instanceof StreetsideImage ? ((StreetsideImage) newImage).getId(): null;;
+		    final String newImageId = CubemapBuilder.getInstance().getCubemap() !=null ? CubemapBuilder.getInstance().getCubemap().getId() : newImage instanceof StreetsideImage ? ((StreetsideImage) newImage).getId(): null;
 		    if (newImageId != null) {
 		      final String bubbleId = CubemapUtils.convertQuaternary2Decimal(newImageId);
 		      imageLinkChangeListener = b -> imgLinkAction.setURL(
@@ -143,7 +139,7 @@ public final class StreetsideViewerPanel extends JPanel
 		      );
 
 		      if(StreetsideProperties.DEBUGING_ENABLED.get()) {
-		        logger.debug(/*I18n.tr(*/"Privacy link set for Streetside image " + bubbleId + " quadKey " + newImageId/*)*/);
+		        logger.debug(MessageFormat.format("Privacy link set for Streetside image {0} quadKey {1}", bubbleId, newImageId));
 		      }
 
 		      imageLinkChangeListener.valueChanged(null);

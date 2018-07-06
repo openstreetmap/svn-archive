@@ -27,11 +27,10 @@ public final class StreetsideDownloader {
 
   /** Possible download modes. */
   public enum DOWNLOAD_MODE {
-    // i18n: download mode for Streetside images
     VISIBLE_AREA("visibleArea", I18n.tr("everything in the visible area")),
-    // i18n: download mode for Streetside images
+
     OSM_AREA("osmArea", I18n.tr("areas with downloaded OSM-data")),
-    // i18n: download mode for Streetside images
+
     MANUAL_ONLY("manualOnly", I18n.tr("only when manually requested"));
 
     public final static DOWNLOAD_MODE DEFAULT = OSM_AREA;

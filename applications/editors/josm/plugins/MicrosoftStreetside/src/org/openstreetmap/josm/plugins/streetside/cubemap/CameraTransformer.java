@@ -10,6 +10,7 @@ import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Scale;
 import javafx.scene.transform.Translate;
 
+// necessary because JavaFX is not an official part of Java 8 (access)
 @SuppressWarnings("restriction")
 public class CameraTransformer extends Group {
 

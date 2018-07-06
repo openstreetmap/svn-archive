@@ -21,10 +21,9 @@ public class ImageDetailsDownloadRunnable extends BoundsDownloadRunnable {
     this.data = data;
   }
 
-  // TODO: image infos for 360 degree viewer? @rrh
   @Override
   public void run(final URLConnection con) throws IOException {
-     // TODO: modifiy decoder to handle Streetside image info. @rrh
+     // TODO: Enable ImageInfo support in decoder for Streetside
 	  /*try (JsonReader reader = Json.createReader(new BufferedInputStream(con.getInputStream()))) {
       JsonImageDetailsDecoder.decodeImageInfos(reader.readObject(), data);
       logConnectionInfo(con, null);

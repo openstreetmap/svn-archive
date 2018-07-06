@@ -6,6 +6,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.EnumSet;
@@ -44,32 +45,9 @@ public final class StreetsideURL {
 			// Private constructor to avoid instantiation
 		}
 
-		/*public static URL getUser(String key) {
-			return StreetsideURL.string2URL(APIv3.BASE_URL, "users/", key, StreetsideURL.queryString(null));
-		}
-
-		*//**
-		 * @return the URL where you can create, get and approve changesets
-		 *//*
-		public static URL submitChangeset() {
-			return StreetsideURL.string2URL(APIv3.BASE_URL, "changesets", APIv3.queryString(null));
-		}
-
-		public static URL searchDetections(Bounds bounds) {
-			return StreetsideURL.string2URL(APIv3.BASE_URL, "detections", APIv3.queryString(bounds));
-		}
-
-		public static URL searchImages(Bounds bounds) {
-			return StreetsideURL.string2URL(APIv3.BASE_URL, "images", APIv3.queryStreetsideString(bounds));
-		}*/
-
 		public static URL searchStreetsideImages(Bounds bounds) {
 			return StreetsideURL.string2URL(StreetsideURL.STREETSIDE_BASE_URL, APIv3.queryStreetsideString(bounds));
 		}
-
-		/*public static URL searchMapObjects(final Bounds bounds) {
-			return StreetsideURL.string2URL(APIv3.BASE_URL, "objects", APIv3.queryString(bounds));
-		}*/
 
 		public static URL searchStreetsideSequences(final Bounds bounds) {
 			return StreetsideURL.string2URL(StreetsideURL.STREETSIDE_BASE_URL, APIv3.queryStreetsideString(bounds));
@@ -146,7 +124,6 @@ public final class StreetsideURL {
 		public static URL streetsideTile(final String id, boolean thumbnail) {
 			StringBuilder modifiedId = new StringBuilder();
 
-			// TODO: make code more elegant
 			if (thumbnail) {
         // pad thumbnail imagery with leading zeros
         if (id.length() < 16) {
@@ -174,14 +151,13 @@ public final class StreetsideURL {
       }
 		  URL url = StreetsideURL.string2URL(VirtualEarth.BASE_URL_PREFIX + modifiedId.toString() + VirtualEarth.BASE_URL_SUFFIX);
 	    if(StreetsideProperties.DEBUGING_ENABLED.get()) {
-		    logger.debug("Tile task URL " + url.toString() + " invoked.");
+		    logger.debug(MessageFormat.format("Tile task URL {0} invoked.", url.toString()));
 	    }
 			return url;
 		}
 	}
 
 	public static final class MainWebsite {
-		//private static final String BASE_URL = "https://www.mapillary.com/";
 
 		private MainWebsite() {
 			// Private constructor to avoid instantiation
@@ -220,25 +196,6 @@ public final class StreetsideURL {
 			return StreetsideURL.string2URL(StreetsideURL.STREETSIDE_PRIVACY_URL, urlEncodedId);
 		}
 
-		/**
-		 * Gives you the URL which the user should visit to initiate the OAuth authentication process
-		 * @param redirectURI the URI to which the user will be redirected when the authentication is finished.
-		 *        When this is <code>null</code>, it's omitted from the query string.
-		 * @return the URL that the user should visit to start the OAuth authentication
-		 */
-		/*public static URL connect(String redirectURI) {
-			final HashMap<String, String> parts = new HashMap<>();
-			if (redirectURI != null && redirectURI.length() >= 1) {
-				parts.put("redirect_uri", redirectURI);
-			}
-			parts.put("response_type", "token");
-			parts.put("scope", "user:read public:upload public:write");
-			return StreetsideURL.string2URL(MainWebsite.BASE_URL, "connect", StreetsideURL.queryString(parts));
-		}
-
-		public static URL mapObjectIcon(String key) {
-			return StreetsideURL.string2URL(MainWebsite.BASE_URL, "developer/api-documentation/images/traffic_sign/" + key + ".png");
-		}*/
 	}
 
 	private StreetsideURL() {
@@ -269,6 +226,7 @@ public final class StreetsideURL {
 					}
 				}
 			});
+			break;
 
 		case 4:
 			EnumSet.allOf(CubemapUtils.CubemapFaces.class).forEach(face -> {
@@ -293,13 +251,6 @@ public final class StreetsideURL {
 	}
 
 	/**
-	 * @return the URL where you'll find the upload secrets as JSON
-	 */
-	/*public static URL uploadSecretsURL() {
-		return StreetsideURL.string2URL(StreetsideURL.BASE_API_V2_URL, "me/uploads/secrets", StreetsideURL.queryString(null));
-	}*/
-
-	/**
 	 * Builds a query string from it's parts that are supplied as a {@link Map}
 	 * @param parts the parts of the query string
 	 * @return the constructed query string (including a leading ?)
@@ -320,7 +271,7 @@ public final class StreetsideURL {
 		}
 
 		if(StreetsideProperties.DEBUGING_ENABLED.get()) {
-		  logger.debug("queryString result: " + ret.toString());
+		  logger.debug(MessageFormat.format("queryString result: {0}", ret.toString()));
 		}
 
 		return ret.toString();
@@ -347,7 +298,7 @@ public final class StreetsideURL {
 		}
 
 		if(StreetsideProperties.DEBUGING_ENABLED.get()) {
-		  logger.debug("queryStreetsideBoundsString result: " + ret.toString());
+		  logger.debug(MessageFormat.format("queryStreetsideBoundsString result: {0}", ret.toString()));
 		}
 
 		return ret.toString();

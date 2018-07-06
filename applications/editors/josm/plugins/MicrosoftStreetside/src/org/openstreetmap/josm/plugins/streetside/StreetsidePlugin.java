@@ -36,8 +36,6 @@ public class StreetsidePlugin extends Plugin {
   private static final StreetsideZoomAction ZOOM_ACTION = new StreetsideZoomAction();
   /** Walk action */
   private static final StreetsideWalkAction WALK_ACTION = new StreetsideWalkAction();
-  /** Upload action */
-  //private static final StreetsideUploadAction UPLOAD_ACTION = new StreetsideUploadAction();
 
   static {
     if (Main.main != null) {
@@ -47,8 +45,6 @@ public class StreetsidePlugin extends Plugin {
       MainMenu.add(MainApplication.getMenu().fileMenu, new StreetsideDownloadViewAction(), false, 14);
       MainMenu.add(MainApplication.getMenu().dataMenu, new StreetsideJoinAction(), false);
       MainMenu.add(MainApplication.getMenu().moreToolsMenu, WALK_ACTION, false);
-      //MainMenu.add(MainApplication.getMenu().imagerySubMenu, new MapObjectLayerAction(), false);
-      //MainMenu.add(MainApplication.getMenu().imagerySubMenu, new MapObjectLayerAction(), false);
     }
   }
 
@@ -89,15 +85,9 @@ public class StreetsidePlugin extends Plugin {
     	  MainApplication.getMap().addToggleDialog(ImageInfoPanel.getInstance(), false)
       ));
       MainApplication.getMap().addToggleDialog(StreetsideViewerDialog.getInstance(), false);
-      //MainApplication.getMap().addToggleDialog(StreetsideHistoryDialog.getInstance(), false);
-      //MainApplication.getMap().addToggleDialog(StreetsideChangesetDialog.getInstance(), false);
-      //MainApplication.getMap().addToggleDialog(StreetsideFilterDialog.getInstance(), false);
     }
     if (oldFrame != null && newFrame == null) { // map frame destroyed
       StreetsideMainDialog.destroyInstance();
-      //StreetsideHistoryDialog.destroyInstance();
-      //StreetsideChangesetDialog.destroyInstance();
-      //StreetsideFilterDialog.destroyInstance();
       ImageInfoPanel.destroyInstance();
       CubemapBuilder.destroyInstance();
 
@@ -119,18 +109,4 @@ public class StreetsidePlugin extends Plugin {
     }
     return null;
   }
-
-  /**
-   * @return the {@link StreetsideUploadAction} for the plugin
-   */
-  /*public static StreetsideUploadAction getUploadAction() {
-    return UPLOAD_ACTION;
-  }*/
-
-  /**
-   * @return the {@link StreetsideZoomAction} for the plugin
-   */
-  /*public static StreetsideZoomAction getZoomAction() {
-    return ZOOM_ACTION;
-  }*/
-  }
+}

@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
+import java.text.MessageFormat;
 import java.util.function.Function;
 
 import org.apache.log4j.Logger;
@@ -14,9 +15,7 @@ import org.openstreetmap.josm.gui.Notification;
 import org.openstreetmap.josm.plugins.streetside.StreetsidePlugin;
 import org.openstreetmap.josm.plugins.streetside.utils.StreetsideProperties;
 import org.openstreetmap.josm.plugins.streetside.utils.StreetsideURL.APIv3;
-import org.openstreetmap.josm.tools.I18n;
 import org.openstreetmap.josm.tools.ImageProvider.ImageSizes;
-import org.openstreetmap.josm.tools.Logging;
 
 public abstract class BoundsDownloadRunnable implements Runnable {
 
@@ -33,7 +32,7 @@ public abstract class BoundsDownloadRunnable implements Runnable {
   public void run() {
     URL nextURL = getUrlGenerator().apply(bounds);
     if(StreetsideProperties.DEBUGING_ENABLED.get()) {
-      logger.debug("nextURL: " + nextURL.toString());
+      logger.debug(MessageFormat.format("nextURL: {0}", nextURL.toString()));
     }
     try {
       while (nextURL != null) {

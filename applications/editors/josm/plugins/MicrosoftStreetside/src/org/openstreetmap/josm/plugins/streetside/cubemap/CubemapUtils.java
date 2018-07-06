@@ -8,7 +8,6 @@ import java.util.stream.Stream;
 
 import org.apache.log4j.Logger;
 import org.openstreetmap.josm.plugins.streetside.utils.StreetsideProperties;
-import org.openstreetmap.josm.tools.I18n;
 
 public class CubemapUtils {
 
@@ -109,8 +108,6 @@ public class CubemapUtils {
 			inputNum /= CubemapUtils.NUM_BASE;
 		}
 
-		// TODO: leading zeros added in StreetsideURL now
-		//sb.append("0");
 		res = sb.reverse().toString();
 
 		if (StreetsideProperties.DEBUGING_ENABLED.get()) {

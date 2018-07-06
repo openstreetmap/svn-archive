@@ -23,7 +23,7 @@ public class StreetsideImage extends StreetsideAbstractImage {
    * left out initially because it's an unrequired complex object.
    */
   public static class Rn {
-	  // placeholder for nexted Rn attribute
+	  // placeholder for Rn attribute (undocumented streetside complex inner type)
   }
 
   // latitude of the Streetside image
@@ -51,11 +51,6 @@ public class StreetsideImage extends StreetsideAbstractImage {
   private int ad;
   private Rn rn;
 
-  /**
-   * Set of traffic signs in the image.
-   *//*
-  private final List<ImageDetection> detections = Collections.synchronizedList(new ArrayList<>());
-*/
   /**
    * Main constructor of the class StreetsideImage
    *
@@ -94,18 +89,6 @@ public String getId() {
     return String.valueOf(id);
   }
 
-  /*public List<ImageDetection> getDetections() {
-    return detections;
-  }*/
-
-  /*public void setAllDetections(Collection<ImageDetection> newDetections) {
-    logger.debug("Add {0} detections to image {1}", newDetections.size(), getId());
-    synchronized (detections) {
-      detections.clear();
-      detections.addAll(newDetections);
-    }
-  }*/
-
   public UserProfile getUser() {
 	    return getSequence().getUser();
   }
@@ -119,13 +102,11 @@ public String getId() {
     );
   }
 
-  // TODO: implement equals @rrh
   @Override
   public boolean equals(Object object) {
     return object instanceof StreetsideImage && id.equals(((StreetsideImage) object).getId());
   }
 
-  // TODO: implement compareTo @rrh
   @Override
   public int compareTo(StreetsideAbstractImage image) {
     if (image instanceof StreetsideImage) {
@@ -134,7 +115,6 @@ public String getId() {
     return hashCode() - image.hashCode();
   }
 
-  // TODO: implement hashcode @rrh
   @Override
   public int hashCode() {
     return id.hashCode();

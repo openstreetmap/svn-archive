@@ -194,23 +194,6 @@ public class ThreeSixtyDegreeViewerPanel extends JFXPanel {
 			}
 		});
 
-		/*scene.widthProperty().addListener(new ChangeListener<Number>() {
-		    @Override public void changed(ObservableValue<? extends Number> observableValue, Number oldSceneWidth, Number newSceneWidth) {
-		        System.out.println("Width: " + newSceneWidth);
-		    }
-
-			@Override
-			public void changed(ObservableValue<? extends Number> observable, Number oldSceneWidth, Number newSceneWidth) {
-				draw();
-			}
-		});*/
-		/*scene.heightProperty().addListener(new ChangeListener<Number>() {
-		    @Override public void changed(ObservableValue<? extends Number> observableValue, Number oldSceneHeight, Number newSceneHeight) {
-		        //System.out.println("Height: " + newSceneHeight);
-		    	draw();
-		    }
-		});*/
-
 		root.getChildren().addAll(cubemapBox, subGroup);
 		root.setAutoSizeChildren(true);
 
@@ -223,10 +206,7 @@ public class ThreeSixtyDegreeViewerPanel extends JFXPanel {
 	}
 
 	private static Scene createDefaultScene() {
-		// TODO: default scene with message? @rrh
-
 		// Load Cubemap box AFTER camera is initialized
-		//final double size = 100000D;
 
 		TextArea textArea = new TextArea();
 		textArea.setText("No Streetside image selected.");
@@ -329,23 +309,6 @@ public class ThreeSixtyDegreeViewerPanel extends JFXPanel {
       }
     });
 
-    /*scene.widthProperty().addListener(new ChangeListener<Number>() {
-        @Override public void changed(ObservableValue<? extends Number> observableValue, Number oldSceneWidth, Number newSceneWidth) {
-            System.out.println("Width: " + newSceneWidth);
-        }
-
-      @Override
-      public void changed(ObservableValue<? extends Number> observable, Number oldSceneWidth, Number newSceneWidth) {
-        draw();
-      }
-    });*/
-    /*scene.heightProperty().addListener(new ChangeListener<Number>() {
-        @Override public void changed(ObservableValue<? extends Number> observableValue, Number oldSceneHeight, Number newSceneHeight) {
-            //System.out.println("Height: " + newSceneHeight);
-          draw();
-        }
-    });*/
-
     root.getChildren().addAll(cubemapBox, subGroup);
     root.setAutoSizeChildren(true);
 
@@ -354,9 +317,7 @@ public class ThreeSixtyDegreeViewerPanel extends JFXPanel {
     // prevent content from disappearing after resizing
     Platform.setImplicitExit(false);
 
-    //return scene;
-
-		defaultScene = new Scene(vbox, 200, 100);
+    defaultScene = new Scene(vbox, 200, 100);
 		return defaultScene;
 	}
 
@@ -378,9 +339,6 @@ public class ThreeSixtyDegreeViewerPanel extends JFXPanel {
 		camera.setFarClip(1000000.0);
 		camera.setFieldOfView(42);
 		camera.setTranslateZ(-cameraDistance);
-		// cameraTransform.ry.setAngle(-45.0);
-		// cameraTransform.rx.setAngle(-10.0);
-		// add a Point Light for better viewing of the grid coordinate system
 		final PointLight light = new PointLight(Color.WHITE);
 
 		cameraTransform.getChildren().add(light);

@@ -2,6 +2,7 @@
 package org.openstreetmap.josm.plugins.streetside.cubemap;
 
 import java.awt.image.BufferedImage;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -21,10 +22,12 @@ import org.openstreetmap.josm.plugins.streetside.gui.imageinfo.StreetsideViewerP
 import org.openstreetmap.josm.plugins.streetside.utils.CubemapBox;
 import org.openstreetmap.josm.plugins.streetside.utils.StreetsideProperties;
 import org.openstreetmap.josm.tools.I18n;
+import org.slf4j.helpers.MessageFormatter;
 
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
+// JavaFX access in Java 8
 @SuppressWarnings("restriction")
 public class CubemapBuilder implements ITileDownloadingTaskListener, StreetsideDataListener {
 
@@ -75,7 +78,7 @@ public class CubemapBuilder implements ITileDownloadingTaskListener, StreetsideD
 
 			long runTime = (System.currentTimeMillis()-startTime)/1000;
 			if(StreetsideProperties.DEBUGING_ENABLED.get()) {
-			  logger.debug("Completed downloading tiles for " + newImage.getId() + " in " + runTime + " seconds.");
+			  logger.debug(MessageFormat.format("Completed downloading tiles for {0} in {1} seconds.", newImage.getId() , runTime));
 			}
 		}
 	}
@@ -120,7 +123,7 @@ public class CubemapBuilder implements ITileDownloadingTaskListener, StreetsideD
 				for (Future<String> ff : results) {
 
 					if(StreetsideProperties.DEBUGING_ENABLED.get()) {
-					  logger.debug("Completed tile downloading task " +  ff.get() + " in " + (startTime - System.currentTimeMillis())/ 1000 + " seconds.");
+					  logger.debug(MessageFormat.format("Completed tile downloading task {0} in {1} seconds.", ff.get(), (startTime - System.currentTimeMillis())/ 1000));
 					}
 				}
 
@@ -140,8 +143,8 @@ public class CubemapBuilder implements ITileDownloadingTaskListener, StreetsideD
 				List<Future<String>> results = pool.invokeAll(tasks);
 				for (Future<String> ff : results) {
 					if(StreetsideProperties.DEBUGING_ENABLED.get()) {
-					  logger.debug("Completed tile downloading task " + ff.get() + " in " +
-							(startTime - System.currentTimeMillis())/ 1000 + " seconds.");
+					  logger.debug(MessageFormat.format("Completed tile downloading task {0} in {1} seconds.",ff.get(),
+							(startTime - System.currentTimeMillis())/ 1000));
 					}
 				}
 			}
@@ -155,7 +158,7 @@ public class CubemapBuilder implements ITileDownloadingTaskListener, StreetsideD
 		long runTime = stopTime - startTime;
 
 		if (StreetsideProperties.DEBUGING_ENABLED.get()) {
-      logger.debug("Tile imagery downloading tasks completed in " + runTime/1000000);
+      logger.debug(MessageFormat.format("Tile imagery downloading tasks completed in {0} seconds.",  runTime/1000000));
 		}
 
 		if (fails > 0) {
@@ -179,8 +182,8 @@ public class CubemapBuilder implements ITileDownloadingTaskListener, StreetsideD
 
 		if (tileCount == (CubemapUtils.NUM_SIDES * maxCols * maxRows)) {
 		  if (StreetsideProperties.DEBUGING_ENABLED.get()) {
-        logger.debug(tileCount + " tile images ready for building cumbemap faces for cubemap " +
-					CubemapBuilder.getInstance().getCubemap().getId());
+        logger.debug(MessageFormat.format("{0} tile images ready for building cumbemap faces for cubemap {1}.", tileCount,
+					CubemapBuilder.getInstance().getCubemap().getId()));
 		  }
 
 			buildCubemapFaces();
@@ -268,8 +271,8 @@ public class CubemapBuilder implements ITileDownloadingTaskListener, StreetsideD
     long runTime = (endTime - startTime) / 1000;
     if (StreetsideProperties.DEBUGING_ENABLED.get()) {
       logger.debug(
-        "Completed downloading, assembling and setting cubemap imagery for cubemap " + cubemap.getId() + " in "
-          + runTime + " sceconds."
+        MessageFormat.format("Completed downloading, assembling and setting cubemap imagery for cubemap {0} in  {1} seconds.", cubemap.getId(),
+          runTime)
       );
     }
     CubemapBuilder.getInstance().resetTileImages();

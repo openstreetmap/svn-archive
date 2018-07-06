@@ -13,16 +13,20 @@ import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.projection.Projection;
 
 public class FilePlacement {
-    public Projection projection = null;
-    public double minX = 0;
-    public double maxX = 1;
-    public double minY = 0;
-    public double maxY = 1;
+	/*
+	 * provide data and services to place a PDF-File to world coordinates
+	 * enhanced by FilePlacement18 but kept for compatibilty to existing code
+	 */
+    protected Projection projection = null;
+    protected double minX = 0;
+    protected double maxX = 1;
+    protected double minY = 0;
+    protected double maxY = 1;
 
-    public double minEast = 0;
-    public double maxEast = 10000;
-    public double minNorth = 0;
-    public double maxNorth = 10000;
+    protected double minEast = 0;
+    protected double maxEast = 10000;
+    protected double minNorth = 0;
+    protected double maxNorth = 10000;
 
     private AffineTransform transform;
 
@@ -40,7 +44,7 @@ public class FilePlacement {
         this.maxNorth = maxNorth;
     }
 
-    public Properties toProperties() {
+    protected Properties toProperties() {
         Properties p = new Properties();
         if (projection != null) {
             p.setProperty("Projection", projection.toCode());
@@ -58,10 +62,10 @@ public class FilePlacement {
         return p;
     }
 
-    public void fromProperties(Properties p) {
+    protected void fromProperties(Properties p) {
         String projectionCode = p.getProperty("Projection", null);
         if (projectionCode != null) {
-            projection = ProjectionInfo.getProjectionByCode(projectionCode);
+            projection = ProjectionInfo.getProjectionByCode(projectionCode); // TODO: Handle non-core Projections
         } else {
             projection = null;
         }
@@ -77,7 +81,7 @@ public class FilePlacement {
         maxNorth = parseProperty(p, "maxNorth", maxNorth);
     }
 
-    private double parseProperty(Properties p, String name, double defaultValue) {
+    protected double parseProperty(Properties p, String name, double defaultValue) {
         if (!p.containsKey(name)) {
             return defaultValue;
         }
@@ -91,7 +95,7 @@ public class FilePlacement {
         }
     }
 
-    public String prepareTransform() {
+    protected String prepareTransform() {
         if (this.minX > this.maxX) {
             return tr("Transform error: Min X must be smaller than max");
         }
@@ -180,13 +184,13 @@ public class FilePlacement {
     EastNorth en = new EastNorth(0, 0);
     Point2D src = new Point2D.Double();
 
-    public Bounds getWorldBounds(PathOptimizer data) {
+    protected Bounds getWorldBounds(PathOptimizer data) {
         LatLon min = this.tranformCoords(new Point2D.Double(data.bounds.getMinX(), data.bounds.getMinY()));
         LatLon max = this.tranformCoords(new Point2D.Double(data.bounds.getMaxX(), data.bounds.getMaxY()));
         return new Bounds(min, max);
     }
 
-    public LatLon tranformCoords(Point2D pt) {
+    protected LatLon tranformCoords(Point2D pt) {
 
         if (this.projection == null) {
             return new LatLon(pt.getY() / 1000, pt.getX() / 1000);
@@ -198,7 +202,7 @@ public class FilePlacement {
         }
     }
 
-    public EastNorth reverseTransform(LatLon coor) {
+    protected EastNorth reverseTransform(LatLon coor) {
         if (this.projection == null) {
             return new EastNorth(coor.lon() * 1000, coor.lat() * 1000);
         } else {

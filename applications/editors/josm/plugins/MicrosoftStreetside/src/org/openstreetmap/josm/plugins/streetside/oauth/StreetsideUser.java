@@ -2,13 +2,9 @@
 package org.openstreetmap.josm.plugins.streetside.oauth;
 
 
-import java.io.IOException;
-import java.util.HashMap;
 import java.util.Map;
 
 import org.openstreetmap.josm.plugins.streetside.utils.StreetsideProperties;
-import org.openstreetmap.josm.plugins.streetside.utils.StreetsideURL;
-import org.openstreetmap.josm.tools.Logging;
 
 /**
 * Represents the current logged in user and stores its data.

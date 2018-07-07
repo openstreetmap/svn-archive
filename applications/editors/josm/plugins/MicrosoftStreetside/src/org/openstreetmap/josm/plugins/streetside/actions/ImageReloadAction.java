@@ -6,10 +6,9 @@ import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 
 import org.openstreetmap.josm.plugins.streetside.cubemap.CubemapBuilder;
+import org.openstreetmap.josm.plugins.streetside.gui.StreetsideMainDialog;
 import org.openstreetmap.josm.tools.ImageProvider;
 import org.openstreetmap.josm.tools.ImageProvider.ImageSizes;
-
-import org.openstreetmap.josm.plugins.streetside.gui.StreetsideMainDialog;
 
 public class ImageReloadAction extends AbstractAction {
 

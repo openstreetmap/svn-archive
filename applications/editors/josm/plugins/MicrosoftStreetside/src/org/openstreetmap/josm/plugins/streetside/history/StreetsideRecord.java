@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Objects;
 
 import org.openstreetmap.josm.plugins.streetside.StreetsideAbstractImage;
-
 import org.openstreetmap.josm.plugins.streetside.history.commands.StreetsideCommand;
 import org.openstreetmap.josm.plugins.streetside.history.commands.StreetsideExecutableCommand;
 

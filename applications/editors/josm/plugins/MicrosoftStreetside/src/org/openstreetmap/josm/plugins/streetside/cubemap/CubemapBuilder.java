@@ -17,12 +17,9 @@ import org.openstreetmap.josm.plugins.streetside.StreetsideAbstractImage;
 import org.openstreetmap.josm.plugins.streetside.StreetsideCubemap;
 import org.openstreetmap.josm.plugins.streetside.StreetsideDataListener;
 import org.openstreetmap.josm.plugins.streetside.gui.StreetsideViewerDialog;
-import org.openstreetmap.josm.plugins.streetside.gui.imageinfo.StreetsideViewerHelpPopup;
 import org.openstreetmap.josm.plugins.streetside.gui.imageinfo.StreetsideViewerPanel;
 import org.openstreetmap.josm.plugins.streetside.utils.CubemapBox;
 import org.openstreetmap.josm.plugins.streetside.utils.StreetsideProperties;
-import org.openstreetmap.josm.tools.I18n;
-import org.slf4j.helpers.MessageFormatter;
 
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;

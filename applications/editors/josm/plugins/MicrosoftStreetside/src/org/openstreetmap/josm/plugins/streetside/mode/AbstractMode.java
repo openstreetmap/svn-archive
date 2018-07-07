@@ -7,14 +7,13 @@ import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.util.Calendar;
 
-import org.openstreetmap.josm.plugins.streetside.StreetsideAbstractImage;
-import org.openstreetmap.josm.plugins.streetside.StreetsideLayer;
-import org.openstreetmap.josm.plugins.streetside.io.download.StreetsideDownloader;
-
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.NavigatableComponent.ZoomChangeListener;
+import org.openstreetmap.josm.plugins.streetside.StreetsideAbstractImage;
+import org.openstreetmap.josm.plugins.streetside.StreetsideLayer;
+import org.openstreetmap.josm.plugins.streetside.io.download.StreetsideDownloader;
 
 /**
  * Superclass for all the mode of the {@link StreetsideLayer}.

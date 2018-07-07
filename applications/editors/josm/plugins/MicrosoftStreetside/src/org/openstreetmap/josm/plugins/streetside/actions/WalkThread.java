@@ -12,7 +12,6 @@ import org.openstreetmap.josm.plugins.streetside.StreetsideImage;
 import org.openstreetmap.josm.plugins.streetside.StreetsideLayer;
 import org.openstreetmap.josm.plugins.streetside.cache.CacheUtils;
 import org.openstreetmap.josm.plugins.streetside.gui.StreetsideMainDialog;
-
 import org.openstreetmap.josm.plugins.streetside.utils.StreetsideProperties;
 
 

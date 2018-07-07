@@ -10,14 +10,13 @@ import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.util.Arrays;
 
+import org.openstreetmap.josm.data.Bounds;
+import org.openstreetmap.josm.gui.MainApplication;
+import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.plugins.streetside.StreetsideAbstractImage;
 import org.openstreetmap.josm.plugins.streetside.StreetsideImportedImage;
 import org.openstreetmap.josm.plugins.streetside.StreetsideLayer;
 import org.openstreetmap.josm.plugins.streetside.history.StreetsideRecord;
-
-import org.openstreetmap.josm.data.Bounds;
-import org.openstreetmap.josm.gui.MainApplication;
-import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.plugins.streetside.history.commands.CommandJoin;
 import org.openstreetmap.josm.plugins.streetside.history.commands.CommandUnjoin;
 

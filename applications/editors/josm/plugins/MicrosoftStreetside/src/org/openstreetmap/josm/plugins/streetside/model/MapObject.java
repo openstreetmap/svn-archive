@@ -1,16 +1,10 @@
 // License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.streetside.model;
 
-import java.io.IOException;
-import java.net.URL;
-import java.util.function.Function;
-
-import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.plugins.streetside.cache.Caches.MapObjectIconCache;
-import org.openstreetmap.josm.plugins.streetside.utils.StreetsideURL.MainWebsite;
 import org.openstreetmap.josm.tools.ImageProvider;
 
 public class MapObject extends KeyIndexedObject {

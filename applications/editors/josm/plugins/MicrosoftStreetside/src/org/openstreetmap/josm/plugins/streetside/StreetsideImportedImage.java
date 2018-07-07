@@ -14,9 +14,8 @@ import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.layer.geoimage.GeoImageLayer;
 import org.openstreetmap.josm.gui.layer.geoimage.ImageEntry;
-import org.openstreetmap.josm.plugins.streetside.utils.StreetsideUtils;
-
 import org.openstreetmap.josm.plugins.streetside.cubemap.CubemapUtils;
+import org.openstreetmap.josm.plugins.streetside.utils.StreetsideUtils;
 
 /**
  * A StreetsideImoprtedImage object represents a picture imported locally.

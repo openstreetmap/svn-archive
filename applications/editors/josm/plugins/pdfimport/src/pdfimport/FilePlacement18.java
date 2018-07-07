@@ -375,7 +375,7 @@ public class FilePlacement18 extends FilePlacement {
 
 	public void load(File baseFile) throws IOException {
 		File file = new File(baseFile + ".placement");
-		Properties p = new Properties(9);
+		Properties p = new Properties();
 		try (FileInputStream s = new FileInputStream(file)){
 			p.load(s);
 			s.close();

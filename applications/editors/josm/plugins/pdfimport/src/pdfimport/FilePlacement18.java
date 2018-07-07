@@ -167,16 +167,16 @@ public class FilePlacement18 extends FilePlacement {
 			projectionChooser = new GuiProjections();
 
 			pdfMin = new CoorFields(minXField = new GuiFieldDouble(0), minYField = new GuiFieldDouble(0));
-			minXField.setToolTipText(tr("X-value of buttom left reference point"));
+			minXField.setToolTipText(tr("X-value of bottom left reference point"));
 			minXField.addFocusListener(monitor);
-			minYField.setToolTipText(tr("Y-value of buttom left reference point"));
+			minYField.setToolTipText(tr("Y-value of bottom left reference point"));
 			minYField.addFocusListener(monitor);
 
 //
 			worldMin = new CoorFields(minEastField = new GuiFieldDouble(0), minNorthField = new GuiFieldDouble(0));
-			minEastField.setToolTipText(tr("East-value of buttom left reference point"));
+			minEastField.setToolTipText(tr("East-value of bottom left reference point"));
 			minEastField.addFocusListener(monitor);
-			minNorthField.setToolTipText(tr("North-value of buttom left reference point"));
+			minNorthField.setToolTipText(tr("North-value of bottom left reference point"));
 			minNorthField.addFocusListener(monitor);
 //
 			getMinButton = new JButton(tr("Get from Preview"));

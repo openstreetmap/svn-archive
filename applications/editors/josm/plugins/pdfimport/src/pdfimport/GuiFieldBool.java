@@ -10,8 +10,8 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 public class GuiFieldBool extends JCheckBox {
-	private JComponent companion =null;
-	private  boolean value = false;
+	private JComponent companion;
+	private boolean value;
 
 	public JComponent getCompanion() {
 		return companion;
@@ -27,7 +27,7 @@ public class GuiFieldBool extends JCheckBox {
 	}
 
 	public void setValue(boolean value) {
-		value = value;
+		this.value = value;
 		super.setSelected(value);
 	}
 

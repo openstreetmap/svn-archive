@@ -31,7 +31,6 @@
     <property name="plugin.jar"             location="${plugin.dist.dir}/${ant.project.name}.jar"/>
     <property name="plugin.sources.jar"     location="${plugin.dist.dir}/${ant.project.name}-sources.jar"/>
     <property name="plugin.javadoc.jar"     location="${plugin.dist.dir}/${ant.project.name}-javadoc.jar"/>
-    <property name="javac.compiler"         value="com.google.errorprone.ErrorProneAntCompilerAdapter" />
 
     <!-- For Windows-specific stuff -->
     <condition property="isWindows">

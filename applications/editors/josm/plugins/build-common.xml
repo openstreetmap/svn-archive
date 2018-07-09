@@ -19,6 +19,7 @@
     <property name="checkstyle-build.dir"   location="../00_core_tools/checkstyle/build"/>
     <property name="spotbugs-ant.jar"       location="../00_core_tools/spotbugs/spotbugs-ant.jar"/>
     <property name="annotations.jar"        location="../00_core_tools/spotbugs/spotbugs-annotations.jar"/>
+    <property name="plugin.tools.dir"       location="../00_tools"/>
     <property name="plugin.build.dir"       location="build"/>
     <property name="plugin.test.dir"        location="test"/>
     <property name="plugin.src.dir"         location="src"/>
@@ -68,6 +69,8 @@
     <!-- To be overriden in plugin build file before inclusion if other plugins are required -->
     <fileset id="plugin.requires.jars" dir="${plugin.dist.dir}" includes="nothing"/>
 
+    <fileset id="jaxb.jars" dir="${plugin.tools.dir}/jaxb-ri/lib" includes="**/*.jar"/>
+
     <path id="plugin.classpath">
         <pathelement location="${josm}"/>
         <fileset dir="${plugin.lib.dir}" erroronmissingdir="no">
@@ -76,6 +79,7 @@
             <exclude name="**/*-javadoc.jar"/>
         </fileset>
         <fileset refid="plugin.requires.jars"/>
+        <fileset refid="jaxb.jars"/>
     </path>
 
     <!--

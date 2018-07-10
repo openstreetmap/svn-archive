@@ -77,8 +77,9 @@ public final class SequenceDownloadRunnable extends BoundsDownloadRunnable {
           StreetsideImage image = new StreetsideImage(CubemapUtils.convertDecimal2Quaternary(node.path("id").asLong()), node.path("la").asDouble(), node.get("lo").asDouble());
           if(previous!=null) {
         	  // Analyze sequence behaviour
-        	  //previous.setNext(image.)
+        	  //previous.setNext(image.getId());
           }
+          previous = image;
           image.setAd(node.path("ad").asInt());
           image.setAl(node.path("al").asDouble());
           image.setBl(node.path("bl").asText());

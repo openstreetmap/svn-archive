@@ -19,11 +19,12 @@ import org.openstreetmap.josm.plugins.streetside.cubemap.CubemapBuilder;
 import org.openstreetmap.josm.plugins.streetside.gui.StreetsideMainDialog;
 import org.openstreetmap.josm.plugins.streetside.gui.StreetsidePreferenceSetting;
 import org.openstreetmap.josm.plugins.streetside.gui.StreetsideViewerDialog;
-import org.openstreetmap.josm.plugins.streetside.gui.imageinfo.ImageInfoHelpPopup;
 import org.openstreetmap.josm.plugins.streetside.gui.imageinfo.ImageInfoPanel;
 import org.openstreetmap.josm.plugins.streetside.oauth.StreetsideUser;
 import org.openstreetmap.josm.plugins.streetside.utils.StreetsideProperties;
 import org.openstreetmap.josm.tools.ImageProvider;
+
+import org.openstreetmap.josm.plugins.streetside.gui.imageinfo.ImageInfoHelpPopup;
 
 /**
  * This is the main class of the Streetside plugin.

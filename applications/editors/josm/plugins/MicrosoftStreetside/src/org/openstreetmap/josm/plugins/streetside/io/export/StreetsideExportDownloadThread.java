@@ -57,7 +57,8 @@ public class StreetsideExportDownloadThread extends Thread implements
 
   @Override
   public void run() {
-    CacheUtils.submit(image.getId(), StreetsideCache.Type.FULL_IMAGE, this);
+    //CacheUtils.submit(image.getId(), StreetsideCache.Type.FULL_IMAGE, this);
+    CacheUtils.submit(image.getId(), StreetsideCache.Type.THUMBNAIL, this);
   }
 
   @Override

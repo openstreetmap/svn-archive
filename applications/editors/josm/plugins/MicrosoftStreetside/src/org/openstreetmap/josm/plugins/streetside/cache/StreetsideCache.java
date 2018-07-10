@@ -29,16 +29,7 @@ public class StreetsideCache extends JCSCachedTileLoaderJob<String, BufferedImag
 		/** Full quality image */
 		FULL_IMAGE,
 		/** Low quality image */
-		THUMBNAIL,
-		/** cubemap faces */
-		// TODO: one class per cache/load required? really?!
-		CUBEMAP/*,
-		CUBEMAP_FRONT,
-		CUBEMAP_RIGHT,
-		CUBEMAP_BACK,
-		CUBEMAP_LEFT,
-		CUBEMAP_UP,
-		CUBEMAP_DOWN*/
+		THUMBNAIL
 	}
 
 	/**

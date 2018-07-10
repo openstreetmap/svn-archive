@@ -6,6 +6,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.IllegalComponentStateException;
 import java.awt.event.ActionEvent;
+import java.text.MessageFormat;
 
 import javax.swing.AbstractAction;
 import javax.swing.JLabel;
@@ -13,17 +14,20 @@ import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JTextPane;
 
+import org.apache.log4j.Logger;
 import org.openstreetmap.josm.plugins.streetside.gui.boilerplate.SelectableLabel;
 import org.openstreetmap.josm.plugins.streetside.gui.boilerplate.StreetsideButton;
 import org.openstreetmap.josm.plugins.streetside.utils.StreetsideColorScheme;
 import org.openstreetmap.josm.plugins.streetside.utils.StreetsideProperties;
 import org.openstreetmap.josm.tools.I18n;
 import org.openstreetmap.josm.tools.ImageProvider;
-import org.openstreetmap.josm.tools.Logging;
+
 
 public class StreetsideViewerHelpPopup extends JPopupMenu {
 
 	private static final long serialVersionUID = -7840242522398163839L;
+
+	final static Logger logger = Logger.getLogger(StreetsideViewerHelpPopup.class);
 
 	private final Component invokerComp;
 	private boolean alreadyDisplayed;
@@ -42,11 +46,11 @@ public class StreetsideViewerHelpPopup extends JPopupMenu {
 		JTextPane mainText = new JTextPane();
 		mainText.setContentType("text/html");
 		mainText.setFont(SelectableLabel.DEFAULT_FONT);
-		mainText.setText("<html><div style='width:250px'>" + I18n.tr(
-				"Welcome to the Microsoft Streetside JOSM Plugin. To view the vector bubbles for the 360 degree imagery, select Imagery->Streetside from the JOSM menu.")
+		mainText.setText("<html><div style='width:250px'>" +
+				"Welcome to the Microsoft Streetside JOSM Plugin. To view the vector bubbles for the 360 degree imagery, select Imagery->Streetside from the JOSM menu."
 				+ "<br><br>"
-				+ I18n.tr(
-						"Once the blue bubbles appear on the map, click on a vector bubble and undock/maximize the 360 viewer to view the imagery.")
+				+
+						"Once the blue bubbles appear on the map, click on a vector bubble and undock/maximize the 360 viewer to view the imagery."
 				+ "</div></html>");
 		add(mainText, BorderLayout.CENTER);
 
@@ -82,7 +86,7 @@ public boolean showPopup() {
      alreadyDisplayed = true;
      return true;
    } catch (IllegalComponentStateException e) {
-     Logging.log(Logging.LEVEL_WARN, "Could not show ImageInfoHelpPopup, because probably the invoker component has disappeared from screen.", e);
+     logger.error(MessageFormat.format("Could not show ImageInfoHelpPopup, because probably the invoker component has disappeared from screen. {0}", e.getMessage()));
    }
  }
  return false;

@@ -173,7 +173,7 @@ public final class StreetsideURL {
 			if (id == null) {
 				throw new IllegalArgumentException("The image id may not be null!");
 			}
-			return StreetsideURL.string2URL(VirtualEarth.BASE_URL_PREFIX + id + VirtualEarth.BASE_URL_SUFFIX);
+			return StreetsideURL.string2URL(MessageFormat.format("{0}{1}{2}{3}{4}",VirtualEarth.BASE_URL_PREFIX, "0", id, "01", VirtualEarth.BASE_URL_SUFFIX));
 		}
 
 		/**

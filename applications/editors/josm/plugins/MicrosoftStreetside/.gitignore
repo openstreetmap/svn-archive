@@ -4,6 +4,8 @@
 /doc
 /logs
 /.git
+/.gitattributes
+/.gitignore
 /.gradle
 /checkstyle-josm-MicrosoftStreetside.xml
 /spotbugs-josm-MicrosoftStreetside.xml

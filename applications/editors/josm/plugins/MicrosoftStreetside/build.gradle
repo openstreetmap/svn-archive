@@ -13,7 +13,7 @@ plugins {
 }
 
 apply from: 'gradle/tool-config.gradle'
-//apply from: 'gradle/markdown.gradle'
+apply from: 'gradle/markdown.gradle'
 
 sourceCompatibility = '1.8'
 

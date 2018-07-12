@@ -1,0 +1,156 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+<head>
+<title>Source code</title>
+<link rel="stylesheet" type="text/css" href="../../../../../../../../stylesheet.css" title="Style">
+</head>
+<body>
+<div class="sourceContainer">
+<pre><span class="sourceLineNo">001</span>// License: GPL. For details, see LICENSE file.<a name="line.1"></a>
+<span class="sourceLineNo">002</span>package org.openstreetmap.josm.plugins.streetside.io.download;<a name="line.2"></a>
+<span class="sourceLineNo">003</span><a name="line.3"></a>
+<span class="sourceLineNo">004</span>import java.awt.GraphicsEnvironment;<a name="line.4"></a>
+<span class="sourceLineNo">005</span>import java.io.IOException;<a name="line.5"></a>
+<span class="sourceLineNo">006</span>import java.net.HttpURLConnection;<a name="line.6"></a>
+<span class="sourceLineNo">007</span>import java.net.URL;<a name="line.7"></a>
+<span class="sourceLineNo">008</span>import java.net.URLConnection;<a name="line.8"></a>
+<span class="sourceLineNo">009</span>import java.text.MessageFormat;<a name="line.9"></a>
+<span class="sourceLineNo">010</span>import java.util.function.Function;<a name="line.10"></a>
+<span class="sourceLineNo">011</span><a name="line.11"></a>
+<span class="sourceLineNo">012</span>import org.apache.log4j.Logger;<a name="line.12"></a>
+<span class="sourceLineNo">013</span>import org.openstreetmap.josm.data.Bounds;<a name="line.13"></a>
+<span class="sourceLineNo">014</span>import org.openstreetmap.josm.gui.Notification;<a name="line.14"></a>
+<span class="sourceLineNo">015</span>import org.openstreetmap.josm.plugins.streetside.StreetsidePlugin;<a name="line.15"></a>
+<span class="sourceLineNo">016</span>import org.openstreetmap.josm.plugins.streetside.utils.StreetsideProperties;<a name="line.16"></a>
+<span class="sourceLineNo">017</span>import org.openstreetmap.josm.plugins.streetside.utils.StreetsideURL.APIv3;<a name="line.17"></a>
+<span class="sourceLineNo">018</span>import org.openstreetmap.josm.tools.ImageProvider.ImageSizes;<a name="line.18"></a>
+<span class="sourceLineNo">019</span><a name="line.19"></a>
+<span class="sourceLineNo">020</span>public abstract class BoundsDownloadRunnable implements Runnable {<a name="line.20"></a>
+<span class="sourceLineNo">021</span><a name="line.21"></a>
+<span class="sourceLineNo">022</span>  final static Logger logger = Logger.getLogger(BoundsDownloadRunnable.class);<a name="line.22"></a>
+<span class="sourceLineNo">023</span><a name="line.23"></a>
+<span class="sourceLineNo">024</span>  protected Bounds bounds;<a name="line.24"></a>
+<span class="sourceLineNo">025</span>  protected abstract Function&lt;Bounds, URL&gt; getUrlGenerator();<a name="line.25"></a>
+<span class="sourceLineNo">026</span><a name="line.26"></a>
+<span class="sourceLineNo">027</span>  public BoundsDownloadRunnable(final Bounds bounds) {<a name="line.27"></a>
+<span class="sourceLineNo">028</span>    this.bounds = bounds;<a name="line.28"></a>
+<span class="sourceLineNo">029</span>  }<a name="line.29"></a>
+<span class="sourceLineNo">030</span><a name="line.30"></a>
+<span class="sourceLineNo">031</span>  @Override<a name="line.31"></a>
+<span class="sourceLineNo">032</span>  public void run() {<a name="line.32"></a>
+<span class="sourceLineNo">033</span>    URL nextURL = getUrlGenerator().apply(bounds);<a name="line.33"></a>
+<span class="sourceLineNo">034</span>    if(StreetsideProperties.DEBUGING_ENABLED.get()) {<a name="line.34"></a>
+<span class="sourceLineNo">035</span>      logger.debug(MessageFormat.format("nextURL: {0}", nextURL.toString()));<a name="line.35"></a>
+<span class="sourceLineNo">036</span>    }<a name="line.36"></a>
+<span class="sourceLineNo">037</span>    try {<a name="line.37"></a>
+<span class="sourceLineNo">038</span>      while (nextURL != null) {<a name="line.38"></a>
+<span class="sourceLineNo">039</span>        if (Thread.interrupted()) {<a name="line.39"></a>
+<span class="sourceLineNo">040</span>          logger.error(getClass().getSimpleName() + " for " +  bounds.toString() + " interrupted!");<a name="line.40"></a>
+<span class="sourceLineNo">041</span>          return;<a name="line.41"></a>
+<span class="sourceLineNo">042</span>        }<a name="line.42"></a>
+<span class="sourceLineNo">043</span>        final URLConnection con = nextURL.openConnection();<a name="line.43"></a>
+<span class="sourceLineNo">044</span>        run(con);<a name="line.44"></a>
+<span class="sourceLineNo">045</span>        nextURL = APIv3.parseNextFromLinkHeaderValue(con.getHeaderField("Link"));<a name="line.45"></a>
+<span class="sourceLineNo">046</span>      }<a name="line.46"></a>
+<span class="sourceLineNo">047</span>    } catch (IOException e) {<a name="line.47"></a>
+<span class="sourceLineNo">048</span>      String message = "Could not read from URL " +  nextURL.toString() + "!";<a name="line.48"></a>
+<span class="sourceLineNo">049</span>      logger.warn(message, e);<a name="line.49"></a>
+<span class="sourceLineNo">050</span>      if (!GraphicsEnvironment.isHeadless()) {<a name="line.50"></a>
+<span class="sourceLineNo">051</span>        new Notification(message)<a name="line.51"></a>
+<span class="sourceLineNo">052</span>          .setIcon(StreetsidePlugin.LOGO.setSize(ImageSizes.LARGEICON).get())<a name="line.52"></a>
+<span class="sourceLineNo">053</span>          .setDuration(Notification.TIME_LONG)<a name="line.53"></a>
+<span class="sourceLineNo">054</span>          .show();<a name="line.54"></a>
+<span class="sourceLineNo">055</span>      }<a name="line.55"></a>
+<span class="sourceLineNo">056</span>      e.printStackTrace();<a name="line.56"></a>
+<span class="sourceLineNo">057</span>    }<a name="line.57"></a>
+<span class="sourceLineNo">058</span>  }<a name="line.58"></a>
+<span class="sourceLineNo">059</span><a name="line.59"></a>
+<span class="sourceLineNo">060</span>  /**<a name="line.60"></a>
+<span class="sourceLineNo">061</span>   * Logs information about the given connection via {@link logger#info(String)}.<a name="line.61"></a>
+<span class="sourceLineNo">062</span>   * If it's a {@link HttpURLConnection}, the request method, the response code and the URL itself are logged.<a name="line.62"></a>
+<span class="sourceLineNo">063</span>   * Otherwise only the URL is logged.<a name="line.63"></a>
+<span class="sourceLineNo">064</span>   * @param con the {@link URLConnection} for which information is logged<a name="line.64"></a>
+<span class="sourceLineNo">065</span>   * @param info an additional info text, which is appended to the output in braces<a name="line.65"></a>
+<span class="sourceLineNo">066</span>   * @throws IOException if {@link HttpURLConnection#getResponseCode()} throws an {@link IOException}<a name="line.66"></a>
+<span class="sourceLineNo">067</span>   */<a name="line.67"></a>
+<span class="sourceLineNo">068</span>  public static void logConnectionInfo(final URLConnection con, final String info) throws IOException {<a name="line.68"></a>
+<span class="sourceLineNo">069</span>    final StringBuilder message;<a name="line.69"></a>
+<span class="sourceLineNo">070</span>    if (con instanceof HttpURLConnection) {<a name="line.70"></a>
+<span class="sourceLineNo">071</span>      message = new StringBuilder(((HttpURLConnection) con).getRequestMethod())<a name="line.71"></a>
+<span class="sourceLineNo">072</span>        .append(' ').append(con.getURL())<a name="line.72"></a>
+<span class="sourceLineNo">073</span>        .append(" → ").append(((HttpURLConnection) con).getResponseCode());<a name="line.73"></a>
+<span class="sourceLineNo">074</span>    } else {<a name="line.74"></a>
+<span class="sourceLineNo">075</span>      message = new StringBuilder("Download from ").append(con.getURL());<a name="line.75"></a>
+<span class="sourceLineNo">076</span>    }<a name="line.76"></a>
+<span class="sourceLineNo">077</span>    if (info != null &amp;&amp; info.length() &gt;= 1) {<a name="line.77"></a>
+<span class="sourceLineNo">078</span>      message.append(" (").append(info).append(')');<a name="line.78"></a>
+<span class="sourceLineNo">079</span>    }<a name="line.79"></a>
+<span class="sourceLineNo">080</span>    logger.info(message.toString());<a name="line.80"></a>
+<span class="sourceLineNo">081</span>  }<a name="line.81"></a>
+<span class="sourceLineNo">082</span><a name="line.82"></a>
+<span class="sourceLineNo">083</span>  public abstract void run(final URLConnection connection) throws IOException;<a name="line.83"></a>
+<span class="sourceLineNo">084</span>}<a name="line.84"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</pre>
+</div>
+</body>
+</html>

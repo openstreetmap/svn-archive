@@ -30,7 +30,6 @@ public final class StreetsideViewerDialog extends ToggleDialog
 	private StreetsideViewerPanel streetsideViewerPanel;
 
 	private StreetsideViewerDialog() {
-	  // TODO: I18n support in all languages?
 	  super(StreetsideViewerDialog.BASE_TITLE, "streetside-viewer", "Open Streetside Viewer window",
 				null, 200, true, StreetsidePreferenceSetting.class);
 		streetsideViewerPanel = new StreetsideViewerPanel();

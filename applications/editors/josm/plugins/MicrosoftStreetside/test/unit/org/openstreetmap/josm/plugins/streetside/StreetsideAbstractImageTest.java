@@ -4,7 +4,6 @@ package org.openstreetmap.josm.plugins.streetside;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.openstreetmap.josm.data.coor.LatLon;
@@ -16,7 +15,6 @@ public class StreetsideAbstractImageTest {
   @Rule
   public JOSMTestRules rules = new StreetsideTestRules().platform();
 
-  @Ignore
   @Test
   public void testIsModified() {
     StreetsideImage img = new StreetsideImage("key___________________", new LatLon(0, 0), 0);

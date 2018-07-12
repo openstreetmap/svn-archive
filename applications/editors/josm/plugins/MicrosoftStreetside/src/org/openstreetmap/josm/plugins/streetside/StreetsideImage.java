@@ -62,10 +62,6 @@ public class StreetsideImage extends StreetsideAbstractImage {
     super(id, latLon, he);
   }
 
-  public StreetsideImage(String id, LatLon latLon) {
-    super(id, latLon, 0.0);
-  }
-
   public StreetsideImage(String id, double la, double lo) {
     super(id, new LatLon(la,lo), 0.0);
   }
@@ -96,7 +92,6 @@ public String getId() {
   @Override
   public String toString() {
     return String.format(
-      // TODO: format date cd (Gradle build error command line)
       "Image[id=%s,lat=%f,lon=%f,he=%f,user=%s]",
       id, latLon.lat(), latLon.lon(), he, "null"//, cd
     );
@@ -127,13 +122,7 @@ public String getId() {
   }
 
   private void checkModified() {
-    if (StreetsideLayer.hasInstance()) {
-      if (isModified()) {
-        StreetsideLayer.getInstance().getLocationChangeset().add(this);
-      } else {
-        StreetsideLayer.getInstance().getLocationChangeset().remove(this);
-      }
-    }
+    // modifications not currently supported in Streetside
   }
 
   @Override

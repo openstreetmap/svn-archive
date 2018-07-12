@@ -42,7 +42,6 @@ import org.openstreetmap.josm.plugins.streetside.history.StreetsideRecord;
 import org.openstreetmap.josm.plugins.streetside.io.download.StreetsideDownloader;
 import org.openstreetmap.josm.plugins.streetside.io.download.StreetsideDownloader.DOWNLOAD_MODE;
 import org.openstreetmap.josm.plugins.streetside.mode.AbstractMode;
-import org.openstreetmap.josm.plugins.streetside.mode.JoinMode;
 import org.openstreetmap.josm.plugins.streetside.mode.SelectMode;
 import org.openstreetmap.josm.plugins.streetside.utils.MapViewGeometryUtil;
 import org.openstreetmap.josm.plugins.streetside.utils.StreetsideColorScheme;
@@ -89,7 +88,6 @@ ActiveLayerChangeListener, StreetsideDataListener {
 	public AbstractMode mode;
 
 	private volatile TexturePaint hatched;
-	private final StreetsideLocationChangeset locationChangeset = new StreetsideLocationChangeset();
 
 	private StreetsideLayer() {
 		super(I18n.tr("Microsoft Streetside Images"));
@@ -189,16 +187,6 @@ ActiveLayerChangeListener, StreetsideDataListener {
 	public StreetsideData getData() {
 		return data;
 	}
-
-  /**
-   * Returns the {@link StreetsideLocationChangeset} object, which acts as the database of the
-   * Layer.
-   *
-   * @return The {@link StreetsideData} object that stores the database.
-   */
-  public StreetsideLocationChangeset getLocationChangeset() {
-    return locationChangeset;
-  }
 
   /**
    * Returns the n-nearest image, for n=1 the nearest one is returned, for n=2 the second nearest one and so on.
@@ -313,9 +301,6 @@ ActiveLayerChangeListener, StreetsideDataListener {
       if (imageAbs.isVisible() && mv != null && mv.contains(mv.getPoint(imageAbs.getMovingLatLon()))) {
         drawImageMarker(g, imageAbs);
       }
-    }
-    if (mode instanceof JoinMode) {
-      mode.paint(g, mv, box);
     }
   }
 
@@ -503,8 +488,8 @@ ActiveLayerChangeListener, StreetsideDataListener {
       nearestImages = new StreetsideImage[0];
     }
     if (MainApplication.isDisplayingMapView()) {
-      StreetsideMainDialog.getInstance().redButton.setEnabled(nearestImages.length >= 1);
-      StreetsideMainDialog.getInstance().blueButton.setEnabled(nearestImages.length >= 2);
+      //StreetsideMainDialog.getInstance().redButton.setEnabled(nearestImages.length >= 1);
+      //StreetsideMainDialog.getInstance().blueButton.setEnabled(nearestImages.length >= 2);
     }
     if (nearestImages.length >= 1) {
       CacheUtils.downloadPicture(nearestImages[0]);

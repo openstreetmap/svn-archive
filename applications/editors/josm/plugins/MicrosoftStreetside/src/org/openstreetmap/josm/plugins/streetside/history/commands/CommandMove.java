@@ -37,8 +37,8 @@ public class CommandMove extends StreetsideCommand {
 
   @Override
   public void undo() {
-    for (StreetsideAbstractImage image : this.images) {
-      image.move(-this.x, -this.y);
+    for (StreetsideAbstractImage image : images) {
+      image.move(-x, -y);
       image.stopMoving();
     }
     StreetsideLayer.invalidateInstance();
@@ -46,8 +46,8 @@ public class CommandMove extends StreetsideCommand {
 
   @Override
   public void redo() {
-    for (StreetsideAbstractImage image : this.images) {
-      image.move(this.x, this.y);
+    for (StreetsideAbstractImage image : images) {
+      image.move(x, y);
       image.stopMoving();
     }
     StreetsideLayer.invalidateInstance();
@@ -55,16 +55,15 @@ public class CommandMove extends StreetsideCommand {
 
   @Override
   public String toString() {
-    // TODO: trn( RRH
-    return trn("Moved {0} image", "Moved {0} images", this.images.size(),
-        this.images.size());
+    return trn("Moved {0} image", "Moved {0} images", images.size(),
+        images.size());
   }
 
   @Override
   public void sum(StreetsideCommand command) {
     if (command instanceof CommandMove) {
-      this.x += ((CommandMove) command).x;
-      this.y += ((CommandMove) command).y;
+      x += ((CommandMove) command).x;
+      y += ((CommandMove) command).y;
     }
   }
 }

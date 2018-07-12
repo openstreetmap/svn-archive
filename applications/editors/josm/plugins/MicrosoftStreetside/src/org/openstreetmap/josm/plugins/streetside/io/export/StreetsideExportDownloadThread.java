@@ -57,7 +57,7 @@ public class StreetsideExportDownloadThread extends Thread implements
 
   @Override
   public void run() {
-    //CacheUtils.submit(image.getId(), StreetsideCache.Type.FULL_IMAGE, this);
+    // use "thumbnail" type here so that the tiles are not exported
     CacheUtils.submit(image.getId(), StreetsideCache.Type.THUMBNAIL, this);
   }
 

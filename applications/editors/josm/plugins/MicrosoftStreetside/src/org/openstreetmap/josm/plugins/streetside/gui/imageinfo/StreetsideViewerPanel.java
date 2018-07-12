@@ -14,11 +14,11 @@ import org.openstreetmap.josm.plugins.streetside.StreetsideAbstractImage;
 import org.openstreetmap.josm.plugins.streetside.StreetsideDataListener;
 import org.openstreetmap.josm.plugins.streetside.StreetsideImage;
 import org.openstreetmap.josm.plugins.streetside.actions.ImageReloadAction;
+import org.openstreetmap.josm.plugins.streetside.cubemap.CubemapBox;
 import org.openstreetmap.josm.plugins.streetside.cubemap.CubemapBuilder;
 import org.openstreetmap.josm.plugins.streetside.cubemap.CubemapUtils;
 import org.openstreetmap.josm.plugins.streetside.cubemap.GraphicsUtils;
 import org.openstreetmap.josm.plugins.streetside.gui.boilerplate.StreetsideButton;
-import org.openstreetmap.josm.plugins.streetside.utils.CubemapBox;
 import org.openstreetmap.josm.plugins.streetside.utils.StreetsideProperties;
 import org.openstreetmap.josm.plugins.streetside.utils.StreetsideURL;
 import org.openstreetmap.josm.tools.I18n;
@@ -66,13 +66,11 @@ public final class StreetsideViewerPanel extends JPanel
 		repaint();
 	    JPanel checkPanel = new JPanel();
 
-	    // TODO: I18n for all languages?
-	    imgReloadAction = new ImageReloadAction(/*I18n.tr(*/"Reload"/*)*/);
+	    imgReloadAction = new ImageReloadAction("Reload");
 
 	    StreetsideButton imgReloadButton = new StreetsideButton(imgReloadAction);
 
-	    // TODO: I18n for all languages?
-      highResImageryCheck = new JCheckBox(/*I18n.tr(*/"High resolution"/*)*/);
+	    highResImageryCheck = new JCheckBox("High resolution");
 	    highResImageryCheck.setSelected(StreetsideProperties.SHOW_HIGH_RES_STREETSIDE_IMAGERY.get());
 	    highResImageryCheck.addActionListener(
 	      action -> StreetsideProperties.SHOW_HIGH_RES_STREETSIDE_IMAGERY.put(highResImageryCheck.isSelected())
@@ -154,7 +152,7 @@ public final class StreetsideViewerPanel extends JPanel
 		  }
 	}
 
-	public CubemapBox getCubemapBox() {
+	public static CubemapBox getCubemapBox() {
 		return threeSixtyDegreeViewerPanel.getCubemapBox();
 	}
 

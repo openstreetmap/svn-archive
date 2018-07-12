@@ -1,17 +1,12 @@
 // License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.streetside.gui.imageinfo;
 
-import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.Image;
 import java.awt.Insets;
 import java.awt.datatransfer.StringSelection;
-import java.awt.image.BufferedImage;
 import java.util.Collection;
 
-import javax.swing.ImageIcon;
-import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextPane;
@@ -28,7 +23,6 @@ import org.openstreetmap.josm.plugins.streetside.StreetsideDataListener;
 import org.openstreetmap.josm.plugins.streetside.StreetsideImage;
 import org.openstreetmap.josm.plugins.streetside.gui.boilerplate.SelectableLabel;
 import org.openstreetmap.josm.plugins.streetside.gui.boilerplate.StreetsideButton;
-import org.openstreetmap.josm.plugins.streetside.model.UserProfile;
 import org.openstreetmap.josm.plugins.streetside.utils.StreetsideProperties;
 import org.openstreetmap.josm.plugins.streetside.utils.StreetsideURL;
 import org.openstreetmap.josm.tools.I18n;
@@ -39,11 +33,7 @@ public final class ImageInfoPanel extends ToggleDialog implements StreetsideData
   final static Logger logger = Logger.getLogger(ImageInfoPanel.class);
 
   private static ImageInfoPanel instance;
-  private static final ImageIcon EMPTY_USER_AVATAR = new ImageIcon(new BufferedImage(32, 32, BufferedImage.TYPE_INT_ARGB));
 
-  private final JLabel numDetectionsLabel;
-  private final JCheckBox showDetectionsCheck;
-  private final JLabel usernameLabel;
   private final JTextPane imgKeyValue;
   private final WebLinkAction imgLinkAction;
   private final ClipboardAction copyImgKeyAction;
@@ -54,28 +44,13 @@ public final class ImageInfoPanel extends ToggleDialog implements StreetsideData
 
   private ImageInfoPanel() {
     super(
-      I18n.tr("Streetside Image info"),
+      I18n.tr("Streetside 360° image info"),
       "streetside-info",
       I18n.tr("Displays detail information on the currently selected Streetside image"),
       null,
       150
     );
     SelectionEventManager.getInstance().addSelectionListener(this);
-
-    numDetectionsLabel = new JLabel();
-    numDetectionsLabel.setFont(numDetectionsLabel.getFont().deriveFont(Font.PLAIN));
-
-    showDetectionsCheck = new JCheckBox(I18n.tr("Show detections on top of image"));
-     showDetectionsCheck.setSelected(StreetsideProperties.SHOW_DETECTED_SIGNS.get());
-     showDetectionsCheck.addActionListener(
-      action -> StreetsideProperties.SHOW_DETECTED_SIGNS.put(showDetectionsCheck.isSelected())
-    );
-    StreetsideProperties.SHOW_DETECTED_SIGNS.addListener(
-      valueChange -> showDetectionsCheck.setSelected(StreetsideProperties.SHOW_DETECTED_SIGNS.get())
-    );
-
-    usernameLabel = new JLabel();
-    usernameLabel.setFont(usernameLabel.getFont().deriveFont(Font.PLAIN));
 
     imgKeyValue = new SelectableLabel();
 
@@ -87,51 +62,52 @@ public final class ImageInfoPanel extends ToggleDialog implements StreetsideData
 
     addStreetsideTagAction = new AddTagToPrimitiveAction(I18n.tr("Add Streetside tag"));
 
-    JPanel imgKey = new JPanel();
-    imgKey.add(imgKeyValue);
-    imgKey.add(copyButton);
-    JPanel imgButtons = new JPanel();
-    imgButtons.add(new StreetsideButton(imgLinkAction, true));
-    imgButtons.add(new StreetsideButton(addStreetsideTagAction, true));
     seqKeyValue = new SelectableLabel();
 
     JPanel root = new JPanel(new GridBagLayout());
+
     GridBagConstraints gbc = new GridBagConstraints();
     gbc.insets = new Insets(0, 5, 0, 5);
 
-    // Left column
+    gbc.fill = GridBagConstraints.HORIZONTAL;
     gbc.gridx = 0;
     gbc.gridy = 0;
-    gbc.anchor = GridBagConstraints.LINE_END;
-    gbc.gridwidth = 1;
-    gbc.gridheight = 2;
-    root.add(new JLabel(I18n.tr("Image detections")), gbc);
-    gbc.gridy += 2;
-    gbc.gridheight = 1;
-    root.add(new JLabel(I18n.tr("User")), gbc);
-    gbc.gridy++;
     root.add(new JLabel(I18n.tr("Image actions")), gbc);
-    gbc.gridy++;
+
+    gbc.fill = GridBagConstraints.HORIZONTAL;
+    gbc.weightx = 0.5;
+    gbc.gridx = 0;
+    gbc.gridy = 1;
     root.add(new JLabel(I18n.tr("Image key")), gbc);
-    gbc.gridy++;
+
+    gbc.fill = GridBagConstraints.HORIZONTAL;
+    gbc.weightx = 0.5;
+    gbc.gridx = 0;
+    gbc.gridy = 2;
     root.add(new JLabel(I18n.tr("Sequence key")), gbc);
 
-    // Right column
-    gbc.weightx = 1;
-    gbc.gridx++;
+    gbc.fill = GridBagConstraints.HORIZONTAL;
+    gbc.gridx = 1;
     gbc.gridy = 0;
-    gbc.anchor = GridBagConstraints.LINE_START;
-    root.add(numDetectionsLabel, gbc);
-    gbc.gridy++;
-    root.add(showDetectionsCheck, gbc);
-    gbc.gridy++;
-    root.add(usernameLabel, gbc);
-    gbc.gridy++;
-    root.add(imgButtons, gbc);
-    gbc.gridy++;
-    root.add(imgKey, gbc);
-    gbc.gridy++;
+    root.add(new StreetsideButton(imgLinkAction, true), gbc);
+
+    gbc.fill = GridBagConstraints.HORIZONTAL;
+    gbc.weightx = 0.5;
+    gbc.gridx = 1;
+    gbc.gridy = 1;
+    root.add(imgKeyValue, gbc);
+
+    gbc.fill = GridBagConstraints.HORIZONTAL;
+    gbc.weightx = 0.5;
+    gbc.gridx = 1;
+    gbc.gridy = 2;
     root.add(seqKeyValue, gbc);
+
+    gbc.fill = GridBagConstraints.HORIZONTAL;
+    gbc.weightx = 0.5;
+    gbc.gridx = 2;
+    gbc.gridy = 1;
+    root.add(copyButton, gbc);
 
     createLayout(root, true, null);
     selectedImageChanged(null, null);
@@ -183,14 +159,11 @@ public final class ImageInfoPanel extends ToggleDialog implements StreetsideData
       newImage instanceof StreetsideImage ? ((StreetsideImage) newImage).getId() : "‹none›"
     ));
 
-    numDetectionsLabel.setText(I18n.tr("{0} detections", newImage instanceof StreetsideImage ? /*((StreetsideImage) newImage).getDetections().size()*/0 : 0));
     imgKeyValue.setEnabled(newImage instanceof StreetsideImage);
     final String newImageKey = newImage instanceof StreetsideImage ? ((StreetsideImage) newImage).getId(): null;
     if (newImageKey != null) {
       imageLinkChangeListener = b -> imgLinkAction.setURL(
-        /*StreetsideProperties.IMAGE_LINK_TO_BLUR_EDITOR.get()
-        ? StreetsideURL.MainWebsite.blurEditImage(newImageKey)
-        :*/ StreetsideURL.MainWebsite.browseImage(newImageKey)
+        StreetsideURL.MainWebsite.browseImage(newImageKey)
       );
       imageLinkChangeListener.valueChanged(null);
       StreetsideProperties.IMAGE_LINK_TO_BLUR_EDITOR.addListener(imageLinkChangeListener);
@@ -208,16 +181,6 @@ public final class ImageInfoPanel extends ToggleDialog implements StreetsideData
       imgKeyValue.setText('‹' + I18n.tr("image has no key") + '›');
       copyImgKeyAction.setContents(null);
       addStreetsideTagAction.setTag(null);
-    }
-
-    final UserProfile user = newImage instanceof StreetsideImage ? ((StreetsideImage) newImage).getUser() : null;
-    usernameLabel.setEnabled(user != null);
-    if (user != null) {
-      usernameLabel.setText(user.getUsername());
-      usernameLabel.setIcon(new ImageIcon(user.getAvatar().getImage().getScaledInstance(32, 32, Image.SCALE_SMOOTH)));
-    } else {
-      usernameLabel.setText("‹" + I18n.tr("unknown user") + "›");
-      usernameLabel.setIcon(EMPTY_USER_AVATAR);
     }
 
     final boolean partOfSequence = newImage != null && newImage.getSequence() != null && newImage.getSequence().getId() != null;

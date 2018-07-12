@@ -75,10 +75,6 @@ public final class SequenceDownloadRunnable extends BoundsDownloadRunnable {
         // Discard the first sequence ('enabled') - it does not contain bubble data
         if (node.get("id") != null && node.get("la") != null && node.get("lo") != null) {
           StreetsideImage image = new StreetsideImage(CubemapUtils.convertDecimal2Quaternary(node.path("id").asLong()), node.path("la").asDouble(), node.get("lo").asDouble());
-          if(previous!=null) {
-        	  // Analyze sequence behaviour
-        	  //previous.setNext(image.getId());
-          }
           previous = image;
           image.setAd(node.path("ad").asInt());
           image.setAl(node.path("al").asDouble());

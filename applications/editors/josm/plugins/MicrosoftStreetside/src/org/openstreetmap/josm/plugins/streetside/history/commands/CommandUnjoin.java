@@ -39,7 +39,7 @@ public class CommandUnjoin extends StreetsideExecutableCommand {
 
   @Override
   public void execute() {
-    this.redo();
+    redo();
   }
 
   @Override
@@ -58,7 +58,6 @@ public class CommandUnjoin extends StreetsideExecutableCommand {
 
   @Override
   public String toString() {
-    // TODO: tr( RRH
     return tr("2 images unjoined");
   }
 }

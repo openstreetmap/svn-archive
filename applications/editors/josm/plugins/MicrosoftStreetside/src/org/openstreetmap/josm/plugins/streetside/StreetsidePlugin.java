@@ -12,19 +12,17 @@ import org.openstreetmap.josm.plugins.PluginInformation;
 import org.openstreetmap.josm.plugins.streetside.actions.StreetsideDownloadAction;
 import org.openstreetmap.josm.plugins.streetside.actions.StreetsideDownloadViewAction;
 import org.openstreetmap.josm.plugins.streetside.actions.StreetsideExportAction;
-import org.openstreetmap.josm.plugins.streetside.actions.StreetsideJoinAction;
 import org.openstreetmap.josm.plugins.streetside.actions.StreetsideWalkAction;
 import org.openstreetmap.josm.plugins.streetside.actions.StreetsideZoomAction;
 import org.openstreetmap.josm.plugins.streetside.cubemap.CubemapBuilder;
 import org.openstreetmap.josm.plugins.streetside.gui.StreetsideMainDialog;
 import org.openstreetmap.josm.plugins.streetside.gui.StreetsidePreferenceSetting;
 import org.openstreetmap.josm.plugins.streetside.gui.StreetsideViewerDialog;
+import org.openstreetmap.josm.plugins.streetside.gui.imageinfo.ImageInfoHelpPopup;
 import org.openstreetmap.josm.plugins.streetside.gui.imageinfo.ImageInfoPanel;
 import org.openstreetmap.josm.plugins.streetside.oauth.StreetsideUser;
 import org.openstreetmap.josm.plugins.streetside.utils.StreetsideProperties;
 import org.openstreetmap.josm.tools.ImageProvider;
-
-import org.openstreetmap.josm.plugins.streetside.gui.imageinfo.ImageInfoHelpPopup;
 
 /**
  * This is the main class of the Streetside plugin.
@@ -44,7 +42,7 @@ public class StreetsidePlugin extends Plugin {
       MainMenu.add(MainApplication.getMenu().imagerySubMenu, new StreetsideDownloadAction(), false);
       MainMenu.add(MainApplication.getMenu().viewMenu, ZOOM_ACTION, false, 15);
       MainMenu.add(MainApplication.getMenu().fileMenu, new StreetsideDownloadViewAction(), false, 14);
-      MainMenu.add(MainApplication.getMenu().dataMenu, new StreetsideJoinAction(), false);
+      //MainMenu.add(MainApplication.getMenu().dataMenu, new StreetsideJoinAction(), false);
       MainMenu.add(MainApplication.getMenu().moreToolsMenu, WALK_ACTION, false);
     }
   }

@@ -2,9 +2,11 @@
 package org.openstreetmap.josm.plugins.streetside.actions;
 
 import java.awt.image.BufferedImage;
+import java.text.MessageFormat;
 
 import javax.swing.SwingUtilities;
 
+import org.apache.log4j.Logger;
 import org.openstreetmap.josm.plugins.streetside.StreetsideAbstractImage;
 import org.openstreetmap.josm.plugins.streetside.StreetsideData;
 import org.openstreetmap.josm.plugins.streetside.StreetsideDataListener;
@@ -29,6 +31,8 @@ public class WalkThread extends Thread implements StreetsideDataListener {
   private final boolean goForward;
   private BufferedImage lastImage;
   private volatile boolean paused;
+
+  final static Logger logger = Logger.getLogger(WalkThread.class);
 
   /**
    * Main constructor.
@@ -64,9 +68,6 @@ public class WalkThread extends Thread implements StreetsideDataListener {
             // Start downloading 3 next full images.
             StreetsideAbstractImage currentImage = image.next();
         	  preDownloadImages((StreetsideImage) currentImage, 3, CacheUtils.PICTURE.FULL_IMAGE);
-        	  /*if (StreetsideProperties.PREDOWNLOAD_CUBEMAPS.get().booleanValue()) {
-          	  preDownloadCubemaps((StreetsideImage) currentImage, 3);
-            }*/
           }
         }
         try {
@@ -99,7 +100,10 @@ public class WalkThread extends Thread implements StreetsideDataListener {
         }
       }
     } catch (NullPointerException e) {
-      // TODO: Avoid NPEs instead of waiting until they are thrown and then catching them
+      if(StreetsideProperties.DEBUGING_ENABLED.get()) {
+        logger.debug(MessageFormat.format("Exception thrown in WalkThread: {0}", e.getMessage()));
+        e.printStackTrace();
+      }
       return;
     }
     end();

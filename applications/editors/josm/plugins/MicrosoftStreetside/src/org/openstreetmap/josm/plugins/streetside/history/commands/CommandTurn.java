@@ -32,8 +32,8 @@ public class CommandTurn extends StreetsideCommand {
 
   @Override
   public void undo() {
-    for (StreetsideAbstractImage image : this.images) {
-      image.turn(-this.ca);
+    for (StreetsideAbstractImage image : images) {
+      image.turn(-ca);
       image.stopMoving();
     }
     StreetsideLayer.invalidateInstance();
@@ -41,8 +41,8 @@ public class CommandTurn extends StreetsideCommand {
 
   @Override
   public void redo() {
-    for (StreetsideAbstractImage image : this.images) {
-      image.turn(this.ca);
+    for (StreetsideAbstractImage image : images) {
+      image.turn(ca);
       image.stopMoving();
     }
     StreetsideLayer.invalidateInstance();
@@ -50,15 +50,14 @@ public class CommandTurn extends StreetsideCommand {
 
   @Override
   public String toString() {
-    // TODO: trn( RRH
-    return trn("Turned {0} image", "Turned {0} images", this.images.size(),
-        this.images.size());
+    return trn("Turned {0} image", "Turned {0} images", images.size(),
+        images.size());
   }
 
   @Override
   public void sum(StreetsideCommand command) {
     if (command instanceof CommandTurn) {
-      this.ca += ((CommandTurn) command).ca;
+      ca += ((CommandTurn) command).ca;
     }
   }
 }

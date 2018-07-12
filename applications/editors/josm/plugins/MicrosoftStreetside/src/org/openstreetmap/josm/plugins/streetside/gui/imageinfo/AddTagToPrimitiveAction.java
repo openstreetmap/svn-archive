@@ -46,7 +46,6 @@ public class AddTagToPrimitiveAction extends AbstractAction {
         conflictResolution = JOptionPane.showConfirmDialog(
           Main.parent,
           "<html>" +
-            // TODO: tr( RRH
             I18n.tr("A tag with key <i>{0}</i> is already present on the selected OSM object.", tag.getKey()) + "<br>" +
             I18n.tr(
               "Do you really want to replace the current value <i>{0}</i> with the new value <i>{1}</i>?",

@@ -11,7 +11,13 @@ public interface ITileDownloadingTaskListener {
 
  /**
  * Fired when a cubemap tile image is downloaded by a download worker.
- * @param imageId image id 
+ * @param imageId image id
  */
  void tileAdded(String imageId);
+
+ /**
+  * Fired when multiple cubemap tile images are downloaded by a download worker.
+  * @param imageId image id
+  */
+  void tilesAdded(String[] imageId);
 }

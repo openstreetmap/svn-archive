@@ -18,7 +18,6 @@ import org.openstreetmap.josm.plugins.streetside.StreetsideCubemap;
 import org.openstreetmap.josm.plugins.streetside.StreetsideDataListener;
 import org.openstreetmap.josm.plugins.streetside.gui.StreetsideViewerDialog;
 import org.openstreetmap.josm.plugins.streetside.gui.imageinfo.StreetsideViewerPanel;
-import org.openstreetmap.josm.plugins.streetside.utils.CubemapBox;
 import org.openstreetmap.josm.plugins.streetside.utils.StreetsideProperties;
 
 import javafx.scene.image.Image;
@@ -192,6 +191,29 @@ public class CubemapBuilder implements ITileDownloadingTaskListener, StreetsideD
 			buildCubemapFaces();
 		}
 	}
+
+	@Override
+  public void tilesAdded(String[] tileIds) {
+    // determine whether all tiles have been set for each of the
+    // six cubemap faces. If so, build the images for the faces
+    // and set the views in the cubemap box.
+
+    int tileCount = 0;
+
+    tileCount = CubemapBuilder.getInstance().getTileImages().keySet().size();
+
+    int maxCols = StreetsideProperties.SHOW_HIGH_RES_STREETSIDE_IMAGERY.get() ? 4 : 2;
+    int maxRows = StreetsideProperties.SHOW_HIGH_RES_STREETSIDE_IMAGERY.get() ? 4 : 2;
+
+    if (tileCount == (CubemapUtils.NUM_SIDES * maxCols * maxRows)) {
+      if (StreetsideProperties.DEBUGING_ENABLED.get()) {
+        logger.debug(MessageFormat.format("{0} tile images ready for building cumbemap faces for cubemap {1}.", tileCount,
+          CubemapBuilder.getInstance().getCubemap().getId()));
+      }
+
+      buildCubemapFaces();
+    }
+  }
 
 	private void buildCubemapFaces() {
 

@@ -27,11 +27,8 @@ public final class StreetsideURL {
 
 	/** Base URL of the Bing Bubble API. */
 	private static final String STREETSIDE_BASE_URL = "https://dev.virtualearth.net/mapcontrol/HumanScaleServices/GetBubbles.ashx";
-	private static final String CLIENT_ID = "T1Fzd20xZjdtR0s1VDk5OFNIOXpYdzoxNDYyOGRkYzUyYTFiMzgz";
-	private static final String BING_MAPS_KEY = "AuftgJsO0Xs8Ts4M1xZUQJQXJNsvmh3IV8DkNieCiy3tCwCUMq76-WpkrBtNAuEm";
-	private static final String TEST_BUBBLE_ID = "80848005";
-
-	private static final String STREETSIDE_PRIVACY_URL = "https://www.bing.com/maps/privacyreport/streetsideprivacyreport?bubbleid=";
+	/** Base URL for Streetside privacy concerns. */
+  private static final String STREETSIDE_PRIVACY_URL = "https://www.bing.com/maps/privacyreport/streetsideprivacyreport?bubbleid=";
 
 	private static final int OSM_BBOX_NORTH = 3;
 	private static final int OSM_BBOX_SOUTH = 1;
@@ -39,7 +36,6 @@ public final class StreetsideURL {
 	private static final int OSM_BBOX_WEST = 0;
 
 	public static final class APIv3 {
-		//private static final String BASE_URL = "https://a.mapillary.com/v3/";
 
 		private APIv3() {
 			// Private constructor to avoid instantiation
@@ -105,12 +101,6 @@ public final class StreetsideURL {
 			return StreetsideURL.queryStreetsideBoundsString(null);
 		}
 
-		/**
-		 * @return the URL where you'll find information about the user account as JSON
-		 */
-		/*public static URL userURL() {
-			return StreetsideURL.string2URL(APIv3.BASE_URL, "me", StreetsideURL.queryString(null));
-		}*/
 	}
 
 	public static final class VirtualEarth {
@@ -173,7 +163,7 @@ public final class StreetsideURL {
 			if (id == null) {
 				throw new IllegalArgumentException("The image id may not be null!");
 			}
-			return StreetsideURL.string2URL(MessageFormat.format("{0}{1}{2}{3}{4}",VirtualEarth.BASE_URL_PREFIX, "0", id, "01", VirtualEarth.BASE_URL_SUFFIX));
+			return StreetsideURL.string2URL(MessageFormat.format("{0}{1}{2}{3}{4}",VirtualEarth.BASE_URL_PREFIX, "0", id, "0101", VirtualEarth.BASE_URL_SUFFIX));
 		}
 
 		/**
@@ -256,7 +246,7 @@ public final class StreetsideURL {
 	 * @return the constructed query string (including a leading ?)
 	 */
 	static String queryString(Map<String, String> parts) {
-		final StringBuilder ret = new StringBuilder("?client_id=").append(StreetsideURL.CLIENT_ID);
+		final StringBuilder ret = new StringBuilder("?client_id=").append(StreetsideProperties.URL_CLIENT_ID.get());
 		if (parts != null) {
 			for (final Entry<String, String> entry : parts.entrySet()) {
 				try {
@@ -291,7 +281,7 @@ public final class StreetsideURL {
 				.append(URLEncoder.encode(bbox.get(StreetsideURL.OSM_BBOX_WEST), StandardCharsets.UTF_8.name()))
 				.append("&c=1000")
 				.append("&appkey=")
-				.append(StreetsideURL.BING_MAPS_KEY);
+				.append(StreetsideProperties.BING_MAPS_KEY.get());
 			} catch (final UnsupportedEncodingException e) {
 				logger.error(e); // This should not happen, as the encoding is hard-coded
 			}
@@ -307,9 +297,9 @@ public final class StreetsideURL {
 	static String queryByIdString(Map<String, String> parts) {
 		final StringBuilder ret = new StringBuilder("?id=");
 		try {
-			ret.append(URLEncoder.encode(StreetsideURL.TEST_BUBBLE_ID, StandardCharsets.UTF_8.name()));
+			ret.append(URLEncoder.encode(StreetsideProperties.TEST_BUBBLE_ID.get(), StandardCharsets.UTF_8.name()));
 			ret.append('&').append(URLEncoder.encode("appkey=", StandardCharsets.UTF_8.name())).append('=')
-			.append(URLEncoder.encode(StreetsideURL.BING_MAPS_KEY, StandardCharsets.UTF_8.name()));
+			.append(URLEncoder.encode(StreetsideProperties.BING_MAPS_KEY.get(), StandardCharsets.UTF_8.name()));
 		} catch (final UnsupportedEncodingException e) {
 			logger.error(e); // This should not happen, as the encoding is hard-coded
 		}

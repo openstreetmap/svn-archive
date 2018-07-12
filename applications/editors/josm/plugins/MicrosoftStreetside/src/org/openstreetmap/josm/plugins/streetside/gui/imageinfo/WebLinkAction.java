@@ -11,7 +11,6 @@ import javax.swing.JOptionPane;
 import org.apache.log4j.Logger;
 import org.openstreetmap.josm.gui.Notification;
 import org.openstreetmap.josm.plugins.streetside.utils.StreetsideUtils;
-import org.openstreetmap.josm.tools.I18n;
 import org.openstreetmap.josm.tools.ImageProvider;
 import org.openstreetmap.josm.tools.ImageProvider.ImageSizes;
 

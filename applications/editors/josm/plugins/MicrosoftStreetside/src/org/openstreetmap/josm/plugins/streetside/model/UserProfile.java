@@ -5,10 +5,11 @@ import java.io.Serializable;
 
 import javax.swing.ImageIcon;
 
+// not currently used but kept in case Microsoft wants to support user logins
 public class UserProfile extends KeyIndexedObject implements Serializable {
-  
+
   private static final long serialVersionUID = 7993340649510343946L;
-  
+
   private final String username;
   private final ImageIcon avatar;
 

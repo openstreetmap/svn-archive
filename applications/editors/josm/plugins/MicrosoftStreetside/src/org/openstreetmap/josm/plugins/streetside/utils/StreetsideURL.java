@@ -163,7 +163,18 @@ public final class StreetsideURL {
 			if (id == null) {
 				throw new IllegalArgumentException("The image id may not be null!");
 			}
-			return StreetsideURL.string2URL(MessageFormat.format("{0}{1}{2}{3}{4}",VirtualEarth.BASE_URL_PREFIX, "0", id, "0101", VirtualEarth.BASE_URL_SUFFIX));
+
+			StringBuilder modifiedId = new StringBuilder();
+
+      // pad thumbnail imagery with leading zeros
+      if (id.length() < 16) {
+        for (int i = 0; i < 16 - id.length(); i++) {
+          modifiedId.append("0");
+        }
+      }
+      modifiedId.append(id).append("01");
+
+			return StreetsideURL.string2URL(MessageFormat.format("{0}{1}{2}",VirtualEarth.BASE_URL_PREFIX, modifiedId.toString(), VirtualEarth.BASE_URL_SUFFIX));
 		}
 
 		/**

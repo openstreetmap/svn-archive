@@ -429,11 +429,14 @@ public class LoadPdfDialog extends JFrame {
 	private void importAction() {
 
 		if (!placement.isValid()) return;
+		try {
+			placement.save(pdfFile);
+		} catch (IOException e) {
+			e.toString();
+		}
+		removeLayer();
 
-		Logging.debug("PdfImport: Import");
-		this.removeLayer();
-
-		this.runAsBackgroundTask(new Runnable() {
+		runAsBackgroundTask(new Runnable() {
 			@Override
 			public void run() {
 				// async part

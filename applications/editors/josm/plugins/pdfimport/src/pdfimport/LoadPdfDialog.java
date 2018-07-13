@@ -362,11 +362,15 @@ public class LoadPdfDialog extends JFrame {
 	 private void loadAction() {
 		 /*
 		  * perform load PDF file to preview
+		  * TODO: load preview to previous placement, involves reverse transform
 		  */
 		final File newFileName = this.chooseFile();
 
 		if (newFileName == null) {
-			return;
+			if (Preferences.getGuiMode() == Preferences.GuiMode.Simple) {
+				cancelAction();
+			} else
+				return;
 		}
 		Logging.debug("PdfImport: Load Preview");
 		this.removeLayer();

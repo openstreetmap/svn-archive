@@ -49,6 +49,9 @@ public class PdfImportPlugin extends Plugin {
 
 	@Override
 	public PreferenceSetting getPreferenceSetting() {
+		/*
+		 * TODO: implement it
+		 */
 		return new pdfimportPrefs();
 		}
 

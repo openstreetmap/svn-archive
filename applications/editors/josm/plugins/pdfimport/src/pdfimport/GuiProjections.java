@@ -29,6 +29,9 @@ import org.openstreetmap.josm.tools.Logging;
 public class GuiProjections {
 	/*
 	 * provide a component let the user select a projection
+	 * TODO: allow preferences for sub-projections like UTM, Gauss-Krüger, etc.
+	 * TODO: allow selection of projection by code (EPSG)
+	 * TODO: allow selection of custom projection
 	 */
 	private GuiPanel panel = null;
 	private Chooser chooser = null;
@@ -146,8 +149,9 @@ public class GuiProjections {
 		ProjectionBounds bd;
 		try {
 			bd=p.getWorldBoundsBoxEastNorth();
-			s += String.format("Center: (%.0f %.0f) Min:(%.0f %.0f) Max:(%.0f %.0f)", bd.getCenter().east(),bd.getCenter().north(), bd.getMin().east(),bd.getMin().north(),bd.getMax().east(),bd.getMax().north());
+			s += String.format("(%3$.0f %4$.0f) : (%5$.0f %6$.0f)", bd.getCenter().east(),bd.getCenter().north(), bd.getMin().east(),bd.getMin().north(),bd.getMax().east(),bd.getMax().north());
 		} catch (Exception e) {
+			e.toString();
 			// Leave it, if we cant get it
 		}
 		return s;

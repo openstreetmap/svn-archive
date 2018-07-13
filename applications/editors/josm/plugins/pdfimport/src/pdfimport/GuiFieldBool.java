@@ -10,8 +10,11 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 public class GuiFieldBool extends JCheckBox {
-	private JComponent companion;
-	private boolean value;
+	/*
+	 * TODO: evolve to a component with integrated display of dependend components
+	 */
+	private JComponent companion =null;
+	private boolean value = false;
 
 	public JComponent getCompanion() {
 		return companion;

@@ -1,36 +1,33 @@
 package org.openstreetmap.josm.plugins.streetside.cubemap;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+
 import org.junit.Ignore;
 import org.junit.Test;
 
 public class TileDownloadingTaskTest {
 
-  @BeforeClass
-  public static void setUpBeforeClass() throws Exception {
-  }
-
-  @AfterClass
-  public static void tearDownAfterClass() throws Exception {
-  }
-
-  @Before
-  public void setUp() throws Exception {
-  }
-
-  @After
-  public void tearDown() throws Exception {
-  }
-
+  @SuppressWarnings("static-method")
   @Ignore
   @Test
   public final void testCall() {
-    fail("Not yet implemented"); // TODO
+    ExecutorService pool = Executors.newFixedThreadPool(1);
+    List<Callable<String>> tasks = new ArrayList<>(1);
+      tasks.add(new TileDownloadingTask("2202112030033001233"));
+      try {
+        List<Future<String>> results = pool.invokeAll(tasks);
+        assertEquals(results.get(0),"2202112030033001233");
+      } catch (InterruptedException e) {
+        e.printStackTrace();
+        fail("Test threw an exception.");
+      }
   }
-
 }

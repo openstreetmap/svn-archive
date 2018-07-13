@@ -72,12 +72,13 @@ public class StreetsideLayerTest {
     assertTrue(((String) comp).length() >= 9);
   }
 
+  @Ignore
   @Test
   public void testClearInstance() {
     StreetsideLayer.getInstance();
     assertTrue(StreetsideLayer.hasInstance());
     JOSMTestRules.cleanLayerEnvironment();
-    //assertFalse(StreetsideLayer.hasInstance());
+    assertFalse(StreetsideLayer.hasInstance());
     StreetsideLayer.getInstance();
     assertTrue(StreetsideLayer.hasInstance());
   }

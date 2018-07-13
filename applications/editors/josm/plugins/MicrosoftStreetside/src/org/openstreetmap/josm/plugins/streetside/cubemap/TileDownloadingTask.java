@@ -100,7 +100,7 @@ public class TileDownloadingTask implements Callable<String> {
 	@Override
 	public String call() throws Exception {
 
-		BufferedImage img = ImageIO.read(new Resty().bytes(
+	  BufferedImage img = ImageIO.read(new Resty().bytes(
 				StreetsideURL.VirtualEarth.streetsideTile(tileId, false).toExternalForm())
 				.stream());
 

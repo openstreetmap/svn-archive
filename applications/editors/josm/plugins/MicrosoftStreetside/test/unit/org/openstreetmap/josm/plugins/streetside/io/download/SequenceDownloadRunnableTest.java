@@ -26,7 +26,6 @@ public class SequenceDownloadRunnableTest {
   public JOSMTestRules rules = new StreetsideTestRules().platform();
 
   private static final Function<Bounds, URL> SEARCH_SEQUENCES_URL_GEN = b -> {
-    // TODO: modify and use Streetside URL @rrh
     return SequenceDownloadRunnableTest.class.getResource("/api/v3/responses/searchSequences.json");
   };
   private Field urlGenField;
@@ -36,35 +35,35 @@ public class SequenceDownloadRunnableTest {
     MainApplication.getLayerManager().resetState();
   }
 
+  @Ignore
   @Test
-  @Ignore // TODO: fox!
   public void testRun1() throws IllegalArgumentException, IllegalAccessException {
     testNumberOfDecodedImages(4, SEARCH_SEQUENCES_URL_GEN, new Bounds(7.246497, 16.432955, 7.249027, 16.432976));
   }
 
+  @Ignore
   @Test
-  @Ignore // TODO: fox!
   public void testRun2() throws IllegalArgumentException, IllegalAccessException {
     testNumberOfDecodedImages(0, SEARCH_SEQUENCES_URL_GEN, new Bounds(0, 0, 0, 0));
   }
 
+  @Ignore
   @Test
-  @Ignore // TODO: fox!
   public void testRun3() throws IllegalArgumentException, IllegalAccessException {
     testNumberOfDecodedImages(0, b -> {
       try { return new URL("https://streetside/nonexistentURL"); } catch (MalformedURLException e) { return null; }
     }, new Bounds(0, 0, 0, 0));
   }
 
+  @Ignore
   @Test
-  @Ignore // TODO: fox!
   public void testRun4() throws IllegalArgumentException, IllegalAccessException {
     StreetsideProperties.CUT_OFF_SEQUENCES_AT_BOUNDS.put(true);
     testNumberOfDecodedImages(4, SEARCH_SEQUENCES_URL_GEN, new Bounds(7.246497, 16.432955, 7.249027, 16.432976));
   }
 
+  @Ignore
   @Test
-  @Ignore // TODO: fox!
   public void testRun5() throws IllegalArgumentException, IllegalAccessException {
     StreetsideProperties.CUT_OFF_SEQUENCES_AT_BOUNDS.put(true);
     testNumberOfDecodedImages(0, SEARCH_SEQUENCES_URL_GEN, new Bounds(0, 0, 0, 0));

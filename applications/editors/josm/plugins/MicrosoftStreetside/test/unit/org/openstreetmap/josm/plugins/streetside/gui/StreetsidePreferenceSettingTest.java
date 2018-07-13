@@ -31,6 +31,7 @@ public class StreetsidePreferenceSettingTest {
   @Rule
   public JOSMTestRules rules = new StreetsideTestRules().main();
 
+  // TODO: repair broken unit test from Mapillary
   @Ignore
   @Test
   public void testAddGui() {
@@ -46,40 +47,12 @@ public class StreetsidePreferenceSettingTest {
     assertEquals(tabs.getDisplayPreference(), setting.getTabPreferenceSetting(tabs));
   }
 
-  @Ignore
   @Test
   public void testIsExpert() {
     assertFalse(new StreetsidePreferenceSetting().isExpert());
   }
 
-  @Ignore
-  @Test
-  public void testLoginLogout() {
-    if (GraphicsEnvironment.isHeadless()) {
-      return;
-    }
-    PreferenceTabbedPane tabs = new PreferenceTabbedPane();
-    tabs.buildGui();
-    StreetsidePreferenceSetting setting = new StreetsidePreferenceSetting();
-    setting.addGui(tabs);
-    setting.onLogout();
-
-    assertEquals(I18n.tr("Login"), ((JButton) getPrivateFieldValue(setting, "loginButton")).getText());
-    assertEquals(I18n.tr("You are currently not logged in."), ((JLabel) getPrivateFieldValue(setting, "loginLabel")).getText());
-    assertFalse(((JPanel) getPrivateFieldValue(setting, "loginPanel")).isAncestorOf(((JButton) getPrivateFieldValue(setting, "logoutButton"))));
-    assertTrue(((JPanel) getPrivateFieldValue(setting, "loginPanel")).isAncestorOf(((JButton) getPrivateFieldValue(setting, "loginButton"))));
-
-    String username = "TheStreetsideUsername";
-    setting.onLogin(username);
-
-    assertEquals(I18n.tr("Login"), ((JButton) getPrivateFieldValue(setting, "loginButton")).getText());
-    assertEquals(I18n.tr("You are logged in as ''{0}''.", username), ((JLabel) getPrivateFieldValue(setting, "loginLabel")).getText());
-    assertTrue(((JPanel) getPrivateFieldValue(setting, "loginPanel")).isAncestorOf(((JButton) getPrivateFieldValue(setting, "logoutButton"))));
-    assertFalse(((JPanel) getPrivateFieldValue(setting, "loginPanel")).isAncestorOf(((JButton) getPrivateFieldValue(setting, "loginButton"))));
-  }
-
   @SuppressWarnings("unchecked")
-  @Ignore
   @Test
   public void testOk() {
     StreetsidePreferenceSetting settings = new StreetsidePreferenceSetting();

@@ -147,7 +147,7 @@ public class CubemapBuilder implements ITileDownloadingTaskListener, StreetsideD
 				for (Future<String> ff : results) {
 					if(StreetsideProperties.DEBUGING_ENABLED.get()) {
 					  logger.debug(MessageFormat.format("Completed tile downloading task {0} in {1} seconds.",ff.get(),
-							(startTime - System.currentTimeMillis())/ 1000));
+							(System.currentTimeMillis())/ 1000 - startTime));
 					}
 				}
 			}
@@ -161,7 +161,7 @@ public class CubemapBuilder implements ITileDownloadingTaskListener, StreetsideD
 		long runTime = stopTime - startTime;
 
 		if (StreetsideProperties.DEBUGING_ENABLED.get()) {
-      logger.debug(MessageFormat.format("Tile imagery downloading tasks completed in {0} seconds.",  runTime/1000000));
+      logger.debug(MessageFormat.format("Tile imagery downloading tasks completed in {0} seconds.",  runTime/1000));
 		}
 
 		if (fails > 0) {

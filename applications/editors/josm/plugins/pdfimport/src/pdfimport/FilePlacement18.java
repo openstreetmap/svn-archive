@@ -357,6 +357,9 @@ public class FilePlacement18 extends FilePlacement {
     private boolean valid=false;	// the data is consistent and the object ready to use for transformation
 
     public boolean isValid() {
+    	/*
+    	 * TODO: compupte it now
+    	 */
     	return valid;
     }
 	public void setDependsOnValid(JComponent c) {

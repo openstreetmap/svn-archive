@@ -4,7 +4,7 @@
     <property name="commit.message" value=""/>
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
     <property name="plugin.main.version" value="12678"/>
-    
+	<property name="plugin.canloadatruntime" value="true"/>   
     <!-- Configure these properties (replace "..." accordingly).
          See https://josm.openstreetmap.de/wiki/DevelopersGuide/DevelopingPlugins
     -->
@@ -12,8 +12,8 @@
     <property name="plugin.class" value="pdfimport.PdfImportPlugin"/>
     <property name="plugin.description" value="Import PDF file into a layer and convert pdf lines to ways."/>
     <property name="plugin.icon" value="images/pdf_import.png"/>
-    <!--<property name="plugin.link" value="..."/>-->
-    <property name="plugin.requires" value="apache-commons"/>
+    <property name="plugin.link" value="https://wiki.openstreetmap.org/wiki/JOSM/Plugins/Pdf_Import"/>
+    <!-- <property name="plugin.requires" value="apache-commons"/> -->
     
     <!-- ** include targets that all plugins have in common ** -->
     <import file="../build-common.xml"/>

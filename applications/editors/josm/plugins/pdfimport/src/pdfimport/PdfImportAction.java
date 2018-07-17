@@ -36,8 +36,6 @@ public class PdfImportAction extends JosmAction {
     	 * TODO: make dialog reusable
     	 */
         LoadPdfDialog dialog = new LoadPdfDialog();
-        dialog.setAlwaysOnTop(true);
         dialog.setTitle(tr("Import PDF"));
-        dialog.setVisible(true);
     }
 }

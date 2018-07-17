@@ -299,11 +299,15 @@ public class LoadPdfDialog extends JFrame {
 			actionPanel.saveButton.setVisible(false);
 			actionPanel.showButton.setVisible(false);
 			setSize(new Dimension(380, 350));
-			loadAction();
+			if (!loadAction()) {
+				cancelAction();
+				return;
+			}
 		} else {
 			setSize(new Dimension(450, 600));
-//			setSize(450, 600);
 		}
+		setAlwaysOnTop(true);
+		setVisible(true);
 	}
 
 	Component placementPanel = placement.getGui();
@@ -359,7 +363,7 @@ public class LoadPdfDialog extends JFrame {
 //		SwingUtilities.getRootPane(panel).setDefaultButton(actionPanel.okButton);
 	}
 
-	 private void loadAction() {
+	 private boolean loadAction() {
 		 /*
 		  * perform load PDF file to preview
 		  * TODO: load preview to previous placement, involves reverse transform
@@ -367,10 +371,7 @@ public class LoadPdfDialog extends JFrame {
 		final File newFileName = this.chooseFile();
 
 		if (newFileName == null) {
-			if (Preferences.getGuiMode() == Preferences.GuiMode.Simple) {
-				cancelAction();
-			} else
-				return;
+			return false;
 		}
 		Logging.debug("PdfImport: Load Preview");
 		this.removeLayer();
@@ -424,6 +425,7 @@ public class LoadPdfDialog extends JFrame {
 				}
 			}
 		});
+		return true;
 	}
 
 	private void importAction() {

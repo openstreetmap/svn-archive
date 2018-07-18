@@ -47,7 +47,7 @@ public class GraphicsUtilsTest {
   }
 
   /**
-   * Test method for {@link org.openstreetmap.josm.plugins.streetside.cubemap.GraphicsUtils#convertBufferedImage2JavaFXImage(java.awt.image.BufferedImage)}.
+   * Test method for {@link org.openstreetmap.josm.plugins.streetside.utils.GraphicsUtils#convertBufferedImage2JavaFXImage(java.awt.image.BufferedImage)}.
    */
   @Ignore
   @Test
@@ -56,7 +56,7 @@ public class GraphicsUtilsTest {
   }
 
   /**
-   * Test method for {@link org.openstreetmap.josm.plugins.streetside.cubemap.GraphicsUtils#buildMultiTiledCubemapFaceImage(java.awt.image.BufferedImage[])}.
+   * Test method for {@link org.openstreetmap.josm.plugins.streetside.utils.GraphicsUtils#buildMultiTiledCubemapFaceImage(java.awt.image.BufferedImage[])}.
    */
   @Ignore
   @Test
@@ -65,7 +65,7 @@ public class GraphicsUtilsTest {
   }
 
   /**
-   * Test method for {@link org.openstreetmap.josm.plugins.streetside.cubemap.GraphicsUtils#rotateImage(java.awt.image.BufferedImage)}.
+   * Test method for {@link org.openstreetmap.josm.plugins.streetside.utils.GraphicsUtils#rotateImage(java.awt.image.BufferedImage)}.
    */
   @Ignore
   @Test

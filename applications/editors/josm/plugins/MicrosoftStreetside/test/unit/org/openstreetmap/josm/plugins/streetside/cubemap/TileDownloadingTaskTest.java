@@ -20,10 +20,10 @@ public class TileDownloadingTaskTest {
   @Test
   public final void testCall() {
     ExecutorService pool = Executors.newFixedThreadPool(1);
-    List<Callable<String>> tasks = new ArrayList<>(1);
+    List<Callable<List<String>>> tasks = new ArrayList<>(1);
       tasks.add(new TileDownloadingTask("2202112030033001233"));
       try {
-        List<Future<String>> results = pool.invokeAll(tasks);
+        List<Future<List<String>>> results = pool.invokeAll(tasks);
         assertEquals(results.get(0),"2202112030033001233");
       } catch (InterruptedException e) {
         e.printStackTrace();

@@ -58,7 +58,7 @@ public abstract class BoundsDownloadRunnable implements Runnable {
   }
 
   /**
-   * Logs information about the given connection via {@link logger#info(String)}.
+   * Logs information about the given connection via {@link Logger}.
    * If it's a {@link HttpURLConnection}, the request method, the response code and the URL itself are logged.
    * Otherwise only the URL is logged.
    * @param con the {@link URLConnection} for which information is logged

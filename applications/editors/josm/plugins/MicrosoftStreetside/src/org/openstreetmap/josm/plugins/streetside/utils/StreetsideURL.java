@@ -323,7 +323,7 @@ public final class StreetsideURL {
 
 	/**
 	 * Converts a {@link String} into a {@link URL} without throwing a {@link MalformedURLException}.
-	 * Instead such an exception will lead to an {@link logger#error(Throwable)}.
+	 * Instead such an exception will lead to an {@link Logger}.
 	 * So you should be very confident that your URL is well-formed when calling this method.
 	 * @param strings the Strings describing the URL
 	 * @return the URL that is constructed from the given string

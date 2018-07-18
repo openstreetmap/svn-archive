@@ -12,16 +12,18 @@ You can find out more about how to use the plugin and how it works in the [proje
 If you want to know how to configure the plugin, you can look at the [Configuration Wiki page](https://github.com/JOSM/MicrosoftStreetside/wiki/Configuration).
 
 ## Building from source
-Checkout the JOSM source, compile it and checkout the plugin source:
+Checkout the JOSM source, compile it and checkout the plugin source (the last gradle command is optional, but contains code checking and unit test functionality - requires a Gradle installation):
 
     svn co http://svn.openstreetmap.org/applications/editors/josm josm
     cd josm/core
-    ant clean dist
+    ant
     cd ../plugins
     rm -rf MicrosoftStreetside
     git clone https://github.com/JOSM/MicrosoftStreetside.git MicrosoftStreetside
     cd MicrosoftStreetside
-    ant clean install
+    ant clean
+    ant dist
+    gradle build
     
 Now Restart JOSM and activate the MicrosoftStreeside plugin in your preferences. 
 The MicrosoftStreetside menu items will appear in the JOSM main menu after JOSM is

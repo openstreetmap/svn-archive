@@ -72,7 +72,6 @@ public class StreetsideLayerTest {
     assertTrue(((String) comp).length() >= 9);
   }
 
-  @Ignore
   @Test
   public void testClearInstance() {
     StreetsideLayer.getInstance();

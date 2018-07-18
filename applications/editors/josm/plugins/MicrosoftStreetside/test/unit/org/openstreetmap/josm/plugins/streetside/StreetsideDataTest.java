@@ -24,8 +24,8 @@ import org.openstreetmap.josm.testutils.JOSMTestRules;
  */
 public class StreetsideDataTest {
 
-  @Rule
-  public JOSMTestRules rules = new StreetsideTestRules().platform();
+  /*@Rule
+  public JOSMTestRules rules = new StreetsideTestRules().platform();*/
 
   private StreetsideData data;
   private StreetsideImage img1;
@@ -95,7 +95,6 @@ public class StreetsideDataTest {
   /**
    * Tests the selection of images.
    */
-  @Ignore
   @Test
   public void selectTest() {
     data.setSelectedImage(img1);
@@ -112,7 +111,6 @@ public class StreetsideDataTest {
    * Tests the {@link StreetsideData#selectNext()} and
    * {@link StreetsideData#selectPrevious()} methods.
    */
-  @Ignore
   @Test
   public void nextAndPreviousTest() {
     data.setSelectedImage(img1);
@@ -127,14 +125,12 @@ public class StreetsideDataTest {
     data.setSelectedImage(null);
   }
 
-  @Ignore
   @Test(expected=IllegalStateException.class)
   public void nextOfNullImgTest() {
     data.setSelectedImage(null);
     data.selectNext();
   }
 
-  @Ignore
   @Test(expected=IllegalStateException.class)
   public void previousOfNullImgTest() {
     data.setSelectedImage(null);
@@ -145,7 +141,6 @@ public class StreetsideDataTest {
    * Test the multiselection of images. When a new image is selected, the
    * multiselected List should reset.
    */
-  @Ignore
   @Test
   public void multiSelectTest() {
     assertEquals(0, data.getMultiSelectedImages().size());

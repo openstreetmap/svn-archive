@@ -4,6 +4,7 @@ package org.openstreetmap.josm.plugins.streetside.cubemap;
 import java.awt.image.BufferedImage;
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,6 +20,7 @@ import org.openstreetmap.josm.plugins.streetside.StreetsideCubemap;
 import org.openstreetmap.josm.plugins.streetside.StreetsideDataListener;
 import org.openstreetmap.josm.plugins.streetside.gui.StreetsideViewerDialog;
 import org.openstreetmap.josm.plugins.streetside.gui.imageinfo.StreetsideViewerPanel;
+import org.openstreetmap.josm.plugins.streetside.utils.GraphicsUtils;
 import org.openstreetmap.josm.plugins.streetside.utils.StreetsideProperties;
 
 import javafx.scene.image.Image;
@@ -34,7 +36,10 @@ public class CubemapBuilder implements ITileDownloadingTaskListener, StreetsideD
 	private StreetsideCubemap cubemap;
 	protected boolean cancelled;
 	private long startTime;
-  private Map<String, BufferedImage> tileImages = new ConcurrentHashMap();//new HashMap<>();
+
+	private Map<String, BufferedImage> tileImages = new ConcurrentHashMap<>();
+
+	private int currentTileCount = 0;
 
   /**
    * @return the tileImages
@@ -54,14 +59,28 @@ public class CubemapBuilder implements ITileDownloadingTaskListener, StreetsideD
 		// private constructor to avoid instantiation
 	}
 
-	@Override
+	/**
+   * Fired when any image is added to the database.
+   */
+  @Override
 	public void imagesAdded() {
-		// Do nothing
+		// Not implemented by the CubemapBuilder
 	}
 
-	@Override
-	public void selectedImageChanged(StreetsideAbstractImage oldImage, StreetsideAbstractImage newImage) {
-		startTime = System.currentTimeMillis();
+	/**
+   * Fired when the selected image is changed by something different from
+   * manually clicking on the icon.
+   *
+   * @param oldImage
+   *          Old selected {@link StreetsideAbstractImage}
+   * @param newImage
+   *          New selected {@link StreetsideAbstractImage}
+   *
+   * @see StreetsideDataListener
+   */
+  @Override
+  public void selectedImageChanged(StreetsideAbstractImage oldImage, StreetsideAbstractImage newImage) {
+    startTime = System.currentTimeMillis();
 
 		if (newImage != null) {
 
@@ -89,144 +108,147 @@ public class CubemapBuilder implements ITileDownloadingTaskListener, StreetsideD
 
 	public void downloadCubemapImages(String imageId) {
 
-		final int maxCols = StreetsideProperties.SHOW_HIGH_RES_STREETSIDE_IMAGERY.get() ? 4 : 2;
-		final int maxRows = StreetsideProperties.SHOW_HIGH_RES_STREETSIDE_IMAGERY.get() ? 4 : 2;
-		final int maxThreadCount = 6 * maxCols * maxRows;
+	  final int maxThreadCount = StreetsideProperties.DOWNLOAD_CUBEFACE_TILES_TOGETHER.get()?6:6 * CubemapUtils.getMaxCols() * CubemapUtils.getMaxRows();
 
 		int fails = 0;
 
-		int min = 0;   int max = (StreetsideProperties.SHOW_HIGH_RES_STREETSIDE_IMAGERY.get()?96:24)*2;
-
-		String[] message = new String[2];
+    // TODO: message for progress bar
+    String[] message = new String[2];
     message[0] = MessageFormat.format("Downloading Streetside imagery for {0}", imageId);
     message[1] = "Wait for completion…….";
 
-		long startTime = System.currentTimeMillis();
+    long startTime = System.currentTimeMillis();
 
-		try {
+    try {
 
-			ExecutorService pool = Executors.newFixedThreadPool(maxThreadCount);
-			List<Callable<String>> tasks = new ArrayList<>(maxThreadCount);
+      ExecutorService pool = Executors.newFixedThreadPool(maxThreadCount);
+      List<Callable<List<String>>> tasks = new ArrayList<>(maxThreadCount);
 
-			// launch 4-tiled (low-res) downloading tasks . . .
-			if (!StreetsideProperties.SHOW_HIGH_RES_STREETSIDE_IMAGERY.get()) {
-				for (int i = 0; i < CubemapUtils.NUM_SIDES; i++) {
-					int tileNr = 0;
-					for (int j = 0; j < maxCols; j++) {
-						for (int k = 0; k < maxRows; k++) {
+      if (StreetsideProperties.DOWNLOAD_CUBEFACE_TILES_TOGETHER.get()) {
+        EnumSet.allOf(CubemapUtils.CubemapFaces.class).forEach(face -> {
+          String tileId = String.valueOf(imageId + face.getValue());
+          tasks.add(new TileDownloadingTask(tileId));
+        });
+      } else {
 
-							String tileId = String.valueOf(imageId + CubemapUtils.getFaceNumberForCount(i)
-									+ Integer.valueOf(tileNr++).toString());
-							tasks.add(new TileDownloadingTask(tileId));
-						}
-					}
-				}
+        // launch 4-tiled (low-res) downloading tasks . . .
+        if (!StreetsideProperties.SHOW_HIGH_RES_STREETSIDE_IMAGERY.get()) {
+          // download all imagery for each cubeface at once
 
-				List<Future<String>> results = pool.invokeAll(tasks);
-				for (Future<String> ff : results) {
+          for (int i = 0; i < CubemapUtils.NUM_SIDES; i++) {
+            int tileNr = 0;
+            for (int j = 0; j < CubemapUtils.getMaxCols(); j++) {
+              for (int k = 0; k < CubemapUtils.getMaxRows(); k++) {
 
-					if(StreetsideProperties.DEBUGING_ENABLED.get()) {
-					  logger.debug(MessageFormat.format("Completed tile downloading task {0} in {1} seconds.", ff.get(), (startTime - System.currentTimeMillis())/ 1000));
-					}
-				}
+                String tileId = String
+                  .valueOf(imageId + CubemapUtils.getFaceNumberForCount(i) + Integer.valueOf(tileNr++).toString());
+                tasks.add(new TileDownloadingTask(tileId));
+              }
+            }
+          }
 
-				// launch 16-tiled (high-res) downloading tasks
-			} else if (StreetsideProperties.SHOW_HIGH_RES_STREETSIDE_IMAGERY.get()) {
-				for (int i = 0; i < CubemapUtils.NUM_SIDES; i++) {
-					for (int j = 0; j < maxCols; j++) {
-						for (int k = 0; k < maxRows; k++) {
+          List<Future<List<String>>> results = pool.invokeAll(tasks);
+          /*for (Future<List<String>> ff : results) {
 
-							String tileId = String.valueOf(imageId + CubemapUtils.getFaceNumberForCount(i)
-									+ String.valueOf(Integer.valueOf(j).toString() + Integer.valueOf(k).toString()));
-							tasks.add(new TileDownloadingTask(tileId));
-						}
-					}
-				}
+            if (StreetsideProperties.DEBUGING_ENABLED.get()) {
+              logger.debug(
+                MessageFormat.format(
+                  "Completed tile downloading task {0} in {1} seconds.", ff.get().toString(),
+                  (System.currentTimeMillis()) / 1000 - startTime)
+                );
+            }
+          }*/
 
-				List<Future<String>> results = pool.invokeAll(tasks);
-				for (Future<String> ff : results) {
-					if(StreetsideProperties.DEBUGING_ENABLED.get()) {
-					  logger.debug(MessageFormat.format("Completed tile downloading task {0} in {1} seconds.",ff.get(),
-							(System.currentTimeMillis())/ 1000 - startTime));
-					}
-				}
-			}
-		} catch (Exception ee) {
-			fails++;
-			logger.error("Error loading tile for image " + imageId);
-			ee.printStackTrace();
-		}
+          // launch 16-tiled (high-res) downloading tasks
+        } else if (StreetsideProperties.SHOW_HIGH_RES_STREETSIDE_IMAGERY.get()) {
 
-		long stopTime = System.currentTimeMillis();
-		long runTime = stopTime - startTime;
+          for (int i = 0; i < CubemapUtils.NUM_SIDES; i++) {
+            for (int j = 0; j < CubemapUtils.getMaxCols(); j++) {
+              for (int k = 0; k < CubemapUtils.getMaxRows(); k++) {
 
-		if (StreetsideProperties.DEBUGING_ENABLED.get()) {
-      logger.debug(MessageFormat.format("Tile imagery downloading tasks completed in {0} seconds.",  runTime/1000));
-		}
+                String tileId = String
+                  .valueOf(imageId + CubemapUtils.getFaceNumberForCount(i) + String.valueOf(Integer.valueOf(j).toString() + Integer.valueOf(k).toString()));
+                tasks.add(new TileDownloadingTask(tileId));
+              }
+            }
+          }
+        }
+      } // finish preparing tasks for invocation
 
-		if (fails > 0) {
-			logger.error(Integer.valueOf(fails) + " downloading tasks failed!");
-		}
+      List<Future<List<String>>> results = pool.invokeAll(tasks);
+      for (Future<List<String>> ff : results) {
+        if (StreetsideProperties.DEBUGING_ENABLED.get()) {
+          logger.debug(
+            MessageFormat.format(
+              "Completed tile downloading task {0} in {1} seconds.", ff.get().toString(),
+              ((System.currentTimeMillis()) - startTime)/1000)
+            );
+        }
+      }
+    } catch (Exception ee) {
+      fails++;
+      logger.error("Error loading tile for image " + imageId);
+      ee.printStackTrace();
+    }
 
-	}
+    long stopTime = System.currentTimeMillis();
+    long runTime = stopTime - startTime;
 
-	@Override
-	public void tileAdded(String tileId) {
-		// determine whether all tiles have been set for each of the
-		// six cubemap faces. If so, build the images for the faces
-		// and set the views in the cubemap box.
+    if (StreetsideProperties.DEBUGING_ENABLED.get()) {
+      logger.debug(MessageFormat.format("Tile imagery downloading tasks completed in {0} seconds.", runTime / 1000));
+    }
 
-		int tileCount = 0;
+    if (fails > 0) {
+      logger.error(Integer.valueOf(fails) + " downloading tasks failed!");
+    }
+  }
 
-		tileCount = CubemapBuilder.getInstance().getTileImages().keySet().size();
-
-		int maxCols = StreetsideProperties.SHOW_HIGH_RES_STREETSIDE_IMAGERY.get() ? 4 : 2;
-		int maxRows = StreetsideProperties.SHOW_HIGH_RES_STREETSIDE_IMAGERY.get() ? 4 : 2;
-
-		if (tileCount == (CubemapUtils.NUM_SIDES * maxCols * maxRows)) {
-		  if (StreetsideProperties.DEBUGING_ENABLED.get()) {
-        logger.debug(MessageFormat.format("{0} tile images ready for building cumbemap faces for cubemap {1}.", tileCount,
-					CubemapBuilder.getInstance().getCubemap().getId()));
-		  }
-
-			buildCubemapFaces();
-		}
-	}
-
-	@Override
-  public void tilesAdded(String[] tileIds) {
-    // determine whether all tiles have been set for each of the
+  /**
+   * Fired when a TileDownloadingTask has completed downloading an image tile. When all of the tiles for the Cubemap
+   * have been downloaded, the CubemapBuilder assembles the cubemap.
+   *
+   * @param tileId
+   *          the complete quadKey of the imagery tile, including cubeface and row/column in quaternary.
+   * @see TileDownloadingTask
+   */
+  @Override
+  public void tileAdded(String tileId) {
+    // determine whether four tiles have been set for each of the
     // six cubemap faces. If so, build the images for the faces
     // and set the views in the cubemap box.
 
-    int tileCount = 0;
+    if(currentTileCount>96) {
+      int x = 0;
+    }
 
-    tileCount = CubemapBuilder.getInstance().getTileImages().keySet().size();
+    currentTileCount++;
 
-    int maxCols = StreetsideProperties.SHOW_HIGH_RES_STREETSIDE_IMAGERY.get() ? 4 : 2;
-    int maxRows = StreetsideProperties.SHOW_HIGH_RES_STREETSIDE_IMAGERY.get() ? 4 : 2;
-
-    if (tileCount == (CubemapUtils.NUM_SIDES * maxCols * maxRows)) {
+    if (currentTileCount == (CubemapUtils.NUM_SIDES * CubemapUtils.getMaxCols() * CubemapUtils.getMaxRows())) {
       if (StreetsideProperties.DEBUGING_ENABLED.get()) {
-        logger.debug(MessageFormat.format("{0} tile images ready for building cumbemap faces for cubemap {1}.", tileCount,
-          CubemapBuilder.getInstance().getCubemap().getId()));
+        long endTime = System.currentTimeMillis();
+        long runTime = (endTime - startTime) / 1000;
+        logger.debug(
+          MessageFormat.format(
+            "{0} tile images ready for building cumbemap faces for cubemap {1} in {2} seconds.", currentTileCount,
+            CubemapBuilder.getInstance().getCubemap().getId(), Long.toString(runTime))
+          );
       }
 
       buildCubemapFaces();
     }
   }
 
-	private void buildCubemapFaces() {
-
-	  if (StreetsideProperties.DEBUGING_ENABLED.get()) {
-      logger.debug("Assembling cubemap tile images");
-	  }
-
-	  CubemapBox cmb = StreetsideViewerDialog.getInstance().getStreetsideViewerPanel().getCubemapBox();
+  /**
+   * Assembles the cubemap once all of the tiles have been downloaded.
+   * <p>
+   * The tiles for each cubemap face are cropped and stitched together
+   * then the ImageViews of the cubemap are set with the new imagery.
+   *
+   * @see         StreetsideCubemap
+   */
+   private void buildCubemapFaces() {
+		CubemapBox cmb = StreetsideViewerDialog.getInstance().getStreetsideViewerPanel().getCubemapBox();
 		ImageView[] views = cmb.getViews();
-
-		final int maxCols = StreetsideProperties.SHOW_HIGH_RES_STREETSIDE_IMAGERY.get() ? 4 : 2;
-		final int maxRows = StreetsideProperties.SHOW_HIGH_RES_STREETSIDE_IMAGERY.get() ? 4 : 2;
 
 		Image finalImages[] = new Image[CubemapUtils.NUM_SIDES];
 
@@ -234,9 +256,9 @@ public class CubemapBuilder implements ITileDownloadingTaskListener, StreetsideD
 		if (!StreetsideProperties.SHOW_HIGH_RES_STREETSIDE_IMAGERY.get()) {
 			for (int i = 0; i < CubemapUtils.NUM_SIDES; i++) {
 
-				BufferedImage[] faceTileImages = new BufferedImage[maxCols * maxRows];
+				BufferedImage[] faceTileImages = new BufferedImage[CubemapUtils.getMaxCols() * CubemapUtils.getMaxRows()];
 
-				for (int j = 0; j < (maxCols * maxRows); j++) {
+				for (int j = 0; j < (CubemapUtils.getMaxCols() * CubemapUtils.getMaxRows()); j++) {
 					String tileId = String.valueOf(getCubemap().getId() + CubemapUtils.getFaceNumberForCount(i)
 							+ Integer.valueOf(j).toString());
 					BufferedImage currentTile = tileImages.get(tileId);
@@ -261,8 +283,8 @@ public class CubemapBuilder implements ITileDownloadingTaskListener, StreetsideD
 				BufferedImage[] faceTileImages = new BufferedImage[StreetsideProperties.SHOW_HIGH_RES_STREETSIDE_IMAGERY
 						.get() ? 16 : 4];
 
-				for (int j = 0; j < maxCols; j++) {
-					for (int k = 0; k < maxRows; k++) {
+				for (int j = 0; j < CubemapUtils.getMaxCols(); j++) {
+					for (int k = 0; k < CubemapUtils.getMaxRows(); k++) {
 						String tileId = String.valueOf(getCubemap().getId() + CubemapUtils.getFaceNumberForCount(i)
 								+ CubemapUtils.convertDoubleCountNrto16TileNr(
 										String.valueOf(Integer.valueOf(j).toString() + Integer.valueOf(k).toString())));
@@ -302,7 +324,9 @@ public class CubemapBuilder implements ITileDownloadingTaskListener, StreetsideD
       logger.debug(message);
     }
 
-    CubemapBuilder.getInstance().resetTileImages();
+    // reset count and image map after assembly
+    resetTileImages();
+    currentTileCount = 0;
 	}
 
 	private void resetTileImages() {

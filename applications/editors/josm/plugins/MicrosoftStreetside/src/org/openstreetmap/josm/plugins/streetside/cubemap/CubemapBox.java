@@ -8,6 +8,8 @@ package org.openstreetmap.josm.plugins.streetside.cubemap;
 
 import java.awt.image.BufferedImage;
 
+import org.openstreetmap.josm.plugins.streetside.utils.GraphicsUtils;
+
 import javafx.animation.AnimationTimer;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;

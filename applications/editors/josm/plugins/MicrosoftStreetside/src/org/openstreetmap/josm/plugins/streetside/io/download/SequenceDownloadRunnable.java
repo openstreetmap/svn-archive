@@ -5,6 +5,7 @@ import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
@@ -127,11 +128,11 @@ public final class SequenceDownloadRunnable extends BoundsDownloadRunnable {
     parser.close();
 
     } catch (JsonParseException e) {
-      e.printStackTrace();
+      logger.error(MessageFormat.format("JSON parsing error occured during Streetside sequence download {0}",e.getMessage()));
     } catch (JsonMappingException e) {
-      e.printStackTrace();
+      logger.error(MessageFormat.format("JSON mapping error occured during Streetside sequence download {0}",e.getMessage()));
     } catch (IOException e) {
-      e.printStackTrace();
+      logger.error(MessageFormat.format("Input/output error occured during Streetside sequence download {0}",e.getMessage()));
     }
 
     /** Top Level Bubble Metadata in Streetside are bubble (aka images) not Sequences

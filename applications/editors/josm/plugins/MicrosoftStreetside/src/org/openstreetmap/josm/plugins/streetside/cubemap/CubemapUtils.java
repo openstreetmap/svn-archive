@@ -13,6 +13,9 @@ public class CubemapUtils {
 
   final static Logger logger = Logger.getLogger(CubemapUtils.class);
 
+  private CubemapUtils() {
+    // Private constructor to avoid instantiation
+  }
 
 	public enum CubefaceType {
 		    ONE(1),
@@ -70,7 +73,6 @@ public class CubemapUtils {
 	private static final int NUM_BASE = 4;
 	public static final String IMPORTED_ID = "00000000";
 	public static final int NUM_SIDES = 6;
-
 	public static Map<String,String> rowCol2StreetsideCellAddressMap = null;
 
 	// Intialize utility map for storing row to Streetside cell number conversions
@@ -93,6 +95,14 @@ public class CubemapUtils {
 		CubemapUtils.rowCol2StreetsideCellAddressMap.put("31","23");
 		CubemapUtils.rowCol2StreetsideCellAddressMap.put("32","32");
 		CubemapUtils.rowCol2StreetsideCellAddressMap.put("33","33");
+	}
+
+	public static int getMaxCols() {
+	  return StreetsideProperties.SHOW_HIGH_RES_STREETSIDE_IMAGERY.get()?4:2;
+	}
+
+	public static int getMaxRows() {
+	  return getMaxCols();
 	}
 
 	public static String convertDecimal2Quaternary(long inputNum) {

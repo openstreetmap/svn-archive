@@ -56,21 +56,6 @@ public final class StreetsideMainDialog extends ToggleDialog implements
 
 	private volatile StreetsideAbstractImage image;
 
-	/*public final SideButton nextButton = new SideButton(new NextPictureAction());
-	public final SideButton previousButton = new SideButton(new PreviousPictureAction());
-	*//**
-	 * Button used to jump to the image following the red line
-	 *//*
-	public final SideButton redButton = new SideButton(new RedAction());
-	*//**
-	 * Button used to jump to the image following the blue line
-	 *//*
-	public final SideButton blueButton = new SideButton(new BlueAction());
-
-	private final SideButton playButton = new SideButton(new PlayAction());
-	private final SideButton pauseButton = new SideButton(new PauseAction());
-	private final SideButton stopButton = new SideButton(new StopAction());*/
-
 	private ImageInfoHelpPopup imageInfoHelp;
 
 	private StreetsideViewerHelpPopup streetsideViewerHelp;
@@ -106,9 +91,6 @@ public final class StreetsideMainDialog extends ToggleDialog implements
 
 		streetsideImageDisplay = new StreetsideImageDisplay();
 
-		/*blueButton.setForeground(Color.BLUE);
-		redButton.setForeground(Color.RED);*/
-
 		setMode(MODE.NORMAL);
 	}
 
@@ -116,19 +98,7 @@ public final class StreetsideMainDialog extends ToggleDialog implements
 	 * Adds the shortcuts to the buttons.
 	 */
 	private void addShortcuts() {
-		/*nextButton.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
-				KeyStroke.getKeyStroke("PAGE_DOWN"), "next");
-		nextButton.getActionMap().put("next", new NextPictureAction());
-		previousButton.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
-				KeyStroke.getKeyStroke("PAGE_UP"), "previous");
-		previousButton.getActionMap().put("previous",
-				new PreviousPictureAction());
-		blueButton.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
-				KeyStroke.getKeyStroke("control PAGE_UP"), "blue");
-		blueButton.getActionMap().put("blue", new BlueAction());
-		redButton.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
-				KeyStroke.getKeyStroke("control PAGE_DOWN"), "red");
-		redButton.getActionMap().put("red", new RedAction());*/
+		// next, previous, blueAction and redAction from Mapillary removed
 	}
 
 	/**
@@ -175,16 +145,17 @@ public final class StreetsideMainDialog extends ToggleDialog implements
 		case WALK:
 			createLayout(
 				streetsideImageDisplay,
-				null//Arrays.asList(playButton, pauseButton, stopButton)
+				null
+				// TODO: Walk Action for Streetside - re-add buttons here
 			);
 		case NORMAL:
 		default:
 			createLayout(
 		        streetsideImageDisplay,
-		        null//Arrays.asList(blueButton, previousButton, nextButton, redButton)
+		        null
 		    );
 		}
-		//disableAllButtons();
+
 		if (MODE.NORMAL.equals(mode)) {
 			updateImage();
 		} 	}
@@ -221,19 +192,14 @@ public final class StreetsideMainDialog extends ToggleDialog implements
 			if (image == null) {
 				streetsideImageDisplay.setImage(null, null);
 				setTitle(I18n.tr(StreetsideMainDialog.BASE_TITLE));
-				//disableAllButtons();
 				return;
 			}
 
-			// TODO: help for cubemaps? @rrh
 			if (imageInfoHelp != null && StreetsideProperties.IMAGEINFO_HELP_COUNTDOWN.get() > 0 && imageInfoHelp.showPopup()) {
 				// Count down the number of times the popup will be displayed
 				StreetsideProperties.IMAGEINFO_HELP_COUNTDOWN.put(StreetsideProperties.IMAGEINFO_HELP_COUNTDOWN.get() - 1);
 			}
 
-			// Enables/disables next/previous buttons
-			/*nextButton.setEnabled(false);
-			previousButton.setEnabled(false);*/
 			if (image.getSequence() != null) {
 				StreetsideAbstractImage tempImage = image;
 				while (tempImage.next() != null) {
@@ -249,7 +215,6 @@ public final class StreetsideMainDialog extends ToggleDialog implements
 				while (tempImage.previous() != null) {
 					tempImage = tempImage.previous();
 					if (tempImage.isVisible()) {
-						//previousButton.setEnabled(true);
 						break;
 					}
 				}
@@ -287,16 +252,6 @@ public final class StreetsideMainDialog extends ToggleDialog implements
 			updateTitle();
 		}
 	}
-
-	/**
-	 * Disables all the buttons in the dialog
-	 */
-	/*public private void disableAllButtons() {
-		nextButton.setEnabled(false);
-		previousButton.setEnabled(false);
-		blueButton.setEnabled(false);
-		redButton.setEnabled(false);
-	}*/
 
 	/**
 	 * Sets a new StreetsideImage to be shown.
@@ -406,7 +361,6 @@ public final class StreetsideMainDialog extends ToggleDialog implements
 			new ImageProvider("dialogs", "red").getResource().attachImageIcon(this, true);
 		}
 
-		// TODO: RedAction for cubemaps? @rrh
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			if (StreetsideMainDialog.getInstance().getImage() != null) {
@@ -552,10 +506,8 @@ public final class StreetsideMainDialog extends ToggleDialog implements
 						streetsideImageDisplay.getImage() == null
 						|| img.getHeight() > streetsideImageDisplay.getImage().getHeight()
 						) {
-					//final StreetsideAbstractImage mai = getImage();
 					streetsideImageDisplay.setImage(
 							img,
-							//mai instanceof StreetsideImage ? ((StreetsideImage) getImage()).getDetections() : null
 							null);
 				}
 			} catch (final IOException e) {

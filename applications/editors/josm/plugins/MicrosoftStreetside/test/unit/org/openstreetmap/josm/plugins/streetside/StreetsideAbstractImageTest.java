@@ -12,8 +12,8 @@ import org.openstreetmap.josm.testutils.JOSMTestRules;
 
 public class StreetsideAbstractImageTest {
 
-  @Rule
-  public JOSMTestRules rules = new StreetsideTestRules().platform();
+  /*@Rule
+  public JOSMTestRules rules = new StreetsideTestRules().platform();*/
 
   @Test
   public void testIsModified() {

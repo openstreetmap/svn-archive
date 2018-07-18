@@ -2,7 +2,9 @@
 package org.openstreetmap.josm.plugins.streetside.cubemap;
 
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.Callable;
@@ -17,12 +19,11 @@ import org.openstreetmap.josm.plugins.streetside.utils.StreetsideURL;
 
 import us.monoid.web.Resty;
 
-public class TileDownloadingTask implements Callable<String> {
+public class TileDownloadingTask implements Callable<List<String>> {
 
   final static Logger logger = Logger.getLogger(TileDownloadingTask.class);
 
 	private String tileId;
-	private final long startTime = System.currentTimeMillis();
 	private StreetsideCache cache;
 	protected CubemapBuilder cb;
 
@@ -97,29 +98,67 @@ public class TileDownloadingTask implements Callable<String> {
 		this.cancelled = cancelled;
 	}
 
-	@Override
-	public String call() throws Exception {
+  @Override
+  public List<String> call() throws Exception {
 
-	  BufferedImage img = ImageIO.read(new Resty().bytes(
-				StreetsideURL.VirtualEarth.streetsideTile(tileId, false).toExternalForm())
-				.stream());
+    List<String> res = new ArrayList<>();
 
-		if (img == null) {
-			logger.error("Download of BufferedImage " + tileId + " is null!");
-		}
+    if (StreetsideProperties.DOWNLOAD_CUBEFACE_TILES_TOGETHER.get()) {
+      // download all imagery for each cubeface at once
+      if (!StreetsideProperties.SHOW_HIGH_RES_STREETSIDE_IMAGERY.get()) {
+        // download low-res imagery
+        int tileNr = 0;
+        for (int j = 0; j < CubemapUtils.getMaxCols(); j++) {
+          for (int k = 0; k < CubemapUtils.getMaxRows(); k++) {
+            String quadKey = String.valueOf(tileId + Integer.valueOf(tileNr++).toString());
+            res.add(downloadTile(quadKey));
+          }
+        }
+        // download high-res imagery
+      } else {
+        for (int j = 0; j < CubemapUtils.getMaxCols(); j++) {
+          for (int k = 0; k < CubemapUtils.getMaxRows(); k++) {
+            String quadKey = String
+              .valueOf(tileId + String.valueOf(Integer.valueOf(j).toString() + Integer.valueOf(k).toString()));
+            res.add(downloadTile(quadKey));
+          }
+        }
+      }
+    // task downloads just one tile
+    } else {
+      res.add(downloadTile(tileId));
+    }
+    return res;
+  }
 
-		CubemapBuilder.getInstance().getTileImages().put(tileId, img);
+  private String downloadTile(String tileId) {
+    BufferedImage img;
 
-		fireTileAdded(tileId);
+    long startTime = System.currentTimeMillis();
 
-		if (StreetsideProperties.DEBUGING_ENABLED.get()) {
-		  long endTime = System.currentTimeMillis();
-	    long runTime = (endTime-startTime)/1000;
-	    logger.debug(MessageFormat.format("Loaded image for {0} in {1} seconds.", tileId, runTime));
-		}
+    try {
+      img = ImageIO
+        .read(new Resty().bytes(StreetsideURL.VirtualEarth.streetsideTile(tileId, false).toExternalForm()).stream());
 
-		return tileId;
-	}
+      if (img == null) {
+        logger.error("Download of BufferedImage " + tileId + " is null!");
+      }
+
+      CubemapBuilder.getInstance().getTileImages().put(tileId, img);
+
+      fireTileAdded(tileId);
+
+      if (StreetsideProperties.DEBUGING_ENABLED.get()) {
+        long endTime = System.currentTimeMillis();
+        long runTime = (endTime - startTime) / 1000;
+        logger.debug(MessageFormat.format("Loaded image for {0} in {1} seconds.", tileId, runTime));
+      }
+    } catch (IOException e) {
+      logger.error(MessageFormat.format("Error downloading image for tileId {0}", tileId));
+      return null;
+    }
+    return tileId;
+  }
 
 	private void fireTileAdded(String id) {
 	    listeners.stream().filter(Objects::nonNull).forEach(lis -> lis.tileAdded(id));

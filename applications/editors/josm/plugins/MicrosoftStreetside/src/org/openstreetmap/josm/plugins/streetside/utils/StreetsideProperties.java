@@ -23,7 +23,9 @@ public final class StreetsideProperties {
   public static final BooleanProperty CUBEMAP_LINK_TO_BLUR_EDITOR = new BooleanProperty("streetside.cubemap-link-to-blur-editor", true);
   public static final IntegerProperty TILE_DOWNLOAD_THREAD_PAUSE_LEN_SEC = new IntegerProperty("streetside.tile-download-thread-pause-len-sec", 60);
   public static final BooleanProperty PREDOWNLOAD_CUBEMAPS = new BooleanProperty("streetside.predownload-cubemaps", false);
-  public static final BooleanProperty DEBUGING_ENABLED = new BooleanProperty("streetside.debugging-enabled", false);
+  public static final BooleanProperty DEBUGING_ENABLED = new BooleanProperty("streetside.debugging-enabled", true);
+  public static final BooleanProperty DOWNLOAD_CUBEFACE_TILES_TOGETHER = new BooleanProperty("streetside.download-cubeface-tiles-together", false);
+
   /**
    * If false, all sequences that cross the download bounds are put completely into the StreetsideData object.
    * Otherwise only all images (!) inside the download bounds are added, the others are discarded.

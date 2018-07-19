@@ -26,18 +26,18 @@ public abstract class StreetsideAbstractImage implements Comparable<StreetsideAb
 
 	protected String id;
 
+	// Image id of next image in sequence (decimal)
 	private long ne;
-  private long pr;
+    //Image id of previous image in sequence (decimal)
+    private long pr;
 
 
-	/** The time the image was captured, in Epoch format. */
-	protected long cd;
 	/** Sequence of pictures containing this object. */
 	private StreetsideSequence sequence;
 
 	/** Position of the picture. */
 	protected LatLon latLon;
-	/** Direction of the picture. */
+	/** Direction of the picture in degrees from true north. */
 	protected double he;
 	/** Temporal position of the picture until it is uploaded. */
 	private LatLon tempLatLon;
@@ -115,50 +115,6 @@ public abstract class StreetsideAbstractImage implements Comparable<StreetsideAb
 	}
 
 	/**
-	 * Returns the Epoch time when the image was captured.
-	 *
-	 * @return The long containing the Epoch time when the image was captured.
-	 */
-	public long getCd() {
-		return cd;
-	}
-
-	/**
-	 * Returns the date the picture was taken in DMY format.
-	 *
-	 * @return A String object containing the date when the picture was taken.
-	 */
-	public String getDate() {
-		final StringBuilder format = new StringBuilder(26);
-		format.append("m/d/YYYY");
-		if (StreetsideProperties.DISPLAY_HOUR.get()) {
-			if (StreetsideProperties.TIME_FORMAT_24.get()) {
-				format.append(" - HH:mm:ss");
-			} else {
-				format.append(" - h:mm:ss a");
-			}
-		}
-		return getDate(format.toString());
-	}
-
-	/**
-	 * Returns the date the picture was taken in the given format.
-	 *
-	 * @param format
-	 *            Format of the date. See {@link SimpleDateFormat}.
-	 * @return A String containing the date the picture was taken using the given
-	 *         format.
-	 * @throws NullPointerException
-	 *             if parameter format is <code>null</code>
-	 */
-	public String getDate(String format) {
-		final Date date = new Date(getCd());
-		final SimpleDateFormat formatter = new SimpleDateFormat(format, Locale.US);
-		formatter.setTimeZone(Calendar.getInstance().getTimeZone());
-		return formatter.format(date);
-	}
-
-	/**
 	 * Returns a LatLon object containing the original coordinates of the object.
 	 *
 	 * @return The LatLon object with the position of the object.
@@ -226,7 +182,7 @@ public abstract class StreetsideAbstractImage implements Comparable<StreetsideAb
 	 * @return true if the object has been modified; false otherwise.
 	 */
 	public boolean isModified() {
-		return !getMovingLatLon().equals(latLon) || Math.abs(getMovingHe() - cd) > EPSILON;
+		return !getMovingLatLon().equals(latLon) || Math.abs(getMovingHe() - he) > EPSILON;
 	}
 
 	/**
@@ -276,16 +232,6 @@ public abstract class StreetsideAbstractImage implements Comparable<StreetsideAb
 
 	public void setHe(final double he) {
 		this.he = he;
-	}
-
-	/**
-	 * Sets the Epoch time when the picture was captured.
-	 *
-	 * @param cd
-	 *            Epoch time when the image was captured.
-	 */
-	public synchronized void setCd(final long cd) {
-		this.cd = cd;
 	}
 
 	public void setLatLon(final LatLon latLon) {
@@ -338,8 +284,8 @@ public abstract class StreetsideAbstractImage implements Comparable<StreetsideAb
 	 * @param ca
 	 *            The angle the image is moving.
 	 */
-	public void turn(final double ca) {
-		movingHe = tempHe + ca;
+	public void turn(final double he) {
+		movingHe = tempHe + he;
 	}
 
 	/**

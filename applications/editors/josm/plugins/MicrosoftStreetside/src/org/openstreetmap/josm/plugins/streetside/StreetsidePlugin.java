@@ -24,6 +24,8 @@ import org.openstreetmap.josm.plugins.streetside.oauth.StreetsideUser;
 import org.openstreetmap.josm.plugins.streetside.utils.StreetsideProperties;
 import org.openstreetmap.josm.tools.ImageProvider;
 
+import org.openstreetmap.josm.plugins.streetside.gui.imageinfo.StreetsideViewerPanel;
+
 /**
  * This is the main class of the Streetside plugin.
  */
@@ -42,7 +44,6 @@ public class StreetsidePlugin extends Plugin {
       MainMenu.add(MainApplication.getMenu().imagerySubMenu, new StreetsideDownloadAction(), false);
       MainMenu.add(MainApplication.getMenu().viewMenu, ZOOM_ACTION, false, 15);
       MainMenu.add(MainApplication.getMenu().fileMenu, new StreetsideDownloadViewAction(), false, 14);
-      //MainMenu.add(MainApplication.getMenu().dataMenu, new StreetsideJoinAction(), false);
       MainMenu.add(MainApplication.getMenu().moreToolsMenu, WALK_ACTION, false);
     }
   }

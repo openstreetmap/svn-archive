@@ -71,7 +71,7 @@ public class CubemapUtils {
 
 	// numerical base for decimal conversion (quaternary in the case of Streetside)
 	private static final int NUM_BASE = 4;
-	public static final String IMPORTED_ID = "00000000";
+	public static final String TEST_IMAGE_ID = "00000000";
 	public static final int NUM_SIDES = 6;
 	public static Map<String,String> rowCol2StreetsideCellAddressMap = null;
 

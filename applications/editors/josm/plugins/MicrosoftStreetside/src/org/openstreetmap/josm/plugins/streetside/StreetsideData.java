@@ -244,18 +244,14 @@ public class StreetsideData {
    *                               belong to a sequence.
    */
   public void selectNext(boolean moveToPicture) {
-    if (getSelectedImage() == null) {
-		throw new IllegalStateException();
-	}
-    if (getSelectedImage().getSequence() == null) {
-		throw new IllegalStateException();
-	}
     StreetsideAbstractImage tempImage = selectedImage;
-    while (tempImage.next() != null) {
-      tempImage = tempImage.next();
-      if (tempImage.isVisible()) {
-        setSelectedImage(tempImage, moveToPicture);
-        break;
+    if (selectedImage != null && selectedImage.getSequence() != null) {
+      while (tempImage.next() != null) {
+        tempImage = tempImage.next();
+        if (tempImage.isVisible()) {
+          setSelectedImage(tempImage, moveToPicture);
+          break;
+        }
       }
     }
   }
@@ -283,18 +279,14 @@ public class StreetsideData {
    *                               belong to a sequence.
    */
   public void selectPrevious(boolean moveToPicture) {
-    if (getSelectedImage() == null) {
-		throw new IllegalStateException();
-	}
-    if (getSelectedImage().getSequence() == null) {
-		throw new IllegalStateException();
-	}
-    StreetsideAbstractImage tempImage = selectedImage;
-    while (tempImage.previous() != null) {
-      tempImage = tempImage.previous();
-      if (tempImage.isVisible()) {
-        setSelectedImage(tempImage, moveToPicture);
-        break;
+    if (selectedImage != null && selectedImage.getSequence() != null) {
+      StreetsideAbstractImage tempImage = selectedImage;
+      while (tempImage.previous() != null) {
+        tempImage = tempImage.previous();
+        if (tempImage.isVisible()) {
+          setSelectedImage(tempImage, moveToPicture);
+          break;
+        }
       }
     }
   }

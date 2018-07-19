@@ -37,12 +37,15 @@ public final class StreetsideViewerPanel extends JPanel
 
 	private static ThreeSixtyDegreeViewerPanel threeSixtyDegreeViewerPanel;
 
+  private StreetsideViewerHelpPopup streetsideViewerHelp;
+
 	public StreetsideViewerPanel() {
 
 		super(new BorderLayout());
 
 		SwingUtilities.invokeLater(new Runnable() {
-		     @Override
+		     @SuppressWarnings("synthetic-access")
+        @Override
 		     public void run() {
 		    	 initializeAndStartGUI();
 		     }

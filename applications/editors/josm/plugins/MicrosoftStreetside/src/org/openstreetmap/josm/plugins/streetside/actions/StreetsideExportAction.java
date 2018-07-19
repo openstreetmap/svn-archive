@@ -6,8 +6,6 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Set;
 import java.util.concurrent.ConcurrentSkipListSet;
 
@@ -21,7 +19,6 @@ import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.plugins.streetside.StreetsideAbstractImage;
 import org.openstreetmap.josm.plugins.streetside.StreetsideImage;
-import org.openstreetmap.josm.plugins.streetside.StreetsideImportedImage;
 import org.openstreetmap.josm.plugins.streetside.StreetsideLayer;
 import org.openstreetmap.josm.plugins.streetside.StreetsidePlugin;
 import org.openstreetmap.josm.plugins.streetside.gui.StreetsideExportDialog;
@@ -92,15 +89,6 @@ public class StreetsideExportAction extends JosmAction {
         export(images);
       } else if (dialog.group.isSelected(dialog.selected.getModel())) {
         export(StreetsideLayer.getInstance().getData().getMultiSelectedImages());
-      }
-      // This option ignores the selected directory.
-    } else if (dialog.group.isSelected(dialog.rewrite.getModel())) {
-      ArrayList<StreetsideImportedImage> images = new ArrayList<>();
-      StreetsideLayer.getInstance().getData().getImages().stream().filter(img -> img instanceof StreetsideImportedImage).forEach(img -> images.add((StreetsideImportedImage) img));
-      try {
-        MainApplication.worker.execute(new StreetsideExportManager(images));
-      } catch (IOException e1) {
-        logger.error(e1);
       }
     }
     dlg.dispose();

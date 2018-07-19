@@ -7,11 +7,15 @@ import java.awt.event.ActionEvent;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.text.MessageFormat;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.imageio.ImageIO;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
+import javax.swing.JComponent;
+import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 
 import org.apache.log4j.Logger;
@@ -23,14 +27,12 @@ import org.openstreetmap.josm.gui.dialogs.ToggleDialog;
 import org.openstreetmap.josm.plugins.streetside.StreetsideAbstractImage;
 import org.openstreetmap.josm.plugins.streetside.StreetsideDataListener;
 import org.openstreetmap.josm.plugins.streetside.StreetsideImage;
-import org.openstreetmap.josm.plugins.streetside.StreetsideImportedImage;
 import org.openstreetmap.josm.plugins.streetside.StreetsideLayer;
 import org.openstreetmap.josm.plugins.streetside.StreetsidePlugin;
 import org.openstreetmap.josm.plugins.streetside.actions.WalkListener;
 import org.openstreetmap.josm.plugins.streetside.actions.WalkThread;
 import org.openstreetmap.josm.plugins.streetside.cache.StreetsideCache;
 import org.openstreetmap.josm.plugins.streetside.gui.imageinfo.ImageInfoHelpPopup;
-import org.openstreetmap.josm.plugins.streetside.gui.imageinfo.StreetsideViewerHelpPopup;
 import org.openstreetmap.josm.plugins.streetside.utils.StreetsideProperties;
 import org.openstreetmap.josm.tools.I18n;
 import org.openstreetmap.josm.tools.ImageProvider;
@@ -56,9 +58,22 @@ public final class StreetsideMainDialog extends ToggleDialog implements
 
 	private volatile StreetsideAbstractImage image;
 
-	private ImageInfoHelpPopup imageInfoHelp;
+	private final SideButton nextButton = new SideButton(new NextPictureAction());
+  private final SideButton previousButton = new SideButton(new PreviousPictureAction());
+  /**
+   * Button used to jump to the image following the red line
+   */
+  public final SideButton redButton = new SideButton(new RedAction());
+  /**
+   * Button used to jump to the image following the blue line
+   */
+  public final SideButton blueButton = new SideButton(new BlueAction());
 
-	private StreetsideViewerHelpPopup streetsideViewerHelp;
+  private final SideButton playButton = new SideButton(new PlayAction());
+  private final SideButton pauseButton = new SideButton(new PauseAction());
+  private final SideButton stopButton = new SideButton(new StopAction());
+
+  private ImageInfoHelpPopup imageInfoHelp;
 
 	/**
 	 * Buttons mode.
@@ -97,9 +112,16 @@ public final class StreetsideMainDialog extends ToggleDialog implements
 	/**
 	 * Adds the shortcuts to the buttons.
 	 */
-	private void addShortcuts() {
-		// next, previous, blueAction and redAction from Mapillary removed
-	}
+  private void addShortcuts() {
+    nextButton.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("PAGE_DOWN"), "next");
+    nextButton.getActionMap().put("next", new NextPictureAction());
+    previousButton.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("PAGE_UP"), "previous");
+    previousButton.getActionMap().put("previous", new PreviousPictureAction());
+    blueButton.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("control PAGE_UP"), "blue");
+    blueButton.getActionMap().put("blue", new BlueAction());
+    redButton.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("control PAGE_DOWN"), "red");
+    redButton.getActionMap().put("red", new RedAction());
+  }
 
 	/**
 	 * Returns the unique instance of the class.
@@ -124,17 +146,6 @@ public final class StreetsideMainDialog extends ToggleDialog implements
 		imageInfoHelp = popup;
 	}
 
-	public synchronized void setStreetsideViewerHelp(StreetsideViewerHelpPopup popup) {
-		streetsideViewerHelp = popup;
-	}
-
-	/**
-	 * @return the streetsideViewerHelp
-	 */
-	public StreetsideViewerHelpPopup getStreetsideViewerHelp() {
-		return streetsideViewerHelp;
-	}
-
 	/**
 	 * Sets a new mode for the dialog.
 	 *
@@ -143,22 +154,26 @@ public final class StreetsideMainDialog extends ToggleDialog implements
 	public void setMode(MODE mode) {
 		switch (mode) {
 		case WALK:
-			createLayout(
-				streetsideImageDisplay,
-				null
-				// TODO: Walk Action for Streetside - re-add buttons here
-			);
-		case NORMAL:
-		default:
-			createLayout(
-		        streetsideImageDisplay,
-		        null
-		    );
+      createLayout(
+        streetsideImageDisplay,
+        Arrays.asList(playButton, pauseButton, stopButton)
+      );
+      break;
+    case NORMAL:
+    default:
+      createLayout(
+        streetsideImageDisplay,
+        Arrays.asList(blueButton, previousButton, nextButton, redButton)
+      );
+      break;
 		}
-
-		if (MODE.NORMAL.equals(mode)) {
-			updateImage();
-		} 	}
+		disableAllButtons();
+    if (MODE.NORMAL.equals(mode)) {
+      updateImage();
+    }
+    revalidate();
+    repaint();
+	}
 
 	/**
 	 * Destroys the unique instance of the class.
@@ -200,25 +215,6 @@ public final class StreetsideMainDialog extends ToggleDialog implements
 				StreetsideProperties.IMAGEINFO_HELP_COUNTDOWN.put(StreetsideProperties.IMAGEINFO_HELP_COUNTDOWN.get() - 1);
 			}
 
-			if (image.getSequence() != null) {
-				StreetsideAbstractImage tempImage = image;
-				while (tempImage.next() != null) {
-					tempImage = tempImage.next();
-					if (tempImage.isVisible()) {
-						//nextButton.setEnabled(true);
-						break;
-					}
-				}
-			}
-			if (image.getSequence() != null) {
-				StreetsideAbstractImage tempImage = image;
-				while (tempImage.previous() != null) {
-					tempImage = tempImage.previous();
-					if (tempImage.isVisible()) {
-						break;
-					}
-				}
-			}
 			if (image instanceof StreetsideImage) {
 				final StreetsideImage streetsideImage = (StreetsideImage) image;
 				// Downloads the thumbnail.
@@ -254,6 +250,16 @@ public final class StreetsideMainDialog extends ToggleDialog implements
 	}
 
 	/**
+   * Disables all the buttons in the dialog
+   */
+  private void disableAllButtons() {
+    nextButton.setEnabled(false);
+    previousButton.setEnabled(false);
+    blueButton.setEnabled(false);
+    redButton.setEnabled(false);
+  }
+
+	/**
 	 * Sets a new StreetsideImage to be shown.
 	 *
 	 * @param image The image to be shown.
@@ -271,16 +277,8 @@ public final class StreetsideMainDialog extends ToggleDialog implements
 		} else if (image != null) {
 			final StringBuilder title = new StringBuilder(I18n.tr(StreetsideMainDialog.BASE_TITLE));
 			if (image instanceof StreetsideImage) {
-				final StreetsideImage streetsideImage = (StreetsideImage) image;
-				if (streetsideImage.getCd() != 0) {
-					title.append(StreetsideMainDialog.MESSAGE_SEPARATOR).append(streetsideImage.getDate());
-				}
-				setTitle(title.toString());
-			} else if (image instanceof StreetsideImportedImage) {
-				final StreetsideImportedImage mapillaryImportedImage = (StreetsideImportedImage) image;
-				title.append(StreetsideMainDialog.MESSAGE_SEPARATOR).append(mapillaryImportedImage.getFile().getName());
-				title.append(StreetsideMainDialog.MESSAGE_SEPARATOR).append(mapillaryImportedImage.getDate());
-				setTitle(title.toString());
+				title.append(StreetsideMainDialog.MESSAGE_SEPARATOR).append(MessageFormat.format("(heading {0}°)",Double.toString(image.getHe())));
+        setTitle(title.toString());
 			}
 		}
 	}
@@ -532,6 +530,12 @@ public final class StreetsideMainDialog extends ToggleDialog implements
 	@Override
 	public void selectedImageChanged(StreetsideAbstractImage oldImage, StreetsideAbstractImage newImage) {
 		setImage(newImage);
+		if (newImage.getSequence() != null && newImage.next()!=null) {
+      nextButton.setEnabled(true);
+    }
+    if (newImage.getSequence() != null && newImage.previous()!=null) {
+      previousButton.setEnabled(true);
+    }
 		updateImage();
 	}
 

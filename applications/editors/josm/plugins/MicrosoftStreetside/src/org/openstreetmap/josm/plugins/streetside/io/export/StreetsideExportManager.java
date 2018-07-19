@@ -6,7 +6,6 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -17,7 +16,6 @@ import org.openstreetmap.josm.gui.PleaseWaitRunnable;
 import org.openstreetmap.josm.gui.progress.swing.PleaseWaitProgressMonitor;
 import org.openstreetmap.josm.plugins.streetside.StreetsideAbstractImage;
 import org.openstreetmap.josm.plugins.streetside.StreetsideImage;
-import org.openstreetmap.josm.plugins.streetside.StreetsideImportedImage;
 
 /**
  * Export main thread. Exportation works by creating a
@@ -62,25 +60,6 @@ public class StreetsideExportManager extends PleaseWaitRunnable {
     amount = this.images.size();
   }
 
-  /**
-   * Constructor used to rewrite imported images.
-   *
-   * @param images
-   *          The set of {@link StreetsideImportedImage} object that is going to
-   *          be rewritten.
-   * @throws IOException
-   *           If the file of one of the {@link StreetsideImportedImage} objects
-   *           doesn't contain a picture.
-   */
-  public StreetsideExportManager(List<StreetsideImportedImage> images) throws IOException {
-    this(null, null);
-    for (StreetsideImportedImage image : images) {
-      queue.add(image.getImage());
-      queueImages.add(image);
-    }
-    amount = images.size();
-  }
-
   @Override
   protected void cancel() {
     writer.interrupt();
@@ -109,13 +88,6 @@ public class StreetsideExportManager extends PleaseWaitRunnable {
           ex.execute(new StreetsideExportDownloadThread(
               (StreetsideImage) image, queue, queueImages));
         } catch (Exception e) {
-          logger.error(e);
-        }
-      } else if (image instanceof StreetsideImportedImage) {
-        try {
-          queue.put(((StreetsideImportedImage) image).getImage());
-          queueImages.put(image);
-        } catch (InterruptedException e) {
           logger.error(e);
         }
       }

@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.openstreetmap.josm.gui.SideButton;
 import org.openstreetmap.josm.gui.dialogs.ToggleDialog;
+import org.openstreetmap.josm.plugins.streetside.gui.imageinfo.StreetsideViewerHelpPopup;
 import org.openstreetmap.josm.plugins.streetside.gui.imageinfo.StreetsideViewerPanel;
 
 /**
@@ -23,6 +24,9 @@ public final class StreetsideViewerDialog extends ToggleDialog
 	private static final String BASE_TITLE = "360° Streetside Viewer";
 
 	private static StreetsideViewerDialog instance;
+
+	// TODO: enable help without StreetsideViewerPanel being a ToggleDialog
+	private StreetsideViewerHelpPopup streetsideViewerHelpPopup;
 
 	/**
 	 * Object containing the shown image and that handles zoom and drag
@@ -79,5 +83,9 @@ public final class StreetsideViewerDialog extends ToggleDialog
 	public StreetsideViewerPanel getStreetsideViewerPanel() {
 		return streetsideViewerPanel;
 	}
+
+  public void setStreetsideViewerHelpPopup(StreetsideViewerHelpPopup svhp) {
+    streetsideViewerHelpPopup = svhp;
+  }
 
 }

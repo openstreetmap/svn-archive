@@ -72,7 +72,7 @@ public class StreetsideImage extends StreetsideAbstractImage {
 
   // Default constructor for Jackson/JSON Deserializattion
   public StreetsideImage() {
-    super(CubemapUtils.IMPORTED_ID, null, 0.0);
+    super(CubemapUtils.TEST_IMAGE_ID, null, 0.0);
   }
 
   /**

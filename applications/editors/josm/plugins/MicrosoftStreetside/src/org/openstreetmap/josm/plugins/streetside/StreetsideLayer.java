@@ -321,31 +321,19 @@ ActiveLayerChangeListener, StreetsideDataListener {
     final Color markerC;
     final Color directionC;
     if (selectedImg != null && getData().getMultiSelectedImages().contains(img)) {
-      markerC = img instanceof StreetsideImportedImage
-        ? StreetsideColorScheme.SEQ_IMPORTED_HIGHLIGHTED
-        : StreetsideColorScheme.SEQ_HIGHLIGHTED;
-      directionC = img instanceof StreetsideImportedImage
-        ? StreetsideColorScheme.SEQ_IMPORTED_HIGHLIGHTED_CA
-        : StreetsideColorScheme.SEQ_HIGHLIGHTED_CA;
+      markerC = StreetsideColorScheme.SEQ_HIGHLIGHTED;
+      directionC = StreetsideColorScheme.SEQ_HIGHLIGHTED_CA;
     } else if (selectedImg != null && selectedImg.getSequence() != null && selectedImg.getSequence().equals(img.getSequence())) {
-      markerC = img instanceof StreetsideImportedImage
-        ? StreetsideColorScheme.SEQ_IMPORTED_SELECTED
-        : StreetsideColorScheme.SEQ_SELECTED;
-      directionC = img instanceof StreetsideImportedImage
-        ? StreetsideColorScheme.SEQ_IMPORTED_SELECTED_CA
-        : StreetsideColorScheme.SEQ_SELECTED_CA;
+      markerC = StreetsideColorScheme.SEQ_SELECTED;
+      directionC = StreetsideColorScheme.SEQ_SELECTED_CA;
     } else {
-      markerC = img instanceof StreetsideImportedImage
-        ? StreetsideColorScheme.SEQ_IMPORTED_UNSELECTED
-        : StreetsideColorScheme.SEQ_UNSELECTED;
-      directionC = img instanceof StreetsideImportedImage
-        ? StreetsideColorScheme.SEQ_IMPORTED_UNSELECTED_CA
-        : StreetsideColorScheme.SEQ_UNSELECTED_CA;
+      markerC = StreetsideColorScheme.SEQ_UNSELECTED;
+      directionC = StreetsideColorScheme.SEQ_UNSELECTED_CA;
     }
 
     // Paint direction indicator
     g.setColor(directionC);
-    g.fillArc(p.x - CA_INDICATOR_RADIUS, p.y - CA_INDICATOR_RADIUS, 2 * CA_INDICATOR_RADIUS, 2 * CA_INDICATOR_RADIUS, (int) (90 - img.getMovingHe() - CA_INDICATOR_ANGLE / 2d), CA_INDICATOR_ANGLE);
+    g.fillArc(p.x - CA_INDICATOR_RADIUS, p.y - CA_INDICATOR_RADIUS, 2 * CA_INDICATOR_RADIUS, 2 * CA_INDICATOR_RADIUS, (int) (90 - /*img.getMovingHe()*/img.getHe() - CA_INDICATOR_ANGLE / 2d), CA_INDICATOR_ANGLE);
     // Paint image marker
     g.setColor(markerC);
     g.fillOval(p.x - IMG_MARKER_RADIUS, p.y - IMG_MARKER_RADIUS, 2 * IMG_MARKER_RADIUS, 2 * IMG_MARKER_RADIUS);
@@ -396,10 +384,6 @@ ActiveLayerChangeListener, StreetsideDataListener {
         seqSizeStats.getAverage()
       ))
       .append("\n\n")
-      .append(I18n.tr(
-        "{0} imported images",
-        getData().getImages().stream().filter(i -> i instanceof StreetsideImportedImage).count()
-      ))
       .append("\n+ ")
       .append(I18n.tr(
         "{0} downloaded images",
@@ -488,8 +472,8 @@ ActiveLayerChangeListener, StreetsideDataListener {
       nearestImages = new StreetsideImage[0];
     }
     if (MainApplication.isDisplayingMapView()) {
-      //StreetsideMainDialog.getInstance().redButton.setEnabled(nearestImages.length >= 1);
-      //StreetsideMainDialog.getInstance().blueButton.setEnabled(nearestImages.length >= 2);
+      StreetsideMainDialog.getInstance().redButton.setEnabled(nearestImages.length >= 1);
+      StreetsideMainDialog.getInstance().blueButton.setEnabled(nearestImages.length >= 2);
     }
     if (nearestImages.length >= 1) {
       CacheUtils.downloadPicture(nearestImages[0]);

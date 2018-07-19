@@ -94,7 +94,6 @@ public final class JsonStreetsideSequencesDecoder {
       result.setNbn(image.getNbn());
       result.setPbn(image.getPbn());
       result.setRn(image.getRn());
-      result.setCd(image.getCd());
     }
     return result;
   }

@@ -47,9 +47,9 @@ public class StreetsideLayerTest {
 
   @Test
   public void testSetVisible() {
-    StreetsideLayer.getInstance().getData().add(new StreetsideImportedImage(CubemapUtils.IMPORTED_ID, new LatLon(0.0, 0.0), 0.0, new File("")));
-    StreetsideLayer.getInstance().getData().add(new StreetsideImportedImage(CubemapUtils.IMPORTED_ID, new LatLon(0.0, 0.0), 0.0, new File("")));
-    StreetsideImportedImage invisibleImage = new StreetsideImportedImage(CubemapUtils.IMPORTED_ID, new LatLon(0.0, 0.0), 0.0, new File(""));
+    StreetsideLayer.getInstance().getData().add(new StreetsideImage(CubemapUtils.TEST_IMAGE_ID, new LatLon(0.0, 0.0), 0.0));
+    StreetsideLayer.getInstance().getData().add(new StreetsideImage(CubemapUtils.TEST_IMAGE_ID, new LatLon(0.0, 0.0), 0.0));
+    StreetsideImage invisibleImage = new StreetsideImage(CubemapUtils.TEST_IMAGE_ID, new LatLon(0.0, 0.0), 0.0);
     invisibleImage.setVisible(false);
     StreetsideLayer.getInstance().getData().add(invisibleImage);
 

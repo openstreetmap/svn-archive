@@ -34,8 +34,9 @@ public class CubemapBuilder implements ITileDownloadingTaskListener, StreetsideD
 
 	private static CubemapBuilder instance;
 	private StreetsideCubemap cubemap;
-	protected boolean cancelled;
-	private long startTime;
+	protected boolean isBuilding;
+
+  private long startTime;
 
 	private Map<String, BufferedImage> tileImages = new ConcurrentHashMap<>();
 
@@ -80,13 +81,16 @@ public class CubemapBuilder implements ITileDownloadingTaskListener, StreetsideD
    */
   @Override
   public void selectedImageChanged(StreetsideAbstractImage oldImage, StreetsideAbstractImage newImage) {
+
+
     startTime = System.currentTimeMillis();
 
 		if (newImage != null) {
 
 			cubemap = null;
 			cubemap = new StreetsideCubemap(newImage.getId(), newImage.getLatLon(), newImage.getHe());
-			cubemap.setCd(newImage.getCd());
+			currentTileCount = 0;
+			resetTileImages();
 
 			// download cubemap images in different threads and then subsequently
 			// set the cubeface images in JavaFX
@@ -148,16 +152,17 @@ public class CubemapBuilder implements ITileDownloadingTaskListener, StreetsideD
           }
 
           List<Future<List<String>>> results = pool.invokeAll(tasks);
-          /*for (Future<List<String>> ff : results) {
-
-            if (StreetsideProperties.DEBUGING_ENABLED.get()) {
+          for (Future<List<String>> ff : results) {
+            if (StreetsideProperties.DEBUGING_ENABLED.get() && results!=null) {
               logger.debug(
                 MessageFormat.format(
                   "Completed tile downloading task {0} in {1} seconds.", ff.get().toString(),
-                  (System.currentTimeMillis()) / 1000 - startTime)
+                  ((System.currentTimeMillis()) - startTime)/1000)
                 );
+            } else {
+              logger.error(MessageFormat.format("Results of downloading tasks for image id {0} are null!", imageId));
             }
-          }*/
+          }
 
           // launch 16-tiled (high-res) downloading tasks
         } else if (StreetsideProperties.SHOW_HIGH_RES_STREETSIDE_IMAGERY.get()) {
@@ -177,12 +182,14 @@ public class CubemapBuilder implements ITileDownloadingTaskListener, StreetsideD
 
       List<Future<List<String>>> results = pool.invokeAll(tasks);
       for (Future<List<String>> ff : results) {
-        if (StreetsideProperties.DEBUGING_ENABLED.get()) {
+        if (StreetsideProperties.DEBUGING_ENABLED.get() && results!=null) {
           logger.debug(
             MessageFormat.format(
               "Completed tile downloading task {0} in {1} seconds.", ff.get().toString(),
               ((System.currentTimeMillis()) - startTime)/1000)
             );
+        } else {
+          logger.error(MessageFormat.format("Results of downloading tasks for image id {0} are null!", imageId));
         }
       }
     } catch (Exception ee) {
@@ -217,8 +224,8 @@ public class CubemapBuilder implements ITileDownloadingTaskListener, StreetsideD
     // six cubemap faces. If so, build the images for the faces
     // and set the views in the cubemap box.
 
-    if(currentTileCount>96) {
-      int x = 0;
+    if(!tileId.startsWith(cubemap.getId())) {
+      return;
     }
 
     currentTileCount++;
@@ -327,6 +334,7 @@ public class CubemapBuilder implements ITileDownloadingTaskListener, StreetsideD
     // reset count and image map after assembly
     resetTileImages();
     currentTileCount = 0;
+    isBuilding = false;
 	}
 
 	private void resetTileImages() {
@@ -361,6 +369,14 @@ public class CubemapBuilder implements ITileDownloadingTaskListener, StreetsideD
 	public static boolean hasInstance() {
 		return CubemapBuilder.instance != null;
 	}
+
+	/**
+   * @return the isBuilding
+   */
+  public boolean isBuilding() {
+    return isBuilding;
+  }
+
 
 	/**
 	 * Destroys the unique instance of the class.

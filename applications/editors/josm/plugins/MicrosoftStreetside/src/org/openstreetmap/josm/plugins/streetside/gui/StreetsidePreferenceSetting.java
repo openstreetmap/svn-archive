@@ -219,7 +219,6 @@ public class StreetsidePreferenceSetting implements SubPreferenceSetting, Street
 	private final transient StreetsideLoginListener callback;
 
     LoginAction(StreetsideLoginListener loginCallback) {
-      // TODO tr( RRH
       super(I18n.tr("Login"));
       callback = loginCallback;
     }

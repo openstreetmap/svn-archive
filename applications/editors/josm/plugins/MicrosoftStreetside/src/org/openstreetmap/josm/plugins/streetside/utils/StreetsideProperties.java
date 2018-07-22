@@ -60,11 +60,11 @@ public final class StreetsideProperties {
   public static final StringProperty START_DIR =
     new StringProperty("streetside.start-directory", System.getProperty("user.home"));
   public static final StringProperty URL_CLIENT_ID =
-    new StringProperty("streetside.url-clientid", "T1Fzd20xZjdtR0s1VDk5OFNIOXpYdzoxNDYyOGRkYzUyYTFiMzgz");
+    new StringProperty("streetside.url-clientid", System.getProperty("T1Fzd20xZjdtR0s1VDk5OFNIOXpYdzoxNDYyOGRkYzUyYTFiMzgz"));
   public static final StringProperty BING_MAPS_KEY =
-    new StringProperty("streetside.bing-maps-key", "AuftgJsO0Xs8Ts4M1xZUQJQXJNsvmh3IV8DkNieCiy3tCwCUMq76-WpkrBtNAuEm");
+    new StringProperty("streetside.bing-maps-key", System.getProperty("AuftgJsO0Xs8Ts4M1xZUQJQXJNsvmh3IV8DkNieCiy3tCwCUMq76-WpkrBtNAuEm"));
   public static final StringProperty TEST_BUBBLE_ID =
-    new StringProperty("streetside.test-bubble-id", "80848005");
+    new StringProperty("streetside.test-bubble-id", System.getProperty("80848005"));
 
   /**
    * The number of times the help popup for the {@link ImageInfoPanel} will be displayed.

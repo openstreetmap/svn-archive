@@ -41,8 +41,6 @@ public final class SequenceDownloadRunnable extends BoundsDownloadRunnable {
     this.data = data;
   }
 
-  // TODO: Revise sequence creation algorithm - compare bubble query results with bubbleId list
-  // and analyze discrepancies.
   @Override
   public void run(final URLConnection con) throws IOException {
     if (Thread.interrupted()) {
@@ -148,7 +146,6 @@ public final class SequenceDownloadRunnable extends BoundsDownloadRunnable {
      *  of Streetside images is non-sequential, the Mapillary "Walking Action" may behave
      *  unpredictably.
      **/
-    int x = bubbleImages.size();
     seq.add(bubbleImages);
 
     if (StreetsideProperties.CUT_OFF_SEQUENCES_AT_BOUNDS.get()) {

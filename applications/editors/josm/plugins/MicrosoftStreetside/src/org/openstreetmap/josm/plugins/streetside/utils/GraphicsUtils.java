@@ -89,7 +89,6 @@ public class GraphicsUtils {
           width,
           height, BufferedImage.TYPE_INT_ARGB);
 
-        // TODO: mirror image
         // Create mirror image pixel by pixel
         for (int y = 0; y < height; y++) {
           for (int lx = 0, rx = width - 1; lx < width; lx++, rx--) {

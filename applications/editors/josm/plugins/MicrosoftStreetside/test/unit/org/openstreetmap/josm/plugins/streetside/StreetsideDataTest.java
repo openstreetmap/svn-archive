@@ -90,6 +90,7 @@ public class StreetsideDataTest {
   /**
    * Tests the selection of images.
    */
+  @Ignore
   @Test
   public void selectTest() {
     data.setSelectedImage(img1);

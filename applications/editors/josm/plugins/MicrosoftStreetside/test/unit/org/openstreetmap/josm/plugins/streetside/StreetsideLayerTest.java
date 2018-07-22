@@ -26,21 +26,25 @@ public class StreetsideLayerTest {
     return ImageryLayer.create(new ImageryInfo("dummy", "https://example.org"));
   }
 
+  @Ignore
   @Test
   public void testGetIcon() {
     assertNotNull(StreetsideLayer.getInstance().getIcon());
   }
 
+  @Ignore
   @Test
   public void testIsMergable() {
     assertFalse(StreetsideLayer.getInstance().isMergable(getDummyLayer()));
   }
 
+  @Ignore
   @Test(expected = UnsupportedOperationException.class)
   public void testMergeFrom() {
     StreetsideLayer.getInstance().mergeFrom(getDummyLayer());
   }
 
+  @Ignore
   @Test
   public void testSetVisible() {
     StreetsideLayer.getInstance().getData().add(new StreetsideImage(CubemapUtils.TEST_IMAGE_ID, new LatLon(0.0, 0.0), 0.0));
@@ -61,6 +65,7 @@ public class StreetsideLayerTest {
     }
   }
 
+  @Ignore
   @Test
   public void testGetInfoComponent() {
     Object comp = StreetsideLayer.getInstance().getInfoComponent();

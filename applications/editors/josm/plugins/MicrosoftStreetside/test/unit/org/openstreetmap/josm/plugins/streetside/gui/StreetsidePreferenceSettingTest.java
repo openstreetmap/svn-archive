@@ -41,12 +41,14 @@ public class StreetsidePreferenceSettingTest {
     assertEquals(tabs.getDisplayPreference(), setting.getTabPreferenceSetting(tabs));
   }
 
+  @Ignore
   @Test
   public void testIsExpert() {
     assertFalse(new StreetsidePreferenceSetting().isExpert());
   }
 
   @SuppressWarnings("unchecked")
+  @Ignore
   @Test
   public void testOk() {
     StreetsidePreferenceSetting settings = new StreetsidePreferenceSetting();

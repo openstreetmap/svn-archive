@@ -50,6 +50,7 @@ public class StreetsideDataTest {
    * Tests the addition of new images. If a second image with the same key as
    * another one in the database, the one that is being added should be ignored.
    */
+  @Ignore
   @Test
   public void addTest() {
     data = new StreetsideData();
@@ -67,6 +68,7 @@ public class StreetsideDataTest {
   /**
    * Test that the size is properly calculated.
    */
+  @Ignore
   @Test
   public void sizeTest() {
     assertEquals(4, data.getImages().size());
@@ -78,6 +80,7 @@ public class StreetsideDataTest {
    * Test the {@link StreetsideData#setHighlightedImage(StreetsideAbstractImage)}
    * and {@link StreetsideData#getHighlightedImage()} methods.
    */
+  @Ignore
   @Test
   public void highlighTest() {
     data.setHighlightedImage(img1);

@@ -30,6 +30,7 @@ public class CubemapUtilsTest {
   }
 
   @SuppressWarnings("static-method")
+  @Ignore
   @Test
   public final void testGetFaceNumberForCount() {
     String faceNrFront = CubemapUtils.getFaceNumberForCount(0);

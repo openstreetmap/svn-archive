@@ -15,7 +15,7 @@ import org.openstreetmap.josm.plugins.streetside.StreetsideLayer;
  *
  */
 public class CommandTurn extends StreetsideCommand {
-  private double ca;
+  private double he;
 
   /**
    * Main constructor.
@@ -27,13 +27,13 @@ public class CommandTurn extends StreetsideCommand {
    */
   public CommandTurn(Set<StreetsideAbstractImage> images, double ca) {
     super(images);
-    this.ca = ca;
+    he = ca;
   }
 
   @Override
   public void undo() {
     for (StreetsideAbstractImage image : images) {
-      image.turn(-ca);
+      image.turn(-he);
       image.stopMoving();
     }
     StreetsideLayer.invalidateInstance();
@@ -42,7 +42,7 @@ public class CommandTurn extends StreetsideCommand {
   @Override
   public void redo() {
     for (StreetsideAbstractImage image : images) {
-      image.turn(ca);
+      image.turn(he);
       image.stopMoving();
     }
     StreetsideLayer.invalidateInstance();
@@ -57,7 +57,7 @@ public class CommandTurn extends StreetsideCommand {
   @Override
   public void sum(StreetsideCommand command) {
     if (command instanceof CommandTurn) {
-      ca += ((CommandTurn) command).ca;
+      he += ((CommandTurn) command).he;
     }
   }
 }

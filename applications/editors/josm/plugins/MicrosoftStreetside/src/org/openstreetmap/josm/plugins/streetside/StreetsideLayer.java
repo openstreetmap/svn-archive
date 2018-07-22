@@ -332,6 +332,11 @@ ActiveLayerChangeListener, StreetsideDataListener {
     }
 
     // Paint direction indicator
+    float alpha = 0.75f;
+    int type = AlphaComposite.SRC_OVER;
+    AlphaComposite composite =
+      AlphaComposite.getInstance(type, alpha);
+    g.setComposite(composite);
     g.setColor(directionC);
     g.fillArc(p.x - CA_INDICATOR_RADIUS, p.y - CA_INDICATOR_RADIUS, 2 * CA_INDICATOR_RADIUS, 2 * CA_INDICATOR_RADIUS, (int) (90 - /*img.getMovingHe()*/img.getHe() - CA_INDICATOR_ANGLE / 2d), CA_INDICATOR_ANGLE);
     // Paint image marker

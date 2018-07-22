@@ -12,7 +12,6 @@ import org.junit.AfterClass;
 import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
-
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.plugins.streetside.StreetsideLayer;

@@ -24,8 +24,6 @@ import org.openstreetmap.josm.plugins.streetside.oauth.StreetsideUser;
 import org.openstreetmap.josm.plugins.streetside.utils.StreetsideProperties;
 import org.openstreetmap.josm.tools.ImageProvider;
 
-import org.openstreetmap.josm.plugins.streetside.gui.imageinfo.StreetsideViewerPanel;
-
 /**
  * This is the main class of the Streetside plugin.
  */

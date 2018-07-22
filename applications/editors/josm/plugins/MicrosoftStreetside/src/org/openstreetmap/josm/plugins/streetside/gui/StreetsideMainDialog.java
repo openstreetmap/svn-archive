@@ -2,6 +2,7 @@
 package org.openstreetmap.josm.plugins.streetside.gui;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.image.BufferedImage;
@@ -105,6 +106,9 @@ public final class StreetsideMainDialog extends ToggleDialog implements
 		addShortcuts();
 
 		streetsideImageDisplay = new StreetsideImageDisplay();
+
+		blueButton.setForeground(Color.BLUE);
+    redButton.setForeground(Color.RED);
 
 		setMode(MODE.NORMAL);
 	}

@@ -10,7 +10,6 @@ import java.awt.image.BufferedImage;
 
 import javax.swing.JFrame;
 
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.openstreetmap.josm.plugins.streetside.utils.TestUtil.StreetsideTestRules;
@@ -26,8 +25,6 @@ public class ImageDisplayTest {
 
   private static final BufferedImage DUMMY_IMAGE = new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB);
 
-  //TODO: fix broken Mapillary test
-  @Ignore
   @Test
   public void testImagePersistence() {
     StreetsideImageDisplay display = new StreetsideImageDisplay();
@@ -40,8 +37,6 @@ public class ImageDisplayTest {
    * it only checks if the tested method runs through.
    */
 
-  // TODO: fix broken Mapillary test
-  @Ignore
   @Test
   public void testMouseWheelMoved() {
     if (GraphicsEnvironment.isHeadless()) {
@@ -68,8 +63,6 @@ public class ImageDisplayTest {
    * This test does not check if the scroll events result in the correct changes in the {@link StreetsideImageDisplay},
    * it only checks if the tested method runs through.
    */
-  //TODO: fix broken Mapillary test
-  @Ignore
   @Test
   public void testMouseClicked() {
     if (GraphicsEnvironment.isHeadless()) {

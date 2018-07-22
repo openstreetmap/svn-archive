@@ -32,7 +32,7 @@ public abstract class BoundsDownloadRunnable implements Runnable {
   public void run() {
     URL nextURL = getUrlGenerator().apply(bounds);
     if(StreetsideProperties.DEBUGING_ENABLED.get()) {
-      logger.debug(MessageFormat.format("nextURL: {0}", nextURL.toString()));
+      logger.debug(MessageFormat.format("Downloading bounds: URL: {0}", nextURL.toString()));
     }
     try {
       while (nextURL != null) {

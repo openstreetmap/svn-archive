@@ -1,13 +1,7 @@
 // License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.streetside;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Locale;
-
 import org.openstreetmap.josm.data.coor.LatLon;
-import org.openstreetmap.josm.plugins.streetside.utils.StreetsideProperties;
 
 /**
  * Abstract superclass for all image objects. At the moment there are 3,

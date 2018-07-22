@@ -1,18 +1,13 @@
-// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.streetside.gui;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 import static org.openstreetmap.josm.plugins.streetside.utils.TestUtil.getPrivateFieldValue;
 
 import java.awt.GraphicsEnvironment;
 
-import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
 import javax.swing.SpinnerNumberModel;
 
 import org.junit.Ignore;
@@ -24,7 +19,6 @@ import org.openstreetmap.josm.gui.preferences.PreferenceTabbedPane;
 import org.openstreetmap.josm.plugins.streetside.io.download.StreetsideDownloader.DOWNLOAD_MODE;
 import org.openstreetmap.josm.plugins.streetside.utils.TestUtil.StreetsideTestRules;
 import org.openstreetmap.josm.testutils.JOSMTestRules;
-import org.openstreetmap.josm.tools.I18n;
 
 public class StreetsidePreferenceSettingTest {
 

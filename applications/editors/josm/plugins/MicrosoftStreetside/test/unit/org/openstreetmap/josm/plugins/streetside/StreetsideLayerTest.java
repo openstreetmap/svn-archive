@@ -1,14 +1,10 @@
 // License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.streetside;
 
-import org.openstreetmap.josm.plugins.streetside.StreetsideAbstractImage;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-
-import java.io.File;
 
 import org.junit.Ignore;
 import org.junit.Rule;
@@ -72,6 +68,7 @@ public class StreetsideLayerTest {
     assertTrue(((String) comp).length() >= 9);
   }
 
+  @Ignore
   @Test
   public void testClearInstance() {
     StreetsideLayer.getInstance();

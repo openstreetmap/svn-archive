@@ -28,12 +28,11 @@ import org.openstreetmap.josm.plugins.streetside.utils.TestUtil;
 
 public class JsonSequencesDecoderTest {
 
-
   @Ignore
   @Test
   public void testDecodeSequences() {
     Collection<StreetsideSequence> exampleSequences = JsonDecoder.decodeFeatureCollection(
-      Json.createReader(this.getClass().getResourceAsStream("/api/v3/responses/searchSequences.json")).readObject(),
+      Json.createReader(this.getClass().getResourceAsStream("test/data/api/v3/responses/searchSequences.json")).readObject(),
       JsonSequencesDecoder::decodeSequence
     );
     assertNotNull(exampleSequences);

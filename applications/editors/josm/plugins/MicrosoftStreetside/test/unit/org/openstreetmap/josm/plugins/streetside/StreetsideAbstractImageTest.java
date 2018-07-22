@@ -4,11 +4,8 @@ package org.openstreetmap.josm.plugins.streetside;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import org.junit.Rule;
 import org.junit.Test;
 import org.openstreetmap.josm.data.coor.LatLon;
-import org.openstreetmap.josm.plugins.streetside.utils.TestUtil.StreetsideTestRules;
-import org.openstreetmap.josm.testutils.JOSMTestRules;
 
 public class StreetsideAbstractImageTest {
 

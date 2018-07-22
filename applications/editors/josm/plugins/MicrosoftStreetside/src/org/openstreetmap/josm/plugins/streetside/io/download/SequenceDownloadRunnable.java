@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.function.Function;
 
 import org.openstreetmap.josm.data.Bounds;
+import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.plugins.streetside.StreetsideAbstractImage;
 import org.openstreetmap.josm.plugins.streetside.StreetsideData;
 import org.openstreetmap.josm.plugins.streetside.StreetsideImage;
@@ -33,13 +34,15 @@ public final class SequenceDownloadRunnable extends BoundsDownloadRunnable {
 
 	private final StreetsideData data;
 
-  private static final Function<Bounds, URL> URL_GEN = APIv3::searchStreetsideSequences;
+  private static final Function<Bounds, URL> URL_GEN = APIv3::searchStreetsideImages;
 
   public SequenceDownloadRunnable(final StreetsideData data, final Bounds bounds) {
     super(bounds);
     this.data = data;
   }
 
+  // TODO: Revise sequence creation algorithm - compare bubble query results with bubbleId list
+  // and analyze discrepancies.
   @Override
   public void run(final URLConnection con) throws IOException {
     if (Thread.interrupted()) {
@@ -58,7 +61,7 @@ public final class SequenceDownloadRunnable extends BoundsDownloadRunnable {
     mapper.configure(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES, true);
 
     // Allow unrecognized properties - won't break with addition of new attributes
-    mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+    mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, true);
 
     try {
       JsonParser parser = mapper.getFactory().createParser(new BufferedInputStream(con.getInputStream()));
@@ -75,7 +78,7 @@ public final class SequenceDownloadRunnable extends BoundsDownloadRunnable {
         ObjectNode node = mapper.readTree(parser);
         // Discard the first sequence ('enabled') - it does not contain bubble data
         if (node.get("id") != null && node.get("la") != null && node.get("lo") != null) {
-          StreetsideImage image = new StreetsideImage(CubemapUtils.convertDecimal2Quaternary(node.path("id").asLong()), node.path("la").asDouble(), node.get("lo").asDouble());
+          StreetsideImage image = new StreetsideImage(CubemapUtils.convertDecimal2Quaternary(node.path("id").asLong()), new LatLon(node.path("la").asDouble(), node.get("lo").asDouble()), node.get("he").asDouble());
           if(previous!=null) {
             image.setPr(Long.parseLong(previous.getId()));
             previous.setNe(Long.parseLong(image.getId()));
@@ -85,7 +88,6 @@ public final class SequenceDownloadRunnable extends BoundsDownloadRunnable {
           image.setAd(node.path("ad").asInt());
           image.setAl(node.path("al").asDouble());
           image.setBl(node.path("bl").asText());
-          image.setHe(node.path("he").asDouble());
           image.setMl(node.path("ml").asInt());
           image.setNbn(node.findValuesAsText("nbn"));
           image.setNe(node.path("ne").asLong());
@@ -126,6 +128,8 @@ public final class SequenceDownloadRunnable extends BoundsDownloadRunnable {
           if (StreetsideProperties.PREDOWNLOAD_CUBEMAPS.get()) {
             StreetsideData.downloadSurroundingCubemaps(image);
           }
+        } else {
+          logger.info(MessageFormat.format("Unparsable JSON node object: {0}",node.toString()));
         }
       }
 
@@ -144,6 +148,7 @@ public final class SequenceDownloadRunnable extends BoundsDownloadRunnable {
      *  of Streetside images is non-sequential, the Mapillary "Walking Action" may behave
      *  unpredictably.
      **/
+    int x = bubbleImages.size();
     seq.add(bubbleImages);
 
     if (StreetsideProperties.CUT_OFF_SEQUENCES_AT_BOUNDS.get()) {
@@ -165,7 +170,7 @@ public final class SequenceDownloadRunnable extends BoundsDownloadRunnable {
     }
 
     final long endTime = System.currentTimeMillis();
-    logger.info("Sucessfully loaded " + seq.getImages().size() + " Microsoft Streetside images in " + (endTime-startTime/1000));
+    logger.info(MessageFormat.format("Sucessfully loaded {0} Microsoft Streetside images in {1} seconds.", seq.getImages().size(),(endTime-startTime)/1000));
   }
 
   @Override

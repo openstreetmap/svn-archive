@@ -45,10 +45,6 @@ public final class StreetsideURL {
 			return StreetsideURL.string2URL(StreetsideURL.STREETSIDE_BASE_URL, APIv3.queryStreetsideString(bounds));
 		}
 
-		public static URL searchStreetsideSequences(final Bounds bounds) {
-			return StreetsideURL.string2URL(StreetsideURL.STREETSIDE_BASE_URL, APIv3.queryStreetsideString(bounds));
-		}
-
 		/**
 		 * The APIv3 returns a Link header for each request. It contains a URL for requesting more results.
 		 * If you supply the value of the Link header, this method returns the next URL,
@@ -296,10 +292,6 @@ public final class StreetsideURL {
 			} catch (final UnsupportedEncodingException e) {
 				logger.error(e); // This should not happen, as the encoding is hard-coded
 			}
-		}
-
-		if(StreetsideProperties.DEBUGING_ENABLED.get()) {
-		  logger.debug(MessageFormat.format("queryStreetsideBoundsString result: {0}", ret.toString()));
 		}
 
 		return ret.toString();

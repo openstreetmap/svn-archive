@@ -25,8 +25,14 @@ public final class ProjectionInfo {
         // Hide default constructor for utilities classes
     }
 
-    public static Projection getProjectionByCode(String code) {
-		return new SingleProjectionChoice(code.toString(), code.toString(), code).getProjection() ;
+	public static Projection getProjectionByCode(String code) {
+		try {
+			ProjectionChoice pc = new SingleProjectionChoice(code.toString(), code.toString(), code);
+			Projection p = pc.getProjection();
+			return p;
+		} catch (Exception e) {
+			throw new IllegalArgumentException();
+		}
 
 //        Projection p = allCodes.get(code);
 //        if (p != null) return p;

@@ -9,14 +9,14 @@ Uses PDFBox library to parse PDF files, see https://pdfbox.apache.org for more i
 
 Layout
 ======
-+--- src                                source of your plugin
-  |- images                             images your plugin needs
-  |- resources                          resources your plugin needs
++- src                                source of the plugin
++- images                             images the plugin needs
++- resources                          resources the plugin needs
++- libs								  libraries the plugin needs (pdfbox ...)
 
   README                                this file
 
-  GPL-v2.0.txt                          GPL version 2 license text
-  GPL-v3.0.txt                          GPL version 3 license text
+  license                               GPL version 3 license text
   build.xml                             deployment build file
 
   
@@ -65,6 +65,15 @@ There are two versions maintained with each plugin:
  Note that you have to manually publish (commit) your plugin jar. There is no nightly build
  in place. Everything else (pulishing meta data, updating plugins in the client) is then handled 
  by automatic processes. 
+
+Hints for eclipse
+=================
+. Building:
+  . add pdfimport/src to your buildpath
+  . add to buildpath|libraries: josm-custom.jar, fontbox-...jar, jempbox...jar, pdfbox...jar
+  . build with ant, if any resources have changed (at least after svn update); eclipse cant handle build of resources, etc
+. Run / Debug
+  . main class: org.openstreetmap.josm.gui.MainApplication (found in josm-custom.jar)
 
 See also
 ========

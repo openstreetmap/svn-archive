@@ -280,7 +280,7 @@ public class LoadPdfDialog extends JFrame {
 	private final FilePlacement18 placement = new FilePlacement18();
 
 	private PathOptimizer pdfData;
-	private OsmDataLayer dataLayer;
+//	private OsmDataLayer dataLayer;
 
 	private final JButton loadFileButton = new JButton(tr("Load preview ..."));
 
@@ -712,8 +712,9 @@ public class LoadPdfDialog extends JFrame {
 		 *
 		 */
 		removeLayer();
-		dataLayer = _layer;
-		MainApplication.getLayerManager().addLayer(dataLayer);
+		Preview.set(_layer, placement);
+//		dataLayer = _layer;
+//		MainApplication.getLayerManager().addLayer(dataLayer);
 		MainApplication.getMap().mapView.zoomTo(placement.getWorldBounds(pdfData));
 	}
 
@@ -721,11 +722,12 @@ public class LoadPdfDialog extends JFrame {
 		/*
 		 * remove preview layer
 		 */
-		if (dataLayer != null) {
-			MainApplication.getLayerManager().removeLayer(dataLayer);
-			dataLayer.data.clear(); // saves memory
-			dataLayer = null;
-		}
+//		if (dataLayer != null) {
+//			MainApplication.getLayerManager().removeLayer(dataLayer);
+//			dataLayer.data.clear(); // saves memory
+//			dataLayer = null;
+//		}
+		Preview.clear();
 		// No layer ==> no actions
 		actionPanel.showButton.setEnabled(false);
 		actionPanel.saveButton.setEnabled(false);

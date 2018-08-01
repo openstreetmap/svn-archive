@@ -18,11 +18,12 @@ public class Preview {
 	public static OsmDataLayer dataLayer;
 	public static FilePlacement placement;
 	
-	public static void set (@NotNull OsmDataLayer dataLayer, @NotNull FilePlacement placement) {
+	public static synchronized void set (@NotNull OsmDataLayer dataLayer, @NotNull FilePlacement placement) {
 		clear();
 		Preview.dataLayer = dataLayer;
 		Preview.placement = placement;
-		MainApplication.getLayerManager().addLayer(dataLayer);  
+		MainApplication.getLayerManager().addLayer(dataLayer); 
+
 	}
 	
 	public static void clear() {

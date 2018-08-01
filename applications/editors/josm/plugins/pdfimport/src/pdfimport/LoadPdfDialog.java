@@ -406,11 +406,12 @@ public class LoadPdfDialog extends JFrame {
 				// sync part
 				LoadPdfDialog.this.pdfFile = newFileName;
 				if (pdfData != null) {
-					LoadPdfDialog.this.placeLayer(newLayer, new FilePlacement());
+					Preview.set(newLayer, new FilePlacement());
+					MainApplication.getMap().mapView.zoomTo(placement.getWorldBounds(pdfData));
 					try {
 						LoadPdfDialog.this.placement.load(newFileName);
 					} catch (IOException e) {
-						// Dont care
+						// Saved placement does not exist, corrupt, ... ---> ignore it
 					} finally {
 						LoadPdfDialog.this.placement.verify();
 					}
@@ -454,7 +455,8 @@ public class LoadPdfDialog extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				// sync part
 				// rebuild layer with latest projection
-				LoadPdfDialog.this.placeLayer(newLayer, placement);
+				MainApplication.getLayerManager().addLayer(newLayer);
+				MainApplication.getMap().mapView.zoomTo(placement.getWorldBounds(pdfData));
 				LoadPdfDialog.this.setVisible(false);
 			}
 		});
@@ -707,18 +709,7 @@ public class LoadPdfDialog extends JFrame {
 		return result;
 	}
 
-	private void placeLayer(OsmDataLayer _layer, FilePlacement placement) {
-		/*
-		 *
-		 */
-		removeLayer();
-		Preview.set(_layer, placement);
-//		dataLayer = _layer;
-//		MainApplication.getLayerManager().addLayer(dataLayer);
-		MainApplication.getMap().mapView.zoomTo(placement.getWorldBounds(pdfData));
-	}
-
-	private void removeLayer() {
+		private void removeLayer() {
 		/*
 		 * remove preview layer
 		 */

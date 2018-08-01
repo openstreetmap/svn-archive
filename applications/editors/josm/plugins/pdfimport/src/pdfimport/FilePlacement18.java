@@ -81,7 +81,9 @@ public class FilePlacement18 extends FilePlacement {
 				});
 			}
 			public void SetCoor(EastNorth en) {
+				x.requestFocusInWindow();		// make shure focus-lost events will be triggered later
 				x.setValue(en.getX());
+				y.requestFocusInWindow();
 				y.setValue(en.getY());
 			}
 			public EastNorth getCorr() {

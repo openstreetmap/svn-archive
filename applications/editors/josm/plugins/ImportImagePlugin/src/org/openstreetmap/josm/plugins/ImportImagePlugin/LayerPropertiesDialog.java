@@ -7,6 +7,7 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Rectangle;
+import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.FileWriter;
@@ -30,7 +31,6 @@ import javax.swing.event.ListSelectionListener;
 
 import org.geotools.referencing.CRS;
 import org.opengis.referencing.FactoryException;
-import org.opengis.referencing.NoSuchAuthorityCodeException;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.openstreetmap.josm.tools.Logging;
 
@@ -108,7 +108,6 @@ public class LayerPropertiesDialog extends JFrame {
         initialize();
     }
 
-
     /**
      * This method initializes this
      *
@@ -117,7 +116,6 @@ public class LayerPropertiesDialog extends JFrame {
         this.setMinimumSize(new Dimension(404, 485));
         this.setContentPane(getMainPanel());
         this.setPreferredSize(new Dimension(404, 485));
-
     }
 
     /**
@@ -352,13 +350,10 @@ public class LayerPropertiesDialog extends JFrame {
             okButton = new JButton();
             okButton.setBounds(new Rectangle(134, 5, 136, 31));
             okButton.setText("OK");
-            okButton.addActionListener(new java.awt.event.ActionListener() {
-                @Override
-        public void actionPerformed(java.awt.event.ActionEvent e) {
-                    setVisible(false);
-                    dispose();
-                }
-            });
+            okButton.addActionListener(e -> {
+                        setVisible(false);
+                        dispose();
+                    });
         }
         return okButton;
     }
@@ -373,9 +368,9 @@ public class LayerPropertiesDialog extends JFrame {
             searchField = new JTextField();
             searchField.setBounds(new Rectangle(13, 111, 282, 20));
             searchField.setToolTipText("Enter keywords or EPSG codes");
-            searchField.addKeyListener(new java.awt.event.KeyAdapter() {
+            searchField.addKeyListener(new KeyAdapter() {
                 @Override
-                public void keyTyped(java.awt.event.KeyEvent e) {
+                public void keyTyped(KeyEvent e) {
 
                     for (Iterator<String> iterator = supportedCRS.iterator(); iterator.hasNext();) {
                         String type = iterator.next();
@@ -429,33 +424,21 @@ public class LayerPropertiesDialog extends JFrame {
             useDefaultCRSButton = new JButton();
             useDefaultCRSButton.setBounds(new Rectangle(253, 54, 118, 28));
             useDefaultCRSButton.setText("Apply Default");
-            useDefaultCRSButton.addActionListener(new java.awt.event.ActionListener() {
-                @Override
-        public void actionPerformed(java.awt.event.ActionEvent e) {
-                    try {
-
-                        setCursor(new Cursor(Cursor.WAIT_CURSOR));
-                        if (PluginOperations.defaultSourceCRS != null) {
-                            imageLayer.resample(PluginOperations.defaultSourceCRS);
-                        } else {
-                            JOptionPane.showMessageDialog(getContentPane(), 
-                                    "<html>No default reference system available.<br>Please select one from the list</html>");
+            useDefaultCRSButton.addActionListener(e -> {
+                        try {
+                            setCursor(new Cursor(Cursor.WAIT_CURSOR));
+                            if (PluginOperations.defaultSourceCRS != null) {
+                                imageLayer.resample(PluginOperations.defaultSourceCRS);
+                            } else {
+                                JOptionPane.showMessageDialog(getContentPane(), 
+                                        "<html>No default reference system available.<br>Please select one from the list</html>");
+                            }
+                        } catch (FactoryException | IOException e1) {
+                            Logging.error(e1);
+                        } finally {
+                            setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
                         }
-
-                    } catch (NoSuchAuthorityCodeException e1) {
-                        // TODO Auto-generated catch block
-                        e1.printStackTrace();
-                    } catch (FactoryException e1) {
-                        // TODO Auto-generated catch block
-                        e1.printStackTrace();
-                    } catch (IOException e2) {
-                        // TODO Auto-generated catch block
-                        e2.printStackTrace();
-                    } finally {
-                        setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
-                    }
-                }
-            });
+                    });
         }
         return useDefaultCRSButton;
     }
@@ -472,35 +455,21 @@ public class LayerPropertiesDialog extends JFrame {
             applySelectedCRSButton.setHorizontalAlignment(SwingConstants.CENTER);
             applySelectedCRSButton.setHorizontalTextPosition(SwingConstants.TRAILING);
             applySelectedCRSButton.setText("<html>Apply<br>Selection</html>");
-            applySelectedCRSButton.addActionListener(new java.awt.event.ActionListener() {
-                @Override
-        public void actionPerformed(java.awt.event.ActionEvent e) {
+            applySelectedCRSButton.addActionListener(e -> {
 
-                    String selection = crsJList.getSelectedValue();
-                    String code = selection.substring(selection.indexOf("[-") + 2, selection.indexOf("-]"));
+                        String selection = crsJList.getSelectedValue();
+                        String code = selection.substring(selection.indexOf("[-") + 2, selection.indexOf("-]"));
 
-                    CoordinateReferenceSystem newRefSys = null;
-                    try {
-                        newRefSys = CRS.decode(code, eastingFirstCheckBox.isSelected());
-
-                        setCursor(new Cursor(Cursor.WAIT_CURSOR));
-
-                        imageLayer.resample(newRefSys);
-
-                    } catch (NoSuchAuthorityCodeException e1) {
-                        // TODO Auto-generated catch block
-                        e1.printStackTrace();
-                    } catch (FactoryException e1) {
-                        // TODO Auto-generated catch block
-                        e1.printStackTrace();
-                    } catch (IOException e2) {
-                        // TODO Auto-generated catch block
-                        e2.printStackTrace();
-                    } finally {
-                        setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
-                    }
-                }
-            });
+                        try {
+                            CoordinateReferenceSystem newRefSys = CRS.decode(code, eastingFirstCheckBox.isSelected());
+                            setCursor(new Cursor(Cursor.WAIT_CURSOR));
+                            imageLayer.resample(newRefSys);
+                        } catch (FactoryException | IOException e1) {
+                            Logging.error(e1);
+                        } finally {
+                            setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+                        }
+                    });
         }
         return applySelectedCRSButton;
     }
@@ -515,34 +484,29 @@ public class LayerPropertiesDialog extends JFrame {
             setSelectedCRSAsDefaultButton = new JButton();
             setSelectedCRSAsDefaultButton.setBounds(new Rectangle(315, 300, 69, 61));
             setSelectedCRSAsDefaultButton.setText("<html>Set as<br>Default</html>");
-            setSelectedCRSAsDefaultButton
-                    .addActionListener(new java.awt.event.ActionListener() {
-                        @Override
-                        public void actionPerformed(java.awt.event.ActionEvent e) {
+            setSelectedCRSAsDefaultButton.addActionListener(e -> {
+                        if (crsJList.getSelectedValue() != null) {
+                            String selection = crsJList.getSelectedValue();
+                            String code = selection.substring(selection.indexOf("[-") + 2, selection.indexOf("-]"));
 
-                            if (crsJList.getSelectedValue() != null) {
-                                String selection = crsJList.getSelectedValue();
-                                String code = selection.substring(selection.indexOf("[-") + 2, selection.indexOf("-]"));
+                            try {
+                                PluginOperations.defaultSourceCRS = CRS.decode(code, eastingFirstCheckBox.isSelected());
+                                PluginOperations.defaultSourceCRSDescription = selection;
 
-                                try {
-                                    PluginOperations.defaultSourceCRS = CRS.decode(code, eastingFirstCheckBox.isSelected());
-                                    PluginOperations.defaultSourceCRSDescription = selection;
-
-                                    ImportImagePlugin.pluginProps.setProperty("default_crs_eastingfirst", 
-                                            "" + eastingFirstCheckBox.isSelected());
-                                    ImportImagePlugin.pluginProps.setProperty("default_crs_srid", code);
-                                    try (FileWriter fileWriter = new FileWriter(new File(ImportImagePlugin.PLUGINPROPERTIES_PATH))) {
-                                        ImportImagePlugin.pluginProps.store(fileWriter, null);
-                                    }
-
-                                    defaultCRSLabel.setText(selection);
-
-                                } catch (IOException | FactoryException e2) {
-                                    Logging.error(e2);
+                                ImportImagePlugin.pluginProps.setProperty("default_crs_eastingfirst", 
+                                        "" + eastingFirstCheckBox.isSelected());
+                                ImportImagePlugin.pluginProps.setProperty("default_crs_srid", code);
+                                try (FileWriter fileWriter = new FileWriter(new File(ImportImagePlugin.PLUGINPROPERTIES_PATH))) {
+                                    ImportImagePlugin.pluginProps.store(fileWriter, null);
                                 }
-                            } else {
-                                JOptionPane.showMessageDialog(getContentPane(), "Please make a selection from the list.");
+
+                                defaultCRSLabel.setText(selection);
+
+                            } catch (IOException | FactoryException e2) {
+                                Logging.error(e2);
                             }
+                        } else {
+                            JOptionPane.showMessageDialog(getContentPane(), "Please make a selection from the list.");
                         }
                     });
         }

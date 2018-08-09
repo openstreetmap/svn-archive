@@ -222,7 +222,7 @@ public class ImageLayer extends Layer {
                 g.drawImage(image, 0, 0, null);
             } catch (ArrayIndexOutOfBoundsException e) {
                 // TODO: prevents this to happen when displaying GeoTIFF images (see #7902)
-                e.printStackTrace();
+                Logging.error(e);
             }
 
         } else {

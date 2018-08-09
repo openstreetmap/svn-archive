@@ -123,9 +123,11 @@ public class ImportImagePlugin extends Plugin {
             if (pluginProps == null || pluginProps.isEmpty()) {
                 try (FileWriter fw = new FileWriter(new File(PLUGINPROPERTIES_PATH))) {
                     URL propertiesURL = getClass().getResource("resources/" + PLUGINPROPERTIES_FILENAME);
-                    pluginProps = new Properties();
-                    pluginProps.load(propertiesURL.openStream());
-                    pluginProps.store(fw, null);
+                    if (propertiesURL != null) {
+                        pluginProps = new Properties();
+                        pluginProps.load(propertiesURL.openStream());
+                        pluginProps.store(fw, null);
+                    }
                 }
                 logger.debug("Plugin properties loaded");
             }
@@ -133,9 +135,11 @@ public class ImportImagePlugin extends Plugin {
             if (!new File(LOGGING_PROPERTIES_FILEPATH).exists()) {
                 try (FileWriter fw = new FileWriter(new File(LOGGING_PROPERTIES_FILEPATH))) {
                     URL propertiesURL = getClass().getResource("resources/log4j.properties");
-                    Properties loggingProps = new Properties();
-                    loggingProps.load(propertiesURL.openStream());
-                    loggingProps.store(fw, null);
+                    if (propertiesURL != null) {
+                        Properties loggingProps = new Properties();
+                        loggingProps.load(propertiesURL.openStream());
+                        loggingProps.store(fw, null);
+                    }
                 }
                 logger.debug("Logging properties created");
             }

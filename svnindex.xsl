@@ -43,6 +43,9 @@
         <link rel="stylesheet" type="text/css" href="/svnindex.css"/>
       </head>
       <body>
+        <div class="svnnotice">
+          NOTICE: Please note that this OpenStreetMap svn repo is deprecated and many items have now moved to repositories under <a href="https://github.com/OpenStreetMap">github.com/OpenStreetMap</a> project.
+        </div>
         <div class="svn">
           <xsl:apply-templates/>
         </div>

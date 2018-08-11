@@ -31,6 +31,14 @@ a {
   color: navy;
 }
 
+.svnnotice {
+    padding: 20px;
+    background-color: #f44336; /* Red */
+    color: white;
+    margin-bottom: 15px;
+    font-size: 120%;
+}
+
 .footer {
   margin-top: 8em;
   padding: 0.5em 1em 0.5em;

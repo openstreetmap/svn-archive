@@ -6,7 +6,8 @@
     <target name="compile_josm_test" unless="skip-josm">
         <ant dir="../core" target="test-compile"/>
     </target>
-    <property name="ordered_plugins" value="jna/build.xml
+    <property name="ordered_plugins" value="jaxb/build.xml
+                                            jna/build.xml
                                             jts/build.xml
                                             gson/build.xml
                                             ejml/build.xml

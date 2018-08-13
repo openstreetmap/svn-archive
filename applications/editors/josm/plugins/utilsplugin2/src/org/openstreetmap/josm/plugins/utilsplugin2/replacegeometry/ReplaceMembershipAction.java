@@ -17,15 +17,18 @@ import javax.swing.JOptionPane;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.command.ChangeCommand;
 import org.openstreetmap.josm.command.Command;
+import org.openstreetmap.josm.data.UndoRedoHandler;
 import org.openstreetmap.josm.data.osm.DefaultNameFormatter;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.data.osm.RelationToChildReference;
-import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.Notification;
 import org.openstreetmap.josm.tools.MultiMap;
 
+/**
+ * In relations where the selected object is member of, replace it with a new one
+ */
 public class ReplaceMembershipAction extends JosmAction {
 
     public ReplaceMembershipAction() {
@@ -44,7 +47,7 @@ public class ReplaceMembershipAction extends JosmAction {
         final ReplaceGeometryCommand command = getReplaceGeometryCommand(firstObject, secondObject);
         final int affectedRelations = command != null ? command.getChildren().size() : 0;
         if (affectedRelations > 0) {
-            MainApplication.undoRedo.add(command);
+            UndoRedoHandler.getInstance().add(command);
             new Notification(trn("Replaced ''{0}'' by ''{1}'' in {2} relation", "Replaced ''{0}'' by ''{1}'' in {2} relations",
                     affectedRelations,
                     firstObject.getDisplayName(DefaultNameFormatter.getInstance()),

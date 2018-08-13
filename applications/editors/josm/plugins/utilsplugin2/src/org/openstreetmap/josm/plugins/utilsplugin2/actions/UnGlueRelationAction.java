@@ -14,6 +14,7 @@ import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.command.AddCommand;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.SequenceCommand;
+import org.openstreetmap.josm.data.UndoRedoHandler;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
@@ -80,7 +81,7 @@ public class UnGlueRelationAction extends JosmAction {
         if (newPrimitives.isEmpty()) {
             // error message nothing to do
         } else {
-            MainApplication.undoRedo.add(new SequenceCommand(tr("Unglued Relations"), cmds));
+            UndoRedoHandler.getInstance().add(new SequenceCommand(tr("Unglued Relations"), cmds));
             //Set selection all primiteves (new and old)
             newPrimitives.addAll(selection);
             ds.setSelected(newPrimitives);

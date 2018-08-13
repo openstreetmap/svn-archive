@@ -20,10 +20,10 @@ import javax.swing.JOptionPane;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.command.DeleteCommand;
 import org.openstreetmap.josm.command.SplitWayCommand;
+import org.openstreetmap.josm.data.UndoRedoHandler;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Way;
-import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.Notification;
 import org.openstreetmap.josm.tools.Shortcut;
 
@@ -209,9 +209,9 @@ public class SplitObjectAction extends JosmAction {
             }
             SplitWayCommand result = SplitWayCommand.splitWay(
                     selectedWay, wayChunks, Collections.<OsmPrimitive>emptyList());
-            MainApplication.undoRedo.add(result);
+            UndoRedoHandler.getInstance().add(result);
             if (splitWay != null)
-                MainApplication.undoRedo.add(new DeleteCommand(splitWay));
+                UndoRedoHandler.getInstance().add(new DeleteCommand(splitWay));
             getLayerManager().getEditDataSet().setSelected(result.getNewSelection());
         }
     }

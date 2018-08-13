@@ -9,11 +9,11 @@ import java.awt.event.KeyEvent;
 import java.util.Collection;
 import java.util.LinkedList;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.command.AddCommand;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.SequenceCommand;
+import org.openstreetmap.josm.data.UndoRedoHandler;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
@@ -40,7 +40,7 @@ public final class LatLonAction extends JosmAction {
         if (!isEnabled())
             return;
 
-        LatLonDialog dialog = new LatLonDialog(Main.parent, tr("Add Node..."), ht("/Action/AddNode"));
+        LatLonDialog dialog = new LatLonDialog(MainApplication.getMainFrame(), tr("Add Node..."), ht("/Action/AddNode"));
 
         if (textLatLon != null) {
             dialog.setLatLonText(textLatLon);
@@ -82,7 +82,7 @@ public final class LatLonAction extends JosmAction {
             wnew.setNodes(nodes);
             cmds.add(new AddCommand(ds, wnew));
         }
-        MainApplication.undoRedo.add(new SequenceCommand(tr("Lat Lon tool"), cmds));
+        UndoRedoHandler.getInstance().add(new SequenceCommand(tr("Lat Lon tool"), cmds));
         MainApplication.getMap().mapView.repaint();
     }
 

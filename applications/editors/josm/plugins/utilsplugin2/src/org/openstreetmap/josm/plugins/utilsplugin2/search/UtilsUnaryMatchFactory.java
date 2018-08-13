@@ -4,10 +4,14 @@ package org.openstreetmap.josm.plugins.utilsplugin2.search;
 import java.util.Arrays;
 import java.util.Collection;
 
-import org.openstreetmap.josm.data.osm.search.SearchParseError;
 import org.openstreetmap.josm.data.osm.search.PushbackTokenizer;
 import org.openstreetmap.josm.data.osm.search.SearchCompiler;
+import org.openstreetmap.josm.data.osm.search.SearchCompiler.CoreUnaryMatchFactory;
+import org.openstreetmap.josm.data.osm.search.SearchParseError;
 
+/**
+ * Extension of the {@link CoreUnaryMatchFactory}.
+ */
 public class UtilsUnaryMatchFactory implements SearchCompiler.UnaryMatchFactory {
 
     private static Collection<String> keywords = Arrays.asList("inside",

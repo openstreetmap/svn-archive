@@ -4,8 +4,8 @@ package org.openstreetmap.josm.plugins.utilsplugin2.search;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
-import org.openstreetmap.josm.data.osm.search.SearchParseError;
 import org.openstreetmap.josm.data.osm.search.PushbackTokenizer;
+import org.openstreetmap.josm.data.osm.search.SearchParseError;
 
 /**
  * Matches objects with a number of parent primitives in the given range.

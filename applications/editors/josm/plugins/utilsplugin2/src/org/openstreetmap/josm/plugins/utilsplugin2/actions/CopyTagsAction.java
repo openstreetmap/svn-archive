@@ -13,10 +13,10 @@ import java.util.TreeSet;
 
 import javax.swing.JOptionPane;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Tag;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.datatransfer.ClipboardUtils;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import org.openstreetmap.josm.tools.Shortcut;
@@ -80,7 +80,7 @@ public final class CopyTagsAction extends JosmAction {
         Collection<OsmPrimitive> sel = getLayerManager().getEditDataSet().getSelected();
         if (sel.isEmpty()) {
             JOptionPane.showMessageDialog(
-                    Main.parent,
+                    MainApplication.getMainFrame(),
                     tr("Please select something to copy."),
                     tr("Information"),
                     JOptionPane.INFORMATION_MESSAGE

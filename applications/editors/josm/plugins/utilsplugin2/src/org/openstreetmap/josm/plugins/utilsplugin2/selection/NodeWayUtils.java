@@ -13,7 +13,6 @@ import java.util.Set;
 
 import javax.swing.JOptionPane;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.osm.BBox;
 import org.openstreetmap.josm.data.osm.DataSet;
@@ -22,6 +21,7 @@ import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.gui.Notification;
+import org.openstreetmap.josm.spi.preferences.Config;
 import org.openstreetmap.josm.tools.Geometry;
 import org.openstreetmap.josm.tools.Pair;
 
@@ -31,9 +31,9 @@ import org.openstreetmap.josm.tools.Pair;
  */
 public final class NodeWayUtils {
 
-    static final int maxLevel = Main.pref.getInt("selection.maxrecursion", 15);
-    static final int maxWays = Main.pref.getInt("selection.maxfoundways", 2000);
-    static final int maxWays1 = Main.pref.getInt("selection.maxfoundways.intersection", 500);
+    static final int maxLevel = Config.getPref().getInt("selection.maxrecursion", 15);
+    static final int maxWays = Config.getPref().getInt("selection.maxfoundways", 2000);
+    static final int maxWays1 = Config.getPref().getInt("selection.maxfoundways.intersection", 500);
 
     private NodeWayUtils() {
         // Hide default constructor for utilities classes

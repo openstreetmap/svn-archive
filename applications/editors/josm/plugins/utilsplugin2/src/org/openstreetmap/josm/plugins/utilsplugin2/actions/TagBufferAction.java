@@ -18,8 +18,8 @@ import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.command.ChangePropertyCommand;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.SequenceCommand;
+import org.openstreetmap.josm.data.UndoRedoHandler;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
-import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.tools.Shortcut;
 import org.openstreetmap.josm.tools.SubclassFilteredCollection;
 
@@ -68,7 +68,7 @@ public class TagBufferAction extends JosmAction {
         }
 
         if (!commands.isEmpty())
-            MainApplication.undoRedo.add(new SequenceCommand(TITLE, commands));
+            UndoRedoHandler.getInstance().add(new SequenceCommand(TITLE, commands));
     }
 
     @Override

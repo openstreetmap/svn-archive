@@ -16,11 +16,15 @@ import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.gui.ExtendedDialog;
+import org.openstreetmap.josm.gui.MainApplication;
+import org.openstreetmap.josm.spi.preferences.Config;
 import org.openstreetmap.josm.tools.GBC;
 
+/**
+ * Select custom URL
+ */
 public class ChooseURLAction extends JosmAction {
 
     public ChooseURLAction() {
@@ -55,7 +59,7 @@ public class ChooseURLAction extends JosmAction {
         final JTextField editField = new JTextField();
         final JCheckBox check1 = new JCheckBox(tr("Ask every time"));
 
-        final ExtendedDialog dialog = new ExtendedDialog(Main.parent,
+        final ExtendedDialog dialog = new ExtendedDialog(MainApplication.getMainFrame(),
                 tr("Configure custom URL"),
                 new String[] {tr("OK"), tr("Cancel")}
                 );
@@ -68,7 +72,7 @@ public class ChooseURLAction extends JosmAction {
             }
         });
         list1.setSelectedIndex(idxToSelect);
-        check1.setSelected(Main.pref.getBoolean("utilsplugin2.askurl", false));
+        check1.setSelected(Config.getPref().getBoolean("utilsplugin2.askurl", false));
 
         editField.setEditable(false);
 
@@ -86,7 +90,7 @@ public class ChooseURLAction extends JosmAction {
         int idx = list1.getSelectedIndex();
         if (ret == 1 && idx >= 0) {
             URLList.select(vals[idx]);
-            Main.pref.putBoolean("utilsplugin2.askurl", check1.isSelected());
+            Config.getPref().putBoolean("utilsplugin2.askurl", check1.isSelected());
         }
         return ret;
     }

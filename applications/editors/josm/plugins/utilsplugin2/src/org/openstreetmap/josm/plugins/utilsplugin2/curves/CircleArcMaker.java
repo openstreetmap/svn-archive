@@ -23,6 +23,9 @@ import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.gui.MainApplication;
 
+/**
+ * Create a circle arc
+ */
 public final class CircleArcMaker {
 
     private CircleArcMaker() {

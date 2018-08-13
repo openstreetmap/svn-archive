@@ -17,7 +17,6 @@ import java.util.Map;
 
 import javax.swing.JOptionPane;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.MergeNodesAction;
 import org.openstreetmap.josm.command.ChangeNodesCommand;
 import org.openstreetmap.josm.command.ChangePropertyCommand;
@@ -35,13 +34,14 @@ import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.Notification;
 import org.openstreetmap.josm.gui.conflict.tags.CombinePrimitiveResolverDialog;
+import org.openstreetmap.josm.spi.preferences.Config;
 import org.openstreetmap.josm.tools.Logging;
 import org.openstreetmap.josm.tools.UserCancelException;
 
 import edu.princeton.cs.algs4.AssignmentProblem;
 
 /**
- *
+ * Utilities for Replace Geometry
  * @author joshdoe
  */
 public final class ReplaceGeometryUtils {
@@ -275,8 +275,8 @@ public final class ReplaceGeometryUtils {
         int gLen = geometryPool.size();
         int nLen = nodePool.size();
         int N = Math.max(gLen, nLen);
-        boolean useRobust = Main.pref.getBoolean("utilsplugin2.replace-geometry.robustAssignment", true)
-                && N <= Main.pref.getInt("utilsplugin2.replace-geometry.robustAssignment.max-size", 300);
+        boolean useRobust = Config.getPref().getBoolean("utilsplugin2.replace-geometry.robustAssignment", true)
+                && N <= Config.getPref().getInt("utilsplugin2.replace-geometry.robustAssignment.max-size", 300);
 
         // Find new nodes that are closest to the old ones, remove matching old ones from the pool
         // Assign node moves with least overall distance moved
@@ -290,7 +290,7 @@ public final class ReplaceGeometryUtils {
                     }
                 }
 
-                double maxDistance = Double.parseDouble(Main.pref.get("utilsplugin2.replace-geometry.max-distance", "1"));
+                double maxDistance = Double.parseDouble(Config.getPref().get("utilsplugin2.replace-geometry.max-distance", "1"));
                 for (int i = 0; i < nLen; i++) {
                     for (int j = 0; j < gLen; j++) {
                         double d = nodePool.get(i).getCoor().distance(geometryPool.get(j).getCoor());
@@ -467,7 +467,7 @@ public final class ReplaceGeometryUtils {
 
         Node nearest = null;
         // TODO: use meters instead of degrees, but do it fast
-        double distance = Double.parseDouble(Main.pref.get("utilsplugin2.replace-geometry.max-distance", "1"));
+        double distance = Double.parseDouble(Config.getPref().get("utilsplugin2.replace-geometry.max-distance", "1"));
         LatLon coor = node.getCoor();
 
         for (Node n : nodes) {

@@ -12,8 +12,8 @@ import java.util.List;
 import javax.swing.JOptionPane;
 
 import org.openstreetmap.josm.actions.JosmAction;
+import org.openstreetmap.josm.data.UndoRedoHandler;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
-import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.Notification;
 import org.openstreetmap.josm.tools.Shortcut;
 
@@ -57,7 +57,7 @@ public class ReplaceGeometryAction extends JosmAction {
             if (replaceCommand == null)
                 return;
 
-            MainApplication.undoRedo.add(replaceCommand);
+            UndoRedoHandler.getInstance().add(replaceCommand);
         } catch (IllegalArgumentException ex) {
             new Notification(
                     ex.getMessage()

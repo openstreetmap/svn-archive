@@ -18,10 +18,10 @@ import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.SequenceCommand;
 import org.openstreetmap.josm.command.SplitWayCommand;
+import org.openstreetmap.josm.data.UndoRedoHandler;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Way;
-import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.Notification;
 import org.openstreetmap.josm.tools.Shortcut;
 
@@ -91,7 +91,7 @@ public class SplitOnIntersectionsAction extends JosmAction {
         }
 
         if (!list.isEmpty()) {
-            MainApplication.undoRedo.add(list.size() == 1 ? list.get(0) : new SequenceCommand(TITLE, list));
+            UndoRedoHandler.getInstance().add(list.size() == 1 ? list.get(0) : new SequenceCommand(TITLE, list));
             getLayerManager().getEditDataSet().clearSelection();
         }
     }

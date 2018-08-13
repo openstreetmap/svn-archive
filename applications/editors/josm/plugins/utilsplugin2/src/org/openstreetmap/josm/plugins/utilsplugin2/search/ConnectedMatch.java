@@ -66,4 +66,30 @@ public class ConnectedMatch extends SearchCompiler.UnaryMatch {
         return false;
     }
 
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = super.hashCode();
+        result = prime * result + (all ? 1231 : 1237);
+        result = prime * result + ((connected == null) ? 0 : connected.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (!super.equals(obj) || getClass() != obj.getClass())
+            return false;
+        ConnectedMatch other = (ConnectedMatch) obj;
+        if (all != other.all)
+            return false;
+        if (connected == null) {
+            if (other.connected != null)
+                return false;
+        } else if (!connected.equals(other.connected))
+            return false;
+        return true;
+    }
+
 }

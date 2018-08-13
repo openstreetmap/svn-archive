@@ -39,7 +39,6 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableCellRenderer;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.AutoScaleAction;
 import org.openstreetmap.josm.actions.search.SearchAction;
 import org.openstreetmap.josm.data.SelectionChangedListener;
@@ -58,6 +57,7 @@ import org.openstreetmap.josm.gui.util.TableHelper;
 import org.openstreetmap.josm.gui.util.WindowGeometry;
 import org.openstreetmap.josm.gui.widgets.HistoryComboBox;
 import org.openstreetmap.josm.gui.widgets.PopupMenuLauncher;
+import org.openstreetmap.josm.spi.preferences.Config;
 import org.openstreetmap.josm.tools.GBC;
 import org.openstreetmap.josm.tools.ImageProvider;
 import org.openstreetmap.josm.tools.Logging;
@@ -80,7 +80,7 @@ public class MultiTagDialog extends ExtendedDialog implements SelectionChangedLi
     "name name:en name:ru name:de"};
 
     public MultiTagDialog() {
-        super(Main.parent, tr("Edit tags"), new String[]{tr("Ok"), tr("Cancel")}, false);
+        super(MainApplication.getMainFrame(), tr("Edit tags"), new String[]{tr("Ok"), tr("Cancel")}, false);
         JPanel pnl = new JPanel(new GridBagLayout());
         tbl = createTable();
 
@@ -111,7 +111,7 @@ public class MultiTagDialog extends ExtendedDialog implements SelectionChangedLi
         setDefaultButton(-1);
         loadHistory();
 
-        WindowGeometry defaultGeometry = WindowGeometry.centerInWindow(Main.parent, new Dimension(500, 500));
+        WindowGeometry defaultGeometry = WindowGeometry.centerInWindow(MainApplication.getMainFrame(), new Dimension(500, 500));
         setRememberWindowGeometry(getClass().getName() + ".geometry", defaultGeometry);
     }
 
@@ -150,7 +150,7 @@ public class MultiTagDialog extends ExtendedDialog implements SelectionChangedLi
 
     private void loadHistory() {
         List<String> cmtHistory = new LinkedList<>(
-                Main.pref.getList(HISTORY_KEY, Arrays.asList(defaultHistory)));
+                Config.getPref().getList(HISTORY_KEY, Arrays.asList(defaultHistory)));
         Collections.reverse(cmtHistory);
         cbTagSet.setPossibleItems(cmtHistory);
         String s = cmtHistory.get(cmtHistory.size()-1);
@@ -302,7 +302,7 @@ public class MultiTagDialog extends ExtendedDialog implements SelectionChangedLi
             if (history.isEmpty()) {
                 history = Arrays.asList(defaultHistory);
             }
-            Main.pref.putList(HISTORY_KEY, history);
+            Config.getPref().putList(HISTORY_KEY, history);
             loadHistory();
         }
     }
@@ -335,7 +335,7 @@ public class MultiTagDialog extends ExtendedDialog implements SelectionChangedLi
             if (s == null || s.isEmpty() || s.equals(oldTags)) return;
             oldTags = s;
             cbTagSet.addCurrentItemToHistory();
-            Main.pref.putList(HISTORY_KEY, cbTagSet.getHistory());
+            Config.getPref().putList(HISTORY_KEY, cbTagSet.getHistory());
             specifyTagSet(s);
         }
     }

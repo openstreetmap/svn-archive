@@ -47,6 +47,9 @@ import org.openstreetmap.josm.plugins.utilsplugin2.selection.SelectWayNodesActio
 import org.openstreetmap.josm.plugins.utilsplugin2.selection.UndoSelectionAction;
 import org.openstreetmap.josm.plugins.utilsplugin2.selection.UnselectNodesAction;
 
+/**
+ * Collection of utilities
+ */
 public class UtilsPlugin2 extends Plugin {
 
     private static UtilsPlugin2 instance;

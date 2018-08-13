@@ -12,10 +12,14 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.data.Preferences;
 import org.openstreetmap.josm.plugins.utilsplugin2.UtilsPlugin2;
+import org.openstreetmap.josm.spi.preferences.Config;
 import org.openstreetmap.josm.tools.Logging;
 
+/**
+ * List of custom URLs
+ */
 public final class URLList {
     public static final String defaultURL = "http://osm.mapki.com/history/{#type}.php?id={#id}";
 
@@ -25,11 +29,11 @@ public final class URLList {
 
     public static String getSelectedURL() {
         getURLList();
-        return Main.pref.get("utilsplugin2.customurl", defaultURL);
+        return Config.getPref().get("utilsplugin2.customurl", defaultURL);
     }
 
     public static void select(String url) {
-        Main.pref.put("utilsplugin2.customurl", url);
+        Config.getPref().put("utilsplugin2.customurl", url);
     }
 
     public static List<String> resetURLList() {
@@ -46,24 +50,24 @@ public final class URLList {
         items.add("https://www.openstreetmap.org/{#type}/{#id}/history");
         items.add("Browse element [demo, =Ctrl-Shift-I]");
         items.add("https://www.openstreetmap.org/{#type}/{#id}");
-        Main.pref.putList("utilsplugin2.urlHistory", items);
-        Main.pref.put("utilsplugin2.customurl", items.get(9));
+        Config.getPref().putList("utilsplugin2.urlHistory", items);
+        Config.getPref().put("utilsplugin2.customurl", items.get(9));
         return items;
     }
 
     public static List<String> getURLList() {
-        List<String> items = Main.pref.getList("utilsplugin2.urlHistory");
+        List<String> items = Config.getPref().getList("utilsplugin2.urlHistory");
         if (items == null || items.isEmpty()) {
             resetURLList();
-            items = Main.pref.getList("utilsplugin2.urlHistory");
+            items = Config.getPref().getList("utilsplugin2.urlHistory");
         }
         return items;
     }
 
     public static void updateURLList(List<String> lst) {
-        Main.pref.putList("utilsplugin2.urlHistory", lst);
+        Config.getPref().putList("utilsplugin2.urlHistory", lst);
         try {
-            Main.pref.save();
+            Preferences.main().save();
         } catch (IOException ex) {
             Logger.getLogger(UtilsPluginPreferences.class.getName()).log(Level.SEVERE, null, ex);
         }

@@ -18,14 +18,17 @@ import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.command.AddCommand;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.SequenceCommand;
+import org.openstreetmap.josm.data.UndoRedoHandler;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Way;
-import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.Notification;
 import org.openstreetmap.josm.tools.Geometry;
 import org.openstreetmap.josm.tools.Shortcut;
 
+/**
+ * Add missing nodes at intersections of selected ways.
+ */
 public class AddIntersectionsAction extends JosmAction {
 
     /**
@@ -55,7 +58,7 @@ public class AddIntersectionsAction extends JosmAction {
         LinkedList<Command> cmds = new LinkedList<>();
         Geometry.addIntersections(ways, false, cmds);
         if (!cmds.isEmpty()) {
-            MainApplication.undoRedo.add(new SequenceCommand(tr("Add nodes at intersections"), cmds));
+            UndoRedoHandler.getInstance().add(new SequenceCommand(tr("Add nodes at intersections"), cmds));
             Set<Node> nodes = new HashSet<>(10);
             // find and select newly added nodes
             for (Command cmd: cmds) if (cmd instanceof AddCommand) {

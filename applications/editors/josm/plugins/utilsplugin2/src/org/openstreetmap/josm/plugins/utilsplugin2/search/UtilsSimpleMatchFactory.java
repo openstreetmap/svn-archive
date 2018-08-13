@@ -6,9 +6,13 @@ import java.util.Collection;
 
 import org.openstreetmap.josm.data.osm.search.PushbackTokenizer;
 import org.openstreetmap.josm.data.osm.search.SearchCompiler;
+import org.openstreetmap.josm.data.osm.search.SearchCompiler.CoreSimpleMatchFactory;
 import org.openstreetmap.josm.data.osm.search.SearchCompiler.SimpleMatchFactory;
 import org.openstreetmap.josm.data.osm.search.SearchParseError;
 
+/**
+ * Extension of the {@link CoreSimpleMatchFactory}
+ */
 public class UtilsSimpleMatchFactory implements SimpleMatchFactory {
 
     private static Collection<String> keywords = Arrays.asList("usedinways", "usedinrelations", "parents", "children");

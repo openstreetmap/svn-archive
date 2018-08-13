@@ -39,5 +39,28 @@ public abstract class RangeMatch extends SearchCompiler.Match {
     public String toString() {
         return getString() + "=" + min + "-" + max;
     }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + (int) (max ^ (max >>> 32));
+        result = prime * result + (int) (min ^ (min >>> 32));
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null || getClass() != obj.getClass())
+            return false;
+        RangeMatch other = (RangeMatch) obj;
+        if (max != other.max)
+            return false;
+        if (min != other.min)
+            return false;
+        return true;
+    }
 }
 

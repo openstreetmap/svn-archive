@@ -15,12 +15,16 @@ import org.openstreetmap.josm.command.ChangePropertyCommand;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.SequenceCommand;
 import org.openstreetmap.josm.data.SelectionChangedListener;
+import org.openstreetmap.josm.data.UndoRedoHandler;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.OsmPrimitiveType;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.tools.Geometry;
 
+/**
+ * Model of the multi tag table.
+ */
 public class MultiTaggerTableModel extends AbstractTableModel implements SelectionChangedListener {
 
     ArrayList<OsmPrimitive> list = new ArrayList<>(50);
@@ -114,7 +118,7 @@ public class MultiTaggerTableModel extends AbstractTableModel implements Selecti
         if (!val.equals(newValue)) {
             Command cmd = new ChangePropertyCommand(sel, key, (String) value);
             if (autoCommit) {
-                MainApplication.undoRedo.add(cmd);
+                UndoRedoHandler.getInstance().add(cmd);
             } else {
                 cmds.add(cmd);
             }
@@ -184,7 +188,7 @@ public class MultiTaggerTableModel extends AbstractTableModel implements Selecti
     }
 
     void commit(String commandTitle) {
-        MainApplication.undoRedo.add(new SequenceCommand(commandTitle, cmds));
+        UndoRedoHandler.getInstance().add(new SequenceCommand(commandTitle, cmds));
         cmds.clear();
     }
 

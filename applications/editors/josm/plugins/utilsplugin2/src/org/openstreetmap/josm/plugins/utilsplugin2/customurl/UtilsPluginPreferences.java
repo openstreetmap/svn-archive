@@ -25,6 +25,9 @@ import org.openstreetmap.josm.gui.widgets.HistoryComboBox;
 import org.openstreetmap.josm.gui.widgets.HtmlPanel;
 import org.openstreetmap.josm.tools.GBC;
 
+/**
+ * Preferences of Utilsplugin2 functions
+ */
 public class UtilsPluginPreferences extends DefaultTabPreferenceSetting {
     HistoryComboBox combo1 = new HistoryComboBox();
     JTable table;

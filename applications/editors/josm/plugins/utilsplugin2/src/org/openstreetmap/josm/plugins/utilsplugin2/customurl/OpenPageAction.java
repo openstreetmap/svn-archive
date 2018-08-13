@@ -12,13 +12,13 @@ import java.util.Collection;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.OsmPrimitiveType;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MapView;
+import org.openstreetmap.josm.spi.preferences.Config;
 import org.openstreetmap.josm.tools.Logging;
 import org.openstreetmap.josm.tools.OpenBrowser;
 import org.openstreetmap.josm.tools.OsmUrlToBounds;
@@ -49,7 +49,7 @@ public final class OpenPageAction extends JosmAction {
             p = sel.iterator().next();
         }
 
-        if (Main.pref.getBoolean("utilsplugin2.askurl", false) && 1 != ChooseURLAction.showConfigDialog(true)) {
+        if (Config.getPref().getBoolean("utilsplugin2.askurl", false) && 1 != ChooseURLAction.showConfigDialog(true)) {
             return;
         }
 

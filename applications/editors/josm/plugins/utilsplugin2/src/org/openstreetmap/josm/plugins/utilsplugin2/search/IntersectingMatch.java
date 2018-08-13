@@ -56,4 +56,30 @@ public class IntersectingMatch extends SearchCompiler.UnaryMatch {
         return false;
     }
 
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = super.hashCode();
+        result = prime * result + (all ? 1231 : 1237);
+        result = prime * result + ((intersecting == null) ? 0 : intersecting.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (!super.equals(obj) || getClass() != obj.getClass())
+            return false;
+        IntersectingMatch other = (IntersectingMatch) obj;
+        if (all != other.all)
+            return false;
+        if (intersecting == null) {
+            if (other.intersecting != null)
+                return false;
+        } else if (!intersecting.equals(other.intersecting))
+            return false;
+        return true;
+    }
+
 }

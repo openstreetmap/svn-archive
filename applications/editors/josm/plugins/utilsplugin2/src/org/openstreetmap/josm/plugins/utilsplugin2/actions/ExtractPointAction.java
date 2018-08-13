@@ -19,6 +19,7 @@ import org.openstreetmap.josm.command.ChangeNodesCommand;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.MoveCommand;
 import org.openstreetmap.josm.command.SequenceCommand;
+import org.openstreetmap.josm.data.UndoRedoHandler;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
@@ -72,7 +73,7 @@ public class ExtractPointAction extends JosmAction {
                 cmds.add(new ChangeNodesCommand(w, nodes));
             }
         }
-        if (cmds.size() > 1) MainApplication.undoRedo.add(new SequenceCommand(tr("Extract node from line"), cmds));
+        if (cmds.size() > 1) UndoRedoHandler.getInstance().add(new SequenceCommand(tr("Extract node from line"), cmds));
     }
 
     @Override

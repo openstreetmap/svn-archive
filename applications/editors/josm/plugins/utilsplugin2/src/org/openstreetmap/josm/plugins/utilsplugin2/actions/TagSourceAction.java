@@ -9,11 +9,11 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.command.ChangePropertyCommand;
+import org.openstreetmap.josm.data.UndoRedoHandler;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
-import org.openstreetmap.josm.gui.MainApplication;
+import org.openstreetmap.josm.spi.preferences.Config;
 import org.openstreetmap.josm.tools.Shortcut;
 
 /**
@@ -31,7 +31,7 @@ public class TagSourceAction extends JosmAction {
         super(TITLE, "dumbutils/sourcetag", tr("Add remembered source tag"),
                 Shortcut.registerShortcut("tools:sourcetag", tr("Tool: {0}", tr("Add Source Tag")), KeyEvent.VK_S, Shortcut.ALT_CTRL),
                 true, false);
-        source = Main.pref.get("sourcetag.value");
+        source = Config.getPref().get("sourcetag.value");
         // The fields are not initialized while the super constructor is running, so we have to call this afterwards:
         installAdapters();
     }
@@ -42,7 +42,7 @@ public class TagSourceAction extends JosmAction {
         if (selection.isEmpty() || source == null || source.length() == 0)
             return;
 
-        MainApplication.undoRedo.add(new ChangePropertyCommand(selection, "source", source));
+        UndoRedoHandler.getInstance().add(new ChangePropertyCommand(selection, "source", source));
     }
 
     @Override
@@ -81,7 +81,7 @@ public class TagSourceAction extends JosmAction {
                 }
                 if (newSource != null && newSource.length() > 0 && !newSource.equals(source)) {
                     source = newSource;
-                    Main.pref.put("sourcetag.value", source);
+                    Config.getPref().put("sourcetag.value", source);
                 }
             }
         } else

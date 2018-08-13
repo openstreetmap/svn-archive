@@ -10,18 +10,21 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.SequenceCommand;
+import org.openstreetmap.josm.data.UndoRedoHandler;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Way;
-import org.openstreetmap.josm.gui.MainApplication;
+import org.openstreetmap.josm.spi.preferences.Config;
 import org.openstreetmap.josm.tools.Shortcut;
 
 // TODO: investigate splines
 
+/**
+ * Create a circle arc
+ */
 public class CurveAction extends JosmAction {
 
     private static final long serialVersionUID = 1L;
@@ -38,7 +41,7 @@ public class CurveAction extends JosmAction {
 
     private void updatePreferences() {
         // @formatter:off
-        angleSeparation = Main.pref.getInt(prefKey("circlearc.angle-separation"), 20);
+        angleSeparation = Config.getPref().getInt(prefKey("circlearc.angle-separation"), 20);
         // @formatter:on
     }
 
@@ -58,7 +61,7 @@ public class CurveAction extends JosmAction {
 
         Collection<Command> cmds = CircleArcMaker.doCircleArc(selectedNodes, selectedWays, angleSeparation);
         if (cmds != null)
-            MainApplication.undoRedo.add(new SequenceCommand("Create a curve", cmds));
+            UndoRedoHandler.getInstance().add(new SequenceCommand("Create a curve", cmds));
     }
 
     @Override

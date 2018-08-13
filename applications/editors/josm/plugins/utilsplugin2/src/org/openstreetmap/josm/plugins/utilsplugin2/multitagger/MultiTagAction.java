@@ -12,6 +12,9 @@ import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.tools.Shortcut;
 
+/**
+ * Edit tags of object list in table
+ */
 public final class MultiTagAction extends JosmAction {
 
     MultiTagDialog dlg;

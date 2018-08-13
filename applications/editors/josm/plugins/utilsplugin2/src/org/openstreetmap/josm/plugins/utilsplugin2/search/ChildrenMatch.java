@@ -6,8 +6,8 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.Way;
-import org.openstreetmap.josm.data.osm.search.SearchParseError;
 import org.openstreetmap.josm.data.osm.search.PushbackTokenizer;
+import org.openstreetmap.josm.data.osm.search.SearchParseError;
 
 /**
  * Matches objects with a number of child primitives in the given range.

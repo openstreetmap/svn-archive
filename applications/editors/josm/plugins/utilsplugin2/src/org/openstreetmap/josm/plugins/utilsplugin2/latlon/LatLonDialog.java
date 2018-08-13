@@ -31,16 +31,19 @@ import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.coor.conversion.CoordinateFormatManager;
 import org.openstreetmap.josm.data.coor.conversion.ICoordinateFormat;
 import org.openstreetmap.josm.data.coor.conversion.LatLonParser;
 import org.openstreetmap.josm.gui.ExtendedDialog;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.util.WindowGeometry;
 import org.openstreetmap.josm.gui.widgets.HtmlPanel;
 import org.openstreetmap.josm.tools.GBC;
 
+/**
+ * Dialog for entering lat/lon coordinates.
+ */
 public class LatLonDialog extends ExtendedDialog {
     private static final Color BG_COLOR_ERROR = new Color(255, 224, 224);
 
@@ -166,7 +169,7 @@ public class LatLonDialog extends ExtendedDialog {
     }
 
     public LatLonDialog(Component parent, String title, String help) {
-        super(Main.parent, tr("Add Node..."), new String[] {tr("Ok"), tr("Cancel")});
+        super(MainApplication.getMainFrame(), tr("Add Node..."), new String[] {tr("Ok"), tr("Cancel")});
         setButtonIcons(new String[] {"ok", "cancel"});
         configureContextsensitiveHelp("/Action/AddNode", true);
 

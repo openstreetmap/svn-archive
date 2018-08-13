@@ -50,4 +50,24 @@ public class InsideMatch extends SearchCompiler.UnaryMatch {
         }
         return inside.contains(osm);
     }
+
+    @Override
+    public int hashCode() {
+        return 31 * super.hashCode() + ((inside == null) ? 0 : inside.hashCode());
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (!super.equals(obj) || getClass() != obj.getClass())
+            return false;
+        InsideMatch other = (InsideMatch) obj;
+        if (inside == null) {
+            if (other.inside != null)
+                return false;
+        } else if (!inside.equals(other.inside))
+            return false;
+        return true;
+    }
 }

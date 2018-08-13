@@ -12,11 +12,11 @@ import java.util.LinkedList;
 
 import javax.swing.JOptionPane;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.MoveCommand;
 import org.openstreetmap.josm.command.SequenceCommand;
+import org.openstreetmap.josm.data.UndoRedoHandler;
 import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
@@ -87,7 +87,7 @@ public final class SymmetryAction extends JosmAction {
             cmds.add(new MoveCommand(n, -2*ne*pr, -2*nn*pr));
         }
 
-        MainApplication.undoRedo.add(new SequenceCommand(tr("Symmetry"), cmds));
+        UndoRedoHandler.getInstance().add(new SequenceCommand(tr("Symmetry"), cmds));
         MainApplication.getMap().repaint();
     }
 

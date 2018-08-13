@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project name="jaxb" default="dist" basedir=".">
+    <!-- enter the SVN commit message -->
+    <property name="commit.message" value="Commit message"/>
+    <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
+    <property name="plugin.main.version" value="10580"/>
+
+	<!-- Configure these properties (replace "..." accordingly).
+         See https://josm.openstreetmap.de/wiki/DevelopersGuide/DevelopingPlugins
+    -->
+    <property name="plugin.author" value="Don-vip"/>
+    <property name="plugin.class" value="org.openstreetmap.josm.plugins.jaxb.JaxbPlugin"/>
+    <property name="plugin.description" value="Provides the JAXB library for other JOSM plugins. Not meant to be installed directly by users, but rather as a dependency for other plugins."/>
+    <!--<property name="plugin.icon" value="..."/>-->
+    <!--<property name="plugin.link" value="..."/>-->
+    <property name="plugin.early" value="true"/>
+    <!--<property name="plugin.requires" value="..."/>-->
+    <property name="plugin.stage" value="4"/>
+
+    <!-- ** include targets that all plugins have in common ** -->
+    <import file="../build-common.xml"/>
+
+    <!--
+    **********************************************************
+    ** post-dist - replaces files from the generated jar
+    **********************************************************
+    -->
+    <target name="post-dist">
+        <jar destfile="${plugin.jar}" update="true">
+            <restrict>
+                <not><or>
+                    <name name="META-INF/maven/*"/>
+                    <name name="META-INF/versions/*"/>
+                    <name name="META-INF/LICENSE.txt"/>
+                    <name name="META-INF/MANIFEST.MF"/>
+                    <name name="module-info.class"/>
+                </or></not>
+                <archives>
+                    <zips>
+                        <fileset dir="${plugin.tools.dir}/jaxb-ri/lib">
+                            <include name="ja*.jar"/>
+                            <exclude name="jaxb-jxc.jar"/>
+                            <exclude name="jaxb-xjc.jar"/>
+                            <exclude name="*-sources.jar"/>
+                            <exclude name="*-javadoc.jar"/>
+                        </fileset>
+                    </zips>
+                </archives>
+            </restrict>
+        </jar>
+    </target>
+
+</project>

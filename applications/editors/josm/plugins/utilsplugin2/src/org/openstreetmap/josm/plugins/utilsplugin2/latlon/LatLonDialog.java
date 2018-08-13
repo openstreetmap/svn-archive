@@ -281,6 +281,7 @@ public class LatLonDialog extends ExtendedDialog {
                     preferenceKey,
                     WindowGeometry.centerInWindow(getParent(), getSize())
                     ).applySafe(this);
+            taLatLon.requestFocusInWindow();
         } else {
             new WindowGeometry(this).remember(preferenceKey);
         }

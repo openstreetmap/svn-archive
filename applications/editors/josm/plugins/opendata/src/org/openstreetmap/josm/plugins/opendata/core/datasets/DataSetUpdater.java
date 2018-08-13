@@ -9,7 +9,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.SimplifyWayAction;
 import org.openstreetmap.josm.command.SequenceCommand;
 import org.openstreetmap.josm.command.SplitWayCommand;
@@ -21,6 +20,7 @@ import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.io.Capabilities;
 import org.openstreetmap.josm.io.OsmApi;
 import org.openstreetmap.josm.plugins.opendata.core.OdConstants;
+import org.openstreetmap.josm.spi.preferences.Config;
 
 public abstract class DataSetUpdater {
 
@@ -34,7 +34,7 @@ public abstract class DataSetUpdater {
                         handler.setSourceDate(new SimpleDateFormat("yyyy-MM-dd").format(new Date(lastmodified)));
                     }
                 }
-                if (!Main.pref.getBoolean(OdConstants.PREF_RAWDATA)) {
+                if (!Config.getPref().getBoolean(OdConstants.PREF_RAWDATA)) {
                     handler.updateDataSet(dataSet);
                 }
                 handler.checkDataSetSource(dataSet);

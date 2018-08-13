@@ -10,7 +10,6 @@ import java.util.regex.Pattern;
 
 import javax.swing.JOptionPane;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.downloadtasks.DownloadOsmTask;
 import org.openstreetmap.josm.actions.downloadtasks.DownloadParams;
 import org.openstreetmap.josm.data.Bounds;
@@ -117,7 +116,7 @@ public class DownloadDataTask extends DownloadOsmTask {
             return new AskLicenseAgreementDialog(license).showDialog().getValue() == 1;
 
         } catch (IOException e) {
-            JOptionPane.showMessageDialog(Main.parent, tr("License URL not available: {0}", license.toString()));
+            JOptionPane.showMessageDialog(MainApplication.getMainFrame(), tr("License URL not available: {0}", license.toString()));
             return false;
         }
     }

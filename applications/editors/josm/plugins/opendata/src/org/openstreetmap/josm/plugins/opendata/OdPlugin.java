@@ -13,9 +13,9 @@ import javax.swing.ImageIcon;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.ExtensionFileFilter;
 import org.openstreetmap.josm.gui.MainApplication;
+import org.openstreetmap.josm.gui.MainFrame;
 import org.openstreetmap.josm.gui.MainMenu;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.gui.MenuScroller;
@@ -186,13 +186,14 @@ public final class OdPlugin extends Plugin {
     }
 
     private void loadModules() {
-        List<ModuleInformation> modulesToLoad = ModuleHandler.buildListOfModulesToLoad(Main.parent);
-        if (!modulesToLoad.isEmpty() && ModuleHandler.checkAndConfirmModuleUpdate(Main.parent)) {
-            modulesToLoad = ModuleHandler.updateModules(Main.parent, modulesToLoad, null);
+        MainFrame parent = MainApplication.getMainFrame();
+        List<ModuleInformation> modulesToLoad = ModuleHandler.buildListOfModulesToLoad(parent);
+        if (!modulesToLoad.isEmpty() && ModuleHandler.checkAndConfirmModuleUpdate(parent)) {
+            modulesToLoad = ModuleHandler.updateModules(parent, modulesToLoad, null);
         }
 
         ModuleHandler.installDownloadedModules(true);
-        ModuleHandler.loadModules(Main.parent, modulesToLoad, null);
+        ModuleHandler.loadModules(parent, modulesToLoad, null);
     }
 
     private File getSubDirectory(String name) {

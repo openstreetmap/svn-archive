@@ -13,9 +13,9 @@ import java.util.Locale;
 import javax.swing.ImageIcon;
 
 import org.apache.commons.lang3.StringUtils;
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
+import org.openstreetmap.josm.spi.preferences.Config;
 import org.openstreetmap.josm.tools.ImageProvider;
 import org.openstreetmap.josm.tools.Utils;
 
@@ -70,7 +70,7 @@ public abstract class OdUtils {
     }
 
     public static final String getJosmLanguage() {
-        String lang = Main.pref.get("language");
+        String lang = Config.getPref().get("language");
         if (lang == null || lang.isEmpty()) {
             lang = Locale.getDefault().toString();
         }

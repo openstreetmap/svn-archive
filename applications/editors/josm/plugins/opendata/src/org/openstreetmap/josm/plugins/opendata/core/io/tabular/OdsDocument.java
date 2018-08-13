@@ -11,7 +11,7 @@ import java.util.zip.ZipInputStream;
 import org.jopendocument.io.SaxContentUnmarshaller;
 import org.jopendocument.model.OpenDocument;
 import org.openstreetmap.josm.tools.Logging;
-import org.openstreetmap.josm.tools.Utils;
+import org.openstreetmap.josm.tools.XmlUtils;
 import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
 
@@ -36,7 +36,7 @@ public class OdsDocument extends OpenDocument {
 
         try {
             final ZipInputStream zis = new ZipInputStream(in);
-            final XMLReader rdr = Utils.newSafeSAXParser().getXMLReader();
+            final XMLReader rdr = XmlUtils.newSafeSAXParser().getXMLReader();
 
             ZipEntry entry;
             boolean contentParsed = false;

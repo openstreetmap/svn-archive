@@ -33,7 +33,6 @@ import javax.swing.JCheckBox;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.PreferencesUtils;
 import org.openstreetmap.josm.data.preferences.sources.SourceProvider;
 import org.openstreetmap.josm.gui.HelpAwareOptionPane;
@@ -47,6 +46,7 @@ import org.openstreetmap.josm.gui.widgets.JMultilineLabel;
 import org.openstreetmap.josm.plugins.opendata.OdPlugin;
 import org.openstreetmap.josm.plugins.opendata.core.OdConstants;
 import org.openstreetmap.josm.plugins.opendata.core.gui.OdPreferenceSetting;
+import org.openstreetmap.josm.spi.preferences.Config;
 import org.openstreetmap.josm.tools.CheckParameterUtil;
 import org.openstreetmap.josm.tools.I18n;
 import org.openstreetmap.josm.tools.ImageProvider;
@@ -100,11 +100,11 @@ public final class ModuleHandler {
         String message = null;
         String togglePreferenceKey = null;
         long tim = System.currentTimeMillis();
-        long last = Main.pref.getLong("opendata.modulemanager.lastupdate", 0);
-        Integer maxTime = Main.pref.getInt("opendata.modulemanager.time-based-update.interval", 60);
+        long last = Config.getPref().getLong("opendata.modulemanager.lastupdate", 0);
+        Integer maxTime = Config.getPref().getInt("opendata.modulemanager.time-based-update.interval", 60);
         long d = (tim - last) / (24 * 60 * 60 * 1000L);
         if ((last <= 0) || (maxTime <= 0)) {
-            Main.pref.put("opendata.modulemanager.lastupdate", Long.toString(tim));
+            Config.getPref().put("opendata.modulemanager.lastupdate", Long.toString(tim));
         } else if (d > maxTime) {
             message =
                     "<html>"
@@ -135,7 +135,7 @@ public final class ModuleHandler {
 
         // check whether automatic update at startup was disabled
         //
-        String policy = Main.pref.get(togglePreferenceKey, "ask");
+        String policy = Config.getPref().get(togglePreferenceKey, "ask");
         policy = policy.trim().toLowerCase();
         if (policy.equals("never")) {
             if ("opendata.modulemanager.time-based-update.policy".equals(togglePreferenceKey)) {
@@ -168,15 +168,15 @@ public final class ModuleHandler {
         if (pnlMessage.isRememberDecision()) {
             switch(ret) {
             case 0:
-                Main.pref.put(togglePreferenceKey, "always");
+                Config.getPref().put(togglePreferenceKey, "always");
                 break;
             case JOptionPane.CLOSED_OPTION:
             case 1:
-                Main.pref.put(togglePreferenceKey, "never");
+                Config.getPref().put(togglePreferenceKey, "never");
                 break;
             }
         } else {
-            Main.pref.put(togglePreferenceKey, "ask");
+            Config.getPref().put(togglePreferenceKey, "ask");
         }
         return ret == 0;
     }
@@ -257,7 +257,7 @@ public final class ModuleHandler {
             Logging.error(e);
         }
         if (msg != null && confirmDisableModule(parent, msg, module.name)) {
-            PreferencesUtils.removeFromList(Main.pref, OdConstants.PREF_MODULES, module.name);
+            PreferencesUtils.removeFromList(Config.getPref(), OdConstants.PREF_MODULES, module.name);
         }
     }
 
@@ -363,7 +363,7 @@ public final class ModuleHandler {
      */
     public static List<ModuleInformation> buildListOfModulesToLoad(Component parent) {
         Set<String> modules = new HashSet<>();
-        modules.addAll(Main.pref.getList(OdConstants.PREF_MODULES, new LinkedList<String>()));
+        modules.addAll(Config.getPref().getList(OdConstants.PREF_MODULES, new LinkedList<String>()));
         if (System.getProperty("josm."+OdConstants.PREF_MODULES) != null) {
             modules.addAll(Arrays.asList(System.getProperty("josm."+OdConstants.PREF_MODULES).split(",")));
         }
@@ -493,7 +493,7 @@ public final class ModuleHandler {
         }
         // remember the update because it was successful
         //
-        Main.pref.put("opendata.modulemanager.lastupdate", Long.toString(System.currentTimeMillis()));
+        Config.getPref().put("opendata.modulemanager.lastupdate", Long.toString(System.currentTimeMillis()));
         return modules;
     }
 
@@ -612,7 +612,7 @@ public final class ModuleHandler {
         msg.append("</html>");
 
         int ret = HelpAwareOptionPane.showOptionDialog(
-                Main.parent,
+                MainApplication.getMainFrame(),
                 msg.toString(),
                 tr("Update modules"),
                 JOptionPane.QUESTION_MESSAGE,
@@ -669,7 +669,7 @@ public final class ModuleHandler {
             return;
 
         Set<String> modules = new HashSet<String>(
-                Main.pref.getCollection(PREF_MODULES, Collections.<String> emptySet())
+                Config.getPref().getCollection(PREF_MODULES, Collections.<String> emptySet())
         );
         if (! modules.contains(module.getModuleInformation().name))
             // module not activated ? strange in this context but anyway, don't bother
@@ -682,9 +682,9 @@ public final class ModuleHandler {
 
         // deactivate the module
         modules.remove(module.getModuleInformation().name);
-        Main.pref.putCollection(PREF_MODULES, modules);
+        Config.getPref().putCollection(PREF_MODULES, modules);
         JOptionPane.showMessageDialog(
-                Main.parent,
+                MainApplication.getMainFrame(),
                 tr("The module has been removed from the configuration. Please restart JOSM to unload the module."),
                 tr("Information"),
                 JOptionPane.INFORMATION_MESSAGE
@@ -694,7 +694,7 @@ public final class ModuleHandler {
 
     /*public static String getBugReportText() {
         String text = "";
-        LinkedList <String> pl = new LinkedList<String>(Main.pref.getCollection(PREF_MODULES, new LinkedList<String>()));
+        LinkedList <String> pl = new LinkedList<String>(Config.getPref().getCollection(PREF_MODULES, new LinkedList<String>()));
         for (final Module pp : moduleList) {
             ModuleInformation pi = pp.getModuleInformation();
             pl.remove(pi.name);
@@ -728,7 +728,7 @@ public final class ModuleHandler {
                     JTextArea a = new JTextArea(10, 40);
                     a.setEditable(false);
                     a.setText(b.toString());
-                    JOptionPane.showMessageDialog(Main.parent, new JScrollPane(a), tr("Module information"),
+                    JOptionPane.showMessageDialog(MainApplication.getMainFrame(), new JScrollPane(a), tr("Module information"),
                             JOptionPane.INFORMATION_MESSAGE);
                 }
             }), GBC.eol());
@@ -779,7 +779,7 @@ public final class ModuleHandler {
         }
 
         public void initDontShowAgain(String preferencesKey) {
-            String policy = Main.pref.get(preferencesKey, "ask");
+            String policy = Config.getPref().get(preferencesKey, "ask");
             policy = policy.trim().toLowerCase();
             cbDontShowAgain.setSelected(!policy.equals("ask"));
         }

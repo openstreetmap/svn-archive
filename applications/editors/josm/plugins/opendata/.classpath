@@ -9,7 +9,11 @@
 	<classpathentry kind="src" path="modules/fr.toulouse/src"/>
 	<classpathentry kind="src" path="modules/fr.toulouse/resources"/>
 	<classpathentry kind="src" path="util"/>
-	<classpathentry kind="src" path="test/unit"/>
+	<classpathentry kind="src" output="bintest" path="test/unit">
+		<attributes>
+			<attribute name="test" value="true"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry combineaccessrules="false" kind="src" path="/JOSM"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/JOSM-utilsplugin2"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/JOSM-GeoTools"/>

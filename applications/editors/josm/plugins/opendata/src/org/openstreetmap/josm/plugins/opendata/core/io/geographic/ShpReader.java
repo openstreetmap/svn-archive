@@ -39,12 +39,12 @@ import org.opengis.feature.type.Name;
 import org.opengis.geometry.MismatchedDimensionException;
 import org.opengis.referencing.FactoryException;
 import org.opengis.referencing.operation.TransformException;
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.gui.util.GuiHelper;
 import org.openstreetmap.josm.plugins.opendata.core.datasets.AbstractDataSetHandler;
@@ -234,7 +234,7 @@ public class ShpReader extends GeographicReader {
 
                 int n = 0;
 
-                Component parent = instance != null ? instance.getWindowParent() : Main.parent;
+                Component parent = instance != null ? instance.getWindowParent() : MainApplication.getMainFrame();
 
                 try (FeatureIterator<?> iterator = collection.features()) {
                     while (iterator.hasNext()) {

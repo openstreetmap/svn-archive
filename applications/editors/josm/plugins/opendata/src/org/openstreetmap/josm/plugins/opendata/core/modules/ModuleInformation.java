@@ -23,7 +23,7 @@ import java.util.jar.Manifest;
 
 import javax.swing.ImageIcon;
 
-import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.data.Preferences;
 import org.openstreetmap.josm.plugins.opendata.OdPlugin;
 import org.openstreetmap.josm.plugins.opendata.core.OdConstants;
 import org.openstreetmap.josm.plugins.opendata.core.util.OdUtils;
@@ -260,7 +260,7 @@ public class ModuleInformation {
     }
 
     public static Collection<String> getModuleLocations() {
-        Collection<String> locations = Main.pref.getAllPossiblePreferenceDirs();
+        Collection<String> locations = Preferences.getAllPossiblePreferenceDirs();
         Collection<String> all = new ArrayList<>(locations.size());
         for (String s : locations) {
             all.add(s+"plugins/opendata/modules");

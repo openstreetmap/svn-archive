@@ -5,7 +5,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Locale;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.Tag;
@@ -13,6 +12,7 @@ import org.openstreetmap.josm.data.projection.Projection;
 import org.openstreetmap.josm.plugins.opendata.core.OdConstants;
 import org.openstreetmap.josm.plugins.opendata.core.datasets.SimpleDataSetHandler;
 import org.openstreetmap.josm.plugins.opendata.core.io.tabular.DefaultCsvHandler;
+import org.openstreetmap.josm.spi.preferences.Config;
 
 public abstract class BelgianDataSetHandler extends SimpleDataSetHandler implements BelgianConstants {
 
@@ -91,7 +91,7 @@ public abstract class BelgianDataSetHandler extends SimpleDataSetHandler impleme
     public URL getNationalPortalURL() {
         try {
             String nationalPortalPath = "";
-            String lang = Main.pref.get("language");
+            String lang = Config.getPref().get("language");
             if (lang == null || lang.isEmpty()) {
                 lang = Locale.getDefault().toString();
             }

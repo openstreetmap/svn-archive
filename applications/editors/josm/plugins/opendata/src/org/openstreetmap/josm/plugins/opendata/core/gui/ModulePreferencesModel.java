@@ -12,12 +12,12 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.util.ChangeNotifier;
 import org.openstreetmap.josm.plugins.opendata.OdPlugin;
 import org.openstreetmap.josm.plugins.opendata.core.OdConstants;
 import org.openstreetmap.josm.plugins.opendata.core.modules.ModuleException;
 import org.openstreetmap.josm.plugins.opendata.core.modules.ModuleInformation;
+import org.openstreetmap.josm.spi.preferences.Config;
 
 public class ModulePreferencesModel extends ChangeNotifier {
     private final ArrayList<ModuleInformation> availableModules = new ArrayList<>();
@@ -28,7 +28,7 @@ public class ModulePreferencesModel extends ChangeNotifier {
     private final Set<String> currentActiveModules;
 
     protected List<String> getModules(List<String> def) {
-        return Main.pref.getList(OdConstants.PREF_MODULES, def);
+        return Config.getPref().getList(OdConstants.PREF_MODULES, def);
     }
 
     public ModulePreferencesModel() {

@@ -43,7 +43,6 @@ import org.opengis.referencing.datum.Datum;
 import org.opengis.referencing.operation.MathTransform;
 import org.opengis.referencing.operation.OperationNotFoundException;
 import org.opengis.referencing.operation.TransformException;
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
@@ -58,6 +57,7 @@ import org.openstreetmap.josm.io.AbstractReader;
 import org.openstreetmap.josm.io.IllegalDataException;
 import org.openstreetmap.josm.plugins.opendata.core.OdConstants;
 import org.openstreetmap.josm.plugins.opendata.core.gui.DialogPrompter;
+import org.openstreetmap.josm.spi.preferences.Config;
 import org.openstreetmap.josm.tools.ImageOverlay;
 import org.openstreetmap.josm.tools.ImageProvider;
 import org.openstreetmap.josm.tools.ImageProvider.ImageSizes;
@@ -371,12 +371,12 @@ public abstract class GeographicReader extends AbstractReader {
                         CoordinateReferenceSystem candidate = CRS.decode(code);
                         if (candidate instanceof AbstractCRS && crs instanceof AbstractIdentifiedObject) {
 
-                            Hints.putSystemDefault(Hints.COMPARISON_TOLERANCE, Main.pref.getDouble(
+                            Hints.putSystemDefault(Hints.COMPARISON_TOLERANCE, Config.getPref().getDouble(
                                     OdConstants.PREF_CRS_COMPARISON_TOLERANCE, OdConstants.DEFAULT_CRS_COMPARISON_TOLERANCE));
                             if (((AbstractCRS) candidate).equals((AbstractIdentifiedObject) crs, false)) {
                                 Logging.info("Found a potential CRS: "+candidate.getName());
                                 candidates.add(candidate);
-                            } else if (Main.pref.getBoolean(OdConstants.PREF_CRS_COMPARISON_DEBUG, false)) {
+                            } else if (Config.getPref().getBoolean(OdConstants.PREF_CRS_COMPARISON_DEBUG, false)) {
                                 compareDebug(crs, candidate);
                             }
                             Hints.removeSystemDefault(Hints.COMPARISON_TOLERANCE);

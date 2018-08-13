@@ -13,8 +13,8 @@ import javax.swing.JEditorPane;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.ExtendedDialog;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.plugins.opendata.core.licenses.License;
 import org.openstreetmap.josm.tools.ImageProvider;
 
@@ -23,14 +23,14 @@ public class ViewLicenseDialog extends ExtendedDialog {
     private final License license;
     private final JEditorPane htmlPane;
     private boolean summary;
-    
+
     public ViewLicenseDialog(License license) throws IOException {
-        this(license, Main.parent, tr("License"), new String[] {tr("OK"), "", tr("Cancel")});
+        this(license, MainApplication.getMainFrame(), tr("License"), new String[] {tr("OK"), "", tr("Cancel")});
     }
 
     public ViewLicenseDialog(License license, Component parent, String title, String[] buttonTexts) throws IOException {
         super(parent, title, buttonTexts);
-        
+
         this.license = license;
         this.htmlPane = new JEditorPane();
         htmlPane.setEditable(false);
@@ -43,7 +43,7 @@ public class ViewLicenseDialog extends ExtendedDialog {
         }
         JScrollPane scrollPane = new JScrollPane(htmlPane);
         scrollPane.setPreferredSize(new Dimension(800, 600));
-        
+
         setButtonIcons(new Icon[] {
                 ImageProvider.get("ok"),
                 ImageProvider.get("agreement24"),

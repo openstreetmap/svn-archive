@@ -17,7 +17,6 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
@@ -28,6 +27,7 @@ import org.openstreetmap.josm.io.IllegalDataException;
 import org.openstreetmap.josm.plugins.opendata.core.OdConstants;
 import org.openstreetmap.josm.plugins.opendata.core.gui.ChooserLauncher;
 import org.openstreetmap.josm.plugins.opendata.core.io.ProjectionPatterns;
+import org.openstreetmap.josm.spi.preferences.Config;
 import org.openstreetmap.josm.tools.Logging;
 
 public abstract class SpreadSheetReader extends AbstractReader {
@@ -253,14 +253,14 @@ public abstract class SpreadSheetReader extends AbstractReader {
                         firstNode = n;
                     }
                     if (n == firstNode || n.getCoor().greatCircleDistance(firstNode.getCoor())
-                            > Main.pref.getDouble(OdConstants.PREF_TOLERANCE, OdConstants.DEFAULT_TOLERANCE)) {
+                            > Config.getPref().getDouble(OdConstants.PREF_TOLERANCE, OdConstants.DEFAULT_TOLERANCE)) {
                         ds.addPrimitive(n);
                     } else {
                         nodes.remove(c);
                     }
                 }
             }
-            if (handler != null && !Main.pref.getBoolean(OdConstants.PREF_RAWDATA)) {
+            if (handler != null && !Config.getPref().getBoolean(OdConstants.PREF_RAWDATA)) {
                 handler.nodesAdded(ds, nodes, header, lineNumber);
             }
         }

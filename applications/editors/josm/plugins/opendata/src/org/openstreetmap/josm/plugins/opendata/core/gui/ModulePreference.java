@@ -38,7 +38,6 @@ import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.HelpAwareOptionPane;
 import org.openstreetmap.josm.gui.HelpAwareOptionPane.ButtonSpec;
 import org.openstreetmap.josm.gui.MainApplication;
@@ -53,6 +52,7 @@ import org.openstreetmap.josm.plugins.opendata.core.modules.ModuleDownloadTask;
 import org.openstreetmap.josm.plugins.opendata.core.modules.ModuleInformation;
 import org.openstreetmap.josm.plugins.opendata.core.modules.ReadLocalModuleInformationTask;
 import org.openstreetmap.josm.plugins.opendata.core.modules.ReadRemoteModuleInformationTask;
+import org.openstreetmap.josm.spi.preferences.Config;
 import org.openstreetmap.josm.tools.GBC;
 import org.openstreetmap.josm.tools.ImageProvider;
 
@@ -224,7 +224,7 @@ public class ModulePreference implements SubPreferenceSetting {
         if (model.isActiveModulesChanged()) {
             LinkedList<String> l = new LinkedList<>(model.getSelectedModuleNames());
             Collections.sort(l);
-            Main.pref.putList(OdConstants.PREF_MODULES, l);
+            Config.getPref().putList(OdConstants.PREF_MODULES, l);
             return true;
         }
         return false;
@@ -483,7 +483,7 @@ public class ModulePreference implements SubPreferenceSetting {
                         return;
                     }
                     String s = (String) JOptionPane.showInputDialog(
-                            Main.parent,
+                            MainApplication.getMainFrame(),
                             tr("Edit Open Data Module description URL."),
                             tr("Open Data Module description URL"),
                             JOptionPane.QUESTION_MESSAGE,

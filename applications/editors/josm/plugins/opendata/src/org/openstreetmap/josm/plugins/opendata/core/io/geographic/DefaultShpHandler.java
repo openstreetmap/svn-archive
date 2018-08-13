@@ -19,7 +19,6 @@ import org.opengis.referencing.FactoryException;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.opengis.referencing.datum.GeodeticDatum;
 import org.opengis.referencing.operation.MathTransform;
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.projection.AbstractProjection;
@@ -32,6 +31,7 @@ import org.openstreetmap.josm.data.projection.proj.LambertConformalConic.Paramet
 import org.openstreetmap.josm.gui.preferences.projection.ProjectionChoice;
 import org.openstreetmap.josm.gui.preferences.projection.ProjectionPreference;
 import org.openstreetmap.josm.plugins.opendata.core.OdConstants;
+import org.openstreetmap.josm.spi.preferences.Config;
 import org.openstreetmap.josm.tools.Logging;
 import org.openstreetmap.josm.tools.Pair;
 
@@ -49,9 +49,9 @@ public class DefaultShpHandler extends DefaultGeographicHandler implements ShpHa
     }
 
     private static boolean equals(Double a, Double b) {
-        boolean res = Math.abs(a - b) <= Main.pref.getDouble(
+        boolean res = Math.abs(a - b) <= Config.getPref().getDouble(
                 OdConstants.PREF_CRS_COMPARISON_TOLERANCE, OdConstants.DEFAULT_CRS_COMPARISON_TOLERANCE);
-        if (Main.pref.getBoolean(OdConstants.PREF_CRS_COMPARISON_DEBUG, false)) {
+        if (Config.getPref().getBoolean(OdConstants.PREF_CRS_COMPARISON_DEBUG, false)) {
             Logging.debug("Comparing "+a+" and "+b+" -> "+res);
         }
         return res;

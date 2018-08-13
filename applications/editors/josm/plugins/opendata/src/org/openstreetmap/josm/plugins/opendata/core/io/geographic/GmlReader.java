@@ -19,11 +19,11 @@ import org.opengis.referencing.NoSuchAuthorityCodeException;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.opengis.referencing.operation.MathTransform;
 import org.opengis.referencing.operation.TransformException;
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.io.UTFInputStreamReader;
 import org.openstreetmap.josm.plugins.opendata.core.OdConstants;
@@ -92,7 +92,7 @@ public class GmlReader extends GeographicReader {
 
     private DataSet parseDoc(ProgressMonitor instance) throws XMLStreamException, GeoCrsException, FactoryException,
     GeoMathTransformException, MismatchedDimensionException, TransformException {
-        Component parent = instance != null ? instance.getWindowParent() : Main.parent;
+        Component parent = instance != null ? instance.getWindowParent() : MainApplication.getMainFrame();
         while (parser.hasNext()) {
             int event = parser.next();
             if (event == XMLStreamConstants.START_ELEMENT) {

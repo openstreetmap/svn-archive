@@ -21,13 +21,13 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.preferences.DefaultTabPreferenceSetting;
 import org.openstreetmap.josm.gui.preferences.PreferenceTabbedPane;
 import org.openstreetmap.josm.plugins.opendata.core.OdConstants;
 import org.openstreetmap.josm.plugins.opendata.core.modules.ModuleDownloadTask;
 import org.openstreetmap.josm.plugins.opendata.core.modules.ModuleInformation;
+import org.openstreetmap.josm.spi.preferences.Config;
 import org.openstreetmap.josm.tools.GBC;
 
 public class OdPreferenceSetting extends DefaultTabPreferenceSetting {
@@ -58,7 +58,7 @@ public class OdPreferenceSetting extends DefaultTabPreferenceSetting {
      * @return the collection of module site URLs from where module lists can be downloaded
      */
     public static final Collection<String> getModuleSites() {
-        return Main.pref.getList(OdConstants.PREF_MODULES_SITES, Arrays.asList(OdConstants.DEFAULT_MODULE_SITES));
+        return Config.getPref().getList(OdConstants.PREF_MODULES_SITES, Arrays.asList(OdConstants.DEFAULT_MODULE_SITES));
     }
 
     /**
@@ -67,7 +67,7 @@ public class OdPreferenceSetting extends DefaultTabPreferenceSetting {
      * @param sites the site URLs
      */
     public static void setModuleSites(List<String> sites) {
-        Main.pref.putList(OdConstants.PREF_MODULES_SITES, sites);
+        Config.getPref().putList(OdConstants.PREF_MODULES_SITES, sites);
     }
 
     @Override
@@ -87,7 +87,7 @@ public class OdPreferenceSetting extends DefaultTabPreferenceSetting {
         general.setName(tr("General settings"));
 
         // option to enable raw data
-        rawData.setSelected(Main.pref.getBoolean(OdConstants.PREF_RAWDATA, OdConstants.DEFAULT_RAWDATA));
+        rawData.setSelected(Config.getPref().getBoolean(OdConstants.PREF_RAWDATA, OdConstants.DEFAULT_RAWDATA));
         rawData.setToolTipText(tr("Import only raw data (i.e. do not add/delete tags or replace them by standard OSM tags)"));
         general.add(rawData, GBC.eop().insets(0, 0, 0, 0));
 
@@ -102,7 +102,7 @@ public class OdPreferenceSetting extends DefaultTabPreferenceSetting {
         rbWGS84.setToolTipText(tr("WGS84"));
         bgCoordinates.add(rbCC43);
         bgCoordinates.add(rbWGS84);
-        String currentCoordinates = Main.pref.get(PREF_COORDINATES, VALUE_CC9ZONES);
+        String currentCoordinates = Config.getPref().get(PREF_COORDINATES, VALUE_CC9ZONES);
         if (currentCoordinates.equals(VALUE_WGS84))
             rbWGS84.setSelected(true);
         else
@@ -112,14 +112,14 @@ public class OdPreferenceSetting extends DefaultTabPreferenceSetting {
 
         // option to set the Overpass API server
         JLabel jLabelOapi = new JLabel(tr("Overpass API server:"));
-        oapi.setText(Main.pref.get(OdConstants.PREF_OAPI, OdConstants.DEFAULT_OAPI));
+        oapi.setText(Config.getPref().get(OdConstants.PREF_OAPI, OdConstants.DEFAULT_OAPI));
         oapi.setToolTipText(tr("Overpass API server used to download OSM data"));
         general.add(jLabelOapi, GBC.std().insets(0, 5, 10, 0));
         general.add(oapi, GBC.eol().fill(GBC.HORIZONTAL).insets(5, 5, 200, 5));
 
         // option to set the XAPI server
         JLabel jLabelXapi = new JLabel(tr("XAPI server:"));
-        xapi.setText(Main.pref.get(OdConstants.PREF_XAPI, OdConstants.DEFAULT_XAPI));
+        xapi.setText(Config.getPref().get(OdConstants.PREF_XAPI, OdConstants.DEFAULT_XAPI));
         xapi.setToolTipText(tr("XAPI server used to download OSM data when Overpass API is not available"));
         general.add(jLabelXapi, GBC.std().insets(0, 5, 10, 0));
         general.add(xapi, GBC.eol().fill(GBC.HORIZONTAL).insets(5, 5, 200, 5));
@@ -133,10 +133,10 @@ public class OdPreferenceSetting extends DefaultTabPreferenceSetting {
     @Override
     public boolean ok() {
         boolean result = modulePref.ok();
-        //Main.pref.put(PREF_COORDINATES, rbWGS84.isSelected() ? VALUE_WGS84 : VALUE_CC9ZONES);
-        Main.pref.put(OdConstants.PREF_OAPI, oapi.getText());
-        Main.pref.put(OdConstants.PREF_XAPI, xapi.getText());
-        Main.pref.putBoolean(OdConstants.PREF_RAWDATA, rawData.isSelected());
+        //Config.getPref().put(PREF_COORDINATES, rbWGS84.isSelected() ? VALUE_WGS84 : VALUE_CC9ZONES);
+        Config.getPref().put(OdConstants.PREF_OAPI, oapi.getText());
+        Config.getPref().put(OdConstants.PREF_XAPI, xapi.getText());
+        Config.getPref().putBoolean(OdConstants.PREF_RAWDATA, rawData.isSelected());
 
         // create a task for downloading modules if the user has activated, yet not downloaded,
         // new modules
@@ -177,13 +177,13 @@ public class OdPreferenceSetting extends DefaultTabPreferenceSetting {
             //
             if ((task != null && !task.isCanceled()) || requiresRestart) {
                 JOptionPane.showMessageDialog(
-                        Main.parent,
+                        MainApplication.getMainFrame(),
                         sb.toString(),
                         tr("Warning"),
                         JOptionPane.WARNING_MESSAGE
                         );
             }
-            Main.parent.repaint();
+            MainApplication.getMainFrame().repaint();
         };
 
         if (task != null) {

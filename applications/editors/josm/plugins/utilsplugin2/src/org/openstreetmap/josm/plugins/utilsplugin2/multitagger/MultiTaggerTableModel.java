@@ -14,8 +14,8 @@ import javax.swing.table.AbstractTableModel;
 import org.openstreetmap.josm.command.ChangePropertyCommand;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.SequenceCommand;
-import org.openstreetmap.josm.data.SelectionChangedListener;
 import org.openstreetmap.josm.data.UndoRedoHandler;
+import org.openstreetmap.josm.data.osm.DataSelectionListener;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.OsmPrimitiveType;
 import org.openstreetmap.josm.data.osm.Way;
@@ -25,7 +25,7 @@ import org.openstreetmap.josm.tools.Geometry;
 /**
  * Model of the multi tag table.
  */
-public class MultiTaggerTableModel extends AbstractTableModel implements SelectionChangedListener {
+public class MultiTaggerTableModel extends AbstractTableModel implements DataSelectionListener {
 
     ArrayList<OsmPrimitive> list = new ArrayList<>(50);
     String[] mainTags = new String[]{};
@@ -53,7 +53,7 @@ public class MultiTaggerTableModel extends AbstractTableModel implements Selecti
     public void setWatchSelection(boolean watchSelection) {
         this.watchSelection = watchSelection;
         if (watchSelection && MainApplication.getLayerManager().getEditLayer() != null)
-            selectionChanged(MainApplication.getLayerManager().getEditDataSet().getSelected());
+            doSelectionChanged(MainApplication.getLayerManager().getEditDataSet().getSelected());
     }
 
     @Override
@@ -94,7 +94,11 @@ public class MultiTaggerTableModel extends AbstractTableModel implements Selecti
     }
 
     @Override
-    public void selectionChanged(Collection<? extends OsmPrimitive> newSelection) {
+    public void selectionChanged(SelectionChangeEvent event) {
+        doSelectionChanged(event.getSelection());
+    }
+
+    public void doSelectionChanged(Collection<? extends OsmPrimitive> newSelection) {
         if (watchSelection)
             updateData(newSelection);
     }

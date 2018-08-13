@@ -41,7 +41,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 
 import org.openstreetmap.josm.actions.AutoScaleAction;
 import org.openstreetmap.josm.actions.search.SearchAction;
-import org.openstreetmap.josm.data.SelectionChangedListener;
+import org.openstreetmap.josm.data.osm.DataSelectionListener;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.OsmPrimitiveType;
 import org.openstreetmap.josm.data.osm.search.SearchMode;
@@ -65,7 +65,7 @@ import org.openstreetmap.josm.tools.Logging;
 /**
  * Dialog for editing multiple object tags
  */
-public class MultiTagDialog extends ExtendedDialog implements SelectionChangedListener {
+public class MultiTagDialog extends ExtendedDialog implements DataSelectionListener {
 
     private final MultiTaggerTableModel tableModel = new MultiTaggerTableModel();
     private final JTable tbl;
@@ -166,8 +166,12 @@ public class MultiTagDialog extends ExtendedDialog implements SelectionChangedLi
     }
 
     @Override
-    public void selectionChanged(Collection<? extends OsmPrimitive> newSelection) {
-        tableModel.selectionChanged(newSelection);
+    public void selectionChanged(SelectionChangeEvent event) {
+        tableModel.selectionChanged(event);
+    }
+
+    void doSelectionChanged(Collection<? extends OsmPrimitive> newSelection) {
+        tableModel.doSelectionChanged(newSelection);
     }
 
     /*private OsmPrimitive getSelectedPrimitive() {

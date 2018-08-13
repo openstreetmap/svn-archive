@@ -34,7 +34,7 @@ public final class MultiTagAction extends JosmAction {
         if (!isEnabled())
             return;
         dlg = new MultiTagDialog();
-        dlg.selectionChanged(getLayerManager().getEditDataSet().getSelected());
+        dlg.doSelectionChanged(getLayerManager().getEditDataSet().getSelected());
         dlg.showDialog();
     }
 
@@ -47,7 +47,7 @@ public final class MultiTagAction extends JosmAction {
     protected void updateEnabledState(Collection<? extends OsmPrimitive> selection) {
         setEnabled(getLayerManager().getEditLayer() != null);
         if (dlg != null && dlg.isVisible()) {
-            dlg.selectionChanged(selection);
+            dlg.doSelectionChanged(selection);
         }
     }
 }

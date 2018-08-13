@@ -23,7 +23,6 @@ import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.validation.util.Entities;
 import org.openstreetmap.josm.gui.MainApplication;
@@ -31,6 +30,7 @@ import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.gui.util.GuiHelper;
 import org.openstreetmap.josm.io.OsmTransferException;
 import org.openstreetmap.josm.plugins.fr.cadastre.CadastrePlugin;
+import org.openstreetmap.josm.spi.preferences.Config;
 import org.openstreetmap.josm.tools.GBC;
 import org.openstreetmap.josm.tools.HttpClient;
 import org.openstreetmap.josm.tools.HttpClient.Response;
@@ -108,7 +108,7 @@ public class CadastreInterface {
         } catch (IOException e) {
             Logging.error(e);
             GuiHelper.runInEDT(() ->
-                JOptionPane.showMessageDialog(Main.parent,
+                JOptionPane.showMessageDialog(MainApplication.getMainFrame(),
                     tr("Town/city {0} not found or not available\n" +
                             "or action canceled", wmsLayer.getLocation())));
             return false;
@@ -220,8 +220,8 @@ public class CadastreInterface {
                         String newLocation = selected.substring(selected.indexOf('>') + 1, selected.lastIndexOf(" - "));
                         wmsLayer.setCodeCommune(newCodeCommune);
                         wmsLayer.setLocation(newLocation);
-                        Main.pref.put("cadastrewms.codeCommune", newCodeCommune);
-                        Main.pref.put("cadastrewms.location", newLocation);
+                        Config.getPref().put("cadastrewms.codeCommune", newCodeCommune);
+                        Config.getPref().put("cadastrewms.location", newLocation);
                     }
                     checkLayerDuplicates(wmsLayer);
                     interfaceRef = postForm(wmsLayer, wmsLayer.getCodeCommune());
@@ -392,7 +392,7 @@ public class CadastreInterface {
         listOfFeuilles.clear();
         // get "Tableau d'assemblage"
         String inputTA = input;
-        if (Main.pref.getBoolean("cadastrewms.useTA", false)) {
+        if (Config.getPref().getBoolean("cadastrewms.useTA", false)) {
             while (inputTA.indexOf(C_TA_IMAGE_LINK_START) != -1) {
                 inputTA = inputTA.substring(inputTA.indexOf(C_TA_IMAGE_LINK_START) + C_TA_IMAGE_LINK_START.length()
                     + csrfToken.length() + C_F.length());
@@ -426,7 +426,7 @@ public class CadastreInterface {
             p.add(inputCommuneList, GBC.eol().fill(GBC.HORIZONTAL).insets(10, 0, 0, 0));
             JOptionPane pane = new JOptionPane(p, JOptionPane.INFORMATION_MESSAGE, JOptionPane.OK_CANCEL_OPTION, null);
             // this below is a temporary workaround to fix the "always on top" issue
-            JDialog dialog = pane.createDialog(Main.parent, tr("Select commune"));
+            JDialog dialog = pane.createDialog(MainApplication.getMainFrame(), tr("Select commune"));
             CadastrePlugin.prepareDialog(dialog);
             dialog.setVisible(true);
             // till here
@@ -447,7 +447,7 @@ public class CadastreInterface {
             p.add(inputFeuilleList, GBC.eol().fill(GBC.HORIZONTAL).insets(10, 0, 0, 0));
             JOptionPane pane = new JOptionPane(p, JOptionPane.INFORMATION_MESSAGE, JOptionPane.OK_CANCEL_OPTION, null);
             // this below is a temporary workaround to fix the "always on top" issue
-            JDialog dialog = pane.createDialog(Main.parent, tr("Select Feuille"));
+            JDialog dialog = pane.createDialog(MainApplication.getMainFrame(), tr("Select Feuille"));
             CadastrePlugin.prepareDialog(dialog);
             dialog.setVisible(true);
             // till here

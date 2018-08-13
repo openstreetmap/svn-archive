@@ -9,7 +9,6 @@ import java.util.concurrent.Future;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MapView;
@@ -39,7 +38,7 @@ public class DownloadWMSPlanImage {
                     if (!wmsLayer.getImages().isEmpty()) {
                         JOptionPane pane = new JOptionPane(tr("Image already loaded"), JOptionPane.INFORMATION_MESSAGE);
                         // this below is a temporary workaround to fix the "always on top" issue
-                        JDialog dialog = pane.createDialog(Main.parent, "");
+                        JDialog dialog = pane.createDialog(MainApplication.getMainFrame(), "");
                         CadastrePlugin.prepareDialog(dialog);
                         dialog.setVisible(true);
                         // till here
@@ -69,13 +68,13 @@ public class DownloadWMSPlanImage {
                                 wmsLayer.joinBufferedImages();
                             }
                         } else {
-                            /*JOptionPane.showMessageDialog(Main.parent,tr("Municipality vectorized !\n"+
+                            /*JOptionPane.showMessageDialog(MainApplication.getMainFrame(),tr("Municipality vectorized !\n"+
                                     "Use the normal Cadastre Grab menu."));*/
                             JOptionPane pane = new JOptionPane(
                                     tr("Municipality vectorized !\nUse the normal Cadastre Grab menu."),
                                     JOptionPane.INFORMATION_MESSAGE);
                             // this below is a temporary workaround to fix the "always on top" issue
-                            JDialog dialog = pane.createDialog(Main.parent, "");
+                            JDialog dialog = pane.createDialog(MainApplication.getMainFrame(), "");
                             CadastrePlugin.prepareDialog(dialog);
                             dialog.setVisible(true);
                             // till here
@@ -113,7 +112,7 @@ public class DownloadWMSPlanImage {
         this.bounds = bounds;
         task = MainApplication.worker.submit(t, t);
         if (errorMessage != null)
-            JOptionPane.showMessageDialog(Main.parent, errorMessage);
+            JOptionPane.showMessageDialog(MainApplication.getMainFrame(), errorMessage);
     }
 
     public boolean waitFinished() {

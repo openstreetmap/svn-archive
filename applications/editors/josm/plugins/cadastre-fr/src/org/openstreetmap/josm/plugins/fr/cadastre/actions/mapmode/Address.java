@@ -40,16 +40,17 @@ import javax.swing.JTextField;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.mapmode.MapMode;
 import org.openstreetmap.josm.command.AddCommand;
 import org.openstreetmap.josm.command.ChangeCommand;
 import org.openstreetmap.josm.command.ChangePropertyCommand;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.SequenceCommand;
+import org.openstreetmap.josm.data.UndoRedoHandler;
 import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
+import org.openstreetmap.josm.data.osm.OsmDataManager;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.RelationMember;
@@ -57,6 +58,7 @@ import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.data.osm.WaySegment;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MapView;
+import org.openstreetmap.josm.spi.preferences.Config;
 import org.openstreetmap.josm.tools.GBC;
 import org.openstreetmap.josm.tools.ImageProvider;
 import org.openstreetmap.josm.tools.Logging;
@@ -144,7 +146,7 @@ public class Address extends MapMode {
                 Collection<Command> cmds = new LinkedList<>();
                 addStreetNameOrRelation(currentMouseNode, cmds);
                 Command c = new SequenceCommand("Add node address", cmds);
-                Main.main.undoRedo.add(c);
+                UndoRedoHandler.getInstance().add(c);
                 setNewSelection(currentMouseNode);
             } else {
                 if (num != null) {
@@ -158,7 +160,7 @@ public class Address extends MapMode {
                     }
                 }
                 if (currentMouseNode.get(tagHouseStreet) != null) {
-                    if (Main.pref.getBoolean("cadastrewms.addr.dontUseRelation", false)) {
+                    if (Config.getPref().getBoolean("cadastrewms.addr.dontUseRelation", false)) {
                         inputStreet.setText(currentMouseNode.get(tagHouseStreet));
                         if (ctrl) {
                             Collection<Command> cmds = new LinkedList<>();
@@ -252,12 +254,12 @@ public class Address extends MapMode {
         }
         Map<String, String> tags = new HashMap<>();
         tags.put(tagHouseNumber, inputNumber.getText());
-        cmds.add(new ChangePropertyCommand(Main.main.getEditDataSet(), Collections.singleton(osm), tags));
+        cmds.add(new ChangePropertyCommand(OsmDataManager.getInstance().getEditDataSet(), Collections.singleton(osm), tags));
         addStreetNameOrRelation(osm, cmds);
         try {
             applyInputNumberChange();
             Command c = new SequenceCommand("Add node address", cmds);
-            Main.main.undoRedo.add(c);
+            UndoRedoHandler.getInstance().add(c);
             setNewSelection(osm);
         } catch (NumberFormatException ex) {
             Logging.warn("Unable to parse house number \"" + inputNumber.getText() + "\"");
@@ -275,7 +277,7 @@ public class Address extends MapMode {
     }
 
     private void addStreetNameOrRelation(OsmPrimitive osm, Collection<Command> cmds) {
-        if (Main.pref.getBoolean("cadastrewms.addr.dontUseRelation", false)) {
+        if (Config.getPref().getBoolean("cadastrewms.addr.dontUseRelation", false)) {
             cmds.add(new ChangePropertyCommand(osm, tagHouseStreet, inputStreet.getText()));
         } else if (selectedWay != null) {
             Relation selectedRelation = findRelationAddr(selectedWay);
@@ -292,7 +294,7 @@ public class Address extends MapMode {
                 newRel.put(relationAddrName, selectedWay.get(tagHighwayName));
                 newRel.addMember(new RelationMember(relationAddrStreetRole, selectedWay));
                 newRel.addMember(new RelationMember(relationMemberHouse, osm));
-                cmds.add(new AddCommand(Main.main.getEditDataSet(), newRel));
+                cmds.add(new AddCommand(OsmDataManager.getInstance().getEditDataSet(), newRel));
             }
         }
     }
@@ -300,7 +302,7 @@ public class Address extends MapMode {
     private static Node createNewNode(MouseEvent e, Collection<Command> cmds) {
         // DrawAction.mouseReleased() but without key modifiers
         Node n = new Node(MainApplication.getMap().mapView.getLatLon(e.getX(), e.getY()));
-        cmds.add(new AddCommand(Main.main.getEditDataSet(), n));
+        cmds.add(new AddCommand(OsmDataManager.getInstance().getEditDataSet(), n));
         List<WaySegment> wss = MainApplication.getMap().mapView.getNearestWaySegments(e.getPoint(), OsmPrimitive::isSelectable);
         Map<Way, List<Integer>> insertPoints = new HashMap<>();
         for (WaySegment ws : wss) {
@@ -370,7 +372,7 @@ public class Address extends MapMode {
                     B.north() + q * (A.north() - B.north()));
 
             int snapToIntersectionThreshold
-            = Main.pref.getInt("edit.snap-intersection-threshold", 10);
+            = Config.getPref().getInt("edit.snap-intersection-threshold", 10);
 
             // only adjust to intersection if within snapToIntersectionThreshold pixel of mouse click; otherwise
             // fall through to default action.
@@ -477,11 +479,11 @@ public class Address extends MapMode {
         bgIncremental.add(minusTwo);
         p.add(minusOne, GBC.std().insets(10, 0, 10, 0));
         p.add(plusOne, GBC.std().insets(0, 0, 10, 0));
-        tagPolygon.setSelected(Main.pref.getBoolean("cadastrewms.addr.onBuilding", false));
+        tagPolygon.setSelected(Config.getPref().getBoolean("cadastrewms.addr.onBuilding", false));
         tagPolygon.addChangeListener(new ChangeListener() {
             @Override
             public void stateChanged(ChangeEvent arg0) {
-                Main.pref.putBoolean("cadastrewms.addr.onBuilding", tagPolygon.isSelected());
+                Config.getPref().putBoolean("cadastrewms.addr.onBuilding", tagPolygon.isSelected());
             }
         });
         p.add(tagPolygon, GBC.eol().fill(GBC.HORIZONTAL).insets(0, 0, 0, 0));
@@ -493,12 +495,12 @@ public class Address extends MapMode {
         final JOptionPane pane = new JOptionPane(p,
                 JOptionPane.PLAIN_MESSAGE, JOptionPane.YES_NO_CANCEL_OPTION,
                 null, options, null);
-        dialog = pane.createDialog(Main.parent, tr("Enter addresses"));
+        dialog = pane.createDialog(MainApplication.getMainFrame(), tr("Enter addresses"));
         dialog.setModal(false);
         dialog.setAlwaysOnTop(true);
         dialog.addComponentListener(new ComponentAdapter() {
             protected void rememberGeometry() {
-                Main.pref.put("cadastrewms.addr.bounds", dialog.getX()+","+dialog.getY()+","+dialog.getWidth()+","+dialog.getHeight());
+                Config.getPref().put("cadastrewms.addr.bounds", dialog.getX()+","+dialog.getY()+","+dialog.getWidth()+","+dialog.getHeight());
             }
 
             @Override public void componentMoved(ComponentEvent e) {
@@ -515,7 +517,7 @@ public class Address extends MapMode {
                 MainApplication.getMap().selectMapMode((MapMode) MainApplication.getMap().getDefaultButtonAction());
             }
         });
-        String bounds = Main.pref.get("cadastrewms.addr.bounds", null);
+        String bounds = Config.getPref().get("cadastrewms.addr.bounds", null);
         if (bounds != null) {
             String[] b = bounds.split(",");
             dialog.setBounds(new Rectangle(

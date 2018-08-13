@@ -3,9 +3,9 @@ package org.openstreetmap.josm.plugins.fr.cadastre.wms;
 
 import java.io.Serializable;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.coor.EastNorth;
+import org.openstreetmap.josm.data.projection.ProjectionRegistry;
 
 public class EastNorthBound implements Serializable {
 
@@ -32,7 +32,7 @@ public class EastNorthBound implements Serializable {
     }
 
     public Bounds toBounds() {
-        return new Bounds(Main.getProjection().eastNorth2latlon(min), Main.getProjection().eastNorth2latlon(max));
+        return new Bounds(ProjectionRegistry.getProjection().eastNorth2latlon(min), ProjectionRegistry.getProjection().eastNorth2latlon(max));
     }
 
     @Override public String toString() {

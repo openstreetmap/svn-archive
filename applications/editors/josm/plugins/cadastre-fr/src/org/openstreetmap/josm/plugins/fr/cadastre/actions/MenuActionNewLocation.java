@@ -13,13 +13,13 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.plugins.fr.cadastre.CadastrePlugin;
 import org.openstreetmap.josm.plugins.fr.cadastre.wms.DownloadWMSVectorImage;
 import org.openstreetmap.josm.plugins.fr.cadastre.wms.WMSLayer;
+import org.openstreetmap.josm.spi.preferences.Config;
 import org.openstreetmap.josm.tools.GBC;
 import org.openstreetmap.josm.tools.Logging;
 
@@ -77,7 +77,7 @@ public class MenuActionNewLocation extends JosmAction {
         JLabel labelSectionNewLocation = new JLabel(tr("Add a new municipality layer"));
         JPanel p = new JPanel(new GridBagLayout());
         JLabel labelLocation = new JLabel(tr("Commune"));
-        final JTextField inputTown = new JTextField(Main.pref.get("cadastrewms.location"));
+        final JTextField inputTown = new JTextField(Config.getPref().get("cadastrewms.location"));
         inputTown.setToolTipText(tr("<html>Enter the town,village or city name.<br>"
                 + "Use the syntax and punctuation known by www.cadastre.gouv.fr .</html>"));
         JLabel labelDepartement = new JLabel(tr("Departement"));
@@ -86,9 +86,9 @@ public class MenuActionNewLocation extends JosmAction {
             inputDepartement.addItem(departements[i]);
         }
         inputDepartement.setToolTipText(tr("<html>Departement number (optional)</html>"));
-        if (!Main.pref.get("cadastrewms.codeDepartement").equals("")) {
+        if (!Config.getPref().get("cadastrewms.codeDepartement").equals("")) {
             for (int i = 0; i < departements.length; i += 2) {
-                if (departements[i].equals(Main.pref.get("cadastrewms.codeDepartement")))
+                if (departements[i].equals(Config.getPref().get("cadastrewms.codeDepartement")))
                     inputDepartement.setSelectedIndex(i/2);
             }
         }
@@ -106,7 +106,7 @@ public class MenuActionNewLocation extends JosmAction {
                 inputTown.selectAll();
             }
         };
-        pane.createDialog(Main.parent, tr("Add new layer")).setVisible(true);
+        pane.createDialog(MainApplication.getMainFrame(), tr("Add new layer")).setVisible(true);
         if (!Integer.valueOf(JOptionPane.OK_OPTION).equals(pane.getValue()))
             return null;
 
@@ -114,9 +114,9 @@ public class MenuActionNewLocation extends JosmAction {
         if (!inputTown.getText().equals("")) {
             location = inputTown.getText().toUpperCase();
             codeDepartement = departements[inputDepartement.getSelectedIndex()*2];
-            Main.pref.put("cadastrewms.location", location);
-            Main.pref.put("cadastrewms.codeCommune", codeCommune);
-            Main.pref.put("cadastrewms.codeDepartement", codeDepartement);
+            Config.getPref().put("cadastrewms.location", location);
+            Config.getPref().put("cadastrewms.codeCommune", codeCommune);
+            Config.getPref().put("cadastrewms.codeDepartement", codeDepartement);
             if (MainApplication.getMap() != null) {
                 for (Layer l : MainApplication.getLayerManager().getLayers()) {
                     if (l instanceof WMSLayer && l.getName().equalsIgnoreCase(location)) {
@@ -130,7 +130,8 @@ public class MenuActionNewLocation extends JosmAction {
             wmsLayer.setDepartement(codeDepartement);
             CadastrePlugin.addWMSLayer(wmsLayer);
             Logging.info("Add new layer with Location:" + inputTown.getText());
-        } else if (existingLayers != null && existingLayers.size() > 0 && MainApplication.getLayerManager().getActiveLayer() instanceof WMSLayer) {
+        } else if (existingLayers != null && existingLayers.size() > 0
+                && MainApplication.getLayerManager().getActiveLayer() instanceof WMSLayer) {
             wmsLayer = (WMSLayer) MainApplication.getLayerManager().getActiveLayer();
         }
 

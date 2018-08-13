@@ -8,11 +8,11 @@ import java.util.ArrayList;
 
 import javax.swing.JOptionPane;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.MainApplication;
 //import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.plugins.fr.cadastre.wms.WMSLayer;
+import org.openstreetmap.josm.spi.preferences.Config;
 
 final class WMSDownloadAction {
 
@@ -36,10 +36,10 @@ final class WMSDownloadAction {
                 return existingWMSlayers.get(0);
             if (existingWMSlayers.size() == 0)
                 return new MenuActionNewLocation().addNewLayer(existingWMSlayers);
-            if (Main.pref.getBoolean("cadastrewms.autoFirstLayer", false)) {
+            if (Config.getPref().getBoolean("cadastrewms.autoFirstLayer", false)) {
                 return existingWMSlayers.get(0);
             } else {
-                JOptionPane.showMessageDialog(Main.parent,
+                JOptionPane.showMessageDialog(MainApplication.getMainFrame(),
                         tr("More than one WMS layer present\nSelect one of them first, then retry"));
             }
         } else {

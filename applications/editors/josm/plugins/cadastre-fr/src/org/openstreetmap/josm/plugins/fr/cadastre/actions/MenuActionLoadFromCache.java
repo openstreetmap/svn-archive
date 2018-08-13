@@ -10,7 +10,6 @@ import java.io.File;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.layer.Layer;
@@ -31,7 +30,8 @@ public class MenuActionLoadFromCache extends JosmAction {
      * Constructs a new {@code MenuActionLoadFromCache}.
      */
     public MenuActionLoadFromCache() {
-        super(tr(name), "cadastre_small", tr("Load location from cache (only if cache is enabled)"), null, false, "cadastrefr/loadfromcache", true);
+        super(tr(name), "cadastre_small",
+                tr("Load location from cache (only if cache is enabled)"), null, false, "cadastrefr/loadfromcache", true);
     }
 
     @Override
@@ -52,7 +52,8 @@ public class MenuActionLoadFromCache extends JosmAction {
                     || (ext.length() == 4 && ext.substring(0, CacheControl.C_UTM20N.length()).equals(CacheControl.C_UTM20N) &&
                             !(CadastrePlugin.isUtm_france_dom()))
                     || (ext.length() == 1) && !(CadastrePlugin.isLambert())) {
-                        JOptionPane.showMessageDialog(Main.parent, tr("{0} not allowed with the current projection", filename),
+                        JOptionPane.showMessageDialog(MainApplication.getMainFrame(),
+                                tr("{0} not allowed with the current projection", filename),
                                 tr("Error"), JOptionPane.ERROR_MESSAGE);
                         continue;
                 } else {
@@ -66,7 +67,7 @@ public class MenuActionLoadFromCache extends JosmAction {
                         int cacheZone = Integer.parseInt(ext) - 1;
                         if (cacheZone >= 0 && cacheZone <= 9) {
                             if (cacheZone != layoutZone) {
-                                JOptionPane.showMessageDialog(Main.parent,
+                                JOptionPane.showMessageDialog(MainApplication.getMainFrame(),
                                         tr("Cannot load cache {0} which is not compatible with current projection zone", filename),
                                         tr("Error"), JOptionPane.ERROR_MESSAGE);
                                 continue nextFile;
@@ -74,7 +75,7 @@ public class MenuActionLoadFromCache extends JosmAction {
                                 Logging.info("Load cache " + filename);
                         }
                     } catch (NumberFormatException ex) {
-                        JOptionPane.showMessageDialog(Main.parent,
+                        JOptionPane.showMessageDialog(MainApplication.getMainFrame(),
                                 tr("Selected file {0} is not a cache file from this plugin (invalid extension)", filename),
                                 tr("Error"), JOptionPane.ERROR_MESSAGE);
                         continue nextFile;
@@ -83,7 +84,7 @@ public class MenuActionLoadFromCache extends JosmAction {
                     if (MainApplication.getMap() != null) {
                         for (Layer l : MainApplication.getLayerManager().getLayers()) {
                             if (l instanceof WMSLayer && l.getName().equals(location)) {
-                                JOptionPane.showMessageDialog(Main.parent,
+                                JOptionPane.showMessageDialog(MainApplication.getMainFrame(),
                                         tr("The location {0} is already on screen. Cache not loaded.", filename),
                                         tr("Error"), JOptionPane.ERROR_MESSAGE);
                                 continue nextFile;
@@ -114,7 +115,7 @@ public class MenuActionLoadFromCache extends JosmAction {
         }
         fc.setAcceptAllFileFilterUsed(false);
 
-        int answer = fc.showOpenDialog(Main.parent);
+        int answer = fc.showOpenDialog(MainApplication.getMainFrame());
         if (answer != JFileChooser.APPROVE_OPTION)
             return null;
 

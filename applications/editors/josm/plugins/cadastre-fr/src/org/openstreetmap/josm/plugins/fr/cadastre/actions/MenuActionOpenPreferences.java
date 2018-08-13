@@ -6,8 +6,8 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.event.ActionEvent;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.preferences.PreferenceDialog;
 import org.openstreetmap.josm.plugins.fr.cadastre.preferences.CadastrePreferenceSetting;
 
@@ -25,7 +25,7 @@ public class MenuActionOpenPreferences extends JosmAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        PreferenceDialog p = new PreferenceDialog(Main.parent);
+        PreferenceDialog p = new PreferenceDialog(MainApplication.getMainFrame());
         p.selectPreferencesTabByClass(CadastrePreferenceSetting.class);
         p.setVisible(true);
     }

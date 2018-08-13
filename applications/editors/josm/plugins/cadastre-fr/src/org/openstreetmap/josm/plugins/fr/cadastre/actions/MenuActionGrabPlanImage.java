@@ -9,13 +9,13 @@ import java.util.ArrayList;
 
 import javax.swing.JOptionPane;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.plugins.fr.cadastre.CadastrePlugin;
 import org.openstreetmap.josm.plugins.fr.cadastre.wms.DownloadWMSPlanImage;
 import org.openstreetmap.josm.plugins.fr.cadastre.wms.RasterImageGeoreferencer;
 import org.openstreetmap.josm.plugins.fr.cadastre.wms.WMSLayer;
+import org.openstreetmap.josm.spi.preferences.Config;
 
 public class MenuActionGrabPlanImage extends JosmAction implements Runnable {
 
@@ -44,7 +44,7 @@ public class MenuActionGrabPlanImage extends JosmAction implements Runnable {
         if (!rasterImageGeoreferencer.isRunning()) return;
         if (MainApplication.getLayerManager().containsLayer(wmsLayer))
             return;
-        JOptionPane.showMessageDialog(Main.parent, tr("Georeferencing interrupted"));
+        JOptionPane.showMessageDialog(MainApplication.getMainFrame(), tr("Georeferencing interrupted"));
         rasterImageGeoreferencer.actionInterrupted();
     }
 
@@ -86,7 +86,7 @@ public class MenuActionGrabPlanImage extends JosmAction implements Runnable {
                 rasterImageGeoreferencer.transformGeoreferencedImg();
             } else {
                 rasterImageGeoreferencer.addListener();
-                if (Main.pref.getBoolean("cadastrewms.noImageCropping", false) == false)
+                if (Config.getPref().getBoolean("cadastrewms.noImageCropping", false) == false)
                     rasterImageGeoreferencer.startCropping(wmsLayer);
                 else
                     rasterImageGeoreferencer.startGeoreferencing(wmsLayer);

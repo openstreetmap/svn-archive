@@ -22,11 +22,11 @@ import javax.swing.JSlider;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.preferences.DefaultTabPreferenceSetting;
 import org.openstreetmap.josm.gui.preferences.PreferenceTabbedPane;
 import org.openstreetmap.josm.plugins.fr.cadastre.CadastrePlugin;
 import org.openstreetmap.josm.plugins.fr.cadastre.wms.CacheControl;
+import org.openstreetmap.josm.spi.preferences.Config;
 import org.openstreetmap.josm.tools.GBC;
 import org.openstreetmap.josm.tools.I18n;
 import org.openstreetmap.josm.tools.ImageProvider;
@@ -139,12 +139,12 @@ public class CadastrePreferenceSetting extends DefaultTabPreferenceSetting {
         cadastrewms.add(sourcing, GBC.eol().fill(GBC.HORIZONTAL).insets(5, 0, 0, 5));
 
         // option to alter the original colors of the wms images
-        alterColors.setSelected(Main.pref.getBoolean("cadastrewms.alterColors", false));
+        alterColors.setSelected(Config.getPref().getBoolean("cadastrewms.alterColors", false));
         alterColors.setToolTipText(tr("Replace the original white background by the background color defined in JOSM preferences."));
         cadastrewms.add(alterColors, GBC.eop().insets(0, 0, 0, 0));
 
         // option to reverse the grey colors (to see texts background)
-        reversGrey.setSelected(Main.pref.getBoolean("cadastrewms.invertGrey", false));
+        reversGrey.setSelected(Config.getPref().getBoolean("cadastrewms.invertGrey", false));
         reversGrey.setToolTipText(
                 tr("Invert the original black and white colors (and all intermediate greys). Useful for texts on dark backgrounds."));
         cadastrewms.add(reversGrey, GBC.eop().insets(0, 0, 0, 0));
@@ -156,7 +156,7 @@ public class CadastrePreferenceSetting extends DefaultTabPreferenceSetting {
                 sliderTrans.setEnabled(transparency.isSelected());
             }
         });
-        transparency.setSelected(Main.pref.getBoolean("cadastrewms.backgroundTransparent", false));
+        transparency.setSelected(Config.getPref().getBoolean("cadastrewms.backgroundTransparent", false));
         transparency.setToolTipText(tr("Allows multiple layers stacking"));
         cadastrewms.add(transparency, GBC.eop().insets(0, 0, 0, 0));
 
@@ -165,14 +165,14 @@ public class CadastrePreferenceSetting extends DefaultTabPreferenceSetting {
         sliderTrans.setToolTipText(tr("Set WMS layers transparency. Right is opaque, left is transparent."));
         sliderTrans.setMajorTickSpacing(10);
         sliderTrans.setMinorTickSpacing(1);
-        sliderTrans.setValue((int) (Float.parseFloat(Main.pref.get("cadastrewms.brightness", "1.0f"))*10));
+        sliderTrans.setValue((int) (Float.parseFloat(Config.getPref().get("cadastrewms.brightness", "1.0f"))*10));
         sliderTrans.setPaintTicks(true);
         sliderTrans.setPaintLabels(false);
         sliderTrans.setEnabled(transparency.isSelected());
         cadastrewms.add(sliderTrans, GBC.eol().fill(GBC.HORIZONTAL).insets(20, 0, 250, 0));
 
         // option to draw boundaries of downloaded data
-        drawBoundaries.setSelected(Main.pref.getBoolean("cadastrewms.drawBoundaries", false));
+        drawBoundaries.setSelected(Config.getPref().getBoolean("cadastrewms.drawBoundaries", false));
         drawBoundaries.setToolTipText(tr("Draw a rectangle around downloaded data from WMS server."));
         cadastrewms.add(drawBoundaries, GBC.eop().insets(0, 0, 0, 5));
 
@@ -186,7 +186,7 @@ public class CadastrePreferenceSetting extends DefaultTabPreferenceSetting {
         bgResolution.add(grabRes1);
         bgResolution.add(grabRes2);
         bgResolution.add(grabRes3);
-        String currentResolution = Main.pref.get("cadastrewms.resolution", "high");
+        String currentResolution = Config.getPref().get("cadastrewms.resolution", "high");
         if (currentResolution.equals("high"))
             grabRes1.setSelected(true);
         if (currentResolution.equals("medium"))
@@ -203,7 +203,7 @@ public class CadastrePreferenceSetting extends DefaultTabPreferenceSetting {
         imageInterpolationMethod.addItem(tr("Nearest-Neighbor (fastest) [ Default ]"));
         imageInterpolationMethod.addItem(tr("Bilinear (fast)"));
         imageInterpolationMethod.addItem(tr("Bicubic (slow)"));
-        String savedImageInterpolationMethod = Main.pref.get("cadastrewms.imageInterpolation", "standard");
+        String savedImageInterpolationMethod = Config.getPref().get("cadastrewms.imageInterpolation", "standard");
         if (savedImageInterpolationMethod.equals("bilinear"))
             imageInterpolationMethod.setSelectedIndex(1);
         else if (savedImageInterpolationMethod.equals("bicubic"))
@@ -246,7 +246,7 @@ public class CadastrePreferenceSetting extends DefaultTabPreferenceSetting {
         bgGrabMultiplier.add(grabMultiplier2);
         bgGrabMultiplier.add(grabMultiplier3);
         bgGrabMultiplier.add(grabMultiplier4);
-        String currentScale = Main.pref.get("cadastrewms.scale", DEFAULT_GRAB_MULTIPLIER);
+        String currentScale = Config.getPref().get("cadastrewms.scale", DEFAULT_GRAB_MULTIPLIER);
         if (currentScale.equals(Scale.X1.value))
             grabMultiplier1.setSelected(true);
         if (currentScale.equals(Scale.X2.value))
@@ -268,31 +268,31 @@ public class CadastrePreferenceSetting extends DefaultTabPreferenceSetting {
         // WMS layers selection
         JLabel jLabelLayers = new JLabel(tr("Layers:"));
         cadastrewms.add(jLabelLayers, GBC.std().insets(0, 5, 10, 0));
-        layerLS3.setSelected(Main.pref.getBoolean("cadastrewms.layerWater", true));
+        layerLS3.setSelected(Config.getPref().getBoolean("cadastrewms.layerWater", true));
         layerLS3.setToolTipText(tr("Sea, rivers, swimming pools."));
         cadastrewms.add(layerLS3, GBC.std().insets(5, 0, 5, 0));
-        layerLS2.setSelected(Main.pref.getBoolean("cadastrewms.layerBuilding", true));
+        layerLS2.setSelected(Config.getPref().getBoolean("cadastrewms.layerBuilding", true));
         layerLS2.setToolTipText(tr("Buildings, covers, underground constructions."));
         cadastrewms.add(layerLS2, GBC.std().insets(5, 0, 5, 0));
-        layerLS1.setSelected(Main.pref.getBoolean("cadastrewms.layerSymbol", true));
+        layerLS1.setSelected(Config.getPref().getBoolean("cadastrewms.layerSymbol", true));
         layerLS1.setToolTipText(tr("Symbols like cristian cross."));
         cadastrewms.add(layerLS1, GBC.std().insets(5, 0, 5, 0));
-        layerParcel.setSelected(Main.pref.getBoolean("cadastrewms.layerParcel", true));
+        layerParcel.setSelected(Config.getPref().getBoolean("cadastrewms.layerParcel", true));
         layerParcel.setToolTipText(tr("Parcels."));
         cadastrewms.add(layerParcel, GBC.eop().insets(5, 0, 5, 0));
-        layerLabel.setSelected(Main.pref.getBoolean("cadastrewms.layerLabel", true));
+        layerLabel.setSelected(Config.getPref().getBoolean("cadastrewms.layerLabel", true));
         layerLabel.setToolTipText(tr("Parcels numbers, street names."));
         cadastrewms.add(layerLabel, GBC.std().insets(70, 0, 5, 0));
-        layerNumero.setSelected(Main.pref.getBoolean("cadastrewms.layerNumero", true));
+        layerNumero.setSelected(Config.getPref().getBoolean("cadastrewms.layerNumero", true));
         layerNumero.setToolTipText(tr("Address, houses numbers."));
         cadastrewms.add(layerNumero, GBC.std().insets(5, 0, 5, 0));
-        layerLieudit.setSelected(Main.pref.getBoolean("cadastrewms.layerLieudit", true));
+        layerLieudit.setSelected(Config.getPref().getBoolean("cadastrewms.layerLieudit", true));
         layerLieudit.setToolTipText(tr("Locality, hamlet, place."));
         cadastrewms.add(layerLieudit, GBC.std().insets(5, 0, 5, 0));
-        layerSection.setSelected(Main.pref.getBoolean("cadastrewms.layerSection", true));
+        layerSection.setSelected(Config.getPref().getBoolean("cadastrewms.layerSection", true));
         layerSection.setToolTipText(tr("Cadastral sections and subsections."));
         cadastrewms.add(layerSection, GBC.std().insets(5, 0, 5, 0));
-        layerCommune.setSelected(Main.pref.getBoolean("cadastrewms.layerCommune", true));
+        layerCommune.setSelected(Config.getPref().getBoolean("cadastrewms.layerCommune", true));
         layerCommune.setToolTipText(tr("Municipality administrative borders."));
         cadastrewms.add(layerCommune, GBC.eop().insets(5, 0, 5, 0));
 
@@ -300,22 +300,22 @@ public class CadastrePreferenceSetting extends DefaultTabPreferenceSetting {
         cadastrewms.add(new JSeparator(SwingConstants.HORIZONTAL), GBC.eol().fill(GBC.HORIZONTAL));
 
         // for raster images (not vectorized), image grab divider (from 1 to 12)
-        String savedRasterDivider = Main.pref.get("cadastrewms.rasterDivider", DEFAULT_RASTER_DIVIDER);
+        String savedRasterDivider = Config.getPref().get("cadastrewms.rasterDivider", DEFAULT_RASTER_DIVIDER);
         JLabel jLabelRasterDivider = new JLabel(tr("Raster images grab multiplier:"));
         rasterDivider.setText(savedRasterDivider);
         rasterDivider.setToolTipText("Raster image grab division, from 1 to 12; 12 is very high definition");
         cadastrewms.add(jLabelRasterDivider, GBC.std().insets(0, 5, 10, 0));
         cadastrewms.add(rasterDivider, GBC.eol().fill(GBC.HORIZONTAL).insets(5, 5, 200, 5));
         // option to disable image cropping during raster image georeferencing
-        disableImageCropping.setSelected(Main.pref.getBoolean("cadastrewms.noImageCropping", false));
+        disableImageCropping.setSelected(Config.getPref().getBoolean("cadastrewms.noImageCropping", false));
         disableImageCropping.setToolTipText(tr("Disable image cropping during georeferencing."));
         cadastrewms.add(disableImageCropping, GBC.std().insets(0, 0, 10, 0));
         // option to add the "Tableau d'assemblage" in list of sheets to grab
-        enableTableauAssemblage.setSelected(Main.pref.getBoolean("cadastrewms.useTA", false));
+        enableTableauAssemblage.setSelected(Config.getPref().getBoolean("cadastrewms.useTA", false));
         enableTableauAssemblage.setToolTipText(tr("Add the \"Tableau(x) d''assemblage\" in the list of cadastre sheets to grab."));
         cadastrewms.add(enableTableauAssemblage, GBC.eop().insets(0, 0, 0, 0));
         // option to use 2 bits colors only
-        simplify2BitsColors.setSelected(Main.pref.getBoolean("cadastrewms.raster2bitsColors", false));
+        simplify2BitsColors.setSelected(Config.getPref().getBoolean("cadastrewms.raster2bitsColors", false));
         simplify2BitsColors.setToolTipText(tr("Replace greyscale by white color (smaller files and memory usage)."));
         cadastrewms.add(simplify2BitsColors, GBC.eop().insets(0, 0, 0, 0));
         // the crosspiece display
@@ -347,7 +347,7 @@ public class CadastrePreferenceSetting extends DefaultTabPreferenceSetting {
                 cacheSize.setEnabled(enableCache.isSelected());
             }
         });
-        enableCache.setSelected(Main.pref.getBoolean("cadastrewms.enableCaching", true));
+        enableCache.setSelected(Config.getPref().getBoolean("cadastrewms.enableCaching", true));
         enableCache.setToolTipText(tr("Allows an automatic caching"));
         cadastrewms.add(enableCache, GBC.eop().insets(0, 0, 0, 0));
 
@@ -362,7 +362,7 @@ public class CadastrePreferenceSetting extends DefaultTabPreferenceSetting {
         cadastrewms.add(new JSeparator(SwingConstants.HORIZONTAL), GBC.eol().fill(GBC.HORIZONTAL));
 
         // option to select the first WMS layer
-        autoFirstLayer.setSelected(Main.pref.getBoolean("cadastrewms.autoFirstLayer", false));
+        autoFirstLayer.setSelected(Config.getPref().getBoolean("cadastrewms.autoFirstLayer", false));
         autoFirstLayer.setToolTipText(tr("Automatically selects the first WMS layer if multiple layers exist when grabbing."));
         cadastrewms.add(autoFirstLayer, GBC.eop().insets(0, 0, 0, 0));
 
@@ -370,7 +370,7 @@ public class CadastrePreferenceSetting extends DefaultTabPreferenceSetting {
         cadastrewms.add(new JSeparator(SwingConstants.HORIZONTAL), GBC.eol().fill(GBC.HORIZONTAL));
 
         // option to use or not relations in addresses
-        dontUseRelation.setSelected(Main.pref.getBoolean("cadastrewms.addr.dontUseRelation", false));
+        dontUseRelation.setSelected(Config.getPref().getBoolean("cadastrewms.addr.dontUseRelation", false));
         dontUseRelation.setToolTipText(tr("Enable this to use the tag \"add:street\" on nodes."));
         cadastrewms.add(dontUseRelation, GBC.eop().insets(0, 0, 0, 0));
 
@@ -383,76 +383,76 @@ public class CadastrePreferenceSetting extends DefaultTabPreferenceSetting {
 
     @Override
     public boolean ok() {
-        Main.pref.put("cadastrewms.source", sourcing.getText());
+        Config.getPref().put("cadastrewms.source", sourcing.getText());
         CadastrePlugin.source = sourcing.getText();
-        Main.pref.putBoolean("cadastrewms.alterColors", alterColors.isSelected());
-        Main.pref.putBoolean("cadastrewms.invertGrey", reversGrey.isSelected());
-        Main.pref.putBoolean("cadastrewms.backgroundTransparent", transparency.isSelected());
-        Main.pref.put("cadastrewms.brightness", Float.toString((float) sliderTrans.getValue()/10));
-        Main.pref.putBoolean("cadastrewms.drawBoundaries", drawBoundaries.isSelected());
+        Config.getPref().putBoolean("cadastrewms.alterColors", alterColors.isSelected());
+        Config.getPref().putBoolean("cadastrewms.invertGrey", reversGrey.isSelected());
+        Config.getPref().putBoolean("cadastrewms.backgroundTransparent", transparency.isSelected());
+        Config.getPref().put("cadastrewms.brightness", Float.toString((float) sliderTrans.getValue()/10));
+        Config.getPref().putBoolean("cadastrewms.drawBoundaries", drawBoundaries.isSelected());
         if (grabRes1.isSelected())
-            Main.pref.put("cadastrewms.resolution", "high");
+            Config.getPref().put("cadastrewms.resolution", "high");
         else if (grabRes2.isSelected())
-            Main.pref.put("cadastrewms.resolution", "medium");
+            Config.getPref().put("cadastrewms.resolution", "medium");
         else if (grabRes3.isSelected())
-            Main.pref.put("cadastrewms.resolution", "low");
+            Config.getPref().put("cadastrewms.resolution", "low");
         if (imageInterpolationMethod.getSelectedIndex() == 2)
-            Main.pref.put("cadastrewms.imageInterpolation", "bicubic");
+            Config.getPref().put("cadastrewms.imageInterpolation", "bicubic");
         else if (imageInterpolationMethod.getSelectedIndex() == 1)
-            Main.pref.put("cadastrewms.imageInterpolation", "bilinear");
+            Config.getPref().put("cadastrewms.imageInterpolation", "bilinear");
         else
-            Main.pref.put("cadastrewms.imageInterpolation", "standard");
+            Config.getPref().put("cadastrewms.imageInterpolation", "standard");
         if (grabMultiplier1.isSelected())
-            Main.pref.put("cadastrewms.scale", Scale.X1.toString());
+            Config.getPref().put("cadastrewms.scale", Scale.X1.toString());
         else if (grabMultiplier2.isSelected())
-            Main.pref.put("cadastrewms.scale", Scale.X2.toString());
+            Config.getPref().put("cadastrewms.scale", Scale.X2.toString());
         else if (grabMultiplier3.isSelected())
-            Main.pref.put("cadastrewms.scale", Scale.X3.toString());
+            Config.getPref().put("cadastrewms.scale", Scale.X3.toString());
         else {
-            Main.pref.put("cadastrewms.scale", Scale.SQUARE_100M.toString());
+            Config.getPref().put("cadastrewms.scale", Scale.SQUARE_100M.toString());
             try {
                 int squareSize = Integer.parseInt(grabMultiplier4Size.getText());
                 if (squareSize >= 25 && squareSize <= 1000)
-                    Main.pref.put("cadastrewms.squareSize", grabMultiplier4Size.getText());
+                    Config.getPref().put("cadastrewms.squareSize", grabMultiplier4Size.getText());
             } catch (NumberFormatException e) {
                 Logging.debug(e);
             }
         }
-        Main.pref.putBoolean("cadastrewms.layerWater", layerLS3.isSelected());
-        Main.pref.putBoolean("cadastrewms.layerBuilding", layerLS2.isSelected());
-        Main.pref.putBoolean("cadastrewms.layerSymbol", layerLS1.isSelected());
-        Main.pref.putBoolean("cadastrewms.layerParcel", layerParcel.isSelected());
-        Main.pref.putBoolean("cadastrewms.layerLabel", layerLabel.isSelected());
-        Main.pref.putBoolean("cadastrewms.layerNumero", layerNumero.isSelected());
-        Main.pref.putBoolean("cadastrewms.layerLieudit", layerLieudit.isSelected());
-        Main.pref.putBoolean("cadastrewms.layerSection", layerSection.isSelected());
-        Main.pref.putBoolean("cadastrewms.layerCommune", layerCommune.isSelected());
+        Config.getPref().putBoolean("cadastrewms.layerWater", layerLS3.isSelected());
+        Config.getPref().putBoolean("cadastrewms.layerBuilding", layerLS2.isSelected());
+        Config.getPref().putBoolean("cadastrewms.layerSymbol", layerLS1.isSelected());
+        Config.getPref().putBoolean("cadastrewms.layerParcel", layerParcel.isSelected());
+        Config.getPref().putBoolean("cadastrewms.layerLabel", layerLabel.isSelected());
+        Config.getPref().putBoolean("cadastrewms.layerNumero", layerNumero.isSelected());
+        Config.getPref().putBoolean("cadastrewms.layerLieudit", layerLieudit.isSelected());
+        Config.getPref().putBoolean("cadastrewms.layerSection", layerSection.isSelected());
+        Config.getPref().putBoolean("cadastrewms.layerCommune", layerCommune.isSelected());
         try {
             int i = Integer.parseInt(rasterDivider.getText());
             if (i > 0 && i < 13)
-                Main.pref.put("cadastrewms.rasterDivider", String.valueOf(i));
+                Config.getPref().put("cadastrewms.rasterDivider", String.valueOf(i));
         } catch (NumberFormatException e) {
             Logging.debug(e);
         }
-        Main.pref.putBoolean("cadastrewms.noImageCropping", disableImageCropping.isSelected());
-        Main.pref.putBoolean("cadastrewms.useTA", enableTableauAssemblage.isSelected());
-        Main.pref.putBoolean("cadastrewms.raster2bitsColors", simplify2BitsColors.isSelected());
-        if (crosspiece1.isSelected()) Main.pref.put("cadastrewms.crosspieces", "0");
-        else if (crosspiece2.isSelected()) Main.pref.put("cadastrewms.crosspieces", "1");
-        else if (crosspiece3.isSelected()) Main.pref.put("cadastrewms.crosspieces", "2");
-        else if (crosspiece4.isSelected()) Main.pref.put("cadastrewms.crosspieces", "3");
-        Main.pref.putBoolean("cadastrewms.enableCaching", enableCache.isSelected());
+        Config.getPref().putBoolean("cadastrewms.noImageCropping", disableImageCropping.isSelected());
+        Config.getPref().putBoolean("cadastrewms.useTA", enableTableauAssemblage.isSelected());
+        Config.getPref().putBoolean("cadastrewms.raster2bitsColors", simplify2BitsColors.isSelected());
+        if (crosspiece1.isSelected()) Config.getPref().put("cadastrewms.crosspieces", "0");
+        else if (crosspiece2.isSelected()) Config.getPref().put("cadastrewms.crosspieces", "1");
+        else if (crosspiece3.isSelected()) Config.getPref().put("cadastrewms.crosspieces", "2");
+        else if (crosspiece4.isSelected()) Config.getPref().put("cadastrewms.crosspieces", "3");
+        Config.getPref().putBoolean("cadastrewms.enableCaching", enableCache.isSelected());
 
         // spread data into objects instead of restarting the application
         try {
             CacheControl.cacheSize = Integer.parseInt(cacheSize.getText());
-            Main.pref.put("cadastrewms.cacheSize", String.valueOf(CacheControl.cacheSize));
+            Config.getPref().put("cadastrewms.cacheSize", String.valueOf(CacheControl.cacheSize));
         } catch (NumberFormatException e) {
             Logging.debug(e);
         }
-        Main.pref.putBoolean("cadastrewms.autoFirstLayer", autoFirstLayer.isSelected());
+        Config.getPref().putBoolean("cadastrewms.autoFirstLayer", autoFirstLayer.isSelected());
         CacheControl.cacheEnabled = enableCache.isSelected();
-        Main.pref.putBoolean("cadastrewms.addr.dontUseRelation", dontUseRelation.isSelected());
+        Config.getPref().putBoolean("cadastrewms.addr.dontUseRelation", dontUseRelation.isSelected());
         CadastrePlugin.refreshConfiguration();
         CadastrePlugin.refreshMenu();
 
@@ -461,7 +461,7 @@ public class CadastrePreferenceSetting extends DefaultTabPreferenceSetting {
 
     private int getNumber(String pref_parameter, int def_value) {
         try {
-            return Integer.parseInt(Main.pref.get(pref_parameter, String.valueOf(def_value)));
+            return Integer.parseInt(Config.getPref().get(pref_parameter, String.valueOf(def_value)));
         } catch (NumberFormatException e) {
             return def_value;
         }

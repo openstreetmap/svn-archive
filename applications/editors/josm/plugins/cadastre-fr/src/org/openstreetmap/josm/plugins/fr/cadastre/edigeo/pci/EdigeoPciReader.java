@@ -44,10 +44,10 @@ public class EdigeoPciReader extends AbstractReader {
     private static final BiPredicate<CadastreDownloadData, OsmPrimitive> build = (x, p) -> !x.isDownloadBuilding();
     private static final BiPredicate<CadastreDownloadData, OsmPrimitive> symbo = (x, p) -> !x.isDownloadSymbol();
     private static final BiPredicate<CadastreDownloadData, OsmPrimitive> parce = (x, p) -> !x.isDownloadParcel();
-    private static final BiPredicate<CadastreDownloadData, OsmPrimitive> parcn = (x, p) -> !x.isDownloadParcelNumber();
+    //private static final BiPredicate<CadastreDownloadData, OsmPrimitive> parcn = (x, p) -> !x.isDownloadParcelNumber();
     private static final BiPredicate<CadastreDownloadData, OsmPrimitive> addre = (x, p) -> !x.isDownloadAddress();
     private static final BiPredicate<CadastreDownloadData, OsmPrimitive> local = (x, p) -> !x.isDownloadLocality();
-    private static final BiPredicate<CadastreDownloadData, OsmPrimitive> secti = (x, p) -> !x.isDownloadSection();
+    //private static final BiPredicate<CadastreDownloadData, OsmPrimitive> secti = (x, p) -> !x.isDownloadSection();
     private static final BiPredicate<CadastreDownloadData, OsmPrimitive> commu = (x, p) -> !x.isDownloadCommune();
 
     private static final Map<String, List<String>> highways = new HashMap<>();

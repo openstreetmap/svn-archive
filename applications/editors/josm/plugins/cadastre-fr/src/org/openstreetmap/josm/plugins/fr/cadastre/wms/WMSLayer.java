@@ -30,11 +30,11 @@ import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
+import org.openstreetmap.josm.data.projection.ProjectionRegistry;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.dialogs.LayerListDialog;
@@ -48,6 +48,7 @@ import org.openstreetmap.josm.plugins.fr.cadastre.actions.MenuActionRefineGeoRef
 import org.openstreetmap.josm.plugins.fr.cadastre.actions.MenuActionSaveRasterAs;
 import org.openstreetmap.josm.plugins.fr.cadastre.actions.mapmode.WMSAdjustAction;
 import org.openstreetmap.josm.plugins.fr.cadastre.preferences.CadastrePreferenceSetting;
+import org.openstreetmap.josm.spi.preferences.Config;
 import org.openstreetmap.josm.tools.Logging;
 
 /**
@@ -174,11 +175,12 @@ public class WMSLayer extends Layer implements ImageObserver {
             divideBbox(bounds, 1);
         } else {
             if (isRaster) {
-                divideBbox(new Bounds(Main.getProjection().eastNorth2latlon(rasterMin), Main.getProjection().eastNorth2latlon(rasterMax)),
-                        Integer.parseInt(Main.pref.get("cadastrewms.rasterDivider", CadastrePreferenceSetting.DEFAULT_RASTER_DIVIDER)));
+                divideBbox(new Bounds(ProjectionRegistry.getProjection().eastNorth2latlon(rasterMin),
+                        ProjectionRegistry.getProjection().eastNorth2latlon(rasterMax)),
+                        Integer.parseInt(Config.getPref().get("cadastrewms.rasterDivider", CadastrePreferenceSetting.DEFAULT_RASTER_DIVIDER)));
             } else
                 divideBbox(b,
-                        Integer.parseInt(Main.pref.get("cadastrewms.scale", CadastrePreferenceSetting.DEFAULT_GRAB_MULTIPLIER)));
+                        Integer.parseInt(Config.getPref().get("cadastrewms.scale", CadastrePreferenceSetting.DEFAULT_GRAB_MULTIPLIER)));
         }
         grabThread.addImages(dividedBbox);
     }
@@ -194,8 +196,8 @@ public class WMSLayer extends Layer implements ImageObserver {
      *                   allowing grabbing of next contiguous zone
      */
     private void divideBbox(Bounds b, int factor) {
-        EastNorth lambertMin = Main.getProjection().latlon2eastNorth(b.getMin());
-        EastNorth lambertMax = Main.getProjection().latlon2eastNorth(b.getMax());
+        EastNorth lambertMin = ProjectionRegistry.getProjection().latlon2eastNorth(b.getMin());
+        EastNorth lambertMax = ProjectionRegistry.getProjection().latlon2eastNorth(b.getMax());
         double minEast = lambertMin.east()+deltaEast;
         double minNorth = lambertMin.north()+deltaNorth;
         double dEast = (lambertMax.east() - minEast) / factor;
@@ -211,7 +213,8 @@ public class WMSLayer extends Layer implements ImageObserver {
         } else {
             // divide to fixed size squares
             // grab all square in a spiral starting from the center (usually the most interesting place)
-            int c = Integer.parseInt(Main.pref.get("cadastrewms.squareSize", String.valueOf(CadastrePreferenceSetting.DEFAULT_SQUARE_SIZE)));
+            int c = Integer.parseInt(Config.getPref().get("cadastrewms.squareSize",
+                    String.valueOf(CadastrePreferenceSetting.DEFAULT_SQUARE_SIZE)));
             lambertMin = lambertMin.add(-minEast % c, -minNorth % c);
             lambertMax = lambertMax.add(c - lambertMax.east() % c, c - lambertMax.north() % c);
             EastNorth mid = lambertMax.getCenter(lambertMin);
@@ -288,7 +291,7 @@ public class WMSLayer extends Layer implements ImageObserver {
         synchronized (this) {
             Object savedInterpolation = g.getRenderingHint(RenderingHints.KEY_INTERPOLATION);
             if (savedInterpolation == null) savedInterpolation = RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR;
-            String interpolation = Main.pref.get("cadastrewms.imageInterpolation", "standard");
+            String interpolation = Config.getPref().get("cadastrewms.imageInterpolation", "standard");
             if (interpolation.equals("bilinear"))
                 g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
             else if (interpolation.equals("bicubic"))
@@ -361,8 +364,8 @@ public class WMSLayer extends Layer implements ImageObserver {
     public boolean isOverlapping(Bounds bounds) {
         GeorefImage georefImage =
             new GeorefImage(null,
-            Main.getProjection().latlon2eastNorth(bounds.getMin()),
-            Main.getProjection().latlon2eastNorth(bounds.getMax()), this);
+            ProjectionRegistry.getProjection().latlon2eastNorth(bounds.getMin()),
+            ProjectionRegistry.getProjection().latlon2eastNorth(bounds.getMax()), this);
         for (GeorefImage img : images) {
             if (img.overlap(georefImage))
                 return true;
@@ -437,9 +440,9 @@ public class WMSLayer extends Layer implements ImageObserver {
      * @param bounds the current main map view boundaries
      */
     public void setRasterBounds(Bounds bounds) {
-        EastNorth rasterCenter = Main.getProjection().latlon2eastNorth(bounds.getCenter());
-        EastNorth eaMin = Main.getProjection().latlon2eastNorth(bounds.getMin());
-        EastNorth eaMax = Main.getProjection().latlon2eastNorth(bounds.getMax());
+        EastNorth rasterCenter = ProjectionRegistry.getProjection().latlon2eastNorth(bounds.getCenter());
+        EastNorth eaMin = ProjectionRegistry.getProjection().latlon2eastNorth(bounds.getMin());
+        EastNorth eaMax = ProjectionRegistry.getProjection().latlon2eastNorth(bounds.getMax());
         double rasterSizeX = communeBBox.max.getX() - communeBBox.min.getX();
         double rasterSizeY = communeBBox.max.getY() - communeBBox.min.getY();
         double ratio = rasterSizeY/rasterSizeX;
@@ -482,7 +485,8 @@ public class WMSLayer extends Layer implements ImageObserver {
     public boolean read(File associatedFile, ObjectInputStream ois, int currentLambertZone) throws IOException, ClassNotFoundException {
         currentFormat = ois.readInt();;
         if (currentFormat < 2) {
-            JOptionPane.showMessageDialog(Main.parent, tr("Unsupported cache file version; found {0}, expected {1}\nCreate a new one.",
+            JOptionPane.showMessageDialog(MainApplication.getMainFrame(),
+                    tr("Unsupported cache file version; found {0}, expected {1}\nCreate a new one.",
                     currentFormat, this.serializeFormatVersion), tr("Cache Format Error"), JOptionPane.ERROR_MESSAGE);
             return false;
         }
@@ -508,7 +512,7 @@ public class WMSLayer extends Layer implements ImageObserver {
         double maxY = ois.readDouble();
         this.communeBBox = new EastNorthBound(new EastNorth(minX, minY), new EastNorth(maxX, maxY));
         if (this.lambertZone != currentLambertZone && currentLambertZone != -1) {
-            JOptionPane.showMessageDialog(Main.parent, tr("Lambert zone {0} in cache "+
+            JOptionPane.showMessageDialog(MainApplication.getMainFrame(), tr("Lambert zone {0} in cache "+
                     "incompatible with current Lambert zone {1}",
                     this.lambertZone+1, currentLambertZone), tr("Cache Lambert Zone Error"), JOptionPane.ERROR_MESSAGE);
             return false;
@@ -667,7 +671,7 @@ public class WMSLayer extends Layer implements ImageObserver {
     }
 
     private void paintCrosspieces(Graphics g, MapView mv) {
-        String crosspieces = Main.pref.get("cadastrewms.crosspieces", "0");
+        String crosspieces = Config.getPref().get("cadastrewms.crosspieces", "0");
         if (!crosspieces.equals("0")) {
             int modulo = 25;
             if (crosspieces.equals("2")) modulo = 50;

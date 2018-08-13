@@ -7,7 +7,6 @@ import java.io.IOException;
 
 import javax.swing.JOptionPane;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MapView;
@@ -45,7 +44,7 @@ public class DownloadWMSVectorImage extends PleaseWaitRunnable {
                     if (wmsLayer.isRaster()) {
                         // set raster image commune bounding box based on current view (before adjustment)
                         GuiHelper.runInEDT(() ->
-                            JOptionPane.showMessageDialog(Main.parent,
+                            JOptionPane.showMessageDialog(MainApplication.getMainFrame(),
                                 tr("This commune is not vectorized.\nPlease use the other menu entry to georeference a \"Plan image\"")));
                         MainApplication.getLayerManager().removeLayer(wmsLayer);
                         wmsLayer = null;
@@ -88,6 +87,6 @@ public class DownloadWMSVectorImage extends PleaseWaitRunnable {
 
         MainApplication.worker.execute(new DownloadWMSVectorImage(wmsLayer, bounds));
         if (errorMessage != null)
-            JOptionPane.showMessageDialog(Main.parent, errorMessage);
+            JOptionPane.showMessageDialog(MainApplication.getMainFrame(), errorMessage);
     }
 }

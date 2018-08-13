@@ -14,13 +14,14 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.upload.UploadHook;
 import org.openstreetmap.josm.command.ChangePropertyCommand;
 import org.openstreetmap.josm.data.APIDataSet;
+import org.openstreetmap.josm.data.UndoRedoHandler;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.PrimitiveRenderer;
 import org.openstreetmap.josm.plugins.fr.cadastre.CadastrePlugin;
 import org.openstreetmap.josm.tools.GBC;
@@ -77,10 +78,10 @@ public class CheckSourceUploadHook implements UploadHook {
             l.setCellRenderer(renderer);
             l.setVisibleRowCount(l.getModel().getSize() < 6 ? l.getModel().getSize() : 10);
             p.add(new JScrollPane(l), GBC.eol().fill());
-            boolean bContinue = JOptionPane.showConfirmDialog(Main.parent, p, tr("Add \"source=...\" to elements?"),
+            boolean bContinue = JOptionPane.showConfirmDialog(MainApplication.getMainFrame(), p, tr("Add \"source=...\" to elements?"),
                    JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION;
             if (bContinue)
-                Main.main.undoRedo.add(new ChangePropertyCommand(sel, "source", tf.getText()));
+                UndoRedoHandler.getInstance().add(new ChangePropertyCommand(sel, "source", tf.getText()));
         }
     }
 }

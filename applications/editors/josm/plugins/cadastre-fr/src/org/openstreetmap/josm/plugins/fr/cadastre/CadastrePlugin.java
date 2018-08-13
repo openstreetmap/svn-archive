@@ -22,12 +22,12 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.ExtensionFileFilter;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.actions.UploadAction;
 import org.openstreetmap.josm.data.projection.AbstractProjection;
 import org.openstreetmap.josm.data.projection.Projection;
+import org.openstreetmap.josm.data.projection.ProjectionRegistry;
 import org.openstreetmap.josm.gui.IconToggleButton;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MainMenu;
@@ -56,6 +56,7 @@ import org.openstreetmap.josm.plugins.fr.cadastre.preferences.CadastrePreference
 import org.openstreetmap.josm.plugins.fr.cadastre.session.CadastreSessionExporter;
 import org.openstreetmap.josm.plugins.fr.cadastre.session.CadastreSessionImporter;
 import org.openstreetmap.josm.plugins.fr.cadastre.wms.WMSLayer;
+import org.openstreetmap.josm.spi.preferences.Config;
 import org.openstreetmap.josm.tools.Logging;
 
 /**
@@ -152,7 +153,7 @@ import org.openstreetmap.josm.tools.Logging;
  * <br>                - the divided BBox mode starts from the central square and loads the next in a spiral
  * <br>                - move the grabber from CadastrPlugin singleton to each wmsLayer instance to allow grabbing
  *                       of multiple municipalities in parallel.
- * <br>2.2 01-Jul-2011 - replace deprecated Main.proj by newest Main.getProjection()
+ * <br>2.2 01-Jul-2011 - replace deprecated Main.proj by newest ProjectionRegistry.getProjection()
  * <br>                - fix list of raster images (Feuilles) parsing failing after a Cadastre server change/maintenance
  * <br>2.3 11-Jan-2013 - add various improvements from Don-Vip (Vincent Privat) trac #8175, #8229 and #5626.
  * <br>2.4 27-Jun-2013 - fix raster image georeferencing issues. Add new MenuActionRefineGeoRef for a new georeferencing
@@ -238,10 +239,10 @@ public class CadastrePlugin extends Plugin {
     }
 
     private static void initCacheDir() {
-        if (Main.pref.get("cadastrewms.cacheDir").isEmpty()) {
-            cacheDir = new File(Main.pref.getDirs().getCacheDirectory(true), "cadastrewms").getAbsolutePath();
+        if (Config.getPref().get("cadastrewms.cacheDir").isEmpty()) {
+            cacheDir = new File(Config.getDirs().getCacheDirectory(true), "cadastrewms").getAbsolutePath();
         } else {
-            cacheDir = Main.pref.get("cadastrewms.cacheDir");
+            cacheDir = Config.getPref().get("cadastrewms.cacheDir");
         }
         if (cacheDir.charAt(cacheDir.length()-1) != File.separatorChar)
             cacheDir += File.separatorChar;
@@ -266,7 +267,7 @@ public class CadastrePlugin extends Plugin {
             menuSource.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent ev) {
-                    Main.pref.putBoolean("cadastrewms.autosourcing", menuSource.isSelected());
+                    Config.getPref().putBoolean("cadastrewms.autosourcing", menuSource.isSelected());
                     autoSourcing = menuSource.isSelected();
                 }
             });
@@ -284,7 +285,7 @@ public class CadastrePlugin extends Plugin {
             cadastreJMenu.add(menuSource);
             //cadastreJMenu.add(menuResetCookie); not required any more
             //cadastreJMenu.add(menuLambertZone);
-            //if (Main.pref.getBoolean("cadastrewms.buildingsMenu", false))
+            //if (Config.getPref().getBoolean("cadastrewms.buildingsMenu", false))
             //    cadastreJMenu.add(menuActionBuildings);
             cadastreJMenu.add(menuLoadFromCache);
             // all SVG features disabled until official WMS is released
@@ -296,17 +297,17 @@ public class CadastrePlugin extends Plugin {
 
     public static void refreshConfiguration() {
         source = checkSourceMillesime();
-        autoSourcing = Main.pref.getBoolean("cadastrewms.autosourcing", true);
-        alterColors = Main.pref.getBoolean("cadastrewms.alterColors");
-        drawBoundaries = Main.pref.getBoolean("cadastrewms.drawBoundaries", false);
+        autoSourcing = Config.getPref().getBoolean("cadastrewms.autosourcing", true);
+        alterColors = Config.getPref().getBoolean("cadastrewms.alterColors");
+        drawBoundaries = Config.getPref().getBoolean("cadastrewms.drawBoundaries", false);
         if (alterColors) {
-            backgroundTransparent = Main.pref.getBoolean("cadastrewms.backgroundTransparent");
-            transparency = Float.parseFloat(Main.pref.get("cadastrewms.brightness", "1.0f"));
+            backgroundTransparent = Config.getPref().getBoolean("cadastrewms.backgroundTransparent");
+            transparency = Float.parseFloat(Config.getPref().get("cadastrewms.brightness", "1.0f"));
         } else {
             backgroundTransparent = false;
             transparency = 1.0f;
         }
-        String currentResolution = Main.pref.get("cadastrewms.resolution", "high");
+        String currentResolution = Config.getPref().get("cadastrewms.resolution", "high");
         if (currentResolution.equals("high")) {
             imageWidth = 1000; imageHeight = 800;
         } else if (currentResolution.equals("medium")) {
@@ -322,47 +323,47 @@ public class CadastrePlugin extends Plugin {
         grabLayers = "";
         grabStyles = "";
         int countLayers = 0;
-        if (Main.pref.getBoolean("cadastrewms.layerWater", true)) {
+        if (Config.getPref().getBoolean("cadastrewms.layerWater", true)) {
             grabLayers += LAYER_WATER + ",";
             grabStyles += STYLE_WATER + ",";
             countLayers++;
         }
-        if (Main.pref.getBoolean("cadastrewms.layerBuilding", true)) {
+        if (Config.getPref().getBoolean("cadastrewms.layerBuilding", true)) {
             grabLayers += LAYER_BULDINGS + ",";
             grabStyles += STYLE_BUILDING + ",";
             countLayers++;
         }
-        if (Main.pref.getBoolean("cadastrewms.layerSymbol", true)) {
+        if (Config.getPref().getBoolean("cadastrewms.layerSymbol", true)) {
             grabLayers += LAYER_SYMBOL + ",";
             grabStyles += STYLE_SYMBOL + ",";
             countLayers++;
         }
-        if (Main.pref.getBoolean("cadastrewms.layerParcel", true)) {
+        if (Config.getPref().getBoolean("cadastrewms.layerParcel", true)) {
             grabLayers += LAYER_PARCELS + ",";
             grabStyles += STYLE_PARCELS + ",";
             countLayers++;
         }
-        if (Main.pref.getBoolean("cadastrewms.layerNumero", true)) {
+        if (Config.getPref().getBoolean("cadastrewms.layerNumero", true)) {
             grabLayers += LAYER_NUMERO + ",";
             grabStyles += STYLE_NUMERO + ",";
             countLayers++;
         }
-        if (Main.pref.getBoolean("cadastrewms.layerLabel", true)) {
+        if (Config.getPref().getBoolean("cadastrewms.layerLabel", true)) {
             grabLayers += LAYER_LABEL + ",";
             grabStyles += STYLE_LABEL + ",";
             countLayers++;
         }
-        if (Main.pref.getBoolean("cadastrewms.layerLieudit", true)) {
+        if (Config.getPref().getBoolean("cadastrewms.layerLieudit", true)) {
             grabLayers += LAYER_LIEUDIT + ",";
             grabStyles += STYLE_LIEUDIT + ",";
             countLayers++;
         }
-        if (Main.pref.getBoolean("cadastrewms.layerSection", true)) {
+        if (Config.getPref().getBoolean("cadastrewms.layerSection", true)) {
             grabLayers += LAYER_SECTION + ",";
             grabStyles += STYLE_SECTION + ",";
             countLayers++;
         }
-        if (Main.pref.getBoolean("cadastrewms.layerCommune", true)) {
+        if (Config.getPref().getBoolean("cadastrewms.layerCommune", true)) {
             grabLayers += LAYER_COMMUNE + ",";
             grabStyles += STYLE_COMMUNE + ",";
             countLayers++;
@@ -371,10 +372,10 @@ public class CadastrePlugin extends Plugin {
             grabLayers = grabLayers.substring(0, grabLayers.length()-1);
             grabStyles = grabStyles.substring(0, grabStyles.length()-1);
         } else {
-            JOptionPane.showMessageDialog(Main.parent, tr("Please enable at least two WMS layers in the cadastre-fr "
+            JOptionPane.showMessageDialog(MainApplication.getMainFrame(), tr("Please enable at least two WMS layers in the cadastre-fr "
                     + "plugin configuration.\nLayers ''Building'' and ''Parcel'' added by default."));
-            Main.pref.putBoolean("cadastrewms.layerBuilding", true);
-            Main.pref.putBoolean("cadastrewms.layerParcel", true);
+            Config.getPref().putBoolean("cadastrewms.layerBuilding", true);
+            Config.getPref().putBoolean("cadastrewms.layerParcel", true);
             grabLayers += LAYER_BULDINGS + "," + LAYER_PARCELS;
             grabStyles += STYLE_BUILDING + "," + STYLE_PARCELS;
         }
@@ -415,17 +416,17 @@ public class CadastrePlugin extends Plugin {
     }
 
     public static boolean isLambert() {
-        String code = Main.getProjection().toCode();
+        String code = ProjectionRegistry.getProjection().toCode();
         return Arrays.asList(ProjectionPreference.lambert.allCodes()).contains(code);
     }
 
     public static boolean isUtm_france_dom() {
-        String code = Main.getProjection().toCode();
+        String code = ProjectionRegistry.getProjection().toCode();
         return Arrays.asList(ProjectionPreference.utm_france_dom.allCodes()).contains(code);
     }
 
     public static boolean isLambert_cc9() {
-        String code = Main.getProjection().toCode();
+        String code = ProjectionRegistry.getProjection().toCode();
         return Arrays.asList(ProjectionPreference.lambert_cc9.allCodes()).contains(code);
     }
 
@@ -435,7 +436,7 @@ public class CadastrePlugin extends Plugin {
 
     public static int getCadastreProjectionLayoutZone() {
         int zone = -1;
-        Projection proj = Main.getProjection();
+        Projection proj = ProjectionRegistry.getProjection();
         if (proj instanceof AbstractProjection) {
             Integer code = ((AbstractProjection) proj).getEpsgCode();
             if (code != null) {
@@ -470,7 +471,7 @@ public class CadastrePlugin extends Plugin {
     // See OptionPaneUtil
     // FIXME: this is a temporary solution.
     public static void prepareDialog(JDialog dialog) {
-        if (Main.pref.getBoolean("window-handling.option-pane-always-on-top", true)) {
+        if (Config.getPref().getBoolean("window-handling.option-pane-always-on-top", true)) {
             try {
                 dialog.setAlwaysOnTop(true);
             } catch (SecurityException e) {
@@ -505,7 +506,7 @@ public class CadastrePlugin extends Plugin {
 
     private static String checkSourceMillesime() {
         int currentYear = Calendar.getInstance().get(Calendar.YEAR);
-        String src = Main.pref.get("cadastrewms.source",
+        String src = Config.getPref().get("cadastrewms.source",
             "cadastre-dgi-fr source : Direction G\u00e9n\u00e9rale des Imp\u00f4ts - Cadastre. Mise \u00e0 jour : AAAA");
         String srcYear = src.substring(src.lastIndexOf(" ")+1);
         Integer year = null;
@@ -517,7 +518,7 @@ public class CadastrePlugin extends Plugin {
         if (srcYear.equals("AAAA") || (year != null && year < currentYear)) {
             Logging.info("Replace source year "+srcYear+" by current year "+currentYear);
             src = src.substring(0, src.lastIndexOf(" ")+1)+currentYear;
-            Main.pref.put("cadastrewms.source", src);
+            Config.getPref().put("cadastrewms.source", src);
         }
         return src;
     }
@@ -529,13 +530,13 @@ public class CadastrePlugin extends Plugin {
         GuiHelper.runInEDTAndWait(new Runnable() {
             @Override
             public void run() {
-                if (JOptionPane.showConfirmDialog(Main.parent,
+                if (JOptionPane.showConfirmDialog(MainApplication.getMainFrame(),
                         tr("To enable the cadastre WMS plugin, change\n"
                                 + "the current projection to one of the cadastre\n"
                                 + "projections and retry"),
                                 tr("Change the current projection"), JOptionPane.OK_CANCEL_OPTION)
                     == JOptionPane.OK_OPTION) {
-                    PreferenceDialog p = new PreferenceDialog(Main.parent);
+                    PreferenceDialog p = new PreferenceDialog(MainApplication.getMainFrame());
                     p.selectPreferencesTabByClass(MapPreference.class);
                     p.getTabbedPane().getSetting(ProjectionPreference.class).selectProjection(ProjectionPreference.lambert_cc9);
                     p.setVisible(true);

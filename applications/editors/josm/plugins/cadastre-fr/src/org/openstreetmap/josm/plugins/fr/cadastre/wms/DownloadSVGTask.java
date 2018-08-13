@@ -21,14 +21,16 @@ import java.util.List;
 
 import javax.swing.JOptionPane;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.command.AddCommand;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.SequenceCommand;
+import org.openstreetmap.josm.data.UndoRedoHandler;
 import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
+import org.openstreetmap.josm.data.osm.OsmDataManager;
 import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.data.projection.ProjectionRegistry;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.PleaseWaitRunnable;
 import org.openstreetmap.josm.io.OsmTransferException;
@@ -122,10 +124,10 @@ public class DownloadSVGTask extends PleaseWaitRunnable {
         int bestPath = fitViewBox.indexOf(min);
         List<Node> nodeList = new ArrayList<>();
         for (EastNorth eastNorth : eastNorths.get(bestPath)) {
-            nodeList.add(new Node(Main.getProjection().eastNorth2latlon(eastNorth)));
+            nodeList.add(new Node(ProjectionRegistry.getProjection().eastNorth2latlon(eastNorth)));
         }
         Way wayToAdd = new Way();
-        DataSet ds = Main.main.getEditDataSet();
+        DataSet ds = OsmDataManager.getInstance().getEditDataSet();
         Collection<Command> cmds = new LinkedList<>();
         for (Node node : nodeList) {
             cmds.add(new AddCommand(ds, node));
@@ -134,7 +136,7 @@ public class DownloadSVGTask extends PleaseWaitRunnable {
         wayToAdd.addNode(wayToAdd.getNode(0)); // close the circle
 
         cmds.add(new AddCommand(ds, wayToAdd));
-        Main.main.undoRedo.add(new SequenceCommand(tr("Create boundary"), cmds));
+        UndoRedoHandler.getInstance().add(new SequenceCommand(tr("Create boundary"), cmds));
         MainApplication.getMap().repaint();
     }
 
@@ -214,12 +216,12 @@ public class DownloadSVGTask extends PleaseWaitRunnable {
 
     public static void download(WMSLayer wmsLayer) {
         if (!CadastrePlugin.autoSourcing) {
-            JOptionPane.showMessageDialog(Main.parent,
+            JOptionPane.showMessageDialog(MainApplication.getMainFrame(),
                     tr("Please, enable auto-sourcing and check cadastre millesime."));
             return;
         }
         MainApplication.worker.execute(new DownloadSVGTask(wmsLayer));
         if (errorMessage != null)
-            JOptionPane.showMessageDialog(Main.parent, errorMessage);
+            JOptionPane.showMessageDialog(MainApplication.getMainFrame(), errorMessage);
     }
 }

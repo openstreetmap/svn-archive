@@ -19,14 +19,16 @@ import java.util.LinkedList;
 
 import javax.swing.JOptionPane;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.command.AddCommand;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.SequenceCommand;
+import org.openstreetmap.josm.data.UndoRedoHandler;
 import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
+import org.openstreetmap.josm.data.osm.OsmDataManager;
 import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.data.projection.ProjectionRegistry;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.PleaseWaitRunnable;
@@ -117,7 +119,7 @@ public class DownloadSVGBuilding extends PleaseWaitRunnable {
         for (ArrayList<EastNorth> path : eastNorths) {
             Way wayToAdd = new Way();
             for (EastNorth eastNorth : path) {
-                Node nodeToAdd = new Node(Main.getProjection().eastNorth2latlon(eastNorth));
+                Node nodeToAdd = new Node(ProjectionRegistry.getProjection().eastNorth2latlon(eastNorth));
                 // check if new node is not already created by another new path
                 Node nearestNewNode = checkNearestNode(nodeToAdd, svgDataSet.getNodes());
                 if (nodeToAdd.equals(nearestNewNode))
@@ -156,7 +158,7 @@ public class DownloadSVGBuilding extends PleaseWaitRunnable {
             }
         }
 
-        DataSet ds = Main.main.getEditDataSet();
+        DataSet ds = OsmDataManager.getInstance().getEditDataSet();
         Collection<Command> cmds = new LinkedList<>();
         for (Node node : svgDataSet.getNodes()) {
             if (!node.isDeleted())
@@ -166,7 +168,7 @@ public class DownloadSVGBuilding extends PleaseWaitRunnable {
             if (!way.isDeleted())
                 cmds.add(new AddCommand(ds, way));
         }
-        Main.main.undoRedo.add(new SequenceCommand(tr("Create buildings"), cmds));
+        UndoRedoHandler.getInstance().add(new SequenceCommand(tr("Create buildings"), cmds));
         MainApplication.getMap().repaint();
     }
 
@@ -266,18 +268,18 @@ public class DownloadSVGBuilding extends PleaseWaitRunnable {
                 mv.getEastNorth(mv.getWidth(), 0));
         if ((currentView.max.east() - currentView.min.east()) > 1000 ||
                 (currentView.max.north() - currentView.min.north() > 1000)) {
-            JOptionPane.showMessageDialog(Main.parent,
+            JOptionPane.showMessageDialog(MainApplication.getMainFrame(),
                     tr("To avoid cadastre WMS overload,\nbuilding import size is limited to 1 km2 max."));
             return;
         }
         if (CadastrePlugin.autoSourcing == false) {
-            JOptionPane.showMessageDialog(Main.parent,
+            JOptionPane.showMessageDialog(MainApplication.getMainFrame(),
                     tr("Please, enable auto-sourcing and check cadastre millesime."));
             return;
         }
         MainApplication.worker.execute(new DownloadSVGBuilding(wmsLayer));
         if (errorMessage != null)
-            JOptionPane.showMessageDialog(Main.parent, errorMessage);
+            JOptionPane.showMessageDialog(MainApplication.getMainFrame(), errorMessage);
     }
 
 }

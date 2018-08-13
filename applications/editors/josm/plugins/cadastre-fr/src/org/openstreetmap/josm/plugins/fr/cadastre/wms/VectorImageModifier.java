@@ -7,7 +7,7 @@ import java.awt.image.ColorModel;
 import java.awt.image.IndexColorModel;
 import java.awt.image.WritableRaster;
 
-import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.spi.preferences.Config;
 import org.openstreetmap.josm.tools.ColorHelper;
 
 public class VectorImageModifier extends ImageModifier {
@@ -24,11 +24,11 @@ public class VectorImageModifier extends ImageModifier {
 
     public VectorImageModifier(BufferedImage bi, boolean monocolor) {
         setBufferedImage(bi);
-        if (Main.pref.getBoolean("cadastrewms.backgroundTransparent"))
+        if (Config.getPref().getBoolean("cadastrewms.backgroundTransparent"))
             makeTransparent();
-        else if (Main.pref.getBoolean("cadastrewms.alterColors"))
+        else if (Config.getPref().getBoolean("cadastrewms.alterColors"))
             replaceBackground();
-        if (Main.pref.getBoolean("cadastrewms.invertGrey"))
+        if (Config.getPref().getBoolean("cadastrewms.invertGrey"))
             invertGrey();
         if (monocolor)
             setBufferedImage(convert8(convert4(bufferedImage)));
@@ -40,7 +40,7 @@ public class VectorImageModifier extends ImageModifier {
     private void replaceBackground() {
         int w = bufferedImage.getWidth();
         int h = bufferedImage.getHeight();
-        int josmBackgroundColor = ColorHelper.html2color(Main.pref.get("color.background", "#000000")).getRGB();
+        int josmBackgroundColor = ColorHelper.html2color(Config.getPref().get("color.background", "#000000")).getRGB();
         for (int x = 0; x < w; x++) {
             for (int y = 0; y < h; y++) {
                 int pixel = bufferedImage.getRGB(x, y);

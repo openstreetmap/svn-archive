@@ -6,7 +6,7 @@ import java.awt.image.BufferedImage;
 import java.awt.image.ComponentColorModel;
 import java.awt.image.IndexColorModel;
 
-import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.spi.preferences.Config;
 
 public class RasterImageModifier extends ImageModifier {
 
@@ -18,10 +18,10 @@ public class RasterImageModifier extends ImageModifier {
 
     public RasterImageModifier(BufferedImage bi) {
         setBufferedImage(bi);
-        transparencyEnabled = Main.pref.getBoolean("cadastrewms.backgroundTransparent");
+        transparencyEnabled = Config.getPref().getBoolean("cadastrewms.backgroundTransparent");
         if (transparencyEnabled)
             makeTransparent();
-        if (Main.pref.getBoolean("cadastrewms.invertGrey"))
+        if (Config.getPref().getBoolean("cadastrewms.invertGrey"))
             invertGrey();
     }
 
@@ -64,7 +64,7 @@ public class RasterImageModifier extends ImageModifier {
             int height = bufferedImage.getHeight();
             BufferedImage bi = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
             // converting grey scale colors to black/white is configurable (use less resources but is less readable)
-            boolean simplifyColors = Main.pref.getBoolean("cadastrewms.raster2bitsColors", false);
+            boolean simplifyColors = Config.getPref().getBoolean("cadastrewms.raster2bitsColors", false);
             for (int y = 0; y < height; y++) {
                 for (int x = 0; x < width; x++) {
                     int rgb = bufferedImage.getRGB(x, y);

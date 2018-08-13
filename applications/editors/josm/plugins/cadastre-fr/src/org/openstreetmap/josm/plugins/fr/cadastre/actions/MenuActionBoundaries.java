@@ -7,8 +7,8 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.JOptionPane;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.plugins.fr.cadastre.wms.DownloadSVGTask;
 import org.openstreetmap.josm.plugins.fr.cadastre.wms.WMSLayer;
 
@@ -31,7 +31,7 @@ public class MenuActionBoundaries extends JosmAction {
         wmsLayer = WMSDownloadAction.getLayer();
         if (wmsLayer != null) {
             if (wmsLayer.isRaster()) {
-                JOptionPane.showMessageDialog(Main.parent,
+                JOptionPane.showMessageDialog(MainApplication.getMainFrame(),
                         tr("Only on vectorized layers"), tr("Error"),
                         JOptionPane.ERROR_MESSAGE);
                 return;

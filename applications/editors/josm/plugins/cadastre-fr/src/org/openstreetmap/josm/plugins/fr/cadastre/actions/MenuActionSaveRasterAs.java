@@ -24,8 +24,8 @@ import org.geotools.geometry.Envelope2D;
 import org.geotools.referencing.CRS;
 import org.opengis.parameter.GeneralParameterValue;
 import org.opengis.parameter.ParameterValueGroup;
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.plugins.fr.cadastre.wms.WMSLayer;
 import org.openstreetmap.josm.tools.Logging;
 
@@ -86,7 +86,7 @@ public class MenuActionSaveRasterAs extends JosmAction {
         fc.addChoosableFileFilter(filtreTiff);
         fc.addChoosableFileFilter(filtrePng);
         fc.setFileFilter(filtreTiff);
-        int returnVal = fc.showSaveDialog(Main.parent);
+        int returnVal = fc.showSaveDialog(MainApplication.getMainFrame());
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             file = fc.getSelectedFile();
             BufferedImage bi = wmsLayer.getImage(0).image;
@@ -95,13 +95,13 @@ public class MenuActionSaveRasterAs extends JosmAction {
                     file = new File(file.getParent(), file.getName()+".png");
                 try {
                     ImageIO.write(bi, "png", file);
-/*
+                    /*
                     FileOutputStream flux = new FileOutputStream(file);
                     BufferedOutputStream fluxBuf = new BufferedOutputStream(flux);
                     JPEGImageEncoder codec = JPEGCodec.createJPEGEncoder(fluxBuf, JPEGCodec.getDefaultJPEGEncodeParam(bi));
                     codec.encode(bi);
                     fluxBuf.close();
-*/
+                    */
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

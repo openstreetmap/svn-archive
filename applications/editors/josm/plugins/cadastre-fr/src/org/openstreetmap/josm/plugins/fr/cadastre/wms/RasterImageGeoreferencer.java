@@ -15,10 +15,11 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.coor.EastNorth;
+import org.openstreetmap.josm.data.projection.ProjectionRegistry;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.util.GuiHelper;
+import org.openstreetmap.josm.spi.preferences.Config;
 import org.openstreetmap.josm.tools.GBC;
 import org.openstreetmap.josm.tools.Logging;
 
@@ -55,7 +56,7 @@ public class RasterImageGeoreferencer implements MouseListener {
        this.wmsLayer = wmsLayer;
        mode = cGetCorners;
        countMouseClicked = 0;
-       initialClickDelay = Main.pref.getInt("cadastrewms.georef-click-delay", 200);
+       initialClickDelay = Config.getPref().getInt("cadastrewms.georef-click-delay", 200);
        mouseClickedTime = System.currentTimeMillis();
        Object[] options = {"OK", "Cancel"};
        int ret = GuiHelper.runInEDTAndWaitAndReturn(() -> JOptionPane.showOptionDialog(null,
@@ -79,7 +80,7 @@ public class RasterImageGeoreferencer implements MouseListener {
       this.wmsLayer = wmsLayer;
       countMouseClicked = 0;
       mode = cGetLambertCrosspieces;
-      initialClickDelay = Main.pref.getInt("cadastrewms.georef-click-delay", 200);
+      initialClickDelay = Config.getPref().getInt("cadastrewms.georef-click-delay", 200);
       mouseClickedTime = System.currentTimeMillis();
       Object[] options = {"OK", "Cancel"};
       int ret = JOptionPane.showOptionDialog(null,
@@ -109,7 +110,7 @@ public class RasterImageGeoreferencer implements MouseListener {
       if (e.getButton() != MouseEvent.BUTTON1)
           return;
       if (ignoreMouseClick) return; // In case we are currently just allowing zooming to read lambert coordinates
-      EastNorth ea = Main.getProjection().latlon2eastNorth(MainApplication.getMap().mapView.getLatLon(e.getX(), e.getY()));
+      EastNorth ea = ProjectionRegistry.getProjection().latlon2eastNorth(MainApplication.getMap().mapView.getLatLon(e.getX(), e.getY()));
       Logging.info("click:"+countMouseClicked+" ,"+ea+", mode:"+mode);
       if (clickOnTheMap) {
           clickOnTheMap = false;
@@ -178,7 +179,7 @@ public class RasterImageGeoreferencer implements MouseListener {
  private void affineTransform(EastNorth org1, EastNorth org2, EastNorth dst1, EastNorth dst2) {
      // handle an NPE case I'm not able to reproduce
      if (org1 == null || org2 == null || dst1 == null || dst2 == null) {
-         JOptionPane.showMessageDialog(Main.parent,
+         JOptionPane.showMessageDialog(MainApplication.getMainFrame(),
                  tr("Ooops. I failed to catch all coordinates\n"+
                     "correctly. Retry please."));
          Logging.warn("failed to transform: one coordinate missing:"
@@ -237,7 +238,7 @@ public class RasterImageGeoreferencer implements MouseListener {
          number = "first";
      else
          number = "second";
-     JDialog dialog = pane.createDialog(Main.parent, tr(
+     JDialog dialog = pane.createDialog(MainApplication.getMainFrame(), tr(
              "Set {0} Lambert coordinates", number));
      dialog.setModal(false);
      ignoreMouseClick = true; // To avoid mouseClicked from being called

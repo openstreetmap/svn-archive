@@ -19,10 +19,11 @@ import java.util.concurrent.locks.ReentrantLock;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 
-import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.util.GuiHelper;
 import org.openstreetmap.josm.plugins.fr.cadastre.CadastrePlugin;
 import org.openstreetmap.josm.plugins.fr.cadastre.preferences.CadastrePreferenceSetting;
+import org.openstreetmap.josm.spi.preferences.Config;
 import org.openstreetmap.josm.tools.Logging;
 
 /**
@@ -68,10 +69,11 @@ public class CacheControl implements Runnable {
     }
 
     public CacheControl(WMSLayer wmsLayer) {
-        cacheEnabled = Main.pref.getBoolean("cadastrewms.enableCaching", true);
+        cacheEnabled = Config.getPref().getBoolean("cadastrewms.enableCaching", true);
         this.wmsLayer = wmsLayer;
         try {
-            cacheSize = Integer.parseInt(Main.pref.get("cadastrewms.cacheSize", String.valueOf(CadastrePreferenceSetting.DEFAULT_CACHE_SIZE)));
+            cacheSize = Integer.parseInt(Config.getPref().get("cadastrewms.cacheSize",
+                    String.valueOf(CadastrePreferenceSetting.DEFAULT_CACHE_SIZE)));
         } catch (NumberFormatException e) {
             cacheSize = CadastrePreferenceSetting.DEFAULT_CACHE_SIZE;
         }
@@ -120,7 +122,7 @@ public class CacheControl implements Runnable {
                             "(No = new cache)", wmsLayer.getName()),
                             JOptionPane.QUESTION_MESSAGE, JOptionPane.YES_NO_OPTION, null);
                     // this below is a temporary workaround to fix the "always on top" issue
-                    JDialog dialog = pane.createDialog(Main.parent, tr("Select Feuille"));
+                    JDialog dialog = pane.createDialog(MainApplication.getMainFrame(), tr("Select Feuille"));
                     CadastrePlugin.prepareDialog(dialog);
                     dialog.setVisible(true);
                     return (Integer) pane.getValue();
@@ -159,7 +161,7 @@ public class CacheControl implements Runnable {
             successfulRead = wmsLayer.read(file, ois, currentLambertZone);
         } catch (IOException | ClassNotFoundException ex) {
             Logging.error(ex);
-            GuiHelper.runInEDTAndWait(() -> JOptionPane.showMessageDialog(Main.parent,
+            GuiHelper.runInEDTAndWait(() -> JOptionPane.showMessageDialog(MainApplication.getMainFrame(),
                     tr("Error loading file.\nProbably an old version of the cache file."),
                     tr("Error"), JOptionPane.ERROR_MESSAGE));
             return false;

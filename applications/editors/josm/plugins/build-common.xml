@@ -622,7 +622,7 @@
                 excludeFilter="../spotbugs-filter.xml"
                 effort="less"
                 reportLevel="low"
-                jvmargs="-Xmx3072m"
+                jvmargs="-Xmx1024m"
                 >
             <auxClasspath refid="plugin.classpath" />
             <sourcePath path="${basedir}/src" />

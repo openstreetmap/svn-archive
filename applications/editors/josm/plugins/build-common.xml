@@ -622,6 +622,7 @@
                 excludeFilter="../spotbugs-filter.xml"
                 effort="less"
                 reportLevel="low"
+                nested="false"
                 jvmargs="-Xmx1024m"
                 >
             <auxClasspath refid="plugin.classpath" />

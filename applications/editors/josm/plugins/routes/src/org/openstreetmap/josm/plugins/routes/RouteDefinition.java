@@ -7,6 +7,7 @@ import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.search.SearchCompiler;
 import org.openstreetmap.josm.data.osm.search.SearchCompiler.Match;
 import org.openstreetmap.josm.data.osm.search.SearchParseError;
+import org.openstreetmap.josm.tools.Logging;
 
 public class RouteDefinition {
 
@@ -23,7 +24,7 @@ public class RouteDefinition {
             match = SearchCompiler.compile(expression);
         } catch (SearchParseError e) {
             match = new SearchCompiler.Never();
-            e.printStackTrace();
+            Logging.error(e);
         }
     }
 

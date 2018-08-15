@@ -3,10 +3,9 @@ package org.openstreetmap.josm.plugins.routes;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,22 +35,13 @@ public class RoutesPlugin extends Plugin implements LayerChangeListener {
         super(info);
         MainApplication.getLayerManager().addLayerChangeListener(this);
 
-        File routesFile = new File(getPluginDirs().getUserDataDirectory(false), "routes.xml");
+        File routesFile = new File(getPluginDirs().getUserDataDirectory(true), "routes.xml");
         if (!routesFile.exists()) {
             Logging.info("File with route definitions doesn't exist, using default");
-
-            try {
-                routesFile.getParentFile().mkdir();
-                try (
-                        OutputStream outputStream = new FileOutputStream(routesFile);
-                        InputStream inputStream = Routes.class.getResourceAsStream("routes.xml");
-                        ) {
-                    byte[] b = new byte[512];
-                    int read;
-                    while ((read = inputStream.read(b)) != -1) {
-                        outputStream.write(b, 0, read);
-                    }
-                }
+            try (InputStream inputStream = getClass().getResourceAsStream(
+                    "/resources/org/openstreetmap/josm/plugins/routes/xml/routes.xml");
+                    ) {
+                Files.copy(inputStream, routesFile.toPath());
             } catch (IOException e) {
                 Logging.error(e);
             }

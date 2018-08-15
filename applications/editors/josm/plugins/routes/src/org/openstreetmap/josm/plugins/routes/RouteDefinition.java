@@ -1,11 +1,12 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.routes;
 
 import java.awt.Color;
 
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
-import org.openstreetmap.josm.data.osm.search.SearchParseError;
 import org.openstreetmap.josm.data.osm.search.SearchCompiler;
 import org.openstreetmap.josm.data.osm.search.SearchCompiler.Match;
+import org.openstreetmap.josm.data.osm.search.SearchParseError;
 
 public class RouteDefinition {
 

@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.routes;
 
 import java.io.File;
@@ -60,7 +61,7 @@ public class RoutesPlugin extends Plugin implements LayerChangeListener {
             JAXBContext context = JAXBContext.newInstance(
                     Routes.class.getPackage().getName(), Routes.class.getClassLoader());
             Unmarshaller unmarshaller = context.createUnmarshaller();
-            Routes routes = (Routes)unmarshaller.unmarshal(
+            Routes routes = (Routes) unmarshaller.unmarshal(
                     new FileInputStream(getPluginDirs().getUserDataDirectory(false) + File.separator + "routes.xml"));
             for (RoutesXMLLayer layer:routes.getLayer()) {
                 if (layer.isEnabled()) {
@@ -68,7 +69,7 @@ public class RoutesPlugin extends Plugin implements LayerChangeListener {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            Logging.error(e);
         }
     }
 
@@ -96,11 +97,11 @@ public class RoutesPlugin extends Plugin implements LayerChangeListener {
     @Override
     public void layerRemoving(LayerRemoveEvent e) {
         for (Layer layer : e.getSource().getLayers()) {
-            if (layer instanceof OsmDataLayer)  {
+            if (layer instanceof OsmDataLayer) {
                 return; /* at least one OSM layer left, do nothing */
             }
         }
-        if(!e.isLastLayer()) {
+        if (!e.isLastLayer()) {
             SwingUtilities.invokeLater(() -> {
                 for (RouteLayer routeLayer : routeLayers) {
                     if (e.getSource().containsLayer(routeLayer)) {

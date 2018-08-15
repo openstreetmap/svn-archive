@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.routes.paint;
 
 import java.awt.BasicStroke;
@@ -21,6 +22,7 @@ public class WideLinePainter extends AbstractLinePainter {
         this.layer = layer;
     }
 
+    @Override
     public void drawWay(ConvertedWay way, MapView mapView, Graphics2D g) {
         List<Node> nodes = way.getNodes();
         BitSet routes = way.getRoutes();
@@ -33,7 +35,7 @@ public class WideLinePainter extends AbstractLinePainter {
         double width = totalWidth / routes.cardinality();
         double shift = -totalWidth / 2 + width / 2;
 
-        for (int k=0; k<routes.length(); k++) {
+        for (int k = 0; k < routes.length(); k++) {
 
             if (!routes.get(k)) {
                 continue;

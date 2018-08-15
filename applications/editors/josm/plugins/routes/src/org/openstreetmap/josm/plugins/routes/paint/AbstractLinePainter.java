@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.routes.paint;
 
 import java.awt.Graphics2D;
@@ -16,12 +17,11 @@ public abstract class AbstractLinePainter implements PathPainter {
     // Following two method copied from http://blog.persistent.info/2004/03/java-lineline-intersections.html
     protected boolean getLineLineIntersection(Line2D.Double l1,
             Line2D.Double l2,
-            Point intersection)
-    {
+            Point intersection) {
         double x1 = l1.getX1(), y1 = l1.getY1(),
-               x2 = l1.getX2(), y2 = l1.getY2(),
-               x3 = l2.getX1(), y3 = l2.getY1(),
-               x4 = l2.getX2(), y4 = l2.getY2();
+                x2 = l1.getX2(), y2 = l1.getY2(),
+                x3 = l2.getX1(), y3 = l2.getY1(),
+                x4 = l2.getX2(), y4 = l2.getY2();
         double dx1 = x2 - x1;
         double dx2 = x4 - x3;
         double dy1 = y2 - y1;
@@ -30,19 +30,18 @@ public abstract class AbstractLinePainter implements PathPainter {
         double ua = (dx2 * (y1 - y3) - dy2 * (x1 - x3)) / (dy2 * dx1 - dx2 * dy1);
 
         if (Math.abs(dy2 * dx1 - dx2 * dy1) < 0.0001) {
-            intersection.x = (int)l1.x2;
-            intersection.y = (int)l1.y2;
+            intersection.x = (int) l1.x2;
+            intersection.y = (int) l1.y2;
             return false;
         } else {
-            intersection.x = (int)(x1 + ua * (x2 - x1));
-            intersection.y = (int)(y1 + ua * (y2 - y1));
+            intersection.x = (int) (x1 + ua * (x2 - x1));
+            intersection.y = (int) (y1 + ua * (y2 - y1));
         }
 
         return true;
     }
 
-    protected double det(double a, double b, double c, double d)
-    {
+    protected double det(double a, double b, double c, double d) {
         return a * d - b * c;
     }
 
@@ -59,7 +58,7 @@ public abstract class AbstractLinePainter implements PathPainter {
         ndx = ndx / length;
         ndy = ndy / length;
 
-        return new Point((int)(p1.getX() + shift * ndx), (int)(p1.getY() + shift * ndy));
+        return new Point((int) (p1.getX() + shift * ndx), (int) (p1.getY() + shift * ndy));
     }
 
     protected Line2D.Double shiftLine(Point2D p1, Point2D p2, double shift) {
@@ -116,7 +115,7 @@ public abstract class AbstractLinePainter implements PathPainter {
                     } else {
                         int dx = p.x - p2.x;
                         int dy = p.y - p2.y;
-                        int distance = (int)Math.sqrt(dx * dx + dy * dy);
+                        int distance = (int) Math.sqrt(dx * dx + dy * dy);
                         if (distance > 10) {
                             p.x = p2.x + dx / (distance / 10);
                             p.y = p2.y + dy / (distance / 10);

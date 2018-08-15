@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.routes;
 
 import java.util.ArrayList;
@@ -7,7 +8,6 @@ import java.util.List;
 
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.Way;
-
 
 public class ConvertedWay {
 
@@ -21,7 +21,7 @@ public class ConvertedWay {
         @Override
         public boolean equals(Object o) {
             if (o instanceof WayEnd) {
-                WayEnd otherEnd = (WayEnd)o;
+                WayEnd otherEnd = (WayEnd) o;
                 return end.equals(otherEnd.end) && routes.equals(otherEnd.getRoutes());
             } else {
                 return false;
@@ -60,10 +60,10 @@ public class ConvertedWay {
 
     /**
      * Connects way to this way. Other ways internal representation is destroyed!!!
-     * @param way
+     * @param way way
      */
     public void connect(ConvertedWay way) {
-        for (int i=0; i<2; i++) {
+        for (int i = 0; i < 2; i++) {
             if (way.nodes.get(0).equals(nodes.get(nodes.size() - 1))) {
                 way.nodes.remove(0);
                 nodes.addAll(way.nodes);
@@ -87,6 +87,4 @@ public class ConvertedWay {
     public BitSet getRoutes() {
         return routes;
     }
-
-
 }

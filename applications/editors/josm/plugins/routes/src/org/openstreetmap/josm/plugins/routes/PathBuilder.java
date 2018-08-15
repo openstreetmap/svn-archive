@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.routes;
 
 import java.util.BitSet;
@@ -5,8 +6,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.plugins.routes.ConvertedWay.WayEnd;

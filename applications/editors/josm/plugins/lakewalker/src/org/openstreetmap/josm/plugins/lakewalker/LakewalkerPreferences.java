@@ -10,9 +10,9 @@ import javax.swing.Box;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.preferences.DefaultTabPreferenceSetting;
 import org.openstreetmap.josm.gui.preferences.PreferenceTabbedPane;
+import org.openstreetmap.josm.spi.preferences.Config;
 import org.openstreetmap.josm.tools.GBC;
 import org.openstreetmap.josm.tools.I18n;
 
@@ -97,20 +97,20 @@ public class LakewalkerPreferences extends DefaultTabPreferenceSetting {
         JPanel prefPanel = gui.createPreferenceTab(this);
         buildPreferences(prefPanel);
 
-        maxSegsConfig.setValue(Main.pref.getInt(PREF_MAX_SEG, 500));
-        maxNodesConfig.setValue(Main.pref.getInt(PREF_MAX_NODES, 50000));
-        thresholdConfig.setValue(Main.pref.getInt(PREF_THRESHOLD_VALUE, 90));
-        epsilonConfig.setValue(Main.pref.getDouble(PREF_EPSILON, 0.0003));
-        landsatResConfig.setValue(Main.pref.getInt(PREF_LANDSAT_RES, 4000));
-        landsatSizeConfig.setValue(Main.pref.getInt(PREF_LANDSAT_SIZE, 2000));
-        eastOffsetConfig.setValue(Main.pref.getDouble(PREF_EAST_OFFSET, 0.0));
-        northOffsetConfig.setValue(Main.pref.getDouble(PREF_NORTH_OFFSET, 0.0));
-        startDirConfig.setValue(Main.pref.get(PREF_START_DIR, "east"));
-        lakeTypeConfig.setValue(Main.pref.get(PREF_WAYTYPE, "water"));
-        wmsConfig.setValue(Main.pref.get(PREF_WMS, "IR1"));
-        sourceConfig.setValue(Main.pref.get(PREF_SOURCE, "Landsat"));
-        maxCacheSizeConfig.setValue(Main.pref.getInt(PREF_MAXCACHESIZE, 300));
-        maxCacheAgeConfig.setValue(Main.pref.getInt(PREF_MAXCACHEAGE, 100));
+        maxSegsConfig.setValue(Config.getPref().getInt(PREF_MAX_SEG, 500));
+        maxNodesConfig.setValue(Config.getPref().getInt(PREF_MAX_NODES, 50000));
+        thresholdConfig.setValue(Config.getPref().getInt(PREF_THRESHOLD_VALUE, 90));
+        epsilonConfig.setValue(Config.getPref().getDouble(PREF_EPSILON, 0.0003));
+        landsatResConfig.setValue(Config.getPref().getInt(PREF_LANDSAT_RES, 4000));
+        landsatSizeConfig.setValue(Config.getPref().getInt(PREF_LANDSAT_SIZE, 2000));
+        eastOffsetConfig.setValue(Config.getPref().getDouble(PREF_EAST_OFFSET, 0.0));
+        northOffsetConfig.setValue(Config.getPref().getDouble(PREF_NORTH_OFFSET, 0.0));
+        startDirConfig.setValue(Config.getPref().get(PREF_START_DIR, "east"));
+        lakeTypeConfig.setValue(Config.getPref().get(PREF_WAYTYPE, "water"));
+        wmsConfig.setValue(Config.getPref().get(PREF_WMS, "IR1"));
+        sourceConfig.setValue(Config.getPref().get(PREF_SOURCE, "Landsat"));
+        maxCacheSizeConfig.setValue(Config.getPref().getInt(PREF_MAXCACHESIZE, 300));
+        maxCacheAgeConfig.setValue(Config.getPref().getInt(PREF_MAXCACHEAGE, 100));
     }
 
     public void buildPreferences(JPanel prefPanel) {
@@ -154,20 +154,20 @@ public class LakewalkerPreferences extends DefaultTabPreferenceSetting {
     */
     @Override
     public boolean ok() {
-        Main.pref.put(PREF_MAX_SEG, maxSegsConfig.getValueString());
-        Main.pref.put(PREF_MAX_NODES, maxNodesConfig.getValueString());
-        Main.pref.put(PREF_THRESHOLD_VALUE, thresholdConfig.getValueString());
-        Main.pref.put(PREF_EPSILON, epsilonConfig.getValueString());
-        Main.pref.put(PREF_LANDSAT_RES, landsatResConfig.getValueString());
-        Main.pref.put(PREF_LANDSAT_SIZE, landsatSizeConfig.getValueString());
-        Main.pref.put(PREF_EAST_OFFSET, eastOffsetConfig.getValueString());
-        Main.pref.put(PREF_NORTH_OFFSET, northOffsetConfig.getValueString());
-        Main.pref.put(PREF_START_DIR, startDirConfig.getValueString());
-        Main.pref.put(PREF_WAYTYPE, lakeTypeConfig.getValueString());
-        Main.pref.put(PREF_WMS, wmsConfig.getValueString());
-        Main.pref.put(PREF_MAXCACHESIZE, maxCacheSizeConfig.getValueString());
-        Main.pref.put(PREF_MAXCACHEAGE, maxCacheAgeConfig.getValueString());
-        Main.pref.put(PREF_SOURCE, sourceConfig.getValueString());
+        Config.getPref().put(PREF_MAX_SEG, maxSegsConfig.getValueString());
+        Config.getPref().put(PREF_MAX_NODES, maxNodesConfig.getValueString());
+        Config.getPref().put(PREF_THRESHOLD_VALUE, thresholdConfig.getValueString());
+        Config.getPref().put(PREF_EPSILON, epsilonConfig.getValueString());
+        Config.getPref().put(PREF_LANDSAT_RES, landsatResConfig.getValueString());
+        Config.getPref().put(PREF_LANDSAT_SIZE, landsatSizeConfig.getValueString());
+        Config.getPref().put(PREF_EAST_OFFSET, eastOffsetConfig.getValueString());
+        Config.getPref().put(PREF_NORTH_OFFSET, northOffsetConfig.getValueString());
+        Config.getPref().put(PREF_START_DIR, startDirConfig.getValueString());
+        Config.getPref().put(PREF_WAYTYPE, lakeTypeConfig.getValueString());
+        Config.getPref().put(PREF_WMS, wmsConfig.getValueString());
+        Config.getPref().put(PREF_MAXCACHESIZE, maxCacheSizeConfig.getValueString());
+        Config.getPref().put(PREF_MAXCACHEAGE, maxCacheAgeConfig.getValueString());
+        Config.getPref().put(PREF_SOURCE, sourceConfig.getValueString());
         return false;
     }
 }

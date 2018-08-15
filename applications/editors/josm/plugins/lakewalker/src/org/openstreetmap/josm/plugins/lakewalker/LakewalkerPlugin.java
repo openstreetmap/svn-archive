@@ -5,12 +5,12 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.io.File;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MainMenu;
 import org.openstreetmap.josm.gui.preferences.PreferenceSetting;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
+import org.openstreetmap.josm.spi.preferences.Config;
 
 /**
  * Interface to Darryl Shpak's Lakewalker python module
@@ -29,6 +29,6 @@ public class LakewalkerPlugin extends Plugin {
     }
 
     public static File getLakewalkerCacheDir() {
-        return new File(Main.pref.getDirs().getCacheDirectory(true), "lakewalkerwms");
+        return new File(Config.getDirs().getCacheDirectory(true), "lakewalkerwms");
     }
 }

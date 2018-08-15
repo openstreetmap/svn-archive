@@ -59,22 +59,22 @@ public class DirectDownload extends Plugin {
                 if (data == null) {
                     return;
                 }
+                GpxData dataNew = new GpxData();
 
                 for (GpxTrack trk : data.getTracks()) {
                     HashMap<String, Object> attrib = new HashMap<>(trk.getAttributes());
                     if (!trk.getAttributes().containsKey(GpxConstants.GPX_NAME)) {
-                        System.out.println(track.filename);
                         attrib.put(GpxConstants.GPX_NAME, track.filename);
                     }
                     if (!trk.getAttributes().containsKey(GpxConstants.GPX_DESC)) {
-                        System.out.println(track.description);
                         attrib.put(GpxConstants.GPX_DESC, track.description);
                     }
                     // replace the existing trace in the unmodifiable tracks
                     data.removeTrack(trk);
-                    trk = new ImmutableGpxTrack(new ArrayList<>(trk.getSegments()), attrib);
-                    data.addTrack(trk);
+                    dataNew.addTrack(new ImmutableGpxTrack(new ArrayList<>(trk.getSegments()), attrib));
                 }
+
+                data = dataNew;
 
                 final GpxLayer gpxLayer = new GpxLayer(data, (track.filename + " " + track.description).trim());
 

@@ -29,7 +29,7 @@ public class SdsConnection {
         try {
             HttpURLConnection.setFollowRedirects(true);
         } catch (SecurityException e) {
-            e.printStackTrace();
+            Logging.error(e);
         }
     }
 

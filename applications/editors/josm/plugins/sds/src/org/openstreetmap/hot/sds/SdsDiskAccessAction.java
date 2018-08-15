@@ -8,10 +8,11 @@ import java.io.File;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileFilter;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.DiskAccessAction;
 import org.openstreetmap.josm.gui.ExtendedDialog;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.widgets.SwingFileChooser;
+import org.openstreetmap.josm.spi.preferences.Config;
 import org.openstreetmap.josm.tools.Shortcut;
 
 @SuppressWarnings("serial")
@@ -23,7 +24,7 @@ public abstract class SdsDiskAccessAction extends DiskAccessAction {
     }
 
     public static SwingFileChooser createAndOpenFileChooser(boolean open, boolean multiple, String title) {
-        String curDir = Main.pref.get("lastDirectory");
+        String curDir = Config.getPref().get("lastDirectory");
         if (curDir.equals("")) {
             curDir = ".";
         }
@@ -48,19 +49,19 @@ public abstract class SdsDiskAccessAction extends DiskAccessAction {
             }
         });
 
-        int answer = open ? fc.showOpenDialog(Main.parent) : fc.showSaveDialog(Main.parent);
+        int answer = open ? fc.showOpenDialog(MainApplication.getMainFrame()) : fc.showSaveDialog(MainApplication.getMainFrame());
         if (answer != JFileChooser.APPROVE_OPTION)
             return null;
 
         if (!fc.getCurrentDirectory().getAbsolutePath().equals(curDir)) {
-            Main.pref.put("lastDirectory", fc.getCurrentDirectory().getAbsolutePath());
+            Config.getPref().put("lastDirectory", fc.getCurrentDirectory().getAbsolutePath());
         }
 
         if (!open) {
             File file = fc.getSelectedFile();
             if (file != null && file.exists()) {
                 ExtendedDialog dialog = new ExtendedDialog(
-                        Main.parent,
+                        MainApplication.getMainFrame(),
                         tr("Overwrite"),
                         new String[] {tr("Overwrite"), tr("Cancel")}
                 );
@@ -76,7 +77,7 @@ public abstract class SdsDiskAccessAction extends DiskAccessAction {
     }
 
     public static File createAndOpenSaveFileChooser(String title) {
-        String curDir = Main.pref.get("lastDirectory");
+        String curDir = Config.getPref().get("lastDirectory");
         if (curDir.equals("")) {
             curDir = ".";
         }
@@ -101,12 +102,12 @@ public abstract class SdsDiskAccessAction extends DiskAccessAction {
             }
         });
 
-        int answer = fc.showSaveDialog(Main.parent);
+        int answer = fc.showSaveDialog(MainApplication.getMainFrame());
         if (answer != JFileChooser.APPROVE_OPTION)
             return null;
 
         if (!fc.getCurrentDirectory().getAbsolutePath().equals(curDir)) {
-            Main.pref.put("lastDirectory", fc.getCurrentDirectory().getAbsolutePath());
+            Config.getPref().put("lastDirectory", fc.getCurrentDirectory().getAbsolutePath());
         }
 
         File file = fc.getSelectedFile();
@@ -119,7 +120,7 @@ public abstract class SdsDiskAccessAction extends DiskAccessAction {
     public static boolean confirmOverwrite(File file) {
         if (file == null || (file.exists())) {
             ExtendedDialog dialog = new ExtendedDialog(
-                    Main.parent,
+                    MainApplication.getMainFrame(),
                     tr("Overwrite"),
                     new String[] {tr("Overwrite"), tr("Cancel")}
             );

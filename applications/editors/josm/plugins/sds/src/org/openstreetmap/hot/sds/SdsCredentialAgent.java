@@ -11,7 +11,6 @@ import java.util.Map;
 
 import javax.swing.text.html.HTMLEditorKit;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.oauth.OAuthToken;
 import org.openstreetmap.josm.gui.io.CredentialDialog;
 import org.openstreetmap.josm.gui.widgets.HtmlPanel;
@@ -20,6 +19,7 @@ import org.openstreetmap.josm.io.auth.AbstractCredentialsAgent;
 import org.openstreetmap.josm.io.auth.CredentialsAgent;
 import org.openstreetmap.josm.io.auth.CredentialsAgentException;
 import org.openstreetmap.josm.io.auth.CredentialsAgentResponse;
+import org.openstreetmap.josm.spi.preferences.Config;
 
 /**
  * Factored after JOSM's JosmPreferencesCredentialAgent.
@@ -39,14 +39,14 @@ public class SdsCredentialAgent extends AbstractCredentialsAgent {
         String password;
         switch(requestorType) {
         case SERVER:
-            user = Main.pref.get("sds-server.username", null);
-            password = Main.pref.get("sds-server.password", null);
+            user = Config.getPref().get("sds-server.username", null);
+            password = Config.getPref().get("sds-server.password", null);
             if (user == null)
                 return null;
             return new PasswordAuthentication(user, password == null ? new char[0] : password.toCharArray());
         case PROXY:
-            user = Main.pref.get(DefaultProxySelector.PROXY_USER, null);
-            password = Main.pref.get(DefaultProxySelector.PROXY_PASS, null);
+            user = Config.getPref().get(DefaultProxySelector.PROXY_USER, null);
+            password = Config.getPref().get(DefaultProxySelector.PROXY_PASS, null);
             if (user == null)
                 return null;
             return new PasswordAuthentication(user, password == null ? new char[0] : password.toCharArray());
@@ -63,19 +63,19 @@ public class SdsCredentialAgent extends AbstractCredentialsAgent {
             return;
         switch(requestorType) {
         case SERVER:
-            Main.pref.put("sds-server.username", credentials.getUserName());
+            Config.getPref().put("sds-server.username", credentials.getUserName());
             if (credentials.getPassword() == null) {
-                Main.pref.put("sds-server.password", null);
+                Config.getPref().put("sds-server.password", null);
             } else {
-                Main.pref.put("sds-server.password", String.valueOf(credentials.getPassword()));
+                Config.getPref().put("sds-server.password", String.valueOf(credentials.getPassword()));
             }
             break;
         case PROXY:
-            Main.pref.put(DefaultProxySelector.PROXY_USER, credentials.getUserName());
+            Config.getPref().put(DefaultProxySelector.PROXY_USER, credentials.getUserName());
             if (credentials.getPassword() == null) {
-                Main.pref.put(DefaultProxySelector.PROXY_PASS, null);
+                Config.getPref().put(DefaultProxySelector.PROXY_PASS, null);
             } else {
-                Main.pref.put(DefaultProxySelector.PROXY_PASS, String.valueOf(credentials.getPassword()));
+                Config.getPref().put(DefaultProxySelector.PROXY_PASS, String.valueOf(credentials.getPassword()));
             }
             break;
         }
@@ -90,8 +90,8 @@ public class SdsCredentialAgent extends AbstractCredentialsAgent {
      */
     @Override
     public OAuthToken lookupOAuthAccessToken() throws CredentialsAgentException {
-        String accessTokenKey = Main.pref.get("oauth.access-token.key", null);
-        String accessTokenSecret = Main.pref.get("oauth.access-token.secret", null);
+        String accessTokenKey = Config.getPref().get("oauth.access-token.key", null);
+        String accessTokenSecret = Config.getPref().get("oauth.access-token.secret", null);
         if (accessTokenKey == null && accessTokenSecret == null)
             return null;
         return new OAuthToken(accessTokenKey, accessTokenSecret);

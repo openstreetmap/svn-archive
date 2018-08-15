@@ -4,7 +4,6 @@ package org.openstreetmap.hot.sds;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -18,6 +17,7 @@ import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.data.osm.visitor.OsmPrimitiveVisitor;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.io.OsmServerReadPostprocessor;
+import org.openstreetmap.josm.tools.Logging;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
@@ -69,8 +69,7 @@ public class ReadPostprocessor implements OsmServerReadPostprocessor {
         try {
             rv = api.requestShadowsFromSds(nodeList, wayList, relationList, progress);
         } catch (SdsTransferException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            Logging.error(e);
         }
 
         // this is slightly inefficient, as we're re-making the string into
@@ -81,18 +80,8 @@ public class ReadPostprocessor implements OsmServerReadPostprocessor {
             xmlStream = new ByteArrayInputStream(rv.getBytes("UTF-8"));
             InputSource inputSource = new InputSource(xmlStream);
             SAXParserFactory.newInstance().newSAXParser().parse(inputSource, new SdsParser(ds, plugin));
-        } catch (UnsupportedEncodingException e1) {
-            // TODO Auto-generated catch block
-            e1.printStackTrace();
-        } catch (SAXException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (ParserConfigurationException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+        } catch (SAXException | IOException | ParserConfigurationException e) {
+            Logging.error(e);
         }
 
     }

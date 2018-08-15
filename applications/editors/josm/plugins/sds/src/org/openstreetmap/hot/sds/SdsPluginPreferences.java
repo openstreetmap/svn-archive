@@ -17,9 +17,10 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
-import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.preferences.DefaultTabPreferenceSetting;
 import org.openstreetmap.josm.gui.preferences.PreferenceTabbedPane;
+import org.openstreetmap.josm.spi.preferences.Config;
 import org.openstreetmap.josm.tools.GBC;
 
 public class SdsPluginPreferences extends DefaultTabPreferenceSetting {
@@ -45,10 +46,10 @@ public class SdsPluginPreferences extends DefaultTabPreferenceSetting {
         final JPanel access = new JPanel(new GridBagLayout());
         access.setBorder(BorderFactory.createTitledBorder(tr("Server")));
 
-        server.setText(Main.pref.get(SDS_SERVER, "http://datastore.hotosm.org"));
-        username.setText(Main.pref.get(SDS_USERNAME, ""));
-        password.setText(Main.pref.get(SDS_PASSWORD, ""));
-        prefix.setText(Main.pref.get(SDS_PREFIX, "hot:"));
+        server.setText(Config.getPref().get(SDS_SERVER, "http://datastore.hotosm.org"));
+        username.setText(Config.getPref().get(SDS_USERNAME, ""));
+        password.setText(Config.getPref().get(SDS_PASSWORD, ""));
+        prefix.setText(Config.getPref().get(SDS_PREFIX, "hot:"));
         server.setToolTipText(tr("The URL under which the SDS server can be contacted."));
         username.setToolTipText(tr("The user name at the SDS server. You need to create an account with the SDS admin first."));
         password.setToolTipText(tr("The password at the SDS server. You need to create an account with the SDS admin first."));
@@ -77,21 +78,21 @@ public class SdsPluginPreferences extends DefaultTabPreferenceSetting {
             @Override
             public void actionPerformed(ActionEvent ev) {
                 SdsApi api = new SdsApi(server.getText());
-                String olduser = Main.pref.get(SDS_USERNAME);
-                String oldpass = Main.pref.get(SDS_PASSWORD);
-                Main.pref.put(SDS_USERNAME, username.getText());
-                Main.pref.put(SDS_PASSWORD, new String(password.getPassword()));
+                String olduser = Config.getPref().get(SDS_USERNAME);
+                String oldpass = Config.getPref().get(SDS_PASSWORD);
+                Config.getPref().put(SDS_USERNAME, username.getText());
+                Config.getPref().put(SDS_PASSWORD, new String(password.getPassword()));
                 try {
                     api.requestShadowsFromSds(Collections.singletonList(Long.valueOf(1L)), null, null, null);
                     JOptionPane.showMessageDialog(
-                            Main.parent,
+                            MainApplication.getMainFrame(),
                             tr("Connection successful."),
                             tr("Success"),
                             JOptionPane.PLAIN_MESSAGE
                     );
                 } catch (Exception ex) {
                     JOptionPane.showMessageDialog(
-                            Main.parent,
+                            MainApplication.getMainFrame(),
                             tr("Cannot connect to SDS server: ") + ex.getMessage(),
                             tr("Error"),
                             JOptionPane.ERROR_MESSAGE
@@ -99,18 +100,18 @@ public class SdsPluginPreferences extends DefaultTabPreferenceSetting {
                 }
                 // restore old credentials even if successful; user might still
                 // choose to press cancel!
-                Main.pref.put(SDS_USERNAME, olduser);
-                Main.pref.put(SDS_PASSWORD, oldpass);
+                Config.getPref().put(SDS_USERNAME, olduser);
+                Config.getPref().put(SDS_PASSWORD, oldpass);
             }
         });
     }
 
     @Override
     public boolean ok() {
-        Main.pref.put(SDS_SERVER, server.getText());
-        Main.pref.put(SDS_USERNAME, username.getText());
-        Main.pref.put(SDS_PASSWORD, new String(password.getPassword()));
-        Main.pref.put(SDS_PREFIX, prefix.getText());
+        Config.getPref().put(SDS_SERVER, server.getText());
+        Config.getPref().put(SDS_USERNAME, username.getText());
+        Config.getPref().put(SDS_PASSWORD, new String(password.getPassword()));
+        Config.getPref().put(SDS_PREFIX, prefix.getText());
         return false;
     }
 

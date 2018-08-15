@@ -19,8 +19,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
+import org.openstreetmap.josm.spi.preferences.Config;
 import org.openstreetmap.josm.tools.CheckParameterUtil;
 import org.openstreetmap.josm.tools.Logging;
 
@@ -61,7 +61,7 @@ public class SdsApi extends SdsConnection {
      *
      */
     public static SdsApi getSdsApi() {
-        String serverUrl = Main.pref.get("sds-server.url", "http://datastore.hotosm.org");
+        String serverUrl = Config.getPref().get("sds-server.url", "http://datastore.hotosm.org");
         if (serverUrl == null)
             throw new IllegalStateException(tr("Preference ''{0}'' missing. Cannot initialize SdsApi.", "sds-server.url"));
         return getSdsApi(serverUrl);
@@ -288,7 +288,7 @@ public class SdsApi extends SdsConnection {
      * @return the max number of retries
      */
     protected int getMaxRetries() {
-        int ret = Main.pref.getInt("osm-server.max-num-retries", DEFAULT_MAX_NUM_RETRIES);
+        int ret = Config.getPref().getInt("osm-server.max-num-retries", DEFAULT_MAX_NUM_RETRIES);
         return Math.max(ret, 0);
     }
 
@@ -305,8 +305,7 @@ public class SdsApi extends SdsConnection {
         try {
             sendRequest("POST", "createshadows", message, pm);
         } catch (SdsTransferException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            Logging.error(e);
         }
         return true;
     }
@@ -340,7 +339,7 @@ public class SdsApi extends SdsConnection {
                 URL url = new URL(new URL(getBaseUrl()), urlSuffix);
                 System.out.print(requestMethod + " " + url + "... ");
                 activeConnection = (HttpURLConnection) url.openConnection();
-                activeConnection.setConnectTimeout(fastFail ? 1000 : Main.pref.getInt("socket.timeout.connect", 15)*1000);
+                activeConnection.setConnectTimeout(fastFail ? 1000 : Config.getPref().getInt("socket.timeout.connect", 15)*1000);
                 activeConnection.setRequestMethod(requestMethod);
                 if (doAuthenticate) {
                     addAuth(activeConnection);

@@ -17,7 +17,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MainMenu;
@@ -119,7 +118,7 @@ public class SdsMenu extends JMenu implements LayerChangeListener, ActiveLayerCh
 
             about.setPreferredSize(new Dimension(500, 300));
 
-            JOptionPane.showMessageDialog(Main.parent, about, tr("About SDS..."),
+            JOptionPane.showMessageDialog(MainApplication.getMainFrame(), about, tr("About SDS..."),
                     JOptionPane.INFORMATION_MESSAGE, null);
         }
     }
@@ -142,7 +141,7 @@ public class SdsMenu extends JMenu implements LayerChangeListener, ActiveLayerCh
 
         @Override
         public void run() {
-            PreferenceDialog pd = new PreferenceDialog(Main.parent);
+            PreferenceDialog pd = new PreferenceDialog(MainApplication.getMainFrame());
             // unusual reflection mechanism to cater for older JOSM versions where
             // the selectPreferencesTabByName method was not public
             try {

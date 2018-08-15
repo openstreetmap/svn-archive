@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.UploadAction;
 import org.openstreetmap.josm.data.osm.INode;
 import org.openstreetmap.josm.data.osm.IPrimitive;
@@ -20,6 +19,7 @@ import org.openstreetmap.josm.io.OsmServerWriter;
 import org.openstreetmap.josm.io.OsmWriterFactory;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
+import org.openstreetmap.josm.spi.preferences.Config;
 
 /**
  *
@@ -88,7 +88,7 @@ public class SeparateDataStorePlugin extends Plugin {
     }
 
     public String getIgnorePrefix() {
-        return Main.pref.get("sds-server.tag-prefix", "hot:");
+        return Config.getPref().get("sds-server.tag-prefix", "hot:");
     }
 
     public IPrimitive getOriginalPrimitive(IPrimitive other) {

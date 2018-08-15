@@ -14,10 +14,11 @@ import java.io.Writer;
 
 import javax.swing.JOptionPane;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.osm.IPrimitive;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
+import org.openstreetmap.josm.spi.preferences.Config;
 import org.openstreetmap.josm.tools.Logging;
 import org.openstreetmap.josm.tools.Utils;
 
@@ -80,13 +81,13 @@ public class SdsSaveAction extends SdsDiskAccessAction {
                 layer.data.getReadLock().unlock();
             }
             // FIXME - how to close?
-            if (!Main.pref.getBoolean("save.keepbackup", false) && (tmpFile != null)) {
+            if (!Config.getPref().getBoolean("save.keepbackup", false) && (tmpFile != null)) {
                 tmpFile.delete();
             }
         } catch (IOException e) {
             Logging.error(e);
             JOptionPane.showMessageDialog(
-                    Main.parent,
+                    MainApplication.getMainFrame(),
                     tr("<html>An error occurred while saving.<br>Error is:<br>{0}</html>", e.getMessage()),
                     tr("Error"),
                     JOptionPane.ERROR_MESSAGE
@@ -101,7 +102,7 @@ public class SdsSaveAction extends SdsDiskAccessAction {
             } catch (IOException e2) {
                 Logging.error(e2);
                 JOptionPane.showMessageDialog(
-                        Main.parent,
+                        MainApplication.getMainFrame(),
                         tr("<html>An error occurred while restoring backup file.<br>Error is:<br>{0}</html>", e2.getMessage()),
                         tr("Error"),
                         JOptionPane.ERROR_MESSAGE

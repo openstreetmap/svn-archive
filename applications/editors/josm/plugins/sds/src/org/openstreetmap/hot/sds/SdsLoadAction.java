@@ -8,7 +8,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -20,6 +19,7 @@ import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.PleaseWaitRunnable;
 import org.openstreetmap.josm.gui.widgets.SwingFileChooser;
 import org.openstreetmap.josm.io.OsmTransferException;
+import org.openstreetmap.josm.tools.Logging;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
@@ -84,20 +84,9 @@ public class SdsLoadAction extends SdsDiskAccessAction {
                     SdsParser p = new SdsParser(getLayerManager().getEditDataSet(), plugin, false);
                     InputSource inputSource = new InputSource(fileStream);
                     SAXParserFactory.newInstance().newSAXParser().parse(inputSource, p);
-                } catch (UnsupportedEncodingException e1) {
-                    // TODO Auto-generated catch block
-                    e1.printStackTrace();
-                } catch (SAXException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                } catch (ParserConfigurationException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
+                } catch (SAXException | IOException | ParserConfigurationException e) {
+                    Logging.error(e);
                 }
-
             }
         }
     }

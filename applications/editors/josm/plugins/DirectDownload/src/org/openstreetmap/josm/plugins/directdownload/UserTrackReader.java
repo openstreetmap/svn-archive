@@ -40,7 +40,7 @@ public class UserTrackReader extends OsmConnection {
             SAXParser sp = spf.newSAXParser();
 
             //parse the file and also register this class for call backs
-            try (final InputStream in = client.connect().getContent()) {
+            try (InputStream in = client.connect().getContent()) {
                 sp.parse(in, handler);
             }
 
@@ -79,7 +79,7 @@ public class UserTrackReader extends OsmConnection {
         }
 
         @Override
-        public void characters(char ch[], int start, int length)
+        public void characters(char[] ch, int start, int length)
                 throws SAXException {
             cdata += new String(ch, start, length);
         }
@@ -88,13 +88,11 @@ public class UserTrackReader extends OsmConnection {
         public void endElement(String uri, String localName, String qName) throws SAXException {
             if (qName.equals("description")) {
                 data.getFirst().description = cdata;
+            } else if (qName.equals("tag")) {
+                data.getFirst().tags = cdata;
+                cdata = new String();
             }
-            /*
-            else if (qName.equals("tag")) {
-            data.getFirst().tags = cdata;
-            cdata = new String();
-            }
-            */
+
         }
 
         public List<UserTrack> getResult() {

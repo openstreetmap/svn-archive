@@ -4,10 +4,16 @@ package org.openstreetmap.josm.plugins.directdownload;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.event.ActionEvent;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.data.gpx.GpxData;
+import org.openstreetmap.josm.data.gpx.GpxTrack;
+import org.openstreetmap.josm.data.gpx.GpxTrackSegment;
+import org.openstreetmap.josm.data.gpx.GpxConstants;
+import org.openstreetmap.josm.data.gpx.ImmutableGpxTrack;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MainMenu;
 import org.openstreetmap.josm.gui.layer.GpxLayer;
@@ -16,6 +22,7 @@ import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
 
 public class DirectDownload extends Plugin {
+
     private DownloadAction openaction;
 
     /**
@@ -31,7 +38,7 @@ public class DirectDownload extends Plugin {
     }
 
     static class DownloadAction extends JosmAction {
-        public DownloadAction() {
+        DownloadAction() {
             super(tr("Download Track ..."), "DownloadAction",
                     tr("Download GPX track from openstreetmap.org"), null, false);
         }
@@ -41,26 +48,46 @@ public class DirectDownload extends Plugin {
             DownloadDataGui go = new DownloadDataGui();
             go.setVisible(true);
 
-            UserTrack track = go.getSelectedUserTrack();
+            ArrayList<UserTrack> tracks = go.getSelectedUserTracks();
 
-            if (!((go.getValue() == 1) && (track != null))) {
+            if (!((go.getValue() == 1) && (tracks != null))) {
                 return;
             }
 
-            final GpxData data = new GpxServerReader().loadGpx(Long.parseLong(track.id));
-            if (data == null) {
-                return;
-            }
-            final GpxLayer gpxLayer = new GpxLayer(data);
+            for (UserTrack track: tracks) {
 
-            if (data.hasRoutePoints() || data.hasTrackPoints()) {
-                MainApplication.getLayerManager().addLayer(gpxLayer);
-            }
+                GpxData data = new GpxServerReader().loadGpx(Long.parseLong(track.id));
+                if (data == null) {
+                    return;
+                }
 
-            if (Main.pref.getBoolean("marker.makeautomarkers", true) && !data.waypoints.isEmpty()) {
-                MarkerLayer ml = new MarkerLayer(data, tr("Markers from {0}", track.filename), null, gpxLayer);
-                if (ml.data.size() > 0) {
-                    MainApplication.getLayerManager().addLayer(ml);
+                for (GpxTrack trk : data.getTracks()) {
+                    HashMap<String, Object> attrib = new HashMap<String, Object>(trk.getAttributes());
+                    if (!trk.getAttributes().containsKey(GpxConstants.GPX_NAME)) {
+                        System.out.println(track.filename);
+                        attrib.put(GpxConstants.GPX_NAME, track.filename);
+                    }
+                    if (!trk.getAttributes().containsKey(GpxConstants.GPX_DESC)) {
+                        System.out.println(track.description);
+                        attrib.put(GpxConstants.GPX_DESC, track.description);
+                    }
+                    // replace the existing trace in the unmodifiable tracks
+                    data.removeTrack(trk);
+                    trk = new ImmutableGpxTrack(new ArrayList<GpxTrackSegment>(trk.getSegments()), attrib);
+                    data.addTrack(trk);
+                }
+
+                final GpxLayer gpxLayer = new GpxLayer(data, (track.filename + " " + track.description).trim());
+
+                if (data.hasRoutePoints() || data.hasTrackPoints()) {
+                    MainApplication.getLayerManager().addLayer(gpxLayer);
+                }
+
+                if (Main.pref.getBoolean("marker.makeautomarkers", true) && !data.waypoints.isEmpty()) {
+                    MarkerLayer ml = new MarkerLayer(data, tr("Markers from {0}", track.filename), null, gpxLayer);
+                    if (ml.data.size() > 0) {
+                        MainApplication.getLayerManager().addLayer(ml);
+                    }
                 }
             }
         }

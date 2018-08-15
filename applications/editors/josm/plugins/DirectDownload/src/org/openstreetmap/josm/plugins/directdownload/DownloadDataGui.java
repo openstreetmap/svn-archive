@@ -47,9 +47,9 @@ public class DownloadDataGui extends ExtendedDialog {
         columnmodel = new NamedResultTableColumnModel();
         tblSearchResults = new JTable(model, columnmodel);
         tblSearchResults.setSelectionModel(selectionModel);
-        tblSearchResults.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        tblSearchResults.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
         JScrollPane scrollPane = new JScrollPane(tblSearchResults);
-        scrollPane.setPreferredSize(new Dimension(800,300));
+        scrollPane.setPreferredSize(new Dimension(800, 300));
         panel.add(scrollPane, BorderLayout.CENTER);
 
     model.setData(new UserTrackReader().getTrackList());
@@ -62,7 +62,7 @@ public class DownloadDataGui extends ExtendedDialog {
         private ArrayList<UserTrack> data;
         private ListSelectionModel selectionModel;
 
-        public NamedResultTableModel(ListSelectionModel selectionModel) {
+        NamedResultTableModel(ListSelectionModel selectionModel) {
             data = new ArrayList<>();
             this.selectionModel = selectionModel;
         }
@@ -83,9 +83,13 @@ public class DownloadDataGui extends ExtendedDialog {
             if (data == null) {
                 this.data.clear();
             } else {
-                this.data  =new ArrayList<>(data);
+                this.data = new ArrayList<>(data);
             }
             fireTableDataChanged();
+        }
+
+        public ArrayList<UserTrack> getDataArrayList() {
+            return data;
         }
 
         @Override
@@ -98,6 +102,16 @@ public class DownloadDataGui extends ExtendedDialog {
                 return null;
             return data.get(selectionModel.getMinSelectionIndex());
         }
+    }
+
+    public ArrayList<UserTrack> getSelectedUserTracks() {
+        ArrayList<UserTrack> DataArray = model.getDataArrayList();
+        int[] selected = tblSearchResults.getSelectedRows();
+        ArrayList<UserTrack> selectedTracks = new ArrayList<>(selected.length);
+        for (int i = 0; i < selected.length; i++) {
+            selectedTracks.add(DataArray.get(selected[i]));
+        }
+        return selectedTracks;
     }
 
     public UserTrack getSelectedUserTrack() {
@@ -134,26 +148,26 @@ public class DownloadDataGui extends ExtendedDialog {
             addColumn(col);
 
             // column 3 - tags
-        /*
+
             col = new TableColumn(3);
             col.setHeaderValue(tr("Tags"));
             col.setResizable(true);
             col.setPreferredWidth(100);
             col.setCellRenderer(renderer);
             addColumn(col);
-        */
+
         }
 
-        public NamedResultTableColumnModel() {
+        NamedResultTableColumnModel() {
             createColumns();
         }
     }
 
     static class NamedResultCellRenderer extends JLabel implements TableCellRenderer {
 
-        public NamedResultCellRenderer() {
+        NamedResultCellRenderer() {
             setOpaque(true);
-            setBorder(BorderFactory.createEmptyBorder(2,2,2,2));
+            setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
         }
 
         protected void reset() {
@@ -172,7 +186,7 @@ public class DownloadDataGui extends ExtendedDialog {
         }
 
         @Override
-		public Component getTableCellRendererComponent(JTable table, Object value,
+        public Component getTableCellRendererComponent(JTable table, Object value,
                 boolean isSelected, boolean hasFocus, int row, int column) {
 
             reset();
@@ -190,11 +204,11 @@ public class DownloadDataGui extends ExtendedDialog {
             case 2:
                 setText(sr.description);
                 break;
-        /*
+
             case 3:
                 setText(sr.tags);
                 break;
-        */
+
             }
             return this;
         }

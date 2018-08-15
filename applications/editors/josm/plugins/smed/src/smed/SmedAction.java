@@ -5,6 +5,8 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.Collection;
 
 import javax.swing.JFrame;
@@ -12,14 +14,14 @@ import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 
 import org.openstreetmap.josm.actions.JosmAction;
-import org.openstreetmap.josm.data.SelectionChangedListener;
-import org.openstreetmap.josm.data.osm.DataSet;
+import org.openstreetmap.josm.data.osm.DataSelectionListener;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.data.osm.event.SelectionEventManager;
 
 import messages.Messages;
 import panels.PanelMain;
 
-public class SmedAction extends JosmAction implements SelectionChangedListener {
+public class SmedAction extends JosmAction implements DataSelectionListener {
 
     private static final long serialVersionUID = 1L;
     private static String editor = tr("SeaMap Editor");
@@ -52,9 +54,9 @@ public class SmedAction extends JosmAction implements SelectionChangedListener {
     protected void createFrame() {
         editFrame = new JFrame(editor);
         editFrame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-        editFrame.addWindowListener(new java.awt.event.WindowAdapter() {
+        editFrame.addWindowListener(new WindowAdapter() {
             @Override
-            public void windowClosing(java.awt.event.WindowEvent e) {
+            public void windowClosing(WindowEvent e) {
                 closeDialog();
             }
         });
@@ -69,9 +71,7 @@ public class SmedAction extends JosmAction implements SelectionChangedListener {
         node = null;
         panelMain.syncPanel();
         editFrame.add(panelMain);
-        DataSet.addSelectionListener(this);
-
-        // System.out.println("hello");
+        SelectionEventManager.getInstance().addSelectionListener(this);
     }
 
     public void closeDialog() {
@@ -83,9 +83,9 @@ public class SmedAction extends JosmAction implements SelectionChangedListener {
     }
 
     @Override
-    public void selectionChanged(Collection<? extends OsmPrimitive> newSelection) {
+    public void selectionChanged(SelectionChangeEvent event) {
         OsmPrimitive nextNode = null;
-        selection = newSelection;
+        selection = event.getSelection();
 
         for (OsmPrimitive osm : selection) {
             nextNode = osm;

@@ -9,12 +9,12 @@ import java.util.List;
 
 import javax.swing.JMenu;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.Version;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.preferences.ToolbarPreferences;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
+import org.openstreetmap.josm.spi.preferences.Config;
 
 /**
  * A plugin to request and store imagery offsets in the centralized database.
@@ -48,14 +48,14 @@ public class ImageryOffsetPlugin extends Plugin {
                 offsetMenu.add(storeAction);
 
                 // an ugly hack to add this plugin to the toolbar
-                if (Main.pref.getBoolean("iodb.modify.toolbar", true)) {
+                if (Config.getPref().getBoolean("iodb.modify.toolbar", true)) {
                     List<String> toolbar = new LinkedList<>(ToolbarPreferences.getToolString());
                     if (!toolbar.contains("getoffset")) {
                         toolbar.add("getoffset");
-                        Main.pref.putList("toolbar", toolbar);
+                        Config.getPref().putList("toolbar", toolbar);
                         MainApplication.getToolbar().refreshToolbarControl();
                     }
-                    Main.pref.putBoolean("iodb.modify.toolbar", false);
+                    Config.getPref().putBoolean("iodb.modify.toolbar", false);
                 }
     }
 }

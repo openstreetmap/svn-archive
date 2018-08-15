@@ -23,10 +23,10 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.projection.Projection;
+import org.openstreetmap.josm.data.projection.ProjectionRegistry;
 import org.openstreetmap.josm.gui.layer.AbstractTileSourceLayer;
 import org.openstreetmap.josm.tools.ImageProvider;
 
@@ -139,7 +139,7 @@ public class OffsetDialogButton extends JButton {
      * @see #getLengthAndDirection(iodb.ImageryOffset)
      */
     public static double[] getLengthAndDirection(ImageryOffset offset, double dx, double dy) {
-        Projection proj = Main.getProjection();
+        Projection proj = ProjectionRegistry.getProjection();
         EastNorth pos = proj.latlon2eastNorth(offset.getPosition());
         LatLon correctedCenterLL = proj.eastNorth2latlon(pos.add(-dx, -dy));
         double length = correctedCenterLL.greatCircleDistance(offset.getImageryPos());

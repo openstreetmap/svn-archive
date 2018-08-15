@@ -10,7 +10,6 @@ import java.net.URLEncoder;
 import javax.swing.AbstractAction;
 import javax.swing.JOptionPane;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.UserIdentityManager;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.tools.ImageProvider;
@@ -50,7 +49,7 @@ public class DeprecateOffsetAction extends AbstractAction {
         String desc = offset instanceof ImageryOffset ?
                 tr("Are you sure this imagery offset is wrong?") :
                     tr("Are you sure this calibration geometry is aligned badly?");
-                if (JOptionPane.showConfirmDialog(Main.parent,
+                if (JOptionPane.showConfirmDialog(MainApplication.getMainFrame(),
                         tr("Warning: deprecation is basically irreversible!")+ "\n" + desc,
                         ImageryOffsetTools.DIALOG_TITLE, JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) != JOptionPane.YES_OPTION) {
                     return;
@@ -80,7 +79,7 @@ public class DeprecateOffsetAction extends AbstractAction {
     public static void deprecateOffset(ImageryOffsetBase offset, QuerySuccessListener listener) {
         String userName = UserIdentityManager.getInstance().getUserName();
         if (userName == null) {
-            JOptionPane.showMessageDialog(Main.parent, tr("To store imagery offsets you must be a registered OSM user."),
+            JOptionPane.showMessageDialog(MainApplication.getMainFrame(), tr("To store imagery offsets you must be a registered OSM user."),
                     ImageryOffsetTools.DIALOG_TITLE, JOptionPane.ERROR_MESSAGE);
             return;
         }

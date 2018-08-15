@@ -10,9 +10,9 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.TreeMap;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.imagery.OffsetBookmark;
+import org.openstreetmap.josm.data.projection.ProjectionRegistry;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.NavigatableComponent.ZoomChangeListener;
@@ -25,6 +25,7 @@ import org.openstreetmap.josm.gui.layer.LayerManager.LayerRemoveEvent;
 import org.openstreetmap.josm.gui.layer.MainLayerManager.ActiveLayerChangeEvent;
 import org.openstreetmap.josm.gui.layer.MainLayerManager.ActiveLayerChangeListener;
 import org.openstreetmap.josm.gui.layer.imagery.TileSourceDisplaySettings;
+import org.openstreetmap.josm.spi.preferences.Config;
 import org.openstreetmap.josm.tools.Destroyable;
 
 /**
@@ -48,7 +49,7 @@ public final class ImageryOffsetWatcher implements ZoomChangeListener, LayerChan
      * Also starts a timer task.
      */
     private ImageryOffsetWatcher() {
-        maxDistance = Main.pref.getDouble("iodb.offset.radius", 15);
+        maxDistance = Config.getPref().getDouble("iodb.offset.radius", 15);
         MapView.addZoomChangeListener(this);
         MainApplication.getLayerManager().addLayerChangeListener(this);
         MainApplication.getLayerManager().addActiveLayerChangeListener(this);
@@ -223,9 +224,9 @@ public final class ImageryOffsetWatcher implements ZoomChangeListener, LayerChan
      */
     private void storeLayerOffset(AbstractTileSourceLayer<?> layer) {
         String id = ImageryOffsetTools.getImageryID(layer);
-        if (!Main.pref.getBoolean("iodb.remember.offsets", true) || id == null)
+        if (!Config.getPref().getBoolean("iodb.remember.offsets", true) || id == null)
             return;
-        List<String> offsets = new LinkedList<>(Main.pref.getList("iodb.stored.offsets"));
+        List<String> offsets = new LinkedList<>(Config.getPref().getList("iodb.stored.offsets"));
         for (Iterator<String> iter = offsets.iterator(); iter.hasNext();) {
             String[] offset = iter.next().split(":");
             if (offset.length == 5 && offset[0].equals(id))
@@ -234,7 +235,7 @@ public final class ImageryOffsetWatcher implements ZoomChangeListener, LayerChan
         LatLon center = ImageryOffsetTools.getMapCenter();
         offsets.add(id + ":" + center.lat() + ":" + center.lon() + ":" +
                 layer.getDisplaySettings().getDx() + ":" + layer.getDisplaySettings().getDy());
-        Main.pref.putList("iodb.stored.offsets", offsets);
+        Config.getPref().putList("iodb.stored.offsets", offsets);
     }
 
     /**
@@ -242,9 +243,9 @@ public final class ImageryOffsetWatcher implements ZoomChangeListener, LayerChan
      */
     private void loadLayerOffset(AbstractTileSourceLayer<?> layer) {
         String id = ImageryOffsetTools.getImageryID(layer);
-        if (!Main.pref.getBoolean("iodb.remember.offsets", true) || id == null)
+        if (!Config.getPref().getBoolean("iodb.remember.offsets", true) || id == null)
             return;
-        List<String> offsets = Main.pref.getList("iodb.stored.offsets");
+        List<String> offsets = Config.getPref().getList("iodb.stored.offsets");
         for (String offset : offsets) {
             String[] parts = offset.split(":");
             if (parts.length == 5 && parts[0].equals(id)) {
@@ -259,7 +260,7 @@ public final class ImageryOffsetWatcher implements ZoomChangeListener, LayerChan
                 LatLon lastPos = new LatLon(dparts[0], dparts[1]);
                 if (lastPos.greatCircleDistance(ImageryOffsetTools.getMapCenter()) < Math.max(maxDistance, 3.0) * 1000) {
                     // apply offset
-                    OffsetBookmark bookmark = new OffsetBookmark(Main.getProjection().toCode(),
+                    OffsetBookmark bookmark = new OffsetBookmark(ProjectionRegistry.getProjection().toCode(),
                             null, layer.getName(), "Restored", dparts[2], dparts[3]);
                     layer.getDisplaySettings().setOffsetBookmark(bookmark);
                     return;
@@ -277,7 +278,7 @@ public final class ImageryOffsetWatcher implements ZoomChangeListener, LayerChan
          */
         @Override
         public void run() {
-            maxDistance = Main.pref.getDouble("iodb.offset.radius", 15);
+            maxDistance = Config.getPref().getDouble("iodb.offset.radius", 15);
             checkOffset();
         }
     }

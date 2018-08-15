@@ -15,8 +15,9 @@ import java.util.regex.Pattern;
 
 import javax.swing.JOptionPane;
 
-import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.PleaseWaitRunnable;
+import org.openstreetmap.josm.spi.preferences.Config;
 
 /**
  * A task to query the imagery offset server and process the response.
@@ -88,7 +89,7 @@ class SimpleOffsetQueryTask extends PleaseWaitRunnable {
      */
     private void doQuery(String query) throws UploadException, IOException {
         try {
-            String serverURL = Main.pref.get("iodb.server.url", "http://offsets.textual.ru/");
+            String serverURL = Config.getPref().get("iodb.server.url", "http://offsets.textual.ru/");
             URL url = new URL(serverURL + query);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.connect();
@@ -124,7 +125,7 @@ class SimpleOffsetQueryTask extends PleaseWaitRunnable {
     @Override
     protected void finish() {
         if (errorMessage != null) {
-            JOptionPane.showMessageDialog(Main.parent, errorMessage,
+            JOptionPane.showMessageDialog(MainApplication.getMainFrame(), errorMessage,
                     ImageryOffsetTools.DIALOG_TITLE, JOptionPane.ERROR_MESSAGE);
         } else if (listener != null) {
             listener.queryPassed();

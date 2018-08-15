@@ -6,11 +6,11 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 import java.text.MessageFormat;
 import java.util.List;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.imagery.OffsetBookmark;
 import org.openstreetmap.josm.data.projection.Projection;
+import org.openstreetmap.josm.data.projection.ProjectionRegistry;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.layer.AbstractTileSourceLayer;
@@ -53,7 +53,7 @@ public final class ImageryOffsetTools {
      * @return the center point, or (0; 0) if there's no map on the screen.
      */
     public static LatLon getMapCenter() {
-        Projection proj = Main.getProjection();
+        Projection proj = ProjectionRegistry.getProjection();
         return !MainApplication.isDisplayingMapView()
                 ? new LatLon(0, 0) : proj.eastNorth2latlon(MainApplication.getMap().mapView.getCenter());
     }
@@ -66,7 +66,7 @@ public final class ImageryOffsetTools {
      * @see #applyLayerOffset
      */
     public static LatLon getLayerOffset(AbstractTileSourceLayer layer, LatLon center) {
-        Projection proj = Main.getProjection();
+        Projection proj = ProjectionRegistry.getProjection();
         EastNorth offsetCenter = MainApplication.getMap().mapView.getCenter();
         EastNorth centerOffset = offsetCenter.add(-layer.getDisplaySettings().getDx(),
                 -layer.getDisplaySettings().getDy());
@@ -90,7 +90,7 @@ public final class ImageryOffsetTools {
      * @see #applyLayerOffset
      */
     public static OffsetBookmark calculateOffset(ImageryOffset offset) {
-        Projection proj = Main.getProjection();
+        Projection proj = ProjectionRegistry.getProjection();
         EastNorth center = proj.latlon2eastNorth(offset.getPosition());
         EastNorth offsetPos = proj.latlon2eastNorth(offset.getImageryPos());
         EastNorth offsetXY = new EastNorth(center.getX() - offsetPos.getX(), center.getY() - offsetPos.getY());

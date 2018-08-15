@@ -15,13 +15,13 @@ import javax.swing.Action;
 import javax.swing.Icon;
 import javax.swing.JOptionPane;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.coor.conversion.DecimalDegreesCoordinateFormat;
 import org.openstreetmap.josm.data.projection.Projection;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.layer.AbstractTileSourceLayer;
+import org.openstreetmap.josm.spi.preferences.Config;
 import org.openstreetmap.josm.tools.ImageProvider;
 import org.openstreetmap.josm.tools.Shortcut;
 import org.xml.sax.SAXException;
@@ -89,7 +89,7 @@ public class GetImageryOffsetAction extends JosmAction implements ImageryOffsetW
      */
     private void showOffsetDialog(List<ImageryOffsetBase> offsets) {
         if (offsets.isEmpty()) {
-            JOptionPane.showMessageDialog(Main.parent,
+            JOptionPane.showMessageDialog(MainApplication.getMainFrame(),
                     tr("No data for this region. Please adjust imagery layer and upload an offset."),
                     ImageryOffsetTools.DIALOG_TITLE, JOptionPane.INFORMATION_MESSAGE);
             return;
@@ -136,7 +136,7 @@ public class GetImageryOffsetAction extends JosmAction implements ImageryOffsetW
                 String query = "get?lat=" + DecimalDegreesCoordinateFormat.INSTANCE.latToString(center)
                 + "&lon=" + DecimalDegreesCoordinateFormat.INSTANCE.lonToString(center)
                 + "&imagery=" + URLEncoder.encode(imagery, "UTF8");
-                int radius = Main.pref.getInt("iodb.radius", -1);
+                int radius = Config.getPref().getInt("iodb.radius", -1);
                 if (radius > 0)
                     query = query + "&radius=" + radius;
                 setQuery(query);

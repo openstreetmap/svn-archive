@@ -12,7 +12,6 @@ import java.util.Map;
 
 import javax.swing.JOptionPane;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.data.UserIdentityManager;
 import org.openstreetmap.josm.data.coor.LatLon;
@@ -59,7 +58,7 @@ public class StoreImageryOffsetAction extends JosmAction {
 
         String userName = UserIdentityManager.getInstance().getUserName();
         if (userName == null || userName.length() == 0) {
-            JOptionPane.showMessageDialog(Main.parent,
+            JOptionPane.showMessageDialog(MainApplication.getMainFrame(),
                     tr("To store imagery offsets you must be a registered OSM user."),
                     ImageryOffsetTools.DIALOG_TITLE, JOptionPane.ERROR_MESSAGE);
             return;
@@ -76,7 +75,7 @@ public class StoreImageryOffsetAction extends JosmAction {
                 if (!selection.isIncomplete() && (selection instanceof Way ||
                         (selection instanceof Node && !((Node) selection).isReferredByWays(1)))) {
                     String[] options = new String[] {tr("Store calibration geometry"), tr("Store imagery offset")};
-                    int result = JOptionPane.showOptionDialog(Main.parent,
+                    int result = JOptionPane.showOptionDialog(MainApplication.getMainFrame(),
                             tr("The selected object can be used as a calibration geometry. What do you intend to do?"),
                             ImageryOffsetTools.DIALOG_TITLE, JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE,
                             null, options, options[0]);
@@ -94,7 +93,7 @@ public class StoreImageryOffsetAction extends JosmAction {
         if (calibration == null) {
             // register imagery offset
             if (Math.abs(layer.getDisplaySettings().getDx()) < 1e-8 && Math.abs(layer.getDisplaySettings().getDy()) < 1e-8) {
-                if (JOptionPane.showConfirmDialog(Main.parent,
+                if (JOptionPane.showConfirmDialog(MainApplication.getMainFrame(),
                         tr("The topmost imagery layer has no offset. Are you sure you want to upload this?"),
                         ImageryOffsetTools.DIALOG_TITLE, JOptionPane.YES_NO_OPTION) != JOptionPane.YES_OPTION)
                     return;
@@ -145,7 +144,7 @@ public class StoreImageryOffsetAction extends JosmAction {
         boolean iterated = false;
         boolean ok = false;
         while (!ok) {
-            Object result = JOptionPane.showInputDialog(Main.parent, message,
+            Object result = JOptionPane.showInputDialog(MainApplication.getMainFrame(), message,
                     ImageryOffsetTools.DIALOG_TITLE, JOptionPane.PLAIN_MESSAGE, null, null, reason);
             if (result == null || result.toString().length() == 0) {
                 return null;

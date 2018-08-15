@@ -11,7 +11,6 @@ import java.text.SimpleDateFormat;
 import javax.swing.AbstractAction;
 import javax.swing.JOptionPane;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.tools.ImageProvider;
 import org.openstreetmap.josm.tools.Logging;
@@ -46,14 +45,14 @@ public class OffsetInfoAction extends AbstractAction {
     public void actionPerformed(ActionEvent e) {
         Object info = offset == null ? null : getInformationObject(offset);
         if (offset.isFlagged())
-            JOptionPane.showMessageDialog(Main.parent, info, ImageryOffsetTools.DIALOG_TITLE, JOptionPane.PLAIN_MESSAGE);
+            JOptionPane.showMessageDialog(MainApplication.getMainFrame(), info, ImageryOffsetTools.DIALOG_TITLE, JOptionPane.PLAIN_MESSAGE);
         else {
-            int result = JOptionPane.showOptionDialog(Main.parent, info, ImageryOffsetTools.DIALOG_TITLE,
+            int result = JOptionPane.showOptionDialog(MainApplication.getMainFrame(), info, ImageryOffsetTools.DIALOG_TITLE,
                     JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null,
                     new String[] {"OK", tr("Report this offset")}, null);
             if (result == 1) {
                 // ask for a reason
-                Object reason = JOptionPane.showInputDialog(Main.parent,
+                Object reason = JOptionPane.showInputDialog(MainApplication.getMainFrame(),
                         tr("You are to notify moderators of this offset. Why?"),
                         ImageryOffsetTools.DIALOG_TITLE, JOptionPane.PLAIN_MESSAGE);
                 if (reason != null && reason.toString().length() > 0) {

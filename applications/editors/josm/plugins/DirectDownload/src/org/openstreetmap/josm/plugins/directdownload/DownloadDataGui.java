@@ -22,8 +22,8 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.ExtendedDialog;
+import org.openstreetmap.josm.gui.MainApplication;
 
 public class DownloadDataGui extends ExtendedDialog {
 
@@ -33,7 +33,7 @@ public class DownloadDataGui extends ExtendedDialog {
 
     public DownloadDataGui() {
         // Initalizes ExtendedDialog
-        super(Main.parent,
+        super(MainApplication.getMainFrame(),
           tr("Download Track"),
           new String[] {tr("Download Track"), tr("Cancel")},
           true

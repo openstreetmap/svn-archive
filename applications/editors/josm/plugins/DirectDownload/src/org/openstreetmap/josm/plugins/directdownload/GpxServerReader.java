@@ -9,8 +9,8 @@ import java.net.URL;
 
 import javax.swing.JOptionPane;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.gpx.GpxData;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.io.GpxReader;
 import org.openstreetmap.josm.io.OsmApi;
 import org.openstreetmap.josm.io.OsmConnection;
@@ -32,18 +32,18 @@ public class GpxServerReader extends OsmConnection {
                 final GpxReader r = new GpxReader(in);
                 boolean parsedProperly = r.parse(true);
                 if (!parsedProperly) {
-                    JOptionPane.showMessageDialog(Main.parent,
+                    JOptionPane.showMessageDialog(MainApplication.getMainFrame(),
                             tr("Error occurred while parsing gpx file {0}. Only a part of the file will be available.", urlString));
                 }
                 return r.getGpxData();
             }
         } catch (IOException | OsmTransferException e) {
             Logging.warn(e);
-            JOptionPane.showMessageDialog(Main.parent, tr("Error fetching URL {0}", urlString));
+            JOptionPane.showMessageDialog(MainApplication.getMainFrame(), tr("Error fetching URL {0}", urlString));
             return null;
         } catch (SAXException e) {
             Logging.warn(e);
-            JOptionPane.showMessageDialog(Main.parent, tr("Error parsing data from URL {0}", urlString));
+            JOptionPane.showMessageDialog(MainApplication.getMainFrame(), tr("Error parsing data from URL {0}", urlString));
             return null;
         }
     }

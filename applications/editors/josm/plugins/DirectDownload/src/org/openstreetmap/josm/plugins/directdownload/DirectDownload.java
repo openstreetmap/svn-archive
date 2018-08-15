@@ -7,12 +7,10 @@ import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
+import org.openstreetmap.josm.data.gpx.GpxConstants;
 import org.openstreetmap.josm.data.gpx.GpxData;
 import org.openstreetmap.josm.data.gpx.GpxTrack;
-import org.openstreetmap.josm.data.gpx.GpxTrackSegment;
-import org.openstreetmap.josm.data.gpx.GpxConstants;
 import org.openstreetmap.josm.data.gpx.ImmutableGpxTrack;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MainMenu;
@@ -20,6 +18,7 @@ import org.openstreetmap.josm.gui.layer.GpxLayer;
 import org.openstreetmap.josm.gui.layer.markerlayer.MarkerLayer;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
+import org.openstreetmap.josm.spi.preferences.Config;
 
 public class DirectDownload extends Plugin {
 
@@ -62,7 +61,7 @@ public class DirectDownload extends Plugin {
                 }
 
                 for (GpxTrack trk : data.getTracks()) {
-                    HashMap<String, Object> attrib = new HashMap<String, Object>(trk.getAttributes());
+                    HashMap<String, Object> attrib = new HashMap<>(trk.getAttributes());
                     if (!trk.getAttributes().containsKey(GpxConstants.GPX_NAME)) {
                         System.out.println(track.filename);
                         attrib.put(GpxConstants.GPX_NAME, track.filename);
@@ -73,7 +72,7 @@ public class DirectDownload extends Plugin {
                     }
                     // replace the existing trace in the unmodifiable tracks
                     data.removeTrack(trk);
-                    trk = new ImmutableGpxTrack(new ArrayList<GpxTrackSegment>(trk.getSegments()), attrib);
+                    trk = new ImmutableGpxTrack(new ArrayList<>(trk.getSegments()), attrib);
                     data.addTrack(trk);
                 }
 
@@ -83,7 +82,7 @@ public class DirectDownload extends Plugin {
                     MainApplication.getLayerManager().addLayer(gpxLayer);
                 }
 
-                if (Main.pref.getBoolean("marker.makeautomarkers", true) && !data.waypoints.isEmpty()) {
+                if (Config.getPref().getBoolean("marker.makeautomarkers", true) && !data.waypoints.isEmpty()) {
                     MarkerLayer ml = new MarkerLayer(data, tr("Markers from {0}", track.filename), null, gpxLayer);
                     if (ml.data.size() > 0) {
                         MainApplication.getLayerManager().addLayer(ml);

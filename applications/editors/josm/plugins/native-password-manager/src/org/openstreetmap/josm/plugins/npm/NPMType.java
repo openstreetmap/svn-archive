@@ -1,6 +1,8 @@
 // License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.npm;
 
+import static org.openstreetmap.josm.tools.I18n.tr;
+
 import java.util.Objects;
 
 import org.netbeans.modules.keyring.gnome.GnomeProvider;
@@ -8,8 +10,6 @@ import org.netbeans.modules.keyring.kde.KWalletProvider;
 import org.netbeans.modules.keyring.mac.MacProvider;
 import org.netbeans.spi.keyring.KeyringProvider;
 import org.openstreetmap.josm.tools.JosmRuntimeException;
-
-import static org.openstreetmap.josm.tools.I18n.tr;
 
 public enum NPMType {
     PLAIN(

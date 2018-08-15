@@ -4,11 +4,11 @@ package org.openstreetmap.josm.plugins.npm;
 import java.awt.GraphicsEnvironment;
 
 import javax.swing.SwingUtilities;
-import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.io.auth.CredentialsManager;
 
+import org.openstreetmap.josm.io.auth.CredentialsManager;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
+import org.openstreetmap.josm.spi.preferences.Config;
 
 public class NPMPlugin extends Plugin {
     
@@ -20,7 +20,7 @@ public class NPMPlugin extends Plugin {
     }
     
     private void initialize() {
-        String pref = Main.pref.get(NPMPLUGIN_KEY+"agent", null);
+        String pref = Config.getPref().get(NPMPLUGIN_KEY+"agent", null);
         if ("off".equals(pref)) return;
         NPMType sel = NPMType.fromPrefString(pref);
         if (sel != null) {
@@ -42,10 +42,10 @@ public class NPMPlugin extends Plugin {
         CredentialsManager.registerCredentialsAgentFactory(
                 new NPMCredentialsAgentFactory(type)
         );
-        Main.pref.put(NPMPLUGIN_KEY+"agent", type.toPrefString());
+        Config.getPref().put(NPMPLUGIN_KEY+"agent", type.toPrefString());
     }
     
     public static void turnOffPermanently() {
-        Main.pref.put(NPMPLUGIN_KEY+"agent", "off");
+        Config.getPref().put(NPMPLUGIN_KEY+"agent", "off");
     }
 }

@@ -40,18 +40,18 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.EtchedBorder;
 
 import org.netbeans.spi.keyring.KeyringProvider;
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.oauth.OAuthToken;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.util.WindowGeometry;
 import org.openstreetmap.josm.gui.widgets.HtmlPanel;
 import org.openstreetmap.josm.io.DefaultProxySelector;
 import org.openstreetmap.josm.io.OsmApi;
 import org.openstreetmap.josm.io.auth.CredentialsAgentException;
 import org.openstreetmap.josm.io.auth.CredentialsManager;
+import org.openstreetmap.josm.spi.preferences.Config;
 import org.openstreetmap.josm.tools.ImageProvider;
-import org.openstreetmap.josm.tools.PlatformHookOsx;
-import org.openstreetmap.josm.tools.PlatformHookUnixoid;
-import org.openstreetmap.josm.tools.PlatformHookWindows;
+import org.openstreetmap.josm.tools.Logging;
+import org.openstreetmap.josm.tools.PlatformManager;
 
 public class InitializationWizard extends JDialog {
 
@@ -66,7 +66,7 @@ public class InitializationWizard extends JDialog {
     private CardLayout cardLayout;
     
     public InitializationWizard() {
-        super(JOptionPane.getFrameForComponent(Main.parent), tr("Native password manager plugin"), ModalityType.DOCUMENT_MODAL);
+        super(JOptionPane.getFrameForComponent(MainApplication.getMainFrame()), tr("Native password manager plugin"), ModalityType.DOCUMENT_MODAL);
         build();
         NPMType npm = detectNativePasswordManager();
         WizardPanel firstPanel;
@@ -350,43 +350,43 @@ public class InitializationWizard extends JDialog {
             
             CredentialsManager cm = CredentialsManager.getInstance();
             
-            String server_username = Main.pref.get("osm-server.username", null);
-            String server_password = Main.pref.get("osm-server.password", null);
+            String server_username = Config.getPref().get("osm-server.username", null);
+            String server_password = Config.getPref().get("osm-server.password", null);
             if (server_username != null || server_password != null) {
                 try {
                     cm.store(RequestorType.SERVER, OsmApi.getOsmApi().getHost(), new PasswordAuthentication(string(server_username), toCharArray(server_password)));
                     if (rbClear.isSelected()) {
-                        Main.pref.put("osm-server.username", null);
-                        Main.pref.put("osm-server.password", null);
+                        Config.getPref().put("osm-server.username", null);
+                        Config.getPref().put("osm-server.password", null);
                     }
                 } catch (CredentialsAgentException ex) {
                     ex.printStackTrace();
                 }
             }
             
-            String proxy_username = Main.pref.get(DefaultProxySelector.PROXY_USER, null);
-            String proxy_password = Main.pref.get(DefaultProxySelector.PROXY_PASS, null);
-            String proxy_host = Main.pref.get(DefaultProxySelector.PROXY_HTTP_HOST, null);
+            String proxy_username = Config.getPref().get(DefaultProxySelector.PROXY_USER, null);
+            String proxy_password = Config.getPref().get(DefaultProxySelector.PROXY_PASS, null);
+            String proxy_host = Config.getPref().get(DefaultProxySelector.PROXY_HTTP_HOST, null);
             if (proxy_username != null || proxy_password != null) {
                 try {
                     cm.store(RequestorType.PROXY, proxy_host, new PasswordAuthentication(string(proxy_username), toCharArray(proxy_password)));
                     if (rbClear.isSelected()) {
-                        Main.pref.put(DefaultProxySelector.PROXY_USER, null);
-                        Main.pref.put(DefaultProxySelector.PROXY_PASS, null);
+                        Config.getPref().put(DefaultProxySelector.PROXY_USER, null);
+                        Config.getPref().put(DefaultProxySelector.PROXY_PASS, null);
                     }
                 } catch (CredentialsAgentException ex) {
                     ex.printStackTrace();
                 }
             }
             
-            String oauth_key = Main.pref.get("oauth.access-token.key", null);
-            String oauth_secret = Main.pref.get("oauth.access-token.secret", null);
+            String oauth_key = Config.getPref().get("oauth.access-token.key", null);
+            String oauth_secret = Config.getPref().get("oauth.access-token.secret", null);
             if (oauth_key != null || oauth_secret != null) {
                 try {
                     cm.storeOAuthAccessToken(new OAuthToken(string(oauth_key), string(oauth_secret)));
                     if (rbClear.isSelected()) {
-                        Main.pref.put("oauth.access-token.key", null);
-                        Main.pref.put("oauth.access-token.secret", null);
+                        Config.getPref().put("oauth.access-token.key", null);
+                        Config.getPref().put("oauth.access-token.secret", null);
                     }
                 } catch (CredentialsAgentException ex) {
                     ex.printStackTrace();
@@ -399,21 +399,20 @@ public class InitializationWizard extends JDialog {
 
     private static NPMType detectNativePasswordManager() {
         NPMType[] potentialManagers;
-        
-        if (Main.platform instanceof PlatformHookWindows) {
+        if (PlatformManager.isPlatformWindows()) {
             potentialManagers = new NPMType[] { NPMType.CRYPT32 };
-        } else if (Main.platform instanceof PlatformHookOsx) {
+        } else if (PlatformManager.isPlatformOsx()) {
             potentialManagers = new NPMType[] { NPMType.KEYCHAIN };
-        } else if (Main.platform instanceof PlatformHookUnixoid) {
+        } else if (PlatformManager.isPlatformUnixoid()) {
             potentialManagers = new NPMType[] { NPMType.GNOME_KEYRING, NPMType.KWALLET };
         } else
             throw new AssertionError();
-            
+
         for (NPMType manager : potentialManagers) {
-            System.out.println(NPM + "Looking for " + manager.getName());
+            Logging.info(NPM + "Looking for " + manager.getName());
             KeyringProvider provider = manager.getProvider();
             if (provider.enabled()) {
-                System.out.println(NPM + "Found " + manager.getName());
+                Logging.info(NPM + "Found " + manager.getName());
                 return manager;
             }
         }
@@ -422,12 +421,12 @@ public class InitializationWizard extends JDialog {
     
     private static boolean hasUnprotectedCedentials() {
         return 
-            Main.pref.get("osm-server.username", null) != null ||
-            Main.pref.get("osm-server.password", null) != null ||
-            Main.pref.get(DefaultProxySelector.PROXY_USER, null) != null ||
-            Main.pref.get(DefaultProxySelector.PROXY_PASS, null) != null ||
-            Main.pref.get("oauth.access-token.key", null) != null ||
-            Main.pref.get("oauth.access-token.secret", null) != null;
+            Config.getPref().get("osm-server.username", null) != null ||
+            Config.getPref().get("osm-server.password", null) != null ||
+            Config.getPref().get(DefaultProxySelector.PROXY_USER, null) != null ||
+            Config.getPref().get(DefaultProxySelector.PROXY_PASS, null) != null ||
+            Config.getPref().get("oauth.access-token.key", null) != null ||
+            Config.getPref().get("oauth.access-token.secret", null) != null;
     }
     
     public void showDialog() {

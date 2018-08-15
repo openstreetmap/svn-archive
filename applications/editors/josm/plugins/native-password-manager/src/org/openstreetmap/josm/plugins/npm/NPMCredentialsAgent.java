@@ -15,13 +15,14 @@ import java.util.zip.CRC32;
 import javax.swing.text.html.HTMLEditorKit;
 
 import org.netbeans.spi.keyring.KeyringProvider;
-import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.data.Preferences;
 import org.openstreetmap.josm.data.oauth.OAuthToken;
 import org.openstreetmap.josm.gui.widgets.HtmlPanel;
 import org.openstreetmap.josm.io.DefaultProxySelector;
 import org.openstreetmap.josm.io.OsmApi;
 import org.openstreetmap.josm.io.auth.AbstractCredentialsAgent;
 import org.openstreetmap.josm.io.auth.CredentialsAgentException;
+import org.openstreetmap.josm.spi.preferences.Config;
 import org.openstreetmap.josm.tools.Utils;
 
 public class NPMCredentialsAgent extends AbstractCredentialsAgent {
@@ -53,11 +54,11 @@ public class NPMCredentialsAgent extends AbstractCredentialsAgent {
     }
     
     protected String getServerDescriptor() {
-        String pref = Main.pref.getPreferenceFile().getAbsolutePath();
+        String pref = Preferences.main().getPreferenceFile().getAbsolutePath();
         
-        String url =  Main.pref.get("osm-server.url", null);
+        String url =  Config.getPref().get("osm-server.url", null);
         if (url == null) {
-            url = OsmApi.DEFAULT_API_URL;
+            url = Config.getUrls().getDefaultOsmApiUrl();
         }
         
         CRC32 id = new CRC32();
@@ -69,9 +70,9 @@ public class NPMCredentialsAgent extends AbstractCredentialsAgent {
     }
     
     protected String getProxyDescriptor() {
-        String pref = Main.pref.getPreferenceFile().getAbsolutePath();
-        String host = Main.pref.get(DefaultProxySelector.PROXY_HTTP_HOST, "");
-        String port = Main.pref.get(DefaultProxySelector.PROXY_HTTP_PORT, "");
+        String pref = Preferences.main().getPreferenceFile().getAbsolutePath();
+        String host = Config.getPref().get(DefaultProxySelector.PROXY_HTTP_HOST, "");
+        String port = Config.getPref().get(DefaultProxySelector.PROXY_HTTP_PORT, "");
         
         CRC32 id = new CRC32();
         id.update((pref+"/"+host+"/"+port).getBytes());
@@ -82,7 +83,7 @@ public class NPMCredentialsAgent extends AbstractCredentialsAgent {
     }
     
     protected String getOAuthDescriptor() {
-        String pref = Main.pref.getPreferenceFile().getAbsolutePath();
+        String pref = Preferences.main().getPreferenceFile().getAbsolutePath();
         // TODO: put more identifying data here
         
         CRC32 id = new CRC32();
@@ -223,22 +224,22 @@ public class NPMCredentialsAgent extends AbstractCredentialsAgent {
                     + tr("The username and password is protected by {0}.", type.getName())
         );
         List<String> sensitive = new ArrayList<>();
-        if (Main.pref.get("osm-server.username", null) != null) {
+        if (Config.getPref().get("osm-server.username", null) != null) {
             sensitive.add(tr("username"));
         }
-        if (Main.pref.get("osm-server.password", null) != null) {
+        if (Config.getPref().get("osm-server.password", null) != null) {
             sensitive.add(tr("password"));
         }
-        if (Main.pref.get(DefaultProxySelector.PROXY_USER, null) != null) {
+        if (Config.getPref().get(DefaultProxySelector.PROXY_USER, null) != null) {
             sensitive.add(tr("proxy username"));
         }
-        if (Main.pref.get(DefaultProxySelector.PROXY_PASS, null) != null) {
+        if (Config.getPref().get(DefaultProxySelector.PROXY_PASS, null) != null) {
             sensitive.add(tr("proxy password"));
         }
-        if (Main.pref.get("oauth.access-token.key", null) != null) {
+        if (Config.getPref().get("oauth.access-token.key", null) != null) {
             sensitive.add(tr("oauth key"));
         }
-        if (Main.pref.get("oauth.access-token.secret", null) != null) {
+        if (Config.getPref().get("oauth.access-token.secret", null) != null) {
             sensitive.add(tr("oauth secret"));
         }
         if (!sensitive.isEmpty()) {

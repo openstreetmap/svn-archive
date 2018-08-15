@@ -15,7 +15,6 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.datatype.XMLGregorianCalendar;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.ExtensionFileFilter;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.gpx.GpxData;
@@ -33,6 +32,7 @@ import org.openstreetmap.josm.plugins.dataimport.io.tcx.PositionT;
 import org.openstreetmap.josm.plugins.dataimport.io.tcx.TrackT;
 import org.openstreetmap.josm.plugins.dataimport.io.tcx.TrackpointT;
 import org.openstreetmap.josm.plugins.dataimport.io.tcx.TrainingCenterDatabaseT;
+import org.openstreetmap.josm.spi.preferences.Config;
 
 
 /**
@@ -75,7 +75,7 @@ public class Tcx extends FileImporter {
         gpxData.storageFile = tcxFile;
         GpxLayer gpxLayer = new GpxLayer(gpxData, tcxFile.getName());
         MainApplication.getLayerManager().addLayer(gpxLayer);
-        if (Main.pref.getBoolean("marker.makeautomarkers", true)) {
+        if (Config.getPref().getBoolean("marker.makeautomarkers", true)) {
             MarkerLayer ml = new MarkerLayer(gpxData, tr("Markers from {0}", tcxFile.getName()), tcxFile, gpxLayer);
             if (ml.data.size() > 0) {
                 MainApplication.getLayerManager().addLayer(ml);

@@ -17,6 +17,7 @@ public class DataImportPlugin extends Plugin {
     /**
      * Add new File import filter into open dialog
      * @param info plugin information
+     * @throws IOException in case of I/O error
      */
     public DataImportPlugin(PluginInformation info) throws IOException {
         super(info);

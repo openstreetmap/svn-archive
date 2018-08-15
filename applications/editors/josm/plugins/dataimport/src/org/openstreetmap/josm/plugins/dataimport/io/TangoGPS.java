@@ -9,13 +9,13 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import javax.swing.JOptionPane;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.ExtensionFileFilter;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.gpx.GpxData;
@@ -26,6 +26,7 @@ import org.openstreetmap.josm.gui.io.importexport.FileImporter;
 import org.openstreetmap.josm.gui.layer.GpxLayer;
 import org.openstreetmap.josm.gui.layer.markerlayer.MarkerLayer;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
+import org.openstreetmap.josm.spi.preferences.Config;
 import org.openstreetmap.josm.tools.Logging;
 
 /**
@@ -54,7 +55,7 @@ public class TangoGPS extends FileImporter {
 
         try (
             InputStream source = new FileInputStream(file);
-            BufferedReader rd = new BufferedReader(new InputStreamReader(source));
+            BufferedReader rd = new BufferedReader(new InputStreamReader(source, StandardCharsets.UTF_8));
          ) {
             String line;
             while ((line = rd.readLine()) != null) {
@@ -82,7 +83,7 @@ public class TangoGPS extends FileImporter {
                 data.storageFile = file;
                 GpxLayer gpxLayer = new GpxLayer(data, file.getName());
                 MainApplication.getLayerManager().addLayer(gpxLayer);
-                if (Main.pref.getBoolean("marker.makeautomarkers", true)) {
+                if (Config.getPref().getBoolean("marker.makeautomarkers", true)) {
                     MarkerLayer ml = new MarkerLayer(data, tr("Markers from {0}", file.getName()), file, gpxLayer);
                     if (ml.data.size() > 0) {
                         MainApplication.getLayerManager().addLayer(ml);
@@ -106,9 +107,9 @@ public class TangoGPS extends FileImporter {
     private void showInfobox(int success, int failure) {
         String msg = tr("Coordinates imported: ") + success + " " + tr("Format errors: ") + failure + "\n";
         if (success > 0) {
-            JOptionPane.showMessageDialog(Main.parent, msg, tr("TangoGPS import success"), JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(MainApplication.getMainFrame(), msg, tr("TangoGPS import success"), JOptionPane.INFORMATION_MESSAGE);
         } else {
-            JOptionPane.showMessageDialog(Main.parent, msg, tr("TangoGPS import failure!"), JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(MainApplication.getMainFrame(), msg, tr("TangoGPS import failure!"), JOptionPane.ERROR_MESSAGE);
         }
     }
 }

@@ -17,13 +17,13 @@ import java.util.Map.Entry;
 
 import javax.swing.JOptionPane;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.CreateCircleAction;
 import org.openstreetmap.josm.command.AddCommand;
 import org.openstreetmap.josm.command.ChangeCommand;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.DeleteCommand;
 import org.openstreetmap.josm.command.SequenceCommand;
+import org.openstreetmap.josm.data.UndoRedoHandler;
 import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.BBox;
@@ -305,7 +305,7 @@ class Building {
                 created[i] = false;
             }
             if (nodes[i].getCoor().isOutSideWorld()) {
-                JOptionPane.showMessageDialog(Main.parent,
+                JOptionPane.showMessageDialog(MainApplication.getMainFrame(),
                         tr("Cannot place building outside of the world."));
                 return null;
             }
@@ -325,7 +325,7 @@ class Building {
 
         if (addNodesCmd.size() > 0) {
             Command addNodes = new SequenceCommand(tr("Add nodes for building"), addNodesCmd);
-            Main.main.undoRedo.add(addNodes);
+            UndoRedoHandler.getInstance().add(addNodes);
         }
 
         // Nodes must be selected for create circle action
@@ -369,7 +369,7 @@ class Building {
                 created[i] = false;
             }
             if (nodes[i].getCoor().isOutSideWorld()) {
-                JOptionPane.showMessageDialog(Main.parent,
+                JOptionPane.showMessageDialog(MainApplication.getMainFrame(),
                         tr("Cannot place building outside of the world."));
                 return null;
             }
@@ -397,7 +397,7 @@ class Building {
         addAddress(w);
 
         Command c = new SequenceCommand(tr("Create building"), cmds);
-        Main.main.undoRedo.add(c);
+        UndoRedoHandler.getInstance().add(c);
         return w;
     }
 
@@ -423,7 +423,7 @@ class Building {
                 }
                 addressCmds.add(new DeleteCommand(addrNode));
                 Command c = new SequenceCommand(tr("Add address for building"), addressCmds);
-                Main.main.undoRedo.add(c);
+                UndoRedoHandler.getInstance().add(c);
             }
         }
     }

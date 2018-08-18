@@ -10,8 +10,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.NoSuchElementException;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.preferences.BooleanProperty;
+import org.openstreetmap.josm.spi.preferences.Config;
 import org.openstreetmap.josm.tools.Logging;
 
 public final class ToolSettings {
@@ -72,12 +72,12 @@ public final class ToolSettings {
             values.add(entry.getKey());
             values.add(entry.getValue());
         }
-        Main.pref.putList("buildings_tools.tags", values);
+        Config.getPref().putList("buildings_tools.tags", values);
     }
 
     private static void loadTags() {
         TAGS.clear();
-        Collection<String> values = Main.pref.getList("buildings_tools.tags",
+        Collection<String> values = Config.getPref().getList("buildings_tools.tags",
                 Arrays.asList("building", "yes"));
         try {
             for (Iterator<String> iterator = values.iterator(); iterator.hasNext();) {
@@ -89,11 +89,11 @@ public final class ToolSettings {
     }
 
     public static void saveShape(Shape shape) {
-        Main.pref.put("buildings_tool.shape", shape.name());
+        Config.getPref().put("buildings_tool.shape", shape.name());
     }
 
     private static Shape loadShape() {
-        String shape = Main.pref.get("buildings_tool.shape");
+        String shape = Config.getPref().get("buildings_tool.shape");
         if (ToolSettings.Shape.CIRCLE.name().equals(shape)) {
             ToolSettings.shape = Shape.CIRCLE;
             return Shape.CIRCLE;
@@ -104,19 +104,19 @@ public final class ToolSettings {
     }
 
     public static void setBBMode(boolean bbmode) {
-        Main.pref.putBoolean("buildings_tools.bbmode", bbmode);
+        Config.getPref().putBoolean("buildings_tools.bbmode", bbmode);
     }
 
     public static boolean isBBMode() {
-        return Main.pref.getBoolean("buildings_tools.bbmode", false);
+        return Config.getPref().getBoolean("buildings_tools.bbmode", false);
     }
 
     public static void setSoftCursor(boolean softCursor) {
-        Main.pref.putBoolean("buildings_tools.softcursor", softCursor);
+        Config.getPref().putBoolean("buildings_tools.softcursor", softCursor);
     }
 
     public static boolean isSoftCursor() {
-        return Main.pref.getBoolean("buildings_tools.softcursor", false);
+        return Config.getPref().getBoolean("buildings_tools.softcursor", false);
     }
 
     public static boolean isAutoSelect() {

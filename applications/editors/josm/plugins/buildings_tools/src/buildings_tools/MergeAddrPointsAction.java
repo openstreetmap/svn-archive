@@ -16,13 +16,13 @@ import java.util.Map.Entry;
 
 import javax.swing.JOptionPane;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.command.ChangeCommand;
 import org.openstreetmap.josm.command.ChangePropertyCommand;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.DeleteCommand;
 import org.openstreetmap.josm.command.SequenceCommand;
+import org.openstreetmap.josm.data.UndoRedoHandler;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.OsmPrimitiveType;
@@ -144,7 +144,7 @@ public class MergeAddrPointsAction extends JosmAction {
             new Notification(tr("No address nodes inside buildings found"))
                     .setIcon(JOptionPane.INFORMATION_MESSAGE).show();
         if (!cmds.isEmpty())
-            Main.main.undoRedo.add(new SequenceCommand("Merge addresses", cmds));
+            UndoRedoHandler.getInstance().add(new SequenceCommand("Merge addresses", cmds));
     }
 
     @Override

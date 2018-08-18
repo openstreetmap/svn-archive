@@ -10,8 +10,8 @@ import java.awt.Insets;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.ExtendedDialog;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.tools.GBC;
 
 public abstract class MyDialog extends ExtendedDialog {
@@ -28,7 +28,7 @@ public abstract class MyDialog extends ExtendedDialog {
     }
 
     public MyDialog(String title) {
-        super(Main.parent, title, BUTTON_TEXTS, true);
+        super(MainApplication.getMainFrame(), title, BUTTON_TEXTS, true);
         contentInsets = new Insets(15, 15, 5, 15);
         setButtonIcons(BUTTON_ICONS);
 

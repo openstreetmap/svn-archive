@@ -22,13 +22,13 @@ import java.util.Set;
 import javax.swing.Popup;
 import javax.swing.PopupFactory;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.mapmode.MapMode;
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.gpx.GpxTrack;
 import org.openstreetmap.josm.data.gpx.GpxTrackSegment;
 import org.openstreetmap.josm.data.gpx.WayPoint;
+import org.openstreetmap.josm.data.projection.ProjectionRegistry;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.layer.GpxLayer;
@@ -69,7 +69,7 @@ class InfoMode extends MapMode implements MapViewPaintable, AWTEventListener {
         mv.addTemporaryLayer(this);
         /*if (!(Main.main.getActiveLayer() instanceof GpxLayer)) {
             boolean answer = ConditionalOptionPaneUtil.showConfirmationDialog(
-                    "scan_all_layers", Main.parent,
+                    "scan_all_layers", MainApplication.getMainFrame(),
                     tr("Please select GPX layer to view only its trackpoint info. Do you want to scan all GPX layers?"),
                     tr("Select layer to scan"), JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, JOptionPane.YES_OPTION );
                  if(!answer) return;
@@ -246,7 +246,7 @@ class InfoMode extends MapMode implements MapViewPaintable, AWTEventListener {
                 for (GpxTrackSegment seg : track.getSegments()) {
                     oldWp = null; // next segment will have new previous point
                     for (WayPoint S : seg.getWayPoints()) {
-                        d = S.getEastNorth(Main.getProjection()).distance(pos);
+                        d = S.getEastNorth(ProjectionRegistry.getProjection()).distance(pos);
 
                         if (d < minDist && d < maxD) {
                             minDist = d;
@@ -270,7 +270,7 @@ class InfoMode extends MapMode implements MapViewPaintable, AWTEventListener {
                     for (GpxTrackSegment seg : trk.getSegments()) {
                     Point oldP = null, curP = null; // next segment will have new previous point
                         for (WayPoint S : seg.getWayPoints()) {
-                            curP = mv.getPoint(S.getEastNorth(Main.getProjection()));
+                            curP = mv.getPoint(S.getEastNorth(ProjectionRegistry.getProjection()));
                             if (oldP != null) g.drawLine(oldP.x, oldP.y, curP.x, curP.y);
                             oldP = curP;
                         }

@@ -8,7 +8,6 @@ import java.util.Collection;
 
 import javax.swing.JOptionPane;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MainMenu;
@@ -40,7 +39,7 @@ public class TaggingPresetTesterAction extends JosmAction {
         Collection<String> coll = TaggingPresetReader.getPresetSources();
 
         if (coll.isEmpty()) {
-            JOptionPane.showMessageDialog(Main.parent, tr("You have to specify tagging preset sources in the preferences first."));
+            JOptionPane.showMessageDialog(MainApplication.getMainFrame(), tr("You have to specify tagging preset sources in the preferences first."));
             return;
         }
 

@@ -19,7 +19,6 @@ import javax.swing.JPanel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
@@ -114,8 +113,6 @@ public class TaggingPresetTester extends JFrame {
             args = new String[]{c.getSelectedFile().getPath()};
         }
         if (args!=null) {
-            Main.determinePlatformHook();
-            System.out.println("Opening file "+args[0]);
             JFrame f = new TaggingPresetTester(args);
             f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             f.setVisible(true);

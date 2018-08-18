@@ -26,12 +26,12 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.ProjectionBounds;
 import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.gpx.GpxData;
 import org.openstreetmap.josm.data.gpx.ImmutableGpxTrack;
 import org.openstreetmap.josm.data.gpx.WayPoint;
+import org.openstreetmap.josm.data.projection.ProjectionRegistry;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.layer.GpxLayer;
 import org.openstreetmap.josm.gui.layer.Layer;
@@ -107,7 +107,7 @@ public class GameWindow extends JFrame implements ActionListener {
             /* We should count the satellites here, see if we
              * have a fix and add any distortions.  */
 
-            segment.add(new WayPoint(Main.getProjection().eastNorth2latlon(
+            segment.add(new WayPoint(ProjectionRegistry.getProjection().eastNorth2latlon(
                     new EastNorth(lon, lat))));
         }
 

@@ -34,11 +34,11 @@ import javax.swing.JTabbedPane;
 import javax.swing.JToolBar;
 import javax.swing.KeyStroke;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.AutoScaleAction;
 import org.openstreetmap.josm.command.AddCommand;
 import org.openstreetmap.josm.command.ChangeCommand;
 import org.openstreetmap.josm.command.conflict.ConflictAddCommand;
+import org.openstreetmap.josm.data.UndoRedoHandler;
 import org.openstreetmap.josm.data.conflict.Conflict;
 import org.openstreetmap.josm.data.osm.DefaultNameFormatter;
 import org.openstreetmap.josm.data.osm.Relation;
@@ -52,6 +52,7 @@ import org.openstreetmap.josm.gui.help.HelpUtil;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import org.openstreetmap.josm.plugins.turnrestrictions.preferences.PreferenceKeys;
 import org.openstreetmap.josm.plugins.turnrestrictions.qa.IssuesView;
+import org.openstreetmap.josm.spi.preferences.Config;
 import org.openstreetmap.josm.spi.preferences.PreferenceChangeEvent;
 import org.openstreetmap.josm.spi.preferences.PreferenceChangedListener;
 import org.openstreetmap.josm.tools.CheckParameterUtil;
@@ -334,12 +335,12 @@ public class TurnRestrictionEditor extends JDialog implements NavigationControle
         if (visible && !isVisible()) {
             pnlJosmSelection.wireListeners();
             editorModel.registerAsEventListener();
-            Main.pref.addPreferenceChangeListener(this.preferenceChangeHandler = new PreferenceChangeHandler());
-            pnlBasicEditor.initIconSetFromPreferences(Main.pref);
+            Config.getPref().addPreferenceChangeListener(this.preferenceChangeHandler = new PreferenceChangeHandler());
+            pnlBasicEditor.initIconSetFromPreferences(Config.getPref());
         } else if (!visible && isVisible()) {
             pnlJosmSelection.unwireListeners();
             editorModel.unregisterAsEventListener();
-            Main.pref.removePreferenceChangeListener(preferenceChangeHandler);
+            Config.getPref().removePreferenceChangeListener(preferenceChangeHandler);
         }
         super.setVisible(visible);
         if (!visible) {
@@ -545,7 +546,7 @@ public class TurnRestrictionEditor extends JDialog implements NavigationControle
                 removeDeletedMembers(newTurnRestriction);
             }
 
-            MainApplication.undoRedo.add(new AddCommand(getLayer().getDataSet(), newTurnRestriction));
+            UndoRedoHandler.getInstance().add(new AddCommand(getLayer().getDataSet(), newTurnRestriction));
 
             // make sure everybody is notified about the changes
             //
@@ -567,7 +568,7 @@ public class TurnRestrictionEditor extends JDialog implements NavigationControle
             Relation toUpdate = new Relation(getTurnRestriction());
             editorModel.apply(toUpdate);
             Conflict<Relation> conflict = new Conflict<>(getTurnRestriction(), toUpdate);
-            MainApplication.undoRedo.add(new ConflictAddCommand(getLayer().getDataSet(), conflict));
+            UndoRedoHandler.getInstance().add(new ConflictAddCommand(getLayer().getDataSet(), conflict));
         }
 
         /**
@@ -577,11 +578,11 @@ public class TurnRestrictionEditor extends JDialog implements NavigationControle
         protected void applyExistingNonConflictingTurnRestriction() {
             if (getTurnRestriction().getDataSet() == null) {
                 editorModel.apply(getTurnRestriction());
-                MainApplication.undoRedo.add(new AddCommand(getLayer().getDataSet(), getTurnRestriction()));
+                UndoRedoHandler.getInstance().add(new AddCommand(getLayer().getDataSet(), getTurnRestriction()));
             } else {
                 Relation toUpdate = new Relation(getTurnRestriction());
                 editorModel.apply(toUpdate);
-                MainApplication.undoRedo.add(new ChangeCommand(getTurnRestriction(), toUpdate));
+                UndoRedoHandler.getInstance().add(new ChangeCommand(getTurnRestriction(), toUpdate));
             }
             // this will refresh the snapshot and update the dialog title
             //
@@ -605,7 +606,7 @@ public class TurnRestrictionEditor extends JDialog implements NavigationControle
             };
 
             int ret = HelpAwareOptionPane.showOptionDialog(
-                    Main.parent,
+                    MainApplication.getMainFrame(),
                     tr("<html>This turn restriction has been changed outside of the editor.<br>"
                             + "You cannot apply your changes and continue editing.<br>"
                             + "<br>"
@@ -622,7 +623,7 @@ public class TurnRestrictionEditor extends JDialog implements NavigationControle
 
         protected void warnDoubleConflict() {
             JOptionPane.showMessageDialog(
-                    Main.parent,
+                    MainApplication.getMainFrame(),
                     tr("<html>Layer ''{0}'' already has a conflict for object<br>"
                             + "''{1}''.<br>"
                             + "Please resolve this conflict first, then try again.</html>",
@@ -885,7 +886,7 @@ public class TurnRestrictionEditor extends JDialog implements NavigationControle
      */
     class PreferenceChangeHandler implements PreferenceChangedListener {
         public void refreshIconSet() {
-            pnlBasicEditor.initIconSetFromPreferences(Main.pref);
+            pnlBasicEditor.initIconSetFromPreferences(Config.getPref());
         }
 
         @Override
@@ -893,7 +894,7 @@ public class TurnRestrictionEditor extends JDialog implements NavigationControle
             if (evt.getKey().equals(PreferenceKeys.ROAD_SIGNS)) {
                 refreshIconSet();
             } else if (evt.getKey().equals(PreferenceKeys.SHOW_VIAS_IN_BASIC_EDITOR)) {
-                pnlBasicEditor.initViasVisibilityFromPreferences(Main.pref);
+                pnlBasicEditor.initViasVisibilityFromPreferences(Config.getPref());
             }
         }
     }

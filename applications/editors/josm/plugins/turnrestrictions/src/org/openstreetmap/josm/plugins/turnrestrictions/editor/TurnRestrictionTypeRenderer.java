@@ -14,8 +14,8 @@ import javax.swing.JList;
 import javax.swing.ListCellRenderer;
 import javax.swing.UIManager;
 
-import org.openstreetmap.josm.data.Preferences;
 import org.openstreetmap.josm.plugins.turnrestrictions.preferences.PreferenceKeys;
+import org.openstreetmap.josm.spi.preferences.IPreferences;
 import org.openstreetmap.josm.tools.ImageProvider;
 
 public class TurnRestrictionTypeRenderer extends JLabel implements ListCellRenderer<Object> {
@@ -60,7 +60,7 @@ public class TurnRestrictionTypeRenderer extends JLabel implements ListCellRende
      *
      * @param prefs the JOSM preferences
      */
-    public void initIconSetFromPreferences(Preferences prefs) {
+    public void initIconSetFromPreferences(IPreferences prefs) {
         iconSet = prefs.get(PreferenceKeys.ROAD_SIGNS, "set-a");
         iconSet = iconSet.trim().toLowerCase();
         if (!iconSet.equals("set-a") && !iconSet.equals("set-b")) {

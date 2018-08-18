@@ -22,7 +22,6 @@ import javax.swing.JPopupMenu;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.AutoScaleAction;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
@@ -39,6 +38,7 @@ import org.openstreetmap.josm.plugins.turnrestrictions.TurnRestrictionBuilder;
 import org.openstreetmap.josm.plugins.turnrestrictions.editor.TurnRestrictionEditor;
 import org.openstreetmap.josm.plugins.turnrestrictions.editor.TurnRestrictionEditorManager;
 import org.openstreetmap.josm.plugins.turnrestrictions.preferences.PreferenceKeys;
+import org.openstreetmap.josm.spi.preferences.Config;
 import org.openstreetmap.josm.spi.preferences.PreferenceChangeEvent;
 import org.openstreetmap.josm.spi.preferences.PreferenceChangedListener;
 import org.openstreetmap.josm.tools.ImageProvider;
@@ -81,7 +81,7 @@ public class TurnRestrictionsListDialog extends ToggleDialog {
         pnlTurnRestrictionsInSelection.registerAsListener();
         MainApplication.getLayerManager().addActiveLayerChangeListener(actNew);
         actNew.updateEnabledState();
-        Main.pref.addPreferenceChangeListener(preferenceChangeHandler);
+        Config.getPref().addPreferenceChangeListener(preferenceChangeHandler);
         preferenceChangeHandler.refreshIconSet();
     }
 
@@ -90,7 +90,7 @@ public class TurnRestrictionsListDialog extends ToggleDialog {
         pnlTurnRestrictionsInDataSet.unregisterAsListener();
         pnlTurnRestrictionsInSelection.unregisterAsListener();
         MainApplication.getLayerManager().removeActiveLayerChangeListener(actNew);
-        Main.pref.removePreferenceChangeListener(preferenceChangeHandler);
+        Config.getPref().removePreferenceChangeListener(preferenceChangeHandler);
     }
 
     /**
@@ -444,8 +444,8 @@ public class TurnRestrictionsListDialog extends ToggleDialog {
      */
     class PreferenceChangeHandler implements PreferenceChangedListener {
         public void refreshIconSet() {
-            pnlTurnRestrictionsInDataSet.initIconSetFromPreferences(Main.pref);
-            pnlTurnRestrictionsInSelection.initIconSetFromPreferences(Main.pref);
+            pnlTurnRestrictionsInDataSet.initIconSetFromPreferences(Config.getPref());
+            pnlTurnRestrictionsInSelection.initIconSetFromPreferences(Config.getPref());
             repaint();
         }
 

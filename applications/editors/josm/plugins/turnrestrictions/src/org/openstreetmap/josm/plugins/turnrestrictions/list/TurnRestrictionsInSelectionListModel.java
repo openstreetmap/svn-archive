@@ -7,7 +7,7 @@ import java.util.Set;
 
 import javax.swing.DefaultListSelectionModel;
 
-import org.openstreetmap.josm.data.SelectionChangedListener;
+import org.openstreetmap.josm.data.osm.DataSelectionListener;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.gui.MainApplication;
@@ -20,7 +20,7 @@ import org.openstreetmap.josm.gui.layer.OsmDataLayer;
  * objects in the current selection.
  */
 public class TurnRestrictionsInSelectionListModel extends TurnRestrictionsListModel
-    implements ActiveLayerChangeListener, SelectionChangedListener {
+    implements ActiveLayerChangeListener, DataSelectionListener {
 
     public TurnRestrictionsInSelectionListModel(
             DefaultListSelectionModel selectionModel) {
@@ -62,7 +62,7 @@ public class TurnRestrictionsInSelectionListModel extends TurnRestrictionsListMo
     /* interface SelectionChangedListener                                          */
     /* --------------------------------------------------------------------------- */
     @Override
-    public void selectionChanged(Collection<? extends OsmPrimitive> newSelection) {
-        initFromSelection(newSelection);
+    public void selectionChanged(SelectionChangeEvent event) {
+        initFromSelection(event.getSelection());
     }
 }

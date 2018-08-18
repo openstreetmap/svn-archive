@@ -87,7 +87,7 @@ public class JosmSelectionPanel extends JPanel {
     public void wireListeners() {
         MainApplication.getLayerManager().addActiveLayerChangeListener(model);
         DatasetEventManager.getInstance().addDatasetListener(model, FireMode.IN_EDT);
-        SelectionEventManager.getInstance().addSelectionListener(model, FireMode.IN_EDT_CONSOLIDATED);
+        SelectionEventManager.getInstance().addSelectionListenerForEdt(model);
     }
 
     /**

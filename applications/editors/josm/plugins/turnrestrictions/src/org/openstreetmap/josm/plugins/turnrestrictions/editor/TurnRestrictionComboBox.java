@@ -3,8 +3,8 @@ package org.openstreetmap.josm.plugins.turnrestrictions.editor;
 
 import javax.swing.JComboBox;
 
-import org.openstreetmap.josm.data.Preferences;
 import org.openstreetmap.josm.plugins.turnrestrictions.preferences.PreferenceKeys;
+import org.openstreetmap.josm.spi.preferences.IPreferences;
 /**
  * A combo box for selecting a turn restriction type.
  */
@@ -36,7 +36,7 @@ public class TurnRestrictionComboBox extends JComboBox<Object> {
      *
      * @param prefs the JOSM preferences
      */
-    public void initIconSetFromPreferences(Preferences prefs) {
+    public void initIconSetFromPreferences(IPreferences prefs) {
         TurnRestrictionTypeRenderer renderer = (TurnRestrictionTypeRenderer) getRenderer();
         renderer.initIconSetFromPreferences(prefs);
         repaint();

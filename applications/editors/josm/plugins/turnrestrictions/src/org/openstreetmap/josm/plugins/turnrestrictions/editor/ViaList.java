@@ -37,6 +37,7 @@ import org.openstreetmap.josm.plugins.turnrestrictions.dnd.PrimitiveIdListProvid
 import org.openstreetmap.josm.plugins.turnrestrictions.dnd.PrimitiveIdListTransferHandler;
 import org.openstreetmap.josm.plugins.turnrestrictions.dnd.PrimitiveIdTransferable;
 import org.openstreetmap.josm.tools.ImageProvider;
+import org.openstreetmap.josm.tools.Logging;
 import org.openstreetmap.josm.tools.Shortcut;
 
 /**
@@ -130,10 +131,8 @@ public class ViaList extends JList<OsmPrimitive> {
                 try {
                     List<PrimitiveId> idsToAdd = (List<PrimitiveId>) t.getTransferData(PrimitiveIdTransferable.PRIMITIVE_ID_LIST_FLAVOR);
                     model.insertVias(idsToAdd);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (UnsupportedFlavorException e) {
-                    e.printStackTrace();
+                } catch (IOException | UnsupportedFlavorException e) {
+                    Logging.error(e);
                 }
             }
             return true;

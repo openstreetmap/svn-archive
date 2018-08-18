@@ -5,8 +5,8 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.event.ListSelectionListener;
 
-import org.openstreetmap.josm.data.Preferences;
 import org.openstreetmap.josm.data.osm.Relation;
+import org.openstreetmap.josm.spi.preferences.IPreferences;
 
 /**
  * The abstract base class for two views of turn restriction lists.
@@ -35,7 +35,7 @@ abstract class AbstractTurnRestrictionsListView extends JPanel {
         lstTurnRestrictions.addListSelectionListener(listener);
     }
 
-    public void initIconSetFromPreferences(Preferences prefs) {
+    public void initIconSetFromPreferences(IPreferences prefs) {
         TurnRestrictionCellRenderer renderer = (TurnRestrictionCellRenderer) lstTurnRestrictions.getCellRenderer();
         renderer.initIconSetFromPreferences(prefs);
     }

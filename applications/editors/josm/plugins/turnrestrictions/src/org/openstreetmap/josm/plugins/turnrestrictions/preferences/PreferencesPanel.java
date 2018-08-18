@@ -16,10 +16,10 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JSeparator;
 
-import org.openstreetmap.josm.data.Preferences;
 import org.openstreetmap.josm.gui.widgets.HtmlPanel;
 import org.openstreetmap.josm.gui.widgets.VerticallyScrollablePanel;
 import org.openstreetmap.josm.plugins.turnrestrictions.editor.TurnRestrictionType;
+import org.openstreetmap.josm.spi.preferences.IPreferences;
 import org.openstreetmap.josm.tools.ImageProvider;
 
 /**
@@ -170,7 +170,7 @@ public class PreferencesPanel extends VerticallyScrollablePanel {
      *
      * @param prefs the preferences
      */
-    public void initFromPreferences(Preferences prefs) {
+    public void initFromPreferences(IPreferences prefs) {
         String set = prefs.get(PreferenceKeys.ROAD_SIGNS, "set-a");
         if (!set.equals("set-a") && !set.equals("set-b")) {
             System.out.println(
@@ -193,7 +193,7 @@ public class PreferencesPanel extends VerticallyScrollablePanel {
      *
      * @param prefs the preferences
      */
-    public void saveToPreferences(Preferences prefs) {
+    public void saveToPreferences(IPreferences prefs) {
         prefs.put(PreferenceKeys.ROAD_SIGNS, rbSetA.isSelected() ? "set-a" : "set-b");
         prefs.putBoolean(PreferenceKeys.SHOW_VIAS_IN_BASIC_EDITOR, cbShowViaListInBasicEditor.isSelected());
     }

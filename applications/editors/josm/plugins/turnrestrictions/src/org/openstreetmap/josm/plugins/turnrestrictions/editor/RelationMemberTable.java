@@ -35,6 +35,7 @@ import org.openstreetmap.josm.gui.widgets.PopupMenuLauncher;
 import org.openstreetmap.josm.plugins.turnrestrictions.dnd.PrimitiveIdListTransferHandler;
 import org.openstreetmap.josm.plugins.turnrestrictions.dnd.PrimitiveIdTransferable;
 import org.openstreetmap.josm.tools.ImageProvider;
+import org.openstreetmap.josm.tools.Logging;
 import org.openstreetmap.josm.tools.Shortcut;
 
 /**
@@ -150,13 +151,11 @@ public class RelationMemberTable extends JTable {
                 try {
                     model.getRelationMemberEditorModel().insertMembers(ids);
                 } catch (IllegalArgumentException e) {
-                    e.printStackTrace();
+                    Logging.error(e);
                     // FIXME: provide user feedback
                 }
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (UnsupportedFlavorException e) {
-                e.printStackTrace();
+            } catch (IOException | UnsupportedFlavorException e) {
+                Logging.error(e);
             }
         }
     }
@@ -270,10 +269,8 @@ public class RelationMemberTable extends JTable {
                     return false;
                 }
                 return true;
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (UnsupportedFlavorException e) {
-                e.printStackTrace();
+            } catch (IOException | UnsupportedFlavorException e) {
+                Logging.error(e);
             }
             return false;
         }
@@ -347,13 +344,11 @@ public class RelationMemberTable extends JTable {
                 try {
                     model.getRelationMemberEditorModel().insertMembers(ids);
                 } catch (IllegalArgumentException e) {
-                    e.printStackTrace();
+                    Logging.error(e);
                     // FIXME: provide user feedback
                 }
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (UnsupportedFlavorException e) {
-                e.printStackTrace();
+            } catch (IOException | UnsupportedFlavorException e) {
+                Logging.error(e);
             } finally {
                 setColumnSelectionAllowed(true);
             }

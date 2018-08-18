@@ -14,12 +14,12 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
-import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.data.Preferences;
 import org.openstreetmap.josm.gui.help.HelpUtil;
 import org.openstreetmap.josm.gui.widgets.VerticallyScrollablePanel;
 import org.openstreetmap.josm.plugins.turnrestrictions.editor.NavigationControler.BasicEditorFokusTargets;
 import org.openstreetmap.josm.plugins.turnrestrictions.preferences.PreferenceKeys;
+import org.openstreetmap.josm.spi.preferences.Config;
+import org.openstreetmap.josm.spi.preferences.IPreferences;
 import org.openstreetmap.josm.tools.CheckParameterUtil;
 
 /**
@@ -99,7 +99,7 @@ public class BasicEditorPanel extends VerticallyScrollablePanel {
              }
         };
         add(spVias, gc);
-        if (!Main.pref.getBoolean(PreferenceKeys.SHOW_VIAS_IN_BASIC_EDITOR, false)) {
+        if (!Config.getPref().getBoolean(PreferenceKeys.SHOW_VIAS_IN_BASIC_EDITOR, false)) {
             lblVias.setVisible(false);
             spVias.setVisible(false);
         }
@@ -170,7 +170,7 @@ public class BasicEditorPanel extends VerticallyScrollablePanel {
      *
      * @param prefs the JOSM preferences
      */
-    public void initIconSetFromPreferences(Preferences prefs) {
+    public void initIconSetFromPreferences(IPreferences prefs) {
         cbTurnRestrictions.initIconSetFromPreferences(prefs);
     }
 
@@ -180,7 +180,7 @@ public class BasicEditorPanel extends VerticallyScrollablePanel {
      *
      * @param prefs the JOSM preferences
      */
-    public void initViasVisibilityFromPreferences(Preferences prefs) {
+    public void initViasVisibilityFromPreferences(IPreferences prefs) {
         boolean value = prefs.getBoolean(PreferenceKeys.SHOW_VIAS_IN_BASIC_EDITOR, false);
         if (value != lblVias.isVisible()) {
             lblVias.setVisible(value);

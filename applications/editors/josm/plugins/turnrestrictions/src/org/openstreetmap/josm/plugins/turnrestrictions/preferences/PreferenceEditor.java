@@ -18,10 +18,10 @@ import javax.swing.JTabbedPane;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.preferences.DefaultTabPreferenceSetting;
 import org.openstreetmap.josm.gui.preferences.PreferenceTabbedPane;
 import org.openstreetmap.josm.gui.widgets.HtmlPanel;
+import org.openstreetmap.josm.spi.preferences.Config;
 import org.openstreetmap.josm.tools.GBC;
 import org.openstreetmap.josm.tools.ImageProvider;
 import org.openstreetmap.josm.tools.OpenBrowser;
@@ -82,7 +82,7 @@ public class PreferenceEditor extends DefaultTabPreferenceSetting {
         JPanel pnl = new JPanel(new BorderLayout());
 
         pnlIconPreferences = new PreferencesPanel();
-        pnlIconPreferences.initFromPreferences(Main.pref);
+        pnlIconPreferences.initFromPreferences(Config.getPref());
 
         JScrollPane sp = new JScrollPane(pnlIconPreferences);
         sp.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
@@ -112,7 +112,7 @@ public class PreferenceEditor extends DefaultTabPreferenceSetting {
 
     @Override
     public boolean ok() {
-        pnlIconPreferences.saveToPreferences(Main.pref);
+        pnlIconPreferences.saveToPreferences(Config.getPref());
         return false;
     }
 

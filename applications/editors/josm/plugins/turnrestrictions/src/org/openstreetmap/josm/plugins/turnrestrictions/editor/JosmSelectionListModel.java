@@ -11,7 +11,7 @@ import javax.swing.AbstractListModel;
 import javax.swing.DefaultListSelectionModel;
 import javax.swing.ListSelectionModel;
 
-import org.openstreetmap.josm.data.SelectionChangedListener;
+import org.openstreetmap.josm.data.osm.DataSelectionListener;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.PrimitiveId;
 import org.openstreetmap.josm.data.osm.event.AbstractDatasetChangedEvent;
@@ -36,7 +36,7 @@ import org.openstreetmap.josm.tools.CheckParameterUtil;
  *
  */
 public class JosmSelectionListModel extends AbstractListModel<OsmPrimitive>
-    implements ActiveLayerChangeListener, SelectionChangedListener, DataSetListener, PrimitiveIdListProvider {
+    implements ActiveLayerChangeListener, DataSelectionListener, DataSetListener, PrimitiveIdListProvider {
 
     private final List<OsmPrimitive> selection = new ArrayList<>();
     private final DefaultListSelectionModel selectionModel = new DefaultListSelectionModel();
@@ -171,13 +171,13 @@ public class JosmSelectionListModel extends AbstractListModel<OsmPrimitive>
     /* interface SelectionChangeListener                                        */
     /* ------------------------------------------------------------------------ */
     @Override
-    public void selectionChanged(Collection<? extends OsmPrimitive> newSelection) {
+    public void selectionChanged(SelectionChangeEvent event) {
         // only update the JOSM selection if it is changed in the same data layer
         // this turn restriction editor is working on
         OsmDataLayer layer = MainApplication.getLayerManager().getEditLayer();
         if (layer == null) return;
         if (layer != this.layer) return;
-        setJOSMSelection(newSelection);
+        setJOSMSelection(event.getSelection());
     }
 
     /* ------------------------------------------------------------------------ */

@@ -1,5 +1,5 @@
 // License: GPL. For details, see LICENSE file.
-package CommandLine;
+package org.openstreetmap.josm.plugins.commandline;
 
 import static org.openstreetmap.josm.gui.help.HelpUtil.ht;
 import static org.openstreetmap.josm.tools.I18n.tr;

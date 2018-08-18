@@ -9,7 +9,7 @@
          See https://josm.openstreetmap.de/wiki/DevelopersGuide/DevelopingPlugins
     -->
     <property name="plugin.author" value="Hind"/>
-    <property name="plugin.class" value="CommandLine.CommandLine"/>
+    <property name="plugin.class" value="org.openstreetmap.josm.plugins.commandline.CommandLine"/>
     <property name="plugin.description" value="Implements a command line and enables to create your commands. See link for standard commands (arc, circle etc.)"/>
     <property name="plugin.icon" value="images/commandline.png"/>
     <property name="plugin.link" value="https://wiki.openstreetmap.org/wiki/JOSM/Plugins/CommandLine"/>

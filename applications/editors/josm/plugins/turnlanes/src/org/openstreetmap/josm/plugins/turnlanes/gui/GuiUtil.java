@@ -11,9 +11,9 @@ import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.osm.Node;
+import org.openstreetmap.josm.data.projection.ProjectionRegistry;
 import org.openstreetmap.josm.plugins.turnlanes.model.Junction;
 
 final class GuiUtil {
@@ -133,7 +133,7 @@ final class GuiUtil {
     }
 
     public static Point2D loc(Node node) {
-        final EastNorth loc = Main.getProjection().latlon2eastNorth(node.getCoor());
+        final EastNorth loc = ProjectionRegistry.getProjection().latlon2eastNorth(node.getCoor());
         return new Point2D.Double(loc.getX(), -loc.getY());
     }
 

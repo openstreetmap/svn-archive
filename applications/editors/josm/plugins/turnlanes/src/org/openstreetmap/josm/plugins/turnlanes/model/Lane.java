@@ -9,7 +9,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.data.UndoRedoHandler;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.RelationMember;
@@ -220,7 +220,7 @@ public class Lane {
         lanes.add(getIndex());
         cmd.backup(r).put(key, Turn.join(lanes));
 
-        Main.main.undoRedo.add(cmd);
+        UndoRedoHandler.getInstance().add(cmd);
     }
 
     public Set<Turn> getTurns() {
@@ -240,7 +240,7 @@ public class Lane {
 
         getOutgoingRoadEnd().removeLane(cmd, this);
 
-        Main.main.undoRedo.add(cmd);
+        UndoRedoHandler.getInstance().add(cmd);
     }
 
     void initialize() {

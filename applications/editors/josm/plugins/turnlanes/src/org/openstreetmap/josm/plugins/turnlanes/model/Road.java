@@ -10,7 +10,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
-import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.data.UndoRedoHandler;
 import org.openstreetmap.josm.data.osm.AbstractPrimitive;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
@@ -140,7 +140,7 @@ public class Road {
                 cmd.backup(target).put(key, old + Constants.SEPARATOR + lengthStr);
             }
 
-            Main.main.undoRedo.add(cmd);
+            UndoRedoHandler.getInstance().add(cmd);
         }
 
         private Relation createLengthsRelation() {
@@ -183,7 +183,7 @@ public class Road {
                         lengths.toString());
             }
 
-            Main.main.undoRedo.add(cmd);
+            UndoRedoHandler.getInstance().add(cmd);
         }
 
         public List<Lane> getLanes() {

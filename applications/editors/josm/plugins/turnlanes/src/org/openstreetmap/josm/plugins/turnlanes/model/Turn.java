@@ -11,7 +11,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.data.UndoRedoHandler;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
@@ -195,7 +195,7 @@ public final class Turn {
 
         remove(cmd);
 
-        Main.main.undoRedo.add(cmd);
+        UndoRedoHandler.getInstance().add(cmd);
     }
 
     void remove(GenericCommand cmd) {

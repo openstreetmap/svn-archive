@@ -23,7 +23,7 @@ import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 
 import org.kaintoch.gps.globalsat.dg100.Dg100Config;
-import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.gui.MainApplication;
 
 /**
  * Configuration download dialog.
@@ -242,7 +242,7 @@ public class GlobalsatConfigDialog extends JPanel {
             formatPosTDSA.setSelected(true);
             break;
         default:
-            JOptionPane.showMessageDialog(Main.parent, tr("Unknown logFormat"));
+            JOptionPane.showMessageDialog(MainApplication.getMainFrame(), tr("Unknown logFormat"));
         }
 
         enableTimeDistRadioButton(conf.getSwATimeOrDist(), aTime, aDist);
@@ -259,7 +259,7 @@ public class GlobalsatConfigDialog extends JPanel {
         cMeters.setText("" + conf.getSwCDist());
     }
 
-    private static ButtonGroup createButtonGroup(AbstractButton ... buttons) {
+    private static ButtonGroup createButtonGroup(AbstractButton... buttons) {
         ButtonGroup group = new ButtonGroup();
         for (AbstractButton b : buttons) {
             group.add(b);

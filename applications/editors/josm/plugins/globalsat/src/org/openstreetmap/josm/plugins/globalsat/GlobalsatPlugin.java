@@ -11,7 +11,6 @@ import java.io.IOException;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.data.gpx.GpxData;
 import org.openstreetmap.josm.gui.MainApplication;
@@ -20,6 +19,7 @@ import org.openstreetmap.josm.gui.layer.GpxLayer;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
+import org.openstreetmap.josm.spi.preferences.Config;
 import org.openstreetmap.josm.tools.Logging;
 import org.openstreetmap.josm.tools.Shortcut;
 import org.xml.sax.SAXException;
@@ -60,25 +60,25 @@ public class GlobalsatPlugin extends Plugin {
 
         @Override protected void finish() {
             if (deleteAfter && GlobalsatPlugin.dg100().isCanceled() == false) {
-                Main.pref.putBoolean("globalsat.deleteAfterDownload", true);
+                Config.getPref().putBoolean("globalsat.deleteAfterDownload", true);
                 try {
                     GlobalsatPlugin.dg100().deleteData();
                 } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(Main.parent, tr("Error deleting data.") + " " + ex.toString());
+                    JOptionPane.showMessageDialog(MainApplication.getMainFrame(), tr("Error deleting data.") + " " + ex.toString());
                 }
             } else {
-                Main.pref.putBoolean("globalsat.deleteAfterDownload", false);
+                Config.getPref().putBoolean("globalsat.deleteAfterDownload", false);
             }
             if (data != null && data.hasTrackPoints()) {
                 MainApplication.getLayerManager().addLayer(new GpxLayer(data, tr("imported data from {0}", "DG 100")));
                 MainApplication.getMap().repaint();
             } else {
-                JOptionPane.showMessageDialog(Main.parent, tr("No data found on device."));
+                JOptionPane.showMessageDialog(MainApplication.getMainFrame(), tr("No data found on device."));
             }
             if (eee != null) {
                 eee.printStackTrace();
                 System.out.println(eee.getMessage());
-                JOptionPane.showMessageDialog(Main.parent, tr("Connection failed.") + " (" + eee.toString() + ")");
+                JOptionPane.showMessageDialog(MainApplication.getMainFrame(), tr("Connection failed.") + " (" + eee.toString() + ")");
             }
             GlobalsatPlugin.dg100().disconnect();
         }
@@ -102,7 +102,7 @@ public class GlobalsatPlugin extends Plugin {
             // CHECKSTYLE.ON: LineLength
             Logging.error(msg);
             if (!GraphicsEnvironment.isHeadless()) {
-                JOptionPane.showMessageDialog(Main.parent, "<html>" + msg + "</html>");
+                JOptionPane.showMessageDialog(MainApplication.getMainFrame(), "<html>" + msg + "</html>");
             }
         }
         if (!error) {
@@ -123,7 +123,7 @@ public class GlobalsatPlugin extends Plugin {
         public void actionPerformed(ActionEvent e) {
             GlobalsatImportDialog dialog = new GlobalsatImportDialog();
             JOptionPane pane = new JOptionPane(dialog, JOptionPane.PLAIN_MESSAGE, JOptionPane.OK_CANCEL_OPTION);
-            JDialog dlg = pane.createDialog(Main.parent, tr("Import"));
+            JDialog dlg = pane.createDialog(MainApplication.getMainFrame(), tr("Import"));
             dlg.setVisible(true);
             if (((Integer) pane.getValue()) == JOptionPane.OK_OPTION) {
                 setPortIdent(dialog.getPort());

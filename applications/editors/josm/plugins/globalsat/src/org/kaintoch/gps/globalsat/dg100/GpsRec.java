@@ -68,25 +68,35 @@ public class GpsRec
     }
 
     @Override
-    public boolean equals(Object arg0)
-    {
-        boolean isEqual = false;
-        if (arg0 != null && arg0 instanceof GpsRec)
-        {
-            GpsRec otherGpsRec = (GpsRec)arg0;
-            isEqual =
-                dg100TypeOfNextRec == otherGpsRec.dg100TypeOfNextRec
-                && dg100TypeOfCurRec == otherGpsRec.dg100TypeOfCurRec
-                && dg100Latitude == otherGpsRec.dg100Latitude
-                && dg100Longitude == otherGpsRec.dg100Longitude
-                && dg100TimeZ == otherGpsRec.dg100TimeZ
-                && dg100Date == otherGpsRec.dg100Date
-                && dg100Speed == otherGpsRec.dg100Speed
-                && dg100Altitude == otherGpsRec.dg100Altitude
-                //&& dg100Unk1 == otherGpsRec.unk1
-                ;
-        }
-        return isEqual;
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + dg100Altitude;
+        result = prime * result + dg100Date;
+        result = prime * result + dg100Latitude;
+        result = prime * result + dg100Longitude;
+        result = prime * result + dg100Speed;
+        result = prime * result + dg100TimeZ;
+        result = prime * result + dg100TypeOfCurRec;
+        result = prime * result + dg100TypeOfNextRec;
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null || getClass() != obj.getClass())
+            return false;
+        GpsRec other = (GpsRec) obj;
+        return dg100Altitude == other.dg100Altitude
+            && dg100Date == other.dg100Date
+            && dg100Latitude == other.dg100Latitude
+            && dg100Longitude == other.dg100Longitude
+            && dg100Speed == other.dg100Speed
+            && dg100TimeZ == other.dg100TimeZ
+            && dg100TypeOfCurRec == other.dg100TypeOfCurRec
+            && dg100TypeOfNextRec == other.dg100TypeOfNextRec;
     }
 
     public GpsRec(ByteBuffer buf, int recType)

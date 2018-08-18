@@ -20,7 +20,8 @@ import javax.swing.JPanel;
 import javax.swing.ListCellRenderer;
 
 import org.kaintoch.gps.globalsat.dg100.Dg100Config;
-import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.gui.MainApplication;
+import org.openstreetmap.josm.spi.preferences.Config;
 
 import gnu.io.CommPortIdentifier;
 
@@ -59,7 +60,7 @@ public class GlobalsatImportDialog extends JPanel {
                     Object i = portCombo.getSelectedItem();
                     if (i instanceof CommPortIdentifier) {
                         GlobalsatPlugin.setPortIdent((CommPortIdentifier) i);
-                        Main.pref.put("globalsat.portIdentifier", ((CommPortIdentifier) i).getName());
+                        Config.getPref().put("globalsat.portIdentifier", ((CommPortIdentifier) i).getName());
                     }
                 }
             });
@@ -104,17 +105,18 @@ public class GlobalsatImportDialog extends JPanel {
                         if (conf != null) {
                             GlobalsatConfigDialog dialog = new GlobalsatConfigDialog(conf);
                             JOptionPane pane = new JOptionPane(dialog, JOptionPane.PLAIN_MESSAGE, JOptionPane.OK_CANCEL_OPTION);
-                            JDialog dlg = pane.createDialog(Main.parent, tr("Configure Device"));
+                            JDialog dlg = pane.createDialog(MainApplication.getMainFrame(), tr("Configure Device"));
                             dlg.setVisible(true);
                             if (((Integer) pane.getValue()) == JOptionPane.OK_OPTION) {
                                 GlobalsatPlugin.dg100().setConfig(dialog.getConfig());
                             }
                             dlg.dispose();
                         } else {
-                            JOptionPane.showMessageDialog(Main.parent, tr("Connection Error."), tr("Connection Error."), JOptionPane.ERROR);
+                            JOptionPane.showMessageDialog(MainApplication.getMainFrame(),
+                                    tr("Connection Error."), tr("Connection Error."), JOptionPane.ERROR);
                         }
                     } catch (GlobalsatDg100.ConnectionException ex) {
-                        JOptionPane.showMessageDialog(Main.parent, tr("Connection Error.") + " " + ex.toString());
+                        JOptionPane.showMessageDialog(MainApplication.getMainFrame(), tr("Connection Error.") + " " + ex.toString());
                     }
                     System.out.println("configuring the device finished");
                 }
@@ -129,7 +131,7 @@ public class GlobalsatImportDialog extends JPanel {
 
 
         delete = new JCheckBox(tr("delete data after import"));
-        delete.setSelected(Main.pref.getBoolean("globalsat.deleteAfterDownload", false));
+        delete.setSelected(Config.getPref().getBoolean("globalsat.deleteAfterDownload", false));
 
         c.gridwidth = 3;
         c.fill = GridBagConstraints.HORIZONTAL;
@@ -139,7 +141,7 @@ public class GlobalsatImportDialog extends JPanel {
     }
 
     public void refreshPorts() {
-        String sel = Main.pref.get("globalsat.portIdentifier");
+        String sel = Config.getPref().get("globalsat.portIdentifier");
         portCombo.setVisible(false);
         portCombo.removeAllItems();
 

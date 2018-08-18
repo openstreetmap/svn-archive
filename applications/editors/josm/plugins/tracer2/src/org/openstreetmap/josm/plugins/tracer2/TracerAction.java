@@ -20,11 +20,11 @@ import java.util.List;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.mapmode.MapMode;
 import org.openstreetmap.josm.command.ChangePropertyCommand;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.SequenceCommand;
+import org.openstreetmap.josm.data.UndoRedoHandler;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
@@ -98,7 +98,7 @@ class TracerAction extends MapMode implements MouseListener, KeyListener {
             commands.add(new ChangePropertyCommand(selection, strTag, strTagValue));
 
             if (!commands.isEmpty()) {
-                Main.main.undoRedo.add(new SequenceCommand(tr("Change tag {0} to {1}", strTag, strTagValue), commands));
+                UndoRedoHandler.getInstance().add(new SequenceCommand(tr("Change tag {0} to {1}", strTag, strTagValue), commands));
             }
         }
     }
@@ -205,13 +205,13 @@ class TracerAction extends MapMode implements MouseListener, KeyListener {
                 return false;
             }
             if (oGetVersion.m_nVersionMajor != nMajor) {
-                JOptionPane.showMessageDialog(Main.parent,
+                JOptionPane.showMessageDialog(MainApplication.getMainFrame(),
                         tr("The Tracer2Server version isn''t compatible with this plugin. Please download version {0} from\n{1}.", nMajor + ".x",
                                 "http://sourceforge.net/projects/tracer2server/"), tr("Error"), JOptionPane.ERROR_MESSAGE);
                 return false;
             }
             if (oGetVersion.m_nVersionMinor < nMinor) {
-                JOptionPane.showMessageDialog(Main.parent,
+                JOptionPane.showMessageDialog(MainApplication.getMainFrame(),
                         tr("New version of Tracer2Server is available. For best results please upgrade to version {0}.", nMajor + "." + nMinor),
                         tr("Information"), JOptionPane.INFORMATION_MESSAGE);
             }
@@ -231,7 +231,7 @@ class TracerAction extends MapMode implements MouseListener, KeyListener {
 
             if (listEnableParam == null || listEnableParam.size() == 0) {
                 listParam.setActivParam(null);
-                JOptionPane.showMessageDialog(Main.parent, tr("No set of parameter is active!"), tr("Error"), JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(MainApplication.getMainFrame(), tr("No set of parameter is active!"), tr("Error"), JOptionPane.ERROR_MESSAGE);
                 return false;
             }
             if (listEnableParam.size() == 1) {
@@ -245,7 +245,7 @@ class TracerAction extends MapMode implements MouseListener, KeyListener {
 
             if (dialog.getShow()) {
                 JOptionPane pane = new JOptionPane(dialog, JOptionPane.PLAIN_MESSAGE, JOptionPane.OK_CANCEL_OPTION);
-                JDialog dlg = pane.createDialog(Main.parent, tr("Tracer2") + " - " + tr("Select parameter"));
+                JDialog dlg = pane.createDialog(MainApplication.getMainFrame(), tr("Tracer2") + " - " + tr("Select parameter"));
                 dlg.setVisible(true);
                 Object obj = pane.getValue();
                 dlg.dispose();
@@ -319,7 +319,7 @@ class TracerAction extends MapMode implements MouseListener, KeyListener {
                 } else {
                     strCommand = tr("Tracer2: modify way to {0} points", coordList.size());
                 }
-                Main.main.undoRedo.add(new SequenceCommand(strCommand, commands));
+                UndoRedoHandler.getInstance().add(new SequenceCommand(strCommand, commands));
 
                 if (m_bShift) {
                     getLayerManager().getEditDataSet().addSelected(ConnectWays.s_oWay);

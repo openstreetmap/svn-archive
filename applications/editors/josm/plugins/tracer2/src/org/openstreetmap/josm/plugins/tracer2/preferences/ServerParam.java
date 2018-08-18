@@ -12,7 +12,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
 
-import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.widgets.JMultilineLabel;
 import org.openstreetmap.josm.tools.GBC;
 
@@ -203,7 +203,7 @@ public class ServerParam {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                JOptionPane.showMessageDialog(Main.parent, p, tr("Tracer2 error"), JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(MainApplication.getMainFrame(), p, tr("Tracer2 error"), JOptionPane.ERROR_MESSAGE);
             }
         });
     }

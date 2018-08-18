@@ -17,8 +17,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.ExtendedDialog;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.tools.GBC;
 
 public class ServerParamDialog extends ExtendedDialog {
@@ -110,7 +110,7 @@ public class ServerParamDialog extends ExtendedDialog {
     }
 
     public ServerParamDialog(ServerParam param) {
-        super(Main.parent, tr("Tracer2") + " - " + tr("Parameter for server request"),
+        super(MainApplication.getMainFrame(), tr("Tracer2") + " - " + tr("Parameter for server request"),
                 new String[] {tr("OK"), tr("Cancel")},
                 true);
         if (param == null) {

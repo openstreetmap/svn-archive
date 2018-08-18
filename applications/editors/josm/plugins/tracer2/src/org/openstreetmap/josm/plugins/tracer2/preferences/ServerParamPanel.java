@@ -15,7 +15,7 @@ import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.gui.MainApplication;
 
 public class ServerParamPanel extends JPanel {
     /**
@@ -73,7 +73,7 @@ public class ServerParamPanel extends JPanel {
             bDel.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent arg0) {
-                    if (JOptionPane.showConfirmDialog(Main.parent,
+                    if (JOptionPane.showConfirmDialog(MainApplication.getMainFrame(),
                             tr("Delete parameter \"{0}\"?", param.getName()),
                             tr("Are you sure?"),
                             JOptionPane.YES_NO_OPTION,
@@ -122,7 +122,7 @@ public class ServerParamPanel extends JPanel {
 
                 if (dialog.getShow()) {
                     JOptionPane pane = new JOptionPane(dialog, JOptionPane.PLAIN_MESSAGE, JOptionPane.OK_CANCEL_OPTION);
-                    JDialog dlg = pane.createDialog(Main.parent, tr("Tracer2") + " - " + tr("Select predefined parameter"));
+                    JDialog dlg = pane.createDialog(MainApplication.getMainFrame(), tr("Tracer2") + " - " + tr("Select predefined parameter"));
                     dlg.setVisible(true);
                     Object obj = pane.getValue();
                     dlg.dispose();

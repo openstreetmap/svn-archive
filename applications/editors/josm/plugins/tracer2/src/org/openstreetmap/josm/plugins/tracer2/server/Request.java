@@ -8,7 +8,7 @@ import java.net.URL;
 
 import javax.swing.JOptionPane;
 
-import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.tools.HttpClient;
 
 public class Request extends Thread {
@@ -27,12 +27,12 @@ public class Request extends Thread {
         try {
             return HttpClient.create(new URL(URL + strUrl)).connect().fetchContent();
         } catch (IOException e) {
-            JOptionPane.showMessageDialog(Main.parent,
+            JOptionPane.showMessageDialog(MainApplication.getMainFrame(),
                     tr("Tracer2Server isn''t running. Please start the Server.\nIf you don''t have the server, please download it from\n{0}.",
                             "http://sourceforge.net/projects/tracer2server/"), tr("Error"), JOptionPane.ERROR_MESSAGE);
             return "";
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(Main.parent, tr("Tracer2Server hasn''t found anything.") + "\n",
+            JOptionPane.showMessageDialog(MainApplication.getMainFrame(), tr("Tracer2Server hasn''t found anything.") + "\n",
                     tr("Error"), JOptionPane.ERROR_MESSAGE);
             return "";
         }
@@ -47,7 +47,7 @@ public class Request extends Thread {
         String strIdentifier = "&traceError=";
         if (strResponse.contains(strIdentifier)) {
             String strError = strResponse.replaceFirst(strIdentifier, "").trim();
-            JOptionPane.showMessageDialog(Main.parent, tr("Tracer2Server has detected an error.") + "\n" + strError,
+            JOptionPane.showMessageDialog(MainApplication.getMainFrame(), tr("Tracer2Server has detected an error.") + "\n" + strError,
                     tr("Error"), JOptionPane.ERROR_MESSAGE);
             return true;
         }

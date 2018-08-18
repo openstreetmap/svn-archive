@@ -6,7 +6,6 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.UserIdentityManager;
 import org.openstreetmap.josm.gui.MainApplication;
@@ -17,6 +16,7 @@ import org.openstreetmap.josm.gui.download.DownloadDialog;
 import org.openstreetmap.josm.gui.download.DownloadSelection;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
+import org.openstreetmap.josm.spi.preferences.Config;
 import org.openstreetmap.josm.spi.preferences.PreferenceChangeEvent;
 import org.openstreetmap.josm.spi.preferences.PreferenceChangedListener;
 import org.openstreetmap.josm.tools.Shortcut;
@@ -52,10 +52,10 @@ MouseListener, PreferenceChangedListener, DownloadSelection{
         //String tooltip = "Activates the Osm Inspector reporter plugin";
         
         /* add default values for static variables */
-        Main.pref.put("osmInspector.nickname", "osmi");
-        Main.pref.putBoolean("osmInspector.showBugs", true);
-        Main.pref.put("osmInspector.version", getPluginInformation().version);
-        Main.pref.put("osmInspector.localVersion",getPluginInformation().localversion);
+        Config.getPref().put("osmInspector.nickname", "osmi");
+        Config.getPref().putBoolean("osmInspector.showBugs", true);
+        Config.getPref().put("osmInspector.version", getPluginInformation().version);
+        Config.getPref().put("osmInspector.localVersion",getPluginInformation().localversion);
         inspectorLayer = null;
     }
 	@Override
@@ -73,9 +73,9 @@ MouseListener, PreferenceChangedListener, DownloadSelection{
                 /* add Listeners */
                 NavigatableComponent.addZoomChangeListener(this);
                 MainApplication.getMap().mapView.addMouseListener(this);
-                Main.pref.addPreferenceChangeListener(this);
+                Config.getPref().addPreferenceChangeListener(this);
                 /* put username to preferences */
-                Main.pref.put("osmInspector.josmUserName",
+                Config.getPref().put("osmInspector.josmUserName",
                         userIdentityManager.getUserName());
                 MainApplication.getToolbar().control.add( new ImportOsmInspectorBugsAction( this ) );
             }

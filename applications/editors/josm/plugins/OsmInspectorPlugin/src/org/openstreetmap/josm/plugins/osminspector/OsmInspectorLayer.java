@@ -48,10 +48,10 @@ import org.opengis.filter.spatial.Intersects;
 import org.opengis.referencing.FactoryException;
 import org.opengis.referencing.NoSuchAuthorityCodeException;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
+import org.openstreetmap.josm.data.projection.ProjectionRegistry;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.layer.Layer;
@@ -344,7 +344,7 @@ public class OsmInspectorLayer extends Layer {
 
 		String typeNames[] = wfsClient.getTypeNames();
 		renderer = new StreamingRenderer();
-		CRS.decode(Main.getProjection().toCode());
+		CRS.decode(ProjectionRegistry.getProjection().toCode());
 		crsOSMI = CRS.decode("EPSG:4326");
 		content = new MapContent();
 		content.getViewport().setCoordinateReferenceSystem(crsOSMI);

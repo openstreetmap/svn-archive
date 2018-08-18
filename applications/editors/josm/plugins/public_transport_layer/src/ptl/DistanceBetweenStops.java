@@ -11,7 +11,6 @@ import java.util.List;
 
 import javax.swing.JOptionPane;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.data.SystemOfMeasurement;
 import org.openstreetmap.josm.data.coor.LatLon;
@@ -21,10 +20,12 @@ import org.openstreetmap.josm.data.osm.OsmPrimitiveType;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.gui.ExtendedDialog;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.dialogs.relation.sort.WayConnectionType;
 import org.openstreetmap.josm.gui.dialogs.relation.sort.WayConnectionTypeCalculator;
 import org.openstreetmap.josm.gui.util.GuiHelper;
 import org.openstreetmap.josm.gui.widgets.JosmTextArea;
+import org.openstreetmap.josm.spi.preferences.Config;
 import org.openstreetmap.josm.tools.CheckParameterUtil;
 import org.openstreetmap.josm.tools.Utils;
 
@@ -73,8 +74,8 @@ public class DistanceBetweenStops extends JosmAction {
         List<Node> remainingRouteNodes = routeNodes;
         double totalLength = 0.0;
         int lengthN = 0;
-        final boolean onlyLowerUnit = Main.pref.getBoolean("system_of_measurement.use_only_lower_unit", false);
-        Main.pref.putBoolean("system_of_measurement.use_only_lower_unit", true);
+        final boolean onlyLowerUnit = Config.getPref().getBoolean("system_of_measurement.use_only_lower_unit", false);
+        Config.getPref().putBoolean("system_of_measurement.use_only_lower_unit", true);
         try {
             for (Node n : stopNodes) {
                 final double length;
@@ -104,7 +105,7 @@ public class DistanceBetweenStops extends JosmAction {
             sb.insert(0, "\t");
             sb.insert(0, SystemOfMeasurement.getSystemOfMeasurement().getDistText(totalLength / lengthN, new DecimalFormat("0"), -1));
         } finally {
-            Main.pref.putBoolean("system_of_measurement.use_only_lower_unit", onlyLowerUnit);
+            Config.getPref().putBoolean("system_of_measurement.use_only_lower_unit", onlyLowerUnit);
         }
 
         return sb.toString();
@@ -141,7 +142,8 @@ public class DistanceBetweenStops extends JosmAction {
         final StringBuilder sb = new StringBuilder();
         for (Relation relation : getLayerManager().getEditDataSet().getSelectedRelations()) {
             if (!isRouteSupported(relation)) {
-                JOptionPane.showMessageDialog(Main.parent, "<html>" + tr("A valid public_transport:version=2 route is required")
+                JOptionPane.showMessageDialog(MainApplication.getMainFrame(),
+                        "<html>" + tr("A valid public_transport:version=2 route is required")
                 + Utils.joinAsHtmlUnorderedList(Collections.singleton(relation.getDisplayName(DefaultNameFormatter.getInstance()))),
                 tr("Invalid selection"), JOptionPane.WARNING_MESSAGE);
                 continue;
@@ -150,7 +152,7 @@ public class DistanceBetweenStops extends JosmAction {
             sb.append(calculateDistanceBetweenStops(relation)).append("\n");
         }
 
-        new ExtendedDialog(Main.parent, getValue(NAME).toString(), new String[]{tr("Close")}) {
+        new ExtendedDialog(MainApplication.getMainFrame(), getValue(NAME).toString(), new String[]{tr("Close")}) {
             {
                 setButtonIcons(new String[]{"ok.png"});
                 final JosmTextArea jte = new JosmTextArea();

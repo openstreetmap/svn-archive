@@ -26,7 +26,6 @@ import javax.swing.JTabbedPane;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Tag;
 import org.openstreetmap.josm.gui.MainApplication;
@@ -263,7 +262,7 @@ public class TagEditorDialog extends JDialog {
             new WindowGeometry(
                     getClass().getName() + ".geometry",
                     WindowGeometry.centerInWindow(
-                            Main.parent,
+                            MainApplication.getMainFrame(),
                             PREFERRED_SIZE
                     )
             ).applySafe(this);
@@ -318,7 +317,7 @@ public class TagEditorDialog extends JDialog {
             tagEditor.stopEditing();
             setVisible(false);
             tagEditor.getModel().updateJOSMSelection();
-            Main.parent.repaint(); // repaint all - drawing could have been changed
+            MainApplication.getMainFrame().repaint(); // repaint all - drawing could have been changed
         }
 
         @Override

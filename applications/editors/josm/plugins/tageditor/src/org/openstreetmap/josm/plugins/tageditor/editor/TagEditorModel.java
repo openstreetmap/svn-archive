@@ -11,6 +11,7 @@ import javax.swing.DefaultListSelectionModel;
 
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.SequenceCommand;
+import org.openstreetmap.josm.data.UndoRedoHandler;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Tag;
 import org.openstreetmap.josm.gui.MainApplication;
@@ -166,7 +167,7 @@ public class TagEditorModel extends org.openstreetmap.josm.gui.tagging.TagEditor
         );
 
         // executes the commands and adds them to the undo/redo chains
-        MainApplication.undoRedo.add(command);
+        UndoRedoHandler.getInstance().add(command);
     }
 
     /**

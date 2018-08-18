@@ -1,10 +1,11 @@
 // License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.tageditor.preset.ui;
 
+import static org.openstreetmap.josm.tools.I18n.tr;
+
 import javax.swing.table.DefaultTableColumnModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
-import static org.openstreetmap.josm.tools.I18n.tr;
 
 public class PresetsTableColumnModel extends DefaultTableColumnModel {
 

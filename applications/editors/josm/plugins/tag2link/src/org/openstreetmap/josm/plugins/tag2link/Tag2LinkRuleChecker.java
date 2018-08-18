@@ -25,7 +25,6 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.osm.IPrimitive;
 import org.openstreetmap.josm.data.osm.Tag;
 import org.openstreetmap.josm.plugins.tag2link.data.Link;
@@ -35,6 +34,7 @@ import org.openstreetmap.josm.plugins.tag2link.data.Rule.EvalResult;
 import org.openstreetmap.josm.plugins.tag2link.data.Rule.MatchingTag;
 import org.openstreetmap.josm.plugins.tag2link.data.Source;
 import org.openstreetmap.josm.plugins.tag2link.io.SourcesReader;
+import org.openstreetmap.josm.spi.preferences.Config;
 
 /**
  * Class matching rules against a specified OSM primitive in order to get its relevant links. 
@@ -79,7 +79,7 @@ public class Tag2LinkRuleChecker implements Tag2LinkConstants {
             if (val == null) {
                 Matcher lm = Pattern.compile(".*lang(?:\\((\\p{Lower}{2,})(?:,(\\p{Lower}{2,}))*\\))?.*").matcher(arg);
                 if (lm.matches()) {
-                    String josmLang = Main.pref.get("language");
+                    String josmLang = Config.getPref().get("language");
                     String jvmLang = (josmLang.isEmpty() ? Locale.getDefault().getLanguage() : josmLang).split("_")[0];
                     if (lm.groupCount() == 0) {
                         val = jvmLang;

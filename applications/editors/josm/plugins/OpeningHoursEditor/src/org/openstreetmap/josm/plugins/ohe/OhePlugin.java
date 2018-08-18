@@ -34,11 +34,11 @@ import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.command.ChangePropertyCommand;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.SequenceCommand;
+import org.openstreetmap.josm.data.UndoRedoHandler;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MainMenu;
@@ -46,6 +46,7 @@ import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
 import org.openstreetmap.josm.plugins.ohe.gui.OheDialogPanel;
+import org.openstreetmap.josm.spi.preferences.Config;
 import org.openstreetmap.josm.tools.GBC;
 import org.openstreetmap.josm.tools.Shortcut;
 
@@ -56,7 +57,7 @@ public class OhePlugin extends Plugin {
     
     /**
      * Strings for choosing which key of an object with given tags should be
-     * edited, the order is referencing the preference of the keys, String[] ->
+     * edited, the order is referencing the preference of the keys, String[] -&gt;
      * {key, value, key-to-edit} key and value can contain regular expressions
      */
     private final String[][] TAG_EDIT_STRINGS = new String[][] {
@@ -259,7 +260,7 @@ public class OhePlugin extends Plugin {
             }
 
             // load the preference for the clocksystem (12h/24h)
-            ClockSystem clockSystem = ClockSystem.valueOf(Main.pref.get("ohe.clocksystem",
+            ClockSystem clockSystem = ClockSystem.valueOf(Config.getPref().get("ohe.clocksystem",
                     ClockSystem.getClockSystem(Locale.getDefault()).toString()));
 
             JCheckBox useTwelveHourClock = new JCheckBox(tr("Display clock in 12h mode."),
@@ -274,7 +275,7 @@ public class OhePlugin extends Plugin {
 
             JOptionPane optionPane = new JOptionPane(dlgPanel, JOptionPane.QUESTION_MESSAGE,
                     JOptionPane.OK_CANCEL_OPTION);
-            JDialog dlg = optionPane.createDialog(Main.parent, tr("Choose key"));
+            JDialog dlg = optionPane.createDialog(MainApplication.getMainFrame(), tr("Choose key"));
             dlg.pack();
             dlg.setResizable(true);
             dlg.setVisible(true);
@@ -294,14 +295,14 @@ public class OhePlugin extends Plugin {
                 return;
 
             // save the value for the clocksystem (12h/24h)
-            Main.pref.put("ohe.clocksystem", (useTwelveHourClock.isSelected() ? ClockSystem.TWELVE_HOURS
+            Config.getPref().put("ohe.clocksystem", (useTwelveHourClock.isSelected() ? ClockSystem.TWELVE_HOURS
                     : ClockSystem.TWENTYFOUR_HOURS).toString());
 
             OheDialogPanel panel = new OheDialogPanel(OhePlugin.this, keyToEdit, valuesToEdit,
                     useTwelveHourClock.isSelected() ? ClockSystem.TWELVE_HOURS : ClockSystem.TWENTYFOUR_HOURS);
 
             optionPane = new JOptionPane(panel, JOptionPane.PLAIN_MESSAGE, JOptionPane.OK_CANCEL_OPTION);
-            dlg = optionPane.createDialog(Main.parent, tr("Edit"));
+            dlg = optionPane.createDialog(MainApplication.getMainFrame(), tr("Edit"));
             dlg.setResizable(true);
             dlg.setVisible(true);
 
@@ -327,7 +328,7 @@ public class OhePlugin extends Plugin {
             if (key.equals(newkey) && tr("<different>").equals(value))
                 return;
             if (key.equals(newkey) || value == null) {
-                Main.main.undoRedo.add(new ChangePropertyCommand(selection, newkey, value));
+                UndoRedoHandler.getInstance().add(new ChangePropertyCommand(selection, newkey, value));
             } else {
                 Collection<Command> commands = new Vector<>();
                 commands.add(new ChangePropertyCommand(selection, key, null));
@@ -351,7 +352,7 @@ public class OhePlugin extends Plugin {
                 } else {
                     commands.add(new ChangePropertyCommand(selection, newkey, value));
                 }
-                Main.main.undoRedo.add(new SequenceCommand(trn("Change properties of up to {0} object",
+                UndoRedoHandler.getInstance().add(new SequenceCommand(trn("Change properties of up to {0} object",
                         "Change properties of up to {0} objects", selection.size(), selection.size()), commands));
             }
         }

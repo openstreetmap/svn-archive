@@ -17,7 +17,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.plugins.ohe.ClockSystem;
 import org.openstreetmap.josm.plugins.ohe.OhePlugin;
 import org.openstreetmap.josm.plugins.ohe.OpeningTimeUtils;

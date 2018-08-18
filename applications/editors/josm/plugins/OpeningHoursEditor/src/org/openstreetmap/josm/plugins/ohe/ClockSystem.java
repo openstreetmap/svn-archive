@@ -5,7 +5,6 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.Locale;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.tools.Logging;
 
 /**

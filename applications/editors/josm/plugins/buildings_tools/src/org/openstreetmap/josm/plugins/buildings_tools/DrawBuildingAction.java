@@ -1,7 +1,7 @@
 // License: GPL. For details, see LICENSE file.
-package buildings_tools;
+package org.openstreetmap.josm.plugins.buildings_tools;
 
-import static buildings_tools.BuildingsToolsPlugin.latlon2eastNorth;
+import static org.openstreetmap.josm.plugins.buildings_tools.BuildingsToolsPlugin.latlon2eastNorth;
 import static org.openstreetmap.josm.tools.I18n.marktr;
 import static org.openstreetmap.josm.tools.I18n.tr;
 

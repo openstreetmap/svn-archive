@@ -1,5 +1,5 @@
 // License: GPL. For details, see LICENSE file.
-package buildings_tools;
+package org.openstreetmap.josm.plugins.buildings_tools;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
@@ -9,7 +9,6 @@ import java.awt.event.KeyEvent;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.tools.Shortcut;
 
-@SuppressWarnings("serial")
 public class BuildingRectangleAction extends JosmAction {
 
     public BuildingRectangleAction() {

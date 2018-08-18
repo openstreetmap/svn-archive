@@ -1,5 +1,5 @@
 // License: GPL. For details, see LICENSE file.
-package buildings_tools;
+package org.openstreetmap.josm.plugins.buildings_tools;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
@@ -16,7 +16,6 @@ import javax.swing.JRadioButton;
 
 import org.openstreetmap.josm.tools.GBC;
 
-@SuppressWarnings("serial")
 public class BuildingSizeDialog extends MyDialog {
     private final JFormattedTextField twidth = new JFormattedTextField(NumberFormat.getInstance());
     private final JFormattedTextField tlenstep = new JFormattedTextField(NumberFormat.getInstance());

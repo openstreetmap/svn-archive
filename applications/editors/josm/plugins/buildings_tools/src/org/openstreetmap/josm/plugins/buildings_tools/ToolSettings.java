@@ -1,5 +1,5 @@
 // License: GPL. For details, see LICENSE file.
-package buildings_tools;
+package org.openstreetmap.josm.plugins.buildings_tools;
 
 import java.util.ArrayList;
 import java.util.Arrays;

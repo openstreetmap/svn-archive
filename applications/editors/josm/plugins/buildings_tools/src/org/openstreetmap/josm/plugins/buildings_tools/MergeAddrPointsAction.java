@@ -1,5 +1,5 @@
 // License: GPL. For details, see LICENSE file.
-package buildings_tools;
+package org.openstreetmap.josm.plugins.buildings_tools;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 import static org.openstreetmap.josm.tools.I18n.trn;
@@ -33,7 +33,6 @@ import org.openstreetmap.josm.gui.Notification;
 import org.openstreetmap.josm.tools.Geometry;
 import org.openstreetmap.josm.tools.Shortcut;
 
-@SuppressWarnings("serial")
 public class MergeAddrPointsAction extends JosmAction {
 
     public MergeAddrPointsAction() {

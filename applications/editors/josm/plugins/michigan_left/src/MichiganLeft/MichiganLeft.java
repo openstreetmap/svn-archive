@@ -14,11 +14,11 @@ import java.util.LinkedList;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.command.AddCommand;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.SequenceCommand;
+import org.openstreetmap.josm.data.UndoRedoHandler;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
@@ -75,7 +75,7 @@ public class MichiganLeft extends Plugin {
             }
 
             if ((ways != 4) && (ways != 5)) {
-                JOptionPane.showMessageDialog(Main.parent,
+                JOptionPane.showMessageDialog(MainApplication.getMainFrame(),
                     tr("Please select 4 or 5 ways to assign no left turns."));
                 return;
             }
@@ -91,7 +91,7 @@ public class MichiganLeft extends Plugin {
                     }
                 }
                 if (extremNodes.size() != 4) {
-                    JOptionPane.showMessageDialog(Main.parent,
+                    JOptionPane.showMessageDialog(MainApplication.getMainFrame(),
                         tr("Please select 4 ways that form a closed relation."));
                     return;
                 }
@@ -115,7 +115,7 @@ public class MichiganLeft extends Plugin {
                         }
                     }
                     if (!found) {
-                        JOptionPane.showMessageDialog(Main.parent,
+                        JOptionPane.showMessageDialog(MainApplication.getMainFrame(),
                             tr("Unable to order the ways. Please verify their directions"));
                         return;
                     }
@@ -130,7 +130,7 @@ public class MichiganLeft extends Plugin {
                     cmds.add(new AddCommand(ds, buildRelation(firstWay, lastWay, lastNode)));
                 }
                 Command c = new SequenceCommand(tr("Create Michigan left turn restriction"), cmds);
-                Main.main.undoRedo.add(c);
+                UndoRedoHandler.getInstance().add(c);
                 cmds.clear();
             }
 
@@ -156,7 +156,7 @@ public class MichiganLeft extends Plugin {
                 }
 
                 if (viaNodes.size() != 2) {
-                    JOptionPane.showMessageDialog(Main.parent,
+                    JOptionPane.showMessageDialog(MainApplication.getMainFrame(),
                         tr("Unable to find via nodes. Please check your selection"));
                     return;
                 }
@@ -197,7 +197,7 @@ public class MichiganLeft extends Plugin {
                     }
                 }
                 Command c = new SequenceCommand(tr("Create Michigan left turn restriction"), cmds);
-                Main.main.undoRedo.add(c);
+                UndoRedoHandler.getInstance().add(c);
                 cmds.clear();
             }
         }

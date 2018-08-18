@@ -22,10 +22,10 @@ import java.util.Objects;
 import javax.swing.Icon;
 import javax.swing.JOptionPane;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.command.AddCommand;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.SequenceCommand;
+import org.openstreetmap.josm.data.UndoRedoHandler;
 import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.DefaultNameFormatter;
@@ -33,6 +33,7 @@ import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.data.preferences.IntegerProperty;
+import org.openstreetmap.josm.data.projection.ProjectionRegistry;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.NavigatableComponent;
@@ -260,10 +261,10 @@ public class Spline {
             EastNorth cb = b.add(sn.cprev);
             if (!a.equalsEpsilon(ca, EPSILON) || !b.equalsEpsilon(cb, EPSILON))
                 for (int i = 1; i < detail; i++) {
-                    Node n = new Node(Main.getProjection().eastNorth2latlon(
+                    Node n = new Node(ProjectionRegistry.getProjection().eastNorth2latlon(
                             cubicBezier(a, ca, cb, b, (double) i / detail)));
                     if (n.getCoor().isOutSideWorld()) {
-                        JOptionPane.showMessageDialog(Main.parent, tr("Spline goes outside of the world."));
+                        JOptionPane.showMessageDialog(MainApplication.getMainFrame(), tr("Spline goes outside of the world."));
                         return;
                     }
                     cmds.add(new AddCommand(ds, n));
@@ -275,7 +276,7 @@ public class Spline {
         }
         if (!cmds.isEmpty())
             cmds.add(new AddCommand(ds, w));
-        MainApplication.undoRedo.add(new FinishSplineCommand(cmds));
+        UndoRedoHandler.getInstance().add(new FinishSplineCommand(cmds));
     }
 
     /**

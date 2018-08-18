@@ -18,16 +18,17 @@ import java.util.Map;
 
 import javax.swing.AbstractAction;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.mapmode.MapMode;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.MoveCommand;
 import org.openstreetmap.josm.data.Bounds;
+import org.openstreetmap.josm.data.UndoRedoHandler;
 import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.visitor.paint.MapPaintSettings;
 import org.openstreetmap.josm.data.preferences.NamedColorProperty;
+import org.openstreetmap.josm.data.projection.ProjectionRegistry;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.gui.MapView;
@@ -44,6 +45,7 @@ import org.openstreetmap.josm.gui.util.KeyPressReleaseListener;
 import org.openstreetmap.josm.gui.util.ModifierExListener;
 import org.openstreetmap.josm.plugins.Splinex.Spline.PointHandle;
 import org.openstreetmap.josm.plugins.Splinex.Spline.SplinePoint;
+import org.openstreetmap.josm.spi.preferences.Config;
 import org.openstreetmap.josm.tools.ImageProvider;
 import org.openstreetmap.josm.tools.Logging;
 import org.openstreetmap.josm.tools.Shortcut;
@@ -108,10 +110,10 @@ public class DrawSplineAction extends MapMode implements MapViewPaintable, KeyPr
     @Override
     protected void readPreferences() {
         rubberLineColor = new NamedColorProperty(marktr("helper line"), Color.RED).get();
-        initialMoveDelay = Main.pref.getInt("edit.initial-move-", 200);
-        initialMoveThreshold = Main.pref.getInt("edit.initial-move-threshold", 5);
+        initialMoveDelay = Config.getPref().getInt("edit.initial-move-", 200);
+        initialMoveThreshold = Config.getPref().getInt("edit.initial-move-threshold", 5);
         initialMoveThreshold *= initialMoveThreshold;
-        drawHelperLine = Main.pref.getBoolean("draw.helper-line", true);
+        drawHelperLine = Config.getPref().getBoolean("draw.helper-line", true);
     }
 
     @Override
@@ -164,7 +166,7 @@ public class DrawSplineAction extends MapMode implements MapViewPaintable, KeyPr
         if (e.getClickCount() == 2) {
             if (!spl.isClosed() && spl.nodeCount() > 1 && ph != null && ph.point == SplinePoint.ENDPOINT
                     && ((ph.idx == 0 && direction == 1) || (ph.idx == spl.nodeCount() - 1 && direction == -1))) {
-                MainApplication.undoRedo.add(spl.new CloseSplineCommand());
+                UndoRedoHandler.getInstance().add(spl.new CloseSplineCommand());
                 return;
             }
             spl.finishSpline();
@@ -184,8 +186,8 @@ public class DrawSplineAction extends MapMode implements MapViewPaintable, KeyPr
                         && Math.abs(ph.sn.cprev.east() + ph.sn.cnext.east()) < EPSILON && Math.abs(ph.sn.cprev.north()
                         + ph.sn.cnext.north()) < EPSILON);
             }
-            if (ph.point == SplinePoint.ENDPOINT && !MainApplication.undoRedo.commands.isEmpty()) {
-                Command cmd = MainApplication.undoRedo.commands.getLast();
+            if (ph.point == SplinePoint.ENDPOINT && !UndoRedoHandler.getInstance().commands.isEmpty()) {
+                Command cmd = UndoRedoHandler.getInstance().commands.getLast();
                 if (cmd instanceof MoveCommand) {
                     mc = (MoveCommand) cmd;
                     Collection<Node> pp = mc.getParticipatingPrimitives();
@@ -195,8 +197,8 @@ public class DrawSplineAction extends MapMode implements MapViewPaintable, KeyPr
                         mc.changeStartPoint(ph.sn.node.getEastNorth());
                 }
             }
-            if (ph.point != SplinePoint.ENDPOINT && !MainApplication.undoRedo.commands.isEmpty()) {
-                Command cmd = MainApplication.undoRedo.commands.getLast();
+            if (ph.point != SplinePoint.ENDPOINT && !UndoRedoHandler.getInstance().commands.isEmpty()) {
+                Command cmd = UndoRedoHandler.getInstance().commands.getLast();
                 if (!(cmd instanceof Spline.EditSplineCommand && ((Spline.EditSplineCommand) cmd).sn == ph.sn))
                     dragControl = true;
             }
@@ -223,7 +225,7 @@ public class DrawSplineAction extends MapMode implements MapViewPaintable, KeyPr
             existing = false;
         }
         int idx = direction == -1 ? 0 : spl.nodeCount();
-        MainApplication.undoRedo.add(spl.new AddSplineNodeCommand(new Spline.SNode(n), existing, idx));
+        UndoRedoHandler.getInstance().add(spl.new AddSplineNodeCommand(new Spline.SNode(n), existing, idx));
         ph = spl.new PointHandle(idx, direction == -1 ? SplinePoint.CONTROL_PREV : SplinePoint.CONTROL_NEXT);
         lockCounterpart = true;
         MainApplication.getMap().repaint();
@@ -256,12 +258,12 @@ public class DrawSplineAction extends MapMode implements MapViewPaintable, KeyPr
         if (clickPos != null && clickPos.distanceSq(e.getPoint()) < initialMoveThreshold)
             return;
         EastNorth en = MainApplication.getMap().mapView.getEastNorth(e.getX(), e.getY());
-        if (Main.getProjection().eastNorth2latlon(en).isOutSideWorld())
+        if (ProjectionRegistry.getProjection().eastNorth2latlon(en).isOutSideWorld())
             return;
         if (dragSpline) {
             if (mc == null) {
                 mc = new MoveCommand(spl.getNodes(), MainApplication.getMap().mapView.getEastNorth(clickPos.x, clickPos.y), en);
-                MainApplication.undoRedo.add(mc);
+                UndoRedoHandler.getInstance().add(mc);
                 clickPos = null;
             } else
                 mc.applyVectorTo(en);
@@ -273,12 +275,12 @@ public class DrawSplineAction extends MapMode implements MapViewPaintable, KeyPr
         if (ph.point == SplinePoint.ENDPOINT) {
             if (mc == null) {
                 mc = new MoveCommand(ph.sn.node, ph.sn.node.getEastNorth(), en);
-                MainApplication.undoRedo.add(mc);
+                UndoRedoHandler.getInstance().add(mc);
             } else
                 mc.applyVectorTo(en);
         } else {
             if (dragControl) {
-                MainApplication.undoRedo.add(new Spline.EditSplineCommand(ph.sn));
+                UndoRedoHandler.getInstance().add(new Spline.EditSplineCommand(ph.sn));
                 dragControl = false;
             }
             ph.movePoint(en);
@@ -399,7 +401,7 @@ public class DrawSplineAction extends MapMode implements MapViewPaintable, KeyPr
     public static class BackSpaceAction extends AbstractAction {
         @Override
         public void actionPerformed(ActionEvent e) {
-            MainApplication.undoRedo.undo();
+            UndoRedoHandler.getInstance().undo();
         }
     }
 
@@ -447,7 +449,7 @@ public class DrawSplineAction extends MapMode implements MapViewPaintable, KeyPr
             Spline spl = ph.getSpline();
             if (spl.nodeCount() == 3 && spl.isClosed() && ph.idx == 1)
                 return; // Don't allow to delete node when it results with two-node closed spline
-            MainApplication.undoRedo.add(spl.new DeleteSplineNodeCommand(ph.idx));
+            UndoRedoHandler.getInstance().add(spl.new DeleteSplineNodeCommand(ph.idx));
             e.consume();
         }
         if (e.getKeyCode() == KeyEvent.VK_ESCAPE && direction != 0) {

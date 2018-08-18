@@ -1,7 +1,6 @@
 // License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.Splinex;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.tools.Logging;
 
 public class SplineHitTest {

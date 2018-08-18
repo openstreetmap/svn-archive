@@ -9,8 +9,8 @@ import java.io.IOException;
 
 import javax.swing.JOptionPane;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.ExtensionFileFilter;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.io.importexport.FileExporter;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.plugins.trustosm.TrustOSMplugin;
@@ -41,7 +41,7 @@ public class SigExporter extends FileExporter {
             fo.flush();
         } catch (IOException x) {
             x.printStackTrace();
-            JOptionPane.showMessageDialog(Main.parent, tr("Error while exporting {0}:\n{1}", fn, x.getMessage()),
+            JOptionPane.showMessageDialog(MainApplication.getMainFrame(), tr("Error while exporting {0}:\n{1}", fn, x.getMessage()),
                     tr("Error"), JOptionPane.ERROR_MESSAGE);
         }
     }

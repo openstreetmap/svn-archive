@@ -15,10 +15,10 @@ import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.preferences.DefaultTabPreferenceSetting;
 import org.openstreetmap.josm.gui.preferences.PreferenceTabbedPane;
 import org.openstreetmap.josm.plugins.trustosm.TrustOSMplugin;
+import org.openstreetmap.josm.spi.preferences.Config;
 import org.openstreetmap.josm.tools.GBC;
 
 public class TrustPreferenceEditor extends DefaultTabPreferenceSetting {
@@ -49,7 +49,7 @@ public class TrustPreferenceEditor extends DefaultTabPreferenceSetting {
         gpgdirGroup.add(separateHomedir);
         gpgdirGroup.add(defaultHomedir);
 
-        if (Main.pref.getBoolean("trustosm.gpg.separateHomedir")) {
+        if (Config.getPref().getBoolean("trustosm.gpg.separateHomedir")) {
             separateHomedir.setSelected(true);
         } else
             defaultHomedir.setSelected(true);
@@ -69,8 +69,8 @@ public class TrustPreferenceEditor extends DefaultTabPreferenceSetting {
 
     @Override
     public boolean ok() {
-        Main.pref.putBoolean("trustosm.gpg.showSignedDeleted", showSignedDeleted.isSelected());
-        Main.pref.putBoolean("trustosm.gpg.separateHomedir", separateHomedir.isSelected());
+        Config.getPref().putBoolean("trustosm.gpg.showSignedDeleted", showSignedDeleted.isSelected());
+        Config.getPref().putBoolean("trustosm.gpg.separateHomedir", separateHomedir.isSelected());
         return false;
     }
 }

@@ -84,10 +84,11 @@ import org.bouncycastle.openpgp.operator.jcajce.JcaPGPKeyPair;
 import org.bouncycastle.openpgp.operator.jcajce.JcePBESecretKeyDecryptorBuilder;
 import org.bouncycastle.openpgp.operator.jcajce.JcePBESecretKeyEncryptorBuilder;
 import org.bouncycastle.util.encoders.Hex;
-import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.data.Preferences;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.plugins.trustosm.data.TrustNode;
 import org.openstreetmap.josm.plugins.trustosm.data.TrustOsmPrimitive;
 import org.openstreetmap.josm.plugins.trustosm.data.TrustWay;
@@ -157,7 +158,7 @@ public class TrustGPG {
             } catch (Exception e) {
                 Logging.error(e);
                 Logging.error("GPG Key Ring File could not be created in: "+
-                        Main.pref.getPluginsDirectory().getPath() + "/trustosm/gnupg/secring.gpg");
+                        Preferences.main().getPluginsDirectory().getPath() + "/trustosm/gnupg/secring.gpg");
             }
         }
         //
@@ -248,7 +249,7 @@ public class TrustGPG {
         p.add(createButton);
         p.add(Box.createRigidArea(d));
 
-        int n = JOptionPane.showOptionDialog(Main.parent, p, tr("Select a Key to sign"),
+        int n = JOptionPane.showOptionDialog(MainApplication.getMainFrame(), p, tr("Select a Key to sign"),
                 JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, ImageProvider.get("keyring"), null, null);
 
         if (n == JOptionPane.OK_OPTION) {
@@ -268,14 +269,14 @@ public class TrustGPG {
         FileInputStream pubIn;
         FileInputStream secIn;
         try {
-            pubIn = new FileInputStream(Main.pref.getPluginsDirectory().getPath() + "/trustosm/gnupg/secring.gpg");
-            secIn = new FileInputStream(Main.pref.getPluginsDirectory().getPath() + "/trustosm/gnupg/pubring.gpg");
+            pubIn = new FileInputStream(Preferences.main().getPluginsDirectory().getPath() + "/trustosm/gnupg/secring.gpg");
+            secIn = new FileInputStream(Preferences.main().getPluginsDirectory().getPath() + "/trustosm/gnupg/pubring.gpg");
             //pubIn = new FileInputStream("/tmp/secring.gpg");
             //secIn = new FileInputStream("/tmp/pubring.gpg");
             pgpSec = new BcPGPSecretKeyRingCollection(PGPUtil.getDecoderStream(pubIn));
             pgpPub = new BcPGPPublicKeyRingCollection(PGPUtil.getDecoderStream(secIn));
         } catch (FileNotFoundException e) {
-            System.err.println("No gpg files found in "+Main.pref.getPluginsDirectory().getPath() + "/trustosm/gnupg/secring.gpg");
+            System.err.println("No gpg files found in "+Preferences.main().getPluginsDirectory().getPath() + "/trustosm/gnupg/secring.gpg");
             pgpSec = null;
             pgpPub = null;
         }
@@ -283,7 +284,7 @@ public class TrustGPG {
     }
 
     public void writeGpgFiles() throws FileNotFoundException, IOException {
-        String path = Main.pref.getPluginsDirectory().getPath();
+        String path = Preferences.main().getPluginsDirectory().getPath();
         try (FileOutputStream pubOut = new FileOutputStream(path + "/trustosm/gnupg/pubring.gpg");
                 FileOutputStream secOut = new FileOutputStream(path + "/trustosm/gnupg/secring.gpg")) {
             pgpSec.encode(secOut);
@@ -312,7 +313,7 @@ public class TrustGPG {
         }
 
         /*final JPasswordField passwordField = new JPasswordField(10);
-        JOptionPane.showMessageDialog(Main.parent, passwordField, "Enter password", JOptionPane.OK_OPTION, ImageProvider.get("lock"));
+        JOptionPane.showMessageDialog(MainApplication.getMainFrame(), passwordField, "Enter password", JOptionPane.OK_OPTION, ImageProvider.get("lock"));
         password = passwordField.getPassword();
          */
     }
@@ -347,7 +348,7 @@ public class TrustGPG {
 
     public void invalidIDWarning(OsmPrimitive osm) {
         // CHECKSTYLE.OFF: LineLength
-        JOptionPane.showMessageDialog(Main.parent,
+        JOptionPane.showMessageDialog(MainApplication.getMainFrame(),
                 tr("The object with the ID \"{0}\" ({1}) is newly created.\nYou can not sign it, because the signature would lose the ID-Reference after uploading it to the OSM-server.",
                         osm.getUniqueId(), osm.toString()),
                 tr("Signing canceled!"), JOptionPane.ERROR_MESSAGE);
@@ -475,7 +476,7 @@ public class TrustGPG {
         p.add(meters, GBC.std());
         p.add(new JLabel(tr("meters")), GBC.eol());
 
-        int n = JOptionPane.showOptionDialog(Main.parent, p, tr("Accuracy"),
+        int n = JOptionPane.showOptionDialog(MainApplication.getMainFrame(), p, tr("Accuracy"),
                 JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, null, null);
 
         if (n == JOptionPane.OK_OPTION) {
@@ -502,7 +503,7 @@ public class TrustGPG {
         JCheckBox trusted = new JCheckBox(tr("Trusted persons told me"));
         p.add(trusted, GBC.eol());
 
-        int n = JOptionPane.showOptionDialog(Main.parent, p, tr("Which source did you use?"),
+        int n = JOptionPane.showOptionDialog(MainApplication.getMainFrame(), p, tr("Which source did you use?"),
                 JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, null, null);
 
         if (n == JOptionPane.OK_OPTION) {
@@ -698,14 +699,14 @@ public class TrustGPG {
         //        sp.setPreferredSize(new Dimension(0, 200));
         //        metaPanel.add(sp);
 
-        JOptionPane.showMessageDialog(Main.parent, p, tr("PGP-Key details"), JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(MainApplication.getMainFrame(), p, tr("PGP-Key details"), JOptionPane.INFORMATION_MESSAGE);
     }
 
     public PGPSecretKey generateKey()
             throws NoSuchAlgorithmException, NoSuchProviderException, PGPException, FileNotFoundException, IOException {
 
         JTextField userId = new JTextField();
-        NameGenerator nameGen = new NameGenerator(Main.pref.getPluginsDirectory().getPath()+"/trustosm/resources/syllables.txt");
+        NameGenerator nameGen = new NameGenerator(Preferences.main().getPluginsDirectory().getPath()+"/trustosm/resources/syllables.txt");
         userId.setText(nameGen.compose(3));
 
         final String[] sizes = {"1024", "2048", "3072", "4096"};
@@ -792,7 +793,7 @@ public class TrustGPG {
                 6, 6,        //initX, initY
                 16, 6);      //xPad, yPad
 
-        int n = JOptionPane.showOptionDialog(Main.parent, p, tr("Create a new signing key"),
+        int n = JOptionPane.showOptionDialog(MainApplication.getMainFrame(), p, tr("Create a new signing key"),
                 JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, null, null);
 
         if (n != JOptionPane.OK_OPTION)

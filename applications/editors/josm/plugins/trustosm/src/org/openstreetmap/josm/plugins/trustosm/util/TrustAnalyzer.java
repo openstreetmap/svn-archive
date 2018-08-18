@@ -11,9 +11,9 @@ import java.util.Map;
 import javax.swing.JOptionPane;
 
 import org.bouncycastle.openpgp.PGPSignature;
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.plugins.trustosm.TrustOSMplugin;
 import org.openstreetmap.josm.plugins.trustosm.data.TrustNode;
 import org.openstreetmap.josm.plugins.trustosm.data.TrustOsmPrimitive;
@@ -27,7 +27,7 @@ public final class TrustAnalyzer {
     }
 
     public static void showManipulationWarning() {
-        JOptionPane.showMessageDialog(Main.parent, tr("The Signature is broken!"), tr("Manipulation Warning"), JOptionPane.WARNING_MESSAGE);
+        JOptionPane.showMessageDialog(MainApplication.getMainFrame(), tr("The Signature is broken!"), tr("Manipulation Warning"), JOptionPane.WARNING_MESSAGE);
     }
 
     public static double computeReputation(TrustOsmPrimitive trust, Map<String, List<PGPSignature>> textsigs) {

@@ -55,14 +55,14 @@ public class SigImporter extends FileImporter {
         int missingCount = missingData.size();
         int itemCount = trustitems.size();
         if (missingCount == 0) {
-            JOptionPane.showMessageDialog(Main.parent, tr("{0} Signatures loaded. All referenced OSM objects found.",itemCount));
+            JOptionPane.showMessageDialog(MainApplication.getMainFrame(), tr("{0} Signatures loaded. All referenced OSM objects found.",itemCount));
         } else {
-            int n = JOptionPane.showOptionDialog(Main.parent,
+            int n = JOptionPane.showOptionDialog(MainApplication.getMainFrame(),
             tr("{0} of {1} OSM objects are referenced but not there.\nDo you want to load them from OSM-Server?",missingCount,itemCount),
             tr("Load objects from server"), JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, null, null);
 
             if (n == JOptionPane.YES_OPTION) {
-                Main.worker.submit(new DownloadSignedOsmDataTask(missingData, Main.main.getEditLayer()));
+                Main.worker.submit(new DownloadSignedOsmDataTask(missingData, OsmDataManager.getInstance().getEditLayer()));
             }
         }
          */

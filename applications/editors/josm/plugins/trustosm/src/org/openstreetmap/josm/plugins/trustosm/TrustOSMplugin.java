@@ -26,8 +26,8 @@ import javax.crypto.spec.SecretKeySpec;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.ExtensionFileFilter;
+import org.openstreetmap.josm.data.Preferences;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MainMenu;
 import org.openstreetmap.josm.gui.MapFrame;
@@ -41,6 +41,7 @@ import org.openstreetmap.josm.plugins.trustosm.gui.dialogs.TrustPreferenceEditor
 import org.openstreetmap.josm.plugins.trustosm.io.SigExporter;
 import org.openstreetmap.josm.plugins.trustosm.io.SigImporter;
 import org.openstreetmap.josm.plugins.trustosm.util.TrustGPG;
+import org.openstreetmap.josm.spi.preferences.Config;
 import org.openstreetmap.josm.tools.Logging;
 
 public class TrustOSMplugin extends Plugin {
@@ -64,9 +65,9 @@ public class TrustOSMplugin extends Plugin {
         // init the plugin
         super(info);
         // check if the jarlibs are already extracted or not and extract them if not
-        /*if (!Main.pref.getBoolean("trustosm.jarLibsExtracted")) {
-            Main.pref.put("trustosm.jarLibsExtracted", extractFiles("trustosm","lib"));
-            Main.pref.put("trustosm.jarLibsExtracted", extractFiles("trustosm","resources"));
+        /*if (!Config.getPref().getBoolean("trustosm.jarLibsExtracted")) {
+            Config.getPref().put("trustosm.jarLibsExtracted", extractFiles("trustosm","lib"));
+            Config.getPref().put("trustosm.jarLibsExtracted", extractFiles("trustosm","resources"));
         }*/
         extractFiles("trustosm", "lib");
         extractFiles("trustosm", "resources");
@@ -160,8 +161,8 @@ public class TrustOSMplugin extends Plugin {
 
         String cmd = "sh -c sudo -S mv "+sysSecPath+"/local_policy.jar "+sysSecPath+"/local_policy.jar.restricted";
         /*        String cmd2 = "sudo -S mv "+sysSecPath+"/US_export_policy.jar "+sysSecPath+"/US_export_policy.jar.restricted";
-        String cmd3 = "sudo -S cp "+Main.pref.getPluginsDirectory().getPath()+"/trustosm/jce/US_export_policy.jar "+sysSecPath;
-        String cmd4 = "sudo -S cp "+Main.pref.getPluginsDirectory().getPath()+"/trustosm/jce/local_policy.jar "+sysSecPath;
+        String cmd3 = "sudo -S cp "+Config.getPref().getPluginsDirectory().getPath()+"/trustosm/jce/US_export_policy.jar "+sysSecPath;
+        String cmd4 = "sudo -S cp "+Config.getPref().getPluginsDirectory().getPath()+"/trustosm/jce/local_policy.jar "+sysSecPath;
 
 
         //System.out.println (cmd);
@@ -225,7 +226,7 @@ public class TrustOSMplugin extends Plugin {
 
     public static boolean extractFiles(String pluginname, String extractDir) {
         if (extractDir == null) extractDir = "lib";
-        String path = Main.pref.getPluginsDirectory().getPath();
+        String path = Preferences.main().getPluginsDirectory().getPath();
         try (JarFile jar = new JarFile(path+"/"+pluginname+".jar")) {
             Enumeration<JarEntry> entries = jar.entries();
             InputStream is;
@@ -264,12 +265,12 @@ public class TrustOSMplugin extends Plugin {
     }
 
     public static void setSettings() {
-        Map<String, String> prefs = Main.pref.getAllPrefix("trustosm.");
+        Map<String, String> prefs = Preferences.main().getAllPrefix("trustosm.");
 
         // if setting isn't present, we set a default
         // This makes sense for example when we start the plugin for the first time
-        if (!prefs.containsKey("trustosm.gpg")) Main.pref.put("trustosm.gpg", "gpg");
-        if (!prefs.containsKey("trustosm.gpg.separateHomedir")) Main.pref.putBoolean("trustosm.gpg.separateHomedir", true);
+        if (!prefs.containsKey("trustosm.gpg")) Config.getPref().put("trustosm.gpg", "gpg");
+        if (!prefs.containsKey("trustosm.gpg.separateHomedir")) Config.getPref().putBoolean("trustosm.gpg.separateHomedir", true);
     }
 
     @Override
@@ -286,6 +287,6 @@ public class TrustOSMplugin extends Plugin {
     }
 
     public static String getGpgPath() {
-        return Main.pref.getPluginsDirectory().getPath() + "/trustosm/gnupg/";
+        return Preferences.main().getPluginsDirectory().getPath() + "/trustosm/gnupg/";
     }
 }

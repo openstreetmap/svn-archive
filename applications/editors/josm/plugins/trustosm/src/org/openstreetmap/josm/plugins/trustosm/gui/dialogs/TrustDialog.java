@@ -492,7 +492,7 @@ public class TrustDialog extends ToggleDialog implements SelectionChangedListene
             JPanel content = new JPanel();
             content.setMaximumSize(new Dimension(600, 500));
             content.add(scroller);
-            JOptionPane.showMessageDialog(Main.parent,content, tr("Clearsigned Signature"), JOptionPane.PLAIN_MESSAGE);
+            JOptionPane.showMessageDialog(MainApplication.getMainFrame(),content, tr("Clearsigned Signature"), JOptionPane.PLAIN_MESSAGE);
         }
     }
      */

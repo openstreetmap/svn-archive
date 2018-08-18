@@ -20,10 +20,10 @@ import javax.swing.tree.TreePath;
 import org.bouncycastle.openpgp.PGPPublicKey;
 import org.bouncycastle.openpgp.PGPSignature;
 import org.jdesktop.swingx.JXTreeTable;
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.osm.DefaultNameFormatter;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.gui.ExtendedDialog;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.plugins.trustosm.TrustOSMplugin;
 import org.openstreetmap.josm.plugins.trustosm.data.TrustNode;
 import org.openstreetmap.josm.plugins.trustosm.data.TrustOsmPrimitive;
@@ -98,7 +98,7 @@ public final class TrustSignaturesDialog {
         JScrollPane scroller = new JScrollPane(p);
         scroller.setPreferredSize(new Dimension(700, 500));
         String[] buttons = {tr("Ok")};
-        ExtendedDialog info = new ExtendedDialog(Main.parent, tr("Signature Info"), buttons, false);
+        ExtendedDialog info = new ExtendedDialog(MainApplication.getMainFrame(), tr("Signature Info"), buttons, false);
         info.setContent(scroller, false);
         info.showDialog();
     }
@@ -163,7 +163,7 @@ public final class TrustSignaturesDialog {
             uid = (String)i.next();
 
         p.add(createKeyButton(uid,pub.getKeyID()));
-        JOptionPane.showMessageDialog(Main.parent,p, tr("Key Signatures"), JOptionPane.PLAIN_MESSAGE);
+        JOptionPane.showMessageDialog(MainApplication.getMainFrame(),p, tr("Key Signatures"), JOptionPane.PLAIN_MESSAGE);
     }
 
 

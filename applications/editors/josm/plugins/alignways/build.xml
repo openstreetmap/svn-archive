@@ -9,7 +9,7 @@
          See https://josm.openstreetmap.de/wiki/DevelopersGuide/DevelopingPlugins
     -->
     <property name="plugin.author" value="Attila Szász"/>
-    <property name="plugin.class" value="com.tilusnet.josm.plugins.alignways.AlignWaysPlugin"/>
+    <property name="plugin.class" value="org.openstreetmap.josm.plugins.alignways.AlignWaysPlugin"/>
     <property name="plugin.description" value="Makes a pair of selected way segments parallel by rotating one of them around a chosen pivot."/>
     <property name="plugin.icon" value="images/alignways.png"/>
     <property name="plugin.link" value="https://wiki.openstreetmap.org/wiki/JOSM/Plugins/AlignWayS"/>

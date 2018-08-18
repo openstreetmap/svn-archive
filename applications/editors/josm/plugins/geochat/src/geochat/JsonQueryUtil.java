@@ -12,8 +12,8 @@ import javax.json.Json;
 import javax.json.JsonException;
 import javax.json.JsonObject;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.MainApplication;
+import org.openstreetmap.josm.spi.preferences.Config;
 import org.openstreetmap.josm.tools.Logging;
 
 /**
@@ -31,7 +31,7 @@ public final class JsonQueryUtil implements Runnable {
      */
     public static JsonObject query(String query) throws IOException {
         try {
-            String serverURL = Main.pref.get("geochat.server", "https://zverik.dev.openstreetmap.org/osmochat.php?action=");
+            String serverURL = Config.getPref().get("geochat.server", "https://zverik.dev.openstreetmap.org/osmochat.php?action=");
             URL url = new URL(serverURL + query);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.connect();

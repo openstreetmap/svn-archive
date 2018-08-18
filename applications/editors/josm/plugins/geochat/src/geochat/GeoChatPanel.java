@@ -33,7 +33,6 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.UserIdentityManager;
 import org.openstreetmap.josm.data.coor.LatLon;
@@ -43,6 +42,7 @@ import org.openstreetmap.josm.gui.Notification;
 import org.openstreetmap.josm.gui.dialogs.ToggleDialog;
 import org.openstreetmap.josm.gui.layer.MapViewPaintable;
 import org.openstreetmap.josm.gui.util.GuiHelper;
+import org.openstreetmap.josm.spi.preferences.Config;
 import org.openstreetmap.josm.tools.GBC;
 import org.openstreetmap.josm.tools.Logging;
 
@@ -95,13 +95,13 @@ public class GeoChatPanel extends ToggleDialog implements ChatServerConnectionLi
         // Start threads
         connection = ChatServerConnection.getInstance();
         connection.addListener(this);
-        boolean autoLogin = Main.pref.get("geochat.username", null) == null ? false : Main.pref.getBoolean("geochat.autologin", true);
+        boolean autoLogin = Config.getPref().get("geochat.username", null) == null ? false : Config.getPref().getBoolean("geochat.autologin", true);
         connection.autoLoginWithDelay(autoLogin ? defaultUserName : null);
         updateTitleAlarm();
     }
 
     private String constructUserName() {
-        String userName = Main.pref.get("geochat.username", null); // so the default is null
+        String userName = Config.getPref().get("geochat.username", null); // so the default is null
         if (userName == null)
             userName = UserIdentityManager.getInstance().getUserName();
         if (userName == null)
@@ -130,11 +130,11 @@ public class GeoChatPanel extends ToggleDialog implements ChatServerConnectionLi
         });
         nameField.setPreferredSize(new Dimension(nameField.getPreferredSize().width, loginButton.getPreferredSize().height));
 
-        final JCheckBox autoLoginBox = new JCheckBox(tr("Enable autologin"), Main.pref.getBoolean("geochat.autologin", true));
+        final JCheckBox autoLoginBox = new JCheckBox(tr("Enable autologin"), Config.getPref().getBoolean("geochat.autologin", true));
         autoLoginBox.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Main.pref.putBoolean("geochat.autologin", autoLoginBox.isSelected());
+                Config.getPref().putBoolean("geochat.autologin", autoLoginBox.isSelected());
             }
         });
 
@@ -152,7 +152,7 @@ public class GeoChatPanel extends ToggleDialog implements ChatServerConnectionLi
     @Override
     public void destroy() {
         try {
-            if (Main.pref.getBoolean("geochat.logout.on.close", true)) {
+            if (Config.getPref().getBoolean("geochat.logout.on.close", true)) {
                 connection.removeListener(this);
                 connection.bruteLogout();
             }
@@ -256,7 +256,7 @@ public class GeoChatPanel extends ToggleDialog implements ChatServerConnectionLi
 
     @Override
     public void loggedIn(String userName) {
-        Main.pref.put("geochat.username", userName);
+        Config.getPref().put("geochat.username", userName);
         if (gcPanel.getComponentCount() == 1) {
             GuiHelper.runInEDTAndWait(new Runnable() {
                 @Override

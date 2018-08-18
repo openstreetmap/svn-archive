@@ -18,12 +18,13 @@ import javax.json.JsonArray;
 import javax.json.JsonException;
 import javax.json.JsonObject;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.coor.conversion.DecimalDegreesCoordinateFormat;
 import org.openstreetmap.josm.data.projection.Projection;
+import org.openstreetmap.josm.data.projection.ProjectionRegistry;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MapView;
+import org.openstreetmap.josm.spi.preferences.Config;
 import org.openstreetmap.josm.tools.Logging;
 
 /**
@@ -87,7 +88,7 @@ final class ChatServerConnection {
      * Does not autologin, if userName is null, obviously.
      */
     public void autoLogin(final String userName) {
-        final int uid = Main.pref.getInt("geochat.lastuid", 0);
+        final int uid = Config.getPref().getInt("geochat.lastuid", 0);
         if (uid <= 0) {
             if (userName != null && userName.length() > 1)
                 login(userName);
@@ -172,7 +173,7 @@ final class ChatServerConnection {
     private void login(int userId, String userName) {
         this.userId = userId;
         this.userName = userName;
-        Main.pref.putInt("geochat.lastuid", userId);
+        Config.getPref().putInt("geochat.lastuid", userId);
         for (ChatServerConnectionListener listener : listeners) {
             listener.loggedIn(userName);
         }
@@ -181,7 +182,7 @@ final class ChatServerConnection {
     private void logoutIntl() {
         ChatServerConnection.this.userId = 0;
         ChatServerConnection.this.userName = null;
-        Main.pref.put("geochat.lastuid", null);
+        Config.getPref().put("geochat.lastuid", null);
         for (ChatServerConnectionListener listener : listeners) {
             listener.notLoggedIn(null);
         }
@@ -279,7 +280,7 @@ final class ChatServerConnection {
             return null;
         if (getCurrentZoom() < 10)
             return null;
-        Projection proj = Main.getProjection();
+        Projection proj = ProjectionRegistry.getProjection();
         return proj.eastNorth2latlon(MainApplication.getMap().mapView.getCenter());
     }
 
@@ -327,8 +328,8 @@ final class ChatServerConnection {
 
         @Override
         public void run() {
-            //            lastId = Main.pref.getLong("geochat.lastid", 0);
-            int interval = Main.pref.getInt("geochat.interval", 2);
+            //            lastId = Config.getPref().getLong("geochat.lastid", 0);
+            int interval = Config.getPref().getInt("geochat.interval", 2);
             while (!stopping) {
                 process();
                 try {
@@ -361,7 +362,7 @@ final class ChatServerConnection {
             if (needFullReset || (lastPosition != null && pos.greatCircleDistance(lastPosition) > MAX_JUMP)) {
                 // reset messages
                 lastId = 0;
-                //                Main.pref.put("geochat.lastid", null);
+                //                Config.getPref().put("geochat.lastid", null);
                 needReset = true;
             } else
                 needReset = false;
@@ -412,8 +413,8 @@ final class ChatServerConnection {
                     }
                 }
             }
-            //                    if (lastId > 0 && Main.pref.getBoolean("geochat.store.lastid", true) )
-            //                        Main.pref.putLong("geochat.lastid", lastId);
+            //                    if (lastId > 0 && Config.getPref().getBoolean("geochat.store.lastid", true) )
+            //                        Config.getPref().putLong("geochat.lastid", lastId);
         }
 
         private List<ChatMessage> parseMessages(JsonArray messages, boolean priv) {

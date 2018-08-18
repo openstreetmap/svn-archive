@@ -22,8 +22,8 @@ import javax.swing.text.Document;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.util.GuiHelper;
+import org.openstreetmap.josm.spi.preferences.Config;
 import org.openstreetmap.josm.tools.Logging;
 
 /**
@@ -154,7 +154,7 @@ class ChatPaneManager {
         JTextPane chatPane = new JTextPane();
         chatPane.setEditable(false);
         Font font = chatPane.getFont();
-        float size = Main.pref.getInt("geochat.fontsize", -1);
+        float size = Config.getPref().getInt("geochat.fontsize", -1);
         if (size < 6)
             size += font.getSize2D();
         chatPane.setFont(font.deriveFont(size));

@@ -10,10 +10,10 @@ import java.awt.Shape;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Point2D;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.coor.CachedLatLon;
 import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.projection.Projection;
+import org.openstreetmap.josm.data.projection.ProjectionRegistry;
 import org.openstreetmap.josm.gui.MapView;
 
 class GPSBlamMarker {
@@ -22,9 +22,12 @@ class GPSBlamMarker {
     private final CachedLatLon ellipseCoord1, ellipseCoord2, ellipseCoord3; // 1=TL 2=TR 3=BL, where main axis = +R, minor +U
     private static final double FAC = 2.45; // 2.45 gives 95% CI for 2D
 
-    /** construct a blammarker by analysis of selected GPS points */
+    /**
+     * Construct a blammarker by analysis of selected GPS points
+     * @param inputData input data
+     */
     GPSBlamMarker(GPSBlamInputData inputData) {
-        Projection projection = Main.getProjection();
+        Projection projection = ProjectionRegistry.getProjection();
         // get mean east, north
         double meanEast=0.0, meanNorth=0.0;
         for (CachedLatLon cll : inputData) {
@@ -66,7 +69,7 @@ class GPSBlamMarker {
         double sigma2East = evec2East * evec2Fac, sigma2North = evec2North * evec2Fac;
 
         // save latlon coords of the mean and the ends of the crosshairs
-        Projection proj = Main.getProjection();
+        Projection proj = ProjectionRegistry.getProjection();
         mean = new CachedLatLon(proj.eastNorth2latlon(new EastNorth(meanEast, meanNorth)));
         hair1Coord1 = new CachedLatLon(proj.eastNorth2latlon(
                    new EastNorth(meanEast-sigma1East*FAC, meanNorth-sigma1North*FAC)));
@@ -87,7 +90,7 @@ class GPSBlamMarker {
     }
 
     void paint(Graphics2D g, MapView mv) {
-        Projection projection = Main.getProjection();
+        Projection projection = ProjectionRegistry.getProjection();
         g.setColor(Color.GREEN);
         g.setPaintMode();
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);

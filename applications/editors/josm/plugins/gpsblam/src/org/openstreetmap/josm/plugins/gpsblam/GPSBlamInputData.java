@@ -8,12 +8,12 @@ import java.util.GregorianCalendar;
 import java.util.HashSet;
 import java.util.LinkedList;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.coor.CachedLatLon;
 import org.openstreetmap.josm.data.gpx.GpxTrack;
 import org.openstreetmap.josm.data.gpx.GpxTrackSegment;
 import org.openstreetmap.josm.data.gpx.WayPoint;
 import org.openstreetmap.josm.data.projection.Projection;
+import org.openstreetmap.josm.data.projection.ProjectionRegistry;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.layer.GpxLayer;
 import org.openstreetmap.josm.gui.layer.Layer;
@@ -29,10 +29,10 @@ class GPSBlamInputData extends LinkedList<CachedLatLon> {
     // within given radius of line between given points
     GPSBlamInputData(Point p1, Point p2, int radius) {
         Collection<Layer> layers = MainApplication.getLayerManager().getLayers();
-        Projection projection = Main.getProjection();
+        Projection projection = ProjectionRegistry.getProjection();
         for (Layer l : layers) {
             if (l.isVisible() && l instanceof GpxLayer) {
-                for (GpxTrack track : ((GpxLayer)l).data.tracks) {
+                for (GpxTrack track : ((GpxLayer) l).data.tracks) {
                     for (GpxTrackSegment segment: track.getSegments()) {
                         for (WayPoint wayPoint : segment.getWayPoints()) {
                             if (p2.equals(p1)) {
@@ -68,18 +68,18 @@ class GPSBlamInputData extends LinkedList<CachedLatLon> {
                                 if (distsq < radius*radius) {
                                     this.add(cll, wayPoint);
                                 }
-                            } // end if circular else line based selection
-                        } // end loop over wayponts in segment
-                    } // end loop over segments in track
-                } // end loop over tracks in layer
-            } // end if layer visible
-        } // end loop over layers
-    } // end constructor
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
 
     private void add(CachedLatLon cll, WayPoint wayPoint) {
         this.add(cll);
         Calendar day = new GregorianCalendar();
-        day.setTimeInMillis((long)wayPoint.time*1000);
+        day.setTimeInMillis((long) (wayPoint.time*1000d));
         day.set(Calendar.HOUR_OF_DAY, 0);
         day.set(Calendar.MINUTE, 0);
         day.set(Calendar.SECOND, 0);

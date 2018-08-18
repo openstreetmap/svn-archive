@@ -4,56 +4,21 @@
     <!-- enter the SVN commit message -->
     <property name="commit.message" value="Commit message"/>
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
-    <property name="plugin.main.version" value="12636"/>
+    <property name="plugin.main.version" value="14153"/>
 
-    <!--
-    **********************************************************
-    ** include targets that all plugins have in common
-    **********************************************************
+    <!-- Configure these properties (replace "..." accordingly).
+         See https://josm.openstreetmap.de/wiki/DevelopersGuide/DevelopingPlugins
     -->
+    <property name="plugin.author" value="Russell Edwards"/>
+    <property name="plugin.class" value="org.openstreetmap.josm.plugins.gpsblam.GPSBlamPlugin"/>
+    <property name="plugin.description" value="Analyse a set of GPS points to obtain its centre and direction of spread."/>
+    <property name="plugin.icon" value="images/mapmode/gpsblam_mode.png"/>
+    <property name="plugin.link" value="https://wiki.openstreetmap.org/wiki/JOSM/Plugins/GPSBlam"/>
+    <!--<property name="plugin.early" value="..."/>-->
+    <!--<property name="plugin.requires" value="..."/>-->
+    <!--<property name="plugin.stage" value="..."/>-->
+
+    <!-- ** include targets that all plugins have in common ** -->
     <import file="../build-common.xml"/>
-  
-    <!--
-    **********************************************************
-    ** dist - creates the plugin jar
-    **********************************************************
-    -->
-    <target name="dist" depends="compile,revision">
-        <echo message="creating ${ant.project.name}.jar ... "/>
-        <copy todir="${plugin.build.dir}/resources">
-            <fileset dir="resources"/>
-        </copy>
-        <copy todir="${plugin.build.dir}/images">
-            <fileset dir="images"/>
-        </copy>
-        <copy todir="${plugin.build.dir}/data">
-            <fileset dir="data"/>
-        </copy>
-        <copy todir="${plugin.build.dir}">
-            <fileset dir=".">
-                <include name="README"/>
-                <include name="LICENSE"/>
-            </fileset>
-        </copy>
-        <jar destfile="${plugin.jar}" basedir="${plugin.build.dir}" manifestencoding="UTF-8">
-            <!--
-            ************************************************
-            ** configure these properties. Most of them will be copied to the plugins
-            ** manifest file. Property values will also show up in the list available
-            ** plugins: https://josm.openstreetmap.de/wiki/Plugins.
-            **
-            ************************************************
-            -->
-            <manifest>
-                <attribute name="Author" value="Russell Edwards"/>
-                <attribute name="Plugin-Class" value="org.openstreetmap.josm.plugins.gpsblam.GPSBlamPlugin"/>
-                <attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
-                <attribute name="Plugin-Description" value="Analyse a set of GPS points to obtain its centre and direction of spread."/>
-                <attribute name="Plugin-Icon" value="images/mapmode/gpsblam_mode.png"/>
-                <attribute name="Plugin-Link" value="https://wiki.openstreetmap.org/wiki/JOSM/Plugins/GPSBlam"/>
-                <attribute name="Plugin-Mainversion" value="${plugin.main.version}"/>
-                <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
-            </manifest>
-        </jar>
-    </target>
+
 </project>

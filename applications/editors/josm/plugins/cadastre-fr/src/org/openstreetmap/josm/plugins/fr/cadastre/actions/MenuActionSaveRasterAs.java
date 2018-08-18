@@ -103,7 +103,7 @@ public class MenuActionSaveRasterAs extends JosmAction {
                     fluxBuf.close();
                     */
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    Logging.error(e);
                 }
             } else if (fc.getFileFilter().equals(filtreTiff)) {
                 boolean alpha = bi.getColorModel().hasAlpha();

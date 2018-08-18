@@ -120,7 +120,7 @@ public class DownloadWMSPlanImage {
             try {
                 task.get();
             } catch (Exception e) {
-                e.printStackTrace();
+                Logging.error(e);
             }
         }
         return dontGeoreference;

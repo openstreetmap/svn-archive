@@ -20,7 +20,6 @@ import java.util.Set;
 
 import javax.swing.JOptionPane;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.command.ChangeCommand;
 import org.openstreetmap.josm.command.Command;
@@ -28,14 +27,16 @@ import org.openstreetmap.josm.command.DeleteCommand;
 import org.openstreetmap.josm.command.MoveCommand;
 import org.openstreetmap.josm.command.SequenceCommand;
 import org.openstreetmap.josm.data.Bounds;
+import org.openstreetmap.josm.data.UndoRedoHandler;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.OsmPrimitiveType;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.gui.HelpAwareOptionPane;
-import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.HelpAwareOptionPane.ButtonSpec;
+import org.openstreetmap.josm.gui.MainApplication;
+import org.openstreetmap.josm.spi.preferences.Config;
 import org.openstreetmap.josm.tools.ImageProvider;
 import org.openstreetmap.josm.tools.Shortcut;
 
@@ -64,7 +65,7 @@ public final class SimplifyAreaAction extends JosmAction {
         final ButtonSpec[] options = new ButtonSpec[] { new ButtonSpec(tr("Yes, delete nodes"), ImageProvider.get("ok"), tr("Delete nodes outside of downloaded data regions"), null),
                 new ButtonSpec(tr("No, abort"), ImageProvider.get("cancel"), tr("Cancel operation"), null) };
         return 0 == HelpAwareOptionPane.showOptionDialog(
-                Main.parent,
+                MainApplication.getMainFrame(),
                 "<html>" + trn("The selected way has nodes outside of the downloaded data region.", "The selected ways have nodes outside of the downloaded data region.", 
                         MainApplication.getLayerManager().getEditDataSet().getSelectedWays().size())
                 + "<br>" + tr("This can lead to nodes being deleted accidentally.") + "<br>" + tr("Do you want to delete them anyway?") + "</html>",
@@ -73,13 +74,13 @@ public final class SimplifyAreaAction extends JosmAction {
     }
 
     private void alertSelectAtLeastOneWay() {
-        HelpAwareOptionPane.showOptionDialog(Main.parent, tr("Please select at least one way to simplify."), tr("Warning"), JOptionPane.WARNING_MESSAGE, null);
+        HelpAwareOptionPane.showOptionDialog(MainApplication.getMainFrame(), tr("Please select at least one way to simplify."), tr("Warning"), JOptionPane.WARNING_MESSAGE, null);
     }
 
     private boolean confirmSimplifyManyWays(final int numWays) {
         final ButtonSpec[] options = new ButtonSpec[] { new ButtonSpec(tr("Yes"), ImageProvider.get("ok"), tr("Simplify all selected ways"), null),
                 new ButtonSpec(tr("Cancel"), ImageProvider.get("cancel"), tr("Cancel operation"), null) };
-        return 0 == HelpAwareOptionPane.showOptionDialog(Main.parent, tr("The selection contains {0} ways. Are you sure you want to simplify them all?", numWays), 
+        return 0 == HelpAwareOptionPane.showOptionDialog(MainApplication.getMainFrame(), tr("The selection contains {0} ways. Are you sure you want to simplify them all?", numWays), 
                 tr("Simplify ways?"),
                 JOptionPane.WARNING_MESSAGE, null, // no special icon
                 options, options[0], null);
@@ -173,7 +174,7 @@ public final class SimplifyAreaAction extends JosmAction {
 
         if (!allCommands.isEmpty()) {
             final SequenceCommand rootCommand = new SequenceCommand(trn("Simplify {0} way", "Simplify {0} ways", allCommands.size(), allCommands.size()), allCommands);
-            Main.main.undoRedo.add(rootCommand);
+            UndoRedoHandler.getInstance().add(rootCommand);
             MainApplication.getMap().repaint();
         }
     }
@@ -197,7 +198,7 @@ public final class SimplifyAreaAction extends JosmAction {
 
     // average nearby nodes
     private static Collection<Command> averageNearbyNodes(final Collection<Way> ways, final Collection<Node> nodesAlreadyDeleted) {
-        final double mergeThreshold = Main.pref.getDouble(SimplifyAreaPreferenceSetting.MERGE_THRESHOLD, 0.2);
+        final double mergeThreshold = Config.getPref().getDouble(SimplifyAreaPreferenceSetting.MERGE_THRESHOLD, 0.2);
 
         final Map<Node, LatLon> coordMap = new HashMap<>();
         for (final Way way : ways) {
@@ -320,12 +321,12 @@ public final class SimplifyAreaAction extends JosmAction {
     }
 
     private static void addNodesToDelete(final Collection<Node> nodesToDelete, final Way w) {
-        final double angleThreshold = Main.pref.getDouble(SimplifyAreaPreferenceSetting.ANGLE_THRESHOLD, 10);
-        final double angleFactor = Main.pref.getDouble(SimplifyAreaPreferenceSetting.ANGLE_FACTOR, 1.0);
-        final double areaThreshold = Main.pref.getDouble(SimplifyAreaPreferenceSetting.AREA_THRESHOLD, 5.0);
-        final double areaFactor = Main.pref.getDouble(SimplifyAreaPreferenceSetting.AREA_FACTOR, 1.0);
-        final double distanceThreshold = Main.pref.getDouble(SimplifyAreaPreferenceSetting.DIST_THRESHOLD, 3);
-        final double distanceFactor = Main.pref.getDouble(SimplifyAreaPreferenceSetting.DIST_FACTOR, 3);
+        final double angleThreshold = Config.getPref().getDouble(SimplifyAreaPreferenceSetting.ANGLE_THRESHOLD, 10);
+        final double angleFactor = Config.getPref().getDouble(SimplifyAreaPreferenceSetting.ANGLE_FACTOR, 1.0);
+        final double areaThreshold = Config.getPref().getDouble(SimplifyAreaPreferenceSetting.AREA_THRESHOLD, 5.0);
+        final double areaFactor = Config.getPref().getDouble(SimplifyAreaPreferenceSetting.AREA_FACTOR, 1.0);
+        final double distanceThreshold = Config.getPref().getDouble(SimplifyAreaPreferenceSetting.DIST_THRESHOLD, 3);
+        final double distanceFactor = Config.getPref().getDouble(SimplifyAreaPreferenceSetting.DIST_FACTOR, 3);
 
         final List<Node> nodes = w.getNodes();
         final int size = nodes.size();

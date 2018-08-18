@@ -8,10 +8,10 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.preferences.DefaultTabPreferenceSetting;
 import org.openstreetmap.josm.gui.preferences.PreferenceTabbedPane;
 import org.openstreetmap.josm.gui.widgets.JosmTextField;
+import org.openstreetmap.josm.spi.preferences.Config;
 import org.openstreetmap.josm.tools.GBC;
 
 public class SimplifyAreaPreferenceSetting extends DefaultTabPreferenceSetting {
@@ -48,31 +48,31 @@ public class SimplifyAreaPreferenceSetting extends DefaultTabPreferenceSetting {
     public void addGui(final PreferenceTabbedPane gui) {
         final JPanel tab = gui.createPreferenceTab(this);
 
-        angleThreshold.setText(Main.pref.get(ANGLE_THRESHOLD, "10"));
+        angleThreshold.setText(Config.getPref().get(ANGLE_THRESHOLD, "10"));
         tab.add(new JLabel(tr("Angle Threshold")), GBC.std());
         tab.add(angleThreshold, GBC.eol().fill(GBC.HORIZONTAL).insets(5,0,0,5));
 
-        angleFactor.setText(Main.pref.get(ANGLE_FACTOR, "1.0"));
+        angleFactor.setText(Config.getPref().get(ANGLE_FACTOR, "1.0"));
         tab.add(new JLabel(tr("Angle Factor")), GBC.std());
         tab.add(angleFactor, GBC.eol().fill(GBC.HORIZONTAL).insets(5,0,0,5));
 
-        areaThreshold.setText(Main.pref.get(AREA_THRESHOLD, "5.0"));
+        areaThreshold.setText(Config.getPref().get(AREA_THRESHOLD, "5.0"));
         tab.add(new JLabel(tr("Area Threshold")), GBC.std());
         tab.add(areaThreshold, GBC.eol().fill(GBC.HORIZONTAL).insets(5,0,0,5));
 
-        areaFactor.setText(Main.pref.get(AREA_FACTOR, "1.0"));
+        areaFactor.setText(Config.getPref().get(AREA_FACTOR, "1.0"));
         tab.add(new JLabel(tr("Area Factor")), GBC.std());
         tab.add(areaFactor, GBC.eol().fill(GBC.HORIZONTAL).insets(5,0,0,5));
 
-        distanceThreshold.setText(Main.pref.get(DIST_THRESHOLD, "3"));
+        distanceThreshold.setText(Config.getPref().get(DIST_THRESHOLD, "3"));
         tab.add(new JLabel(tr("Distance Threshold")), GBC.std());
         tab.add(distanceThreshold, GBC.eol().fill(GBC.HORIZONTAL).insets(5,0,0,5));
 
-        distanceFactor.setText(Main.pref.get(DIST_FACTOR, "3"));
+        distanceFactor.setText(Config.getPref().get(DIST_FACTOR, "3"));
         tab.add(new JLabel(tr("Distance Factor")), GBC.std());
         tab.add(distanceFactor, GBC.eol().fill(GBC.HORIZONTAL).insets(5,0,0,5));
 
-        mergeThreshold.setText(Main.pref.get(MERGE_THRESHOLD, "0.2"));
+        mergeThreshold.setText(Config.getPref().get(MERGE_THRESHOLD, "0.2"));
         tab.add(new JLabel(tr("Merge Nearby Nodes Threshold")), GBC.std());
         tab.add(mergeThreshold, GBC.eol().fill(GBC.HORIZONTAL).insets(5,0,0,5));
 
@@ -81,13 +81,13 @@ public class SimplifyAreaPreferenceSetting extends DefaultTabPreferenceSetting {
 
     @Override
     public boolean ok() {
-        Main.pref.put(MERGE_THRESHOLD, mergeThreshold.getText());
-        Main.pref.put(ANGLE_THRESHOLD, angleThreshold.getText());
-        Main.pref.put(ANGLE_FACTOR, angleFactor.getText());
-        Main.pref.put(AREA_THRESHOLD, areaThreshold.getText());
-        Main.pref.put(AREA_FACTOR, areaFactor.getText());
-        Main.pref.put(DIST_THRESHOLD, distanceThreshold.getText());
-        Main.pref.put(DIST_FACTOR, distanceFactor.getText());
+        Config.getPref().put(MERGE_THRESHOLD, mergeThreshold.getText());
+        Config.getPref().put(ANGLE_THRESHOLD, angleThreshold.getText());
+        Config.getPref().put(ANGLE_FACTOR, angleFactor.getText());
+        Config.getPref().put(AREA_THRESHOLD, areaThreshold.getText());
+        Config.getPref().put(AREA_FACTOR, areaFactor.getText());
+        Config.getPref().put(DIST_THRESHOLD, distanceThreshold.getText());
+        Config.getPref().put(DIST_FACTOR, distanceFactor.getText());
         return false;
     }
 }

@@ -23,7 +23,6 @@ import java.util.regex.Pattern;
 
 import javax.swing.JOptionPane;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.command.AddCommand;
 import org.openstreetmap.josm.command.ChangeCommand;
@@ -31,6 +30,7 @@ import org.openstreetmap.josm.command.ChangePropertyCommand;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.DeleteCommand;
 import org.openstreetmap.josm.command.SequenceCommand;
+import org.openstreetmap.josm.data.UndoRedoHandler;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
@@ -178,7 +178,7 @@ public final class TerracerAction extends JosmAction {
 
         } catch (InvalidUserInputException ex) {
             Logging.warn("Terracer: "+ex.getMessage());
-            new ExtendedDialog(Main.parent, tr("Invalid selection"), new String[] {"OK"})
+            new ExtendedDialog(MainApplication.getMainFrame(), tr("Invalid selection"), new String[] {"OK"})
                 .setButtonIcons(new String[] {"ok"}).setIcon(JOptionPane.INFORMATION_MESSAGE)
                 .setContent(tr("Select a single, closed way of at least four nodes. " +
                     "(Optionally you can also select a street for the addr:street tag " +
@@ -424,7 +424,7 @@ public final class TerracerAction extends JosmAction {
             }
         }
 
-        MainApplication.undoRedo.add(createTerracingCommand(outline));
+        UndoRedoHandler.getInstance().add(createTerracingCommand(outline));
         if (nb <= 1 && street != null) {
             // Select the way (for quick selection of a new house (with the same way))
             MainApplication.getLayerManager().getEditDataSet().setSelected(street);

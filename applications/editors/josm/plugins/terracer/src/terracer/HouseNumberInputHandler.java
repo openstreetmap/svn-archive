@@ -18,13 +18,13 @@ import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.data.tagging.ac.AutoCompletionItem;
 import org.openstreetmap.josm.gui.tagging.ac.AutoCompletingComboBox;
+import org.openstreetmap.josm.spi.preferences.Config;
 import org.openstreetmap.josm.tools.Logging;
 import org.openstreetmap.josm.tools.UserCancelException;
 
@@ -444,8 +444,8 @@ public class HouseNumberInputHandler extends JosmAction implements ActionListene
      * Saves settings.
      */
     public void saveValues() {
-        Main.pref.putBoolean(HouseNumberInputDialog.HANDLE_RELATION, doHandleRelation());
-        Main.pref.putBoolean(HouseNumberInputDialog.KEEP_OUTLINE, doKeepOutline());
-        Main.pref.put(HouseNumberInputDialog.INTERPOLATION, stepSize().toString());
+        Config.getPref().putBoolean(HouseNumberInputDialog.HANDLE_RELATION, doHandleRelation());
+        Config.getPref().putBoolean(HouseNumberInputDialog.KEEP_OUTLINE, doKeepOutline());
+        Config.getPref().put(HouseNumberInputDialog.INTERPOLATION, stepSize().toString());
     }
 }

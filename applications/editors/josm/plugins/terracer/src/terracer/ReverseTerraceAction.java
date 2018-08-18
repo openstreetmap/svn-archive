@@ -12,11 +12,11 @@ import java.util.LinkedList;
 
 import javax.swing.JOptionPane;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.command.ChangePropertyCommand;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.SequenceCommand;
+import org.openstreetmap.josm.data.UndoRedoHandler;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Way;
@@ -80,7 +80,7 @@ public class ReverseTerraceAction extends JosmAction {
         }
 
         if (front.isEmpty()) {
-            JOptionPane.showMessageDialog(Main.parent,
+            JOptionPane.showMessageDialog(MainApplication.getMainFrame(),
                     tr("Cannot reverse!"));
             return;
         }
@@ -123,7 +123,7 @@ public class ReverseTerraceAction extends JosmAction {
                     houseNumbers.get(i)));
         }
 
-        MainApplication.undoRedo.add(new SequenceCommand(tr("Reverse Terrace"), commands));
+        UndoRedoHandler.getInstance().add(new SequenceCommand(tr("Reverse Terrace"), commands));
         MainApplication.getLayerManager().getEditDataSet().setSelected(orderedWays);
     }
 

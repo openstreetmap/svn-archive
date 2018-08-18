@@ -12,7 +12,6 @@ import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 import java.util.TreeSet;
 
 import javax.swing.BoxLayout;
@@ -22,17 +21,16 @@ import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.osm.Node;
+import org.openstreetmap.josm.data.osm.OsmDataManager;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Way;
-import org.openstreetmap.josm.data.tagging.ac.AutoCompletionItem;
-import org.openstreetmap.josm.data.tagging.ac.AutoCompletionSet;
 import org.openstreetmap.josm.gui.ExtendedDialog;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.tagging.ac.AutoCompletingComboBox;
 import org.openstreetmap.josm.gui.tagging.ac.AutoCompletionManager;
 import org.openstreetmap.josm.gui.util.WindowGeometry;
+import org.openstreetmap.josm.spi.preferences.Config;
 import org.openstreetmap.josm.tools.GBC;
 
 /**
@@ -95,7 +93,7 @@ public class HouseNumberInputDialog extends ExtendedDialog {
      */
     public HouseNumberInputDialog(HouseNumberInputHandler handler, Way street, String streetName,
             String buildingType, boolean relationExists, ArrayList<Node> housenumbers) {
-        super(Main.parent,
+        super(MainApplication.getMainFrame(),
                 tr("Terrace a house"),
                 new String[] {tr("OK"), tr("Cancel")},
                 true
@@ -116,7 +114,7 @@ public class HouseNumberInputDialog extends ExtendedDialog {
         setupDialog();
         getRootPane().setDefaultButton(defaultButton);
         pack();
-        setRememberWindowGeometry(getClass().getName() + ".geometry", WindowGeometry.centerInWindow(Main.parent, getPreferredSize()));
+        setRememberWindowGeometry(getClass().getName() + ".geometry", WindowGeometry.centerInWindow(MainApplication.getMainFrame(), getPreferredSize()));
         lo.requestFocusInWindow();
     }
 
@@ -178,8 +176,8 @@ public class HouseNumberInputDialog extends ExtendedDialog {
             loLabel.setPreferredSize(new Dimension(111, 16));
             final String txt = relationExists ? tr("add to existing associatedStreet relation") : tr("create an associatedStreet relation");
 
-            handleRelationCheckBox = new JCheckBox(txt, relationExists ? Main.pref.getBoolean(HANDLE_RELATION, true) : false);
-            keepOutlineCheckBox = new JCheckBox(tr("keep outline way"), Main.pref.getBoolean(KEEP_OUTLINE, false));
+            handleRelationCheckBox = new JCheckBox(txt, relationExists ? Config.getPref().getBoolean(HANDLE_RELATION, true) : false);
+            keepOutlineCheckBox = new JCheckBox(tr("keep outline way"), Config.getPref().getBoolean(KEEP_OUTLINE, false));
 
             inputPanel = new JPanel();
             inputPanel.setLayout(new GridBagLayout());
@@ -313,7 +311,7 @@ public class HouseNumberInputDialog extends ExtendedDialog {
 
         if (buildingComboBox == null) {
             buildingComboBox = new AutoCompletingComboBox();
-            buildingComboBox.setPossibleAcItems(AutoCompletionManager.of(Main.main.getEditDataSet()).getTagValues("building"));
+            buildingComboBox.setPossibleAcItems(AutoCompletionManager.of(OsmDataManager.getInstance().getEditDataSet()).getTagValues("building"));
             buildingComboBox.setEditable(true);
             if (buildingType != null && !buildingType.isEmpty()) {
                 buildingComboBox.setSelectedItem(buildingType);
@@ -332,7 +330,7 @@ public class HouseNumberInputDialog extends ExtendedDialog {
     private JTextField getSegments() {
         if (segments == null) {
             segments = new JTextField();
-            segments.setText(Main.pref.get(DEFAULT_SEGMENTS, "2"));
+            segments.setText(Config.getPref().get(DEFAULT_SEGMENTS, "2"));
         }
         return segments;
     }
@@ -347,7 +345,7 @@ public class HouseNumberInputDialog extends ExtendedDialog {
             interpolation = new Choice();
             interpolation.add(tr("All"));
             interpolation.add(tr("Even/Odd"));
-            if (Main.pref.getInt(INTERPOLATION, 2) == 1) {
+            if (Config.getPref().getInt(INTERPOLATION, 2) == 1) {
                 interpolation.select(tr("All"));
             } else {
                 interpolation.select(tr("Even/Odd"));

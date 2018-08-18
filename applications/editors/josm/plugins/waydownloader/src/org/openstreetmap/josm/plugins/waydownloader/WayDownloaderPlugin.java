@@ -13,7 +13,6 @@ import java.util.concurrent.Future;
 
 import javax.swing.JOptionPane;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.actions.MergeNodesAction;
 import org.openstreetmap.josm.actions.downloadtasks.DownloadOsmTask;
@@ -21,6 +20,7 @@ import org.openstreetmap.josm.actions.downloadtasks.DownloadParams;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.DataSource;
+import org.openstreetmap.josm.data.UndoRedoHandler;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.DefaultNameFormatter;
@@ -34,6 +34,7 @@ import org.openstreetmap.josm.gui.progress.swing.PleaseWaitProgressMonitor;
 import org.openstreetmap.josm.gui.util.GuiHelper;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
+import org.openstreetmap.josm.spi.preferences.Config;
 import org.openstreetmap.josm.tools.Logging;
 import org.openstreetmap.josm.tools.Shortcut;
 
@@ -104,8 +105,8 @@ public class WayDownloaderPlugin extends Plugin {
             priorConnectedWay = connectedWays.get(0);
 
             //Download a little rectangle around the selected node
-            double latbuffer = Main.pref.getDouble("waydownloader.latbuffer", 0.00001);
-            double lonbuffer = Main.pref.getDouble("waydownloader.latbuffer", 0.00002);
+            double latbuffer = Config.getPref().getDouble("waydownloader.latbuffer", 0.00001);
+            double lonbuffer = Config.getPref().getDouble("waydownloader.latbuffer", 0.00002);
             DownloadOsmTask downloadTask = new DownloadOsmTask();
             final PleaseWaitProgressMonitor monitor = new PleaseWaitProgressMonitor();
             LatLon ll = selectedNode.getCoor();
@@ -170,7 +171,7 @@ public class WayDownloaderPlugin extends Plugin {
                     );
 
                     int ret = JOptionPane.showConfirmDialog(
-                            Main.parent,
+                            MainApplication.getMainFrame(),
                             msg,
                             tr("Merge duplicate node?"),
                             JOptionPane.YES_NO_OPTION,
@@ -183,7 +184,7 @@ public class WayDownloaderPlugin extends Plugin {
                             selectedNode
                     );
                     if (cmd != null) {
-                    	MainApplication.undoRedo.add(cmd);
+                    	UndoRedoHandler.getInstance().add(cmd);
                         MainApplication.getLayerManager().getEditLayer().data.setSelected(selectedNode);
                     }
                     connectedWays = findConnectedWays(selectedNode);

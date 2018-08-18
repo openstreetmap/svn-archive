@@ -16,7 +16,6 @@ import java.util.Observer;
 
 import javax.swing.JOptionPane;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.gui.layer.LayerManager.LayerAddEvent;
@@ -96,7 +95,7 @@ public class GraphViewPlugin extends Plugin implements LayerChangeListener, Obse
                 AccessRuleset accessRuleset = getAccessRuleset();
 
                 if (accessRuleset == null) {
-                    JOptionPane.showMessageDialog(Main.parent, tr("No ruleset has been selected!"), tr("No ruleset"), JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(MainApplication.getMainFrame(), tr("No ruleset has been selected!"), tr("No ruleset"), JOptionPane.ERROR_MESSAGE);
                 } else {
                     transitionStructure.setAccessParametersAndRuleset(preferences.getCurrentParameterBookmark(), accessRuleset);
                     transitionStructure.forceUpdate();
@@ -107,7 +106,7 @@ public class GraphViewPlugin extends Plugin implements LayerChangeListener, Obse
                 AccessRuleset accessRuleset = getAccessRuleset();
 
                 if (accessRuleset == null) {
-                    JOptionPane.showMessageDialog(Main.parent, tr("No ruleset has been selected!"),
+                    JOptionPane.showMessageDialog(MainApplication.getMainFrame(), tr("No ruleset has been selected!"),
                             tr("No ruleset"), JOptionPane.ERROR_MESSAGE);
                 } else {
 
@@ -128,13 +127,13 @@ public class GraphViewPlugin extends Plugin implements LayerChangeListener, Obse
                 }
             }
         } catch (AccessRulesetSyntaxException e) {
-            JOptionPane.showMessageDialog(Main.parent, tr("Syntax exception in access ruleset:\n{0}", e));
+            JOptionPane.showMessageDialog(MainApplication.getMainFrame(), tr("Syntax exception in access ruleset:\n{0}", e));
             Logging.error(e);
         } catch (FileNotFoundException e) {
-            JOptionPane.showMessageDialog(Main.parent, tr("File not found:\n{0}", e));
+            JOptionPane.showMessageDialog(MainApplication.getMainFrame(), tr("File not found:\n{0}", e));
             Logging.error(e);
         } catch (IOException e) {
-            JOptionPane.showMessageDialog(Main.parent, tr("Problem when accessing a file:\n{0}", e));
+            JOptionPane.showMessageDialog(MainApplication.getMainFrame(), tr("Problem when accessing a file:\n{0}", e));
             Logging.error(e);
         }
     }
@@ -147,7 +146,7 @@ public class GraphViewPlugin extends Plugin implements LayerChangeListener, Obse
                 AccessRuleset accessRuleset = getAccessRuleset();
 
                 if (accessRuleset == null) {
-                    JOptionPane.showMessageDialog(Main.parent, tr("No ruleset has been selected!"),
+                    JOptionPane.showMessageDialog(MainApplication.getMainFrame(), tr("No ruleset has been selected!"),
                             tr("No ruleset"), JOptionPane.ERROR_MESSAGE);
                 } else {
                     transitionStructure.setAccessParametersAndRuleset(
@@ -156,13 +155,13 @@ public class GraphViewPlugin extends Plugin implements LayerChangeListener, Obse
                 }
             }
         } catch (AccessRulesetSyntaxException e) {
-            JOptionPane.showMessageDialog(Main.parent, tr("Syntax exception in access ruleset:\n{0}", e));
+            JOptionPane.showMessageDialog(MainApplication.getMainFrame(), tr("Syntax exception in access ruleset:\n{0}", e));
             Logging.error(e);
         } catch (FileNotFoundException e) {
-            JOptionPane.showMessageDialog(Main.parent, tr("File not found:\n", e));
+            JOptionPane.showMessageDialog(MainApplication.getMainFrame(), tr("File not found:\n", e));
             Logging.error(e);
         } catch (IOException e) {
-            JOptionPane.showMessageDialog(Main.parent, tr("Problem when accessing a file:\n{0}", e));
+            JOptionPane.showMessageDialog(MainApplication.getMainFrame(), tr("Problem when accessing a file:\n{0}", e));
             Logging.error(e);
         }
     }

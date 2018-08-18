@@ -17,12 +17,12 @@ import java.util.List;
 import javax.swing.Action;
 import javax.swing.Icon;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.RenameLayerAction;
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
+import org.openstreetmap.josm.data.projection.ProjectionRegistry;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.dialogs.LayerListDialog;
 import org.openstreetmap.josm.gui.dialogs.LayerListPopup;
@@ -318,7 +318,7 @@ public class GraphViewLayer extends Layer implements  WayGraphObserver {
 
     private static Point getNodePoint(LatLonCoords coords, MapView mv) {
         LatLon latLon = new LatLon(coords.getLat(), coords.getLon());
-        EastNorth eastNorth = Main.getProjection().latlon2eastNorth(latLon);
+        EastNorth eastNorth = ProjectionRegistry.getProjection().latlon2eastNorth(latLon);
         return mv.getPoint(eastNorth);
     }
 

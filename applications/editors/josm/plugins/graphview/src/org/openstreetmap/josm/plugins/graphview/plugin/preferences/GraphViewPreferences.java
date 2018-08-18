@@ -24,7 +24,6 @@ import java.util.Observable;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.preferences.NamedColorProperty;
 import org.openstreetmap.josm.plugins.graphview.core.access.AccessParameters;
 import org.openstreetmap.josm.plugins.graphview.core.access.AccessType;
@@ -32,6 +31,7 @@ import org.openstreetmap.josm.plugins.graphview.core.property.VehiclePropertyTyp
 import org.openstreetmap.josm.plugins.graphview.core.visualisation.ColorScheme;
 import org.openstreetmap.josm.plugins.graphview.plugin.layer.PreferencesColorScheme;
 import org.openstreetmap.josm.plugins.graphview.plugin.preferences.VehiclePropertyStringParser.PropertyValueSyntaxException;
+import org.openstreetmap.josm.spi.preferences.Config;
 
 /**
  * preferences of the GraphView plugin.
@@ -251,58 +251,58 @@ public final class GraphViewPreferences extends Observable {
 
     private void writePreferences() {
 
-        Main.pref.put("graphview.parameterBookmarks",
+        Config.getPref().put("graphview.parameterBookmarks",
                 createAccessParameterBookmarksString(parameterBookmarks));
 
         if (currentParameterBookmarkName != null) {
-            Main.pref.put("graphview.activeBookmark", currentParameterBookmarkName);
+            Config.getPref().put("graphview.activeBookmark", currentParameterBookmarkName);
         }
 
-        Main.pref.putBoolean("graphview.useInternalRulesets", useInternalRulesets);
+        Config.getPref().putBoolean("graphview.useInternalRulesets", useInternalRulesets);
 
-        Main.pref.put("graphview.rulesetFolder", rulesetFolder.getPath());
+        Config.getPref().put("graphview.rulesetFolder", rulesetFolder.getPath());
 
         if (currentRulesetFile != null) {
-            Main.pref.put("graphview.rulesetFile", currentRulesetFile.getPath());
+            Config.getPref().put("graphview.rulesetFile", currentRulesetFile.getPath());
         }
         if (currentInternalRuleset != null) {
-            Main.pref.put("graphview.rulesetResource", currentInternalRuleset.toString());
+            Config.getPref().put("graphview.rulesetResource", currentInternalRuleset.toString());
         }
 
-        Main.pref.putBoolean("graphview.separateDirections", separateDirections);
+        Config.getPref().putBoolean("graphview.separateDirections", separateDirections);
 
-        Main.pref.putDouble("graphview.arrowheadPlacement", arrowheadPlacement);
+        Config.getPref().putDouble("graphview.arrowheadPlacement", arrowheadPlacement);
 
     }
 
     private void readPreferences() {
 
-        if (!Main.pref.get("graphview.parameterBookmarks").isEmpty()) {
-            String bookmarksString = Main.pref.get("graphview.parameterBookmarks");
+        if (!Config.getPref().get("graphview.parameterBookmarks").isEmpty()) {
+            String bookmarksString = Config.getPref().get("graphview.parameterBookmarks");
             parameterBookmarks = parseAccessParameterBookmarksString(bookmarksString);
         }
 
-        if (!Main.pref.get("graphview.activeBookmark").isEmpty()) {
-            currentParameterBookmarkName = Main.pref.get("graphview.activeBookmark");
+        if (!Config.getPref().get("graphview.activeBookmark").isEmpty()) {
+            currentParameterBookmarkName = Config.getPref().get("graphview.activeBookmark");
         }
         if (!parameterBookmarks.containsKey(currentParameterBookmarkName)) {
             currentParameterBookmarkName = null;
         }
 
 
-        useInternalRulesets = Main.pref.getBoolean("graphview.useInternalRulesets", true);
+        useInternalRulesets = Config.getPref().getBoolean("graphview.useInternalRulesets", true);
 
-        if (!Main.pref.get("graphview.rulesetFolder").isEmpty()) {
-            String dirString = Main.pref.get("graphview.rulesetFolder");
+        if (!Config.getPref().get("graphview.rulesetFolder").isEmpty()) {
+            String dirString = Config.getPref().get("graphview.rulesetFolder");
             rulesetFolder = new File(dirString);
         }
-        if (!Main.pref.get("graphview.rulesetFile").isEmpty()) {
-            String fileString = Main.pref.get("graphview.rulesetFile");
+        if (!Config.getPref().get("graphview.rulesetFile").isEmpty()) {
+            String fileString = Config.getPref().get("graphview.rulesetFile");
             currentRulesetFile = new File(fileString);
         }
 
-        if (!Main.pref.get("graphview.rulesetResource").isEmpty()) {
-            String rulesetString = Main.pref.get("graphview.rulesetResource");
+        if (!Config.getPref().get("graphview.rulesetResource").isEmpty()) {
+            String rulesetString = Config.getPref().get("graphview.rulesetResource");
             //get the enum value for the string
             //(InternalRuleset.valueOf cannot be used because it cannot handle invalid strings well)
             for (InternalRuleset ruleset : InternalRuleset.values()) {
@@ -316,9 +316,9 @@ public final class GraphViewPreferences extends Observable {
         nodeColor = new NamedColorProperty(marktr("graphview default node"), Color.WHITE).get();
         segmentColor = new NamedColorProperty(marktr("graphview default segment"), Color.WHITE).get();
         arrowheadFillColor = new NamedColorProperty(marktr("graphview arrowhead core"), Color.BLACK).get();
-        separateDirections = Main.pref.getBoolean("graphview.separateDirections", false);
+        separateDirections = Config.getPref().getBoolean("graphview.separateDirections", false);
 
-        arrowheadPlacement = Main.pref.getDouble("graphview.arrowheadPlacement", 1.0);
+        arrowheadPlacement = Config.getPref().getDouble("graphview.arrowheadPlacement", 1.0);
         if (arrowheadPlacement < 0.0 || arrowheadPlacement >= 1.0) {
             arrowheadPlacement = 1.0;
         }

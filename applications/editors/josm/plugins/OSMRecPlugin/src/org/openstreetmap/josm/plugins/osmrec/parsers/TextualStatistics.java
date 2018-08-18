@@ -13,10 +13,8 @@ import java.util.Scanner;
  *
  * @author imis-nkarag
  */
-
 public class TextualStatistics {
 
-    //private static final org.apache.log4j.Logger LOG = org.apache.log4j.Logger.getLogger(TextualStatistics.class);
     private List<String> textualList;
 
     public void parseTextualList(InputStream textualFileStream) {
@@ -27,7 +25,6 @@ public class TextualStatistics {
             String nextLine = input.nextLine();
             textualList.add(nextLine);
         }
-        //LOG.info("Name occurences parsed successfully!");
     }
 
     public List<String> getTextualList() {

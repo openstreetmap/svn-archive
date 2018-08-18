@@ -7,47 +7,47 @@ import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
 
 /**
- *
+ * OSM rec plugin
  * @author imis-nkarag
  */
 public class OSMRecPlugin extends Plugin {
 
-	private final MenuExportAction menuExportAction;
-	private static MapFrame mapFrame;
-	public OSMRecPlugin plugin;
+    private final MenuExportAction menuExportAction;
+    private static MapFrame mapFrame;
+    public OSMRecPlugin plugin;
 
-	public OSMRecPlugin(PluginInformation info) { // NO_UCD (unused code)
-		super(info);
-		menuExportAction = new MenuExportAction();
-		MainApplication.getMenu().toolsMenu.add(menuExportAction);
-	}
+    public OSMRecPlugin(PluginInformation info) { // NO_UCD (unused code)
+        super(info);
+        menuExportAction = new MenuExportAction();
+        MainApplication.getMenu().toolsMenu.add(menuExportAction);
+    }
 
-	@Override
-	public void mapFrameInitialized(MapFrame oldFrame, MapFrame newFrame) {
-		if (oldFrame == null && newFrame != null) { // map frame added
-			setCurrentMapFrame(newFrame);
-			setState(this);
-		}
-	}
+    @Override
+    public void mapFrameInitialized(MapFrame oldFrame, MapFrame newFrame) {
+        if (oldFrame == null && newFrame != null) { // map frame added
+            setCurrentMapFrame(newFrame);
+            setState(this);
+        }
+    }
 
-	private void setCurrentMapFrame(MapFrame newFrame) {
-		OSMRecPlugin.mapFrame = newFrame;
-	}
+    private void setCurrentMapFrame(MapFrame newFrame) {
+        OSMRecPlugin.mapFrame = newFrame;
+    }
 
-	public static MapFrame getCurrentMapFrame() {
-		return mapFrame;
-	}
+    public static MapFrame getCurrentMapFrame() {
+        return mapFrame;
+    }
 
-	private void setState(OSMRecPlugin plugin) {
-		this.plugin = plugin;
-	}
+    private void setState(OSMRecPlugin plugin) {
+        this.plugin = plugin;
+    }
 
-	public OSMRecPlugin getState() {
-		return plugin;
-	}
+    public OSMRecPlugin getState() {
+        return plugin;
+    }
 
-	//    @Override
-	//    public PreferenceSetting getPreferenceSetting() {
-	//        return new PreferenceEditor();
-	//    }
+    //    @Override
+    //    public PreferenceSetting getPreferenceSetting() {
+    //        return new PreferenceEditor();
+    //    }
 }

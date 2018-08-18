@@ -700,7 +700,7 @@ public class TrainByUser extends AbstractTrainWorker {
     @Override
     protected void done() {
         try {
-            System.out.println("Training process complete! - > " + get());
+            get();
             firePropertyChange("progress", getProgress(), 100);
             setProgress(100);
         } catch (InterruptedException | ExecutionException ignore) {

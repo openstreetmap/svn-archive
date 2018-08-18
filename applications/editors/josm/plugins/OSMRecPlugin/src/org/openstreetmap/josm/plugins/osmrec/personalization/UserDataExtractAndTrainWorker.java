@@ -39,7 +39,6 @@ public class UserDataExtractAndTrainWorker extends SwingWorker<Void, Void> imple
     private final int frequency;
     private final boolean topKIsSelected;
     private final LanguageDetector languageDetector;
-    private int userTrainProgress = 0;
 
     public UserDataExtractAndTrainWorker(String inputFilePath, String username, Integer days, boolean byArea, boolean validateFlag,
             double cParameterFromUser, int topK, int frequency, boolean topKIsSelected, LanguageDetector languageDetector) {

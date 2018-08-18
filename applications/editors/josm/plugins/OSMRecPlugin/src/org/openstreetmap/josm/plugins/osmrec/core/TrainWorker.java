@@ -696,7 +696,7 @@ public class TrainWorker extends AbstractTrainWorker {
     @Override
     protected void done() {
         try {
-            System.out.println("Training process complete! - > " + get());
+            get();
             setProgress(100);
         } catch (InterruptedException | ExecutionException ignore) {
             System.out.println("Exception: " + ignore);

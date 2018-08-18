@@ -89,10 +89,11 @@ import org.opengis.referencing.FactoryException;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.opengis.referencing.operation.MathTransform;
 import org.opengis.referencing.operation.TransformException;
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.command.ChangePropertyCommand;
+import org.openstreetmap.josm.data.UndoRedoHandler;
 import org.openstreetmap.josm.data.osm.Node;
+import org.openstreetmap.josm.data.osm.OsmDataManager;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Tag;
 import org.openstreetmap.josm.data.osm.Way;
@@ -121,6 +122,7 @@ import org.openstreetmap.josm.plugins.osmrec.parsers.OSMParser;
 import org.openstreetmap.josm.plugins.osmrec.parsers.Ontology;
 import org.openstreetmap.josm.plugins.osmrec.parsers.TextualStatistics;
 import org.openstreetmap.josm.plugins.osmrec.personalization.UserDataExtractAndTrainWorker;
+import org.openstreetmap.josm.spi.preferences.Config;
 import org.openstreetmap.josm.tools.GBC;
 import org.openstreetmap.josm.tools.Logging;
 import org.openstreetmap.josm.tools.Shortcut;
@@ -164,7 +166,6 @@ class OSMRecPluginHelper {
     private boolean useCustomSVMModel = false;
     private String customSVMModelPath;
     private final String combinedModelClasses;
-    private final String combinedModel;
 
     // Selection that we are editing by using both dialogs
     Collection<OsmPrimitive> sel;
@@ -194,7 +195,7 @@ class OSMRecPluginHelper {
 
     OSMRecPluginHelper(DefaultTableModel propertyData, Map<String, Map<String, Integer>> valueCount) {
         this.tagData = propertyData;
-        fileHistory = Main.pref.getList("file-open.history");
+        fileHistory = Config.getPref().getList("file-open.history");
         if (!fileHistory.isEmpty()) {
             MAIN_PATH = (String) fileHistory.toArray()[0];
         } else {
@@ -203,7 +204,6 @@ class OSMRecPluginHelper {
         MODEL_PATH = new File(MAIN_PATH).getParentFile() + "/OSMRec_models";
         TEXTUAL_LIST_PATH = MODEL_PATH + "/textualList.txt";
         combinedModelClasses = MODEL_PATH + "/combinedModel.1";
-        combinedModel = MODEL_PATH + "/combinedModel.0";
         bestModelPath = MODEL_PATH + "/best_model";
         customSVMModelPath = bestModelPath;
         modelWithClassesPath = MODEL_PATH + "/model_with_classes";
@@ -220,7 +220,7 @@ class OSMRecPluginHelper {
      */
     public void addTag() {
         changedKey = null;
-        sel = Main.main.getInProgressSelection();
+        sel = OsmDataManager.getInstance().getInProgressSelection();
         if (sel == null || sel.isEmpty()) return;
 
         final AddTagsDialog addDialog = new AddTagsDialog();
@@ -242,10 +242,9 @@ class OSMRecPluginHelper {
      */
     public void editTag(final int row, boolean focusOnKey) {
         changedKey = null;
-        sel = Main.main.getInProgressSelection();
+        sel = OsmDataManager.getInstance().getInProgressSelection();
         String key = "";
 
-        @SuppressWarnings("unchecked")
         Map<String, Integer> dumPar = new HashMap<>();
         dumPar.put(" ", -1);
         final TrainingDialog editDialog = new TrainingDialog(key, row,
@@ -281,7 +280,7 @@ class OSMRecPluginHelper {
     public void loadTagsIfNeeded() {
         if (PROPERTY_REMEMBER_TAGS.get() && recentTags.isEmpty()) {
             recentTags.clear();
-            Collection<String> c = Main.pref.getList("properties.recent-tags");
+            Collection<String> c = Config.getPref().getList("properties.recent-tags");
             Iterator<String> it = c.iterator();
             String key, value;
             while (it.hasNext()) {
@@ -302,7 +301,7 @@ class OSMRecPluginHelper {
                 c.add(t.getKey());
                 c.add(t.getValue());
             }
-            Main.pref.putList("properties.recent-tags", c);
+            Config.getPref().putList("properties.recent-tags", c);
         }
     }
 
@@ -314,7 +313,7 @@ class OSMRecPluginHelper {
      */
     private boolean warnOverwriteKey(String action, String togglePref) {
         ExtendedDialog ed = new ExtendedDialog(
-                Main.parent,
+                MainApplication.getMainFrame(),
                 tr("Overwrite key"),
                 new String[]{tr("Replace"), tr("Cancel")});
         ed.setButtonIcons(new String[]{"purge", "cancel"});
@@ -366,7 +365,7 @@ class OSMRecPluginHelper {
         private UserDataExtractAndTrainWorker userDataExtractAndTrainWorker;
 
         private TrainingDialog(String key, int row, Map<String, Integer> map, final boolean initialFocusOnKey) {
-            super(Main.parent, tr("Training process configuration"), new String[] {tr("Cancel")});
+            super(MainApplication.getMainFrame(), tr("Training process configuration"), new String[] {tr("Cancel")});
 
             setButtonIcons(new String[] {"ok", "cancel"});
             setCancelButton(2);
@@ -423,7 +422,7 @@ class OSMRecPluginHelper {
             userNameField.setColumns(FIELD_COLUMNS);
             daysField.setColumns(FIELD_COLUMNS);
 
-            Collection<String> fileHistory = Main.pref.getList("file-open.history");
+            Collection<String> fileHistory = Config.getPref().getList("file-open.history");
             if (!fileHistory.isEmpty()) {
                 inputFileField.setText(MAIN_PATH);
             }
@@ -929,7 +928,7 @@ class OSMRecPluginHelper {
             // https://bugs.openjdk.java.net/browse/JDK-6464548
 
             setRememberWindowGeometry(getClass().getName() + ".geometry",
-                    WindowGeometry.centerInWindow(Main.parent, size));
+                    WindowGeometry.centerInWindow(MainApplication.getMainFrame(), size));
         }
 
         @Override
@@ -1199,7 +1198,7 @@ class OSMRecPluginHelper {
                 }
             };
 
-            dlg = pane.createDialog(Main.parent, tr("Model Settings"));
+            dlg = pane.createDialog(MainApplication.getMainFrame(), tr("Model Settings"));
             dlg.setVisible(true);
         }
 
@@ -1429,7 +1428,7 @@ class OSMRecPluginHelper {
         private static final int RECOMMENDATIONS_SIZE = 10;
 
         AddTagsDialog() {
-            super(Main.parent, tr("Add value?"), new String[] {tr("OK"), tr("Cancel")});
+            super(MainApplication.getMainFrame(), tr("Add value?"), new String[] {tr("OK"), tr("Cancel")});
             setButtonIcons(new String[] {"ok", "cancel"});
             setCancelButton(2);
             configureContextsensitiveHelp("/Dialog/AddValue", true /* show help button */);
@@ -1830,12 +1829,12 @@ class OSMRecPluginHelper {
             recentTags.put(new Tag(key, value), null);
             AutoCompletionManager.rememberUserInput(key, value, false);
             commandCount++;
-            MainApplication.undoRedo.add(new ChangePropertyCommand(sel, key, value));
+            UndoRedoHandler.getInstance().add(new ChangePropertyCommand(sel, key, value));
             changedKey = key;
         }
 
         public void undoAllTagsAdding() {
-            MainApplication.undoRedo.undo(commandCount);
+            UndoRedoHandler.getInstance().undo(commandCount);
         }
 
         private void disableTagIfNeeded(final Tag t, final JosmAction action) {

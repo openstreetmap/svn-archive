@@ -14,13 +14,13 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.openstreetmap.gui.jmapviewer.Coordinate;
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.plugins.namemanager.NameManagerPlugin;
 import org.openstreetmap.josm.plugins.namemanager.countryData.Country;
 import org.openstreetmap.josm.plugins.namemanager.countryData.CountryDataMemory;
+import org.openstreetmap.josm.tools.Logging;
 import org.openstreetmap.josm.tools.Pair;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -37,7 +37,7 @@ public final class NameManagerUtils {
      * @return the top {@link Window} of the JOSM application.
      */
     public static Window getTopWindow() {
-        Component component = Main.parent;
+        Component component = MainApplication.getMainFrame();
         if (component != null) {
             while (component.getParent() != null) {
                 component = component.getParent();
@@ -238,12 +238,8 @@ public final class NameManagerUtils {
             InputStream xml = NameManagerPlugin.class
                     .getResourceAsStream("/resources/administrative-levels.xml");
             doc = db.parse(xml);
-        } catch (ParserConfigurationException e) {
-            e.printStackTrace();
-        } catch (SAXException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (ParserConfigurationException | SAXException | IOException e) {
+            Logging.error(e);
         }
 
         return doc;

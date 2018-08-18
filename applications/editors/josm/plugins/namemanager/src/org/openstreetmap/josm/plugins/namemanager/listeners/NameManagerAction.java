@@ -7,10 +7,10 @@ import java.awt.event.ActionEvent;
 import java.util.Collection;
 
 import org.openstreetmap.josm.actions.JosmAction;
-import org.openstreetmap.josm.data.SelectionChangedListener;
+import org.openstreetmap.josm.data.osm.DataSelectionListener;
 import org.openstreetmap.josm.data.osm.DataSet;
-import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.data.osm.event.SelectionEventManager;
 import org.openstreetmap.josm.plugins.namemanager.dialog.NameManagerDialog;
 import org.openstreetmap.josm.plugins.namemanager.utils.NameManagerUtils;
 import org.w3c.dom.Document;
@@ -22,7 +22,7 @@ import org.w3c.dom.Document;
  * @author Rafal Jachowicz, Harman/Becker Automotive Systems (master's thesis)
  * 
  */
-public class NameManagerAction extends JosmAction implements SelectionChangedListener {
+public class NameManagerAction extends JosmAction implements DataSelectionListener {
 
     private static final String ATTRIBUTE_DISTRICTS = "Attribute districts";
     private static final String NAME_MANAGER = "Name Manager";
@@ -37,7 +37,7 @@ public class NameManagerAction extends JosmAction implements SelectionChangedLis
      */
     public NameManagerAction() {
         super(tr(NAME_MANAGER), NAME_MANAGER_MENU, tr(ATTRIBUTE_DISTRICTS), null, true, "namemanager", true);
-        DataSet.addSelectionListener(this);
+        SelectionEventManager.getInstance().addSelectionListener(this);
         setEnabled(false);
     }
 
@@ -64,14 +64,12 @@ public class NameManagerAction extends JosmAction implements SelectionChangedLis
     /**
      * This method is responsible for enabling and disabling toolmenu
      * LaneManager button.
-     * 
-     * @see org.openstreetmap.josm.data.SelectionChangedListener#selectionChanged(java.util.Collection)
      */
     @Override
-    public void selectionChanged(Collection<? extends OsmPrimitive> newSelection) {
+    public void selectionChanged(SelectionChangeEvent event) {
         boolean enabledState = false;
         DataSet ds = getLayerManager().getEditDataSet();
-        if (newSelection != null && ds != null) {
+        if (event.getSelection() != null && ds != null) {
             Collection<Way> selectedWays = ds.getSelectedWays();
             enabledState = selectedWays.size() == 1 && selectedWays.iterator().next().isClosed();
         }

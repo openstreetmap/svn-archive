@@ -39,7 +39,6 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.tagging.ac.AutoCompletingTextField;
@@ -102,7 +101,7 @@ public final class NameManagerDialog extends JDialog {
     private JButton deleteButton;
 
     private NameManagerDialog() {
-        super((JFrame) Main.parent, "Name Manager", true);
+        super((JFrame) MainApplication.getMainFrame(), "Name Manager", true);
         Container cp = this.getContentPane();
         cp.setLayout(new BorderLayout());
 
@@ -328,7 +327,7 @@ public final class NameManagerDialog extends JDialog {
     /**
      * Gets reference to the singleton object.
      * 
-     * @return Singleton object of the {@link LaneManagerDialog} class.
+     * @return Singleton object of the {@link NameManagerDialog} class.
      */
     public static NameManagerDialog getInstance() {
         if (dialog == null) {
@@ -343,7 +342,7 @@ public final class NameManagerDialog extends JDialog {
      * This method centers the dialog window on the screen.
      * 
      * @param dialog
-     *            is the {@link LaneManagerDialog} object
+     *            is the {@link NameManagerDialog} object
      */
     private static void centerDialog(NameManagerDialog dialog) {
         Window window = NameManagerUtils.getTopWindow();

@@ -14,12 +14,12 @@ import java.util.Set;
 
 import javax.swing.JOptionPane;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.DownloadAlongAction;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.help.HelpUtil;
 import org.openstreetmap.josm.gui.layer.gpx.DownloadAlongPanel;
 import org.openstreetmap.josm.gui.progress.NullProgressMonitor;
@@ -46,7 +46,7 @@ class DownloadAlongWayAction extends DownloadAlongAction {
         Set<Way> selectedWays = OsmPrimitive.getFilteredSet(getLayerManager().getEditDataSet().getSelected(), Way.class);
 
         if (selectedWays.isEmpty()) {
-            JOptionPane.showMessageDialog(Main.parent, tr("Please select 1 or more ways to download along"));
+            JOptionPane.showMessageDialog(MainApplication.getMainFrame(), tr("Please select 1 or more ways to download along"));
             return;
         }
 

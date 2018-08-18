@@ -14,7 +14,7 @@ public class ChannelDiGraph extends Graph {
     private ArrayList<Channel> channels = new ArrayList<>();
     private final ArrayList<LeadsTo> leadsTos = new ArrayList<>();
     private final HashSet<Channel> selectedChannels = new HashSet<>();
-    private HashSet<Channel> junctioncandidate = new HashSet<>();
+    private HashSet<Channel> junctionCandidate = new HashSet<>();
 
     public void setChannels(ArrayList<Channel> channels) {
         this.channels = channels;
@@ -270,15 +270,15 @@ public class ChannelDiGraph extends Graph {
     }
 
     public HashSet<Channel> getJunctionCandidate() {
-        return junctioncandidate;
+        return junctionCandidate;
     }
 
     public void ereaseJunctioncandidate() {
-        Iterator<Channel> it = junctioncandidate.iterator();
+        Iterator<Channel> it = junctionCandidate.iterator();
         while (it.hasNext()) {
             it.next().setPartOfJunction(false);
         }
-        junctioncandidate.clear();
+        junctionCandidate.clear();
     }
 
     /**
@@ -286,8 +286,8 @@ public class ChannelDiGraph extends Graph {
      * falls in im Hashset vorher Channels gespeichert waren, werden diese vorher gelöscht!
      */
     public void setJunctioncandidate(HashSet<Channel> junctionCandidate) {
-        this.junctioncandidate.clear();
-        this.junctioncandidate = junctionCandidate;
+        this.junctionCandidate.clear();
+        this.junctionCandidate = junctionCandidate;
         Iterator<Channel> it = junctionCandidate.iterator();
         while (it.hasNext()) {
             it.next().setPartOfJunction(true);
@@ -295,7 +295,7 @@ public class ChannelDiGraph extends Graph {
     }
 
     public void addJunctioncandidateChannel(Channel channel) {
-        junctioncandidate.add(channel);
+        junctionCandidate.add(channel);
         channel.setPartOfJunction(true);
     }
 

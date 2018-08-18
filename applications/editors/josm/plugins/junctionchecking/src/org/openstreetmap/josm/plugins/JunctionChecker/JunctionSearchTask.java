@@ -9,7 +9,7 @@ import java.util.HashSet;
 
 import javax.swing.JOptionPane;
 
-import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.PleaseWaitRunnable;
 import org.openstreetmap.josm.io.OsmTransferException;
 import org.openstreetmap.josm.plugins.JunctionChecker.datastructure.Channel;
@@ -53,7 +53,7 @@ public class JunctionSearchTask extends PleaseWaitRunnable {
             return;
         }
         ArrayList<HashSet<Channel>> junctions = jc.getJunctions();
-        JOptionPane.showMessageDialog(Main.parent, tr("Number of {0}-ways junctions found: {1}", n, junctions.size()));
+        JOptionPane.showMessageDialog(MainApplication.getMainFrame(), tr("Number of {0}-ways junctions found: {1}", n, junctions.size()));
         if (produceRelation) {
             for (int i = 0; i < junctions.size(); i++) {
                 plugin.getRelationProducer().produceRelation(junctions.get(i), n);

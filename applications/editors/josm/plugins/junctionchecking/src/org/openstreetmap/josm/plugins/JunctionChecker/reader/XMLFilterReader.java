@@ -7,6 +7,7 @@ import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 
 import org.openstreetmap.josm.plugins.JunctionChecker.filter.Filter;
+import org.openstreetmap.josm.tools.Logging;
 
 /**
  * @author  joerg
@@ -51,7 +52,7 @@ public class XMLFilterReader extends XMLReader {
                 parser.next();
             }
         } catch (XMLStreamException e) {
-            e.printStackTrace();
+            Logging.error(e);
         }
     }
 

@@ -15,10 +15,10 @@ import java.awt.geom.Line2D;
 import javax.swing.Action;
 import javax.swing.Icon;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
+import org.openstreetmap.josm.data.projection.ProjectionRegistry;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.plugins.JunctionChecker.datastructure.Channel;
@@ -141,7 +141,7 @@ public class ChannelDiGraphLayer extends Layer {
     }
 
     private Point getCoord(OSMNode node, MapView mv) {
-        return mv.getPoint(Main.getProjection().latlon2eastNorth(new LatLon(node.getLatitude(), node.getLongitude())));
+        return mv.getPoint(ProjectionRegistry.getProjection().latlon2eastNorth(new LatLon(node.getLatitude(), node.getLongitude())));
     }
 
     /**

@@ -9,6 +9,8 @@ import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
+import org.openstreetmap.josm.tools.Logging;
+
 public abstract class XMLReader {
 
     protected String filename;
@@ -20,7 +22,7 @@ public abstract class XMLReader {
             parser = factory
                 .createXMLStreamReader(this.getClass().getResourceAsStream(filename));
         } catch (XMLStreamException e) {
-            e.printStackTrace();
+            Logging.error(e);
         }
     }
 
@@ -28,10 +30,8 @@ public abstract class XMLReader {
         try {
             parser = factory
                     .createXMLStreamReader(new FileInputStream(file));
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (XMLStreamException e) {
-            e.printStackTrace();
+        } catch (FileNotFoundException | XMLStreamException e) {
+            Logging.error(e);
         }
     }
 

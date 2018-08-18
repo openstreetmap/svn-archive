@@ -9,7 +9,6 @@ import java.util.HashSet;
 
 import javax.swing.JOptionPane;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.PleaseWaitRunnable;
 import org.openstreetmap.josm.io.OsmTransferException;
@@ -28,7 +27,7 @@ public class JunctionCheckTask extends PleaseWaitRunnable {
     private final JunctionCheckerPlugin plugin;
     private final int n; //Grad der Kreuzung
     private final HashSet<Channel> subset; //Teilmge der zu prüfenden Channel
-    private final boolean producerelation;
+    private final boolean produceRelation;
     private boolean canceled;
 
     public JunctionCheckTask(JunctionCheckerPlugin plugin, int n, HashSet<Channel> subset, boolean produceRelation) {
@@ -36,7 +35,7 @@ public class JunctionCheckTask extends PleaseWaitRunnable {
         this.plugin = plugin;
         this.n = n;
         this.subset = subset;
-        this.producerelation = produceRelation;
+        this.produceRelation = produceRelation;
         jc = new JunctionChecker(plugin.getChannelDigraph(), n);
     }
 
@@ -54,20 +53,20 @@ public class JunctionCheckTask extends PleaseWaitRunnable {
         progressMonitor.finishTask();
         if (jc.isSmallerJunction()) {
             showjunction();
-            JOptionPane.showMessageDialog(Main.parent,
+            JOptionPane.showMessageDialog(MainApplication.getMainFrame(),
                 tr("The marked channels contains a junctioncandidate (white). To test this candidat mark these channel and press the \"Check\" button again."));
         } else if (jc.getCheck()) {
             showjunction();
-            JOptionPane.showMessageDialog(Main.parent, tr("The marked channels are a {0}-ways junction", n));
+            JOptionPane.showMessageDialog(MainApplication.getMainFrame(), tr("The marked channels are a {0}-ways junction", n));
             plugin.getChannelDigraph().ereaseJunctioncandidate();
             for (int i = 0; i < jc.getSubJunction().size(); i++) {
                 plugin.getChannelDigraph().addJunctioncandidateChannel(jc.getSubJunction().get(i));
             }
-            if (producerelation) {
+            if (produceRelation) {
                 this.plugin.getRelationProducer().produceRelation(subset, n);
             }
         } else if (!jc.getCheck()) {
-            JOptionPane.showMessageDialog(Main.parent, tr("The marked channels are not a junction:") + jc.getJCheckResult());
+            JOptionPane.showMessageDialog(MainApplication.getMainFrame(), tr("The marked channels are not a junction:") + jc.getJCheckResult());
         }
     }
 

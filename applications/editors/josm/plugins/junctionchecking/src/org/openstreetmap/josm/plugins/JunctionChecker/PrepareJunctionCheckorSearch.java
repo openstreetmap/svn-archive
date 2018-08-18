@@ -5,7 +5,6 @@ import java.util.HashSet;
 
 import javax.swing.JOptionPane;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.plugins.JunctionChecker.datastructure.Channel;
 
@@ -21,11 +20,11 @@ public class PrepareJunctionCheckorSearch {
     private JunctionCheckTask jct;
     private final boolean produceRelation;
 
-    public PrepareJunctionCheckorSearch(JunctionCheckerPlugin plugin, int n, boolean producerelation) {
+    public PrepareJunctionCheckorSearch(JunctionCheckerPlugin plugin, int n, boolean produceRelation) {
         this.plugin = plugin;
         this.n = n;
         this.subset = new HashSet<>();
-        this.produceRelation = producerelation;
+        this.produceRelation = produceRelation;
     }
 
     protected void prepareJunctionCheck() {
@@ -43,7 +42,7 @@ public class PrepareJunctionCheckorSearch {
 
     private boolean prepareSubset() {
         if (plugin.getChannelDigraph().getSelectedChannels().size() < 6) {
-            JOptionPane.showMessageDialog(Main.parent, "Less then 6 channels are selected");
+            JOptionPane.showMessageDialog(MainApplication.getMainFrame(), "Less then 6 channels are selected");
             return false;
         }
         subset = plugin.getChannelDigraph().getSelectedChannels();

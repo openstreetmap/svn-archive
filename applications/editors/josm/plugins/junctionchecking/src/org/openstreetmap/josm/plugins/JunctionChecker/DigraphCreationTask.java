@@ -8,7 +8,6 @@ import java.util.Iterator;
 
 import javax.swing.JOptionPane;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.DataSource;
 import org.openstreetmap.josm.data.osm.DataSet;
@@ -74,7 +73,7 @@ public class DigraphCreationTask extends PleaseWaitRunnable {
         //Prüfen, ob der ausgewählte Layer ein OSMDataLayer ist
         if (MainApplication.getMap() == null
                 || !MainApplication.getMap().isVisible() || !(MainApplication.getLayerManager().getActiveLayer() instanceof OsmDataLayer)) {
-            JOptionPane.showMessageDialog(Main.parent, tr("this layer is no osm data layer"));
+            JOptionPane.showMessageDialog(MainApplication.getMainFrame(), tr("this layer is no osm data layer"));
             return;
         }
         removeDigraphLayer();

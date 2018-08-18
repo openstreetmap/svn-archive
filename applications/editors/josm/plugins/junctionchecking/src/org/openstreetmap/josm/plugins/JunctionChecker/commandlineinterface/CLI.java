@@ -15,6 +15,7 @@ import org.openstreetmap.josm.plugins.JunctionChecker.junctionchecking.JunctionC
 import org.openstreetmap.josm.plugins.JunctionChecker.reader.OSMXMLReader;
 import org.openstreetmap.josm.plugins.JunctionChecker.reader.XMLFilterReader;
 import org.openstreetmap.josm.plugins.JunctionChecker.writing.OSMXMLWriter;
+import org.openstreetmap.josm.tools.Logging;
 
 public final class CLI {
 
@@ -70,22 +71,14 @@ public final class CLI {
 
         StrongConnectednessCalculator scc = new StrongConnectednessCalculator(cdgb.getDigraph());
         scc.calculateSCC();
-        //System.out.println(scc.showNotstronglyConnectednessParts());
 
         if (maxchannelsearch == 0) {
             OSMXMLWriter oxw = new OSMXMLWriter(outputosm, cdgb.getDigraph());
             try {
                 oxw.writeXML();
-            } catch (FileNotFoundException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            } catch (XMLStreamException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+            } catch (FileNotFoundException | XMLStreamException e) {
+                Logging.error(e);
             }
-            ;
-
-            System.out.println("OSMXML erzeugt, breche an dieser Stelle ab");
             return;
         }
 

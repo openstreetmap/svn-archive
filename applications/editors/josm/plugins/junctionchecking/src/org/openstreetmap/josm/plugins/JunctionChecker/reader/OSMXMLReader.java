@@ -12,6 +12,7 @@ import org.openstreetmap.josm.plugins.JunctionChecker.datastructure.OSMGraph;
 import org.openstreetmap.josm.plugins.JunctionChecker.datastructure.OSMNode;
 import org.openstreetmap.josm.plugins.JunctionChecker.datastructure.OSMRelation;
 import org.openstreetmap.josm.plugins.JunctionChecker.datastructure.OSMWay;
+import org.openstreetmap.josm.tools.Logging;
 
 /**
  * @author  joerg
@@ -174,7 +175,7 @@ public class OSMXMLReader extends XMLReader {
                 parser.next();
             }
         } catch (XMLStreamException e) {
-            e.printStackTrace();
+            Logging.error(e);
         }
     }
 

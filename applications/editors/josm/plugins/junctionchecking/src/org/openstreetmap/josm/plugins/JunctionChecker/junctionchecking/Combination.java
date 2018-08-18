@@ -1,6 +1,8 @@
 // License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.JunctionChecker.junctionchecking;
 
+import org.openstreetmap.josm.tools.Logging;
+
 public class Combination {
 
     private long n = 0;
@@ -9,12 +11,7 @@ public class Combination {
 
     public Combination(long n, long k) {
         if (n < 0 || k < 0)
-            try {
-                throw new Exception("Negative parameter in constructor");
-            } catch (Exception e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
+            Logging.error("Negative parameter in constructor");
         this.n = n;
         this.k = k;
         this.data = new long[(int) k];
@@ -25,12 +22,7 @@ public class Combination {
 
     public static long Choose(long n, long k) {
       if (n < 0 || k < 0)
-        try {
-            throw new Exception("Invalid negative parameter in Choose()");
-        } catch (Exception e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+          Logging.error("Invalid negative parameter in Choose()");
       if (n < k) return 0;
       if (n == k) return 1;
 

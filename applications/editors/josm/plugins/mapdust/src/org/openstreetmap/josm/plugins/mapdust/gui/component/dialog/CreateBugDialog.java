@@ -41,7 +41,6 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.WindowConstants;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.plugins.mapdust.MapdustPlugin;
 import org.openstreetmap.josm.plugins.mapdust.gui.action.adapter.WindowClose;
 import org.openstreetmap.josm.plugins.mapdust.gui.action.execute.ExecuteAddBug;
@@ -50,6 +49,7 @@ import org.openstreetmap.josm.plugins.mapdust.gui.component.panel.MapdustButtonP
 import org.openstreetmap.josm.plugins.mapdust.gui.component.renderer.ComboBoxRenderer;
 import org.openstreetmap.josm.plugins.mapdust.gui.component.util.ComponentUtil;
 import org.openstreetmap.josm.plugins.mapdust.service.value.BugType;
+import org.openstreetmap.josm.spi.preferences.Config;
 import org.openstreetmap.josm.tools.ImageProvider;
 
 /**
@@ -173,10 +173,10 @@ public class CreateBugDialog extends AbstractDialog {
             Rectangle bounds = new Rectangle(110, 50, 250, 25);
             txtNickname = ComponentUtil.createJTextField(bounds);
             /* get the nickname */
-            String nickname = Main.pref.get("mapdust.nickname");
+            String nickname = Config.getPref().get("mapdust.nickname");
             if (nickname.isEmpty()) {
                 /* if nickname is empty, get the JOSM username */
-                nickname = Main.pref.get("mapdust.josmUserName");
+                nickname = Config.getPref().get("mapdust.josmUserName");
             }
             if (nickname != null && !nickname.isEmpty()) {
                 txtNickname.setText(nickname);

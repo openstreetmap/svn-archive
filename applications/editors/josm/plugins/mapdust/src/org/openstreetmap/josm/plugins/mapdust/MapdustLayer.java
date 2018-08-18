@@ -29,6 +29,7 @@ package org.openstreetmap.josm.plugins.mapdust;
 
 
 import static org.openstreetmap.josm.tools.I18n.tr;
+
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -39,10 +40,12 @@ import java.awt.image.ImageObserver;
 import java.text.DateFormat;
 import java.util.List;
 import java.util.Locale;
+
 import javax.swing.Action;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JToolTip;
+
 import org.openstreetmap.josm.actions.RenameLayerAction;
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.coor.LatLon;

@@ -30,6 +30,7 @@ package org.openstreetmap.josm.plugins.mapdust.gui.action.execute;
 
 import javax.swing.AbstractAction;
 import javax.swing.JToggleButton;
+
 import org.openstreetmap.josm.plugins.mapdust.gui.MapdustGUI;
 import org.openstreetmap.josm.plugins.mapdust.gui.component.dialog.AbstractDialog;
 import org.openstreetmap.josm.plugins.mapdust.service.value.MapdustBug;

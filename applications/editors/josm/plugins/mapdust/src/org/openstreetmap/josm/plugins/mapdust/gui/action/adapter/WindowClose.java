@@ -30,11 +30,12 @@ package org.openstreetmap.josm.plugins.mapdust.gui.action.adapter;
 
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import org.openstreetmap.josm.Main;
+
 import org.openstreetmap.josm.plugins.mapdust.gui.component.dialog.AbstractDialog;
 import org.openstreetmap.josm.plugins.mapdust.gui.component.panel.MapdustButtonPanel;
 import org.openstreetmap.josm.plugins.mapdust.gui.value.MapdustPluginState;
 import org.openstreetmap.josm.plugins.mapdust.service.value.Status;
+import org.openstreetmap.josm.spi.preferences.Config;
 
 
 /**
@@ -69,8 +70,8 @@ public class WindowClose extends WindowAdapter {
 
     @Override
     public void windowClosing(WindowEvent event) {
-        String status = Main.pref.get("selectedBug.status");
-        String pluginState = Main.pref.get("mapdust.pluginState");
+        String status = Config.getPref().get("selectedBug.status");
+        String pluginState = Config.getPref().get("mapdust.pluginState");
         /* enable buttons */
         if (btnPanel != null) {
             btnPanel.getBtnWorkOffline().setEnabled(true);

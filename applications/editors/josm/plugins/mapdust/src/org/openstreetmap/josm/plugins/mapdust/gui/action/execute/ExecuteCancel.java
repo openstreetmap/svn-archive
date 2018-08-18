@@ -29,12 +29,13 @@ package org.openstreetmap.josm.plugins.mapdust.gui.action.execute;
 
 
 import java.awt.event.ActionEvent;
-import org.openstreetmap.josm.Main;
+
 import org.openstreetmap.josm.plugins.mapdust.gui.MapdustGUI;
 import org.openstreetmap.josm.plugins.mapdust.gui.component.dialog.AbstractDialog;
 import org.openstreetmap.josm.plugins.mapdust.gui.component.panel.MapdustButtonPanel;
 import org.openstreetmap.josm.plugins.mapdust.gui.value.MapdustPluginState;
 import org.openstreetmap.josm.plugins.mapdust.service.value.Status;
+import org.openstreetmap.josm.spi.preferences.Config;
 
 
 /**
@@ -72,8 +73,8 @@ public class ExecuteCancel extends MapdustExecuteAction {
     @Override
     public void actionPerformed(ActionEvent event) {
         if (event != null) {
-            String pluginState = Main.pref.get("mapdust.pluginState");
-            String status = Main.pref.get("selectedBug.status");
+            String pluginState = Config.getPref().get("mapdust.pluginState");
+            String status = Config.getPref().get("selectedBug.status");
             /* enable buttons */
             MapdustButtonPanel btnPanel =
                     getMapdustGUI().getPanel().getBtnPanel();

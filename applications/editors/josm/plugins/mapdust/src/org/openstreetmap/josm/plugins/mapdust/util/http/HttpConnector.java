@@ -40,11 +40,9 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.plugins.mapdust.util.retry.RetryAgent;
 import org.openstreetmap.josm.plugins.mapdust.util.retry.RetrySetup;
 import org.openstreetmap.josm.tools.Logging;
-
 
 /**
  * General connector to a given REST web service.

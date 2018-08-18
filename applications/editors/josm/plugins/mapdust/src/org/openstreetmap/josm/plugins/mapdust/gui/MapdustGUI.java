@@ -29,13 +29,15 @@ package org.openstreetmap.josm.plugins.mapdust.gui;
 
 
 import static org.openstreetmap.josm.tools.I18n.tr;
+
 import java.awt.BorderLayout;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
-import org.openstreetmap.josm.Main;
+
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.dialogs.ToggleDialog;
 import org.openstreetmap.josm.plugins.mapdust.MapdustPlugin;
@@ -53,6 +55,7 @@ import org.openstreetmap.josm.plugins.mapdust.gui.value.MapdustServiceCommand;
 import org.openstreetmap.josm.plugins.mapdust.service.value.MapdustBug;
 import org.openstreetmap.josm.plugins.mapdust.service.value.MapdustBugFilter;
 import org.openstreetmap.josm.plugins.mapdust.service.value.Status;
+import org.openstreetmap.josm.spi.preferences.Config;
 import org.openstreetmap.josm.tools.Shortcut;
 
 
@@ -232,7 +235,7 @@ public class MapdustGUI extends ToggleDialog implements MapdustActionObserver,
     public synchronized void update(List<MapdustBug> mapdustBugs,
             MapdustPlugin mapdustPlugin) {
         setMapdustPlugin(mapdustPlugin);
-        String pluginState = Main.pref.get("mapdust.pluginState");
+        String pluginState = Config.getPref().get("mapdust.pluginState");
         if (pluginState.equals(MapdustPluginState.ONLINE.getValue())) {
             if (tabbedPane != null) {
                 /* from off-line to online */

@@ -29,12 +29,15 @@ package org.openstreetmap.josm.plugins.mapdust.gui.action.execute;
 
 
 import static org.openstreetmap.josm.tools.I18n.tr;
+
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.Iterator;
+
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
-import org.openstreetmap.josm.Main;
+
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.plugins.mapdust.gui.MapdustGUI;
 import org.openstreetmap.josm.plugins.mapdust.gui.component.dialog.CommentBugDialog;
 import org.openstreetmap.josm.plugins.mapdust.gui.observer.MapdustActionObservable;
@@ -48,6 +51,7 @@ import org.openstreetmap.josm.plugins.mapdust.service.MapdustServiceHandler;
 import org.openstreetmap.josm.plugins.mapdust.service.MapdustServiceHandlerException;
 import org.openstreetmap.josm.plugins.mapdust.service.value.MapdustBug;
 import org.openstreetmap.josm.plugins.mapdust.service.value.MapdustComment;
+import org.openstreetmap.josm.spi.preferences.Config;
 
 
 /**
@@ -110,16 +114,16 @@ public class ExecuteCommentBug extends MapdustExecuteAction implements
                 String errorMessage = validate(nickname, commentText);
                 if (errorMessage != null) {
                     /* invalid input data */
-                    JOptionPane.showMessageDialog(Main.parent, tr(errorMessage),
+                    JOptionPane.showMessageDialog(MainApplication.getMainFrame(), tr(errorMessage),
                             tr("Missing input data"), JOptionPane.WARNING_MESSAGE);
                     return;
                 }
                 /* valid */
-                Main.pref.put("mapdust.nickname", nickname);
+                Config.getPref().put("mapdust.nickname", nickname);
                 MapdustBug selectedBug = mapdustGUI.getSelectedBug();
                 MapdustComment comment = new MapdustComment(selectedBug.getId(),
                         commentText, nickname);
-                String pluginState = Main.pref.get("mapdust.pluginState");
+                String pluginState = Config.getPref().get("mapdust.pluginState");
                 if (pluginState.equals(MapdustPluginState.OFFLINE.getValue())) {
                     /* offline, save to actions list */
                     String iconPath = getIconPath(selectedBug);
@@ -143,7 +147,7 @@ public class ExecuteCommentBug extends MapdustExecuteAction implements
                         id = handler.commentBug(comment);
                     } catch (MapdustServiceHandlerException e) {
                         errorMessage = "There was a Mapdust service error.";
-                        JOptionPane.showMessageDialog(Main.parent,
+                        JOptionPane.showMessageDialog(MainApplication.getMainFrame(),
                                 tr(errorMessage), tr("Error"),
                                 JOptionPane.ERROR_MESSAGE);
                     }
@@ -155,7 +159,7 @@ public class ExecuteCommentBug extends MapdustExecuteAction implements
                                     null);
                         } catch (MapdustServiceHandlerException e) {
                             errorMessage = "There was a Mapdust service error.";
-                            JOptionPane.showMessageDialog(Main.parent,
+                            JOptionPane.showMessageDialog(MainApplication.getMainFrame(),
                                     tr(errorMessage), tr("Error"),
                                     JOptionPane.ERROR_MESSAGE);
                         }

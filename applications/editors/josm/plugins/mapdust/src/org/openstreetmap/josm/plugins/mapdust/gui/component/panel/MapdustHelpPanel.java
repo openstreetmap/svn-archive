@@ -29,10 +29,12 @@ package org.openstreetmap.josm.plugins.mapdust.gui.component.panel;
 
 
 import static org.openstreetmap.josm.tools.I18n.tr;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.net.URI;
+
 import javax.swing.JEditorPane;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -40,9 +42,11 @@ import javax.swing.JScrollPane;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 import javax.swing.text.html.HTMLEditorKit;
-import org.openstreetmap.josm.Main;
+
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.plugins.mapdust.gui.component.util.ComponentUtil;
 import org.openstreetmap.josm.plugins.mapdust.util.Configuration;
+import org.openstreetmap.josm.spi.preferences.Config;
 import org.openstreetmap.josm.tools.OpenBrowser;
 
 
@@ -84,7 +88,7 @@ public class MapdustHelpPanel extends JPanel implements HyperlinkListener {
                 OpenBrowser.displayUrl(new URI(url));
             } catch (Exception e) {
                 String errorMessage = "Error opening the MapDust wiki page";
-                JOptionPane.showMessageDialog(Main.parent, tr(errorMessage),
+                JOptionPane.showMessageDialog(MainApplication.getMainFrame(), tr(errorMessage),
                         tr("Error"), JOptionPane.ERROR_MESSAGE);
             }
         }
@@ -100,14 +104,14 @@ public class MapdustHelpPanel extends JPanel implements HyperlinkListener {
     private String buildText() {
         Integer version;
         try {
-            version = Integer.decode(Main.pref.get("mapdust.version"));
+            version = Integer.decode(Config.getPref().get("mapdust.version"));
         } catch (NumberFormatException e) {
             version = null;
         }
                 
         Integer localVersion;
         try {
-            localVersion = Integer.decode(Main.pref.get("mapdust.localVersion"));
+            localVersion = Integer.decode(Config.getPref().get("mapdust.localVersion"));
         } catch (NumberFormatException e) {
             localVersion = null;
         }
@@ -117,9 +121,9 @@ public class MapdustHelpPanel extends JPanel implements HyperlinkListener {
         sb.append("<b>You are using MapDust version ");
         sb.append("<i style='color:red;font-size:10px'>");
         if (version != null && localVersion != null && version <= localVersion) {
-            sb.append(Main.pref.get("mapdust.version")).append("</i>.</b><br>");
+            sb.append(Config.getPref().get("mapdust.version")).append("</i>.</b><br>");
         } else {
-            sb.append(Main.pref.get("mapdust.localVersion"));
+            sb.append(Config.getPref().get("mapdust.localVersion"));
             sb.append("</i>. There is an update available. ");
             sb.append("Please update to version ");
             sb.append("<i style='color:red;font-size:10px'>");

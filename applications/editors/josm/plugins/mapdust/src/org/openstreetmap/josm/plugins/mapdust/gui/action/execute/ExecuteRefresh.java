@@ -31,12 +31,14 @@ package org.openstreetmap.josm.plugins.mapdust.gui.action.execute;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.Iterator;
+
 import javax.swing.AbstractAction;
 import javax.swing.JToggleButton;
-import org.openstreetmap.josm.Main;
+
 import org.openstreetmap.josm.plugins.mapdust.gui.observer.MapdustUpdateObservable;
 import org.openstreetmap.josm.plugins.mapdust.gui.observer.MapdustUpdateObserver;
 import org.openstreetmap.josm.plugins.mapdust.service.value.MapdustBugFilter;
+import org.openstreetmap.josm.spi.preferences.Config;
 
 
 /**
@@ -71,7 +73,7 @@ public class ExecuteRefresh extends AbstractAction implements
         if (event.getSource() instanceof JToggleButton) {
             JToggleButton btn = (JToggleButton) event.getSource();
             /* update the bugs */
-            Main.pref.putBoolean("mapdust.showError", true);
+            Config.getPref().putBoolean("mapdust.showError", true);
             notifyObservers(null, false);
             btn.setSelected(false);
             btn.setFocusable(false);

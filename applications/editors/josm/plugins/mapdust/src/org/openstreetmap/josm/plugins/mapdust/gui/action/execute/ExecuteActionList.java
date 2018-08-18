@@ -34,11 +34,12 @@ import java.awt.event.ActionEvent;
 import javax.swing.JOptionPane;
 import javax.swing.JToggleButton;
 
-import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.plugins.mapdust.gui.MapdustActionUploader;
 import org.openstreetmap.josm.plugins.mapdust.gui.MapdustActionUploaderException;
 import org.openstreetmap.josm.plugins.mapdust.gui.MapdustGUI;
 import org.openstreetmap.josm.plugins.mapdust.gui.value.MapdustPluginState;
+import org.openstreetmap.josm.spi.preferences.Config;
 
 /**
  * Uploads the <code>MapdustAction</code> objects from the action list to the
@@ -73,10 +74,10 @@ public class ExecuteActionList extends MapdustExecuteActionObservable {
             } catch (MapdustActionUploaderException e) {
                 String errorMessage = "There was an error uploading the ";
                 errorMessage += "action list.";
-                JOptionPane.showMessageDialog(Main.parent, tr(errorMessage),
+                JOptionPane.showMessageDialog(MainApplication.getMainFrame(), tr(errorMessage),
                         tr("Error"), JOptionPane.ERROR_MESSAGE);
             }
-            Main.pref.put("mapdust.pluginState",
+            Config.getPref().put("mapdust.pluginState",
                     MapdustPluginState.ONLINE.getValue());
             notifyObservers(null, false);
         }

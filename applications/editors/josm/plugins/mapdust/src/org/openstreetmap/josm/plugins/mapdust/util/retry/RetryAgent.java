@@ -27,7 +27,6 @@
  */
 package org.openstreetmap.josm.plugins.mapdust.util.retry;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.tools.Logging;
 
 /**

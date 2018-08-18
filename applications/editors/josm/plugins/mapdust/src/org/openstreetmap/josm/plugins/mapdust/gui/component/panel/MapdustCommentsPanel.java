@@ -34,9 +34,11 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.text.DateFormat;
 import java.util.Locale;
+
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+
 import org.openstreetmap.josm.plugins.mapdust.gui.component.util.ComponentUtil;
 import org.openstreetmap.josm.plugins.mapdust.service.value.MapdustComment;
 

@@ -31,7 +31,9 @@ package org.openstreetmap.josm.plugins.mapdust.gui.component.panel;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.GridLayout;
+
 import javax.swing.JPanel;
+
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.plugins.mapdust.gui.component.util.ComponentUtil;
 import org.openstreetmap.josm.plugins.mapdust.service.value.Address;

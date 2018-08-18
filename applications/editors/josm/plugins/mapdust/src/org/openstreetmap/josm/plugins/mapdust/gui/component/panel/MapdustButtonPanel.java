@@ -29,10 +29,11 @@ package org.openstreetmap.josm.plugins.mapdust.gui.component.panel;
 
 
 import java.awt.GridLayout;
+
 import javax.swing.AbstractAction;
 import javax.swing.JPanel;
 import javax.swing.JToggleButton;
-import org.openstreetmap.josm.Main;
+
 import org.openstreetmap.josm.plugins.mapdust.MapdustPlugin;
 import org.openstreetmap.josm.plugins.mapdust.gui.action.execute.ExecuteRefresh;
 import org.openstreetmap.josm.plugins.mapdust.gui.action.execute.ExecuteWorkOffline;
@@ -43,6 +44,7 @@ import org.openstreetmap.josm.plugins.mapdust.gui.action.show.ShowInvalidateBugA
 import org.openstreetmap.josm.plugins.mapdust.gui.action.show.ShowReOpenBugAction;
 import org.openstreetmap.josm.plugins.mapdust.gui.component.util.ComponentUtil;
 import org.openstreetmap.josm.plugins.mapdust.gui.value.MapdustPluginState;
+import org.openstreetmap.josm.spi.preferences.Config;
 
 
 /**
@@ -103,7 +105,7 @@ public class MapdustButtonPanel extends JPanel {
         String text = "";
         String imagePath = "";
         if (btnWorkOffline == null) {
-            String pluginState = Main.pref.get("mapdust.pluginState");
+            String pluginState = Config.getPref().get("mapdust.pluginState");
             if (pluginState.equals(MapdustPluginState.ONLINE.getValue())) {
                 text = "Work offline mode";
                 imagePath = "dialogs/workoffline.png";
@@ -173,7 +175,7 @@ public class MapdustButtonPanel extends JPanel {
         if (btnRefresh == null) {
             text = "Refresh";
             imagePath = "dialogs/mapdust_refresh.png";
-            String pluginState = Main.pref.get("mapdust.pluginState");
+            String pluginState = Config.getPref().get("mapdust.pluginState");
             AbstractAction action = new ExecuteRefresh();
             ((ExecuteRefresh) action).addObserver(mapdustPlugin);
             btnRefresh = ComponentUtil.createJButton(text, text, imagePath,
@@ -250,7 +252,7 @@ public class MapdustButtonPanel extends JPanel {
         btnFilter.setEnabled(true);
         btnFilter.setSelected(false);
         btnFilter.setFocusable(false);
-        String pluginState = Main.pref.get("mapdust.pluginState");
+        String pluginState = Config.getPref().get("mapdust.pluginState");
         if (pluginState.equals(MapdustPluginState.ONLINE.getValue())) {
             btnRefresh.setEnabled(true);
         } else {

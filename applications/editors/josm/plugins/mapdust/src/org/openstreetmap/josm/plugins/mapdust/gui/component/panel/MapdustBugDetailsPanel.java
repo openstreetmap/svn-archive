@@ -29,6 +29,7 @@ package org.openstreetmap.josm.plugins.mapdust.gui.component.panel;
 
 
 import static org.openstreetmap.josm.tools.I18n.tr;
+
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -36,13 +37,15 @@ import java.awt.GridLayout;
 import java.net.URI;
 import java.text.DateFormat;
 import java.util.Locale;
+
 import javax.swing.JEditorPane;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 import javax.swing.text.html.HTMLEditorKit;
-import org.openstreetmap.josm.Main;
+
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.plugins.mapdust.gui.component.util.ComponentUtil;
 import org.openstreetmap.josm.plugins.mapdust.service.value.MapdustBug;
 import org.openstreetmap.josm.plugins.mapdust.service.value.MapdustRelevance;
@@ -168,7 +171,7 @@ public class MapdustBugDetailsPanel extends JPanel implements HyperlinkListener 
                 } catch (Exception e) {
                     String errorMessage = "Error opening the MapDust bug ";
                     errorMessage += "details page";
-                    JOptionPane.showMessageDialog(Main.parent,
+                    JOptionPane.showMessageDialog(MainApplication.getMainFrame(),
                             tr(errorMessage), tr("Error"),
                             JOptionPane.ERROR_MESSAGE);
                 }

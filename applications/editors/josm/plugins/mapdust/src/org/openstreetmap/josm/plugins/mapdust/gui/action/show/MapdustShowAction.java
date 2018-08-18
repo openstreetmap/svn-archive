@@ -29,6 +29,7 @@ package org.openstreetmap.josm.plugins.mapdust.gui.action.show;
 
 
 import javax.swing.AbstractAction;
+
 import org.openstreetmap.josm.plugins.mapdust.MapdustPlugin;
 import org.openstreetmap.josm.plugins.mapdust.gui.component.panel.MapdustButtonPanel;
 

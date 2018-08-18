@@ -33,13 +33,15 @@ package org.openstreetmap.josm.plugins.mapdust.gui.action.show;
 
 
 import java.awt.event.ActionEvent;
+
 import javax.swing.JMenuItem;
 import javax.swing.JToggleButton;
-import org.openstreetmap.josm.Main;
+
 import org.openstreetmap.josm.plugins.mapdust.MapdustPlugin;
 import org.openstreetmap.josm.plugins.mapdust.gui.component.dialog.FilterBugDialog;
 import org.openstreetmap.josm.plugins.mapdust.gui.component.panel.MapdustButtonPanel;
 import org.openstreetmap.josm.plugins.mapdust.service.value.MapdustBug;
+import org.openstreetmap.josm.spi.preferences.Config;
 
 
 /**
@@ -92,10 +94,10 @@ public class ShowFilterBugAction extends MapdustShowAction {
             MapdustBug selectedBug =
                     mapdustPlugin.getMapdustGUI().getSelectedBug();
             if (selectedBug != null) {
-                Main.pref.put("selectedBug.status", selectedBug.getStatus()
+                Config.getPref().put("selectedBug.status", selectedBug.getStatus()
                         .getValue());
             } else {
-                Main.pref.put("selectedBug.status", "");
+                Config.getPref().put("selectedBug.status", "");
             }
             disableButtons(getButtonPanel());
             FilterBugDialog dialog = new FilterBugDialog(getTitle(),

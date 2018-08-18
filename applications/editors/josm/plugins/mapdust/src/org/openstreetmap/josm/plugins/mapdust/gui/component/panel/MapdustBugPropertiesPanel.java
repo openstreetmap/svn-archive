@@ -29,14 +29,17 @@ package org.openstreetmap.josm.plugins.mapdust.gui.component.panel;
 
 
 import static org.openstreetmap.josm.tools.I18n.tr;
+
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
-import org.openstreetmap.josm.Main;
+
 import org.openstreetmap.josm.data.coor.LatLon;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.plugins.mapdust.gui.component.util.ComponentUtil;
 import org.openstreetmap.josm.plugins.mapdust.gui.observer.MapdustBugDetailsObserver;
 import org.openstreetmap.josm.plugins.mapdust.service.MapdustServiceHandler;
@@ -218,7 +221,7 @@ public class MapdustBugPropertiesPanel extends JPanel implements
         } catch (MapdustServiceHandlerException e) {
             String errorMessage = "There was a MapDust service error durring ";
             errorMessage += " the MapDust bug retrieve process.";
-            JOptionPane.showMessageDialog(Main.parent, tr(errorMessage),
+            JOptionPane.showMessageDialog(MainApplication.getMainFrame(), tr(errorMessage),
                     tr("Error"), JOptionPane.ERROR_MESSAGE);
         }
         return bug;

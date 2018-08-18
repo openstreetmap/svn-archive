@@ -29,8 +29,10 @@ package org.openstreetmap.josm.plugins.mapdust.gui.action.show;
 
 
 import java.awt.event.ActionEvent;
+
 import javax.swing.JMenuItem;
 import javax.swing.JToggleButton;
+
 import org.openstreetmap.josm.plugins.mapdust.MapdustPlugin;
 import org.openstreetmap.josm.plugins.mapdust.gui.component.dialog.ChangeBugStatusDialog;
 import org.openstreetmap.josm.plugins.mapdust.gui.component.panel.MapdustButtonPanel;

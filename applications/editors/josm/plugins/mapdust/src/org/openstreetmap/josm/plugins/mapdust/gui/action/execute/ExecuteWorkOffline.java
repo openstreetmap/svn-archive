@@ -34,11 +34,12 @@ import java.awt.event.ActionEvent;
 import javax.swing.JOptionPane;
 import javax.swing.JToggleButton;
 
-import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.plugins.mapdust.gui.MapdustActionUploader;
 import org.openstreetmap.josm.plugins.mapdust.gui.MapdustActionUploaderException;
 import org.openstreetmap.josm.plugins.mapdust.gui.MapdustGUI;
 import org.openstreetmap.josm.plugins.mapdust.gui.value.MapdustPluginState;
+import org.openstreetmap.josm.spi.preferences.Config;
 
 /**
  * Executes the "work offline" action. In the offline mode the user actions will
@@ -80,9 +81,9 @@ public class ExecuteWorkOffline extends MapdustExecuteActionObservable {
         if (event.getSource() instanceof JToggleButton) {
             JToggleButton btn = (JToggleButton) event.getSource();
             if (getMapdustGUI() != null) {
-                String pluginState = Main.pref.get("mapdust.pluginState");
+                String pluginState = Config.getPref().get("mapdust.pluginState");
                 if (pluginState.equals(MapdustPluginState.ONLINE.getValue())) {
-                    Main.pref.put("mapdust.pluginState",
+                    Config.getPref().put("mapdust.pluginState",
                             MapdustPluginState.OFFLINE.getValue());
                     btn.setSelected(false);
                     btn.setFocusable(false);
@@ -91,7 +92,7 @@ public class ExecuteWorkOffline extends MapdustExecuteActionObservable {
                     String title = "MapDust";
                     String message = "Do you want to submit your changes ";
                     message += "to Mapdust?";
-                    int result = JOptionPane.showConfirmDialog(Main.parent,
+                    int result = JOptionPane.showConfirmDialog(MainApplication.getMainFrame(),
                             tr(message), tr(title), JOptionPane.YES_NO_OPTION);
                     if (result == JOptionPane.YES_OPTION) {
                         try {
@@ -100,12 +101,12 @@ public class ExecuteWorkOffline extends MapdustExecuteActionObservable {
                         } catch (MapdustActionUploaderException e) {
                             String errorMessage = "There was a Mapdust service";
                             errorMessage += " error.";
-                            JOptionPane.showMessageDialog(Main.parent,
+                            JOptionPane.showMessageDialog(MainApplication.getMainFrame(),
                                     tr(errorMessage), tr("Error"),
                                     JOptionPane.ERROR_MESSAGE);
                         }
                     }
-                    Main.pref.put("mapdust.pluginState",
+                    Config.getPref().put("mapdust.pluginState",
                             MapdustPluginState.ONLINE.getValue());
                     btn.setSelected(false);
                     btn.setFocusable(false);

@@ -33,6 +33,7 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
 import javax.swing.JList;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
@@ -41,7 +42,7 @@ import javax.swing.JScrollPane;
 import javax.swing.border.LineBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import org.openstreetmap.josm.Main;
+
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.plugins.mapdust.MapdustPlugin;
 import org.openstreetmap.josm.plugins.mapdust.gui.MapdustGUI;
@@ -57,6 +58,7 @@ import org.openstreetmap.josm.plugins.mapdust.gui.component.util.ComponentUtil;
 import org.openstreetmap.josm.plugins.mapdust.gui.observer.MapdustBugDetailsObservable;
 import org.openstreetmap.josm.plugins.mapdust.gui.observer.MapdustBugDetailsObserver;
 import org.openstreetmap.josm.plugins.mapdust.service.value.MapdustBug;
+import org.openstreetmap.josm.spi.preferences.Config;
 
 
 /**
@@ -222,7 +224,7 @@ public class MapdustBugListPanel extends JPanel implements
             MapdustBug selectedBug =
                     (MapdustBug) mapdustBugsJList.getSelectedValue();
             if (selectedBug != null) {
-                Main.pref.put("selectedBug.status", selectedBug.getStatus()
+                Config.getPref().put("selectedBug.status", selectedBug.getStatus()
                         .getValue());
                 if (selectedBug.getStatus().getKey().equals(1)) {
                     /* status open */

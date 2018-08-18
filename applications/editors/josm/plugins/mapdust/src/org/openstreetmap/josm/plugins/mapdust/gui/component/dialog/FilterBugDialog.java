@@ -38,10 +38,12 @@ import java.awt.Image;
 import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JToggleButton;
 import javax.swing.WindowConstants;
+
 import org.openstreetmap.josm.plugins.mapdust.MapdustPlugin;
 import org.openstreetmap.josm.plugins.mapdust.gui.action.adapter.WindowClose;
 import org.openstreetmap.josm.plugins.mapdust.gui.action.execute.ExecuteCancel;
@@ -51,10 +53,10 @@ import org.openstreetmap.josm.plugins.mapdust.gui.component.slider.RelevanceSlid
 import org.openstreetmap.josm.plugins.mapdust.gui.component.util.ComponentUtil;
 import org.openstreetmap.josm.plugins.mapdust.gui.component.util.FilterCheckBox;
 import org.openstreetmap.josm.plugins.mapdust.gui.value.MapdustRelevanceValue;
+import org.openstreetmap.josm.plugins.mapdust.service.value.BugType;
 import org.openstreetmap.josm.plugins.mapdust.service.value.MapdustBugFilter;
 import org.openstreetmap.josm.plugins.mapdust.service.value.MapdustRelevance;
 import org.openstreetmap.josm.plugins.mapdust.service.value.Status;
-import org.openstreetmap.josm.plugins.mapdust.service.value.BugType;
 import org.openstreetmap.josm.tools.ImageProvider;
 
 

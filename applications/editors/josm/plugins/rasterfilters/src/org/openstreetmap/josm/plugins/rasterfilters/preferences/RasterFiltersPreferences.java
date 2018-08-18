@@ -16,11 +16,11 @@ import javax.swing.event.TableModelListener;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableModel;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.preferences.PreferenceTabbedPane;
 import org.openstreetmap.josm.gui.preferences.SubPreferenceSetting;
 import org.openstreetmap.josm.gui.preferences.TabPreferenceSetting;
 import org.openstreetmap.josm.gui.preferences.map.MapPreference;
+import org.openstreetmap.josm.spi.preferences.Config;
 import org.openstreetmap.josm.tools.GBC;
 
 /**
@@ -90,7 +90,7 @@ public class RasterFiltersPreferences implements SubPreferenceSetting {
             JsonObject meta = temp.getMeta();
             String paramName = meta.getString("name");
             paramName = "rasterfilters." + paramName;
-            Main.pref.putBoolean(paramName, temp.isNeedToDownload());
+            Config.getPref().putBoolean(paramName, temp.isNeedToDownload());
         }
 
         return false;

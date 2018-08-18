@@ -23,7 +23,6 @@ import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
 
-import com.bric.swing.ColorPicker;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.plugins.rasterfilters.filters.Filter;
 import org.openstreetmap.josm.plugins.rasterfilters.gui.FilterGuiListener;
@@ -32,6 +31,8 @@ import org.openstreetmap.josm.plugins.rasterfilters.gui.FiltersDialog;
 import org.openstreetmap.josm.plugins.rasterfilters.preferences.FiltersDownloader;
 import org.openstreetmap.josm.tools.ImageProcessor;
 import org.openstreetmap.josm.tools.Logging;
+
+import com.bric.swing.ColorPicker;
 
 
 /**

@@ -1,5 +1,7 @@
 package org.openstreetmap.josm.plugins.rasterfilters.actions;
 
+import static org.openstreetmap.josm.tools.I18n.tr;
+
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.net.MalformedURLException;
@@ -16,8 +18,6 @@ import org.openstreetmap.josm.gui.layer.Layer.LayerAction;
 import org.openstreetmap.josm.plugins.rasterfilters.gui.FiltersDialog;
 import org.openstreetmap.josm.tools.ImageProvider;
 import org.openstreetmap.josm.tools.Logging;
-
-import static org.openstreetmap.josm.tools.I18n.tr;
 
 /**
  * The action that is called when user click on 'Choose filters' button
@@ -57,7 +57,7 @@ public final class ShowFiltersDialogAction extends AbstractAction implements Lay
                     try {
                         temp.createAndShowGui();
                     } catch (MalformedURLException e1) {
-                        e1.printStackTrace();
+                        Logging.error(e1);
                     }
                     break;
                 }

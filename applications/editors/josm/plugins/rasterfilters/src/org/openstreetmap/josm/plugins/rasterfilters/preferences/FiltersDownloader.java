@@ -36,7 +36,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.spi.preferences.Config;
 import org.openstreetmap.josm.tools.Logging;
 
 /**
@@ -122,7 +122,7 @@ public class FiltersDownloader implements ActionListener {
                         String paramName = "rasterfilters."
                                 + meta.getString("name");
 
-                        boolean needToLoad = Main.pref.getBoolean(paramName);
+                        boolean needToLoad = Config.getPref().getBoolean(paramName);
 
                         if (needToLoad) {
                             JsonArray binaries = meta.getJsonArray("binaries");
@@ -147,8 +147,7 @@ public class FiltersDownloader implements ActionListener {
 //                Main.debug("Error happenned while requesting for the list of filters");
 //            }
         } catch (IOException e1) {
-            // TODO Auto-generated catch block
-            e1.printStackTrace();
+            Logging.error(e1);
         }
 
         loadBinariesFromMeta(filtersMetaToLoad);
@@ -215,7 +214,7 @@ public class FiltersDownloader implements ActionListener {
 //                Main.debug(wikiConnection.getResponseMessage());
 //            }
         } catch (IOException e1) {
-            e1.printStackTrace();
+            Logging.error(e1);
         }
 
         filtersMeta.add(meta);
@@ -246,7 +245,7 @@ public class FiltersDownloader implements ActionListener {
                 }
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            Logging.error(e);
         }
 
         Logging.debug("BinariesLocal : " + binariesLocalUrls.toString());
@@ -302,12 +301,12 @@ public class FiltersDownloader implements ActionListener {
                         writer.append(localFile);
                         writer.append("\n");
                     } catch (IOException e) {
-                        e.printStackTrace();
+                        Logging.error(e);
                     }
                 }
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            Logging.error(e);
         }
     }
 
@@ -365,10 +364,8 @@ public class FiltersDownloader implements ActionListener {
 
                 return localFile;
             }
-        } catch (MalformedURLException e1) {
-            e1.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (IOException e1) {
+            Logging.error(e1);
         }
 
         return null;

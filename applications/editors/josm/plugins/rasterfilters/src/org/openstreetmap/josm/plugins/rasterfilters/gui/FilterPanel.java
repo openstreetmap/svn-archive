@@ -1,5 +1,7 @@
 package org.openstreetmap.josm.plugins.rasterfilters.gui;
 
+import static org.openstreetmap.josm.tools.I18n.tr;
+
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -27,12 +29,11 @@ import javax.swing.JSlider;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 
-import com.bric.swing.ColorPicker;
-import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.plugins.rasterfilters.model.FiltersManager;
 import org.openstreetmap.josm.tools.Logging;
 
-import static org.openstreetmap.josm.tools.I18n.tr;
+import com.bric.swing.ColorPicker;
 
 /**
  * FilterPanel is usual JPanel with its
@@ -257,7 +258,7 @@ public class FilterPanel extends JPanel {
             } catch (IllegalArgumentException e) {
 
                 JOptionPane.showMessageDialog(
-                        Main.parent,
+                        MainApplication.getMainFrame(),
                         tr("JSlider initialization error. Make sure your meta-inf is correct."),
                         tr("Error"),
                         JOptionPane.ERROR_MESSAGE);
@@ -300,7 +301,7 @@ public class FilterPanel extends JPanel {
             } catch (IllegalArgumentException e) {
 
                 JOptionPane.showMessageDialog(
-                        Main.parent,
+                        MainApplication.getMainFrame(),
                         tr("JSlider initialization error. Make sure your meta-inf is correct."),
                         tr("Error"),
                         JOptionPane.ERROR_MESSAGE);

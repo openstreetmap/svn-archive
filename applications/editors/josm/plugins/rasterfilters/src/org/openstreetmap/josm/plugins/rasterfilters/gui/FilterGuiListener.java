@@ -18,13 +18,14 @@ import javax.swing.JSlider;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import com.bric.swing.ColorPicker;
 import org.openstreetmap.josm.plugins.rasterfilters.model.FilterStateModel;
 import org.openstreetmap.josm.plugins.rasterfilters.model.StateChangeListener;
 import org.openstreetmap.josm.plugins.rasterfilters.values.BooleanValue;
 import org.openstreetmap.josm.plugins.rasterfilters.values.ColorValue;
 import org.openstreetmap.josm.plugins.rasterfilters.values.SelectValue;
 import org.openstreetmap.josm.plugins.rasterfilters.values.SliderValue;
+
+import com.bric.swing.ColorPicker;
 
 /**
  * This class is GUI listener which tracks all changes of GUI controls

@@ -36,6 +36,7 @@ public class JTSConverter {
     /**
      * Conversions will use LatLon if useEastNorth is false, otherwise EastNorth
      * (the currently selected projection) will be used for coordinates.
+     * @param useEastNorth whether to use EastNorth
      */
     public JTSConverter(boolean useEastNorth) {
         this.useEastNorth = useEastNorth;
@@ -58,7 +59,7 @@ public class JTSConverter {
      * Simple subclass to match precision with the OSM data model (7 decimal
      * places)
      */
-    public class OsmPrecisionModel extends com.vividsolutions.jts.geom.PrecisionModel {
+    public static class OsmPrecisionModel extends PrecisionModel {
 
         public OsmPrecisionModel() {
             super(10000000);

@@ -10,11 +10,11 @@ import java.util.LinkedList;
 
 import javax.swing.JOptionPane;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.command.AddCommand;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.SequenceCommand;
+import org.openstreetmap.josm.data.UndoRedoHandler;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
@@ -53,7 +53,7 @@ public final class CreateGridOfWaysAction extends JosmAction {
         Collection<Node> nodesWay1 = new LinkedList<>();
         Collection<Node> nodesWay2 = new LinkedList<>();
         if ((sel.size() != 2) || !(sel.toArray()[0] instanceof Way) || !(sel.toArray()[1] instanceof Way)) {
-            JOptionPane.showMessageDialog(Main.parent, tr("Select two ways with a node in common"));
+            JOptionPane.showMessageDialog(MainApplication.getMainFrame(), tr("Select two ways with a node in common"));
             return;
         }
         nodesWay1.addAll(((Way)sel.toArray()[0]).getNodes());
@@ -63,7 +63,7 @@ public final class CreateGridOfWaysAction extends JosmAction {
             for (Node m : nodesWay2)
                 if (n.equals(m)) {
                     if ( nodeCommon != null ) {
-                        JOptionPane.showMessageDialog(Main.parent, tr("Select two ways with alone a node in common"));
+                        JOptionPane.showMessageDialog(MainApplication.getMainFrame(), tr("Select two ways with alone a node in common"));
                         return;
                     }
                     nodeCommon = n;
@@ -104,7 +104,7 @@ public final class CreateGridOfWaysAction extends JosmAction {
             cmds.add(new AddCommand(ds, w1[c]));
         for (int c=0;c<w2.length;c++)
             cmds.add(new AddCommand(ds, w2[c]));
-        Main.main.undoRedo.add(new SequenceCommand(tr("Create a grid of ways"), cmds));
+        UndoRedoHandler.getInstance().add(new SequenceCommand(tr("Create a grid of ways"), cmds));
         MainApplication.getMap().repaint();
     }
 }

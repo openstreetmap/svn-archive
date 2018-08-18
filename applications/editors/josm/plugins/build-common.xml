@@ -59,10 +59,10 @@
         </not>
     </condition>
     <target name="-jaxb_windows" if="isWindows">
-        <property name="xjc" value="..${file.separator}00_tools${file.separator}jaxb-ri${file.separator}bin${file.separator}xjc.bat" />
+        <property name="xjc" value="${plugin.tools.dir}${file.separator}jaxb-ri${file.separator}bin${file.separator}xjc.bat" />
     </target>
     <target name="-jaxb_linux" unless="isWindows">
-        <property name="xjc" value="..${file.separator}00_tools${file.separator}jaxb-ri${file.separator}bin${file.separator}xjc.sh" />
+        <property name="xjc" value="${plugin.tools.dir}${file.separator}jaxb-ri${file.separator}bin${file.separator}xjc.sh" />
     </target>
 
     <!-- To be overriden in plugin build file before inclusion if other plugins are required -->

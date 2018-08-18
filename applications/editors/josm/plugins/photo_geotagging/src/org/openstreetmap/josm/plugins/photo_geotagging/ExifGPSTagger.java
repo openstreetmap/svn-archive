@@ -38,6 +38,7 @@ public class ExifGPSTagger {
      * @param speed speed in km/h - can be null if not available
      * @param ele elevation - can be null if not available
      * @param imgDir image direction in degrees (0..360) - can be null if not available
+     * @throws IOException in case of I/O error
      */
     public static void setExifGPSTag(File jpegImageFile, File dst, double lat, double lon, Date gpsTime, Double speed, Double ele, Double imgDir) throws IOException {
         try {

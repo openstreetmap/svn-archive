@@ -32,7 +32,6 @@ import javax.swing.JScrollPane;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.ExtendedDialog;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.PleaseWaitRunnable;
@@ -41,6 +40,7 @@ import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.gui.layer.Layer.LayerAction;
 import org.openstreetmap.josm.gui.layer.geoimage.GeoImageLayer;
 import org.openstreetmap.josm.gui.layer.geoimage.ImageEntry;
+import org.openstreetmap.josm.spi.preferences.Config;
 import org.openstreetmap.josm.tools.GBC;
 import org.openstreetmap.josm.tools.ImageProvider;
 import org.openstreetmap.josm.tools.JosmRuntimeException;
@@ -96,16 +96,16 @@ class GeotaggingAction extends AbstractAction implements LayerAction {
         settingsPanel.setBorder(BorderFactory.createTitledBorder(tr("settings")));
         cont.add(settingsPanel, GBC.eol().insets(3,10,3,0));
 
-        final JCheckBox backups = new JCheckBox(tr("keep backup files"), Main.pref.getBoolean(KEEP_BACKUP, true));
+        final JCheckBox backups = new JCheckBox(tr("keep backup files"), Config.getPref().getBoolean(KEEP_BACKUP, true));
         settingsPanel.add(backups, GBC.eol().insets(3,3,0,0));
 
-        final JCheckBox setMTime = new JCheckBox(tr("change file modification time:"), Main.pref.getBoolean(CHANGE_MTIME, false));
+        final JCheckBox setMTime = new JCheckBox(tr("change file modification time:"), Config.getPref().getBoolean(CHANGE_MTIME, false));
         settingsPanel.add(setMTime, GBC.std().insets(3,3,5,3));
 
         final String[] mTimeModeArray = {"----", tr("to gps time"), tr("to previous value (unchanged mtime)")};
         final JComboBox<String> mTimeMode = new JComboBox<>(mTimeModeArray);
         {
-            String mTimeModePref = Main.pref.get(MTIME_MODE, null);
+            String mTimeModePref = Config.getPref().get(MTIME_MODE, null);
             int mTimeIdx = 0;
             if ("gps".equals(mTimeModePref)) {
                 mTimeIdx = 1;
@@ -130,7 +130,7 @@ class GeotaggingAction extends AbstractAction implements LayerAction {
         setMTime.doClick();
 
         int result = new ExtendedDialog(
-                Main.parent,
+                MainApplication.getMainFrame(),
                 tr("Photo Geotagging Plugin"),
                 new String[] {tr("OK"), tr("Cancel")})
             .setButtonIcons(new String[] {"ok.png", "cancel.png"})
@@ -145,8 +145,8 @@ class GeotaggingAction extends AbstractAction implements LayerAction {
 
         final boolean keep_backup = backups.isSelected();
         final boolean change_mtime = setMTime.isSelected();
-        Main.pref.putBoolean(KEEP_BACKUP, keep_backup);
-        Main.pref.putBoolean(CHANGE_MTIME, change_mtime);
+        Config.getPref().putBoolean(KEEP_BACKUP, keep_backup);
+        Config.getPref().putBoolean(CHANGE_MTIME, change_mtime);
         if (change_mtime) {
             String mTimeModePref;
             switch (mTimeMode.getSelectedIndex()) {
@@ -159,7 +159,7 @@ class GeotaggingAction extends AbstractAction implements LayerAction {
             default:
                 mTimeModePref = null;
             }
-            Main.pref.put(MTIME_MODE, mTimeModePref);
+            Config.getPref().put(MTIME_MODE, mTimeModePref);
         }
 
         MainApplication.worker.execute(new GeoTaggingRunnable(images, keep_backup, mTimeMode.getSelectedIndex()));
@@ -426,6 +426,8 @@ class GeotaggingAction extends AbstractAction implements LayerAction {
 
     /**
      * Check if there is any suitable image.
+     * @param layer geo image layer
+     * @return {@code true} if there is any suitable image
      */
     private boolean enabled(GeoImageLayer layer) {
         for (ImageEntry e : layer.getImages()) {

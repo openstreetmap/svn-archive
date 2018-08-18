@@ -39,10 +39,11 @@ import java.util.Optional;
 import javax.swing.AbstractAction;
 import javax.swing.JOptionPane;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.ValidateAction;
 import org.openstreetmap.josm.actions.mapmode.DrawAction;
 import org.openstreetmap.josm.actions.mapmode.SelectAction;
+import org.openstreetmap.josm.data.Preferences;
+import org.openstreetmap.josm.data.osm.OsmDataManager;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Tag;
 import org.openstreetmap.josm.data.validation.OsmValidator;
@@ -51,6 +52,7 @@ import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.gui.help.HelpBrowser;
 import org.openstreetmap.josm.gui.mappaint.MapPaintStyles;
+import org.openstreetmap.josm.spi.preferences.Config;
 import org.openstreetmap.josm.spi.preferences.MapListSetting;
 import org.openstreetmap.josm.spi.preferences.Setting;
 import org.openstreetmap.josm.tools.Shortcut;
@@ -571,7 +573,7 @@ public class IndoorHelperController {
     */
    public void unsetSpecificKeyFilter(String key) {
 
-     Collection<OsmPrimitive> p = Main.main.getEditDataSet().allPrimitives();
+     Collection<OsmPrimitive> p = OsmDataManager.getInstance().getEditDataSet().allPrimitives();
      int level = Integer.parseInt(levelValue);
 
      //Find all primitives with the specific tag and check if value is part of the current
@@ -622,7 +624,7 @@ public class IndoorHelperController {
      * Forces JOSM to load the validator and mappaint settings.
      */
     private void updateSettings() {
-        Main.pref.init(false);
+        Preferences.main().init(false);
         MapCSSTagChecker tagChecker = OsmValidator.getTest(MapCSSTagChecker.class);
             if (tagChecker != null) {
                 OsmValidator.initializeTests(Collections.singleton(tagChecker));
@@ -637,7 +639,7 @@ public class IndoorHelperController {
      * @param enabled Activates or disables the settings.
      */
     private void setPluginPreferences(boolean enabled) {
-       Map<String, Setting<?>> settings = Main.pref.getAllSettings();
+       Map<String, Setting<?>> settings = Preferences.main().getAllSettings();
 
        MapListSetting validatorMapListSetting = (MapListSetting) settings.
                get("validator.org.openstreetmap.josm.data.validation.tests.MapCSSTagChecker.entries");
@@ -671,11 +673,11 @@ public class IndoorHelperController {
            Map<String, String> indoorValidator = new HashMap<>();
            indoorValidator.put("title", "Indoor");
            indoorValidator.put("active", "true");
-           indoorValidator.put("url", Main.pref.getDirs().getUserDataDirectory(true)+ sep +"validator" +
+           indoorValidator.put("url", Config.getDirs().getUserDataDirectory(true)+ sep +"validator" +
                    sep + "indoorhelper.validator.mapcss");
 
            validatorMapsNew.add(indoorValidator);
-           Main.pref.putListOfMaps("validator.org.openstreetmap.josm.data.validation.tests.MapCSSTagChecker.entries",
+           Config.getPref().putListOfMaps("validator.org.openstreetmap.josm.data.validation.tests.MapCSSTagChecker.entries",
                    validatorMapsNew);
 
            //set mappaint active
@@ -694,10 +696,10 @@ public class IndoorHelperController {
            Map<String, String> indoorMapPaint = new HashMap<>();
            indoorMapPaint.put("title", tr("Indoor"));
            indoorMapPaint.put("active", "true");
-           indoorMapPaint.put("url", Main.pref.getDirs().getUserDataDirectory(true) + sep + "styles"
+           indoorMapPaint.put("url", Config.getDirs().getUserDataDirectory(true) + sep + "styles"
                    + sep + "sit.mapcss");
            styleMapsNew.add(indoorMapPaint);
-           Main.pref.putListOfMaps("mappaint.style.entries", styleMapsNew);
+           Config.getPref().putListOfMaps("mappaint.style.entries", styleMapsNew);
 
            updateSettings();
        } else {
@@ -718,11 +720,11 @@ public class IndoorHelperController {
            Map<String, String> indoorValidator = new HashMap<>();
            indoorValidator.put("title", tr("Indoor"));
            indoorValidator.put("active", "false");
-           indoorValidator.put("url", Main.pref.getDirs().getUserDataDirectory(true)+ sep +"validator" +
+           indoorValidator.put("url", Config.getDirs().getUserDataDirectory(true)+ sep +"validator" +
                    sep + "indoorhelper.validator.mapcss");
 
            validatorMapsNew.add(indoorValidator);
-           Main.pref.putListOfMaps("validator.org.openstreetmap.josm.data.validation.tests.MapCSSTagChecker.entries",
+           Config.getPref().putListOfMaps("validator.org.openstreetmap.josm.data.validation.tests.MapCSSTagChecker.entries",
                    validatorMapsNew);
 
 
@@ -742,10 +744,10 @@ public class IndoorHelperController {
            Map<String, String> indoorMapPaint = new HashMap<>();
            indoorMapPaint.put("title", tr("Indoor"));
            indoorMapPaint.put("active", "false");
-           indoorMapPaint.put("url", Main.pref.getDirs().getUserDataDirectory(true) + sep + "styles"
+           indoorMapPaint.put("url", Config.getDirs().getUserDataDirectory(true) + sep + "styles"
                    + sep + "sit.mapcss");
            styleMapsNew.add(indoorMapPaint);
-           Main.pref.putListOfMaps("mappaint.style.entries", styleMapsNew);
+           Config.getPref().putListOfMaps("mappaint.style.entries", styleMapsNew);
 
            updateSettings();
        }

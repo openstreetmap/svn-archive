@@ -26,10 +26,11 @@ import java.util.List;
 
 import javax.swing.JOptionPane;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.command.AddCommand;
 import org.openstreetmap.josm.command.ChangePropertyCommand;
+import org.openstreetmap.josm.data.UndoRedoHandler;
 import org.openstreetmap.josm.data.osm.DataSet;
+import org.openstreetmap.josm.data.osm.OsmDataManager;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.RelationMember;
@@ -78,9 +79,10 @@ public class IndoorHelperModel {
      * @param userTags the tags which are given by the user input
      */
     public void addTagsToOSM(IndoorObject object, List<Tag> userTags) {
-        if (!MainApplication.getLayerManager().getEditDataSet().selectionEmpty() && !Main.main.getInProgressSelection().isEmpty()) {
+        if (!MainApplication.getLayerManager().getEditDataSet().selectionEmpty() &&
+                !OsmDataManager.getInstance().getInProgressSelection().isEmpty()) {
 
-            DataSet ds = Main.main.getEditDataSet();
+            DataSet ds = OsmDataManager.getInstance().getEditDataSet();
             List<Tag> tags = this.getObjectTags(object);
             Collection<Relation> relations = ds.getRelations();
             Relation relationToAdd = null;
@@ -96,12 +98,13 @@ public class IndoorHelperModel {
             if (relationToAdd != null) {
                 //Add tags to relation
                 for (Tag t : tags) {
-                        Main.main.undoRedo.add(new ChangePropertyCommand(relationToAdd, t.getKey(), t.getValue()));
+                        UndoRedoHandler.getInstance().add(new ChangePropertyCommand(relationToAdd, t.getKey(), t.getValue()));
                 }
             } else {
                 //Add tags to ways or nodes
                 for (Tag t : tags) {
-                    Main.main.undoRedo.add(new ChangePropertyCommand(Main.main.getInProgressSelection(), t.getKey(), t.getValue()));
+                    UndoRedoHandler.getInstance().add(new ChangePropertyCommand(
+                            OsmDataManager.getInstance().getInProgressSelection(), t.getKey(), t.getValue()));
                 }
             }
         //If the selected dataset is empty
@@ -118,7 +121,8 @@ public class IndoorHelperModel {
      */
     public void addTagsToOSM(IndoorObject object) {
 
-        if (!MainApplication.getLayerManager().getEditDataSet().selectionEmpty() && !Main.main.getInProgressSelection().isEmpty()) {
+        if (!MainApplication.getLayerManager().getEditDataSet().selectionEmpty() &&
+                !OsmDataManager.getInstance().getInProgressSelection().isEmpty()) {
             List<Tag> tags = this.getObjectTags(object);
 
             //Increment the counter for the presets
@@ -126,7 +130,8 @@ public class IndoorHelperModel {
 
             //Add the tags to the current selection
             for (Tag t : tags) {
-                Main.main.undoRedo.add(new ChangePropertyCommand(Main.main.getInProgressSelection(), t.getKey(), t.getValue()));
+                UndoRedoHandler.getInstance().add(new ChangePropertyCommand(
+                        OsmDataManager.getInstance().getInProgressSelection(), t.getKey(), t.getValue()));
             }
         //If the selected dataset ist empty
         } else if (MainApplication.getLayerManager().getEditDataSet().selectionEmpty()) {
@@ -142,11 +147,13 @@ public class IndoorHelperModel {
      */
     public void addTagsToOSM(List<Tag> userTags) {
 
-        if (!MainApplication.getLayerManager().getEditDataSet().selectionEmpty() && !Main.main.getInProgressSelection().isEmpty()) {
+        if (!MainApplication.getLayerManager().getEditDataSet().selectionEmpty() &&
+                !OsmDataManager.getInstance().getInProgressSelection().isEmpty()) {
 
             //Add the tags to the current selection
             for (Tag t : userTags) {
-                Main.main.undoRedo.add(new ChangePropertyCommand(Main.main.getInProgressSelection(), t.getKey(), t.getValue()));
+                UndoRedoHandler.getInstance().add(new ChangePropertyCommand(
+                        OsmDataManager.getInstance().getInProgressSelection(), t.getKey(), t.getValue()));
             }
         } else if (MainApplication.getLayerManager().getEditDataSet().selectionEmpty()) {
             JOptionPane.showMessageDialog(null, tr("No data selected."), tr("Error"), JOptionPane.ERROR_MESSAGE);
@@ -162,7 +169,7 @@ public class IndoorHelperModel {
     public void addRelation(String role) {
         Relation newRelation = new Relation();
         RelationMember newMember;
-        DataSet ds = Main.main.getEditDataSet();
+        DataSet ds = OsmDataManager.getInstance().getEditDataSet();
 
         // Create new relation and add a new member with specific role
         if (!MainApplication.getLayerManager().getEditDataSet().selectionEmpty()) {
@@ -172,7 +179,7 @@ public class IndoorHelperModel {
             }
         }
         // Add relation to OSM data
-        MainApplication.undoRedo.add(new AddCommand(MainApplication.getLayerManager().getEditDataSet(), newRelation));
+        UndoRedoHandler.getInstance().add(new AddCommand(MainApplication.getLayerManager().getEditDataSet(), newRelation));
     }
 
     /**
@@ -185,11 +192,12 @@ public class IndoorHelperModel {
     public void editRelation(String role, Collection<OsmPrimitive> innerRelation) {
 
         RelationMember newMember;
-        DataSet ds = Main.main.getEditDataSet();
+        DataSet ds = OsmDataManager.getInstance().getEditDataSet();
         Collection<Relation> relations = ds.getRelations();
         Relation relation = getRelationFromDataSet(ds, relations);
 
-        if (!MainApplication.getLayerManager().getEditDataSet().selectionEmpty() && !Main.main.getInProgressSelection().isEmpty() &&
+        if (!MainApplication.getLayerManager().getEditDataSet().selectionEmpty() &&
+                !OsmDataManager.getInstance().getInProgressSelection().isEmpty() &&
                 !innerRelation.isEmpty() && getRole(ds, relations).equals("outer")) {
 
             //Add new relation member to selected relation

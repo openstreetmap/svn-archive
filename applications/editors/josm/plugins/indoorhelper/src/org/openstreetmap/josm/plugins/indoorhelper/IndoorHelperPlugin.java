@@ -25,7 +25,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.gui.autofilter.AutoFilter;
@@ -37,6 +36,7 @@ import org.openstreetmap.josm.gui.layer.MapViewPaintable.PaintableInvalidationLi
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
+import org.openstreetmap.josm.spi.preferences.Config;
 
 import controller.IndoorHelperController;
 
@@ -96,7 +96,7 @@ public class IndoorHelperPlugin extends Plugin implements PaintableInvalidationL
             int readBytes;
             byte[] buffer = new byte[4096];
 
-            String valDirPath = Main.pref.getDirs().getUserDataDirectory(true) + sep + "validator";
+            String valDirPath = Config.getDirs().getUserDataDirectory(true) + sep + "validator";
             File valDir = new File(valDirPath);
             valDir.mkdirs();
             String outPath = valDir.getAbsolutePath() +sep+ "indoorhelper.validator.mapcss";
@@ -125,7 +125,7 @@ public class IndoorHelperPlugin extends Plugin implements PaintableInvalidationL
             int readBytes;
             byte[] buffer = new byte[4096];
 
-            String valDirPath = Main.pref.getDirs().getUserDataDirectory(true) + sep + "styles";
+            String valDirPath = Config.getDirs().getUserDataDirectory(true) + sep + "styles";
             File valDir = new File(valDirPath);
             valDir.mkdirs();
             outPath = valDir.getAbsolutePath() +sep+ resourceName;
@@ -171,7 +171,7 @@ public class IndoorHelperPlugin extends Plugin implements PaintableInvalidationL
      */
 //    private void setIndoorValidator() {
 //        //get the current validator settings
-//        Map<String, Setting<?>> settings =  Main.pref.getAllSettings();
+//        Map<String, Setting<?>> settings =  Config.getPref().getAllSettings();
 //        MapListSetting mapListSetting = (MapListSetting) settings.
 //                get("validator.org.openstreetmap.josm.data.validation.tests.MapCSSTagChecker.entries");
 //        List<Map<String, String>> validatorMaps;
@@ -198,11 +198,11 @@ public class IndoorHelperPlugin extends Plugin implements PaintableInvalidationL
 //            Map<String, String> indoorValidator = new HashMap<>();
 //            indoorValidator.put("title", "Indoor");
 //            indoorValidator.put("active", "true");
-//            indoorValidator.put("url", Main.pref.getUserDataDirectory()+ sep +"validator" +
+//            indoorValidator.put("url", Config.getPref().getUserDataDirectory()+ sep +"validator" +
 //                    sep + "indoorhelper.validator.mapcss");
 //
 //            validatorMapsNew.add(indoorValidator);
-//            Main.pref.putListOfStructs
+//            Config.getPref().putListOfStructs
 //            ("validator.org.openstreetmap.josm.data.validation.tests.MapCSSTagChecker.entries",
 //                    validatorMapsNew);
 //        }

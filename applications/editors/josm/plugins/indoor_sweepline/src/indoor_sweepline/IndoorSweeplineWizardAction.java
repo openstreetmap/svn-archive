@@ -7,8 +7,8 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.JOptionPane;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
+import org.openstreetmap.josm.data.projection.ProjectionRegistry;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.gui.layer.LayerManager.LayerAddEvent;
@@ -30,20 +30,20 @@ public class IndoorSweeplineWizardAction extends JosmAction implements LayerChan
     @Override
     public void actionPerformed(ActionEvent event) {
         if (layer == null)
-            JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(Main.parent),
+            JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(MainApplication.getMainFrame()),
                     "No default layer found.");
         else if (!(layer instanceof OsmDataLayer))
-            JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(Main.parent),
+            JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(MainApplication.getMainFrame()),
                     "The default layer is not an OSM layer.");
         else if (MainApplication.getMap() == null)
-            JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(Main.parent),
+            JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(MainApplication.getMainFrame()),
                     "No map found.");
         else if (MainApplication.getMap().mapView == null)
-            JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(Main.parent),
+            JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(MainApplication.getMainFrame()),
                     "No map view found.");
         else
             new IndoorSweeplineController((OsmDataLayer) layer,
-                    Main.getProjection().eastNorth2latlon(MainApplication.getMap().mapView.getCenter()));
+                    ProjectionRegistry.getProjection().eastNorth2latlon(MainApplication.getMap().mapView.getCenter()));
     }
 
     @Override

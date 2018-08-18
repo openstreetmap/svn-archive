@@ -31,13 +31,13 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 
-import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.tools.Logging;
 
 public class IndoorSweeplineWizardDialog extends JDialog {
 
     public IndoorSweeplineWizardDialog(IndoorSweeplineController controller) {
-        super(JOptionPane.getFrameForComponent(Main.parent), "Indoor Sweepline Wizard", false);
+        super(JOptionPane.getFrameForComponent(MainApplication.getMainFrame()), "Indoor Sweepline Wizard", false);
 
         this.controller = controller;
         beamIndex = 0;
@@ -68,7 +68,7 @@ public class IndoorSweeplineWizardDialog extends JDialog {
     @Override
     public void setVisible(boolean visible) {
         if (visible)
-            setLocationRelativeTo(JOptionPane.getFrameForComponent(Main.parent));
+            setLocationRelativeTo(JOptionPane.getFrameForComponent(MainApplication.getMainFrame()));
         super.setVisible(visible);
     }
 

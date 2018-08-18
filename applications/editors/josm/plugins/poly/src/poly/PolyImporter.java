@@ -12,14 +12,14 @@ import java.util.List;
 
 import javax.swing.JOptionPane;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.RelationMember;
-import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.data.osm.UploadPolicy;
+import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.io.importexport.OsmImporter;
 import org.openstreetmap.josm.gui.progress.NullProgressMonitor;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
@@ -135,7 +135,7 @@ public class PolyImporter extends OsmImporter {
             }
         }
         if (fixedCoords > 0)
-            JOptionPane.showMessageDialog(Main.parent, 
+            JOptionPane.showMessageDialog(MainApplication.getMainFrame(), 
                     tr("{0} points were outside world bounds and were moved", fixedCoords), "Import poly", JOptionPane.WARNING_MESSAGE);
         return areas;
     }

@@ -1,5 +1,5 @@
 // License: GPL. For details, see LICENSE file.
-package ru.rodsoft.openstreetmap.josm.plugins.customizepublictransportstop;
+package org.openstreetmap.josm.plugins.customizepublictransportstop;
 
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.plugins.Plugin;

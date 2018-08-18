@@ -27,7 +27,7 @@
         <jar destfile="${plugin.jar}" basedir="${plugin.build.dir}" manifestencoding="UTF-8">
             <manifest>
                 <attribute name="Author" value="Rodion Scherbakov"/>
-                <attribute name="Plugin-Class" value="ru.rodsoft.openstreetmap.josm.plugins.customizepublictransportstop.CustomizePublicTransportStopPlugin"/>
+                <attribute name="Plugin-Class" value="org.openstreetmap.josm.plugins.customizepublictransportstop.CustomizePublicTransportStopPlugin"/>
                 <attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
                 <attribute name="Plugin-Description" value="Customization of public public transport stops."/>
                 <attribute name="Plugin-Link" value="https://wiki.openstreetmap.org/wiki/JOSM/Plugins/CustomizePublicTransportStop"/>

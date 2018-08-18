@@ -4,6 +4,9 @@ package org.openstreetmap.josm.plugins.http;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
 
+/**
+ * Apache HTTP plugin.
+ */
 public class HttpPlugin extends Plugin {
 
     /**

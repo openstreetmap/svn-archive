@@ -11,7 +11,6 @@ import java.util.List;
 
 import javax.swing.JOptionPane;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.AutoScaleAction;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.data.osm.DataSet;
@@ -36,6 +35,7 @@ import org.openstreetmap.josm.gui.history.HistoryLoadTask;
 import org.openstreetmap.josm.gui.io.DownloadPrimitivesTask;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import org.openstreetmap.josm.gui.util.GuiHelper;
+import org.openstreetmap.josm.spi.preferences.Config;
 import org.openstreetmap.josm.tools.Logging;
 import org.openstreetmap.josm.tools.Shortcut;
 
@@ -198,11 +198,11 @@ public class UndeleteAction extends JosmAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        UndeleteDialog dialog = new UndeleteDialog(Main.parent);
+        UndeleteDialog dialog = new UndeleteDialog(MainApplication.getMainFrame());
         if (dialog.showDialog().getValue() != 1)
             return;
-        Main.pref.putBoolean("undelete.newlayer", dialog.isNewLayerSelected());
-        Main.pref.put("undelete.osmid", dialog.getOsmIdsString());
+        Config.getPref().putBoolean("undelete.newlayer", dialog.isNewLayerSelected());
+        Config.getPref().put("undelete.osmid", dialog.getOsmIdsString());
         undelete(dialog.isNewLayerSelected(), dialog.getOsmIds(), null);
     }
 

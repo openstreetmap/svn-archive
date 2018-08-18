@@ -14,10 +14,10 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.KeyStroke;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.osm.PrimitiveId;
 import org.openstreetmap.josm.gui.ExtendedDialog;
 import org.openstreetmap.josm.gui.widgets.OsmIdTextField;
+import org.openstreetmap.josm.spi.preferences.Config;
 
 public class UndeleteDialog extends ExtendedDialog {
 
@@ -35,7 +35,7 @@ public class UndeleteDialog extends ExtendedDialog {
         gc.weightx = 0;
         all.add(new JLabel(tr("Object ID:")), gc);
 
-        tfId.setText(Main.pref.get("undelete.osmid"));
+        tfId.setText(Config.getPref().get("undelete.osmid"));
         tfId.setToolTipText(tr("Enter the type and ID of the objects that should be undeleted, e.g., ''n1 w2''"));
         // forward the enter key stroke to the undelete button
         tfId.getKeymap().removeKeyStrokeBinding(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0, false));
@@ -48,7 +48,7 @@ public class UndeleteDialog extends ExtendedDialog {
         gc.gridy++;
 
         layer.setToolTipText(tr("Select if the data should be added into a new layer"));
-        layer.setSelected(Main.pref.getBoolean("undelete.newlayer"));
+        layer.setSelected(Config.getPref().getBoolean("undelete.newlayer"));
         all.add(layer, gc);
         setContent(all, false);
         setButtonIcons(new String[] {"undelete.png", "cancel.png"});

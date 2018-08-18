@@ -7,7 +7,7 @@
     <property name="plugin.main.version" value="14153"/>
 
     <property name="plugin.author" value="Christof Dallermassl"/>
-    <property name="plugin.class" value="at.dallermassl.josm.plugin.colorscheme.ColorSchemePlugin"/>
+    <property name="plugin.class" value="org.openstreetmap.josm.plugins.colorscheme.ColorSchemePlugin"/>
     <property name="plugin.description" value="Allows the user to create different color schemes and to switch between them. Just change the colors and create a new scheme. Used to switch to a white background with matching colors for better visibility in bright sunlight. See dialog in display preferences."/>
 
     <!-- ** include targets that all plugins have in common ** -->

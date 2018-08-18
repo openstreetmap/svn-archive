@@ -2,7 +2,7 @@
  * Copyright by Christof Dallermassl
  * This program is free software and licensed under GPL.
  */
-package at.dallermassl.josm.plugin.colorscheme;
+package org.openstreetmap.josm.plugins.colorscheme;
 
 import org.openstreetmap.josm.gui.preferences.PreferenceSetting;
 import org.openstreetmap.josm.plugins.Plugin;

@@ -42,7 +42,6 @@ import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellEditor;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.actions.mapmode.DeleteAction;
 import org.openstreetmap.josm.data.osm.DataSet;
@@ -334,7 +333,7 @@ public class RoutePatternAction extends JosmAction {
 
     @Override
     public void actionPerformed(ActionEvent event) {
-        Frame frame = JOptionPane.getFrameForComponent(Main.parent);
+        Frame frame = JOptionPane.getFrameForComponent(MainApplication.getMainFrame());
         DataSet mainDataSet = MainApplication.getLayerManager().getEditDataSet();
 
         if (jDialog == null) {

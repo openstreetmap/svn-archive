@@ -12,8 +12,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.plugins.public_transport.TransText;
 
 /**
@@ -43,7 +43,7 @@ public abstract class AbstractImporterDialog<T extends JosmAction> {
     protected final JTextField tfThreshold;
 
     public AbstractImporterDialog(T controller, String dialogTitle, String actionPrefix) {
-        Frame frame = JOptionPane.getFrameForComponent(Main.parent);
+        Frame frame = JOptionPane.getFrameForComponent(MainApplication.getMainFrame());
         jDialog = new JDialog(frame, dialogTitle, false);
         tabbedPane = new JTabbedPane();
         jDialog.add(tabbedPane);

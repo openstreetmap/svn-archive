@@ -22,8 +22,8 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
+import org.openstreetmap.josm.data.UndoRedoHandler;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
@@ -38,6 +38,7 @@ import org.openstreetmap.josm.plugins.public_transport.commands.GTFSJoinCommand;
 import org.openstreetmap.josm.plugins.public_transport.dialogs.GTFSImporterDialog;
 import org.openstreetmap.josm.plugins.public_transport.models.GTFSStopTableModel;
 import org.openstreetmap.josm.plugins.public_transport.refs.TrackReference;
+import org.openstreetmap.josm.spi.preferences.Config;
 import org.openstreetmap.josm.tools.Logging;
 
 /**
@@ -93,7 +94,7 @@ public class GTFSImporterAction extends JosmAction {
         dialog.setVisible(true);
 
         if (tr("Create Stops from GTFS ...").equals(event.getActionCommand())) {
-            String curDir = Main.pref.get("lastDirectory");
+            String curDir = Config.getPref().get("lastDirectory");
             if (curDir.isEmpty()) {
                 curDir = ".";
             }
@@ -101,12 +102,12 @@ public class GTFSImporterAction extends JosmAction {
             fc.setDialogTitle(tr("Select GTFS file (stops.txt)"));
             fc.setMultiSelectionEnabled(false);
 
-            int answer = fc.showOpenDialog(Main.parent);
+            int answer = fc.showOpenDialog(MainApplication.getMainFrame());
             if (answer != JFileChooser.APPROVE_OPTION)
                 return;
 
             if (!fc.getCurrentDirectory().getAbsolutePath().equals(curDir))
-                Main.pref.put("lastDirectory", fc.getCurrentDirectory().getAbsolutePath());
+                Config.getPref().put("lastDirectory", fc.getCurrentDirectory().getAbsolutePath());
 
             importData(fc.getSelectedFile());
 
@@ -115,12 +116,12 @@ public class GTFSImporterAction extends JosmAction {
 /*    } else if ("stopImporter.settingsGPSTimeStart".equals(event.getActionCommand()))
     {
       if ((!inEvent) && (dialog.gpsTimeStartValid()) && (currentTrack != null))
-    Main.main.undoRedo.add(new TrackStoplistRelocateCommand(this));
+    UndoRedoHandler.getInstance().add(new TrackStoplistRelocateCommand(this));
     }
     else if ("stopImporter.settingsStopwatchStart".equals(event.getActionCommand()))
     {
       if ((!inEvent) && (dialog.stopwatchStartValid()) && (currentTrack != null))
-    Main.main.undoRedo.add(new TrackStoplistRelocateCommand(this));
+    UndoRedoHandler.getInstance().add(new TrackStoplistRelocateCommand(this));
     }
     else if ("stopImporter.settingsTimeWindow".equals(event.getActionCommand()))
     {
@@ -133,7 +134,7 @@ public class GTFSImporterAction extends JosmAction {
     currentTrack.threshold = dialog.getThreshold();
     }
     else if ("stopImporter.settingsSuggestStops".equals(event.getActionCommand()))
-      Main.main.undoRedo.add(new TrackSuggestStopsCommand(this));
+      UndoRedoHandler.getInstance().add(new TrackSuggestStopsCommand(this));
     else if ("stopImporter.stoplistFind".equals(event.getActionCommand()))
       findNodesInTable(dialog.getStoplistTable(), currentTrack.stoplistTM.getNodes());
     else if ("stopImporter.stoplistShow".equals(event.getActionCommand()))
@@ -142,17 +143,17 @@ public class GTFSImporterAction extends JosmAction {
       markNodesFromTable(dialog.getStoplistTable(), currentTrack.stoplistTM.getNodes());
     else if ("stopImporter.stoplistDetach".equals(event.getActionCommand()))
     {
-      Main.main.undoRedo.add(new TrackStoplistDetachCommand(this));
+      UndoRedoHandler.getInstance().add(new TrackStoplistDetachCommand(this));
       dialog.getStoplistTable().clearSelection();
     */
         } else if ("gtfsImporter.gtfsStopsAdd".equals(event.getActionCommand()))
-            Main.main.undoRedo.add(new GTFSAddCommand(this));
+            UndoRedoHandler.getInstance().add(new GTFSAddCommand(this));
         else if ("gtfsImporter.gtfsStopsDelete".equals(event.getActionCommand()))
-            Main.main.undoRedo.add(new GTFSDeleteCommand(this));
+            UndoRedoHandler.getInstance().add(new GTFSDeleteCommand(this));
         else if ("gtfsImporter.gtfsStopsCatch".equals(event.getActionCommand()))
-            Main.main.undoRedo.add(new GTFSCatchCommand(this));
+            UndoRedoHandler.getInstance().add(new GTFSCatchCommand(this));
         else if ("gtfsImporter.gtfsStopsJoin".equals(event.getActionCommand()))
-            Main.main.undoRedo.add(new GTFSJoinCommand(this));
+            UndoRedoHandler.getInstance().add(new GTFSJoinCommand(this));
         else if ("gtfsImporter.gtfsStopsFind".equals(event.getActionCommand()))
             findNodesInTable(dialog.getGTFSStopTable(), gtfsStopTM.nodes);
         else if ("gtfsImporter.gtfsStopsShow".equals(event.getActionCommand()))
@@ -358,7 +359,7 @@ public class GTFSImporterAction extends JosmAction {
     private class FocusAddAction extends AbstractAction {
         @Override
         public void actionPerformed(ActionEvent e) {
-            Main.main.undoRedo.add(new GTFSAddCommand(GTFSImporterAction.this));
+            UndoRedoHandler.getInstance().add(new GTFSAddCommand(GTFSImporterAction.this));
             showNodesFromTable(dialog.getGTFSStopTable(), gtfsStopTM.nodes);
         }
     }
@@ -380,7 +381,7 @@ public class GTFSImporterAction extends JosmAction {
       return;
     table.clearSelection();
     table.addRowSelectionInterval(row, row);
-/*  Main.main.undoRedo.add
+/*  UndoRedoHandler.getInstance().add
         (new WaypointsDisableCommand(GTFSImporterAction.this));*
       }
     };
@@ -408,7 +409,7 @@ public class GTFSImporterAction extends JosmAction {
       return;
     table.clearSelection();
     table.addRowSelectionInterval(row, row);
-/*  Main.main.undoRedo.add
+/*  UndoRedoHandler.getInstance().add
         (new TrackStoplistDeleteCommand(GTFSImporterAction.this));*
       }
     };

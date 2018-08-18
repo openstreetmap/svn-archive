@@ -9,9 +9,9 @@ import javax.swing.JOptionPane;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.command.ChangeCommand;
 import org.openstreetmap.josm.command.Command;
+import org.openstreetmap.josm.data.UndoRedoHandler;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.gpx.GpxTrack;
 import org.openstreetmap.josm.data.gpx.GpxTrackSegment;
@@ -112,7 +112,7 @@ public class TrackReference implements Comparable<TrackReference>, TableModelLis
                 return;
             }
 
-            Main.main.undoRedo.add(new TrackStoplistNameCommand(this, e.getFirstRow()));
+            UndoRedoHandler.getInstance().add(new TrackStoplistNameCommand(this, e.getFirstRow()));
             stoplistTM.setTimeAt(e.getFirstRow(),
                     (String) stoplistTM.getValueAt(e.getFirstRow(), 0));
         }
@@ -181,7 +181,7 @@ public class TrackReference implements Comparable<TrackReference>, TableModelLis
             newNode.setCoor(latLon);
             Command cmd = new ChangeCommand(node, newNode);
             if (cmd != null) {
-                Main.main.undoRedo.add(cmd);
+                UndoRedoHandler.getInstance().add(cmd);
             }
         }
     }

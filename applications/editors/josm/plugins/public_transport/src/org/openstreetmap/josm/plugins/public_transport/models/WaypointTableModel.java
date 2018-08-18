@@ -9,7 +9,7 @@ import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
 
-import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.data.UndoRedoHandler;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.gpx.WayPoint;
 import org.openstreetmap.josm.data.osm.Node;
@@ -87,7 +87,7 @@ public class WaypointTableModel extends DefaultTableModel implements TableModelL
         if (e.getType() == TableModelEvent.UPDATE) {
             if (inEvent)
                 return;
-            Main.main.undoRedo.add(new WaypointsNameCommand(this, e.getFirstRow(),
+            UndoRedoHandler.getInstance().add(new WaypointsNameCommand(this, e.getFirstRow(),
                     (String) getValueAt(e.getFirstRow(), 1),
                     (TransText) getValueAt(e.getFirstRow(), 2)));
         }

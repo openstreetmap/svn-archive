@@ -44,6 +44,7 @@ public class SetWaypointAction extends AbstractSurveyorAction {
 
     }
 
+    @Override
     public void actionPerformed(GpsActionEvent event) {
         String markerTitle = getParameters().get(0);
         Object source = event.getSource();

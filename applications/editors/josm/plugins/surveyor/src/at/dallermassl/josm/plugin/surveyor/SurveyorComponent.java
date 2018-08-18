@@ -21,7 +21,9 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.gui.MainApplication;
+import org.openstreetmap.josm.spi.preferences.Config;
+import org.openstreetmap.josm.tools.Logging;
 import org.openstreetmap.josm.tools.XmlObjectParser;
 import org.xml.sax.SAXException;
 
@@ -47,8 +49,8 @@ public class SurveyorComponent extends JComponent implements PropertyChangeListe
         hotKeys = new HashSet<>();
         setLayout(new BorderLayout());
         streetLabel = new JLabel(tr("Way: "));
-        float fontSize = Float.parseFloat(Main.pref.get(SurveyorPlugin.PREF_KEY_STREET_NAME_FONT_SIZE, "35"));
-        Main.pref.put(SurveyorPlugin.PREF_KEY_STREET_NAME_FONT_SIZE, String.valueOf(fontSize));
+        float fontSize = Float.parseFloat(Config.getPref().get(SurveyorPlugin.PREF_KEY_STREET_NAME_FONT_SIZE, "35"));
+        Config.getPref().put(SurveyorPlugin.PREF_KEY_STREET_NAME_FONT_SIZE, String.valueOf(fontSize));
         streetLabel.setFont(streetLabel.getFont().deriveFont(35f));
         add(streetLabel, BorderLayout.NORTH);
         buttonPanel = new JPanel();
@@ -102,7 +104,7 @@ public class SurveyorComponent extends JComponent implements PropertyChangeListe
 
     public void addButton(ButtonDescription description) {
         if (description.getHotkey() != "" && hotKeys.contains(description.getHotkey())) {
-            JOptionPane.showMessageDialog(Main.parent, 
+            JOptionPane.showMessageDialog(MainApplication.getMainFrame(), 
                     tr("Duplicate hotkey for button ''{0}'' - button will be ignored!", description.getLabel()));
         } else {
             if (rows == 0 && columns == 0) {
@@ -127,7 +129,7 @@ public class SurveyorComponent extends JComponent implements PropertyChangeListe
         try {
             parser.start(in);
         } catch (SAXException e) {
-            e.printStackTrace();
+            Logging.error(e);
         }
         List<SurveyorActionDescription> actions = new ArrayList<>();
         while (parser.hasNext()) {

@@ -231,13 +231,15 @@ public class ButtonDescription {
             action.addPropertyChangeListener(this);
             button.addItemListener(this);
         }
-        
+
+        @Override
         public void itemStateChanged(ItemEvent e) {
             boolean value = e.getStateChange() == ItemEvent.SELECTED;
             Boolean valueObj = Boolean.valueOf(value);
             action.putValue(ActionConstants.SELECTED_KEY, valueObj);
         }
 
+        @Override
         public void propertyChange(PropertyChangeEvent evt) {
             if (evt.getPropertyName().equals(ActionConstants.SELECTED_KEY)) {
                 Boolean newSelectedState = (Boolean) evt.getNewValue();

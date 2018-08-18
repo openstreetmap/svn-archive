@@ -12,7 +12,7 @@ import java.util.TimerTask;
 
 import javax.swing.JOptionPane;
 
-import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.layer.GpxLayer;
 import org.openstreetmap.josm.io.GpxWriter;
 
@@ -70,7 +70,7 @@ public class AutoSaveGpsLayerTimerTask extends TimerTask {
             tmpFile.renameTo(file);
         } catch (IOException ioExc) {
             ioExc.printStackTrace();
-            JOptionPane.showMessageDialog(Main.parent,
+            JOptionPane.showMessageDialog(MainApplication.getMainFrame(),
                 tr("Error while exporting {0}: {1}", file.getAbsoluteFile(), ioExc.getMessage()),
                 tr("Error"),
                 JOptionPane.ERROR_MESSAGE);

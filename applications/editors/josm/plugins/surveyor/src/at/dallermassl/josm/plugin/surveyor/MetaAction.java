@@ -8,7 +8,7 @@ import javax.swing.AbstractAction;
 import javax.swing.Icon;
 import javax.swing.JFrame;
 
-import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.spi.preferences.Config;
 
 import livegps.LiveGpsData;
 
@@ -84,7 +84,7 @@ public class MetaAction extends AbstractAction {
         } else {
             System.out.println("Surveyor: no gps data available!");
             // TEST for offline test only:
-            if (Main.pref.getBoolean("surveyor.debug")) {
+            if (Config.getPref().getBoolean("surveyor.debug")) {
                 for (SurveyorActionDescription action : actions) {
                     action.actionPerformed(new GpsActionEvent(e, 0, 0));
                 }

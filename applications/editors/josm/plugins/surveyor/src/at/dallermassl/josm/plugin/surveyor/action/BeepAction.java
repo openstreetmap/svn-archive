@@ -20,15 +20,13 @@ public class BeepAction implements SurveyorAction {
     @Override
     public void actionPerformed(GpsActionEvent event) {
         // run as a separate thread
-        MainApplication.worker.execute(new Runnable() {
-            public void run() {
-                for (int index = 0; index < beepNumber; ++index) {
-                    Toolkit.getDefaultToolkit().beep();
-                    try {
-                        Thread.sleep(200);
-                    } catch (InterruptedException ignore) {
-                        Logging.debug(ignore);
-                    }
+        MainApplication.worker.execute(() -> {
+            for (int index = 0; index < beepNumber; ++index) {
+                Toolkit.getDefaultToolkit().beep();
+                try {
+                    Thread.sleep(200);
+                } catch (InterruptedException ignore) {
+                    Logging.debug(ignore);
                 }
             }
         });

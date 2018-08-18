@@ -19,9 +19,9 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.gui.MainApplication;
+import org.openstreetmap.josm.spi.preferences.Config;
 import org.openstreetmap.josm.tools.Logging;
 import org.openstreetmap.josm.tools.Shortcut;
 import org.openstreetmap.josm.tools.XmlObjectParser;
@@ -106,10 +106,10 @@ public class SurveyorShowAction extends JosmAction {
     }
 
     public SurveyorComponent createComponent() {
-        String source = Main.pref.get("surveyor.source");
+        String source = Config.getPref().get("surveyor.source");
         if (source == null || source.length() == 0) {
             source = DEFAULT_SOURCE;
-            Main.pref.put("surveyor.source", DEFAULT_SOURCE);
+            Config.getPref().put("surveyor.source", DEFAULT_SOURCE);
             // <FIXXME date="04.05.2007" author="cdaller">
             // TODO copy xml file to .josm directory if it does not exist!
             // </FIXXME>
@@ -118,10 +118,10 @@ public class SurveyorShowAction extends JosmAction {
             return createComponent(in);
         } catch (IOException e) {
             Logging.error(e);
-            JOptionPane.showMessageDialog(Main.parent, tr("Could not read surveyor definition: {0}", source));
+            JOptionPane.showMessageDialog(MainApplication.getMainFrame(), tr("Could not read surveyor definition: {0}", source));
         } catch (SAXException e) {
             Logging.error(e);
-            JOptionPane.showMessageDialog(Main.parent, tr("Error parsing {0}: {1}", source, e.getMessage()));
+            JOptionPane.showMessageDialog(MainApplication.getMainFrame(), tr("Error parsing {0}: {1}", source, e.getMessage()));
         }
         return null;
     }

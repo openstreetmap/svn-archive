@@ -11,7 +11,6 @@ import java.util.TimerTask;
 
 import javax.swing.JOptionPane;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
@@ -53,7 +52,7 @@ public class AutoSaveEditLayerTimerTask extends TimerTask {
             System.out.println("AutoSaving finished");
         } catch (IOException ex) {
             Logging.error(ex);
-            JOptionPane.showMessageDialog(Main.parent,
+            JOptionPane.showMessageDialog(MainApplication.getMainFrame(),
                 tr("Error while exporting {0}: {1}", file.getAbsoluteFile(), ex.getMessage()),
                 tr("Error"),
                 JOptionPane.ERROR_MESSAGE);

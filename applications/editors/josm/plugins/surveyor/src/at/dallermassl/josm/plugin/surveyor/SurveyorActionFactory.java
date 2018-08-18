@@ -26,19 +26,15 @@ public final class SurveyorActionFactory {
             SurveyorAction action = actionCache.get(actionClass);
             if (action == null) {
                 try {
-                    action = (SurveyorAction) Class.forName(actionClass).newInstance();
+                    action = (SurveyorAction) Class.forName(actionClass).getDeclaredConstructor().newInstance();
                 } catch (ClassNotFoundException e) {
                     actionClass = DEFAULT_PACKAGE + "." + actionClass;
-                    action = (SurveyorAction) Class.forName(actionClass).newInstance();
+                    action = (SurveyorAction) Class.forName(actionClass).getDeclaredConstructor().newInstance();
                 }
                 actionCache.put(actionClass, action);
             }
             return action;
-        } catch (InstantiationException e) {
-            throw new RuntimeException("Could not create action class '" + actionClass + "'", e);
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException("Could not create action class '" + actionClass + "'", e);
-        } catch (ClassNotFoundException e) {
+        } catch (ReflectiveOperationException e) {
             throw new RuntimeException("Could not create action class '" + actionClass + "'", e);
         }
     }

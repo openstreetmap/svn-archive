@@ -9,6 +9,7 @@ import java.awt.geom.Point2D;
 
 import org.openstreetmap.josm.plugins.piclayer.actions.GenericPicTransformAction;
 import org.openstreetmap.josm.tools.ImageProvider;
+import org.openstreetmap.josm.tools.Logging;
 
 /**
  * Transform point on the picture
@@ -36,7 +37,7 @@ public class TransformPointAction extends GenericPicTransformAction {
 
             currentCommand.addIfChanged();
         } catch (NoninvertibleTransformException e1) {
-            e1.printStackTrace();
+            Logging.error(e1);
         }
     }
 

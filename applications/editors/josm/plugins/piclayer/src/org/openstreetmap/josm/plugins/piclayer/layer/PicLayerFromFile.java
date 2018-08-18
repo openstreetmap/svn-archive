@@ -16,7 +16,8 @@ import java.util.zip.ZipFile;
 import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
 
-import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.gui.MainApplication;
+import org.openstreetmap.josm.spi.preferences.Config;
 import org.openstreetmap.josm.tools.Logging;
 
 /**
@@ -180,7 +181,7 @@ public class PicLayerFromFile extends PicLayerAbstract {
 
     protected boolean confirmCalibrationLoading(String fileName) {
         String prefkey = "piclayer.autoloadcal";
-        String policy = Main.pref.get(prefkey, "");
+        String policy = Config.getPref().get(prefkey, "");
         policy = policy.trim().toLowerCase();
         boolean loadcal = false;
 
@@ -193,7 +194,7 @@ public class PicLayerFromFile extends PicLayerAbstract {
             msg += "\n" + tr("Set \"{0}\" to yes/no/ask in the preferences\n"+
                             "to control the autoloading of calibration files.", prefkey);
             msg += "\n" + tr("Do you want to apply it ?");
-            int answer = JOptionPane.showConfirmDialog(Main.parent, msg, tr("Load calibration file?"), JOptionPane.YES_NO_OPTION);
+            int answer = JOptionPane.showConfirmDialog(MainApplication.getMainFrame(), msg, tr("Load calibration file?"), JOptionPane.YES_NO_OPTION);
             if (answer == JOptionPane.YES_OPTION) {
                 loadcal = true;
             }
@@ -203,9 +204,9 @@ public class PicLayerFromFile extends PicLayerAbstract {
             msg += "\n" + tr("Set \"{0}\" to yes/no/ask in the preferences\n"+
                             "to control the autoloading of calibration files.", prefkey);
             // TODO: there should be here a yes/no dialog with a checkbox "do not ask again"
-            JOptionPane.showMessageDialog(Main.parent, msg,
+            JOptionPane.showMessageDialog(MainApplication.getMainFrame(), msg,
                 "Automatic loading of the calibration", JOptionPane.INFORMATION_MESSAGE);
-            Main.pref.put(prefkey, "yes");
+            Config.getPref().put(prefkey, "yes");
             loadcal = true;
         }
         return loadcal;

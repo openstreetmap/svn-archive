@@ -14,7 +14,6 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileFilter;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
 import org.openstreetmap.josm.gui.MainApplication;
@@ -24,6 +23,7 @@ import org.openstreetmap.josm.plugins.piclayer.layer.PicLayerFromFile;
 import org.openstreetmap.josm.plugins.piclayer.layer.PicLayerFromKML;
 import org.openstreetmap.josm.plugins.piclayer.layer.kml.KMLGroundOverlay;
 import org.openstreetmap.josm.plugins.piclayer.layer.kml.KMLReader;
+import org.openstreetmap.josm.spi.preferences.Config;
 
 /**
  * Action responsible for creation of new layers based on image files.
@@ -87,12 +87,12 @@ public class NewLayerFromFileAction extends JosmAction {
     public void actionPerformed(ActionEvent arg0) {
 
         // Choose a file
-        JFileChooser fc = new JFileChooser(Main.pref.get(m_lastdirprefname));
+        JFileChooser fc = new JFileChooser(Config.getPref().get(m_lastdirprefname));
         fc.setAcceptAllFileFilterUsed(true);
         fc.setFileFilter(new ImageFileFilter());
 
         fc.setMultiSelectionEnabled(true);
-        int result = fc.showOpenDialog(Main.parent);
+        int result = fc.showOpenDialog(MainApplication.getMainFrame());
 
         // Create a layer?
         if (result == JFileChooser.APPROVE_OPTION) {
@@ -108,7 +108,7 @@ public class NewLayerFromFileAction extends JosmAction {
             for (File file : fc.getSelectedFiles()) {
                 // TODO: we need a progress bar here, it can take quite some time
 
-                Main.pref.put(m_lastdirprefname, file.getParent());
+                Config.getPref().put(m_lastdirprefname, file.getParent());
 
                 // Create layer from file
                 if ("kml".equalsIgnoreCase(PicLayerFromFile.getFileExtension(file))) {
@@ -147,7 +147,7 @@ public class NewLayerFromFileAction extends JosmAction {
         MainApplication.getLayerManager().addLayer(layer);
         MainApplication.getMap().mapView.moveLayer(layer, newLayerPos++);
 
-        if (isZoomToLayer && Main.pref.getInt("piclayer.zoom-on-load", 1) != 0) {
+        if (isZoomToLayer && Config.getPref().getInt("piclayer.zoom-on-load", 1) != 0) {
             // if we are loading a single picture file, zoom on it, so that the user can see something
             BoundingXYVisitor v = new BoundingXYVisitor();
             layer.visitBoundingBox(v);

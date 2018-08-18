@@ -10,8 +10,8 @@ import java.io.FileInputStream;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.plugins.piclayer.layer.CalibrationFileFilter;
 import org.openstreetmap.josm.plugins.piclayer.layer.PicLayerAbstract;
 
@@ -47,7 +47,7 @@ public class LoadPictureCalibrationAction extends JosmAction {
         fc.setAcceptAllFileFilterUsed(true);
         fc.setFileFilter(new CalibrationFileFilter());
         fc.setSelectedFile(new File(m_owner.getPicLayerName() + CalibrationFileFilter.EXTENSION));
-        int result = fc.showOpenDialog(Main.parent);
+        int result = fc.showOpenDialog(MainApplication.getMainFrame());
 
         if (result == JFileChooser.APPROVE_OPTION) {
 
@@ -57,7 +57,7 @@ public class LoadPictureCalibrationAction extends JosmAction {
             } catch (Exception e) {
                 // Error
                 e.printStackTrace();
-                JOptionPane.showMessageDialog(Main.parent,
+                JOptionPane.showMessageDialog(MainApplication.getMainFrame(),
                         tr("Loading file failed: {0}", e.getMessage()), tr("Problem occurred"), JOptionPane.WARNING_MESSAGE);
             }
         }

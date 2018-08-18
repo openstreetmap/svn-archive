@@ -8,7 +8,6 @@ import java.util.List;
 
 import javax.swing.JOptionPane;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.actions.mapmode.MapMode;
 import org.openstreetmap.josm.gui.IconToggleButton;
@@ -150,7 +149,7 @@ public class PicLayerPlugin extends Plugin implements LayerChangeListener, Activ
     @Override
     public void layerRemoving(LayerRemoveEvent e) {
         if (e.getRemovedLayer() instanceof PicLayerAbstract && ((PicLayerAbstract) e.getRemovedLayer()).getTransformer().isModified()) {
-            if (JOptionPane.showConfirmDialog(Main.parent, tr("Do you want to save current calibration of layer {0}?",
+            if (JOptionPane.showConfirmDialog(MainApplication.getMainFrame(), tr("Do you want to save current calibration of layer {0}?",
                     ((PicLayerAbstract) e.getRemovedLayer()).getPicLayerName()),
                     tr("Select an option"),
                     JOptionPane.YES_NO_OPTION) == 0)

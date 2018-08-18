@@ -12,8 +12,8 @@ import java.io.IOException;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.plugins.piclayer.layer.PicLayerAbstract;
 
 /**
@@ -62,7 +62,7 @@ public class SavePictureCalibrationToWorldAction extends JosmAction {
         final JFileChooser fc = new JFileChooser();
         fc.setAcceptAllFileFilterUsed(true);
         fc.setSelectedFile(new File(picFilenameNoext + "." + wext));
-        int result = fc.showSaveDialog(Main.parent);
+        int result = fc.showSaveDialog(MainApplication.getMainFrame());
 
         if (result == JFileChooser.APPROVE_OPTION) {
             // Check file extension and force it to be valid
@@ -82,7 +82,7 @@ public class SavePictureCalibrationToWorldAction extends JosmAction {
             } catch (IOException e) {
                 // Error
                 e.printStackTrace();
-                JOptionPane.showMessageDialog(Main.parent,
+                JOptionPane.showMessageDialog(MainApplication.getMainFrame(),
                         tr("Saving file failed: {0}", e.getMessage()), tr("Problem occurred"), JOptionPane.WARNING_MESSAGE);
             }
         }

@@ -17,19 +17,20 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.nio.charset.StandardCharsets;
 import java.util.Properties;
 
 import javax.swing.Action;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.RenameLayerAction;
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
 import org.openstreetmap.josm.data.projection.Projection;
+import org.openstreetmap.josm.data.projection.ProjectionRegistry;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.layer.Layer;
@@ -126,7 +127,7 @@ public abstract class PicLayerAbstract extends Layer {
             pinTiledImage = new ImageIcon(Toolkit.getDefaultToolkit().createImage(getClass().getResource("/images/v6_64.png"))).getImage();
         }
 
-        projection = Main.getProjection();
+        projection = ProjectionRegistry.getProjection();
     }
 
     /**
@@ -461,7 +462,7 @@ public abstract class PicLayerAbstract extends Layer {
     public void loadWorldfile(InputStream is) throws IOException {
 
         try (
-            Reader reader = new InputStreamReader(is);
+            Reader reader = new InputStreamReader(is, StandardCharsets.UTF_8);
             BufferedReader br = new BufferedReader(reader)
         ) {
             double[] e = new double[6];
@@ -479,8 +480,6 @@ public abstract class PicLayerAbstract extends Layer {
                     dx + w/2*sx + h/2*rx,
                     dy + w/2*ry + h/2*sy
             );
-//            initialImagePosition.setLocation(imagePosition);
-//            m_angle = 0;
             double scalex = 100*sx*getMetersPerEasting(imagePosition);
             double scaley = -100*sy*getMetersPerNorthing(imagePosition);
             double shearx = rx / sx;
@@ -612,7 +611,7 @@ public abstract class PicLayerAbstract extends Layer {
             }
             return selected;
         } catch (NoninvertibleTransformException e) {
-            e.printStackTrace();
+            Logging.error(e);
         }
         return selected;
     }

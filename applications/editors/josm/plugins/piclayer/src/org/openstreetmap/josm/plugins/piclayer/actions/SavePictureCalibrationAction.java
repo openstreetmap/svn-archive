@@ -11,8 +11,8 @@ import java.util.Properties;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.plugins.piclayer.layer.CalibrationFileFilter;
 import org.openstreetmap.josm.plugins.piclayer.layer.PicLayerAbstract;
 
@@ -46,7 +46,7 @@ public class SavePictureCalibrationAction extends JosmAction {
         fc.setAcceptAllFileFilterUsed(true);
         fc.setFileFilter(new CalibrationFileFilter());
         fc.setSelectedFile(new File(m_owner.getPicLayerName() + CalibrationFileFilter.EXTENSION));
-        int result = fc.showSaveDialog(Main.parent);
+        int result = fc.showSaveDialog(MainApplication.getMainFrame());
 
         if (result == JFileChooser.APPROVE_OPTION) {
             // Check file extension and force it to be valid
@@ -65,7 +65,7 @@ public class SavePictureCalibrationAction extends JosmAction {
             } catch (Exception e) {
                 // Error
                 e.printStackTrace();
-                JOptionPane.showMessageDialog(Main.parent,
+                JOptionPane.showMessageDialog(MainApplication.getMainFrame(),
                         tr("Saving file failed: {0}", e.getMessage()), tr("Problem occurred"), JOptionPane.WARNING_MESSAGE);
             }
         }

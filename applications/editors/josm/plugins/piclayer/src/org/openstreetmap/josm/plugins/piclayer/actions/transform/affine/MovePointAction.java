@@ -9,6 +9,7 @@ import java.awt.geom.Point2D;
 
 import org.openstreetmap.josm.plugins.piclayer.actions.GenericPicTransformAction;
 import org.openstreetmap.josm.tools.ImageProvider;
+import org.openstreetmap.josm.tools.Logging;
 
 /**
  * old version - ctrl move point (not transforming picture)
@@ -29,7 +30,7 @@ public class MovePointAction extends GenericPicTransformAction {
                 selectedPoint = pressed;
             }
         } catch (NoninvertibleTransformException e1) {
-            e1.printStackTrace();
+            Logging.error(e1);
         }
     }
 
@@ -45,7 +46,7 @@ public class MovePointAction extends GenericPicTransformAction {
 
             currentCommand.addIfChanged();
         } catch (NoninvertibleTransformException e1) {
-            e1.printStackTrace();
+            Logging.error(e1);
         }
     }
 

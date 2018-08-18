@@ -7,8 +7,8 @@ import java.util.Collection;
 
 import javax.swing.Icon;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.command.Command;
+import org.openstreetmap.josm.data.UndoRedoHandler;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.plugins.piclayer.layer.PicLayerAbstract;
@@ -80,7 +80,7 @@ public class TransformCommand extends Command {
             !(beforeTransform.getOriginPoints().equals(afterTransform.getOriginPoints())) ||
             !(beforeTransform.getImagePosition().equals(afterTransform.getImagePosition()));
         if (changed && !alreadyAdded) {
-            Main.main.undoRedo.add(this);
+            UndoRedoHandler.getInstance().add(this);
             alreadyAdded = true;
         }
     }

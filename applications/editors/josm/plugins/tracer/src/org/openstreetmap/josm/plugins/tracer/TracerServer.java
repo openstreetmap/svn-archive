@@ -10,6 +10,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ArrayList;
+
 import org.openstreetmap.josm.data.coor.LatLon;
 
 public class TracerServer {

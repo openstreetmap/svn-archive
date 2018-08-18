@@ -18,11 +18,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.mapmode.MapMode;
 import org.openstreetmap.josm.command.AddCommand;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.SequenceCommand;
+import org.openstreetmap.josm.data.UndoRedoHandler;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
@@ -139,7 +139,7 @@ class TracerAction extends MapMode implements MouseListener {
                 }
 
             if (!commands.isEmpty()) {
-                   Main.main.undoRedo.add(new SequenceCommand(tr("Tracer building"), commands));
+                   UndoRedoHandler.getInstance().add(new SequenceCommand(tr("Tracer building"), commands));
 
                 if (shift) {
                     ds.addSelected(way);

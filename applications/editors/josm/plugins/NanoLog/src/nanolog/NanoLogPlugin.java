@@ -9,7 +9,6 @@ import java.util.List;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MapFrame;
@@ -45,7 +44,7 @@ public class NanoLogPlugin extends Plugin {
         @Override
         public void actionPerformed(ActionEvent e) {
             JFileChooser fc = new JFileChooser();
-            if (fc.showOpenDialog(Main.parent) == JFileChooser.APPROVE_OPTION) {
+            if (fc.showOpenDialog(MainApplication.getMainFrame()) == JFileChooser.APPROVE_OPTION) {
                 try {
                     List<NanoLogEntry> entries = NanoLogLayer.readNanoLog(fc.getSelectedFile());
                     if (!entries.isEmpty()) {
@@ -54,7 +53,7 @@ public class NanoLogPlugin extends Plugin {
                         layer.setupListeners();
                     }
                 } catch (IOException ex) {
-                    JOptionPane.showMessageDialog(Main.parent, tr("Could not read NanoLog file:") + "\n" + ex.getMessage());
+                    JOptionPane.showMessageDialog(MainApplication.getMainFrame(), tr("Could not read NanoLog file:") + "\n" + ex.getMessage());
                 }
             }
         }

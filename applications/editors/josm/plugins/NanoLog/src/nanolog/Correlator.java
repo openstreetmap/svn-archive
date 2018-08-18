@@ -8,13 +8,14 @@ import java.util.List;
 
 import javax.swing.JOptionPane;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.gpx.GpxData;
 import org.openstreetmap.josm.data.gpx.GpxTrack;
 import org.openstreetmap.josm.data.gpx.GpxTrackSegment;
 import org.openstreetmap.josm.data.gpx.WayPoint;
+import org.openstreetmap.josm.data.projection.ProjectionRegistry;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.tools.Logging;
 import org.openstreetmap.josm.tools.UncheckedParseException;
 import org.openstreetmap.josm.tools.date.DateUtils;
@@ -60,7 +61,7 @@ public final class Correlator {
 
         // No GPX timestamps found, exit
         if (firstGPXDate < 0) {
-            JOptionPane.showMessageDialog(Main.parent,
+            JOptionPane.showMessageDialog(MainApplication.getMainFrame(),
                     tr("The selected GPX track does not contain timestamps. Please select another one."),
                     tr("GPX Track has no time information"), JOptionPane.WARNING_MESSAGE);
             return 0;
@@ -217,7 +218,7 @@ public final class Correlator {
      * Returns date of a potential point on GPX track (which can be between points).
      */
     public static long getGpxDate(GpxData data, LatLon pos) {
-        EastNorth en = Main.getProjection().latlon2eastNorth(pos);
+        EastNorth en = ProjectionRegistry.getProjection().latlon2eastNorth(pos);
         for (GpxTrack track : data.tracks) {
             for (GpxTrackSegment segment : track.getSegments()) {
                 long prevWpTime = 0;
@@ -228,8 +229,8 @@ public final class Correlator {
                         try {
                             long curWpTime = DateUtils.fromString(curWpTimeStr).getTime();
                             if (prevWp != null) {
-                                EastNorth c1 = Main.getProjection().latlon2eastNorth(prevWp.getCoor());
-                                EastNorth c2 = Main.getProjection().latlon2eastNorth(curWp.getCoor());
+                                EastNorth c1 = ProjectionRegistry.getProjection().latlon2eastNorth(prevWp.getCoor());
+                                EastNorth c2 = ProjectionRegistry.getProjection().latlon2eastNorth(curWp.getCoor());
                                 if (!c1.equals(c2)) {
                                     EastNorth middle = getSegmentAltitudeIntersection(c1, c2, en);
                                     if (middle != null && en.distance(middle) < 1) {

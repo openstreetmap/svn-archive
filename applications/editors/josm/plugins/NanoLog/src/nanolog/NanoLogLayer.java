@@ -28,7 +28,6 @@ import javax.swing.Action;
 import javax.swing.Icon;
 import javax.swing.JOptionPane;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.actions.RenameLayerAction;
 import org.openstreetmap.josm.data.Bounds;
@@ -368,7 +367,7 @@ public class NanoLogLayer extends Layer implements JumpToMarkerActions.JumpToMar
         @Override
         public void actionPerformed(ActionEvent e) {
             // todo
-            JOptionPane.showMessageDialog(Main.parent, "Sorry, no saving yet", "NanoLog", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(MainApplication.getMainFrame(), "Sorry, no saving yet", "NanoLog", JOptionPane.ERROR_MESSAGE);
         }
     }
 

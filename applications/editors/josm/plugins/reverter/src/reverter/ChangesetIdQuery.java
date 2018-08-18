@@ -24,11 +24,11 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.plaf.basic.BasicComboBoxEditor;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.gui.ExtendedDialog;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.widgets.HistoryComboBox;
+import org.openstreetmap.josm.spi.preferences.Config;
 import org.openstreetmap.josm.tools.GBC;
 
 import reverter.ChangesetReverter.RevertType;
@@ -65,7 +65,7 @@ public class ChangesetIdQuery extends ExtendedDialog {
     }
 
     public ChangesetIdQuery() {
-        super(Main.parent, tr("Revert changeset"), new String[] {tr("Revert"), tr("Cancel")}, true);
+        super(MainApplication.getMainFrame(), tr("Revert changeset"), new String[] {tr("Revert"), tr("Cancel")}, true);
         contentInsets = new Insets(10, 10, 10, 5);
 
         panel.add(new JLabel(tr("Changeset id:")));
@@ -141,7 +141,7 @@ public class ChangesetIdQuery extends ExtendedDialog {
             }
         });
 
-        if (Main.pref.getBoolean("downloadchangeset.autopaste", true)) {
+        if (Config.getPref().getBoolean("downloadchangeset.autopaste", true)) {
             tcid.tryToPasteFromClipboard();
         }
 
@@ -156,7 +156,7 @@ public class ChangesetIdQuery extends ExtendedDialog {
      */
     protected void restoreChangesetsHistory(HistoryComboBox cbHistory) {
         List<String> cmtHistory = new LinkedList<>(
-                Main.pref.getList(getClass().getName() + ".changesetsHistory", new LinkedList<String>()));
+                Config.getPref().getList(getClass().getName() + ".changesetsHistory", new LinkedList<String>()));
         // we have to reverse the history, because ComboBoxHistory will reverse it again in addElement()
         Collections.reverse(cmtHistory);
         cbHistory.setPossibleItems(cmtHistory);
@@ -168,7 +168,7 @@ public class ChangesetIdQuery extends ExtendedDialog {
      */
     protected void remindChangesetsHistory(HistoryComboBox cbHistory) {
         cbHistory.addCurrentItemToHistory();
-        Main.pref.putList(getClass().getName() + ".changesetsHistory", cbHistory.getHistory());
+        Config.getPref().putList(getClass().getName() + ".changesetsHistory", cbHistory.getHistory());
     }
 
     private class InternalWindowListener implements WindowListener {

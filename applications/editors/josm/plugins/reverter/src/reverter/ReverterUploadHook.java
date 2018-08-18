@@ -4,6 +4,7 @@ package reverter;
 import org.openstreetmap.josm.actions.upload.UploadHook;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.data.APIDataSet;
+import org.openstreetmap.josm.data.UndoRedoHandler;
 import org.openstreetmap.josm.gui.MainApplication;
 
 public class ReverterUploadHook implements UploadHook {
@@ -16,7 +17,7 @@ public class ReverterUploadHook implements UploadHook {
     public boolean checkUpload(APIDataSet apiDataSet) {
         if (!ReverterPlugin.reverterUsed) return true;
         boolean hasRevertions = false;
-        for (Command cmd : MainApplication.undoRedo.commands) {
+        for (Command cmd : UndoRedoHandler.getInstance().commands) {
             if (cmd instanceof RevertChangesetCommand) {
                 hasRevertions = true;
                 break;

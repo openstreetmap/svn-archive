@@ -13,10 +13,10 @@ import java.util.stream.Collectors;
 
 import javax.swing.JOptionPane;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.SequenceCommand;
 import org.openstreetmap.josm.command.conflict.ConflictAddCommand;
+import org.openstreetmap.josm.data.UndoRedoHandler;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.Notification;
 import org.openstreetmap.josm.gui.PleaseWaitRunnable;
@@ -64,7 +64,7 @@ public class RevertChangesetTask extends PleaseWaitRunnable {
             final Integer selectedOption = GuiHelper.runInEDTAndWaitAndReturn(new Callable<Integer>() {
                 @Override
                 public Integer call() throws Exception {
-                    return JOptionPane.showConfirmDialog(Main.parent,
+                    return JOptionPane.showConfirmDialog(MainApplication.getMainFrame(),
                             tr("This changeset has objects that are not present in current dataset.\n" +
                                     "It is needed to download them before reverting. Do you want to continue?"),
                             tr("Confirm"), JOptionPane.YES_NO_OPTION);
@@ -110,7 +110,7 @@ public class RevertChangesetTask extends PleaseWaitRunnable {
         if (!allcmds.isEmpty()) {
             Command cmd = allcmds.size() == 1 ? allcmds.get(0) : new SequenceCommand(tr("Revert changeset"), allcmds);
             GuiHelper.runInEDT(() -> {
-                MainApplication.undoRedo.add(cmd);
+                UndoRedoHandler.getInstance().add(cmd);
                 if (numberOfConflicts > 0) {
                     MainApplication.getMap().conflictDialog.warnNumNewConflicts(numberOfConflicts);
                 }

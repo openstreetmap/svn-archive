@@ -5,10 +5,10 @@ import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.SequenceCommand;
+import org.openstreetmap.josm.data.UndoRedoHandler;
 import org.openstreetmap.josm.plugins.fixAddresses.AddressEditContainer;
 import org.openstreetmap.josm.plugins.fixAddresses.IAddressEditContainerListener;
 import org.openstreetmap.josm.plugins.fixAddresses.ICommandListener;
@@ -171,7 +171,7 @@ public abstract class AbstractAddressEditAction extends JosmAction implements IA
         }
         // execute the commands
         if (!commands.isEmpty()) {
-            Main.main.undoRedo.add(new SequenceCommand(txName, commands));
+            UndoRedoHandler.getInstance().add(new SequenceCommand(txName, commands));
             commands.clear();
             if (container != null) {
                 container.invalidate();

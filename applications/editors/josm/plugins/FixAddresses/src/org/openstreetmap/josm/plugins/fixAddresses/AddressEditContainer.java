@@ -8,7 +8,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
@@ -25,6 +24,7 @@ import org.openstreetmap.josm.data.osm.event.TagsChangedEvent;
 import org.openstreetmap.josm.data.osm.event.WayNodesChangedEvent;
 import org.openstreetmap.josm.data.osm.visitor.OsmPrimitiveVisitor;
 import org.openstreetmap.josm.gui.MainApplication;
+import org.openstreetmap.josm.gui.layer.MainLayerManager;
 import org.openstreetmap.josm.tools.CheckParameterUtil;
 
 /**
@@ -479,7 +479,7 @@ public class AddressEditContainer implements OsmPrimitiveVisitor, DataSetListene
     /**
      * Rebuilds the street and address lists using the data set given
      * in  {@link AddressEditContainer#attachToDataSet(Collection)} or the
-     * full data set of the current data layer {@link Main#getCurrentDataSet()}.
+     * full data set of the current data layer {@link MainLayerManager#getEditDataSet()}.
      */
     public void invalidate() {
         if (workingSet != null) {
@@ -578,7 +578,7 @@ public class AddressEditContainer implements OsmPrimitiveVisitor, DataSetListene
      * prevent updates caused by e. g. a selection change within the map view.
      */
     public void detachFromDataSet() {
-        //Main.main.getCurrentDataSet().removeDataSetListener(this);
+        //getCurrentDataSet().removeDataSetListener(this);
         if (workingSet != null) {
             workingSet.clear();
             workingSet = null;

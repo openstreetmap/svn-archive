@@ -33,9 +33,9 @@ import javax.swing.table.TableModel;
 
 import org.openstreetmap.gui.jmapviewer.JMapViewer;
 import org.openstreetmap.gui.jmapviewer.MapMarkerDot;
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.SideButton;
 import org.openstreetmap.josm.plugins.fixAddresses.AddressEditContainer;
 import org.openstreetmap.josm.plugins.fixAddresses.IAddressEditContainerListener;
@@ -47,6 +47,7 @@ import org.openstreetmap.josm.plugins.fixAddresses.gui.actions.AbstractAddressEd
 import org.openstreetmap.josm.plugins.fixAddresses.gui.actions.AddressActions;
 import org.openstreetmap.josm.plugins.fixAddresses.gui.actions.ApplyAllGuessesAction;
 import org.openstreetmap.josm.tools.ImageProvider;
+import org.openstreetmap.josm.tools.Logging;
 
 @SuppressWarnings("serial")
 public class AddressEditDialog extends JDialog implements ActionListener, ListSelectionListener, IAddressEditContainerListener {
@@ -75,7 +76,7 @@ public class AddressEditDialog extends JDialog implements ActionListener, ListSe
     private JMapViewer mapViewer;
 
     public AddressEditDialog(AddressEditContainer addressEditContainer) throws HeadlessException {
-        super(JOptionPane.getFrameForComponent(Main.parent), tr("Fix unresolved addresses"), false);
+        super(JOptionPane.getFrameForComponent(MainApplication.getMainFrame()), tr("Fix unresolved addresses"), false);
 
         this.editContainer = addressEditContainer;
         this.editContainer.addChangedListener(this);
@@ -154,7 +155,7 @@ public class AddressEditDialog extends JDialog implements ActionListener, ListSe
 
                 unresolvedPanel.add(unresolvedButtons, BorderLayout.SOUTH);
             } catch (Exception e) {
-                e.printStackTrace();
+                Logging.error(e);
             }
 
             /* Map Panel */

@@ -8,9 +8,9 @@ import java.awt.event.KeyEvent;
 import java.util.Collection;
 
 import org.openstreetmap.josm.actions.JosmAction;
-import org.openstreetmap.josm.data.SelectionChangedListener;
-import org.openstreetmap.josm.data.osm.DataSet;
+import org.openstreetmap.josm.data.osm.DataSelectionListener;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.data.osm.event.SelectionEventManager;
 import org.openstreetmap.josm.plugins.fixAddresses.gui.AddressEditDialog;
 import org.openstreetmap.josm.tools.Shortcut;
 
@@ -20,8 +20,7 @@ import org.openstreetmap.josm.tools.Shortcut;
  *
  * @author Oliver Wieland &lt;oliver.wieland@online.de>
  */
-@SuppressWarnings("serial")
-public class FixUnresolvedStreetsAction extends JosmAction implements SelectionChangedListener {
+public class FixUnresolvedStreetsAction extends JosmAction implements DataSelectionListener {
     private AddressEditContainer addressEditContainer;
     private Collection<? extends OsmPrimitive> newSelection;
 
@@ -33,13 +32,13 @@ public class FixUnresolvedStreetsAction extends JosmAction implements SelectionC
 
         setEnabled(false);
         addressEditContainer = new AddressEditContainer();
-        DataSet.addSelectionListener(this);
+        SelectionEventManager.getInstance().addSelectionListener(this);
     }
 
     @Override
-    public void selectionChanged(Collection<? extends OsmPrimitive> newSelection) {
+    public void selectionChanged(SelectionChangeEvent event) {
         /* remember new selection for actionPerformed */
-        this.newSelection = newSelection;
+        this.newSelection = event.getSelection();
     }
 
     @Override

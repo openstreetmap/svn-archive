@@ -6,11 +6,11 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 import javax.swing.ButtonGroup;
 import javax.swing.JCheckBox;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.preferences.DefaultTabPreferenceSetting;
 import org.openstreetmap.josm.gui.preferences.PreferenceSetting;
 import org.openstreetmap.josm.gui.preferences.PreferenceSettingFactory;
 import org.openstreetmap.josm.gui.preferences.PreferenceTabbedPane;
+import org.openstreetmap.josm.spi.preferences.Config;
 
 public final class FixAddressesPreferences extends DefaultTabPreferenceSetting {
     private static final String FIX_ADDRESSES_IGNORE_POST_CODE_KEY = "fixAddresses.ignorePostCode";
@@ -41,16 +41,16 @@ public final class FixAddressesPreferences extends DefaultTabPreferenceSetting {
      * Loads the (initial) preference settings.
      */
     private void loadFromPrefs() {
-        setSelectGuessedObjects(Main.pref.getBoolean(FIX_ADDRESSES_SELECT_GUESSED_OBJECTS_KEY, false));
-        setIgnorePostCode(Main.pref.getBoolean(FIX_ADDRESSES_IGNORE_POST_CODE_KEY, false));
+        setSelectGuessedObjects(Config.getPref().getBoolean(FIX_ADDRESSES_SELECT_GUESSED_OBJECTS_KEY, false));
+        setIgnorePostCode(Config.getPref().getBoolean(FIX_ADDRESSES_IGNORE_POST_CODE_KEY, false));
     }
 
     /**
      * Save the preference settings.
      */
     private void saveToPrefs() {
-        Main.pref.putBoolean(FIX_ADDRESSES_SELECT_GUESSED_OBJECTS_KEY, isSelectGuessedObjects());
-        Main.pref.putBoolean(FIX_ADDRESSES_IGNORE_POST_CODE_KEY, isIgnorePostCode());
+        Config.getPref().putBoolean(FIX_ADDRESSES_SELECT_GUESSED_OBJECTS_KEY, isSelectGuessedObjects());
+        Config.getPref().putBoolean(FIX_ADDRESSES_IGNORE_POST_CODE_KEY, isIgnorePostCode());
     }
 
     @Override

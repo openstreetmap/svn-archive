@@ -4,6 +4,9 @@ package org.openstreetmap.josm.plugins.commons;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
 
+/**
+ * Apache Commons plugin.
+ */
 public class CommonsPlugin extends Plugin {
 
     /**

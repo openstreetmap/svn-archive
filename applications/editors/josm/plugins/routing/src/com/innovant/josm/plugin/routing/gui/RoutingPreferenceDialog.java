@@ -26,9 +26,10 @@ import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
 import org.apache.log4j.Logger;
-import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.data.Preferences;
 import org.openstreetmap.josm.gui.preferences.DefaultTabPreferenceSetting;
 import org.openstreetmap.josm.gui.preferences.PreferenceTabbedPane;
+import org.openstreetmap.josm.spi.preferences.Config;
 import org.openstreetmap.josm.tools.GBC;
 
 import com.innovant.josm.jrt.osm.OsmWayTypes;
@@ -155,12 +156,12 @@ public class RoutingPreferenceDialog extends DefaultTabPreferenceSetting {
                 String key = model.getValueAt(i, 0).toString();
                 String origValue = orig.get(key);
                 if (origValue == null || !origValue.equals(value))
-                    Main.pref.put(key, value);
+                    Config.getPref().put(key, value);
                 orig.remove(key); // processed.
             }
         }
         for (Entry<String, String> e : orig.entrySet()) {
-            Main.pref.put(e.getKey(), null);
+            Config.getPref().put(e.getKey(), null);
         }
         return false;
     }
@@ -188,14 +189,14 @@ public class RoutingPreferenceDialog extends DefaultTabPreferenceSetting {
     }
 
     private void readPreferences() {
-        orig = Main.pref.getAllPrefix("routing.profile.default.speed");
+        orig = Preferences.main().getAllPrefix("routing.profile.default.speed");
         if (orig.size() == 0) { // defaults
             logger.debug("Loading Default Preferences.");
             for (OsmWayTypes owt : OsmWayTypes.values()) {
-                Main.pref.putInt("routing.profile.default.speed."
+                Config.getPref().putInt("routing.profile.default.speed."
                         + owt.getTag(), owt.getSpeed());
             }
-            orig = Main.pref.getAllPrefix("routing.profile.default.speed");
+            orig = Preferences.main().getAllPrefix("routing.profile.default.speed");
         } else logger.debug("Default preferences already exist.");
     }
     /*

@@ -20,7 +20,6 @@ import javax.swing.Action;
 import javax.swing.Icon;
 
 import org.apache.log4j.Logger;
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.RenameLayerAction;
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.osm.Node;
@@ -34,6 +33,7 @@ import org.openstreetmap.josm.gui.dialogs.LayerListDialog;
 import org.openstreetmap.josm.gui.dialogs.LayerListPopup;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
+import org.openstreetmap.josm.spi.preferences.Config;
 import org.openstreetmap.josm.tools.ColorHelper;
 import org.openstreetmap.josm.tools.ImageProvider;
 
@@ -213,10 +213,10 @@ public class RoutingLayer extends Layer {
         }
 
         // Get path stroke width from preferences
-        String widthString = Main.pref.get(PreferencesKeys.KEY_ROUTE_WIDTH.key);
+        String widthString = Config.getPref().get(PreferencesKeys.KEY_ROUTE_WIDTH.key);
         if (widthString.length() == 0) {
             widthString = "2";                        /* I think 2 is better  */
-            // FIXME add after good width is found: Main.pref.put(KEY_ROUTE_WIDTH, widthString);
+            // FIXME add after good width is found: Config.getPref().put(KEY_ROUTE_WIDTH, widthString);
         }
         int width = Integer.parseInt(widthString);
 

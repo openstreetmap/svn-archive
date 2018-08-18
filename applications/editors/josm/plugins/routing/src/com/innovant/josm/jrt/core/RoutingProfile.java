@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
-import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.data.Preferences;
 
 
 /**
@@ -76,7 +76,7 @@ public class RoutingProfile {
         logger.debug("Init RoutingProfile with name: "+name);
         this.name = name;
         waySpeeds = new HashMap<>();
-        Map<String, String> prefs = Main.pref.getAllPrefix("routing.profile."+name+".speed");
+        Map<String, String> prefs = Preferences.main().getAllPrefix("routing.profile."+name+".speed");
         for (String key:prefs.keySet()) {
             waySpeeds.put((key.split("\\.")[4]), Double.valueOf(prefs.get(key)));
         }

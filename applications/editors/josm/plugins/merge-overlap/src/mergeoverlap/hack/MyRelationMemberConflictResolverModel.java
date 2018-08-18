@@ -6,8 +6,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import mergeoverlap.MergeOverlapAction;
-
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
@@ -15,6 +13,8 @@ import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.gui.conflict.tags.RelationMemberConflictDecision;
 import org.openstreetmap.josm.gui.conflict.tags.RelationMemberConflictResolverModel;
+
+import mergeoverlap.MergeOverlapAction;
 
 /**
  * This model manages a list of conflicting relation members.

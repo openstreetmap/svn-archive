@@ -7,13 +7,13 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.command.ChangePropertyCommand;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.TagCollection;
 import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.conflict.tags.CombinePrimitiveResolverDialog;
 import org.openstreetmap.josm.gui.conflict.tags.TagConflictResolverModel;
 import org.openstreetmap.josm.gui.util.GuiHelper;
@@ -65,7 +65,7 @@ public class MyCombinePrimitiveResolverDialog extends CombinePrimitiveResolverDi
      */
     public static MyCombinePrimitiveResolverDialog getInstance() {
         if (instance == null) {
-            GuiHelper.runInEDTAndWait(() -> instance = new MyCombinePrimitiveResolverDialog(Main.parent));
+            GuiHelper.runInEDTAndWait(() -> instance = new MyCombinePrimitiveResolverDialog(MainApplication.getMainFrame()));
         }
         return instance;
     }

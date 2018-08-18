@@ -25,13 +25,15 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
-import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.data.Preferences;
 import org.openstreetmap.josm.data.preferences.ColorInfo;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.preferences.PreferenceSetting;
 import org.openstreetmap.josm.gui.preferences.PreferenceTabbedPane;
 import org.openstreetmap.josm.gui.preferences.SubPreferenceSetting;
 import org.openstreetmap.josm.gui.preferences.TabPreferenceSetting;
 import org.openstreetmap.josm.gui.preferences.display.ColorPreference;
+import org.openstreetmap.josm.spi.preferences.Config;
 import org.openstreetmap.josm.tools.ColorHelper;
 import org.openstreetmap.josm.tools.GBC;
 
@@ -55,12 +57,12 @@ public class ColorSchemePreference implements SubPreferenceSetting {
         JPanel panel = new JPanel(new GridBagLayout());
         panel.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
 
-        Map<String, String> colorMap = Main.pref.getAllPrefix(PREF_KEY_COLOR_PREFIX);
+        Map<String, String> colorMap = Preferences.main().getAllPrefix(PREF_KEY_COLOR_PREFIX);
         colorKeys = new ArrayList<>(colorMap.keySet());
         Collections.sort(colorKeys);
         listModel = new DefaultListModel<>();
         schemesList = new JList<>(listModel);
-        String schemes = Main.pref.get(PREF_KEY_SCHEMES_NAMES);
+        String schemes = Config.getPref().get(PREF_KEY_SCHEMES_NAMES);
         StringTokenizer st = new StringTokenizer(schemes, ";");
         String schemeName;
         while (st.hasMoreTokens()) {
@@ -71,7 +73,7 @@ public class ColorSchemePreference implements SubPreferenceSetting {
         JButton useScheme = new JButton(tr("Use"));
         useScheme.addActionListener(e -> {
             if (schemesList.getSelectedIndex() == -1)
-                JOptionPane.showMessageDialog(Main.parent, tr("Please select a scheme to use."));
+                JOptionPane.showMessageDialog(MainApplication.getMainFrame(), tr("Please select a scheme to use."));
             else {
                 String schemeName1 = (String) listModel.get(schemesList.getSelectedIndex());
                 getColorPreference(gui).setColors(getColorMap(schemeName1));
@@ -79,7 +81,7 @@ public class ColorSchemePreference implements SubPreferenceSetting {
         });
         JButton addScheme = new JButton(tr("Add"));
         addScheme.addActionListener(e -> {
-            String schemeName1 = JOptionPane.showInputDialog(Main.parent, tr("Color Scheme"));
+            String schemeName1 = JOptionPane.showInputDialog(MainApplication.getMainFrame(), tr("Color Scheme"));
             if (schemeName1 == null)
                 return;
             schemeName1 = schemeName1.replaceAll("\\.", "_");
@@ -91,7 +93,7 @@ public class ColorSchemePreference implements SubPreferenceSetting {
         JButton deleteScheme = new JButton(tr("Delete"));
         deleteScheme.addActionListener(e -> {
             if (schemesList.getSelectedIndex() == -1)
-                JOptionPane.showMessageDialog(Main.parent, tr("Please select the scheme to delete."));
+                JOptionPane.showMessageDialog(MainApplication.getMainFrame(), tr("Please select the scheme to delete."));
             else {
                 String schemeName1 = (String) listModel.get(schemesList.getSelectedIndex());
                 removeColorSchemeFromPreferences(schemeName1);
@@ -132,9 +134,9 @@ public class ColorSchemePreference implements SubPreferenceSetting {
             StringBuilder sb = new StringBuilder();
             for (int i = 0; i < schemesList.getModel().getSize(); ++i)
                 sb.append(";"+schemesList.getModel().getElementAt(i));
-            Main.pref.put(PREF_KEY_SCHEMES_NAMES, sb.toString().substring(1));
+            Config.getPref().put(PREF_KEY_SCHEMES_NAMES, sb.toString().substring(1));
         } else
-            Main.pref.put(PREF_KEY_SCHEMES_NAMES, null);
+            Config.getPref().put(PREF_KEY_SCHEMES_NAMES, null);
     }
 
     @Override
@@ -153,9 +155,9 @@ public class ColorSchemePreference implements SubPreferenceSetting {
      */
     public void removeColorSchemeFromPreferences(String schemeName) {
         // delete color entries for scheme in preferences:
-        Map<String, String> colors = Main.pref.getAllPrefix(PREF_KEY_SCHEMES_PREFIX + schemeName + ".");
+        Map<String, String> colors = Preferences.main().getAllPrefix(PREF_KEY_SCHEMES_PREFIX + schemeName + ".");
         for(String key : colors.keySet()) {
-            Main.pref.put(key, null);
+            Config.getPref().put(key, null);
         }
     }
 
@@ -168,7 +170,7 @@ public class ColorSchemePreference implements SubPreferenceSetting {
         String key;
         for(String colorKey : colorMap.keySet()) {
             key = PREF_KEY_SCHEMES_PREFIX + schemeName + "." + PREF_KEY_COLOR_PREFIX + colorKey;
-            Main.pref.put(key, ColorHelper.color2html(colorMap.get(colorKey).getValue()));
+            Config.getPref().put(key, ColorHelper.color2html(colorMap.get(colorKey).getValue()));
         }
     }
 
@@ -182,11 +184,11 @@ public class ColorSchemePreference implements SubPreferenceSetting {
         String colorKey;
         String prefix = PREF_KEY_SCHEMES_PREFIX + schemeName + "." + PREF_KEY_COLOR_PREFIX;
         Map<String, ColorInfo> colorMap = new HashMap<>();
-        for(String schemeColorKey : Main.pref.getAllPrefix(prefix).keySet()) {
+        for(String schemeColorKey : Preferences.main().getAllPrefix(prefix).keySet()) {
             colorKey = schemeColorKey.substring(prefix.length());
             colorMap.put(colorKey, ColorInfo.fromPref(Arrays.asList(
                     // FIXME: does not work, corrupts the color table ? See #16110
-                    Main.pref.get(schemeColorKey), "", "", ""), false));
+                    Config.getPref().get(schemeColorKey), "", "", ""), false));
         }
         return colorMap;
     }

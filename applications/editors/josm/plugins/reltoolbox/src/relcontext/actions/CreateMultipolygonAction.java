@@ -25,13 +25,13 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.command.AddCommand;
 import org.openstreetmap.josm.command.ChangeCommand;
 import org.openstreetmap.josm.command.ChangePropertyCommand;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.SequenceCommand;
+import org.openstreetmap.josm.data.UndoRedoHandler;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.MultipolygonBuilder;
 import org.openstreetmap.josm.data.osm.Node;
@@ -41,6 +41,7 @@ import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.gui.MainApplication;
+import org.openstreetmap.josm.spi.preferences.Config;
 import org.openstreetmap.josm.tools.GBC;
 import org.openstreetmap.josm.tools.Shortcut;
 
@@ -85,7 +86,7 @@ public class CreateMultipolygonAction extends JosmAction {
     }
 
     private boolean getPref(String property) {
-        return Main.pref.getBoolean(PREF_MULTIPOLY + property, getDefaultPropertyValue(property));
+        return Config.getPref().getBoolean(PREF_MULTIPOLY + property, getDefaultPropertyValue(property));
     }
 
     @Override
@@ -104,7 +105,7 @@ public class CreateMultipolygonAction extends JosmAction {
                     List<Command> commands = new ArrayList<>();
                     rels = TheRing.makeManySimpleMultipolygons(ds.getSelectedWays(), commands);
                     if (!commands.isEmpty()) {
-                        MainApplication.undoRedo.add(new SequenceCommand(tr("Create multipolygons from rings"), commands));
+                        UndoRedoHandler.getInstance().add(new SequenceCommand(tr("Create multipolygons from rings"), commands));
                     }
                 }
             }
@@ -125,7 +126,7 @@ public class CreateMultipolygonAction extends JosmAction {
         MultipolygonBuilder mpc = new MultipolygonBuilder();
         String error = mpc.makeFromWays(ds.getSelectedWays());
         if (error != null) {
-            JOptionPane.showMessageDialog(Main.parent, error);
+            JOptionPane.showMessageDialog(MainApplication.getMainFrame(), error);
             return;
         }
         Relation rel = new Relation();
@@ -147,7 +148,7 @@ public class CreateMultipolygonAction extends JosmAction {
         }
         List<Command> list = removeTagsFromInnerWays(rel);
         if (!list.isEmpty() && isBoundary) {
-            MainApplication.undoRedo.add(new SequenceCommand(tr("Move tags from ways to relation"), list));
+            UndoRedoHandler.getInstance().add(new SequenceCommand(tr("Move tags from ways to relation"), list));
             list = new ArrayList<>();
         }
         if (isBoundary) {
@@ -159,7 +160,7 @@ public class CreateMultipolygonAction extends JosmAction {
             }
         }
         list.add(new AddCommand(ds, rel));
-        MainApplication.undoRedo.add(new SequenceCommand(tr("Create multipolygon"), list));
+        UndoRedoHandler.getInstance().add(new SequenceCommand(tr("Create multipolygon"), list));
 
         if (chRel != null) {
             chRel.set(rel);
@@ -334,7 +335,7 @@ public class CreateMultipolygonAction extends JosmAction {
             values.remove(key);
         }
 
-        for (String linearTag : Main.pref.getList(PREF_MULTIPOLY + "lineartags", DEFAULT_LINEAR_TAGS)) {
+        for (String linearTag : Config.getPref().getList(PREF_MULTIPOLY + "lineartags", DEFAULT_LINEAR_TAGS)) {
             values.remove(linearTag);
         }
 
@@ -422,7 +423,7 @@ public class CreateMultipolygonAction extends JosmAction {
         panel.add(new JLabel(tr("Enter admin level and name for the border relation:")), GBC.eol().insets(0, 0, 0, 5));
 
         final JTextField admin = new JTextField();
-        admin.setText(relAL != null ? relAL : Main.pref.get(PREF_MULTIPOLY + "lastadmin", ""));
+        admin.setText(relAL != null ? relAL : Config.getPref().get(PREF_MULTIPOLY + "lastadmin", ""));
         panel.add(new JLabel(tr("Admin level")), GBC.std());
         panel.add(Box.createHorizontalStrut(10), GBC.std());
         panel.add(admin, GBC.eol().fill(GBC.HORIZONTAL).insets(0, 0, 0, 5));
@@ -442,7 +443,7 @@ public class CreateMultipolygonAction extends JosmAction {
                 admin.selectAll();
             }
         };
-        final JDialog dlg = optionPane.createDialog(Main.parent, tr("Create a new relation"));
+        final JDialog dlg = optionPane.createDialog(MainApplication.getMainFrame(), tr("Create a new relation"));
         dlg.setModalityType(ModalityType.DOCUMENT_MODAL);
 
         name.addActionListener(new ActionListener() {
@@ -464,7 +465,7 @@ public class CreateMultipolygonAction extends JosmAction {
         String new_name = name.getText().trim();
         if (admin_level.equals("10") || (admin_level.length() == 1 && Character.isDigit(admin_level.charAt(0)))) {
             rel.put("admin_level", admin_level);
-            Main.pref.put(PREF_MULTIPOLY + "lastadmin", admin_level);
+            Config.getPref().put(PREF_MULTIPOLY + "lastadmin", admin_level);
         }
         if (new_name.length() > 0) {
             rel.put("name", new_name);

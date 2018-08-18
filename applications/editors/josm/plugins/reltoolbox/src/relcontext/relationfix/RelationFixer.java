@@ -1,9 +1,11 @@
 // License: GPL. For details, see LICENSE file.
 package relcontext.relationfix;
 
-import java.util.*;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import javax.swing.Action;
 

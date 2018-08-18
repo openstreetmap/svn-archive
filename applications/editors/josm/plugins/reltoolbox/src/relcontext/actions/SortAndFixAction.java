@@ -11,9 +11,9 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 
 import org.openstreetmap.josm.command.Command;
+import org.openstreetmap.josm.data.UndoRedoHandler;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.RelationMember;
-import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.tools.ImageProvider;
 
 import relcontext.ChosenRelation;
@@ -56,7 +56,7 @@ public class SortAndFixAction extends AbstractAction implements ChosenRelationLi
     public void actionPerformed(ActionEvent e) {
         Command c = fixRelation(rel.get());
         if (c != null) {
-            MainApplication.undoRedo.add(c);
+            UndoRedoHandler.getInstance().add(c);
         }
     }
 

@@ -16,12 +16,12 @@ import java.util.Set;
 import javax.swing.AbstractAction;
 import javax.swing.JOptionPane;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.command.AddCommand;
 import org.openstreetmap.josm.command.ChangeCommand;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.DeleteCommand;
 import org.openstreetmap.josm.command.SequenceCommand;
+import org.openstreetmap.josm.data.UndoRedoHandler;
 import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.DefaultNameFormatter;
@@ -70,7 +70,7 @@ public class ReconstructPolygonAction extends AbstractAction implements ChosenRe
             }
         }
         if (wont) {
-            JOptionPane.showMessageDialog(Main.parent,
+            JOptionPane.showMessageDialog(MainApplication.getMainFrame(),
                     tr("Multipolygon must consist only of ways"), tr("Reconstruct polygon"), JOptionPane.ERROR_MESSAGE);
             return;
         }
@@ -78,7 +78,7 @@ public class ReconstructPolygonAction extends AbstractAction implements ChosenRe
         MultipolygonBuilder mpc = new MultipolygonBuilder();
         String error = mpc.makeFromWays(ways);
         if (error != null) {
-            JOptionPane.showMessageDialog(Main.parent, error);
+            JOptionPane.showMessageDialog(MainApplication.getMainFrame(), error);
             return;
         }
 
@@ -197,7 +197,7 @@ public class ReconstructPolygonAction extends AbstractAction implements ChosenRe
             commands.add(relationDeleteCommand);
         }
 
-        MainApplication.undoRedo.add(new SequenceCommand(tr("Reconstruct polygons from relation {0}",
+        UndoRedoHandler.getInstance().add(new SequenceCommand(tr("Reconstruct polygons from relation {0}",
                 r.getDisplayName(DefaultNameFormatter.getInstance())), commands));
         ds.setSelected(newSelection);
     }

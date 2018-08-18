@@ -57,11 +57,11 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.command.ChangeRelationMemberRoleCommand;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.SequenceCommand;
+import org.openstreetmap.josm.data.UndoRedoHandler;
 import org.openstreetmap.josm.data.osm.DataSelectionListener;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.DefaultNameFormatter;
@@ -78,6 +78,7 @@ import org.openstreetmap.josm.gui.dialogs.ToggleDialog;
 import org.openstreetmap.josm.gui.layer.MainLayerManager.ActiveLayerChangeEvent;
 import org.openstreetmap.josm.gui.layer.MainLayerManager.ActiveLayerChangeListener;
 import org.openstreetmap.josm.gui.tagging.ac.AutoCompletingComboBox;
+import org.openstreetmap.josm.spi.preferences.Config;
 import org.openstreetmap.josm.tools.GBC;
 import org.openstreetmap.josm.tools.Logging;
 import org.openstreetmap.josm.tools.Shortcut;
@@ -204,7 +205,7 @@ public class RelContextDialog extends ToggleDialog implements ActiveLayerChangeL
             }
         });
         downloadButton.setVisible(false);
-        if (Main.pref.getBoolean(PREF_PREFIX + ".hidetopline", false)) {
+        if (Config.getPref().getBoolean(PREF_PREFIX + ".hidetopline", false)) {
             chosenRelationPanel.setVisible(false);
         }
 
@@ -358,7 +359,7 @@ public class RelContextDialog extends ToggleDialog implements ActiveLayerChangeL
 
     @Override
     public void chosenRelationChanged(Relation oldRelation, Relation newRelation) {
-        if (chosenRelationPanel != null && Main.pref.getBoolean(PREF_PREFIX + ".hidetopline", false)) {
+        if (chosenRelationPanel != null && Config.getPref().getBoolean(PREF_PREFIX + ".hidetopline", false)) {
             chosenRelationPanel.setVisible(newRelation != null);
         }
         DataSet ds = MainApplication.getLayerManager().getEditDataSet();
@@ -493,7 +494,7 @@ public class RelContextDialog extends ToggleDialog implements ActiveLayerChangeL
                 role.getEditor().selectAll();
             }
         };
-        final JDialog dlg = optionPane.createDialog(Main.parent, tr("Specify role"));
+        final JDialog dlg = optionPane.createDialog(MainApplication.getMainFrame(), tr("Specify role"));
         dlg.setModalityType(ModalityType.DOCUMENT_MODAL);
 
         role.getEditor().addActionListener(new ActionListener() {
@@ -572,8 +573,8 @@ public class RelContextDialog extends ToggleDialog implements ActiveLayerChangeL
                 }
             }
             if (!commands.isEmpty()) {
-                //                Main.main.undoRedo.add(new ChangeCommand(chosenRelation.get(), r));
-                MainApplication.undoRedo.add(new SequenceCommand(tr("Change relation member roles to {0}", role), commands));
+                //                UndoRedoHandler.getInstance().add(new ChangeCommand(chosenRelation.get(), r));
+                UndoRedoHandler.getInstance().add(new SequenceCommand(tr("Change relation member roles to {0}", role), commands));
             }
         }
     }
@@ -602,7 +603,7 @@ public class RelContextDialog extends ToggleDialog implements ActiveLayerChangeL
         protected final JCheckBoxMenuItem addMenuItem(String property, String title) {
             String fullProperty = PREF_PREFIX + ".multipolygon." + property;
             JCheckBoxMenuItem item = new JCheckBoxMenuItem(tr(title));
-            item.setSelected(Main.pref.getBoolean(fullProperty, CreateMultipolygonAction.getDefaultPropertyValue(property)));
+            item.setSelected(Config.getPref().getBoolean(fullProperty, CreateMultipolygonAction.getDefaultPropertyValue(property)));
             item.setActionCommand(fullProperty);
             item.addActionListener(this);
             add(item);
@@ -614,7 +615,7 @@ public class RelContextDialog extends ToggleDialog implements ActiveLayerChangeL
             String property = e.getActionCommand();
             if (property != null && property.length() > 0 && e.getSource() instanceof JCheckBoxMenuItem) {
                 boolean value = ((JCheckBoxMenuItem) e.getSource()).isSelected();
-                Main.pref.putBoolean(property, value);
+                Config.getPref().putBoolean(property, value);
                 show(getInvoker(), getX(), getY());
             }
         }

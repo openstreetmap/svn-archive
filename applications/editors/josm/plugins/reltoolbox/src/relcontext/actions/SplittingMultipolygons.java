@@ -12,11 +12,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.command.AddCommand;
 import org.openstreetmap.josm.command.ChangeCommand;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.SequenceCommand;
+import org.openstreetmap.josm.data.UndoRedoHandler;
 import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.DataSet;
@@ -27,6 +27,7 @@ import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.gui.MainApplication;
+import org.openstreetmap.josm.spi.preferences.Config;
 import org.openstreetmap.josm.tools.Geometry;
 import org.openstreetmap.josm.tools.Geometry.PolygonIntersection;
 
@@ -105,7 +106,7 @@ public final class SplittingMultipolygons {
             List<Command> commands = new ArrayList<>();
             Relation newRelation = SplittingMultipolygons.attachRingToNeighbours(ring, commands);
             if (newRelation != null && !commands.isEmpty()) {
-                MainApplication.undoRedo.add(commands.get(0));
+                UndoRedoHandler.getInstance().add(commands.get(0));
                 result.add(newRelation);
             }
         }
@@ -114,7 +115,7 @@ public final class SplittingMultipolygons {
             List<Command> commands = new ArrayList<>();
             Relation newRelation = SplittingMultipolygons.tryToCloseOneWay(arc, commands);
             if (newRelation != null && !commands.isEmpty()) {
-                MainApplication.undoRedo.add(commands.get(0));
+                UndoRedoHandler.getInstance().add(commands.get(0));
                 result.add(newRelation);
             }
         }
@@ -274,7 +275,7 @@ public final class SplittingMultipolygons {
         Relation newRelation = new Relation();
         newRelation.put("type", "multipolygon");
         newRelation.addMember(new RelationMember("outer", segment));
-        Collection<String> linearTags = Main.pref.getList(PREF_MULTIPOLY + "lineartags", CreateMultipolygonAction.DEFAULT_LINEAR_TAGS);
+        Collection<String> linearTags = Config.getPref().getList(PREF_MULTIPOLY + "lineartags", CreateMultipolygonAction.DEFAULT_LINEAR_TAGS);
         Way segmentCopy = new Way(segment);
         boolean changed = false;
         for (String key : segmentCopy.keySet()) {

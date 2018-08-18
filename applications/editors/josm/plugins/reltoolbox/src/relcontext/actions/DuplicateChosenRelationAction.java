@@ -8,6 +8,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 
 import org.openstreetmap.josm.command.AddCommand;
+import org.openstreetmap.josm.data.UndoRedoHandler;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.gui.MainApplication;
@@ -34,7 +35,7 @@ public class DuplicateChosenRelationAction extends AbstractAction implements Cho
         if (ds != null) {
             Relation r = rel.get();
             Relation copy = new Relation(r, true);
-            MainApplication.undoRedo.add(new AddCommand(ds, copy));
+            UndoRedoHandler.getInstance().add(new AddCommand(ds, copy));
             rel.set(copy);
             ds.setSelected(copy);
         }

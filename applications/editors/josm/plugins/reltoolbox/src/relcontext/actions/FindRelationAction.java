@@ -28,10 +28,10 @@ import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.data.osm.DefaultNameFormatter;
 import org.openstreetmap.josm.data.osm.Relation;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.PrimitiveRenderer;
 import org.openstreetmap.josm.tools.Logging;
 import org.openstreetmap.josm.tools.Shortcut;
@@ -73,7 +73,7 @@ public class FindRelationAction extends JosmAction {
                 searchField.requestFocusInWindow();
             }
         };
-        final JDialog dlg = optionPane.createDialog(Main.parent, tr("Find a relation"));
+        final JDialog dlg = optionPane.createDialog(MainApplication.getMainFrame(), tr("Find a relation"));
         dlg.setModalityType(ModalityType.DOCUMENT_MODAL);
 
         relationsList.addMouseListener(new MouseAdapter() {

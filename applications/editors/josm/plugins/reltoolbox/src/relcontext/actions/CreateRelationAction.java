@@ -18,15 +18,16 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.command.AddCommand;
+import org.openstreetmap.josm.data.UndoRedoHandler;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.tagging.ac.AutoCompletingComboBox;
+import org.openstreetmap.josm.spi.preferences.Config;
 import org.openstreetmap.josm.tools.GBC;
 import org.openstreetmap.josm.tools.Shortcut;
 
@@ -69,7 +70,7 @@ public class CreateRelationAction extends JosmAction {
             rel.addMember(new RelationMember("", selected));
         }
 
-        MainApplication.undoRedo.add(new AddCommand(ds, rel));
+        UndoRedoHandler.getInstance().add(new AddCommand(ds, rel));
 
         if (chRel != null) {
             chRel.set(rel);
@@ -104,7 +105,7 @@ public class CreateRelationAction extends JosmAction {
         final AutoCompletingComboBox keys = new AutoCompletingComboBox();
         keys.setPossibleItems(RELATION_TYPES);
         keys.setEditable(true);
-        keys.getEditor().setItem(Main.pref.get(PREF_LASTTYPE, "multipolygon"));
+        keys.getEditor().setItem(Config.getPref().get(PREF_LASTTYPE, "multipolygon"));
 
         panel.add(new JLabel(tr("Type")), GBC.std());
         panel.add(Box.createHorizontalStrut(10), GBC.std());
@@ -117,7 +118,7 @@ public class CreateRelationAction extends JosmAction {
                 keys.getEditor().selectAll();
             }
         };
-        final JDialog dlg = optionPane.createDialog(Main.parent, tr("Create a new relation"));
+        final JDialog dlg = optionPane.createDialog(MainApplication.getMainFrame(), tr("Create a new relation"));
         dlg.setModalityType(ModalityType.DOCUMENT_MODAL);
 
         keys.getEditor().addActionListener(new ActionListener() {
@@ -136,7 +137,7 @@ public class CreateRelationAction extends JosmAction {
             return null;
 
         String result = keys.getEditor().getItem().toString().trim();
-        Main.pref.put(PREF_LASTTYPE, result);
+        Config.getPref().put(PREF_LASTTYPE, result);
         return result;
     }
 }

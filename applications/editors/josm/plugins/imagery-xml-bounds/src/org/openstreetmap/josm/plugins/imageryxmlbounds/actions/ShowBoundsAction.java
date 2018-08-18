@@ -10,9 +10,9 @@ import javax.swing.Box;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.IPrimitiveAction;
 import org.openstreetmap.josm.data.osm.IPrimitive;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.plugins.imageryxmlbounds.XmlBoundsLayer;
 
 import net.boplicity.xmleditor.XmlTextPane;
@@ -50,7 +50,7 @@ public class ShowBoundsAction extends ComputeBoundsAction implements IPrimitiveA
         JScrollPane scrollPane = new JScrollPane(pane);
         scrollPane.setPreferredSize(new Dimension(1024, 600));
         box.add(scrollPane);
-        JOptionPane.showMessageDialog(Main.parent, box, ACTION_NAME, JOptionPane.PLAIN_MESSAGE);
+        JOptionPane.showMessageDialog(MainApplication.getMainFrame(), box, ACTION_NAME, JOptionPane.PLAIN_MESSAGE);
     }
 
     @Override

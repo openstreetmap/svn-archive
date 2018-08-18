@@ -9,7 +9,6 @@ import java.util.List;
 
 import javax.swing.JOptionPane;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.imagery.ImageryInfo;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.gui.MainApplication;
@@ -66,7 +65,7 @@ public class XmlBoundsImporter extends FileImporter implements XmlBoundsConstant
         } catch (SAXException e) {
       	    Logging.trace(e);
             if (JOptionPane.showConfirmDialog(
-                    Main.parent,
+                    MainApplication.getMainFrame(),
                     tr("Validating error in file {0}:\n{1}\nDo you want to continue without validating the file ?",
                             source != null ? source : file.getPath(), e.getLocalizedMessage()),
                     tr("Open Imagery XML file"),
@@ -90,7 +89,7 @@ public class XmlBoundsImporter extends FileImporter implements XmlBoundsConstant
             GuiHelper.runInEDT(() -> {
 			    if (dataSet.allPrimitives().isEmpty()) {
 			        JOptionPane.showMessageDialog(
-			                Main.parent, tr("No data found in file {0}.", source != null ? source : file.getPath()),
+			                MainApplication.getMainFrame(), tr("No data found in file {0}.", source != null ? source : file.getPath()),
 			                tr("Open Imagery XML file"), JOptionPane.INFORMATION_MESSAGE);
 			    }
 			    MainApplication.getLayerManager().addLayer(layer);

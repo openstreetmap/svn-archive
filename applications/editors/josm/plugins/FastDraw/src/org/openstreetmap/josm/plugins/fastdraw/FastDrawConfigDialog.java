@@ -18,11 +18,12 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.ExtendedDialog;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.datatransfer.ClipboardUtils;
 import org.openstreetmap.josm.gui.datatransfer.importers.TextTagPaster;
 import org.openstreetmap.josm.gui.widgets.HistoryComboBox;
+import org.openstreetmap.josm.spi.preferences.Config;
 import org.openstreetmap.josm.tools.GBC;
 import org.openstreetmap.josm.tools.ImageProvider;
 import org.openstreetmap.josm.tools.TextTagParser;
@@ -48,7 +49,7 @@ public class FastDrawConfigDialog extends ExtendedDialog {
     private final FDSettings settings;
 
     public FastDrawConfigDialog(FDSettings settings) {
-        super(Main.parent, tr("FastDraw configuration"), new String[] {tr("Ok"), tr("Cancel")});
+        super(MainApplication.getMainFrame(), tr("FastDraw configuration"), new String[] {tr("Ok"), tr("Cancel")});
         this.settings = settings;
 
         JPanel all = new JPanel();
@@ -65,7 +66,7 @@ public class FastDrawConfigDialog extends ExtendedDialog {
         });
         pasteButton.setToolTipText(tr("Try copying tags from properties table"));
 
-        ArrayList<String> history = new ArrayList<>(Main.pref.getList("fastdraw.tags-history"));
+        ArrayList<String> history = new ArrayList<>(Config.getPref().getList("fastdraw.tags-history"));
         while (history.remove("")) { };
         addTags.setPossibleItems(history);
 
@@ -130,10 +131,10 @@ public class FastDrawConfigDialog extends ExtendedDialog {
                 if (!settings.autoTags.isEmpty()) {
                     addTags.addCurrentItemToHistory();
                 }
-                Main.pref.putList("fastdraw.tags-history", addTags.getHistory());
+                Config.getPref().putList("fastdraw.tags-history", addTags.getHistory());
                 settings.savePrefs();
             } catch (ParseException e) {
-                JOptionPane.showMessageDialog(Main.parent,
+                JOptionPane.showMessageDialog(MainApplication.getMainFrame(),
                         tr("Can not read settings"));
             }
         }

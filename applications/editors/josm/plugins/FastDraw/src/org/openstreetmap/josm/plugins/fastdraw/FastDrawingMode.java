@@ -19,7 +19,6 @@ import java.util.Map;
 
 import javax.swing.JOptionPane;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.mapmode.MapMode;
 import org.openstreetmap.josm.command.AddCommand;
 import org.openstreetmap.josm.command.ChangeCommand;
@@ -27,6 +26,7 @@ import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.DeleteCommand;
 import org.openstreetmap.josm.command.SequenceCommand;
 import org.openstreetmap.josm.data.Bounds;
+import org.openstreetmap.josm.data.UndoRedoHandler;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
@@ -463,7 +463,7 @@ class FastDrawingMode extends MapMode implements MapViewPaintable, KeyPressRelea
             if (lastPoint == null || lastPoint.equals(line.getLastPoint())) {
                 if (line.getPoints().size() > 5) {
                     boolean answer = ConditionalOptionPaneUtil.showConfirmationDialog(
-                            "delete_drawn_line", Main.parent,
+                            "delete_drawn_line", MainApplication.getMainFrame(),
                             tr("Are you sure you do not want to save the line containing {0} points?",
                                     line.getPoints().size()), tr("Delete confirmation"),
                             JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, JOptionPane.YES_OPTION);
@@ -475,7 +475,7 @@ class FastDrawingMode extends MapMode implements MapViewPaintable, KeyPressRelea
             break;
 
         case KeyEvent.VK_I:
-            JOptionPane.showMessageDialog(Main.parent,
+            JOptionPane.showMessageDialog(MainApplication.getMainFrame(),
                     tr("{0} m - length of the line\n{1} nodes\n{2} points per km (maximum)\n{3} points per km (average)",
                             line.getLength(), line.getPoints().size(), line.getNodesPerKm(settings.pkmBlockSize),
                             line.getNodesPerKm(1000000)),
@@ -564,7 +564,7 @@ class FastDrawingMode extends MapMode implements MapViewPaintable, KeyPressRelea
                 }
             }
             if (nd.getCoor().isOutSideWorld()) {
-                JOptionPane.showMessageDialog(Main.parent,
+                JOptionPane.showMessageDialog(MainApplication.getMainFrame(),
                         tr("Cannot place node outside of the world."));
                 return;
             }
@@ -598,7 +598,7 @@ class FastDrawingMode extends MapMode implements MapViewPaintable, KeyPressRelea
             oldWay = null; // that is all with this command
         } else cmds.add(new AddCommand(ds, w));
         Command c = new SequenceCommand(tr("Draw the way by mouse"), cmds);
-        MainApplication.undoRedo.add(c);
+        UndoRedoHandler.getInstance().add(c);
         lineWasSaved = true;
         newDrawing(); // stop drawing
         if (autoExit) {

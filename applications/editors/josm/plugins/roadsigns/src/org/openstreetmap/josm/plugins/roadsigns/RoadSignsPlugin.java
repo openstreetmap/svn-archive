@@ -23,16 +23,17 @@ import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.data.StructUtils;
 import org.openstreetmap.josm.data.StructUtils.StructEntry;
 import org.openstreetmap.josm.gui.ExtendedDialog;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.dialogs.properties.PropertiesDialog;
 import org.openstreetmap.josm.io.CachedFile;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
 import org.openstreetmap.josm.plugins.roadsigns.RoadSignInputDialog.SettingsPanel;
+import org.openstreetmap.josm.spi.preferences.Config;
 import org.openstreetmap.josm.tools.Shortcut;
 import org.openstreetmap.josm.tools.Utils;
 import org.xml.sax.SAXException;
@@ -89,9 +90,9 @@ public class RoadSignsPlugin extends Plugin {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            String code = Main.pref.get("plugin.roadsigns.preset.selection", null);
+            String code = Config.getPref().get("plugin.roadsigns.preset.selection", null);
             if (code == null) {
-                ExtendedDialog ed = new ExtendedDialog(Main.parent, tr("Settings"), new String[] {tr("Ok"), tr("Cancel")});
+                ExtendedDialog ed = new ExtendedDialog(MainApplication.getMainFrame(), tr("Settings"), new String[] {tr("Ok"), tr("Cancel")});
                 ed.setButtonIcons(new String[] {"ok", "cancel"});
                 SettingsPanel settings = new SettingsPanel(true, null);
                 ed.setContent(settings);
@@ -137,19 +138,19 @@ public class RoadSignsPlugin extends Plugin {
     }
 
     public static void setSelectedPreset(PresetMetaData preset) throws IOException {
-        Main.pref.put("plugin.roadsigns.preset.selection", preset.code);
+        Config.getPref().put("plugin.roadsigns.preset.selection", preset.code);
         loadSignPreset();
     }
 
     public static List<PresetMetaData> getAvailablePresetsMetaData() {
 
         List<PresetMetaData> presetsData = StructUtils.getListOfStructs(
-                Main.pref, "plugin.roadsigns.presets", DEFAULT_PRESETS, PresetMetaData.class);
+                Config.getPref(), "plugin.roadsigns.presets", DEFAULT_PRESETS, PresetMetaData.class);
 
-        String customFile = Main.pref.get("plugin.roadsigns.sources", null);
+        String customFile = Config.getPref().get("plugin.roadsigns.sources", null);
         if (customFile == null) {
             // for legacy reasons, try both string and collection preference type
-            List<String> customFiles = Main.pref.getList("plugin.roadsigns.sources", null);
+            List<String> customFiles = Config.getPref().getList("plugin.roadsigns.sources", null);
             if (customFiles != null && !customFiles.isEmpty()) {
                 customFile = customFiles.iterator().next();
             }
@@ -158,18 +159,18 @@ public class RoadSignsPlugin extends Plugin {
         if (customFile != null) {
             // first check, if custom file preference has changed. If yes,
             // change the current preset selection to custom directly
-            String lastCustomFile = Main.pref.get("plugin.roadsigns.sources.last", null);
+            String lastCustomFile = Config.getPref().get("plugin.roadsigns.sources.last", null);
             if (!Objects.equals(customFile, lastCustomFile)) {
-                Main.pref.put("plugin.roadsigns.sources.last", customFile);
-                Main.pref.put("plugin.roadsigns.preset.selection", "custom");
+                Config.getPref().put("plugin.roadsigns.sources.last", customFile);
+                Config.getPref().put("plugin.roadsigns.preset.selection", "custom");
             }
 
-            String customIconDirsStr = Main.pref.get("plugin.roadsigns.icon.sources", null);
+            String customIconDirsStr = Config.getPref().get("plugin.roadsigns.icon.sources", null);
             List<String> customIconDirs = null;
             if (customIconDirsStr != null) {
                 customIconDirs = new ArrayList<>(Arrays.asList(customIconDirsStr.split(",")));
             } else {
-                customIconDirs = Main.pref.getList("plugin.roadsigns.icon.sources", null);
+                customIconDirs = Config.getPref().getList("plugin.roadsigns.icon.sources", null);
             }
             if (customIconDirs != null) {
                 customIconDirs = new ArrayList<>(customIconDirs);
@@ -190,13 +191,13 @@ public class RoadSignsPlugin extends Plugin {
                     customIconDirs.add(parentDir);
                 }
             }
-            if (Main.pref.getBoolean("plugin.roadsigns.use_default_icon_source", true)) {
+            if (Config.getPref().getBoolean("plugin.roadsigns.use_default_icon_source", true)) {
                 customIconDirs.add("resource://images/");
             }
             PresetMetaData custom = new PresetMetaData("custom", tr("custom"), customFile, Utils.join(",", customIconDirs));
             presetsData.add(custom);
         } else {
-            Main.pref.put("plugin.roadsigns.sources.last", null);
+            Config.getPref().put("plugin.roadsigns.sources.last", null);
         }
 
         return presetsData;
@@ -204,7 +205,7 @@ public class RoadSignsPlugin extends Plugin {
 
     protected static void loadSignPreset() throws IOException {
         List<PresetMetaData> presetsData = getAvailablePresetsMetaData();
-        String code = Main.pref.get("plugin.roadsigns.preset.selection", null);
+        String code = Config.getPref().get("plugin.roadsigns.preset.selection", null);
 
         for (PresetMetaData data : presetsData) {
             if (data.code.equals(code)) {
@@ -230,7 +231,7 @@ public class RoadSignsPlugin extends Plugin {
         } catch (IOException ex) {
             ex.printStackTrace();
             JOptionPane.showMessageDialog(
-                    Main.parent,
+                    MainApplication.getMainFrame(),
                     tr("Could not read tagging preset source: ''{0}''", source),
                     tr("Error"),
                     JOptionPane.ERROR_MESSAGE
@@ -239,7 +240,7 @@ public class RoadSignsPlugin extends Plugin {
         } catch (SAXException ex) {
             ex.printStackTrace();
             JOptionPane.showMessageDialog(
-                    Main.parent,
+                    MainApplication.getMainFrame(),
                     tr("Error parsing tagging preset from ''{0}'':\n", source)+ex.getMessage(),
                     tr("Error"),
                     JOptionPane.ERROR_MESSAGE

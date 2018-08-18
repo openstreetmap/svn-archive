@@ -61,10 +61,10 @@ import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 import javax.swing.table.AbstractTableModel;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.command.ChangePropertyCommand;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.SequenceCommand;
+import org.openstreetmap.josm.data.UndoRedoHandler;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.gui.ExtendedDialog;
 import org.openstreetmap.josm.gui.MainApplication;
@@ -77,6 +77,7 @@ import org.openstreetmap.josm.gui.widgets.MultiSplitPane;
 import org.openstreetmap.josm.plugins.roadsigns.RoadSignsPlugin.PresetMetaData;
 import org.openstreetmap.josm.plugins.roadsigns.Sign.SignParameter;
 import org.openstreetmap.josm.plugins.roadsigns.Sign.Tag;
+import org.openstreetmap.josm.spi.preferences.Config;
 import org.openstreetmap.josm.tools.GBC;
 import org.openstreetmap.josm.tools.Logging;
 import org.openstreetmap.josm.tools.OpenBrowser;
@@ -111,9 +112,9 @@ class RoadSignInputDialog extends ExtendedDialog {
     private MultiSplitPane multiSplitPane;
 
     RoadSignInputDialog() {
-        super(Main.parent, tr("Road Sign Plugin"), new String[] {tr("OK"), tr("Cancel")}, false /* modal */);
+        super(MainApplication.getMainFrame(), tr("Road Sign Plugin"), new String[] {tr("OK"), tr("Cancel")}, false /* modal */);
         setRememberWindowGeometry(getClass().getName() + ".geometry",
-            WindowGeometry.centerInWindow(Main.parent, new Dimension(750, 550)));
+            WindowGeometry.centerInWindow(MainApplication.getMainFrame(), new Dimension(750, 550)));
 
         this.signs = RoadSignsPlugin.signs;
         sel = new SignSelection();
@@ -137,11 +138,11 @@ class RoadSignInputDialog extends ExtendedDialog {
         if (i == 0) { // OK Button
             Collection<OsmPrimitive> selPrim = MainApplication.getLayerManager().getEditDataSet().getSelected();
             if (!selPrim.isEmpty()) {
-                Main.pref.putBoolean("plugin.roadsigns.addTrafficSignTag", addTrafficSignTag.isSelected());
+                Config.getPref().putBoolean("plugin.roadsigns.addTrafficSignTag", addTrafficSignTag.isSelected());
 
                 Command cmd = createCommand(selPrim);
                 if (cmd != null) {
-                    MainApplication.undoRedo.add(cmd);
+                    UndoRedoHandler.getInstance().add(cmd);
                 }
             }
         }
@@ -591,7 +592,7 @@ class RoadSignInputDialog extends ExtendedDialog {
         scroll.setMinimumSize(dim); /* minimum size is relevant for multisplit layout */
 
         addTrafficSignTag = new JCheckBox(tr("{0} tag", "traffic_sign"));
-        addTrafficSignTag.setSelected(Main.pref.getBoolean("plugin.roadsigns.addTrafficSignTag"));
+        addTrafficSignTag.setSelected(Config.getPref().getBoolean("plugin.roadsigns.addTrafficSignTag"));
         addTrafficSignTag.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -815,7 +816,7 @@ class RoadSignInputDialog extends ExtendedDialog {
             }
 
             if (sign.wiki != null || sign.loc_wiki != null) {
-                String wikiPrefix = Main.pref.get("plugin.roadsigns.wikiprefix", "https://wiki.openstreetmap.org/wiki/");
+                String wikiPrefix = Config.getPref().get("plugin.roadsigns.wikiprefix", "https://wiki.openstreetmap.org/wiki/");
                 txt.append("<p>");
                 if (sign.loc_wiki != null) {
                     String link = wikiPrefix+sign.loc_wiki;
@@ -906,7 +907,7 @@ class RoadSignInputDialog extends ExtendedDialog {
             presetsData = RoadSignsPlugin.getAvailablePresetsMetaData();
 
             selectionBox = new JComboBox<>(presetsData.toArray(new PresetMetaData[0]));
-            String code = Main.pref.get("plugin.roadsigns.preset.selection", null);
+            String code = Config.getPref().get("plugin.roadsigns.preset.selection", null);
             if (code != null) {
                 for (PresetMetaData data : presetsData) {
                     if (code.equals(data.code)) {
@@ -926,7 +927,7 @@ class RoadSignInputDialog extends ExtendedDialog {
                 grp.add(rbAll);
                 grp.add(rbUseful);
 
-                String filterPref = Main.pref.get("plugin.roadsigns.preset.filter");
+                String filterPref = Config.getPref().get("plugin.roadsigns.preset.filter");
                 if (filterPref.equals("useful")) {
                     rbUseful.setSelected(true);
                 } else {
@@ -966,7 +967,7 @@ class RoadSignInputDialog extends ExtendedDialog {
                 }
             }
             if (filter != null) {
-                Main.pref.put("plugin.roadsigns.preset.filter", filter);
+                Config.getPref().put("plugin.roadsigns.preset.filter", filter);
             }
             RoadSignsPlugin.setSelectedPreset(presetsData.get(selectionBox.getSelectedIndex()));
         }

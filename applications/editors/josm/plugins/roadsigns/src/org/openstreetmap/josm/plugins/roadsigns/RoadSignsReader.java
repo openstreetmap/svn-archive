@@ -14,11 +14,11 @@ import java.util.Map;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParserFactory;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.plugins.roadsigns.Sign.SignParameter;
 import org.openstreetmap.josm.plugins.roadsigns.Sign.Tag;
 import org.openstreetmap.josm.plugins.roadsigns.javacc.ParseException;
 import org.openstreetmap.josm.plugins.roadsigns.javacc.TokenMgrError;
+import org.openstreetmap.josm.spi.preferences.Config;
 import org.openstreetmap.josm.tools.LanguageInfo;
 import org.openstreetmap.josm.tools.XmlParsingException;
 import org.xml.sax.Attributes;
@@ -315,7 +315,7 @@ public class RoadSignsReader {
             factory.setNamespaceAware(true);
             factory.newSAXParser().parse(inputSource, parser);
             parser.wireSupplements();
-            String filterPref = Main.pref.get("plugin.roadsigns.preset.filter");
+            String filterPref = Config.getPref().get("plugin.roadsigns.preset.filter");
             if (filterPref.equals("useful")) {
                 List<Sign> filtered = new ArrayList<>();
                 for (Sign s : parser.allSigns) {

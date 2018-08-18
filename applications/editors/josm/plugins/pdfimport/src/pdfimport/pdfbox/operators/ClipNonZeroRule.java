@@ -37,30 +37,30 @@ import pdfimport.pdfbox.PageDrawer;
 public class ClipNonZeroRule extends OperatorProcessor
 {
 
-	/**
-	 * Log instance.
-	 */
-	private static final Log log = LogFactory.getLog(ClipNonZeroRule.class);
+    /**
+     * Log instance.
+     */
+    private static final Log log = LogFactory.getLog(ClipNonZeroRule.class);
 
-	/**
-	 * process : W : Set the clipping path using non zero winding rule.
-	 * @param operator The operator that is being executed.
-	 * @param arguments List
-	 *
-	 * @throws IOException If there is an error during the processing.
-	 */
-	@Override
-	public void process(PDFOperator operator, List<COSBase> arguments) throws IOException
-	{
+    /**
+     * process : W : Set the clipping path using non zero winding rule.
+     * @param operator The operator that is being executed.
+     * @param arguments List
+     *
+     * @throws IOException If there is an error during the processing.
+     */
+    @Override
+    public void process(PDFOperator operator, List<COSBase> arguments) throws IOException
+    {
 
-		try
-		{
-			PageDrawer drawer = (PageDrawer)context;
-			drawer.setClippingPath(GeneralPath.WIND_NON_ZERO);
-		}
-		catch (Exception e)
-		{
-			log.warn(e, e);
-		}
-	}
+        try
+        {
+            PageDrawer drawer = (PageDrawer)context;
+            drawer.setClippingPath(GeneralPath.WIND_NON_ZERO);
+        }
+        catch (Exception e)
+        {
+            log.warn(e, e);
+        }
+    }
 }

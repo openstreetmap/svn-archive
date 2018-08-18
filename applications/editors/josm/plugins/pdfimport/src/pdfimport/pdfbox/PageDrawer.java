@@ -38,6 +38,7 @@ import org.apache.pdfbox.util.Matrix;
 import org.apache.pdfbox.util.PDFStreamEngine;
 import org.apache.pdfbox.util.ResourceLoader;
 import org.apache.pdfbox.util.TextPosition;
+import org.openstreetmap.josm.tools.Logging;
 
 
 /**
@@ -139,8 +140,8 @@ public class PageDrawer extends PDFStreamEngine {
             float y = textPos.getYPosition();
             graphics.setClip(getGraphicsState().getCurrentClippingPath());
             graphics.drawString(x, y, text.getCharacter(), color);
-        } catch (IOException io) {
-            io.printStackTrace();
+        } catch (IOException e) {
+            Logging.error(e);
         }
     }
 

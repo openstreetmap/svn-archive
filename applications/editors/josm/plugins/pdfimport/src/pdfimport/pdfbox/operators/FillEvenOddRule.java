@@ -37,30 +37,30 @@ import pdfimport.pdfbox.PageDrawer;
 public class FillEvenOddRule extends OperatorProcessor
 {
 
-	/**
-	 * Log instance.
-	 */
-	private static final Log log = LogFactory.getLog(FillEvenOddRule.class);
+    /**
+     * Log instance.
+     */
+    private static final Log log = LogFactory.getLog(FillEvenOddRule.class);
 
-	/**
-	 * process : f* : fill path using even odd rule.
-	 * @param operator The operator that is being executed.
-	 * @param arguments List
-	 *
-	 * @throws IOException if there is an error during execution.
-	 */
-	@Override
-	public void process(PDFOperator operator, List<COSBase> arguments) throws IOException
-	{
-		try
-		{
-			///dwilson refactoring
-			PageDrawer drawer = (PageDrawer)context;
-			drawer.drawPath(false, true, GeneralPath.WIND_EVEN_ODD);
-		}
-		catch (Exception e)
-		{
-			log.warn(e, e);
-		}
-	}
+    /**
+     * process : f* : fill path using even odd rule.
+     * @param operator The operator that is being executed.
+     * @param arguments List
+     *
+     * @throws IOException if there is an error during execution.
+     */
+    @Override
+    public void process(PDFOperator operator, List<COSBase> arguments) throws IOException
+    {
+        try
+        {
+            ///dwilson refactoring
+            PageDrawer drawer = (PageDrawer)context;
+            drawer.drawPath(false, true, GeneralPath.WIND_EVEN_ODD);
+        }
+        catch (Exception e)
+        {
+            log.warn(e, e);
+        }
+    }
 }

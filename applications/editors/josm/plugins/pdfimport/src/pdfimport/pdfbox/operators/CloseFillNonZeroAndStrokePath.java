@@ -35,18 +35,18 @@ import pdfimport.pdfbox.PageDrawer;
 public class CloseFillNonZeroAndStrokePath extends OperatorProcessor
 {
 
-	/**
-	 * fill and stroke the path.
-	 * @param operator The operator that is being executed.
-	 * @param arguments List
-	 *
-	 * @throws IOException If an error occurs while processing the font.
-	 */
-	@Override
-	public void process(PDFOperator operator, List<COSBase> arguments) throws IOException
-	{
-		PageDrawer drawer = (PageDrawer)context;
-		drawer.getLinePath().closePath();
-		drawer.drawPath(true, true, Path2D.WIND_NON_ZERO);
-	}
+    /**
+     * fill and stroke the path.
+     * @param operator The operator that is being executed.
+     * @param arguments List
+     *
+     * @throws IOException If an error occurs while processing the font.
+     */
+    @Override
+    public void process(PDFOperator operator, List<COSBase> arguments) throws IOException
+    {
+        PageDrawer drawer = (PageDrawer)context;
+        drawer.getLinePath().closePath();
+        drawer.drawPath(true, true, Path2D.WIND_NON_ZERO);
+    }
 }

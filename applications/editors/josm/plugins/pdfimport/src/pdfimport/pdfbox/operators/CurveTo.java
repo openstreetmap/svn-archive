@@ -36,28 +36,28 @@ public class CurveTo extends OperatorProcessor
 {
 
 
-	/**
-	 * process : c : Append curved segment to path.
-	 * @param operator The operator that is being executed.
-	 * @param arguments List
-	 */
-	@Override
-	public void process(PDFOperator operator, List<COSBase> arguments)
-	{
-		PageDrawer drawer = (PageDrawer)context;
+    /**
+     * process : c : Append curved segment to path.
+     * @param operator The operator that is being executed.
+     * @param arguments List
+     */
+    @Override
+    public void process(PDFOperator operator, List<COSBase> arguments)
+    {
+        PageDrawer drawer = (PageDrawer)context;
 
-		COSNumber x1 = (COSNumber)arguments.get( 0 );
-		COSNumber y1 = (COSNumber)arguments.get( 1 );
-		COSNumber x2 = (COSNumber)arguments.get( 2 );
-		COSNumber y2 = (COSNumber)arguments.get( 3 );
-		COSNumber x3 = (COSNumber)arguments.get( 4 );
-		COSNumber y3 = (COSNumber)arguments.get( 5 );
+        COSNumber x1 = (COSNumber)arguments.get( 0 );
+        COSNumber y1 = (COSNumber)arguments.get( 1 );
+        COSNumber x2 = (COSNumber)arguments.get( 2 );
+        COSNumber y2 = (COSNumber)arguments.get( 3 );
+        COSNumber x3 = (COSNumber)arguments.get( 4 );
+        COSNumber y3 = (COSNumber)arguments.get( 5 );
 
-		Point2D point1 = drawer.transformedPoint(x1.doubleValue(), y1.doubleValue());
-		Point2D point2 = drawer.transformedPoint(x2.doubleValue(), y2.doubleValue());
-		Point2D point3 = drawer.transformedPoint(x3.doubleValue(), y3.doubleValue());
+        Point2D point1 = drawer.transformedPoint(x1.doubleValue(), y1.doubleValue());
+        Point2D point2 = drawer.transformedPoint(x2.doubleValue(), y2.doubleValue());
+        Point2D point3 = drawer.transformedPoint(x3.doubleValue(), y3.doubleValue());
 
-		drawer.getLinePath().curveTo((float)point1.getX(), (float)point1.getY(),
-				(float)point2.getX(), (float)point2.getY(), (float)point3.getX(), (float)point3.getY());
-	}
+        drawer.getLinePath().curveTo((float)point1.getX(), (float)point1.getY(),
+                (float)point2.getX(), (float)point2.getY(), (float)point3.getX(), (float)point3.getY());
+    }
 }

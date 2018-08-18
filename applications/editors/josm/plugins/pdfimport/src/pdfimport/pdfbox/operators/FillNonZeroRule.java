@@ -35,17 +35,17 @@ import pdfimport.pdfbox.PageDrawer;
 public class FillNonZeroRule extends OperatorProcessor
 {
 
-	/**
-	 * process : F/f : fill path using non zero winding rule.
-	 * @param operator The operator that is being executed.
-	 * @param arguments List
-	 *
-	 * @throws IOException If there is an error during the processing.
-	 */
-	@Override
-	public void process(PDFOperator operator, List<COSBase> arguments) throws IOException
-	{
-		PageDrawer drawer = (PageDrawer)context;
-		drawer.drawPath(false, true, GeneralPath.WIND_NON_ZERO);
-	}
+    /**
+     * process : F/f : fill path using non zero winding rule.
+     * @param operator The operator that is being executed.
+     * @param arguments List
+     *
+     * @throws IOException If there is an error during the processing.
+     */
+    @Override
+    public void process(PDFOperator operator, List<COSBase> arguments) throws IOException
+    {
+        PageDrawer drawer = (PageDrawer)context;
+        drawer.drawPath(false, true, GeneralPath.WIND_NON_ZERO);
+    }
 }

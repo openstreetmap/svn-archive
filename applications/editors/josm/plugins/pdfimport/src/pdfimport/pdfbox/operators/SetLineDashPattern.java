@@ -35,46 +35,46 @@ import pdfimport.pdfbox.PageDrawer;
 public class SetLineDashPattern extends org.apache.pdfbox.util.operator.SetLineDashPattern
 {
 
-	/**
-	 * Set the line dash pattern.
-	 * @param operator The operator that is being executed.
-	 * @param arguments List
-	 *
-	 * @throws IOException If an error occurs while processing the font.
-	 */
-	@Override
-	public void process(PDFOperator operator, List<COSBase> arguments) throws IOException
-	{
-		super.process( operator, arguments );
-		PDLineDashPattern lineDashPattern = context.getGraphicsState().getLineDashPattern();
-		PageDrawer drawer = (PageDrawer)context;
-		BasicStroke stroke = drawer.getStroke();
-		if (stroke == null)
-		{
-			if (lineDashPattern.isDashPatternEmpty())
-			{
-				drawer.setStroke(new BasicStroke(1, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_MITER, 10.0f) );
-			}
-			else
-			{
-				drawer.setStroke(new BasicStroke(1, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_MITER, 10.0f,
-						lineDashPattern.getCOSDashPattern().toFloatArray(), lineDashPattern.getPhaseStart()) );
-			}
-		}
-		else
-		{
-			if (lineDashPattern.isDashPatternEmpty())
-			{
-				drawer.setStroke( new BasicStroke(stroke.getLineWidth(), stroke.getEndCap(),
-						stroke.getLineJoin(), stroke.getMiterLimit()) );
-			}
-			else
-			{
-				drawer.setStroke( new BasicStroke(stroke.getLineWidth(), stroke.getEndCap(), stroke.getLineJoin(),
-						stroke.getMiterLimit(), lineDashPattern.getCOSDashPattern().toFloatArray(),
-						lineDashPattern.getPhaseStart()) );
-			}
-		}
-	}
+    /**
+     * Set the line dash pattern.
+     * @param operator The operator that is being executed.
+     * @param arguments List
+     *
+     * @throws IOException If an error occurs while processing the font.
+     */
+    @Override
+    public void process(PDFOperator operator, List<COSBase> arguments) throws IOException
+    {
+        super.process( operator, arguments );
+        PDLineDashPattern lineDashPattern = context.getGraphicsState().getLineDashPattern();
+        PageDrawer drawer = (PageDrawer)context;
+        BasicStroke stroke = drawer.getStroke();
+        if (stroke == null)
+        {
+            if (lineDashPattern.isDashPatternEmpty())
+            {
+                drawer.setStroke(new BasicStroke(1, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_MITER, 10.0f) );
+            }
+            else
+            {
+                drawer.setStroke(new BasicStroke(1, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_MITER, 10.0f,
+                        lineDashPattern.getCOSDashPattern().toFloatArray(), lineDashPattern.getPhaseStart()) );
+            }
+        }
+        else
+        {
+            if (lineDashPattern.isDashPatternEmpty())
+            {
+                drawer.setStroke( new BasicStroke(stroke.getLineWidth(), stroke.getEndCap(),
+                        stroke.getLineJoin(), stroke.getMiterLimit()) );
+            }
+            else
+            {
+                drawer.setStroke( new BasicStroke(stroke.getLineWidth(), stroke.getEndCap(), stroke.getLineJoin(),
+                        stroke.getMiterLimit(), lineDashPattern.getCOSDashPattern().toFloatArray(),
+                        lineDashPattern.getPhaseStart()) );
+            }
+        }
+    }
 
 }

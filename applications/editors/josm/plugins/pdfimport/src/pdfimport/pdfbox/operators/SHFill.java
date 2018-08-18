@@ -36,17 +36,17 @@ import pdfimport.pdfbox.PageDrawer;
 public class SHFill extends OperatorProcessor
 {
 
-	/**
-	 * process : sh : shade fill the path or clipping area.
-	 * @param operator The operator that is being executed.
-	 * @param arguments List
-	 *
-	 * @throws IOException if there is an error during execution.
-	 */
-	@Override
-	public void process(PDFOperator operator, List<COSBase> arguments) throws IOException
-	{
-		PageDrawer drawer = (PageDrawer)context;
-		drawer.drawPath(false, true, Path2D.WIND_NON_ZERO);
-	}
+    /**
+     * process : sh : shade fill the path or clipping area.
+     * @param operator The operator that is being executed.
+     * @param arguments List
+     *
+     * @throws IOException if there is an error during execution.
+     */
+    @Override
+    public void process(PDFOperator operator, List<COSBase> arguments) throws IOException
+    {
+        PageDrawer drawer = (PageDrawer)context;
+        drawer.drawPath(false, true, Path2D.WIND_NON_ZERO);
+    }
 }

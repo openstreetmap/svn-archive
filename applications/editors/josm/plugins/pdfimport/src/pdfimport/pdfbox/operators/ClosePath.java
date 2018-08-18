@@ -33,17 +33,17 @@ import pdfimport.pdfbox.PageDrawer;
 public class ClosePath extends OperatorProcessor
 {
 
-	/**
-	 * process : h : Close path.
-	 * @param operator The operator that is being executed.
-	 * @param arguments List
-	 *
-	 * @throws IOException if something went wrong during logging
-	 */
-	@Override
-	public void process(PDFOperator operator, List<COSBase> arguments) throws IOException
-	{
-		PageDrawer drawer = (PageDrawer)context;
-		drawer.getLinePath().closePath();
-	}
+    /**
+     * process : h : Close path.
+     * @param operator The operator that is being executed.
+     * @param arguments List
+     *
+     * @throws IOException if something went wrong during logging
+     */
+    @Override
+    public void process(PDFOperator operator, List<COSBase> arguments) throws IOException
+    {
+        PageDrawer drawer = (PageDrawer)context;
+        drawer.getLinePath().closePath();
+    }
 }

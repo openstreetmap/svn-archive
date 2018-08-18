@@ -37,30 +37,30 @@ import pdfimport.pdfbox.PageDrawer;
 public class ClipEvenOddRule extends OperatorProcessor
 {
 
-	/**
-	 * Log instance.
-	 */
-	private static final Log log = LogFactory.getLog(ClipEvenOddRule.class);
+    /**
+     * Log instance.
+     */
+    private static final Log log = LogFactory.getLog(ClipEvenOddRule.class);
 
-	/**
-	 * process : W* : set clipping path using even odd rule.
-	 * @param operator The operator that is being executed.
-	 * @param arguments List
-	 *
-	 * @throws IOException if there is an error during execution.
-	 */
-	@Override
-	public void process(PDFOperator operator, List<COSBase> arguments) throws IOException
-	{
+    /**
+     * process : W* : set clipping path using even odd rule.
+     * @param operator The operator that is being executed.
+     * @param arguments List
+     *
+     * @throws IOException if there is an error during execution.
+     */
+    @Override
+    public void process(PDFOperator operator, List<COSBase> arguments) throws IOException
+    {
 
-		try
-		{
-			PageDrawer drawer = (PageDrawer)context;
-			drawer.setClippingPath(GeneralPath.WIND_EVEN_ODD);
-		}
-		catch (Exception e)
-		{
-			log.warn(e, e);
-		}
-	}
+        try
+        {
+            PageDrawer drawer = (PageDrawer)context;
+            drawer.setClippingPath(GeneralPath.WIND_EVEN_ODD);
+        }
+        catch (Exception e)
+        {
+            log.warn(e, e);
+        }
+    }
 }

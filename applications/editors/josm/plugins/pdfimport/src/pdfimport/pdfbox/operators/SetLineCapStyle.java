@@ -34,28 +34,28 @@ import pdfimport.pdfbox.PageDrawer;
 public class SetLineCapStyle extends org.apache.pdfbox.util.operator.SetLineCapStyle
 {
 
-	/**
-	 * Set the line cap style.
-	 * @param operator The operator that is being executed.
-	 * @param arguments List
-	 *
-	 * @throws IOException If an error occurs while processing the font.
-	 */
-	@Override
-	public void process(PDFOperator operator, List<COSBase> arguments) throws IOException
-	{
-		super.process( operator, arguments );
-		int lineCapStyle = context.getGraphicsState().getLineCap();
-		PageDrawer drawer = (PageDrawer)context;
-		BasicStroke stroke = drawer.getStroke();
-		if (stroke == null)
-		{
-			drawer.setStroke( new BasicStroke(1,lineCapStyle,BasicStroke.JOIN_MITER) );
-		}
-		else
-		{
-			drawer.setStroke( new BasicStroke(stroke.getLineWidth(), lineCapStyle, stroke.getLineJoin(),
-					stroke.getMiterLimit(), stroke.getDashArray(), stroke.getDashPhase()));
-		}
-	}
+    /**
+     * Set the line cap style.
+     * @param operator The operator that is being executed.
+     * @param arguments List
+     *
+     * @throws IOException If an error occurs while processing the font.
+     */
+    @Override
+    public void process(PDFOperator operator, List<COSBase> arguments) throws IOException
+    {
+        super.process( operator, arguments );
+        int lineCapStyle = context.getGraphicsState().getLineCap();
+        PageDrawer drawer = (PageDrawer)context;
+        BasicStroke stroke = drawer.getStroke();
+        if (stroke == null)
+        {
+            drawer.setStroke( new BasicStroke(1,lineCapStyle,BasicStroke.JOIN_MITER) );
+        }
+        else
+        {
+            drawer.setStroke( new BasicStroke(stroke.getLineWidth(), lineCapStyle, stroke.getLineJoin(),
+                    stroke.getMiterLimit(), stroke.getDashArray(), stroke.getDashPhase()));
+        }
+    }
 }

@@ -38,31 +38,31 @@ import pdfimport.pdfbox.PageDrawer;
 public class MoveTo extends OperatorProcessor
 {
 
-	/**
-	 * Log instance.
-	 */
-	private static final Log log = LogFactory.getLog(MoveTo.class);
+    /**
+     * Log instance.
+     */
+    private static final Log log = LogFactory.getLog(MoveTo.class);
 
-	/**
-	 * process : m : Begin new subpath.
-	 * @param operator The operator that is being executed.
-	 * @param arguments List
-	 * @throws IOException If there is an error processing the operator.
-	 */
-	@Override
-	public void process(PDFOperator operator, List<COSBase> arguments) throws IOException
-	{
-		try
-		{
-			PageDrawer drawer = (PageDrawer)context;
-			COSNumber x = (COSNumber)arguments.get( 0 );
-			COSNumber y = (COSNumber)arguments.get( 1 );
-			Point2D pos = drawer.transformedPoint(x.doubleValue(), y.doubleValue());
-			drawer.getLinePath().moveTo((float)pos.getX(), (float)pos.getY());
-		}
-		catch (Exception exception)
-		{
-			log.warn( exception, exception);
-		}
-	}
+    /**
+     * process : m : Begin new subpath.
+     * @param operator The operator that is being executed.
+     * @param arguments List
+     * @throws IOException If there is an error processing the operator.
+     */
+    @Override
+    public void process(PDFOperator operator, List<COSBase> arguments) throws IOException
+    {
+        try
+        {
+            PageDrawer drawer = (PageDrawer)context;
+            COSNumber x = (COSNumber)arguments.get( 0 );
+            COSNumber y = (COSNumber)arguments.get( 1 );
+            Point2D pos = drawer.transformedPoint(x.doubleValue(), y.doubleValue());
+            drawer.getLinePath().moveTo((float)pos.getX(), (float)pos.getY());
+        }
+        catch (Exception exception)
+        {
+            log.warn( exception, exception);
+        }
+    }
 }

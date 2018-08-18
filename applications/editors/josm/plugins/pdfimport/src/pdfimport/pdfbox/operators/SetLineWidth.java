@@ -34,31 +34,31 @@ import pdfimport.pdfbox.PageDrawer;
 public class SetLineWidth extends org.apache.pdfbox.util.operator.SetLineWidth
 {
 
-	/**
-	 * w Set line width.
-	 * @param operator The operator that is being executed.
-	 * @param arguments List
-	 * @throws IOException If an error occurs while processing the font.
-	 */
-	@Override
-	public void process(PDFOperator operator, List<COSBase> arguments) throws IOException
-	{
-		super.process( operator, arguments );
-		float lineWidth = (float)context.getGraphicsState().getLineWidth();
-		if (lineWidth == 0)
-		{
-			lineWidth = 1;
-		}
-		PageDrawer drawer = (PageDrawer)context;
-		BasicStroke stroke = drawer.getStroke();
-		if (stroke == null)
-		{
-			drawer.setStroke( new BasicStroke( lineWidth ) );
-		}
-		else
-		{
-			drawer.setStroke( new BasicStroke(lineWidth, stroke.getEndCap(), stroke.getLineJoin(),
-					stroke.getMiterLimit(), stroke.getDashArray(), stroke.getDashPhase()) );
-		}
-	}
+    /**
+     * w Set line width.
+     * @param operator The operator that is being executed.
+     * @param arguments List
+     * @throws IOException If an error occurs while processing the font.
+     */
+    @Override
+    public void process(PDFOperator operator, List<COSBase> arguments) throws IOException
+    {
+        super.process( operator, arguments );
+        float lineWidth = (float)context.getGraphicsState().getLineWidth();
+        if (lineWidth == 0)
+        {
+            lineWidth = 1;
+        }
+        PageDrawer drawer = (PageDrawer)context;
+        BasicStroke stroke = drawer.getStroke();
+        if (stroke == null)
+        {
+            drawer.setStroke( new BasicStroke( lineWidth ) );
+        }
+        else
+        {
+            drawer.setStroke( new BasicStroke(lineWidth, stroke.getEndCap(), stroke.getLineJoin(),
+                    stroke.getMiterLimit(), stroke.getDashArray(), stroke.getDashPhase()) );
+        }
+    }
 }

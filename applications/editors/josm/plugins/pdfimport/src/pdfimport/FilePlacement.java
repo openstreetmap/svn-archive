@@ -13,10 +13,10 @@ import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.projection.Projection;
 
 public class FilePlacement {
-	/*
-	 * provide data and services to place a PDF-File to world coordinates
-	 * enhanced by FilePlacement18 but kept for compatibilty to existing code
-	 */
+    /*
+     * provide data and services to place a PDF-File to world coordinates
+     * enhanced by FilePlacement18 but kept for compatibilty to existing code
+     */
     protected Projection projection = null;
     protected double minX = 0;
     protected double maxX = 1;

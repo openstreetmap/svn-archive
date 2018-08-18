@@ -34,29 +34,29 @@ import pdfimport.pdfbox.PageDrawer;
 public class SetLineMiterLimit extends org.apache.pdfbox.util.operator.SetLineMiterLimit
 {
 
-	/**
-	 * Set the line dash pattern.
-	 * @param operator The operator that is being executed.
-	 * @param arguments List
-	 *
-	 * @throws IOException If an error occurs while processing the font.
-	 */
-	@Override
-	public void process(PDFOperator operator, List<COSBase> arguments) throws IOException
-	{
-		super.process(operator, arguments);
-		float miterLimit = (float)context.getGraphicsState().getMiterLimit();
-		PageDrawer drawer = (PageDrawer)context;
-		BasicStroke stroke = drawer.getStroke();
-		if (stroke == null)
-		{
-			drawer.setStroke(new BasicStroke(1, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_MITER,
-					miterLimit, null, 0.0f));
-		}
-		else
-		{
-			drawer.setStroke( new BasicStroke(stroke.getLineWidth(), stroke.getEndCap(), stroke.getLineJoin(),
-					miterLimit, null, 0.0f));
-		}
-	}
+    /**
+     * Set the line dash pattern.
+     * @param operator The operator that is being executed.
+     * @param arguments List
+     *
+     * @throws IOException If an error occurs while processing the font.
+     */
+    @Override
+    public void process(PDFOperator operator, List<COSBase> arguments) throws IOException
+    {
+        super.process(operator, arguments);
+        float miterLimit = (float)context.getGraphicsState().getMiterLimit();
+        PageDrawer drawer = (PageDrawer)context;
+        BasicStroke stroke = drawer.getStroke();
+        if (stroke == null)
+        {
+            drawer.setStroke(new BasicStroke(1, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_MITER,
+                    miterLimit, null, 0.0f));
+        }
+        else
+        {
+            drawer.setStroke( new BasicStroke(stroke.getLineWidth(), stroke.getEndCap(), stroke.getLineJoin(),
+                    miterLimit, null, 0.0f));
+        }
+    }
 }

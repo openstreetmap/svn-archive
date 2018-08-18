@@ -13,46 +13,42 @@ import org.openstreetmap.josm.plugins.PluginInformation;
 /**
  * A plugin to import a PDF file.
  */
-
 public class PdfImportPlugin extends Plugin {
 
+    public PdfImportPlugin(PluginInformation info) {
+        super(info);
+        MainMenu.add(MainApplication.getMenu().imagerySubMenu, new PdfImportAction());
+        new Preferences(getPluginInformation().name);
+    }
 
-	public PdfImportPlugin(PluginInformation info) {
-		super(info);
-		MainMenu.add(MainApplication.getMenu().imagerySubMenu, new PdfImportAction());
-		new Preferences(getPluginInformation().name);
-	}
+    public static class pdfimportPrefs implements SubPreferenceSetting {
+        @Override
+        public TabPreferenceSetting getTabPreferenceSetting(PreferenceTabbedPane gui) {
+            return null;
+        }
 
-	public class pdfimportPrefs implements SubPreferenceSetting
-	{
-		@Override
-		public TabPreferenceSetting getTabPreferenceSetting(PreferenceTabbedPane gui)
-		{
-			return null;
-		}
+        @Override
+        public void addGui(PreferenceTabbedPane gui) {
+            return;
+        }
 
-		@Override
-		public void addGui(PreferenceTabbedPane gui) {
-			return;
-		}
+        @Override
+        public boolean ok() {
+            return false;
+        }
 
-		@Override
-		public boolean ok() {
-			return false;
-		}
+        @Override
+        public boolean isExpert() {
+            return false;
+        }
+    }
 
-		@Override
-		public boolean isExpert() {
-			return false;
-		}
-	}
-
-	@Override
-	public PreferenceSetting getPreferenceSetting() {
-		/*
-		 * TODO: implement it
-		 */
-		return new pdfimportPrefs();
-		}
+    @Override
+    public PreferenceSetting getPreferenceSetting() {
+        /*
+         * TODO: implement it
+         */
+        return new pdfimportPrefs();
+        }
 
 }

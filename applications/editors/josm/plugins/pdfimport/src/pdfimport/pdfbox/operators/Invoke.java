@@ -44,49 +44,49 @@ public class Invoke extends OperatorProcessor
 {
 
 
-	/**
-	 * process : Do : Paint the specified XObject (section 4.7).
-	 * @param operator The operator that is being executed.
-	 * @param arguments List
-	 * @throws IOException If there is an error invoking the sub object.
-	 */
-	@Override
-	public void process(PDFOperator operator, List<COSBase> arguments) throws IOException
-	{
-		PageDrawer drawer = (PageDrawer)context;
-		PDPage page = drawer.getPage();
-		COSName objectName = (COSName)arguments.get( 0 );
-		Map<?, ?> xobjects = drawer.getResources().getXObjects();
-		PDXObject xobject = (PDXObject)xobjects.get( objectName.getName() );
-		if( xobject instanceof PDXObjectImage )
-		{
-			drawer.drawImage();
-		}
-		else if(xobject instanceof PDXObjectForm)
-		{
-			PDXObjectForm form = (PDXObjectForm)xobject;
-			COSStream invoke = (COSStream)form.getCOSObject();
-			PDResources pdResources = form.getResources();
-			if(pdResources == null)
-			{
-				pdResources = page.findResources();
-			}
-			// if there is an optional form matrix, we have to
-			// map the form space to the user space
-			Matrix matrix = form.getMatrix();
-			if (matrix != null)
-			{
-				Matrix xobjectCTM = matrix.multiply( context.getGraphicsState().getCurrentTransformationMatrix());
-				context.getGraphicsState().setCurrentTransformationMatrix(xobjectCTM);
-			}
-			getContext().processSubStream( page, pdResources, invoke );
-		}
-		else
-		{
-			//unknown xobject type
-		}
+    /**
+     * process : Do : Paint the specified XObject (section 4.7).
+     * @param operator The operator that is being executed.
+     * @param arguments List
+     * @throws IOException If there is an error invoking the sub object.
+     */
+    @Override
+    public void process(PDFOperator operator, List<COSBase> arguments) throws IOException
+    {
+        PageDrawer drawer = (PageDrawer)context;
+        PDPage page = drawer.getPage();
+        COSName objectName = (COSName)arguments.get( 0 );
+        Map<?, ?> xobjects = drawer.getResources().getXObjects();
+        PDXObject xobject = (PDXObject)xobjects.get( objectName.getName() );
+        if( xobject instanceof PDXObjectImage )
+        {
+            drawer.drawImage();
+        }
+        else if(xobject instanceof PDXObjectForm)
+        {
+            PDXObjectForm form = (PDXObjectForm)xobject;
+            COSStream invoke = (COSStream)form.getCOSObject();
+            PDResources pdResources = form.getResources();
+            if(pdResources == null)
+            {
+                pdResources = page.findResources();
+            }
+            // if there is an optional form matrix, we have to
+            // map the form space to the user space
+            Matrix matrix = form.getMatrix();
+            if (matrix != null)
+            {
+                Matrix xobjectCTM = matrix.multiply( context.getGraphicsState().getCurrentTransformationMatrix());
+                context.getGraphicsState().setCurrentTransformationMatrix(xobjectCTM);
+            }
+            getContext().processSubStream( page, pdResources, invoke );
+        }
+        else
+        {
+            //unknown xobject type
+        }
 
 
-		//invoke named object.
-	}
+        //invoke named object.
+    }
 }

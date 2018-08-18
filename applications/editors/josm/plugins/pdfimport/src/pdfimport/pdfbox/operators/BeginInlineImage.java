@@ -34,16 +34,16 @@ import pdfimport.pdfbox.PageDrawer;
 public class BeginInlineImage extends OperatorProcessor
 {
 
-	/**
-	 * process : BI : begin inline image.
-	 * @param operator The operator that is being executed.
-	 * @param arguments List
-	 * @throws IOException If there is an error displaying the inline image.
-	 */
-	@Override
-	public void process(PDFOperator operator, List<COSBase> arguments)  throws IOException
-	{
-		PageDrawer drawer = (PageDrawer)context;
-		drawer.drawImage();
-	}
+    /**
+     * process : BI : begin inline image.
+     * @param operator The operator that is being executed.
+     * @param arguments List
+     * @throws IOException If there is an error displaying the inline image.
+     */
+    @Override
+    public void process(PDFOperator operator, List<COSBase> arguments)  throws IOException
+    {
+        PageDrawer drawer = (PageDrawer)context;
+        drawer.drawImage();
+    }
 }

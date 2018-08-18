@@ -34,15 +34,15 @@ public class EndPath extends OperatorProcessor
 {
 
 
-	/**
-	 * process : n : End path.
-	 * @param operator The operator that is being executed.
-	 * @param arguments List
-	 */
-	@Override
-	public void process(PDFOperator operator, List<COSBase> arguments)
-	{
-		PageDrawer drawer = (PageDrawer)context;
-		drawer.getLinePath().reset();
-	}
+    /**
+     * process : n : End path.
+     * @param operator The operator that is being executed.
+     * @param arguments List
+     */
+    @Override
+    public void process(PDFOperator operator, List<COSBase> arguments)
+    {
+        PageDrawer drawer = (PageDrawer)context;
+        drawer.getLinePath().reset();
+    }
 }

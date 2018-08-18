@@ -32,9 +32,9 @@ public class PdfImportAction extends JosmAction {
     public void actionPerformed(ActionEvent e) {
 
         //show dialog asking to select coordinate axes and input coordinates and projection.
-    	/*
-    	 * TODO: make dialog reusable
-    	 */
+        /*
+         * TODO: make dialog reusable
+         */
         LoadPdfDialog dialog = new LoadPdfDialog();
         dialog.setTitle(tr("Import PDF"));
     }

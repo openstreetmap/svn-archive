@@ -3,9 +3,10 @@
 /bin
 /bugs
 /build
-/doc
-/lib
+/buildtest
 /checkstyle-josm-ElevationProfile.xml
+/doc
 /findbugs-josm-ElevationProfile.xml
-/spotbugs-josm-ElevationProfile.xml
 /javadoc
+/lib
+/spotbugs-josm-ElevationProfile.xml

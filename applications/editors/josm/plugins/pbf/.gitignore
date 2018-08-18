@@ -1,4 +1,5 @@
 /build
+/buildtest
 /checkstyle-josm-pbf.xml
 /findbugs-josm-pbf.xml
 /javadoc

@@ -1,6 +1,7 @@
-/build
-/bin
 /MANIFEST
+/bin
+/bintest
+/build
 /checkstyle-josm-pdfimport.xml
 /findbugs-josm-pdfimport.xml
 /javadoc

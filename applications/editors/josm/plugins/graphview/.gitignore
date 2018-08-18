@@ -1,5 +1,6 @@
-/build
 /REVISION
+/build
+/buildtest
 /checkstyle-josm-graphview.xml
 /findbugs-josm-graphview.xml
 /javadoc

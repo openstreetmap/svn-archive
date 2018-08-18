@@ -1,6 +1,7 @@
-/build
-/bin
-/checkstyle-josm-opendata.xml
 /MANIFEST
+/bin
+/bintest
+/build
+/checkstyle-josm-opendata.xml
 /findbugs-josm-opendata.xml
 /javadoc

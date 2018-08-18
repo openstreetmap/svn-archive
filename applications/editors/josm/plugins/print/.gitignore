@@ -1,5 +1,6 @@
-/build
 /bin
+/bintest
+/build
 /checkstyle-josm-print.xml
 /findbugs-josm-print.xml
 /javadoc

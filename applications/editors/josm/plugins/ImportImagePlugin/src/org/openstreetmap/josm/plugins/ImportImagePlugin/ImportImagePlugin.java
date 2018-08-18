@@ -11,9 +11,9 @@ import javax.swing.JMenu;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.ExtensionFileFilter;
 import org.openstreetmap.josm.actions.JosmAction;
+import org.openstreetmap.josm.data.Preferences;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MainMenu;
 import org.openstreetmap.josm.plugins.Plugin;
@@ -39,18 +39,23 @@ public class ImportImagePlugin extends Plugin {
     static Properties pluginProps;
 
     // path constants
-    static final String PLUGIN_DIR = Main.pref.getPluginsDirectory().getAbsolutePath() + "/ImportImagePlugin/";
+    static final String PLUGIN_DIR = Preferences.main().getPluginsDirectory().getAbsolutePath() + "/ImportImagePlugin/";
     static final String PLUGINPROPERTIES_FILENAME = "pluginProperties.properties";
     static final String PLUGINPROPERTIES_PATH = PLUGIN_DIR + PLUGINPROPERTIES_FILENAME;
     static final String PLUGINLIBRARIES_DIR = PLUGIN_DIR + "lib/";
     static final String LOGGING_PROPERTIES_FILEPATH = PLUGIN_DIR + "log4j.properties/";
 
+    /**
+     * Returns Import image plugin properties.
+     * @return Import image plugin properties
+     */
     public Properties getPluginProps() {
         return pluginProps;
     }
 
     /**
      * constructor
+     * @param info plugin information
      *
      * @throws IOException if any I/O error occurs
      */
@@ -77,9 +82,7 @@ public class ImportImagePlugin extends Plugin {
             // create new Action for menu entry
             loadFileAction = new LoadImageAction();
             loadFileAction.setEnabled(true);
-            if (Main.main != null) {
-                MainMenu.add(MainApplication.getMenu().imagerySubMenu, loadFileAction);
-            }
+            MainMenu.add(MainApplication.getMenu().imagerySubMenu, loadFileAction);
 
             ExtensionFileFilter.addImporter(new ImportImageFileImporter());
 
@@ -159,7 +162,7 @@ public class ImportImagePlugin extends Plugin {
 
             // Set file for logging here:
             props.setProperty("log4j.appender.MyRoFiAppender.file",
-                    (Main.pref.getPluginsDirectory().getAbsolutePath() + "/ImportImagePlugin/" + "log.log"));
+                    (Preferences.main().getPluginsDirectory().getAbsolutePath() + "/ImportImagePlugin/" + "log.log"));
 
             PropertyConfigurator.configure(props);
 
@@ -185,7 +188,7 @@ public class ImportImagePlugin extends Plugin {
 
         // Set file for logging here:
         props.setProperty("log4j.appender.A.file",
-                (Main.pref.getPluginsDirectory().getAbsolutePath() + "/ImportImagePlugin/" + "log.log"));
+                (Preferences.main().getPluginsDirectory().getAbsolutePath() + "/ImportImagePlugin/" + "log.log"));
 
         PropertyConfigurator.configure(props);
         logger = Logger.getLogger(ImportImagePlugin.class);

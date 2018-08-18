@@ -10,11 +10,11 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
 import org.apache.log4j.Logger;
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.plugins.ImportImagePlugin.ImageLayer.LayerCreationCanceledException;
+import org.openstreetmap.josm.spi.preferences.Config;
 
 /**
  * Class extends JosmAction and creates a new image layer.
@@ -34,16 +34,16 @@ public class LoadImageAction extends JosmAction {
     }
 
     @Override
-    public void actionPerformed(ActionEvent arg0) {
+    public void actionPerformed(ActionEvent event) {
 
         // Choose a file
-        JFileChooser fc = new JFileChooser(Main.pref.get("plugins.importimage.importpath", null));
+        JFileChooser fc = new JFileChooser(Config.getPref().get("plugins.importimage.importpath", null));
         fc.setAcceptAllFileFilterUsed(false);
-        int result = fc.showOpenDialog(Main.parent);
+        int result = fc.showOpenDialog(MainApplication.getMainFrame());
 
         ImageLayer layer = null;
         if (result == JFileChooser.APPROVE_OPTION) {
-            Main.pref.put("plugins.importimage.importpath", fc.getCurrentDirectory().getAbsolutePath());
+            Config.getPref().put("plugins.importimage.importpath", fc.getCurrentDirectory().getAbsolutePath());
             logger.info("File chosen:" + fc.getSelectedFile());
             try {
                 layer = new ImageLayer(fc.getSelectedFile());

@@ -26,12 +26,12 @@ import org.geotools.referencing.CRS;
 import org.opengis.referencing.FactoryException;
 import org.opengis.referencing.NoSuchAuthorityCodeException;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.RenameLayerAction;
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.ProjectionBounds;
 import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
+import org.openstreetmap.josm.data.projection.ProjectionRegistry;
 import org.openstreetmap.josm.gui.ExtendedDialog;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MapView;
@@ -95,7 +95,7 @@ public class ImageLayer extends Layer {
             this.sourceRefSys = coverage.getCoordinateReferenceSystem();
 
             // now reproject grid coverage
-            coverage = PluginOperations.reprojectCoverage(coverage, CRS.decode(Main.getProjection().toCode()));
+            coverage = PluginOperations.reprojectCoverage(coverage, CRS.decode(ProjectionRegistry.getProjection().toCode()));
 
         } catch (FactoryException e) {
             logger.error("Error while creating GridCoverage:", e);
@@ -104,13 +104,13 @@ public class ImageLayer extends Layer {
             if (e.getMessage().contains("No projection file found")) {
                 int val = 2;
                 if (!GraphicsEnvironment.isHeadless()) {
-                    ExtendedDialog ex = new ExtendedDialog(Main.parent, tr("Warning"), 
+                    ExtendedDialog ex = new ExtendedDialog(MainApplication.getMainFrame(), tr("Warning"), 
                         new String[] {tr("Default image projection"), tr("JOSM''s current projection"), tr("Cancel")});
                     // CHECKSTYLE.OFF: LineLength
                     ex.setContent(tr("No projection file (.prj) found.<br>"
                         + "You can choose the default image projection ({0}) or JOSM''s current editor projection ({1}) as original image projection.<br>"
                         + "(It can be changed later from the right click menu of the image layer.)", 
-                        ImportImagePlugin.pluginProps.getProperty("default_crs_srid"), Main.getProjection().toCode()));
+                        ImportImagePlugin.pluginProps.getProperty("default_crs_srid"), ProjectionRegistry.getProjection().toCode()));
                     // CHECKSTYLE.ON: LineLength
                     val = ex.showDialog().getValue();
                     if (val == 3) {
@@ -124,13 +124,13 @@ public class ImageLayer extends Layer {
                         src = PluginOperations.defaultSourceCRS;
                     } else {
                         logger.debug("Passing through image un-projected.");
-                        src = CRS.decode(Main.getProjection().toCode());
+                        src = CRS.decode(ProjectionRegistry.getProjection().toCode());
                     }
                     // create a grid coverage from the image
                     coverage = PluginOperations.createGridFromFile(imageFile, src, false);
                     this.sourceRefSys = coverage.getCoordinateReferenceSystem();
                     if (val == 1) {
-                        coverage = PluginOperations.reprojectCoverage(coverage, CRS.decode(Main.getProjection().toCode()));
+                        coverage = PluginOperations.reprojectCoverage(coverage, CRS.decode(ProjectionRegistry.getProjection().toCode()));
                     }
                 } catch (Exception e1) {
                     logger.error("Error while creating GridCoverage:", e1);
@@ -297,7 +297,7 @@ public class ImageLayer extends Layer {
     void resample(CoordinateReferenceSystem refSys) throws IOException, NoSuchAuthorityCodeException, FactoryException {
         logger.debug("resample");
         GridCoverage2D coverage = PluginOperations.createGridFromFile(this.imageFile, refSys, true);
-        coverage = PluginOperations.reprojectCoverage(coverage, CRS.decode(Main.getProjection().toCode()));
+        coverage = PluginOperations.reprojectCoverage(coverage, CRS.decode(ProjectionRegistry.getProjection().toCode()));
         this.bbox = coverage.getEnvelope2D();
         this.image = ((PlanarImage) coverage.getRenderedImage()).getAsBufferedImage();
 
@@ -327,7 +327,7 @@ public class ImageLayer extends Layer {
         @Override
         public void actionPerformed(ActionEvent arg0) {
             LayerPropertiesDialog layerProps = new LayerPropertiesDialog(imageLayer, PluginOperations.crsDescriptions);
-            layerProps.setLocation(Main.parent.getWidth() / 4, Main.parent.getHeight() / 4);
+            layerProps.setLocation(MainApplication.getMainFrame().getWidth() / 4, MainApplication.getMainFrame().getHeight() / 4);
             layerProps.setVisible(true);
         }
     }

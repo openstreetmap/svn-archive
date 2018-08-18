@@ -10,7 +10,6 @@ import java.util.List;
 import javax.swing.JOptionPane;
 
 import org.apache.log4j.Logger;
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.ExtensionFileFilter;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.io.importexport.FileImporter;
@@ -59,7 +58,7 @@ public class ImportImageFileImporter extends FileImporter {
                 Logging.error(e);
                 logger.error("Error while creating image layer: \n" + e.getMessage());
                 GuiHelper.runInEDT(() ->
-                    JOptionPane.showMessageDialog(Main.parent, tr("Error while creating image layer: {0}", e.getCause())));
+                    JOptionPane.showMessageDialog(MainApplication.getMainFrame(), tr("Error while creating image layer: {0}", e.getCause())));
                 continue;
             }
 

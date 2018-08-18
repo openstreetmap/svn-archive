@@ -29,9 +29,9 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.data.Bounds;
+import org.openstreetmap.josm.data.Preferences;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
@@ -50,9 +50,10 @@ import org.openstreetmap.josm.io.OsmWriter;
 import org.openstreetmap.josm.io.OsmWriterFactory;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
+import org.openstreetmap.josm.spi.preferences.Config;
 import org.openstreetmap.josm.tools.GBC;
 import org.openstreetmap.josm.tools.Logging;
-import org.openstreetmap.josm.tools.PlatformHookWindows;
+import org.openstreetmap.josm.tools.PlatformManager;
 import org.openstreetmap.josm.tools.Utils;
 
 public class OsmarenderPlugin extends Plugin {
@@ -83,7 +84,7 @@ public class OsmarenderPlugin extends Plugin {
             	Logging.error(ex);
             }
 
-            String firefox = Main.pref.get("osmarender.firefox", "firefox");
+            String firefox = Config.getPref().get("osmarender.firefox", "firefox");
             String pluginDir = getPluginDirs().getUserDataDirectory(false).getPath();
             try (OsmWriter w = OsmWriterFactory.createOsmWriter(new PrintWriter(new OutputStreamWriter(
                     new FileOutputStream(pluginDir+File.separator+"data.osm"), "UTF-8")), false, "0.6")) {
@@ -128,7 +129,7 @@ public class OsmarenderPlugin extends Plugin {
 
                 // get the exec line
                 String argument;
-                if (Main.platform instanceof PlatformHookWindows)
+                if (PlatformManager.isPlatformWindows())
                     argument = "file:///"+pluginDir.replace('\\','/').replace(" ","%20")+File.separator+"generated.xml\"";
                 else
                     argument = pluginDir+File.separator+"generated.xml";
@@ -136,7 +137,7 @@ public class OsmarenderPlugin extends Plugin {
                 // launch up the viewer
                 Runtime.getRuntime().exec(new String[]{firefox, argument});
             } catch (IOException e1) {
-                JOptionPane.showMessageDialog(Main.parent, 
+                JOptionPane.showMessageDialog(MainApplication.getMainFrame(), 
                         tr("Firefox not found. Please set firefox executable in the Map Settings page of the preferences."));
             }
         }
@@ -167,7 +168,7 @@ public class OsmarenderPlugin extends Plugin {
      */
     @Deprecated
     public String _getPluginDir() {
-        return new File(Main.pref.getPluginsDirectory(), getPluginInformation().name).getPath();
+        return new File(Preferences.main().getPluginsDirectory(), getPluginInformation().name).getPath();
     }
 
     /**
@@ -221,13 +222,13 @@ public class OsmarenderPlugin extends Plugin {
             panel.add(new JLabel(tr("Firefox executable")), GBC.std().insets(10,5,5,0));
             panel.add(firefox, GBC.eol().insets(0,5,0,0).fill(GBC.HORIZONTAL));
             panel.add(Box.createVerticalGlue(), GBC.eol().fill(GBC.BOTH));
-            firefox.setText(Main.pref.get("osmarender.firefox"));
+            firefox.setText(Config.getPref().get("osmarender.firefox"));
             gui.getMapPreference().getTabPane().addTab(tr("Osmarender"), panel);
         }
 
         @Override
         public boolean ok() {
-            Main.pref.put("osmarender.firefox", firefox.getText());
+            Config.getPref().put("osmarender.firefox", firefox.getText());
             return false;
         }
 

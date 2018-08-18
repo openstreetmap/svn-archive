@@ -5,11 +5,11 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 
 import javax.swing.JOptionPane;
 
-import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.gui.MainApplication;
 
 /**
  * Utility functions. 
- * @author Oliver Wieland <oliver.wieland@online.de>
+ * @author Oliver Wieland &lt;oliver.wieland@online.de&gt;
  * 
  */
 public class ColumbusCSVUtils {
@@ -53,7 +53,7 @@ public class ColumbusCSVUtils {
     public static void showMessage(String txt, String caption, int icon) {
         if (isStringNullOrEmpty(txt)) return;
         
-        JOptionPane.showMessageDialog(Main.parent, tr(txt), caption, icon);
+        JOptionPane.showMessageDialog(MainApplication.getMainFrame(), tr(txt), caption, icon);
     }
     
     /**
@@ -64,24 +64,21 @@ public class ColumbusCSVUtils {
      * @return True, if given text is either null or empty.
      */
     public static boolean isStringNullOrEmpty(String txt) {
-        return txt == null || txt.length() == 0;
+        return txt == null || txt.isEmpty();
     }
     
     /**
      * Parses a float number from a string.
-     * @param txt
+     * @param txt float value as string
      * @return The corresponding float instance or Float.NaN, if txt was empty or contained an invalid float number.
      */
     public static Float floatFromString(String txt) {
-        Float f;
-        
         if (isStringNullOrEmpty(txt)) return Float.NaN;
-        
+
         try {
-            f = Float.parseFloat(txt);
+            return Float.parseFloat(txt);
         } catch (NumberFormatException nex) {
-            f = Float.NaN;
+            return Float.NaN;
         }
-        return f;
     }    
 }

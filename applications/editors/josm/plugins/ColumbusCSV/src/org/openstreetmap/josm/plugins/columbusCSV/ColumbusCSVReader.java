@@ -9,6 +9,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -58,7 +59,7 @@ notes:
 001 Spy mode timer
  *  </code>
  * 
- * @author Oliver Wieland <oliver.wieland@online.de>
+ * @author Oliver Wieland &lt;oliver.wieland@online.de&gt;
  * 
  */
 public class ColumbusCSVReader {
@@ -113,7 +114,7 @@ public class ColumbusCSVReader {
         FileInputStream fstream = new FileInputStream(fileName);
         // Get the object of DataInputStream
         DataInputStream in = new DataInputStream(fstream);
-        BufferedReader br = new BufferedReader(new InputStreamReader(in));
+        BufferedReader br = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
         String strLine;
         // Initial values
         int line = 1;
@@ -224,7 +225,7 @@ public class ColumbusCSVReader {
         FileInputStream fstream = new FileInputStream(file);
         // Get the object of DataInputStream
         DataInputStream in = new DataInputStream(fstream);
-        BufferedReader br = new BufferedReader(new InputStreamReader(in));
+        BufferedReader br = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
         String strLine;
         // Initial values
         int line = 0;

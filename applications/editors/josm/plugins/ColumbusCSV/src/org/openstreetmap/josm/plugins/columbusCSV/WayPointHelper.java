@@ -16,7 +16,7 @@ import org.openstreetmap.josm.data.gpx.WayPoint;
 import org.openstreetmap.josm.tools.Logging;
 
 /**
- * @author Oliver Wieland <oliver.wieland@online.de> Provides several static methods to access way point
+ * @author Oliver Wieland &lt;oliver.wieland@online.de&gt; Provides several static methods to access way point
  *         attributes.
  */
 public class WayPointHelper {
@@ -73,7 +73,7 @@ public class WayPointHelper {
      * @param src The original lat/lon coordinate.
      * @param dlat The distance in latitude direction in meters
      * @param dlon The distance in longitude direction in meters
-     * @return 
+     * @return new lat/lon coordinates
      */
     public static LatLon moveLatLon(LatLon src, double dlat, double dlon) {
         double lat1 = toRadians(src.lat());

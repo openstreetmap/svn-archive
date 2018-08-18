@@ -6,13 +6,13 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 import javax.swing.ButtonGroup;
 import javax.swing.JCheckBox;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.preferences.DefaultTabPreferenceSetting;
 import org.openstreetmap.josm.gui.preferences.PreferenceTabbedPane;
+import org.openstreetmap.josm.spi.preferences.Config;
 
 /**
  * Implements the preferences dialog for this plugin.
- * @author Oliver Wieland <oliver.wieland@online.de>
+ * @author Oliver Wieland &lt;oliver.wieland@online.de&gt;
  */
 public class ColumbusCSVPreferences extends DefaultTabPreferenceSetting {
     public static final String PREFIX = "columbuscsv.";
@@ -60,56 +60,56 @@ public class ColumbusCSVPreferences extends DefaultTabPreferenceSetting {
      */
     @Override
     public boolean ok() {
-        Main.pref.putBoolean(SHOW_SUMMARY, colCSVShowSummary.isSelected());
-        Main.pref.putBoolean(ZOOM_AFTER_IMPORT, colCSVDontZoomAfterImport.isSelected());
-        Main.pref.putBoolean(IGNORE_VDOP, colCSVIgnoreVDOP.isSelected());
-        Main.pref.putBoolean(WARN_CONVERSION_ERRORS, colCSVWarnConversionErrors.isSelected());
-        Main.pref.putBoolean(WARN_MISSING_AUDIO, colCSVWarnMissingAudio.isSelected());        
+        Config.getPref().putBoolean(SHOW_SUMMARY, colCSVShowSummary.isSelected());
+        Config.getPref().putBoolean(ZOOM_AFTER_IMPORT, colCSVDontZoomAfterImport.isSelected());
+        Config.getPref().putBoolean(IGNORE_VDOP, colCSVIgnoreVDOP.isSelected());
+        Config.getPref().putBoolean(WARN_CONVERSION_ERRORS, colCSVWarnConversionErrors.isSelected());
+        Config.getPref().putBoolean(WARN_MISSING_AUDIO, colCSVWarnMissingAudio.isSelected());        
         return false;
     }
     
     /**
      * If <tt>true</tt>, a summary dialog is shown after import. Default is <tt>true</tt>.
-     * @return
+     * @return <tt>true</tt> if a summary dialog is shown after import
      */
     public static boolean showSummary() {
-        return Main.pref.getBoolean(SHOW_SUMMARY, true);
+        return Config.getPref().getBoolean(SHOW_SUMMARY, true);
     }
     
     /**
-     * If <tt>true</tt>, a the bounding box will not be scaled to the imported data.
-     * @return
+     * If <tt>true</tt>, the bounding box will not be scaled to the imported data.
+     * @return <tt>true</tt> if the bounding box will not be scaled to the imported data
      */
     public static boolean zoomAfterImport() {
-        return Main.pref.getBoolean(ZOOM_AFTER_IMPORT, true);
+        return Config.getPref().getBoolean(ZOOM_AFTER_IMPORT, true);
     }
     
     /**
      * If <tt>true</tt>, all DOP values (hdop, vdop, pdop) are ignored. If the V-900 runs in simple mode,
      * this setting has no effect. 
      * Default is <tt>false</tt>.
-     * @return
+     * @return <tt>true</tt> if all DOP values (hdop, vdop, pdop) are ignored
      */
     public static boolean ignoreDOP() {
-        return Main.pref.getBoolean(IGNORE_VDOP, false);
+        return Config.getPref().getBoolean(IGNORE_VDOP, false);
     }
     
     /**
-     * If <tt>true</tt>, the plugin issues warnings if either date or position errors have been occurred. 
+     * If <tt>true</tt>, the plugin issues warnings when either date or position errors occurr. 
      * Default is <tt>true</tt>.
-     * @return
+     * @return <tt>true</tt> if the plugin issues warnings when either date or position errors occurr.
      */
     public static boolean warnConversion() {
-        return Main.pref.getBoolean(WARN_CONVERSION_ERRORS, false);
+        return Config.getPref().getBoolean(WARN_CONVERSION_ERRORS, false);
     }
     
     /**
      * If <tt>true</tt>, the plugin issues a warning if a referenced audio file is missing. 
      * Default is <tt>true</tt>.
-     * @return
+     * @return <tt>true</tt> if the plugin issues a warning when a referenced audio file is missing
      */
     public static boolean warnMissingAudio() {
-        return Main.pref.getBoolean(WARN_MISSING_AUDIO, false);
+        return Config.getPref().getBoolean(WARN_MISSING_AUDIO, false);
     }
 
     /**
@@ -130,11 +130,11 @@ public class ColumbusCSVPreferences extends DefaultTabPreferenceSetting {
         gpsWarningsGroup.add(colCSVWarnConversionErrors);
 
         // Apply settings
-        colCSVShowSummary.setSelected(Main.pref.getBoolean(SHOW_SUMMARY, true));
-        colCSVDontZoomAfterImport.setSelected(Main.pref.getBoolean(ZOOM_AFTER_IMPORT, true));
-        colCSVIgnoreVDOP.setSelected(Main.pref.getBoolean(IGNORE_VDOP, false));
-        colCSVWarnConversionErrors.setSelected(Main.pref.getBoolean(WARN_CONVERSION_ERRORS, true));
-        colCSVWarnMissingAudio.setSelected(Main.pref.getBoolean(WARN_MISSING_AUDIO, true));
+        colCSVShowSummary.setSelected(Config.getPref().getBoolean(SHOW_SUMMARY, true));
+        colCSVDontZoomAfterImport.setSelected(Config.getPref().getBoolean(ZOOM_AFTER_IMPORT, true));
+        colCSVIgnoreVDOP.setSelected(Config.getPref().getBoolean(IGNORE_VDOP, false));
+        colCSVWarnConversionErrors.setSelected(Config.getPref().getBoolean(WARN_CONVERSION_ERRORS, true));
+        colCSVWarnMissingAudio.setSelected(Config.getPref().getBoolean(WARN_MISSING_AUDIO, true));
     }
 
     @Override

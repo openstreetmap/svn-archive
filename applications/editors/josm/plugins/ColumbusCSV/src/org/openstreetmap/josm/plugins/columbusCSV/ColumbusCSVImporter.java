@@ -6,7 +6,6 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 import java.io.File;
 import java.io.IOException;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.AutoScaleAction;
 import org.openstreetmap.josm.actions.ExtensionFileFilter;
 import org.openstreetmap.josm.data.gpx.GpxData;
@@ -17,11 +16,12 @@ import org.openstreetmap.josm.gui.layer.markerlayer.MarkerLayer;
 import org.openstreetmap.josm.gui.progress.NullProgressMonitor;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.io.IllegalDataException;
+import org.openstreetmap.josm.spi.preferences.Config;
 import org.openstreetmap.josm.tools.Logging;
 
 /**
  * 
- * @author Oliver Wieland <oliver.wieland@online.de>
+ * @author Oliver Wieland &lt;oliver.wieland@online.de&gt;
  * 
  */
 public class ColumbusCSVImporter extends FileImporter {
@@ -88,7 +88,7 @@ public class ColumbusCSVImporter extends FileImporter {
                 }
                 progressMonitor.setTicksCount(4);
         
-                if (Main.pref.getBoolean("marker.makeautomarkers", true)) {
+                if (Config.getPref().getBoolean("marker.makeautomarkers", true)) {
                     try {
                         MarkerLayer ml = new MarkerLayer(gpxData,
                             tr("Markers of ") + file.getName(), file, gpxLayer);

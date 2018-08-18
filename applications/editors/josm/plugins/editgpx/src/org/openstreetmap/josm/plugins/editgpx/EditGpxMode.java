@@ -14,9 +14,9 @@ import java.awt.event.InputEvent;
 import java.awt.event.MouseEvent;
 import java.util.List;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.mapmode.MapMode;
 import org.openstreetmap.josm.data.projection.Projection;
+import org.openstreetmap.josm.data.projection.ProjectionRegistry;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.gui.layer.LayerManager.LayerAddEvent;
@@ -88,7 +88,7 @@ public class EditGpxMode extends MapMode implements LayerChangeListener {
 
         //go through nodes and mark the ones in the selection rect as deleted
         if (currentEditLayer != null) {
-            Projection projection = Main.getProjection();
+            Projection projection = ProjectionRegistry.getProjection();
             for (EditGpxTrack track: currentEditLayer.data.getTracks()) {
                 for (EditGpxTrackSegment segment: track.getSegments()) {
                     for (EditGpxWayPoint wayPoint: segment.getWayPoints()) {

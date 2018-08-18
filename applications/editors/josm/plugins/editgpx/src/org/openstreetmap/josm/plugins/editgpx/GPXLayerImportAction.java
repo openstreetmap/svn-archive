@@ -22,7 +22,6 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.layer.GpxLayer;
 import org.openstreetmap.josm.gui.layer.Layer;
@@ -86,7 +85,7 @@ class GPXLayerImportAction extends AbstractAction {
                     layerList.requestFocusInWindow();
                 }
             };
-            final JDialog dlg = optionPane.createDialog(Main.parent, tr("Import path from GPX layer"));
+            final JDialog dlg = optionPane.createDialog(MainApplication.getMainFrame(), tr("Import path from GPX layer"));
             dlg.setVisible(true);
 
             Object answer = optionPane.getValue();
@@ -107,7 +106,7 @@ class GPXLayerImportAction extends AbstractAction {
 
         } else {
             // no gps layer
-            JOptionPane.showMessageDialog(Main.parent,tr("No GPX data layer found."));
+            JOptionPane.showMessageDialog(MainApplication.getMainFrame(),tr("No GPX data layer found."));
         }
     }
 

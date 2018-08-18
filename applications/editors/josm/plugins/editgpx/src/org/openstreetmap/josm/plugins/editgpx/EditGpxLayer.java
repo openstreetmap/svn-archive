@@ -16,11 +16,11 @@ import javax.swing.Action;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.gpx.GpxData;
 import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
 import org.openstreetmap.josm.data.projection.Projection;
+import org.openstreetmap.josm.data.projection.ProjectionRegistry;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.dialogs.LayerListDialog;
@@ -104,7 +104,7 @@ public class EditGpxLayer extends Layer {
 
         //don't iterate through dataSet whiling making changes
         synchronized(layerImport.importing) {
-            Projection projection = Main.getProjection();
+            Projection projection = ProjectionRegistry.getProjection();
             for (EditGpxTrack track: data.getTracks()) {
                 for (EditGpxTrackSegment segment: track.getSegments()) {
                     for (EditGpxWayPoint wayPoint: segment.getWayPoints()) {

@@ -8,9 +8,9 @@ import java.util.List;
 
 import javax.swing.JOptionPane;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MapView;
 
 /**
@@ -75,7 +75,7 @@ public class AlignWaysSegmentMgr {
             return false;
         }
         else if (refSeg != null && tmpAlgnSeg.equals(refSeg)) {
-            JOptionPane.showMessageDialog(Main.parent,
+            JOptionPane.showMessageDialog(MainApplication.getMainFrame(),
                     tr("Segment to be aligned cannot be the same with the reference segment.\n" +
                     "Please choose a different segment to be aligned."),
                     tr("AlignWayS message"), JOptionPane.WARNING_MESSAGE);
@@ -109,7 +109,7 @@ public class AlignWaysSegmentMgr {
             return false;
         }
         else if (algnSeg != null && tmpRefSeg.equals(algnSeg)) {
-            JOptionPane.showMessageDialog(Main.parent,
+            JOptionPane.showMessageDialog(MainApplication.getMainFrame(),
                     tr("Reference segment cannot be the same with the segment to be aligned.\n" +
                     "Please choose a different reference segment."),
                     tr("AlignWayS message"), JOptionPane.WARNING_MESSAGE);

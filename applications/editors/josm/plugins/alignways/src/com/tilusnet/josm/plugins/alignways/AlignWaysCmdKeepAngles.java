@@ -10,11 +10,11 @@ import java.util.Map;
 
 import javax.swing.JOptionPane;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.WaySegment;
+import org.openstreetmap.josm.gui.MainApplication;
 
 import com.tilusnet.josm.plugins.alignways.geometry.AlignWaysGeomLine;
 import com.tilusnet.josm.plugins.alignways.geometry.AlignWaysGeomLine.IntersectionStatus;
@@ -210,7 +210,7 @@ public class AlignWaysCmdKeepAngles extends AlignWaysCmdKeepLength {
         }
 
         JOptionPane.showMessageDialog(
-                Main.parent,
+                MainApplication.getMainFrame(),
                 tr(statMsg),
                 tr("AlignWayS: Alignment not possible"),
                 JOptionPane.WARNING_MESSAGE

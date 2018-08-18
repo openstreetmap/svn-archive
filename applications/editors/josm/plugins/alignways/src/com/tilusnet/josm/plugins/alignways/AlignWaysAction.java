@@ -9,9 +9,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.util.Collection;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.command.Command;
+import org.openstreetmap.josm.data.UndoRedoHandler;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.gui.MainApplication;
@@ -51,7 +51,7 @@ public class AlignWaysAction extends JosmAction {
                 MainApplication.getMap().mapView).getSelectedNodes();
 
         // c is the last command launched, if any
-        Command c = !Main.main.undoRedo.commands.isEmpty() ? Main.main.undoRedo.commands
+        Command c = !UndoRedoHandler.getInstance().commands.isEmpty() ? UndoRedoHandler.getInstance().commands
                 .getLast() : null;
 
                 // Potentially add my type of command only if last command wasn't my type
@@ -68,7 +68,7 @@ public class AlignWaysAction extends JosmAction {
 
                     if (cmdAW.executable()) {
                         // This will also trigger AlignWaysCmdKeepLength.executeCommand()
-                        Main.main.undoRedo.add(cmdAW);
+                        UndoRedoHandler.getInstance().add(cmdAW);
                     }
                 }
 

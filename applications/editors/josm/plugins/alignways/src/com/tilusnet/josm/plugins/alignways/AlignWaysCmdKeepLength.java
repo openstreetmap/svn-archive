@@ -14,13 +14,13 @@ import java.util.Map;
 import javax.swing.Icon;
 import javax.swing.JOptionPane;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.WaySegment;
+import org.openstreetmap.josm.data.projection.ProjectionRegistry;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.tools.ImageProvider;
@@ -252,7 +252,7 @@ public class AlignWaysCmdKeepLength extends Command {
 
         // Deny action if the nodes would end up outside world
         for (EastNorth en : calculatedNodes.values()) {
-            if (Main.getProjection().eastNorth2latlon(en).isOutSideWorld())
+            if (ProjectionRegistry.getProjection().eastNorth2latlon(en).isOutSideWorld())
                 return AlignableStatus.ALGN_INV_OUTSIDE_WORLD;
         }
 
@@ -299,7 +299,7 @@ public class AlignWaysCmdKeepLength extends Command {
         }
 
         JOptionPane.showMessageDialog(
-                Main.parent,
+                MainApplication.getMainFrame(),
                 tr(statMsg),
                 tr("AlignWayS: Alignment not possible"),
                 JOptionPane.WARNING_MESSAGE

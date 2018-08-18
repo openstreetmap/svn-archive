@@ -17,7 +17,6 @@ import javax.swing.ImageIcon;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.mapmode.MapMode;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.event.AbstractDatasetChangedEvent;
@@ -33,6 +32,7 @@ import org.openstreetmap.josm.gui.IconToggleButton;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
+import org.openstreetmap.josm.spi.preferences.Config;
 import org.openstreetmap.josm.tools.Shortcut;
 
 /**
@@ -75,11 +75,11 @@ public class AlignWaysMode extends MapMode implements DataSetListener {
             optBtn.doClick();
         }
 
-        boolean showTips = Boolean.parseBoolean(Main.pref.get("alignways.showtips", "true"));
+        boolean showTips = Boolean.parseBoolean(Config.getPref().get("alignways.showtips", "true"));
         if ((showTips) && (!tipShown)) {
             showTips();
         }
-        int majorVer = Integer.parseInt(Main.pref.get("alignways.majorver", "-1"));
+        int majorVer = Integer.parseInt(Config.getPref().get("alignways.majorver", "-1"));
         if (majorVer != AlignWaysPlugin.AlignWaysMajorVersion) {
             showWhatsNew();
         }
@@ -223,7 +223,7 @@ public class AlignWaysMode extends MapMode implements DataSetListener {
         JOptionPane tipPane = new JOptionPane(atp, JOptionPane.PLAIN_MESSAGE, JOptionPane.DEFAULT_OPTION,
                 null, okButton, okButton[0]);
         tipPane.setBorder(BorderFactory.createEmptyBorder(10, 10, 30, 10));
-        JDialog tipDialog = tipPane.createDialog(Main.parent, tr("AlignWays Tips"));
+        JDialog tipDialog = tipPane.createDialog(MainApplication.getMainFrame(), tr("AlignWays Tips"));
         tipDialog.setIconImage(new ImageIcon(getClass().getResource("/images/alignways.png")).getImage());
 
         tipDialog.setResizable(true);
@@ -232,7 +232,7 @@ public class AlignWaysMode extends MapMode implements DataSetListener {
 
         tipDialog.dispose();
 
-        Main.pref.putBoolean("alignways.showtips", !atp.isChkBoxSelected());
+        Config.getPref().putBoolean("alignways.showtips", !atp.isChkBoxSelected());
     }
 
     private void showWhatsNew() {
@@ -240,7 +240,7 @@ public class AlignWaysMode extends MapMode implements DataSetListener {
         AlignWaysWhatsNewPanel awnp = new AlignWaysWhatsNewPanel();
         JOptionPane wnPane = new JOptionPane(awnp, JOptionPane.PLAIN_MESSAGE, JOptionPane.DEFAULT_OPTION, null);
         wnPane.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        JDialog wnDialog = wnPane.createDialog(Main.parent, tr("AlignWays: What''s New..."));
+        JDialog wnDialog = wnPane.createDialog(MainApplication.getMainFrame(), tr("AlignWays: What''s New..."));
         wnDialog.setIconImage(new ImageIcon(getClass().getResource("/images/alignways.png")).getImage());
 
         wnDialog.setResizable(true);
@@ -248,7 +248,7 @@ public class AlignWaysMode extends MapMode implements DataSetListener {
 
         wnDialog.dispose();
 
-        Main.pref.put("alignways.majorver", Integer.toString(AlignWaysPlugin.AlignWaysMajorVersion));
+        Config.getPref().put("alignways.majorver", Integer.toString(AlignWaysPlugin.AlignWaysMajorVersion));
     }
 
     @Override

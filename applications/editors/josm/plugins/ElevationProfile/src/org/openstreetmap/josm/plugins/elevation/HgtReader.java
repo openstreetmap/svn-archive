@@ -10,7 +10,7 @@ import java.nio.ShortBuffer;
 import java.nio.channels.FileChannel;
 import java.util.HashMap;
 
-import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.data.Preferences;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.tools.CheckParameterUtil;
 
@@ -43,7 +43,7 @@ public class HgtReader {
                 // but is not there'
                 cache.put(file, null);
                 // Try all resource directories
-                for (String location : Main.pref.getAllPossiblePreferenceDirs()) {
+                for (String location : Preferences.getAllPossiblePreferenceDirs()) {
                     String fullPath = new File(location + File.separator + "elevation", file).getPath();
                     File f = new File(fullPath);
                     if (f.exists()) {

@@ -18,7 +18,6 @@ import java.util.zip.GZIPInputStream;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.DataSet;
@@ -33,10 +32,9 @@ import org.openstreetmap.josm.gui.progress.NullProgressMonitor;
 import org.openstreetmap.josm.io.GpxReader;
 import org.openstreetmap.josm.io.IllegalDataException;
 import org.openstreetmap.josm.io.OsmReader;
+import org.openstreetmap.josm.tools.Logging;
 import org.openstreetmap.josm.tools.Shortcut;
 import org.xml.sax.SAXException;
-
-import at.dallermassl.josm.plugin.openvisible.OsmGpxBounds;
 
 /**
  * @author cdaller
@@ -56,9 +54,9 @@ public class OpenVisibleAction extends JosmAction {
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
     @Override
-    public void actionPerformed(ActionEvent e) {
+    public void actionPerformed(ActionEvent event) {
         if(!MainApplication.isDisplayingMapView()) {
-            JOptionPane.showMessageDialog(Main.parent, tr("No view open - cannot determine boundaries!"));
+            JOptionPane.showMessageDialog(MainApplication.getMainFrame(), tr("No view open - cannot determine boundaries!"));
             return;
         }
         MapView view = MainApplication.getMap().mapView;
@@ -75,7 +73,7 @@ public class OpenVisibleAction extends JosmAction {
             fileChooser = new JFileChooser();
         }
         fileChooser.setMultiSelectionEnabled(true);
-        fileChooser.showOpenDialog(Main.parent);
+        fileChooser.showOpenDialog(MainApplication.getMainFrame());
         File[] files = fileChooser.getSelectedFiles();
         lastDirectory = fileChooser.getCurrentDirectory();
 
@@ -92,17 +90,10 @@ public class OpenVisibleAction extends JosmAction {
                     }
 
                 }
-            } catch (FileNotFoundException e1) {
-                e1.printStackTrace();
-            } catch (IOException e1) {
-                e1.printStackTrace();
-            } catch (SAXException e1) {
-                e1.printStackTrace();
-            } catch(IllegalDataException e1) {
-                e1.printStackTrace();
+            } catch (IOException | SAXException | IllegalDataException e) {
+                Logging.error(e);
             }
         }
-
     }
 
     private void openAsData(File file) throws SAXException, IOException, FileNotFoundException, IllegalDataException {
@@ -113,7 +104,7 @@ public class OpenVisibleAction extends JosmAction {
             MainApplication.getLayerManager().addLayer(layer);
         }
         else
-            JOptionPane.showMessageDialog(Main.parent, fn+": "+tr("Unknown file extension: {0}", fn.substring(fn.lastIndexOf('.')+1)));
+            JOptionPane.showMessageDialog(MainApplication.getMainFrame(), fn+": "+tr("Unknown file extension: {0}", fn.substring(fn.lastIndexOf('.')+1)));
     }
 
     private void openFileAsGpx(File file) throws SAXException, IOException, FileNotFoundException {
@@ -127,7 +118,7 @@ public class OpenVisibleAction extends JosmAction {
             }
             if (!r.parse(true)) {
                 // input was not properly parsed, abort
-                JOptionPane.showMessageDialog(Main.parent, tr("Parsing file \"{0}\" failed", file));
+                JOptionPane.showMessageDialog(MainApplication.getMainFrame(), tr("Parsing file \"{0}\" failed", file));
                 throw new IllegalStateException();
             }
             r.getGpxData().storageFile = file;

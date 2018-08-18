@@ -3,10 +3,6 @@
  */
 package at.dallermassl.josm.plugin.openvisible;
 
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -74,48 +70,4 @@ public class OsmGpxBounds extends DefaultHandler {
         double lon2 = Math.min(this.maxLon, maxLon);
         return ((lat2-lat1) > 0) && ((lon2-lon1) > 0);
     }
-
-    public static void main(String[] args) {
-        if(args.length < 5) {
-            printHelp();
-            return;
-        }
-        double minLat = Double.parseDouble(args[0]);
-        double maxLat = Double.parseDouble(args[1]);
-        double minLon = Double.parseDouble(args[2]);
-        double maxLon = Double.parseDouble(args[3]);
-        String[] files = new String[args.length - 4];
-        System.arraycopy(args, 4, files, 0, args.length - 4);
-
-        try {
-            File file;
-            for(String fileName : files) {
-                file = new File(fileName);
-                if(!file.isDirectory()
-                  && (file.getName().endsWith("gpx") || file.getName().endsWith("osm"))) {
-                    OsmGpxBounds parser = new OsmGpxBounds();
-                    parser.parse(new BufferedInputStream(new FileInputStream(file)));
-                    if(parser.intersects(minLat, maxLat, minLon, maxLon)) {
-                        System.out.println(file.getAbsolutePath()); // + "," + parser.minLat + "," + parser.maxLat + "," + parser.minLon + "," + parser.maxLon);
-                    }
-//                    System.out.println(parser.intersects(47.0555, 47.09, 15.406, 15.4737));
-                }
-            }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (SAXException e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     *
-     */
-    private static void printHelp() {
-        System.out.println(OsmGpxBounds.class.getName() + " <minLat> <maxLat> <minLon> <maxLon> <files+>");
-
-    }
-
 }

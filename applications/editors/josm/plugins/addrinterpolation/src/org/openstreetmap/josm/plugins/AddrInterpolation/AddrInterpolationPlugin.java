@@ -6,6 +6,9 @@ import org.openstreetmap.josm.gui.MainMenu;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
 
+/**
+ * Address Interpolation plugin
+ */
 public class AddrInterpolationPlugin extends Plugin {
 
     /**

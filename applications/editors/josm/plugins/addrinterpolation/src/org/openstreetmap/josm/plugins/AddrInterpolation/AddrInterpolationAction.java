@@ -5,25 +5,25 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
-import java.util.Collection;
 
 import org.openstreetmap.josm.actions.JosmAction;
-import org.openstreetmap.josm.data.SelectionChangedListener;
-import org.openstreetmap.josm.data.osm.DataSet;
+import org.openstreetmap.josm.data.osm.DataSelectionListener;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.data.osm.event.SelectionEventManager;
 import org.openstreetmap.josm.tools.Shortcut;
 
-@SuppressWarnings("serial")
-public class AddrInterpolationAction extends JosmAction implements
-SelectionChangedListener {
+/**
+ * Handy Address Interpolation Functions
+ */
+public class AddrInterpolationAction extends JosmAction implements DataSelectionListener {
 
     public AddrInterpolationAction() {
         super(tr("Address Interpolation"), "AddrInterpolation", tr("Handy Address Interpolation Functions"),
                 Shortcut.registerShortcut("tools:AddressInterpolation", tr("Tool: {0}", tr("Address Interpolation")),
                         KeyEvent.VK_Z, Shortcut.ALT_CTRL), false);
         setEnabled(false);
-        DataSet.addSelectionListener(this);
+        SelectionEventManager.getInstance().addSelectionListener(this);
     }
 
     @Override
@@ -32,10 +32,9 @@ SelectionChangedListener {
     }
 
     @Override
-    public void selectionChanged(
-            Collection<? extends OsmPrimitive> newSelection) {
+    public void selectionChanged(SelectionChangeEvent event) {
 
-        for (OsmPrimitive osm : newSelection) {
+        for (OsmPrimitive osm : event.getSelection()) {
             if (osm instanceof Way) {
                 setEnabled(true);
                 return;

@@ -8,7 +8,6 @@ import java.awt.Checkbox;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
-import java.awt.Frame;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -42,13 +41,13 @@ import javax.swing.JTextField;
 import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.command.AddCommand;
 import org.openstreetmap.josm.command.ChangeCommand;
 import org.openstreetmap.josm.command.ChangePropertyCommand;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.DeleteCommand;
 import org.openstreetmap.josm.command.SequenceCommand;
+import org.openstreetmap.josm.data.UndoRedoHandler;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
@@ -60,6 +59,9 @@ import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.widgets.UrlLabel;
 import org.openstreetmap.josm.tools.ImageProvider;
 
+/**
+ * Address Interpolation dialog
+ */
 public class AddrInterpolationDialog extends JDialog implements ActionListener {
 
     private Way selectedStreet = null;
@@ -122,7 +124,7 @@ public class AddrInterpolationDialog extends JDialog implements ActionListener {
     }
 
     private void ShowDialog(JPanel editControlsPane, String name) {
-        dialog = new EscapeDialog((Frame) Main.parent, name, true);
+        dialog = new EscapeDialog(MainApplication.getMainFrame(), name, true);
 
         dialog.add(editControlsPane);
         dialog.setSize(new Dimension(300, 500));
@@ -618,7 +620,7 @@ public class AddrInterpolationDialog extends JDialog implements ActionListener {
 
         if (namedWayCount != 1) {
             JOptionPane.showMessageDialog(
-                    Main.parent,
+                    MainApplication.getMainFrame(),
                     tr("Please select a street to associate with address interpolation way"),
                     tr("Error"),
                     JOptionPane.ERROR_MESSAGE
@@ -631,7 +633,7 @@ public class AddrInterpolationDialog extends JDialog implements ActionListener {
                     isValid = true;
                 } else {
                     JOptionPane.showMessageDialog(
-                            Main.parent,
+                            MainApplication.getMainFrame(),
                             tr("Please select address interpolation way for this street"),
                             tr("Error"),
                             JOptionPane.ERROR_MESSAGE
@@ -1001,14 +1003,14 @@ public class AddrInterpolationDialog extends JDialog implements ActionListener {
                 }
             }
             if (!errorMessage.equals("")) {
-                JOptionPane.showMessageDialog(Main.parent, errorMessage, tr("Error"), JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(MainApplication.getMainFrame(), errorMessage, tr("Error"), JOptionPane.ERROR_MESSAGE);
                 return false;
             }
         }
 
         if (country != null) {
             if (country.length() != 2) {
-                JOptionPane.showMessageDialog(Main.parent,
+                JOptionPane.showMessageDialog(MainApplication.getMainFrame(),
                         tr("Country code must be 2 letters"), tr("Error"), JOptionPane.ERROR_MESSAGE);
                 return false;
             }
@@ -1095,7 +1097,7 @@ public class AddrInterpolationDialog extends JDialog implements ActionListener {
         }
 
         if (!commandGroup.isEmpty()) {
-            Main.main.undoRedo.add(new SequenceCommand(tr("Address Interpolation"), commandGroup));
+            UndoRedoHandler.getInstance().add(new SequenceCommand(tr("Address Interpolation"), commandGroup));
             MainApplication.getLayerManager().getEditLayer().invalidate();
         }
 
@@ -1239,7 +1241,7 @@ public class AddrInterpolationDialog extends JDialog implements ActionListener {
             return true;
 
         } else {
-            JOptionPane.showMessageDialog(Main.parent, errorMessage, tr("Error"), JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(MainApplication.getMainFrame(), errorMessage, tr("Error"), JOptionPane.ERROR_MESSAGE);
             return false;
         }
     }

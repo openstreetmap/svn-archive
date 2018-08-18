@@ -1,6 +1,8 @@
 // License: GPL. For details, see LICENSE file.
 package ru.rodsoft.openstreetmap.josm.plugins.customizepublictransportstop;
 
+import static org.openstreetmap.josm.tools.I18n.tr;
+
 import java.awt.Frame;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -20,9 +22,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import static org.openstreetmap.josm.tools.I18n.tr;
-
-import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.gui.MainApplication;
 
 /**
  * Dialog for setting stop area properties
@@ -143,7 +143,7 @@ public class CustomizePublicTransportStopDialog implements ActionListener, ItemL
      * Constructor of dialog
      */
     public CustomizePublicTransportStopDialog() {
-        Frame frame = JOptionPane.getFrameForComponent(Main.parent);
+        Frame frame = JOptionPane.getFrameForComponent(MainApplication.getMainFrame());
         jDialog = new JDialog(frame, tr(STOP_CUSTOMIZING_DIALOG_CAPTION), false);
         JPanel contentPane = createContentPane();
 

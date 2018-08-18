@@ -1,8 +1,9 @@
 // License: GPL. For details, see LICENSE file.
 package ru.rodsoft.openstreetmap.josm.plugins.customizepublictransportstop;
 
-import javax.swing.JOptionPane;
 import java.awt.Component;
+
+import javax.swing.JOptionPane;
 
 /**
  * MessageBox static class It is used for debug. Source: Java forums

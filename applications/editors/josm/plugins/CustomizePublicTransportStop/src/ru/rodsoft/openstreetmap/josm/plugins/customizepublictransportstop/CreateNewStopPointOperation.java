@@ -9,9 +9,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.command.AddCommand;
 import org.openstreetmap.josm.command.ChangeCommand;
+import org.openstreetmap.josm.data.UndoRedoHandler;
 import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.BBox;
@@ -19,8 +19,10 @@ import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.data.osm.WaySegment;
+import org.openstreetmap.josm.data.projection.ProjectionRegistry;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MapView;
+import org.openstreetmap.josm.spi.preferences.Config;
 import org.openstreetmap.josm.tools.Geometry;
 
 /**
@@ -186,10 +188,10 @@ public class CreateNewStopPointOperation extends StopAreaOperationBase {
         DataSet ds = getCurrentDataSet();
 
         if (ds != null) {
-            double snapDistanceSq = Main.pref.getInt("mappaint.segment.snap-distance", 200);
+            double snapDistanceSq = Config.getPref().getInt("mappaint.segment.snap-distance", 200);
             snapDistanceSq *= snapDistanceSq;
 
-            for (Way w : ds.searchWays(getBBox(p, Main.pref.getInt("mappaint.segment.snap-distance", 200)))) {
+            for (Way w : ds.searchWays(getBBox(p, Config.getPref().getInt("mappaint.segment.snap-distance", 200)))) {
                 Node lastN = null;
                 int i = -2;
                 for (Node n : w.getNodes()) {
@@ -255,8 +257,8 @@ public class CreateNewStopPointOperation extends StopAreaOperationBase {
                     Node lastN = waySegment.getSecondNode();
 
                     EastNorth newPosition = Geometry.closestPointToSegment(n.getEastNorth(), lastN.getEastNorth(),
-                            Main.getProjection().latlon2eastNorth(platformCoord));
-                    LatLon newNodePosition = Main.getProjection().eastNorth2latlon(newPosition);
+                            ProjectionRegistry.getProjection().latlon2eastNorth(platformCoord));
+                    LatLon newNodePosition = ProjectionRegistry.getProjection().eastNorth2latlon(newPosition);
                     Point2D lastN2D = mapView.getPoint2D(lastN);
                     Point2D n2D = mapView.getPoint2D(n);
                     Point2D newNodePosition2D = mapView.getPoint2D(newNodePosition);
@@ -279,12 +281,12 @@ public class CreateNewStopPointOperation extends StopAreaOperationBase {
      * @return Stop position node
      */
     protected Node createNodeOnWay(Node newStopNode, WaySegment waySegment) {
-        Main.main.undoRedo.add(new AddCommand(MainApplication.getLayerManager().getEditDataSet(), newStopNode));
+        UndoRedoHandler.getInstance().add(new AddCommand(MainApplication.getLayerManager().getEditDataSet(), newStopNode));
         List<Node> wayNodes = waySegment.way.getNodes();
         wayNodes.add(waySegment.lowerIndex + 1, newStopNode);
         Way newWay = new Way(waySegment.way);
         newWay.setNodes(wayNodes);
-        Main.main.undoRedo.add(new ChangeCommand(waySegment.way, newWay));
+        UndoRedoHandler.getInstance().add(new ChangeCommand(waySegment.way, newWay));
         return newStopNode;
     }
 

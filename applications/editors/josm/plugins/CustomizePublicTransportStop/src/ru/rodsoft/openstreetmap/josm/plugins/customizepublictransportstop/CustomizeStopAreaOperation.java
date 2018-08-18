@@ -1,17 +1,17 @@
 // License: GPL. For details, see LICENSE file.
 package ru.rodsoft.openstreetmap.josm.plugins.customizepublictransportstop;
 
+import static org.openstreetmap.josm.tools.I18n.tr;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.openstreetmap.josm.tools.I18n.tr;
-
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.command.AddCommand;
 import org.openstreetmap.josm.command.ChangeCommand;
 import org.openstreetmap.josm.command.ChangePropertyCommand;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.SequenceCommand;
+import org.openstreetmap.josm.data.UndoRedoHandler;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
@@ -275,7 +275,7 @@ public class CustomizeStopAreaOperation extends StopAreaOperationBase {
         for (OsmPrimitive otherMember : stopArea.otherMembers) {
             newRelation.addMember(new RelationMember("", otherMember));
         }
-        Main.main.undoRedo.add(new AddCommand(MainApplication.getLayerManager().getEditDataSet(), newRelation));
+        UndoRedoHandler.getInstance().add(new AddCommand(MainApplication.getLayerManager().getEditDataSet(), newRelation));
         commands = generalTagAssign(newRelation, commands, stopArea);
         commands = assignTag(commands, newRelation, OSMTags.TYPE_TAG, OSMTags.PUBLIC_TRANSPORT_TAG);
         commands = assignTag(commands, newRelation, OSMTags.PUBLIC_TRANSPORT_TAG, OSMTags.STOP_AREA_TAG_VALUE);
@@ -464,8 +464,8 @@ public class CustomizeStopAreaOperation extends StopAreaOperationBase {
             if (centerOfPlatform != null) {
                 Node newNode = new Node();
                 newNode.setCoor(centerOfPlatform);
-                Main.main.undoRedo.add(new AddCommand(MainApplication.getLayerManager().getEditDataSet(), newNode));
-                Main.main.undoRedo.add(new ChangePropertyCommand(newNode, tag, tagValue));
+                UndoRedoHandler.getInstance().add(new AddCommand(MainApplication.getLayerManager().getEditDataSet(), newNode));
+                UndoRedoHandler.getInstance().add(new ChangePropertyCommand(newNode, tag, tagValue));
                 commands = assignTag(commands, newNode, tag, tagValue);
                 stopArea.otherMembers.add(newNode);
             }
@@ -570,7 +570,7 @@ public class CustomizeStopAreaOperation extends StopAreaOperationBase {
         List<Command> commands = customize(stopArea);
         if (commands != null && !commands.isEmpty())
             try {
-                Main.main.undoRedo.add(new SequenceCommand(tr(TAG_ASSIGN_COMMAND_NAME), commands));
+                UndoRedoHandler.getInstance().add(new SequenceCommand(tr(TAG_ASSIGN_COMMAND_NAME), commands));
                 return stopArea;
             } catch (Exception ex) {
                 Logging.error(ex);

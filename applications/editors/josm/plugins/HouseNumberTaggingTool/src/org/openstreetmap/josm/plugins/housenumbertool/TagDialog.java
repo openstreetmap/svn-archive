@@ -36,10 +36,10 @@ import javax.swing.JSlider;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.command.ChangePropertyCommand;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.SequenceCommand;
+import org.openstreetmap.josm.data.UndoRedoHandler;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.tagging.ac.AutoCompletionItem;
 import org.openstreetmap.josm.gui.ExtendedDialog;
@@ -105,7 +105,7 @@ public class TagDialog extends ExtendedDialog {
      * @param selection selected primitive
      */
     public TagDialog(File pluginDir, OsmPrimitive selection) {
-        super(Main.parent, tr("House Number Editor"), new String[] { tr("OK"), tr("Cancel") }, true);
+        super(MainApplication.getMainFrame(), tr("House Number Editor"), new String[] { tr("OK"), tr("Cancel") }, true);
         this.pluginDir = pluginDir;
         this.selection = selection;
 
@@ -520,7 +520,7 @@ public class TagDialog extends ExtendedDialog {
                      "Updating properties of up to {0} objects", commands.size(), commands.size()), commands);
 
             // executes the commands and adds them to the undo/redo chains
-            Main.main.undoRedo.add(sequenceCommand);
+            UndoRedoHandler.getInstance().add(sequenceCommand);
         }
     }
 

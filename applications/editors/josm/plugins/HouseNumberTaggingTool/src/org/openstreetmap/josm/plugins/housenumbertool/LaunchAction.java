@@ -4,15 +4,15 @@ package org.openstreetmap.josm.plugins.housenumbertool;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.io.File;
-import java.util.Collection;
+import java.util.Set;
 
 import org.openstreetmap.josm.actions.JosmAction;
-import org.openstreetmap.josm.data.SelectionChangedListener;
-import org.openstreetmap.josm.data.osm.DataSet;
+import org.openstreetmap.josm.data.osm.DataSelectionListener;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.data.osm.event.SelectionEventManager;
 import org.openstreetmap.josm.tools.Shortcut;
 
-public class LaunchAction extends JosmAction implements SelectionChangedListener {
+public class LaunchAction extends JosmAction implements DataSelectionListener {
 
     private OsmPrimitive selection = null;
 
@@ -30,7 +30,7 @@ public class LaunchAction extends JosmAction implements SelectionChangedListener
               true);
 
         this.pluginDir = pluginDir;
-        DataSet.addSelectionListener(this);
+        SelectionEventManager.getInstance().addSelectionListener(this);
         setEnabled(false);
     }
 
@@ -52,7 +52,8 @@ public class LaunchAction extends JosmAction implements SelectionChangedListener
     }
 
     @Override
-    public void selectionChanged(Collection<? extends OsmPrimitive> newSelection) {
+    public void selectionChanged(SelectionChangeEvent event) {
+        Set<OsmPrimitive> newSelection = event.getSelection();
         if (newSelection != null && newSelection.size() == 1) {
             setEnabled(true);
             selection  =  newSelection.iterator().next();

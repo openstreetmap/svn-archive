@@ -8,9 +8,11 @@ import java.util.Date;
 
 import javax.swing.JOptionPane;
 
-import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.data.Preferences;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
+import org.openstreetmap.josm.spi.preferences.Config;
 
 /**
  * Prevent JOSM from loading.
@@ -25,16 +27,16 @@ public class NoMorePlugin extends Plugin {
      */
     public NoMorePlugin(PluginInformation info) {
         super(info);
-        long startDate = Main.pref.getLong("nomoremapping.date", 0);
-        long lastHash = Math.max(Main.pref.getLong("pluginmanager.lastupdate", 0) / 1000,
-                Math.max(Main.pref.getLong("cache.motd.html", 0),
-                Main.pref.getLong("cache.bing.attribution.xml", 0))) + Main.pref.get("osm-download.bounds", "").hashCode();
-        boolean sameHash = Main.pref.getLong("nomoremapping.hash", 0) == lastHash;
+        long startDate = Config.getPref().getLong("nomoremapping.date", 0);
+        long lastHash = Math.max(Config.getPref().getLong("pluginmanager.lastupdate", 0) / 1000,
+                Math.max(Config.getPref().getLong("cache.motd.html", 0),
+                Config.getPref().getLong("cache.bing.attribution.xml", 0))) + Config.getPref().get("osm-download.bounds", "").hashCode();
+        boolean sameHash = Config.getPref().getLong("nomoremapping.hash", 0) == lastHash;
         long today = new Date().getTime() / 1000;
         if (startDate == 0 || !sameHash) {
             startDate = today;
-            Main.pref.putLong("nomoremapping.date", startDate);
-            Main.pref.putLong("nomoremapping.hash", lastHash);
+            Config.getPref().putLong("nomoremapping.date", startDate);
+            Config.getPref().putLong("nomoremapping.hash", lastHash);
         }
         long days = Math.max(today - startDate, 0) / (60*60*24);
         String message;
@@ -49,12 +51,13 @@ public class NoMorePlugin extends Plugin {
         String intro = tr("Days without mapping: {0}.", days);
         String prefs;
         try {
-             prefs = Main.pref.getPreferenceFile().getCanonicalPath();
+             prefs = Preferences.main().getPreferenceFile().getCanonicalPath();
         } catch (IOException e) {
-            prefs = Main.pref.getPreferenceFile().getAbsolutePath();
+            prefs = Preferences.main().getPreferenceFile().getAbsolutePath();
         }
         String howto = days > 0 ? "" : "\n\n" + tr("(To miserably continue mapping, edit out no_more_mapping\nfrom {0})", prefs);
-        JOptionPane.showMessageDialog(Main.parent, intro + " " + message + howto, "No More Mapping", JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(MainApplication.getMainFrame(), intro + " " + message + howto, 
+                "No More Mapping", JOptionPane.INFORMATION_MESSAGE);
         System.exit(0);
     }
 }

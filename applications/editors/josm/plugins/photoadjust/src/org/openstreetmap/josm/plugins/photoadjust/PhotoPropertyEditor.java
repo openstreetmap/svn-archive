@@ -20,7 +20,6 @@ import javax.swing.UIManager;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.coor.conversion.CoordinateFormatManager;
@@ -101,7 +100,7 @@ public class PhotoPropertyEditor {
                 }
                 updateLayer(layer, photo);
             } catch (AssertionError err) {
-                JOptionPane.showMessageDialog(Main.parent,
+                JOptionPane.showMessageDialog(MainApplication.getMainFrame(),
                                               tr("Please select an image first."),
                                               tr("No image selected"),
                                               JOptionPane.INFORMATION_MESSAGE);
@@ -148,7 +147,7 @@ public class PhotoPropertyEditor {
 
         public PropertyEditorDialog(String title, final ImageEntry image,
                                     final GeoImageLayer layer) {
-            super(Main.parent, title, tr("Ok"), tr("Cancel"));
+            super(MainApplication.getMainFrame(), title, tr("Ok"), tr("Cancel"));
             this.image = image;
             this.layer = layer;
             imgOrig = image.clone();
@@ -185,7 +184,7 @@ public class PhotoPropertyEditor {
             Action editCoordAction = new AbstractAction(tr("Edit")) {
                 @Override public void actionPerformed(ActionEvent evt) {
                     final LatLonDialog llDialog
-                        = new LatLonDialog(Main.parent,
+                        = new LatLonDialog(MainApplication.getMainFrame(),
                                            tr("Edit Image Coordinates"), null);
                     llDialog.setCoordinates(getLatLon());
                     llDialog.showDialog();

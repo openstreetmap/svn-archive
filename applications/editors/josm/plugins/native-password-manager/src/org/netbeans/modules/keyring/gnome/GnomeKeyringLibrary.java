@@ -67,7 +67,7 @@ public interface GnomeKeyringLibrary extends Library {
         private static final String GENERIC = "gnome-keyring";
         // http://packages.ubuntu.com/search?suite=precise&arch=any&mode=exactfilename&searchon=contents&keywords=libgnome-keyring.so.0
         private static final String EXPLICIT_ONEIRIC = "/usr/lib/libgnome-keyring.so.0";
-        private static Object load(Map<?,?> options) {
+        private static Object load(Map<String,?> options) {
             try {
                 return Native.loadLibrary(GENERIC, GnomeKeyringLibrary.class, options);
             } catch (UnsatisfiedLinkError x) {

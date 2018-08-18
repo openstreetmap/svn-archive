@@ -40,8 +40,7 @@ import javax.swing.tree.TreePath;
 
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.data.Bounds;
-import org.openstreetmap.josm.data.SelectionChangedListener;
-import org.openstreetmap.josm.data.osm.DataSet;
+import org.openstreetmap.josm.data.osm.DataSelectionListener;
 import org.openstreetmap.josm.data.osm.DefaultNameFormatter;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
@@ -49,6 +48,7 @@ import org.openstreetmap.josm.data.osm.OsmPrimitiveType;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.data.osm.WaySegment;
+import org.openstreetmap.josm.data.osm.event.SelectionEventManager;
 import org.openstreetmap.josm.data.osm.visitor.paint.PaintColors;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MapView;
@@ -64,7 +64,7 @@ import org.openstreetmap.josm.plugins.trustosm.util.TrustAnalyzer;
 import org.openstreetmap.josm.tools.ImageProvider;
 import org.openstreetmap.josm.tools.Shortcut;
 
-public class TrustDialog extends ToggleDialog implements SelectionChangedListener, MapViewPaintable {
+public class TrustDialog extends ToggleDialog implements DataSelectionListener, MapViewPaintable {
 
     public static final Color BGCOLOR_NO_SIG = new Color(234, 234, 234);
     //    public static final Color BGCOLOR_VALID_SIG = new Color(235, 255,177);
@@ -312,7 +312,7 @@ public class TrustDialog extends ToggleDialog implements SelectionChangedListene
         createLayout(dataPanel, true, Arrays.asList(new SideButton[] {
                 checkButton, signButton, showButton
         }));
-        DataSet.addSelectionListener(this);
+        SelectionEventManager.getInstance().addSelectionListener(this);
     }
 
     private class CheckAction extends JosmAction {
@@ -631,8 +631,8 @@ public class TrustDialog extends ToggleDialog implements SelectionChangedListene
     }
 
     @Override
-    public void selectionChanged(Collection<? extends OsmPrimitive> newSelection) {
-        this.osmData = newSelection;
+    public void selectionChanged(SelectionChangeEvent event) {
+        this.osmData = event.getSelection();
 
         if (!isVisible())
             return;

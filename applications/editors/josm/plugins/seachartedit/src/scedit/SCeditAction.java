@@ -14,8 +14,8 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
-import java.util.Collection;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
@@ -23,8 +23,8 @@ import javax.swing.WindowConstants;
 
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.data.Bounds;
-import org.openstreetmap.josm.data.SelectionChangedListener;
 import org.openstreetmap.josm.data.coor.LatLon;
+import org.openstreetmap.josm.data.osm.DataSelectionListener;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
@@ -39,6 +39,7 @@ import org.openstreetmap.josm.data.osm.event.NodeMovedEvent;
 import org.openstreetmap.josm.data.osm.event.PrimitivesAddedEvent;
 import org.openstreetmap.josm.data.osm.event.PrimitivesRemovedEvent;
 import org.openstreetmap.josm.data.osm.event.RelationMembersChangedEvent;
+import org.openstreetmap.josm.data.osm.event.SelectionEventManager;
 import org.openstreetmap.josm.data.osm.event.TagsChangedEvent;
 import org.openstreetmap.josm.data.osm.event.WayNodesChangedEvent;
 import org.openstreetmap.josm.gui.layer.MainLayerManager.ActiveLayerChangeEvent;
@@ -51,7 +52,7 @@ import panels.ShowFrame;
 import s57.S57map;
 import s57.S57map.Feature;
 
-public class SCeditAction extends JosmAction implements ActiveLayerChangeListener, SelectionChangedListener {
+public class SCeditAction extends JosmAction implements ActiveLayerChangeListener, DataSelectionListener {
     private static String title = tr("SeaChart Editor");
     public static JFrame editFrame = null;
     public static ShowFrame showFrame = null;
@@ -151,7 +152,7 @@ public class SCeditAction extends JosmAction implements ActiveLayerChangeListene
         showFrame.setVisible(false);
 
         getLayerManager().addAndFireActiveLayerChangeListener(this);
-        DataSet.addSelectionListener(this);
+        SelectionEventManager.getInstance().addSelectionListener(this);
     }
 
     public void closeDialog() {
@@ -182,13 +183,14 @@ public class SCeditAction extends JosmAction implements ActiveLayerChangeListene
     }
 
     @Override
-    public void selectionChanged(Collection<? extends OsmPrimitive> selection) {
+    public void selectionChanged(SelectionChangeEvent event) {
         OsmPrimitive nextFeature = null;
         OsmPrimitive feature = null;
 
         showFrame.setVisible(false);
         panelMain.clearMark();
         if (map != null) {
+            Set<OsmPrimitive> selection = event.getSelection();
             for (OsmPrimitive osm : selection) {
                 nextFeature = osm;
                 if (selection.size() == 1) {

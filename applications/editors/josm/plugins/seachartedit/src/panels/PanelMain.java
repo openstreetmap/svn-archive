@@ -27,7 +27,8 @@ import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
-import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.gui.MainApplication;
+import org.openstreetmap.josm.spi.preferences.Config;
 
 import messages.Messages;
 import s57.S57att.Att;
@@ -51,17 +52,17 @@ public class PanelMain extends JPanel {
         }
     };
     private JButton importButton = null;
-    JFileChooser ifc = new JFileChooser(Main.pref.get("nceditplugin.encinpfile"));
+    JFileChooser ifc = new JFileChooser(Config.getPref().get("nceditplugin.encinpfile"));
     private ActionListener alImport = new ActionListener() {
         @Override
         public void actionPerformed(java.awt.event.ActionEvent e) {
             if (e.getSource() == importButton) {
                 SCeditAction.panelS57.setVisible(true);
         setStatus("Select S-57 ENC file for import", Color.yellow);
-                int returnVal = ifc.showOpenDialog(Main.parent);
+                int returnVal = ifc.showOpenDialog(MainApplication.getMainFrame());
                 if (returnVal == JFileChooser.APPROVE_OPTION) {
                     try {
-                        Main.pref.put("smed2plugin.encinpfile", ifc.getSelectedFile().getPath());
+                        Config.getPref().put("smed2plugin.encinpfile", ifc.getSelectedFile().getPath());
                         SCeditAction.panelS57.startImport(ifc.getSelectedFile());
                     } catch (IOException e1) {
                         SCeditAction.panelS57.setVisible(false);
@@ -83,7 +84,7 @@ public class PanelMain extends JPanel {
             if (e.getSource() == exportButton) {
                 SCeditAction.panelS57.setVisible(true);
         setStatus("Select S-57 ENC file for export", Color.yellow);
-        int returnVal = efc.showOpenDialog(Main.parent);
+        int returnVal = efc.showOpenDialog(MainApplication.getMainFrame());
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             try {
                         SCeditAction.panelS57.startExport(efc.getSelectedFile());

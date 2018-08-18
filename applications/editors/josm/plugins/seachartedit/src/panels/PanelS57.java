@@ -22,19 +22,19 @@ import java.util.Scanner;
 import javax.swing.JFileChooser;
 import javax.swing.JPanel;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.DataSet;
-import org.openstreetmap.josm.data.osm.UploadPolicy;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.OsmPrimitiveType;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.RelationMember;
+import org.openstreetmap.josm.data.osm.UploadPolicy;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
+import org.openstreetmap.josm.spi.preferences.Config;
 
 import s57.S57att;
 import s57.S57att.Att;
@@ -68,11 +68,11 @@ public class PanelS57 extends JPanel {
     public void startImport(File inf) throws IOException {
         FileInputStream in = new FileInputStream(inf);
         PanelMain.setStatus("Select OSM types file", Color.yellow);
-        JFileChooser ifc = new JFileChooser(Main.pref.get("smed2plugin.typesfile"));
-        ifc.setSelectedFile(new File(Main.pref.get("smed2plugin.typesfile")));
-        int returnVal = ifc.showOpenDialog(Main.parent);
+        JFileChooser ifc = new JFileChooser(Config.getPref().get("smed2plugin.typesfile"));
+        ifc.setSelectedFile(new File(Config.getPref().get("smed2plugin.typesfile")));
+        int returnVal = ifc.showOpenDialog(MainApplication.getMainFrame());
         if (returnVal == JFileChooser.APPROVE_OPTION) {
-            Main.pref.put("smed2plugin.typesfile", ifc.getSelectedFile().getPath());
+            Config.getPref().put("smed2plugin.typesfile", ifc.getSelectedFile().getPath());
             Scanner tin = new Scanner(new FileInputStream(ifc.getSelectedFile()), "UTF-8");
             while (tin.hasNext()) {
                 Obj type = S57obj.enumType(tin.next());

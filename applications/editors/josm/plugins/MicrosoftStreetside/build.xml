@@ -11,10 +11,9 @@
 	<!-- enter the SVN commit message -->
 	<property name="commit.message" value="Commit message" />
 	<!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
-	<property name="plugin.main.version" value="13860" />
-	<property name="plugin.version" value="13860" />
-	
-  <property name="plugin.author" value="renerr18" />
+	<property name="plugin.main.version" value="14153" />
+
+	<property name="plugin.author" value="renerr18" />
 	<property name="plugin.class" value="org.openstreetmap.josm.plugins.streetside.StreetsidePlugin" />
 	<property name="plugin.description" value="View high resolution Microsoft Streetside 360 degree imagery in JOSM." />
 	<property name="plugin.icon" value="images/streetside-logo-white.png" />
@@ -32,7 +31,7 @@
 	<!--** include targets that all plugins have in common **-->
 	<import file="../build-common.xml"/>
 
-	<path id="ivy.lib.path" path="ant/ivy-2.4.0.jar" />
+	<path id="ivy.lib.path" path="ant/ivy-2.5.0-rc1.jar" />
 	<taskdef resource="org/apache/ivy/ant/antlib.xml" uri="antlib:org.apache.ivy.ant" classpathref="ivy.lib.path" />
 
 	<fileset id="plugin.requires.jars" dir="${plugin.dist.dir}">
@@ -56,7 +55,8 @@
 
 	<target name="fetch_dependencies" depends="clean_ivy">
 		<echo>fetching dependencies with ivy</echo>
-		<ivy:retrieve pattern="${plugin.lib.dir}/[artifact]-[type].[ext]" conf="default" />
+		<ivy:settings file="ivy_settings.xml" />
+		<ivy:retrieve pattern="${plugin.lib.dir}/[artifact]-[revision](-[classifier]).[ext]" conf="default" />
 	</target>
 
 	<target name="install-plugin" depends="clean, dist, install">

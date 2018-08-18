@@ -21,7 +21,6 @@ import javax.swing.Action;
 import javax.swing.Icon;
 
 import org.apache.log4j.Logger;
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.event.DataChangedEvent;
@@ -114,7 +113,7 @@ ActiveLayerChangeListener, StreetsideDataListener {
       }
     }
     // Does not execute when in headless mode
-    if (Main.main != null && !StreetsideMainDialog.getInstance().isShowing()) {
+    if (!StreetsideMainDialog.getInstance().isShowing()) {
       StreetsideMainDialog.getInstance().showDialog();
     }
     if (StreetsidePlugin.getMapView() != null) {

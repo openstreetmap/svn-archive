@@ -4,8 +4,8 @@ package org.openstreetmap.josm.plugins.streetside;
 import org.openstreetmap.josm.data.coor.LatLon;
 
 /**
- * Abstract superclass for all image objects. At the moment there are 3,
- * {@link StreetsideImportedImage}, {@link StreetsideImage}, {@link StreetsideCubemap}.
+ * Abstract superclass for all image objects. At the moment there are 2,
+ * {@link StreetsideImage}, {@link StreetsideCubemap}.
  *
  * @author nokutu
  * @author renerr18
@@ -275,7 +275,7 @@ public abstract class StreetsideAbstractImage implements Comparable<StreetsideAb
 	/**
 	 * Turns the image direction.
 	 *
-	 * @param ca
+	 * @param he
 	 *            The angle the image is moving.
 	 */
 	public void turn(final double he) {

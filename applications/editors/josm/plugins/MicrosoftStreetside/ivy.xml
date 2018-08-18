@@ -1,4 +1,4 @@
-<ivy-module version="2.0">
+<ivy-module version="2.0" xmlns:m="http://ant.apache.org/ivy/maven">
 	<info organisation="org.openstreetmap.josm.plugins" module="MicrosoftStreetside" revision="0.0.1" />
 	<configurations defaultconf="default" defaultconfmapping="default->default">
 			<conf name="default" />

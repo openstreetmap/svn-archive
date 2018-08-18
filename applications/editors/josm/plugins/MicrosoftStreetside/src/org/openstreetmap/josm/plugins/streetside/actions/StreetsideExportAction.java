@@ -14,7 +14,6 @@ import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 
 import org.apache.log4j.Logger;
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.plugins.streetside.StreetsideAbstractImage;
@@ -65,7 +64,7 @@ public class StreetsideExportAction extends JosmAction {
     pane.setMessage(dialog);
     pane.setOptions(new JButton[] {ok, cancel});
 
-    JDialog dlg = pane.createDialog(Main.parent, tr("Export Streetside images"));
+    JDialog dlg = pane.createDialog(MainApplication.getMainFrame(), tr("Export Streetside images"));
     dlg.setMinimumSize(new Dimension(400, 150));
     dlg.setVisible(true);
 

@@ -6,7 +6,7 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 import javax.swing.JOptionPane;
 
 import org.apache.log4j.Logger;
-import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.tools.I18n;
 
 /**
@@ -100,14 +100,14 @@ public final class PluginState {
    */
   public static void imageUploaded() {
     imagesUploaded++;
-    if (imagesToUpload == imagesUploaded && Main.main != null) {
+    if (imagesToUpload == imagesUploaded) {
         finishedUploadDialog(imagesUploaded);
     }
   }
 
   private static void finishedUploadDialog(int numImages) {
     JOptionPane.showMessageDialog(
-      Main.parent,
+      MainApplication.getMainFrame(),
       tr("You have successfully uploaded {0} images to Bing.com", numImages),
       tr("Finished upload"),
       JOptionPane.INFORMATION_MESSAGE
@@ -115,18 +115,13 @@ public final class PluginState {
   }
 
   public static void notLoggedInToMapillaryDialog() {
-    if (Main.main == null) {
-      return;
-    }
     JOptionPane.showMessageDialog(
-        Main.parent,
+        MainApplication.getMainFrame(),
         tr("You are not logged in, please log in to Streetside in the preferences"),
         tr("Not Logged in to Streetside"),
         JOptionPane.WARNING_MESSAGE
     );
   }
-
-
 
   /**
    * Returns the text to be written in the status bar.

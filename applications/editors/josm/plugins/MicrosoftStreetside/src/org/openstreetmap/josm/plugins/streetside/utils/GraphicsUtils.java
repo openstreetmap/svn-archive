@@ -24,8 +24,6 @@ public class GraphicsUtils {
   }
 
 	public static javafx.scene.image.Image convertBufferedImage2JavaFXImage(BufferedImage bf) {
-	  //Image res = SwingFXUtils.toFXImage(bf, null);
-	  long startTime = System.currentTimeMillis();
 		WritableImage res = null;
 		if (bf != null) {
 			res = new WritableImage(bf.getWidth(), bf.getHeight());

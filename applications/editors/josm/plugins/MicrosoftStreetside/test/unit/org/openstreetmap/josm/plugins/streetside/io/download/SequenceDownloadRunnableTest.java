@@ -22,7 +22,7 @@ import org.openstreetmap.josm.testutils.JOSMTestRules;
 public class SequenceDownloadRunnableTest {
 
   @Rule
-  public JOSMTestRules rules = new StreetsideTestRules().platform();
+  public JOSMTestRules rules = new StreetsideTestRules();
 
   private static final Function<Bounds, URL> SEARCH_SEQUENCES_URL_GEN = b -> {
     return SequenceDownloadRunnableTest.class.getResource("/api/v3/responses/searchSequences.json");

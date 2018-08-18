@@ -10,7 +10,7 @@ import javax.swing.ImageIcon;
 import org.apache.commons.jcs.access.CacheAccess;
 import org.apache.commons.jcs.engine.behavior.IElementAttributes;
 import org.apache.log4j.Logger;
-import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.data.Preferences;
 import org.openstreetmap.josm.data.cache.BufferedImageCacheEntry;
 import org.openstreetmap.josm.data.cache.JCSCacheManager;
 import org.openstreetmap.josm.plugins.streetside.model.UserProfile;
@@ -25,7 +25,7 @@ public final class Caches {
 	}
 
 	public static File getCacheDirectory() {
-		final File f = new File(Main.pref.getPluginsDirectory().getPath() + "/MicrosoftStreetside/cache");
+		final File f = new File(Preferences.main().getPluginsDirectory().getPath() + "/MicrosoftStreetside/cache");
 		if (!f.exists()) {
 			f.mkdirs();
 		}

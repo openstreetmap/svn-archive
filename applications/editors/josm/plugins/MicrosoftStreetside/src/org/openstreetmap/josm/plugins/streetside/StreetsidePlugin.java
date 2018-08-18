@@ -1,7 +1,6 @@
 // License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.streetside;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MainMenu;
 import org.openstreetmap.josm.gui.MapFrame;
@@ -37,13 +36,11 @@ public class StreetsidePlugin extends Plugin {
   private static final StreetsideWalkAction WALK_ACTION = new StreetsideWalkAction();
 
   static {
-    if (Main.main != null) {
       MainMenu.add(MainApplication.getMenu().fileMenu, new StreetsideExportAction(), false, 14);
       MainMenu.add(MainApplication.getMenu().imagerySubMenu, new StreetsideDownloadAction(), false);
       MainMenu.add(MainApplication.getMenu().viewMenu, ZOOM_ACTION, false, 15);
       MainMenu.add(MainApplication.getMenu().fileMenu, new StreetsideDownloadViewAction(), false, 14);
       MainMenu.add(MainApplication.getMenu().moreToolsMenu, WALK_ACTION, false);
-    }
   }
 
   /**

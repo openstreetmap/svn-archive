@@ -8,18 +8,16 @@ import java.util.UUID;
  * Due to the functionality inherited from Mapillary the plugin is structured to
  * handle sequences of contiguous imagery, but Streetside only has implicit
  * sequences defined by the "pre" and "ne" attributes.
- * <p/>
- * @See StreetsideSequence
+ * 
+ * See {@link org.openstreetmap.josm.plugins.streetside.StreetsideSequence}
  */
 public class StreetsideSequenceIdGenerator {
 
   private StreetsideSequenceIdGenerator() {
     // private constructor to avoid instantiation
   }
+
   public static String generateId() {
-
     return UUID.randomUUID().toString();
-
   }
-
 }

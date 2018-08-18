@@ -14,7 +14,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.plugins.streetside.utils.StreetsideProperties;
 import org.openstreetmap.josm.tools.I18n;
 
@@ -70,14 +69,12 @@ public void run() {
    logger.info(I18n.tr("Successful login with Streetside, the access token is: {0}", accessToken));
    // Saves the access token in preferences.
    StreetsideUser.setTokenValid(true);
-   if (Main.main != null) {
      StreetsideProperties.ACCESS_TOKEN.put(accessToken);
      String username = StreetsideUser.getUsername();
      logger.info(I18n.tr("The username is: {0}", username));
      if (callback != null) {
        callback.onLogin(username);
      }
-   }
  } catch (BindException e) {
    logger.warn(e);
  } catch (IOException e) {

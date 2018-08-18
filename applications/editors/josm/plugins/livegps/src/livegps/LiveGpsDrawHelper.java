@@ -5,13 +5,13 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.gpx.WayPoint;
 import org.openstreetmap.josm.data.preferences.CachingProperty;
 import org.openstreetmap.josm.data.preferences.NamedColorProperty;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.layer.MapViewGraphics;
 import org.openstreetmap.josm.gui.layer.gpx.GpxDrawHelper;
+import org.openstreetmap.josm.spi.preferences.Config;
 
 public class LiveGpsDrawHelper extends GpxDrawHelper {
     private final LiveGpsLayer layer;
@@ -47,9 +47,9 @@ public class LiveGpsDrawHelper extends GpxDrawHelper {
 
         Point screen = mv.getPoint(lastPoint.getCoor());
 
-        int TriaHeight = Main.pref.getInt(C_CURSOR_H, 20);
-        int TriaWidth = Main.pref.getInt(C_CURSOR_W, 10);
-        int TriaThick = Main.pref.getInt(C_CURSOR_T, 4);
+        int TriaHeight = Config.getPref().getInt(C_CURSOR_H, 20);
+        int TriaWidth = Config.getPref().getInt(C_CURSOR_W, 10);
+        int TriaThick = Config.getPref().getInt(C_CURSOR_T, 4);
 
         /*
          * Draw a bold triangle.

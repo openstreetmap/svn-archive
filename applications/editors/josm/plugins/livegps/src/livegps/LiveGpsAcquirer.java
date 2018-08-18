@@ -20,7 +20,7 @@ import javax.json.JsonException;
 import javax.json.JsonNumber;
 import javax.json.JsonObject;
 
-import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.spi.preferences.Config;
 import org.openstreetmap.josm.tools.Logging;
 
 public class LiveGpsAcquirer implements Runnable {
@@ -46,11 +46,11 @@ public class LiveGpsAcquirer implements Runnable {
      */
     public LiveGpsAcquirer() {
 
-        gpsdHost = Main.pref.get(C_HOST, DEFAULT_HOST);
-        gpsdPort = Main.pref.getInt(C_PORT, DEFAULT_PORT);
+        gpsdHost = Config.getPref().get(C_HOST, DEFAULT_HOST);
+        gpsdPort = Config.getPref().getInt(C_PORT, DEFAULT_PORT);
         // put the settings back in to the preferences, makes keys appear.
-        Main.pref.put(C_HOST, gpsdHost);
-        Main.pref.putInt(C_PORT, gpsdPort);
+        Config.getPref().put(C_HOST, gpsdHost);
+        Config.getPref().putInt(C_PORT, gpsdPort);
     }
 
     /**

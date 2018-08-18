@@ -12,13 +12,13 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.gpx.GpxData;
 import org.openstreetmap.josm.data.gpx.GpxTrack;
 import org.openstreetmap.josm.data.gpx.WayPoint;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.layer.GpxLayer;
+import org.openstreetmap.josm.spi.preferences.Config;
 
 public class LiveGpsLayer extends GpxLayer implements PropertyChangeListener {
     public static final String LAYER_NAME = tr("LiveGPS layer");
@@ -138,20 +138,20 @@ public class LiveGpsLayer extends GpxLayer implements PropertyChangeListener {
      * exists, it will be initialized here.
      */
     private void initIntervals() {
-        if ((refreshInterval = Main.pref.getInt(oldC_REFRESH_INTERVAL, 0)) != 0) {
+        if ((refreshInterval = Config.getPref().getInt(oldC_REFRESH_INTERVAL, 0)) != 0) {
             refreshInterval *= 1000;
-            Main.pref.put(oldC_REFRESH_INTERVAL, null);
+            Config.getPref().put(oldC_REFRESH_INTERVAL, null);
         } else
-            refreshInterval = Main.pref.getInt(C_REFRESH_INTERVAL, DEFAULT_REFRESH_INTERVAL);
+            refreshInterval = Config.getPref().getInt(C_REFRESH_INTERVAL, DEFAULT_REFRESH_INTERVAL);
 
-        centerInterval = Main.pref.getInt(C_CENTER_INTERVAL, DEFAULT_CENTER_INTERVAL);
-        centerFactor = Main.pref.getInt(C_CENTER_FACTOR, DEFAULT_CENTER_FACTOR);
+        centerInterval = Config.getPref().getInt(C_CENTER_INTERVAL, DEFAULT_CENTER_INTERVAL);
+        centerFactor = Config.getPref().getInt(C_CENTER_FACTOR, DEFAULT_CENTER_FACTOR);
         if (centerFactor <= 1 || centerFactor >= 99)
             centerFactor = DEFAULT_CENTER_FACTOR;
 
-            Main.pref.putInt(C_REFRESH_INTERVAL, refreshInterval);
-            Main.pref.putInt(C_CENTER_INTERVAL, centerInterval);
-        Main.pref.putInt(C_CENTER_FACTOR, (int) centerFactor);
+            Config.getPref().putInt(C_REFRESH_INTERVAL, refreshInterval);
+            Config.getPref().putInt(C_CENTER_INTERVAL, centerInterval);
+        Config.getPref().putInt(C_CENTER_FACTOR, (int) centerFactor);
 
         /*
          * Do one time conversion of factor: user value means "how big is inner rectangle

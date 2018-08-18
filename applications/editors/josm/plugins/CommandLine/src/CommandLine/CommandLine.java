@@ -32,9 +32,10 @@ import javax.swing.JTextField;
 import javax.swing.JToolBar;
 import javax.swing.SwingUtilities;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.mapmode.MapMode;
 import org.openstreetmap.josm.command.SequenceCommand;
+import org.openstreetmap.josm.data.Preferences;
+import org.openstreetmap.josm.data.UndoRedoHandler;
 import org.openstreetmap.josm.data.imagery.ImageryInfo;
 import org.openstreetmap.josm.data.osm.BBox;
 import org.openstreetmap.josm.data.osm.DataSet;
@@ -56,6 +57,7 @@ import org.openstreetmap.josm.io.OsmWriter;
 import org.openstreetmap.josm.io.OsmWriterFactory;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
+import org.openstreetmap.josm.spi.preferences.Config;
 import org.openstreetmap.josm.tools.HttpClient;
 import org.openstreetmap.josm.tools.Logging;
 import org.openstreetmap.josm.tools.SubclassFilteredCollection;
@@ -74,7 +76,7 @@ public class CommandLine extends Plugin {
     protected MapFrame currentMapFrame;
     protected MapMode previousMode;
 
-    static final String pluginDir = Main.pref.getPluginsDirectory().getAbsolutePath() + "/CommandLine/";
+    static final String pluginDir = Preferences.main().getPluginsDirectory().getAbsolutePath() + "/CommandLine/";
 
     public CommandLine(PluginInformation info) {
         super(info);
@@ -147,17 +149,17 @@ public class CommandLine extends Plugin {
     private void loadCommands() {
         commands = (new Loader(getPluginDirs().getUserDataDirectory(false))).load();
         if (commands.isEmpty()) {
-            if (!GraphicsEnvironment.isHeadless() && JOptionPane.YES_OPTION == JOptionPane.showConfirmDialog(Main.parent,
+            if (!GraphicsEnvironment.isHeadless() && JOptionPane.YES_OPTION == JOptionPane.showConfirmDialog(MainApplication.getMainFrame(),
                     tr("No command has been found. Would you like to download and install default commands now?"),
                     tr("No command found"), JOptionPane.YES_NO_CANCEL_OPTION)) {
                 try {
                     downloadAndInstallDefaultCommands();
                     commands = (new Loader(getPluginDirs().getUserDataDirectory(false))).load();
-                    JOptionPane.showMessageDialog(Main.parent, tr("Default commands have been successfully installed"),
+                    JOptionPane.showMessageDialog(MainApplication.getMainFrame(), tr("Default commands have been successfully installed"),
                             tr("Success"), JOptionPane.INFORMATION_MESSAGE);
                 } catch (IOException e) {
                     Logging.warn(e);
-                    JOptionPane.showMessageDialog(Main.parent,
+                    JOptionPane.showMessageDialog(MainApplication.getMainFrame(),
                             tr("Failed to download and install default commands.\n\nError: {0}", e.getMessage()),
                             tr("Warning"), JOptionPane.WARNING_MESSAGE);
                 }
@@ -169,7 +171,7 @@ public class CommandLine extends Plugin {
     }
 
     private void downloadAndInstallDefaultCommands() throws IOException {
-        String url = Main.pref.get("commandline.default.commands.url",
+        String url = Config.getPref().get("commandline.default.commands.url",
                 "https://github.com/Foxhind/JOSM-CommandLine-commands/archive/master.zip");
         try (ZipInputStream zis = new ZipInputStream(HttpClient.create(new URL(url)).connect().getContent(), StandardCharsets.UTF_8)) {
             File dir = getPluginDirs().getUserDataDirectory(false);
@@ -255,7 +257,7 @@ public class CommandLine extends Plugin {
                 action = new LengthAction(this);
                 break;
             case USERNAME:
-                loadParameter(Main.pref.get("osm-server.username", null), true);
+                loadParameter(Config.getPref().get("osm-server.username", null), true);
                 action = new DummyAction(this);
                 break;
             case IMAGERYURL:
@@ -612,7 +614,7 @@ public class CommandLine extends Plugin {
                 final List<org.openstreetmap.josm.command.Command> cmdlist = osmToCmd.getCommandList();
                 if (!cmdlist.isEmpty()) {
                     final SequenceCommand cmd = new SequenceCommand(commandName, cmdlist);
-                    SwingUtilities.invokeLater(() -> Main.main.undoRedo.add(cmd));
+                    SwingUtilities.invokeLater(() -> UndoRedoHandler.getInstance().add(cmd));
                 }
             } catch (Exception e) {
                 Logging.warn(e);
@@ -629,7 +631,7 @@ public class CommandLine extends Plugin {
 
         synchronized (syncObj) {
             try {
-                syncObj.wait(Main.pref.getInt("commandline.timeout", 20000));
+                syncObj.wait(Config.getPref().getInt("commandline.timeout", 20000));
             } catch (InterruptedException e) {
                 Logging.warn(e);
             }

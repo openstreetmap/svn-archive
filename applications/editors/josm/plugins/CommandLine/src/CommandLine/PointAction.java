@@ -15,7 +15,6 @@ import java.util.ArrayList;
 
 import javax.swing.JOptionPane;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.mapmode.MapMode;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.Node;
@@ -86,7 +85,7 @@ public class PointAction extends MapMode implements AWTEventListener {
                 else
                     coor = nearestNode.getCoor();
                 if (coor.isOutSideWorld()) {
-                    JOptionPane.showMessageDialog(Main.parent, tr("Can not draw outside of the world."));
+                    JOptionPane.showMessageDialog(MainApplication.getMainFrame(), tr("Can not draw outside of the world."));
                     return;
                 }
                 String point = String.valueOf(coor.getX()) + "," + String.valueOf(coor.getY());

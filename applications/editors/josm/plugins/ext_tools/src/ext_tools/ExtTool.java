@@ -20,7 +20,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.SequenceCommand;
 import org.openstreetmap.josm.data.ProjectionBounds;
@@ -36,6 +35,8 @@ import org.openstreetmap.josm.io.IllegalDataException;
 import org.openstreetmap.josm.io.OsmReader;
 import org.openstreetmap.josm.tools.GBC;
 import org.openstreetmap.josm.tools.Logging;
+
+import org.openstreetmap.josm.data.UndoRedoHandler;
 
 public class ExtTool {
 
@@ -155,7 +156,7 @@ public class ExtTool {
                 info.setEditable(false);
                 p.add(new JScrollPane(info), GBC.eop());
             }
-            JOptionPane.showMessageDialog(Main.parent, p, tr("External tool error"), JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(MainApplication.getMainFrame(), p, tr("External tool error"), JOptionPane.ERROR_MESSAGE);
         });
     }
 
@@ -235,7 +236,7 @@ public class ExtTool {
                         NullProgressMonitor.INSTANCE);
                 final List<Command> cmdlist = new DataSetToCmd(ds).getCommandList();
                 if (!cmdlist.isEmpty()) {
-                    Main.main.undoRedo.add(new SequenceCommand(getName(), cmdlist));
+                    UndoRedoHandler.getInstance().add(new SequenceCommand(getName(), cmdlist));
                 }
             } catch (IllegalDataException e) {
                 Logging.error(e);

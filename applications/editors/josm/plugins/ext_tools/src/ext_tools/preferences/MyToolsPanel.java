@@ -14,10 +14,9 @@ import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-import org.openstreetmap.josm.Main;
-
 import ext_tools.ExtTool;
 import ext_tools.ToolsInformation;
+import org.openstreetmap.josm.gui.MainApplication;
 
 public class MyToolsPanel extends JPanel {
     ToolsInformation tools;
@@ -65,7 +64,7 @@ public class MyToolsPanel extends JPanel {
             bDel.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent arg0) {
-                    if (JOptionPane.showConfirmDialog(Main.parent,
+                    if (JOptionPane.showConfirmDialog(MainApplication.getMainFrame(),
                             tr("Delete tool \"{0}\"?", tool.name),
                             tr("Are you sure?"),
                             JOptionPane.YES_NO_OPTION,

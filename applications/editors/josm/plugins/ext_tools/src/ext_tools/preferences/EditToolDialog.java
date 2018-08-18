@@ -12,11 +12,11 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.ExtendedDialog;
 import org.openstreetmap.josm.tools.GBC;
 
 import ext_tools.ExtTool;
+import org.openstreetmap.josm.gui.MainApplication;
 
 public class EditToolDialog extends ExtendedDialog {
     private ExtTool tool;
@@ -43,7 +43,7 @@ public class EditToolDialog extends ExtendedDialog {
     }
 
     public EditToolDialog(ExtTool tool) {
-        super(Main.parent, tr("Edit tool"),
+        super(MainApplication.getMainFrame(), tr("Edit tool"),
                 new String[] { tr("OK"), tr("Cancel") },
                 true);
         contentInsets = new Insets(15, 15, 5, 15);

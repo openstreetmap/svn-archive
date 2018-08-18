@@ -23,12 +23,12 @@ import java.util.Map.Entry;
 
 import org.openstreetmap.josm.actions.mapmode.MapMode;
 import org.openstreetmap.josm.data.Bounds;
-import org.openstreetmap.josm.data.SelectionChangedListener;
 import org.openstreetmap.josm.data.coor.EastNorth;
-import org.openstreetmap.josm.data.osm.DataSet;
+import org.openstreetmap.josm.data.osm.DataSelectionListener;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.data.osm.event.SelectionEventManager;
 import org.openstreetmap.josm.data.preferences.NamedColorProperty;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MapFrame;
@@ -42,8 +42,7 @@ import org.openstreetmap.josm.tools.ImageProvider;
 import org.openstreetmap.josm.tools.Logging;
 import org.openstreetmap.josm.tools.Shortcut;
 
-@SuppressWarnings("serial")
-public class DrawBuildingAction extends MapMode implements MapViewPaintable, SelectionChangedListener,
+public class DrawBuildingAction extends MapMode implements MapViewPaintable, DataSelectionListener,
         KeyPressReleaseListener, ModifierExListener {
     private enum Mode {
         None, Drawing, DrawingWidth, DrawingAngFix
@@ -142,7 +141,7 @@ public class DrawBuildingAction extends MapMode implements MapViewPaintable, Sel
         map.mapView.addTemporaryLayer(this);
         map.keyDetector.addKeyListener(this);
         map.keyDetector.addModifierExListener(this);
-        DataSet.addSelectionListener(this);
+        SelectionEventManager.getInstance().addSelectionListener(this);
         updateSnap(getLayerManager().getEditDataSet().getSelected());
     }
 
@@ -155,7 +154,7 @@ public class DrawBuildingAction extends MapMode implements MapViewPaintable, Sel
         map.mapView.removeTemporaryLayer(this);
         map.keyDetector.removeKeyListener(this);
         map.keyDetector.removeModifierExListener(this);
-        DataSet.removeSelectionListener(this);
+        SelectionEventManager.getInstance().removeSelectionListener(this);
         if (mode != Mode.None)
             map.mapView.repaint();
         mode = Mode.None;
@@ -490,7 +489,7 @@ public class DrawBuildingAction extends MapMode implements MapViewPaintable, Sel
     }
 
     @Override
-    public void selectionChanged(Collection<? extends OsmPrimitive> newSelection) {
-        updateSnap(newSelection);
+    public void selectionChanged(SelectionChangeEvent event) {
+        updateSnap(event.getSelection());
     }
 }

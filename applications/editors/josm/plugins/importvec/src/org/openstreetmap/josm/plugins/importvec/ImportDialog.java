@@ -11,8 +11,8 @@ import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.ExtendedDialog;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.tools.GBC;
 
 public class ImportDialog extends ExtendedDialog {
@@ -21,7 +21,7 @@ public class ImportDialog extends ExtendedDialog {
     private JFormattedTextField tsteps = new JFormattedTextField(NumberFormat.getIntegerInstance());
 
     public ImportDialog() {
-        super(Main.parent, tr("Import vector graphics"),
+        super(MainApplication.getMainFrame(), tr("Import vector graphics"),
                 new String[] { tr("OK"), tr("Cancel") },
                 true);
         contentInsets = new Insets(15, 15, 5, 15);

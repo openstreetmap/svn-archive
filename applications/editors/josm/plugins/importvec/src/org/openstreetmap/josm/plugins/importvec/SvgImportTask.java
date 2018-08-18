@@ -15,20 +15,22 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.command.AddCommand;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.SequenceCommand;
+import org.openstreetmap.josm.data.UndoRedoHandler;
 import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.data.projection.Projection;
+import org.openstreetmap.josm.data.projection.ProjectionRegistry;
 import org.openstreetmap.josm.data.projection.Projections;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.PleaseWaitRunnable;
 import org.openstreetmap.josm.io.OsmTransferException;
+import org.openstreetmap.josm.spi.preferences.Config;
 import org.openstreetmap.josm.tools.I18n;
 
 import com.kitfox.svg.Group;
@@ -162,12 +164,12 @@ public class SvgImportTask extends PleaseWaitRunnable {
 
     @Override
     protected void realRun() throws IOException, OsmTransferException {
-        LatLon center = Main.getProjection().eastNorth2latlon(MainApplication.getMap().mapView.getCenter());
+        LatLon center = ProjectionRegistry.getProjection().eastNorth2latlon(MainApplication.getMap().mapView.getCenter());
         scale = Settings.getScaleNumerator() / Settings.getScaleDivisor() / Math.cos(Math.toRadians(center.lat()));
         this.center = projection.latlon2eastNorth(center);
         try {
             SVGUniverse universe = new SVGUniverse();
-            universe.setVerbose(Main.pref.getBoolean("importvec.verbose", false));
+            universe.setVerbose(Config.getPref().getBoolean("importvec.verbose", false));
             for (File f : files) {
                 if (f.isDirectory()) continue;
                 if (canceled) {
@@ -195,7 +197,7 @@ public class SvgImportTask extends PleaseWaitRunnable {
         for (Way w : ways) {
             cmds.add(new AddCommand(ds, w));
         }
-        MainApplication.undoRedo.add(new SequenceCommand("Import primitives", cmds));
+        UndoRedoHandler.getInstance().add(new SequenceCommand("Import primitives", cmds));
     }
     
 }

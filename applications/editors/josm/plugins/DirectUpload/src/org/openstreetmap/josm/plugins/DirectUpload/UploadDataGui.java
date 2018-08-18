@@ -8,6 +8,7 @@ import java.awt.event.ActionEvent;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
@@ -19,7 +20,6 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.gpx.GpxConstants;
 import org.openstreetmap.josm.data.gpx.GpxData;
 import org.openstreetmap.josm.data.gpx.GpxTrack;
@@ -33,6 +33,7 @@ import org.openstreetmap.josm.gui.widgets.JMultilineLabel;
 import org.openstreetmap.josm.gui.widgets.UrlLabel;
 import org.openstreetmap.josm.io.GpxWriter;
 import org.openstreetmap.josm.io.OsmApi;
+import org.openstreetmap.josm.spi.preferences.Config;
 import org.openstreetmap.josm.tools.GBC;
 import org.openstreetmap.josm.tools.HttpClient;
 import org.openstreetmap.josm.tools.HttpClient.Response;
@@ -96,7 +97,7 @@ public class UploadDataGui extends ExtendedDialog {
 
     public UploadDataGui() {
         // Initalizes ExtendedDialog
-        super(Main.parent,
+        super(MainApplication.getMainFrame(),
                 tr("Upload Traces"),
                 new String[] {uploadTraceText, tr("Cancel")},
                 true
@@ -125,7 +126,7 @@ public class UploadDataGui extends ExtendedDialog {
         for(visibility v : visibility.values()) {
             visibilityCombo.addItem(v.description);
         }
-        visibilityCombo.setSelectedItem(visibility.valueOf(Main.pref.get("directupload.visibility.last-used", visibility.PRIVATE.name())).description);
+        visibilityCombo.setSelectedItem(visibility.valueOf(Config.getPref().get("directupload.visibility.last-used", visibility.PRIVATE.name())).description);
         /* I18n: either copy the link verbose or replace it by the translated version from the wiki for already translated languages */
         UrlLabel visiUrl = new UrlLabel(tr("https://wiki.openstreetmap.org/wiki/Visibility_of_GPS_traces"), tr("(What does that mean?)"), 2);
 
@@ -134,7 +135,7 @@ public class UploadDataGui extends ExtendedDialog {
         descriptionField = new HistoryComboBox();
         descriptionField.setToolTipText(tr("Please enter Description about your trace."));
 
-        List<String> descHistory = new LinkedList<>(Main.pref.getList("directupload.description.history", new LinkedList<String>()));
+        List<String> descHistory = new LinkedList<>(Config.getPref().getList("directupload.description.history", new LinkedList<String>()));
         // we have to reverse the history, because ComboBoxHistory will reverse it again in addElement()
         // XXX this should be handled in HistoryComboBox
         Collections.reverse(descHistory);
@@ -145,7 +146,7 @@ public class UploadDataGui extends ExtendedDialog {
         tagsField = new HistoryComboBox();
         tagsField.setToolTipText(tr("Please enter tags about your trace."));
 
-        List<String> tagsHistory = new LinkedList<>(Main.pref.getList("directupload.tags.history", new LinkedList<String>()));
+        List<String> tagsHistory = new LinkedList<>(Config.getPref().getList("directupload.tags.history", new LinkedList<String>()));
         // we have to reverse the history, because ComboBoxHistory will reverse it againin addElement()
         // XXX this should be handled in HistoryComboBox
         Collections.reverse(tagsHistory);
@@ -413,13 +414,13 @@ public class UploadDataGui extends ExtendedDialog {
         buttons.get(0).setEnabled(false);
 
         // save history
-        Main.pref.put("directupload.visibility.last-used", visibility.desc2visi(visibilityCombo.getSelectedItem().toString()).name());
+        Config.getPref().put("directupload.visibility.last-used", visibility.desc2visi(visibilityCombo.getSelectedItem().toString()).name());
 
         descriptionField.addCurrentItemToHistory();
-        Main.pref.putList("directupload.description.history", descriptionField.getHistory());
+        Config.getPref().putList("directupload.description.history", descriptionField.getHistory());
 
         tagsField.addCurrentItemToHistory();
-        Main.pref.putList("directupload.tags.history", tagsField.getHistory());
+        Config.getPref().putList("directupload.tags.history", tagsField.getHistory());
 
         PleaseWaitRunnable uploadTask = new PleaseWaitRunnable(tr("Uploading GPX Track")){
             @Override protected void realRun() throws IOException {
@@ -485,7 +486,7 @@ public class UploadDataGui extends ExtendedDialog {
      */
     private void writeString(ByteArrayOutputStream baos, String s) {
         try {
-            baos.write(s.getBytes());
+            baos.write(s.getBytes(StandardCharsets.UTF_8));
         } catch(Exception e) {}
     }
 

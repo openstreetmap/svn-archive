@@ -7,15 +7,15 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.coor.LatLon;
-import org.openstreetmap.josm.gui.preferences.PreferenceSetting;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MainMenu;
+import org.openstreetmap.josm.gui.preferences.PreferenceSetting;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
-import org.openstreetmap.josm.plugins.pointinfo.ruian.RuianModule;
 import org.openstreetmap.josm.plugins.pointinfo.catastro.CatastroModule;
+import org.openstreetmap.josm.plugins.pointinfo.ruian.RuianModule;
+import org.openstreetmap.josm.spi.preferences.Config;
 
 /**
  * This is the main class for the PointInfo plugin.
@@ -70,7 +70,7 @@ public class PointInfoPlugin extends Plugin {
     public static AbstractPointInfoModule getModule(LatLon pos) throws IOException {
         AbstractPointInfoModule module;
         module = null;
-        if (Main.pref.getBoolean("plugin.pointinfo.automode", true)) {
+        if (Config.getPref().getBoolean("plugin.pointinfo.automode", true)) {
             ReverseRecord r = ReverseFinder.queryNominatim(pos);
             Iterator i = modules.values().iterator();
             while (module == null && i.hasNext()) {
@@ -80,7 +80,7 @@ public class PointInfoPlugin extends Plugin {
                 }
             }
         } else {
-            module = modules.get(Main.pref.get("plugin.pointinfo.module", "RUIAN"));
+            module = modules.get(Config.getPref().get("plugin.pointinfo.module", "RUIAN"));
         }
         if (module == null) {
             module = modules.get("RUIAN");

@@ -3,8 +3,8 @@ package org.openstreetmap.josm.plugins.pointinfo;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.Locale;
 
 import javax.json.Json;

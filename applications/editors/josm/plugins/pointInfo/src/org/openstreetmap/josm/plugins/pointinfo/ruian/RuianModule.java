@@ -4,10 +4,9 @@ package org.openstreetmap.josm.plugins.pointinfo.ruian;
 import java.net.URL;
 
 import org.openstreetmap.josm.data.coor.LatLon;
+import org.openstreetmap.josm.plugins.pointinfo.AbstractPointInfoModule;
 import org.openstreetmap.josm.tools.HttpClient;
 import org.openstreetmap.josm.tools.Logging;
-
-import org.openstreetmap.josm.plugins.pointinfo.AbstractPointInfoModule;
 
 /**
  * A module for the Czech RUIAN database

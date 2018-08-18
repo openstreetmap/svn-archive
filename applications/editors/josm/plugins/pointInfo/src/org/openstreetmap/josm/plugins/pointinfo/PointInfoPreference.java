@@ -12,9 +12,9 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.preferences.DefaultTabPreferenceSetting;
 import org.openstreetmap.josm.gui.preferences.PreferenceTabbedPane;
+import org.openstreetmap.josm.spi.preferences.Config;
 import org.openstreetmap.josm.tools.GBC;
 
 /**
@@ -41,7 +41,7 @@ public class PointInfoPreference extends DefaultTabPreferenceSetting {
     public void addGui(PreferenceTabbedPane gui) {
         JPanel panel = new JPanel(new GridBagLayout());
         // autoMode
-        autoMode.setSelected(Main.pref.getBoolean("plugin.pointinfo.automode", false));
+        autoMode.setSelected(Config.getPref().getBoolean("plugin.pointinfo.automode", false));
         autoMode.setToolTipText(tr("Try to guess the appropriate module from the location."
                 + " If it fails, use the module selected below."));
         panel.add(autoMode, GBC.eol().insets(0, 0, 0, 0));
@@ -49,7 +49,7 @@ public class PointInfoPreference extends DefaultTabPreferenceSetting {
         for (String modName : PointInfoPlugin.getModules()) {
             module.addItem(modName);
         }
-        module.setSelectedItem(Main.pref.get("plugin.pointinfo.module", "RUIAN"));
+        module.setSelectedItem(Config.getPref().get("plugin.pointinfo.module", "RUIAN"));
         module.setToolTipText(tr("The module called to get the point information."));
         panel.add(new JLabel(tr("Module")), GBC.std());
         panel.add(module, GBC.eol().fill(GridBagConstraints.HORIZONTAL).insets(5, 0, 0, 5));
@@ -59,8 +59,8 @@ public class PointInfoPreference extends DefaultTabPreferenceSetting {
 
     @Override
     public boolean ok() {
-        Main.pref.putBoolean("plugin.pointinfo.automode", autoMode.isSelected());
-        Main.pref.put("plugin.pointinfo.module", (String) module.getSelectedItem());
+        Config.getPref().putBoolean("plugin.pointinfo.automode", autoMode.isSelected());
+        Config.getPref().put("plugin.pointinfo.module", (String) module.getSelectedItem());
         return false;
     }
 }

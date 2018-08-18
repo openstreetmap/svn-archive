@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedList;
+import java.util.logging.Level;
 
 import javax.json.Json;
 import javax.json.JsonArray;
@@ -19,16 +20,16 @@ import javax.json.JsonValue;
 import org.openstreetmap.josm.command.AddCommand;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.SequenceCommand;
+import org.openstreetmap.josm.data.UndoRedoHandler;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Tag;
 import org.openstreetmap.josm.data.osm.TagCollection;
-import org.openstreetmap.josm.gui.datatransfer.ClipboardUtils;
 import org.openstreetmap.josm.gui.MainApplication;
+import org.openstreetmap.josm.gui.datatransfer.ClipboardUtils;
 import org.openstreetmap.josm.plugins.pointinfo.PointInfoUtils;
 import org.openstreetmap.josm.tools.Logging;
-import java.util.logging.Level;
 
 /**
  * Private class contains RUIAN data
@@ -850,19 +851,17 @@ class RuianRecord {
 
         // Near address places
         if (!m_adresni_mista.isEmpty() && m_objekt_ruian_id == 0) {
-            String x, x_name;
+            String x;
             r.append("<i><u>Adresní místa v okolí</u></i><br/>")
              .append("<table>");
             for (int i = 0; i < m_adresni_mista.size(); i++) {
                 x = "";
-                x_name = "";
                 if (m_adresni_mista.get(i).getCisloTyp().equals("Číslo evidenční")) {
                     x = "ev.";
                 }
                 x += m_adresni_mista.get(i).getCisloDomovni();
                 if (!m_adresni_mista.get(i).getCisloOrientacni().isEmpty()) {
                     x += "/" + m_adresni_mista.get(i).getCisloOrientacni();
-                    x_name += "/orientační";
                 }
                 r.append("<tr><td bgcolor=#e5e5ff>");
                 if (!m_adresni_mista.get(i).getUlice().isEmpty()) {
@@ -1124,7 +1123,7 @@ class RuianRecord {
 
         tc.applyTo(coll);
 
-        MainApplication.undoRedo.add(new SequenceCommand(tr("Add new address point"), commands));
+        UndoRedoHandler.getInstance().add(new SequenceCommand(tr("Add new address point"), commands));
     }
 
     /**

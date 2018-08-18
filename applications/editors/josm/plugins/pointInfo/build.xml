@@ -4,7 +4,7 @@
     <!-- enter the SVN commit message -->
     <property name="commit.message" value="PointInfo: Adds a link to photo metadata in Catastro module. Patch by Javier Sánchez Portero."/>
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
-    <property name="plugin.main.version" value="12666"/>
+    <property name="plugin.main.version" value="14153"/>
 
     <!-- plugin can load at runtime -->
     <property name="plugin.canloadatruntime" value="true"/>

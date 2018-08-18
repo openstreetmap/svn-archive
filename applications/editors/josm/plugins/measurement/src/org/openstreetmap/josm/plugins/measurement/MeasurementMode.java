@@ -8,7 +8,6 @@ import java.awt.event.MouseEvent;
 
 import javax.swing.JOptionPane;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.mapmode.MapMode;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.gui.MainApplication;
@@ -48,7 +47,7 @@ public class MeasurementMode extends MapMode {
         } else if (e.getButton() == MouseEvent.BUTTON1){
             LatLon coor = MainApplication.getMap().mapView.getLatLon(e.getX(), e.getY());
             if (coor.isOutSideWorld()) {
-                JOptionPane.showMessageDialog(Main.parent,tr("Can not draw outside of the world."));
+                JOptionPane.showMessageDialog(MainApplication.getMainFrame(),tr("Can not draw outside of the world."));
                 return;
             }
             MeasurementPlugin.getCurrentLayer().mouseClicked(e);

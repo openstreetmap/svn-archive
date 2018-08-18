@@ -15,9 +15,9 @@ import javax.swing.AbstractAction;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import org.openstreetmap.josm.data.SelectionChangedListener;
 import org.openstreetmap.josm.data.SystemOfMeasurement;
 import org.openstreetmap.josm.data.SystemOfMeasurement.SoMChangeListener;
+import org.openstreetmap.josm.data.osm.DataSelectionListener;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
@@ -29,6 +29,7 @@ import org.openstreetmap.josm.data.osm.event.NodeMovedEvent;
 import org.openstreetmap.josm.data.osm.event.PrimitivesAddedEvent;
 import org.openstreetmap.josm.data.osm.event.PrimitivesRemovedEvent;
 import org.openstreetmap.josm.data.osm.event.RelationMembersChangedEvent;
+import org.openstreetmap.josm.data.osm.event.SelectionEventManager;
 import org.openstreetmap.josm.data.osm.event.TagsChangedEvent;
 import org.openstreetmap.josm.data.osm.event.WayNodesChangedEvent;
 import org.openstreetmap.josm.gui.MainApplication;
@@ -45,7 +46,7 @@ import org.openstreetmap.josm.tools.SubclassFilteredCollection;
  *
  * @author ramack
  */
-public class MeasurementDialog extends ToggleDialog implements SelectionChangedListener, DataSetListener, SoMChangeListener {
+public class MeasurementDialog extends ToggleDialog implements DataSelectionListener, DataSetListener, SoMChangeListener {
     private static final long serialVersionUID = 4708541586297950021L;
 
     /**
@@ -141,7 +142,7 @@ public class MeasurementDialog extends ToggleDialog implements SelectionChangedL
                 resetButton
         }));
 
-        DataSet.addSelectionListener(this);
+        SelectionEventManager.getInstance().addSelectionListener(this);
         SystemOfMeasurement.addSoMChangeListener(this);
     }
 
@@ -169,8 +170,8 @@ public class MeasurementDialog extends ToggleDialog implements SelectionChangedL
     }
 
     @Override
-    public void selectionChanged(Collection<? extends OsmPrimitive> newSelection) {
-        refresh(newSelection);
+    public void selectionChanged(SelectionChangeEvent event) {
+        refresh(event.getSelection());
     }
 
     private void refresh(Collection<? extends OsmPrimitive> selection) {
@@ -261,7 +262,7 @@ public class MeasurementDialog extends ToggleDialog implements SelectionChangedL
     public void destroy() {
         super.destroy();
         SystemOfMeasurement.removeSoMChangeListener(this);
-        DataSet.removeSelectionListener(this);
+        SelectionEventManager.getInstance().removeSelectionListener(this);
         if (ds != null) {
             ds.removeDataSetListener(this);
             ds = null;

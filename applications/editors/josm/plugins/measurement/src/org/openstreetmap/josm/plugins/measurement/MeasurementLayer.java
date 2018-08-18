@@ -26,7 +26,6 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.gpx.GpxTrack;
@@ -102,12 +101,12 @@ public class MeasurementLayer extends Layer {
     @Override
     public Action[] getMenuEntries() {
         return new Action[]{
-            LayerListDialog.getInstance().createShowHideLayerAction(),
-            // TODO: implement new JMenuItem(new LayerListDialog.DeleteLayerAction(this)),
-            SeparatorLayerAction.INSTANCE,
-            new GPXLayerImportAction(this),
-            SeparatorLayerAction.INSTANCE,
-            new LayerListPopup.InfoAction(this)};
+                LayerListDialog.getInstance().createShowHideLayerAction(),
+                // TODO: implement new JMenuItem(new LayerListDialog.DeleteLayerAction(this)),
+                SeparatorLayerAction.INSTANCE,
+                new GPXLayerImportAction(this),
+                SeparatorLayerAction.INSTANCE,
+                new LayerListPopup.InfoAction(this)};
     }
 
     public void removeLastPoint(){
@@ -185,9 +184,9 @@ public class MeasurementLayer extends Layer {
         double coslat2 = Math.cos(lat2);
 
         return (180 * Math.atan2(coslat2 * Math.sin(dlon),
-                          (Math.cos(lat1) * Math.sin(lat2)
-                                    -
-                           Math.sin(lat1) * coslat2 * Math.cos(dlon)))) / Math.PI;
+                (Math.cos(lat1) * Math.sin(lat2)
+                        -
+                        Math.sin(lat1) * coslat2 * Math.cos(dlon)))) / Math.PI;
     }
 
     public static double oldAngleBetween(LatLon p1, LatLon p2){
@@ -206,7 +205,7 @@ public class MeasurementLayer extends Layer {
         double a = (Math.pow(Math.sin(dlat/2), 2) + Math.cos(lat1) * Math.cos(lat2) * Math.pow(Math.sin(dlon/2), 2));
         double d = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
         heading = Math.acos((Math.sin(lat2) - Math.sin(lat1) * Math.cos(d))
-                            / (Math.sin(d) * Math.cos(lat1)));
+                / (Math.sin(d) * Math.cos(lat1)));
         if (Math.sin(lon2 - lon1) < 0) {
             heading = 2 * Math.PI - heading;
         }
@@ -252,7 +251,7 @@ public class MeasurementLayer extends Layer {
                     public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
                         Layer layer = (Layer)value;
                         JLabel label = (JLabel)super.getListCellRendererComponent(list,
-                                                                                  layer.getName(), index, isSelected, cellHasFocus);
+                                layer.getName(), index, isSelected, cellHasFocus);
                         Icon icon = layer.getIcon();
                         label.setIcon(icon);
                         label.setToolTipText(layer.getToolTipText());
@@ -266,17 +265,17 @@ public class MeasurementLayer extends Layer {
                 panel.add(dropFirst);
 
                 final JOptionPane optionPane = new JOptionPane(panel, JOptionPane.QUESTION_MESSAGE, JOptionPane.OK_CANCEL_OPTION){
-                        @Override
-                        public void selectInitialValue() {
-                            layerList.requestFocusInWindow();
-                        }
-                    };
-                final JDialog dlg = optionPane.createDialog(Main.parent, tr("Import path from GPX layer"));
+                    @Override
+                    public void selectInitialValue() {
+                        layerList.requestFocusInWindow();
+                    }
+                };
+                final JDialog dlg = optionPane.createDialog(MainApplication.getMainFrame(), tr("Import path from GPX layer"));
                 dlg.setVisible(true);
 
                 Object answer = optionPane.getValue();
                 if (answer == null || answer == JOptionPane.UNINITIALIZED_VALUE ||
-                    (answer instanceof Integer && (Integer)answer != JOptionPane.OK_OPTION)) {
+                        (answer instanceof Integer && (Integer)answer != JOptionPane.OK_OPTION)) {
                     return;
                 }
 
@@ -296,7 +295,7 @@ public class MeasurementLayer extends Layer {
             } else{
                 // TODO: register a listener and show menu entry only if gps layers are available
                 // no gps layer
-                JOptionPane.showMessageDialog(Main.parent,tr("No GPX data layer found."));
+                JOptionPane.showMessageDialog(MainApplication.getMainFrame(),tr("No GPX data layer found."));
             }
         }
     }

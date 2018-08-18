@@ -5,12 +5,12 @@ import static org.openstreetmap.josm.eventbus.JosmEventBus.post;
 
 import java.awt.event.KeyEvent;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.ExpertToggleAction;
 import org.openstreetmap.josm.actions.ExpertToggleAction.ExpertModeChangeListener;
 import org.openstreetmap.josm.data.SelectionChangedListener;
 import org.openstreetmap.josm.data.SystemOfMeasurement;
 import org.openstreetmap.josm.data.SystemOfMeasurement.SoMChangeListener;
+import org.openstreetmap.josm.data.UndoRedoHandler;
 import org.openstreetmap.josm.data.UndoRedoHandler.CommandQueueListener;
 import org.openstreetmap.josm.data.conflict.ConflictCollection;
 import org.openstreetmap.josm.data.conflict.IConflictListener;
@@ -37,6 +37,7 @@ import org.openstreetmap.josm.data.osm.event.WayNodesChangedEvent;
 import org.openstreetmap.josm.data.osm.history.HistoryDataSet;
 import org.openstreetmap.josm.data.osm.history.HistoryDataSetListener;
 import org.openstreetmap.josm.data.projection.ProjectionChangeListener;
+import org.openstreetmap.josm.data.projection.ProjectionRegistry;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.gui.MapFrame.MapModeChangeListener;
@@ -382,11 +383,11 @@ public class EventBusPlugin extends Plugin {
      * Registers all JOSM listeners.
      */
     void registerAllJosmListeners() {
-        Main.addProjectionChangeListener(projectionChangeListener);
+        ProjectionRegistry.addProjectionChangeListener(projectionChangeListener);
         MainApplication.getLayerManager().addLayerChangeListener(layerChangeListener);
         MainApplication.getLayerManager().addActiveLayerChangeListener(activeLayerChangeListener);
         MainApplication.getLayerManager().addLayerAvailabilityListener(layerAvailabilityListener);
-        MainApplication.undoRedo.addCommandQueueListener(commandQueueListener);
+        UndoRedoHandler.getInstance().addCommandQueueListener(commandQueueListener);
         ChangesetCache.getInstance().addChangesetCacheListener(changesetCacheListener);
         DataSet.addSelectionListener(selectionChangedListener);
         ExpertToggleAction.addExpertModeChangeListener(expertModeChangeListener);
@@ -405,11 +406,11 @@ public class EventBusPlugin extends Plugin {
      * Unregisters all JOSM listeners.
      */
     void unregisterAllJosmListeners() {
-        Main.removeProjectionChangeListener(projectionChangeListener);
+        ProjectionRegistry.removeProjectionChangeListener(projectionChangeListener);
         MainApplication.getLayerManager().removeLayerChangeListener(layerChangeListener);
         MainApplication.getLayerManager().removeActiveLayerChangeListener(activeLayerChangeListener);
         MainApplication.getLayerManager().removeLayerAvailabilityListener(layerAvailabilityListener);
-        MainApplication.undoRedo.removeCommandQueueListener(commandQueueListener);
+        UndoRedoHandler.getInstance().removeCommandQueueListener(commandQueueListener);
         ChangesetCache.getInstance().removeChangesetCacheListener(changesetCacheListener);
         DataSet.removeSelectionListener(selectionChangedListener);
         ExpertToggleAction.removeExpertModeChangeListener(expertModeChangeListener);

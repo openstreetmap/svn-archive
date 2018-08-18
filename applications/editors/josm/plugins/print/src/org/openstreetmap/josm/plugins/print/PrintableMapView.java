@@ -21,7 +21,6 @@ import java.awt.print.Printable;
 import java.awt.print.PrinterException;
 
 import org.openstreetmap.gui.jmapviewer.tilesources.AbstractOsmTileSource;
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.SystemOfMeasurement;
 import org.openstreetmap.josm.gui.MainApplication;
@@ -30,6 +29,7 @@ import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.gui.layer.LayerManager.LayerAddEvent;
 import org.openstreetmap.josm.gui.layer.LayerManager.LayerOrderChangeEvent;
 import org.openstreetmap.josm.gui.layer.LayerManager.LayerRemoveEvent;
+import org.openstreetmap.josm.spi.preferences.Config;
 
 /**
  * The PrintableMapView class implements a "Printable" perspective on
@@ -109,7 +109,7 @@ public class PrintableMapView extends MapView implements Printable {
      * @param pageformat the size and orientation of the page being drawn
      */
     public void initialize(PageFormat pageFormat) {
-        int resolution = Main.pref.getInt("print.resolution.dpi", PrintPlugin.DEF_RESOLUTION_DPI);
+        int resolution = Config.getPref().getInt("print.resolution.dpi", PrintPlugin.DEF_RESOLUTION_DPI);
         g2dFactor = 72.0/resolution;
         setSize((int) (pageFormat.getImageableWidth()/g2dFactor), (int) (pageFormat.getImageableHeight()/g2dFactor));
     }
@@ -221,7 +221,7 @@ public class PrintableMapView extends MapView implements Printable {
         SystemOfMeasurement som = SystemOfMeasurement.getSystemOfMeasurement();
         double dist100px = getDist100Pixel() / g2dFactor;
         double dist = dist100px / som.aValue;
-        if (!Main.pref.getBoolean("system_of_measurement.use_only_lower_unit", false) && dist > som.bValue / som.aValue) {
+        if (!Config.getPref().getBoolean("system_of_measurement.use_only_lower_unit", false) && dist > som.bValue / som.aValue) {
             dist = dist100px / som.bValue;
         }
         long distExponent = (long) Math.floor(Math.log(dist) / Math.log(10));
@@ -291,7 +291,7 @@ public class PrintableMapView extends MapView implements Printable {
      * @param pageFormat the size and orientation of the page being drawn
      */
     public void paintMapAttribution(Graphics2D g2d, PageFormat pageFormat) {
-        String text = Main.pref.get("print.attribution", AbstractOsmTileSource.DEFAULT_OSM_ATTRIBUTION);
+        String text = Config.getPref().get("print.attribution", AbstractOsmTileSource.DEFAULT_OSM_ATTRIBUTION);
 
         if (text == null) {
             return;

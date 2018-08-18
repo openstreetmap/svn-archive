@@ -5,11 +5,11 @@ import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.KeyStroke;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
+import org.openstreetmap.josm.spi.preferences.Config;
 
 /**
  * The PrintPlugin class implements the interface JOSM needs to
@@ -90,8 +90,8 @@ public class PrintPlugin extends Plugin {
      * Changes will be undone by restorePrefs().
      */
     public static void adjustPrefs() {
-        if (!Main.pref.getBoolean("print.saved-prefs", false)) {
-            Main.pref.putBoolean("print.saved-prefs", true);
+        if (!Config.getPref().getBoolean("print.saved-prefs", false)) {
+            Config.getPref().putBoolean("print.saved-prefs", true);
             adjustPref("draw.data.downloaded_area", false);
             adjustPref("mappaint.node.connection-size", 0);
             adjustPref("mappaint.node.selected-size", 0);
@@ -110,10 +110,10 @@ public class PrintPlugin extends Plugin {
      * @param the temporary new int value
      */
     protected static void adjustPref(String key, int value) {
-        if (!Main.pref.get(key).isEmpty()) {
-            Main.pref.put("print.saved-prefs."+key, Main.pref.get(key));
+        if (!Config.getPref().get(key).isEmpty()) {
+            Config.getPref().put("print.saved-prefs."+key, Config.getPref().get(key));
         }
-        Main.pref.putInt(key, value);
+        Config.getPref().putInt(key, value);
     }
 
     /**
@@ -125,10 +125,10 @@ public class PrintPlugin extends Plugin {
      * @param the temporary new boolean value
      */
     protected static void adjustPref(String key, boolean value) {
-        if (!Main.pref.get(key).isEmpty()) {
-            Main.pref.put("print.saved-prefs."+key, Main.pref.get(key));
+        if (!Config.getPref().get(key).isEmpty()) {
+            Config.getPref().put("print.saved-prefs."+key, Config.getPref().get(key));
         }
-        Main.pref.putBoolean(key, value);
+        Config.getPref().putBoolean(key, value);
     }
 
     /**
@@ -140,24 +140,24 @@ public class PrintPlugin extends Plugin {
      * @param the temporary new String value
      */
     protected static void adjustPref(String key, String value) {
-        if (!Main.pref.get(key).isEmpty()) {
-            Main.pref.put("print.saved-prefs."+key, Main.pref.get(key));
+        if (!Config.getPref().get(key).isEmpty()) {
+            Config.getPref().put("print.saved-prefs."+key, Config.getPref().get(key));
         }
-        Main.pref.put(key, value);
+        Config.getPref().put(key, value);
     }
 
     /**
      * Undo temporary adjustments to the preferences made by adjustPrefs().
      */
     public static void restorePrefs() {
-        if (Main.pref.getBoolean("print.saved-prefs", false)) {
+        if (Config.getPref().getBoolean("print.saved-prefs", false)) {
             restorePref("draw.data.downloaded_area");
             restorePref("mappaint.node.connection-size");
             restorePref("mappaint.node.selected-size");
             restorePref("mappaint.node.tagged-size");
             restorePref("mappaint.node.unselected-size");
             restorePref("mappaint.node.virtual-size");
-            Main.pref.putBoolean("print.saved-prefs", false);
+            Config.getPref().putBoolean("print.saved-prefs", false);
             //Main.main.map.mapView.repaint();
         }
     }
@@ -169,7 +169,7 @@ public class PrintPlugin extends Plugin {
      */
     protected static void restorePref(String key) {
         String savedKey = "print.saved-prefs."+key;
-        Main.pref.put(key, Main.pref.get(savedKey));
-        Main.pref.put(savedKey, null);
+        Config.getPref().put(key, Config.getPref().get(savedKey));
+        Config.getPref().put(savedKey, null);
     }
 }

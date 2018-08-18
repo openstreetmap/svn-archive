@@ -58,9 +58,9 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
 import org.openstreetmap.gui.jmapviewer.tilesources.AbstractOsmTileSource;
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.util.WindowGeometry;
+import org.openstreetmap.josm.spi.preferences.Config;
 import org.openstreetmap.josm.tools.GBC;
 import org.openstreetmap.josm.tools.Logging;
 import org.openstreetmap.josm.tools.Utils;
@@ -165,7 +165,7 @@ public class PrintDialog extends JDialog implements ActionListener {
             ).applySafe(this);
         } else if (isShowing()) { // Avoid IllegalComponentStateException like in #8775
             new WindowGeometry(this).remember(getClass().getName() + ".geometry");
-            Main.pref.putBoolean("print.preview.enabled", previewCheckBox.isSelected());
+            Config.getPref().putBoolean("print.preview.enabled", previewCheckBox.isSelected());
         }
         super.setVisible(visible);
     }
@@ -219,7 +219,7 @@ public class PrintDialog extends JDialog implements ActionListener {
         add(caption, std.grid(2, row));
         caption = new JLabel(" 1 :");
         add(caption, std.grid(GBC.RELATIVE, row));
-        int mapScale = Main.pref.getInt("print.map-scale", PrintPlugin.DEF_MAP_SCALE);
+        int mapScale = Config.getPref().getInt("print.map-scale", PrintPlugin.DEF_MAP_SCALE);
         mapView.setFixedMapScale(mapScale);
         scaleModel = new SpinnerNumberModel(mapScale, 250, 5000000, 250);
         final JSpinner scaleField = new JSpinner(scaleModel);
@@ -231,7 +231,7 @@ public class PrintDialog extends JDialog implements ActionListener {
                     public void run() {
                         try {
                             scaleField.commitEdit();
-                            Main.pref.put("print.map-scale", scaleModel.getNumber().toString());
+                            Config.getPref().put("print.map-scale", scaleModel.getNumber().toString());
                             mapView.setFixedMapScale(scaleModel.getNumber().intValue());
                             printPreview.repaint();
                         } catch (ParseException e) {
@@ -249,7 +249,7 @@ public class PrintDialog extends JDialog implements ActionListener {
         caption = new JLabel("ppi");
         add(caption, std.grid(GBC.RELATIVE, row));
         resolutionModel = new SpinnerNumberModel(
-          Main.pref.getInt("print.resolution.dpi", PrintPlugin.DEF_RESOLUTION_DPI),
+          Config.getPref().getInt("print.resolution.dpi", PrintPlugin.DEF_RESOLUTION_DPI),
           30, 1200, 10);
         final JSpinner resolutionField = new JSpinner(resolutionModel);
         resolutionField.addChangeListener(new ChangeListener() {
@@ -260,7 +260,7 @@ public class PrintDialog extends JDialog implements ActionListener {
                     public void run() {
                         try {
                             resolutionField.commitEdit();
-                            Main.pref.put("print.resolution.dpi", resolutionModel.getNumber().toString());
+                            Config.getPref().put("print.resolution.dpi", resolutionModel.getNumber().toString());
                             printPreview.repaint();
                         } catch (ParseException e) {
                             Logging.error(e);
@@ -276,7 +276,7 @@ public class PrintDialog extends JDialog implements ActionListener {
         add(caption, threeColumns.grid(2, row));
 
         row++;
-        final JTextArea attributionText = new JTextArea(Main.pref.get("print.attribution", AbstractOsmTileSource.DEFAULT_OSM_ATTRIBUTION));
+        final JTextArea attributionText = new JTextArea(Config.getPref().get("print.attribution", AbstractOsmTileSource.DEFAULT_OSM_ATTRIBUTION));
         attributionText.setRows(10);
         attributionText.setLineWrap(true);
         attributionText.setWrapStyleWord(true);
@@ -286,7 +286,7 @@ public class PrintDialog extends JDialog implements ActionListener {
                 SwingUtilities.invokeLater(new Runnable() {
                     @Override
                     public void run() {
-                        Main.pref.put("print.attribution", attributionText.getText());
+                        Config.getPref().put("print.attribution", attributionText.getText());
                         printPreview.repaint();
                     }
                 });
@@ -310,7 +310,7 @@ public class PrintDialog extends JDialog implements ActionListener {
 
         row++;
         previewCheckBox = new JCheckBox(tr("Map Preview"));
-        previewCheckBox.setSelected(Main.pref.getBoolean("print.preview.enabled", false));
+        previewCheckBox.setSelected(Config.getPref().getBoolean("print.preview.enabled", false));
         previewCheckBox.setActionCommand("toggle-preview");
         previewCheckBox.addActionListener(this);
         add(previewCheckBox, threeColumns.grid(2, row));
@@ -415,7 +415,7 @@ public class PrintDialog extends JDialog implements ActionListener {
                 savePrintSettings();
             }
         } else if ("toggle-preview".equals(cmd)) {
-            Main.pref.putBoolean("print.preview.enabled", previewCheckBox.isSelected());
+            Config.getPref().putBoolean("print.preview.enabled", previewCheckBox.isSelected());
             if (previewCheckBox.isSelected()) {
                 printPreview.setPrintable(mapView);
             } else {
@@ -437,7 +437,7 @@ public class PrintDialog extends JDialog implements ActionListener {
                 if (msg.length() == 0) {
                     msg = tr("Printing has been cancelled.");
                 }
-                JOptionPane.showMessageDialog(Main.parent, msg,
+                JOptionPane.showMessageDialog(MainApplication.getMainFrame(), msg,
                   tr("Printing stopped"),
                   JOptionPane.WARNING_MESSAGE);
             } catch (PrinterException ex) {
@@ -445,7 +445,7 @@ public class PrintDialog extends JDialog implements ActionListener {
                 if (msg == null || msg.length() == 0) {
                     msg = tr("Printing has failed.");
                 }
-                JOptionPane.showMessageDialog(Main.parent, msg,
+                JOptionPane.showMessageDialog(MainApplication.getMainFrame(), msg,
                   tr("Printing stopped"),
                   JOptionPane.ERROR_MESSAGE);
             }
@@ -465,7 +465,7 @@ public class PrintDialog extends JDialog implements ActionListener {
                     serviceAttributes.add(marshallPrintSetting(a, TextSyntax.class, ((TextSyntax) a).getValue()));
                 }
             }
-            Main.pref.putListOfLists("print.settings.service-attributes", serviceAttributes);
+            Config.getPref().putListOfLists("print.settings.service-attributes", serviceAttributes);
         }
 
         // Save all request attributes
@@ -487,7 +487,7 @@ public class PrintDialog extends JDialog implements ActionListener {
                 requestAttributes.add(setting);
             }
         }
-        Main.pref.putListOfLists("print.settings.request-attributes", requestAttributes);
+        Config.getPref().putListOfLists("print.settings.request-attributes", requestAttributes);
     }
 
     protected List<String> marshallPrintSetting(Attribute a, Class<?> syntaxClass, String value) {
@@ -539,7 +539,7 @@ public class PrintDialog extends JDialog implements ActionListener {
     }
 
     protected void loadPrintSettings() {
-        for (List<String> setting : Main.pref.getListOfLists("print.settings.service-attributes")) {
+        for (List<String> setting : Config.getPref().getListOfLists("print.settings.service-attributes")) {
             try {
                 PrintServiceAttribute a = (PrintServiceAttribute) unmarshallPrintSetting(setting);
                 if ("printer-name".equals(a.getName())) {
@@ -549,7 +549,7 @@ public class PrintDialog extends JDialog implements ActionListener {
                 Logging.warn(e.getClass().getSimpleName()+": "+e.getMessage());
             }
         }
-        for (List<String> setting : Main.pref.getListOfLists("print.settings.request-attributes")) {
+        for (List<String> setting : Config.getPref().getListOfLists("print.settings.request-attributes")) {
             try {
                 attrs.add(unmarshallPrintSetting(setting));
             } catch (ReflectiveOperationException e) {

@@ -8,8 +8,8 @@ import java.awt.event.KeyEvent;
 
 import javax.swing.SwingUtilities;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.tools.Shortcut;
 
 /**
@@ -47,7 +47,7 @@ public class PrintAction extends JosmAction implements Runnable {
     @Override
     public void run() {
         PrintPlugin.adjustPrefs();
-        PrintDialog window = new PrintDialog(Main.parent);
+        PrintDialog window = new PrintDialog(MainApplication.getMainFrame());
         window.setVisible(true);
         PrintPlugin.restorePrefs();
     }

@@ -1,5 +1,5 @@
 // License: GPL. For details, see LICENSE file.
-package terracer;
+package org.openstreetmap.josm.plugins.terracer;
 
 /**
  * The Class TerracerRuntimeException indicates errors from the Terracer Plugin.

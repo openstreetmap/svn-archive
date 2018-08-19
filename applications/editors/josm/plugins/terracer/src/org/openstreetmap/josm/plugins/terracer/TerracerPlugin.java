@@ -1,5 +1,5 @@
 // License: GPL. For details, see LICENSE file.
-package terracer;
+package org.openstreetmap.josm.plugins.terracer;
 
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MainMenu;

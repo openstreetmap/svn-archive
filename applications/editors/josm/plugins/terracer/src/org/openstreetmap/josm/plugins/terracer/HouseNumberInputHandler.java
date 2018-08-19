@@ -1,5 +1,5 @@
 // License: GPL. For details, see LICENSE file.
-package terracer;
+package org.openstreetmap.josm.plugins.terracer;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
@@ -281,7 +281,7 @@ public class HouseNumberInputHandler extends JosmAction implements ActionListene
         // OK or Cancel button-actions
         if (e.getSource() instanceof JButton) {
             JButton button = (JButton) e.getSource();
-            if (tr("OK").equals(button.getActionCommand()) & button.isEnabled()) {
+            if (tr("OK").equals(button.getActionCommand()) && button.isEnabled()) {
                 if (validateInput()) {
                     saveValues();
 

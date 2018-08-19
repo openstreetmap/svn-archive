@@ -31,6 +31,10 @@
     <property name="plugin.jar"             location="${plugin.dist.dir}/${ant.project.name}.jar"/>
     <property name="plugin.sources.jar"     location="${plugin.dist.dir}/${ant.project.name}-sources.jar"/>
     <property name="plugin.javadoc.jar"     location="${plugin.dist.dir}/${ant.project.name}-javadoc.jar"/>
+    <property name="ivy.home"               location="${user.home}/.ant"/>
+    <property name="ivy.jar.dir"            location="${ivy.home}/lib"/>
+    <property name="ivy.jar.file"           location="${ivy.jar.dir}/ivy.jar"/>
+    <property name="ivy.version"            value="2.5.0-rc1"/>
 
     <!-- For Windows-specific stuff -->
     <condition property="isWindows">
@@ -659,5 +663,18 @@
 
     There are other targets, which usually should not be called manually.
         </echo>
+    </target>
+    <!--
+    ** Ivy tasks
+    -->
+    <target name="download-ivy">
+        <mkdir dir="${ivy.jar.dir}"/>
+        <get src="https://jcenter.bintray.com/org/apache/ivy/ivy/${ivy.version}/ivy-${ivy.version}.jar" dest="${ivy.jar.file}" usetimestamp="true"/>
+    </target>
+    <target name="init-ivy" depends="download-ivy">
+        <path id="ivy.lib.path">
+            <fileset dir="${ivy.jar.dir}" includes="*.jar"/>
+        </path>
+        <taskdef resource="org/apache/ivy/ant/antlib.xml" uri="antlib:org.apache.ivy.ant" classpathref="ivy.lib.path"/>
     </target>
 </project>

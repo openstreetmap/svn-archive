@@ -22,8 +22,6 @@
 package org.dinopolis.util.io;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.PushbackReader;
 import java.io.Reader;
 import java.io.StringReader;
@@ -223,19 +221,6 @@ public class Tokenizer
   {
     this(new StringReader(string));
     setDelimiters(delimiters);
-  }
-
-//----------------------------------------------------------------------
-/**
- * Creates a tokenizer that reads from the given string. It uses the
- * comma as delimiter, does not respect escape characters but respects
- * quoted words.
- *
- * @param inStream the stream to read from.
- */
-  public Tokenizer(InputStream inStream)
-  {
-    this(new InputStreamReader(inStream));
   }
 
 //----------------------------------------------------------------------

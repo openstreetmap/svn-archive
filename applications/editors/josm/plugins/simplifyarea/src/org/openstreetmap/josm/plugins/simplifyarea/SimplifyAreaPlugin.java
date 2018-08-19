@@ -1,5 +1,5 @@
 // License: GPL. For details, see LICENSE file.
-package sk.zdila.josm.plugin.simplify;
+package org.openstreetmap.josm.plugins.simplifyarea;
 
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MainMenu;

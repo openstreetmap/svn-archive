@@ -1,5 +1,5 @@
 // License: GPL. For details, see LICENSE file.
-package sk.zdila.josm.plugin.simplify;
+package org.openstreetmap.josm.plugins.simplifyarea;
 
 import static java.lang.Math.cos;
 import static java.lang.Math.sin;
@@ -377,7 +377,7 @@ public final class SimplifyAreaAction extends JosmAction {
                         final double areaWeight = computeArea(coord1, coord2, coord3) / areaThreshold;
                         final double distanceWeight = Math.abs(crossTrackError(coord1, coord2, coord3)) / distanceThreshold;
 
-                        weight = !closed && i == len - 1 || // don't remove last node of the not closed way
+                        weight = (!closed && i == len - 1) || // don't remove last node of the not closed way
                                 nodeGluesWays(prevNode) ||
                                 angleWeight > 1.0 || areaWeight > 1.0 || distanceWeight > 1.0 ? Double.POSITIVE_INFINITY :
                                 angleWeight * angleFactor + areaWeight * areaFactor + distanceWeight * distanceFactor;

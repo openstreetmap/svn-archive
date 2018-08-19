@@ -9,7 +9,7 @@
          See https://josm.openstreetmap.de/wiki/DevelopersGuide/DevelopingPlugins
     -->
     <property name="plugin.author" value="Malcolm Herring"/>
-    <property name="plugin.class" value="smed.Smed"/>
+    <property name="plugin.class" value="org.openstreetmap.josm.plugins.seamapeditor.SmedPlugin"/>
     <property name="plugin.description" value="Edit features for OpenSeaMap"/>
     <property name="plugin.icon" value="images/Smed.png"/>
     <property name="plugin.link" value="https://openseamap.org/"/>

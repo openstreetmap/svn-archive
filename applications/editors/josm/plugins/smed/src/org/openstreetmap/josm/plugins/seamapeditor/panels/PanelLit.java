@@ -1,5 +1,5 @@
 // License: GPL. For details, see LICENSE file.
-package panels;
+package org.openstreetmap.josm.plugins.seamapeditor.panels;
 
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
@@ -19,13 +19,13 @@ import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
-import messages.Messages;
-import seamarks.SeaMark.Att;
-import seamarks.SeaMark.Ent;
-import seamarks.SeaMark.Exh;
-import seamarks.SeaMark.Lit;
-import seamarks.SeaMark.Vis;
-import smed.SmedAction;
+import org.openstreetmap.josm.plugins.seamapeditor.SmedAction;
+import org.openstreetmap.josm.plugins.seamapeditor.messages.Messages;
+import org.openstreetmap.josm.plugins.seamapeditor.seamarks.SeaMark.Att;
+import org.openstreetmap.josm.plugins.seamapeditor.seamarks.SeaMark.Ent;
+import org.openstreetmap.josm.plugins.seamapeditor.seamarks.SeaMark.Exh;
+import org.openstreetmap.josm.plugins.seamapeditor.seamarks.SeaMark.Lit;
+import org.openstreetmap.josm.plugins.seamapeditor.seamarks.SeaMark.Vis;
 
 public class PanelLit extends JPanel {
 

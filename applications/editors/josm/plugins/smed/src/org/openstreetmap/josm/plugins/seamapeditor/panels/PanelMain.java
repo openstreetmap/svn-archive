@@ -1,5 +1,5 @@
 // License: GPL. For details, see LICENSE file.
-package panels;
+package org.openstreetmap.josm.plugins.seamapeditor.panels;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
@@ -21,9 +21,9 @@ import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
-import messages.Messages;
-import seamarks.SeaMark;
-import smed.SmedAction;
+import org.openstreetmap.josm.plugins.seamapeditor.SmedAction;
+import org.openstreetmap.josm.plugins.seamapeditor.messages.Messages;
+import org.openstreetmap.josm.plugins.seamapeditor.seamarks.SeaMark;
 
 public class PanelMain extends JPanel {
 

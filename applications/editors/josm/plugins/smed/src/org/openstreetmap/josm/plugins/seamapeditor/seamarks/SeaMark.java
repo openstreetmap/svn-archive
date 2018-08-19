@@ -1,5 +1,5 @@
 // License: GPL. For details, see LICENSE file.
-package seamarks;
+package org.openstreetmap.josm.plugins.seamapeditor.seamarks;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -19,11 +19,10 @@ import javax.swing.JPanel;
 import org.openstreetmap.josm.command.ChangePropertyCommand;
 import org.openstreetmap.josm.data.UndoRedoHandler;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.plugins.seamapeditor.SmedAction;
+import org.openstreetmap.josm.plugins.seamapeditor.messages.Messages;
+import org.openstreetmap.josm.plugins.seamapeditor.panels.PanelMain;
 import org.openstreetmap.josm.spi.preferences.Config;
-
-import messages.Messages;
-import panels.PanelMain;
-import smed.SmedAction;
 
 public class SeaMark extends JPanel {
 
@@ -2747,7 +2746,7 @@ public class SeaMark extends JPanel {
                     undoRedo.add(new ChangePropertyCommand(node, "seamark:" + objStr + ":function", FncSTR.get(getFunc())));
                 }
 
-                if ((GrpMAP.get(object) == Grp.LAT) && (getShape() != Shp.PERCH)
+                if (((GrpMAP.get(object) == Grp.LAT) && (getShape() != Shp.PERCH))
                         || (getObject() == Obj.FLTLAT)) {
                     switch (region) {
                     case A:

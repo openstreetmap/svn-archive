@@ -1,5 +1,5 @@
 // License: GPL. For details, see LICENSE file.
-package messages;
+package org.openstreetmap.josm.plugins.seamapeditor.messages;
 
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;

@@ -1,5 +1,5 @@
 // License: GPL. For details, see LICENSE file.
-package panels;
+package org.openstreetmap.josm.plugins.seamapeditor.panels;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
@@ -19,12 +19,12 @@ import javax.swing.JTextField;
 import javax.swing.JToggleButton;
 import javax.swing.SwingConstants;
 
-import messages.Messages;
-import seamarks.SeaMark;
-import seamarks.SeaMark.Att;
-import seamarks.SeaMark.Chr;
-import seamarks.SeaMark.Col;
-import smed.SmedAction;
+import org.openstreetmap.josm.plugins.seamapeditor.SmedAction;
+import org.openstreetmap.josm.plugins.seamapeditor.messages.Messages;
+import org.openstreetmap.josm.plugins.seamapeditor.seamarks.SeaMark;
+import org.openstreetmap.josm.plugins.seamapeditor.seamarks.SeaMark.Att;
+import org.openstreetmap.josm.plugins.seamapeditor.seamarks.SeaMark.Chr;
+import org.openstreetmap.josm.plugins.seamapeditor.seamarks.SeaMark.Col;
 
 public class PanelChr extends JPanel {
 

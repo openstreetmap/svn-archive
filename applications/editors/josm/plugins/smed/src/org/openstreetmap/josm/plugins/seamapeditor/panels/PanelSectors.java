@@ -1,5 +1,5 @@
 // License: GPL. For details, see LICENSE file.
-package panels;
+package org.openstreetmap.josm.plugins.seamapeditor.panels;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
@@ -24,14 +24,14 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 
-import messages.Messages;
-import seamarks.SeaMark;
-import seamarks.SeaMark.Att;
-import seamarks.SeaMark.Col;
-import seamarks.SeaMark.Exh;
-import seamarks.SeaMark.Lit;
-import seamarks.SeaMark.Vis;
-import smed.SmedAction;
+import org.openstreetmap.josm.plugins.seamapeditor.SmedAction;
+import org.openstreetmap.josm.plugins.seamapeditor.messages.Messages;
+import org.openstreetmap.josm.plugins.seamapeditor.seamarks.SeaMark;
+import org.openstreetmap.josm.plugins.seamapeditor.seamarks.SeaMark.Att;
+import org.openstreetmap.josm.plugins.seamapeditor.seamarks.SeaMark.Col;
+import org.openstreetmap.josm.plugins.seamapeditor.seamarks.SeaMark.Exh;
+import org.openstreetmap.josm.plugins.seamapeditor.seamarks.SeaMark.Lit;
+import org.openstreetmap.josm.plugins.seamapeditor.seamarks.SeaMark.Vis;
 
 public class PanelSectors extends JFrame {
 

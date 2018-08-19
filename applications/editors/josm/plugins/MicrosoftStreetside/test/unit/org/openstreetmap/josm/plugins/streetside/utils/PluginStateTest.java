@@ -3,7 +3,11 @@ package org.openstreetmap.josm.plugins.streetside.utils;
 
 import static org.junit.Assert.assertEquals;
 
+import javax.swing.JOptionPane;
+
 import org.junit.Test;
+import org.openstreetmap.josm.TestUtils;
+import org.openstreetmap.josm.testutils.mockers.JOptionPaneSimpleMocker;
 
 /**
  * Tests {@link PluginState} class.
@@ -34,6 +38,12 @@ public class PluginStateTest {
    */
   @Test
   public void uploadTest() {
+    TestUtils.assumeWorkingJMockit();
+    JOptionPaneSimpleMocker jopsMocker = new JOptionPaneSimpleMocker();
+    jopsMocker.getMockResultMap().put(
+            "You have successfully uploaded 2 images to Bing.com",
+            JOptionPane.OK_OPTION
+        );
     assertEquals(false, PluginState.isUploading());
     PluginState.addImagesToUpload(2);
     assertEquals(2, PluginState.getImagesToUpload());

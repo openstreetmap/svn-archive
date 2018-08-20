@@ -70,7 +70,6 @@ public class DirectDownload extends Plugin {
                         attrib.put(GpxConstants.GPX_DESC, track.description);
                     }
                     // replace the existing trace in the unmodifiable tracks
-                    data.removeTrack(trk);
                     dataNew.addTrack(new ImmutableGpxTrack(new ArrayList<>(trk.getSegments()), attrib));
                 }
 

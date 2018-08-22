@@ -258,6 +258,7 @@
             <link href="https://josm.openstreetmap.de/doc"/>
             <doctitle><![CDATA[<h2>JOSM-${ant.project.name} - Javadoc</h2>]]></doctitle>
             <bottom><![CDATA[<a href="https://josm.openstreetmap.de/wiki/Plugins">JOSM Plugins</a>]]></bottom>
+            <arg line="-tag license:X" />
             <arg value="-html5" if:set="isJava9" />
             <arg value="--add-modules" if:set="isJava9" unless:set="isJava11" />
             <arg value="java.activation,java.se.ee" if:set="isJava9" unless:set="isJava11" />

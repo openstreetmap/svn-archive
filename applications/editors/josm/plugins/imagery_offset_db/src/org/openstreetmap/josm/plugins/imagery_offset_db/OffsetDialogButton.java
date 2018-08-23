@@ -1,5 +1,5 @@
 // License: WTFPL. For details, see LICENSE file.
-package iodb;
+package org.openstreetmap.josm.plugins.imagery_offset_db;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
@@ -13,6 +13,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.RenderingHints;
+import java.text.DateFormat;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -29,6 +30,7 @@ import org.openstreetmap.josm.data.projection.Projection;
 import org.openstreetmap.josm.data.projection.ProjectionRegistry;
 import org.openstreetmap.josm.gui.layer.AbstractTileSourceLayer;
 import org.openstreetmap.josm.tools.ImageProvider;
+import org.openstreetmap.josm.tools.date.DateUtils;
 
 /**
  * A button which shows offset information. Must be spectacular, since it's the only
@@ -55,6 +57,7 @@ public class OffsetDialogButton extends JButton {
 
     /**
      * Returns the offset associated with this button.
+     * @return the offset associated with this button
      */
     public ImageryOffsetBase getOffset() {
         return offset;
@@ -76,9 +79,9 @@ public class OffsetDialogButton extends JButton {
     private void layoutComponents() {
         String authorAndDate = offset.isDeprecated()
                 ? tr("Deprecated by {0} on {1}", offset.getAbandonAuthor(),
-                        OffsetInfoAction.DATE_FORMAT.format(offset.getAbandonDate()))
+                        DateUtils.formatDate(offset.getAbandonDate(), DateFormat.DEFAULT))
                         : tr("Created by {0} on {1}", offset.getAuthor(),
-                                OffsetInfoAction.DATE_FORMAT.format(offset.getDate()));
+                                DateUtils.formatDate(offset.getDate(), DateFormat.DEFAULT));
                 JLabel authorAndDateLabel = new JLabel(authorAndDate);
                 Font authorFont = new Font(authorAndDateLabel.getFont().getName(), Font.ITALIC, authorAndDateLabel.getFont().getSize());
                 authorAndDateLabel.setFont(authorFont);
@@ -123,20 +126,26 @@ public class OffsetDialogButton extends JButton {
 
     /**
      * Calculates length and direction for two points in the imagery offset object.
-     * @see #getLengthAndDirection(iodb.ImageryOffset, double, double)
+     * @param offset offset object
+     * @return length and direction
+     * @see #getLengthAndDirection(ImageryOffset, double, double)
      */
     private double[] getLengthAndDirection(ImageryOffset offset) {
         AbstractTileSourceLayer<?> layer = ImageryOffsetTools.getTopImageryLayer();
         double[] dxy = layer == null ? new double[] {0.0, 0.0} :
-                new double[] {layer.getDisplaySettings().getDx(), layer.getDisplaySettings().getDy()};
+            new double[] {layer.getDisplaySettings().getDx(), layer.getDisplaySettings().getDy()};
         return getLengthAndDirection(offset, dxy[0], dxy[1]);
     }
 
     /**
      * Calculates length and direction for two points in the imagery offset object
      * taking into account an existing imagery layer offset.
+     * @param offset offset object
+     * @param dx X offset
+     * @param dy Y offset
+     * @return length and direction
      *
-     * @see #getLengthAndDirection(iodb.ImageryOffset)
+     * @see #getLengthAndDirection(ImageryOffset)
      */
     public static double[] getLengthAndDirection(ImageryOffset offset, double dx, double dy) {
         Projection proj = ProjectionRegistry.getProjection();
@@ -178,6 +187,7 @@ public class OffsetDialogButton extends JButton {
         /**
          * Initialize the icon with an offset object. Calculates length and direction
          * of an arrow if they're needed.
+         * @param offset offset object
          */
         OffsetIcon(ImageryOffsetBase offset) {
             isDeprecated = offset.isDeprecated();

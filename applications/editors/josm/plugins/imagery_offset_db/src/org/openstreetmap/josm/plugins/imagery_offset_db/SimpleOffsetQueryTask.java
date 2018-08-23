@@ -1,5 +1,5 @@
 // License: WTFPL. For details, see LICENSE file.
-package iodb;
+package org.openstreetmap.josm.plugins.imagery_offset_db;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
@@ -47,7 +47,8 @@ class SimpleOffsetQueryTask extends PleaseWaitRunnable {
     /**
      * In case a query was not specified when the object was constructed,
      * it can be set with this method.
-     * @see #SimpleOffsetQueryTask(java.lang.String, java.lang.String)
+     * @param query A query string, usually starting with an action word and a question mark.
+     * @see #SimpleOffsetQueryTask(String, String)
      */
     public void setQuery(String query) {
         this.query = query;
@@ -55,6 +56,7 @@ class SimpleOffsetQueryTask extends PleaseWaitRunnable {
 
     /**
      * Install a listener for successful responses. There can be only one.
+     * @param listener success listener
      */
     public void setListener(QuerySuccessListener listener) {
         this.listener = listener;
@@ -86,6 +88,9 @@ class SimpleOffsetQueryTask extends PleaseWaitRunnable {
     /**
      * Sends a request to the imagery offset server. Processes exceptions and
      * return codes, calls {@link #processResponse(java.io.InputStream)} on success.
+     * @param query A query string, usually starting with an action word and a question mark.
+     * @throws UploadException in case of upload error
+     * @throws IOException in case of other I/O error
      */
     private void doQuery(String query) throws UploadException, IOException {
         try {
@@ -135,7 +140,8 @@ class SimpleOffsetQueryTask extends PleaseWaitRunnable {
     /**
      * Parse the response input stream and determine whether an operation
      * was successful or not.
-     * @throws iodb.SimpleOffsetQueryTask.UploadException Thrown if an error message was found.
+     * @param inp input stream
+     * @throws UploadException Thrown if an error message was found.
      */
     protected void processResponse(InputStream inp) throws UploadException {
         String response = "";

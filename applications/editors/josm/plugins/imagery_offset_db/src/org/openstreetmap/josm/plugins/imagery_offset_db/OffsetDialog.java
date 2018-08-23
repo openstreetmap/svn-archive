@@ -1,5 +1,5 @@
 // License: WTFPL. For details, see LICENSE file.
-package iodb;
+package org.openstreetmap.josm.plugins.imagery_offset_db;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
@@ -160,6 +160,7 @@ public class OffsetDialog extends JDialog implements ActionListener, ZoomChangeL
     /**
      * Make a filtered offset list out of the full one. Takes into
      * account both checkboxes.
+     * @return filtered offset list
      */
     private List<ImageryOffsetBase> filterOffsets() {
         boolean showCalibration = Config.getPref().getBoolean(PREF_CALIBRATION, true);
@@ -304,6 +305,7 @@ public class OffsetDialog extends JDialog implements ActionListener, ZoomChangeL
 
         /**
          * Initialize the listener with an offset.
+         * @param offset offset object
          */
         DeprecateOffsetListener(ImageryOffsetBase offset) {
             this.offset = offset;

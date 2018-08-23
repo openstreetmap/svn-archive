@@ -1,5 +1,5 @@
 // License: WTFPL. For details, see LICENSE file.
-package iodb;
+package org.openstreetmap.josm.plugins.imagery_offset_db;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -87,6 +87,8 @@ public class IODBReader {
          * as decimal degrees. Note that it does not check whether
          * the resulting object is valid: it may not be, especially
          * for locations near the Poles and 180th meridian.
+         * @param atts attributes
+         * @return lat/lon object
          */
         private LatLon parseLatLon(Attributes atts) {
             return new LatLon(

@@ -1,5 +1,5 @@
 // License: WTFPL. For details, see LICENSE file.
-package iodb;
+package org.openstreetmap.josm.plugins.imagery_offset_db;
 
 /**
  * A listener for {@link SimpleOffsetQueryTask}.

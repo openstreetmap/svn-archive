@@ -1,12 +1,12 @@
 // License: WTFPL. For details, see LICENSE file.
-package iodb;
+package org.openstreetmap.josm.plugins.imagery_offset_db;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.event.ActionEvent;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.text.SimpleDateFormat;
+import java.text.DateFormat;
 
 import javax.swing.AbstractAction;
 import javax.swing.JOptionPane;
@@ -14,6 +14,7 @@ import javax.swing.JOptionPane;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.tools.ImageProvider;
 import org.openstreetmap.josm.tools.Logging;
+import org.openstreetmap.josm.tools.date.DateUtils;
 
 /**
  * Display an information box for an offset.
@@ -22,13 +23,13 @@ import org.openstreetmap.josm.tools.Logging;
  * @license WTFPL
  */
 public class OffsetInfoAction extends AbstractAction {
-    public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd MMMM yyyy");
 
     ImageryOffsetBase offset;
 
     /**
      * Initializes the action with an offset object.
-     * Calls {@link #getInformationObject(iodb.ImageryOffsetBase)}.
+     * Calls {@link #getInformationObject(ImageryOffsetBase)}.
+     * @param offset offset object
      */
     public OffsetInfoAction(ImageryOffsetBase offset) {
         super(tr("Offset Information"));
@@ -72,6 +73,8 @@ public class OffsetInfoAction extends AbstractAction {
 
     /**
      * Constructs a string with all information about the given offset.
+     * @param offset offset object
+     * @return string with all information about the given offset
      */
     public static Object getInformationObject(ImageryOffsetBase offset) {
         StringBuilder sb = new StringBuilder();
@@ -90,13 +93,13 @@ public class OffsetInfoAction extends AbstractAction {
 
         sb.append("\n\n");
         sb.append(tr("Created by {0} on {1}", offset.getAuthor(),
-                DATE_FORMAT.format(offset.getDate()))).append('\n');
+                DateUtils.formatDate(offset.getDate(), DateFormat.DEFAULT))).append('\n');
         sb.append(tr("Description")).append(": ").append(offset.getDescription());
 
         if (offset.isDeprecated()) {
             sb.append("\n\n");
             sb.append(tr("Deprecated by {0} on {1}", offset.getAbandonAuthor(),
-                    DATE_FORMAT.format(offset.getAbandonDate()))).append('\n');
+                    DateUtils.formatDate(offset.getAbandonDate(), DateFormat.DEFAULT))).append('\n');
             sb.append(tr("Reason")).append(": ").append(offset.getAbandonReason());
         }
 

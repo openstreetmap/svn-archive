@@ -1,5 +1,5 @@
 // License: WTFPL. For details, see LICENSE file.
-package iodb;
+package org.openstreetmap.josm.plugins.imagery_offset_db;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
@@ -35,11 +35,12 @@ public final class ImageryOffsetTools {
      * Returns the topmost visible imagery layer.
      * @return the layer, or null if it hasn't been found.
      */
-    public static AbstractTileSourceLayer getTopImageryLayer() {
+    public static AbstractTileSourceLayer<?> getTopImageryLayer() {
         if (!MainApplication.isDisplayingMapView())
             return null;
+        @SuppressWarnings("rawtypes")
         List<AbstractTileSourceLayer> layers = MainApplication.getLayerManager().getLayersOfType(AbstractTileSourceLayer.class);
-        for (AbstractTileSourceLayer layer : layers) {
+        for (AbstractTileSourceLayer<?> layer : layers) {
             String url = layer.getInfo().getUrl();
             if (layer.isVisible() && url != null && !url.contains("gps-")) {
                 return layer;
@@ -60,12 +61,13 @@ public final class ImageryOffsetTools {
 
     /**
      * Calculates an imagery layer offset.
+     * @param layer imagery layer
      * @param center The center of a visible map area.
      * @return Coordinates of a point on the imagery which correspond to the
      * center point on the map.
      * @see #applyLayerOffset
      */
-    public static LatLon getLayerOffset(AbstractTileSourceLayer layer, LatLon center) {
+    public static LatLon getLayerOffset(AbstractTileSourceLayer<?> layer, LatLon center) {
         Projection proj = ProjectionRegistry.getProjection();
         EastNorth offsetCenter = MainApplication.getMap().mapView.getCenter();
         EastNorth centerOffset = offsetCenter.add(-layer.getDisplaySettings().getDx(),
@@ -76,16 +78,19 @@ public final class ImageryOffsetTools {
 
     /**
      * Applies the offset to the imagery layer.
-     * @see #calculateOffset(iodb.ImageryOffset)
+     * @param layer imagery layer
+     * @param offset offset object
+     * @see #calculateOffset(ImageryOffset)
      * @see #getLayerOffset
      */
-    public static void applyLayerOffset(AbstractTileSourceLayer layer, ImageryOffset offset) {
+    public static void applyLayerOffset(AbstractTileSourceLayer<?> layer, ImageryOffset offset) {
         OffsetBookmark bookmark = calculateOffset(offset);
         layer.getDisplaySettings().setOffsetBookmark(bookmark);
     }
 
     /**
      * Calculate dx and dy for imagery offset.
+     * @param offset offset object
      * @return An array of [dx, dy].
      * @see #applyLayerOffset
      */
@@ -104,7 +109,7 @@ public final class ImageryOffsetTools {
      * @param layer imagery layer.
      * @return imagery id.
      */
-    public static String getImageryID(AbstractTileSourceLayer layer) {
+    public static String getImageryID(AbstractTileSourceLayer<?> layer) {
         return layer == null ? null :
             ImageryIdGenerator.getImageryID(layer.getInfo().getUrl(), layer.getInfo().getImageryType());
     }
@@ -145,6 +150,8 @@ public final class ImageryOffsetTools {
 
     /**
      * Converts distance in meters to a human-readable string.
+     * @param d distance in meters
+     * @return d as a human-readable string
      */
     public static String formatDistance(double d) {
         // CHECKSTYLE.OFF: SingleSpaceSeparator

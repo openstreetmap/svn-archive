@@ -1,5 +1,5 @@
 // License: WTFPL. For details, see LICENSE file.
-package iodb;
+package org.openstreetmap.josm.plugins.imagery_offset_db;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
@@ -27,6 +27,7 @@ public class DeprecateOffsetAction extends AbstractAction {
 
     /**
      * Initialize an action with an offset object.
+     * @param offset offset object
      */
     public DeprecateOffsetAction(ImageryOffsetBase offset) {
         super(tr("Deprecate Offset"));
@@ -38,7 +39,7 @@ public class DeprecateOffsetAction extends AbstractAction {
     /**
      * Asks a user if they really want to deprecate an offset (since this
      * action is virtually irreversible) and calls
-     * {@link #deprecateOffset(iodb.ImageryOffsetBase, iodb.QuerySuccessListener)}
+     * {@link #deprecateOffset(ImageryOffsetBase, QuerySuccessListener)}
      * on a positive answer.
      */
     @Override
@@ -59,6 +60,7 @@ public class DeprecateOffsetAction extends AbstractAction {
 
     /**
      * Installs a listener to process successful deprecation event.
+     * @param listener success listener
      */
     public void setListener(QuerySuccessListener listener) {
         this.listener = listener;
@@ -66,7 +68,8 @@ public class DeprecateOffsetAction extends AbstractAction {
 
     /**
      * Deprecate the given offset.
-     * @see #deprecateOffset(iodb.ImageryOffsetBase, iodb.QuerySuccessListener)
+     * @param offset offset object
+     * @see #deprecateOffset(ImageryOffsetBase, QuerySuccessListener)
      */
     public static void deprecateOffset(ImageryOffsetBase offset) {
         deprecateOffset(offset, null);
@@ -75,6 +78,8 @@ public class DeprecateOffsetAction extends AbstractAction {
     /**
      * Deprecate the given offset and call listener on success. Asks user the reason
      * and executes {@link SimpleOffsetQueryTask} with a query to deprecate the offset.
+     * @param offset offset object
+     * @param listener success listener
      */
     public static void deprecateOffset(ImageryOffsetBase offset, QuerySuccessListener listener) {
         String userName = UserIdentityManager.getInstance().getUserName();

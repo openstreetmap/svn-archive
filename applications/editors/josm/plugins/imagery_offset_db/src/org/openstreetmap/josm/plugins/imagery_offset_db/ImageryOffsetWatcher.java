@@ -1,5 +1,5 @@
 // License: WTFPL. For details, see LICENSE file.
-package iodb;
+package org.openstreetmap.josm.plugins.imagery_offset_db;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -72,6 +72,7 @@ public final class ImageryOffsetWatcher implements ZoomChangeListener, LayerChan
     /**
      * This class is a singleton, this method returns the instance,
      * creating it if neccessary.
+     * @return unique instance
      */
     public static ImageryOffsetWatcher getInstance() {
         if (instance == null) {
@@ -82,6 +83,7 @@ public final class ImageryOffsetWatcher implements ZoomChangeListener, LayerChan
 
     /**
      * Register an offset state listener.
+     * @param listener offset state listener
      */
     public void register(OffsetStateListener listener) {
         listeners.add(listener);
@@ -90,6 +92,7 @@ public final class ImageryOffsetWatcher implements ZoomChangeListener, LayerChan
 
     /**
      * Unregister an offset state listener.
+     * @param listener offset state listener
      */
     public void unregister(OffsetStateListener listener) {
         listeners.remove(listener);
@@ -97,6 +100,7 @@ public final class ImageryOffsetWatcher implements ZoomChangeListener, LayerChan
 
     /**
      * Change stored offset state, notify listeners if needed.
+     * @param good offset state
      */
     private void setOffsetGood(boolean good) {
         if (good != offsetGood) {
@@ -221,6 +225,7 @@ public final class ImageryOffsetWatcher implements ZoomChangeListener, LayerChan
      * Saves the current imagery layer offset to preferences. It is stored as a
      * collection of ':'-separated strings: imagery_id:lat:lon:dx:dy. No need for
      * projections: nobody uses them anyway.
+     * @param layer imagery layer
      */
     private void storeLayerOffset(AbstractTileSourceLayer<?> layer) {
         String id = ImageryOffsetTools.getImageryID(layer);
@@ -240,6 +245,7 @@ public final class ImageryOffsetWatcher implements ZoomChangeListener, LayerChan
 
     /**
      * Loads the current imagery layer offset from preferences.
+     * @param layer imagery layer
      */
     private void loadLayerOffset(AbstractTileSourceLayer<?> layer) {
         String id = ImageryOffsetTools.getImageryID(layer);

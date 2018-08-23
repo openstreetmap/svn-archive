@@ -1,5 +1,5 @@
 // License: WTFPL. For details, see LICENSE file.
-package iodb;
+package org.openstreetmap.josm.plugins.imagery_offset_db;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
@@ -157,7 +157,7 @@ public class GetImageryOffsetAction extends JosmAction implements ImageryOffsetW
         /**
          * Parses the response with {@link IODBReader}.
          * @param inp Response input stream.
-         * @throws iodb.SimpleOffsetQueryTask.UploadException Thrown on XML parsing error.
+         * @throws org.openstreetmap.josm.plugins.imagery_offset_db.SimpleOffsetQueryTask.UploadException Thrown on XML parsing error.
          */
         @Override
         protected void processResponse(InputStream inp) throws UploadException {

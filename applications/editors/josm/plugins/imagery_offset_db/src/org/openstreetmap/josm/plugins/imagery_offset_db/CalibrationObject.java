@@ -1,5 +1,5 @@
 // License: WTFPL. For details, see LICENSE file.
-package iodb;
+package org.openstreetmap.josm.plugins.imagery_offset_db;
 
 import java.util.Map;
 
@@ -21,6 +21,7 @@ public class CalibrationObject extends ImageryOffsetBase {
 
     /**
      * Initialize a calibration object from the array of nodes.
+     * @param geometry array of lat/lon coordinates forming the geometry
      */
     public CalibrationObject(LatLon[] geometry) {
         this.geometry = geometry;
@@ -28,6 +29,7 @@ public class CalibrationObject extends ImageryOffsetBase {
 
     /**
      * Initialize a calibration object from OSM primitive.
+     * @param p OSM primitive
      */
     public CalibrationObject(OsmPrimitive p) {
         if (p instanceof Node)
@@ -43,6 +45,7 @@ public class CalibrationObject extends ImageryOffsetBase {
 
     /**
      * Get an array of points for this geometry.
+     * @return array of lat/lon coordinates forming the geometry
      */
     public LatLon[] getGeometry() {
         return geometry;

@@ -1,5 +1,5 @@
 // License: WTFPL. For details, see LICENSE file.
-package iodb;
+package org.openstreetmap.josm.plugins.imagery_offset_db;
 
 import java.util.Date;
 import java.util.Map;
@@ -29,6 +29,10 @@ public class ImageryOffsetBase {
     /**
      * Initialize object with the basic information. It's offset location, author, date
      * and description.
+     * @param position offset location
+     * @param author author name
+     * @param description description
+     * @param date creation date
      */
     public void setBasicInfo(LatLon position, String author, String description, Date date) {
         this.position = position;
@@ -50,6 +54,9 @@ public class ImageryOffsetBase {
     /**
      * Mark the offset as deprecated. Though there is no exact field for "isDeprecated",
      * it is deduced from abandonDate, author and reason being not null.
+     * @param abandonDate abandon date
+     * @param author author name
+     * @param reason reason why
      */
     public void setDeprecated(Date abandonDate, String author, String reason) {
         this.abandonDate = abandonDate;
@@ -80,6 +87,7 @@ public class ImageryOffsetBase {
     /**
      * Check that {@link #getAbandonDate()} is not null. Note that
      * is doesn't say anything about abandonAuthor or abandonReason.
+     * @return {@code true} if this is deprecated (abandoned)
      */
     public boolean isDeprecated() {
         return abandonDate != null;

@@ -8,7 +8,7 @@
     <property name="plugin.canloadatruntime" value="true"/>
 
     <property name="plugin.author" value="Ilya Zverev"/>
-    <property name="plugin.class" value="iodb.ImageryOffsetPlugin"/>
+    <property name="plugin.class" value="org.openstreetmap.josm.plugins.imagery_offset_db.ImageryOffsetPlugin"/>
     <property name="plugin.description" value="Database of imagery offsets: share and aquire imagery offsets with one button."/>
     <property name="plugin.icon" value="images/iodb.png"/>
     <property name="plugin.link" value="https://wiki.openstreetmap.org/wiki/Imagery_Offset_Database"/>

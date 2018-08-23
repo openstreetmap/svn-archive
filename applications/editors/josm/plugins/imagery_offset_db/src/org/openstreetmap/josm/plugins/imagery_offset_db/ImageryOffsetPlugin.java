@@ -1,5 +1,5 @@
 // License: WTFPL. For details, see LICENSE file.
-package iodb;
+package org.openstreetmap.josm.plugins.imagery_offset_db;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
@@ -31,6 +31,7 @@ public class ImageryOffsetPlugin extends Plugin {
      * "Offset" menu, because "Imagery" is constantly rebuilt,
      * losing all changes, and other menus are either too long already,
      * or completely unsuitable for imagery offset actions.
+     * @param info Plugin information
      */
     public ImageryOffsetPlugin(PluginInformation info) {
         super(info);

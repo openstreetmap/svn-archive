@@ -360,7 +360,7 @@ public class InitializationWizard extends JDialog {
                         Config.getPref().put("osm-server.password", null);
                     }
                 } catch (CredentialsAgentException ex) {
-                    ex.printStackTrace();
+                    Logging.error(ex);
                 }
             }
             
@@ -375,7 +375,7 @@ public class InitializationWizard extends JDialog {
                         Config.getPref().put(DefaultProxySelector.PROXY_PASS, null);
                     }
                 } catch (CredentialsAgentException ex) {
-                    ex.printStackTrace();
+                    Logging.error(ex);
                 }
             }
             
@@ -389,7 +389,7 @@ public class InitializationWizard extends JDialog {
                         Config.getPref().put("oauth.access-token.secret", null);
                     }
                 } catch (CredentialsAgentException ex) {
-                    ex.printStackTrace();
+                    Logging.error(ex);
                 }
             }
         }

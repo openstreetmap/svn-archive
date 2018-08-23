@@ -24,6 +24,7 @@ import java.net.URI;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.plugins.tag2link.Tag2LinkConstants;
 import org.openstreetmap.josm.plugins.tag2link.data.Link;
+import org.openstreetmap.josm.tools.Logging;
 
 /**
  * Action allowing to open a mailto:// link.
@@ -51,7 +52,7 @@ public class OpenMailAction extends JosmAction implements Tag2LinkConstants {
                 System.out.println("Sending "+url);
                 Desktop.getDesktop().mail(new URI(url));
             } catch (Exception ex) {
-                ex.printStackTrace();
+                Logging.error(ex);
             }
         }
     }

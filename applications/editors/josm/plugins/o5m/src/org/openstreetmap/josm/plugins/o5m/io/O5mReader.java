@@ -132,7 +132,7 @@ public class O5mReader extends AbstractReader {
                 if (discourageUpload)
                     ds.setUploadPolicy(UploadPolicy.DISCOURAGED);
             } catch (IOException e) {
-                e.printStackTrace();
+                Logging.error(e);
             }
         }
         

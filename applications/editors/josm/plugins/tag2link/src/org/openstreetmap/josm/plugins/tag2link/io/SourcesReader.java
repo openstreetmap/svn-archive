@@ -40,6 +40,7 @@ import org.openstreetmap.josm.plugins.tag2link.data.Link;
 import org.openstreetmap.josm.plugins.tag2link.data.LinkPost;
 import org.openstreetmap.josm.plugins.tag2link.data.Rule;
 import org.openstreetmap.josm.plugins.tag2link.data.Source;
+import org.openstreetmap.josm.tools.Logging;
 
 /**
  * Class allowing to read the sources file.
@@ -70,12 +71,8 @@ public class SourcesReader implements Tag2LinkConstants {
             InputStreamReader ir = UTFInputStreamReader.create(is, UTF8_ENCODING);
             XMLStreamReader parser = XMLInputFactory.newInstance().createXMLStreamReader(ir);
             result.addAll(new SourcesReader(parser).parseDoc());
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (XMLStreamException e) {
-            e.printStackTrace();
-        } catch (FactoryConfigurationError e) {
-            e.printStackTrace();
+        } catch (IOException | XMLStreamException | FactoryConfigurationError e) {
+            Logging.error(e);
         }
         
         return result;

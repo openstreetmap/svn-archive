@@ -116,8 +116,7 @@ public class TrustGPG {
         try {
             readGpgFiles();
         } catch (Exception e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            Logging.error(e);
         }
     }
 

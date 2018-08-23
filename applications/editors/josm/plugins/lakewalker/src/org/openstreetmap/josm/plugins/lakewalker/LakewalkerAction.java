@@ -240,7 +240,7 @@ class LakewalkerAction extends JosmAction implements MouseListener {
                     commands.add(new AddCommand(ds, n));
 
                 } catch (Exception ex) {
-                    ex.printStackTrace();
+                    Logging.error(ex);
                 }
 
                 way.addNode(n);

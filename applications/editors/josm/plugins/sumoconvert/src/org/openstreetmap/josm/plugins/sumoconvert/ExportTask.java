@@ -8,6 +8,7 @@ import java.util.Properties;
 
 import org.openstreetmap.josm.gui.PleaseWaitRunnable;
 import org.openstreetmap.josm.io.OsmTransferException;
+import org.openstreetmap.josm.tools.Logging;
 import org.xml.sax.SAXException;
 
 /**
@@ -23,18 +24,18 @@ public class ExportTask extends PleaseWaitRunnable {
 		try {
 			sumoConvertProperties.load(ExportTask.class.getResourceAsStream("/resources/properties/sumoConvert.properties"));
 		} catch (IOException e) {
-			e.printStackTrace();
+			Logging.error(e);
 		}
 	}
 
 	@Override
 	protected void cancel() {
-		// TODO Auto-generated method stub
+		// Do nothing
 	}
 
 	@Override
 	protected void finish() {
-		// TODO Auto-generated method stub
+		// Do nothing
 	}
 
 	@Override
@@ -48,7 +49,7 @@ public class ExportTask extends PleaseWaitRunnable {
 									  null
 			); 			
 		} catch (IOException e) {
-		    e.printStackTrace();
+		    Logging.error(e);
 		}
 	}
 }

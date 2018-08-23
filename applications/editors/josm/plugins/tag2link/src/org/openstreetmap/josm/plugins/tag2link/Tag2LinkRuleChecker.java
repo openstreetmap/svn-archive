@@ -35,6 +35,7 @@ import org.openstreetmap.josm.plugins.tag2link.data.Rule.MatchingTag;
 import org.openstreetmap.josm.plugins.tag2link.data.Source;
 import org.openstreetmap.josm.plugins.tag2link.io.SourcesReader;
 import org.openstreetmap.josm.spi.preferences.Config;
+import org.openstreetmap.josm.tools.Logging;
 
 /**
  * Class matching rules against a specified OSM primitive in order to get its relevant links. 
@@ -119,7 +120,7 @@ public class Tag2LinkRuleChecker implements Tag2LinkConstants {
                     // Finally replace parameter
                     result = result.replaceFirst(Pattern.quote(m.group()), val);
                 } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
+                    Logging.error(e);
                 }
             } else {
                 System.err.println("Invalid argument: "+arg);

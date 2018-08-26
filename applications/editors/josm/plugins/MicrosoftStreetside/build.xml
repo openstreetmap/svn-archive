@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--** This is a template build file for a JOSM  plugin.
-**
-** Maintaining versions
-** ====================-->
-<project name="MicrosoftStreetside" default="dist" basedir="." xmlns:ivy="antlib:org.apache.ivy.ant">
+<project name="MicrosoftStreetside" default="dist" basedir=".">
 
 	<!-- Configure these properties (replace "..." accordingly).
 	         See https://josm.openstreetmap.de/wiki/DevelopersGuide/DevelopingPlugins
@@ -39,21 +35,6 @@
 
 	<target name="pre-compile" depends="fetch_dependencies">
 		<!-- include fetch_dependencies task -->
-	</target>
-
-	<target name="clean_ivy">
-		<delete failonerror="false">
-			<fileset dir="${plugin.lib.dir}">
-				<include name="**/*.jar"/>
-				<exclude name="**/*-custom.jar" />
-			</fileset>
-		</delete>
-	</target>
-
-	<target name="fetch_dependencies" depends="clean_ivy, init-ivy">
-		<echo>fetching dependencies with ivy</echo>
-		<ivy:settings file="ivy_settings.xml" />
-		<ivy:retrieve pattern="${plugin.lib.dir}/[artifact]-[revision](-[classifier]).[ext]" conf="default" />
 	</target>
 
 	<target name="install-plugin" depends="clean, dist, install">

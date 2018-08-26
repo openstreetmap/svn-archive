@@ -1,0 +1,16 @@
+<ivysettings>
+    <version-matchers usedefaults="true">
+        <maven-tsnap-vm/>
+    </version-matchers>
+    <settings defaultResolver="central"/>
+    <resolvers>
+        <ibiblio name="central" m2compatible="true"/>
+        <ibiblio name="gluon" root="http://nexus.gluonhq.com/nexus/content/repositories/releases/" m2compatible="true" />
+        <ibiblio name="josm" root="https://josm.openstreetmap.de/nexus/content/repositories/releases/" m2compatible="true" />
+        <ibiblio name="sonatype_snapshots" root="https://oss.sonatype.org/content/repositories/snapshots/" m2compatible="true"  />
+    </resolvers>
+    <modules>
+        <module organisation="org.openstreetmap.jmapviewer" resolver="josm"/>
+        <module organisation="org.openstreetmap.josm" resolver="josm"/>
+    </modules>
+</ivysettings>

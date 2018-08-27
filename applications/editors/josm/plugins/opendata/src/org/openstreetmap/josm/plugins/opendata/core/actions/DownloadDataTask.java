@@ -12,7 +12,6 @@ import javax.swing.JOptionPane;
 
 import org.openstreetmap.josm.actions.downloadtasks.DownloadOsmTask;
 import org.openstreetmap.josm.actions.downloadtasks.DownloadParams;
-import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
@@ -28,11 +27,6 @@ import org.openstreetmap.josm.plugins.opendata.core.modules.ModuleHandler;
 public class DownloadDataTask extends DownloadOsmTask {
 
     private AbstractDataSetHandler handler;
-
-    @Override
-    public Future<?> download(boolean newLayer, Bounds downloadArea, ProgressMonitor progressMonitor) {
-        return null;
-    }
 
     @Override
     public Future<?> loadUrl(DownloadParams settings, String url, ProgressMonitor progressMonitor) {

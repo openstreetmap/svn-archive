@@ -11,6 +11,7 @@
     <property name="plugin.author" value="Don-vip"/>
     <property name="plugin.class" value="org.openstreetmap.josm.plugins.jaxb.OpenJfxPlugin"/>
     <property name="plugin.description" value="Provides the OpenJFX (JavaFX) library for JOSM core and other JOSM plugins. Provides additional features such as MP3 audio playback."/>
+    <property name="plugin.minimum.java.version" value="11"/>
     <!--<property name="plugin.icon" value="..."/>-->
     <!--<property name="plugin.link" value="..."/>-->
     <property name="plugin.early" value="true"/>

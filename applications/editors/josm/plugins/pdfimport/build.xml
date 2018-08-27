@@ -9,7 +9,7 @@
          See https://josm.openstreetmap.de/wiki/DevelopersGuide/DevelopingPlugins
     -->
     <property name="plugin.author" value="extropy"/>
-    <property name="plugin.class" value="pdfimport.PdfImportPlugin"/>
+    <property name="plugin.class" value="org.openstreetmap.josm.plugins.pdfimport.PdfImportPlugin"/>
     <property name="plugin.description" value="Import PDF file into a layer and convert pdf lines to ways."/>
     <property name="plugin.icon" value="images/pdf_import.png"/>
     <property name="plugin.link" value="https://wiki.openstreetmap.org/wiki/JOSM/Plugins/Pdf_Import"/>

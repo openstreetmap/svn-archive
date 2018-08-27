@@ -69,7 +69,6 @@ There are two versions maintained with each plugin:
 Hints for eclipse
 =================
 . Building:
-  . add pdfimport/src to your buildpath
   . add to buildpath|libraries: josm-custom.jar, fontbox-...jar, jempbox...jar, pdfbox...jar
   . build with ant, if any resources have changed (at least after svn update); eclipse cant handle build of resources, etc
 . Run / Debug

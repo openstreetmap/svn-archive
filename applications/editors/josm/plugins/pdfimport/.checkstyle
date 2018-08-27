@@ -9,7 +9,7 @@
   </fileset>
   <filter name="DerivedFiles" enabled="true"/>
   <filter name="FilesFromPackage" enabled="true">
-    <filter-data value="src/pdfimport/pdfbox/operators"/>
+    <filter-data value="src/org/openstreetmap/josm/plugins/pdfimport/pdfbox/operators"/>
     <filter-data value="data"/>
     <filter-data value="images"/>
     <filter-data value="styles"/>

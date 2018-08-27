@@ -497,8 +497,11 @@
     </target>
 
     <path id="test.classpath">
+        <!-- JMockit must be included before JUnit in the classpath -->
+        <pathelement path="${jmockit.jar}"/>
         <fileset dir="../00_core_test_lib">
             <include name="**/*.jar"/>
+            <exclude name="**/jmockit*.jar"/>
         </fileset>
         <fileset dir="${plugin.test.dir}/lib" erroronmissingdir="no">
             <include name="**/*.jar"/>

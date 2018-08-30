@@ -30,7 +30,10 @@ public class UntaggedGeoImageLayerAction
         super(tr("New layer for untagged images"), ImageProvider.get("untaglayer"));
     }
 
-    /** Get the layer this menu entry belongs to. */
+    /**
+     * Get the layer this menu entry belongs to.
+     * @return the layer this menu entry belongs to
+     */
     private GeoImageLayer getSelectedLayer() {
         return (GeoImageLayer)LayerListDialog.getInstance().getModel()
             .getSelectedLayers().get(0);
@@ -60,7 +63,11 @@ public class UntaggedGeoImageLayerAction
         }
     }
 
-    /** Check if there is any image without coordinates. */
+    /**
+     * Check if there is any image without coordinates.
+     * @param layer geo image layer
+     * @return {@code true} if there is any image without coordinates
+     */
     private boolean enabled(GeoImageLayer layer) {
         if (layer != null) {
             for (ImageEntry img: layer.getImages()) {

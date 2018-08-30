@@ -24,6 +24,7 @@ import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.coor.conversion.CoordinateFormatManager;
 import org.openstreetmap.josm.data.coor.conversion.LatLonParser;
+import org.openstreetmap.josm.data.gpx.GpxImageEntry;
 import org.openstreetmap.josm.gui.ExtendedDialog;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MainMenu;
@@ -142,7 +143,7 @@ public class PhotoPropertyEditor {
         private final ImageEntry image;
         private final GeoImageLayer layer;
         // Image as it was when the dialog was opened.
-        private final ImageEntry imgOrig;
+        private final GpxImageEntry imgOrig;
         private static final Color BG_COLOR_ERROR = new Color(255, 224, 224);
 
         public PropertyEditorDialog(String title, final ImageEntry image,
@@ -404,7 +405,7 @@ public class PhotoPropertyEditor {
          * Copy the values from the dialog to the temporary image copy.
          */
         public void updateImageTmp() {
-            ImageEntry imgTmp = image.getTmp();
+            GpxImageEntry imgTmp = image.getTmp();
 
             String text = coords.getText();
             // The position of imgTmp is set in any case because it was

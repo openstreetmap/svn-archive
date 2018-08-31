@@ -4,17 +4,13 @@ package relcontext.actions;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.event.ActionEvent;
-import java.net.URI;
-import java.util.List;
 
 import javax.swing.AbstractAction;
 
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.dialogs.properties.HelpAction;
-import org.openstreetmap.josm.spi.preferences.Config;
 import org.openstreetmap.josm.tools.ImageProvider;
-import org.openstreetmap.josm.tools.LanguageInfo;
 import org.openstreetmap.josm.tools.Logging;
 
 import relcontext.ChosenRelation;
@@ -42,10 +38,7 @@ public class RelationHelpAction extends AbstractAction implements ChosenRelation
         if (rel.get() == null)
             return;
         try {
-            String base = Config.getPref().get("url.openstreetmap-wiki", "https://wiki.openstreetmap.org/wiki/");
-            String lang = LanguageInfo.getWikiLanguagePrefix();
-            final List<URI> uris = HelpAction.getRelationURIs(base, lang, rel.get());
-            MainApplication.worker.execute(() -> HelpAction.displayHelp(uris));
+            MainApplication.worker.execute(() -> HelpAction.displayRelationHelp(rel.get()));
         } catch (Exception e1) {
             Logging.error(e1);
         }

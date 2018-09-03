@@ -7,6 +7,7 @@ import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.text.DecimalFormat;
@@ -33,10 +34,12 @@ import org.openstreetmap.josm.gui.widgets.JMultilineLabel;
 import org.openstreetmap.josm.gui.widgets.UrlLabel;
 import org.openstreetmap.josm.io.GpxWriter;
 import org.openstreetmap.josm.io.OsmApi;
+import org.openstreetmap.josm.io.OsmTransferException;
 import org.openstreetmap.josm.spi.preferences.Config;
 import org.openstreetmap.josm.tools.GBC;
 import org.openstreetmap.josm.tools.HttpClient;
 import org.openstreetmap.josm.tools.HttpClient.Response;
+import org.openstreetmap.josm.tools.Logging;
 
 /**
  *
@@ -201,10 +204,12 @@ public class UploadDataGui extends ExtendedDialog {
 
     /**
      * This is the actual workhorse that manages the upload.
-     * @param String Description of the GPX track being uploaded
-     * @param String Tags associated with the GPX track being uploaded
-     * @param boolean Shall the GPX track be public
-     * @param GpxData The GPX Data to upload
+     * @param description Description of the GPX track being uploaded
+     * @param tags Tags associated with the GPX track being uploaded
+     * @param visi Shall the GPX track be public
+     * @param gpxData The GPX Data to upload
+     * @param progressMonitor Progress monitor
+     * @throws IOException if any I/O error occurs
      */
     private void upload(String description, String tags, String visi, GpxData gpxData, ProgressMonitor progressMonitor) throws IOException {
         progressMonitor.beginTask(tr("Uploading trace ..."));
@@ -269,10 +274,12 @@ public class UploadDataGui extends ExtendedDialog {
     /**
      * This function sets up the upload URL and logs in using the username and password given
      * in the preferences.
-     * @param int The length of the content to be sent to the server
+     * @param contentLength The length of the content to be sent to the server
      * @return HttpURLConnection The set up conenction
+     * @throws MalformedURLException in case of invalid URL
+     * @throws OsmTransferException if auth header cannot be added
      */
-    private HttpClient setupConnection(int contentLength) throws Exception {
+    private HttpClient setupConnection(int contentLength) throws MalformedURLException, OsmTransferException {
 
         // Upload URL
         URL url = new URL(OsmApi.getOsmApi().getBaseUrl() + "gpx/create");
@@ -294,9 +301,10 @@ public class UploadDataGui extends ExtendedDialog {
      * This function checks if the given connection finished up fine, closes it and returns the result.
      * It also posts the result (or errors) to OutputDisplay.
 
-     * @param HttpURLConnection The connection to check/finish up
+     * @param c The HTTP connection to check/finish up
+     * @return {@code true} for success
      */
-    private boolean finishUpConnection(Response c) throws Exception {
+    private boolean finishUpConnection(Response c) {
         String returnMsg = c.getResponseMessage();
         final boolean success = returnMsg.equals("OK");
 
@@ -349,12 +357,13 @@ public class UploadDataGui extends ExtendedDialog {
 */
     /**
      * Generates the output string displayed in the PleaseWaitDialog.
-     * @param int Bytes already uploaded
-     * @return String Message
+     * @param cur Bytes already uploaded
+     * @param progressMonitor Progress monitor
+     * @return Message
      */
     private String getProgressText(int cur, ProgressMonitor progressMonitor) {
         int max = progressMonitor.getTicksCount();
-        int percent = Math.round(cur * 100 / max);
+        int percent = (cur * 100 / max);
         // FIXME method kept because of translated string
         return tr("Uploading GPX track: {0}% ({1} of {2})",
                         percent, formatBytes(cur), formatBytes(max));
@@ -362,24 +371,24 @@ public class UploadDataGui extends ExtendedDialog {
 
     /**
      * Nicely calculates given bytes into MB, kB and B (with units)
-     * @param int Bytes
+     * @param bytes Bytes
      * @return String
      */
     private String formatBytes(int bytes) {
         return (bytes > 1000 * 1000
                     // Rounds to 2 decimal places
                     ? new DecimalFormat("0.00")
-                        .format((double)Math.round(bytes/(1000*10))/100) + " MB"
+                        .format((double)(bytes/(1000*10))/100) + " MB"
                     : (bytes > 1000
-                        ? Math.round(bytes/1000) + " kB"
+                        ? (bytes/1000) + " kB"
                         : bytes + " B"));
     }
 
     /**
      * Checks for common errors and displays them in OutputDisplay if it finds any.
      * Returns whether errors have been found or not.
-     * @param String GPX track description
-     * @param GpxData the GPX data to upload
+     * @param description GPX track description
+     * @param gpxData the GPX data to upload
      * @return boolean true if errors have been found
      */
     private boolean checkForErrors(String description, GpxData gpxData) {
@@ -442,9 +451,10 @@ public class UploadDataGui extends ExtendedDialog {
 
     /**
      * Writes textfields (like in webbrowser) to the given ByteArrayOutputStream
-     * @param ByteArrayOutputStream
-     * @param String The name of the "textbox"
-     * @param String The value to write
+     * @param baos output stream
+     * @param name The name of the "textbox"
+     * @param value The value to write
+     * @throws IOException if any I/O error occurs
      */
     private void writeField(ByteArrayOutputStream baos, String name, String value) throws IOException {
         writeBoundary(baos);
@@ -457,9 +467,10 @@ public class UploadDataGui extends ExtendedDialog {
 
     /**
      * Writes gpxData (= file field in webbrowser) to the given ByteArrayOutputStream
-     * @param ByteArrayOutputStream
-     * @param String The name of the "upload field"
-     * @param GpxData The GPX data to upload
+     * @param baos output stream
+     * @param name The name of the "upload field"
+     * @param gpxData The GPX data to upload
+     * @throws IOException if any I/O error occurs
      */
     private void writeGpxFile(ByteArrayOutputStream baos, String name, GpxData gpxData) throws IOException {
         String filename;
@@ -481,18 +492,20 @@ public class UploadDataGui extends ExtendedDialog {
 
     /**
      * Writes a String to the given ByteArrayOutputStream
-     * @param ByteArrayOutputStream
-     * @param String
+     * @param baos output stream
+     * @param s string
      */
     private void writeString(ByteArrayOutputStream baos, String s) {
         try {
             baos.write(s.getBytes(StandardCharsets.UTF_8));
-        } catch(Exception e) {}
+        } catch(Exception e) {
+            Logging.error(e);
+        }
     }
 
     /**
      * Writes a newline to the given ByteArrayOutputStream
-     * @param ByteArrayOutputStream
+     * @param baos output stream
      */
     private void writeLineEnd(ByteArrayOutputStream baos) {
         writeString(baos, LINE_END);
@@ -500,7 +513,7 @@ public class UploadDataGui extends ExtendedDialog {
 
     /**
      * Writes a boundary line to the given ByteArrayOutputStream
-     * @param ByteArrayOutputStream
+     * @param baos output stream
      */
     private void writeBoundary(ByteArrayOutputStream baos) {
         writeString(baos, "--" + BOUNDARY);

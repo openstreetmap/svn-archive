@@ -153,7 +153,7 @@ class GPSBlamMode extends MapMode implements LayerChangeListener, MouseWheelList
             // AA+XOR broken in some versions of Java
             g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
             g.setStroke(new BasicStroke(2.0f));
-            if (p2==null)
+            if (p2 == null)
                 p2 = p1;
             double length = Math.sqrt((p2.x-p1.x)*(p2.x-p1.x)+(p2.y-p1.y)*(p2.y-p1.y));
             if (length > 0) {
@@ -163,11 +163,11 @@ class GPSBlamMode extends MapMode implements LayerChangeListener, MouseWheelList
                 double ofsX = radius * perpdirX, ofsY = radius * perpdirY; // radius vector, 90deg CW from dir vector
 
                 Path2D path = new Path2D.Double();
-                path.append(new Line2D.Double(p1.x+ofsX, p1.y+ofsY,p2.x+ofsX, p2.y+ofsY), false);
-                path.append(new Arc2D.Double(p2.x-radius, p2.y-radius,radius*2, radius*2,
+                path.append(new Line2D.Double(p1.x+ofsX, p1.y+ofsY, p2.x+ofsX, p2.y+ofsY), false);
+                path.append(new Arc2D.Double(p2.x-radius, p2.y-radius, radius*2, radius*2,
                         Math.toDegrees(angle), -180, Arc2D.OPEN), true);
-                path.append(new Line2D.Double(p2.x-ofsX, p2.y-ofsY,p1.x-ofsX, p1.y-ofsY), true);
-                path.append(new Arc2D.Double(p1.x-radius, p1.y-radius,radius*2, radius*2,
+                path.append(new Line2D.Double(p2.x-ofsX, p2.y-ofsY, p1.x-ofsX, p1.y-ofsY), true);
+                path.append(new Arc2D.Double(p1.x-radius, p1.y-radius, radius*2, radius*2,
                         Math.toDegrees(angle)-180, -180, Arc2D.OPEN), true);
                 path.closePath();
                 g.draw(path);
@@ -175,12 +175,12 @@ class GPSBlamMode extends MapMode implements LayerChangeListener, MouseWheelList
                 try {
                     g.setXORMode(Color.BLACK);
                     g.setColor(Color.WHITE);
-                    g.drawOval(Math.round(p2.x-radius), Math.round(p2.y-radius),
-                    Math.round(radius*2), Math.round(radius*2));
+                    g.drawOval(p2.x-radius, p2.y-radius, radius*2, radius*2);
                 } catch (InternalError e) {
                     // Robustness against Java bug https://bugs.openjdk.java.net/browse/JDK-8041647
                     Logging.error(e);
-                    Logging.error("Java bug JDK-8041647 occured. To avoid this bug, please consult https://bugs.openjdk.java.net/browse/JDK-8041647."
+                    Logging.error(
+                            "Java bug JDK-8041647 occured. To avoid this bug, please consult https://bugs.openjdk.java.net/browse/JDK-8041647."
                             +" If the bug is fixed, please update your Java Runtime Environment.");
                 }
             }

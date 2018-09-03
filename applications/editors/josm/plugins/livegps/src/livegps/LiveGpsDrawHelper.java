@@ -66,8 +66,8 @@ public class LiveGpsDrawHelper extends GpxDrawHelper {
         if (w > TriaWidth || h > TriaWidth) {
             int xo, yo;
 
-            yo = screen.y - Math.round(h/2);
-            xo = screen.x - Math.round(w/2);
+            yo = screen.y - (h/2);
+            xo = screen.x - (w/2);
 
             g.drawOval(xo, yo, w, h);
         }

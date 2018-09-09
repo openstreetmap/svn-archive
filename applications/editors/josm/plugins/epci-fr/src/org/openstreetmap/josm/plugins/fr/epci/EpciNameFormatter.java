@@ -12,7 +12,7 @@ import org.openstreetmap.josm.data.osm.NameFormatterHook;
 public class EpciNameFormatter implements NameFormatterHook {
 
     @Override
-    public String checkRelationTypeName(IRelation relation, String defaultName) {
+    public String checkRelationTypeName(IRelation<?> relation, String defaultName) {
         if (relation == null) return null;
         String localAuthorityFR = relation.get("local_authority:FR");
         if (localAuthorityFR != null) {
@@ -29,12 +29,12 @@ public class EpciNameFormatter implements NameFormatterHook {
     }
 
     @Override
-    public String checkFormat(IWay node, String defaultName) {
+    public String checkFormat(IWay<?> node, String defaultName) {
         return null;
     }
 
     @Override
-    public String checkFormat(IRelation node, String defaultName) {
+    public String checkFormat(IRelation<?> node, String defaultName) {
         return null;
     }
 }

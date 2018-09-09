@@ -79,7 +79,7 @@ public class SelectMode extends AbstractMode {
                     && lastClicked instanceof StreetsideImage
             ) {
       if (this.closest != null
-              && this.closest.getSequence() == (lastClicked).getSequence()) {
+              && this.closest.getSequence() == lastClicked.getSequence()) {
         int i = this.closest.getSequence().getImages().indexOf(this.closest);
         int j = lastClicked.getSequence().getImages().indexOf(lastClicked);
         StreetsideLayer.getInstance().getData().addMultiSelectedImage(

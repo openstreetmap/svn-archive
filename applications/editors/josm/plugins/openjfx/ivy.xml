@@ -4,6 +4,7 @@
 		<conf name="default" />
 	</configurations>
 	<dependencies>
+        <dependency org="org.testfx" name="openjfx-monocle" rev="jdk-11+23"/>
         <dependency org="org.openjfx" name="javafx-swing" rev="11-ea+25">
             <artifact name="javafx-swing" type="jar" m:classifier="linux"/>
             <artifact name="javafx-swing" type="jar" m:classifier="mac"/>

@@ -3,13 +3,13 @@
     <!-- enter the SVN commit message -->
     <property name="commit.message" value="Commit message"/>
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
-    <property name="plugin.main.version" value="14183"/>
+    <property name="plugin.main.version" value="14234"/>
 
 	<!-- Configure these properties (replace "..." accordingly).
          See https://josm.openstreetmap.de/wiki/DevelopersGuide/DevelopingPlugins
     -->
     <property name="plugin.author" value="Don-vip"/>
-    <property name="plugin.class" value="org.openstreetmap.josm.plugins.jaxb.OpenJfxPlugin"/>
+    <property name="plugin.class" value="org.openstreetmap.josm.plugins.openjfx.OpenJfxPlugin"/>
     <property name="plugin.description" value="Provides the OpenJFX (JavaFX) library for JOSM core and other JOSM plugins. Provides additional features such as MP3 audio playback."/>
     <property name="plugin.minimum.java.version" value="11"/>
     <!--<property name="plugin.icon" value="..."/>-->
@@ -24,4 +24,60 @@
 	<target name="pre-compile" depends="fetch_dependencies">
 		<!-- include fetch_dependencies task -->
 	</target>
+
+    <!-- Override build-jar target to speed up merging from 16 minutes to 7 minutes -->
+    <target name="build-jar">
+        <echo>Building commong jar...</echo>
+        <jar destfile="${plugin.jar}" basedir="${plugin.build.dir}" manifest="MANIFEST" manifestencoding="UTF-8" duplicate="preserve" level="9">
+            <restrict>
+                <not><or>
+                    <name name="META-INF/maven/*"/>
+                    <name name="META-INF/DEPENDENCIES"/>
+                    <name name="META-INF/LICENSE"/>
+                    <name name="META-INF/NOTICE"/>
+                    <name name="META-INF/*.RSA"/>
+                    <name name="META-INF/*.SF"/>
+                    <name name="module-info.class"/>
+                </or></not>
+                <archives>
+                    <zips>
+                        <fileset dir="${plugin.lib.dir}" includes="*-linux.jar"/>
+                    </zips>
+                </archives>
+            </restrict>
+        </jar>
+        <echo>Adding macOS artifacts...</echo>
+        <jar destfile="${plugin.jar}" update="true" duplicate="preserve" level="9">
+            <restrict>
+                <or>
+                    <name name="*.dylib"/>
+                    <name name="com/sun/glass/events/mac/**"/>
+                    <name name="com/sun/glass/ui/mac/**"/>
+                    <name name="com/sun/media/jfxmediaimpl/platform/osx/**"/>
+                    <name name="com/sun/prism/es2/**"/>
+                </or>
+                <archives>
+                    <zips>
+                        <fileset dir="${plugin.lib.dir}" includes="*-mac.jar"/>
+                    </zips>
+                </archives>
+            </restrict>
+        </jar>
+        <echo>Adding Windows artifacts...</echo>
+        <jar destfile="${plugin.jar}" update="true" duplicate="preserve" level="9">
+            <restrict>
+                <or>
+                    <name name="*.dll"/>
+                    <name name="com/sun/glass/ui/win/**"/>
+                    <name name="com/sun/prism/d3d/**"/>
+                    <name name="com/sun/scenario/effect/impl/hw/d3d/**"/>
+                </or>
+                <archives>
+                    <zips>
+                        <fileset dir="${plugin.lib.dir}" includes="*-win.jar"/>
+                    </zips>
+                </archives>
+            </restrict>
+        </jar>
+    </target>
 </project>

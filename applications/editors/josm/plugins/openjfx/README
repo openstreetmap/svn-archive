@@ -1,4 +1,4 @@
 README 
 ======
-This plugin provides the openjfx library for JOSM plugins.
+This plugin provides the openjfx (JavaFX) library for JOSM plugins.
     * Licensed under GPL v3 (see LICENSE)

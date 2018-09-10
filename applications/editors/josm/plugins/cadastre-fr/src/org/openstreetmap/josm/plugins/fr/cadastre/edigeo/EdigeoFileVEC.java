@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
@@ -660,8 +661,15 @@ public class EdigeoFileVEC extends EdigeoLotFile<VecBlock<?>> {
                 ArcBlock ab = newArcs.get(newArcs.size() - 1);
                 EastNorth en = ab.points.get(ab.nPoints - 1);
                 Stream<ArcBlock> stream = arcs.stream().filter(a -> a.points.get(0).equalsEpsilon(en, EPSILON));
-                assert stream.count() == 1;
-                newArcs.add(stream.findAny().get());
+                Optional<ArcBlock> x = stream.findAny();
+                if (!x.isPresent()) {
+                    // Problem observed with 31248000AO01. Choose the nearest node
+                    Logging.warn("Degraded mode for " + obj + " around " + en);
+                    stream = arcs.stream()
+                                 .sorted((o1, o2) -> Double.compare(en.distance(o1.points.get(0)), en.distance(o2.points.get(0))));
+                    x = stream.findFirst();
+                }
+                newArcs.add(x.get());
             }
             assert newArcs.size() == arcs.size();
             arcs.clear();

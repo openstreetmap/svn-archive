@@ -275,6 +275,7 @@ public class EdigeoPciReader extends AbstractReader {
         } catch (IOException e) {
             throw e;
         } catch (Exception | AssertionError e) {
+            Logging.error(e);
             throw new IOException(e);
         }
     }

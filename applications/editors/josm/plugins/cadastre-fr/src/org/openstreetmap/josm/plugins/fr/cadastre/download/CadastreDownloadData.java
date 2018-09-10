@@ -41,38 +41,74 @@ public class CadastreDownloadData {
         this.downloadCommune = downloadCommune;
     }
 
+    /**
+     * Determines whether to download water layer
+     * @return whether to download water layer
+     */
     public final boolean isDownloadWater() {
         return downloadWater;
     }
 
+    /**
+     * Determines whether to download building layer
+     * @return whether to download building layer
+     */
     public final boolean isDownloadBuilding() {
         return downloadBuilding;
     }
 
+    /**
+     * Determines whether to download symbol layer
+     * @return whether to download symbol layer
+     */
     public final boolean isDownloadSymbol() {
         return downloadSymbol;
     }
 
+    /**
+     * Determines whether to download parcel layer
+     * @return whether to download parcel layer
+     */
     public final boolean isDownloadParcel() {
         return downloadParcel;
     }
 
+    /**
+     * Determines whether to download parcel number layer
+     * @return whether to download parcel number layer
+     */
     public final boolean isDownloadParcelNumber() {
         return downloadParcelNumber;
     }
 
+    /**
+     * Determines whether to download address layer
+     * @return whether to download address layer
+     */
     public final boolean isDownloadAddress() {
         return downloadAddress;
     }
 
+    /**
+     * Determines whether to download locality layer
+     * @return whether to download locality layer
+     */
     public final boolean isDownloadLocality() {
         return downloadLocality;
     }
 
+    /**
+     * Determines whether to download section layer
+     * @return whether to download section layer
+     */
     public final boolean isDownloadSection() {
         return downloadSection;
     }
 
+    /**
+     * Determines whether to download communal layer
+     * @return whether to download communal layer
+     */
     public final boolean isDownloadCommune() {
         return downloadCommune;
     }

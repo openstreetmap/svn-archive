@@ -116,7 +116,7 @@ public class DatatypeConverter {
                     out[o++] = (byte) ((quadruplet[1] << 4) | (quadruplet[2] >> 2));
                 }
                 if (quadruplet[3] != PADDING) {
-                    out[o++] = (byte) ((quadruplet[2] << 6) | (quadruplet[3]));
+                    out[o++] = (byte) ((quadruplet[2] << 6) | quadruplet[3]);
                 }
                 q = 0;
             }
@@ -194,7 +194,7 @@ public class DatatypeConverter {
         // encode when exactly 1 element (left) to encode
         if (remaining == 1) {
             buf[ptr++] = encode(input[i] >> 2);
-            buf[ptr++] = encode(((input[i]) & 0x3) << 4);
+            buf[ptr++] = encode((input[i] & 0x3) << 4);
             buf[ptr++] = '=';
             buf[ptr++] = '=';
         }

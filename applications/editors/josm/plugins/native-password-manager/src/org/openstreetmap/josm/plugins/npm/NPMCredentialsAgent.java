@@ -6,6 +6,7 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 import java.awt.Component;
 import java.net.Authenticator.RequestorType;
 import java.net.PasswordAuthentication;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -62,7 +63,7 @@ public class NPMCredentialsAgent extends AbstractCredentialsAgent {
         }
         
         CRC32 id = new CRC32();
-        id.update((pref+"/"+url).getBytes());
+        id.update((pref+"/"+url).getBytes(StandardCharsets.UTF_8));
         
         String hash = Integer.toHexString((int)id.getValue());
 
@@ -75,7 +76,7 @@ public class NPMCredentialsAgent extends AbstractCredentialsAgent {
         String port = Config.getPref().get(DefaultProxySelector.PROXY_HTTP_PORT, "");
         
         CRC32 id = new CRC32();
-        id.update((pref+"/"+host+"/"+port).getBytes());
+        id.update((pref+"/"+host+"/"+port).getBytes(StandardCharsets.UTF_8));
 
         String hash = Integer.toHexString((int)id.getValue());
 
@@ -87,7 +88,7 @@ public class NPMCredentialsAgent extends AbstractCredentialsAgent {
         // TODO: put more identifying data here
         
         CRC32 id = new CRC32();
-        id.update((pref).getBytes());
+        id.update(pref.getBytes(StandardCharsets.UTF_8));
 
         String hash = Integer.toHexString((int)id.getValue());
 

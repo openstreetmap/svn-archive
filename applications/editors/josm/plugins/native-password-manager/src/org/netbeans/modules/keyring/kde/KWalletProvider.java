@@ -45,6 +45,7 @@ package org.netbeans.modules.keyring.kde;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -95,7 +96,7 @@ public class KWalletProvider implements KeyringProvider{
         if (updateHandler()){
             CommandResult result = runCommand("writePassword", handler , getApplicationName()
                     , key.toCharArray(), password , getApplicationName());
-            if (result.exitCode != 0 || (new String(result.retVal)).equals("-1")){
+            if (result.exitCode != 0 || new String(result.retVal).equals("-1")) {
                 warning("save action failed");
             }
             return;
@@ -108,7 +109,7 @@ public class KWalletProvider implements KeyringProvider{
         if (updateHandler()){
             CommandResult result = runCommand("removeEntry" ,handler,
             getApplicationName() , key.toCharArray() , getApplicationName());
-             if (result.exitCode != 0  || (new String(result.retVal)).equals("-1")){
+             if (result.exitCode != 0  || new String(result.retVal).equals("-1")) {
                 warning("delete action failed");
             }
             return;
@@ -175,7 +176,7 @@ public class KWalletProvider implements KeyringProvider{
             }
             Process pr = rt.exec(argv);
             
-            try (BufferedReader input = new BufferedReader(new InputStreamReader(pr.getInputStream()))) {
+            try (BufferedReader input = new BufferedReader(new InputStreamReader(pr.getInputStream(), StandardCharsets.UTF_8))) {
 
                 String line;
                 while((line = input.readLine()) != null) {
@@ -185,7 +186,7 @@ public class KWalletProvider implements KeyringProvider{
                     retVal = retVal.concat(line);
                 }            
             }
-            try (BufferedReader input = new BufferedReader(new InputStreamReader(pr.getErrorStream()))) {
+            try (BufferedReader input = new BufferedReader(new InputStreamReader(pr.getErrorStream(), StandardCharsets.UTF_8))) {
 
                 String line;
                 while((line = input.readLine()) != null) {

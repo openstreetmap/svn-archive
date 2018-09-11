@@ -42,6 +42,7 @@
 
 package org.netbeans.modules.keyring.fallback;
 
+import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -89,7 +90,7 @@ public class FallbackProvider implements KeyringProvider {
         encryption.freshKeyring(true);
         byte[] randomArray = new byte[36];
         new SecureRandom().nextBytes(randomArray);
-        if (_save(SAMPLE_KEY, (SAMPLE_KEY + new String(randomArray)).toCharArray(),
+        if (_save(SAMPLE_KEY, (SAMPLE_KEY + new String(randomArray, StandardCharsets.UTF_8)).toCharArray(),
                 "Sample value ensuring that decryption is working.")) {
             LOG.fine("saved sample key");
             return true;

@@ -13,7 +13,7 @@
     
 	<property name="josm" location="../../core/dist/josm-custom.jar"/>
 	<property name="plugin.dist.dir" value="../../dist"/>
-    <property name="plugin.requires" value="apache-commons"/>
+    <property name="plugin.requires" value="apache-commons;jna"/>
     <property name="plugin.stage" value="15"/>
 
     <!-- ** include targets that all plugins have in common ** -->

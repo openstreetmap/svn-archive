@@ -7,7 +7,6 @@ import java.awt.event.KeyEvent;
 
 import org.openstreetmap.josm.actions.ExpertToggleAction;
 import org.openstreetmap.josm.actions.ExpertToggleAction.ExpertModeChangeListener;
-import org.openstreetmap.josm.data.SelectionChangedListener;
 import org.openstreetmap.josm.data.SystemOfMeasurement;
 import org.openstreetmap.josm.data.SystemOfMeasurement.SoMChangeListener;
 import org.openstreetmap.josm.data.UndoRedoHandler;
@@ -126,7 +125,6 @@ public class EventBusPlugin extends Plugin {
     private final GpxDataChangeListener gpxChangeListener = e -> post(e);
     private final GpxTrackChangeListener gpxTrackChangeListener = e -> post(e);
     private final HighlightUpdateListener highlightUpdateListener = e -> post(e);
-    private final SelectionChangedListener selectionChangedListener = e -> post(e);
     private final PreferenceChangedListener preferenceChangedListener = e -> post(e);
     private final PaintableInvalidationListener paintableInvalidationListener = e -> post(e);
     private final NoteDataUpdateListener noteDataUpdateListener = new NoteDataUpdateListener() {
@@ -389,7 +387,6 @@ public class EventBusPlugin extends Plugin {
         MainApplication.getLayerManager().addLayerAvailabilityListener(layerAvailabilityListener);
         UndoRedoHandler.getInstance().addCommandQueueListener(commandQueueListener);
         ChangesetCache.getInstance().addChangesetCacheListener(changesetCacheListener);
-        DataSet.addSelectionListener(selectionChangedListener);
         ExpertToggleAction.addExpertModeChangeListener(expertModeChangeListener);
         HistoryDataSet.getInstance().addHistoryDataSetListener(historyDataSetListener);
         SystemOfMeasurement.addSoMChangeListener(soMChangeListener);
@@ -412,7 +409,6 @@ public class EventBusPlugin extends Plugin {
         MainApplication.getLayerManager().removeLayerAvailabilityListener(layerAvailabilityListener);
         UndoRedoHandler.getInstance().removeCommandQueueListener(commandQueueListener);
         ChangesetCache.getInstance().removeChangesetCacheListener(changesetCacheListener);
-        DataSet.removeSelectionListener(selectionChangedListener);
         ExpertToggleAction.removeExpertModeChangeListener(expertModeChangeListener);
         HistoryDataSet.getInstance().removeHistoryDataSetListener(historyDataSetListener);
         SystemOfMeasurement.removeSoMChangeListener(soMChangeListener);

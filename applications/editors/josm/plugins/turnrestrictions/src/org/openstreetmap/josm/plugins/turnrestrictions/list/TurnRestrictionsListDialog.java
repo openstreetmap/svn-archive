@@ -23,6 +23,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import org.openstreetmap.josm.actions.AutoScaleAction;
+import org.openstreetmap.josm.actions.AutoScaleAction.AutoScaleMode;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.RelationMember;
@@ -390,7 +391,7 @@ public class TurnRestrictionsListDialog extends ToggleDialog {
             OsmDataLayer layer = MainApplication.getLayerManager().getEditLayer();
             if (layer == null) return;
             layer.data.setSelected(toSelect);
-            new AutoScaleAction("selection").autoScale();
+            new AutoScaleAction(AutoScaleMode.SELECTION).autoScale();
         }
 
         public void updateEnabledState() {

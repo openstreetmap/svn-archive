@@ -19,6 +19,7 @@ import javax.swing.Action;
 import javax.swing.Icon;
 
 import org.openstreetmap.josm.actions.AutoScaleAction;
+import org.openstreetmap.josm.actions.AutoScaleAction.AutoScaleMode;
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
@@ -220,7 +221,7 @@ public class CalibrationLayer extends Layer {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            AutoScaleAction.autoScale("layer");
+            AutoScaleAction.autoScale(AutoScaleMode.LAYER);
         }
     }
 }

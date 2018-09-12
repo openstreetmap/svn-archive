@@ -98,7 +98,7 @@ public class ColumbusCSVReader {
      * @param fileName The Columbus file to import.
      * @return GPX representation of Columbus track file.
      * @throws IOException
-     * @throws DataFormatException
+     * @throws IllegalDataException
      */
     public GpxData transformColumbusCSV(String fileName) throws IOException, IllegalDataException {
         if (fileName == null || fileName.length() == 0) {

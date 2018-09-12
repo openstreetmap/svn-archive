@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.IOException;
 
 import org.openstreetmap.josm.actions.AutoScaleAction;
+import org.openstreetmap.josm.actions.AutoScaleAction.AutoScaleMode;
 import org.openstreetmap.josm.actions.ExtensionFileFilter;
 import org.openstreetmap.josm.data.gpx.GpxData;
 import org.openstreetmap.josm.gui.MainApplication;
@@ -83,7 +84,7 @@ public class ColumbusCSVImporter extends FileImporter {
         
                 // ... and scale view appropriately - if wished by user
                 if (ColumbusCSVPreferences.zoomAfterImport()) {
-                    AutoScaleAction action = new AutoScaleAction("data");
+                    AutoScaleAction action = new AutoScaleAction(AutoScaleMode.DATA);
                     action.autoScale();
                 }
                 progressMonitor.setTicksCount(4);

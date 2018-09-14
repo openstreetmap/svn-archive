@@ -9,10 +9,10 @@ public class Preferences {
 
     public enum GuiMode {
         Auto, Expert, Simple
-    };
+    }
 
     public static String getLoadDir() {
-        return     Config.getPref().get(Preferences.prefix + "loadDir");
+        return Config.getPref().get(Preferences.prefix + "loadDir");
     }
 
     public static void setLoadDir(String loadDir) {

@@ -13,14 +13,13 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Set;
-import javax.imageio.ImageIO;
 
+import javax.imageio.ImageIO;
 import javax.swing.AbstractAction;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 
 import org.apache.commons.jcs.access.CacheAccess;
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.cache.BufferedImageCacheEntry;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.Notification;
@@ -51,8 +50,8 @@ public abstract class AbstractImageryCacheExportAction
      *
      * @return Currently selected layer.
      */
-    private AbstractCachedTileSourceLayer getSelectedLayer() {
-        return (AbstractCachedTileSourceLayer)LayerListDialog.getInstance().getModel()
+    private AbstractCachedTileSourceLayer<?> getSelectedLayer() {
+        return (AbstractCachedTileSourceLayer<?>)LayerListDialog.getInstance().getModel()
             .getSelectedLayers().get(0);
     }
 
@@ -80,7 +79,7 @@ public abstract class AbstractImageryCacheExportAction
      *
      * @return Cache key prefix.
      */
-    protected String getCacheKeyPrefix(final AbstractCachedTileSourceLayer layer) {
+    protected String getCacheKeyPrefix(final AbstractCachedTileSourceLayer<?> layer) {
         return layer.getName().replace(':', '_');
     }
 
@@ -91,7 +90,7 @@ public abstract class AbstractImageryCacheExportAction
      */
     @Override
     public void actionPerformed(ActionEvent evt) {
-        final AbstractCachedTileSourceLayer layer = getSelectedLayer();
+        final AbstractCachedTileSourceLayer<?> layer = getSelectedLayer();
         final String cacheName = layer.getName();
         final CacheAccess<String, BufferedImageCacheEntry> cache = getCache();
         final String cacheKeyPrefix = getCacheKeyPrefix(layer);
@@ -171,7 +170,7 @@ public abstract class AbstractImageryCacheExportAction
                                 GuiHelper.runInEDT(new Runnable() {
                                     @Override
                                     public void run() {
-                                        JOptionPane.showMessageDialog(Main.parent, message,
+                                        JOptionPane.showMessageDialog(MainApplication.getMainFrame(), message,
                                                                       tr("Error"), JOptionPane.ERROR_MESSAGE);
                                     }
                                 });
@@ -208,12 +207,12 @@ public abstract class AbstractImageryCacheExportAction
      * @param cache	 Cache object.
      */
     private void exportImagery(final String exportPath,
-                               final AbstractCachedTileSourceLayer layer,
+                               final AbstractCachedTileSourceLayer<?> layer,
                                final CacheAccess<String, BufferedImageCacheEntry> cache) {
         try {
             Files.createDirectories(Paths.get(exportPath));
         } catch (FileAlreadyExistsException exn) {
-            JOptionPane.showMessageDialog(Main.parent,
+            JOptionPane.showMessageDialog(MainApplication.getMainFrame(),
                                           tr("Export file system path already exists but is not a directory."),
                                           tr("Error"),
                                           JOptionPane.ERROR_MESSAGE);
@@ -221,12 +220,12 @@ public abstract class AbstractImageryCacheExportAction
         } catch (IOException exn) {
             final String message = exn.getLocalizedMessage();
             if (message != null) {
-                JOptionPane.showMessageDialog(Main.parent,
+                JOptionPane.showMessageDialog(MainApplication.getMainFrame(),
                                               tr("Failed to create export directory: {0}", message),
                                               tr("Error"),
                                               JOptionPane.ERROR_MESSAGE);
             } else {
-                JOptionPane.showMessageDialog(Main.parent,
+                JOptionPane.showMessageDialog(MainApplication.getMainFrame(),
                                               tr("Failed to create export directory."),
                                               tr("Error"),
                                               JOptionPane.ERROR_MESSAGE);
@@ -264,6 +263,7 @@ public abstract class AbstractImageryCacheExportAction
      *
      * @param image Image to be written.
      * @param file  File the image is to be written to.
+     * @throws IOException in case of I/O error
      */
     public void writeImage(BufferedImage image, File file) throws IOException {
         // File must exist for ImageIO.write();

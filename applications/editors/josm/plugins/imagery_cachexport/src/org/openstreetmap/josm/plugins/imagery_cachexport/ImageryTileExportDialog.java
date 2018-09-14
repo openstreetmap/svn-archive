@@ -15,9 +15,9 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
 import org.apache.commons.jcs.access.CacheAccess;
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.cache.BufferedImageCacheEntry;
 import org.openstreetmap.josm.gui.ExtendedDialog;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.widgets.JosmTextField;
 import org.openstreetmap.josm.spi.preferences.Config;
 import org.openstreetmap.josm.tools.GBC;
@@ -38,7 +38,7 @@ public class ImageryTileExportDialog extends ExtendedDialog {
     public ImageryTileExportDialog(final CacheAccess<String, BufferedImageCacheEntry> cache,
                                    final String cacheName,
                                    final String cacheKeyPrefix) {
-        super(Main.parent, tr("Export Tiles"), new String[] {tr("Ok"), tr("Cancel")});
+        super(MainApplication.getMainFrame(), tr("Export Tiles"), new String[] {tr("Ok"), tr("Cancel")});
         this.cacheName = cacheName;
 
         setButtonIcons(new String[] {"ok", "cancel"});

@@ -1,8 +1,6 @@
 package org.openstreetmap.josm.plugins.imagery_cachexport;
 
 import org.openstreetmap.josm.gui.layer.TMSLayer;
-import org.openstreetmap.josm.gui.layer.WMSLayer;
-import org.openstreetmap.josm.gui.layer.WMTSLayer;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
 

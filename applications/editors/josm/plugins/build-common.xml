@@ -193,6 +193,13 @@
             <param name="property.value" value="${plugin.minimum.java.version}"/>
         </antcall>
         <antcall target="additional-manifest" />
+        <antcall target="build-jar" />
+        <jar destfile="${plugin.sources.jar}" basedir="${plugin.src.dir}" level="9"/>
+        <jar destfile="${plugin.javadoc.jar}" basedir="${plugin.doc.dir}" level="9"/>
+        <delete file="MANIFEST" failonerror="no"/>
+        <antcall target="post-dist" />
+    </target>
+    <target name="build-jar">
         <jar destfile="${plugin.jar}" basedir="${plugin.build.dir}" manifest="MANIFEST" manifestencoding="UTF-8" duplicate="preserve" level="9">
             <restrict>
                 <not><or>
@@ -211,10 +218,6 @@
                 </archives>
             </restrict>
         </jar>
-        <jar destfile="${plugin.sources.jar}" basedir="${plugin.src.dir}" level="9"/>
-        <jar destfile="${plugin.javadoc.jar}" basedir="${plugin.doc.dir}" level="9"/>
-        <delete file="MANIFEST" failonerror="no"/>
-        <antcall target="post-dist" />
     </target>
     <target name="post-dist">
         <!-- to be overidden by plugins that need to perform additional tasks on resulting jar -->
@@ -607,9 +610,9 @@
                                                                          org/netbeans/**/*.java,
 																		 org/openstreetmap/josm/plugins/dataimport/io/tcx/**/*.java,
 																		 org/openstreetmap/josm/plugins/ohe/parser/**/*.java,
+																		 org/openstreetmap/josm/plugins/pdfimport/pdfbox/operators/**/*.java
 																		 org/openstreetmap/josm/plugins/roadsigns/javacc/**/*.java,
                                                                          org/osgeo/**/*.java,
-																		 pdfimport/pdfbox/operators/**/*.java
 																		 "/>
             <fileset dir="${basedir}/test" includes="**/*.java" erroronmissingdir="false"/>
             <formatter type="xml" toFile="checkstyle-josm-${ant.project.name}.xml"/>

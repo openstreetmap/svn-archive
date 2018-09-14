@@ -138,6 +138,7 @@ public class ModuleInformation {
                 .setSuppressWarnings(suppressWarnings).get();
     }
 
+    @SuppressWarnings("unused")
     private void scanManifest(Manifest manifest) {
         String lang = LanguageInfo.getLanguageCodeManifest();
         Attributes attr = manifest.getMainAttributes();
@@ -148,8 +149,7 @@ public class ModuleInformation {
         }
         if (s != null) {
             try {
-                @SuppressWarnings("unused")
-                URL url = new URL(s);
+                new URL(s);
             } catch (MalformedURLException e) {
                 Logging.error(tr("Invalid URL ''{0}'' in module {1}", s, name));
                 s = null;

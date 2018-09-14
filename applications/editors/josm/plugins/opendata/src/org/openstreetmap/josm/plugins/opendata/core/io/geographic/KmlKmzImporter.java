@@ -12,6 +12,9 @@ import org.openstreetmap.josm.io.IllegalDataException;
 import org.openstreetmap.josm.plugins.opendata.core.OdConstants;
 import org.openstreetmap.josm.plugins.opendata.core.io.AbstractImporter;
 
+/**
+ * Keyhole Markup Language (KML/KMZ) importer.
+ */
 public class KmlKmzImporter extends AbstractImporter {
 
     public static final ExtensionFileFilter KML_KMZ_FILE_FILTER = new ExtensionFileFilter(
@@ -26,7 +29,7 @@ public class KmlKmzImporter extends AbstractImporter {
     protected DataSet parseDataSet(InputStream in, ProgressMonitor instance)
             throws IllegalDataException {
         try {
-            if (file.getName().toLowerCase().endsWith(OdConstants.KML_EXT)) {
+            if (file != null && file.getName().toLowerCase().endsWith(OdConstants.KML_EXT)) {
                 return KmlReader.parseDataSet(in, instance);
             } else {
                 return KmzReader.parseDataSet(in, instance);

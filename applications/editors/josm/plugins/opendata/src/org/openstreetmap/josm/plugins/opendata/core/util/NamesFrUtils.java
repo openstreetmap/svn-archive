@@ -15,6 +15,9 @@ import org.openstreetmap.josm.plugins.opendata.core.OdConstants;
 import org.openstreetmap.josm.plugins.opendata.core.datasets.SimpleDataSetHandler;
 import org.openstreetmap.josm.tools.Logging;
 
+/**
+ * Utilities for French names.
+ */
 public abstract class NamesFrUtils {
 
     private static Map<String, String> dictionary = initDictionary();
@@ -35,6 +38,7 @@ public abstract class NamesFrUtils {
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(
                 SimpleDataSetHandler.class.getResourceAsStream(OdConstants.DICTIONARY_FR), OdConstants.UTF8))) {
             String line = reader.readLine(); // Skip first line
+            Logging.trace(line);
             while ((line = reader.readLine()) != null) {
                 String[] tab = line.split(";");
                 result.put(tab[0].replace("\"", ""), tab[1].replace("\"", ""));

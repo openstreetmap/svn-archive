@@ -2,6 +2,7 @@
 package org.openstreetmap.josm.plugins.opendata.core.actions;
 
 import java.awt.event.ActionEvent;
+import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -41,7 +42,7 @@ public class OpenLinkAction extends JosmAction {
                     Logging.info("Opening "+uri);
                     OpenBrowser.displayUrl(uri);
                 }
-            } catch (Exception e2) {
+            } catch (IOException | URISyntaxException e2) {
                 Logging.error(e2);
             }
         }

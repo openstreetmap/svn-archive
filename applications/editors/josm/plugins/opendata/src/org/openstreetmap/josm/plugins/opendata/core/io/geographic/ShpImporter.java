@@ -13,8 +13,11 @@ import org.openstreetmap.josm.io.IllegalDataException;
 import org.openstreetmap.josm.plugins.opendata.core.OdConstants;
 import org.openstreetmap.josm.plugins.opendata.core.io.AbstractImporter;
 
+/**
+ * Shapefile (SHP) importer.
+ */
 public class ShpImporter extends AbstractImporter {
-    
+
     public static final ExtensionFileFilter SHP_FILE_FILTER = new ExtensionFileFilter(
             OdConstants.SHP_EXT, OdConstants.SHP_EXT, tr("Shapefiles") + " (*."+OdConstants.SHP_EXT+")");
 

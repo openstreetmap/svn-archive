@@ -97,8 +97,8 @@ public class ModulePreference implements SubPreferenceSetting {
     }
 
     private JTextField tfFilter;
-    private ModuleListPanel pnlModulePreferences;
-    private ModulePreferencesModel model;
+    private final ModulePreferencesModel model = new ModulePreferencesModel();
+    private final ModuleListPanel pnlModulePreferences = new ModuleListPanel(model);
     private JScrollPane spModulePreferences;
 
     /**
@@ -139,8 +139,7 @@ public class ModulePreference implements SubPreferenceSetting {
     protected JPanel buildModuleListPanel() {
         JPanel pnl = new JPanel(new BorderLayout());
         pnl.add(buildSearchFieldPanel(), BorderLayout.NORTH);
-        model = new ModulePreferencesModel();
-        spModulePreferences = new JScrollPane(pnlModulePreferences = new ModuleListPanel(model));
+        spModulePreferences = new JScrollPane(pnlModulePreferences);
         spModulePreferences.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         spModulePreferences.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
         spModulePreferences.getVerticalScrollBar().addComponentListener(

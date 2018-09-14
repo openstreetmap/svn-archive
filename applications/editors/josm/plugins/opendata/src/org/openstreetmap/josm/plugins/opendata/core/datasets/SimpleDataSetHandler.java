@@ -39,7 +39,7 @@ public abstract class SimpleDataSetHandler extends AbstractDataSetHandler {
         this.relevantUnion = false;
         Tag tag;
         String[] kv = relevantTag.split("=");
-        if (kv != null && kv.length == 2) {
+        if (kv.length == 2) {
             tag = new Tag(kv[0], kv[1]);
         } else {
             tag = new Tag(relevantTag);
@@ -47,12 +47,12 @@ public abstract class SimpleDataSetHandler extends AbstractDataSetHandler {
         setMenuIcon(MapPaintStyles.getNodeIcon(tag));
     }
 
-    public SimpleDataSetHandler(boolean relevantUnion, String ... relevantTags) {
+    public SimpleDataSetHandler(boolean relevantUnion, String... relevantTags) {
         addRelevantTag(relevantTags);
         this.relevantUnion = relevantUnion;
     }
 
-    public SimpleDataSetHandler(String ... relevantTags) {
+    public SimpleDataSetHandler(String... relevantTags) {
         this(false, relevantTags);
     }
 

@@ -33,7 +33,7 @@ public abstract class OdUtils {
         for (int i = 0; i < split.length; i++) {
             if (append) {
                 int index = result.size()-1;
-                if (split[i].endsWith("\"") && StringUtils.countMatches(split[i], "\"") % 2 == 1) {
+                if (split[i].endsWith("\"") && StringUtils.countMatches(split[i], "\"") % 2 != 0) {
                     append = false;
                 }
                 result.set(index, result.get(index)+sep+split[i].replaceAll("\"", ""));

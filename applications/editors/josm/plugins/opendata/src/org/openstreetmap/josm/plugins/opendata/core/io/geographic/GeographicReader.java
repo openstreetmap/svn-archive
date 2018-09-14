@@ -266,7 +266,7 @@ public abstract class GeographicReader extends AbstractReader {
         if (crs1 instanceof AbstractSingleCRS) {
             Datum datum1 = ((AbstractSingleCRS) crs1).getDatum();
             Datum datum2 = ((AbstractSingleCRS) crs2).getDatum();
-            if (!compareDebug("datum", datum1, datum2)) {
+            if (!compareDebug("datum", datum1, datum2) && datum1 instanceof AbstractIdentifiedObject) {
                 AbstractIdentifiedObject adatum1 = (AbstractIdentifiedObject) datum1;
                 AbstractIdentifiedObject adatum2 = (AbstractIdentifiedObject) datum2;
                 compareDebug("datum.name1", adatum1.nameMatches(adatum2.getName().getCode()), adatum1.getName(), adatum2.getName());

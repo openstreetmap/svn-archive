@@ -157,4 +157,10 @@ public class ProjectionChooser extends ExtendedDialog {
             return null;
         }
     }
+
+    @Override
+    public ProjectionChooser showDialog() {
+        super.showDialog();
+        return this;
+    }
 }

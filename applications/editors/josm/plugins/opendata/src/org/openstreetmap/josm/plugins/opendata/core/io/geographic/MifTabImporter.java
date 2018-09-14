@@ -13,6 +13,9 @@ import org.openstreetmap.josm.io.IllegalDataException;
 import org.openstreetmap.josm.plugins.opendata.core.OdConstants;
 import org.openstreetmap.josm.plugins.opendata.core.io.AbstractImporter;
 
+/**
+ * MapInfo (MIF/TAB) importer.
+ */
 public class MifTabImporter extends AbstractImporter {
 
     public static final ExtensionFileFilter MIF_TAB_FILE_FILTER = new ExtensionFileFilter(
@@ -27,7 +30,7 @@ public class MifTabImporter extends AbstractImporter {
     protected DataSet parseDataSet(InputStream in, ProgressMonitor instance)
             throws IllegalDataException {
         try {
-            if (file.getName().toLowerCase().endsWith(OdConstants.MIF_EXT)) {
+            if (file != null && file.getName().toLowerCase().endsWith(OdConstants.MIF_EXT)) {
                 return MifReader.parseDataSet(in, file, handler, instance);
             } else {
                 return TabReader.parseDataSet(in, file, handler, instance);

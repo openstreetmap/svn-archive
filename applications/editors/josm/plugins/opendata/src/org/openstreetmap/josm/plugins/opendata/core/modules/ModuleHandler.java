@@ -174,6 +174,8 @@ public final class ModuleHandler {
             case 1:
                 Config.getPref().put(togglePreferenceKey, "never");
                 break;
+            default:
+                Logging.trace(Integer.toString(ret));
             }
         } else {
             Config.getPref().put(togglePreferenceKey, "ask");

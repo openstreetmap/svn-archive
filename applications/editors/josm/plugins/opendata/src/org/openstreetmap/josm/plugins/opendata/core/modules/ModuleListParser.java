@@ -100,18 +100,15 @@ public class ModuleListParser {
                 name = x[0];
                 url = x[1];
                 manifest = new StringBuilder();
-
             }
             if (name != null) {
                 ModuleInformation info = createInfo(name, url, manifest.toString());
-                if (info != null) {
-                    for (Module module : ModuleHandler.moduleList) {
-                        if (module.getModuleInformation().name.equals(info.getName())) {
-                            info.localversion = module.getModuleInformation().localversion;
-                        }
+                for (Module module : ModuleHandler.moduleList) {
+                    if (module.getModuleInformation().name.equals(info.getName())) {
+                        info.localversion = module.getModuleInformation().localversion;
                     }
-                    ret.add(info);
                 }
+                ret.add(info);
             }
             return ret;
         } catch (IOException e) {

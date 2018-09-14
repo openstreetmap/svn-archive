@@ -59,8 +59,8 @@ public final class MifReader extends AbstractMapInfoReader {
 
     private File file;
     private InputStream stream;
-    protected Charset charset;
-    protected BufferedReader midReader;
+    private Charset charset;
+    private BufferedReader midReader;
 
     private Character delimiter = '\t';
 
@@ -165,6 +165,8 @@ public final class MifReader extends AbstractMapInfoReader {
             originLat = Double.parseDouble(words[7+offset]);
             params += param(Param.lat_0, originLat);
             break;
+        default:
+            Logging.trace("originLat not set for " + proj);
         }
 
         // Standard Parallel 1
@@ -181,6 +183,8 @@ public final class MifReader extends AbstractMapInfoReader {
             stdP1 = Double.parseDouble(words[8+offset]);
             params += param(Param.lat_1, stdP1);
             break;
+        default:
+            Logging.trace("stdP1 not set for " + proj);
         }
 
         // Standard Parallel 2
@@ -192,6 +196,8 @@ public final class MifReader extends AbstractMapInfoReader {
             stdP2 = Double.parseDouble(words[9+offset]);
             params += param(Param.lat_2, stdP2);
             break;
+        default:
+            Logging.trace("stdP2 not set for " + proj);
         }
 
         // Azimuth
@@ -215,6 +221,8 @@ public final class MifReader extends AbstractMapInfoReader {
             scaleFactor = Double.parseDouble(words[8+offset]);
             params += param(Param.k_0, scaleFactor);
             break;
+        default:
+            Logging.trace("scaleFactor not set for " + proj);
         }
 
         // False Easting/Northing
@@ -248,6 +256,8 @@ public final class MifReader extends AbstractMapInfoReader {
             params += param(Param.x_0, falseEasting);
             params += param(Param.y_0, falseNorthing);
             break;
+        default:
+            Logging.trace("falseEasting/falseNorthing not set for " + proj);
         }
 
         // Range
@@ -256,6 +266,8 @@ public final class MifReader extends AbstractMapInfoReader {
         case Lambert_Azimuthal_Equal_Area_polar_aspect_only:
             Double.parseDouble(words[8+offset]);
             // TODO: what's proj4 parameter ?
+        default:
+            Logging.trace("range not set for " + proj);
         }
 
         switch (proj) {
@@ -275,6 +287,8 @@ public final class MifReader extends AbstractMapInfoReader {
                 }
             }
             break;
+        default:
+            Logging.trace("josmProj not set for " + proj);
         }
 
         // TODO: handle cases with Affine declaration
@@ -591,7 +605,7 @@ public final class MifReader extends AbstractMapInfoReader {
         }
     }
 
-    protected void readAttributes(OsmPrimitive p) throws IOException {
+    private void readAttributes(OsmPrimitive p) throws IOException {
         if (midReader != null) {
             String midLine = midReader.readLine();
             if (midLine != null) {
@@ -612,7 +626,7 @@ public final class MifReader extends AbstractMapInfoReader {
         }
     }
 
-    protected Node createNode(String x, String y) {
+    private Node createNode(String x, String y) {
         Node node = new Node(josmProj.eastNorth2latlon(new EastNorth(Double.parseDouble(x), Double.parseDouble(y))));
         ds.addPrimitive(node);
         return node;

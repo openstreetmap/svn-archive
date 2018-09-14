@@ -8,11 +8,14 @@ import java.io.InputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
+import javax.xml.parsers.ParserConfigurationException;
+
 import org.jopendocument.io.SaxContentUnmarshaller;
 import org.jopendocument.model.OpenDocument;
 import org.openstreetmap.josm.tools.Logging;
 import org.openstreetmap.josm.tools.XmlUtils;
 import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
 public class OdsDocument extends OpenDocument {
@@ -50,7 +53,7 @@ public class OdsDocument extends OpenDocument {
                 }
             }
 
-        } catch (Exception e) {
+        } catch (IOException | SAXException | ParserConfigurationException e) {
             Logging.error(e);
         }
 

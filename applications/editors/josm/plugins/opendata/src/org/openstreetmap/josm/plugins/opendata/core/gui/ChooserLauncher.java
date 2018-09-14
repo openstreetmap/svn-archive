@@ -20,7 +20,7 @@ public final class ChooserLauncher implements Runnable {
     @Override
     public void run() {
         Component parent = progressMonitor == null ? MainApplication.getMainFrame() : progressMonitor.getWindowParent();
-        ProjectionChooser dialog = (ProjectionChooser) new ProjectionChooser(parent).showDialog();
+        ProjectionChooser dialog = new ProjectionChooser(parent).showDialog();
         if (dialog.getValue() == 1) {
             proj = dialog.getProjection();
         }

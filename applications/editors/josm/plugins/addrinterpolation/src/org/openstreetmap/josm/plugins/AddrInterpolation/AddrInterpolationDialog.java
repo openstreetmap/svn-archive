@@ -351,13 +351,13 @@ public class AddrInterpolationDialog extends JDialog implements ActionListener {
             char startingChar = startValueString.charAt(startValueString.length()-1);
             char endingChar = endValueString.charAt(endValueString.length()-1);
 
-            if ((!IsNumeric("" + startingChar)) && (!IsNumeric("" + endingChar))) {
+            if (!IsNumeric("" + startingChar) && !IsNumeric("" + endingChar)) {
                 // Both end with alpha
                 SelectInterpolationMethod("alphabetic");
                 return true;
             }
 
-            if ((IsNumeric("" + startingChar)) && (!IsNumeric("" + endingChar))) {
+            if (IsNumeric("" + startingChar) && !IsNumeric("" + endingChar)) {
                 endingChar = Character.toUpperCase(endingChar);
                 if ((endingChar >= 'A') && (endingChar <= 'Z')) {
                     // First is a number, last is Latin alpha
@@ -1079,7 +1079,7 @@ public class AddrInterpolationDialog extends JDialog implements ActionListener {
                 AddToRelation(associatedStreetRelation, node, "house");
             }
             Map<String, String> tags = new HashMap<>();
-            if ((city != null) || (streetNameButton.isSelected())) {
+            if (city != null || streetNameButton.isSelected()) {
                 // Include street unconditionally if adding nodes only or city name specified
                 tags.put("addr:street", streetName);
             }
@@ -1179,13 +1179,13 @@ public class AddrInterpolationDialog extends JDialog implements ActionListener {
 
 
             boolean isOk = false;
-            if ((IsNumeric("" + startingChar)) && (!IsNumeric("" + endingChar))) {
+            if (IsNumeric("" + startingChar) && !IsNumeric("" + endingChar)) {
                 endingChar = Character.toUpperCase(endingChar);
                 if ((endingChar >= 'A') && (endingChar <= 'Z')) {
                     // First is a number, last is Latin alpha
                     isOk = true;
                 }
-            } else if ((!IsNumeric("" + startingChar)) && (!IsNumeric("" + endingChar))) {
+            } else if (!IsNumeric("" + startingChar) && !IsNumeric("" + endingChar)) {
                 // Both are alpha
                 isOk = true;
             }

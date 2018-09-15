@@ -139,7 +139,7 @@ public class Command {
         case RELAY:
             if (obj instanceof String) {
                 if (parameter.getRawValue() instanceof Relay) {
-                    if (((Relay) (parameter.getRawValue())).isCorrectValue((String) obj))
+                    if (((Relay) parameter.getRawValue()).isCorrectValue((String) obj))
                         return true;
                 }
             }

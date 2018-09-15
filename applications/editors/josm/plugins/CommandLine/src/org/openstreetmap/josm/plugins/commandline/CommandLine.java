@@ -147,14 +147,14 @@ public class CommandLine extends Plugin {
     }
 
     private void loadCommands() {
-        commands = (new Loader(getPluginDirs().getUserDataDirectory(false))).load();
+        commands = new Loader(getPluginDirs().getUserDataDirectory(false)).load();
         if (commands.isEmpty()) {
             if (!GraphicsEnvironment.isHeadless() && JOptionPane.YES_OPTION == JOptionPane.showConfirmDialog(MainApplication.getMainFrame(),
                     tr("No command has been found. Would you like to download and install default commands now?"),
                     tr("No command found"), JOptionPane.YES_NO_CANCEL_OPTION)) {
                 try {
                     downloadAndInstallDefaultCommands();
-                    commands = (new Loader(getPluginDirs().getUserDataDirectory(false))).load();
+                    commands = new Loader(getPluginDirs().getUserDataDirectory(false)).load();
                     JOptionPane.showMessageDialog(MainApplication.getMainFrame(), tr("Default commands have been successfully installed"),
                             tr("Success"), JOptionPane.INFORMATION_MESSAGE);
                 } catch (IOException e) {
@@ -231,7 +231,7 @@ public class CommandLine extends Plugin {
             Parameter currentParameter = currentCommand.parameters.get(currentCommand.currentParameterNum);
             prefix = tr(currentParameter.description == null ? currentParameter.name : currentParameter.description);
             if (currentParameter.getRawValue() instanceof Relay)
-                prefix = prefix + " (" + ((Relay) (currentParameter.getRawValue())).getOptionsString() + ")";
+                prefix = prefix + " (" + ((Relay) currentParameter.getRawValue()).getOptionsString() + ")";
             prefix += commandSymbol;
             String value = currentParameter.getValue();
             textField.setText(prefix + value);

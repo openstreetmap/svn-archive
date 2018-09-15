@@ -24,7 +24,7 @@ public class Relay {
 
     public void addValue(String value) {
         String letter = null;
-        if (!(options.containsValue(value))) {
+        if (!options.containsValue(value)) {
             int i = 0;
             for (; i < value.length(); i++) {
                 letter = value.substring(i, i + 1).toLowerCase();

@@ -110,7 +110,7 @@ final class OsmToCmd {
                         throwException(tr("Missing mandatory attribute ''{0}''.", "version"));
                         return;
                     }
-                    if (!(v.equals("0.6"))) {
+                    if (!v.equals("0.6")) {
                         throwException(tr("Unsupported version: {0}", v));
                         return;
                     }

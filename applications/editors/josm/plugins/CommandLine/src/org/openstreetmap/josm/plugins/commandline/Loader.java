@@ -116,7 +116,7 @@ public class Loader extends DefaultHandler {
 
     @Override
     public void characters(char[] ch, int start, int length) {
-        String text = (new String(ch, start, length)).trim();
+        String text = new String(ch, start, length).trim();
         if (currentParameter != null) {
             if (currentTag.equals("name")) {
                 currentParameter.name = text;

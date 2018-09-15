@@ -30,11 +30,13 @@ public class LayerInfo {
 
     @Override
     public boolean equals(Object o) {
+        if (!(o instanceof LayerInfo)) {
+            return false;
+        }
         LayerInfo l = (LayerInfo) o;
         boolean eq = this.width == l.width &&
         this.divider == l.divider &&
         this.dash == l.dash;
-
 
         if (this.fill != null) {
             eq &= this.fill.equals(l.fill);

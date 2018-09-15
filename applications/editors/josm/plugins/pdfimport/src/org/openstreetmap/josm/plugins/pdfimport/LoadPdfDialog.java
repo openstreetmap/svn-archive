@@ -144,26 +144,26 @@ public class LoadPdfDialog extends JFrame {
             mergeCloseNodesCheck.setCompanion(mergeCloseNodesTolerance);
 
             removeSmallObjectsSize = new GuiFieldDouble(Preferences.getRemoveSmallValue());
-            removeSmallObjectsCheck = new GuiFieldBool(tr("Remove objects smaller than"),Preferences.isRemoveSmall());
+            removeSmallObjectsCheck = new GuiFieldBool(tr("Remove objects smaller than"), Preferences.isRemoveSmall());
             removeSmallObjectsCheck.setCompanion(removeSmallObjectsSize);
 
-            removeLargeObjectsSize = new GuiFieldDouble((Preferences.getRemoveLargeValue()));
-            removeLargeObjectsCheck = new GuiFieldBool(tr("Remove objects larger than"),Preferences.isRemoveLarge());
+            removeLargeObjectsSize = new GuiFieldDouble(Preferences.getRemoveLargeValue());
+            removeLargeObjectsCheck = new GuiFieldBool(tr("Remove objects larger than"), Preferences.isRemoveLarge());
             removeLargeObjectsCheck.setCompanion(removeLargeObjectsSize);
 
             colorFilterColor = new GuiFieldHex(Preferences.getLimitColorValue());
             colorFilterCheck = new GuiFieldBool(tr("Only this color"), Preferences.isLimitColor());
             colorFilterCheck.setCompanion(colorFilterColor);
 
-            removeParallelSegmentsTolerance = new GuiFieldDouble((Preferences.getRemoveParallelValue()));
-            removeParallelSegmentsCheck = new GuiFieldBool(tr("Remove parallel lines"),Preferences.isRemoveParallel());
+            removeParallelSegmentsTolerance = new GuiFieldDouble(Preferences.getRemoveParallelValue());
+            removeParallelSegmentsCheck = new GuiFieldBool(tr("Remove parallel lines"), Preferences.isRemoveParallel());
             removeParallelSegmentsCheck.setCompanion(removeParallelSegmentsTolerance);
 
-            limitPathCount = new GuiFieldInteger((Preferences.getLimitPathValue()));
-            limitPathCountCheck = new GuiFieldBool(tr("Take only first X paths"),Preferences.isLimitPath());
+            limitPathCount = new GuiFieldInteger(Preferences.getLimitPathValue());
+            limitPathCountCheck = new GuiFieldBool(tr("Take only first X paths"), Preferences.isLimitPath());
             limitPathCountCheck.setCompanion(limitPathCount);
 
-            splitOnColorChangeCheck = new GuiFieldBool(tr("Color/width change"),Preferences.isLayerAttribChange());
+            splitOnColorChangeCheck = new GuiFieldBool(tr("Color/width change"), Preferences.isLayerAttribChange());
             splitOnShapeClosedCheck = new GuiFieldBool(tr("Shape closed"), Preferences.isLayerClosed());
 
             splitOnSingleSegmentCheck = new GuiFieldBool(tr("Single segments", Preferences.isLayerSegment()));

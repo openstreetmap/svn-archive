@@ -323,25 +323,26 @@ public class FilePlacement18 extends FilePlacement {
                     placement.setEastNorthBounds(minEastField.getValue(), minNorthField.getValue(),
                             maxEastField.getValue(), maxNorthField.getValue());
                 } catch (Exception e) {
-                    Hint=(tr("Check numbers"));
+                    Hint = tr("Check numbers");
                     return;
                 }
                 String transformError = placement.prepareTransform();
                 if (transformError != null) {
-                    Hint=(transformError);
+                    Hint = transformError;
                     return;
                 }
                 fc.valid = true;
             } finally {
                 hintField.setText(Hint);
-                if (dependsOnValid!=null) dependsOnValid.setEnabled(fc.valid && panel.isEnabled());
+                if (dependsOnValid != null)
+                    dependsOnValid.setEnabled(fc.valid && panel.isEnabled());
             }
 
             return;
         }
 
         public void setDependsOnValid(JComponent c) {
-            dependsOnValid=c;
+            dependsOnValid = c;
         }
 
         void setFromCoor(CoorFields f) {

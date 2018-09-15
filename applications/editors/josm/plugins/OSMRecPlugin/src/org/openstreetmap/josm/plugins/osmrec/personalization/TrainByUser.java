@@ -187,7 +187,7 @@ public class TrainByUser extends AbstractTrainWorker {
         List<OSMWay> trainList = new ArrayList<>();
         for (int g = a*testSize; g < b*testSize; g++) {  // 0~~1~~2~~3~~4~~5
             if (skip) {
-                if (g == (c)*testSize) {
+                if (g == c*testSize) {
                     g = (c+1)*testSize;
                 }
             }

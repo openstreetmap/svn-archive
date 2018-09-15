@@ -176,7 +176,7 @@ public class OSMParser extends DefaultHandler {
                 //checks if the beginning and ending node are the same and the number of nodes are more than 3.
                 //the nodes must be more than 3, because jts does not allow a construction of a linear ring with less points.
 
-                if (!((wayTmp.getTagKeyValue().containsKey("barrier")) || wayTmp.getTagKeyValue().containsKey("highway"))) {
+                if (!(wayTmp.getTagKeyValue().containsKey("barrier") || wayTmp.getTagKeyValue().containsKey("highway"))) {
                     //this is not a barrier nor a road, so construct a polygon geometry
 
                     LinearRing linear = geometryFactory.createLinearRing(geom.getCoordinates());

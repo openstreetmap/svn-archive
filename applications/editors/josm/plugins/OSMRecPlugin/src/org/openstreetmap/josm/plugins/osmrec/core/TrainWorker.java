@@ -125,7 +125,7 @@ public class TrainWorker extends AbstractTrainWorker {
             clearDataset();
             System.out.println("fold1");
             crossValidateFold(0, 4, 4, 5, false, param); //4-1
-            setProgress(4*((5*(trainProgress++))/confParams.length));
+            setProgress(4*((5*trainProgress++)/confParams.length));
 
             foldScore1 = foldScore1 + score1;
             foldScore5 = foldScore5 + score5;
@@ -133,7 +133,7 @@ public class TrainWorker extends AbstractTrainWorker {
             clearDataset();
             System.out.println("fold2");
             crossValidateFold(1, 5, 0, 1, false, param);
-            setProgress(4*((5*(trainProgress++))/confParams.length));
+            setProgress(4*((5*trainProgress++)/confParams.length));
 
             foldScore1 = foldScore1 + score1;
             foldScore5 = foldScore5 + score5;
@@ -141,7 +141,7 @@ public class TrainWorker extends AbstractTrainWorker {
             clearDataset();
             System.out.println("fold3");
             crossValidateFold(0, 5, 1, 2, true, param);
-            setProgress(4*((5*(trainProgress++))/confParams.length));
+            setProgress(4*((5*trainProgress++)/confParams.length));
 
             foldScore1 = foldScore1 + score1;
             foldScore5 = foldScore5 + score5;
@@ -149,7 +149,7 @@ public class TrainWorker extends AbstractTrainWorker {
             clearDataset();
             System.out.println("fold4");
             crossValidateFold(0, 5, 2, 3, true, param);
-            setProgress(4*((5*(trainProgress++))/confParams.length));
+            setProgress(4*((5*trainProgress++)/confParams.length));
 
             foldScore1 = foldScore1 + score1;
             foldScore5 = foldScore5 + score5;
@@ -157,7 +157,7 @@ public class TrainWorker extends AbstractTrainWorker {
             clearDataset();
             System.out.println("fold5");
             crossValidateFold(0, 5, 3, 4, true, param);
-            setProgress(4*((5*(trainProgress++))/confParams.length));
+            setProgress(4*((5*trainProgress++)/confParams.length));
 
             foldScore1 = foldScore1 + score1;
             foldScore5 = foldScore5 + score5;
@@ -169,7 +169,7 @@ public class TrainWorker extends AbstractTrainWorker {
             }
 
         }
-        System.out.println(4*((5*(trainProgress++))/confParams.length));
+        System.out.println(4*((5*trainProgress++)/confParams.length));
         bestConfParam = bestC;
         System.out.println("best c param= " + bestC + ", score: " + bestScore/5);
     }
@@ -181,7 +181,7 @@ public class TrainWorker extends AbstractTrainWorker {
         List<OSMWay> trainList = new ArrayList<>();
         for (int g = a*testSize; g < b*testSize; g++) {  // 0~~1~~2~~3~~4~~5
             if (skip) {
-                if (g == (c)*testSize) {
+                if (g == c*testSize) {
                     g = (c+1)*testSize;
                 }
             }

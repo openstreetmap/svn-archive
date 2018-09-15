@@ -53,7 +53,7 @@ public class OSMClassification {
                                 //at the OntologyParser.
                                 //so this condition check will remain for now
 
-                                if (!(sortedIndirectIDs.contains(indirectID))) {
+                                if (!sortedIndirectIDs.contains(indirectID)) {
                                     sortedIndirectIDs.add(indirectID);
                                     //wayNode.getIndexVector().put(indirectID, 1.0);
                                 }

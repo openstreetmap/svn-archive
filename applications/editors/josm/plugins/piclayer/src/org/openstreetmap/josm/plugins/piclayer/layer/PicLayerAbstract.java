@@ -145,9 +145,7 @@ public abstract class PicLayerAbstract extends Layer {
 
             EastNorth center = MainApplication.getMap().mapView.getCenter();
 
-//            imagePosition = new EastNorth(center.east(), center.north());
             transformer.setImagePosition(new EastNorth(center.east(), center.north()));
-//            initialImagePosition = new EastNorth(imagePosition.east(), imagePosition.north());
             // Initial scale at which the image was loaded
             initialImageScale = MainApplication.getMap().mapView.getDist100Pixel();
         } else {
@@ -160,7 +158,7 @@ public abstract class PicLayerAbstract extends Layer {
             throw new IOException(tr("PicLayer failed to load or import the image."));
         }
         // Load image completely
-        (new ImageIcon(image)).getImage();
+        new ImageIcon(image).getImage();
 
         lookForCalibration();
     }

@@ -6,8 +6,9 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 import java.awt.event.ActionEvent;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -15,6 +16,7 @@ import javax.swing.JOptionPane;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.plugins.piclayer.layer.PicLayerAbstract;
+import org.openstreetmap.josm.tools.Logging;
 
 /**
  * Action to export World file Calibration.
@@ -72,7 +74,7 @@ public class SavePictureCalibrationToWorldAction extends JosmAction {
                 // no extension given, add a reasonable one
                 file = new File(path + "." + wext);
             }
-            try (BufferedWriter bw = new BufferedWriter(new FileWriter(file))) {
+            try (BufferedWriter bw = Files.newBufferedWriter(file.toPath(), StandardCharsets.UTF_8)) {
                 for (int i = 0; i < 6; i++) {
                     bw.write(Double.toString(values[i]));
                     if (i < 5) {
@@ -80,8 +82,7 @@ public class SavePictureCalibrationToWorldAction extends JosmAction {
                     }
                 }
             } catch (IOException e) {
-                // Error
-                e.printStackTrace();
+                Logging.error(e);
                 JOptionPane.showMessageDialog(MainApplication.getMainFrame(),
                         tr("Saving file failed: {0}", e.getMessage()), tr("Problem occurred"), JOptionPane.WARNING_MESSAGE);
             }

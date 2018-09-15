@@ -2,8 +2,9 @@
 package org.openstreetmap.josm.plugins.piclayer.layer.kml;
 
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.List;
 
 import org.openstreetmap.josm.tools.Logging;
@@ -26,7 +27,7 @@ public class KMLReader {
         try {
             XMLReader xr = XMLReaderFactory.createXMLReader();
             xr.setContentHandler(handler);
-            xr.parse(new InputSource(new FileReader(file)));
+            xr.parse(new InputSource(Files.newBufferedReader(file.toPath(), StandardCharsets.UTF_8)));
         } catch (SAXException | IOException e) {
             Logging.error(e);
         }

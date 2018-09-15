@@ -130,19 +130,15 @@ public final class CLI {
             measuredGenerateSubColumnTime = 0;
             measuredTime = 0;
             jcf = 0;
-            //System.out.println("maxchannel: " + i);
             for (int j = 0; j < runs; j++) {
-                //System.out.println("run: " +j);
                 subset.clear();
                 do {
                     seed = cdgb.getDigraph()
                     .getChannelAtPosition(
-                            (int) ((cdgb.getDigraph().getChannels()
-                                    .size()) * Math.random()));
+                            (int) (cdgb.getDigraph().getChannels().size() * Math.random()));
                 }
                 while (!seed.isStrongConnected());
                 subset.add(seed);
-                //System.out.println("Seed: " + seed.getNewid());
                 vorChannel = seed;
                 for (int k = 0; k < i - 1; k++) {
                     isIn = false;
@@ -150,7 +146,6 @@ public final class CLI {
                         tempChannel = getNeighbourChannel(vorChannel);
                         if (!subset.contains(tempChannel)) {
                             subset.add(tempChannel);
-                            //System.out.println("zugefügt: " + tempChannel.getNewid());
                             seed = tempChannel;
                             isIn = true;
                         } else {
@@ -162,12 +157,11 @@ public final class CLI {
                 start = System.currentTimeMillis();
                 jc.junctionSearch(subset);
                 measuredTime += (System.currentTimeMillis() - start);
-                //System.out.println("jc beendet");
                 measuredIterateThroughTime += jc.getMeasuredIterateTime();
                 measuredGenerateSubColumnTime += jc.getMeasuredGenerateTime();
                 jcf = jcf + jc.getJunctions().size();
             }
-            System.out.println("Channels: " + (i) +
+            System.out.println("Channels: " + i +
                     " Time(Iterate): " + (measuredIterateThroughTime/runs) +
                     " Time(Generate): " + (measuredGenerateSubColumnTime/runs) +
                     " Time(overall): "+ (measuredTime/runs) + " junctionsfound: " + jcf);

@@ -170,6 +170,6 @@ public class OSMEntity {
     }
 
     protected String valuestoString() {
-        return ("ID: " + (id) + "\n" + "User: " + user + "\n");
+        return ("ID: " + id + "\n" + "User: " + user + "\n");
     }
 }

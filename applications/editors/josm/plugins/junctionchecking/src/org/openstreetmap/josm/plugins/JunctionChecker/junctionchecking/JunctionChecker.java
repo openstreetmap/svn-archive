@@ -146,13 +146,10 @@ public class JunctionChecker {
         Grid = new int[E.size()][E.size()];
         for (int y = 0; y < E.size(); y++) {
             for (int x = 0; x < E.size(); x++) {
-                if (x != y && !(entries.contains(E.get(x)))
-                        && !(exits.contains(E.get(y)))
+                if (x != y && !entries.contains(E.get(x))
+                        && !exits.contains(E.get(y))
                         && E.get(y).getReachableNodes().contains(E.get(x))) {
                     Grid[y][x] = 1;
-                    //log.trace("Grid-Position auf 1 gesetzT (y/x): " + y + ":"
-                    //        + x + "(Entry/exit):" + E.get(y).getNewid() + ":" +
-                    //        E.get(x).getNewid());
                 } else {
                     Grid[y][x] = 0;
                 }

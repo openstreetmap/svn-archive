@@ -162,20 +162,21 @@ public class JMinimality {
                 long ans = c.Choose();
                 int missing = 0;
                 boolean smallerjunction = false;
-                for (int k = 0; k < ans; k++) { //Makes sure that subset of m columns contains an n*n subgrid, because ans = m over n would be 0 otherwise
+                //Makes sure that subset of m columns contains an n*n subgrid, because ans = m over n would be 0 otherwise
+                for (int k = 0; k < ans; k++) {
                     for (int y = 0; y < n; y++) { //Iterates over all rows of subgrid k
                         missing = 0;    //test = "";
                         for (int x = 0; x < c.data.length; x++) { //Iterates over all columns of subgrid k
                             x_i = ((Integer) L.get((int) (lindex-m+c.data[x])).get(0)); //columnindex in grid
-                            v = ((int[][]) (L.get((int) (lindex-m+c.data[x])).get(2))); //subcolumn of grid
+                            v = ((int[][]) L.get((int) (lindex-m+c.data[x])).get(2)); //subcolumn of grid
                             y_j = v[y][0]; //rowindex in grid
                             if (v[y][1] == 0) {
                                 missing++;
                             } else {
                                 CandidateK.add(new int[]{y_j, x_i});
                             } //save entry/exit tuple
-                            if (!smallerjunction && ((!OrEn.contains(E.get(v[y][0])))
-                                    && (!OrEx.contains(E.get(x_i))))) { // Tests, whether y or x is not an original entry/exit
+                            if (!smallerjunction && (!OrEn.contains(E.get(v[y][0]))
+                                    && !OrEx.contains(E.get(x_i)))) { // Tests, whether y or x is not an original entry/exit
                                 smallerjunction = true; //Then k identifies a different junction than the original one
                             }
                             //test = test+" ("+y_j+", "+x_i+", "+v[y][1]+")";

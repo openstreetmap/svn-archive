@@ -36,8 +36,8 @@ public class RelationProducer {
         while (cit.hasNext()) {
             Channel c = cit.next();
             // System.out.println(c.getWay().getId());
-            if (!(ways.contains(plugin.getOsmlayer().data.getPrimitiveById(c
-                    .getWay().getId(), OsmPrimitiveType.WAY)))) {
+            if (!ways.contains(plugin.getOsmlayer().data.getPrimitiveById(c
+                    .getWay().getId(), OsmPrimitiveType.WAY))) {
                 ways.add(plugin.getOsmlayer().data.getPrimitiveById(c.getWay()
                         .getId(), OsmPrimitiveType.WAY));
             }

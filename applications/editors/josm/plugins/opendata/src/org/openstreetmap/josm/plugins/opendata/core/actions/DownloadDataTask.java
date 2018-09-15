@@ -60,12 +60,12 @@ public class DownloadDataTask extends DownloadOsmTask {
 
     @Override
     public String[] getPatterns() {
-        String pattern = "";
+        StringBuilder pattern = new StringBuilder();
         for (String ext : NetworkReader.FILE_AND_ARCHIVE_READERS.keySet()) {
-            if (!pattern.isEmpty()) {
-                pattern += "|";
+            if (pattern.length() > 0) {
+                pattern.append('|');
             }
-            pattern += "."+ext;
+            pattern.append('.').append(ext);
         }
         return new String[]{".*(" + pattern + ")"};
     }

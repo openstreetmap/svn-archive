@@ -42,28 +42,28 @@ public abstract class OverpassApi {
         private final String value;
     }
 
-    public static final String union(String... queries) {
-        String result = "<union>\n";
-        for (String query : queries) {
+    public static final StringBuilder union(CharSequence... queries) {
+        StringBuilder result = new StringBuilder("<union>\n");
+        for (CharSequence query : queries) {
             if (query != null) {
-                result += query + "\n";
+                result.append(query).append('\n');
             }
         }
-        result += "</union>";
+        result.append("</union>");
         return result;
     }
 
-    public static final String query(String bbox, OaQueryType type, String... conditions) {
-        String result = "<query type=\""+type+"\" >\n";
+    public static final StringBuilder query(String bbox, OaQueryType type, CharSequence... conditions) {
+        StringBuilder result = new StringBuilder("<query type=\"").append(type).append("\" >\n");
         if (bbox != null) {
-            result += "<bbox-query "+bbox+"/>\n";
+            result.append("<bbox-query ").append(bbox).append("/>\n");
         }
-        for (String condition : conditions) {
+        for (CharSequence condition : conditions) {
             if (condition != null) {
-                result += condition + "\n";
+                result.append(condition).append('\n');
             }
         }
-        result += "</query>";
+        result.append("</query>");
         return result;
     }
 

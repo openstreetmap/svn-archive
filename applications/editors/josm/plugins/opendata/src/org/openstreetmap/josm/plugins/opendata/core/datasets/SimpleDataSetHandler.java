@@ -159,7 +159,7 @@ public abstract class SimpleDataSetHandler extends AbstractDataSetHandler {
         return conditions.toArray(new String[0]);
     }
 
-    protected String getOverpassApiQueries(String bbox, String ... conditions) {
+    protected String getOverpassApiQueries(String bbox, String... conditions) {
         String[] mpconditions = new String[conditions.length+1];
         mpconditions[0] = OverpassApi.hasKey("type", "multipolygon");
         for (int i = 0; i < conditions.length; i++) {
@@ -176,10 +176,10 @@ public abstract class SimpleDataSetHandler extends AbstractDataSetHandler {
 
     @Override
     protected String getOverpassApiRequest(String bbox) {
-        String result = "";
+        StringBuilder result = new StringBuilder();
         if (this.relevantUnion) {
             for (Tag tag : this.relevantTags) {
-                result += getOverpassApiQueries(bbox, OverpassApi.hasKey(tag.getKey(), tag.getValue()));
+                result.append(getOverpassApiQueries(bbox, OverpassApi.hasKey(tag.getKey(), tag.getValue())));
             }
             result = OverpassApi.union(result);
         } else {

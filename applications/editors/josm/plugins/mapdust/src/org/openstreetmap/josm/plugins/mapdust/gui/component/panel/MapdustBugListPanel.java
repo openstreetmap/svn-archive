@@ -452,7 +452,7 @@ public class MapdustBugListPanel extends JPanel implements
         Iterator<MapdustBugDetailsObserver> elements =
                 this.observers.iterator();
         while (elements.hasNext()) {
-            (elements.next()).showDetails(mapdustBug);
+            elements.next().showDetails(mapdustBug);
         }
     }
 

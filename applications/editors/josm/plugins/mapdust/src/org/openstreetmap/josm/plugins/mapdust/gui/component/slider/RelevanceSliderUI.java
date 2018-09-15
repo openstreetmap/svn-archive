@@ -544,7 +544,7 @@ public class RelevanceSliderUI extends BasicSliderUI {
             int thumbLeft = currentMouseX - offset;
             int trackLeft = getTrackRect().x;
             int trackRight = getTrackRect().x + (getTrackRect().width - 1);
-            int hMin = xPositionForValue((getSlider()).getLowerValue());
+            int hMin = xPositionForValue(getSlider().getLowerValue());
             if (drawInverted()) {
                 trackRight = hMin;
             } else {

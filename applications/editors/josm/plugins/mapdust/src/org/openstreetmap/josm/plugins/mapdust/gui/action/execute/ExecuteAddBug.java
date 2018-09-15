@@ -107,7 +107,7 @@ public class ExecuteAddBug extends MapdustExecuteAction implements
     public void actionPerformed(ActionEvent event) {
         if (event != null) {
             CreateBugDialog createDialog = (CreateBugDialog) getDialog();
-            BugType type = (BugType) (createDialog).getCbbType().getSelectedItem();
+            BugType type = (BugType) createDialog.getCbbType().getSelectedItem();
             String nickname = createDialog.getTxtNickname().getText();
             String commentText = createDialog.getTxtDescription().getText();
             /* validates the input */
@@ -204,7 +204,7 @@ public class ExecuteAddBug extends MapdustExecuteAction implements
     public void notifyObservers(MapdustBug mapdustBug) {
         Iterator<MapdustBugObserver> elements = this.bugObservers.iterator();
         while (elements.hasNext()) {
-            (elements.next()).changedData(mapdustBug);
+            elements.next().changedData(mapdustBug);
         }
     }
 
@@ -242,7 +242,7 @@ public class ExecuteAddBug extends MapdustExecuteAction implements
         Iterator<MapdustActionObserver> elements =
                 this.actionObservers.iterator();
         while (elements.hasNext()) {
-            (elements.next()).addAction(mapdustAction);
+            elements.next().addAction(mapdustAction);
         }
     }
 

@@ -512,7 +512,7 @@ public class MapdustGUI extends ToggleDialog implements MapdustActionObserver,
         Iterator<MapdustBugDetailsObserver> elements =
                 this.bugDetailsObservers.iterator();
         while (elements.hasNext()) {
-            (elements.next()).showDetails(mapdustBug);
+            elements.next().showDetails(mapdustBug);
         }
     }
 
@@ -525,7 +525,7 @@ public class MapdustGUI extends ToggleDialog implements MapdustActionObserver,
         Iterator<MapdustUpdateObserver> elements =
                 this.initialUpdateObservers.iterator();
         while (elements.hasNext()) {
-            (elements.next()).update(filter, first);
+            elements.next().update(filter, first);
         }
     }
 

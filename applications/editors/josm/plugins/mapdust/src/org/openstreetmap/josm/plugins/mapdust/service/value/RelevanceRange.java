@@ -146,6 +146,9 @@ public final class RelevanceRange implements Serializable, Comparable<RelevanceR
 
     @Override
     public boolean equals(Object obj) {
+        if (!(obj instanceof RelevanceRange)) {
+            return false;
+        }
         RelevanceRange other = (RelevanceRange) obj;
         if (lowerValue != other.lowerValue)
             return false;

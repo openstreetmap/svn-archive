@@ -146,10 +146,10 @@ public class MapdustRelevance implements Serializable,
 
     @Override
     public boolean equals(Object obj) {
-        MapdustRelevance other = (MapdustRelevance) obj;
-        if (other == null) {
+        if (!(obj instanceof MapdustRelevance)) {
             return false;
         }
+        MapdustRelevance other = (MapdustRelevance) obj;
         if (name == null || other.name == null) {
             return false;
         }

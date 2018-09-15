@@ -109,7 +109,7 @@ public class ExecuteRefresh extends AbstractAction implements
     public void notifyObservers(MapdustBugFilter filter, boolean first) {
         Iterator<MapdustUpdateObserver> elements = this.observers.iterator();
         while (elements.hasNext()) {
-            (elements.next()).update(filter, false);
+            elements.next().update(filter, false);
         }
     }
 

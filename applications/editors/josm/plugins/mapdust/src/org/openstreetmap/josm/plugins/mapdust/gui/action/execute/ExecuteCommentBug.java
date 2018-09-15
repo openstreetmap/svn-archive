@@ -232,7 +232,7 @@ public class ExecuteCommentBug extends MapdustExecuteAction implements
     public void notifyObservers(MapdustBug mapdustBug) {
         Iterator<MapdustBugObserver> elements = this.bugObservers.iterator();
         while (elements.hasNext()) {
-            (elements.next()).changedData(mapdustBug);
+            elements.next().changedData(mapdustBug);
         }
     }
 
@@ -244,7 +244,7 @@ public class ExecuteCommentBug extends MapdustExecuteAction implements
         Iterator<MapdustActionObserver> elements =
                 this.actionObservers.iterator();
         while (elements.hasNext()) {
-            (elements.next()).addAction(mapdustAction);
+            elements.next().addAction(mapdustAction);
         }
     }
 

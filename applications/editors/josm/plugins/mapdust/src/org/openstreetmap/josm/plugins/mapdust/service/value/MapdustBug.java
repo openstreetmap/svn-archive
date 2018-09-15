@@ -38,7 +38,7 @@ import org.openstreetmap.josm.data.coor.LatLon;
  * @author Bea
  *
  */
-public class MapdustBug {
+public final class MapdustBug {
 
     /** The id of the bug */
     private Long id;

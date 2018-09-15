@@ -204,7 +204,7 @@ public class MapdustBugDetailsPanel extends JPanel implements HyperlinkListener 
                 color = Color.GREEN;
             }
             if (bug.getRelevance().equals(MapdustRelevance.HIGH)) {
-                color = (Color.GREEN.darker()).darker();
+                color = Color.GREEN.darker().darker();
             }
         }
         return color;

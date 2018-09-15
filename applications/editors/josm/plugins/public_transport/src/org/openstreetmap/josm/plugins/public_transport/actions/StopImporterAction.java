@@ -123,10 +123,10 @@ public class StopImporterAction extends JosmAction {
 
             refreshData();
         } else if ("stopImporter.settingsGPSTimeStart".equals(event.getActionCommand())) {
-            if ((!inEvent) && (dialog.gpsTimeStartValid()) && (currentTrack != null))
+            if (!inEvent && dialog.gpsTimeStartValid() && currentTrack != null)
                 UndoRedoHandler.getInstance().add(new TrackStoplistRelocateCommand(this));
         } else if ("stopImporter.settingsStopwatchStart".equals(event.getActionCommand())) {
-            if ((!inEvent) && (dialog.stopwatchStartValid()) && (currentTrack != null))
+            if (!inEvent && dialog.stopwatchStartValid() && currentTrack != null)
                 UndoRedoHandler.getInstance().add(new TrackStoplistRelocateCommand(this));
         } else if ("stopImporter.settingsTimeWindow".equals(event.getActionCommand())) {
             if (currentTrack != null)
@@ -238,7 +238,7 @@ public class StopImporterAction extends JosmAction {
 
     public void tracksSelectionChanged(int selectedPos) {
         if (selectedPos >= 0) {
-            currentTrack = (tracksListModel.elementAt(selectedPos));
+            currentTrack = tracksListModel.elementAt(selectedPos);
             dialog.setTrackValid(true);
 
             // Prepare Settings
@@ -327,7 +327,7 @@ public class StopImporterAction extends JosmAction {
         table.clearSelection();
 
         for (int i = 0; i < table.getRowCount(); ++i) {
-            if ((nodes.elementAt(i) != null) && (ds.isSelected(nodes.elementAt(i))))
+            if (nodes.elementAt(i) != null && ds.isSelected(nodes.elementAt(i)))
                 table.addRowSelectionInterval(i, i);
         }
     }

@@ -87,7 +87,7 @@ public class RoutePatternAction extends JosmAction {
 
         @Override
         public boolean isCellEditable(int row, int column) {
-            if ((column == 0) && (hasFixedKeys))
+            if (column == 0 && hasFixedKeys)
                 return false;
             return true;
         }
@@ -135,7 +135,7 @@ public class RoutePatternAction extends JosmAction {
                 String key = (String) getValueAt(e.getFirstRow(), 0);
                 if (key == null)
                     return;
-                if ((blacklist == null) || (!blacklist.contains(key))) {
+                if (blacklist == null || !blacklist.contains(key)) {
                     relation.setModified(true);
                     if ("".equals(getValueAt(e.getFirstRow(), 1)))
                         relation.remove(key);
@@ -211,7 +211,7 @@ public class RoutePatternAction extends JosmAction {
             if (curName != null) {
                 buf[0] = curName;
             } else {
-                buf[0] = tr("[ID] {0}", (Long.valueOf(node.getId())).toString());
+                buf[0] = tr("[ID] {0}", Long.valueOf(node.getId()).toString());
             }
             String curRef = node.get("ref");
             if (curRef != null) {
@@ -1081,16 +1081,16 @@ public class RoutePatternAction extends JosmAction {
             itineraryTable.clearSelection();
 
             for (int i = 0; i < itineraryData.getRowCount(); ++i) {
-                if ((itineraryData.ways.elementAt(i) != null)
-                        && (mainDataSet.isSelected(itineraryData.ways.elementAt(i))))
+                if (itineraryData.ways.elementAt(i) != null
+                        && mainDataSet.isSelected(itineraryData.ways.elementAt(i)))
                     itineraryTable.addRowSelectionInterval(i, i);
             }
         } else if ("routePattern.itineraryShow".equals(event.getActionCommand())) {
             BoundingXYVisitor box = new BoundingXYVisitor();
             if (itineraryTable.getSelectedRowCount() > 0) {
                 for (int i = 0; i < itineraryData.getRowCount(); ++i) {
-                    if ((itineraryTable.isRowSelected(i))
-                            && (itineraryData.ways.elementAt(i) != null)) {
+                    if (itineraryTable.isRowSelected(i)
+                            && itineraryData.ways.elementAt(i) != null) {
                         itineraryData.ways.elementAt(i).accept((PrimitiveVisitor) box);
                     }
                 }
@@ -1111,12 +1111,12 @@ public class RoutePatternAction extends JosmAction {
             markedWays.clear();
             if (itineraryTable.getSelectedRowCount() > 0) {
                 for (int i = 0; i < itineraryData.getRowCount(); ++i) {
-                    if ((itineraryTable.isRowSelected(i))
-                            && (itineraryData.ways.elementAt(i) != null)) {
+                    if (itineraryTable.isRowSelected(i)
+                            && itineraryData.ways.elementAt(i) != null) {
                         mainDataSet.addSelected(itineraryData.ways.elementAt(i));
 
                         RelationMember markedWay = new RelationMember(
-                                (String) (itineraryData.getValueAt(i, 1)),
+                                (String) itineraryData.getValueAt(i, 1),
                                 itineraryData.ways.elementAt(i));
                         markedWays.addElement(markedWay);
                     }
@@ -1127,7 +1127,7 @@ public class RoutePatternAction extends JosmAction {
                         mainDataSet.addSelected(itineraryData.ways.elementAt(i));
 
                         RelationMember markedWay = new RelationMember(
-                                (String) (itineraryData.getValueAt(i, 1)),
+                                (String) itineraryData.getValueAt(i, 1),
                                 itineraryData.ways.elementAt(i));
                         markedWays.addElement(markedWay);
                     }
@@ -1142,7 +1142,7 @@ public class RoutePatternAction extends JosmAction {
 
             while (relIter.hasNext()) {
                 RelationMember curMember = relIter.next();
-                if ((curMember.isWay()) && (mainDataSet.isSelected(curMember.getWay()))) {
+                if (curMember.isWay() && mainDataSet.isSelected(curMember.getWay())) {
                     itineraryData.insertRow(insPos, curMember.getWay(), curMember.getRole());
                     if (insPos >= 0)
                         ++insPos;
@@ -1156,7 +1156,7 @@ public class RoutePatternAction extends JosmAction {
 
             while (wayIter.hasNext()) {
                 Way curMember = wayIter.next();
-                if (!(addedWays.contains(curMember))) {
+                if (!addedWays.contains(curMember)) {
                     itineraryData.insertRow(insPos, curMember, "");
                     if (insPos >= 0)
                         ++insPos;
@@ -1178,8 +1178,8 @@ public class RoutePatternAction extends JosmAction {
             rebuildWays();
         } else if ("routePattern.itineraryDelete".equals(event.getActionCommand())) {
             for (int i = itineraryData.getRowCount() - 1; i >= 0; --i) {
-                if ((itineraryTable.isRowSelected(i))
-                        && (itineraryData.ways.elementAt(i) != null)) {
+                if (itineraryTable.isRowSelected(i)
+                        && itineraryData.ways.elementAt(i) != null) {
                     itineraryData.ways.removeElementAt(i);
                     itineraryData.removeRow(i);
                 }
@@ -1197,9 +1197,9 @@ public class RoutePatternAction extends JosmAction {
 
             if (itineraryTable.getSelectedRowCount() > 0) {
                 for (int i = itineraryData.getRowCount() - 1; i >= 0; --i) {
-                    if ((itineraryTable.isRowSelected(i))
-                            && (itineraryData.ways.elementAt(i) != null)) {
-                        if (!(usedWays.contains(itineraryData.ways.elementAt(i)))) {
+                    if (itineraryTable.isRowSelected(i)
+                            && itineraryData.ways.elementAt(i) != null) {
+                        if (!usedWays.contains(itineraryData.ways.elementAt(i))) {
                             addWayToSortingData(itineraryData.ways.elementAt(i), frontNodes,
                                     backNodes, loops);
                             usedWays.add(itineraryData.ways.elementAt(i));
@@ -1212,7 +1212,7 @@ public class RoutePatternAction extends JosmAction {
             } else {
                 for (int i = itineraryData.getRowCount() - 1; i >= 0; --i) {
                     if (itineraryData.ways.elementAt(i) != null) {
-                        if (!(usedWays.contains(itineraryData.ways.elementAt(i)))) {
+                        if (!usedWays.contains(itineraryData.ways.elementAt(i))) {
                             addWayToSortingData(itineraryData.ways.elementAt(i), frontNodes,
                                     backNodes, loops);
                             usedWays.add(itineraryData.ways.elementAt(i));
@@ -1255,9 +1255,9 @@ public class RoutePatternAction extends JosmAction {
 
             if (itineraryTable.getSelectedRowCount() > 0) {
                 for (int i = itineraryData.getRowCount() - 1; i >= 0; --i) {
-                    if ((itineraryTable.isRowSelected(i))
-                            && (itineraryData.ways.elementAt(i) != null)) {
-                        String role = (String) (itineraryData.getValueAt(i, 1));
+                    if (itineraryTable.isRowSelected(i)
+                            && itineraryData.ways.elementAt(i) != null) {
+                        String role = (String) itineraryData.getValueAt(i, 1);
                         if ("backward".equals(role))
                             role = "forward";
                         else if ("forward".equals(role))
@@ -1275,7 +1275,7 @@ public class RoutePatternAction extends JosmAction {
             } else {
                 for (int i = itineraryData.getRowCount() - 1; i >= 0; --i) {
                     if (itineraryData.ways.elementAt(i) != null) {
-                        String role = (String) (itineraryData.getValueAt(i, 1));
+                        String role = (String) itineraryData.getValueAt(i, 1);
                         if ("backward".equals(role))
                             role = "forward";
                         else if ("forward".equals(role))
@@ -1314,8 +1314,8 @@ public class RoutePatternAction extends JosmAction {
             stoplistTable.clearSelection();
 
             for (int i = 0; i < stoplistData.getRowCount(); ++i) {
-                if ((stoplistData.nodes.elementAt(i) != null)
-                        && (mainDataSet.isSelected(stoplistData.nodes.elementAt(i))))
+                if (stoplistData.nodes.elementAt(i) != null
+                        && mainDataSet.isSelected(stoplistData.nodes.elementAt(i)))
                     stoplistTable.addRowSelectionInterval(i, i);
             }
         } else if ("routePattern.stoplistShow".equals(event.getActionCommand())) {
@@ -1345,7 +1345,7 @@ public class RoutePatternAction extends JosmAction {
                         mainDataSet.addSelected(stoplistData.nodes.elementAt(i));
 
                         RelationMember markedNode = new RelationMember(
-                                (String) (stoplistData.getValueAt(i, 1)),
+                                (String) stoplistData.getValueAt(i, 1),
                                 stoplistData.nodes.elementAt(i));
                         markedNodes.addElement(markedNode);
                     }
@@ -1355,7 +1355,7 @@ public class RoutePatternAction extends JosmAction {
                     mainDataSet.addSelected(stoplistData.nodes.elementAt(i));
 
                     RelationMember markedNode = new RelationMember(
-                            (String) (stoplistData.getValueAt(i, 1)),
+                            (String) stoplistData.getValueAt(i, 1),
                             stoplistData.nodes.elementAt(i));
                     markedNodes.addElement(markedNode);
                 }
@@ -1369,7 +1369,7 @@ public class RoutePatternAction extends JosmAction {
 
             while (relIter.hasNext()) {
                 RelationMember curMember = relIter.next();
-                if ((curMember.isNode()) && (mainDataSet.isSelected(curMember.getNode()))) {
+                if (curMember.isNode() && mainDataSet.isSelected(curMember.getNode())) {
                     StopReference sr = detectMinDistance(curMember.getNode(), segmentMetrics,
                             cbRight.isSelected(), cbLeft.isSelected());
                     stoplistData.insertRow(insPos, curMember.getNode(), curMember.getRole(),
@@ -1386,7 +1386,7 @@ public class RoutePatternAction extends JosmAction {
 
             while (nodeIter.hasNext()) {
                 Node curMember = nodeIter.next();
-                if (!(addedNodes.contains(curMember))) {
+                if (!addedNodes.contains(curMember)) {
                     StopReference sr = detectMinDistance(curMember, segmentMetrics,
                             cbRight.isSelected(), cbLeft.isSelected());
                     stoplistData.insertRow(insPos, curMember, "", calcOffset(sr, segmentMetrics));
@@ -1486,7 +1486,7 @@ public class RoutePatternAction extends JosmAction {
             if (stoplistTable.getSelectedRowCount() > 0) {
                 for (int i = stoplistData.getRowCount() - 1; i >= 0; --i) {
                     if (stoplistTable.isRowSelected(i)) {
-                        String role = (String) (stoplistData.getValueAt(i, STOPLIST_ROLE_COLUMN));
+                        String role = (String) stoplistData.getValueAt(i, STOPLIST_ROLE_COLUMN);
                         RelationMember markedNode = new RelationMember(role,
                                 stoplistData.nodes.elementAt(i));
                         itemsToReflect.addElement(markedNode);
@@ -1497,7 +1497,7 @@ public class RoutePatternAction extends JosmAction {
                 }
             } else {
                 for (int i = stoplistData.getRowCount() - 1; i >= 0; --i) {
-                    String role = (String) (stoplistData.getValueAt(i, STOPLIST_ROLE_COLUMN));
+                    String role = (String) stoplistData.getValueAt(i, STOPLIST_ROLE_COLUMN);
                     RelationMember markedNode = new RelationMember(role,
                             stoplistData.nodes.elementAt(i));
                     itemsToReflect.addElement(markedNode);
@@ -1650,7 +1650,7 @@ public class RoutePatternAction extends JosmAction {
         for (int i = 0; i < itineraryData.getRowCount(); ++i) {
             if (itineraryData.ways.elementAt(i) != null) {
                 RelationMember member = new RelationMember(
-                        (String) (itineraryData.getValueAt(i, 1)), itineraryData.ways.elementAt(i));
+                        (String) itineraryData.getValueAt(i, 1), itineraryData.ways.elementAt(i));
                 members.add(member);
             }
         }
@@ -1667,7 +1667,7 @@ public class RoutePatternAction extends JosmAction {
         }
         for (int i = 0; i < stoplistData.getRowCount(); ++i) {
             RelationMember member = new RelationMember(
-                    (String) (stoplistData.getValueAt(i, STOPLIST_ROLE_COLUMN)),
+                    (String) stoplistData.getValueAt(i, STOPLIST_ROLE_COLUMN),
                     stoplistData.nodes.elementAt(i));
             currentRoute.addMember(member);
         }
@@ -1864,8 +1864,8 @@ public class RoutePatternAction extends JosmAction {
         for (int i = 0; i < itineraryData.getRowCount(); ++i) {
             if (itineraryData.ways.elementAt(i) != null) {
                 Way way = itineraryData.ways.elementAt(i);
-                if (!(way.isIncomplete())) {
-                    if ("backward".equals((itineraryData.getValueAt(i, 1)))) {
+                if (!way.isIncomplete()) {
+                    if ("backward".equals(itineraryData.getValueAt(i, 1))) {
                         for (int j = way.getNodesCount() - 2; j >= 0; --j) {
                             SegmentMetric sm = new SegmentMetric(way.getNode(j + 1).getCoor().lat(),
                                     way.getNode(j + 1).getCoor().lon(),
@@ -1927,7 +1927,7 @@ public class RoutePatternAction extends JosmAction {
 
                     boolean vertexOnSeg = (vertexAngle == segAngle)
                             || (vertexAngle == lastSegAngle);
-                    boolean vertexOnTheLeft = (!vertexOnSeg)
+                    boolean vertexOnTheLeft = !vertexOnSeg
                             && (((lastSegAngle > vertexAngle) && (vertexAngle > segAngle))
                                     || ((vertexAngle > segAngle) && (segAngle > lastSegAngle))
                                     || ((segAngle > lastSegAngle) && (lastSegAngle > vertexAngle)));
@@ -1942,8 +1942,8 @@ public class RoutePatternAction extends JosmAction {
                     if (curPosition < 0)
                         curPosition += 2 * Math.PI;
                     if ((Math.abs(currentDistance) < distance)
-                            && (((!vertexOnTheLeft) && (rhsPossible))
-                                    || ((vertexOnTheLeft) && (lhsPossible)) || (vertexOnSeg))) {
+                            && ((!vertexOnTheLeft && rhsPossible)
+                                    || (vertexOnTheLeft && lhsPossible) || vertexOnSeg)) {
                         distance = Math.abs(currentDistance);
                         minIndex = curIndex - 1;
                         position = curPosition;
@@ -1957,8 +1957,8 @@ public class RoutePatternAction extends JosmAction {
             } else {
                 double currentDistance = (lat - sm.aLat) * sm.o1 + (lon - sm.aLon) * sm.o2;
                 if ((Math.abs(currentDistance) < distance)
-                        && (((currentDistance >= 0) && (rhsPossible))
-                                || ((currentDistance <= 0) && (lhsPossible)))) {
+                        && ((currentDistance >= 0 && rhsPossible)
+                                || (currentDistance <= 0 && lhsPossible))) {
                     distance = Math.abs(currentDistance);
                     minIndex = curIndex;
                     position = curPosition;

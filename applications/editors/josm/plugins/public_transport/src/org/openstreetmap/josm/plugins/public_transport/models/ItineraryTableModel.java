@@ -58,7 +58,7 @@ public class ItineraryTableModel extends DefaultTableModel implements TableModel
         else if (curName != null)
             buf[0] = curName;
         else
-            buf[0] = tr("[ID] {0}", (Long.valueOf(way.getId())).toString());
+            buf[0] = tr("[ID] {0}", Long.valueOf(way.getId()));
         buf[1] = role;
         if (insPos == -1) {
             ways.addElement(way);
@@ -93,21 +93,21 @@ public class ItineraryTableModel extends DefaultTableModel implements TableModel
             if (i >= getRowCount())
                 break;
 
-            boolean gapRequired = gapNecessary(ways.elementAt(i), (String) (getValueAt(i, 1)),
+            boolean gapRequired = gapNecessary(ways.elementAt(i), (String) getValueAt(i, 1),
                     lastNode);
-            if ((i > 0) && (!gapRequired) && (ways.elementAt(i - 1) == null)) {
+            if (i > 0 && !gapRequired && ways.elementAt(i - 1) == null) {
                 ways.removeElementAt(i - 1);
                 removeRow(i - 1);
                 --i;
-            } else if ((i > 0) && gapRequired && (ways.elementAt(i - 1) != null)) {
+            } else if (i > 0 && gapRequired && ways.elementAt(i - 1) != null) {
                 String[] buf = {"", ""};
                 buf[0] = tr("[gap]");
                 insertRow(i, buf);
                 ++i;
             }
-            lastNode = getLastNode(ways.elementAt(i), (String) (getValueAt(i, 1)));
+            lastNode = getLastNode(ways.elementAt(i), (String) getValueAt(i, 1));
         }
-        while ((getRowCount() > 0) && (ways.elementAt(getRowCount() - 1) == null)) {
+        while (getRowCount() > 0 && ways.elementAt(getRowCount() - 1) == null) {
             ways.removeElementAt(getRowCount() - 1);
             removeRow(getRowCount() - 1);
         }
@@ -125,7 +125,7 @@ public class ItineraryTableModel extends DefaultTableModel implements TableModel
     }
 
     private Node getLastNode(Way way, String role) {
-        if ((way == null) || (way.isIncomplete()) || (way.getNodesCount() < 1))
+        if (way == null || way.isIncomplete() || way.getNodesCount() < 1)
             return null;
         else {
             if ("backward".equals(role))
@@ -136,13 +136,13 @@ public class ItineraryTableModel extends DefaultTableModel implements TableModel
     }
 
     private boolean gapNecessary(Way way, String role, Node lastNode) {
-        if ((way != null) && (!(way.isIncomplete())) && (way.getNodesCount() >= 1)) {
+        if (way != null && !way.isIncomplete() && way.getNodesCount() >= 1) {
             Node firstNode = null;
             if ("backward".equals(role))
                 firstNode = way.getNode(way.getNodesCount() - 1);
             else
                 firstNode = way.getNode(0);
-            if ((lastNode != null) && (!lastNode.equals(firstNode)))
+            if (lastNode != null && !lastNode.equals(firstNode))
                 return true;
         }
         return false;

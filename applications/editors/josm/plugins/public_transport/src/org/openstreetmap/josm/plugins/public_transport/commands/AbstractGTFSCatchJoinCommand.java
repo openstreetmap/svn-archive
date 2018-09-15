@@ -52,7 +52,7 @@ public abstract class AbstractGTFSCatchJoinCommand extends Command {
         int j = workingLines.get(0);
         while (iter.hasNext()) {
             Node n = iter.next();
-            if ((n != null) && (n.equals(gtfsStopTM.nodes.elementAt(j))))
+            if (n != null && n.equals(gtfsStopTM.nodes.elementAt(j)))
                 continue;
             if (dest != null)
                 return false;

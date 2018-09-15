@@ -111,7 +111,7 @@ public class GTFSStopTableModel extends DefaultTableModel {
         while (pos < s.length()) {
             if ('"' == s.charAt(pos))
                 insideDoubleQuoted = !insideDoubleQuoted;
-            else if ((separator == s.charAt(pos)) && (!insideDoubleQuoted))
+            else if (separator == s.charAt(pos) && !insideDoubleQuoted)
                 break;
             ++pos;
         }
@@ -186,7 +186,7 @@ public class GTFSStopTableModel extends DefaultTableModel {
         }
 
         if (insPos == -1) {
-            if ((nearBusStop) || !(tr("pending").equals(buf[2])))
+            if (nearBusStop || !tr("pending").equals(buf[2]))
                 nodes.addElement(null);
             else {
                 Node node = GTFSImporterAction.createNode(coor, buf[0], buf[1]);
@@ -196,7 +196,7 @@ public class GTFSStopTableModel extends DefaultTableModel {
             coors.addElement(coor);
             super.addRow(buf);
         } else {
-            if ((nearBusStop) || !(tr("pending").equals(buf[2])))
+            if (nearBusStop || !tr("pending").equals(buf[2]))
                 nodes.insertElementAt(null, insPos);
             else {
                 Node node = GTFSImporterAction.createNode(coor, buf[0], buf[1]);

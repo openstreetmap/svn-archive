@@ -50,7 +50,7 @@ public class TrackReference implements Comparable<TrackReference>, TableModelLis
         this.controller = controller;
         if (track != null) {
             Iterator<GpxTrackSegment> siter = track.getSegments().iterator();
-            while ((siter.hasNext()) && (this.gpsSyncTime == null)) {
+            while (siter.hasNext() && this.gpsSyncTime == null) {
                 Iterator<WayPoint> witer = siter.next().getWayPoints().iterator();
                 if (witer.hasNext()) {
                     this.gpsStartTime = witer.next().getString("time");

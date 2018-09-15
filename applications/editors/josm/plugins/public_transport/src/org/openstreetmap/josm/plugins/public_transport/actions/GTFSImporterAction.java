@@ -295,7 +295,7 @@ public class GTFSImporterAction extends JosmAction {
         table.clearSelection();
 
         for (int i = 0; i < table.getRowCount(); ++i) {
-            if ((nodes.elementAt(i) != null) && (ds.isSelected(nodes.elementAt(i))))
+            if (nodes.elementAt(i) != null && ds.isSelected(nodes.elementAt(i)))
                 table.addRowSelectionInterval(i, i);
         }
     }

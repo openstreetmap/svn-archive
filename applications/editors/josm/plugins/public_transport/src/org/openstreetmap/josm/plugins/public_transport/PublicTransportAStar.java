@@ -28,7 +28,7 @@ public class PublicTransportAStar extends AStarAlgorithm {
 
         @Override
         public boolean equals(Object o) {
-            if ((NodeVertex) o == null)
+            if (!(o instanceof NodeVertex))
                 return false;
             return node.equals(((NodeVertex) o).node);
         }

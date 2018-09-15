@@ -1653,6 +1653,6 @@ public final class S57val { // S57 Attribute values lookup tables & methods
     }
 
     public static Enum<?> unknAtt(Att att) {
-        return (Enum<?>) (keys.get(att).map.keySet().toArray()[0]);
+        return (Enum<?>) keys.get(att).map.keySet().toArray()[0];
     }
 }

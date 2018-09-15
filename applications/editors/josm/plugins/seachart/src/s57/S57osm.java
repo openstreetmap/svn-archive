@@ -8,7 +8,6 @@ import java.util.HashMap;
 import s57.S57att.Att;
 import s57.S57map.Snode;
 import s57.S57obj.Obj;
-import s57.S57val.CatBUA;
 import s57.S57val.CatROD;
 import s57.S57val.Conv;
 
@@ -130,7 +129,7 @@ public final class S57osm { // OSM to S57 Object/Attribute and Object/Primitive 
                         }
                     }
                 } else {
-                    if ((inNode || inWay || inRel) && (ln.contains("<tag"))) {
+                    if ((inNode || inWay || inRel) && ln.contains("<tag")) {
                         k = v = "";
                         String[] token = ln.split("k=");
                         k = token[1].split("[\"\']")[1];
@@ -204,11 +203,11 @@ public final class S57osm { // OSM to S57 Object/Attribute and Object/Primitive 
                                 if (token.matches("^ref=.+")) {
                                     ref = Long.parseLong(token.split("[\"\']")[1]);
                                 } else if (token.matches("^type=.+")) {
-                                    type = (token.split("[\"\']")[1]);
+                                    type = token.split("[\"\']")[1];
                                 } else if (token.matches("^role=.+")) {
                                     String[] str = token.split("[\"\']");
                                     if (str.length > 1) {
-                                        role = (token.split("[\"\']")[1]);
+                                        role = token.split("[\"\']")[1];
                                     }
                                 }
                             }

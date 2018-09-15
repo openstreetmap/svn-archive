@@ -545,7 +545,7 @@ public class Rules {
 				default:
 					Renderer.symbol(Beacons.Stake, getScheme(feature.type));
 				}
-			} else if ((shape == BcnSHP.BCN_PRCH) && (feature.type == Obj.BCNLAT) && !(feature.objs.containsKey(Obj.TOPMAR))) {
+			} else if (shape == BcnSHP.BCN_PRCH && feature.type == Obj.BCNLAT && !feature.objs.containsKey(Obj.TOPMAR)) {
 				switch ((CatLAM) getAttEnum(feature.type, Att.CATLAM)) {
 				case LAM_PORT:
 					Renderer.symbol(Beacons.PerchPort);
@@ -564,12 +564,12 @@ public class Rules {
 						Renderer.symbol(Beacons.Floodlight);
 					}
 					if (topmap.containsKey(Att.TOPSHP)) {
-						Renderer.symbol(Topmarks.Shapes.get(((ArrayList<TopSHP>) (topmap.get(Att.TOPSHP).val)).get(0)), getScheme(Obj.TOPMAR), Topmarks.BeaconDelta);
+						Renderer.symbol(Topmarks.Shapes.get(((ArrayList<TopSHP>) topmap.get(Att.TOPSHP).val).get(0)), getScheme(Obj.TOPMAR), Topmarks.BeaconDelta);
 					}
 				} else if (feature.objs.containsKey(Obj.DAYMAR)) {
 					AttMap topmap = feature.objs.get(Obj.DAYMAR).get(0);
 					if (topmap.containsKey(Att.TOPSHP)) {
-						Renderer.symbol(Topmarks.Shapes.get(((ArrayList<TopSHP>) (topmap.get(Att.TOPSHP).val)).get(0)), getScheme(Obj.DAYMAR), Topmarks.BeaconDelta);
+						Renderer.symbol(Topmarks.Shapes.get(((ArrayList<TopSHP>) topmap.get(Att.TOPSHP).val).get(0)), getScheme(Obj.DAYMAR), Topmarks.BeaconDelta);
 					}
 				}
 			}
@@ -590,12 +590,12 @@ public class Rules {
 			if (feature.objs.containsKey(Obj.TOPMAR)) {
 				AttMap topmap = feature.objs.get(Obj.TOPMAR).get(0);
 				if (topmap.containsKey(Att.TOPSHP)) {
-					Renderer.symbol(Topmarks.Shapes.get(((ArrayList<TopSHP>) (topmap.get(Att.TOPSHP).val)).get(0)), getScheme(Obj.TOPMAR), Topmarks.BuoyDeltas.get(shape));
+					Renderer.symbol(Topmarks.Shapes.get(((ArrayList<TopSHP>) topmap.get(Att.TOPSHP).val).get(0)), getScheme(Obj.TOPMAR), Topmarks.BuoyDeltas.get(shape));
 				}
 			} else if (feature.objs.containsKey(Obj.DAYMAR)) {
 				AttMap topmap = feature.objs.get(Obj.DAYMAR).get(0);
 				if (topmap.containsKey(Att.TOPSHP)) {
-					Renderer.symbol(Topmarks.Shapes.get(((ArrayList<TopSHP>) (topmap.get(Att.TOPSHP).val)).get(0)), getScheme(Obj.DAYMAR), Topmarks.BuoyDeltas.get(shape));
+					Renderer.symbol(Topmarks.Shapes.get(((ArrayList<TopSHP>) topmap.get(Att.TOPSHP).val).get(0)), getScheme(Obj.DAYMAR), Topmarks.BuoyDeltas.get(shape));
 				}
 			}
 			addName(15, new Font("Arial", Font.BOLD, 40), new Delta(Handle.BL, AffineTransform.getTranslateInstance(60, -50)));
@@ -648,7 +648,7 @@ public class Rules {
 				Renderer.lineSymbols(Areas.Cable, 0.0, null, null, 0, Symbols.Mline);
 			} else if (feature.type == Obj.CBLOHD) {
 				AttMap atts = feature.objs.get(Obj.CBLOHD).get(0);
-				if ((atts != null) && (atts.containsKey(Att.CATCBL)) && (atts.get(Att.CATCBL).val == CatCBL.CBL_POWR)) {
+				if (atts != null && atts.containsKey(Att.CATCBL) && atts.get(Att.CATCBL).val == CatCBL.CBL_POWR) {
 					Renderer.lineSymbols(Areas.CableDash, 0, Areas.CableDot, Areas.CableFlash, 2, Color.black);
 				} else {
 					Renderer.lineSymbols(Areas.CableDash, 0, Areas.CableDot, null, 2, Color.black);
@@ -723,7 +723,7 @@ public class Rules {
 			}
 			if (Renderer.zoom >= 15) {
 				AttMap atts = getAtts(Obj.DISMAR, 0);
-				if ((atts != null) && (atts.containsKey(Att.WTWDIS))) {
+				if (atts != null && atts.containsKey(Att.WTWDIS)) {
 					Double dist = (Double) atts.get(Att.WTWDIS).val;
 					String str = "";
 					if (atts.containsKey(Att.HUNITS)) {
@@ -776,12 +776,12 @@ public class Rules {
 			if (feature.objs.containsKey(Obj.TOPMAR)) {
 				AttMap topmap = feature.objs.get(Obj.TOPMAR).get(0);
 				if (topmap.containsKey(Att.TOPSHP)) {
-					Renderer.symbol(Topmarks.Shapes.get(((ArrayList<TopSHP>) (topmap.get(Att.TOPSHP).val)).get(0)), getScheme(Obj.TOPMAR), Topmarks.FloatDelta);
+					Renderer.symbol(Topmarks.Shapes.get(((ArrayList<TopSHP>) topmap.get(Att.TOPSHP).val).get(0)), getScheme(Obj.TOPMAR), Topmarks.FloatDelta);
 				}
 			} else if (feature.objs.containsKey(Obj.DAYMAR)) {
 				AttMap topmap = feature.objs.get(Obj.DAYMAR).get(0);
 				if (topmap.containsKey(Att.TOPSHP)) {
-					Renderer.symbol(Topmarks.Shapes.get(((ArrayList<TopSHP>) (topmap.get(Att.TOPSHP).val)).get(0)), getScheme(Obj.DAYMAR), Topmarks.FloatDelta);
+					Renderer.symbol(Topmarks.Shapes.get(((ArrayList<TopSHP>) topmap.get(Att.TOPSHP).val).get(0)), getScheme(Obj.DAYMAR), Topmarks.FloatDelta);
 				}
 			}
 			addName(15, new Font("Arial", Font.BOLD, 40), new Delta(Handle.BL, AffineTransform.getTranslateInstance(20, -50)));
@@ -829,7 +829,7 @@ public class Rules {
 				}
 				addName(15, new Font("Arial", Font.BOLD, 60), Symbols.Mline, new Delta(Handle.LC, AffineTransform.getTranslateInstance(70, 0)));
 				ArrayList<StsSTS> sts = (ArrayList<StsSTS>) getAttList(Obj.ACHARE, Att.STATUS);
-				if ((Renderer.zoom >= 15) && (sts.contains(StsSTS.STS_RESV))) {
+				if (Renderer.zoom >= 15 && sts.contains(StsSTS.STS_RESV)) {
 					Renderer.labelText("Reserved", new Font("Arial", Font.PLAIN, 50), Symbols.Mline, new Delta(Handle.TC, AffineTransform.getTranslateInstance(0, 60)));
 				}
 				ArrayList<CatACH> cats = (ArrayList<CatACH>) getAttList(Obj.ACHARE, Att.CATACH);
@@ -922,7 +922,7 @@ public class Rules {
 	private static void highways() {
 		switch (feature.type) {
 		case ROADWY:
-			ArrayList<CatROD> cat = (ArrayList<CatROD>) (getAttList(Obj.ROADWY, Att.CATROD));
+			ArrayList<CatROD> cat = (ArrayList<CatROD>) getAttList(Obj.ROADWY, Att.CATROD);
 			if (cat.size() > 0) {
 				switch (cat.get(0)) {
 				case ROD_MWAY:
@@ -1017,12 +1017,12 @@ public class Rules {
 				}
 				AttMap topmap = feature.objs.get(Obj.TOPMAR).get(0);
 				if (topmap.containsKey(Att.TOPSHP)) {
-					Renderer.symbol(Topmarks.Shapes.get(((ArrayList<TopSHP>) (topmap.get(Att.TOPSHP).val)).get(0)), getScheme(Obj.TOPMAR), Topmarks.LightDelta);
+					Renderer.symbol(Topmarks.Shapes.get(((ArrayList<TopSHP>) topmap.get(Att.TOPSHP).val).get(0)), getScheme(Obj.TOPMAR), Topmarks.LightDelta);
 				}
 			} else if (feature.objs.containsKey(Obj.DAYMAR)) {
 				AttMap topmap = feature.objs.get(Obj.DAYMAR).get(0);
 				if (topmap.containsKey(Att.TOPSHP)) {
-					Renderer.symbol(Topmarks.Shapes.get(((ArrayList<TopSHP>) (topmap.get(Att.TOPSHP).val)).get(0)), getScheme(Obj.DAYMAR), Topmarks.LightDelta);
+					Renderer.symbol(Topmarks.Shapes.get(((ArrayList<TopSHP>) topmap.get(Att.TOPSHP).val).get(0)), getScheme(Obj.DAYMAR), Topmarks.LightDelta);
 				}
 			}
 			Signals.addSignals();
@@ -1107,17 +1107,17 @@ public class Rules {
 				int i = 0;
 				for (AttMap atts : objs.values()) {
 					if (atts.get(Att.MARSYS) != null)
-						sys = ((ArrayList<MarSYS>) (atts.get(Att.MARSYS).val)).get(0);
+						sys = ((ArrayList<MarSYS>) atts.get(Att.MARSYS).val).get(0);
 					if (atts.get(Att.BNKWTW) != null)
-						bnk = ((ArrayList<BnkWTW>) (atts.get(Att.BNKWTW).val)).get(0);
+						bnk = ((ArrayList<BnkWTW>) atts.get(Att.BNKWTW).val).get(0);
 					CatNMK cat = CatNMK.NMK_UNKN;
 					if (atts.get(Att.CATNMK) != null)
-						cat = ((ArrayList<CatNMK>) (atts.get(Att.CATNMK).val)).get(0);
+						cat = ((ArrayList<CatNMK>) atts.get(Att.CATNMK).val).get(0);
 					Symbol sym = Notices.getNotice(cat, sys, bnk);
 					Scheme sch = Notices.getScheme(sys, bnk);
 					ArrayList<AddMRK> add = new ArrayList<>();
 					if (atts.get(Att.ADDMRK) != null)
-						add = (ArrayList<AddMRK>) (atts.get(Att.ADDMRK).val);
+						add = (ArrayList<AddMRK>) atts.get(Att.ADDMRK).val;
 					Handle h = Handle.CC;
 					double ax = 0.0;
 					double ay = 0.0;
@@ -1253,12 +1253,12 @@ public class Rules {
 			if (feature.objs.containsKey(Obj.TOPMAR)) {
 				AttMap topmap = feature.objs.get(Obj.TOPMAR).get(0);
 				if (topmap.containsKey(Att.TOPSHP)) {
-					Renderer.symbol(Topmarks.Shapes.get(((ArrayList<TopSHP>) (topmap.get(Att.TOPSHP).val)).get(0)), getScheme(Obj.TOPMAR), null);
+					Renderer.symbol(Topmarks.Shapes.get(((ArrayList<TopSHP>) topmap.get(Att.TOPSHP).val).get(0)), getScheme(Obj.TOPMAR), null);
 				}
 			} else if (feature.objs.containsKey(Obj.DAYMAR)) {
 				AttMap topmap = feature.objs.get(Obj.DAYMAR).get(0);
 				if (topmap.containsKey(Att.TOPSHP)) {
-					Renderer.symbol(Topmarks.Shapes.get(((ArrayList<TopSHP>) (topmap.get(Att.TOPSHP).val)).get(0)), getScheme(Obj.DAYMAR), null);
+					Renderer.symbol(Topmarks.Shapes.get(((ArrayList<TopSHP>) topmap.get(Att.TOPSHP).val).get(0)), getScheme(Obj.DAYMAR), null);
 				}
 			}
 			Signals.addSignals();

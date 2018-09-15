@@ -124,7 +124,7 @@ public class Signals extends Rules {
 			case BCNISD:
 			case BCNSAW:
 			case BCNSPP:
-				if ((feature.objs.containsKey(Obj.TOPMAR)) || (feature.objs.containsKey(Obj.DAYMAR))) {
+				if (feature.objs.containsKey(Obj.TOPMAR) || feature.objs.containsKey(Obj.DAYMAR)) {
 					Renderer.symbol(Topmarks.RadarReflector, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -140)));
 				} else {
 					Renderer.symbol(Topmarks.RadarReflector, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -80)));
@@ -133,7 +133,7 @@ public class Signals extends Rules {
 			case LITFLT:
 			case LITVES:
 			case BOYINB:
-				if ((feature.objs.containsKey(Obj.TOPMAR)) || (feature.objs.containsKey(Obj.DAYMAR))) {
+				if (feature.objs.containsKey(Obj.TOPMAR) || feature.objs.containsKey(Obj.DAYMAR)) {
 					Renderer.symbol(Topmarks.RadarReflector, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -110)));
 				} else {
 					Renderer.symbol(Topmarks.RadarReflector, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -60)));
@@ -141,7 +141,7 @@ public class Signals extends Rules {
 				break;
 			case LITMAJ:
 			case LITMIN:
-				if ((feature.objs.containsKey(Obj.TOPMAR)) || (feature.objs.containsKey(Obj.DAYMAR))) {
+				if (feature.objs.containsKey(Obj.TOPMAR) || feature.objs.containsKey(Obj.DAYMAR)) {
 					Renderer.symbol(Topmarks.RadarReflector, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -90)));
 				} else {
 					Renderer.symbol(Topmarks.RadarReflector, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -30)));
@@ -152,7 +152,7 @@ public class Signals extends Rules {
 			case BOYISD:
 			case BOYSAW:
 			case BOYSPP:
-				if ((feature.objs.containsKey(Obj.TOPMAR)) || (feature.objs.containsKey(Obj.DAYMAR))) {
+				if (feature.objs.containsKey(Obj.TOPMAR) || feature.objs.containsKey(Obj.DAYMAR)) {
 					if (testAttribute(feature.type, Att.BOYSHP, BoySHP.BOY_PILR) || testAttribute(feature.type, Att.BOYSHP, BoySHP.BOY_SPAR)) {
 						Renderer.symbol(Topmarks.RadarReflector, new Delta(Handle.BC, AffineTransform.getTranslateInstance(50, -160)));
 					} else {
@@ -180,7 +180,7 @@ public class Signals extends Rules {
 			if (atts != null) {
 				String str = "";
 				if (atts.containsKey(Att.CATFOG)) {
-					str += fogSignals.get(((ArrayList<?>) (atts.get(Att.CATFOG).val)).get(0));
+					str += fogSignals.get(((ArrayList<?>) atts.get(Att.CATFOG).val).get(0));
 				}
 				if (atts.containsKey(Att.SIGGRP)) {
 					str += "(" + atts.get(Att.SIGGRP).val + ")";
@@ -439,7 +439,7 @@ public class Signals extends Rules {
 									if (satts == atts)
 										continue;
 									if (srad == radius) {
-										ArrayList<CatLIT> scats = (ArrayList<CatLIT>) ((satts.containsKey(Att.CATLIT)) ? (ArrayList<CatLIT>) satts.get(Att.CATLIT).val : new ArrayList<>());
+										ArrayList<CatLIT> scats = (ArrayList<CatLIT>) (satts.containsKey(Att.CATLIT) ? (ArrayList<CatLIT>) satts.get(Att.CATLIT).val : new ArrayList<>());
 										if (scats.contains(CatLIT.LIT_DIR)) {
 											if (satts.containsKey(Att.ORIENT)) {
 												sdir = (Double) satts.get(Att.ORIENT).val;
@@ -556,7 +556,7 @@ public class Signals extends Rules {
 						boolean found = false;
 						for (ArrayList<LitSect> group : groupings) {
 							LitSect mem = group.get(0);
-							if ((lit.dir == mem.dir) && (lit.chr == mem.chr) && (lit.grp.equals(mem.grp)) && (lit.per == mem.per) && (lit.hgt == mem.hgt)) {
+							if (lit.dir == mem.dir && lit.chr == mem.chr && lit.grp.equals(mem.grp) && lit.per == mem.per && lit.hgt == mem.hgt) {
 								group.add(lit);
 								found = true;
 							}
@@ -615,7 +615,7 @@ public class Signals extends Rules {
 							}
 						}
 						LitSect tmp = group.get(0);
-						str = (tmp.dir) ? "Dir" : "";
+						str = tmp.dir ? "Dir" : "";
 						str += LightCharacters.get(tmp.chr);
 						if (!tmp.grp.isEmpty())
 							str += "(" + tmp.grp + ")";
@@ -644,8 +644,8 @@ public class Signals extends Rules {
 					if (atts.containsKey(Att.CATLIT)) {
 						cats = (ArrayList<CatLIT>) atts.get(Att.CATLIT).val;
 					}
-					str = (cats.contains(CatLIT.LIT_DIR)) ? "Dir" : "";
-					str += (atts.containsKey(Att.MLTYLT)) ? atts.get(Att.MLTYLT).val : "";
+					str = cats.contains(CatLIT.LIT_DIR) ? "Dir" : "";
+					str += atts.containsKey(Att.MLTYLT) ? atts.get(Att.MLTYLT).val : "";
 					if (atts.containsKey(Att.LITCHR)) {
 						LitCHR chr = ((ArrayList<LitCHR>) atts.get(Att.LITCHR).val).get(0);
 						if (atts.containsKey(Att.SIGGRP)) {
@@ -679,16 +679,16 @@ public class Signals extends Rules {
 							}
 						}
 					}
-					str += (cats.contains(CatLIT.LIT_VERT)) ? "(vert)" : "";
-					str += (cats.contains(CatLIT.LIT_HORI)) ? "(hor)" : "";
+					str += cats.contains(CatLIT.LIT_VERT) ? "(vert)" : "";
+					str += cats.contains(CatLIT.LIT_HORI) ? "(hor)" : "";
 					str += (!str.isEmpty() && (atts.containsKey(Att.SIGPER) || atts.containsKey(Att.HEIGHT) || atts.containsKey(Att.VALMXR)) && !str.endsWith(")")) ? "." : "";
-					str += (atts.containsKey(Att.SIGPER)) ? df.format(atts.get(Att.SIGPER).val) + "s" : "";
-					str += (atts.containsKey(Att.HEIGHT)) ? df.format(atts.get(Att.HEIGHT).val) + "m" : "";
-					str += (atts.containsKey(Att.VALNMR)) ? df.format(atts.get(Att.VALNMR).val) + "M" : "";
-					str += (cats.contains(CatLIT.LIT_FRNT)) ? "(Front)" : "";
-					str += (cats.contains(CatLIT.LIT_REAR)) ? "(Rear)" : "";
-					str += (cats.contains(CatLIT.LIT_UPPR)) ? "(Upper)" : "";
-					str += (cats.contains(CatLIT.LIT_LOWR)) ? "(Lower)" : "";
+					str += atts.containsKey(Att.SIGPER) ? df.format(atts.get(Att.SIGPER).val) + "s" : "";
+					str += atts.containsKey(Att.HEIGHT) ? df.format(atts.get(Att.HEIGHT).val) + "m" : "";
+					str += atts.containsKey(Att.VALNMR) ? df.format(atts.get(Att.VALNMR).val) + "M" : "";
+					str += cats.contains(CatLIT.LIT_FRNT) ? "(Front)" : "";
+					str += cats.contains(CatLIT.LIT_REAR) ? "(Rear)" : "";
+					str += cats.contains(CatLIT.LIT_UPPR) ? "(Upper)" : "";
+					str += cats.contains(CatLIT.LIT_LOWR) ? "(Lower)" : "";
 					Renderer.labelText(str, new Font("Arial", Font.PLAIN, 40), Color.black, new Delta(Handle.TL, AffineTransform.getTranslateInstance(60, -30)));
 				}
 			}

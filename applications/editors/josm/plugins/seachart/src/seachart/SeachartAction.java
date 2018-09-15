@@ -202,7 +202,7 @@ public class SeachartAction extends JosmAction implements ActiveLayerChangeListe
                 if (way.getNodesCount() > 0) {
                     map.addEdge(way.getUniqueId());
                     for (Node node : way.getNodes()) {
-                        map.addToEdge((node.getUniqueId()));
+                        map.addToEdge(node.getUniqueId());
                     }
                     for (Entry<String, String> entry : way.getKeys().entrySet()) {
                         map.addTag(entry.getKey(), entry.getValue());
@@ -215,7 +215,7 @@ public class SeachartAction extends JosmAction implements ActiveLayerChangeListe
                     map.addArea(rel.getUniqueId());
                     for (RelationMember mem : rel.getMembers()) {
                         if (mem.getType() == OsmPrimitiveType.WAY)
-                            map.addToArea(mem.getUniqueId(), (mem.getRole().equals("outer")));
+                            map.addToArea(mem.getUniqueId(), mem.getRole().equals("outer"));
                     }
                     for (Entry<String, String> entry : rel.getKeys().entrySet()) {
                         map.addTag(entry.getKey(), entry.getValue());

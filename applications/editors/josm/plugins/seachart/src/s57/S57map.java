@@ -907,7 +907,7 @@ public class S57map { // S57/OSM map generation methods
                         if (first) {
                             first = false;
                         } else {
-                            sarc += (Math.acos(Math.cos(lon - llon) * Math.cos(lat - llat)));
+                            sarc += Math.acos(Math.cos(lon - llon) * Math.cos(lat - llat));
                         }
                         llat = lat;
                         llon = lon;
@@ -930,7 +930,7 @@ public class S57map { // S57/OSM map generation methods
                         if (first) {
                             first = false;
                         } else {
-                            sarc = (Math.acos(Math.cos(lon - llon) * Math.cos(lat - llat)));
+                            sarc = Math.acos(Math.cos(lon - llon) * Math.cos(lat - llat));
                             if (sarc > harc)
                                 break;
                         }

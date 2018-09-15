@@ -422,9 +422,9 @@ public final class Renderer {
     public static void labelText(String str, Font font, Color tc, LabelStyle style, Color fg, Color bg, Delta delta) {
         if (delta == null) delta = new Delta(Handle.CC);
         if (bg == null) bg = new Color(0x00000000, true);
-        if ((str == null) || (str.isEmpty())) str = " ";
+        if (str == null || str.isEmpty()) str = " ";
         FontRenderContext frc = g2.getFontRenderContext();
-        GlyphVector gv = font.deriveFont((float) (font.getSize())).createGlyphVector(frc, str.equals(" ") ? "M" : str);
+        GlyphVector gv = font.deriveFont((float) font.getSize()).createGlyphVector(frc, str.equals(" ") ? "M" : str);
         Rectangle2D bounds = gv.getVisualBounds();
         double width = bounds.getWidth();
         double height = bounds.getHeight();
@@ -592,7 +592,7 @@ public final class Renderer {
                     pos.rotate(rotate);
                     pos.translate((mid.getX() - centre.getX()), (mid.getY() - centre.getY()));
                     Symbol label = new Symbol();
-                    label.add(new Instr(Form.BBOX, new Rectangle2D.Double((-width / 2), (-height), width, height)));
+                    label.add(new Instr(Form.BBOX, new Rectangle2D.Double((-width / 2), -height, width, height)));
                     label.add(new Instr(Form.TEXT, new Caption(str, font, colour, new Delta(Handle.BC))));
                     Symbols.drawSymbol(g2, label, sScale, centre.getX(), centre.getY(), null, new Delta(Handle.BC, pos));
                 }
@@ -602,7 +602,7 @@ public final class Renderer {
 
     public static void lightSector(Color col1, Color col2, double radius, double s1, double s2, Double dir, String str) {
         if ((zoom >= 16) && (radius > 0.2)) {
-            radius /= (Math.pow(2, zoom-15));
+            radius /= Math.pow(2, zoom-15);
         }
         double mid = (((s1 + s2) / 2) + (s1 > s2 ? 180 : 0)) % 360;
         g2.setStroke(new BasicStroke((float) (3.0 * sScale), BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND, 1,
@@ -631,7 +631,7 @@ public final class Renderer {
             g2.draw(new Arc2D.Double(centre.x - radial + arcWidth, centre.y - radial + arcWidth, 2 * (radial - arcWidth),
                     2 * (radial - arcWidth), -(s1 + 90), ((s1 < s2) ? (s1 - s2) : (s1 - s2 - 360)), Arc2D.OPEN));
         }
-        if ((str != null) && (!str.isEmpty())) {
+        if (str != null && !str.isEmpty()) {
             Font font = new Font("Arial", Font.PLAIN, 40);
             double arc = (s2 > s1) ? (s2 - s1) : (s2 - s1 + 360);
             double awidth = (Math.toRadians(arc) * radial);

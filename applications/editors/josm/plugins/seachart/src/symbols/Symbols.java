@@ -185,8 +185,8 @@ public final class Symbols {
         g2.setPaint(Color.black);
         if (cs != null) {
             if ((cs.pat.size() > 0) && (cs.col.size() > 0) && (cs.pat.get(0) == Patt.B)) {
-                bpat = (cs.pat.remove(0));
-                bcol = (cs.col.remove(0));
+                bpat = cs.pat.remove(0);
+                bcol = cs.col.remove(0);
             }
             pn = cs.pat.size();
             cn = cs.col.size() - ((pn != 0) ? pn - 1 : 0);

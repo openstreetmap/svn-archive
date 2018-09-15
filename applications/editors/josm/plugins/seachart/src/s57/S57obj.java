@@ -162,7 +162,7 @@ public final class S57obj { // S57 Object lookup tables & methods
     }
 
     public static Obj enumType(String type) { // Convert OSM object string to SCM object enumeration
-        if ((type != null) && !type.isEmpty() && (StrObj.containsKey(type)))
+        if (type != null && !type.isEmpty() && StrObj.containsKey(type))
             return StrObj.get(type);
         else
             return Obj.UNKOBJ;

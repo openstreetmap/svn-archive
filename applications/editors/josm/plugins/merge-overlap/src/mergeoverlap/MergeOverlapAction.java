@@ -19,12 +19,12 @@ import java.util.Map;
 import java.util.Set;
 
 import org.openstreetmap.josm.actions.JosmAction;
+import org.openstreetmap.josm.actions.corrector.ReverseWayTagCorrector;
 import org.openstreetmap.josm.command.ChangeCommand;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.DeleteCommand;
 import org.openstreetmap.josm.command.SequenceCommand;
 import org.openstreetmap.josm.command.SplitWayCommand;
-import org.openstreetmap.josm.corrector.ReverseWayTagCorrector;
 import org.openstreetmap.josm.data.UndoRedoHandler;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.NodeGraph;

@@ -13,8 +13,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import org.openstreetmap.josm.actions.corrector.ReverseWayTagCorrector;
 import org.openstreetmap.josm.command.Command;
-import org.openstreetmap.josm.corrector.ReverseWayTagCorrector;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.NodeGraph;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;

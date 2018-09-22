@@ -21,10 +21,13 @@ import org.openstreetmap.josm.plugins.fr.cadastre.wms.CacheFileUTM20NFilter;
 import org.openstreetmap.josm.plugins.fr.cadastre.wms.WMSLayer;
 import org.openstreetmap.josm.tools.Logging;
 
+/**
+ * Load location from cache (only if cache is enabled)
+ */
 public class MenuActionLoadFromCache extends JosmAction {
     private static final long serialVersionUID = 1L;
 
-    public static final String name = marktr("Load layer from cache");
+    private static final String name = marktr("Load layer from cache");
 
     /**
      * Constructs a new {@code MenuActionLoadFromCache}.
@@ -48,10 +51,10 @@ public class MenuActionLoadFromCache extends JosmAction {
                 String filename = file.getName();
                 String ext = (filename.lastIndexOf('.') == -1) ? "" : filename.substring(filename.lastIndexOf('.')+1, filename.length());
                 if ((ext.length() == 3 && ext.substring(0, CacheControl.C_LAMBERT_CC_9Z.length()).equals(CacheControl.C_LAMBERT_CC_9Z) &&
-                    !(CadastrePlugin.isLambert_cc9()))
+                    !CadastrePlugin.isLambert_cc9())
                     || (ext.length() == 4 && ext.substring(0, CacheControl.C_UTM20N.length()).equals(CacheControl.C_UTM20N) &&
                             !(CadastrePlugin.isUtm_france_dom()))
-                    || (ext.length() == 1) && !(CadastrePlugin.isLambert())) {
+                    || (ext.length() == 1 && !CadastrePlugin.isLambert())) {
                         JOptionPane.showMessageDialog(MainApplication.getMainFrame(),
                                 tr("{0} not allowed with the current projection", filename),
                                 tr("Error"), JOptionPane.ERROR_MESSAGE);

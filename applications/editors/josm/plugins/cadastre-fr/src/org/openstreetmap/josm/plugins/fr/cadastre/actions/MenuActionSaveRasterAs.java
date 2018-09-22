@@ -29,15 +29,16 @@ import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.plugins.fr.cadastre.wms.WMSLayer;
 import org.openstreetmap.josm.tools.Logging;
 
+/**
+ * Export image (only raster images)
+ */
 public class MenuActionSaveRasterAs extends JosmAction {
 
-    public static final String NAME = marktr("Save image as...");
-
-    private static final long serialVersionUID = 1L;
+    private static final String NAME = marktr("Save image as...");
 
     private WMSLayer wmsLayer;
 
-    public static class FiltrePng extends FileFilter {
+    static class FiltrePng extends FileFilter {
         @Override
         public boolean accept(File file) {
             if (file.isDirectory()) {
@@ -52,7 +53,7 @@ public class MenuActionSaveRasterAs extends JosmAction {
         }
     }
 
-    public static class FiltreTiff extends FileFilter {
+    static class FiltreTiff extends FileFilter {
         @Override
         public boolean accept(File file) {
             if (file.isDirectory()) {
@@ -95,13 +96,6 @@ public class MenuActionSaveRasterAs extends JosmAction {
                     file = new File(file.getParent(), file.getName()+".png");
                 try {
                     ImageIO.write(bi, "png", file);
-                    /*
-                    FileOutputStream flux = new FileOutputStream(file);
-                    BufferedOutputStream fluxBuf = new BufferedOutputStream(flux);
-                    JPEGImageEncoder codec = JPEGCodec.createJPEGEncoder(fluxBuf, JPEGCodec.getDefaultJPEGEncodeParam(bi));
-                    codec.encode(bi);
-                    fluxBuf.close();
-                    */
                 } catch (IOException e) {
                     Logging.error(e);
                 }

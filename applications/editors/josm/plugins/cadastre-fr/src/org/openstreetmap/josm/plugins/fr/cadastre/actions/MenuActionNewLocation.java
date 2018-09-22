@@ -23,6 +23,9 @@ import org.openstreetmap.josm.spi.preferences.Config;
 import org.openstreetmap.josm.tools.GBC;
 import org.openstreetmap.josm.tools.Logging;
 
+/**
+ * Set a new location for the next request
+ */
 public class MenuActionNewLocation extends JosmAction {
 
     private static final long serialVersionUID = 1L;
@@ -58,6 +61,9 @@ public class MenuActionNewLocation extends JosmAction {
     // CHECKSTYLE.ON: SingleSpaceSeparator
     // CHECKSTYLE.ON: LineLength
 
+    /**
+     * Constructs a new {@code MenuActionNewLocation}.
+     */
     public MenuActionNewLocation() {
         super(tr("Change location"), "cadastre_small", tr("Set a new location for the next request"), null, false,
                 "cadastrefr/newlocation", true);

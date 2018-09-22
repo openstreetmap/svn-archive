@@ -9,7 +9,7 @@ import java.util.Objects;
 /**
  * Edigeo record.
  */
-class EdigeoRecord {
+final class EdigeoRecord {
 
     enum Nature {
         RESERVED('T'),

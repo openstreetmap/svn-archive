@@ -17,6 +17,9 @@ import org.openstreetmap.josm.plugins.fr.cadastre.wms.RasterImageGeoreferencer;
 import org.openstreetmap.josm.plugins.fr.cadastre.wms.WMSLayer;
 import org.openstreetmap.josm.spi.preferences.Config;
 
+/**
+ * Grab non-georeferenced image
+ */
 public class MenuActionGrabPlanImage extends JosmAction implements Runnable {
 
     /**

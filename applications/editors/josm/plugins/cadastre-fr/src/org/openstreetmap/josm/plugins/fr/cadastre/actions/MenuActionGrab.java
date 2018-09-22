@@ -19,7 +19,7 @@ import org.openstreetmap.josm.tools.Shortcut;
  */
 public class MenuActionGrab extends JosmAction {
 
-    public static final String NAME = marktr("Cadastre grab");
+    private static final String NAME = marktr("Cadastre grab");
 
     /**
      * Constructs a new {@code MenuActionGrab}.

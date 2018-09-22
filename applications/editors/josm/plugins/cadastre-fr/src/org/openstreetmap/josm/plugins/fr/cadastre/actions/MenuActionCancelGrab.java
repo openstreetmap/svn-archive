@@ -9,10 +9,12 @@ import java.awt.event.ActionEvent;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.plugins.fr.cadastre.wms.WMSLayer;
 
-@SuppressWarnings("serial")
+/**
+ * Cancel current grab (only vector images)
+ */
 public class MenuActionCancelGrab extends JosmAction {
 
-    public static final String NAME = marktr("Cancel current grab");
+    private static final String NAME = marktr("Cancel current grab");
 
     private WMSLayer wmsLayer;
 

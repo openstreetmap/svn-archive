@@ -14,7 +14,6 @@ import java.awt.event.ActionEvent;
 import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
 import java.io.EOFException;
-import java.io.File;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -60,14 +59,14 @@ public class WMSLayer extends Layer implements ImageObserver {
 
     private int lambertZone = -1;
 
-    public CadastreGrabber grabber = new CadastreGrabber();
+    CadastreGrabber grabber = new CadastreGrabber();
 
     protected static final Icon icon = new ImageIcon(Toolkit.getDefaultToolkit().createImage(
             CadastrePlugin.class.getResource("/images/cadastre_small.png")));
 
     private Vector<GeorefImage> images = new Vector<>();
 
-    public Lock imagesLock = new ReentrantLock();
+    Lock imagesLock = new ReentrantLock();
 
     /**
      * v1 to v2 = not supported
@@ -76,7 +75,7 @@ public class WMSLayer extends Layer implements ImageObserver {
      */
     protected final int serializeFormatVersion = 4;
 
-    public static int currentFormat;
+    static int currentFormat;
 
     private ArrayList<EastNorthBound> dividedBbox = new ArrayList<>();
 
@@ -86,11 +85,11 @@ public class WMSLayer extends Layer implements ImageObserver {
 
     private String codeCommune = "";
 
-    public EastNorthBound communeBBox = new EastNorthBound(new EastNorth(0, 0), new EastNorth(0, 0));
+    EastNorthBound communeBBox = new EastNorthBound(new EastNorth(0, 0), new EastNorth(0, 0));
 
     private boolean isRaster;
     private boolean isAlreadyGeoreferenced;
-    public double X0, Y0, angle, fX, fY;
+    double X0, Y0, angle, fX, fY;
 
     // bbox of the georeferenced raster image (the nice horizontal and vertical box)
     private EastNorth rasterMin;
@@ -98,8 +97,8 @@ public class WMSLayer extends Layer implements ImageObserver {
     private double rasterRatio;
 
     // offset for vector images temporarily shifted (correcting Cadastre artifacts), in pixels
-    public double deltaEast;
-    public double deltaNorth;
+    double deltaEast;
+    double deltaNorth;
 
     private Action saveAsPng;
 
@@ -299,11 +298,14 @@ public class WMSLayer extends Layer implements ImageObserver {
             else
                 g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR);
             imagesLock.lock();
-            for (GeorefImage img : images) {
-                img.paint(g, mv, CadastrePlugin.backgroundTransparent,
-                        CadastrePlugin.transparency, CadastrePlugin.drawBoundaries);
+            try {
+                for (GeorefImage img : images) {
+                    img.paint(g, mv, CadastrePlugin.backgroundTransparent,
+                            CadastrePlugin.transparency, CadastrePlugin.drawBoundaries);
+                }
+            } finally {
+                imagesLock.unlock();
             }
-            imagesLock.unlock();
             g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, savedInterpolation);
         }
         if (this.isRaster) {
@@ -377,6 +379,8 @@ public class WMSLayer extends Layer implements ImageObserver {
      * Convert the eastNorth input coordinates to raster coordinates.
      * The original raster size is [0,0,12286,8730] where 0,0 is the upper left corner and
      * 12286,8730 is the approx. raster max size.
+     * @param min min east/north
+     * @param max max east/north
      * @return the raster coordinates for the wms server request URL (minX,minY,maxX,maxY)
      */
     public String eastNorth2raster(EastNorth min, EastNorth max) {
@@ -455,10 +459,11 @@ public class WMSLayer extends Layer implements ImageObserver {
     /**
      * Called by CacheControl when a new cache file is created on disk.
      * Save only primitives to keep cache independent of software changes.
+     * @param oos output stream
+     * @throws IOException if any I/O error occurs
      */
-    public void write(File associatedFile, ObjectOutputStream oos) throws IOException {
+    public void write(ObjectOutputStream oos) throws IOException {
         currentFormat = this.serializeFormatVersion;
-        setAssociatedFile(associatedFile);
         oos.writeInt(this.serializeFormatVersion);
         oos.writeObject(this.location);    // String
         oos.writeObject(this.codeCommune); // String
@@ -481,9 +486,14 @@ public class WMSLayer extends Layer implements ImageObserver {
     /**
      * Called by CacheControl when a cache file is read from disk.
      * Cache uses only primitives to stay independent of software changes.
+     * @param ois input stream
+     * @param currentLambertZone current Lambert zone
+     * @return {@code true} for success
+     * @throws IOException if any I/O error occurs
+     * @throws ClassNotFoundException if class of a serialized object cannot be found
      */
-    public boolean read(File associatedFile, ObjectInputStream ois, int currentLambertZone) throws IOException, ClassNotFoundException {
-        currentFormat = ois.readInt();;
+    public boolean read(ObjectInputStream ois, int currentLambertZone) throws IOException, ClassNotFoundException {
+        currentFormat = ois.readInt();
         if (currentFormat < 2) {
             JOptionPane.showMessageDialog(MainApplication.getMainFrame(),
                     tr("Unsupported cache file version; found {0}, expected {1}\nCreate a new one.",
@@ -494,7 +504,6 @@ public class WMSLayer extends Layer implements ImageObserver {
         this.setCodeCommune((String) ois.readObject());
         this.lambertZone = ois.readInt();
         this.setRaster(ois.readBoolean());
-        setAssociatedFile(associatedFile);
         if (currentFormat >= 4)
             ois.readBoolean();
         if (this.isRaster) {
@@ -586,6 +595,8 @@ public class WMSLayer extends Layer implements ImageObserver {
      * Because it's coming from user mouse clics, we have to sort de positions first.
      * Works only for raster image layer (only one image in collection).
      * Updates layer georeferences.
+     * @param en1 first east/north
+     * @param en2 second east/north
      */
     public void cropImage(EastNorth en1, EastNorth en2) {
         // adj1 is corner bottom, left
@@ -699,18 +710,18 @@ public class WMSLayer extends Layer implements ImageObserver {
 
     public GeorefImage getImage(int index) {
         imagesLock.lock();
-        GeorefImage img = null;
         try {
-            img = this.images.get(index);
+            return images.get(index);
         } catch (ArrayIndexOutOfBoundsException e) {
             Logging.error(e);
+            return null;
+        } finally {
+            imagesLock.unlock();
         }
-        imagesLock.unlock();
-        return img;
     }
 
     public Vector<GeorefImage> getImages() {
-        return this.images;
+        return images;
     }
 
     public boolean hasImages() {
@@ -719,19 +730,28 @@ public class WMSLayer extends Layer implements ImageObserver {
 
     public void addImage(GeorefImage img) {
         imagesLock.lock();
-        this.images.add(img);
-        imagesLock.unlock();
+        try {
+            images.add(img);
+        } finally {
+            imagesLock.unlock();
+        }
     }
 
     public void setImages(Vector<GeorefImage> images) {
         imagesLock.lock();
-        this.images = images;
-        imagesLock.unlock();
+        try {
+            this.images = images;
+        } finally {
+            imagesLock.unlock();
+        }
     }
 
     public void clearImages() {
         imagesLock.lock();
-        this.images.clear();
-        imagesLock.unlock();
+        try {
+            images.clear();
+        } finally {
+            imagesLock.unlock();
+        }
     }
 }

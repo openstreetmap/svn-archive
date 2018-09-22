@@ -63,9 +63,11 @@ public class CacheControl implements Runnable {
 
     public boolean isCachePipeEmpty() {
         imagesLock.lock();
-        boolean ret = imagesToSave.isEmpty();
-        imagesLock.unlock();
-        return ret;
+        try {
+            return imagesToSave.isEmpty();
+        } finally {
+            imagesLock.unlock();
+        }
     }
 
     public CacheControl(WMSLayer wmsLayer) {
@@ -158,7 +160,8 @@ public class CacheControl implements Runnable {
             FileInputStream fis = new FileInputStream(file);
             ObjectInputStream ois = new ObjectInputStream(fis);
         ) {
-            successfulRead = wmsLayer.read(file, ois, currentLambertZone);
+            wmsLayer.setAssociatedFile(file);
+            successfulRead = wmsLayer.read(ois, currentLambertZone);
         } catch (IOException | ClassNotFoundException ex) {
             Logging.error(ex);
             GuiHelper.runInEDTAndWait(() -> JOptionPane.showMessageDialog(MainApplication.getMainFrame(),
@@ -175,9 +178,12 @@ public class CacheControl implements Runnable {
 
     public synchronized void saveCache(GeorefImage image) {
         imagesLock.lock();
-        this.imagesToSave.add(image);
-        this.notifyAll();
-        imagesLock.unlock();
+        try {
+            this.imagesToSave.add(image);
+            this.notifyAll();
+        } finally {
+            imagesLock.unlock();
+        }
     }
 
     /**
@@ -202,7 +208,8 @@ public class CacheControl implements Runnable {
                     } else {
                         try (ObjectOutputStream oos = new ObjectOutputStream(
                                 new BufferedOutputStream(new FileOutputStream(file)))) {
-                            wmsLayer.write(file, oos);
+                            wmsLayer.setAssociatedFile(file);
+                            wmsLayer.write(oos);
                             for (int i = 0; i < size; i++) {
                                 oos.writeObject(imagesToSave.get(i));
                             }
@@ -212,10 +219,13 @@ public class CacheControl implements Runnable {
                     Logging.error(e);
                 }
                 imagesLock.lock();
-                for (int i = 0; i < size; i++) {
-                    imagesToSave.remove(0);
+                try {
+                    for (int i = 0; i < size; i++) {
+                        imagesToSave.remove(0);
+                    }
+                } finally {
+                    imagesLock.unlock();
                 }
-                imagesLock.unlock();
             }
             try {
                 wait();

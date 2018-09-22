@@ -7,13 +7,14 @@ import java.awt.event.ActionEvent;
 
 import org.openstreetmap.josm.actions.JosmAction;
 
+/**
+ * Get a new cookie (session timeout)
+ */
 public class MenuActionResetCookie extends JosmAction {
 
     /**
-     *
+     * Constructs a new {@code MenuActionResetCookie}
      */
-    private static final long serialVersionUID = 1L;
-
     public MenuActionResetCookie() {
         super(tr("Reset cookie"), "cadastre_small", tr("Get a new cookie (session timeout)"), null, false);
     }

@@ -12,9 +12,12 @@ import org.openstreetmap.josm.plugins.fr.cadastre.wms.RasterImageGeoreferencer;
 import org.openstreetmap.josm.plugins.fr.cadastre.wms.WMSLayer;
 import org.openstreetmap.josm.tools.Logging;
 
+/**
+ * Improve georeferencing (only raster images)
+ */
 public class MenuActionRefineGeoRef extends JosmAction {
 
-    public static final String NAME = marktr("Refine georeferencing");
+    private static final String NAME = marktr("Refine georeferencing");
 
     private WMSLayer wmsLayer;
     private RasterImageGeoreferencer rasterImageGeoreferencer;

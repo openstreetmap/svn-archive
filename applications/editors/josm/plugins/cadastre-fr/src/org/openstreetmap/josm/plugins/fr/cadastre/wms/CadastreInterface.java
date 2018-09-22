@@ -535,7 +535,7 @@ public class CadastreInterface {
     private static void checkLayerDuplicates(WMSLayer wmsLayer) throws DuplicateLayerException {
         if (MainApplication.getMap() != null) {
             for (Layer l : MainApplication.getLayerManager().getLayers()) {
-                if (l instanceof WMSLayer && l.getName().equals(wmsLayer.getName()) && (!l.equals(wmsLayer))) {
+                if (l instanceof WMSLayer && l.getName().equals(wmsLayer.getName()) && !l.equals(wmsLayer)) {
                     Logging.info("Try to grab into a new layer when "+wmsLayer.getName()+" is already opened.");
                     // remove the duplicated layer
                     MainApplication.getLayerManager().removeLayer(wmsLayer);

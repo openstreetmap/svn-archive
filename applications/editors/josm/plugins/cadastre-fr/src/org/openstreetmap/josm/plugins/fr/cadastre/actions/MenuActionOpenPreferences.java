@@ -11,10 +11,12 @@ import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.preferences.PreferenceDialog;
 import org.openstreetmap.josm.plugins.fr.cadastre.preferences.CadastrePreferenceSetting;
 
+/**
+ * Open Cadastre Preferences
+ */
 public class MenuActionOpenPreferences extends JosmAction {
-    private static final long serialVersionUID = 1L;
 
-    public static final String NAME = marktr("Preferences");
+    private static final String NAME = marktr("Preferences");
 
     /**
      * Constructs a new {@code MenuActionOpenPreferences}.

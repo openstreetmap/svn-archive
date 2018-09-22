@@ -39,8 +39,11 @@ public class GrabThread extends Thread {
      */
     void addImages(ArrayList<EastNorthBound> moreImages) {
         lockImagesToGrag.lock();
-        imagesToGrab.addAll(moreImages);
-        lockImagesToGrag.unlock();
+        try {
+            imagesToGrab.addAll(moreImages);
+        } finally {
+            lockImagesToGrag.unlock();
+        }
         synchronized (this) {
             this.notify();
         }
@@ -52,26 +55,34 @@ public class GrabThread extends Thread {
 
     public int getImagesToGrabSize() {
         lockImagesToGrag.lock();
-        int size = imagesToGrab.size();
-        lockImagesToGrag.unlock();
-        return size;
+        try {
+            return imagesToGrab.size();
+        } finally {
+            lockImagesToGrag.unlock();
+        }
     }
 
     ArrayList<EastNorthBound> getImagesToGrabCopy() {
         ArrayList<EastNorthBound> copyList = new ArrayList<>();
         lockImagesToGrag.lock();
-        for (EastNorthBound img : imagesToGrab) {
-            EastNorthBound imgCpy = new EastNorthBound(img.min, img.max);
-            copyList.add(imgCpy);
+        try {
+            for (EastNorthBound img : imagesToGrab) {
+                EastNorthBound imgCpy = new EastNorthBound(img.min, img.max);
+                copyList.add(imgCpy);
+            }
+        } finally {
+            lockImagesToGrag.unlock();
         }
-        lockImagesToGrag.unlock();
         return copyList;
     }
 
     void clearImagesToGrab() {
         lockImagesToGrag.lock();
-        imagesToGrab.clear();
-        lockImagesToGrag.unlock();
+        try {
+            imagesToGrab.clear();
+        } finally {
+            lockImagesToGrag.unlock();
+        }
     }
 
     @Override
@@ -108,16 +119,19 @@ public class GrabThread extends Thread {
                     try {
                         if (CadastrePlugin.backgroundTransparent) {
                             wmsLayer.imagesLock.lock();
-                            for (GeorefImage img : wmsLayer.getImages()) {
-                                if (img.overlap(newImage))
-                                    // mask overlapping zone in already grabbed image
-                                    img.withdraw(newImage);
-                                else
-                                    // mask overlapping zone in new image only when new image covers completely the
-                                    // existing image
-                                    newImage.withdraw(img);
+                            try {
+                                for (GeorefImage img : wmsLayer.getImages()) {
+                                    if (img.overlap(newImage))
+                                        // mask overlapping zone in already grabbed image
+                                        img.withdraw(newImage);
+                                    else
+                                        // mask overlapping zone in new image only when new image covers completely the
+                                        // existing image
+                                        newImage.withdraw(img);
+                                }
+                            } finally {
+                                wmsLayer.imagesLock.unlock();
                             }
-                            wmsLayer.imagesLock.unlock();
                         }
                         wmsLayer.addImage(newImage);
                         wmsLayer.invalidate();

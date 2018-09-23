@@ -8,3 +8,5 @@
 /findbugs-jmapviewer.xml
 /javadoc
 /spotbugs-jmapviewer.xml
+/report
+/bintest

@@ -117,13 +117,13 @@ public final class ModuleHandler {
         ButtonSpec[] options = new ButtonSpec[] {
                 new ButtonSpec(
                         tr("Update modules"),
-                        ImageProvider.get("dialogs", "refresh"),
+                        new ImageProvider("dialogs", "refresh"),
                         tr("Click to update the activated modules"),
                         null /* no specific help context */
                         ),
                 new ButtonSpec(
                         tr("Skip update"),
-                        ImageProvider.get("cancel"),
+                        new ImageProvider("cancel"),
                         tr("Click to skip updating the activated modules"),
                         null /* no specific help context */
                         )
@@ -511,13 +511,13 @@ public final class ModuleHandler {
         ButtonSpec[] options = new ButtonSpec[] {
                 new ButtonSpec(
                         tr("Disable module"),
-                        ImageProvider.get("dialogs", "delete"),
+                        new ImageProvider("dialogs", "delete"),
                         tr("Click to delete the module ''{0}''", name),
                         null /* no specific help context */
                         ),
                 new ButtonSpec(
                         tr("Keep module"),
-                        ImageProvider.get("cancel"),
+                        new ImageProvider("cancel"),
                         tr("Click to keep the module ''{0}''", name),
                         null /* no specific help context */
                         )
@@ -534,13 +534,6 @@ public final class ModuleHandler {
                 );
         return ret == 0;
     }
-
-    /*public static Module getModule(String name) {
-        for (Module module : moduleList)
-            if (module.getModuleInformation().name.equals(name))
-                return module;
-        return null;
-    }*/
 
     /**
      * Installs downloaded modules. Moves files with the suffix ".jar.new" to the corresponding
@@ -583,171 +576,6 @@ public final class ModuleHandler {
         }
         return;
     }
-
-    /*private static boolean confirmDeactivatingModuleAfterException(Module module) {
-        ButtonSpec [] options = new ButtonSpec[] {
-                new ButtonSpec(
-                        tr("Disable module"),
-                        ImageProvider.get("dialogs", "delete"),
-                        tr("Click to disable the module ''{0}''", module.getModuleInformation().name),
-                        null // no specific help context
-                ),
-                new ButtonSpec(
-                        tr("Keep module"),
-                        ImageProvider.get("cancel"),
-                        tr("Click to keep the module ''{0}''",module.getModuleInformation().name),
-                        null // no specific help context
-                )
-        };
-
-        StringBuffer msg = new StringBuffer();
-        msg.append("<html>");
-        msg.append(tr("An unexpected exception occurred that may have come from the ''{0}'' module.", module.getModuleInformation().name));
-        msg.append("<br>");
-        if(module.getModuleInformation().author != null) {
-            msg.append(tr("According to the information within the module, the author is {0}.", module.getModuleInformation().author));
-            msg.append("<br>");
-        }
-        msg.append(tr("Try updating to the newest version of this module before reporting a bug."));
-        msg.append("<br>");
-        msg.append(tr("Should the module be disabled?"));
-        msg.append("</html>");
-
-        int ret = HelpAwareOptionPane.showOptionDialog(
-                MainApplication.getMainFrame(),
-                msg.toString(),
-                tr("Update modules"),
-                JOptionPane.QUESTION_MESSAGE,
-                null,
-                options,
-                options[0],
-                null
-        );
-        return ret == 0;
-    }*/
-
-    /*
-     * Replies the module which most likely threw the exception <code>ex</code>.
-     *
-     * @param ex the exception
-     * @return the module; null, if the exception probably wasn't thrown from a module
-     */
-    /*private static Module getModuleCausingException(Throwable ex) {
-        Module err = null;
-        StackTraceElement[] stack = ex.getStackTrace();
-        // remember the error position, as multiple modules may be involved,
-        //  we search the topmost one
-        int pos = stack.length;
-        for (Module p : moduleList) {
-            String baseClass = p.getModuleInformation().className;
-            baseClass = baseClass.substring(0, baseClass.lastIndexOf("."));
-            for (int elpos = 0; elpos < pos; ++elpos) {
-                if (stack[elpos].getClassName().startsWith(baseClass)) {
-                    pos = elpos;
-                    err = p;
-                }
-            }
-        }
-        return err;
-    }*/
-
-    /*
-     * Checks whether the exception <code>e</code> was thrown by a module. If so,
-     * conditionally deactivates the module, but asks the user first.
-     *
-     * @param e the exception
-     */
-    /*public static void disableModuleAfterException(Throwable e) {
-        Module module = null;
-        // Check for an explicit problem when calling a module function
-        if (e instanceof ModuleException) {
-            module = ((ModuleException) e).module;
-        }
-        if (module == null) {
-            module = getModuleCausingException(e);
-        }
-        if (module == null)
-            // don't know what module threw the exception
-            return;
-
-        Set<String> modules = new HashSet<String>(
-                Config.getPref().getCollection(PREF_MODULES, Collections.<String> emptySet())
-        );
-        if (! modules.contains(module.getModuleInformation().name))
-            // module not activated ? strange in this context but anyway, don't bother
-            // the user with dialogs, skip conditional deactivation
-            return;
-
-        if (!confirmDeactivatingModuleAfterException(module))
-            // user doesn't want to deactivate the module
-            return;
-
-        // deactivate the module
-        modules.remove(module.getModuleInformation().name);
-        Config.getPref().putCollection(PREF_MODULES, modules);
-        JOptionPane.showMessageDialog(
-                MainApplication.getMainFrame(),
-                tr("The module has been removed from the configuration. Please restart JOSM to unload the module."),
-                tr("Information"),
-                JOptionPane.INFORMATION_MESSAGE
-        );
-        return;
-    }*/
-
-    /*public static String getBugReportText() {
-        String text = "";
-        LinkedList <String> pl = new LinkedList<String>(Config.getPref().getCollection(PREF_MODULES, new LinkedList<String>()));
-        for (final Module pp : moduleList) {
-            ModuleInformation pi = pp.getModuleInformation();
-            pl.remove(pi.name);
-            pl.add(pi.name + " (" + (pi.localversion != null && !pi.localversion.equals("")
-                    ? pi.localversion : "unknown") + ")");
-        }
-        Collections.sort(pl);
-        for (String s : pl) {
-            text += "Module: " + s + "\n";
-        }
-        return text;
-    }*/
-
-    /*public static JPanel getInfoPanel() {
-        JPanel moduleTab = new JPanel(new GridBagLayout());
-        for (final Module p : moduleList) {
-            final ModuleInformation info = p.getModuleInformation();
-            String name = info.name
-            + (info.version != null && !info.version.equals("") ? " Version: " + info.version : "");
-            moduleTab.add(new JLabel(name), GBC.std());
-            moduleTab.add(Box.createHorizontalGlue(), GBC.std().fill(GBC.HORIZONTAL));
-            moduleTab.add(new JButton(new AbstractAction(tr("Information")) {
-                public void actionPerformed(ActionEvent event) {
-                    StringBuilder b = new StringBuilder();
-                    for (Entry<String, String> e : info.attr.entrySet()) {
-                        b.append(e.getKey());
-                        b.append(": ");
-                        b.append(e.getValue());
-                        b.append("\n");
-                    }
-                    JTextArea a = new JTextArea(10, 40);
-                    a.setEditable(false);
-                    a.setText(b.toString());
-                    JOptionPane.showMessageDialog(MainApplication.getMainFrame(), new JScrollPane(a), tr("Module information"),
-                            JOptionPane.INFORMATION_MESSAGE);
-                }
-            }), GBC.eol());
-
-            JTextArea description = new JTextArea((info.description == null ? tr("no description available")
-                    : info.description));
-            description.setEditable(false);
-            description.setFont(new JLabel().getFont().deriveFont(Font.ITALIC));
-            description.setLineWrap(true);
-            description.setWrapStyleWord(true);
-            description.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 0));
-            description.setBackground(UIManager.getColor("Panel.background"));
-
-            moduleTab.add(description, GBC.eop().fill(GBC.HORIZONTAL));
-        }
-        return moduleTab;
-    }*/
 
     private static class UpdateModulesMessagePanel extends JPanel {
         private JMultilineLabel lblMessage;

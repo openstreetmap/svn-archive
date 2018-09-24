@@ -57,11 +57,6 @@ import org.openstreetmap.josm.tools.GBC;
 import org.openstreetmap.josm.tools.ImageProvider;
 
 public class ModulePreference implements SubPreferenceSetting {
-    /*public static class Factory implements PreferenceSettingFactory {
-        public PreferenceSetting createPreferenceSetting() {
-            return new ModulePreference();
-        }
-    }*/
 
     public static String buildDownloadSummary(ModuleDownloadTask task) {
         Collection<ModuleInformation> downloaded = task.getDownloadedModules();
@@ -178,13 +173,13 @@ public class ModulePreference implements SubPreferenceSetting {
         ButtonSpec[] options = new ButtonSpec[] {
                 new ButtonSpec(
                         tr("OK"),
-                        ImageProvider.get("ok"),
+                        new ImageProvider("ok"),
                         tr("Accept the new module sites and close the dialog"),
                         null /* no special help topic */
                         ),
                 new ButtonSpec(
                         tr("Cancel"),
-                        ImageProvider.get("cancel"),
+                        new ImageProvider("cancel"),
                         tr("Close the dialog"),
                         null /* no special help topic */
                         )
@@ -257,7 +252,7 @@ public class ModulePreference implements SubPreferenceSetting {
         DownloadAvailableModulesAction() {
             putValue(NAME, tr("Download list"));
             putValue(SHORT_DESCRIPTION, tr("Download the list of available modules"));
-            putValue(SMALL_ICON, ImageProvider.get("download"));
+            new ImageProvider("download").getResource().attachImageIcon(this);
         }
 
         @Override
@@ -283,7 +278,7 @@ public class ModulePreference implements SubPreferenceSetting {
         UpdateSelectedModulesAction() {
             putValue(NAME, tr("Update modules"));
             putValue(SHORT_DESCRIPTION, tr("Update the selected modules"));
-            putValue(SMALL_ICON, ImageProvider.get("dialogs", "refresh"));
+            new ImageProvider("dialogs", "refresh").getResource().attachImageIcon(this);
         }
 
         protected void notifyDownloadResults(ModuleDownloadTask task) {
@@ -296,13 +291,13 @@ public class ModulePreference implements SubPreferenceSetting {
                 sb.append(tr("Please restart JOSM to activate the downloaded modules."));
             }
             sb.append("</html>");
-            HelpAwareOptionPane.showOptionDialog(
+            GuiHelper.runInEDTAndWait(() -> HelpAwareOptionPane.showOptionDialog(
                     pnlModulePreferences,
                     sb.toString(),
                     tr("Update modules"),
                     !failed.isEmpty() ? JOptionPane.WARNING_MESSAGE : JOptionPane.INFORMATION_MESSAGE,
                             HelpUtil.ht("/Preferences/Modules")
-                    );
+                    ));
         }
 
         protected void alertNothingToUpdate() {
@@ -336,12 +331,7 @@ public class ModulePreference implements SubPreferenceSetting {
                 notifyDownloadResults(moduleDownloadTask);
                 model.refreshLocalModuleVersion(moduleDownloadTask.getDownloadedModules());
                 model.clearPendingModules(moduleDownloadTask.getDownloadedModules());
-                GuiHelper.runInEDT(new Runnable() {
-                    @Override
-                    public void run() {
-                        pnlModulePreferences.refreshView();
-                    }
-                });
+                GuiHelper.runInEDT(() -> pnlModulePreferences.refreshView());
             };
 
             // to be run asynchronously after the module list download
@@ -381,7 +371,7 @@ public class ModulePreference implements SubPreferenceSetting {
         ConfigureSitesAction() {
             putValue(NAME, tr("Configure sites..."));
             putValue(SHORT_DESCRIPTION, tr("Configure the list of sites where modules are downloaded from"));
-            putValue(SMALL_ICON, ImageProvider.get("dialogs", "settings"));
+            new ImageProvider("dialogs", "settings").getResource().attachImageIcon(this);
         }
 
         @Override

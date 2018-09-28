@@ -26,6 +26,7 @@
     <property name="plugin.build.dir"       location="build"/>
     <property name="plugin.test.dir"        location="test"/>
     <property name="plugin.src.dir"         location="src"/>
+    <property name="plugin.resources.dir"   location="resources"/>
     <property name="plugin.doc.dir"         location="javadoc"/>
     <property name="plugin.lib.dir"         location="lib"/>
     <!-- this is the directory where the plugin jar is copied to -->
@@ -120,7 +121,7 @@
     -->
     <target name="setup-dist-default">
         <copy todir="${plugin.build.dir}/resources" failonerror="no" includeemptydirs="no">
-            <fileset dir="resources"/>
+            <fileset dir="${plugin.resources.dir}"/>
         </copy>
         <copy todir="${plugin.build.dir}/images" failonerror="no" includeemptydirs="no">
             <fileset dir="images"/>
@@ -509,6 +510,7 @@
             <exclude name="**/*-sources.jar"/>
             <exclude name="**/*-javadoc.jar"/>
         </fileset>
+        <pathelement path="${plugin.resources.dir}"/>
         <pathelement path="${plugin.test.dir}/data"/>
         <pathelement path="${josm.test.build.dir}/unit"/>
         <pathelement path="${josm}"/>

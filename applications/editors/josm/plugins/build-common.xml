@@ -14,7 +14,7 @@
 
     <property name="josm"                   location="../../core/dist/josm-custom.jar"/>
     <property name="josm.test.build.dir"    location="../../core/test/build"/>
-    <property name="jmockit.jar"            location="../00_core_test_lib/jmockit-1.41.jar"/>
+    <property name="jmockit.jar"            location="../00_core_test_lib/jmockit-1.43.jar"/>
     <property name="error_prone_core.jar"   location="../00_core_tools/error_prone_core.jar"/>
     <property name="error_prone_javac.jar"  location="../00_core_tools/error_prone_javac.jar"/>
     <property name="checkstyle.jar"         location="../00_core_tools/checkstyle/checkstyle-all.jar"/>

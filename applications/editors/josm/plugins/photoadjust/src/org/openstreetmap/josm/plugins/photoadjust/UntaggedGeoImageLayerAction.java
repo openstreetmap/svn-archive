@@ -34,14 +34,14 @@ public class UntaggedGeoImageLayerAction
      * Get the layer this menu entry belongs to.
      * @return the layer this menu entry belongs to
      */
-    private GeoImageLayer getSelectedLayer() {
+    private static GeoImageLayer getSelectedLayer() {
         return (GeoImageLayer)LayerListDialog.getInstance().getModel()
             .getSelectedLayers().get(0);
     }
 
     /** This is called after the menu entry was selected. */
     @Override
-    public void actionPerformed(ActionEvent arg0) {
+    public void actionPerformed(ActionEvent evt) {
         GeoImageLayer layer = getSelectedLayer();
         if (layer != null) {
             List<ImageEntry> untagged = new ArrayList<>();
@@ -68,7 +68,7 @@ public class UntaggedGeoImageLayerAction
      * @param layer geo image layer
      * @return {@code true} if there is any image without coordinates
      */
-    private boolean enabled(GeoImageLayer layer) {
+    private static boolean enabled(GeoImageLayer layer) {
         if (layer != null) {
             for (ImageEntry img: layer.getImages()) {
                 if (img.getPos() == null) {

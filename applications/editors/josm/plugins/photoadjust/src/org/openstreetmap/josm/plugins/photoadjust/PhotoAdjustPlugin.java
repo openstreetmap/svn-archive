@@ -22,7 +22,7 @@ import org.openstreetmap.josm.plugins.PluginInformation;
  * coordinates (untagged photos) on the map.
  */
 public class PhotoAdjustPlugin extends Plugin implements ActiveLayerChangeListener {
-  
+
     private GeoImageLayer imageLayer;
     private MouseAdapter mouseAdapter;
     private MouseMotionAdapter mouseMotionAdapter;
@@ -31,10 +31,10 @@ public class PhotoAdjustPlugin extends Plugin implements ActiveLayerChangeListen
     /**
      * Will be invoked by JOSM to bootstrap the plugin.
      *
-     * @param info  information about the plugin and its local installation    
+     * @param info  information about the plugin and its local installation
      */
     public PhotoAdjustPlugin(PluginInformation info) {
-	super(info);
+        super(info);
         GeoImageLayer.registerMenuAddition(new UntaggedGeoImageLayerAction());
         PhotoPropertyEditor.init();
         initAdapters();
@@ -71,7 +71,7 @@ public class PhotoAdjustPlugin extends Plugin implements ActiveLayerChangeListen
     }
 
     /**
-     * Called when the JOSM map frame is created or destroyed. 
+     * Called when the JOSM map frame is created or destroyed.
      */
     @Override
     public void mapFrameInitialized(MapFrame oldFrame, MapFrame newFrame) {

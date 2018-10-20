@@ -42,6 +42,14 @@ import org.openstreetmap.josm.tools.ImageProvider;
 public class PhotoPropertyEditor {
 
     /**
+     * This class is not intended to be instantiated.  Throw an exception if
+     * it is.
+     */
+    private PhotoPropertyEditor() {
+        throw new IllegalStateException("Utility class");
+    }
+
+    /**
      * Add photo property editor to edit menu.
      */
     public static void init() {
@@ -364,8 +372,8 @@ public class PhotoPropertyEditor {
          * @param value Double value to compare with.
          * @return {@code true} if the values differ, {@code false} otherwise.
          */
-        private boolean isDoubleFieldDifferent(JosmTextField txtFld,
-                                               Double value) {
+        private static boolean isDoubleFieldDifferent(JosmTextField txtFld,
+                                                      Double value) {
             final Double fieldValue = getDoubleValue(txtFld);
             if (fieldValue == null) {
                 if (value != null) {

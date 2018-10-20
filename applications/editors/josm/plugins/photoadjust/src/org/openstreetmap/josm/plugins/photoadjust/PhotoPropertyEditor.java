@@ -190,24 +190,8 @@ public class PhotoPropertyEditor {
             content.add(new JLabel(tr("Coordinates:")),
                         GBC.std().insets(0, 0, 5, 0));
             content.add(coords, GBC.std().fill(GBC.HORIZONTAL));
-            Action editCoordAction = new AbstractAction(tr("Edit")) {
-                @Override public void actionPerformed(ActionEvent evt) {
-                    final LatLonDialog llDialog
-                        = new LatLonDialog(MainApplication.getMainFrame(),
-                                           tr("Edit Image Coordinates"), null);
-                    llDialog.setCoordinates(getLatLon());
-                    llDialog.showDialog();
-                    if (llDialog.getValue() == 1) {
-                        final LatLon coordinates = llDialog.getCoordinates();
-                        if (coordinates != null) {
-                            coords.setText(posToText(coordinates));
-                        }
-                    }
-                }
-            };
-            final JButton editCoordBtn = new JButton(editCoordAction);
-            editCoordBtn
-                .setToolTipText(tr("Edit coordinates in separate editor"));
+
+            final JButton editCoordBtn = new JButton(new EditCoordAction());
             content.add(editCoordBtn, GBC.eol());
 
             // Altitude/elevation.
@@ -263,39 +247,15 @@ public class PhotoPropertyEditor {
             final JPanel buttonsPanel = new JPanel(new GridBagLayout());
 
             // Undo.
-            Action undoAction = new AbstractAction(tr("Undo")) {
-                @Override public void actionPerformed(ActionEvent evt) {
-                    setInitialValues();
-                }
-            };
-            final JButton undoButton = new JButton(undoAction);
-            undoButton.setToolTipText(tr("Undo changes made in this dialog"));
-            undoButton.setIcon(ImageProvider.get("undo"));
+            final JButton undoButton = new JButton(new UndoAction());
             buttonsPanel.add(undoButton, GBC.std().insets(2, 2, 2, 2));
 
             // Reload.
-            Action reloadAction = new AbstractAction(tr("Reload")) {
-                @Override public void actionPerformed(ActionEvent evt) {
-                    final ImageEntry imgTmp = new ImageEntry(image.getFile());
-                    imgTmp.extractExif();
-                    setInitialValues(imgTmp);
-                }
-            };
-            final JButton reloadButton = new JButton(reloadAction);
-            reloadButton.setToolTipText(tr("Reload GPS data from image file"));
-            reloadButton.setIcon(ImageProvider.get("dialogs/refresh"));
+            final JButton reloadButton = new JButton(new ReloadAction());
             buttonsPanel.add(reloadButton, GBC.std().insets(2, 2, 2, 2));
 
             // // Apply.
-            // Action applyAction = new AbstractAction(tr("Apply")) {
-            //     @Override public void actionPerformed(ActionEvent evt) {
-            //         updateImageTmp();
-            //         updateLayer(layer, image);
-            //     }
-            // };
-            // final JButton applyButton = new JButton(applyAction);
-            // applyButton.setToolTipText(tr("Apply changes, keep dialog open"));
-            // applyButton.setIcon(ImageProvider.get("apply"));
+            // final JButton applyButton = new JButton(new ApplyAction());
             // // fill(VERTICAL) to make the button the same height than the
             // // other buttons.  This is needed because the apply icon is
             // // smaller.
@@ -691,5 +651,71 @@ public class PhotoPropertyEditor {
                 doUpdate();
             }
         }
+
+        class EditCoordAction extends AbstractAction {
+            EditCoordAction() {
+                super(tr("Edit"));
+                putValue(SHORT_DESCRIPTION,
+                         tr("Edit coordinates in separate editor"));
+            }
+
+            @Override public void actionPerformed(ActionEvent evt) {
+                final LatLonDialog llDialog
+                    = new LatLonDialog(MainApplication.getMainFrame(),
+                                       tr("Edit Image Coordinates"), null);
+                llDialog.setCoordinates(getLatLon());
+                llDialog.showDialog();
+                if (llDialog.getValue() == 1) {
+                    final LatLon coordinates = llDialog.getCoordinates();
+                    if (coordinates != null) {
+                        coords.setText(posToText(coordinates));
+                    }
+                }
+            }
+        }
+
+        class UndoAction extends AbstractAction {
+            UndoAction() {
+                super(tr("Undo"));
+                new ImageProvider("undo").getResource().attachImageIcon(this);
+                putValue(SHORT_DESCRIPTION,
+                         tr("Undo changes made in this dialog"));
+            }
+
+            @Override public void actionPerformed(ActionEvent evt) {
+                setInitialValues();
+            }
+        }
+
+        class ReloadAction extends AbstractAction {
+            ReloadAction() {
+                super(tr("Reload"));
+                new ImageProvider("dialogs", "refresh").getResource().
+                    attachImageIcon(this);
+                putValue(SHORT_DESCRIPTION,
+                         tr("Reload GPS data from image file"));
+            }
+
+            @Override public void actionPerformed(ActionEvent evt) {
+                final ImageEntry imgTmp = new ImageEntry(image.getFile());
+                imgTmp.extractExif();
+                setInitialValues(imgTmp);
+            }
+        }
+
+        // class ApplyAction extends AbstractAction {
+        //     ApplyAction() {
+        //         super(tr("Apply"));
+        //         new ImageProvider("apply").getResource().
+        //             attachImageIcon(this);
+        //         putValue(SHORT_DESCRIPTION,
+        //                  tr("Apply changes, keep dialog open"));
+        //     }
+        //
+        //     @Override public void actionPerformed(ActionEvent evt) {
+        //         updateImageTmp();
+        //         updateLayer(layer, image);
+        //     }
+        // }
     }
 }

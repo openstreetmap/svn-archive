@@ -1,5 +1,6 @@
 [main]
 host = https://www.transifex.com
+lang_map = ca@valencia: ca-valencia
 
 [josm.core]
 file_filter = po/<lang>/core.po
@@ -7,9 +8,21 @@ source_file = po/core.pot
 source_lang = en
 type = PO
 
-[josm.data]
-file_filter = po/<lang>/data.po
-source_file = po/data.pot
+[josm.maplist]
+file_filter = po/<lang>/maplist.po
+source_file = po/maplist.pot
+source_lang = en
+type = PO
+
+[josm.pluginlist]
+file_filter = po/<lang>/pluginlist.po
+source_file = po/pluginlist.pot
+source_lang = en
+type = PO
+
+[josm.presets]
+file_filter = po/<lang>/presets.po
+source_file = po/presets.pot
 source_lang = en
 type = PO
 

@@ -84,25 +84,32 @@
             <fileset dir="${i18n.build.dir}" includes="trans_tag2link.java"/>
         </gettext-extract>
     </target>
-    <target name="po/core.pot" description="Extracts message keys from the JOSM core source code" depends="trans_.java,init">
+    <target name="po/core.pot" description="Extracts message keys from the JOSM core source code" depends="init">
         <gettext-extract keysFile="core.pot" poDirectory="po" keywords="${gettext.keywords} --exclude-file=excludes.pot">
             <fileset dir="${josm.build.dir}/src" includes="**/*.java"/>
             <fileset dir="${i18n.build.dir}" includes="specialmessages.java"/>
-            <fileset dir="${i18n.build.dir}" includes="trans_presets.java"/>
             <fileset dir="${josm.build.dir}/data/validator" includes="*.mapcss"/>
             <fileset dir="${josm.build.dir}/styles/standard" includes="*.mapcss"/>
-            <!-- maps should be in data instead, but that requires language file loading support in trac python code -->
+        </gettext-extract>
+    </target>
+    <target name="po/maplist.pot" description="Extracts message keys from plugin descriptions" depends="trans_.java,init">
+        <gettext-extract keysFile="maplist.pot" poDirectory="po" keywords="${gettext.keywords} --exclude-file=excludes.pot">
+            <!-- maps should be translated server-side, but that requires language file loading support in trac python code -->
             <fileset dir="${i18n.build.dir}" includes="trans_maps.java"/>
         </gettext-extract>
     </target>
     <target name="po/pluginlist.pot" description="Extracts message keys from plugin descriptions" depends="trans_.java,init">
         <gettext-extract keysFile="pluginlist.pot" poDirectory="po" keywords="${gettext.keywords} --exclude-file=excludes.pot">
             <fileset dir="${i18n.build.dir}" includes="trans_plugins.java"/>
-            <!-- <fileset dir="${i18n.build.dir}/josmfiles" includes="trans_*.*"/> -->
         </gettext-extract>
     </target>
-    <target name="po/plugins.pot" description="Extracts message keys from the plugins source code (minus core and data strings)" depends="trans_.java,po/core.pot,init">
-        <gettext-extract keysFile="plugins.pot" poDirectory="po" keywords="${gettext.keywords} --exclude-file=excludes.pot --exclude-file=po/core.pot">
+    <target name="po/presets.pot" description="Extracts message keys from presets (minus core)" depends="trans_.java,po/core.pot,init">
+        <gettext-extract keysFile="presets.pot" poDirectory="po" keywords="${gettext.keywords} --exclude-file=excludes.pot --exclude-file=po/core.pot">
+            <fileset dir="${i18n.build.dir}" includes="trans_presets.java"/>
+        </gettext-extract>
+    </target>
+    <target name="po/plugins.pot" description="Extracts message keys from the plugins source code (minus core)" depends="trans_.java,po/core.pot,po/presets.pot,init,filterpluginsources">
+        <gettext-extract keysFile="plugins.pot" poDirectory="po" keywords="${gettext.keywords} --exclude-file=excludes.pot --exclude-file=po/core.pot --exclude-file=po/presets.pot">
             <fileset dir="${plugin.dir}" includesfile="${po.build.dir}/pluginSrc.txt"/>
             <fileset dir="${i18n.build.dir}" includes="trans_surveyor.java"/>
             <fileset dir="${i18n.build.dir}" includes="trans_tag2link.java"/>
@@ -190,7 +197,7 @@
         </exec>
     </target>
     <target name="pot" depends="po/josm.pot" />
-    <target name="allpot" depends="po/core.pot,po/pluginlist.pot,po/plugins.pot" />
+    <target name="allpot" depends="po/core.pot,po/maplist.pot,po/pluginlist.pot,po/presets.pot,po/plugins.pot" />
     <target name="update">
         <exec executable="perl" failonerror="true">
             <arg line="launchpad.pl bzronly"/>

@@ -10,7 +10,7 @@
     <property name="tag2link.srcfile" value="${plugin.dir}/tag2link/resources/tag2link_sources.xml"/>
     <property name="i18n.build.dir" value="build"/>
     <property name="i18n.install.dir" value="${josm.build.dir}/data"/>
-    <property name="i18n_data.install.dir" value="${josm.build.dir}/data_nodist/trans"/>
+    <property name="pluginlist.install.dir" value="${josm.build.dir}/data_nodist/trans"/>
     <property name="po.build.dir" value="${i18n.build.dir}"/>
     <property name="ant.build.javac.target" value="1.5"/>
     <property name="gettext.keywords" value="-k -ktrc:1c,2 -kmarktrc:1c,2 -ktr -kmarktr -ktrn:1,2 -ktrnc:1c,2,3"/>
@@ -95,13 +95,13 @@
             <fileset dir="${i18n.build.dir}" includes="trans_maps.java"/>
         </gettext-extract>
     </target>
-    <target name="po/data.pot" description="Extracts message keys from data files, e.g., presets, imagery (minus core strings)" depends="trans_.java,po/core.pot,init">
-        <gettext-extract keysFile="data.pot" poDirectory="po" keywords="${gettext.keywords} --exclude-file=excludes.pot --exclude-file=po/core.pot">
+    <target name="po/pluginlist.pot" description="Extracts message keys from plugin descriptions" depends="trans_.java,init">
+        <gettext-extract keysFile="pluginlist.pot" poDirectory="po" keywords="${gettext.keywords} --exclude-file=excludes.pot">
             <fileset dir="${i18n.build.dir}" includes="trans_plugins.java"/>
             <!-- <fileset dir="${i18n.build.dir}/josmfiles" includes="trans_*.*"/> -->
         </gettext-extract>
     </target>
-    <target name="po/plugins.pot" description="Extracts message keys from the plugins source code (minus core and data strings)" depends="trans_.java,po/core.pot,po/data.pot,init">
+    <target name="po/plugins.pot" description="Extracts message keys from the plugins source code (minus core and data strings)" depends="trans_.java,po/core.pot,init">
         <gettext-extract keysFile="plugins.pot" poDirectory="po" keywords="${gettext.keywords} --exclude-file=excludes.pot --exclude-file=po/core.pot">
             <fileset dir="${plugin.dir}" includesfile="${po.build.dir}/pluginSrc.txt"/>
             <fileset dir="${i18n.build.dir}" includes="trans_surveyor.java"/>
@@ -124,18 +124,18 @@
             <param name="path" value="${plugin}"/>
         </antcall>
     </target>
-    <target name="buildcore" depends="po/core.pot,po/data.pot">
+    <target name="buildcore">
         <antcall target="coretrans"/>
-        <antcall target="datatrans"/>
+        <antcall target="pluginlisttrans"/>
     </target>
-    <target name="coretrans">
+    <target name="coretrans" depends="po/core.pot">
         <exec executable="perl" failonerror="true">
             <arg line="i18n.pl --potfile=po/core.pot --basedir=${i18n.install.dir}/ po/*.po"/>
         </exec>
     </target>
-    <target name="datatrans">
+    <target name="pluginlisttrans" depends="po/pluginlist.pot">
         <exec executable="perl" failonerror="true">
-            <arg line="i18n.pl --potfile=po/data.pot --basedir=${i18n_data.install.dir}/ po/*.po"/>
+            <arg line="i18n.pl --potfile=po/pluginlist.pot --basedir=${pluginlist.install.dir}/ po/*.po"/>
         </exec>
     </target>
     <!-- If the file `josm.pot` is present and the plugin has a `data/` directory, update its *.po files based on the ones in the `po/` directory. -->
@@ -190,7 +190,7 @@
         </exec>
     </target>
     <target name="pot" depends="po/josm.pot" />
-    <target name="allpot" depends="po/core.pot,po/data.pot,po/plugins.pot" />
+    <target name="allpot" depends="po/core.pot,po/pluginlist.pot,po/plugins.pot" />
     <target name="update">
         <exec executable="perl" failonerror="true">
             <arg line="launchpad.pl bzronly"/>

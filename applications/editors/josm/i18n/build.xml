@@ -13,6 +13,7 @@
     <property name="i18n_data.install.dir" value="${josm.build.dir}/data_nodist/trans"/>
     <property name="po.build.dir" value="${i18n.build.dir}"/>
     <property name="ant.build.javac.target" value="1.5"/>
+    <property name="gettext.keywords" value="-k -ktrc:1c,2 -kmarktrc:1c,2 -ktr -kmarktr -ktrn:1,2 -ktrnc:1c,2,3"/>
     <property name="gettexttasks.jar" value="lib/gettext-ant-tasks-0.9.7.jar"/>
     <property name="antcontrib.jar" value="lib/ant-contrib-1.0b3.jar"/>
     <target name="init" description="Loads the Ant gettext and contrib tasks">
@@ -66,7 +67,7 @@
       </if>
     </target>
     <target name="po/josm.pot" description="Extracts message keys from the source code" depends="trans_.java,init,filterpluginsources">
-        <gettext-extract keysFile="josm.raw.pot" poDirectory="po" keywords="-k -ktrc:1c,2 -kmarktrc:1c,2 -ktr -kmarktr -ktrn:1,2 -ktrnc:1c,2,3">
+        <gettext-extract keysFile="josm.raw.pot" poDirectory="po" keywords="${gettext.keywords}">
             <!-- core.pot -->
             <fileset dir="${josm.build.dir}/src" includes="**/*.java"/>
             <fileset dir="${i18n.build.dir}" includes="specialmessages.java"/>
@@ -88,7 +89,7 @@
         <delete file="po/josm.raw.pot"/>
     </target>
     <target name="po/core.pot" description="Extracts message keys from the JOSM core source code" depends="trans_.java,init">
-        <gettext-extract keysFile="core.pot" poDirectory="po" keywords="-k -ktrc:1c,2 -kmarktrc:1c,2 -ktr -kmarktr -ktrn:1,2 -ktrnc:1c,2,3">
+        <gettext-extract keysFile="core.pot" poDirectory="po" keywords="${gettext.keywords}">
             <fileset dir="${josm.build.dir}/src" includes="**/*.java"/>
             <fileset dir="${i18n.build.dir}" includes="specialmessages.java"/>
             <fileset dir="${i18n.build.dir}" includes="trans_presets.java"/>
@@ -99,7 +100,7 @@
         </gettext-extract>
     </target>
     <target name="po/data.pot" description="Extracts message keys from data files, e.g., presets, imagery (minus core strings)" depends="trans_.java,po/core.pot,init">
-        <gettext-extract keysFile="data.raw.pot" poDirectory="${i18n.build.dir}" keywords="-k -ktrc:1c,2 -kmarktrc:1c,2 -ktr -kmarktr -ktrn:1,2 -ktrnc:1c,2,3">
+        <gettext-extract keysFile="data.raw.pot" poDirectory="${i18n.build.dir}" keywords="${gettext.keywords}">
             <fileset dir="${i18n.build.dir}" includes="trans_plugins.java"/>
             <!-- <fileset dir="${i18n.build.dir}/josmfiles" includes="trans_*.*"/> -->
         </gettext-extract>
@@ -113,7 +114,7 @@
         <delete file="${po.build.dir}/data.raw.pot"/>
     </target>
     <target name="po/plugins.pot" description="Extracts message keys from the plugins source code (minus core and data strings)" depends="trans_.java,po/core.pot,po/data.pot,init">
-        <gettext-extract keysFile="plugins.raw.pot" poDirectory="${i18n.build.dir}" keywords="-k -ktrc:1c,2 -kmarktrc:1c,2 -ktr -kmarktr -ktrn:1,2 -ktrnc:1c,2,3">
+        <gettext-extract keysFile="plugins.raw.pot" poDirectory="${i18n.build.dir}" keywords="${gettext.keywords}">
             <fileset dir="${plugin.dir}" includesfile="${po.build.dir}/pluginSrc.txt"/>
             <fileset dir="${i18n.build.dir}" includes="trans_surveyor.java"/>
             <fileset dir="${i18n.build.dir}" includes="trans_tag2link.java"/>
@@ -174,7 +175,7 @@
                 <exec executable="perl" failonerror="true" output="${po.build.dir}/plugin_${dir}/trans_plugin.java">
                     <arg line="convplugins.pl ${plugin.dir}/${dir}/build.xml"/>
                 </exec>
-                <gettext-extract keysFile="josm.pot" poDirectory="${po.build.dir}/plugin_${dir}" keywords="-k -ktrc:1c,2 -kmarktrc:1c,2 -ktr -kmarktr -ktrn:1,2 -ktrnc:1c,2,3">
+                <gettext-extract keysFile="josm.pot" poDirectory="${po.build.dir}/plugin_${dir}" keywords="${gettext.keywords}">
                     <fileset dir="${plugin.dir}/${dir}" includes="**/*.java"/>
                     <fileset dir="${po.build.dir}/plugin_${dir}" includes="trans_*.java"/>
                     <fileset dir="${i18n.build.dir}" includes="trans_${dir}.java"/> <!-- include plugin specific translation -->

@@ -67,7 +67,7 @@
       </if>
     </target>
     <target name="po/josm.pot" description="Extracts message keys from the source code" depends="trans_.java,init,filterpluginsources">
-        <gettext-extract keysFile="josm.raw.pot" poDirectory="po" keywords="${gettext.keywords}">
+        <gettext-extract keysFile="josm.pot" poDirectory="po" keywords="${gettext.keywords} --exclude-file=excludes.pot">
             <!-- core.pot -->
             <fileset dir="${josm.build.dir}/src" includes="**/*.java"/>
             <fileset dir="${i18n.build.dir}" includes="specialmessages.java"/>
@@ -83,13 +83,9 @@
             <fileset dir="${i18n.build.dir}" includes="trans_surveyor.java"/>
             <fileset dir="${i18n.build.dir}" includes="trans_tag2link.java"/>
         </gettext-extract>
-        <exec executable="msggrep" failonerror="true">
-            <arg line="--msgid --regexp='---DUMMY-MARKER---' --invert-match --output-file=po/josm.pot po/josm.raw.pot"/>
-        </exec>
-        <delete file="po/josm.raw.pot"/>
     </target>
     <target name="po/core.pot" description="Extracts message keys from the JOSM core source code" depends="trans_.java,init">
-        <gettext-extract keysFile="core.pot" poDirectory="po" keywords="${gettext.keywords}">
+        <gettext-extract keysFile="core.pot" poDirectory="po" keywords="${gettext.keywords} --exclude-file=excludes.pot">
             <fileset dir="${josm.build.dir}/src" includes="**/*.java"/>
             <fileset dir="${i18n.build.dir}" includes="specialmessages.java"/>
             <fileset dir="${i18n.build.dir}" includes="trans_presets.java"/>
@@ -100,35 +96,17 @@
         </gettext-extract>
     </target>
     <target name="po/data.pot" description="Extracts message keys from data files, e.g., presets, imagery (minus core strings)" depends="trans_.java,po/core.pot,init">
-        <gettext-extract keysFile="data.raw.pot" poDirectory="${i18n.build.dir}" keywords="${gettext.keywords}">
+        <gettext-extract keysFile="data.pot" poDirectory="po" keywords="${gettext.keywords} --exclude-file=excludes.pot --exclude-file=po/core.pot">
             <fileset dir="${i18n.build.dir}" includes="trans_plugins.java"/>
             <!-- <fileset dir="${i18n.build.dir}/josmfiles" includes="trans_*.*"/> -->
         </gettext-extract>
-        <copy todir="${po.build.dir}">
-            <fileset dir="po" includes="core.pot"/>
-        </copy>
-        <exec executable="msgcomm" failonerror="true" output="po/data.pot">
-            <arg line="--unique po/core.pot ${po.build.dir}/core.pot ${i18n.build.dir}/data.raw.pot"/>
-        </exec>
-        <delete file="${po.build.dir}/core.pot"/>
-        <delete file="${po.build.dir}/data.raw.pot"/>
     </target>
     <target name="po/plugins.pot" description="Extracts message keys from the plugins source code (minus core and data strings)" depends="trans_.java,po/core.pot,po/data.pot,init">
-        <gettext-extract keysFile="plugins.raw.pot" poDirectory="${i18n.build.dir}" keywords="${gettext.keywords}">
+        <gettext-extract keysFile="plugins.pot" poDirectory="po" keywords="${gettext.keywords} --exclude-file=excludes.pot --exclude-file=po/core.pot">
             <fileset dir="${plugin.dir}" includesfile="${po.build.dir}/pluginSrc.txt"/>
             <fileset dir="${i18n.build.dir}" includes="trans_surveyor.java"/>
             <fileset dir="${i18n.build.dir}" includes="trans_tag2link.java"/>
         </gettext-extract>
-        <copy todir="${po.build.dir}">
-            <fileset dir="po" includes="core.pot"/>
-            <fileset dir="po" includes="data.pot"/>
-        </copy>
-        <exec executable="msgcomm" failonerror="true" output="po/plugins.pot">
-            <arg line="--unique po/core.pot ${po.build.dir}/core.pot po/data.pot ${po.build.dir}/data.pot ${i18n.build.dir}/plugins.raw.pot"/>
-        </exec>
-        <delete file="${po.build.dir}/core.pot"/>
-        <delete file="${po.build.dir}/data.pot"/>
-        <delete file="${po.build.dir}/plugins.raw.pot"/>
     </target>
     <target name="build" depends="pot,allpot">
         <antcall target="buildcore"/>

@@ -85,6 +85,11 @@
             <fileset dir="${i18n.build.dir}" includes="trans_tag2link.java"/>
         </gettext-extract>
     </target>
+    <target name="po/core+maplist+presets.pot" depends="po/core.pot,po/maplist.pot,po/presets.pot">
+        <exec executable="msgcat" failonerror="true" output="po/core+maplist+presets.pot">
+            <arg line="po/core.pot po/maplist.pot po/presets.pot"/>
+        </exec>
+    </target>
     <target name="po/core.pot" description="Extracts message keys from the JOSM core source code" depends="init">
         <gettext-extract keysFile="core.pot" poDirectory="po" keywords="${gettext.keywords} --exclude-file=excludes.pot">
             <fileset dir="${josm.build.dir}/src" includes="**/*.java"/>
@@ -136,9 +141,9 @@
         <antcall target="coretrans"/>
         <antcall target="pluginlisttrans"/>
     </target>
-    <target name="coretrans" depends="po/core.pot">
+    <target name="coretrans" depends="po/core+maplist+presets.pot">
         <exec executable="perl" failonerror="true">
-            <arg line="i18n.pl --potfile=po/core.pot --basedir=${i18n.install.dir}/ po/*.po"/>
+            <arg line="i18n.pl --potfile=po/core+maplist+presets.pot --basedir=${i18n.install.dir}/ po/*.po"/>
         </exec>
     </target>
     <target name="pluginlisttrans" depends="po/pluginlist.pot">

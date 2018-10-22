@@ -121,7 +121,7 @@
             <fileset dir="${i18n.build.dir}" includes="trans_tag2link.java"/>
         </gettext-extract>
     </target>
-    <target name="build" depends="pot,allpot">
+    <target name="build" depends="pot">
         <antcall target="buildcore"/>
         <antcall target="buildplugins"/>
     </target>
@@ -200,7 +200,6 @@
         </exec>
     </target>
     <target name="pot" depends="po/josm.pot" />
-    <target name="allpot" depends="po/core.pot,po/maplist.pot,po/pluginlist.pot,po/presets.pot,po/plugins.pot" />
     <target name="update">
         <exec executable="perl" failonerror="true">
             <arg line="launchpad.pl bzronly"/>

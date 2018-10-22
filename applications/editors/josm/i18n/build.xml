@@ -16,6 +16,7 @@
     <property name="gettext.keywords" value="-k -ktrc:1c,2 -kmarktrc:1c,2 -ktr -kmarktr -ktrn:1,2 -ktrnc:1c,2,3"/>
     <property name="gettexttasks.jar" value="lib/gettext-ant-tasks-0.9.7.jar"/>
     <property name="antcontrib.jar" value="lib/ant-contrib-1.0b3.jar"/>
+    <property name="grand.jar" value="lib/grand-1.9.5.jar"/>
     <target name="init" description="Loads the Ant gettext and contrib tasks">
         <taskdef name="gettext-extract" classname="org.xnap.commons.ant.gettext.GettextExtractKeysTask" classpath="${gettexttasks.jar}"/>
         <!-- for the <foreach> possibility -->
@@ -183,6 +184,8 @@
     <target name="clean">
         <delete dir="${i18n.build.dir}"/>
         <delete file="po/josm.pot"/>
+        <delete file="build.dot"/>
+        <delete file="build.png"/>
         <delete>
             <fileset dir="po" includes="*.*~" defaultexcludes="false"/>
         </delete>
@@ -209,5 +212,12 @@
             <arg line="launchpad.pl bzronly"/>
         </exec>
         <antcall target="buildcore"/>
+    </target>
+    <target name="ant-dependencies">
+        <typedef resource="net/ggtools/grand/antlib.xml" classpath="${grand.jar}"/>
+        <grand output="build.dot" outputconfigprefix="grand"/>
+        <exec executable="dot">
+            <arg line="-Tpng -o build.png build.dot"/>
+        </exec>
     </target>
 </project>

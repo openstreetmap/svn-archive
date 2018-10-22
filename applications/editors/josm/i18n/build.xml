@@ -183,14 +183,12 @@
     </target>
     <target name="clean">
         <delete dir="${i18n.build.dir}"/>
-        <delete file="po/josm.pot"/>
         <delete file="build.dot"/>
         <delete file="build.png"/>
         <delete>
             <fileset dir="po" includes="*.*~" defaultexcludes="false"/>
-        </delete>
-        <delete>
             <fileset dir="po" includes="*.po" defaultexcludes="false"/>
+            <fileset dir="po" includes="*.pot" defaultexcludes="false"/>
         </delete>
     </target>
     <target name="test" depends="pot">

@@ -126,11 +126,16 @@
         <antcall target="buildplugins"/>
     </target>
     <target name="buildplugins" depends="init">
-        <foreach param="plugin" target="singleplugintrans" parallel="true" maxThreads="8">
+        <foreach param="path" target="plugintrans" parallel="true" maxThreads="8">
             <path>
                 <dirset dir="${plugin.dir}" includes="*" excludes="00_*" />
             </path>
         </foreach>
+    </target>
+    <target name="singleplugintrans" depends="init">
+        <antcall target="plugintrans">
+            <param name="path" value="${plugin}"/>
+        </antcall>
     </target>
     <target name="buildcore">
         <antcall target="coretrans"/>
@@ -148,15 +153,15 @@
     </target>
     <!-- If the file `josm.pot` is present and the plugin has a `data/` directory, update its *.po files based on the ones in the `po/` directory. -->
     <!-- If the plugin has a Transifex config file `.tx/config`, skip this target altogether -->
-    <target name="singleplugintrans" depends="trans_.java,init">
-        <basename file="${plugin}" property="dir"/>
+    <target name="plugintrans">
+        <basename file="${path}" property="dir"/>
         <if>
             <available file="${plugin.dir}/${dir}/.tx/config" type="file"/>
             <then>
                 <echo message="Skip plugin ${dir}, because it is translated with Transifex!"/>
             </then>
             <else>
-                <echo message="Run singleplugintrans target for plugin ${dir}" level="info"/>
+                <echo message="Run plugintrans target for plugin ${dir}" level="info"/>
                 <mkdir dir="${po.build.dir}/plugin_${dir}"/>
                 <exec executable="perl" failonerror="true" output="${po.build.dir}/plugin_${dir}/trans_plugin.java">
                     <arg line="convplugins.pl ${plugin.dir}/${dir}/build.xml"/>

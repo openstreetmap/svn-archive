@@ -5,37 +5,37 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/JOSM"/>
 	<classpathentry exported="true" kind="lib" path="lib/javafx-base-11-win.jar" sourcepath="lib/javafx-base-11-sources.jar">
 		<attributes>
-			<attribute name="javadoc_location" value="jar:platform:/resource/JOSM-openjfx/lib/javafx-base-11-javadoc.jar!/"/>
+			<attribute name="javadoc_location" value="jar:platform:/resource/JOSM-javafx/lib/javafx-base-11-javadoc.jar!/"/>
 		</attributes>
 	</classpathentry>
 	<classpathentry exported="true" kind="lib" path="lib/javafx-controls-11-win.jar" sourcepath="lib/javafx-controls-11-sources.jar">
 		<attributes>
-			<attribute name="javadoc_location" value="jar:platform:/resource/JOSM-openjfx/lib/javafx-controls-11-javadoc.jar!/"/>
+			<attribute name="javadoc_location" value="jar:platform:/resource/JOSM-javafx/lib/javafx-controls-11-javadoc.jar!/"/>
 		</attributes>
 	</classpathentry>
 	<classpathentry exported="true" kind="lib" path="lib/javafx-fxml-11-win.jar" sourcepath="lib/javafx-fxml-11-sources.jar">
 		<attributes>
-			<attribute name="javadoc_location" value="jar:platform:/resource/JOSM-openjfx/lib/javafx-fxml-11-javadoc.jar!/"/>
+			<attribute name="javadoc_location" value="jar:platform:/resource/JOSM-javafx/lib/javafx-fxml-11-javadoc.jar!/"/>
 		</attributes>
 	</classpathentry>
 	<classpathentry exported="true" kind="lib" path="lib/javafx-graphics-11-win.jar" sourcepath="lib/javafx-graphics-11-sources.jar">
 		<attributes>
-			<attribute name="javadoc_location" value="jar:platform:/resource/JOSM-openjfx/lib/javafx-graphics-11-javadoc.jar!/"/>
+			<attribute name="javadoc_location" value="jar:platform:/resource/JOSM-javafx/lib/javafx-graphics-11-javadoc.jar!/"/>
 		</attributes>
 	</classpathentry>
 	<classpathentry exported="true" kind="lib" path="lib/javafx-media-11-win.jar" sourcepath="lib/javafx-media-11-sources.jar">
 		<attributes>
-			<attribute name="javadoc_location" value="jar:platform:/resource/JOSM-openjfx/lib/javafx-media-11-javadoc.jar!/"/>
+			<attribute name="javadoc_location" value="jar:platform:/resource/JOSM-javafx/lib/javafx-media-11-javadoc.jar!/"/>
 		</attributes>
 	</classpathentry>
 	<classpathentry exported="true" kind="lib" path="lib/javafx-swing-11-win.jar" sourcepath="lib/javafx-swing-11-sources.jar">
 		<attributes>
-			<attribute name="javadoc_location" value="jar:platform:/resource/JOSM-openjfx/lib/javafx-swing-11-javadoc.jar!/"/>
+			<attribute name="javadoc_location" value="jar:platform:/resource/JOSM-javafx/lib/javafx-swing-11-javadoc.jar!/"/>
 		</attributes>
 	</classpathentry>
 	<classpathentry exported="true" kind="lib" path="lib/javafx-web-11-win.jar" sourcepath="lib/javafx-web-11-sources.jar">
 		<attributes>
-			<attribute name="javadoc_location" value="jar:platform:/resource/JOSM-openjfx/lib/javafx-web-11-javadoc.jar!/"/>
+			<attribute name="javadoc_location" value="jar:platform:/resource/JOSM-javafx/lib/javafx-web-11-javadoc.jar!/"/>
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="output" path="bin"/>

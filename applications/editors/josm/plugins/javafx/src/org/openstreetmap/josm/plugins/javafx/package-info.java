@@ -3,4 +3,4 @@
 /**
  * Provides Main plugin class.
  */
-package org.openstreetmap.josm.plugins.openjfx;
+package org.openstreetmap.josm.plugins.javafx;

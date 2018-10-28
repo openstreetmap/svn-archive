@@ -1,5 +1,5 @@
 // License: GPL. For details, see LICENSE file.
-package org.openstreetmap.josm.plugins.openjfx.io.audio;
+package org.openstreetmap.josm.plugins.javafx.io.audio;
 
 import java.io.File;
 import java.io.FileNotFoundException;

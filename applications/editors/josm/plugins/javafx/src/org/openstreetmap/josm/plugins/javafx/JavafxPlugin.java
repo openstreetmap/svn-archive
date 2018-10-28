@@ -1,5 +1,5 @@
 // License: GPL. For details, see LICENSE file.
-package org.openstreetmap.josm.plugins.openjfx;
+package org.openstreetmap.josm.plugins.javafx;
 
 import java.io.File;
 import java.io.IOException;
@@ -24,20 +24,20 @@ import org.openstreetmap.josm.io.audio.AudioPlayer;
 import org.openstreetmap.josm.plugins.DynamicURLClassLoader;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
-import org.openstreetmap.josm.plugins.openjfx.io.audio.JavaFxMediaPlayer;
+import org.openstreetmap.josm.plugins.javafx.io.audio.JavaFxMediaPlayer;
 import org.openstreetmap.josm.tools.Logging;
 import org.openstreetmap.josm.tools.PlatformManager;
 
 /**
  * OpenJFX plugin brings OpenJFX (JavaFX) to other plugins.
  */
-public class OpenJfxPlugin extends Plugin {
+public class JavafxPlugin extends Plugin {
 
     /**
      * Constructs a new {@code OpenJfxPlugin}.
      * @param info plugin info
      */
-    public OpenJfxPlugin(PluginInformation info) {
+    public JavafxPlugin(PluginInformation info) {
         super(info);
         AudioPlayer.setSoundPlayerClass(JavaFxMediaPlayer.class);
         String ext = null;
@@ -53,7 +53,7 @@ public class OpenJfxPlugin extends Plugin {
     }
 
     private static void extractNativeLibs(String ext) {
-        CodeSource src = OpenJfxPlugin.class.getProtectionDomain().getCodeSource();
+        CodeSource src = JavafxPlugin.class.getProtectionDomain().getCodeSource();
         if (src != null) {
             try (ZipFile zf = new ZipFile(Paths.get(src.getLocation().toURI()).toFile(), StandardCharsets.UTF_8)) {
                 Path dir = getNativeDir();

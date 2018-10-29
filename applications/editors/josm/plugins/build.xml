@@ -10,7 +10,7 @@
                                             jna/build.xml
                                             jts/build.xml
                                             gson/build.xml
-                                            openjfx/build.xml
+                                            javafx/build.xml
                                             ejml/build.xml
                                             geotools/build.xml
                                             utilsplugin2/build.xml

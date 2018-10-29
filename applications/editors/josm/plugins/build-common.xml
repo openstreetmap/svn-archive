@@ -32,7 +32,14 @@
     <!-- this is the directory where the plugin jar is copied to -->
     <property name="plugin.dist.dir"        location="../../dist"/>
     <property name="java.lang.version"      value="1.8" />
+    <property name="manifest"               value="MANIFEST"/>
+    <property name="manifest.unixoid"       value="MANIFEST-unixoid"/>
+    <property name="manifest.windows"       value="MANIFEST-windows"/>
+    <property name="manifest.osx"           value="MANIFEST-osx"/>
     <property name="plugin.jar"             location="${plugin.dist.dir}/${ant.project.name}.jar"/>
+    <property name="plugin.unixoid.jar"     location="${plugin.dist.dir}/${ant.project.name}-unixoid.jar"/>
+    <property name="plugin.windows.jar"     location="${plugin.dist.dir}/${ant.project.name}-windows.jar"/>
+    <property name="plugin.osx.jar"         location="${plugin.dist.dir}/${ant.project.name}-osx.jar"/>
     <property name="plugin.sources.jar"     location="${plugin.dist.dir}/${ant.project.name}-sources.jar"/>
     <property name="plugin.javadoc.jar"     location="${plugin.dist.dir}/${ant.project.name}-javadoc.jar"/>
     <property name="ivy.home"               location="${user.home}/.ant"/>
@@ -40,10 +47,10 @@
     <property name="ivy.jar.file"           location="${ivy.jar.dir}/ivy.jar"/>
     <property name="ivy.version"            value="2.5.0-rc1"/>
 
-    <!-- For Windows-specific stuff -->
-    <condition property="isWindows">
-        <os family="Windows"/>
-    </condition>
+    <!-- For platform-specific stuff -->
+    <condition property="isWindows"><os family="Windows"/></condition>
+    <condition property="isUnix"><os family="Unix"/></condition>
+    <condition property="isMac"><os family="Mac"/></condition>
     <!-- For Java specific stuff by version -->
     <condition property="isJava9"><matches string="${ant.java.version}" pattern="(1.)?(9|1[0-9])" /></condition>
     <condition property="isJava10"><matches string="${ant.java.version}" pattern="1[0-9]" /></condition>
@@ -74,6 +81,9 @@
             <include name="**/*.jar"/>
             <exclude name="**/*-sources.jar"/>
             <exclude name="**/*-javadoc.jar"/>
+            <exclude name="**/*-unixoid.jar" unless="isUnix"/>
+            <exclude name="**/*-windows.jar" unless="isWindows"/>
+            <exclude name="**/*-osx.jar" unless="isMac"/>
         </fileset>
         <fileset refid="plugin.requires.jars"/>
         <fileset refid="jaxb.jars"/>
@@ -149,8 +159,10 @@
     <target name="dist" depends="compile,javadoc,revision" unless="skip-dist">
         <echo message="creating ${ant.project.name}.jar ... "/>
         <antcall target="setup-dist" />
-        <delete file="MANIFEST" failonerror="no"/>
-        <manifest file="MANIFEST" mode="update">
+        <delete failonerror="no">
+            <fileset dir="." includes="${manifest}*" />
+        </delete>
+        <manifest file="${manifest}" mode="update">
             <attribute name="Plugin-Mainversion" value="${plugin.main.version}"/>
             <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
             <attribute name="Plugin-Class" value="${plugin.class}" />
@@ -197,11 +209,13 @@
         <antcall target="build-jar" />
         <jar destfile="${plugin.sources.jar}" basedir="${plugin.src.dir}" level="9"/>
         <jar destfile="${plugin.javadoc.jar}" basedir="${plugin.doc.dir}" level="9"/>
-        <delete file="MANIFEST" failonerror="no"/>
+        <delete failonerror="no">
+            <fileset dir="." includes="${manifest}*" />
+        </delete>
         <antcall target="post-dist" />
     </target>
     <target name="build-jar">
-        <jar destfile="${plugin.jar}" basedir="${plugin.build.dir}" manifest="MANIFEST" manifestencoding="UTF-8" duplicate="preserve" level="9">
+        <jar destfile="${plugin.jar}" basedir="${plugin.build.dir}" manifest="${manifest}" manifestencoding="UTF-8" duplicate="preserve" level="9">
             <restrict>
                 <not><or>
                     <name name="META-INF/maven/*"/>
@@ -224,7 +238,7 @@
         <!-- to be overidden by plugins that need to perform additional tasks on resulting jar -->
     </target>
     <target name="add-manifest-attribute" depends="check-manifest-attribute" if="have-${property.name}">
-        <manifest file="MANIFEST" mode="update">
+        <manifest file="${manifest}" mode="update">
             <attribute name="${manifest.attribute}" value="${property.value}" />
         </manifest>
     </target>
@@ -548,8 +562,8 @@
                     <fileset refid="plugin.requires.jars"/>
                     <path refid="test.classpath"/>
                 </classpath>
-				<compilerarg value="-Xlint:all"/>
-				<compilerarg value="-Xlint:-serial"/>
+                <compilerarg value="-Xlint:all"/>
+                <compilerarg value="-Xlint:-serial"/>
             </javac>
         </sequential>
     </target>
@@ -610,12 +624,12 @@
                                                                          org/kaintoch/**/*.java,
                                                                          org/marvinproject/**/*.java,
                                                                          org/netbeans/**/*.java,
-																		 org/openstreetmap/josm/plugins/dataimport/io/tcx/**/*.java,
-																		 org/openstreetmap/josm/plugins/ohe/parser/**/*.java,
-																		 org/openstreetmap/josm/plugins/pdfimport/pdfbox/operators/**/*.java
-																		 org/openstreetmap/josm/plugins/roadsigns/javacc/**/*.java,
+                                                                         org/openstreetmap/josm/plugins/dataimport/io/tcx/**/*.java,
+                                                                         org/openstreetmap/josm/plugins/ohe/parser/**/*.java,
+                                                                         org/openstreetmap/josm/plugins/pdfimport/pdfbox/operators/**/*.java
+                                                                         org/openstreetmap/josm/plugins/roadsigns/javacc/**/*.java,
                                                                          org/osgeo/**/*.java,
-																		 "/>
+                                                                         "/>
             <fileset dir="${basedir}/test" includes="**/*.java" erroronmissingdir="false"/>
             <formatter type="xml" toFile="checkstyle-josm-${ant.project.name}.xml"/>
         </checkstyle>
@@ -687,17 +701,17 @@
         </path>
         <taskdef resource="org/apache/ivy/ant/antlib.xml" uri="antlib:org.apache.ivy.ant" classpathref="ivy.lib.path"/>
     </target>
-	<target name="clean_ivy">
-		<delete failonerror="false">
-			<fileset dir="${plugin.lib.dir}">
-				<include name="**/*.jar"/>
-				<exclude name="**/*-custom.jar" />
-			</fileset>
-		</delete>
-	</target>
-	<target name="fetch_dependencies" depends="clean_ivy, init-ivy">
-		<echo>fetching dependencies with ivy</echo>
-		<ivy:settings file="ivy_settings.xml" />
-		<ivy:retrieve pattern="${plugin.lib.dir}/[artifact]-[revision](-[classifier]).[ext]" conf="default" />
-	</target>
+    <target name="clean_ivy">
+        <delete failonerror="false">
+            <fileset dir="${plugin.lib.dir}">
+                <include name="**/*.jar"/>
+                <exclude name="**/*-custom.jar" />
+            </fileset>
+        </delete>
+    </target>
+    <target name="fetch_dependencies" depends="clean_ivy, init-ivy">
+        <echo>fetching dependencies with ivy</echo>
+        <ivy:settings file="ivy_settings.xml" />
+        <ivy:retrieve pattern="${plugin.lib.dir}/[artifact]-[revision](-[classifier]).[ext]" conf="default" />
+    </target>
 </project>

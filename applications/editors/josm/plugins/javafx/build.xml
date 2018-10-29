@@ -1,15 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<project name="javafx" default="dist" basedir=".">
+<project name="javafx" default="dist" basedir="." xmlns:if="ant:if" xmlns:unless="ant:unless">
     <!-- enter the SVN commit message -->
     <property name="commit.message" value="Commit message"/>
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
     <property name="plugin.main.version" value="14234"/>
 
-	<!-- Configure these properties (replace "..." accordingly).
+    <!-- Configure these properties (replace "..." accordingly).
          See https://josm.openstreetmap.de/wiki/DevelopersGuide/DevelopingPlugins
     -->
     <property name="plugin.author" value="Don-vip"/>
-    <property name="plugin.class" value="org.openstreetmap.josm.plugins.javafx.JavaFxPlugin"/>
+    <property name="plugin.class.windows" value="org.openstreetmap.josm.plugins.javafx.JavaFxPluginWindows"/>
+    <property name="plugin.class.unixoid" value="org.openstreetmap.josm.plugins.javafx.JavaFxPluginUnixoid"/>
+    <property name="plugin.class.osx" value="org.openstreetmap.josm.plugins.javafx.JavaFxPluginOsx"/>
     <property name="plugin.description" value="Provides the OpenJFX (JavaFX) library for JOSM core and other JOSM plugins. Provides additional features such as MP3 audio playback."/>
     <property name="plugin.minimum.java.version" value="11"/>
     <property name="plugin.provides" value="javafx"/>
@@ -22,73 +24,66 @@
     <!-- ** include targets that all plugins have in common ** -->
     <import file="../build-common.xml"/>
 
-	<target name="pre-compile" depends="fetch_dependencies">
-		<!-- include fetch_dependencies task -->
-	</target>
+    <target name="pre-compile" depends="fetch_dependencies">
+        <!-- include fetch_dependencies task -->
+    </target>
 
-    <!-- Override build-jar target to speed up merging from 16 minutes to 7 minutes -->
+    <macrodef name="build-native-manifest">
+        <attribute name="class"/>
+        <attribute name="manifest"/>
+        <attribute name="platform"/>
+        <sequential>
+            <copy file="MANIFEST" tofile="@{manifest}" />
+            <manifest file="@{manifest}" mode="update">
+                <attribute name="Plugin-Class" value="${property.value}" />
+                <attribute name="Plugin-Platform" value="@{platform}" />
+            </manifest>
+        </sequential>
+    </macrodef>
+
+    <target name="additional-manifest">
+        <build-native-manifest platform="Windows" class="${plugin.class.windows}" manifest="${manifest.windows}"/>
+        <build-native-manifest platform="Unixoid" class="${plugin.class.unixoid}" manifest="${manifest.unixoid}" />
+        <build-native-manifest platform="Osx" class="${plugin.class.osx}" manifest="${manifest.osx}" />
+    </target>
+
+    <macrodef name="build-native-jar">
+        <attribute name="jar"/>
+        <attribute name="manifest"/>
+        <attribute name="qualifier"/>
+        <attribute name="copy"/>
+        <sequential>
+            <echo>Building @{qualifier} jar...</echo>
+            <!-- Building the JAR file directly from javafx jar files is awfully slow,
+                 see https://bz.apache.org/bugzilla/show_bug.cgi?id=43144 -->
+            <mkdir dir="${plugin.lib.dir}/@{qualifier}"/>
+            <unzip dest="${plugin.lib.dir}/@{qualifier}">
+                <patternset>
+                    <exclude name="META-INF/maven/*"/>
+                    <exclude name="META-INF/DEPENDENCIES"/>
+                    <exclude name="META-INF/LICENSE"/>
+                    <exclude name="META-INF/NOTICE"/>
+                    <exclude name="META-INF/*.RSA"/>
+                    <exclude name="META-INF/*.SF"/>
+                    <exclude name="module-info.class"/>
+                </patternset>
+                <fileset dir="${plugin.lib.dir}">
+                    <include name="*-@{qualifier}.jar"/>
+                    <include name="*-monocle*.jar"/>
+                </fileset>
+            </unzip>
+            <jar destfile="@{jar}" manifest="@{manifest}" manifestencoding="UTF-8" level="9">
+                <fileset dir="${plugin.build.dir}"/>
+                <fileset dir="${plugin.lib.dir}/@{qualifier}"/>
+            </jar>
+            <delete dir="${plugin.lib.dir}/@{qualifier}" failonerror="false" />
+            <copy file="@{jar}" tofile="${plugin.jar}" if:set="@{copy}" />
+        </sequential>
+    </macrodef>
+
     <target name="build-jar">
-        <echo>Building commong jar...</echo>
-        <jar destfile="${plugin.jar}" basedir="${plugin.build.dir}" manifest="MANIFEST" manifestencoding="UTF-8" duplicate="preserve" level="9">
-            <restrict>
-                <not><or>
-                    <name name="META-INF/maven/*"/>
-                    <name name="META-INF/DEPENDENCIES"/>
-                    <name name="META-INF/LICENSE"/>
-                    <name name="META-INF/NOTICE"/>
-                    <name name="META-INF/*.RSA"/>
-                    <name name="META-INF/*.SF"/>
-                    <name name="module-info.class"/>
-                </or></not>
-                <archives>
-                    <zips>
-                        <fileset dir="${plugin.lib.dir}" includes="*-linux.jar"/>
-                    </zips>
-                </archives>
-            </restrict>
-        </jar>
-        <echo>Adding macOS artifacts...</echo>
-        <jar destfile="${plugin.jar}" update="true" duplicate="preserve" level="9">
-            <restrict>
-                <or>
-                    <name name="*.dylib"/>
-                    <name name="com/sun/glass/events/mac/**"/>
-                    <name name="com/sun/glass/ui/mac/**"/>
-                    <name name="com/sun/media/jfxmediaimpl/platform/osx/**"/>
-                    <name name="com/sun/prism/es2/**"/>
-                </or>
-                <archives>
-                    <zips>
-                        <fileset dir="${plugin.lib.dir}" includes="*-mac.jar"/>
-                    </zips>
-                </archives>
-            </restrict>
-        </jar>
-        <echo>Adding Windows artifacts...</echo>
-        <jar destfile="${plugin.jar}" update="true" duplicate="preserve" level="9">
-            <restrict>
-                <or>
-                    <name name="*.dll"/>
-                    <name name="com/sun/glass/ui/win/**"/>
-                    <name name="com/sun/prism/d3d/**"/>
-                    <name name="com/sun/scenario/effect/impl/hw/d3d/**"/>
-                </or>
-                <archives>
-                    <zips>
-                        <fileset dir="${plugin.lib.dir}" includes="*-win.jar"/>
-                    </zips>
-                </archives>
-            </restrict>
-        </jar>
-        <echo>Adding Monocle artifacts...</echo>
-        <jar destfile="${plugin.jar}" update="true" duplicate="preserve" level="9">
-            <restrict>
-                <archives>
-                    <zips>
-                        <fileset dir="${plugin.lib.dir}" includes="*-monocle*.jar"/>
-                    </zips>
-                </archives>
-            </restrict>
-        </jar>
+        <build-native-jar jar="${plugin.unixoid.jar}" manifest="${manifest.unixoid}" qualifier="linux" copy="isUnix" />
+        <build-native-jar jar="${plugin.windows.jar}" manifest="${manifest.windows}" qualifier="win" copy="isWindows" />
+        <build-native-jar jar="${plugin.osx.jar}" manifest="${manifest.osx}" qualifier="mac" copy="isMac" />
     </target>
 </project>

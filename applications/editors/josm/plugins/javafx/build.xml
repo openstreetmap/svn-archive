@@ -35,7 +35,7 @@
         <sequential>
             <copy file="MANIFEST" tofile="@{manifest}" />
             <manifest file="@{manifest}" mode="update">
-                <attribute name="Plugin-Class" value="${property.value}" />
+                <attribute name="Plugin-Class" value="@{class}" />
                 <attribute name="Plugin-Platform" value="@{platform}" />
             </manifest>
         </sequential>

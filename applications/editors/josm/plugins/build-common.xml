@@ -186,6 +186,11 @@
             <param name="property.value" value="${plugin.early}"/>
         </antcall>
         <antcall target="add-manifest-attribute">
+            <param name="manifest.attribute" value="Plugin-Provides"/>
+            <param name="property.name" value="plugin.provides"/>
+            <param name="property.value" value="${plugin.provides}"/>
+        </antcall>
+        <antcall target="add-manifest-attribute">
             <param name="manifest.attribute" value="Plugin-Requires"/>
             <param name="property.name" value="plugin.requires"/>
             <param name="property.value" value="${plugin.requires}"/>

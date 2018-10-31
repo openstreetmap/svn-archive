@@ -53,7 +53,7 @@ public class MenuActionLoadFromCache extends JosmAction {
                 if ((ext.length() == 3 && ext.substring(0, CacheControl.C_LAMBERT_CC_9Z.length()).equals(CacheControl.C_LAMBERT_CC_9Z) &&
                     !CadastrePlugin.isLambert_cc9())
                     || (ext.length() == 4 && ext.substring(0, CacheControl.C_UTM20N.length()).equals(CacheControl.C_UTM20N) &&
-                            !(CadastrePlugin.isUtm_france_dom()))
+                            !CadastrePlugin.isUtm_france_dom())
                     || (ext.length() == 1 && !CadastrePlugin.isLambert())) {
                         JOptionPane.showMessageDialog(MainApplication.getMainFrame(),
                                 tr("{0} not allowed with the current projection", filename),

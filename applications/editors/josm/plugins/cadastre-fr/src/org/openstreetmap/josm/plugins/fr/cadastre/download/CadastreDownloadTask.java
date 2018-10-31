@@ -12,6 +12,8 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.stream.Stream;
 
+import javax.swing.JOptionPane;
+
 import org.openstreetmap.josm.actions.downloadtasks.DownloadOsmTask;
 import org.openstreetmap.josm.actions.downloadtasks.DownloadParams;
 import org.openstreetmap.josm.data.Bounds;
@@ -19,10 +21,12 @@ import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.DownloadPolicy;
 import org.openstreetmap.josm.data.osm.UploadPolicy;
 import org.openstreetmap.josm.gui.MainApplication;
+import org.openstreetmap.josm.gui.Notification;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.plugins.fr.cadastre.api.CadastreAPI;
 import org.openstreetmap.josm.tools.Logging;
+import org.openstreetmap.josm.tools.Utils;
 
 /**
  * Cadastre download task.
@@ -58,6 +62,8 @@ public class CadastreDownloadTask extends DownloadOsmTask {
             }
         } catch (IOException e) {
             Logging.error(e);
+            new Notification(Utils.escapeReservedCharactersHTML(Utils.getRootCause(e).getMessage()))
+                .setIcon(JOptionPane.ERROR_MESSAGE).show();
         }
         return MainApplication.worker.submit(() -> {
             for (Future<?> f : tasks) {

@@ -21,7 +21,15 @@
     <!--<property name="plugin.requires" value="..."/>-->
     <property name="plugin.stage" value="5"/>
 
-    <!-- ** include targets that all plugins have in common ** -->
+    <condition property="isWindows"><os family="Windows"/></condition>
+    <condition property="isUnix"><os family="Unix"/></condition>
+    <condition property="isMac"><os family="Mac"/></condition>
+    <property name="plugin.dist.dir" location="../../dist"/>
+    <property name="plugin.jar"      location="${plugin.dist.dir}/${ant.project.name}-windows.jar" if:set="isWindows"/>
+    <property name="plugin.jar"      location="${plugin.dist.dir}/${ant.project.name}-osx.jar" if:set="isMac"/>
+    <property name="plugin.jar"      location="${plugin.dist.dir}/${ant.project.name}-unixoid.jar" if:set="isUnix"/>
+
+	<!-- ** include targets that all plugins have in common ** -->
     <import file="../build-common.xml"/>
 
     <target name="pre-compile" depends="fetch_dependencies">
@@ -77,7 +85,6 @@
                 <fileset dir="${plugin.lib.dir}/@{qualifier}"/>
             </jar>
             <delete dir="${plugin.lib.dir}/@{qualifier}" failonerror="false" />
-            <copy file="@{jar}" tofile="${plugin.jar}" if:set="@{copy}" />
         </sequential>
     </macrodef>
 

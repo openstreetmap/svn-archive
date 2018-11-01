@@ -15,6 +15,7 @@ import java.nio.file.StandardCopyOption;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.security.CodeSource;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.Objects;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -36,12 +37,13 @@ abstract class JavaFxPlugin extends Plugin {
      * Constructs a new {@code OpenJfxPlugin}.
      * @param info plugin info
      * @param ext native libraries extension
+     * @param orderedNativeLibraries native librarires that must be loaded in this order
      */
-    protected JavaFxPlugin(PluginInformation info, String ext) {
+    protected JavaFxPlugin(PluginInformation info, String ext, List<String> orderedNativeLibraries) {
         super(info);
         AudioPlayer.setSoundPlayerClass(JavaFxMediaPlayer.class);
         extractNativeLibs(ext);
-        loadNativeLibs(ext);
+        loadNativeLibs(ext, orderedNativeLibraries);
     }
 
     private static void extractNativeLibs(String ext) {
@@ -79,19 +81,21 @@ abstract class JavaFxPlugin extends Plugin {
     private static class LibVisitor extends SimpleFileVisitor<Path> {
         private final ClassLoader ccl = Thread.currentThread().getContextClassLoader();
         private final String ext;
+        private final List<String> orderedNativeLibraries;
 
-        public LibVisitor(String ext) {
+        public LibVisitor(String ext, List<String> orderedNativeLibraries) {
             this.ext = Objects.requireNonNull(ext);
+            this.orderedNativeLibraries = Objects.requireNonNull(orderedNativeLibraries);
         }
 
         @Override
         public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
             if (ccl instanceof DynamicURLClassLoader) {
-                if (file.endsWith(ext)) {
-                    Logging.debug("Loading " + file);
-                    System.load(file.toAbsolutePath().toString());
-                } else if (file.endsWith(".jar")) {
-                    Logging.debug("Loading " + file);
+                String path = file.toAbsolutePath().toString();
+                if (path.endsWith(ext) && !orderedNativeLibraries.contains(file.getFileName().toString())) {
+                    loadNativeLib(path);
+                } else if (path.endsWith(".jar")) {
+                    Logging.debug("Loading {0}", path);
                     ((DynamicURLClassLoader) ccl).addURL(file.toUri().toURL());
                 }
             } else {
@@ -102,9 +106,22 @@ abstract class JavaFxPlugin extends Plugin {
         }
     }
 
-    private void loadNativeLibs(String ext) {
+    private static void loadNativeLib(String absolutePath) {
         try {
-            Files.walkFileTree(getNativeDir(), new LibVisitor(ext));
+            Logging.debug("Loading {0}", absolutePath);
+            System.load(absolutePath);
+        } catch (LinkageError e) {
+            Logging.error(e);
+        }
+    }
+
+    private static void loadNativeLibs(String ext, List<String> orderedNativeLibraries) {
+        try {
+            Path nativeDir = getNativeDir();
+            Files.walkFileTree(nativeDir, new LibVisitor(ext, orderedNativeLibraries));
+            for (String lib : orderedNativeLibraries) {
+                loadNativeLib(nativeDir.resolve(lib).toAbsolutePath().toString());
+            }
         } catch (IOException e) {
             Logging.error(e);
         }

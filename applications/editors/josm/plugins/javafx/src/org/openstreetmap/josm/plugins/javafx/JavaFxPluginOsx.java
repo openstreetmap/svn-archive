@@ -1,6 +1,8 @@
 // License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.javafx;
 
+import java.util.Arrays;
+
 import org.openstreetmap.josm.plugins.PluginInformation;
 
 /**
@@ -9,10 +11,10 @@ import org.openstreetmap.josm.plugins.PluginInformation;
 public class JavaFxPluginOsx extends JavaFxPlugin {
 
     /**
-     * Constructs a new {@code OpenJfxPlugin}.
+     * Constructs a new {@code JavaFxPluginOsx}.
      * @param info plugin info
      */
     public JavaFxPluginOsx(PluginInformation info) {
-        super(info, ".dylib");
+        super(info, ".dylib", Arrays.asList());
     }
 }

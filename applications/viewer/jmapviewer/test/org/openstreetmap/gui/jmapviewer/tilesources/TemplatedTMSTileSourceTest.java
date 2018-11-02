@@ -10,9 +10,7 @@ import java.util.Collection;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
-import org.apache.commons.lang3.tuple.Triple;
 import org.junit.Test;
-import org.openstreetmap.josm.data.imagery.ImageryInfo;
 
 
 /**
@@ -38,11 +36,14 @@ public class TemplatedTMSTileSourceTest {
      *  * expected tile url for zoom=3, x=2, y=1
      */
     @SuppressWarnings("unchecked")
-    private Collection<Triple<String, String, String>> TEST_DATA = Arrays.asList(new Triple[] {
-            Triple.of("http://imagico.de/map/osmim_tiles.php?layer=S2A_R136_N41_20150831T093006&z={zoom}&x={x}&y={-y}", "http://imagico.de/map/osmim_tiles.php?layer=S2A_R136_N41_20150831T093006&z=1&x=2&y=-2", "http://imagico.de/map/osmim_tiles.php?layer=S2A_R136_N41_20150831T093006&z=3&x=2&y=6"),
-            /*
-             * generate with main method below once TMS_IMAGERIES is filled in
-             */
+    private Collection<String[]> TEST_DATA = Arrays.asList(new String[][] {
+        /*
+         * generate with main method below once TMS_IMAGERIES is filled in
+         */
+            new String[]{"http://imagico.de/map/osmim_tiles.php?layer=S2A_R136_N41_20150831T093006&z={zoom}&x={x}&y={-y}", 
+                    "http://imagico.de/map/osmim_tiles.php?layer=S2A_R136_N41_20150831T093006&z=1&x=2&y=-2", 
+                    "http://imagico.de/map/osmim_tiles.php?layer=S2A_R136_N41_20150831T093006&z=3&x=2&y=6"
+                    }
     });
 
     /**
@@ -111,7 +112,7 @@ public class TemplatedTMSTileSourceTest {
      */
     @Test
     public void testGetTileUrl_switch() {
-        ImageryInfo testImageryTMS = new ImageryInfo("test imagery", "http://{switch:a,b,c}.localhost/{10-zoom-5}/{x}/{y}", "tms", null, null);
+        TileSourceInfo testImageryTMS = new TileSourceInfo("test imagery", "http://{switch:a,b,c}.localhost/{10-zoom-5}/{x}/{y}", "id1");
         TemplatedTMSTileSource ts = new TemplatedTMSTileSource(testImageryTMS);
         assertTrue(
                 Stream.of(
@@ -169,7 +170,7 @@ public class TemplatedTMSTileSourceTest {
     }
 
     private void checkGetTileUrl(String url, String expected123, String expected312) {
-        ImageryInfo testImageryTMS = new ImageryInfo("test imagery", url, "tms", null, null);
+        TileSourceInfo testImageryTMS = new TileSourceInfo("test imagery", url, "id1");
         TemplatedTMSTileSource ts = new TemplatedTMSTileSource(testImageryTMS);
         assertEquals(expected123, ts.getTileUrl(1, 2, 3));
         assertEquals(expected312, ts.getTileUrl(3, 1, 2));
@@ -179,19 +180,19 @@ public class TemplatedTMSTileSourceTest {
      */
     @Test
     public void testAllUrls() {
-        for(Triple<String, String, String> test: TEST_DATA) {
-            ImageryInfo testImageryTMS = new ImageryInfo("test imagery", test.getLeft(), "tms", null, null);
+        for(String[] test: TEST_DATA) {
+            TileSourceInfo testImageryTMS = new TileSourceInfo("test imagery", test[0], "id1");
             TemplatedTMSTileSource ts = new TemplatedTMSTileSource(testImageryTMS);
-            assertEquals(test.getMiddle(), ts.getTileUrl(1, 2, 3));
-            assertEquals(test.getRight(), ts.getTileUrl(3, 2, 1));
+            assertEquals(test[1], ts.getTileUrl(1, 2, 3));
+            assertEquals(test[2], ts.getTileUrl(3, 2, 1));
         }
     }
 
     public static void main(String[] args) {
         for(String url: TMS_IMAGERIES) {
-            ImageryInfo testImageryTMS = new ImageryInfo("test imagery", url, "tms", null, null);
+            TileSourceInfo testImageryTMS = new TileSourceInfo("test imagery", url, "id1");
             TemplatedTMSTileSource ts = new TemplatedTMSTileSource(testImageryTMS);
-            System.out.println(MessageFormat.format("Triple.of(\"{0}\", \"{1}\", \"{2}\"),", url, ts.getTileUrl(1, 2, 3), ts.getTileUrl(3, 2, 1)));
+            System.out.println(MessageFormat.format("new String[]{\"{0}\", \"{1}\", \"{2}\"},", url, ts.getTileUrl(1, 2, 3), ts.getTileUrl(3, 2, 1)));
         }
     }
 

@@ -9,6 +9,7 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.geom.GeneralPath;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -36,6 +37,7 @@ import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MapView;
+import org.openstreetmap.josm.tools.Geometry;
 
 class Building {
     private final EastNorth[] en = new EastNorth[4];
@@ -353,14 +355,17 @@ class Building {
         return w;
     }
 
-    public Way createRectangle() {
+    public Way createRectangle(boolean ctrl) {
         if (len == 0)
             return null;
         final boolean[] created = new boolean[4];
         final Node[] nodes = new Node[4];
+        final boolean snap = !ctrl; // don't snap if Ctrl is held
         for (int i = 0; i < 4; i++) {
-
-            Node n = findNode(en[i]);
+            Node n = null;
+            if (snap) {
+                n = findNode(en[i]);
+            }
             if (n == null) {
                 nodes[i] = new Node(eastNorth2latlon(en[i]));
                 created[i] = true;
@@ -396,9 +401,69 @@ class Building {
 
         addAddress(w);
 
+        if (snap) {
+            // calculate BBox which is slightly larger than the new building
+            BBox searchBox = new BBox();
+            final double maxDist = 0.001;
+            List<Node> wayNodes = w.getNodes();
+            for (Node n : nodes) {
+                LatLon l = eastNorth2latlon(n.getEastNorth());
+                searchBox.add(new BBox(l.lon() - 0.0000001, l.lat() - 0.0000001,
+                        l.lon() + 0.0000001, l.lat() + 0.0000001));
+            }
+            // find the ways which might be snapped to the new building
+            List<Way> others = ds.searchWays(searchBox);
+            // add nodes of existing buildings to the new one
+            others.removeIf(o -> o.get("building") == null || !o.isUsable());
+            for (Way other : others) {
+                snapToWay(wayNodes, other.getNodes(), maxDist);
+                w.setNodes(wayNodes);
+            }
+            // add new nodes to existing buildings
+            for (Way other : others) {
+                List<Node> otherNodes = other.getNodes();
+                snapToWay(otherNodes, Arrays.asList(nodes), maxDist);
+                if (otherNodes.size() != other.getNodesCount()) {
+                    Way newWay = new Way(other);
+                    newWay.setNodes(otherNodes);
+                    cmds.add(new ChangeCommand(other, newWay));
+                }
+            }
+        }
         Command c = new SequenceCommand(tr("Create building"), cmds);
         UndoRedoHandler.getInstance().add(c);
         return w;
+    }
+
+    /**
+     * Add all nodes in otherNodes to wayNodes that are within maxDist to the
+     * segments described by wayNodes.
+     *
+     * @param wayNodes
+     *            List of nodes that might be changed
+     * @param otherNodes
+     *            other nodes
+     * @param maxDist
+     *            maximum distance as square of the euclidean distance between
+     *            way segment and node
+     */
+    private static void snapToWay(List<Node> wayNodes, Collection<Node> otherNodes, double maxDist) {
+        for (int i = 0; i < wayNodes.size(); i++) {
+            Node n0 = wayNodes.get(i);
+            Node n1 = wayNodes.get(i + 1 == wayNodes.size() ? 0 : i + 1);
+            for (Node n2 : otherNodes) {
+                if (n2 == n0 || n2 == n1)
+                    continue;
+                EastNorth x = Geometry.closestPointToSegment(n0.getEastNorth(), n1.getEastNorth(),
+                        n2.getEastNorth());
+                if (x.distanceSq(n2.getEastNorth()) < maxDist) {
+                    wayNodes.add(i + 1, n2);
+                    i--; // we may add multiple nodes to one segment, so repeat
+                         // it
+                    break;
+                }
+            }
+        }
     }
 
     private void addAddress(Way w) {

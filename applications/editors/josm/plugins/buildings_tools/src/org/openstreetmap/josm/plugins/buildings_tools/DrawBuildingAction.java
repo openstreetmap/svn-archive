@@ -320,7 +320,7 @@ public class DrawBuildingAction extends MapMode implements MapViewPaintable, Dat
             if (ToolSettings.Shape.CIRCLE.equals(ToolSettings.getShape())) {
                 w = building.createCircle();
             } else {
-                w = building.createRectangle();
+                w = building.createRectangle(ctrl);
             }
             if (w != null) {
                 if (!alt || ToolSettings.isUsingAddr())

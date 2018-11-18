@@ -21,6 +21,7 @@ import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.gui.MainApplication;
+import org.openstreetmap.josm.tools.Logging;
 import org.openstreetmap.josm.tools.Shortcut;
 
 /**
@@ -68,6 +69,10 @@ public final class CreateGridOfWaysAction extends JosmAction {
                     }
                     nodeCommon = n;
                 }
+        if (nodeCommon == null) {
+            Logging.error("Cannot find common node");
+            return;
+        }
         Way w2[] = new Way[nodesWay2.size()-1];
         for (int c=0;c<w2.length;c++)
             w2[c]=new Way();
@@ -77,9 +82,15 @@ public final class CreateGridOfWaysAction extends JosmAction {
         Collection<Command> cmds = new LinkedList<>();
         int c1=0,c2;
         double latDif,lonDif;
+        LatLon llc = nodeCommon.getCoor();
         for (Node n1 : nodesWay1) {
-            latDif = n1.getCoor().lat()-nodeCommon.getCoor().lat();
-            lonDif = n1.getCoor().lon()-nodeCommon.getCoor().lon();
+            LatLon ll1 = n1.getCoor();
+            if (ll1 == null || llc == null) {
+                Logging.warn("Null coordinates: {0} / {1}", n1, nodeCommon);
+                continue;
+            }
+            latDif = ll1.lat()-llc.lat();
+            lonDif = ll1.lon()-llc.lon();
             c2=0;
             for (Node n2 : nodesWay2) {
                 if (n1.equals(nodeCommon) && n2.equals(nodeCommon))
@@ -92,7 +103,8 @@ public final class CreateGridOfWaysAction extends JosmAction {
                     w2[c2++].addNode(n2);
                     continue;
                 }
-                Node nodeOfGrid = new Node(new LatLon(n2.getCoor().lat()+latDif,n2.getCoor().lon()+lonDif));
+                LatLon ll2 = n2.getCoor();
+                Node nodeOfGrid = new Node(new LatLon(ll2.lat()+latDif, ll2.lon()+lonDif));
                 cmds.add(new AddCommand(ds, nodeOfGrid));
                 w1[c1].addNode(nodeOfGrid);
                 w2[c2++].addNode(nodeOfGrid);

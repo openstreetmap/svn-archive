@@ -13,7 +13,7 @@
     <property name="plugin.class.unixoid" value="org.openstreetmap.josm.plugins.javafx.JavaFxPluginUnixoid"/>
     <property name="plugin.class.osx" value="org.openstreetmap.josm.plugins.javafx.JavaFxPluginOsx"/>
     <property name="plugin.description" value="Provides the OpenJFX (JavaFX) library for JOSM core and other JOSM plugins. Provides additional features such as MP3 audio playback."/>
-    <property name="plugin.minimum.java.version" value="11"/>
+    <property name="plugin.minimum.java.version" value="10"/>
     <property name="plugin.provides" value="javafx"/>
     <!--<property name="plugin.icon" value="..."/>-->
     <!--<property name="plugin.link" value="..."/>-->

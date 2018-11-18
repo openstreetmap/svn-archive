@@ -28,6 +28,7 @@ import org.openstreetmap.josm.data.osm.DataSelectionListener;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.data.osm.WaySegment;
 import org.openstreetmap.josm.data.osm.event.SelectionEventManager;
 import org.openstreetmap.josm.data.preferences.NamedColorProperty;
 import org.openstreetmap.josm.gui.MainApplication;
@@ -38,6 +39,7 @@ import org.openstreetmap.josm.gui.layer.MapViewPaintable;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import org.openstreetmap.josm.gui.util.KeyPressReleaseListener;
 import org.openstreetmap.josm.gui.util.ModifierExListener;
+import org.openstreetmap.josm.tools.Geometry;
 import org.openstreetmap.josm.tools.ImageProvider;
 import org.openstreetmap.josm.tools.Logging;
 import org.openstreetmap.josm.tools.Shortcut;
@@ -50,6 +52,7 @@ public class DrawBuildingAction extends MapMode implements MapViewPaintable, Dat
 
     private final Cursor cursorCrosshair;
     private final Cursor cursorJoinNode;
+    private final Cursor cursorJoinWay;
     private Cursor currCursor;
     private Cursor customCursor;
 
@@ -71,6 +74,7 @@ public class DrawBuildingAction extends MapMode implements MapViewPaintable, Dat
 
         cursorCrosshair = getCursor();
         cursorJoinNode = ImageProvider.getCursor("crosshair", "joinnode");
+        cursorJoinWay = ImageProvider.getCursor("crosshair", "joinway");
         currCursor = cursorCrosshair;
     }
 
@@ -200,17 +204,23 @@ public class DrawBuildingAction extends MapMode implements MapViewPaintable, Dat
     }
 
     private EastNorth getEastNorth() {
-        Node n;
-        if (ctrl) {
-            n = null;
-        } else {
-            n = MainApplication.getMap().mapView.getNearestNode(mousePos, OsmPrimitive::isUsable);
+        if (!ctrl) {
+            Node n = MainApplication.getMap().mapView.getNearestNode(mousePos, OsmPrimitive::isUsable);
+            if (n != null)
+                return latlon2eastNorth(n.getCoor());
+            WaySegment ws = MainApplication.getMap().mapView.getNearestWaySegment(mousePos,
+                    OsmPrimitive::isSelectable);
+            if (ws != null && ws.way.get("building") != null) {
+                EastNorth p1 = ws.getFirstNode().getEastNorth();
+                EastNorth p2 = ws.getSecondNode().getEastNorth();
+                EastNorth enX = Geometry.closestPointToSegment(p1, p2,
+                        MainApplication.getMap().mapView.getEastNorth(mousePos.x, mousePos.y));
+                if (enX != null) {
+                    return enX;
+                }
+            }
         }
-        if (n == null) {
-            return latlon2eastNorth(MainApplication.getMap().mapView.getLatLon(mousePos.x, mousePos.y));
-        } else {
-            return latlon2eastNorth(n.getCoor());
-        }
+        return latlon2eastNorth(MainApplication.getMap().mapView.getLatLon(mousePos.x, mousePos.y));
     }
 
     private boolean isRectDrawing() {
@@ -221,8 +231,8 @@ public class DrawBuildingAction extends MapMode implements MapViewPaintable, Dat
     private Mode modeDrawing() {
         EastNorth p = getEastNorth();
         if (isRectDrawing()) {
-                building.setPlaceRect(p);
-                return shift ? Mode.DrawingAngFix : Mode.None;
+            building.setPlaceRect(p);
+            return shift ? Mode.DrawingAngFix : Mode.None;
         } else if (ToolSettings.Shape.CIRCLE.equals(ToolSettings.getShape())) {
             if (ToolSettings.getWidth() != 0) {
                 building.setPlaceCircle(p, ToolSettings.getWidth(), shift);
@@ -290,16 +300,8 @@ public class DrawBuildingAction extends MapMode implements MapViewPaintable, Dat
     private void drawingStart(MouseEvent e) {
         mousePos = e.getPoint();
         drawStartPos = mousePos;
-        if (ToolSettings.Shape.CIRCLE.equals(ToolSettings.getShape())) {
-            building.setBase(latlon2eastNorth(MainApplication.getMap().mapView.getLatLon(mousePos.x, mousePos.y)));
-        } else {
-            Node n = MainApplication.getMap().mapView.getNearestNode(mousePos, OsmPrimitive::isUsable);
-            if (n == null) {
-                building.setBase(latlon2eastNorth(MainApplication.getMap().mapView.getLatLon(mousePos.x, mousePos.y)));
-            } else {
-                building.setBase(n);
-            }
-        }
+        EastNorth en = getEastNorth();
+        building.setBase(en);
         mode = Mode.Drawing;
         updateStatusLine();
     }
@@ -384,16 +386,23 @@ public class DrawBuildingAction extends MapMode implements MapViewPaintable, Dat
         if (!MainApplication.isDisplayingMapView())
             return;
         Node n = null;
-        if (!ctrl)
-            n = MainApplication.getMap().mapView.getNearestNode(mousePos, OsmPrimitive::isUsable);
-        if (n != null) {
-            setCursor(cursorJoinNode);
-        } else {
-            if (customCursor != null && (!ctrl || isRectDrawing()))
-                setCursor(customCursor);
-            else
-                setCursor(getCursor());
+        if (!ctrl) {
+            n = MainApplication.getMap().mapView.getNearestNode(mousePos, OsmPrimitive::isSelectable);
+            if (n != null) {
+                setCursor(cursorJoinNode);
+                return;
+            } else {
+                Way w = MainApplication.getMap().mapView.getNearestWay(mousePos, OsmPrimitive::isSelectable);
+                if (w != null && w.get("building") != null) {
+                    setCursor(cursorJoinWay);
+                    return;
+                }
+            }
         }
+        if (customCursor != null && (!ctrl || isRectDrawing()))
+            setCursor(customCursor);
+        else
+            setCursor(getCursor());
 
     }
 

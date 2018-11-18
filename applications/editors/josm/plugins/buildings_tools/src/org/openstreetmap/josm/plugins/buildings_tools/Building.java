@@ -12,9 +12,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import javax.swing.JOptionPane;
 
@@ -26,7 +28,6 @@ import org.openstreetmap.josm.command.DeleteCommand;
 import org.openstreetmap.josm.command.SequenceCommand;
 import org.openstreetmap.josm.data.UndoRedoHandler;
 import org.openstreetmap.josm.data.coor.EastNorth;
-import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.BBox;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
@@ -49,6 +50,7 @@ class Building {
     private double heading;
     private AngleSnap angleSnap = new AngleSnap();
     private Double drawingAngle;
+    private final static double EQUAL_NODE_DIST_TOLERANCE = 1e-6;
 
     public void clearAngleSnap() {
         angleSnap.clear();
@@ -105,11 +107,6 @@ class Building {
         updMetrics();
     }
 
-    public void setBase(Node base) {
-        en[0] = latlon2eastNorth(base.getCoor());
-        updMetrics();
-    }
-
     /**
      * @param p
      *            The point to project
@@ -144,7 +141,7 @@ class Building {
         }
     }
 
-    public void setLengthWidth(double length, double width) {
+    private void setLengthWidth(double length, double width) {
         this.len = length;
         this.width = width;
         updatePos();
@@ -230,20 +227,11 @@ class Building {
     }
 
     private Node findNode(EastNorth pos) {
-        DataSet ds = MainApplication.getLayerManager().getEditDataSet();
-        LatLon l = eastNorth2latlon(pos);
-        List<Node> nodes = ds.searchNodes(new BBox(l.lon() - 0.0000001, l.lat() - 0.0000001,
-                l.lon() + 0.0000001, l.lat() + 0.0000001));
-        Node bestnode = null;
-        double mindist = 0.0003;
-        for (Node n : nodes) {
-            double dist = n.getCoor().distanceSq(l);
-            if (dist < mindist && n.isUsable()) {
-                bestnode = n;
-                mindist = dist;
-            }
-        }
-        return bestnode;
+        MapView mv = MainApplication.getMap().mapView;
+        Node n = mv.getNearestNode(mv.getPoint(eastNorth2latlon(pos)), OsmPrimitive::isSelectable);
+        if (n == null)
+            return null;
+        return n.getEastNorth().distance(pos) <= EQUAL_NODE_DIST_TOLERANCE ? n : null;
     }
 
     /**
@@ -325,22 +313,20 @@ class Building {
             }
         }
 
+        snapBuildings(w, nodes, addNodesCmd);
         if (addNodesCmd.size() > 0) {
             Command addNodes = new SequenceCommand(tr("Add nodes for building"), addNodesCmd);
             UndoRedoHandler.getInstance().add(addNodes);
         }
 
         // Nodes must be selected for create circle action
-        for (int i = 0; i < 2; i++) {
-            if (created[i]) {
-                ds.addSelected(nodes[i]);
-            }
-        }
+        ds.addSelected(w.getNodes());
 
         CreateCircleAction action = new CreateCircleAction();
         action.setEnabled(true);
         action.actionPerformed(null);
 
+        // restore selection
         ds.clearSelection();
         ds.addSelected(selectedPrimitives);
 
@@ -402,64 +388,63 @@ class Building {
         addAddress(w);
 
         if (snap) {
-            // calculate BBox which is slightly larger than the new building
-            BBox searchBox = new BBox();
-            final double maxDist = 0.001;
-            List<Node> wayNodes = w.getNodes();
-            for (Node n : nodes) {
-                LatLon l = eastNorth2latlon(n.getEastNorth());
-                searchBox.add(new BBox(l.lon() - 0.0000001, l.lat() - 0.0000001,
-                        l.lon() + 0.0000001, l.lat() + 0.0000001));
-            }
-            // find the ways which might be snapped to the new building
-            List<Way> others = ds.searchWays(searchBox);
-            // add nodes of existing buildings to the new one
-            others.removeIf(o -> o.get("building") == null || !o.isUsable());
-            for (Way other : others) {
-                snapToWay(wayNodes, other.getNodes(), maxDist);
-                w.setNodes(wayNodes);
-            }
-            // add new nodes to existing buildings
-            for (Way other : others) {
-                List<Node> otherNodes = other.getNodes();
-                snapToWay(otherNodes, Arrays.asList(nodes), maxDist);
-                if (otherNodes.size() != other.getNodesCount()) {
-                    Way newWay = new Way(other);
-                    newWay.setNodes(otherNodes);
-                    cmds.add(new ChangeCommand(other, newWay));
-                }
-            }
+            snapBuildings(w, nodes, cmds);
         }
         Command c = new SequenceCommand(tr("Create building"), cmds);
         UndoRedoHandler.getInstance().add(c);
         return w;
     }
 
+    private void snapBuildings(Way w, Node[] nodes, Collection<Command> cmds) {
+        // calculate BBox which is slightly larger than the new building
+        List<Node> wayNodes = w.getNodes();
+        // find the ways which might be snapped to the new building
+        Set<Way> others = new LinkedHashSet<>();
+        MapView mv = MainApplication.getMap().mapView;
+        for (Node n : nodes) {
+            Way w2 = mv.getNearestWay(mv.getPoint(n), OsmPrimitive::isSelectable);
+            if (w2 != null && w2.get("building") != null)
+                others.add(w2);
+        }
+        // add nodes of existing buildings to the new one
+        for (Way other : others) {
+            snapToWay(wayNodes, other.getNodes());
+            w.setNodes(wayNodes);
+        }
+        // add new nodes to existing buildings
+        for (Way other : others) {
+            List<Node> otherNodes = other.getNodes();
+            snapToWay(otherNodes, Arrays.asList(nodes));
+            if (otherNodes.size() != other.getNodesCount()) {
+                Way newWay = new Way(other);
+                newWay.setNodes(otherNodes);
+                cmds.add(new ChangeCommand(other, newWay));
+            }
+        }
+
+    }
+
     /**
-     * Add all nodes in otherNodes to wayNodes that are within maxDist to the
-     * segments described by wayNodes.
+     * Add all nodes in otherNodes to wayNodes that are within snap distance to
+     * the segments described by wayNodes.
      *
      * @param wayNodes
      *            List of nodes that might be changed
      * @param otherNodes
      *            other nodes
-     * @param maxDist
-     *            maximum distance as square of the euclidean distance between
-     *            way segment and node
      */
-    private static void snapToWay(List<Node> wayNodes, Collection<Node> otherNodes, double maxDist) {
+    private static void snapToWay(List<Node> wayNodes, Collection<Node> otherNodes) {
         for (int i = 0; i < wayNodes.size(); i++) {
             Node n0 = wayNodes.get(i);
             Node n1 = wayNodes.get(i + 1 == wayNodes.size() ? 0 : i + 1);
             for (Node n2 : otherNodes) {
                 if (n2 == n0 || n2 == n1)
                     continue;
-                EastNorth x = Geometry.closestPointToSegment(n0.getEastNorth(), n1.getEastNorth(),
-                        n2.getEastNorth());
-                if (x.distanceSq(n2.getEastNorth()) < maxDist) {
+                EastNorth x = Geometry.closestPointToSegment(n0.getEastNorth(), n1.getEastNorth(), n2.getEastNorth());
+                if (x.distance(n2.getEastNorth()) <= EQUAL_NODE_DIST_TOLERANCE && !wayNodes.contains(n2)) {
                     wayNodes.add(i + 1, n2);
-                    i--; // we may add multiple nodes to one segment, so repeat
-                         // it
+                    // we may add multiple nodes to one segment, so repeat it
+                    i--;
                     break;
                 }
             }

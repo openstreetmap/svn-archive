@@ -57,7 +57,8 @@ public final class OSMTags {
     public static final String PLATFORM_TAG_VALUE = "platform";
     public static final String SERVICE_TAG = "service";
 
-    public static final String CITY_NETWORK_TAG_VALUE = "city";
+    public static final String CITY_NETWORK_TAG_VALUE_OLD = "city";
+    public static final String CITY_NETWORK_TAG_VALUE = "urban";
     public static final String COMMUTER_NETWORK_TAG_VALUE = "commuter";
     public static final String LOCAL_NETWORK_TAG_VALUE = "local";
     public static final String REGIONAL_NETWORK_TAG_VALUE = "regional";

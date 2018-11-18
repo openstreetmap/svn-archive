@@ -148,7 +148,8 @@ public class CustomizeStopAreaOperation extends StopAreaOperationBase {
         commands = assignTag(commands, target, OSMTags.OPERATOR_TAG,
                 "".equals(stopArea.operator) ? null : stopArea.operator);
         commands = assignTag(commands, target, OSMTags.SERVICE_TAG,
-                null == stopArea.service || OSMTags.CITY_NETWORK_TAG_VALUE.equals(stopArea.service) ? null
+                null == stopArea.service || OSMTags.CITY_NETWORK_TAG_VALUE.equals(stopArea.service)
+                        || OSMTags.CITY_NETWORK_TAG_VALUE_OLD.equals(stopArea.service) ? null
                         : stopArea.service);
 
         return commands;

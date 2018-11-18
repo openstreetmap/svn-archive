@@ -9,6 +9,7 @@ import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.RelationMember;
+import sun.security.provider.certpath.IndexedCollectionCertStore;
 
 /**
  * Operation of constructing of stop area object from selected JOSM object
@@ -94,7 +95,7 @@ public class CreateStopAreaFromSelectedObjectOperation extends StopAreaOperation
     /**
      * Setting of stop area from selected josm object
      * 
-     * @param selectedObject Selected josm object
+     * @param stopArea Selected stop area
      */
     public void fromSelectedObject(StopArea stopArea) {
         Collection<OsmPrimitive> selectedObjects = new ArrayList<OsmPrimitive>();
@@ -155,7 +156,10 @@ public class CreateStopAreaFromSelectedObjectOperation extends StopAreaOperation
     public StopArea performCustomizing(StopArea stopArea) {
         if (getCurrentDataSet() == null)
             return null;
-        OsmPrimitive selectedObject = getCurrentDataSet().getSelectedNodesAndWays().iterator().next();
+        Collection<OsmPrimitive> selectedObjects = getCurrentDataSet().getSelectedNodesAndWays();
+        if(!(null != selectedObjects && !selectedObjects.isEmpty()))
+            return null;
+        OsmPrimitive selectedObject = selectedObjects.iterator().next();
         if (selectedObject == null)
             return null;
         if (stopArea == null)

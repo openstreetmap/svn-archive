@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Ant-Version: Apache Ant 1.10.5
+Created-By: 1.8.0_181-b13 (Oracle Corporation)
+Author: Rodion Shcherbakov
+Plugin-Class: org.openstreetmap.josm.plugins.customizepublictransportstop.CustomizePublicTransportStopPlugin
+Plugin-Date: 2018-08-18T01:41:55.294079Z
+Plugin-Description: Customization of public public transport stops.
+Plugin-Link: https://wiki.openstreetmap.org/wiki/JOSM/Plugins/CustomizePublicTransportStop
+Plugin-Mainversion: 14153
+Plugin-Version: 34501
+Plugin-Icon: images/bus.png
+ru_Plugin-Description: Настройка остановки общественного транспорта в соответствии со стандартом

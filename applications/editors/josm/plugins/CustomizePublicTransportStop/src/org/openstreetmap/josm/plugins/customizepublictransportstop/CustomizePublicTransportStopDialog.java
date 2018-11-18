@@ -7,10 +7,7 @@ import java.awt.Frame;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
+import java.awt.event.*;
 import java.util.HashMap;
 
 import javax.swing.JButton;
@@ -24,19 +21,20 @@ import javax.swing.JTextField;
 
 import org.openstreetmap.josm.gui.MainApplication;
 
+
 /**
  * Dialog for setting stop area properties
  * 
  * @author Rodion Scherbakov
  */
-public class CustomizePublicTransportStopDialog implements ActionListener, ItemListener {
+public class CustomizePublicTransportStopDialog implements ActionListener, ItemListener, KeyListener {
     private static final String CANCEL_COMMAND = "cancel";
     private static final String SAVE_COMMAND = "save";
     private static final String CANCEL_BUTTON_CAPTION = "Cancel";
     private static final String SAVE_BUTTON_CAPTION = "Save";
     private static final String AREA_CAPTION = "Area";
     private static final String COVER_CAPTION = "Cover";
-    private static final String SHELDER_CAPTION = "Shelder";
+    private static final String SHELTER_CAPTION = "Shelter";
     private static final String BENCH_CAPTION = "Bench";
     private static final String RAILWAY_STOP_CAPTION = "Railway stop";
     private static final String RAILWAY_STATION_CAPTION = "Railway station";
@@ -79,7 +77,7 @@ public class CustomizePublicTransportStopDialog implements ActionListener, ItemL
     private JCheckBox checkBoxIsTrainStation;
     private JCheckBox checkBoxIsTrainStop;
     private JCheckBox checkBoxIsBench;
-    private JCheckBox checkBoxIsShelder;
+    private JCheckBox checkBoxIsShelter;
     private JCheckBox checkBoxIsCover;
     private JCheckBox checkBoxIsArea;
 
@@ -151,6 +149,10 @@ public class CustomizePublicTransportStopDialog implements ActionListener, ItemL
 
         jDialog.pack();
         jDialog.setLocationRelativeTo(frame);
+
+        jDialog.addKeyListener(this);
+        contentPane.addKeyListener(this);
+
     }
 
     private JPanel createContentPane() {
@@ -164,6 +166,7 @@ public class CustomizePublicTransportStopDialog implements ActionListener, ItemL
         layoutCons.weightx = 0.5;
         layoutCons.fill = GridBagConstraints.HORIZONTAL;
         gridbag.setConstraints(label, layoutCons);
+        label.addKeyListener(this);
         contentPane.add(label);
 
         textFieldName = new JTextField("", 25);
@@ -172,6 +175,7 @@ public class CustomizePublicTransportStopDialog implements ActionListener, ItemL
         layoutCons.weightx = 0.5;
         layoutCons.fill = GridBagConstraints.HORIZONTAL;
         gridbag.setConstraints(textFieldName, layoutCons);
+        textFieldName.addKeyListener(this);
         contentPane.add(textFieldName);
 
         JLabel labelNameEn = new JLabel(tr(NAME_EN_CAPTION));
@@ -180,6 +184,7 @@ public class CustomizePublicTransportStopDialog implements ActionListener, ItemL
         layoutCons.weightx = 0.5;
         layoutCons.fill = GridBagConstraints.HORIZONTAL;
         gridbag.setConstraints(labelNameEn, layoutCons);
+        labelNameEn.addKeyListener(this);
         contentPane.add(labelNameEn);
 
         textFieldNameEn = new JTextField("", 25);
@@ -188,6 +193,7 @@ public class CustomizePublicTransportStopDialog implements ActionListener, ItemL
         layoutCons.weightx = 0.5;
         layoutCons.fill = GridBagConstraints.HORIZONTAL;
         gridbag.setConstraints(textFieldNameEn, layoutCons);
+        textFieldNameEn.addKeyListener(this);
         contentPane.add(textFieldNameEn);
 
         JLabel labelNetwork = new JLabel(tr(NETWORK_CAPTION));
@@ -196,6 +202,7 @@ public class CustomizePublicTransportStopDialog implements ActionListener, ItemL
         layoutCons.weightx = 0.5;
         layoutCons.fill = GridBagConstraints.HORIZONTAL;
         gridbag.setConstraints(labelNetwork, layoutCons);
+        labelNetwork.addKeyListener(this);
         contentPane.add(labelNetwork);
 
         textFieldNetwork = new JTextField("", 25);
@@ -204,6 +211,7 @@ public class CustomizePublicTransportStopDialog implements ActionListener, ItemL
         layoutCons.weightx = 0.5;
         layoutCons.fill = GridBagConstraints.HORIZONTAL;
         gridbag.setConstraints(textFieldNetwork, layoutCons);
+        textFieldNetwork.addKeyListener(this);
         contentPane.add(textFieldNetwork);
 
         JLabel labelOperator = new JLabel(tr(OPERATOR_CAPTION));
@@ -212,6 +220,7 @@ public class CustomizePublicTransportStopDialog implements ActionListener, ItemL
         layoutCons.weightx = 0.5;
         layoutCons.fill = GridBagConstraints.HORIZONTAL;
         gridbag.setConstraints(labelOperator, layoutCons);
+        labelOperator.addKeyListener(this);
         contentPane.add(labelOperator);
 
         textFieldOperator = new JTextField("", 25);
@@ -220,6 +229,7 @@ public class CustomizePublicTransportStopDialog implements ActionListener, ItemL
         layoutCons.weightx = 0.5;
         layoutCons.fill = GridBagConstraints.HORIZONTAL;
         gridbag.setConstraints(textFieldOperator, layoutCons);
+        textFieldOperator.addKeyListener(this);
         contentPane.add(textFieldOperator);
 
         JLabel labelService = new JLabel(tr(NETWORK_LEVEL_CAPTION));
@@ -228,6 +238,7 @@ public class CustomizePublicTransportStopDialog implements ActionListener, ItemL
         layoutCons.weightx = 0.5;
         layoutCons.fill = GridBagConstraints.HORIZONTAL;
         gridbag.setConstraints(labelService, layoutCons);
+        labelService.addKeyListener(this);
         contentPane.add(labelService);
 
         String[] serviceTransStrings = new String[serviceCaptionStrings.length];
@@ -241,6 +252,7 @@ public class CustomizePublicTransportStopDialog implements ActionListener, ItemL
         layoutCons.weightx = 0.5;
         layoutCons.fill = GridBagConstraints.HORIZONTAL;
         gridbag.setConstraints(comboBoxService, layoutCons);
+        comboBoxService.addKeyListener(this);
         contentPane.add(comboBoxService);
 
         checkBoxIsBus = new JCheckBox(tr(BUS_CAPTION));
@@ -250,6 +262,7 @@ public class CustomizePublicTransportStopDialog implements ActionListener, ItemL
         layoutCons.fill = GridBagConstraints.HORIZONTAL;
         gridbag.setConstraints(checkBoxIsBus, layoutCons);
         checkBoxIsBus.addItemListener(this);
+        checkBoxIsBus.addKeyListener(this);
         contentPane.add(checkBoxIsBus);
 
         checkBoxIsShareTaxi = new JCheckBox(tr(SHARE_TAXI_CAPTION));
@@ -259,6 +272,7 @@ public class CustomizePublicTransportStopDialog implements ActionListener, ItemL
         layoutCons.fill = GridBagConstraints.HORIZONTAL;
         gridbag.setConstraints(checkBoxIsShareTaxi, layoutCons);
         checkBoxIsShareTaxi.addItemListener(this);
+        checkBoxIsShareTaxi.addKeyListener(this);
         contentPane.add(checkBoxIsShareTaxi);
 
         checkBoxIsTrolleybus = new JCheckBox(tr(TROLLEYBUS_CAPTION));
@@ -268,6 +282,7 @@ public class CustomizePublicTransportStopDialog implements ActionListener, ItemL
         layoutCons.fill = GridBagConstraints.HORIZONTAL;
         gridbag.setConstraints(checkBoxIsTrolleybus, layoutCons);
         checkBoxIsTrolleybus.addItemListener(this);
+        checkBoxIsTrolleybus.addKeyListener(this);
         contentPane.add(checkBoxIsTrolleybus);
 
         checkBoxIsBusStation = new JCheckBox(tr(BUS_STATION_CAPTION));
@@ -277,6 +292,7 @@ public class CustomizePublicTransportStopDialog implements ActionListener, ItemL
         layoutCons.fill = GridBagConstraints.HORIZONTAL;
         gridbag.setConstraints(checkBoxIsBusStation, layoutCons);
         checkBoxIsBusStation.addItemListener(this);
+        checkBoxIsBusStation.addKeyListener(this);
         contentPane.add(checkBoxIsBusStation);
 
         checkBoxIsTram = new JCheckBox(tr(TRAM_CAPTION));
@@ -286,6 +302,7 @@ public class CustomizePublicTransportStopDialog implements ActionListener, ItemL
         layoutCons.fill = GridBagConstraints.HORIZONTAL;
         gridbag.setConstraints(checkBoxIsTram, layoutCons);
         checkBoxIsTram.addItemListener(this);
+        checkBoxIsTram.addKeyListener(this);
         contentPane.add(checkBoxIsTram);
 
         checkBoxIsTrainStation = new JCheckBox(tr(RAILWAY_STATION_CAPTION));
@@ -295,6 +312,7 @@ public class CustomizePublicTransportStopDialog implements ActionListener, ItemL
         layoutCons.fill = GridBagConstraints.HORIZONTAL;
         gridbag.setConstraints(checkBoxIsTrainStation, layoutCons);
         checkBoxIsTrainStation.addItemListener(this);
+        checkBoxIsTrainStation.addKeyListener(this);
         contentPane.add(checkBoxIsTrainStation);
 
         checkBoxIsTrainStop = new JCheckBox(tr(RAILWAY_STOP_CAPTION));
@@ -304,6 +322,7 @@ public class CustomizePublicTransportStopDialog implements ActionListener, ItemL
         layoutCons.fill = GridBagConstraints.HORIZONTAL;
         gridbag.setConstraints(checkBoxIsTrainStop, layoutCons);
         checkBoxIsTrainStop.addItemListener(this);
+        checkBoxIsTrainStop.addKeyListener(this);
         contentPane.add(checkBoxIsTrainStop);
 
         checkBoxIsAssignTransportType = new JCheckBox(tr(ASSIGN_TRANSPORT_TYPE_CAPTION));
@@ -313,6 +332,7 @@ public class CustomizePublicTransportStopDialog implements ActionListener, ItemL
         layoutCons.fill = GridBagConstraints.HORIZONTAL;
         gridbag.setConstraints(checkBoxIsAssignTransportType, layoutCons);
         checkBoxIsAssignTransportType.addItemListener(this);
+        checkBoxIsAssignTransportType.addKeyListener(this);
         contentPane.add(checkBoxIsAssignTransportType);
 
         checkBoxIsBench = new JCheckBox(tr(BENCH_CAPTION));
@@ -322,16 +342,18 @@ public class CustomizePublicTransportStopDialog implements ActionListener, ItemL
         layoutCons.fill = GridBagConstraints.HORIZONTAL;
         gridbag.setConstraints(checkBoxIsBench, layoutCons);
         checkBoxIsBench.addItemListener(this);
+        checkBoxIsBench.addKeyListener(this);
         contentPane.add(checkBoxIsBench);
 
-        checkBoxIsShelder = new JCheckBox(tr(SHELDER_CAPTION));
+        checkBoxIsShelter = new JCheckBox(tr(SHELTER_CAPTION));
         layoutCons.gridx = 1;
         layoutCons.gridy = 10;
         layoutCons.weightx = 0.5;
         layoutCons.fill = GridBagConstraints.HORIZONTAL;
-        gridbag.setConstraints(checkBoxIsShelder, layoutCons);
-        checkBoxIsShelder.addItemListener(this);
-        contentPane.add(checkBoxIsShelder);
+        gridbag.setConstraints(checkBoxIsShelter, layoutCons);
+        checkBoxIsShelter.addItemListener(this);
+        checkBoxIsShelter.addKeyListener(this);
+        contentPane.add(checkBoxIsShelter);
 
         checkBoxIsCover = new JCheckBox(tr(COVER_CAPTION));
         layoutCons.gridx = 0;
@@ -340,6 +362,7 @@ public class CustomizePublicTransportStopDialog implements ActionListener, ItemL
         layoutCons.fill = GridBagConstraints.HORIZONTAL;
         gridbag.setConstraints(checkBoxIsCover, layoutCons);
         checkBoxIsCover.addItemListener(this);
+        checkBoxIsCover.addKeyListener(this);
         contentPane.add(checkBoxIsCover);
 
         checkBoxIsArea = new JCheckBox(tr(AREA_CAPTION));
@@ -349,6 +372,7 @@ public class CustomizePublicTransportStopDialog implements ActionListener, ItemL
         layoutCons.fill = GridBagConstraints.HORIZONTAL;
         gridbag.setConstraints(checkBoxIsArea, layoutCons);
         checkBoxIsArea.addItemListener(this);
+        checkBoxIsArea.addKeyListener(this);
         contentPane.add(checkBoxIsArea);
 
         JButton buttonSave = new JButton(tr(SAVE_BUTTON_CAPTION));
@@ -360,6 +384,7 @@ public class CustomizePublicTransportStopDialog implements ActionListener, ItemL
         gridbag.setConstraints(buttonSave, layoutCons);
         buttonSave.setActionCommand(SAVE_COMMAND);
         buttonSave.addActionListener(this);
+        buttonSave.addKeyListener(this);
         contentPane.add(buttonSave);
 
         JButton buttonCancel = new JButton(tr(CANCEL_BUTTON_CAPTION));
@@ -371,6 +396,7 @@ public class CustomizePublicTransportStopDialog implements ActionListener, ItemL
         gridbag.setConstraints(buttonCancel, layoutCons);
         buttonCancel.setActionCommand(CANCEL_COMMAND);
         buttonCancel.addActionListener(this);
+        buttonCancel.addKeyListener(this);
         contentPane.add(buttonCancel);
         return contentPane;
     }
@@ -527,7 +553,7 @@ public class CustomizePublicTransportStopDialog implements ActionListener, ItemL
         setCheckBoxValue(checkBoxIsTrainStop, stopArea.isTrainStation);
         setCheckBoxValue(checkBoxIsTrainStop, stopArea.isTrainStop);
         setCheckBoxValue(checkBoxIsBench, stopArea.isBench);
-        setCheckBoxValue(checkBoxIsShelder, stopArea.isShelter);
+        setCheckBoxValue(checkBoxIsShelter, stopArea.isShelter);
         setCheckBoxValue(checkBoxIsCover, stopArea.isCovered);
         setCheckBoxValue(checkBoxIsArea, stopArea.isArea);
     }
@@ -572,7 +598,7 @@ public class CustomizePublicTransportStopDialog implements ActionListener, ItemL
             stopArea.isTrainStation = getCheckBoxValue(checkBoxIsTrainStation);
             stopArea.isTrainStop = getCheckBoxValue(checkBoxIsTrainStop);
             stopArea.isBench = getCheckBoxValue(checkBoxIsBench);
-            stopArea.isShelter = getCheckBoxValue(checkBoxIsShelder);
+            stopArea.isShelter = getCheckBoxValue(checkBoxIsShelter);
             stopArea.isCovered = getCheckBoxValue(checkBoxIsCover);
             stopArea.isArea = getCheckBoxValue(checkBoxIsArea);
         } catch (Exception ex) {
@@ -597,4 +623,20 @@ public class CustomizePublicTransportStopDialog implements ActionListener, ItemL
         }
     }
 
+    @Override
+    public void keyTyped(KeyEvent e) {
+
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+        if (e.getKeyChar() == KeyEvent.VK_ESCAPE) {
+            setVisible(false);
+        }
+   }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+
+    }
 }

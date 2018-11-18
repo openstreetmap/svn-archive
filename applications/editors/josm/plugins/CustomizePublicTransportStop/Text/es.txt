@@ -1,0 +1,28 @@
+Personalizar parada
+Personalizar parada bajo el estándar público de tránsito OSM v2
+Parar personalización
+Asignar etiqueta al área de detención
+Nombre
+Nombre (inglés)
+Red
+Operador
+Nivel de red
+Transporte urbano
+Local
+Regional
+Larga distancia
+Alta velocidad
+Autobús
+Taxi compartido
+Trolebús
+Estación de autobús
+Tranvía
+Estación de tren
+Parada de tren
+Asignar tipo de transporte a la plataforma
+Techo
+Banco
+Cubierto
+Área
+Guardar
+Cancelar

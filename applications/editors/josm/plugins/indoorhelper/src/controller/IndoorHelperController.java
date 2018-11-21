@@ -81,11 +81,11 @@ public class IndoorHelperController {
    private MapFrame map;
    private DrawAction drawAction;
    private SelectAction selectAction;
-   private SpaceAction SpaceAction;
-   private transient Shortcut SpaceShortcut;
-   private EnterAction EnterAction;
-   private transient Shortcut EnterShortcut;
-   private boolean OuterHelp, InnerHelp, LevelHelp;
+   private SpaceAction spaceAction;
+   private transient Shortcut spaceShortcut;
+   private EnterAction enterAction;
+   private transient Shortcut enterShortcut;
+   private boolean outerHelp, innerHelp, levelHelp;
    private Collection<OsmPrimitive> innerRelation;
    private LevelSelectorView selectorView;
 
@@ -114,20 +114,20 @@ public class IndoorHelperController {
        MainApplication.getMap().addToggleDialog(toolboxView);
 
        // Shortcuts
-       SpaceShortcut = Shortcut.registerShortcut("mapmode:space",
+       spaceShortcut = Shortcut.registerShortcut("mapmode:space",
                "ConfirmObjectDrawing", KeyEvent.VK_SPACE, Shortcut.DIRECT);
-       this.SpaceAction = new SpaceAction();
-       MainApplication.registerActionShortcut(SpaceAction, SpaceShortcut);
+       this.spaceAction = new SpaceAction();
+       MainApplication.registerActionShortcut(spaceAction, spaceShortcut);
 
-       EnterShortcut = Shortcut.registerShortcut("mapmode:enter",
+       enterShortcut = Shortcut.registerShortcut("mapmode:enter",
                "ConfirmMultipolygonSelection", KeyEvent.VK_ENTER, Shortcut.DIRECT);
-       this.EnterAction = new EnterAction();
-       MainApplication.registerActionShortcut(EnterAction, EnterShortcut);
+       this.enterAction = new EnterAction();
+       MainApplication.registerActionShortcut(enterAction, enterShortcut);
 
        // Helper
-       OuterHelp = false;
-       InnerHelp = false;
-       LevelHelp = false;
+       outerHelp = false;
+       innerHelp = false;
+       levelHelp = false;
        innerRelation = null;
        levelValue = new String();
        levelNum = new String();
@@ -327,8 +327,8 @@ public class IndoorHelperController {
            map.selectMapMode(drawAction);
 
            // For space shortcut to add the relation after spacebar got pushed {@link SpaceAction}
-           OuterHelp = true;
-           InnerHelp = false;
+           outerHelp = true;
+           innerHelp = false;
        }
    }
 
@@ -344,8 +344,8 @@ public class IndoorHelperController {
            map.selectMapMode(drawAction);
 
            // For space shortcut to edit the relation after enter got pushed {@link SpaceAction}{@link EnterAction}
-           InnerHelp = true;
-           OuterHelp = false;
+           innerHelp = true;
+           outerHelp = false;
 
        }
    }
@@ -418,7 +418,7 @@ public class IndoorHelperController {
 
        @Override
        public void actionPerformed(ActionEvent e) {
-           LevelHelp = true;
+           levelHelp = true;
 
            // Get insert level number out of SelectorView
            if (!selectorView.getLevelNumber().equals("")) {
@@ -509,16 +509,16 @@ public class IndoorHelperController {
 
     @Override
        public void actionPerformed(ActionEvent e) {
-           if (OuterHelp) {
+           if (outerHelp) {
 
                //Create new relation and add the currently drawn object to it
                model.addRelation("outer");
                map.selectMapMode(selectAction);
-               OuterHelp = false;
+               outerHelp = false;
 
                //Clear currently selection
                MainApplication.getLayerManager().getEditDataSet().clearSelection();
-           } else if (InnerHelp) {
+           } else if (innerHelp) {
 
                //Save new drawn relation for adding
                innerRelation = MainApplication.getLayerManager().getEditDataSet().getAllSelected();
@@ -526,7 +526,7 @@ public class IndoorHelperController {
 
                //Clear currently selection
                MainApplication.getLayerManager().getEditDataSet().clearSelection();
-           } else if (LevelHelp) {
+           } else if (levelHelp) {
 
                List<Tag> tags = new ArrayList<>();
                tags.add(new Tag("level", levelNum));
@@ -536,7 +536,7 @@ public class IndoorHelperController {
 
                //Change action
                map.selectMapMode(selectAction);
-               LevelHelp = false;
+               levelHelp = false;
            }
        }
    }
@@ -551,11 +551,11 @@ public class IndoorHelperController {
 
        @Override
        public void actionPerformed(ActionEvent e) {
-           if (InnerHelp && !OuterHelp) {
+           if (innerHelp && !outerHelp) {
                // Edit the new drawn relation member to selected relation
                model.editRelation("inner", innerRelation);
-               InnerHelp = false;
-           } else if ((InnerHelp && OuterHelp) || (OuterHelp && !InnerHelp)) {
+               innerHelp = false;
+           } else if ((innerHelp && outerHelp) || (outerHelp && !innerHelp)) {
                JOptionPane.showMessageDialog(null,
                        tr("Please press spacebar first to add \"outer\" object to relation."), tr("Relation-Error"), JOptionPane.ERROR_MESSAGE);
                resetHelper();
@@ -616,8 +616,8 @@ public class IndoorHelperController {
      * Function which resets the helper for relation adding
      */
     private void resetHelper() {
-        InnerHelp = false;
-        OuterHelp = false;
+        innerHelp = false;
+        outerHelp = false;
     }
 
     /**

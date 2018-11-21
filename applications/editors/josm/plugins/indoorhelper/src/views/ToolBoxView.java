@@ -25,7 +25,6 @@ import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.TextField;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
@@ -469,12 +468,12 @@ public class ToolBoxView extends ToggleDialog {
    public void setLevelLabel(String levelTag) {
        if (getLevelCheckBoxStatus() == false) {
           if (!levelTag.equals("")) {
-              this.levelLabel.setText((tr("Working level: {0}", levelTag)));
+              this.levelLabel.setText(tr("Working level: {0}", levelTag));
           } else {
-              this.levelLabel.setText((tr("Working level: NONE")));
+              this.levelLabel.setText(tr("Working level: NONE"));
           }
        } else {
-           this.levelLabel.setText((tr("Working level: NONE")));
+           this.levelLabel.setText(tr("Working level: NONE"));
        }
    }
 
@@ -504,7 +503,7 @@ public class ToolBoxView extends ToggleDialog {
        return this.repeatOnField.getText();
    }
 
-   
+
    /**
     * Clears the text boxes and sets an empty String.
     */

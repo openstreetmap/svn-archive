@@ -121,7 +121,7 @@ public class IndoorLevel {
 
             //Extract values
             if (val.indexOf("-") == 0) {
-                firstVal = (Integer.parseInt(val.split("-", 2)[1].split("-", 2)[0]))*-1;
+                firstVal = Integer.parseInt(val.split("-", 2)[1].split("-", 2)[0])*-1;
                 secVal = Integer.parseInt(val.split("-", 2)[1].split("-", 2)[1]);
             } else if (val.contains("-")) {
                 firstVal = Integer.parseInt(val.split("-")[0]);

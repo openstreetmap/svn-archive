@@ -61,12 +61,12 @@ public class IndoorHelperPlugin extends Plugin implements PaintableInvalidationL
      */
     public IndoorHelperPlugin(PluginInformation info) throws IOException {
         super(info);
+        exportValidator("/data/indoorhelper.validator.mapcss");
+        exportStyleFile("sit.mapcss");
+        exportStyleFile("entrance_door_icon.png");
+        exportStyleFile("entrance_icon.png");
+        exportStyleFile("elevator_icon.png");
         MainApplication.getLayerManager().addAndFireActiveLayerChangeListener(this);
-        this.exportValidator("/data/indoorhelper.validator.mapcss");
-        this.exportStyleFile("sit.mapcss");
-        this.exportStyleFile("entrance_door_icon.png");
-        this.exportStyleFile("entrance_icon.png");
-        this.exportStyleFile("elevator_icon.png");
     }
 
     @Override
@@ -85,27 +85,22 @@ public class IndoorHelperPlugin extends Plugin implements PaintableInvalidationL
      * @throws IOException if any I/O error occurs
      */
     private void exportValidator(String resourceName) throws IOException {
-        OutputStream resStreamOut = null;
-
         try (InputStream stream = IndoorHelperPlugin.class.getResourceAsStream(resourceName)) {
             if (stream == null) {
-                System.out.println("Validator: stream is null");
                 throw new IOException("Cannot get resource \"" + resourceName + "\" from Jar file.");
             }
 
-            int readBytes;
-            byte[] buffer = new byte[4096];
-
-            String valDirPath = Config.getDirs().getUserDataDirectory(true) + sep + "validator";
-            File valDir = new File(valDirPath);
+            File valDir = new File(Config.getDirs().getUserDataDirectory(true), "validator");
             valDir.mkdirs();
             String outPath = valDir.getAbsolutePath() +sep+ "indoorhelper.validator.mapcss";
 
-            resStreamOut = new FileOutputStream(outPath);
-            while ((readBytes = stream.read(buffer)) > 0) {
-                resStreamOut.write(buffer, 0, readBytes);
+            try (OutputStream resStreamOut = new FileOutputStream(outPath)) {
+                int readBytes;
+                byte[] buffer = new byte[4096];
+                while ((readBytes = stream.read(buffer)) > 0) {
+                    resStreamOut.write(buffer, 0, readBytes);
+                }
             }
-            resStreamOut.close();
         }
     }
 
@@ -149,19 +144,18 @@ public class IndoorHelperPlugin extends Plugin implements PaintableInvalidationL
     @Override
     public void paintableInvalidated(PaintableInvalidationEvent event) {
         AutoFilter currentAutoFilter = AutoFilterManager.getInstance().getCurrentAutoFilter();
-        String currentFilterValue = new String();
 
         if (currentAutoFilter != null) {
-            currentFilterValue = currentAutoFilter.getFilter().text.split("=")[1];
+            if (controller != null) {
+                String currentFilterValue = currentAutoFilter.getFilter().text.split("=")[1];
 
-            this.controller.setIndoorLevel(currentFilterValue);
-            this.controller.getIndoorLevel(currentFilterValue);
-            this.controller.unsetSpecificKeyFilter("repeat_on");
-
-        } else {
-            currentFilterValue = "";
-            this.controller.setIndoorLevel(currentFilterValue);
-            this.controller.getIndoorLevel(currentFilterValue);
+                controller.setIndoorLevel(currentFilterValue);
+                controller.getIndoorLevel(currentFilterValue);
+                controller.unsetSpecificKeyFilter("repeat_on");
+            }
+        } else if (controller != null) {
+            controller.setIndoorLevel("");
+            controller.getIndoorLevel("");
         }
     }
 

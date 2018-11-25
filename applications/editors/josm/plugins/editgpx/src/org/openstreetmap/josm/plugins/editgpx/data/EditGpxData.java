@@ -70,6 +70,7 @@ public class EditGpxData {
     /**
      * time of the oldest waypoint in the set of non-deleted waypoints
      * in this data (in seconds since Epoch)
+     * @return time in seconds since Epoch
      */
     public double minNonDeletedTime() {
         boolean foundOne = false;
@@ -79,7 +80,7 @@ public class EditGpxData {
             if (!track.isDeleted()) {
                 try {
                     double t = track.minNonDeletedTime();
-                    if ((!foundOne) || (t < minTime)) {
+                    if (!foundOne || t < minTime) {
                         minTime = t;
                     }
                     foundOne = true;

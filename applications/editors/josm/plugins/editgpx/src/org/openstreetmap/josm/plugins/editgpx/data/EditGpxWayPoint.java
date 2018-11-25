@@ -35,6 +35,7 @@ public class EditGpxWayPoint implements Comparable<EditGpxWayPoint> {
 
     /**
      * returns this waypoint's time in seconds since Epoch
+     * @return time in seconds since Epoch
      */
     public double getTime() {
         return time;

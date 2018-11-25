@@ -45,6 +45,7 @@ public class EditGpxTrackSegment {
     /**
      * time of the oldest waypoint in the set of non-deleted waypoints
      * in this segment (in seconds since Epoch)
+     * @return time in seconds since Epoch
      */
     public double minNonDeletedTime() {
         return Collections.min(getNonDeletedWaypoints()).time;

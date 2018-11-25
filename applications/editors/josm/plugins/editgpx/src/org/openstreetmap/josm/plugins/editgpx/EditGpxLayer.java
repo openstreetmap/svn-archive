@@ -130,8 +130,8 @@ public class EditGpxLayer extends Layer {
     /**
      * convert a DataSet to GPX
      *
-     * @param boolean anonTime If true set all time and date in GPX to 01/01/1970 00:00 ?
-     * @return GPXData
+     * @param anonTime If true set all time and date in GPX to 01/01/1970 00:00 ?
+     * @return GpxData
      */
     private GpxData toGpxData(boolean anonTime) {
         return data.createGpxData(anonTime);

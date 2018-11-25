@@ -106,6 +106,9 @@ public class EditGpxMode extends MapMode implements LayerChangeListener {
 
     /**
      * create rectangle out of two given corners
+     * @param p1 first corner
+     * @param p2 second corner
+     * @return rectangle
      */
     public Rectangle createRect(Point p1, Point p2) {
         int x,y,w,h;
@@ -136,6 +139,8 @@ public class EditGpxMode extends MapMode implements LayerChangeListener {
 
     /**
      * Draw a selection rectangle on screen.
+     * @param p1 first corner
+     * @param p2 second corner
      */
     private void paintRect(Point p1, Point p2) {
         if (mapFrame != null) {

@@ -1,11 +1,5 @@
 /* Validator file to check the indoor data for errors */
 
-/* rule which checks if every way and every POI has a level-tag */
-way[!level], node:unconnected[!level]{
-	throwWarning: tr("This object has no level tag.");
-	suggestAlternative: "Delete the object or use the plug-in to add a POI tag!";
-}
-
 /* rules for wrong assigned ways or nodes */
 node:unconnected[area], node:unconnected[highway]{
 	throwWarning: tr("You assigned properties to a node which should only be assigned to ways!");

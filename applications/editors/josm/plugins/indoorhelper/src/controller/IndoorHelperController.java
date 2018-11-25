@@ -30,7 +30,6 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -46,8 +45,6 @@ import org.openstreetmap.josm.data.Preferences;
 import org.openstreetmap.josm.data.osm.OsmDataManager;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Tag;
-import org.openstreetmap.josm.data.validation.OsmValidator;
-import org.openstreetmap.josm.data.validation.tests.MapCSSTagChecker;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.gui.help.HelpBrowser;
@@ -171,7 +168,7 @@ public class IndoorHelperController {
    /**
     * The listener which provides the handling of the applyButton.
     * Gets the texts which were written by the user and writes them to the OSM-data.
-    * After that it checks the tagged data  with the built-in validator file.
+    * After that it checks the tagged data.
     *
     * @author egru
     * @author rebsc
@@ -621,32 +618,20 @@ public class IndoorHelperController {
     }
 
     /**
-     * Forces JOSM to load the validator and mappaint settings.
+     * Forces JOSM to load the mappaint settings.
      */
     private void updateSettings() {
         Preferences.main().init(false);
-        MapCSSTagChecker tagChecker = OsmValidator.getTest(MapCSSTagChecker.class);
-            if (tagChecker != null) {
-                OsmValidator.initializeTests(Collections.singleton(tagChecker));
-            }
-
-            MapPaintStyles.readFromPreferences();
+        MapPaintStyles.readFromPreferences();
     }
 
     /**
-     * Enables or disables the preferences for the mapcss-style and the validator.
+     * Enables or disables the preferences for the mapcss-style.
      *
      * @param enabled Activates or disables the settings.
      */
     private void setPluginPreferences(boolean enabled) {
        Map<String, Setting<?>> settings = Preferences.main().getAllSettings();
-
-       MapListSetting validatorMapListSetting = (MapListSetting) settings.
-               get("validator.org.openstreetmap.josm.data.validation.tests.MapCSSTagChecker.entries");
-       List<Map<String, String>> validatorMaps = new ArrayList<>();
-       if (validatorMapListSetting != null) {
-           validatorMaps = validatorMapListSetting.getValue();
-       }
 
        MapListSetting styleMapListSetting = (MapListSetting) settings.
                get("mappaint.style.entries");
@@ -656,30 +641,6 @@ public class IndoorHelperController {
        }
 
        if (enabled) {
-           //set the validator active
-
-           List<Map<String, String>> validatorMapsNew = new ArrayList<>();
-           if (!validatorMaps.isEmpty()) {
-               validatorMapsNew.addAll(validatorMaps);
-           }
-
-           for (Map<String, String> map : validatorMapsNew) {
-               if (map.containsValue(tr("Indoor"))) {
-                   validatorMapsNew.remove(map);
-                   break;
-               }
-           }
-
-           Map<String, String> indoorValidator = new HashMap<>();
-           indoorValidator.put("title", "Indoor");
-           indoorValidator.put("active", "true");
-           indoorValidator.put("url", Config.getDirs().getUserDataDirectory(true)+ sep +"validator" +
-                   sep + "indoorhelper.validator.mapcss");
-
-           validatorMapsNew.add(indoorValidator);
-           Config.getPref().putListOfMaps("validator.org.openstreetmap.josm.data.validation.tests.MapCSSTagChecker.entries",
-                   validatorMapsNew);
-
            //set mappaint active
 
            List<Map<String, String>> styleMapsNew = new ArrayList<>();
@@ -703,33 +664,7 @@ public class IndoorHelperController {
 
            updateSettings();
        } else {
-           //set the validator inactive
-
-
-           List<Map<String, String>> validatorMapsNew = new ArrayList<>();
-           if (!validatorMaps.isEmpty()) {
-               validatorMapsNew.addAll(validatorMaps);
-           }
-
-           for (Map<String, String> map : validatorMapsNew) {
-               if (map.containsValue(tr("Indoor"))) {
-                   validatorMapsNew.remove(map);
-                   break;
-               }
-           }
-           Map<String, String> indoorValidator = new HashMap<>();
-           indoorValidator.put("title", tr("Indoor"));
-           indoorValidator.put("active", "false");
-           indoorValidator.put("url", Config.getDirs().getUserDataDirectory(true)+ sep +"validator" +
-                   sep + "indoorhelper.validator.mapcss");
-
-           validatorMapsNew.add(indoorValidator);
-           Config.getPref().putListOfMaps("validator.org.openstreetmap.josm.data.validation.tests.MapCSSTagChecker.entries",
-                   validatorMapsNew);
-
-
            //set mappaint inactive
-
 
            List<Map<String, String>> styleMapsNew = new ArrayList<>();
            if (!styleMaps.isEmpty()) {

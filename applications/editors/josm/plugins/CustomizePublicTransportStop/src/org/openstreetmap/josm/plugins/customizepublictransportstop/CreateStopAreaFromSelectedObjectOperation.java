@@ -9,7 +9,6 @@ import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.RelationMember;
-import sun.security.provider.certpath.IndexedCollectionCertStore;
 
 /**
  * Operation of constructing of stop area object from selected JOSM object

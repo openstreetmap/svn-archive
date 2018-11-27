@@ -61,7 +61,6 @@ public class IndoorHelperPlugin extends Plugin implements PaintableInvalidationL
      */
     public IndoorHelperPlugin(PluginInformation info) throws IOException {
         super(info);
-        exportValidator("/data/indoorhelper.validator.mapcss");
         exportStyleFile("sit.mapcss");
         exportStyleFile("entrance_door_icon.png");
         exportStyleFile("entrance_icon.png");
@@ -76,31 +75,6 @@ public class IndoorHelperPlugin extends Plugin implements PaintableInvalidationL
         if (oldFrame == null && newFrame != null) {
             // Secures that the plug-in is only loaded, if a new MapFrame is created.
             controller = new IndoorHelperController();
-        }
-    }
-
-    /**
-     * Exports the mapcss validator file to the preferences directory.
-     * @param resourceName resource name
-     * @throws IOException if any I/O error occurs
-     */
-    private void exportValidator(String resourceName) throws IOException {
-        try (InputStream stream = IndoorHelperPlugin.class.getResourceAsStream(resourceName)) {
-            if (stream == null) {
-                throw new IOException("Cannot get resource \"" + resourceName + "\" from Jar file.");
-            }
-
-            File valDir = new File(Config.getDirs().getUserDataDirectory(true), "validator");
-            valDir.mkdirs();
-            String outPath = valDir.getAbsolutePath() +sep+ "indoorhelper.validator.mapcss";
-
-            try (OutputStream resStreamOut = new FileOutputStream(outPath)) {
-                int readBytes;
-                byte[] buffer = new byte[4096];
-                while ((readBytes = stream.read(buffer)) > 0) {
-                    resStreamOut.write(buffer, 0, readBytes);
-                }
-            }
         }
     }
 

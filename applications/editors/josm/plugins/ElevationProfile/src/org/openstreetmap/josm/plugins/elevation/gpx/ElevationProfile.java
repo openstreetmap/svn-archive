@@ -193,7 +193,7 @@ IGpxWaypointVisitor {
      */
     protected void setStart(WayPoint wp) {
         importantWayPoints[WAYPOINT_START] = wp;
-        this.start = wp.getTime();
+        this.start = wp.getDate();
     }
 
     /**
@@ -201,7 +201,7 @@ IGpxWaypointVisitor {
      */
     protected void setEnd(WayPoint wp) {
         importantWayPoints[WAYPOINT_END] = wp;
-        this.end = wp.getTime();
+        this.end = wp.getDate();
     }
 
     public void setParent(IElevationProfile parent) {
@@ -303,7 +303,7 @@ IGpxWaypointVisitor {
         WayPoint wp2 = getEndWayPoint();
 
         if (wp1 != null && wp2 != null) {
-            long diff = wp2.getTime().getTime() - wp1.getTime().getTime();
+            long diff = wp2.getDate().getTime() - wp1.getDate().getTime();
             return diff;
         }
 
@@ -376,11 +376,11 @@ IGpxWaypointVisitor {
      */
     @Override
     public void visitWayPoint(WayPoint wp) {
-        if (wp.getTime().after(end)) {
+        if (wp.getDate().after(end)) {
             setEnd(wp);
         }
 
-        if (wp.getTime().before(start)) {
+        if (wp.getDate().before(start)) {
             setStart(wp);
         }
 

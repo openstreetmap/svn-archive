@@ -342,7 +342,7 @@ public final class ElevationHelper {
         if (wpt == null) return -1;
 
         Calendar calendar = GregorianCalendar.getInstance(); // creates a new calendar instance
-        calendar.setTime(wpt.getTime());   // assigns calendar to given date
+        calendar.setTime(wpt.getDate());   // assigns calendar to given date
         return calendar.get(Calendar.HOUR_OF_DAY);
     }
 
@@ -353,7 +353,7 @@ public final class ElevationHelper {
         if (wpt == null) return -1;
 
         Calendar calendar = GregorianCalendar.getInstance(); // creates a new calendar instance
-        calendar.setTime(wpt.getTime());   // assigns calendar to given date
+        calendar.setTime(wpt.getDate());   // assigns calendar to given date
         return calendar.get(Calendar.MINUTE);
     }
 }

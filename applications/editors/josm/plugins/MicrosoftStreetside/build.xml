@@ -13,7 +13,7 @@
     <property name="plugin.class" value="org.openstreetmap.josm.plugins.streetside.StreetsidePlugin" />
     <property name="plugin.description" value="View high resolution Microsoft Streetside 360 degree imagery in JOSM." />
     <property name="plugin.icon" value="images/streetside-logo-white.png" />
-    <property name="plugin.link" value="https://github.com/spatialdev/MicrosoftStreetside"/>
+    <!--<property name="plugin.link" value="https://github.com/spatialdev/MicrosoftStreetside"/>-->
 
     <property name="plugin.canloadatruntime" value="true"/>
 

@@ -51,9 +51,9 @@ public class EditGpxTrack {
                     if (anonTime) {
                         // convert to anonymous time
                         for (WayPoint w : points) {
-                            double t = w.time - minTime;
+                            double t = w.getTime() - minTime;
                             w.setTimeInMillis((long)(t * 1000));
-                            assert w.time == t;
+                            assert w.getTime() == t;
                             if (w.attr.containsKey("name")) {
                                 w.attr.put("name", "anon"); //time information can also be in "name" field. so delete time information
                             }

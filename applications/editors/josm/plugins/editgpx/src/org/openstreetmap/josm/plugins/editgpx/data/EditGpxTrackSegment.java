@@ -48,7 +48,7 @@ public class EditGpxTrackSegment {
      * @return time in seconds since Epoch
      */
     public double minNonDeletedTime() {
-        return Collections.min(getNonDeletedWaypoints()).time;
+        return Collections.min(getNonDeletedWaypoints()).getTime();
     }
 
 }

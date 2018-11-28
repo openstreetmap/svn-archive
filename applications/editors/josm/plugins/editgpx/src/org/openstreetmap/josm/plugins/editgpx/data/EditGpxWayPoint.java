@@ -13,14 +13,14 @@ public class EditGpxWayPoint implements Comparable<EditGpxWayPoint> {
     private Map<String, Object> attributes;
 
     public EditGpxWayPoint(WayPoint wayPoint) {
-        this.time = wayPoint.time;
+        this.time = wayPoint.getTime();
         this.coor = new CachedLatLon(wayPoint.getCoor());
         this.attributes = new HashMap<>(wayPoint.attr);
     }
 
     public WayPoint createWayPoint() {
         WayPoint result = new WayPoint(getCoor());
-        result.time = time;
+        result.setTime((long) time);
         result.attr = attributes;
         return result;
     }

@@ -131,8 +131,7 @@ public class Tcx extends FileImporter {
         XMLGregorianCalendar time = tp.getTime();
 
         if (time != null) {
-            waypt.attr.put("time", time.toString());
-            waypt.time = .001 * time.toGregorianCalendar().getTimeInMillis();
+            waypt.setTimeInMillis(time.toGregorianCalendar().getTimeInMillis());
         }
 
         return waypt;

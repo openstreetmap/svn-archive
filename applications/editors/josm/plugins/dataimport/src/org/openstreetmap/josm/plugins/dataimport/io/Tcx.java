@@ -158,8 +158,7 @@ public class Tcx extends FileImporter {
 
                                         if (waypt != null) {
                                             if (startTime != null) {
-                                                waypt.attr.put("name", "LAP"
-                                                               + (++lap));
+                                                waypt.attr.put("name", "LAP" + ++lap);
                                                 gpxData.waypoints.add(waypt);
                                                 startTime = null;
                                             }

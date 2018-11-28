@@ -28,6 +28,7 @@ import org.openstreetmap.josm.gui.layer.markerlayer.MarkerLayer;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.spi.preferences.Config;
 import org.openstreetmap.josm.tools.Logging;
+import org.openstreetmap.josm.tools.date.DateUtils;
 
 /**
  * Data import for TangoGPS file format.
@@ -66,8 +67,7 @@ public class TangoGPS extends FileImporter {
                         WayPoint currentWayPoint = new WayPoint(
                                 parseLatLon(lineElements));
                         currentWayPoint.attr.put("ele", lineElements[2]);
-                        currentWayPoint.attr.put("time", lineElements[6]);
-                        currentWayPoint.setTime();
+                        currentWayPoint.setTimeInMillis(DateUtils.tsFromString(lineElements[6]));
                         currentTrackSeg.add(currentWayPoint);
                         imported++;
                     } catch (NumberFormatException e) {

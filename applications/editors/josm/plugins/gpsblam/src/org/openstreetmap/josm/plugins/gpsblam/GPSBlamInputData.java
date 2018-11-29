@@ -53,7 +53,7 @@ class GPSBlamInputData extends LinkedList<CachedLatLon> {
 
                                 CachedLatLon cll = new CachedLatLon(wayPoint.getCoor());
                                 Point p = MainApplication.getMap().mapView.getPoint(cll.getEastNorth(projection));
-                                double pX = p.x-p1.x, pY=p.y-p1.y; // vector from point clicked to waypoint
+                                double pX = p.x-p1.x, pY = p.y-p1.y; // vector from point clicked to waypoint
                                 double pPar = pX*dirX + pY*dirY; // parallel component
                                 double pPerp = pX*perpdirX + pY*perpdirY; // perpendicular component
                                 double pardist = 0.0;
@@ -79,7 +79,7 @@ class GPSBlamInputData extends LinkedList<CachedLatLon> {
     private void add(CachedLatLon cll, WayPoint wayPoint) {
         this.add(cll);
         Calendar day = new GregorianCalendar();
-        day.setTimeInMillis((long) (wayPoint.time*1000d));
+        day.setTimeInMillis(wayPoint.getTimeInMillis());
         day.set(Calendar.HOUR_OF_DAY, 0);
         day.set(Calendar.MINUTE, 0);
         day.set(Calendar.SECOND, 0);

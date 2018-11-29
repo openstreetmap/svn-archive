@@ -223,7 +223,7 @@ class InfoMode extends MapMode implements MapViewPaintable, AWTEventListener {
                 boolean f = true;
                 sg: for (GpxTrackSegment seg : track.getSegments()) {
                     for (WayPoint S : seg.getWayPoints()) {
-                        if (S.time != 0) {
+                        if (S.hasDate()) {
                             f = false;
                             break sg;
                         }
@@ -287,9 +287,9 @@ class InfoMode extends MapMode implements MapViewPaintable, AWTEventListener {
                 if (wp != wpOld) {
                     if (oldPopup != null) oldPopup.hide();
                     double vel = -1;
-                    if (prevWp != null && wp.time != prevWp.time) {
+                    if (prevWp != null && wp.getTimeInMillis() != prevWp.getTimeInMillis()) {
                         vel = wp.getCoor().greatCircleDistance(prevWp.getCoor())/
-                                (wp.time-prevWp.time);
+                                (wp.getTime()-prevWp.getTime());
                     }
                     infoPanel.setData(wp, trk, vel, gpxL.data.tracks);
                     Popup pp = PopupFactory.getSharedInstance().getPopup(mv, infoPanel, pcx, pcy);

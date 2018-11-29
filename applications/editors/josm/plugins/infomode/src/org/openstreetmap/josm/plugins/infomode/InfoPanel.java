@@ -77,8 +77,8 @@ class InfoPanel extends JPanel {
             double tm = -1;
             for (GpxTrackSegment seg : trk.getSegments()) {
                     for (WayPoint S : seg.getWayPoints()) {
-                        if (S.time > tm) {
-                            tm = S.time;
+                        if (S.getTime() > tm) {
+                            tm = S.getTime();
                         }
                     }
                 }
@@ -87,7 +87,7 @@ class InfoPanel extends JPanel {
                 boolean f = true;
                 sg: for (GpxTrackSegment seg : track.getSegments()) {
                     for (WayPoint S : seg.getWayPoints()) {
-                        if (S.time > tm) {
+                        if (S.getTime() > tm) {
                             f = false;
                             break sg;
                         }
@@ -104,11 +104,11 @@ class InfoPanel extends JPanel {
     void setData(WayPoint wp, GpxTrack trk, double vel, Collection<GpxTrack> tracks) {
         this.tracks = tracks;
         this.trk = trk;
-        if (wp.time == 0.0) {
+        if (!wp.hasDate()) {
             label1.setText(tr("No timestamp"));
             but2.setVisible(false);
         } else {
-            label1.setText(DateUtils.formatDateTime(wp.getTime(), DateFormat.DEFAULT, DateFormat.DEFAULT));
+            label1.setText(DateUtils.formatDateTime(wp.getDate(), DateFormat.DEFAULT, DateFormat.DEFAULT));
             but2.setVisible(true);
         }
         if (vel > 0) {

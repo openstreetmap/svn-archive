@@ -150,7 +150,7 @@
                 private="true"
                 linksource="true"
                 author="false">
-            <link href="http://docs.oracle.com/javase/8/docs/api"/>
+            <link href="https://docs.oracle.com/javase/8/docs/api"/>
             <doctitle><![CDATA[<h2>JMapViewer - Javadoc</h2>]]></doctitle>
             <bottom><![CDATA[<a href="https://josm.openstreetmap.de/">JMapViewer</a>]]></bottom>
             <arg value="-html5" if:set="isJava9" />

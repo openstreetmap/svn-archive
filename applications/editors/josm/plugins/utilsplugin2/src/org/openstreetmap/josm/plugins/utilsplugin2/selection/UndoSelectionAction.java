@@ -29,46 +29,56 @@ public class UndoSelectionAction extends JosmAction {
         putValue("help", ht("/Action/UndoSelection"));
     }
 
-    private int myAutomaticSelectionHash;
     private Collection<OsmPrimitive> lastSel;
     private int index;
+
     @Override
     public void actionPerformed(ActionEvent e) {
         DataSet ds = getLayerManager().getEditDataSet();
         if (ds != null) {
             LinkedList<Collection<? extends OsmPrimitive>> history = ds.getSelectionHistory();
             if (history == null || history.isEmpty()) return; // empty history
-            int num = history.size();
-
-            Collection<OsmPrimitive> selection = ds.getSelected();
-
-            if (selection != null && selection.hashCode() != myAutomaticSelectionHash) {
-                // manual selection or another pluging selection noticed
-                index = history.indexOf(lastSel);
-                // first is selected, next list is previous selection
+            if (lastSel != null) {
+            	Collection<OsmPrimitive> selection = ds.getSelected();
+            	if (selection.containsAll(lastSel) && lastSel.containsAll(selection)) {
+            		// repeated action
+            	} else {
+            		index = -1;
+            	}
             }
+
+            int num = history.size();
             int k = 0;
+
             Set<OsmPrimitive> newsel = new HashSet<>();
-            do {
+            while (k < num) {
                 if (index+1 < history.size()) index++; else index = 0;
                 Collection<? extends OsmPrimitive> histsel = history.get(index);
                 // remove deleted entities from selection
                 newsel.clear();
                 newsel.addAll(histsel);
-                newsel.retainAll(ds.allNonDeletedPrimitives());
-                if (!newsel.isEmpty()) break;
+                newsel.removeIf(p -> p == null || p.isDeleted());
                 k++;
-            } while (k < num);
+                if (!newsel.isEmpty()) {
+                	if (newsel.containsAll(ds.getSelected()) && ds.getSelected().containsAll(newsel)) {
+                		// ignore no-change selection
+                		continue;
+                	}
+                	break;
+                }
+            }
 
+            // set new selection (is added to history)
             ds.setSelected(newsel);
             lastSel = ds.getSelected();
-            myAutomaticSelectionHash = lastSel.hashCode();
-            // remember last automatic selection
         }
     }
 
     @Override
     protected void updateEnabledState() {
-        setEnabled(getLayerManager().getEditDataSet() != null);
+    	DataSet ds = getLayerManager().getEditDataSet();
+    	lastSel = null;
+    	index = -1;
+		setEnabled(ds != null && ds.getSelectionHistory().isEmpty());
     }
 }

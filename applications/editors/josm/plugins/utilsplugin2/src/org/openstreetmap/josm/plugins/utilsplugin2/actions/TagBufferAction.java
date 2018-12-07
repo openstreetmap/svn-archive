@@ -7,12 +7,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
-import java.util.function.Predicate;
 
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.command.ChangePropertyCommand;
@@ -20,6 +17,8 @@ import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.SequenceCommand;
 import org.openstreetmap.josm.data.UndoRedoHandler;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.data.osm.Tag;
+import org.openstreetmap.josm.data.osm.TagCollection;
 import org.openstreetmap.josm.tools.Shortcut;
 import org.openstreetmap.josm.tools.SubclassFilteredCollection;
 
@@ -30,11 +29,9 @@ import org.openstreetmap.josm.tools.SubclassFilteredCollection;
  */
 public class TagBufferAction extends JosmAction {
     private static final String TITLE = tr("Copy tags from previous selection");
-    private static final Predicate<OsmPrimitive> IS_TAGGED_PREDICATE = object -> object.isTagged();
-    private Map<String, String> tags = new HashMap<>();
-    private Map<String, String> currentTags = new HashMap<>();
-    private Set<OsmPrimitive> selectionBuf = new HashSet<>();
-
+    private static final TagCollection EmptyTags = new TagCollection();
+    private final Set<OsmPrimitive> selectionBuf = new HashSet<>();
+    private TagCollection tagsToPaste = EmptyTags;
     /**
      * Constructs a new {@code TagBufferAction}.
      */
@@ -50,21 +47,20 @@ public class TagBufferAction extends JosmAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         Collection<OsmPrimitive> selection = getLayerManager().getEditDataSet().getSelected();
-        if (selection.isEmpty())
+        if (selection.isEmpty() || tagsToPaste.isEmpty())
             return;
 
         List<Command> commands = new ArrayList<>();
-        for (String key : tags.keySet()) {
-            String value = tags.get(key);
+        for (Tag tag : tagsToPaste) {
             boolean foundNew = false;
             for (OsmPrimitive p : selection) {
-                if (!p.hasKey(key) || !p.get(key).equals(value)) {
+                if (!p.hasTag(tag.getKey(), tag.getValue())) {
                     foundNew = true;
                     break;
                 }
             }
             if (foundNew)
-                commands.add(new ChangePropertyCommand(selection, key, value));
+                commands.add(new ChangePropertyCommand(selection, tag.getKey(), tag.getValue()));
         }
 
         if (!commands.isEmpty())
@@ -75,66 +71,32 @@ public class TagBufferAction extends JosmAction {
     protected void updateEnabledState() {
         if (getLayerManager().getEditDataSet() == null) {
             setEnabled(false);
-            if (selectionBuf != null)
-                selectionBuf.clear();
+            selectionBuf.clear();
+            tagsToPaste = EmptyTags;
         } else
             updateEnabledState(getLayerManager().getEditDataSet().getSelected());
     }
 
     @Override
     protected void updateEnabledState(Collection<? extends OsmPrimitive> selection) {
-        // selection changed => check if selection is completely different from before
-        boolean foundOld = false;
-        if (selection != null) {
-            for (OsmPrimitive p : selectionBuf) {
-                if (selection.contains(p)) {
-                    foundOld = true;
-                    break;
-                }
-            }
-            selectionBuf.clear();
-            selectionBuf.addAll(selection);
-        } else {
-            foundOld = selectionBuf.isEmpty();
-            selectionBuf.clear();
-        }
-        if (!foundOld) {
-            // selection has completely changed, remember tags
-            tags.clear();
-            tags.putAll(currentTags);
-        }
-        if (getLayerManager().getEditDataSet() != null)
-            rememberSelectionTags();
+    	TagCollection oldTags = getCommonTags(selectionBuf);
+    	if (!oldTags.isEmpty()) {
+            tagsToPaste = new TagCollection(oldTags);
+    	}
+    	selectionBuf.clear();
+    	selectionBuf.addAll(selection);
 
-        setEnabled(selection != null && !selection.isEmpty() && !tags.isEmpty());
+        setEnabled(!selection.isEmpty() && !tagsToPaste.isEmpty());
     }
 
-    private void rememberSelectionTags() {
-        // Fix #8350 - only care about tagged objects
-        final Collection<OsmPrimitive> selectedTaggedObjects = SubclassFilteredCollection.filter(
-                getLayerManager().getEditDataSet().getSelected(), IS_TAGGED_PREDICATE);
-        if (!selectedTaggedObjects.isEmpty()) {
-            currentTags.clear();
-            Set<String> bad = new HashSet<>();
-            for (OsmPrimitive p : selectedTaggedObjects) {
-                if (currentTags.isEmpty()) {
-                    for (String key : p.keySet()) {
-                        currentTags.put(key, p.get(key));
-                    }
-                } else {
-                    for (String key : p.keySet()) {
-                        if (!currentTags.containsKey(key) || !currentTags.get(key).equals(p.get(key)))
-                            bad.add(key);
-                    }
-                    for (String key : currentTags.keySet()) {
-                        if (!p.hasKey(key))
-                            bad.add(key);
-                    }
-                }
-            }
-            for (String key : bad) {
-                currentTags.remove(key);
-            }
-        }
+    /**
+     * Find those tags which appear in all primitives of the selection
+     * @param selection the selection
+     */
+    private static TagCollection getCommonTags(Set<OsmPrimitive> selection) {
+    	if (selection.isEmpty())
+    		return EmptyTags;
+//		// Fix #8350 - only care about tagged objects
+		return TagCollection.commonToAllPrimitives(SubclassFilteredCollection.filter(selection, p -> p.isTagged()));
     }
 }

@@ -9,12 +9,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 import org.apache.log4j.Logger;
+import org.openstreetmap.josm.gui.MainApplication;
+import java.util.concurrent.ExecutionException;
 import org.openstreetmap.josm.plugins.streetside.StreetsideAbstractImage;
 import org.openstreetmap.josm.plugins.streetside.StreetsideCubemap;
 import org.openstreetmap.josm.plugins.streetside.StreetsideDataListener;
@@ -27,7 +30,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 // JavaFX access in Java 8
-@SuppressWarnings("restriction")
 public class CubemapBuilder implements ITileDownloadingTaskListener, StreetsideDataListener {
 
   final static Logger logger = Logger.getLogger(CubemapBuilder.class);
@@ -39,6 +41,7 @@ public class CubemapBuilder implements ITileDownloadingTaskListener, StreetsideD
   private long startTime;
 
 	private Map<String, BufferedImage> tileImages = new ConcurrentHashMap<>();
+  private ExecutorService pool;
 
 	private int currentTileCount = 0;
 
@@ -111,6 +114,11 @@ public class CubemapBuilder implements ITileDownloadingTaskListener, StreetsideD
 	}
 
 	public void downloadCubemapImages(String imageId) {
+    if(StreetsideViewerPanel.getThreeSixtyDegreeViewerPanel().getScene() != StreetsideViewerPanel.getThreeSixtyDegreeViewerPanel().getLoadingScene()) {
+      StreetsideViewerPanel.getThreeSixtyDegreeViewerPanel().setScene(
+  	      StreetsideViewerPanel.getThreeSixtyDegreeViewerPanel().getLoadingScene()
+  	  );
+	  }
 
 	  final int maxThreadCount = StreetsideProperties.DOWNLOAD_CUBEFACE_TILES_TOGETHER.get()?6:6 * CubemapUtils.getMaxCols() * CubemapUtils.getMaxRows();
 
@@ -123,9 +131,14 @@ public class CubemapBuilder implements ITileDownloadingTaskListener, StreetsideD
 
     long startTime = System.currentTimeMillis();
 
+    if(CubemapBuilder.getInstance().getTileImages().keySet().size() > 0) {
+      pool.shutdownNow();
+      CubemapBuilder.getInstance().resetTileImages();
+    }
+
     try {
 
-      ExecutorService pool = Executors.newFixedThreadPool(maxThreadCount);
+      pool = Executors.newFixedThreadPool(maxThreadCount);
       List<Callable<List<String>>> tasks = new ArrayList<>(maxThreadCount);
 
       if (StreetsideProperties.DOWNLOAD_CUBEFACE_TILES_TOGETHER.get()) {
@@ -150,21 +163,7 @@ public class CubemapBuilder implements ITileDownloadingTaskListener, StreetsideD
               }
             }
           }
-
-          List<Future<List<String>>> results = pool.invokeAll(tasks);
-          for (Future<List<String>> ff : results) {
-            if (StreetsideProperties.DEBUGING_ENABLED.get() && results!=null) {
-              logger.debug(
-                MessageFormat.format(
-                  "Completed tile downloading task {0} in {1} seconds.", ff.get().toString(),
-                  ((System.currentTimeMillis()) - startTime)/1000)
-                );
-            } else {
-              logger.error(MessageFormat.format("Results of downloading tasks for image id {0} are null!", imageId));
-            }
-          }
-
-          // launch 16-tiled (high-res) downloading tasks
+        // launch 16-tiled (high-res) downloading tasks
         } else if (StreetsideProperties.SHOW_HIGH_RES_STREETSIDE_IMAGERY.get()) {
 
           for (int i = 0; i < CubemapUtils.NUM_SIDES; i++) {
@@ -180,18 +179,25 @@ public class CubemapBuilder implements ITileDownloadingTaskListener, StreetsideD
         }
       } // finish preparing tasks for invocation
 
-      List<Future<List<String>>> results = pool.invokeAll(tasks);
-      for (Future<List<String>> ff : results) {
-        if (StreetsideProperties.DEBUGING_ENABLED.get() && results!=null) {
-          logger.debug(
-            MessageFormat.format(
-              "Completed tile downloading task {0} in {1} seconds.", ff.get().toString(),
-              ((System.currentTimeMillis()) - startTime)/1000)
-            );
-        } else {
-          logger.error(MessageFormat.format("Results of downloading tasks for image id {0} are null!", imageId));
+      // execute tasks
+			MainApplication.worker.submit(() -> {
+			  try {
+          List<Future<List<String>>> results = pool.invokeAll(tasks);
+          
+          if(StreetsideProperties.DEBUGING_ENABLED.get() && results != null) {
+            for (Future<List<String>> ff : results) {
+              try {
+                logger.debug(MessageFormat.format("Completed tile downloading task {0} in {1} seconds.",ff.get().toString(),
+                  (System.currentTimeMillis() - startTime)/1000));
+              } catch (ExecutionException e) {
+                logger.error(e);
+              }
+            }
+          }
+        } catch (InterruptedException e) {
+         logger.error(e);
         }
-      }
+			});
     } catch (Exception ee) {
       fails++;
       logger.error("Error loading tile for image " + imageId);

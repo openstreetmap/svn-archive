@@ -6,16 +6,6 @@
          -->
     <!-- enter the SVN commit message -->
     <property name="commit.message" value="Commit message" />
-    <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
-    <property name="plugin.main.version" value="14183" />
-
-    <property name="plugin.author" value="renerr18" />
-    <property name="plugin.class" value="org.openstreetmap.josm.plugins.streetside.StreetsidePlugin" />
-    <property name="plugin.description" value="View high resolution Microsoft Streetside 360 degree imagery in JOSM." />
-    <property name="plugin.icon" value="images/streetside-logo-white.png" />
-    <!--<property name="plugin.link" value="https://github.com/spatialdev/MicrosoftStreetside"/>-->
-
-    <property name="plugin.canloadatruntime" value="true"/>
 
     <!-- edit the properties of this plugin in the file `gradle.properties` -->
     <property file="${basedir}/gradle.properties"/>

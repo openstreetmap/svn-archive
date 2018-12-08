@@ -29,7 +29,6 @@ public class ScanexTileSource extends TMSTileSource {
 
     private enum ScanexLayer {
         IRS("irs", "/TileSender.ashx?ModeKey=tile&MapName=F7B8CF651682420FA1749D894C8AD0F6&LayerName=BAC78D764F0443BD9AF93E7A998C9F5B"),
-        SPOT("spot", "/TileSender.ashx?ModeKey=tile&MapName=F7B8CF651682420FA1749D894C8AD0F6&LayerName=F51CE95441284AF6B2FC319B609C7DEC");
 
         private final String name;
         private final String uri;

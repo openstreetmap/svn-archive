@@ -82,6 +82,8 @@ public class SplitObjectAction extends JosmAction {
                     selectedWay = selWay;           // use another way as selected way
                 }
             }
+        } else if (selectedWays.size() == 1) {
+            selectedWay = selectedWays.get(0);      // two nodes and a way is selected, so use this selected way
         }
 
         // If only nodes are selected, try to guess which way to split. This works if there
@@ -222,6 +224,8 @@ public class SplitObjectAction extends JosmAction {
      * does not check whether the selected items are really a valid
      * input for splitting (this would be too expensive to be carried
      * out from the selectionChanged listener).
+     * @param selection the selection
+     * @return true if the selection is usable
      */
     private boolean checkSelection(Collection<? extends OsmPrimitive> selection) {
         int node = 0;

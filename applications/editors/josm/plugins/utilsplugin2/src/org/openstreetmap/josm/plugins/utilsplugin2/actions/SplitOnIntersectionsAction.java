@@ -8,9 +8,12 @@ import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import javax.swing.JOptionPane;
 
@@ -21,6 +24,7 @@ import org.openstreetmap.josm.command.SplitWayCommand;
 import org.openstreetmap.josm.data.UndoRedoHandler;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.gui.Notification;
 import org.openstreetmap.josm.tools.Shortcut;
@@ -33,10 +37,10 @@ import org.openstreetmap.josm.tools.Shortcut;
  */
 public class SplitOnIntersectionsAction extends JosmAction {
     private static final String TITLE = tr("Split adjacent ways");
-
+    private static final String TOOL_DESC = tr("Split adjacent ways on T-intersections");
     public SplitOnIntersectionsAction() {
-        super(TITLE, "dumbutils/splitonintersections", tr("Split adjacent ways on T-intersections"),
-                Shortcut.registerShortcut("tools:splitonintersections", tr("Tool: {0}", tr("Split adjacent ways")),
+        super(TITLE, "dumbutils/splitonintersections", TOOL_DESC,
+                Shortcut.registerShortcut("tools:splitonintersections", tr("Tool: {0}", TITLE),
                         KeyEvent.VK_P, Shortcut.ALT_CTRL_SHIFT), true);
     }
 
@@ -83,15 +87,36 @@ public class SplitOnIntersectionsAction extends JosmAction {
                 }
         }
 
+		if (splitWays.isEmpty()) {
+			new Notification(tr("The selection cannot be used for action ''{0}''", TOOL_DESC))
+					.setIcon(JOptionPane.WARNING_MESSAGE).show();
+			return;
+		}
+
+		// fix #16006: Don't generate SequenceCommand when ways are part of the same relation.
+        boolean createSequenceCommand = true;
+        Set<Relation> allWayRefs = new HashSet<>();
         for (Way splitWay : splitWays.keySet()) {
-            List<List<Node>> wayChunks = SplitWayCommand.buildSplitChunks(splitWay, splitWays.get(splitWay));
-            if (wayChunks != null) {
-                list.add(SplitWayCommand.splitWay(splitWay, wayChunks, new ArrayList<>(selectedWays)));
+            for (Relation rel : OsmPrimitive.getFilteredList(splitWay.getReferrers(), Relation.class)) {
+                createSequenceCommand &= allWayRefs.add(rel);
             }
+        }
+        for (Entry<Way, List<Node>> entry : splitWays.entrySet()) {
+        	SplitWayCommand cmd = SplitWayCommand.split(entry.getKey(), entry.getValue(), selectedWays);
+        	if (!createSequenceCommand) {
+        		UndoRedoHandler.getInstance().add(cmd);
+        	}
+        	list.add(cmd);
         }
 
         if (!list.isEmpty()) {
-            UndoRedoHandler.getInstance().add(list.size() == 1 ? list.get(0) : new SequenceCommand(TITLE, list));
+            if (createSequenceCommand) {
+                UndoRedoHandler.getInstance().add(list.size() == 1 ? list.get(0) : new SequenceCommand(TITLE, list));
+            } else {
+				new Notification(
+						tr("Affected ways are members of the same relation. {0} actions were created for this split.",
+								list.size())).setIcon(JOptionPane.WARNING_MESSAGE).show();
+			}
             getLayerManager().getEditDataSet().clearSelection();
         }
     }

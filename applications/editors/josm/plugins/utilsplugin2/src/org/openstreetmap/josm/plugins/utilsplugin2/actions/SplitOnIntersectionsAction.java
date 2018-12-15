@@ -40,8 +40,8 @@ public class SplitOnIntersectionsAction extends JosmAction {
     private static final String TOOL_DESC = tr("Split adjacent ways on T-intersections");
     public SplitOnIntersectionsAction() {
         super(TITLE, "dumbutils/splitonintersections", TOOL_DESC,
-                Shortcut.registerShortcut("tools:splitonintersections", tr("Tool: {0}", TITLE),
-                        KeyEvent.VK_P, Shortcut.ALT_CTRL_SHIFT), true);
+                Shortcut.registerShortcut("tools:splitonintersections", tr("Tool: {0}", TITLE), KeyEvent.VK_P, Shortcut.ALT_CTRL_SHIFT),
+                true);
     }
 
     @Override
@@ -87,13 +87,13 @@ public class SplitOnIntersectionsAction extends JosmAction {
                 }
         }
 
-		if (splitWays.isEmpty()) {
-			new Notification(tr("The selection cannot be used for action ''{0}''", TOOL_DESC))
-					.setIcon(JOptionPane.WARNING_MESSAGE).show();
-			return;
-		}
+        if (splitWays.isEmpty()) {
+            new Notification(tr("The selection cannot be used for action ''{0}''", TOOL_DESC))
+                    .setIcon(JOptionPane.WARNING_MESSAGE).show();
+            return;
+        }
 
-		// fix #16006: Don't generate SequenceCommand when ways are part of the same relation.
+        // fix #16006: Don't generate SequenceCommand when ways are part of the same relation.
         boolean createSequenceCommand = true;
         Set<Relation> allWayRefs = new HashSet<>();
         for (Way splitWay : splitWays.keySet()) {
@@ -102,21 +102,21 @@ public class SplitOnIntersectionsAction extends JosmAction {
             }
         }
         for (Entry<Way, List<Node>> entry : splitWays.entrySet()) {
-        	SplitWayCommand cmd = SplitWayCommand.split(entry.getKey(), entry.getValue(), selectedWays);
-        	if (!createSequenceCommand) {
-        		UndoRedoHandler.getInstance().add(cmd);
-        	}
-        	list.add(cmd);
+            SplitWayCommand cmd = SplitWayCommand.split(entry.getKey(), entry.getValue(), selectedWays);
+            if (!createSequenceCommand) {
+                UndoRedoHandler.getInstance().add(cmd);
+            }
+            list.add(cmd);
         }
 
         if (!list.isEmpty()) {
             if (createSequenceCommand) {
                 UndoRedoHandler.getInstance().add(list.size() == 1 ? list.get(0) : new SequenceCommand(TITLE, list));
             } else {
-				new Notification(
-						tr("Affected ways are members of the same relation. {0} actions were created for this split.",
-								list.size())).setIcon(JOptionPane.WARNING_MESSAGE).show();
-			}
+                new Notification(
+                        tr("Affected ways are members of the same relation. {0} actions were created for this split.",
+                                list.size())).setIcon(JOptionPane.WARNING_MESSAGE).show();
+            }
             getLayerManager().getEditDataSet().clearSelection();
         }
     }

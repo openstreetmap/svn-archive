@@ -53,7 +53,7 @@ public class UntaggedGeoImageLayerAction
                     // Move this image to the new layer and delete it
                     // from the original layer.
                     untagged.add(img);
-                    layer.removePhotoByIdx(idx);
+                    layer.getImageData().removeImage(img);
                 }
             }
             MainApplication.getLayerManager()

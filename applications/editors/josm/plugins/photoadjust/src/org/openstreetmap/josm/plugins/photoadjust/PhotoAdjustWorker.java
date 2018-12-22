@@ -6,6 +6,7 @@ import java.awt.event.MouseEvent;
 import java.awt.geom.Point2D;
 import java.util.List;
 
+import org.openstreetmap.josm.data.ImageData;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.layer.geoimage.GeoImageLayer;
@@ -18,7 +19,7 @@ import org.openstreetmap.josm.gui.layer.geoimage.ImageViewerDialog;
 public class PhotoAdjustWorker {
 
     private ImageEntry dragPhoto;
-    private GeoImageLayer dragLayer;
+    private ImageData dragData;
     // Offset between center of the photo and point where it is
     // clicked.  This must be in pixels to maintain the same offset if
     // the photo is moved very far.
@@ -31,7 +32,7 @@ public class PhotoAdjustWorker {
      */
     public void reset() {
         dragPhoto = null;
-        dragLayer = null;
+        dragData = null;
         dragOffset = null;
     }
 
@@ -72,46 +73,48 @@ public class PhotoAdjustWorker {
      * @param imageLayers List of GeoImageLayers to be considered.
      */
     public void doMousePressed(MouseEvent evt,
-                               List<GeoImageLayer> imageLayers) {
+            List<GeoImageLayer> imageLayers) {
         reset();
 
         if (evt.getButton() == MouseEvent.BUTTON1
-            && imageLayers != null && !imageLayers.isEmpty()) {
+                && imageLayers != null && !imageLayers.isEmpty()) {
             // Check if modifier key is pressed and change to
             // image viewer photo if it is.
             final boolean isShift = (evt.getModifiers() & InputEvent.SHIFT_MASK) != 0;
             final boolean isCtrl = (evt.getModifiers() & InputEvent.CTRL_MASK) != 0;
             if (isShift || isCtrl) {
-                final GeoImageLayer viewerLayer = ImageViewerDialog.getCurrentLayer();
-                final ImageEntry img = ImageViewerDialog.getCurrentImage();
-                if (img != null && viewerLayer != null
-                    && viewerLayer.isVisible()
-                    && imageLayers.contains(viewerLayer)) {
-                    // Change direction if control is pressed, position
-                    // otherwise.  Shift+control changes direction, similar to
-                    // rotate in select mode.
-                    //
-                    // Combinations:
-                    // S ... shift pressed
-                    // C ... control pressed
-                    // pos ... photo has a position set == is displayed on the map
-                    // nopos ... photo has no position set
-                    //
-                    // S + pos: position at mouse
-                    // S + nopos: position at mouse
-                    // C + pos: change orientation
-                    // C + nopos: ignored
-                    // S + C + pos: change orientation
-                    // S + C + nopos: ignore
-                    if (isCtrl) {
-                        if (img.getPos() != null) {
-                            changeDirection(img, viewerLayer, evt);
+                for (GeoImageLayer layer: imageLayers) {
+                    if (layer.isVisible()) {
+                        final ImageEntry img = layer.getImageData().getSelectedImage();
+                        if (img != null) {
+                            // Change direction if control is pressed, position
+                            // otherwise.  Shift+control changes direction, similar to
+                            // rotate in select mode.
+                            //
+                            // Combinations:
+                            // S ... shift pressed
+                            // C ... control pressed
+                            // pos ... photo has a position set == is displayed on the map
+                            // nopos ... photo has no position set
+                            //
+                            // S + pos: position at mouse
+                            // S + nopos: position at mouse
+                            // C + pos: change orientation
+                            // C + nopos: ignored
+                            // S + C + pos: change orientation
+                            // S + C + nopos: ignore
+                            if (isCtrl) {
+                                if (img.getPos() != null) {
+                                    changeDirection(img, layer.getImageData(), evt);
+                                }
+                            } else { // shift pressed
+                                movePhoto(img, layer.getImageData(), evt);
+                            }
+                            dragPhoto = img;
+                            dragData = layer.getImageData();
+                            break;
                         }
-                    } else { // shift pressed
-                        movePhoto(img, viewerLayer, evt);
                     }
-                    dragPhoto = img;
-                    dragLayer = viewerLayer;
                 }
             } else {
                 // Start with the top layer.
@@ -119,7 +122,7 @@ public class PhotoAdjustWorker {
                     if (layer.isVisible()) {
                         dragPhoto = layer.getPhotoUnderMouse(evt);
                         if (dragPhoto != null) {
-                            dragLayer = layer;
+                            dragData = layer.getImageData();
                             setDragOffset(dragPhoto, evt);
                             disableCenterView();
                             break;
@@ -149,13 +152,12 @@ public class PhotoAdjustWorker {
      * @param evt Mouse event from MouseMotionAdapter mouseDragged().
      */
     public void doMouseDragged(MouseEvent evt) {
-        if (dragLayer != null && dragLayer.isVisible()
-            && dragPhoto != null) {
+        if (dragData != null && dragPhoto != null) {
             if ((evt.getModifiers() & InputEvent.CTRL_MASK) != 0) {
-                changeDirection(dragPhoto, dragLayer, evt);
+                changeDirection(dragPhoto, dragData, evt);
             } else {
                 disableCenterView();
-                movePhoto(dragPhoto, dragLayer, evt);
+                movePhoto(dragPhoto, dragData, evt);
             }
         }
     }
@@ -176,11 +178,11 @@ public class PhotoAdjustWorker {
      * Move the photo to the mouse position.
      *
      * @param photo The photo to move.
-     * @param layer GeoImageLayer of the photo.
+     * @param data ImageData of the photo.
      * @param evt Mouse event from one of the mouse adapters.
      */
-    private void movePhoto(ImageEntry photo, GeoImageLayer layer,
-                           MouseEvent evt) {
+    private void movePhoto(ImageEntry photo, ImageData data,
+            MouseEvent evt) {
         LatLon newPos;
         if (dragOffset != null) {
             newPos = MainApplication.getMap().mapView.getLatLon(
@@ -189,9 +191,7 @@ public class PhotoAdjustWorker {
         } else {
             newPos = MainApplication.getMap().mapView.getLatLon(evt.getX(), evt.getY());
         }
-        photo.setPos(newPos);
-        photo.flagNewGpsData();
-        layer.updateBufferAndRepaint();
+        data.updateImagePosition(photo, newPos);
         // Re-display the photo because the OSD data might change (new
         // coordinates).  Or do that in doMouseReleased().
         //ImageViewerDialog.showImage(layer, photo);
@@ -201,11 +201,11 @@ public class PhotoAdjustWorker {
      * Set the image direction, i.e. let it point to where the mouse is.
      *
      * @param photo The photo to move.
-     * @param layer GeoImageLayer of the photo.
+     * @param data ImageData of the photo.
      * @param evt Mouse event from one of the mouse adapters.
      */
-    private void changeDirection(ImageEntry photo, GeoImageLayer layer,
-                                MouseEvent evt) {
+    private void changeDirection(ImageEntry photo, ImageData data,
+            MouseEvent evt) {
         final LatLon photoLL = photo.getPos();
         if (photoLL == null) {
             // Direction cannot be set if image doesn't have a position.
@@ -219,10 +219,7 @@ public class PhotoAdjustWorker {
         } else if (direction >= 360.0) {
             direction -= 360.0;
         }
-        photo.setExifImgDir(direction);
-        photo.flagNewGpsData();
-        layer.updateBufferAndRepaint();
-        ImageViewerDialog.showImage(layer, photo);
+        data.updateImageDirection(photo, direction);
         setDragOffset(photo, evt);
     }
 }

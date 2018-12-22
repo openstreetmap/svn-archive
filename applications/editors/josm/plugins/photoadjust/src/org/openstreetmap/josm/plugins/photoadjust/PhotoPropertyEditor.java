@@ -6,14 +6,14 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 import java.awt.Color;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
+import java.util.List;
+import java.util.Optional;
 
 import javax.swing.AbstractAction;
-import javax.swing.Action;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
 import javax.swing.UIManager;
@@ -21,6 +21,8 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
 import org.openstreetmap.josm.actions.JosmAction;
+import org.openstreetmap.josm.data.ImageData;
+import org.openstreetmap.josm.data.ImageData.ImageDataUpdateListener;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.coor.conversion.CoordinateFormatManager;
 import org.openstreetmap.josm.data.coor.conversion.LatLonParser;
@@ -29,9 +31,13 @@ import org.openstreetmap.josm.gui.ExtendedDialog;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MainMenu;
 import org.openstreetmap.josm.gui.dialogs.LatLonDialog;
+import org.openstreetmap.josm.gui.layer.Layer;
+import org.openstreetmap.josm.gui.layer.LayerManager.LayerAddEvent;
+import org.openstreetmap.josm.gui.layer.LayerManager.LayerChangeListener;
+import org.openstreetmap.josm.gui.layer.LayerManager.LayerOrderChangeEvent;
+import org.openstreetmap.josm.gui.layer.LayerManager.LayerRemoveEvent;
 import org.openstreetmap.josm.gui.layer.geoimage.GeoImageLayer;
 import org.openstreetmap.josm.gui.layer.geoimage.ImageEntry;
-import org.openstreetmap.josm.gui.layer.geoimage.ImageViewerDialog;
 import org.openstreetmap.josm.gui.widgets.JosmTextField;
 import org.openstreetmap.josm.tools.GBC;
 import org.openstreetmap.josm.tools.ImageProvider;
@@ -57,65 +63,51 @@ public class PhotoPropertyEditor {
     }
 
     /**
-     * Update the geo image layer and the image viewer.
-     *
-     * @param layer GeoImageLayer of the photo.
-     * @param photo The photo that is updated.
-     */
-    private static void updateLayer(GeoImageLayer layer, ImageEntry photo) {
-        layer.updateBufferAndRepaint();
-        ImageViewerDialog.showImage(layer, photo);
-    }
-
-    /**
      * Action if the menu entry is selected.
      */
-    private static class PropertyEditorAction extends JosmAction {
+    private static class PropertyEditorAction extends JosmAction implements LayerChangeListener, ImageDataUpdateListener {
         public PropertyEditorAction() {
             super(tr("Edit photo GPS data"),    // String name
-                  (String)null,                         // String iconName
-                  tr("Edit GPS data of selected photo."), // String tooltip
-                  null,                                 // Shortcut shortcut
-                  true,                                 // boolean registerInToolbar
-                  "photoadjust/propertyeditor", // String toolbarId
-                  true                          // boolean installAdapters
-                  );
+                    (String)null,                         // String iconName
+                    tr("Edit GPS data of selected photo."), // String tooltip
+                    null,                                 // Shortcut shortcut
+                    true,                                 // boolean registerInToolbar
+                    "photoadjust/propertyeditor", // String toolbarId
+                    false                          // boolean installAdapters
+                    );
+            this.installAdapters();
+        }
+
+        @Override
+        protected void installAdapters() {
+            MainApplication.getLayerManager().addLayerChangeListener(this);
+            initEnabledState();
         }
 
         @Override
         public void actionPerformed(ActionEvent evt) {
-            try {
-                final ImageEntry photo = ImageViewerDialog.getCurrentImage();
-                final GeoImageLayer layer = ImageViewerDialog.getCurrentLayer();
-                if (photo == null) {
-                    throw new AssertionError("No image selected.");
-                }
-                StringBuilder title =
+            final ImageData data = getLayerWithSelectedImage().get().getImageData();
+            final ImageEntry photo = data.getSelectedImage();
+
+            StringBuilder title =
                     new StringBuilder(tr("Edit Photo GPS Data"));
-                if (photo.getFile() != null) {
-                    title.append(" - ");
-                    title.append(photo.getFile().getName());
-                }
-                PropertyEditorDialog dialog =
-                    new PropertyEditorDialog(title.toString(), photo, layer);
-                if (dialog.getValue() == 1) {
-                    dialog.updateImageTmp();
-                    // There are cases where isNewGpsData is not set but there
-                    // is still new data, e.g. if the EXIF data was re-read
-                    // from the image file.
-                    photo.applyTmp();
-                } else {
-                    photo.discardTmp();
-                }
-                updateLayer(layer, photo);
-            } catch (AssertionError err) {
-                JOptionPane.showMessageDialog(MainApplication.getMainFrame(),
-                                              tr("Please select an image first."),
-                                              tr("No image selected"),
-                                              JOptionPane.INFORMATION_MESSAGE);
-                return;
+            if (photo.getFile() != null) {
+                title.append(" - ");
+                title.append(photo.getFile().getName());
             }
-       }
+            PropertyEditorDialog dialog =
+                    new PropertyEditorDialog(title.toString(), photo, data);
+            if (dialog.getValue() == 1) {
+                dialog.updateImageTmp();
+                // There are cases where isNewGpsData is not set but there
+                // is still new data, e.g. if the EXIF data was re-read
+                // from the image file.
+                photo.applyTmp();
+            } else {
+                photo.discardTmp();
+            }
+            data.notifyImageUpdate();
+        }
 
         /**
          * Check if there is a selected image.
@@ -124,18 +116,50 @@ public class PhotoPropertyEditor {
          *         image shown, {@code false} otherwise.
          */
         private static boolean enabled() {
-            try {
-                //return ImageViewerDialog.getInstance().hasImage();
-                ImageViewerDialog.getInstance().hasImage();
-                return true;
-            } catch (AssertionError err) {
-                return false;
-            }
+            return getLayerWithSelectedImage().isPresent();
+        }
+
+        private static Optional<GeoImageLayer> getLayerWithSelectedImage() {
+            List<GeoImageLayer> list = MainApplication.getLayerManager().getLayersOfType(GeoImageLayer.class);
+            return list.stream().filter(l -> l.getImageData().getSelectedImage() != null).findFirst();
         }
 
         @Override
         protected void updateEnabledState() {
             setEnabled(enabled());
+        }
+
+        @Override
+        public void layerAdded(LayerAddEvent e) {
+            Layer layer = e.getAddedLayer();
+            if (layer instanceof GeoImageLayer) {
+                ((GeoImageLayer) layer).getImageData().addImageDataUpdateListener(this);
+            }
+        }
+
+        @Override
+        public void layerRemoving(LayerRemoveEvent e) {
+            Layer layer = e.getRemovedLayer();
+
+            if (layer instanceof GeoImageLayer) {
+                ((GeoImageLayer) layer).getImageData().removeImageDataUpdateListener(this);
+            }
+            this.updateEnabledState();
+        }
+
+        @Override
+        public void layerOrderChanged(LayerOrderChangeEvent e) {
+            // ignored
+        }
+
+        @Override
+        public void imageDataUpdated(ImageData data) {
+            // ignored
+        }
+
+        @Override
+        public void selectedImageChanged(ImageData data) {
+            this.updateEnabledState();
         }
     }
 
@@ -149,16 +173,16 @@ public class PhotoPropertyEditor {
         private final JosmTextField direction = new JosmTextField();
         // Image that is to be updated.
         private final ImageEntry image;
-        private final GeoImageLayer layer;
+        private final ImageData data;
         // Image as it was when the dialog was opened.
         private final GpxImageEntry imgOrig;
         private static final Color BG_COLOR_ERROR = new Color(255, 224, 224);
 
         public PropertyEditorDialog(String title, final ImageEntry image,
-                                    final GeoImageLayer layer) {
+                final ImageData data) {
             super(MainApplication.getMainFrame(), title, tr("Ok"), tr("Cancel"));
             this.image = image;
-            this.layer = layer;
+            this.data = data;
             imgOrig = image.clone();
             setButtonIcons("ok", "cancel");
             final JPanel content = new JPanel(new GridBagLayout());
@@ -199,7 +223,7 @@ public class PhotoPropertyEditor {
             DoubleInputVerifier altVerif = new DoubleInputVerifier(altitude) {
                 @Override public void updateValue(Double value) {
                     image.getTmp().setElevation(value);
-                    updateLayer(layer, image);
+                    data.notifyImageUpdate();
                 }
             };
             altitude.getDocument().addDocumentListener(altVerif);
@@ -213,7 +237,7 @@ public class PhotoPropertyEditor {
             DoubleInputVerifier speedVerif = new DoubleInputVerifier(speed) {
                 @Override public void updateValue(Double value) {
                     image.getTmp().setSpeed(value);
-                    updateLayer(layer, image);
+                    data.notifyImageUpdate();
                 }
             };
             speedVerif.setMinMax(0.0, null);
@@ -229,7 +253,7 @@ public class PhotoPropertyEditor {
             DoubleInputVerifier dirVerif = new DoubleInputVerifier(direction) {
                 @Override public void updateValue(Double value) {
                     image.getTmp().setExifImgDir(value);
-                    updateLayer(layer, image);
+                    data.notifyImageUpdate();
                 }
             };
             dirVerif.setMinMax(-360.0, 360.0);
@@ -572,7 +596,7 @@ public class PhotoPropertyEditor {
             @Override
             public void updateLatLon(LatLon latLon) {
                 image.getTmp().setPos(latLon);
-                updateLayer(layer, image);
+                data.notifyImageUpdate();
             }
 
             @Override

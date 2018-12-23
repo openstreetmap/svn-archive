@@ -437,6 +437,7 @@ public class RelContextDialog extends ToggleDialog implements ActiveLayerChangeL
         createMultipolygonAction.destroy();
         createRelationAction.destroy();
         addRemoveMemberAction.destroy();
+        MainApplication.getLayerManager().removeActiveLayerChangeListener(chosenRelation);
         super.destroy();
     }
 

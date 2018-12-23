@@ -8,12 +8,10 @@ import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 
 import javax.swing.JOptionPane;
 
@@ -24,7 +22,6 @@ import org.openstreetmap.josm.command.SplitWayCommand;
 import org.openstreetmap.josm.data.UndoRedoHandler;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
-import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.gui.Notification;
 import org.openstreetmap.josm.tools.Shortcut;
@@ -94,29 +91,25 @@ public class SplitOnIntersectionsAction extends JosmAction {
             return;
         }
 
-        // fix #16006: Don't generate SequenceCommand when ways are part of the same relation.
-        boolean createSequenceCommand = true;
-        Set<Relation> allWayRefs = new HashSet<>();
-        for (Way splitWay : splitWays.keySet()) {
-            for (Relation rel : OsmPrimitive.getFilteredList(splitWay.getReferrers(), Relation.class)) {
-                createSequenceCommand &= allWayRefs.add(rel);
-            }
-        }
         for (Entry<Way, List<Node>> entry : splitWays.entrySet()) {
-            SplitWayCommand cmd = SplitWayCommand.split(entry.getKey(), entry.getValue(), selectedWays);
-            if (!createSequenceCommand) {
-                UndoRedoHandler.getInstance().add(cmd);
+            SplitWayCommand split = SplitWayCommand.split(entry.getKey(), entry.getValue(), selectedWays);
+            if (split != null) {
+            	// execute, we need the result, see also #16006
+            	UndoRedoHandler.getInstance().add(split);
+            	selectedWays.remove(split.getOriginalWay());
+            	selectedWays.addAll(split.getNewWays());
+                list.add(split);
             }
-            list.add(cmd);
         }
 
         if (!list.isEmpty()) {
-            if (createSequenceCommand) {
-                UndoRedoHandler.getInstance().add(list.size() == 1 ? list.get(0) : new SequenceCommand(TITLE, list));
-            } else {
-                new Notification(
-                        tr("Affected ways are members of the same relation. {0} actions were created for this split.",
-                                list.size())).setIcon(JOptionPane.WARNING_MESSAGE).show();
+        	if (list.size() > 1) {
+        		// create a single command for the previously executed commands
+        		SequenceCommand seq = new SequenceCommand(TITLE, list);
+        		for (int i = 0; i < list.size(); i++) {
+        			UndoRedoHandler.getInstance().undo();
+        		}
+        		UndoRedoHandler.getInstance().add(seq);
             }
             getLayerManager().getEditDataSet().clearSelection();
         }

@@ -7,9 +7,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.command.ChangePropertyCommand;
@@ -30,7 +28,7 @@ import org.openstreetmap.josm.tools.SubclassFilteredCollection;
 public class TagBufferAction extends JosmAction {
     private static final String TITLE = tr("Copy tags from previous selection");
     private static final TagCollection EmptyTags = new TagCollection();
-    private final Set<OsmPrimitive> selectionBuf = new HashSet<>();
+    private List<OsmPrimitive> selectionBuf = new ArrayList<>();
     private TagCollection tagsToPaste = EmptyTags;
     /**
      * Constructs a new {@code TagBufferAction}.
@@ -71,7 +69,7 @@ public class TagBufferAction extends JosmAction {
     protected void updateEnabledState() {
         if (getLayerManager().getEditDataSet() == null) {
             setEnabled(false);
-            selectionBuf.clear();
+            selectionBuf = new ArrayList<>();
             tagsToPaste = EmptyTags;
         } else
             updateEnabledState(getLayerManager().getEditDataSet().getSelected());
@@ -83,9 +81,7 @@ public class TagBufferAction extends JosmAction {
         if (!oldTags.isEmpty()) {
                 tagsToPaste = new TagCollection(oldTags);
         }
-        selectionBuf.clear();
-        selectionBuf.addAll(selection);
-
+        selectionBuf = new ArrayList<>(selection);
         setEnabled(!selection.isEmpty() && !tagsToPaste.isEmpty());
     }
 
@@ -93,7 +89,7 @@ public class TagBufferAction extends JosmAction {
      * Find those tags which appear in all primitives of the selection
      * @param selection the selection
      */
-    private static TagCollection getCommonTags(Set<OsmPrimitive> selection) {
+    private static TagCollection getCommonTags(List<OsmPrimitive> selection) {
         if (selection.isEmpty())
             return EmptyTags;
         // Fix #8350 - only care about tagged objects

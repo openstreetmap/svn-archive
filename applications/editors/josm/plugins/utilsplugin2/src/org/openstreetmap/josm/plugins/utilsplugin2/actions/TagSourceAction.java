@@ -5,9 +5,9 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.command.ChangePropertyCommand;
@@ -24,8 +24,7 @@ import org.openstreetmap.josm.tools.Shortcut;
 public class TagSourceAction extends JosmAction {
     private static final String TITLE = tr("Add Source Tag");
     private String source;
-    private Set<OsmPrimitive> selectionBuf = new HashSet<>();
-    private boolean clickedTwice = false;
+    private List<OsmPrimitive> selectionBuf = new ArrayList<>();
 
     public TagSourceAction() {
         super(TITLE, "dumbutils/sourcetag", tr("Add remembered source tag"),
@@ -44,50 +43,39 @@ public class TagSourceAction extends JosmAction {
 
         UndoRedoHandler.getInstance().add(new ChangePropertyCommand(selection, "source", source));
     }
-
     @Override
     protected void updateEnabledState() {
         if (getLayerManager().getEditDataSet() == null) {
             setEnabled(false);
-            if (selectionBuf != null)
-                selectionBuf.clear();
+            selectionBuf = new ArrayList<>();
         } else
             updateEnabledState(getLayerManager().getEditDataSet().getSelected());
     }
 
+
     @Override
     protected void updateEnabledState(Collection<? extends OsmPrimitive> selection) {
-        if (selection == null || selection.isEmpty()) {
-            selectionBuf.clear();
-            clickedTwice = false;
-            setEnabled(false);
-            return;
+        if (!selectionBuf.isEmpty()) {
+        	String newSource = null;
+        	for (OsmPrimitive p : selectionBuf) {
+        		String s = p.get("source");
+        		if (s != null) {
+        			if (newSource == null)
+        				newSource = s;
+        			else {
+        				if (!newSource.equals(s)) {
+        					newSource = null;
+        					break;
+        				}
+        			}
+        		}
+        	}
+        	if (newSource != null && !newSource.isEmpty()) {
+                source = newSource;
+                Config.getPref().put("sourcetag.value", source);
+        	}
         }
-
-        if (selectionBuf.size() == selection.size() && selectionBuf.containsAll(selection)) {
-            if (!clickedTwice)
-                clickedTwice = true;
-            else {
-                // tags may have been changed, get the source
-                String newSource = null;
-                for (OsmPrimitive p : selection) {
-                    String value = p.get("source");
-                    if (value != null && newSource == null)
-                        newSource = value;
-                    else if (value != null ? !value.equals(newSource) : newSource != null) {
-                        newSource = "";
-                        break;
-                    }
-                }
-                if (newSource != null && newSource.length() > 0 && !newSource.equals(source)) {
-                    source = newSource;
-                    Config.getPref().put("sourcetag.value", source);
-                }
-            }
-        } else
-            clickedTwice = false;
-        selectionBuf.clear();
-        selectionBuf.addAll(selection);
-        setEnabled(source != null && source.length() > 0);
+        selectionBuf = new ArrayList<>(selection);
+        setEnabled(!selection.isEmpty() && source != null && !source.isEmpty());
     }
 }

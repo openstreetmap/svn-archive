@@ -14,12 +14,11 @@
 
     <property name="josm"                   location="../../core/dist/josm-custom.jar"/>
     <property name="josm.test.build.dir"    location="../../core/test/build"/>
-    <property name="jmockit.jar"            location="../00_core_test_lib/jmockit-1.43.jar"/>
+    <property name="jmockit.jar"            location="../00_core_test_lib/jmockit.jar"/>
     <property name="error_prone_core.jar"   location="../00_core_tools/error_prone_core.jar"/>
     <property name="error_prone_javac.jar"  location="../00_core_tools/error_prone_javac.jar"/>
     <property name="checkstyle.jar"         location="../00_core_tools/checkstyle/checkstyle-all.jar"/>
     <property name="checkstyle-build.dir"   location="../00_core_tools/checkstyle/build"/>
-    <property name="jformatstring.jar"      location="../00_core_tools/spotbugs/jFormatString-3.0.0.jar"/>
     <property name="spotbugs-ant.jar"       location="../00_core_tools/spotbugs/spotbugs-ant.jar"/>
     <property name="annotations.jar"        location="../00_core_tools/spotbugs/spotbugs-annotations.jar"/>
     <property name="plugin.tools.dir"       location="../00_tools"/>
@@ -90,7 +89,6 @@
     </path>
     <path id="processor.path">
         <pathelement location="${error_prone_core.jar}"/>
-        <pathelement location="${jformatstring.jar}"/>
     </path>
 
     <!--

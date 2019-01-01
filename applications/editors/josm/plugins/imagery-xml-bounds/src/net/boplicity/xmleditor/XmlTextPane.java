@@ -83,9 +83,9 @@ public class XmlTextPane extends JTextPane {
                 end = start;
                 try {
                     if (text.charAt(start) != NEW_LINE) {
-                        while ((end < text.length())
-                                && (Character.isWhitespace(text.charAt(end)))
-                                && (text.charAt(end) != NEW_LINE)) {
+                        while (end < text.length()
+                                && Character.isWhitespace(text.charAt(end))
+                                && text.charAt(end) != NEW_LINE) {
                             end++;
                         }
                         if (end > start) {

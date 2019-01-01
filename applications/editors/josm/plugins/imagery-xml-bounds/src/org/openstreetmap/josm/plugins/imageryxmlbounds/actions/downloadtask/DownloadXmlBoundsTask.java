@@ -3,11 +3,13 @@ package org.openstreetmap.josm.plugins.imageryxmlbounds.actions.downloadtask;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
+import java.util.Optional;
 import java.util.concurrent.Future;
 
 import org.openstreetmap.josm.actions.downloadtasks.DownloadOsmTask;
 import org.openstreetmap.josm.actions.downloadtasks.DownloadParams;
 import org.openstreetmap.josm.data.Bounds;
+import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
@@ -92,8 +94,8 @@ public class DownloadXmlBoundsTask extends DownloadOsmTask implements XmlBoundsC
         }
 
         @Override
-        protected OsmDataLayer createNewLayer() {
-            return new XmlBoundsLayer(dataSet, XmlBoundsLayer.createNewName(), null);
+        protected OsmDataLayer createNewLayer(DataSet ds, Optional<String> layerName) {
+            return new XmlBoundsLayer(ds, layerName.orElseGet(this::generateLayerName), null);
         }
     }
 }

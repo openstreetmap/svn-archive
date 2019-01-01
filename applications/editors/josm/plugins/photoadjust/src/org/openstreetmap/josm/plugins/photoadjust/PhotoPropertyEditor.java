@@ -183,7 +183,7 @@ public class PhotoPropertyEditor {
             super(MainApplication.getMainFrame(), title, tr("Ok"), tr("Cancel"));
             this.image = image;
             this.data = data;
-            imgOrig = image.clone();
+            imgOrig = new ImageEntry(image);
             setButtonIcons("ok", "cancel");
             final JPanel content = new JPanel(new GridBagLayout());
             //content.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));

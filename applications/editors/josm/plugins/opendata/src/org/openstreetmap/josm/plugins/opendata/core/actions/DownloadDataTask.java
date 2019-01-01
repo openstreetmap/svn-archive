@@ -5,6 +5,7 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Optional;
 import java.util.concurrent.Future;
 import java.util.regex.Pattern;
 
@@ -12,6 +13,7 @@ import javax.swing.JOptionPane;
 
 import org.openstreetmap.josm.actions.downloadtasks.DownloadOsmTask;
 import org.openstreetmap.josm.actions.downloadtasks.DownloadParams;
+import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
@@ -82,10 +84,11 @@ public class DownloadDataTask extends DownloadOsmTask {
         }
 
         @Override
-        protected OsmDataLayer createNewLayer(String layerName) {
+        protected OsmDataLayer createNewLayer(DataSet ds, Optional<String> optLayerName) {
             File associatedFile = ((NetworkReader) reader).getReadFile();
             String filename = ((NetworkReader) reader).getReadFileName();
-            if (layerName == null || layerName.isEmpty()) {
+            String layerName = optLayerName.orElse("");
+            if (layerName.isEmpty()) {
                 if (associatedFile != null) {
                     layerName = associatedFile.getName();
                 } else if (filename != null && !filename.isEmpty()) {

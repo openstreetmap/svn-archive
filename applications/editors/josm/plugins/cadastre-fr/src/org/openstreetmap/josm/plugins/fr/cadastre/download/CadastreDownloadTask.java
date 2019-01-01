@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.stream.Stream;
@@ -110,8 +111,8 @@ public class CadastreDownloadTask extends DownloadOsmTask {
         }
 
         @Override
-        protected CadastreDataLayer createNewLayer(String layerName) {
-            String realLayerName = layerName != null ? layerName : url.substring(url.lastIndexOf('/')+1);
+        protected CadastreDataLayer createNewLayer(DataSet dataset, Optional<String> layerName) {
+            String realLayerName = layerName.isPresent() ? layerName.get() : url.substring(url.lastIndexOf('/')+1);
             if (realLayerName == null || realLayerName.isEmpty()) {
                 realLayerName = settings.getLayerName();
             }

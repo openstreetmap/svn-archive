@@ -336,7 +336,7 @@ class Building {
         Collections.sort(ways);
         w = ways.get(0);
 
-        addAddress(w);
+        addAddress(w, null);
 
         return w;
     }
@@ -385,7 +385,7 @@ class Building {
         }
         cmds.add(new AddCommand(ds, w));
 
-        addAddress(w);
+        addAddress(w, cmds);
 
         if (snap) {
             snapBuildings(w, nodes, cmds);
@@ -451,11 +451,11 @@ class Building {
         }
     }
 
-    private void addAddress(Way w) {
+    private void addAddress(Way w, Collection<Command> cmdList) {
         if (ToolSettings.PROP_USE_ADDR_NODE.get()) {
             Node addrNode = getAddressNode();
             if (addrNode != null) {
-                Collection<Command> addressCmds = new LinkedList<>();
+                Collection<Command> addressCmds = cmdList != null ? cmdList : new LinkedList<>();
                 for (Entry<String, String> entry : addrNode.getKeys().entrySet()) {
                     w.put(entry.getKey(), entry.getValue());
                 }
@@ -472,8 +472,10 @@ class Building {
                     addressCmds.add(new ChangeCommand(r, rnew));
                 }
                 addressCmds.add(new DeleteCommand(addrNode));
-                Command c = new SequenceCommand(tr("Add address for building"), addressCmds);
-                UndoRedoHandler.getInstance().add(c);
+                if (cmdList == null) {
+                    Command c = new SequenceCommand(tr("Add address for building"), addressCmds);
+                    UndoRedoHandler.getInstance().add(c);
+                }
             }
         }
     }

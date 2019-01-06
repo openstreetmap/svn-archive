@@ -223,6 +223,7 @@ while(my $line = <>)
      || $line =~ /<\/checkgroup/
      || $line =~ /<\/presets/
      || $line =~ /roles/
+     || $line =~ /<link wiki=/
      || $line =~ /href=/
      || $line =~ /<!--/
      || $line =~ /<\?xml/

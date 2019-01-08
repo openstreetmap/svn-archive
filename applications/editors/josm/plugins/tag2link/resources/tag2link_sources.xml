@@ -60,6 +60,14 @@
             <condition k="species"/>
             <link name="View Wikispecies page" href="https://species.wikimedia.org/wiki/%v%" />
         </rule>
+        <rule>
+            <condition k="wikimedia_commons" v="File:.*"/>
+            <link name="View Commons image" href="https://commons.wikimedia.org/wiki/%v%" />
+        </rule>
+        <rule>
+            <condition k="wikimedia_commons" v="Category:.*"/>
+            <link name="View Commons category" href="https://commons.wikimedia.org/wiki/%v%" />
+        </rule>
     </src>
 
     <src name="WHC">

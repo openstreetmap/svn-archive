@@ -34,7 +34,7 @@ public class IntersectedWaysAction extends JosmAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         DataSet ds = getLayerManager().getEditDataSet();
-        Set<Way> selectedWays = OsmPrimitive.getFilteredSet(ds.getSelected(), Way.class);
+        Collection<Way> selectedWays = ds.getSelectedWays();
 
         // select ways attached to already selected ways
         if (!selectedWays.isEmpty()) {

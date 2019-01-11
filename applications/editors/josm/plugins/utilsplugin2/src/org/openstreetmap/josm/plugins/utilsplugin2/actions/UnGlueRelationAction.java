@@ -23,6 +23,7 @@ import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.plugins.utilsplugin2.command.ChangeRelationMemberCommand;
 import org.openstreetmap.josm.tools.Shortcut;
+import org.openstreetmap.josm.tools.Utils;
 
 /**
  * Duplicate nodes, ways and relations that are used by multiple relations.
@@ -57,7 +58,7 @@ public class UnGlueRelationAction extends JosmAction {
 
         for (OsmPrimitive p : selection) {
             boolean first = true;
-            for (Relation relation : OsmPrimitive.getFilteredList(p.getReferrers(), Relation.class)) {
+            for (Relation relation : Utils.filteredCollection(p.getReferrers(), Relation.class)) {
                 if (relation.isDeleted()) {
                     continue;
                 }

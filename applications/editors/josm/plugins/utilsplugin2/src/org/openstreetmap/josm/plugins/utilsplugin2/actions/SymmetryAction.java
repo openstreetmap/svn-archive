@@ -30,7 +30,7 @@ import org.openstreetmap.josm.tools.Shortcut;
  *
  * Note: If a ways are selected, their nodes are mirrored
  *
- * @author Alexei Kasatkin, based on much copy&Paste from other MirrorAction :)
+ * @author Alexei Kasatkin, based on much copy+paste from other MirrorAction :)
  */
 public final class SymmetryAction extends JosmAction {
 

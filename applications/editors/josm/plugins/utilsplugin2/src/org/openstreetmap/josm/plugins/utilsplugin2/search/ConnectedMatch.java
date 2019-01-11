@@ -16,7 +16,7 @@ import org.openstreetmap.josm.plugins.utilsplugin2.selection.NodeWayUtils;
  * Matches all ways connected to [nodes and ways which match the expression]..
  */
 public class ConnectedMatch extends SearchCompiler.UnaryMatch {
-    private Collection<Way> connected = null;
+    private Set<Way> connected = null;
     boolean all;
 
     public ConnectedMatch(SearchCompiler.Match match, boolean all) {
@@ -79,7 +79,7 @@ public class ConnectedMatch extends SearchCompiler.UnaryMatch {
     public boolean equals(Object obj) {
         if (this == obj)
             return true;
-        if (!super.equals(obj) || getClass() != obj.getClass())
+        if (!super.equals(obj) || !(obj instanceof ConnectedMatch))
             return false;
         ConnectedMatch other = (ConnectedMatch) obj;
         if (all != other.all)

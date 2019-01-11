@@ -45,13 +45,13 @@ public class SplitOnIntersectionsAction extends JosmAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         List<Command> list = new ArrayList<>();
-        List<Way> selectedWays = OsmPrimitive.getFilteredList(getLayerManager().getEditDataSet().getSelected(), Way.class);
+        List<Way> selectedWays = new ArrayList<>(getLayerManager().getEditDataSet().getSelectedWays());
         Map<Way, List<Node>> splitWays = new HashMap<>();
 
         for (Way way : selectedWays) {
             if (way.getNodesCount() > 1 && !way.hasIncompleteNodes() && !way.isClosed())
                 for (Node node : new Node[] {way.getNode(0), way.getNode(way.getNodesCount() - 1)}) {
-                    List<Way> refs = OsmPrimitive.getFilteredList(node.getReferrers(), Way.class);
+                    List<Way> refs = node.getParentWays();
                     refs.remove(way);
                     if (selectedWays.size() > 1) {
                         // When several ways are selected, split only those among selected

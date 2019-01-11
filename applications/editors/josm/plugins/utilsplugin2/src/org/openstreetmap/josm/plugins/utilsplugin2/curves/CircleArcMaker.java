@@ -19,7 +19,6 @@ import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
-import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.gui.MainApplication;
 
@@ -55,21 +54,6 @@ public final class CircleArcMaker {
 
         //// Anchor nodes
         Node n1 = null, n2 = null, n3 = null;
-
-        if (false) {
-            int nodeCount = selectedNodes.size();
-            int wayCount = selectedWays.size();
-
-            // TODO: filter garbage nodes based on selected ways
-
-            // Never interested in more than 3 nodes. Nodes prioritized by reverse selection order, but keep their order.
-            // TODO: replace by helper function (eg. getPostFixList(int count))
-            Node[] nodesOfInterest = new Node[3];
-            int nodesOfInterestCount = Math.min(nodeCount, 3);
-            for (int i = nodesOfInterestCount - 1; i >= 0; i--) {
-                nodesOfInterest[i] = selectedNodes.get(nodeCount - 1 - i);
-            }
-        }
 
         Set<Way> targetWays = new HashSet<>();
         DataSet ds = MainApplication.getLayerManager().getEditDataSet();
@@ -124,7 +108,7 @@ public final class CircleArcMaker {
             }
 
             for (Node n : consideredNodes) {
-                targetWays.addAll(OsmPrimitive.getFilteredList(n.getReferrers(), Way.class));
+                targetWays.addAll(n.getParentWays());
             }
         }
         if (!nodesHaveBeenChoosen) {
@@ -221,11 +205,14 @@ public final class CircleArcMaker {
     /**
      * Return a list of coordinates lying an the circle arc determined by n1, n2 and n3.
      * The order of the list and which of the 3 possible arcs to construct are given by the order of n1, n2, n3
-     *
-     * @param includeAnchors include the anchorpoints in the list. The original objects will be used, not copies.
+     * @param p1 n1
+     * @param p2 n2
+     * @param p3 n3
+     * @param angleSeparation maximum angle separation between the arc points
+     * @param includeAnchors include the anchor points in the list. The original objects will be used, not copies.
      *                       If {@code false}, p2 will be replaced by the closest arcpoint.
      * @param anchor2Index if non-null, it's value will be set to p2's index in the returned list.
-     * @param angleSparation maximum angle separation between the arc points
+     * @return list of coordinates lying an the circle arc determined by n1, n2 and n3
      */
     private static List<EastNorth> circleArcPoints(EastNorth p1, EastNorth p2, EastNorth p3,
             int angleSeparation, boolean includeAnchors, ReturnValue<Integer> anchor2Index) {
@@ -296,7 +283,7 @@ public final class CircleArcMaker {
         }
         assert (closestIndexToP2 != 0);
 
-        double a = direction * (stepLength);
+        double a = direction * stepLength;
         points.add(p1);
         if (indexJustBeforeP2 == 0 && includeAnchors) {
             points.add(p2);
@@ -329,7 +316,9 @@ public final class CircleArcMaker {
     }
 
     /**
-     * Normalizes {@code a} so it is between 0 and 2 PI
+     * Normalizes {@code angle} so it is between 0 and 2 PI
+     * @param angle the angle
+     * @return the normalized angle
      */
     private static double normalizeAngle(double angle) {
         double PI2 = Math.PI * 2;

@@ -46,8 +46,10 @@ public final class NodeWayUtils {
      * @param nodes collection to place the nodes we found
      */
     static void addNeighbours(Way w, Node n, Collection<Node> nodes) {
-        List<Node> nodeList = w.getNodes();
+        if (!n.getParentWays().contains(w))
+        	return;
 
+        List<Node> nodeList = w.getNodes();
         int idx = nodeList.indexOf(n);
         if (idx == -1) return;
 
@@ -74,13 +76,14 @@ public final class NodeWayUtils {
      * Adds all ways attached to way to specified collection
      * @param w way to find attached ways
      * @param ways  collection to place the ways we found
+     * @return number of ways added
      */
     static int addWaysConnectedToWay(Way w, Set<Way> ways) {
         int s = ways.size();
         List<Node> nodes = w.getNodes();
         boolean flag = ways.contains(w);
         for (Node n: nodes) {
-            ways.addAll(OsmPrimitive.getFilteredList(n.getReferrers(), Way.class));
+            ways.addAll(n.getParentWays());
         }
         if (!flag) ways.remove(w);
         return ways.size() - s;
@@ -90,10 +93,11 @@ public final class NodeWayUtils {
      * Adds all ways attached to node to specified collection
      * @param n Node to find attached ways
      * @param ways  collection to place the ways we found
+     * @return number of ways added
      */
     static int addWaysConnectedToNode(Node n, Set<Way> ways) {
         int s = ways.size();
-        ways.addAll(OsmPrimitive.getFilteredList(n.getReferrers(), Way.class));
+        ways.addAll(n.getParentWays());
         return ways.size() - s;
     }
 
@@ -102,6 +106,7 @@ public final class NodeWayUtils {
      * @param ways collection of ways to search
      * @param w way to check intersections
      * @param newWays set to place the ways we found
+     * @return number of ways possibly added added to newWays
      */
     static int addWaysIntersectingWay(Collection<Way> ways, Way w, Set<Way> newWays, Set<Way> excludeWays) {
         List<Pair<Node, Node>> nodePairs = w.getNodePairs(false);
@@ -153,6 +158,7 @@ public final class NodeWayUtils {
      * @param allWays collection of ways to search
      * @param initWays ways to check intersections
      * @param newWays set to place the ways we found
+     * @return number of ways added to newWays
      */
     public static int addWaysIntersectingWays(Collection<Way> allWays, Collection<Way> initWays, Set<Way> newWays) {
         int count = 0;
@@ -168,7 +174,7 @@ public final class NodeWayUtils {
         }
     }
 
-    public static int addWaysConnectedToNodes(Set<Node> selectedNodes, Set<Way> newWays) {
+    public static int addWaysConnectedToNodes(Collection<Node> selectedNodes, Set<Way> newWays) {
         int s = newWays.size();
         for (Node node: selectedNodes) {
             addWaysConnectedToNode(node, newWays);
@@ -234,7 +240,7 @@ public final class NodeWayUtils {
         Node n1 = it.next();
         Node n2 = it.next();
         Set<Way> ways = new HashSet<>();
-        ways.addAll(OsmPrimitive.getFilteredList(n1.getReferrers(), Way.class));
+        ways.addAll(n1.getParentWays());
         for (Way w: ways) {
 
             if (w.isUsable() && w.containsNode(n2) && w.containsNode(n1)) {
@@ -341,11 +347,6 @@ public final class NodeWayUtils {
                 return false;
             }
         }
-    }
-
-    static boolean isPointInsideMultipolygon(EastNorth p, Relation rel) {
-        Set<Way> usedWays = OsmPrimitive.getFilteredSet(rel.getMemberPrimitives(), Way.class);
-        return isPointInsidePolygon(p, buildPointList(usedWays));
     }
 
     static void addAllInsideMultipolygon(DataSet data, Relation rel, Set<Way> newWays, Set<Node> newNodes) {
@@ -462,33 +463,19 @@ public final class NodeWayUtils {
         return interCount;
     }
 
-    public static Collection<OsmPrimitive> selectAllInside(Collection<OsmPrimitive> selected, DataSet dataset) {
-        return selectAllInside(selected, dataset, true);
-    }
-
-    public static Collection<OsmPrimitive> selectAllInside(Collection<OsmPrimitive> selected, DataSet dataset, boolean ignoreNodesOfFoundWays) {
-        Set<Way> selectedWays = OsmPrimitive.getFilteredSet(selected, Way.class);
-        Set<Relation> selectedRels = OsmPrimitive.getFilteredSet(selected, Relation.class);
-
-        for (Iterator<Relation> it = selectedRels.iterator(); it.hasNext();) {
-            Relation r = it.next();
-            if (!r.isMultipolygon()) {
-                it.remove();
-            }
-        }
-
+    public static Set<OsmPrimitive> selectAllInside(Collection<OsmPrimitive> selected, DataSet dataset, boolean ignoreNodesOfFoundWays) {
         Set<Way> newWays = new HashSet<>();
         Set<Node> newNodes = new HashSet<>();
-        // select nodes and ways inside slexcted ways and multipolygons
-        if (!selectedWays.isEmpty()) {
-            for (Way w: selectedWays) {
-                addAllInsideWay(dataset, w, newWays, newNodes);
-            }
+        // select nodes and ways inside selected ways and multipolygons
+        for (OsmPrimitive p: selected) {
+        	if (p instanceof Way) {
+        		addAllInsideWay(dataset, (Way)p, newWays, newNodes);
+        	}
         }
-        if (!selectedRels.isEmpty()) {
-            for (Relation r: selectedRels) {
-                addAllInsideMultipolygon(dataset, r, newWays, newNodes);
-            }
+        for (OsmPrimitive p: selected) {
+        	if (!(p instanceof Relation) || p.isMultipolygon())
+        		continue;
+        	addAllInsideMultipolygon(dataset, (Relation) p, newWays, newNodes);
         }
         if (ignoreNodesOfFoundWays) {
             for (Way w : newWays) {

@@ -106,7 +106,7 @@ public final class ReplaceGeometryUtils {
      * Replace a node with another node (similar to MergeNodesAction)
      */
     public static ReplaceGeometryCommand buildReplaceNodeCommand(Node subjectNode, Node referenceNode) {
-        if (!OsmPrimitive.getFilteredList(subjectNode.getReferrers(), Way.class).isEmpty()) {
+        if (!subjectNode.getParentWays().isEmpty()) {
             throw new ReplaceGeometryException(tr("Node belongs to way(s), cannot replace."));
         }
         // FIXME: handle different layers
@@ -114,7 +114,7 @@ public final class ReplaceGeometryUtils {
         Command c = MergeNodesAction.mergeNodes(
             Arrays.asList(subjectNode, referenceNode), referenceNode);
         if (c == null) {
-            // User canceled
+            // User cancelled
             return null;
         }
         commands.add(c);
@@ -131,7 +131,7 @@ public final class ReplaceGeometryUtils {
      * @param referenceObject object with greater spatial quality
      */
     public static ReplaceGeometryCommand buildUpgradeNodeCommand(Node subjectNode, OsmPrimitive referenceObject) {
-        if (!OsmPrimitive.getFilteredList(subjectNode.getReferrers(), Way.class).isEmpty()) {
+    	if (!subjectNode.getParentWays().isEmpty()) {
             throw new ReplaceGeometryException(tr("Node belongs to way(s), cannot replace."));
         }
 
@@ -168,7 +168,7 @@ public final class ReplaceGeometryUtils {
         try {
             commands.addAll(getTagConflictResolutionCommands(subjectNode, referenceObject));
         } catch (UserCancelException e) {
-            // user canceled tag merge dialog
+            // user cancelled tag merge dialog
             return null;
         }
 
@@ -254,7 +254,7 @@ public final class ReplaceGeometryUtils {
         try {
             commands.addAll(getTagConflictResolutionCommands(referenceWay, subjectWay));
         } catch (UserCancelException e) {
-            // user canceled tag merge dialog
+            // user cancelled tag merge dialog
             Logging.trace(e);
             return null;
         }

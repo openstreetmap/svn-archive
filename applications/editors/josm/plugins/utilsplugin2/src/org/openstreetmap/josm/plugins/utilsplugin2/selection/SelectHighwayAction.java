@@ -41,7 +41,7 @@ public class SelectHighwayAction extends JosmAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         DataSet ds = getLayerManager().getEditDataSet();
-        List<Way> selectedWays = OsmPrimitive.getFilteredList(ds.getSelected(), Way.class);
+        List<Way> selectedWays = new ArrayList<>(ds.getSelectedWays());
 
         if (selectedWays.size() == 1) {
             ds.setSelected(selectNamedRoad(selectedWays.get(0)));
@@ -63,7 +63,7 @@ public class SelectHighwayAction extends JosmAction {
             nodeQueue.add(firstWay.firstNode());
             while (!nodeQueue.isEmpty()) {
                 Node node = nodeQueue.remove();
-                for (Way p : OsmPrimitive.getFilteredList(node.getReferrers(), Way.class)) {
+                for (Way p : node.getParentWays()) {
                     if (!newWays.contains(p) && p.hasKey(key) && p.get(key).equals(value)) {
                         newWays.add(p);
                         nodeQueue.add(p.firstNode().equals(node) ? p.lastNode() : p.firstNode());
@@ -159,7 +159,7 @@ public class SelectHighwayAction extends JosmAction {
             for (int i = 0; i < nodesToCheck.size(); i++) {
                 Node node = nodesToCheck.get(i);
                 Integer nodeRef = nodeRefs.get(i);
-                for (Way way : OsmPrimitive.getFilteredList(node.getReferrers(), Way.class)) {
+                for (Way way : node.getParentWays()) {
                     if ((way.firstNode().equals(node) || way.lastNode().equals(node)) &&
                             !tree.contains(way) && suits(way)) {
                         tree.add(way);

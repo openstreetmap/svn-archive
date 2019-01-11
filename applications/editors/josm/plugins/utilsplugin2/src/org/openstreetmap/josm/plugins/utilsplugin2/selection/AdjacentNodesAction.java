@@ -8,6 +8,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 import org.openstreetmap.josm.actions.JosmAction;
@@ -36,23 +37,20 @@ public class AdjacentNodesAction extends JosmAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         DataSet ds = getLayerManager().getEditDataSet();
-        Collection<OsmPrimitive> selection = ds.getSelected();
-        Set<Node> selectedNodes = OsmPrimitive.getFilteredSet(selection, Node.class);
-
-        Set<Way> selectedWays = OsmPrimitive.getFilteredSet(ds.getSelected(), Way.class);
+        Collection<Node> selectedNodes = ds.getSelectedNodes();
+        Set<Way> selectedWays = new LinkedHashSet<>(ds.getSelectedWays());
 
         // if no nodes and no ways are selected, do nothing
         if (selectedNodes.isEmpty() && selectedWays.isEmpty()) return;
 
         if (selectedWays.isEmpty()) {
-            // if one node is selected, used ways connected to it to extend selecteons
+            // if one node is selected, use ways connected to it to extend selection
             // activeWays are remembered for next extend action (!!!)
 
-            // FIXME: some strange behaviour is possible if user delete some of these way
+            // FIXME: some strange behaviour is possible if user deletes some of these ways
             // how to clear activeWays during such user actions? Do not know
             if (selectedNodes.size() == 1) {
                 activeWays.clear();
-                //                System.out.println("Cleared active ways");
             }
         } else {
             // use only ways that were selected for adding nodes

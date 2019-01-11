@@ -32,9 +32,8 @@ public class ConnectedWaysAction extends JosmAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         DataSet ds = getLayerManager().getEditDataSet();
-        Collection<OsmPrimitive> selection = ds.getSelected();
-        Set<Node> selectedNodes = OsmPrimitive.getFilteredSet(selection, Node.class);
-        Set<Way> selectedWays = OsmPrimitive.getFilteredSet(ds.getSelected(), Way.class);
+        Collection<Node> selectedNodes = ds.getSelectedNodes();
+        Collection<Way> selectedWays = ds.getSelectedWays();
 
         Set<Way> newWays = new HashSet<>();
 

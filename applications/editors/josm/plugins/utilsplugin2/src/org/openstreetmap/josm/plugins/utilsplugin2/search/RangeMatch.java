@@ -53,7 +53,7 @@ public abstract class RangeMatch extends SearchCompiler.Match {
     public boolean equals(Object obj) {
         if (this == obj)
             return true;
-        if (obj == null || getClass() != obj.getClass())
+        if (!(obj instanceof RangeMatch))
             return false;
         RangeMatch other = (RangeMatch) obj;
         if (max != other.max)

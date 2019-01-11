@@ -17,7 +17,7 @@ import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.tools.Shortcut;
 
 /**
- * Use selection istory to restore previous selection
+ * Use selection history to restore previous selection
  */
 public class UndoSelectionAction extends JosmAction {
 
@@ -40,7 +40,7 @@ public class UndoSelectionAction extends JosmAction {
             if (history == null || history.isEmpty()) return; // empty history
             if (lastSel != null) {
             	Collection<OsmPrimitive> selection = ds.getSelected();
-            	if (selection.containsAll(lastSel) && lastSel.containsAll(selection)) {
+            	if (lastSel.size() == selection.size() && selection.containsAll(lastSel)) {
             		// repeated action
             	} else {
             		index = -1;
@@ -50,17 +50,18 @@ public class UndoSelectionAction extends JosmAction {
             int num = history.size();
             int k = 0;
 
-            Set<OsmPrimitive> newsel = new HashSet<>();
+            Set<OsmPrimitive> newSel = new HashSet<>();
             while (k < num) {
                 if (index+1 < history.size()) index++; else index = 0;
                 Collection<? extends OsmPrimitive> histsel = history.get(index);
                 // remove deleted entities from selection
-                newsel.clear();
-                newsel.addAll(histsel);
-                newsel.removeIf(p -> p == null || p.isDeleted());
+                newSel.clear();
+                newSel.addAll(histsel);
+                newSel.removeIf(p -> p == null || p.isDeleted());
                 k++;
-                if (!newsel.isEmpty()) {
-                	if (newsel.containsAll(ds.getSelected()) && ds.getSelected().containsAll(newsel)) {
+                if (!newSel.isEmpty()) {
+                	Collection<OsmPrimitive> oldSel = ds.getSelected();
+                	if (oldSel.size() == newSel.size() && newSel.containsAll(oldSel)) {
                 		// ignore no-change selection
                 		continue;
                 	}
@@ -69,7 +70,7 @@ public class UndoSelectionAction extends JosmAction {
             }
 
             // set new selection (is added to history)
-            ds.setSelected(newsel);
+            ds.setSelected(newSel);
             lastSel = ds.getSelected();
         }
     }

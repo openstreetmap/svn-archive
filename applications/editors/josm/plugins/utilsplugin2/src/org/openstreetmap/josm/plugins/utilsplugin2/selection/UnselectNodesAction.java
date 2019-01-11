@@ -7,15 +7,13 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.util.Collection;
-import java.util.Set;
 
 import org.openstreetmap.josm.actions.JosmAction;
-import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.tools.Shortcut;
 
 /**
- * Unselects all nodes
+ * Unselect all nodes.
  */
 public class UnselectNodesAction extends JosmAction {
 
@@ -32,9 +30,7 @@ public class UnselectNodesAction extends JosmAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        Collection<OsmPrimitive> selection = getLayerManager().getEditDataSet().getSelected();
-        Set<Node> selectedNodes = OsmPrimitive.getFilteredSet(selection, Node.class);
-        getLayerManager().getEditDataSet().clearSelection(selectedNodes);
+        getLayerManager().getEditDataSet().clearSelection(getLayerManager().getEditDataSet().getSelectedNodes());
     }
 
     @Override

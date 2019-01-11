@@ -7,6 +7,7 @@ import static org.openstreetmap.josm.tools.I18n.trn;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -21,6 +22,7 @@ import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.command.DeleteCommand;
 import org.openstreetmap.josm.command.SplitWayCommand;
 import org.openstreetmap.josm.data.UndoRedoHandler;
+import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Way;
@@ -55,15 +57,14 @@ public class SplitObjectAction extends JosmAction {
      */
     @Override
     public void actionPerformed(ActionEvent e) {
-        Collection<OsmPrimitive> selection = getLayerManager().getEditDataSet().getSelected();
-
-        List<Node> selectedNodes = OsmPrimitive.getFilteredList(selection, Node.class);
-        List<Way> selectedWays = OsmPrimitive.getFilteredList(selection, Way.class);
-
-        if (!checkSelection(selection)) {
+    	DataSet ds = getLayerManager().getEditDataSet();
+        if (!checkSelection(ds.getSelected())) {
             showWarningNotification(tr("The current selection cannot be used for splitting."));
             return;
         }
+
+        List<Node> selectedNodes = new ArrayList<>(ds.getSelectedNodes());
+        List<Way> selectedWays = new ArrayList<>(ds.getSelectedWays());
 
         Way selectedWay = null;
         Way splitWay = null;
@@ -91,7 +92,7 @@ public class SplitObjectAction extends JosmAction {
         if (selectedWay == null && !selectedNodes.isEmpty()) {
             Map<Way, Integer> wayOccurenceCounter = new HashMap<>();
             for (Node n : selectedNodes) {
-                for (Way w : OsmPrimitive.getFilteredList(n.getReferrers(), Way.class)) {
+                for (Way w : n.getParentWays()) {
                     if (!w.isUsable()) {
                         continue;
                     }

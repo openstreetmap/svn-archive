@@ -47,14 +47,13 @@ public class ExtractPointAction extends JosmAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         DataSet ds = getLayerManager().getEditDataSet();
-        Collection<OsmPrimitive> selection = ds.getSelected();
-        List<Node> selectedNodes = OsmPrimitive.getFilteredList(selection, Node.class);
+        Collection<Node> selectedNodes = ds.getSelectedNodes();
         if (selectedNodes.size() != 1) {
             new Notification(tr("This tool extracts node from its ways and requires single node to be selected."))
             .setIcon(JOptionPane.WARNING_MESSAGE).show();
             return;
         }
-        Node nd = selectedNodes.get(0);
+        Node nd = selectedNodes.iterator().next();
         Node ndCopy = new Node(nd.getCoor());
         List<Command> cmds = new LinkedList<>();
 

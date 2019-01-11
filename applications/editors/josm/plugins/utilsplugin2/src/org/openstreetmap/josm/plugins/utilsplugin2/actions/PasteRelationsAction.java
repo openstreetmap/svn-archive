@@ -27,6 +27,7 @@ import org.openstreetmap.josm.gui.datatransfer.ClipboardUtils;
 import org.openstreetmap.josm.gui.datatransfer.data.PrimitiveTransferData;
 import org.openstreetmap.josm.tools.Logging;
 import org.openstreetmap.josm.tools.Shortcut;
+import org.openstreetmap.josm.tools.Utils;
 
 /**
  * Pastes relation membership from objects in the paste buffer onto selected object(s).
@@ -58,7 +59,7 @@ public class PasteRelationsAction extends JosmAction {
         for (PrimitiveData pdata : data) {
             OsmPrimitive p = getLayerManager().getEditDataSet().getPrimitiveById(pdata.getUniqueId(), pdata.getType());
             if (p != null) {
-                for (Relation r : OsmPrimitive.getFilteredList(p.getReferrers(), Relation.class)) {
+                for (Relation r : Utils.filteredCollection(p.getReferrers(), Relation.class)) {
                     String role = relations.get(r);
                     for (RelationMember m : r.getMembers()) {
                         if (m.getMember().equals(p)) {

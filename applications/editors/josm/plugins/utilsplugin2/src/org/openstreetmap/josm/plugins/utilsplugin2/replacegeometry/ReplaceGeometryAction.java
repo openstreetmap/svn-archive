@@ -18,7 +18,7 @@ import org.openstreetmap.josm.gui.Notification;
 import org.openstreetmap.josm.tools.Shortcut;
 
 /**
- * Replaces already existing object (id>0) with a new object (id<0).
+ * Replaces already existing object (id&gt;0) with a new object (id&lt;0).
  *
  * @author Zverik
  */

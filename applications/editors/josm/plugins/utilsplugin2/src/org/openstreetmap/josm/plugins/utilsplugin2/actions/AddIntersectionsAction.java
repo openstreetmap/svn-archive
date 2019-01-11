@@ -6,6 +6,7 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -46,7 +47,7 @@ public class AddIntersectionsAction extends JosmAction {
     public void actionPerformed(ActionEvent arg0) {
         if (!isEnabled())
             return;
-        List<Way> ways = OsmPrimitive.getFilteredList(getLayerManager().getEditDataSet().getSelected(), Way.class);
+        List<Way> ways = new ArrayList<>(getLayerManager().getEditDataSet().getSelectedWays());
         if (ways.isEmpty()) {
             new Notification(
                     tr("Please select one or more ways with intersections of segments."))

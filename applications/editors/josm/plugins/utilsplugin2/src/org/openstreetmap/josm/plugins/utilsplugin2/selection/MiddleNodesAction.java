@@ -33,8 +33,7 @@ public class MiddleNodesAction extends JosmAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        Collection<OsmPrimitive> selection = getLayerManager().getEditDataSet().getSelected();
-        Set<Node> selectedNodes = OsmPrimitive.getFilteredSet(selection, Node.class);
+        Set<Node> selectedNodes = new HashSet<>(getLayerManager().getEditDataSet().getSelectedNodes());
 
         // if no 2 nodes and no ways are selected, do nothing
         if (selectedNodes.size() != 2) {

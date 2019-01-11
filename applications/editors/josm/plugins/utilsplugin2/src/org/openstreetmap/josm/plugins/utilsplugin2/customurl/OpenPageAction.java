@@ -25,11 +25,10 @@ import org.openstreetmap.josm.tools.OsmUrlToBounds;
 import org.openstreetmap.josm.tools.Shortcut;
 
 /**
- * Mirror the selected ways nodes or ways along line given by two first selected points
  *
- * Note: If a ways are selected, their nodes are mirrored
+ * Open custom URL
  *
- * @author Alexei Kasatkin, based on much copy&Paste from other MirrorAction :)
+ * @author Alexei Kasatkin
  */
 public final class OpenPageAction extends JosmAction {
 

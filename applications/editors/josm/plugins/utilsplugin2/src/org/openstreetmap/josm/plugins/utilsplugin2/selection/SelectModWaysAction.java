@@ -14,16 +14,14 @@ import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.data.UndoRedoHandler;
 import org.openstreetmap.josm.data.osm.DataSet;
-import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.tools.Shortcut;
 
 /**
- * Unselects all nodes
+ * Select last modified ways.
  */
 public class SelectModWaysAction extends JosmAction {
-    private int lastHash;
     private Command lastCmd;
 
     public SelectModWaysAction() {
@@ -38,17 +36,16 @@ public class SelectModWaysAction extends JosmAction {
     public void actionPerformed(ActionEvent e) {
         DataSet ds = getLayerManager().getEditDataSet();
         if (ds != null) {
-            Collection<OsmPrimitive> selection = ds.getSelected();
-            ds.clearSelection(OsmPrimitive.getFilteredSet(selection, Node.class));
+            ds.clearSelection(ds.getSelectedNodes());
             Command cmd;
 
             if (UndoRedoHandler.getInstance().commands == null) return;
             int num = UndoRedoHandler.getInstance().commands.size();
             if (num == 0) return;
             int k = 0, idx;
-            if (selection != null && !selection.isEmpty() && selection.hashCode() == lastHash) {
-                // we are selecting next command in history if nothing is selected
-                idx = UndoRedoHandler.getInstance().commands.indexOf(lastCmd);
+            // check if executed again, we cycle through all available commands
+            if (lastCmd != null && !ds.getSelectedWays().isEmpty() ) {
+                idx = UndoRedoHandler.getInstance().commands.lastIndexOf(lastCmd);
             } else {
                 idx = num;
             }
@@ -57,21 +54,22 @@ public class SelectModWaysAction extends JosmAction {
             do {  //  select next history element
                 if (idx > 0) idx--; else idx = num-1;
                 cmd = UndoRedoHandler.getInstance().commands.get(idx);
-                Collection<? extends OsmPrimitive> pp = cmd.getParticipatingPrimitives();
-                ways.clear();
-                for (OsmPrimitive p : pp) {  // find all affected ways
-                    if (p instanceof Way && !p.isDeleted()) ways.add((Way) p);
-                }
-                if (!ways.isEmpty() && !ds.getSelected().containsAll(ways)) {
-                    ds.setSelected(ways);
-                    lastCmd = cmd; // remember last used command and last selection
-                    lastHash = ds.getSelected().hashCode();
-                    return;
+                if (cmd.getAffectedDataSet() == ds) {
+                	Collection<? extends OsmPrimitive> pp = cmd.getParticipatingPrimitives();
+                	ways.clear();
+                	for (OsmPrimitive p : pp) {
+                		// find all affected ways
+                		if (p instanceof Way && !p.isDeleted()) ways.add((Way) p);
+                	}
+                	if (!ways.isEmpty() && !ds.getSelectedWays().containsAll(ways)) {
+                		ds.setSelected(ways);
+                		lastCmd = cmd; // remember last used command and last selection
+                		return;
+                	}
                 }
                 k++;
             } while (k < num); // try to find previous command if this affects nothing
             lastCmd = null;
-            lastHash = 0;
         }
     }
 

@@ -114,7 +114,7 @@ public class AlignWayNodesAction extends JosmAction {
                 // Otherwise calculate position by solving y=mx+c (simplified)
                 double m1 = (by - ay) / (bx - ax);
                 double c1 = ay - (ax * m1);
-                double m2 = (-1) / m1;
+                double m2 = -1.0 / m1;
                 double c2 = ny - (nx * m2);
 
                 nx = (c2 - c1) / (m1 - m2);
@@ -145,11 +145,10 @@ public class AlignWayNodesAction extends JosmAction {
     private Set<Way> findCommonWays(Set<Node> nodes) {
         Set<Way> ways = null;
         for (Node n : nodes.stream().filter(n -> n.getDataSet() != null).collect(Collectors.toList())) {
-            List<Way> referrers = OsmPrimitive.getFilteredList(n.getReferrers(), Way.class);
             if (ways == null)
-                ways = new HashSet<>(referrers);
+                ways = new HashSet<>(n.getParentWays());
             else {
-                ways.retainAll(referrers);
+                ways.retainAll(n.getParentWays());
             }
         }
         return ways;
@@ -170,6 +169,9 @@ public class AlignWayNodesAction extends JosmAction {
      * Find the largest empty span between nodes and returns the index of the node right after it.
      *
      * TODO: not the maximum node count, but maximum distance!
+     * @param way the way
+     * @param nodes the selected nodes
+     * @return the index of the node right after the largest empty span
      */
     private int findFirstNode(Way way, Set<Node> nodes) {
         int pos = 0;

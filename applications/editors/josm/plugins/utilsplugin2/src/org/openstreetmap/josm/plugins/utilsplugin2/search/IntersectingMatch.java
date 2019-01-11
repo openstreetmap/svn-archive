@@ -15,7 +15,7 @@ import org.openstreetmap.josm.plugins.utilsplugin2.selection.NodeWayUtils;
  * Find (all) ways intersecting ways or nodes which match the expression.
  */
 public class IntersectingMatch extends SearchCompiler.UnaryMatch {
-    private Collection<Way> intersecting = null;
+    private Set<Way> intersecting = null;
     boolean all;
 
     public IntersectingMatch(SearchCompiler.Match match, boolean all) {
@@ -69,7 +69,7 @@ public class IntersectingMatch extends SearchCompiler.UnaryMatch {
     public boolean equals(Object obj) {
         if (this == obj)
             return true;
-        if (!super.equals(obj) || getClass() != obj.getClass())
+        if (!super.equals(obj) || !(obj instanceof IntersectingMatch))
             return false;
         IntersectingMatch other = (IntersectingMatch) obj;
         if (all != other.all)

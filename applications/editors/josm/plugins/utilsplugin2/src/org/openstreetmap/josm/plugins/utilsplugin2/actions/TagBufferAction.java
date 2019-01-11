@@ -86,8 +86,9 @@ public class TagBufferAction extends JosmAction {
     }
 
     /**
-     * Find those tags which appear in all primitives of the selection
+     * Find those tags which appear in all tagged primitives of the selection.
      * @param selection the selection
+     * @return the common tags of all tagged primitives in the selection
      */
     private static TagCollection getCommonTags(List<OsmPrimitive> selection) {
         if (selection.isEmpty())

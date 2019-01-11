@@ -3,6 +3,7 @@ package org.openstreetmap.josm.plugins.utilsplugin2.search;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Set;
 
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
@@ -15,7 +16,7 @@ import org.openstreetmap.josm.plugins.utilsplugin2.selection.NodeWayUtils;
  * Matches all objects contained within the match expression.
  */
 public class InsideMatch extends SearchCompiler.UnaryMatch {
-    private Collection<OsmPrimitive> inside = null;
+    private Set<OsmPrimitive> inside = null;
 
     public InsideMatch(SearchCompiler.Match match) {
         super(match);
@@ -60,7 +61,7 @@ public class InsideMatch extends SearchCompiler.UnaryMatch {
     public boolean equals(Object obj) {
         if (this == obj)
             return true;
-        if (!super.equals(obj) || getClass() != obj.getClass())
+        if (!super.equals(obj) || !(obj instanceof InsideMatch))
             return false;
         InsideMatch other = (InsideMatch) obj;
         if (inside == null) {

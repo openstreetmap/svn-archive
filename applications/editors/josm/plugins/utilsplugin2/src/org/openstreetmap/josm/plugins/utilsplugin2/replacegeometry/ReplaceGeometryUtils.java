@@ -131,7 +131,7 @@ public final class ReplaceGeometryUtils {
      * @param referenceObject object with greater spatial quality
      */
     public static ReplaceGeometryCommand buildUpgradeNodeCommand(Node subjectNode, OsmPrimitive referenceObject) {
-    	if (!subjectNode.getParentWays().isEmpty()) {
+        if (!subjectNode.getParentWays().isEmpty()) {
             throw new ReplaceGeometryException(tr("Node belongs to way(s), cannot replace."));
         }
 

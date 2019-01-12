@@ -39,12 +39,12 @@ public class UndoSelectionAction extends JosmAction {
             LinkedList<Collection<? extends OsmPrimitive>> history = ds.getSelectionHistory();
             if (history == null || history.isEmpty()) return; // empty history
             if (lastSel != null) {
-            	Collection<OsmPrimitive> selection = ds.getSelected();
-            	if (lastSel.size() == selection.size() && selection.containsAll(lastSel)) {
-            		// repeated action
-            	} else {
-            		index = -1;
-            	}
+                Collection<OsmPrimitive> selection = ds.getSelected();
+                if (lastSel.size() == selection.size() && selection.containsAll(lastSel)) {
+                    // repeated action
+                } else {
+                    index = -1;
+                }
             }
 
             int num = history.size();
@@ -60,12 +60,12 @@ public class UndoSelectionAction extends JosmAction {
                 newSel.removeIf(p -> p == null || p.isDeleted());
                 k++;
                 if (!newSel.isEmpty()) {
-                	Collection<OsmPrimitive> oldSel = ds.getSelected();
-                	if (oldSel.size() == newSel.size() && newSel.containsAll(oldSel)) {
-                		// ignore no-change selection
-                		continue;
-                	}
-                	break;
+                    Collection<OsmPrimitive> oldSel = ds.getSelected();
+                    if (oldSel.size() == newSel.size() && newSel.containsAll(oldSel)) {
+                        // ignore no-change selection
+                        continue;
+                    }
+                    break;
                 }
             }
 
@@ -77,9 +77,9 @@ public class UndoSelectionAction extends JosmAction {
 
     @Override
     protected void updateEnabledState() {
-    	DataSet ds = getLayerManager().getEditDataSet();
-    	lastSel = null;
-    	index = -1;
-		setEnabled(ds != null && ds.getSelectionHistory().isEmpty());
+        DataSet ds = getLayerManager().getEditDataSet();
+        lastSel = null;
+        index = -1;
+        setEnabled(ds != null && ds.getSelectionHistory().isEmpty());
     }
 }

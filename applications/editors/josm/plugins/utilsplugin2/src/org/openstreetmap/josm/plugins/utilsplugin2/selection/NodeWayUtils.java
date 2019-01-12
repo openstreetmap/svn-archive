@@ -47,7 +47,7 @@ public final class NodeWayUtils {
      */
     static void addNeighbours(Way w, Node n, Collection<Node> nodes) {
         if (!n.getParentWays().contains(w))
-        	return;
+            return;
 
         List<Node> nodeList = w.getNodes();
         int idx = nodeList.indexOf(n);
@@ -468,14 +468,14 @@ public final class NodeWayUtils {
         Set<Node> newNodes = new HashSet<>();
         // select nodes and ways inside selected ways and multipolygons
         for (OsmPrimitive p: selected) {
-        	if (p instanceof Way) {
-        		addAllInsideWay(dataset, (Way)p, newWays, newNodes);
-        	}
+            if (p instanceof Way) {
+                addAllInsideWay(dataset, (Way) p, newWays, newNodes);
+            }
         }
         for (OsmPrimitive p: selected) {
-        	if (!(p instanceof Relation) || !p.isMultipolygon())
-        		continue;
-        	addAllInsideMultipolygon(dataset, (Relation) p, newWays, newNodes);
+            if ((p instanceof Relation) && p.isMultipolygon()) {
+                addAllInsideMultipolygon(dataset, (Relation) p, newWays, newNodes);
+            }
         }
         if (ignoreNodesOfFoundWays) {
             for (Way w : newWays) {

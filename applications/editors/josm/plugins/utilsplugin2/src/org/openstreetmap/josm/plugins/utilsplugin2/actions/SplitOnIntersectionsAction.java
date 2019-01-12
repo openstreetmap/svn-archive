@@ -36,10 +36,10 @@ public class SplitOnIntersectionsAction extends JosmAction {
     private static final String TITLE = tr("Split adjacent ways");
     private static final String TOOL_DESC = tr("Split adjacent ways on T-intersections");
     public SplitOnIntersectionsAction() {
-		super(TITLE, "dumbutils/splitonintersections", TOOL_DESC,
-				Shortcut.registerShortcut("tools:splitonintersections", tr("Tool: {0}", tr("Split adjacent ways")),
-						KeyEvent.VK_P, Shortcut.ALT_CTRL_SHIFT),
-				true);
+        super(TITLE, "dumbutils/splitonintersections", TOOL_DESC,
+            Shortcut.registerShortcut("tools:splitonintersections", tr("Tool: {0}", tr("Split adjacent ways")),
+            KeyEvent.VK_P, Shortcut.ALT_CTRL_SHIFT),
+            true);
     }
 
     @Override
@@ -94,22 +94,22 @@ public class SplitOnIntersectionsAction extends JosmAction {
         for (Entry<Way, List<Node>> entry : splitWays.entrySet()) {
             SplitWayCommand split = SplitWayCommand.split(entry.getKey(), entry.getValue(), selectedWays);
             if (split != null) {
-            	// execute, we need the result, see also #16006
-            	UndoRedoHandler.getInstance().add(split);
-            	selectedWays.remove(split.getOriginalWay());
-            	selectedWays.addAll(split.getNewWays());
+                // execute, we need the result, see also #16006
+                UndoRedoHandler.getInstance().add(split);
+                selectedWays.remove(split.getOriginalWay());
+                selectedWays.addAll(split.getNewWays());
                 list.add(split);
             }
         }
 
         if (!list.isEmpty()) {
-        	if (list.size() > 1) {
-        		// create a single command for the previously executed commands
-        		SequenceCommand seq = new SequenceCommand(TITLE, list);
-        		for (int i = 0; i < list.size(); i++) {
-        			UndoRedoHandler.getInstance().undo();
-        		}
-        		UndoRedoHandler.getInstance().add(seq);
+            if (list.size() > 1) {
+                // create a single command for the previously executed commands
+                SequenceCommand seq = new SequenceCommand(TITLE, list);
+                for (int i = 0; i < list.size(); i++) {
+                    UndoRedoHandler.getInstance().undo();
+                }
+                UndoRedoHandler.getInstance().add(seq);
             }
             getLayerManager().getEditDataSet().clearSelection();
         }

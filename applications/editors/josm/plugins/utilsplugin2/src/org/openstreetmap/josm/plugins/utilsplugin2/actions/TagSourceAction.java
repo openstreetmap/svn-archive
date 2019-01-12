@@ -43,6 +43,7 @@ public class TagSourceAction extends JosmAction {
 
         UndoRedoHandler.getInstance().add(new ChangePropertyCommand(selection, "source", source));
     }
+
     @Override
     protected void updateEnabledState() {
         if (getLayerManager().getEditDataSet() == null) {
@@ -52,28 +53,27 @@ public class TagSourceAction extends JosmAction {
             updateEnabledState(getLayerManager().getEditDataSet().getSelected());
     }
 
-
     @Override
     protected void updateEnabledState(Collection<? extends OsmPrimitive> selection) {
         if (!selectionBuf.isEmpty()) {
-        	String newSource = null;
-        	for (OsmPrimitive p : selectionBuf) {
-        		String s = p.get("source");
-        		if (s != null) {
-        			if (newSource == null)
-        				newSource = s;
-        			else {
-        				if (!newSource.equals(s)) {
-        					newSource = null;
-        					break;
-        				}
-        			}
-        		}
-        	}
-        	if (newSource != null && !newSource.isEmpty()) {
+            String newSource = null;
+            for (OsmPrimitive p : selectionBuf) {
+                String s = p.get("source");
+                if (s != null) {
+                    if (newSource == null)
+                        newSource = s;
+                    else {
+                        if (!newSource.equals(s)) {
+                            newSource = null;
+                            break;
+                        }
+                    }
+                }
+            }
+            if (newSource != null && !newSource.isEmpty()) {
                 source = newSource;
                 Config.getPref().put("sourcetag.value", source);
-        	}
+            }
         }
         selectionBuf = new ArrayList<>(selection);
         setEnabled(!selection.isEmpty() && source != null && !source.isEmpty());

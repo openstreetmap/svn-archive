@@ -57,7 +57,7 @@ public class SplitObjectAction extends JosmAction {
      */
     @Override
     public void actionPerformed(ActionEvent e) {
-    	DataSet ds = getLayerManager().getEditDataSet();
+        DataSet ds = getLayerManager().getEditDataSet();
         if (!checkSelection(ds.getSelected())) {
             showWarningNotification(tr("The current selection cannot be used for splitting."));
             return;

@@ -44,8 +44,8 @@ public class SelectModNodesAction extends JosmAction {
             int num = UndoRedoHandler.getInstance().commands.size();
             if (num == 0) return;
             int k = 0, idx;
-         // check if executed again, we cycle through all available commands
-            if (lastCmd != null && !selection.isEmpty() ) {
+            // check if executed again, we cycle through all available commands
+            if (lastCmd != null && !selection.isEmpty()) {
                 idx = UndoRedoHandler.getInstance().commands.lastIndexOf(lastCmd);
             } else {
                 idx = num;
@@ -56,16 +56,16 @@ public class SelectModNodesAction extends JosmAction {
                 if (idx > 0) idx--; else idx = num-1;
                 cmd = UndoRedoHandler.getInstance().commands.get(idx);
                 if (cmd.getAffectedDataSet() == ds) {
-                	Collection<? extends OsmPrimitive> pp = cmd.getParticipatingPrimitives();
-                	nodes.clear();
-                	for (OsmPrimitive p : pp) {  // find all affected ways
-                		if (p instanceof Node && !p.isDeleted()) nodes.add((Node) p);
-                	}
-                	if (!nodes.isEmpty() && !ds.getSelectedNodes().containsAll(nodes)) {
-                		ds.setSelected(nodes);
-                		lastCmd = cmd; // remember last used command and last selection
-                		return;
-                	}
+                    Collection<? extends OsmPrimitive> pp = cmd.getParticipatingPrimitives();
+                    nodes.clear();
+                    for (OsmPrimitive p : pp) {  // find all affected ways
+                        if (p instanceof Node && !p.isDeleted()) nodes.add((Node) p);
+                    }
+                    if (!nodes.isEmpty() && !ds.getSelectedNodes().containsAll(nodes)) {
+                        ds.setSelected(nodes);
+                        lastCmd = cmd; // remember last used command and last selection
+                        return;
+                    }
                 }
                 k++;
             } while (k < num); // try to find previous command if this affects nothing

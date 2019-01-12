@@ -44,7 +44,7 @@ public class SelectModWaysAction extends JosmAction {
             if (num == 0) return;
             int k = 0, idx;
             // check if executed again, we cycle through all available commands
-            if (lastCmd != null && !ds.getSelectedWays().isEmpty() ) {
+            if (lastCmd != null && !ds.getSelectedWays().isEmpty()) {
                 idx = UndoRedoHandler.getInstance().commands.lastIndexOf(lastCmd);
             } else {
                 idx = num;
@@ -55,17 +55,17 @@ public class SelectModWaysAction extends JosmAction {
                 if (idx > 0) idx--; else idx = num-1;
                 cmd = UndoRedoHandler.getInstance().commands.get(idx);
                 if (cmd.getAffectedDataSet() == ds) {
-                	Collection<? extends OsmPrimitive> pp = cmd.getParticipatingPrimitives();
-                	ways.clear();
-                	for (OsmPrimitive p : pp) {
-                		// find all affected ways
-                		if (p instanceof Way && !p.isDeleted()) ways.add((Way) p);
-                	}
-                	if (!ways.isEmpty() && !ds.getSelectedWays().containsAll(ways)) {
-                		ds.setSelected(ways);
-                		lastCmd = cmd; // remember last used command and last selection
-                		return;
-                	}
+                    Collection<? extends OsmPrimitive> pp = cmd.getParticipatingPrimitives();
+                    ways.clear();
+                    for (OsmPrimitive p : pp) {
+                        // find all affected ways
+                        if (p instanceof Way && !p.isDeleted()) ways.add((Way) p);
+                    }
+                    if (!ways.isEmpty() && !ds.getSelectedWays().containsAll(ways)) {
+                        ds.setSelected(ways);
+                        lastCmd = cmd; // remember last used command and last selection
+                        return;
+                    }
                 }
                 k++;
             } while (k < num); // try to find previous command if this affects nothing

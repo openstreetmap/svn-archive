@@ -473,7 +473,7 @@ public final class NodeWayUtils {
         	}
         }
         for (OsmPrimitive p: selected) {
-        	if (!(p instanceof Relation) || p.isMultipolygon())
+        	if (!(p instanceof Relation) || !p.isMultipolygon())
         		continue;
         	addAllInsideMultipolygon(dataset, (Relation) p, newWays, newNodes);
         }

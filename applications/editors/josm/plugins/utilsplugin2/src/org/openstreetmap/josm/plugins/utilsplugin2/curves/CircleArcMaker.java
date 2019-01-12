@@ -130,7 +130,7 @@ public final class CircleArcMaker {
         arcNodes.add(n1);
         int i = 1;
         for (EastNorth p : slice(points, 1, -2)) {
-            if (i == p2Index.value) {
+            if (p2Index.value != null && i == p2Index.value) {
                 Node n2new = new Node(n2);
                 n2new.setEastNorth(p);
                 arcNodes.add(n2); // add the original n2, or else we can't find it in the target ways

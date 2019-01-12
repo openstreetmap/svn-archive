@@ -2,7 +2,6 @@
 package org.openstreetmap.josm.plugins.utilsplugin2;
 
 import javax.swing.JMenu;
-import javax.swing.JMenuItem;
 
 import org.openstreetmap.josm.data.osm.search.SearchCompiler;
 import org.openstreetmap.josm.gui.MainApplication;
@@ -54,43 +53,6 @@ public class UtilsPlugin2 extends Plugin {
 
     private static UtilsPlugin2 instance;
 
-    JMenuItem copyTags;
-
-    JMenuItem unglueRelation;
-    JMenuItem symmetry;
-    JMenuItem addIntersections;
-    JMenuItem splitObject;
-    JMenuItem selectWayNodes;
-    JMenuItem adjNodes;
-    JMenuItem unsNodes;
-    JMenuItem midNodes;
-    JMenuItem adjWays;
-    JMenuItem adjWaysAll;
-    JMenuItem intWays;
-    JMenuItem intWaysR;
-    JMenuItem allInside;
-    JMenuItem undoSelection;
-    JMenuItem extractPoint;
-    JMenuItem wiki;
-    JMenuItem latlon;
-    JMenuItem multiTag;
-
-    JMenuItem replaceGeometry;
-    JMenuItem replaceMembership;
-    JMenuItem tagBuffer;
-    JMenuItem sourceTag;
-    JMenuItem pasteRelations;
-    JMenuItem alignWayNodes;
-    JMenuItem splitOnIntersections;
-    JMenuItem selModifiedNodes;
-    JMenuItem selModifiedWays;
-    JMenuItem selectHighway;
-    JMenuItem selectAreaBoundary;
-
-    JMenuItem selectURL;
-
-    JMenuItem drawArc;
-
     public UtilsPlugin2(PluginInformation info) {
         super(info);
         instance = this;
@@ -100,44 +62,46 @@ public class UtilsPlugin2 extends Plugin {
         JMenu dataMenu = MainApplication.getMenu().dataMenu;
         JMenu selectionMenu = MainApplication.getMenu().selectionMenu;
 
-        copyTags = MainMenu.addAfter(editMenu, new CopyTagsAction(), false, MainApplication.getMenu().copy);
+        MainMenu.addAfter(editMenu, new CopyTagsAction(), false, MainApplication.getMenu().copy);
 
-        addIntersections = MainMenu.add(toolsMenu, new AddIntersectionsAction());
-        splitObject = MainMenu.add(toolsMenu, new SplitObjectAction());
-        alignWayNodes = MainMenu.add(toolsMenu, new AlignWayNodesAction());
-        symmetry = MainMenu.add(toolsMenu, new SymmetryAction());
-        splitOnIntersections = MainMenu.add(toolsMenu, new SplitOnIntersectionsAction());
-        unglueRelation = MainMenu.add(toolsMenu, new UnGlueRelationAction());
+        MainMenu.add(toolsMenu, new AddIntersectionsAction());
+        MainMenu.add(toolsMenu, new SplitObjectAction());
+        MainMenu.add(toolsMenu, new AlignWayNodesAction());
+        MainMenu.add(toolsMenu, new SymmetryAction());
+        MainMenu.add(toolsMenu, new SplitOnIntersectionsAction());
+        MainMenu.add(toolsMenu, new UnGlueRelationAction());
+
         toolsMenu.addSeparator();
-        replaceGeometry = MainMenu.add(toolsMenu, new ReplaceGeometryAction());
-        replaceMembership = MainMenu.add(toolsMenu, new ReplaceMembershipAction());
-        extractPoint = MainMenu.add(toolsMenu, new ExtractPointAction());
-        tagBuffer = MainMenu.add(toolsMenu, new TagBufferAction());
-        sourceTag = MainMenu.add(toolsMenu, new TagSourceAction());
-        pasteRelations = MainMenu.add(toolsMenu, new PasteRelationsAction());
-        wiki = MainMenu.add(dataMenu, new OpenPageAction());
-        latlon = MainMenu.add(toolsMenu, new LatLonAction());
-        drawArc = MainMenu.add(toolsMenu, new CurveAction());
+
+        MainMenu.add(toolsMenu, new ReplaceGeometryAction());
+        MainMenu.add(toolsMenu, new ReplaceMembershipAction());
+        MainMenu.add(toolsMenu, new ExtractPointAction());
+        MainMenu.add(toolsMenu, new TagBufferAction());
+        MainMenu.add(toolsMenu, new TagSourceAction());
+        MainMenu.add(toolsMenu, new PasteRelationsAction());
+        MainMenu.add(dataMenu, new OpenPageAction());
+        MainMenu.add(toolsMenu, new LatLonAction());
+        MainMenu.add(toolsMenu, new CurveAction());
 
         selectionMenu.addSeparator();
 
-        selectWayNodes = MainMenu.add(selectionMenu, new SelectWayNodesAction());
-        adjNodes = MainMenu.add(selectionMenu, new AdjacentNodesAction());
-        unsNodes = MainMenu.add(selectionMenu, new UnselectNodesAction());
-        midNodes = MainMenu.add(selectionMenu, new MiddleNodesAction());
-        adjWays = MainMenu.add(selectionMenu, new AdjacentWaysAction());
-        adjWaysAll = MainMenu.add(selectionMenu, new ConnectedWaysAction());
-        intWays = MainMenu.add(selectionMenu, new IntersectedWaysAction());
-        intWaysR = MainMenu.add(selectionMenu, new IntersectedWaysRecursiveAction());
-        allInside = MainMenu.add(selectionMenu, new SelectAllInsideAction());
-        selModifiedNodes = MainMenu.add(selectionMenu, new SelectModNodesAction());
-        selModifiedWays = MainMenu.add(selectionMenu, new SelectModWaysAction());
-        undoSelection = MainMenu.add(selectionMenu, new UndoSelectionAction());
-        selectHighway = MainMenu.add(selectionMenu, new SelectHighwayAction());
-        selectAreaBoundary = MainMenu.add(selectionMenu, new SelectBoundaryAction());
+        MainMenu.add(selectionMenu, new SelectWayNodesAction());
+        MainMenu.add(selectionMenu, new AdjacentNodesAction());
+        MainMenu.add(selectionMenu, new UnselectNodesAction());
+        MainMenu.add(selectionMenu, new MiddleNodesAction());
+        MainMenu.add(selectionMenu, new AdjacentWaysAction());
+        MainMenu.add(selectionMenu, new ConnectedWaysAction());
+        MainMenu.add(selectionMenu, new IntersectedWaysAction());
+        MainMenu.add(selectionMenu, new IntersectedWaysRecursiveAction());
+        MainMenu.add(selectionMenu, new SelectAllInsideAction());
+        MainMenu.add(selectionMenu, new SelectModNodesAction());
+        MainMenu.add(selectionMenu, new SelectModWaysAction());
+        MainMenu.add(selectionMenu, new UndoSelectionAction());
+        MainMenu.add(selectionMenu, new SelectHighwayAction());
+        MainMenu.add(selectionMenu, new SelectBoundaryAction());
 
-        selectURL = MainMenu.add(dataMenu, new ChooseURLAction());
-        multiTag = MainMenu.add(dataMenu, new MultiTagAction());
+        MainMenu.add(dataMenu, new ChooseURLAction());
+        MainMenu.add(dataMenu, new MultiTagAction());
 
         // register search operators
         SearchCompiler.addMatchFactory(new UtilsUnaryMatchFactory());
@@ -146,37 +110,6 @@ public class UtilsPlugin2 extends Plugin {
 
     @Override
     public void mapFrameInitialized(MapFrame oldFrame, MapFrame newFrame) {
-        boolean enabled = newFrame != null;
-        enabled = false;
-        unglueRelation.setEnabled(enabled);
-        addIntersections.setEnabled(enabled);
-        splitObject.setEnabled(enabled);
-
-        replaceGeometry.setEnabled(enabled);
-        replaceMembership.setEnabled(enabled);
-        tagBuffer.setEnabled(enabled);
-        sourceTag.setEnabled(enabled);
-        pasteRelations.setEnabled(enabled);
-        alignWayNodes.setEnabled(enabled);
-        splitOnIntersections.setEnabled(enabled);
-        wiki.setEnabled(enabled);
-
-        selectWayNodes.setEnabled(enabled);
-        adjNodes.setEnabled(enabled);
-        unsNodes.setEnabled(enabled);
-        midNodes.setEnabled(enabled);
-        adjWays.setEnabled(enabled);
-        adjWaysAll.setEnabled(enabled);
-        intWays.setEnabled(enabled);
-        intWaysR.setEnabled(enabled);
-        selModifiedNodes.setEnabled(enabled);
-        selModifiedWays.setEnabled(enabled);
-        undoSelection.setEnabled(enabled);
-        selectURL.setEnabled(enabled);
-        allInside.setEnabled(enabled);
-
-        drawArc.setEnabled(enabled);
-        multiTag.setEnabled(enabled);
     }
 
     @Override

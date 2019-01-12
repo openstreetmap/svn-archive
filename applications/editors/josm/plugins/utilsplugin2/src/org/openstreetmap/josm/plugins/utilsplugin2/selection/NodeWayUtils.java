@@ -409,7 +409,7 @@ public final class NodeWayUtils {
     public static boolean isPointInsidePolygon(EastNorth point, Iterable<EastNorth> polygonPoints) {
         int n = getRayIntersectionsCount(point, polygonPoints);
         if (n < 0) return true; // we are near node or near edge
-        return (n % 2 == 1);
+        return (n % 2 != 0);
     }
 
     /**

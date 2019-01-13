@@ -6,7 +6,7 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 import org.openstreetmap.josm.actions.ExtensionFileFilter;
 
 /**
- * 
+ * Constants for o5m plugin.
  * @author GerdP
  *
  */

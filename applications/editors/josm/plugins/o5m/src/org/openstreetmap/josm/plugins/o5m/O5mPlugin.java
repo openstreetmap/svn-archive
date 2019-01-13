@@ -8,6 +8,7 @@ import org.openstreetmap.josm.plugins.o5m.io.O5mImporter;
 
 /**
  * 
+ * o5m Plugin
  * @author GerdP
  *
  */

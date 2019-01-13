@@ -13,6 +13,7 @@ import org.openstreetmap.josm.io.CachedFile;
 import org.openstreetmap.josm.plugins.o5m.O5mConstants;
 
 /**
+ * OSM Importer for o5m format (*.o5m).
  * @author GerdP
  *
  */

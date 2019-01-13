@@ -79,7 +79,7 @@ public class ConnectedMatch extends SearchCompiler.UnaryMatch {
     public boolean equals(Object obj) {
         if (this == obj)
             return true;
-        if (!super.equals(obj) || !(obj instanceof ConnectedMatch))
+        if (!super.equals(obj) || getClass() != obj.getClass())
             return false;
         ConnectedMatch other = (ConnectedMatch) obj;
         if (all != other.all)

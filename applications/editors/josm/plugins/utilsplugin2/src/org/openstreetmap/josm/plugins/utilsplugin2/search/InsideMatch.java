@@ -61,7 +61,7 @@ public class InsideMatch extends SearchCompiler.UnaryMatch {
     public boolean equals(Object obj) {
         if (this == obj)
             return true;
-        if (!super.equals(obj) || !(obj instanceof InsideMatch))
+        if (!super.equals(obj) || getClass() != obj.getClass())
             return false;
         InsideMatch other = (InsideMatch) obj;
         if (inside == null) {

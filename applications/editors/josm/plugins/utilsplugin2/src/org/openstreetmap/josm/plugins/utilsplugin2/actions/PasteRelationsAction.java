@@ -80,7 +80,7 @@ public class PasteRelationsAction extends JosmAction {
 
         List<Command> commands = new ArrayList<>();
         for (Entry<Relation, String> entry : relations.entrySet()) {
-        	Relation rel = entry.getKey();
+            Relation rel = entry.getKey();
             Relation r = new Relation(rel);
             boolean changed = false;
             for (OsmPrimitive p : selection) {

@@ -17,12 +17,12 @@ import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.DataSource;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.DataSet;
-import org.openstreetmap.josm.data.osm.Node;
+import org.openstreetmap.josm.data.osm.NodeData;
 import org.openstreetmap.josm.data.osm.OsmPrimitiveType;
-import org.openstreetmap.josm.data.osm.Relation;
+import org.openstreetmap.josm.data.osm.RelationData;
 import org.openstreetmap.josm.data.osm.RelationMemberData;
 import org.openstreetmap.josm.data.osm.User;
-import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.data.osm.WayData;
 import org.openstreetmap.josm.data.osm.UploadPolicy;
 import org.openstreetmap.josm.gui.progress.NullProgressMonitor;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
@@ -256,25 +256,26 @@ public class O5mReader extends AbstractReader {
             assert flon >= -180.0 && flon <= 180.0;  
             if (version == 0)
                 discourageUpload = true;
-            Node node = new Node(lastNodeId, version == 0 ? 1 : version);
-            node.setCoor(new LatLon(flat, flon).getRoundedToOsmPrecision());
+            NodeData nd = new NodeData(lastNodeId);
+            nd.setVersion(version == 0 ? 1 : version);
+            nd.setCoor(new LatLon(flat, flon).getRoundedToOsmPrecision());
 
-
-            checkCoordinates(node.getCoor());
+            checkCoordinates(nd.getCoor());
             checkChangesetId(lastChangeSet);
-            node.setChangesetId((int) lastChangeSet);
+            nd.setChangesetId((int) lastChangeSet);
             // User id
             if (lastTs != 0) {
                 checkTimestamp(lastTs);
-                node.setTimestamp(new Date(lastTs * 1000));
+                nd.setTimestamp(new Date(lastTs * 1000));
                 if (osmUser != null)
-                    node.setUser(osmUser);
+                    nd.setUser(osmUser);
             }
             if (bytesToRead > 0) {
                 Map<String, String> keys = readTags();
-                node.setKeys(keys);
+                nd.setKeys(keys);
             }
-            externalIdMap.put(node.getPrimitiveId(), node);
+            buildPrimitive(nd);
+            
         } catch (IllegalDataException e) {
             exception = e;
         }
@@ -298,15 +299,16 @@ public class O5mReader extends AbstractReader {
                 return; // only wayId + version: this is a delete action, we ignore it
             if (version == 0)
                 discourageUpload = true;
-            final Way way = new Way(lastWayId, version == 0 ? 1 : version);
+            final WayData wd = new WayData(lastWayId);
+            wd.setVersion(version == 0 ? 1 : version);
             checkChangesetId(lastChangeSet);
-            way.setChangesetId((int) lastChangeSet);
+            wd.setChangesetId((int) lastChangeSet);
             // User id
             if (lastTs != 0) {
                 checkTimestamp(lastTs);
-                way.setTimestamp(new Date(lastTs * 1000));
+                wd.setTimestamp(new Date(lastTs * 1000));
                 if (osmUser != null)
-                    way.setUser(osmUser);
+                    wd.setUser(osmUser);
             }
 
             long refSize = readUnsignedNum32();
@@ -319,9 +321,9 @@ public class O5mReader extends AbstractReader {
             }
 
             Map<String, String> keys = readTags();
-            way.setKeys(keys);
-            ways.put(way.getUniqueId(), nodeIds);
-            externalIdMap.put(way.getPrimitiveId(), way);
+            wd.setKeys(keys);
+            ways.put(wd.getUniqueId(), nodeIds);
+            buildPrimitive(wd);
         } catch (IllegalDataException e) {
             exception = e;
         }
@@ -344,7 +346,8 @@ public class O5mReader extends AbstractReader {
                 return; // only relId + version: this is a delete action, we ignore it 
             if (version == 0)
                 discourageUpload = true;
-            final Relation rel = new Relation(lastRelId, version == 0 ? 1 : version);
+            final RelationData rel = new RelationData(lastRelId);
+            rel.setVersion(version == 0 ? 1 : version);
             checkChangesetId(lastChangeSet);
             rel.setChangesetId((int) lastChangeSet);
             if (lastTs != 0) {
@@ -377,7 +380,7 @@ public class O5mReader extends AbstractReader {
             Map<String, String> keys = readTags();
             rel.setKeys(keys);
             relations.put(rel.getUniqueId(), members);
-            externalIdMap.put(rel.getPrimitiveId(), rel);
+            buildPrimitive(rel);
         } catch (IllegalDataException e) {
             exception = e;
         }

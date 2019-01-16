@@ -16,14 +16,14 @@ import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.DataSource;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.DataSet;
-import org.openstreetmap.josm.data.osm.UploadPolicy;
-import org.openstreetmap.josm.data.osm.Node;
-import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.data.osm.NodeData;
 import org.openstreetmap.josm.data.osm.OsmPrimitiveType;
-import org.openstreetmap.josm.data.osm.Relation;
+import org.openstreetmap.josm.data.osm.PrimitiveData;
+import org.openstreetmap.josm.data.osm.RelationData;
 import org.openstreetmap.josm.data.osm.RelationMemberData;
+import org.openstreetmap.josm.data.osm.UploadPolicy;
 import org.openstreetmap.josm.data.osm.User;
-import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.data.osm.WayData;
 import org.openstreetmap.josm.gui.progress.NullProgressMonitor;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.io.AbstractReader;
@@ -91,7 +91,7 @@ public class PbfReader extends AbstractReader {
                 && LatLon.isValidLon(minlon) && LatLon.isValidLon(maxlon);
         }
 
-        private void setMetadata(OsmPrimitive osm, Info info) throws IllegalDataException {
+        private void setMetadata(PrimitiveData osm, Info info) throws IllegalDataException {
             if (info.hasChangeset()) {
                 checkChangesetId(info.getChangeset());
                 osm.setChangesetId((int) info.getChangeset());
@@ -145,27 +145,28 @@ public class PbfReader extends AbstractReader {
                     long timestamp = 0;
                     for (int i = 0; i < nodes.getIdCount(); i++) {
                         // Id (delta) and version (normal)
-                        Node node = new Node(nodeId += nodes.getId(i), nodes.hasDenseinfo() ? nodes.getDenseinfo().getVersion(i) : 1);
+                        NodeData nd = new NodeData(nodeId += nodes.getId(i));
+                        nd.setVersion(nodes.hasDenseinfo() ? nodes.getDenseinfo().getVersion(i) : 1);
                         // Lat/Lon (delta)
-                        node.setCoor(new LatLon(parseLat(nodeLat += nodes.getLat(i)),
+                        nd.setCoor(new LatLon(parseLat(nodeLat += nodes.getLat(i)),
                                                 parseLon(nodeLon += nodes.getLon(i))).getRoundedToOsmPrecision());
-                        checkCoordinates(node.getCoor());
+                        checkCoordinates(nd.getCoor());
                         if (nodes.hasDenseinfo()) {
                             DenseInfo info = nodes.getDenseinfo();
                             // Changeset (delta)
                             if (info.getChangesetCount() > i) {
                                 checkChangesetId(changesetId += info.getChangeset(i));
-                                node.setChangesetId((int) changesetId);
+                                nd.setChangesetId((int) changesetId);
                             }
                             // User (delta)
                             if (info.getUidCount() > i && info.getUserSidCount() > i) {
-                                node.setUser(User.createOsmUser(uid += info.getUid(i),
+                                nd.setUser(User.createOsmUser(uid += info.getUid(i),
                                                  getStringById(suid += info.getUserSid(i))));
                             }
                             // Timestamp (delta)
                             if (info.getTimestampCount() > i) {
                                 checkTimestamp(timestamp += info.getTimestamp(i));
-                                node.setTimestamp(new Date(date_granularity * timestamp));
+                                nd.setTimestamp(new Date(date_granularity * timestamp));
                             }
                         }
                         // A single table contains all keys/values of all nodes.
@@ -182,8 +183,8 @@ public class PbfReader extends AbstractReader {
                                 throw new IllegalDataException(tr("Invalid DenseNodes key/values table"));
                             }
                         }
-                        node.setKeys(keys);
-                        externalIdMap.put(node.getPrimitiveId(), node);
+                        nd.setKeys(keys);
+                        buildPrimitive(nd);
                     }
                 } catch (IllegalDataException e) {
                     exception = e;
@@ -199,16 +200,17 @@ public class PbfReader extends AbstractReader {
                         final Info info = n.getInfo();
                         if (!info.hasVersion())
                             discourageUpload = true;
-                        final Node node = new Node(n.getId(), info.hasVersion() ? info.getVersion() : 1);
-                        node.setCoor(new LatLon(parseLat(n.getLat()), parseLon(n.getLon())).getRoundedToOsmPrecision());
-                        checkCoordinates(node.getCoor());
-                        setMetadata(node, info);
+                        NodeData nd = new NodeData(n.getId());
+                        nd.setVersion(info.hasVersion() ? info.getVersion() : 1);
+                        nd.setCoor(new LatLon(parseLat(n.getLat()), parseLon(n.getLon())).getRoundedToOsmPrecision());
+                        checkCoordinates(nd.getCoor());
+                        setMetadata(nd, info);
                         Map<String, String> keys = new HashMap<>();
                         for (int i = 0; i < n.getKeysCount(); i++) {
                             keys.put(getStringById(n.getKeys(i)), getStringById(n.getVals(i)));
                         }
-                        node.setKeys(keys);
-                        externalIdMap.put(node.getPrimitiveId(), node);
+                        nd.setKeys(keys);
+                        buildPrimitive(nd);
                     }
                 } catch (IllegalDataException e) {
                     exception = e;
@@ -224,20 +226,21 @@ public class PbfReader extends AbstractReader {
                         final Info info = w.getInfo();
                         if (!info.hasVersion())
                             discourageUpload = true;
-                        final Way way = new Way(w.getId(), info.hasVersion() ? info.getVersion() : 1);
-                        setMetadata(way, info);
+                        final WayData wd = new WayData(w.getId());
+                        wd.setVersion(info.hasVersion() ? info.getVersion() : 1);
+                        setMetadata(wd, info);
                         Map<String, String> keys = new HashMap<>();
                         for (int i = 0; i < w.getKeysCount(); i++) {
                             keys.put(getStringById(w.getKeys(i)), getStringById(w.getVals(i)));
                         }
-                        way.setKeys(keys);
+                        wd.setKeys(keys);
                         long previousId = 0; // Node ids are delta coded
                         Collection<Long> nodeIds = new ArrayList<>();
                         for (Long id : w.getRefsList()) {
                             nodeIds.add(previousId += id);
                         }
-                        ways.put(way.getUniqueId(), nodeIds);
-                        externalIdMap.put(way.getPrimitiveId(), way);
+                        ways.put(wd.getUniqueId(), nodeIds);
+                        buildPrimitive(wd);
                     }
                 } catch (IllegalDataException e) {
                     exception = e;
@@ -253,13 +256,14 @@ public class PbfReader extends AbstractReader {
                         final Info info = r.getInfo();
                         if (!info.hasVersion())
                             discourageUpload = true;
-                        final Relation rel = new Relation(r.getId(), info.hasVersion() ? info.getVersion() : 1);
-                        setMetadata(rel, info);
+                        final RelationData rd = new RelationData(r.getId());
+                        rd.setVersion(info.hasVersion() ? info.getVersion() : 1);
+                        setMetadata(rd, info);
                         Map<String, String> keys = new HashMap<>();
                         for (int i = 0; i < r.getKeysCount(); i++) {
                             keys.put(getStringById(r.getKeys(i)), getStringById(r.getVals(i)));
                         }
-                        rel.setKeys(keys);
+                        rd.setKeys(keys);
                         long previousId = 0; // Member ids are delta coded
                         Collection<RelationMemberData> members = new ArrayList<>();
                         for (int i = 0; i < r.getMemidsCount(); i++) {
@@ -268,8 +272,8 @@ public class PbfReader extends AbstractReader {
                                     mapOsmType(r.getTypes(i)),
                                     previousId += r.getMemids(i)));
                         }
-                        relations.put(rel.getUniqueId(), members);
-                        externalIdMap.put(rel.getPrimitiveId(), rel);
+                        relations.put(rd.getUniqueId(), members);
+                        buildPrimitive(rd);
                     }
                 } catch (IllegalDataException e) {
                     exception = e;

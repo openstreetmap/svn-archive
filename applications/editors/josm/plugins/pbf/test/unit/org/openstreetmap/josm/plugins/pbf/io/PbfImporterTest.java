@@ -79,4 +79,19 @@ public class PbfImporterTest {
         assertEquals(8727, ds.getWays().size());
         assertEquals(97, ds.getRelations().size());
     }
+    
+    /**
+     * Non-regression test for <a href="https://josm.openstreetmap.de/ticket/14545">Ticket #14545</a>.
+     * @throws Exception if an error occurs
+     */
+    @Test
+    public void testTicket14545() throws Exception {
+        DataSet ds = new PbfImporter().parseDataSet(TestUtils.getRegressionDataFile(14545, "reg14545.osm.pbf"));
+        assertNotNull(ds);
+        assertEquals(12, ds.getNodes().size());
+        assertEquals(2, ds.getWays().size());
+        assertEquals(1, ds.getRelations().size());
+    }
+
+    
 }

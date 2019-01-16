@@ -3,6 +3,7 @@
 	<name>JOSM-PBF</name>
 	<comment></comment>
 	<projects>
+		<project>josm</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

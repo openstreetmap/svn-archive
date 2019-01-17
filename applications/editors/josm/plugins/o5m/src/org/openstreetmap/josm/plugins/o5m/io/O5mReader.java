@@ -7,6 +7,7 @@ import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -38,7 +39,7 @@ import org.openstreetmap.josm.tools.Logging;
  *
  */
 public class O5mReader extends AbstractReader {
-    public IllegalDataException exception = null;
+    private IllegalDataException exception = null;
     private boolean discourageUpload;
     
     private static void checkCoordinates(LatLon coor) throws IllegalDataException {
@@ -79,7 +80,6 @@ public class O5mReader extends AbstractReader {
 
     private BufferedInputStream fis;
     private InputStream is;
-    private ByteArrayInputStream bis;
 
     // buffer for byte -> String conversions
     private byte[] cnvBuffer; 
@@ -93,7 +93,7 @@ public class O5mReader extends AbstractReader {
     // a counter that must be maintained by all routines that read data from the stream
     private int bytesToRead;
     // total number of bytes read from stream
-    long countBytes;
+    private long countBytes;
 
     // for delta calculations
     private long lastNodeId;
@@ -102,7 +102,8 @@ public class O5mReader extends AbstractReader {
     private long[] lastRef;
     private long lastTs;
     private long lastChangeSet;
-    private int lastLon, lastLat;
+    private int lastLon;
+    private int lastLat;
     private int version;
     private User osmUser;
     private String header; 
@@ -174,10 +175,9 @@ public class O5mReader extends AbstractReader {
                         neededBytes -= bytesRead;
                     } 
                     ioPos = 0;
-                    bis = new ByteArrayInputStream(ioBuf, 0, bytesToRead);
-                    is = bis;
+                    is = new ByteArrayInputStream(ioBuf, 0, bytesToRead);
                     break;                    
-                default:    
+                default: break;    
                 }
             }
             if (fileType == EOF_FLAG) done = true; 
@@ -228,15 +228,14 @@ public class O5mReader extends AbstractReader {
                 && LatLon.isValidLon(minlon) && LatLon.isValidLon(maxlon)) {
             ds.addDataSource(new DataSource(b, header));
         } else {
-            Logging.error("Invalid Bounds: "+b);
+            Logging.error("Invalid Bounds: " + b);
         }
     }
 
     /**
      * read a node data set 
-     * @throws IOException in case of I/O error
      */
-    private void readNode() throws IOException {
+    private void readNode() {
         if (exception != null)
             return;
         try {
@@ -284,9 +283,8 @@ public class O5mReader extends AbstractReader {
 
     /**
      * read a way data set
-     * @throws IOException in case of I/O error
      */
-    private void readWay() throws IOException {
+    private void readWay() {
         if (exception != null)
             return;
         try {
@@ -332,9 +330,8 @@ public class O5mReader extends AbstractReader {
 
     /**
      * read a relation data set
-     * @throws IOException in case of I/O error
      */
-    private void readRel() throws IOException {
+    private void readRel() {
         if (exception != null)
             return;
         try {
@@ -386,7 +383,7 @@ public class O5mReader extends AbstractReader {
         }
     }
 
-    private Map<String, String> readTags() throws IOException {
+    private Map<String, String> readTags() {
         Map<String, String> keys = new HashMap<>();
         while (bytesToRead > 0) {
             readStringPair();
@@ -423,9 +420,8 @@ public class O5mReader extends AbstractReader {
     /**
      * Read version, time stamp and change set and author.  
      * We are not interested in the values, but we have to maintain the string table.
-     * @throws IOException in case of I/O error
      */
-    private void readVersionTsAuthor() throws IOException {
+    private void readVersionTsAuthor() {
         stringPair[0] = null;
         stringPair[1] = null;
         version = readUnsignedNum32(); 
@@ -441,9 +437,8 @@ public class O5mReader extends AbstractReader {
 
     /**
      * Read author . 
-     * @throws IOException in case of I/O error
      */
-    private void readAuthor() throws IOException {
+    private void readAuthor() {
         int stringRef = readUnsignedNum32();
         if (stringRef == 0) {
             long toReadStart = bytesToRead;
@@ -464,14 +459,14 @@ public class O5mReader extends AbstractReader {
                 cnvBuffer[buffPos++] = (byte) b;
 
                 if (b == 0)
-                    stringPair[1] = new String(cnvBuffer, start, buffPos-1, "UTF-8");
+                    stringPair[1] = new String(cnvBuffer, start, buffPos-1, StandardCharsets.UTF_8);
             }
             long bytes = toReadStart - bytesToRead;
             if (bytes <= MAX_STRING_PAIR_SIZE)
                 storeStringPair();
         } else 
             setStringRefPair(stringRef);
-        if (stringPair[0] != null && stringPair[0].isEmpty() == false) {
+        if (stringPair[0] != null && !stringPair[0].isEmpty()) {
             long uid = Long.parseLong(stringPair[0]);
             osmUser = User.createOsmUser(uid, stringPair[1]);
         } else 
@@ -481,9 +476,8 @@ public class O5mReader extends AbstractReader {
     /**
      * read object type ("0".."2") concatenated with role (single string) 
      * @return 0..3 for type (3 means unknown)
-     * @throws IOException in case of I/O error
      */
-    private int readRelRef() throws IOException {
+    private int readRelRef() {
         int refType = -1;
         long toReadStart = bytesToRead;
         int stringRef = readUnsignedNum32();
@@ -504,7 +498,7 @@ public class O5mReader extends AbstractReader {
                 cnvBuffer[buffPos++] = (byte) b;
 
                 if (b == 0)
-                    stringPair[1] = new String(cnvBuffer, start, buffPos-1, "UTF-8");
+                    stringPair[1] = new String(cnvBuffer, start, buffPos-1, StandardCharsets.UTF_8);
             }
             long bytes = toReadStart - bytesToRead;
             if (bytes <= MAX_STRING_PAIR_SIZE)
@@ -524,9 +518,8 @@ public class O5mReader extends AbstractReader {
 
     /**
      * read a string pair (see o5m definition)
-     * @throws IOException in case of I/O error
      */
-    private void readStringPair() throws IOException {
+    private void readStringPair() {
         int stringRef = readUnsignedNum32();
         if (stringRef == 0) {
             long toReadStart = bytesToRead;
@@ -539,7 +532,7 @@ public class O5mReader extends AbstractReader {
                 cnvBuffer[buffPos++] = (byte) b;
 
                 if (b == 0) {
-                    stringPair[cnt] = new String(cnvBuffer, start, buffPos-start-1, "UTF-8");
+                    stringPair[cnt] = new String(cnvBuffer, start, buffPos-start-1, StandardCharsets.UTF_8);
                     ++cnt;
                     start = buffPos;
                 }
@@ -569,7 +562,7 @@ public class O5mReader extends AbstractReader {
         if (ioBuf[0] != 'o' || ioBuf[1] != '5' || (ioBuf[2] != 'c' && ioBuf[2] != 'm') || ioBuf[3] != '2') {
             throw new IOException(tr("unsupported header"));
         }
-        header = new String(ioBuf, 0, 3, "UTF-8");
+        header = new String(ioBuf, 0, 3, StandardCharsets.UTF_8);
     }
 
     /**
@@ -706,6 +699,7 @@ public class O5mReader extends AbstractReader {
     /**
      * Exception thrown after user cancellation.
      */
+    @SuppressWarnings("serial")
     private static final class O5mParsingCancelException extends Exception implements ImportCancelException {
         O5mParsingCancelException(String msg) {
             super(msg);

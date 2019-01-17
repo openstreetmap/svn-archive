@@ -3,10 +3,16 @@
 	<name>JOSM-o5m</name>
 	<comment></comment>
 	<projects>
+		<project>josm</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
 			<name>org.eclipse.jdt.core.javabuilder</name>
+			<arguments>
+			</arguments>
+		</buildCommand>
+		<buildCommand>
+			<name>org.sonarlint.eclipse.core.sonarlintBuilder</name>
 			<arguments>
 			</arguments>
 		</buildCommand>
@@ -17,6 +23,7 @@
 		</buildCommand>
 	</buildSpec>
 	<natures>
+		<nature>org.sonar.ide.eclipse.core.sonarNature</nature>
 		<nature>org.eclipse.jdt.core.javanature</nature>
 		<nature>net.sf.eclipsecs.core.CheckstyleNature</nature>
 	</natures>

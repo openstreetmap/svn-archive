@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import javax.swing.JOptionPane;
+
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.SequenceCommand;
@@ -17,6 +19,7 @@ import org.openstreetmap.josm.data.UndoRedoHandler;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.gui.Notification;
 import org.openstreetmap.josm.spi.preferences.Config;
 import org.openstreetmap.josm.tools.Shortcut;
 
@@ -60,8 +63,12 @@ public class CurveAction extends JosmAction {
         List<Way> selectedWays = new ArrayList<>(getLayerManager().getEditDataSet().getSelectedWays());
 
         Collection<Command> cmds = CircleArcMaker.doCircleArc(selectedNodes, selectedWays, angleSeparation);
-        if (cmds != null)
+        if (cmds == null || cmds.isEmpty()) {
+            new Notification(tr("Could not use selection to create a curve")).setIcon(JOptionPane.WARNING_MESSAGE).show();
+
+        } else {
             UndoRedoHandler.getInstance().add(new SequenceCommand("Create a curve", cmds));
+        }
     }
 
     @Override

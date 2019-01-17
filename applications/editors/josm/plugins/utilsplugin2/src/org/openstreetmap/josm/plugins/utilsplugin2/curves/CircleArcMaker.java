@@ -90,7 +90,7 @@ public final class CircleArcMaker {
                 nodesHaveBeenChoosen = true;
             }
             // Fix #7341. Find the first way having all nodes in common to sort them in its nodes order
-            List<Node> consideredNodes = Arrays.asList(new Node[]{n1, n2, n3});
+            List<Node> consideredNodes = Arrays.asList(n1, n2, n3);
             for (Way w : selectedWays) {
                 final List<Node> nodes = w.getNodes();
                 if (nodes.containsAll(consideredNodes)) {
@@ -115,11 +115,14 @@ public final class CircleArcMaker {
             return null;
         }
 
-
         EastNorth p1 = n1.getEastNorth();
         EastNorth p2 = n2.getEastNorth();
         EastNorth p3 = n3.getEastNorth();
-        // TODO: Check that the points are distinct
+
+        // make sure that points are different
+        if (p1.equals(p2) || p1.equals(p3) || p2.equals(p3)) {
+            return null;
+        }
 
         // // Calculate the new points in the arc
         ReturnValue<Integer> p2Index = new ReturnValue<>();
@@ -248,7 +251,6 @@ public final class CircleArcMaker {
 
         double startAngle = realA1;
         // Transform the angles to get a consistent starting point
-        //double a1 = 0;
         double a2 = normalizeAngle(realA2 - startAngle);
         double a3 = normalizeAngle(realA3 - startAngle);
         int direction = a3 > a2 ? 1 : -1;
@@ -260,7 +262,6 @@ public final class CircleArcMaker {
             radialLength = Math.PI * 2 - a3;
             // make the angles consistent with the direction.
             a2 = (Math.PI * 2 - a2);
-            a3 = (Math.PI * 2 - a3);
         }
         int numberOfNodesInArc = Math.max((int) Math.ceil((radialLength / Math.PI) * 180 / angleSeparation)+1,
                 3);

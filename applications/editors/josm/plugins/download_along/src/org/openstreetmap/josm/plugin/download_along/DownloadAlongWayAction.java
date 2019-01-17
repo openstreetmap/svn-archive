@@ -10,8 +10,6 @@ import java.awt.geom.Path2D;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Set;
-
 import javax.swing.JOptionPane;
 
 import org.openstreetmap.josm.actions.DownloadAlongAction;
@@ -27,6 +25,11 @@ import org.openstreetmap.josm.tools.Logging;
 import org.openstreetmap.josm.tools.Shortcut;
 import org.openstreetmap.josm.tools.Utils;
 
+/**
+ * Calculate area around selected ways and split it into reasonable parts so
+ * that they can be downloaded.
+ *
+ */
 class DownloadAlongWayAction extends DownloadAlongAction {
 
     private static final String PREF_DOWNLOAD_ALONG_WAY_DISTANCE = "downloadAlongWay.distance";
@@ -43,7 +46,7 @@ class DownloadAlongWayAction extends DownloadAlongAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        Set<Way> selectedWays = OsmPrimitive.getFilteredSet(getLayerManager().getEditDataSet().getSelected(), Way.class);
+        Collection<Way> selectedWays = getLayerManager().getEditDataSet().getSelectedWays();
 
         if (selectedWays.isEmpty()) {
             JOptionPane.showMessageDialog(MainApplication.getMainFrame(), tr("Please select 1 or more ways to download along"));
@@ -61,10 +64,83 @@ class DownloadAlongWayAction extends DownloadAlongAction {
         Logging.info("Starting area computation");
         long start = System.currentTimeMillis();
 
+        double scale = calcScale(selectedWays);
+        
         /*
-         * Find the average latitude for the data we're contemplating, so we
-         * can know how many metres per degree of longitude we have.
+         * Compute buffer zone extents and maximum bounding box size. Note
+         * that the maximum we ever offer is a bbox area of 0.002, while the
+         * API theoretically supports 0.25, but as soon as you touch any
+         * built-up area, that kind of bounding box will download forever
+         * and then stop because it has more than 50k nodes.
          */
+        double bufferDist = panel.getDistance();
+        double bufferY = bufferDist / 100000.0;
+        double bufferX = bufferY / scale;
+        double maxArea = panel.getArea() / 10000.0 / scale;
+        Path2D path = new Path2D.Double();
+        Rectangle2D r = new Rectangle2D.Double();
+
+        /*
+         * Collect the combined area of all points plus buffer zones
+         * around them. We ignore points that lie closer to the previous
+         * point than the given buffer size because otherwise this operation
+         * takes ages.
+         */
+        LatLon previous = null;
+        for (Way way : selectedWays) {
+            for (Node p : way.getNodes()) {
+                LatLon c = p.getCoor();
+                for (LatLon d : calcBetween(previous, c, bufferDist)) {
+                    // we add a buffer around the point.
+                    r.setRect(d.lon() - bufferX, d.lat() - bufferY, 2 * bufferX, 2 * bufferY);
+                    path.append(r, false);
+                }
+                previous = c;
+            }
+        }
+        Area a = new Area(path);
+        
+        Logging.info("Area computed in " + Utils.getDurationString(System.currentTimeMillis() - start));
+        confirmAndDownloadAreas(a, maxArea, panel.isDownloadOsmData(), panel.isDownloadGpxData(), 
+                tr("Download from OSM along selected ways"), NullProgressMonitor.INSTANCE);
+    }
+
+    /**
+     * Calculate list of points between two given points so that the distance between two consecutive points is below a limit.     
+     * @param p1 first point or null 
+     * @param p2 second point (must not be null)
+     * @param bufferDist the maximum distance 
+     * @return a list of points with at least one point (p2) and maybe more.
+     */
+    private static Collection<? extends LatLon> calcBetween(LatLon p1, LatLon p2, double bufferDist) {
+        ArrayList<LatLon> intermediateNodes = new ArrayList<>();
+        intermediateNodes.add(p2);
+        if (p1 != null && p2.greatCircleDistance(p1) > bufferDist) {
+            Double d = p2.greatCircleDistance(p1) / bufferDist;
+            int nbNodes = d.intValue();
+            if (Logging.isDebugEnabled()) {
+                Logging.debug(tr("{0} intermediate nodes to download.", nbNodes));
+                Logging.debug(tr("between {0} {1} and {2} {3}", p2.lat(), p2.lon(), p1.lat(), p1.lon()));
+            }
+            double latStep = (p2.lat() - p1.lat()) / (nbNodes + 1);
+            double lonStep = (p2.lon() - p1.lon()) / (nbNodes + 1);
+            for (int i = 1; i <= nbNodes; i++) {
+                LatLon intermediate = new LatLon(p1.lat() + i * latStep, p1.lon() + i * lonStep);
+                intermediateNodes.add(intermediate);
+                if (Logging.isTraceEnabled()) {
+                    Logging.trace(tr("  adding {0} {1}", intermediate.lat(), intermediate.lon()));
+                }
+            }
+        }
+        return intermediateNodes;
+    }
+
+    /**
+     * Find the average latitude for the data we're contemplating, so we
+     * can know how many metres per degree of longitude we have.
+     * @param selectedWays collection of ways
+     */
+    private static double calcScale(Collection<Way> selectedWays) {
         double latsum = 0;
         int latcnt = 0;
 
@@ -74,69 +150,11 @@ class DownloadAlongWayAction extends DownloadAlongAction {
                 latcnt++;
             }
         }
-
-        double avglat = latsum / latcnt;
-        double scale = Math.cos(Math.toRadians(avglat));
-
-        /*
-         * Compute buffer zone extents and maximum bounding box size. Note
-         * that the maximum we ever offer is a bbox area of 0.002, while the
-         * API theoretically supports 0.25, but as soon as you touch any
-         * built-up area, that kind of bounding box will download forever
-         * and then stop because it has more than 50k nodes.
-         */
-        double buffer_dist = panel.getDistance();
-        double buffer_y = buffer_dist / 100000.0;
-        double buffer_x = buffer_y / scale;
-        double max_area = panel.getArea() / 10000.0 / scale;
-        Path2D path = new Path2D.Double();
-        Rectangle2D r = new Rectangle2D.Double();
-
-        /*
-         * Collect the combined area of all gpx points plus buffer zones
-         * around them. We ignore points that lie closer to the previous
-         * point than the given buffer size because otherwise this operation
-         * takes ages.
-         */
-        LatLon previous = null;
-        for (Way way : selectedWays) {
-            for (Node p : way.getNodes()) {
-                LatLon c = p.getCoor();
-                ArrayList<LatLon> intermediateNodes = new ArrayList<>();
-                if (previous != null && c.greatCircleDistance(previous) > buffer_dist) {
-                    Double d = c.greatCircleDistance(previous) / buffer_dist;
-                    int nbNodes = d.intValue();
-                    if (Logging.isDebugEnabled()) {
-                        Logging.debug(tr("{0} intermediate nodes to download.", nbNodes));
-                        Logging.debug(tr("between {0} {1} and {2} {3}", c.lat(), c.lon(), previous.lat(), previous.lon()));
-                    }
-                    for (int i = 1; i < nbNodes; i++) {
-                        intermediateNodes.add(new LatLon(previous.lat()
-                                + (i * (c.lat() - previous.lat()) / (nbNodes + 1)), previous.lon()
-                                + (i * (c.lon() - previous.lon()) / (nbNodes + 1))));
-                        if (Logging.isTraceEnabled()) {
-                            Logging.trace(tr("  adding {0} {1}", previous.lat()
-                                    + (i * (c.lat() - previous.lat()) / (nbNodes + 1)), previous.lon()
-                                    + (i * (c.lon() - previous.lon()) / (nbNodes + 1))));
-                        }
-                    }
-                }
-                intermediateNodes.add(c);
-                for (LatLon d : intermediateNodes) {
-                    if (previous == null || d.greatCircleDistance(previous) > buffer_dist) {
-                        // we add a buffer around the point.
-                        r.setRect(d.lon() - buffer_x, d.lat() - buffer_y, 2 * buffer_x, 2 * buffer_y);
-                        path.append(r, false);
-                        previous = d;
-                    }
-                }
-                previous = c;
-            }
+        if (latcnt > 0) {
+            double avglat = latsum / latcnt;
+            return Math.cos(Math.toRadians(avglat));
         }
-        Area a = new Area(path);
-        Logging.info("Area computed in " + Utils.getDurationString(System.currentTimeMillis() - start));
-        confirmAndDownloadAreas(a, max_area, panel.isDownloadOsmData(), panel.isDownloadGpxData(), 
-                tr("Download from OSM along selected ways"), NullProgressMonitor.INSTANCE);
+        return 1;
     }
 
     @Override

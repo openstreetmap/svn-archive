@@ -6,6 +6,9 @@ import org.openstreetmap.josm.gui.MainMenu;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
 
+/**
+ * Plugin to calculate a list of areas around a selection of ways. 
+ */
 public class DownloadAlong extends Plugin {
 
     public DownloadAlong(PluginInformation info) {

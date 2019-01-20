@@ -20,6 +20,7 @@ import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.NodeData;
 import org.openstreetmap.josm.data.osm.OsmPrimitiveType;
+import org.openstreetmap.josm.data.osm.PrimitiveData;
 import org.openstreetmap.josm.data.osm.RelationData;
 import org.openstreetmap.josm.data.osm.RelationMemberData;
 import org.openstreetmap.josm.data.osm.User;
@@ -39,7 +40,7 @@ import org.openstreetmap.josm.tools.Logging;
  *
  */
 public class O5mReader extends AbstractReader {
-    private IllegalDataException exception = null;
+    private IllegalDataException exception;
     private boolean discourageUpload;
     
     private static void checkCoordinates(LatLon coor) throws IllegalDataException {
@@ -76,7 +77,7 @@ public class O5mReader extends AbstractReader {
     private static final int STRING_TABLE_SIZE = 15000;
     private static final int MAX_STRING_PAIR_SIZE = 250 + 2;
     private static final String[] REL_REF_TYPES = {"node", "way", "relation", "?"};
-    private static final double FACTOR = 1d/1000000000; // used with 100*<Val>*FACTOR 
+    private static final double FACTOR = 1d/1_000_000_000; // used with 100*<Val>*FACTOR 
 
     private BufferedInputStream fis;
     private InputStream is;
@@ -85,7 +86,7 @@ public class O5mReader extends AbstractReader {
     private byte[] cnvBuffer; 
 
     private byte[] ioBuf;
-    private int ioPos;
+    private int ioBufPos;
     // the o5m string table
     private String[][] stringTable;
     private String[] stringPair;
@@ -113,7 +114,7 @@ public class O5mReader extends AbstractReader {
     O5mReader() {
         this.cnvBuffer = new byte[4000]; // OSM data should not contain string pairs with length > 512
         this.ioBuf = new byte[8192];
-        this.ioPos = 0;
+        this.ioBufPos = 0;
         this.stringPair = new String[2];
         this.lastRef = new long[3];
         reset();
@@ -165,17 +166,7 @@ public class O5mReader extends AbstractReader {
                 case BBOX_DATASET:
                 case TIMESTAMP_DATASET:
                 case HEADER_DATASET:
-                    if (bytesToRead > ioBuf.length) {
-                        ioBuf = new byte[bytesToRead+100];
-                    }
-                    int bytesRead = 0;
-                    int neededBytes = bytesToRead;
-                    while (neededBytes > 0) {
-                        bytesRead += is.read(ioBuf, bytesRead, neededBytes);
-                        neededBytes -= bytesRead;
-                    } 
-                    ioPos = 0;
-                    is = new ByteArrayInputStream(ioBuf, 0, bytesToRead);
+                    is = fillByteArray();
                     break;                    
                 default: break;    
                 }
@@ -193,6 +184,20 @@ public class O5mReader extends AbstractReader {
                 if (fileType < 0xf0) skip(size); // skip unknown data set 
             }
         }
+    }
+
+    private InputStream fillByteArray() throws IOException {
+        if (bytesToRead > ioBuf.length) {
+            ioBuf = new byte[bytesToRead + 100];
+        }
+        int bytesRead = 0;
+        int neededBytes = bytesToRead;
+        while (neededBytes > 0) {
+            bytesRead += is.read(ioBuf, bytesRead, neededBytes);
+            neededBytes -= bytesRead;
+        }
+        ioBufPos = 0;
+        return new ByteArrayInputStream(ioBuf, 0, bytesToRead);
     }
 
     /**
@@ -232,6 +237,19 @@ public class O5mReader extends AbstractReader {
         }
     }
 
+    private void setMeta(PrimitiveData pd) throws IllegalDataException {
+        pd.setVersion(version == 0 ? 1 : version);
+        checkChangesetId(lastChangeSet);
+        pd.setChangesetId((int) lastChangeSet);
+        // User id
+        if (lastTs != 0) {
+            checkTimestamp(lastTs);
+            pd.setTimestamp(new Date(lastTs * 1000));
+            if (osmUser != null)
+                pd.setUser(osmUser);
+        }
+    }
+
     /**
      * read a node data set 
      */
@@ -256,19 +274,10 @@ public class O5mReader extends AbstractReader {
             if (version == 0)
                 discourageUpload = true;
             NodeData nd = new NodeData(lastNodeId);
-            nd.setVersion(version == 0 ? 1 : version);
             nd.setCoor(new LatLon(flat, flon).getRoundedToOsmPrecision());
-
             checkCoordinates(nd.getCoor());
-            checkChangesetId(lastChangeSet);
-            nd.setChangesetId((int) lastChangeSet);
-            // User id
-            if (lastTs != 0) {
-                checkTimestamp(lastTs);
-                nd.setTimestamp(new Date(lastTs * 1000));
-                if (osmUser != null)
-                    nd.setUser(osmUser);
-            }
+            setMeta(nd);
+
             if (bytesToRead > 0) {
                 Map<String, String> keys = readTags();
                 nd.setKeys(keys);
@@ -278,7 +287,6 @@ public class O5mReader extends AbstractReader {
         } catch (IllegalDataException e) {
             exception = e;
         }
-
     }
 
     /**
@@ -298,16 +306,7 @@ public class O5mReader extends AbstractReader {
             if (version == 0)
                 discourageUpload = true;
             final WayData wd = new WayData(lastWayId);
-            wd.setVersion(version == 0 ? 1 : version);
-            checkChangesetId(lastChangeSet);
-            wd.setChangesetId((int) lastChangeSet);
-            // User id
-            if (lastTs != 0) {
-                checkTimestamp(lastTs);
-                wd.setTimestamp(new Date(lastTs * 1000));
-                if (osmUser != null)
-                    wd.setUser(osmUser);
-            }
+            setMeta(wd);
 
             long refSize = readUnsignedNum32();
             long stop = bytesToRead - refSize;
@@ -344,15 +343,7 @@ public class O5mReader extends AbstractReader {
             if (version == 0)
                 discourageUpload = true;
             final RelationData rel = new RelationData(lastRelId);
-            rel.setVersion(version == 0 ? 1 : version);
-            checkChangesetId(lastChangeSet);
-            rel.setChangesetId((int) lastChangeSet);
-            if (lastTs != 0) {
-                checkTimestamp(lastTs);
-                rel.setTimestamp(new Date(lastTs * 1000));
-                if (osmUser != null)
-                    rel.setUser(osmUser);
-            }
+            setMeta(rel);
 
             long refSize = readUnsignedNum32();
             long stop = bytesToRead - refSize;
@@ -446,15 +437,15 @@ public class O5mReader extends AbstractReader {
             if (uidNum == 0)
                 stringPair[0] = "";
             else {
-                stringPair[0] = Long.toString(uidNum);
-                ioPos++; // skip terminating zero from uid
+                stringPair[0] = Long.toUnsignedString(uidNum);
+                ioBufPos++; // skip terminating zero from uid
                 --bytesToRead;
             }
             int start = 0;
             int buffPos = 0; 
             stringPair[1] = null;
             while (stringPair[1] == null) {
-                final int b = ioBuf[ioPos++];
+                final int b = ioBuf[ioBufPos++];
                 --bytesToRead;
                 cnvBuffer[buffPos++] = (byte) b;
 
@@ -482,7 +473,7 @@ public class O5mReader extends AbstractReader {
         long toReadStart = bytesToRead;
         int stringRef = readUnsignedNum32();
         if (stringRef == 0) {
-            refType = ioBuf[ioPos++] - 0x30;
+            refType = ioBuf[ioBufPos++] - 0x30;
             --bytesToRead;
 
             if (refType < 0 || refType > 2)
@@ -493,7 +484,7 @@ public class O5mReader extends AbstractReader {
             int buffPos = 0; 
             stringPair[1] = null;
             while (stringPair[1] == null) {
-                final int b = ioBuf[ioPos++];
+                final int b = ioBuf[ioBufPos++];
                 --bytesToRead;
                 cnvBuffer[buffPos++] = (byte) b;
 
@@ -527,7 +518,7 @@ public class O5mReader extends AbstractReader {
             int buffPos = 0; 
             int start = 0;
             while (cnt < 2) {
-                final int b = ioBuf[ioPos++];
+                final int b = ioBuf[ioBufPos++];
                 --bytesToRead;
                 cnvBuffer[buffPos++] = (byte) b;
 
@@ -570,29 +561,7 @@ public class O5mReader extends AbstractReader {
      * @return the number as int
      */
     private int readSignedNum32() {
-        int result;
-        int b = ioBuf[ioPos++];
-        --bytesToRead;
-        result = b;
-        if ((b & 0x80) == 0) {  // just one byte
-            if ((b & 0x01) == 1)
-                return -1-(result >> 1); 
-            return result >> 1;
-        }
-        int sign = b & 0x01;
-        result = (result & 0x7e) >> 1;
-        int shift = 6;
-        while (((b = ioBuf[ioPos++]) & 0x80) != 0) { // more bytes will follow
-            --bytesToRead;
-            result += (b & 0x7f) << shift;
-            shift += 7;
-        }
-        --bytesToRead;
-        result += b << shift;
-        if (sign == 1) // negative
-            return -1 - result;
-        return result;
-
+        return (int) readSignedNum64();
     }
 
     /**
@@ -601,7 +570,7 @@ public class O5mReader extends AbstractReader {
      */
     private long readSignedNum64() {
         long result;
-        int b = ioBuf[ioPos++];
+        int b = ioBuf[ioBufPos++];
         --bytesToRead;
         result = b;
         if ((b & 0x80) == 0) {  // just one byte
@@ -612,7 +581,7 @@ public class O5mReader extends AbstractReader {
         int sign = b & 0x01;
         result = (result & 0x7e) >> 1;
         int shift = 6;
-        while (((b = ioBuf[ioPos++]) & 0x80) != 0) { // more bytes will follow
+        while (((b = ioBuf[ioBufPos++]) & 0x80) != 0) { // more bytes will follow
             --bytesToRead;
             result += ((long) (b & 0x7f)) << shift;
             shift += 7;
@@ -654,7 +623,7 @@ public class O5mReader extends AbstractReader {
      * @return the number as long
      */
     private long readUnsignedNum64() {
-        int b = ioBuf[ioPos++];
+        int b = ioBuf[ioBufPos++];
         --bytesToRead;
         long result = b;
         if ((b & 0x80) == 0) {  // just one byte
@@ -662,7 +631,7 @@ public class O5mReader extends AbstractReader {
         }
         result &= 0x7f;
         int shift = 7;
-        while (((b = ioBuf[ioPos++]) & 0x80) != 0) { // more bytes will follow
+        while (((b = ioBuf[ioBufPos++]) & 0x80) != 0) { // more bytes will follow
             --bytesToRead;
             result += ((long) (b & 0x7f)) << shift;
             shift += 7;
@@ -674,33 +643,18 @@ public class O5mReader extends AbstractReader {
 
     /**
      * read a varying length unsigned number (see o5m definition)
-     * is similar to the 64 bit version.
      * @return the number as int
      */
     private int readUnsignedNum32() {
-        int b = ioBuf[ioPos++];
-        --bytesToRead;
-        int result = b;
-        if ((b & 0x80) == 0) {  // just one byte
-            return result;
-        }
-        result &= 0x7f;
-        int shift = 7;
-        while (((b = ioBuf[ioPos++]) & 0x80) != 0) { // more bytes will follow
-            --bytesToRead;
-            result += (b & 0x7f) << shift;
-            shift += 7;
-        }
-        --bytesToRead;
-        result += b << shift;
-        return result;
+        return (int) readUnsignedNum64();
     }
 
     /**
      * Exception thrown after user cancellation.
      */
-    @SuppressWarnings("serial")
     private static final class O5mParsingCancelException extends Exception implements ImportCancelException {
+        private static final long serialVersionUID = 1L;
+
         O5mParsingCancelException(String msg) {
             super(msg);
         }

@@ -123,9 +123,9 @@ public class O5mReader extends AbstractReader {
     /**
      * parse the input stream
      * @param source The InputStream that contains the OSM data in o5m format
-     * @throws O5mParsingCancelException if operation was canceled 
+     * @throws ParsingCancelException if operation was canceled 
      */
-    public void parse(InputStream source) throws O5mParsingCancelException {
+    public void parse(InputStream source) throws ParsingCancelException {
         this.fis = new BufferedInputStream(source);
         is = fis;
 
@@ -142,12 +142,12 @@ public class O5mReader extends AbstractReader {
         }
     }
 
-    private void readFile() throws IOException, O5mParsingCancelException {
+    private void readFile() throws IOException, ParsingCancelException {
         boolean done = false;
         while (!done) {
             if (cancel) {
                 cancel = false;
-                throw new O5mParsingCancelException(tr("Reading was canceled at file offset {0}", countBytes));
+                throw new ParsingCancelException(tr("Reading was canceled at file offset {0}", countBytes));
             }
             is = fis;
             long size = 0;
@@ -652,10 +652,10 @@ public class O5mReader extends AbstractReader {
     /**
      * Exception thrown after user cancellation.
      */
-    private static final class O5mParsingCancelException extends Exception implements ImportCancelException {
+    private static final class ParsingCancelException extends Exception implements ImportCancelException {
         private static final long serialVersionUID = 1L;
 
-        O5mParsingCancelException(String msg) {
+        ParsingCancelException(String msg) {
             super(msg);
         }
     }
@@ -684,19 +684,17 @@ public class O5mReader extends AbstractReader {
         ProgressMonitor.CancelListener cancelListener = () -> cancel = true;
         progressMonitor.addCancelListener(cancelListener);
         try {
-            progressMonitor.beginTask(tr("Prepare OSM data..."), 3); // read, prepare, render
+            progressMonitor.beginTask(tr("Prepare OSM data..."), 3); // read, prepare, create data layer
             progressMonitor.indeterminateSubTask(tr("Reading OSM data..."));
 
             parse(source);
             progressMonitor.worked(1);
-            
             progressMonitor.indeterminateSubTask(tr("Preparing data set..."));
             prepareDataSet();
             progressMonitor.worked(1);
             if (cancel) { 
-                throw new O5mParsingCancelException(tr("Import was canceled while preparing data"));
+                throw new ParsingCancelException(tr("Import was canceled"));
             }
-            progressMonitor.indeterminateSubTask(tr("Rendering data set..."));
             return getDataSet();
         } catch (IllegalDataException e) {
             throw e;

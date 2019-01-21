@@ -58,11 +58,7 @@ public class ReplaceGeometryAction extends JosmAction {
                 return;
 
             UndoRedoHandler.getInstance().add(replaceCommand);
-        } catch (IllegalArgumentException ex) {
-            new Notification(
-                    ex.getMessage()
-                    ).setIcon(JOptionPane.WARNING_MESSAGE).show();
-        } catch (ReplaceGeometryException ex) {
+        } catch (IllegalArgumentException | ReplaceGeometryException ex) {
             new Notification(
                     ex.getMessage()
                     ).setIcon(JOptionPane.WARNING_MESSAGE).show();

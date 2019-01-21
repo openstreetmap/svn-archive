@@ -14,6 +14,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.swing.JOptionPane;
 
@@ -52,6 +53,7 @@ public final class ReplaceGeometryUtils {
 
     /**
      * Replace new or uploaded object with new object
+     * @return (in case of success) a command to update the geometry of one primitive and remove the other
      */
     public static ReplaceGeometryCommand buildReplaceWithNewCommand(OsmPrimitive firstObject, OsmPrimitive secondObject) {
         if (firstObject instanceof Node && secondObject instanceof Node) {
@@ -71,6 +73,9 @@ public final class ReplaceGeometryUtils {
     /**
      * Replace subjectObject geometry with referenceObject geometry and merge tags
      * and relation memberships.
+     * @param subjectObject object to modify
+     * @param referenceSubject object that gives new geometry and is removed
+     * @return (in case of success) a command to update the geometry of fist object and remove the other
      */
     public static ReplaceGeometryCommand buildReplaceCommand(OsmPrimitive subjectObject, OsmPrimitive referenceSubject) {
         if (subjectObject instanceof Node && referenceSubject instanceof Node) {
@@ -90,6 +95,7 @@ public final class ReplaceGeometryUtils {
 
     /**
      * Replace a new or uploaded node with a new node
+     * @return (in case of success) a command to update the geometry of one primitive and remove the other
      */
     public static ReplaceGeometryCommand buildReplaceNodeWithNewCommand(Node firstNode, Node secondNode) {
         if (firstNode.isNew() && !secondNode.isNew())
@@ -206,23 +212,22 @@ public final class ReplaceGeometryUtils {
                 commands);
     }
 
-    public static ReplaceGeometryCommand buildReplaceWayWithNewCommand(List<Way> selection) {
+    private static ReplaceGeometryCommand buildReplaceWayWithNewCommand(List<Way> selection) {
         // determine which way will be replaced and which will provide the geometry
         boolean overrideNewCheck = false;
         int idxNew = selection.get(0).isNew() ? 0 : 1;
         if (selection.get(1-idxNew).isNew()) {
-            // if both are new, select the one with all the DB nodes
-            boolean areNewNodes = false;
-            for (Node n : selection.get(0).getNodes()) {
-                if (n.isNew()) {
-                    areNewNodes = true;
-                }
-            }
-            idxNew = areNewNodes ? 0 : 1;
-            overrideNewCheck = true;
-            for (Node n : selection.get(1 - idxNew).getNodes()) {
-                if (n.isNew()) {
-                    overrideNewCheck = false;
+            // compute the nodes which are not shared by both ways
+            Set<Node> s0OnlyNodes = getDistinctNodes(selection.get(0), selection.get(1));
+            Set<Node> s1OnlyNodes = getDistinctNodes(selection.get(1), selection.get(0));
+
+            boolean hasNewS0 = s0OnlyNodes.stream().anyMatch(Node::isNew);
+            boolean hasNewS1 = s1OnlyNodes.stream().anyMatch(Node::isNew);
+            if (hasNewS0 != hasNewS1) {
+                // OK: one way doesn't have new nodes which don't appear in both ways
+                overrideNewCheck = true;
+                if (hasNewS1) {
+                    idxNew = 1;
                 }
             }
         }
@@ -231,11 +236,17 @@ public final class ReplaceGeometryUtils {
 
         if (!overrideNewCheck && (subjectWay.isNew() || !referenceWay.isNew())) {
             throw new ReplaceGeometryException(
-                    tr("Please select one way that exists in the database and one new way with correct geometry."));
+                    tr("Both ways are new and have new nodes, cannot decide which one has the correct geometry."));
         }
         return buildReplaceWayCommand(subjectWay, referenceWay);
     }
 
+    /**
+     * Replace geometry of subjectWay by that of referenceWay. Tries to keep the history of nodes.
+     * @param subjectWay way to modify
+     * @param referenceWay way to remove
+     * @return
+     */
     public static ReplaceGeometryCommand buildReplaceWayCommand(Way subjectWay, Way referenceWay) {
 
         Area a = MainApplication.getLayerManager().getEditDataSet().getDataSourceArea();
@@ -373,7 +384,9 @@ public final class ReplaceGeometryUtils {
     }
 
     /**
-     * Create a list of nodes that are not used anywhere except in the way.
+     * Create a list of distinct nodes that are not tagged and not used anywhere except in the way.
+     * @param way the way
+     * @return list of distinct nodes that are not tagged and not used anywhere except in the way
      */
     protected static List<Node> getUnimportantNodes(Way way) {
         List<Node> nodePool = new LinkedList<>();
@@ -478,5 +491,17 @@ public final class ReplaceGeometryUtils {
             }
         }
         return nearest;
+    }
+
+    /**
+     * Return the nodes that appear only in 1st way , not in 2nd way.
+     * @param way1 1st way
+     * @param way2 2nd way
+     * @return set of distinct nodes which appear only in first way
+     */
+    private static Set<Node> getDistinctNodes(Way way1, Way way2) {
+        Set<Node> distincNodes = new HashSet<>(way1.getNodes());
+        distincNodes.removeAll(way2.getNodes());
+        return distincNodes;
     }
 }

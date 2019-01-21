@@ -90,8 +90,9 @@ public class MergeAddrPointsAction extends JosmAction {
                 if (Geometry.nodeInsidePolygon(n, w.getNodes()))
                     if (mergeNode != null) {
                         multi++;
-                        continue buildingsLoop; // Multiple address nodes inside
-                                                // one building -- skipping
+                        // Multiple address nodes inside one building --
+                        // skipping
+                        continue buildingsLoop;
                     } else
                         mergeNode = n;
             }

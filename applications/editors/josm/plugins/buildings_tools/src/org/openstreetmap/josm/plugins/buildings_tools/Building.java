@@ -43,14 +43,14 @@ import org.openstreetmap.josm.tools.Geometry;
 class Building {
     private final EastNorth[] en = new EastNorth[4];
 
-    double meter = 0;
+    double meter;
 
-    private double len = 0;
+    private double len;
     private double width;
     private double heading;
     private AngleSnap angleSnap = new AngleSnap();
     private Double drawingAngle;
-    private final static double EQUAL_NODE_DIST_TOLERANCE = 1e-6;
+    private static final double EQUAL_NODE_DIST_TOLERANCE = 1e-6;
 
     public void clearAngleSnap() {
         angleSnap.clear();
@@ -226,7 +226,7 @@ class Building {
         g.draw(b);
     }
 
-    private Node findNode(EastNorth pos) {
+    private static Node findNode(EastNorth pos) {
         MapView mv = MainApplication.getMap().mapView;
         Node n = mv.getNearestNode(mv.getPoint(eastNorth2latlon(pos)), OsmPrimitive::isSelectable);
         if (n == null)
@@ -248,31 +248,33 @@ class Building {
         List<Node> nodes = new LinkedList<>();
         nodesloop:
         for (Node n : MainApplication.getLayerManager().getEditDataSet().searchNodes(bbox)) {
-            if (!n.isUsable())
-                continue;
-            tagcheck: do {
-                for (String key : n.getKeys().keySet()) {
-                    if (key.equals("building") || key.startsWith("addr:"))
-                        break tagcheck;
+            if (n.isUsable() && findUsableTag(n)) {
+                double x = projection1(latlon2eastNorth(n.getCoor()));
+                double y = projection2(latlon2eastNorth(n.getCoor()));
+                if (Math.signum(x) != Math.signum(len) || Math.signum(y) != Math.signum(width))
+                    continue;
+                if (Math.abs(x) > Math.abs(len) || Math.abs(y) > Math.abs(width))
+                    continue;
+                for (OsmPrimitive p : n.getReferrers()) {
+                    // Don't use nodes if they're referenced by ways
+                    if (p.getType() == OsmPrimitiveType.WAY)
+                        continue nodesloop;
                 }
-                continue nodesloop;
-            } while (false);
-            double x = projection1(latlon2eastNorth(n.getCoor()));
-            double y = projection2(latlon2eastNorth(n.getCoor()));
-            if (Math.signum(x) != Math.signum(len) || Math.signum(y) != Math.signum(width))
-                continue;
-            if (Math.abs(x) > Math.abs(len) || Math.abs(y) > Math.abs(width))
-                continue;
-            for (OsmPrimitive p : n.getReferrers()) {
-                // Don't use nodes if they're referenced by ways
-                if (p.getType() == OsmPrimitiveType.WAY)
-                    continue nodesloop;
+                nodes.add(n);
             }
-            nodes.add(n);
         }
         if (nodes.size() != 1)
             return null;
         return nodes.get(0);
+    }
+
+    static boolean findUsableTag(OsmPrimitive p) {
+        for (String key : p.getKeys().keySet()) {
+            if ("building".equals(key) || key.startsWith("addr:")) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public Way createCircle() {
@@ -314,7 +316,7 @@ class Building {
         }
 
         snapBuildings(w, nodes, addNodesCmd);
-        if (addNodesCmd.size() > 0) {
+        if (!addNodesCmd.isEmpty()) {
             Command addNodes = new SequenceCommand(tr("Add nodes for building"), addNodesCmd);
             UndoRedoHandler.getInstance().add(addNodes);
         }
@@ -395,7 +397,7 @@ class Building {
         return w;
     }
 
-    private void snapBuildings(Way w, Node[] nodes, Collection<Command> cmds) {
+    private static void snapBuildings(Way w, Node[] nodes, Collection<Command> cmds) {
         // calculate BBox which is slightly larger than the new building
         List<Node> wayNodes = w.getNodes();
         // find the ways which might be snapped to the new building
@@ -434,20 +436,24 @@ class Building {
      *            other nodes
      */
     private static void snapToWay(List<Node> wayNodes, Collection<Node> otherNodes) {
-        for (int i = 0; i < wayNodes.size(); i++) {
+        int i = 0;
+        while (i < wayNodes.size()) {
             Node n0 = wayNodes.get(i);
             Node n1 = wayNodes.get(i + 1 == wayNodes.size() ? 0 : i + 1);
             for (Node n2 : otherNodes) {
-                if (n2 == n0 || n2 == n1)
-                    continue;
-                EastNorth x = Geometry.closestPointToSegment(n0.getEastNorth(), n1.getEastNorth(), n2.getEastNorth());
-                if (x.distance(n2.getEastNorth()) <= EQUAL_NODE_DIST_TOLERANCE && !wayNodes.contains(n2)) {
-                    wayNodes.add(i + 1, n2);
-                    // we may add multiple nodes to one segment, so repeat it
-                    i--;
-                    break;
+                if (n2 != n0 && n2 != n1) {
+                    EastNorth x = Geometry.closestPointToSegment(n0.getEastNorth(), n1.getEastNorth(),
+                            n2.getEastNorth());
+                    if (x.distance(n2.getEastNorth()) <= EQUAL_NODE_DIST_TOLERANCE && !wayNodes.contains(n2)) {
+                        wayNodes.add(i + 1, n2);
+                        // we may add multiple nodes to one segment, so repeat
+                        // it
+                        i--;
+                        break;
+                    }
                 }
             }
+            i++;
         }
     }
 

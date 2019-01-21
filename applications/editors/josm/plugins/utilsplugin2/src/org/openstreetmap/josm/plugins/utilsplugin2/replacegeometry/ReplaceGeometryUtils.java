@@ -212,7 +212,7 @@ public final class ReplaceGeometryUtils {
                 commands);
     }
 
-    private static ReplaceGeometryCommand buildReplaceWayWithNewCommand(List<Way> selection) {
+    public static ReplaceGeometryCommand buildReplaceWayWithNewCommand(List<Way> selection) {
         // determine which way will be replaced and which will provide the geometry
         boolean overrideNewCheck = false;
         int idxNew = selection.get(0).isNew() ? 0 : 1;

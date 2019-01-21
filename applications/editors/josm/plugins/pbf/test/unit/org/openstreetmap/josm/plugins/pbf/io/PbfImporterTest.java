@@ -79,7 +79,7 @@ public class PbfImporterTest {
         assertEquals(8727, ds.getWays().size());
         assertEquals(97, ds.getRelations().size());
     }
-    
+
     /**
      * Non-regression test for <a href="https://josm.openstreetmap.de/ticket/14545">Ticket #14545</a>.
      * @throws Exception if an error occurs
@@ -93,5 +93,4 @@ public class PbfImporterTest {
         assertEquals(1, ds.getRelations().size());
     }
 
-    
 }

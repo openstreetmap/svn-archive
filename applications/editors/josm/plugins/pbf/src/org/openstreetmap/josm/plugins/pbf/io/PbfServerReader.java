@@ -27,7 +27,7 @@ public class PbfServerReader extends OsmServerReader {
     public DataSet parseOsm(ProgressMonitor progressMonitor)
             throws OsmTransferException {
         try {
-            progressMonitor.beginTask(tr("Contacting Server...", 10));
+            progressMonitor.beginTask(tr("Contacting Server..."));
             return new PbfImporter().parseDataSet(url);
         } catch (Exception e) {
             throw new OsmTransferException(e);

@@ -28,6 +28,7 @@ import org.openstreetmap.josm.gui.progress.NullProgressMonitor;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.io.AbstractReader;
 import org.openstreetmap.josm.io.IllegalDataException;
+import org.openstreetmap.josm.io.ImportCancelException;
 import org.openstreetmap.josm.tools.CheckParameterUtil;
 import org.openstreetmap.josm.tools.Logging;
 
@@ -107,7 +108,7 @@ public class PbfReader extends AbstractReader {
 
         @Override
         public boolean skipBlock(FileBlockPosition block) {
-            return exception != null;
+            return exception != null || cancel;
         }
 
         protected void checkCoordinates(LatLon coor) throws IllegalDataException {
@@ -145,27 +146,32 @@ public class PbfReader extends AbstractReader {
                     long timestamp = 0;
                     for (int i = 0; i < nodes.getIdCount(); i++) {
                         // Id (delta) and version (normal)
-                        NodeData nd = new NodeData(nodeId += nodes.getId(i));
+                        nodeId += nodes.getId(i);
+                        NodeData nd = new NodeData(nodeId);
                         nd.setVersion(nodes.hasDenseinfo() ? nodes.getDenseinfo().getVersion(i) : 1);
                         // Lat/Lon (delta)
-                        nd.setCoor(new LatLon(parseLat(nodeLat += nodes.getLat(i)),
-                                                parseLon(nodeLon += nodes.getLon(i))).getRoundedToOsmPrecision());
+                        nodeLat += nodes.getLat(i);
+                        nodeLon += nodes.getLon(i);
+                        nd.setCoor(new LatLon(parseLat(nodeLat), parseLon(nodeLon)).getRoundedToOsmPrecision());
                         checkCoordinates(nd.getCoor());
                         if (nodes.hasDenseinfo()) {
                             DenseInfo info = nodes.getDenseinfo();
                             // Changeset (delta)
                             if (info.getChangesetCount() > i) {
-                                checkChangesetId(changesetId += info.getChangeset(i));
+                                changesetId += info.getChangeset(i);
+                                checkChangesetId(changesetId);
                                 nd.setChangesetId((int) changesetId);
                             }
                             // User (delta)
                             if (info.getUidCount() > i && info.getUserSidCount() > i) {
-                                nd.setUser(User.createOsmUser(uid += info.getUid(i),
-                                                 getStringById(suid += info.getUserSid(i))));
+                                uid += info.getUid(i);
+                                suid += info.getUserSid(i);
+                                nd.setUser(User.createOsmUser(uid, getStringById(suid)));
                             }
                             // Timestamp (delta)
                             if (info.getTimestampCount() > i) {
-                                checkTimestamp(timestamp += info.getTimestamp(i));
+                                timestamp += info.getTimestamp(i);
+                                checkTimestamp(timestamp);
                                 nd.setTimestamp(new Date(date_granularity * timestamp));
                             }
                         }
@@ -234,10 +240,11 @@ public class PbfReader extends AbstractReader {
                             keys.put(getStringById(w.getKeys(i)), getStringById(w.getVals(i)));
                         }
                         wd.setKeys(keys);
-                        long previousId = 0; // Node ids are delta coded
+                        long id = 0; // Node ids are delta coded
                         Collection<Long> nodeIds = new ArrayList<>();
-                        for (Long id : w.getRefsList()) {
-                            nodeIds.add(previousId += id);
+                        for (Long idDelta : w.getRefsList()) {
+                            id += idDelta;
+                            nodeIds.add(id);
                         }
                         ways.put(wd.getUniqueId(), nodeIds);
                         buildPrimitive(wd);
@@ -264,13 +271,14 @@ public class PbfReader extends AbstractReader {
                             keys.put(getStringById(r.getKeys(i)), getStringById(r.getVals(i)));
                         }
                         rd.setKeys(keys);
-                        long previousId = 0; // Member ids are delta coded
+                        long memId = 0; // Member ids are delta coded
                         Collection<RelationMemberData> members = new ArrayList<>();
                         for (int i = 0; i < r.getMemidsCount(); i++) {
+                            memId += r.getMemids(i);
                             members.add(new RelationMemberData(
                                     getStringById(r.getRolesSid(i)),
                                     mapOsmType(r.getTypes(i)),
-                                    previousId += r.getMemids(i)));
+                                    memId));
                         }
                         relations.put(rd.getUniqueId(), members);
                         buildPrimitive(rd);
@@ -324,15 +332,26 @@ public class PbfReader extends AbstractReader {
     @Override
     protected DataSet doParseDataSet(InputStream source, ProgressMonitor monitor)
             throws IllegalDataException {
+        ProgressMonitor.CancelListener cancelListener = () -> {
+            cancel = true;
+            monitor.indeterminateSubTask(tr("Canceled: Waiting for reader to react"));
+        };
+        monitor.addCancelListener(cancelListener);
+
         try {
-            monitor.beginTask(tr("Prepare OSM data...", 2));
+            monitor.beginTask(tr("Prepare OSM data..."), 3);
             monitor.indeterminateSubTask(tr("Reading OSM data..."));
 
             parse(source);
             monitor.worked(1);
-
+            if (cancel) {
+                throw new ParsingCancelException(tr("Import was canceled"));
+            }
             monitor.indeterminateSubTask(tr("Preparing data set..."));
             prepareDataSet();
+            if (cancel) {
+                throw new ParsingCancelException(tr("Import was canceled"));
+            }
             monitor.worked(1);
             return getDataSet();
         } catch (IllegalDataException e) {
@@ -340,7 +359,7 @@ public class PbfReader extends AbstractReader {
         } catch (Exception e) {
             throw new IllegalDataException(e);
         } finally {
-            monitor.finishTask();
+            monitor.removeCancelListener(cancelListener);
         }
     }
 
@@ -350,4 +369,16 @@ public class PbfReader extends AbstractReader {
             throw parser.exception;
         }
     }
+
+    /**
+     * Exception thrown after user cancellation.
+     */
+    private static final class ParsingCancelException extends Exception implements ImportCancelException {
+        private static final long serialVersionUID = 1L;
+
+        ParsingCancelException(String msg) {
+            super(msg);
+        }
+    }
+
 }

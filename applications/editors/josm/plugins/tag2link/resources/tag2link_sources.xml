@@ -193,6 +193,15 @@
             <condition k="ref:FR:NAF" v="[A-Z0-9-]{5}" />
             <link name="View INSEE explanation of %name% code" href="http://recherche-naf.insee.fr/SIRENET_ClassesNaf/%v%.htm" />
         </rule>
+        <rule>
+            <condition k="ref:FR:NAF" v="[A-Z0-9-]{5}" />
+            <link name="View a map of %name% items" href="https://sidjy.github.io/ape.html?ape=%v%" />
+        </rule>
+        <!--  TODO map lat/lon of selected object
+        <rule>
+            <condition k="ref:FR:NAF" v="[A-Z0-9-]{5}" />
+            <link name="View a map of %name% items" href="https://sidjy.github.io/ape.html?ape=%v%#%zoom%/%lat%/%lon%" />
+        </rule> -->
     </src>
 
     <src name="SIRET" country-code="FR">
@@ -213,6 +222,24 @@
         <rule>
             <condition k="ref:(FR:)?MemorialGenWeb" v="[0-9]+" />
             <link name="View %name% sheet of memorial" href="http://www.memorialgenweb.org/memorial3/html/fr/resultcommune.php?idsource=%v%" />
+        </rule>
+    </src>
+
+	<!-- RCE, Dutch heritage authority --> 
+
+	<src name="rce" country-code="NL">
+	    <rule>
+	        <condition k="ref:rce" />
+	        <link name="RCE website" href="https://cultureelerfgoed.nl/monumenten/%v%" />
+	    </rule>
+	</src>
+
+    <!-- BAG - Buildings in The Netherlands --> 
+
+    <src name="BAG" country-code="NL">
+       <rule>
+            <condition k="ref:bag" />
+            <link name="Open in BAG Viewer" href="https://bagviewer.kadaster.nl/lvbag/bag-viewer/index.html#?searchQuery=0%v%" />
         </rule>
     </src>
 

@@ -84,6 +84,9 @@ public class SourcesReader implements Tag2LinkConstants {
      *
      * This is basically the same code as parseUnkown(), except for the warnings, which
      * are displayed for inner elements and not at top level.
+     * 
+     * @param printWarning determines if a warning should be printed if an unknown tag is parsed
+     * @throws XMLStreamException if there is an error processing the underlying XML source
      */
     private void jumpToEnd(boolean printWarning) throws XMLStreamException {
         while (true) {

@@ -701,6 +701,7 @@ public class O5mReader extends AbstractReader {
         } catch (Exception e) {
             throw new IllegalDataException(e);
         } finally {
+            progressMonitor.finishTask();
             progressMonitor.removeCancelListener(cancelListener);
         }
     }

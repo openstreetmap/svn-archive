@@ -359,6 +359,7 @@ public class PbfReader extends AbstractReader {
         } catch (Exception e) {
             throw new IllegalDataException(e);
         } finally {
+            monitor.finishTask();
             monitor.removeCancelListener(cancelListener);
         }
     }

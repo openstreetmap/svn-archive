@@ -3,6 +3,7 @@
 	<name>JOSM-Poly</name>
 	<comment></comment>
 	<projects>
+		<project>josm</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

@@ -1,5 +1,7 @@
-/build
 /bin
+/build
+/buildtest
 /checkstyle-josm-poly.xml
 /findbugs-josm-poly.xml
 /javadoc
+/spotbugs-josm-poly.xml

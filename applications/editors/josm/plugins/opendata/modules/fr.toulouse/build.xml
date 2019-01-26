@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <project name="fr.toulouse" default="dist" basedir=".">
     <!-- enter the SVN commit message -->
     <property name="commit.message" value="Commit message"/>
@@ -38,7 +38,7 @@
     -->
     <target name="compile" depends="init">
         <echo message="compiling sources for ${module.jar} ... "/>
-        <javac srcdir="${module.src.dir}" debug="true" destdir="${module.build.dir}" includeAntRuntime="false">
+        <javac srcdir="${module.src.dir}" debug="true" destdir="${module.build.dir}" includeAntRuntime="false" encoding="UTF-8">
             <classpath>
                 <pathelement location="${josm}"/>
                 <pathelement location="${opendata}"/>

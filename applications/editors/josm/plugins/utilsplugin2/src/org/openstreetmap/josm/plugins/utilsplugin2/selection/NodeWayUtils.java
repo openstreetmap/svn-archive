@@ -463,6 +463,10 @@ public final class NodeWayUtils {
         return interCount;
     }
 
+    public static Collection<OsmPrimitive> selectAllInside(Collection<OsmPrimitive> selected, DataSet dataset) {
+        return selectAllInside(selected, dataset, true);
+    }
+
     public static Set<OsmPrimitive> selectAllInside(Collection<OsmPrimitive> selected, DataSet dataset, boolean ignoreNodesOfFoundWays) {
         Set<Way> newWays = new HashSet<>();
         Set<Node> newNodes = new HashSet<>();

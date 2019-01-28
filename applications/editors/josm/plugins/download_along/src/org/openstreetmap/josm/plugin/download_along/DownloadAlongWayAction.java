@@ -86,8 +86,8 @@ class DownloadAlongWayAction extends DownloadAlongAction {
          * point than the given buffer size because otherwise this operation
          * takes ages.
          */
-        LatLon previous = null;
         for (Way way : selectedWays) {
+            LatLon previous = null;
             for (Node p : way.getNodes()) {
                 LatLon c = p.getCoor();
                 for (LatLon d : calcBetween(previous, c, bufferDist)) {

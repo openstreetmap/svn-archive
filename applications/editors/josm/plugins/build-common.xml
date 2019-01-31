@@ -32,6 +32,7 @@
     <property name="plugin.dist.dir"        location="../../dist"/>
     <property name="java.lang.version"      value="1.8" />
     <property name="javadoc.executable"     value="javadoc" />
+    <property name="javadoc.link"           value="https://docs.oracle.com/javase/8/docs/api" />
     <property name="manifest"               value="MANIFEST"/>
     <property name="manifest.unixoid"       value="MANIFEST-unixoid"/>
     <property name="manifest.windows"       value="MANIFEST-windows"/>
@@ -277,7 +278,7 @@
                 <pathelement path="gen" />
                 <pathelement path="includes" />
             </sourcepath>
-            <link href="https://docs.oracle.com/javase/8/docs/api"/>
+            <link href="${javadoc.link}"/>
             <link href="https://josm.openstreetmap.de/doc"/>
             <doctitle><![CDATA[<h2>JOSM-${ant.project.name} - Javadoc</h2>]]></doctitle>
             <bottom><![CDATA[<a href="https://josm.openstreetmap.de/wiki/Plugins">JOSM Plugins</a>]]></bottom>

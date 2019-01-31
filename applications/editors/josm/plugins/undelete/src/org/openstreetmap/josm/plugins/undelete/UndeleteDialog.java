@@ -19,13 +19,17 @@ import org.openstreetmap.josm.gui.ExtendedDialog;
 import org.openstreetmap.josm.gui.widgets.OsmIdTextField;
 import org.openstreetmap.josm.spi.preferences.Config;
 
+/**
+ *
+ * Popup for undelete action. Allows to enter a list of objects.
+ */
 public class UndeleteDialog extends ExtendedDialog {
 
     private final JCheckBox layer = new JCheckBox(tr("Download as new layer"));
     private final OsmIdTextField tfId = new OsmIdTextField();
 
     public UndeleteDialog(Component parent) {
-        super(parent, tr("Undelete Object"), new String[] {tr("Undelete object"), tr("Cancel")});
+        super(parent, tr("Undelete Object"), tr("Undelete object"), tr("Cancel"));
 
         JPanel all = new JPanel(new GridBagLayout());
         GridBagConstraints gc = new GridBagConstraints();
@@ -51,8 +55,8 @@ public class UndeleteDialog extends ExtendedDialog {
         layer.setSelected(Config.getPref().getBoolean("undelete.newlayer"));
         all.add(layer, gc);
         setContent(all, false);
-        setButtonIcons(new String[] {"undelete.png", "cancel.png"});
-        setToolTipTexts(new String[] {tr("Start undeleting"), tr("Close dialog and cancel")});
+        setButtonIcons("undelete.png", "cancel.png");
+        setToolTipTexts(tr("Start undeleting"), tr("Close dialog and cancel"));
         setDefaultButton(1);
     }
 

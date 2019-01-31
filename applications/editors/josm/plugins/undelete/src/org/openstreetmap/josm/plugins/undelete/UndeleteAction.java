@@ -7,11 +7,14 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.swing.JOptionPane;
 
 import org.openstreetmap.josm.actions.AutoScaleAction;
+import org.openstreetmap.josm.actions.AutoScaleAction.AutoScaleMode;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
@@ -39,6 +42,9 @@ import org.openstreetmap.josm.spi.preferences.Config;
 import org.openstreetmap.josm.tools.Logging;
 import org.openstreetmap.josm.tools.Shortcut;
 
+/**
+ * Undelete one or more objects.
+ */
 public class UndeleteAction extends JosmAction {
 
     private final class Worker implements Runnable {
@@ -48,10 +54,13 @@ public class UndeleteAction extends JosmAction {
 
         private final List<PrimitiveId> ids;
 
-        private Worker(OsmPrimitive parent, OsmDataLayer layer, List<PrimitiveId> ids) {
+        private Set<OsmPrimitive> restored;
+
+        private Worker(OsmPrimitive parent, OsmDataLayer layer, List<PrimitiveId> ids, Set<OsmPrimitive> restored) {
             this.parent = parent;
             this.layer = layer;
             this.ids = ids;
+            this.restored = restored != null ? restored : new LinkedHashSet<>();
         }
 
         @Override
@@ -82,12 +91,13 @@ public class UndeleteAction extends JosmAction {
                             download.run();
 
                             primitive = layer.data.getPrimitiveById(id, type);
+                            restored.add(primitive);
                         } else {
                             // We search n-1 version with redaction robustness
                             long idx = 1;
                             long n = hPrimitive1.getVersion();
                             while (hPrimitive2 == null && idx < n) {
-                                hPrimitive2 =  h.getByVersion(n - idx++);
+                                hPrimitive2 = h.getByVersion(n - idx++);
                             }
                             if (type.equals(OsmPrimitiveType.NODE)) {
                                 // We get version and user from the latest version,
@@ -108,16 +118,13 @@ public class UndeleteAction extends JosmAction {
                                 Way way = new Way(id, (int) hPrimitive1.getVersion());
 
                                 HistoryWay hWay = (HistoryWay) hPrimitive2;
-                                // System.out.println(tr("Primitive {0} version {1}: {2} nodes",
-                                // hPrimitive2.getId(), hPrimitive2.getVersion(),
-                                // hWay.getNumNodes()));
                                 List<PrimitiveId> nodeIds = new ArrayList<>();
                                 if (hWay != null) {
                                     for (Long i : hWay.getNodes()) {
                                         nodeIds.add(new SimplePrimitiveId(i, OsmPrimitiveType.NODE));
                                     }
                                 }
-                                undelete(false, nodeIds, way);
+                                undelete(false, nodeIds, way, restored);
 
                                 primitive = way;
                             } else {
@@ -146,6 +153,7 @@ public class UndeleteAction extends JosmAction {
                                                 break;
                                             }
                                             layer.data.addPrimitive(p);
+                                            restored.add(p);
                                         }
                                         members.add(new RelationMember(m.getRole(), p));
                                     }
@@ -163,6 +171,7 @@ public class UndeleteAction extends JosmAction {
                                 primitive.setModified(true);
 
                                 layer.data.addPrimitive(primitive);
+                                restored.add(primitive);
                             } else {
                               final String msg = OsmPrimitiveType.NODE.equals(type)
                                   ? tr("Unable to undelete node {0}. Object has likely been redacted", id)
@@ -185,9 +194,11 @@ public class UndeleteAction extends JosmAction {
             }
             if (parent instanceof Way && !nodes.isEmpty()) {
                 ((Way) parent).setNodes(nodes);
-                MainApplication.getMap().repaint();
             }
-            GuiHelper.runInEDT(() -> AutoScaleAction.zoomTo(layer.data.allNonDeletedPrimitives()));
+            if (!restored.isEmpty()) {
+                layer.data.setSelected(restored);
+                GuiHelper.runInEDT(() -> AutoScaleAction.autoScale(AutoScaleMode.SELECTION));
+            }
         }
     }
 
@@ -207,6 +218,10 @@ public class UndeleteAction extends JosmAction {
     }
 
     public void undelete(boolean newLayer, final List<PrimitiveId> ids, final OsmPrimitive parent) {
+        undelete(newLayer, ids, parent, new LinkedHashSet<>());
+    }
+
+    private void undelete(boolean newLayer, final List<PrimitiveId> ids, final OsmPrimitive parent, Set<OsmPrimitive> restored) {
 
         // TODO: undelete relation members if necessary
         Logging.info("Undeleting "+ids+(parent == null ? "" : " with parent "+parent));
@@ -225,6 +240,6 @@ public class UndeleteAction extends JosmAction {
         }
 
         MainApplication.worker.execute(task);
-        MainApplication.worker.submit(new Worker(parent, layer, ids));
+        MainApplication.worker.submit(new Worker(parent, layer, ids, restored));
     }
 }

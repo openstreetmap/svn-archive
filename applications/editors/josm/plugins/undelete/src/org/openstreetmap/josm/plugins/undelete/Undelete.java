@@ -6,6 +6,9 @@ import org.openstreetmap.josm.gui.MainMenu;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
 
+/**
+ * Create the undelete plugin.
+ */
 public class Undelete extends Plugin {
 
     public Undelete(PluginInformation info) {

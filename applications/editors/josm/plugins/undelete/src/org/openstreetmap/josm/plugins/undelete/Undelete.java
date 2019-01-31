@@ -7,10 +7,14 @@ import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
 
 /**
- * Create the undelete plugin.
+ * Undelete action allows to restore one or more deleted objects.
  */
 public class Undelete extends Plugin {
 
+    /**
+     * Create the undelete plugin.
+     * @param info plugin information
+     */
     public Undelete(PluginInformation info) {
         super(info);
         MainMenu.addAfter(MainApplication.getMenu().fileMenu, new UndeleteAction(), false, MainApplication.getMenu().updateModified);

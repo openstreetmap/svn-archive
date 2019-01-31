@@ -88,6 +88,7 @@ public class UndeleteAction extends JosmAction {
                         if (visible) {
                             // If the object is not deleted we get the real object
                             DownloadPrimitivesTask download = new DownloadPrimitivesTask(layer, Collections.singletonList(pid), true);
+                            download.setZoom(false);
                             download.run();
 
                             primitive = layer.data.getPrimitiveById(id, type);
@@ -99,7 +100,7 @@ public class UndeleteAction extends JosmAction {
                             while (hPrimitive2 == null && idx < n) {
                                 hPrimitive2 = h.getByVersion(n - idx++);
                             }
-                            if (type.equals(OsmPrimitiveType.NODE)) {
+                            if (type == OsmPrimitiveType.NODE) {
                                 // We get version and user from the latest version,
                                 // coordinates and tags from n-1 version
                                 Node node = new Node(id, (int) hPrimitive1.getVersion());
@@ -110,7 +111,7 @@ public class UndeleteAction extends JosmAction {
                                 }
 
                                 primitive = node;
-                            } else if (type.equals(OsmPrimitiveType.WAY)) {
+                            } else if (type == OsmPrimitiveType.WAY) {
                                 // We get version and user from the latest version,
                                 // nodes and tags from n-1 version
                                 hPrimitive1 = h.getLatest();
@@ -173,19 +174,19 @@ public class UndeleteAction extends JosmAction {
                                 layer.data.addPrimitive(primitive);
                                 restored.add(primitive);
                             } else {
-                              final String msg = OsmPrimitiveType.NODE.equals(type)
+                              final String msg = OsmPrimitiveType.NODE == type
                                   ? tr("Unable to undelete node {0}. Object has likely been redacted", id)
-                                  : OsmPrimitiveType.WAY.equals(type)
+                                  : OsmPrimitiveType.WAY == type
                                   ? tr("Unable to undelete way {0}. Object has likely been redacted", id)
-                                  : OsmPrimitiveType.RELATION.equals(type)
+                                  : OsmPrimitiveType.RELATION == type
                                   ? tr("Unable to undelete relation {0}. Object has likely been redacted", id)
                                   : null;
                                 GuiHelper.runInEDT(() -> new Notification(msg).setIcon(JOptionPane.WARNING_MESSAGE).show());
                                 Logging.warn(msg);
                             }
                         }
-                    } catch (Exception t) {
-                        Logging.error(t);
+                    } catch (Exception e) {
+                        Logging.error(e);
                     }
                 }
                 if (parent != null && primitive instanceof Node) {
@@ -195,13 +196,16 @@ public class UndeleteAction extends JosmAction {
             if (parent instanceof Way && !nodes.isEmpty()) {
                 ((Way) parent).setNodes(nodes);
             }
-            if (!restored.isEmpty()) {
+            if (parent == null && !restored.isEmpty()) {
                 layer.data.setSelected(restored);
                 GuiHelper.runInEDT(() -> AutoScaleAction.autoScale(AutoScaleMode.SELECTION));
             }
         }
     }
 
+    /**
+     * Create undelete action.
+     */
     public UndeleteAction() {
         super(tr("Undelete object..."), "undelete", tr("Undelete object by id"),
                 Shortcut.registerShortcut("tools:undelete", tr("File: {0}", tr("Undelete object...")), KeyEvent.VK_U, Shortcut.ALT_SHIFT), true);

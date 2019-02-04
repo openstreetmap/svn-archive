@@ -13,6 +13,9 @@ import org.openstreetmap.josm.plugins.fixAddresses.IOSMEntity;
 import org.openstreetmap.josm.plugins.fixAddresses.OSMAddress;
 import org.openstreetmap.josm.plugins.fixAddresses.OSMStreet;
 
+/**
+ * Address Edit model.
+ */
 public class AddressEditModel {
     private List<OSMStreet> streets;
     private List<OSMAddress> unresolvedAddresses;

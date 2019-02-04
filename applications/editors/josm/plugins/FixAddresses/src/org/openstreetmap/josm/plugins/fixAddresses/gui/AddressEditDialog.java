@@ -49,6 +49,9 @@ import org.openstreetmap.josm.plugins.fixAddresses.gui.actions.ApplyAllGuessesAc
 import org.openstreetmap.josm.tools.ImageProvider;
 import org.openstreetmap.josm.tools.Logging;
 
+/**
+ * Address Edit dialog.
+ */
 @SuppressWarnings("serial")
 public class AddressEditDialog extends JDialog implements ActionListener, ListSelectionListener, IAddressEditContainerListener {
     private static final String UNRESOLVED_ADDRESS = tr("Unresolved Addresses");
@@ -366,8 +369,6 @@ public class AddressEditDialog extends JDialog implements ActionListener, ListSe
      * component's {@code addJumpToEntryListener} method. When
      * the jumpToEntry event occurs, that object's appropriate
      * method is invoked.
-     *
-     * @see JumpToEntryEvent
      */
     class JumpToEntryListener implements KeyListener {
         private int column;

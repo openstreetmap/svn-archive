@@ -57,6 +57,7 @@ public class GuessAddressDataAction extends AbstractAddressEditAction implements
 
     /**
      * Internal method to start several threads guessing tag values for the given list of addresses.
+     * @param nodes list of OSM addresses
      */
     private void internalGuessAddresses(List<OSMAddress> nodes) {
         if (nodes == null)

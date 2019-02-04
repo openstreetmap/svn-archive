@@ -25,6 +25,8 @@ import org.openstreetmap.josm.data.osm.event.WayNodesChangedEvent;
 import org.openstreetmap.josm.data.osm.visitor.OsmPrimitiveVisitor;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.layer.MainLayerManager;
+import org.openstreetmap.josm.plugins.fixAddresses.gui.AddressEditTableModel;
+import org.openstreetmap.josm.plugins.fixAddresses.gui.actions.AbstractAddressEditAction;
 import org.openstreetmap.josm.tools.CheckParameterUtil;
 
 /**
@@ -37,13 +39,13 @@ import org.openstreetmap.josm.tools.CheckParameterUtil;
  * {@link AddressEditContainer} is the central class used within actions and UI models to show
  * and alter OSM data.
  *
- * {@see AbstractAddressEditAction}
- * {@see AddressEditTableModel}
- *
  * @author Oliver Wieland &lt;oliver.wieland@online.de>
  *
+ * @see AbstractAddressEditAction
+ * @see AddressEditTableModel
  */
-public class AddressEditContainer implements OsmPrimitiveVisitor, DataSetListener, IAddressEditContainerListener, IProblemVisitor, IAllKnowingTrashHeap {
+public class AddressEditContainer
+implements OsmPrimitiveVisitor, DataSetListener, IAddressEditContainerListener, IProblemVisitor, IAllKnowingTrashHeap {
 
     private Collection<? extends OsmPrimitive> workingSet;
     /** The street dictionary collecting all streets to a set of unique street names. */
@@ -124,6 +126,7 @@ public class AddressEditContainer implements OsmPrimitiveVisitor, DataSetListene
 
     /**
      * Notifies clients that an entity within the address container changed.
+     * @param entity OSM entity
      */
     protected void fireEntityChanged(IOSMEntity entity) {
         if (entity == null) throw new RuntimeException("Entity must not be null");
@@ -441,6 +444,7 @@ public class AddressEditContainer implements OsmPrimitiveVisitor, DataSetListene
     /**
      * Tries to assign an address to a street.
      * @param aNode address
+     * @return {@code true} if address node has been assigned to a street or if it was already the case
      */
     private boolean assignAddressToStreet(OSMAddress aNode) {
         String streetName = aNode.getStreetName();

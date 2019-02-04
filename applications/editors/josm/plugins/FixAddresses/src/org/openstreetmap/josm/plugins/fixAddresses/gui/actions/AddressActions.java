@@ -1,13 +1,15 @@
 // License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.fixAddresses.gui.actions;
 
+/**
+ * Global action objects
+ */
 public final class AddressActions {
 
     private AddressActions() {
         // Hide default constructor for utilities classes
     }
 
-    /* Global action objects */
     public static SelectAddressesInMapAction getSelectAction() {
         return new SelectAddressesInMapAction();
     }

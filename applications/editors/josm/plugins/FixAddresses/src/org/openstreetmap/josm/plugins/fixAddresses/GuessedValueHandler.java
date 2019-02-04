@@ -46,11 +46,10 @@ public class GuessedValueHandler implements OsmPrimitiveVisitor {
     }
 
     /**
-     * Instantiates a new guessed value handler.
+     * Instantiates a new guessed value handler with default maximum distance.
      *
      * @param tag the tag to find the guessed value for.
      * @param aNode the address node to guess the values for.
-     * @param maxDist the maximum distance for a node/way to be considered as guessed value.
      */
     public GuessedValueHandler(String tag, OSMAddress aNode) {
         this(tag, aNode, DEFAULT_MAX_DIST);

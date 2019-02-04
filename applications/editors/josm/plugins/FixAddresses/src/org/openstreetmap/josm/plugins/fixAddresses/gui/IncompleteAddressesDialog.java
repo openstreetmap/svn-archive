@@ -31,6 +31,9 @@ import org.openstreetmap.josm.plugins.fixAddresses.OsmUtils;
 import org.openstreetmap.josm.plugins.fixAddresses.gui.actions.AbstractAddressEditAction;
 import org.openstreetmap.josm.plugins.fixAddresses.gui.actions.AddressActions;
 
+/**
+ * Incomplete addresses dialog.
+ */
 @SuppressWarnings("serial")
 public class IncompleteAddressesDialog extends ToggleDialog implements DataSetListener, ListSelectionListener, IAddressEditContainerListener {
     private static final String FIXED_DIALOG_TITLE = tr("Incomplete Addresses");

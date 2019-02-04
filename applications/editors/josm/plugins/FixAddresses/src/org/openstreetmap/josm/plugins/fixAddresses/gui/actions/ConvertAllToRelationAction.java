@@ -7,6 +7,9 @@ import org.openstreetmap.josm.plugins.fixAddresses.AddressEditContainer;
 import org.openstreetmap.josm.plugins.fixAddresses.OSMStreet;
 import org.openstreetmap.josm.plugins.fixAddresses.gui.AddressEditSelectionEvent;
 
+/**
+ * Create relation between street and related addresses for ALL streets in the current layer.
+ */
 @SuppressWarnings("serial")
 public class ConvertAllToRelationAction extends ConvertToRelationAction {
     public ConvertAllToRelationAction() {

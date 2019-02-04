@@ -127,6 +127,7 @@ public final class TagUtils {
 
     /**
      * Checks if the given OSM primitive is an address node.
+     * @param osmObject OSM primitive
      * @return {@code true} if the given OSM primitive is an address node
      */
     public static boolean isAddress(OsmPrimitive osmObject) {
@@ -138,6 +139,7 @@ public final class TagUtils {
     /**
      * Check if OSM primitive has a tag 'parking'.
      * @param osmPrimitive The OSM entity to check.
+     * @return {@code true} if OSM primitive has a tag 'parking'
      */
     public static boolean hasParkingTag(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.hasKey(PARKING_TAG) : false;
@@ -146,6 +148,7 @@ public final class TagUtils {
     /**
      * Gets the value of tag 'parking'.
      * @param osmPrimitive The OSM entity to check.
+     * @return the value of tag 'parking'
      */
     public static String getParkingValue(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.get(PARKING_TAG) : null;
@@ -154,6 +157,7 @@ public final class TagUtils {
     /**
      * Check if OSM primitive has a tag 'shop'.
      * @param osmPrimitive The OSM entity to check.
+     * @return {@code true} if OSM primitive has a tag 'shop'
      */
     public static boolean hasShopTag(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.hasKey(SHOP_TAG) : false;
@@ -162,6 +166,7 @@ public final class TagUtils {
     /**
      * Gets the value of tag 'shop'.
      * @param osmPrimitive The OSM entity to check.
+     * @return the value of tag 'shop'
      */
     public static String getShopValue(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.get(SHOP_TAG) : null;
@@ -170,6 +175,7 @@ public final class TagUtils {
     /**
      * Check if OSM primitive has a tag 'craft'.
      * @param osmPrimitive The OSM entity to check.
+     * @return {@code true} if OSM primitive has a tag 'craft'
      */
     public static boolean hasCraftTag(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.hasKey(CRAFT_TAG) : false;
@@ -178,6 +184,7 @@ public final class TagUtils {
     /**
      * Gets the value of tag 'craft'.
      * @param osmPrimitive The OSM entity to check.
+     * @return the value of tag 'craft'
      */
     public static String getCraftValue(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.get(CRAFT_TAG) : null;
@@ -186,6 +193,7 @@ public final class TagUtils {
     /**
      * Check if OSM primitive has a tag 'surface'.
      * @param osmPrimitive The OSM entity to check.
+     * @return {@code true} if OSM primitive has a tag 'surface'
      */
     public static boolean hasSurfaceTag(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.hasKey(SURFACE_TAG) : false;
@@ -194,6 +202,7 @@ public final class TagUtils {
     /**
      * Gets the value of tag 'surface'.
      * @param osmPrimitive The OSM entity to check.
+     * @return the value of tag 'surface'
      */
     public static String getSurfaceValue(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.get(SURFACE_TAG) : null;
@@ -202,6 +211,7 @@ public final class TagUtils {
     /**
      * Check if OSM primitive has a tag 'cuisine'.
      * @param osmPrimitive The OSM entity to check.
+     * @return {@code true} if OSM primitive has a tag 'cuisine'
      */
     public static boolean hasCuisineTag(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.hasKey(CUISINE_TAG) : false;
@@ -210,6 +220,7 @@ public final class TagUtils {
     /**
      * Gets the value of tag 'cuisine'.
      * @param osmPrimitive The OSM entity to check.
+     * @return the value of tag 'cuisine'
      */
     public static String getCuisineValue(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.get(CUISINE_TAG) : null;
@@ -218,6 +229,7 @@ public final class TagUtils {
     /**
      * Check if OSM primitive has a tag 'wood'.
      * @param osmPrimitive The OSM entity to check.
+     * @return {@code true} if OSM primitive has a tag 'wood'
      */
     public static boolean hasWoodTag(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.hasKey(WOOD_TAG) : false;
@@ -226,6 +238,7 @@ public final class TagUtils {
     /**
      * Gets the value of tag 'wood'.
      * @param osmPrimitive The OSM entity to check.
+     * @return the value of tag 'wood'
      */
     public static String getWoodValue(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.get(WOOD_TAG) : null;
@@ -234,6 +247,7 @@ public final class TagUtils {
     /**
      * Check if OSM primitive has a tag 'foot'.
      * @param osmPrimitive The OSM entity to check.
+     * @return {@code true} if OSM primitive has a tag 'foot'
      */
     public static boolean hasFootTag(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.hasKey(FOOT_TAG) : false;
@@ -242,6 +256,7 @@ public final class TagUtils {
     /**
      * Gets the value of tag 'foot'.
      * @param osmPrimitive The OSM entity to check.
+     * @return the value of tag 'foot'
      */
     public static String getFootValue(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.get(FOOT_TAG) : null;
@@ -250,6 +265,7 @@ public final class TagUtils {
     /**
      * Check if OSM primitive has a tag 'name:de'.
      * @param osmPrimitive The OSM entity to check.
+     * @return {@code true} if OSM primitive has a tag 'name:de'
      */
     public static boolean hasNameDeTag(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.hasKey(NAME_DE_TAG) : false;
@@ -258,6 +274,7 @@ public final class TagUtils {
     /**
      * Gets the value of tag 'name:de'.
      * @param osmPrimitive The OSM entity to check.
+     * @return the value of tag 'name:de'
      */
     public static String getNameDeValue(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.get(NAME_DE_TAG) : null;
@@ -266,6 +283,7 @@ public final class TagUtils {
     /**
      * Check if OSM primitive has a tag 'nat_ref'.
      * @param osmPrimitive The OSM entity to check.
+     * @return {@code true} if OSM primitive has a tag 'nat_ref'
      */
     public static boolean hasNatRefTag(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.hasKey(NAT_REF_TAG) : false;
@@ -274,6 +292,7 @@ public final class TagUtils {
     /**
      * Gets the value of tag 'nat_ref'.
      * @param osmPrimitive The OSM entity to check.
+     * @return the value of tag 'nat_ref'
      */
     public static String getNatRefValue(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.get(NAT_REF_TAG) : null;
@@ -282,6 +301,7 @@ public final class TagUtils {
     /**
      * Check if OSM primitive has a tag 'note:de'.
      * @param osmPrimitive The OSM entity to check.
+     * @return {@code true} if OSM primitive has a tag 'note:de'
      */
     public static boolean hasNoteDeTag(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.hasKey(NOTE_DE_TAG) : false;
@@ -290,6 +310,7 @@ public final class TagUtils {
     /**
      * Gets the value of tag 'note:de'.
      * @param osmPrimitive The OSM entity to check.
+     * @return the value of tag 'note:de'
      */
     public static String getNoteDeValue(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.get(NOTE_DE_TAG) : null;
@@ -298,6 +319,7 @@ public final class TagUtils {
     /**
      * Check if OSM primitive has a tag 'addr:street'.
      * @param osmPrimitive The OSM entity to check.
+     * @return {@code true} if OSM primitive has a tag 'addr:street'
      */
     public static boolean hasAddrStreetTag(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.hasKey(ADDR_STREET_TAG)
@@ -307,6 +329,7 @@ public final class TagUtils {
     /**
      * Gets the value of tag 'addr:street'.
      * @param osmPrimitive The OSM entity to check.
+     * @return the value of tag 'addr:street'
      */
     public static String getAddrStreetValue(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.get(ADDR_STREET_TAG) : null;
@@ -315,6 +338,7 @@ public final class TagUtils {
     /**
      * Check if OSM primitive has a tag 'type'.
      * @param osmPrimitive The OSM entity to check.
+     * @return {@code true} if OSM primitive has a tag 'type'
      */
     public static boolean hasTypeTag(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.hasKey(TYPE_TAG) : false;
@@ -323,6 +347,7 @@ public final class TagUtils {
     /**
      * Gets the value of tag 'type'.
      * @param osmPrimitive The OSM entity to check.
+     * @return the value of tag 'type'
      */
     public static String getTypeValue(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.get(TYPE_TAG) : null;
@@ -331,6 +356,7 @@ public final class TagUtils {
     /**
      * Check if OSM primitive has a tag 'addr:city'.
      * @param osmPrimitive The OSM entity to check.
+     * @return {@code true} if OSM primitive has a tag 'addr:city'
      */
     public static boolean hasAddrCityTag(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.hasKey(ADDR_CITY_TAG)
@@ -340,6 +366,7 @@ public final class TagUtils {
     /**
      * Gets the value of tag 'addr:city'.
      * @param osmPrimitive The OSM entity to check.
+     * @return the value of tag 'addr:city'
      */
     public static String getAddrCityValue(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.get(ADDR_CITY_TAG) : null;
@@ -348,6 +375,7 @@ public final class TagUtils {
     /**
      * Check if OSM primitive has a tag 'boundary'.
      * @param osmPrimitive The OSM entity to check.
+     * @return {@code true} if OSM primitive has a tag 'boundary'
      */
     public static boolean hasBoundaryTag(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.hasKey(BOUNDARY_TAG) : false;
@@ -356,6 +384,7 @@ public final class TagUtils {
     /**
      * Gets the value of tag 'boundary'.
      * @param osmPrimitive The OSM entity to check.
+     * @return the value of tag 'boundary'
      */
     public static String getBoundaryValue(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.get(BOUNDARY_TAG) : null;
@@ -364,6 +393,7 @@ public final class TagUtils {
     /**
      * Check if OSM primitive has a tag 'smoothness'.
      * @param osmPrimitive The OSM entity to check.
+     * @return {@code true} if OSM primitive has a tag 'smoothness'
      */
     public static boolean hasSmoothnessTag(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.hasKey(SMOOTHNESS_TAG)
@@ -373,6 +403,7 @@ public final class TagUtils {
     /**
      * Gets the value of tag 'smoothness'.
      * @param osmPrimitive The OSM entity to check.
+     * @return the value of tag 'smoothness'
      */
     public static String getSmoothnessValue(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.get(SMOOTHNESS_TAG) : null;
@@ -381,6 +412,7 @@ public final class TagUtils {
     /**
      * Check if OSM primitive has a tag 'opening_hours'.
      * @param osmPrimitive The OSM entity to check.
+     * @return {@code true} if OSM primitive has a tag 'opening_hours'
      */
     public static boolean hasOpeningHoursTag(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.hasKey(OPENING_HOURS_TAG)
@@ -390,6 +422,7 @@ public final class TagUtils {
     /**
      * Gets the value of tag 'opening_hours'.
      * @param osmPrimitive The OSM entity to check.
+     * @return the value of tag 'opening_hours'
      */
     public static String getOpeningHoursValue(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.get(OPENING_HOURS_TAG)
@@ -399,6 +432,7 @@ public final class TagUtils {
     /**
      * Check if OSM primitive has a tag 'bicycle'.
      * @param osmPrimitive The OSM entity to check.
+     * @return {@code true} if OSM primitive has a tag 'bicycle'
      */
     public static boolean hasBicycleTag(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.hasKey(BICYCLE_TAG) : false;
@@ -407,6 +441,7 @@ public final class TagUtils {
     /**
      * Gets the value of tag 'bicycle'.
      * @param osmPrimitive The OSM entity to check.
+     * @return the value of tag 'bicycle'
      */
     public static String getBicycleValue(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.get(BICYCLE_TAG) : null;
@@ -415,6 +450,7 @@ public final class TagUtils {
     /**
      * Check if OSM primitive has a tag 'religion'.
      * @param osmPrimitive The OSM entity to check.
+     * @return {@code true} if OSM primitive has a tag 'religion'
      */
     public static boolean hasReligionTag(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.hasKey(RELIGION_TAG) : false;
@@ -423,6 +459,7 @@ public final class TagUtils {
     /**
      * Gets the value of tag 'religion'.
      * @param osmPrimitive The OSM entity to check.
+     * @return the value of tag 'religion'
      */
     public static String getReligionValue(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.get(RELIGION_TAG) : null;
@@ -431,6 +468,7 @@ public final class TagUtils {
     /**
      * Check if OSM primitive has a tag 'barrier'.
      * @param osmPrimitive The OSM entity to check.
+     * @return {@code true} if OSM primitive has a tag 'barrier'
      */
     public static boolean hasBarrierTag(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.hasKey(BARRIER_TAG) : false;
@@ -439,6 +477,7 @@ public final class TagUtils {
     /**
      * Gets the value of tag 'barrier'.
      * @param osmPrimitive The OSM entity to check.
+     * @return the value of tag 'barrier'
      */
     public static String getBarrierValue(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.get(BARRIER_TAG) : null;
@@ -447,6 +486,7 @@ public final class TagUtils {
     /**
      * Check if OSM primitive has a tag 'power'.
      * @param osmPrimitive The OSM entity to check.
+     * @return {@code true} if OSM primitive has a tag 'power'
      */
     public static boolean hasPowerTag(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.hasKey(POWER_TAG) : false;
@@ -455,6 +495,7 @@ public final class TagUtils {
     /**
      * Gets the value of tag 'power'.
      * @param osmPrimitive The OSM entity to check.
+     * @return the value of tag 'power'
      */
     public static String getPowerValue(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.get(POWER_TAG) : null;
@@ -463,6 +504,7 @@ public final class TagUtils {
     /**
      * Check if OSM primitive has a tag 'landuse'.
      * @param osmPrimitive The OSM entity to check.
+     * @return {@code true} if OSM primitive has a tag 'landuse'
      */
     public static boolean hasLanduseTag(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.hasKey(LANDUSE_TAG) : false;
@@ -471,6 +513,7 @@ public final class TagUtils {
     /**
      * Gets the value of tag 'landuse'.
      * @param osmPrimitive The OSM entity to check.
+     * @return the value of tag 'landuse'
      */
     public static String getLanduseValue(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.get(LANDUSE_TAG) : null;
@@ -479,6 +522,7 @@ public final class TagUtils {
     /**
      * Check if OSM primitive has a tag 'fireplace'.
      * @param osmPrimitive The OSM entity to check.
+     * @return {@code true} if OSM primitive has a tag 'fireplace'
      */
     public static boolean hasFireplaceTag(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.hasKey(FIREPLACE_TAG)
@@ -488,6 +532,7 @@ public final class TagUtils {
     /**
      * Gets the value of tag 'fireplace'.
      * @param osmPrimitive The OSM entity to check.
+     * @return the value of tag 'fireplace'
      */
     public static String getFireplaceValue(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.get(FIREPLACE_TAG) : null;
@@ -496,6 +541,7 @@ public final class TagUtils {
     /**
      * Check if OSM primitive has a tag 'int_ref'.
      * @param osmPrimitive The OSM entity to check.
+     * @return {@code true} if OSM primitive has a tag 'int_ref'
      */
     public static boolean hasIntRefTag(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.hasKey(INT_REF_TAG) : false;
@@ -504,6 +550,7 @@ public final class TagUtils {
     /**
      * Gets the value of tag 'int_ref'.
      * @param osmPrimitive The OSM entity to check.
+     * @return the value of tag 'int_ref'
      */
     public static String getIntRefValue(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.get(INT_REF_TAG) : null;
@@ -512,6 +559,7 @@ public final class TagUtils {
     /**
      * Check if OSM primitive has a tag 'whitewater:section_grade'.
      * @param osmPrimitive The OSM entity to check.
+     * @return {@code true} if OSM primitive has a tag 'whitewater:section_grade'
      */
     public static boolean hasWhitewaterSectionGradeTag(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.hasKey(WHITEWATER_SECTION_GRADE_TAG) : false;
@@ -520,6 +568,7 @@ public final class TagUtils {
     /**
      * Gets the value of tag 'whitewater:section_grade'.
      * @param osmPrimitive The OSM entity to check.
+     * @return the value of tag 'whitewater:section_grade'
      */
     public static String getWhitewaterSectionGradeValue(
             OsmPrimitive osmPrimitive) {
@@ -530,6 +579,7 @@ public final class TagUtils {
     /**
      * Check if OSM primitive has a tag 'denomination'.
      * @param osmPrimitive The OSM entity to check.
+     * @return {@code true} if OSM primitive has a tag 'denomination'
      */
     public static boolean hasDenominationTag(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.hasKey(DENOMINATION_TAG) : false;
@@ -538,6 +588,7 @@ public final class TagUtils {
     /**
      * Gets the value of tag 'denomination'.
      * @param osmPrimitive The OSM entity to check.
+     * @return the value of tag 'denomination'
      */
     public static String getDenominationValue(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.get(DENOMINATION_TAG) : null;
@@ -546,6 +597,7 @@ public final class TagUtils {
     /**
      * Check if OSM primitive has a tag 'addr:postcode'.
      * @param osmPrimitive The OSM entity to check.
+     * @return {@code true} if OSM primitive has a tag 'addr:postcode'
      */
     public static boolean hasAddrPostcodeTag(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.hasKey(ADDR_POSTCODE_TAG) : false;
@@ -554,6 +606,7 @@ public final class TagUtils {
     /**
      * Gets the value of tag 'addr:postcode'.
      * @param osmPrimitive The OSM entity to check.
+     * @return the value of tag 'addr:postcode'
      */
     public static String getAddrPostcodeValue(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.get(ADDR_POSTCODE_TAG) : null;
@@ -562,6 +615,7 @@ public final class TagUtils {
     /**
      * Check if OSM primitive has a tag 'wires'.
      * @param osmPrimitive The OSM entity to check.
+     * @return {@code true} if OSM primitive has a tag 'wires'
      */
     public static boolean hasWiresTag(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.hasKey(WIRES_TAG) : false;
@@ -570,6 +624,7 @@ public final class TagUtils {
     /**
      * Gets the value of tag 'wires'.
      * @param osmPrimitive The OSM entity to check.
+     * @return the value of tag 'wires'
      */
     public static String getWiresValue(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.get(WIRES_TAG) : null;
@@ -578,6 +633,7 @@ public final class TagUtils {
     /**
      * Check if OSM primitive has a tag 'loc_ref'.
      * @param osmPrimitive The OSM entity to check.
+     * @return {@code true} if OSM primitive has a tag 'loc_ref'
      */
     public static boolean hasLocRefTag(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.hasKey(LOC_REF_TAG) : false;
@@ -586,6 +642,7 @@ public final class TagUtils {
     /**
      * Gets the value of tag 'loc_ref'.
      * @param osmPrimitive The OSM entity to check.
+     * @return the value of tag 'loc_ref'
      */
     public static String getLocRefValue(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.get(LOC_REF_TAG) : null;
@@ -594,6 +651,7 @@ public final class TagUtils {
     /**
      * Check if OSM primitive has a tag 'width'.
      * @param osmPrimitive The OSM entity to check.
+     * @return {@code true} if OSM primitive has a tag 'width'
      */
     public static boolean hasWidthTag(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.hasKey(WIDTH_TAG) : false;
@@ -602,6 +660,7 @@ public final class TagUtils {
     /**
      * Gets the value of tag 'width'.
      * @param osmPrimitive The OSM entity to check.
+     * @return the value of tag 'width'
      */
     public static String getWidthValue(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.get(WIDTH_TAG) : null;
@@ -610,6 +669,7 @@ public final class TagUtils {
     /**
      * Check if OSM primitive has a tag 'tourism'.
      * @param osmPrimitive The OSM entity to check.
+     * @return {@code true} if OSM primitive has a tag 'tourism'
      */
     public static boolean hasTourismTag(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.hasKey(TOURISM_TAG) : false;
@@ -618,6 +678,7 @@ public final class TagUtils {
     /**
      * Gets the value of tag 'tourism'.
      * @param osmPrimitive The OSM entity to check.
+     * @return the value of tag 'tourism'
      */
     public static String getTourismValue(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.get(TOURISM_TAG) : null;
@@ -626,6 +687,7 @@ public final class TagUtils {
     /**
      * Check if OSM primitive has a tag 'leisure'.
      * @param osmPrimitive The OSM entity to check.
+     * @return {@code true} if OSM primitive has a tag 'leisure'
      */
     public static boolean hasLeisureTag(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.hasKey(LEISURE_TAG) : false;
@@ -634,6 +696,7 @@ public final class TagUtils {
     /**
      * Gets the value of tag 'leisure'.
      * @param osmPrimitive The OSM entity to check.
+     * @return the value of tag 'leisure'
      */
     public static String getLeisureValue(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.get(LEISURE_TAG) : null;
@@ -642,6 +705,7 @@ public final class TagUtils {
     /**
      * Check if OSM primitive has a tag 'electrified'.
      * @param osmPrimitive The OSM entity to check.
+     * @return {@code true} if OSM primitive has a tag 'electrified'
      */
     public static boolean hasElectrifiedTag(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.hasKey(ELECTRIFIED_TAG) : false;
@@ -651,6 +715,7 @@ public final class TagUtils {
      * Gets the value of tag 'electrified'.
      *
      * @param osmPrimitive The OSM entity to check.
+     * @return the value of tag 'electrified'
      */
     public static String getElectrifiedValue(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.get(ELECTRIFIED_TAG) : null;
@@ -659,6 +724,7 @@ public final class TagUtils {
     /**
      * Check if OSM primitive has a tag 'junction'.
      * @param osmPrimitive The OSM entity to check.
+     * @return {@code true} if OSM primitive has a tag 'junction'
      */
     public static boolean hasJunctionTag(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.hasKey(JUNCTION_TAG) : false;
@@ -667,6 +733,7 @@ public final class TagUtils {
     /**
      * Gets the value of tag 'junction'.
      * @param osmPrimitive The OSM entity to check.
+     * @return the value of tag 'junction'
      */
     public static String getJunctionValue(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.get(JUNCTION_TAG) : null;
@@ -675,6 +742,7 @@ public final class TagUtils {
     /**
      * Check if OSM primitive has a tag 'railway'.
      * @param osmPrimitive The OSM entity to check.
+     * @return {@code true} if OSM primitive has a tag 'railway'
      */
     public static boolean hasRailwayTag(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.hasKey(RAILWAY_TAG) : false;
@@ -683,6 +751,7 @@ public final class TagUtils {
     /**
      * Gets the value of tag 'railway'.
      * @param osmPrimitive The OSM entity to check.
+     * @return the value of tag 'railway'
      */
     public static String getRailwayValue(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.get(RAILWAY_TAG) : null;
@@ -691,6 +760,7 @@ public final class TagUtils {
     /**
      * Check if OSM primitive has a tag 'voltage'.
      * @param osmPrimitive The OSM entity to check.
+     * @return {@code true} if OSM primitive has a tag 'voltage'
      */
     public static boolean hasVoltageTag(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.hasKey(VOLTAGE_TAG) : false;
@@ -699,6 +769,7 @@ public final class TagUtils {
     /**
      * Gets the value of tag 'voltage'.
      * @param osmPrimitive The OSM entity to check.
+     * @return the value of tag 'voltage
      */
     public static String getVoltageValue(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.get(VOLTAGE_TAG) : null;
@@ -707,6 +778,7 @@ public final class TagUtils {
     /**
      * Check if OSM primitive has a tag 'bridge'.
      * @param osmPrimitive The OSM entity to check.
+     * @return {@code true} if OSM primitive has a tag 'bridge'
      */
     public static boolean hasBridgeTag(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.hasKey(BRIDGE_TAG) : false;
@@ -715,6 +787,7 @@ public final class TagUtils {
     /**
      * Gets the value of tag 'bridge'.
      * @param osmPrimitive The OSM entity to check.
+     * @return the value of tag 'bridge'
      */
     public static String getBridgeValue(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.get(BRIDGE_TAG) : null;
@@ -723,6 +796,7 @@ public final class TagUtils {
     /**
      * Check if OSM primitive has a tag 'motor_vehicle'.
      * @param osmPrimitive The OSM entity to check.
+     * @return {@code true} if OSM primitive has a tag 'motor_vehicle'
      */
     public static boolean hasMotorVehicleTag(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.hasKey(MOTOR_VEHICLE_TAG) : false;
@@ -731,6 +805,7 @@ public final class TagUtils {
     /**
      * Gets the value of tag 'motor_vehicle'.
      * @param osmPrimitive The OSM entity to check.
+     * @return the value of tag 'motor_vehicle'
      */
     public static String getMotorVehicleValue(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.get(MOTOR_VEHICLE_TAG) : null;
@@ -739,6 +814,7 @@ public final class TagUtils {
     /**
      * Check if OSM primitive has a tag 'comment'.
      * @param osmPrimitive The OSM entity to check.
+     * @return {@code true} if OSM primitive has a tag 'comment'
      */
     public static boolean hasCommentTag(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.hasKey(COMMENT_TAG) : false;
@@ -747,6 +823,7 @@ public final class TagUtils {
     /**
      * Gets the value of tag 'comment'.
      * @param osmPrimitive The OSM entity to check.
+     * @return the value of tag 'comment'
      */
     public static String getCommentValue(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.get(COMMENT_TAG) : null;
@@ -755,6 +832,7 @@ public final class TagUtils {
     /**
      * Check if OSM primitive has a tag 'maxspeed'.
      * @param osmPrimitive The OSM entity to check.
+     * @return {@code true} if OSM primitive has a tag 'maxspeed'
      */
     public static boolean hasMaxspeedTag(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.hasKey(MAXSPEED_TAG) : false;
@@ -763,6 +841,7 @@ public final class TagUtils {
     /**
      * Gets the value of tag 'maxspeed'.
      * @param osmPrimitive The OSM entity to check.
+     * @return the value of tag 'maxspeed'
      */
     public static String getMaxspeedValue(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.get(MAXSPEED_TAG) : null;
@@ -771,6 +850,7 @@ public final class TagUtils {
     /**
      * Check if OSM primitive has a tag 'natural'.
      * @param osmPrimitive The OSM entity to check.
+     * @return {@code true} if OSM primitive has a tag 'natural'
      */
     public static boolean hasNaturalTag(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.hasKey(NATURAL_TAG) : false;
@@ -779,6 +859,7 @@ public final class TagUtils {
     /**
      * Gets the value of tag 'natural'.
      * @param osmPrimitive The OSM entity to check.
+     * @return the value of tag 'natural'
      */
     public static String getNaturalValue(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.get(NATURAL_TAG) : null;
@@ -787,6 +868,7 @@ public final class TagUtils {
     /**
      * Check if OSM primitive has a tag 'sac_scale'.
      * @param osmPrimitive The OSM entity to check.
+     * @return {@code true} if OSM primitive has a tag 'sac_scale'
      */
     public static boolean hasSacScaleTag(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.hasKey(SAC_SCALE_TAG) : false;
@@ -795,6 +877,7 @@ public final class TagUtils {
     /**
      * Gets the value of tag 'sac_scale'.
      * @param osmPrimitive The OSM entity to check.
+     * @return the value of tag 'sac_scale'
      */
     public static String getSacScaleValue(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.get(SAC_SCALE_TAG) : null;
@@ -803,6 +886,7 @@ public final class TagUtils {
     /**
      * Check if OSM primitive has a tag 'tunnel'.
      * @param osmPrimitive The OSM entity to check.
+     * @return {@code true} if OSM primitive has a tag 'tunnel'
      */
     public static boolean hasTunnelTag(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.hasKey(TUNNEL_TAG) : false;
@@ -811,6 +895,7 @@ public final class TagUtils {
     /**
      * Gets the value of tag 'tunnel'.
      * @param osmPrimitive The OSM entity to check.
+     * @return the value of tag 'tunnel'
      */
     public static String getTunnelValue(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.get(TUNNEL_TAG) : null;
@@ -819,6 +904,7 @@ public final class TagUtils {
     /**
      * Check if OSM primitive has a tag 'waterway'.
      * @param osmPrimitive The OSM entity to check.
+     * @return {@code true} if OSM primitive has a tag 'waterway'
      */
     public static boolean hasWaterwayTag(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.hasKey(WATERWAY_TAG) : false;
@@ -827,6 +913,7 @@ public final class TagUtils {
     /**
      * Gets the value of tag 'waterway'.
      * @param osmPrimitive The OSM entity to check.
+     * @return the value of tag 'waterway'
      */
     public static String getWaterwayValue(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.get(WATERWAY_TAG) : null;
@@ -835,6 +922,7 @@ public final class TagUtils {
     /**
      * Check if OSM primitive has a tag 'trail_visibility'.
      * @param osmPrimitive The OSM entity to check.
+     * @return {@code true} if OSM primitive has a tag 'trail_visibility'
      */
     public static boolean hasTrailVisibilityTag(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.hasKey(TRAIL_VISIBILITY_TAG) : false;
@@ -843,6 +931,7 @@ public final class TagUtils {
     /**
      * Gets the value of tag 'trail_visibility'.
      * @param osmPrimitive The OSM entity to check.
+     * @return the value of tag 'trail_visibility'
      */
     public static String getTrailVisibilityValue(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.get(TRAIL_VISIBILITY_TAG) : null;
@@ -851,6 +940,7 @@ public final class TagUtils {
     /**
      * Check if OSM primitive has a tag 'highway'.
      * @param osmPrimitive The OSM entity to check.
+     * @return {@code true} if OSM primitive has a tag 'highway'
      */
     public static boolean hasHighwayTag(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.hasKey(HIGHWAY_TAG) : false;
@@ -859,6 +949,7 @@ public final class TagUtils {
     /**
      * Gets the value of tag 'highway'.
      * @param osmPrimitive The OSM entity to check.
+     * @return the value of tag 'highway'
      */
     public static String getHighwayValue(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.get(HIGHWAY_TAG) : null;
@@ -867,6 +958,7 @@ public final class TagUtils {
     /**
      * Check if OSM primitive has a tag 'vehicle'.
      * @param osmPrimitive The OSM entity to check.
+     * @return {@code true} if OSM primitive has a tag 'vehicle'
      */
     public static boolean hasVehicleTag(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.hasKey(VEHICLE_TAG) : false;
@@ -875,6 +967,7 @@ public final class TagUtils {
     /**
      * Gets the value of tag 'vehicle'.
      * @param osmPrimitive The OSM entity to check.
+     * @return the value of tag 'vehicle'
      */
     public static String getVehicleValue(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.get(VEHICLE_TAG) : null;
@@ -883,6 +976,7 @@ public final class TagUtils {
     /**
      * Check if OSM primitive has a tag 'horse'.
      * @param osmPrimitive The OSM entity to check.
+     * @return {@code true} if OSM primitive has a tag 'horse'
      */
     public static boolean hasHorseTag(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.hasKey(HORSE_TAG) : false;
@@ -891,6 +985,7 @@ public final class TagUtils {
     /**
      * Gets the value of tag 'horse'.
      * @param osmPrimitive The OSM entity to check.
+     * @return the value of tag 'horse'
      */
     public static String getHorseValue(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.get(HORSE_TAG) : null;
@@ -899,6 +994,7 @@ public final class TagUtils {
     /**
      * Check if OSM primitive has a tag 'goods'.
      * @param osmPrimitive The OSM entity to check.
+     * @return {@code true} if OSM primitive has a tag 'goods'
      */
     public static boolean hasGoodsTag(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.hasKey(GOODS_TAG) : false;
@@ -907,6 +1003,7 @@ public final class TagUtils {
     /**
      * Gets the value of tag 'goods'.
      * @param osmPrimitive The OSM entity to check.
+     * @return the value of tag 'goods'
      */
     public static String getGoodsValue(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.get(GOODS_TAG) : null;
@@ -915,6 +1012,7 @@ public final class TagUtils {
     /**
      * Check if OSM primitive has a tag 'frequency'.
      * @param osmPrimitive The OSM entity to check.
+     * @return {@code true} if OSM primitive has a tag 'frequency'
      */
     public static boolean hasFrequencyTag(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.hasKey(FREQUENCY_TAG) : false;
@@ -923,6 +1021,7 @@ public final class TagUtils {
     /**
      * Gets the value of tag 'frequency'.
      * @param osmPrimitive The OSM entity to check.
+     * @return the value of tag 'frequency'
      */
     public static String getFrequencyValue(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.get(FREQUENCY_TAG) : null;
@@ -931,6 +1030,7 @@ public final class TagUtils {
     /**
      * Check if OSM primitive has a tag 'man_made'.
      * @param osmPrimitive The OSM entity to check.
+     * @return {@code true} if OSM primitive has a tag 'man_made'
      */
     public static boolean hasManMadeTag(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.hasKey(MAN_MADE_TAG) : false;
@@ -939,6 +1039,7 @@ public final class TagUtils {
     /**
      * Gets the value of tag 'man_made'.
      * @param osmPrimitive The OSM entity to check.
+     * @return the value of tag 'man_made'
      */
     public static String getManMadeValue(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.get(MAN_MADE_TAG) : null;
@@ -947,6 +1048,7 @@ public final class TagUtils {
     /**
      * Check if OSM primitive has a tag 'addr:housenumber'.
      * @param osmPrimitive The OSM entity to check.
+     * @return {@code true} if OSM primitive has a tag 'addr:housenumber'
      */
     public static boolean hasAddrHousenumberTag(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.hasKey(ADDR_HOUSENUMBER_TAG) : false;
@@ -955,6 +1057,7 @@ public final class TagUtils {
     /**
      * Gets the value of tag 'addr:housenumber'.
      * @param osmPrimitive The OSM entity to check.
+     * @return the value of tag 'addr:housenumber'
      */
     public static String getAddrHousenumberValue(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.get(ADDR_HOUSENUMBER_TAG) : null;
@@ -963,6 +1066,7 @@ public final class TagUtils {
     /**
      * Check if OSM primitive has a tag 'addr:housename'.
      * @param osmPrimitive The OSM entity to check.
+     * @return {@code true} if OSM primitive has a tag 'addr:housename'
      */
     public static boolean hasAddrHousenameTag(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.hasKey(ADDR_HOUSENAME_TAG) : false;
@@ -971,6 +1075,7 @@ public final class TagUtils {
     /**
      * Gets the value of tag 'addr:housename'.
      * @param osmPrimitive The OSM entity to check.
+     * @return the value of tag 'addr:housename'
      */
     public static String getAddrHousenameValue(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.get(ADDR_HOUSENAME_TAG) : null;
@@ -979,6 +1084,7 @@ public final class TagUtils {
     /**
      * Check if OSM primitive has a tag 'area'.
      * @param osmPrimitive The OSM entity to check.
+     * @return {@code true} if OSM primitive has a tag 'area'
      */
     public static boolean hasAreaTag(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.hasKey(AREA_TAG) : false;
@@ -987,6 +1093,7 @@ public final class TagUtils {
     /**
      * Gets the value of tag 'area'.
      * @param osmPrimitive The OSM entity to check.
+     * @return the value of tag 'area'
      */
     public static String getAreaValue(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.get(AREA_TAG) : null;
@@ -995,6 +1102,7 @@ public final class TagUtils {
     /**
      * Check if OSM primitive has a tag 'building:levels'.
      * @param osmPrimitive The OSM entity to check.
+     * @return {@code true} if OSM primitive has a tag 'building:levels'
      */
     public static boolean hasBuildingLevelsTag(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.hasKey(BUILDING_LEVELS_TAG) : false;
@@ -1003,6 +1111,7 @@ public final class TagUtils {
     /**
      * Gets the value of tag 'building:levels'.
      * @param osmPrimitive The OSM entity to check.
+     * @return the value of tag 'building:levels'
      */
     public static String getBuildingLevelsValue(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.get(BUILDING_LEVELS_TAG) : null;
@@ -1011,6 +1120,7 @@ public final class TagUtils {
     /**
      * Check if OSM primitive has a tag 'wheelchair'.
      * @param osmPrimitive The OSM entity to check.
+     * @return {@code true} if OSM primitive has a tag 'wheelchair'
      */
     public static boolean hasWheelchairTag(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.hasKey(WHEELCHAIR_TAG) : false;
@@ -1019,6 +1129,7 @@ public final class TagUtils {
     /**
      * Gets the value of tag 'wheelchair'.
      * @param osmPrimitive The OSM entity to check.
+     * @return the value of tag 'wheelchair'
      */
     public static String getWheelchairValue(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.get(WHEELCHAIR_TAG) : null;
@@ -1027,6 +1138,7 @@ public final class TagUtils {
     /**
      * Check if OSM primitive has a tag 'name'.
      * @param osmPrimitive The OSM entity to check.
+     * @return {@code true} if OSM primitive has a tag 'name'
      */
     public static boolean hasNameTag(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.hasKey(NAME_TAG) : false;
@@ -1035,6 +1147,7 @@ public final class TagUtils {
     /**
      * Gets the value of tag 'name'.
      * @param osmPrimitive The OSM entity to check.
+     * @return the value of tag 'name'
      */
     public static String getNameValue(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.get(NAME_TAG) : null;
@@ -1043,6 +1156,7 @@ public final class TagUtils {
     /**
      * Check if OSM primitive has a tag 'oneway'.
      * @param osmPrimitive The OSM entity to check.
+     * @return {@code true} if OSM primitive has a tag 'oneway'
      */
     public static boolean hasOnewayTag(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.hasKey(ONEWAY_TAG) : false;
@@ -1051,6 +1165,7 @@ public final class TagUtils {
     /**
      * Gets the value of tag 'oneway'.
      * @param osmPrimitive The OSM entity to check.
+     * @return the value of tag 'oneway'
      */
     public static String getOnewayValue(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.get(ONEWAY_TAG) : null;
@@ -1059,6 +1174,7 @@ public final class TagUtils {
     /**
      * Check if OSM primitive has a tag 'FIXME'.
      * @param osmPrimitive The OSM entity to check.
+     * @return {@code true} if OSM primitive has a tag 'FIXME'
      */
     public static boolean hasFIXMETag(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.hasKey(FIXME_TAG) : false;
@@ -1067,6 +1183,7 @@ public final class TagUtils {
     /**
      * Gets the value of tag 'FIXME'.
      * @param osmPrimitive The OSM entity to check.
+     * @return the value of tag 'FIXME'
      */
     public static String getFIXMEValue(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.get(FIXME_TAG) : null;
@@ -1075,6 +1192,7 @@ public final class TagUtils {
     /**
      * Check if OSM primitive has a tag 'capacity'.
      * @param osmPrimitive The OSM entity to check.
+     * @return {@code true} if OSM primitive has a tag 'capacity'
      */
     public static boolean hasCapacityTag(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.hasKey(CAPACITY_TAG) : false;
@@ -1083,6 +1201,7 @@ public final class TagUtils {
     /**
      * Gets the value of tag 'capacity'.
      * @param osmPrimitive The OSM entity to check.
+     * @return the value of tag 'capacity'
      */
     public static String getCapacityValue(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.get(CAPACITY_TAG) : null;
@@ -1091,6 +1210,7 @@ public final class TagUtils {
     /**
      * Check if OSM primitive has a tag 'motorcycle'.
      * @param osmPrimitive The OSM entity to check.
+     * @return {@code true} if OSM primitive has a tag 'motorcycle'
      */
     public static boolean hasMotorcycleTag(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.hasKey(MOTORCYCLE_TAG) : false;
@@ -1099,6 +1219,7 @@ public final class TagUtils {
     /**
      * Gets the value of tag 'motorcycle'.
      * @param osmPrimitive The OSM entity to check.
+     * @return the value of tag 'motorcycle'
      */
     public static String getMotorcycleValue(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.get(MOTORCYCLE_TAG) : null;
@@ -1107,6 +1228,7 @@ public final class TagUtils {
     /**
      * Check if OSM primitive has a tag 'hgv'.
      * @param osmPrimitive The OSM entity to check.
+     * @return {@code true} if OSM primitive has a tag 'hgv'
      */
     public static boolean hasHgvTag(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.hasKey(HGV_TAG) : false;
@@ -1115,6 +1237,7 @@ public final class TagUtils {
     /**
      * Gets the value of tag 'hgv'.
      * @param osmPrimitive The OSM entity to check.
+     * @return the value of tag 'hgv'
      */
     public static String getHgvValue(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.get(HGV_TAG) : null;
@@ -1123,6 +1246,7 @@ public final class TagUtils {
     /**
      * Check if OSM primitive has a tag 'construction'.
      * @param osmPrimitive The OSM entity to check.
+     * @return {@code true} if OSM primitive has a tag 'construction'
      */
     public static boolean hasConstructionTag(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.hasKey(CONSTRUCTION_TAG) : false;
@@ -1131,6 +1255,7 @@ public final class TagUtils {
     /**
      * Gets the value of tag 'construction'.
      * @param osmPrimitive The OSM entity to check.
+     * @return the value of tag 'construction'
      */
     public static String getConstructionValue(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.get(CONSTRUCTION_TAG) : null;
@@ -1139,6 +1264,7 @@ public final class TagUtils {
     /**
      * Check if OSM primitive has a tag 'addr:state'.
      * @param osmPrimitive The OSM entity to check.
+     * @return {@code true} if OSM primitive has a tag 'addr:state'
      */
     public static boolean hasAddrStateTag(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.hasKey(ADDR_STATE_TAG) : false;
@@ -1147,6 +1273,7 @@ public final class TagUtils {
     /**
      * Gets the value of tag 'addr:state'.
      * @param osmPrimitive The OSM entity to check.
+     * @return the value of tag 'addr:state'
      */
     public static String getAddrStateValue(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.get(ADDR_STATE_TAG) : null;
@@ -1155,6 +1282,7 @@ public final class TagUtils {
     /**
      * Check if OSM primitive has a tag 'lanes'.
      * @param osmPrimitive The OSM entity to check.
+     * @return {@code true} if OSM primitive has a tag 'lanes'
      */
     public static boolean hasLanesTag(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.hasKey(LANES_TAG) : false;
@@ -1163,6 +1291,7 @@ public final class TagUtils {
     /**
      * Gets the value of tag 'lanes'.
      * @param osmPrimitive The OSM entity to check.
+     * @return the value of tag 'lanes'
      */
     public static String getLanesValue(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.get(LANES_TAG) : null;
@@ -1171,6 +1300,7 @@ public final class TagUtils {
     /**
      * Check if OSM primitive has a tag 'note'.
      * @param osmPrimitive The OSM entity to check.
+     * @return {@code true} if OSM primitive has a tag 'note'
      */
     public static boolean hasNoteTag(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.hasKey(NOTE_TAG) : false;
@@ -1179,6 +1309,7 @@ public final class TagUtils {
     /**
      * Gets the value of tag 'note'.
      * @param osmPrimitive The OSM entity to check.
+     * @return the value of tag 'note'
      */
     public static String getNoteValue(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.get(NOTE_TAG) : null;
@@ -1187,6 +1318,7 @@ public final class TagUtils {
     /**
      * Check if OSM primitive has a tag 'lit'.
      * @param osmPrimitive The OSM entity to check.
+     * @return {@code true} if OSM primitive has a tag 'lit'
      */
     public static boolean hasLitTag(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.hasKey(LIT_TAG) : false;
@@ -1195,6 +1327,7 @@ public final class TagUtils {
     /**
      * Gets the value of tag 'lit'.
      * @param osmPrimitive The OSM entity to check.
+     * @return the value of tag 'lit'
      */
     public static String getLitValue(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.get(LIT_TAG) : null;
@@ -1203,6 +1336,7 @@ public final class TagUtils {
     /**
      * Check if OSM primitive has a tag 'building'.
      * @param osmPrimitive The OSM entity to check.
+     * @return {@code true} if OSM primitive has a tag 'building'
      */
     public static boolean hasBuildingTag(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.hasKey(BUILDING_TAG) : false;
@@ -1211,6 +1345,7 @@ public final class TagUtils {
     /**
      * Gets the value of tag 'building'.
      * @param osmPrimitive The OSM entity to check.
+     * @return the value of tag 'building'
      */
     public static String getBuildingValue(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.get(BUILDING_TAG) : null;
@@ -1219,6 +1354,7 @@ public final class TagUtils {
     /**
      * Check if OSM primitive has a tag 'segregated'.
      * @param osmPrimitive The OSM entity to check.
+     * @return {@code true} if OSM primitive has a tag 'segregated'
      */
     public static boolean hasSegregatedTag(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.hasKey(SEGREGATED_TAG) : false;
@@ -1227,6 +1363,7 @@ public final class TagUtils {
     /**
      * Gets the value of tag 'segregated'.
      * @param osmPrimitive The OSM entity to check.
+     * @return the value of tag 'segregated'
      */
     public static String getSegregatedValue(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.get(SEGREGATED_TAG) : null;
@@ -1235,6 +1372,7 @@ public final class TagUtils {
     /**
      * Check if OSM primitive has a tag 'addr:inclusion'.
      * @param osmPrimitive The OSM entity to check.
+     * @return {@code true} if OSM primitive has a tag 'addr:inclusion'
      */
     public static boolean hasAddrInclusionTag(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.hasKey(ADDR_INCLUSION_TAG) : false;
@@ -1243,6 +1381,7 @@ public final class TagUtils {
     /**
      * Gets the value of tag 'addr:inclusion'.
      * @param osmPrimitive The OSM entity to check.
+     * @return the value of tag 'addr:inclusion'
      */
     public static String getAddrInclusionValue(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.get(ADDR_INCLUSION_TAG) : null;
@@ -1251,6 +1390,7 @@ public final class TagUtils {
     /**
      * Check if OSM primitive has a tag 'layer'.
      * @param osmPrimitive The OSM entity to check.
+     * @return {@code true} if OSM primitive has a tag 'layer'
      */
     public static boolean hasLayerTag(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.hasKey(LAYER_TAG) : false;
@@ -1259,6 +1399,7 @@ public final class TagUtils {
     /**
      * Gets the value of tag 'layer'.
      * @param osmPrimitive The OSM entity to check.
+     * @return the value of tag 'layer'
      */
     public static String getLayerValue(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.get(LAYER_TAG) : null;
@@ -1267,6 +1408,7 @@ public final class TagUtils {
     /**
      * Check if OSM primitive has a tag 'sport'.
      * @param osmPrimitive The OSM entity to check.
+     * @return {@code true} if OSM primitive has a tag 'sport'
      */
     public static boolean hasSportTag(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.hasKey(SPORT_TAG) : false;
@@ -1275,6 +1417,7 @@ public final class TagUtils {
     /**
      * Gets the value of tag 'sport'.
      * @param osmPrimitive The OSM entity to check.
+     * @return the value of tag 'sport'
      */
     public static String getSportValue(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.get(SPORT_TAG) : null;
@@ -1283,6 +1426,7 @@ public final class TagUtils {
     /**
      * Check if OSM primitive has a tag 'addr:interpolation'.
      * @param osmPrimitive The OSM entity to check.
+     * @return {@code true} if OSM primitive has a tag 'addr:interpolation'
      */
     public static boolean hasAddrInterpolationTag(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.hasKey(ADDR_INTERPOLATION_TAG) : false;
@@ -1291,6 +1435,7 @@ public final class TagUtils {
     /**
      * Gets the value of tag 'addr:interpolation'.
      * @param osmPrimitive The OSM entity to check.
+     * @return the value of tag 'addr:interpolation'
      */
     public static String getAddrInterpolationValue(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.get(ADDR_INTERPOLATION_TAG) : null;
@@ -1299,6 +1444,7 @@ public final class TagUtils {
     /**
      * Check if OSM primitive has a tag 'cutting'.
      * @param osmPrimitive The OSM entity to check.
+     * @return {@code true} if OSM primitive has a tag 'cutting'
      */
     public static boolean hasCuttingTag(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.hasKey(CUTTING_TAG) : false;
@@ -1307,6 +1453,7 @@ public final class TagUtils {
     /**
      * Gets the value of tag 'cutting'.
      * @param osmPrimitive The OSM entity to check.
+     * @return the value of tag 'cutting'
      */
     public static String getCuttingValue(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.get(CUTTING_TAG) : null;
@@ -1315,6 +1462,7 @@ public final class TagUtils {
     /**
      * Check if OSM primitive has a tag 'amenity'.
      * @param osmPrimitive The OSM entity to check.
+     * @return {@code true} if OSM primitive has a tag 'amenity'
      */
     public static boolean hasAmenityTag(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.hasKey(AMENITY_TAG) : false;
@@ -1323,6 +1471,7 @@ public final class TagUtils {
     /**
      * Gets the value of tag 'amenity'.
      * @param osmPrimitive The OSM entity to check.
+     * @return the value of tag 'amenity'
      */
     public static String getAmenityValue(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.get(AMENITY_TAG) : null;
@@ -1331,6 +1480,7 @@ public final class TagUtils {
     /**
      * Check if OSM primitive has a tag 'access'.
      * @param osmPrimitive The OSM entity to check.
+     * @return {@code true} if OSM primitive has a tag 'access'
      */
     public static boolean hasAccessTag(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.hasKey(ACCESS_TAG) : false;
@@ -1339,6 +1489,7 @@ public final class TagUtils {
     /**
      * Gets the value of tag 'access'.
      * @param osmPrimitive The OSM entity to check.
+     * @return the value of tag 'access'
      */
     public static String getAccessValue(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.get(ACCESS_TAG) : null;
@@ -1347,6 +1498,7 @@ public final class TagUtils {
     /**
      * Check if OSM primitive has a tag 'agricultural'.
      * @param osmPrimitive The OSM entity to check.
+     * @return {@code true} if OSM primitive has a tag 'agricultural'
      */
     public static boolean hasAgriculturalTag(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.hasKey(AGRICULTURAL_TAG)
@@ -1356,6 +1508,7 @@ public final class TagUtils {
     /**
      * Gets the value of tag 'agricultural'.
      * @param osmPrimitive The OSM entity to check.
+     * @return the value of tag 'agricultural'
      */
     public static String getAgriculturalValue(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.get(AGRICULTURAL_TAG) : null;
@@ -1364,6 +1517,7 @@ public final class TagUtils {
     /**
      * Check if OSM primitive has a tag 'capacity:disabled'.
      * @param osmPrimitive The OSM entity to check.
+     * @return {@code true} if OSM primitive has a tag 'capacity:disabled'
      */
     public static boolean hasCapacityDisabledTag(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive
@@ -1373,6 +1527,7 @@ public final class TagUtils {
     /**
      * Gets the value of tag 'capacity:disabled'.
      * @param osmPrimitive The OSM entity to check.
+     * @return the value of tag 'capacity:disabled'
      */
     public static String getCapacityDisabledValue(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.get(CAPACITY_DISABLED_TAG) : null;
@@ -1381,6 +1536,7 @@ public final class TagUtils {
     /**
      * Check if OSM primitive has a tag 'operator'.
      * @param osmPrimitive The OSM entity to check.
+     * @return {@code true} if OSM primitive has a tag 'operator'
      */
     public static boolean hasOperatorTag(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.hasKey(OPERATOR_TAG) : false;
@@ -1389,6 +1545,7 @@ public final class TagUtils {
     /**
      * Gets the value of tag 'operator'.
      * @param osmPrimitive The OSM entity to check.
+     * @return the value of tag 'operator'
      */
     public static String getOperatorValue(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.get(OPERATOR_TAG) : null;
@@ -1397,6 +1554,7 @@ public final class TagUtils {
     /**
      * Check if OSM primitive has a tag 'ref'.
      * @param osmPrimitive The OSM entity to check.
+     * @return {@code true} if OSM primitive has a tag 'ref'
      */
     public static boolean hasRefTag(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.hasKey(REF_TAG) : false;
@@ -1405,6 +1563,7 @@ public final class TagUtils {
     /**
      * Gets the value of tag 'ref'.
      * @param osmPrimitive The OSM entity to check.
+     * @return the value of tag 'ref'
      */
     public static String getRefValue(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.get(REF_TAG) : null;
@@ -1413,6 +1572,7 @@ public final class TagUtils {
     /**
      * Check if OSM primitive has a tag 'noexit'.
      * @param osmPrimitive The OSM entity to check.
+     * @return {@code true} if OSM primitive has a tag 'noexit'
      */
     public static boolean hasNoexitTag(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.hasKey(NOEXIT_TAG) : false;
@@ -1421,6 +1581,7 @@ public final class TagUtils {
     /**
      * Gets the value of tag 'noexit'.
      * @param osmPrimitive The OSM entity to check.
+     * @return the value of tag 'noexit'
      */
     public static String getNoexitValue(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.get(NOEXIT_TAG) : null;
@@ -1429,6 +1590,7 @@ public final class TagUtils {
     /**
      * Check if OSM primitive has a tag 'admin_level'.
      * @param osmPrimitive The OSM entity to check.
+     * @return {@code true} if OSM primitive has a tag 'admin_level'
      */
     public static boolean hasAdminLevelTag(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.hasKey(ADMIN_LEVEL_TAG) : false;
@@ -1437,6 +1599,7 @@ public final class TagUtils {
     /**
      * Gets the value of tag 'admin_level'.
      * @param osmPrimitive The OSM entity to check.
+     * @return the value of tag 'admin_level'
      */
     public static String getAdminLevelValue(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.get(ADMIN_LEVEL_TAG) : null;
@@ -1445,6 +1608,7 @@ public final class TagUtils {
     /**
      * Check if OSM primitive has a tag 'source'.
      * @param osmPrimitive The OSM entity to check.
+     * @return {@code true} if OSM primitive has a tag 'source'
      */
     public static boolean hasSourceTag(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.hasKey(SOURCE_TAG) : false;
@@ -1453,6 +1617,7 @@ public final class TagUtils {
     /**
      * Gets the value of tag 'source'.
      * @param osmPrimitive The OSM entity to check.
+     * @return the value of tag 'source'
      */
     public static String getSourceValue(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.get(SOURCE_TAG) : null;
@@ -1461,6 +1626,7 @@ public final class TagUtils {
     /**
      * Check if OSM primitive has a tag 'tracktype'.
      * @param osmPrimitive The OSM entity to check.
+     * @return {@code true} if OSM primitive has a tag 'tracktype'
      */
     public static boolean hasTracktypeTag(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.hasKey(TRACKTYPE_TAG) : false;
@@ -1469,6 +1635,7 @@ public final class TagUtils {
     /**
      * Gets the value of tag 'tracktype'.
      * @param osmPrimitive The OSM entity to check.
+     * @return the value of tag 'tracktype'
      */
     public static String getTracktypeValue(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.get(TRACKTYPE_TAG) : null;
@@ -1477,6 +1644,7 @@ public final class TagUtils {
     /**
      * Check if OSM primitive has a tag 'addr:country'.
      * @param osmPrimitive The OSM entity to check.
+     * @return {@code true} if OSM primitive has a tag 'addr:country'
      */
     public static boolean hasAddrCountryTag(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.hasKey(ADDR_COUNTRY_TAG) : false;
@@ -1485,6 +1653,7 @@ public final class TagUtils {
     /**
      * Gets the value of tag 'addr:country'.
      * @param osmPrimitive The OSM entity to check.
+     * @return the value of tag 'addr:country'
      */
     public static String getAddrCountryValue(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.get(ADDR_COUNTRY_TAG) : null;
@@ -1493,6 +1662,7 @@ public final class TagUtils {
     /**
      * Check if OSM primitive has a tag 'route'.
      * @param osmPrimitive The OSM entity to check.
+     * @return {@code true} if OSM primitive has a tag 'route'
      */
     public static boolean hasRouteTag(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.hasKey(ROUTE_TAG) : false;
@@ -1501,6 +1671,7 @@ public final class TagUtils {
     /**
      * Gets the value of tag 'route'.
      * @param osmPrimitive The OSM entity to check.
+     * @return the value of tag 'route'
      */
     public static String getRouteValue(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.get(ROUTE_TAG) : null;
@@ -1509,6 +1680,7 @@ public final class TagUtils {
     /**
      * Check if OSM primitive has a tag 'cables'.
      * @param osmPrimitive The OSM entity to check.
+     * @return {@code true} if OSM primitive has a tag 'cables'
      */
     public static boolean hasCablesTag(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.hasKey(CABLES_TAG) : false;
@@ -1517,6 +1689,7 @@ public final class TagUtils {
     /**
      * Gets the value of tag 'cables'.
      * @param osmPrimitive The OSM entity to check.
+     * @return the value of tag 'cables'
      */
     public static String getCablesValue(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.get(CABLES_TAG) : null;
@@ -1525,6 +1698,7 @@ public final class TagUtils {
     /**
      * Check if OSM primitive has a tag 'service'.
      * @param osmPrimitive The OSM entity to check.
+     * @return {@code true} if OSM primitive has a tag 'service'
      */
     public static boolean hasServiceTag(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.hasKey(SERVICE_TAG) : false;
@@ -1533,6 +1707,7 @@ public final class TagUtils {
     /**
      * Gets the value of tag 'service'.
      * @param osmPrimitive The OSM entity to check.
+     * @return the value of tag 'service'
      */
     public static String getServiceValue(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.get(SERVICE_TAG) : null;
@@ -1541,6 +1716,7 @@ public final class TagUtils {
     /**
      * Check if OSM primitive has a tag 'motorcar'.
      * @param osmPrimitive The OSM entity to check.
+     * @return {@code true} if OSM primitive has a tag 'motorcar'
      */
     public static boolean hasMotorcarTag(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.hasKey(MOTORCAR_TAG) : false;
@@ -1549,6 +1725,7 @@ public final class TagUtils {
     /**
      * Gets the value of tag 'motorcar'.
      * @param osmPrimitive The OSM entity to check.
+     * @return the value of tag 'motorcar'
      */
     public static String getMotorcarValue(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.get(MOTORCAR_TAG) : null;
@@ -1557,6 +1734,7 @@ public final class TagUtils {
     /**
      * Check if OSM primitive has a tag 'whitewater'.
      * @param osmPrimitive The OSM entity to check.
+     * @return {@code true} if OSM primitive has a tag 'whitewater'
      */
     public static boolean hasWhitewaterTag(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.hasKey(WHITEWATER_TAG) : false;
@@ -1565,6 +1743,7 @@ public final class TagUtils {
     /**
      * Gets the value of tag 'whitewater'.
      * @param osmPrimitive The OSM entity to check.
+     * @return the value of tag 'whitewater'
      */
     public static String getWhitewaterValue(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.get(WHITEWATER_TAG) : null;
@@ -1573,6 +1752,7 @@ public final class TagUtils {
     /**
      * Check if OSM primitive has a tag 'embankment'.
      * @param osmPrimitive The OSM entity to check.
+     * @return {@code true} if OSM primitive has a tag 'embankment'
      */
     public static boolean hasEmbankmentTag(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.hasKey(EMBANKMENT_TAG) : false;
@@ -1581,6 +1761,7 @@ public final class TagUtils {
     /**
      * Gets the value of tag 'embankment'.
      * @param osmPrimitive The OSM entity to check.
+     * @return the value of tag 'embankment'
      */
     public static String getEmbankmentValue(OsmPrimitive osmPrimitive) {
         return osmPrimitive != null ? osmPrimitive.get(EMBANKMENT_TAG) : null;
@@ -1616,7 +1797,8 @@ public final class TagUtils {
 
     /**
      * Check if OSM relation is a 'associatedStreet' relation.
-     * @param osmPrimitive The OSM entity to check.
+     * @param rel The relation to check.
+     * @return {@code true} if OSM relation is a 'associatedStreet' relation
      */
     public static boolean isAssociatedStreetRelation(Relation rel) {
         return rel != null &&

@@ -3,6 +3,9 @@ package org.openstreetmap.josm.plugins.fixAddresses;
 
 import java.util.List;
 
+/**
+ * Generic problem.
+ */
 public interface IProblem {
 
     /**

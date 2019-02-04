@@ -28,6 +28,7 @@ public class ApplyAllGuessesAction extends AbstractAddressEditAction implements 
     private String tag;
     /**
      * Instantiates a new "apply all guesses" action.
+     * @param tag tag to analyze
      */
     public ApplyAllGuessesAction(String tag) {
         super(tr("Apply"), "applyguesses_24", tr("Turns all guesses into the corresponding tag values."),

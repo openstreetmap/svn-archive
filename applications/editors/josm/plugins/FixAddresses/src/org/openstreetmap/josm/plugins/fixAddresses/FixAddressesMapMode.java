@@ -7,6 +7,9 @@ import java.awt.Cursor;
 
 import org.openstreetmap.josm.actions.mapmode.MapMode;
 
+/**
+ * Map mode that shows dialog with incomplete addresses
+ */
 @SuppressWarnings("serial")
 public class FixAddressesMapMode extends MapMode {
 

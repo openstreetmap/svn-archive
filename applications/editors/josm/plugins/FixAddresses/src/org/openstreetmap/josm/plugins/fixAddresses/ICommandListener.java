@@ -3,6 +3,9 @@ package org.openstreetmap.josm.plugins.fixAddresses;
 
 import org.openstreetmap.josm.command.Command;
 
+/**
+ * Command listener.
+ */
 public interface ICommandListener {
     /**
      * Called by a node entity if a command has been created. Clients may collect

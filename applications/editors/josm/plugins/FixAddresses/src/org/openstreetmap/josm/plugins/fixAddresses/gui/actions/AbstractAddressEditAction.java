@@ -116,7 +116,7 @@ public abstract class AbstractAddressEditAction extends JosmAction implements IA
 
     /**
      * Updates 'enabled' state depending on the current selection.
-     * @param container The selection event.
+     * @param event The selection event.
      */
     protected abstract void updateEnabledState(AddressEditSelectionEvent event);
 

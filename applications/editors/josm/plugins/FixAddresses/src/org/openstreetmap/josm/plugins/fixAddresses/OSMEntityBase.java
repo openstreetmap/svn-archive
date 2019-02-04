@@ -65,6 +65,7 @@ public class OSMEntityBase implements IOSMEntity, Comparable<IOSMEntity> {
 
     /**
      * Notifies clients that the address container changed.
+     * @param entity OSM entity
      */
     protected static void fireEntityChanged(IOSMEntity entity) {
         CheckParameterUtil.ensureParameterNotNull(entity, "entity");
@@ -96,7 +97,6 @@ public class OSMEntityBase implements IOSMEntity, Comparable<IOSMEntity> {
     /**
      * Notifies clients that an entity has issued a command.
      *
-     * @param source the entity that issued the command.
      * @param command the command to execute.
      */
     protected void fireCommandIssued(Command command) {
@@ -139,11 +139,10 @@ public class OSMEntityBase implements IOSMEntity, Comparable<IOSMEntity> {
 
     /**
      * Internal helper method which changes the given property and
-     * puts the appropriate command {@link src.org.openstreetmap.josm.command.Command}
+     * puts the appropriate command {@link org.openstreetmap.josm.command.Command}
      * into the undo/redo queue.
      * @param tag The tag to change.
      * @param newValue The new value for the tag.
-     * @param cmd The surrounding command sequence
      */
     protected void setOSMTag(String tag, String newValue) {
         CheckParameterUtil.ensureParameterNotNull(tag, "tag");

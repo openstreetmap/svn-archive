@@ -3,6 +3,9 @@ package org.openstreetmap.josm.plugins.fixAddresses;
 
 import org.openstreetmap.josm.actions.JosmAction;
 
+/**
+ * Generic solution to a {@link IProblem}.
+ */
 public interface ISolution {
 
     /**

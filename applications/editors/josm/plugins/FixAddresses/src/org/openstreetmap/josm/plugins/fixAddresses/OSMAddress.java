@@ -94,16 +94,16 @@ public class OSMAddress extends OSMEntityBase {
         if (!osmObject.hasKey(tag)
             || StringUtils.isNullOrEmpty(osmObject.get(tag))) {
             if (!hasDerivedValue(tag)) {
-            // object does not have this tag -> check for guess
-            if (hasGuessedValue(tag)) {
-                return "*" + getGuessedValue(tag);
-            } else {
-                // give up
-                return MISSING_TAG;
-            }
+                // object does not have this tag -> check for guess
+                if (hasGuessedValue(tag)) {
+                    return "*" + getGuessedValue(tag);
+                } else {
+                    // give up
+                    return MISSING_TAG;
+                }
             } else { // ok, use derived value known via associated relation or
-                 // way
-            return getDerivedValue(tag);
+                // way
+                return getDerivedValue(tag);
             }
         } else { // get existing tag value
             return osmObject.get(tag);
@@ -428,31 +428,30 @@ public class OSMAddress extends OSMEntityBase {
         if (cc == 0) {
             cc = this.getStreetName().compareTo(other.getStreetName());
             if (cc == 0) {
-            if (hasGuessedStreetName()) {
-                if (other.hasStreetName()) {
-                // Compare guessed name with the real name
-                /*String gsm =*/ this.getGuessedStreetName();
-                cc = this.getGuessedStreetName().compareTo(
-                    other.getStreetName());
-                if (cc == 0) {
+                if (hasGuessedStreetName()) {
+                    if (other.hasStreetName()) {
+                        // Compare guessed name with the real name
+                        /*String gsm =*/ this.getGuessedStreetName();
+                        cc = this.getGuessedStreetName().compareTo(
+                            other.getStreetName());
+                        if (cc == 0) {
+                            cc = this.getHouseNumber().compareTo(
+                                other.getHouseNumber());
+                        }
+                        } else if (other.hasGuessedStreetName()) {
+                        // Compare guessed name with the guessed name
+                        cc = this.getGuessedStreetName().compareTo(
+                            other.getGuessedStreetName());
+                        if (cc == 0) {
+                            cc = this.getHouseNumber().compareTo(
+                                other.getHouseNumber());
+                        }
+                    } // else: give up
+                    // No guessed name at all -> just compare the number
+                } else {
                     cc = this.getHouseNumber().compareTo(
                         other.getHouseNumber());
                 }
-                } else if (other.hasGuessedStreetName()) {
-                // Compare guessed name with the guessed name
-                cc = this.getGuessedStreetName().compareTo(
-                    other.getGuessedStreetName());
-                if (cc == 0) {
-                    cc = this.getHouseNumber().compareTo(
-                        other.getHouseNumber());
-                }
-                } // else: give up
-                  // No guessed name at all -> just compare the
-                  // number
-            } else {
-                cc = this.getHouseNumber().compareTo(
-                    other.getHouseNumber());
-            }
             }
         }
         }
@@ -538,6 +537,7 @@ public class OSMAddress extends OSMEntityBase {
 
     /**
      * Check if this instance needs guessed value for a given tag.
+     * @param tag tag to analyze
      *
      * @return true, if successful
      */

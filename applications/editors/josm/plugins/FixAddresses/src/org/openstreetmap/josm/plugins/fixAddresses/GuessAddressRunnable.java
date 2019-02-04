@@ -21,7 +21,7 @@ import org.xml.sax.SAXException;
  *
  * The guessing procedure itself is implemented by defining "guessers" using the {@link GuessedValueHandler}
  * class. A guessed field does not modify the corresponding property of {@link OSMAddress} itself, but
- * adds the guessed value to a shadowed field by calling {@link OSMAddress#setGuessedValue(String, String)}.
+ * adds the guessed value to a shadowed field by calling {@link OSMAddress#setGuessedValue}.
  */
 public class GuessAddressRunnable extends PleaseWaitRunnable {
     private List<OSMAddress> addressesToGuess;

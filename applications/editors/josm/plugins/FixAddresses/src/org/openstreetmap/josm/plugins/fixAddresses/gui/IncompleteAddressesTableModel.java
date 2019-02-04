@@ -10,10 +10,11 @@ import org.openstreetmap.josm.plugins.fixAddresses.AddressEditContainer;
 import org.openstreetmap.josm.plugins.fixAddresses.IOSMEntity;
 import org.openstreetmap.josm.plugins.fixAddresses.OSMAddress;
 
+/**
+ * Incomplete addresses table model.
+ */
 public class IncompleteAddressesTableModel extends AddressEditTableModel {
-    /**
-     *
-     */
+
     private static final long serialVersionUID = -5951629033395186324L;
 
     // TODO: Add "state" column, if required

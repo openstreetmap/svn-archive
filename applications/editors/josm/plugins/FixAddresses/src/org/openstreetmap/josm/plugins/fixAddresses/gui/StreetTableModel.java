@@ -9,6 +9,9 @@ import org.openstreetmap.josm.plugins.fixAddresses.AddressEditContainer;
 import org.openstreetmap.josm.plugins.fixAddresses.IOSMEntity;
 import org.openstreetmap.josm.plugins.fixAddresses.OSMStreet;
 
+/**
+ * Street table model.
+ */
 @SuppressWarnings("serial")
 public class StreetTableModel extends AddressEditTableModel {
     private static final int NUMBER_OF_COLUMNS = 3;

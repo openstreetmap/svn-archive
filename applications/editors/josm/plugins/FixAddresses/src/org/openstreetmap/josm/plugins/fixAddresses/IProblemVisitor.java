@@ -1,6 +1,9 @@
 // License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.fixAddresses;
 
+/**
+ * Problem visitor.
+ */
 public interface IProblemVisitor {
     /**
      * Adds a problem without solution.
@@ -11,6 +14,7 @@ public interface IProblemVisitor {
 
     /**
      * Removes the problems of the given source.
+     * @param entity OSM entity
      */
     void removeProblemsOfSource(IOSMEntity entity);
 }

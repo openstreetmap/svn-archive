@@ -7,6 +7,9 @@ import org.openstreetmap.josm.plugins.fixAddresses.AddressEditContainer;
 import org.openstreetmap.josm.plugins.fixAddresses.OSMAddress;
 import org.openstreetmap.josm.plugins.fixAddresses.gui.AddressEditSelectionEvent;
 
+/**
+ * Removes address related tags from the object.
+ */
 @SuppressWarnings("serial")
 public class RemoveAddressTagsAction extends AbstractAddressEditAction {
 

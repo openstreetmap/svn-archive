@@ -11,10 +11,11 @@ import org.openstreetmap.josm.plugins.fixAddresses.AddressEditContainer;
 import org.openstreetmap.josm.plugins.fixAddresses.OSMAddress;
 import org.openstreetmap.josm.plugins.fixAddresses.OSMStreet;
 
+/**
+ * Address Edit selection event
+ */
 public class AddressEditSelectionEvent extends ActionEvent {
-    /**
-     *
-     */
+
     private static final long serialVersionUID = -93034483427803409L;
     private JTable streetTable;
     private JTable unresolvedAddressTable;
@@ -29,7 +30,7 @@ public class AddressEditSelectionEvent extends ActionEvent {
      * @param source The event source.
      * @param selStreet The street table component.
      * @param unresolvedAddresses The unresolved addresses table component.
-     * @param incomplete The incomplete addresses table component.
+     * @param incompleteAddresses The incomplete addresses table component.
      * @param container The address container instance holding the entities for streets and addresses.
      */
     public AddressEditSelectionEvent(Object source, JTable selStreet, JTable unresolvedAddresses, JTable incompleteAddresses,

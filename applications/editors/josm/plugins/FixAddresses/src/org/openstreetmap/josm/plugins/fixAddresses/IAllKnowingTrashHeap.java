@@ -3,6 +3,9 @@ package org.openstreetmap.josm.plugins.fixAddresses;
 
 import java.util.List;
 
+/**
+ * Knowledge of street names distances and validity.
+ */
 public interface IAllKnowingTrashHeap {
 
     /**

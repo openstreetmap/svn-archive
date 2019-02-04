@@ -16,6 +16,9 @@ import org.openstreetmap.josm.plugins.fixAddresses.AddressEditContainer;
 import org.openstreetmap.josm.plugins.fixAddresses.IAddressEditContainerListener;
 import org.openstreetmap.josm.plugins.fixAddresses.IOSMEntity;
 
+/**
+ * Address edit table model.
+ */
 @SuppressWarnings("serial")
 public abstract class AddressEditTableModel extends DefaultTableModel implements
         IAddressEditContainerListener {
@@ -35,13 +38,7 @@ public abstract class AddressEditTableModel extends DefaultTableModel implements
         if (SwingUtilities.isEventDispatchThread()) {
             fireTableDataChanged(); // update model
         } else {
-            SwingUtilities.invokeLater(new Runnable() {
-
-                @Override
-                public void run() {
-                    fireTableDataChanged(); // update model
-                }
-            });
+            SwingUtilities.invokeLater(() -> fireTableDataChanged());
         }
     }
 
@@ -90,8 +87,6 @@ public abstract class AddressEditTableModel extends DefaultTableModel implements
      * component's {@code addColumnListener} method. When
      * the column event occurs, that object's appropriate
      * method is invoked.
-     *
-     * @see ColumnEvent
      */
     class ColumnListener extends MouseAdapter {
         protected JTable table;
@@ -138,6 +133,7 @@ public abstract class AddressEditTableModel extends DefaultTableModel implements
 
     /**
      * Internal base class to sort items by different columns.
+     * @param <E> item type
      */
     protected abstract static class ColumnSorter<E> implements Comparator<E> {
         private int column;
@@ -147,6 +143,7 @@ public abstract class AddressEditTableModel extends DefaultTableModel implements
          * Instantiates a new address sorter.
          *
          * @param column the column to sort by
+         * @param ascending if sort mode is ascending or not
          */
         public ColumnSorter(int column, boolean ascending) {
             super();

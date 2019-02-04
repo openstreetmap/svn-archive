@@ -13,9 +13,9 @@ import org.openstreetmap.josm.plugins.fixAddresses.OSMAddress;
 import org.openstreetmap.josm.plugins.fixAddresses.gui.AddressEditSelectionEvent;
 
 /**
+ * Marks selected addresses in the map.
  *
  * @author Oliver Wieland &lt;oliver.wieland@online.de>
- *
  */
 @SuppressWarnings("serial")
 public class SelectAddressesInMapAction extends AbstractAddressEditAction {

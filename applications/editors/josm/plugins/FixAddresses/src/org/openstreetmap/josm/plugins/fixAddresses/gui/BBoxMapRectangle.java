@@ -8,6 +8,9 @@ import org.openstreetmap.gui.jmapviewer.Coordinate;
 import org.openstreetmap.gui.jmapviewer.MapRectangleImpl;
 import org.openstreetmap.josm.data.osm.BBox;
 
+/**
+ * A {@link MapRectangleImpl} constructed from a {@link BBox}.
+ */
 public class BBoxMapRectangle extends MapRectangleImpl {
     private BBox bbox;
 

@@ -12,6 +12,9 @@ import org.openstreetmap.josm.gui.preferences.PreferenceSettingFactory;
 import org.openstreetmap.josm.gui.preferences.PreferenceTabbedPane;
 import org.openstreetmap.josm.spi.preferences.Config;
 
+/**
+ * Plugin preferences.
+ */
 public final class FixAddressesPreferences extends DefaultTabPreferenceSetting {
     private static final String FIX_ADDRESSES_IGNORE_POST_CODE_KEY = "fixAddresses.ignorePostCode";
     private static final String FIX_ADDRESSES_SELECT_GUESSED_OBJECTS_KEY = "fixAddresses.selectGuessedObjects";

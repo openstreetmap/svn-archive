@@ -6,6 +6,9 @@ import java.util.List;
 
 import org.openstreetmap.josm.tools.CheckParameterUtil;
 
+/**
+ * Address problem.
+ */
 public class AddressProblem implements IProblem {
     private List<ISolution> solutions = null;
     private String description;

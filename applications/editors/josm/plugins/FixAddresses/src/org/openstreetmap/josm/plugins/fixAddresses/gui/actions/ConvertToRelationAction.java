@@ -13,6 +13,9 @@ import org.openstreetmap.josm.plugins.fixAddresses.OSMStreet;
 import org.openstreetmap.josm.plugins.fixAddresses.TagConstants;
 import org.openstreetmap.josm.plugins.fixAddresses.gui.AddressEditSelectionEvent;
 
+/**
+ * Create relation between street and related addresses.
+ */
 @SuppressWarnings("serial")
 public class ConvertToRelationAction extends AbstractAddressEditAction {
 
@@ -28,6 +31,7 @@ public class ConvertToRelationAction extends AbstractAddressEditAction {
      * @param name the name of the action
      * @param iconName the icon name
      * @param tooltip the tool tip to show on hover
+     * @param toolbar identifier for the toolbar preferences
      */
     public ConvertToRelationAction(String name, String iconName, String tooltip, String toolbar) {
         super(name, iconName, tooltip, toolbar);

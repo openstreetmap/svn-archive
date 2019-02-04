@@ -12,9 +12,11 @@ import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.plugins.fixAddresses.AddressEditContainer;
 import org.openstreetmap.josm.plugins.fixAddresses.OSMAddress;
 
+/**
+ * Selects all addresses with incomplete data.
+ */
 @SuppressWarnings("serial")
 public class SelectIncompleteAddressesAction extends JosmAction {
-
 
     private AddressEditContainer addressEditContainer;
 

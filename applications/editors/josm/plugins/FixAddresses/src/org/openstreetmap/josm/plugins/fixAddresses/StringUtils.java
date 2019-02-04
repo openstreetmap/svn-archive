@@ -3,6 +3,9 @@ package org.openstreetmap.josm.plugins.fixAddresses;
 
 import java.util.List;
 
+/**
+ * Various String utilities.
+ */
 public final class StringUtils {
 
     private StringUtils() {
@@ -17,7 +20,7 @@ public final class StringUtils {
      * @return True, if string is null or empty; otherwise false
      */
     public static boolean isNullOrEmpty(String txt) {
-        return txt == null || txt.length() == 0;
+        return txt == null || txt.isEmpty();
     }
 
     /**
@@ -29,8 +32,8 @@ public final class StringUtils {
      *            Second string
      * @return The length of the longest common substring or 0, if no common
      *         sequence exists or one of the arguments are invalid. For
-     *         algorithm details please refer to {@link http
-     *         ://www.ics.uci.edu/~eppstein/161/960229.html}
+     *         algorithm details please refer to
+     *         <a href="https://www.ics.uci.edu/~eppstein/161/960229.html">ICS 161: Design and Analysis of Algorithms</a>
      */
     public static int lcsLength(String a, String b) {
         if (StringUtils.isNullOrEmpty(a))
@@ -42,9 +45,6 @@ public final class StringUtils {
         return L[0][0];
     }
 
-    /**
-     * Internal use only
-     */
     private static int[][] createLCSTable(String a, String b) {
         if (StringUtils.isNullOrEmpty(a))
             return null;
@@ -123,7 +123,7 @@ public final class StringUtils {
         if (StringUtils.isNullOrEmpty(needle)) {
             return null;
         }
-        if (haystack == null || haystack.size() == 0) {
+        if (haystack == null || haystack.isEmpty()) {
             return null;
         }
 

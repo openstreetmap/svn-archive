@@ -239,6 +239,7 @@ public class UndeleteAction extends JosmAction {
         final OsmDataLayer layer = tmpLayer;
 
         HistoryLoadTask task = new HistoryLoadTask();
+        task.setChangesetDataNeeded(false);
         for (PrimitiveId id : ids) {
             task.add(id);
         }

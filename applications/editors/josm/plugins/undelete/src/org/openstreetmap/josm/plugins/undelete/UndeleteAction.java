@@ -18,6 +18,7 @@ import org.openstreetmap.josm.actions.AutoScaleAction.AutoScaleMode;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
+import org.openstreetmap.josm.data.osm.NodeData;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.OsmPrimitiveType;
 import org.openstreetmap.josm.data.osm.PrimitiveId;
@@ -86,12 +87,19 @@ public class UndeleteAction extends JosmAction {
                         boolean visible = hPrimitive1.isVisible();
 
                         if (visible) {
-                            // If the object is not deleted we get the real object
-                            DownloadPrimitivesTask download = new DownloadPrimitivesTask(layer, Collections.singletonList(pid), true);
-                            download.setZoom(false);
-                            download.run();
-
-                            primitive = layer.data.getPrimitiveById(id, type);
+                            if (type == OsmPrimitiveType.NODE) {
+                                // we have all needed information in the history object
+                                primitive = new Node(hPrimitive1.getId());
+                                HistoryNode hNode = (HistoryNode) hPrimitive1;
+                                primitive.load(hNode.fillPrimitiveData(new NodeData()));
+                                layer.data.addPrimitive(primitive);
+                            } else {
+                                // If the way or relation is not deleted we get the real object
+                                DownloadPrimitivesTask download = new DownloadPrimitivesTask(layer, Collections.singletonList(pid), true);
+                                download.setZoom(false);
+                                download.run();
+                                primitive = layer.data.getPrimitiveById(id, type);
+                            }
                             restored.add(primitive);
                         } else {
                             // We search n-1 version with redaction robustness

@@ -106,7 +106,7 @@ public final class Jrender {
             FileOutputStream fos = new FileOutputStream(dstdir + "/" + z + "/" + xdir + "/" + ynam + ".png");
             bos.writeTo(fos);
             fos.close();
-            if (send.size() > 20) {
+            if (send.size() > 100) {
                 PrintWriter writer = new PrintWriter(srcdir + z + "-" + xdir + "-" + ynam + ".send", "UTF-8");
                 for (String str : send) {
                     writer.println(str);

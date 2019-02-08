@@ -295,6 +295,7 @@ public class Rules {
 				if (testObject(Obj.PRCARE)) for (Feature f : objects) if (testFeature(f)) areas();
 				if (testObject(Obj.SPLARE)) for (Feature f : objects) if (testFeature(f)) areas();
 				if (testObject(Obj.SEAARE)) for (Feature f : objects) if (testFeature(f)) areas();
+				if (testObject(Obj.DMPGRD)) for (Feature f : objects) if (testFeature(f)) areas();
 				if (testObject(Obj.OBSTRN)) for (Feature f : objects) if (testFeature(f)) obstructions();
 				if (testObject(Obj.UWTROC)) for (Feature f : objects) if (testFeature(f)) obstructions();
 				if (testObject(Obj.MARCUL)) for (Feature f : objects) if (testFeature(f)) areas();
@@ -434,6 +435,7 @@ public class Rules {
 			break;
 		case RESARE:
 		case MIPARE:
+		case DMPGRD:
 			if (Renderer.zoom >= 12) {
 				Renderer.lineSymbols(Areas.Restricted, 1.0, null, null, 0, Symbols.Mline);
 				if (testAttribute(feature.type, Att.CATREA, CatREA.REA_NWAK)) {
@@ -968,7 +970,8 @@ public class Rules {
 				if (cats.get(0) == CatLMK.LMK_RADR)
 					fncSym = Landmarks.RadioTV;
 				Renderer.symbol(catSym);
-				Renderer.symbol(fncSym);
+				if (catSym != Landmarks.Spire)
+					Renderer.symbol(fncSym);
 				break;
 			case SILTNK:
 				if (testAttribute(feature.type, Att.CATSIL, CatSIL.SIL_WTRT))
@@ -1182,8 +1185,6 @@ public class Rules {
 			default:
 				Renderer.symbol(Areas.Rock);
 			}
-		} else {
-			Renderer.symbol(Areas.Rock);
 		}
 	}
 
@@ -1464,9 +1465,9 @@ public class Rules {
 	private static void transits() {
 		if (Renderer.zoom >= 14) {
 			if (feature.type == Obj.RECTRC)
-				Renderer.lineVector(new LineStyle(Color.black, 10, null, null));
+				Renderer.lineVector(new LineStyle(Color.black, 5, null, null));
 			else if (feature.type == Obj.NAVLNE)
-				Renderer.lineVector(new LineStyle(Color.black, 10, new float[] { 25, 25 }, null));
+				Renderer.lineVector(new LineStyle(Color.black, 5, new float[] { 25, 25 }, null));
 		}
 		if (Renderer.zoom >= 15) {
 			String str = "";
@@ -1477,7 +1478,7 @@ public class Rules {
 			if ((ort = (Double) getAttVal(feature.type, Att.ORIENT)) != null) {
 				str += df.format(ort) + "º";
 				if (!str.isEmpty())
-					Renderer.lineText(str, new Font("Arial", Font.PLAIN, 80), Color.black, -20);
+					Renderer.lineText(str, new Font("Arial", Font.PLAIN, 40), Color.black, -20);
 			}
 		}
 	}

@@ -1191,7 +1191,7 @@ public class Rules {
 	private static void pipelines() {
 		if ((Renderer.zoom >= 16) && (feature.geom.length < 2)) {
 			if (feature.type == Obj.PIPSOL) {
-				Renderer.lineSymbols(Areas.Pipeline, 1.0, null, null, 0, Symbols.Mline);
+				Renderer.lineSymbols(Areas.Pipeline, 0.33, null, null, 0, Symbols.Mline);
 			} else if (feature.type == Obj.PIPOHD) {
 				Renderer.lineVector(new LineStyle(Color.black, 8));
 				AttMap atts = feature.atts;

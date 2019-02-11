@@ -167,19 +167,19 @@ public final class Jrender {
             clean(12, 0, 0);
         }
         tile(zoom, 1, 0, 0);
-        if (send.size() > 0) {
-            PrintWriter writer = new PrintWriter(srcdir + zoom + "-" + xtile + "-" + ytile + ".send", "UTF-8");
-            for (String str : send) {
-                writer.println(str);
+        if ((send.size() > 0) || (deletes.size() > 0)) {
+        	PrintWriter writer = new PrintWriter(srcdir + zoom + "-" + xtile + "-" + ytile + ".send", "UTF-8");
+        	if (send.size() > 0) {
+        		for (String str : send) {
+        			writer.println(str);
             }
-            writer.close();
-        }
-        if (deletes.size() > 0) {
-            PrintWriter writer = new PrintWriter(srcdir + zoom + "-" + xtile + "-" + ytile + ".delete", "UTF-8");
-            for (String del : deletes.keySet()) {
-                writer.println("rm " + del);
+          }
+          if (deletes.size() > 0) {
+          	for (String del : deletes.keySet()) {
+          		writer.println("rm " + del);
             }
-            writer.close();
+          }
+          writer.close();
         }
         System.exit(0);
     }

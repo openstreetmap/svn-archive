@@ -9,7 +9,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
-import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
 
 import de.bwaldvogel.liblinear.FeatureNode;
@@ -27,7 +26,6 @@ public class OSMWay implements Serializable {
     private Set<Integer> classIDs;
     private final List<String> nodeReferences = new ArrayList<>(); //node references  //made final
     private final List<Geometry> nodeGeometries = new ArrayList<>(); //nodeGeometries   //made final
-    private Coordinate[] coordinateList;
     private Map<String, String> tags = new HashMap<>();
     private Geometry geometry;
     private TreeMap<Integer, Double> indexVector = new TreeMap<>();
@@ -44,11 +42,6 @@ public class OSMWay implements Serializable {
 
     public List<Geometry> getNodeGeometries() {
         return nodeGeometries;
-    }
-
-    public Coordinate[] getCoordinateList() {
-        coordinateList = nodeGeometries.toArray(new Coordinate[0]);
-        return coordinateList;
     }
 
     public Geometry getGeometry() {

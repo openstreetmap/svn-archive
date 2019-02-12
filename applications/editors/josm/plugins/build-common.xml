@@ -17,6 +17,8 @@
     <property name="jmockit.jar"            location="../00_core_test_lib/jmockit.jar"/>
     <property name="error_prone_core.jar"   location="../00_core_tools/error_prone_core.jar"/>
     <property name="error_prone_javac.jar"  location="../00_core_tools/error_prone_javac.jar"/>
+    <property name="dataflow.jar"           location="../00_core_tools/dataflow.jar"/>
+    <property name="javacutil.jar"          location="../00_core_tools/javacutil.jar"/>
     <property name="failureaccess.jar"      location="../00_core_tools/failureaccess.jar"/>
     <property name="guava.jar"              location="../00_core_tools/guava.jar"/>
     <property name="checkstyle.jar"         location="../00_core_tools/checkstyle/checkstyle-all.jar"/>
@@ -94,6 +96,8 @@
     </path>
     <path id="processor.path">
         <pathelement location="${error_prone_core.jar}"/>
+        <pathelement location="${dataflow.jar}"/>
+        <pathelement location="${javacutil.jar}"/>
         <pathelement location="${failureaccess.jar}"/>
         <pathelement location="${guava.jar}"/>
         <pathelement location="${jformatstring.jar}"/>

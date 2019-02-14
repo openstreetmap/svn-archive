@@ -546,6 +546,7 @@
         <pathelement path="${josm}"/>
         <pathelement path="${plugin.jar}"/>
         <pathelement path="${annotations.jar}"/>
+        <pathelement path="${guava.jar}"/>
     </path>
     <macrodef name="init-test-preferences">
         <sequential>

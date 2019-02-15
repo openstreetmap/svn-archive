@@ -120,7 +120,7 @@ public class Rules {
 				name = atts.get(Att.OBJNAM);
 			}
 		}
-		return (name != null) ? (String) name.val : null;
+		return (name != null) ? ((String) name.val).replace("&quot;", "\"") : null;
 	}
 
 	public static void addName(int z, Font font) {
@@ -429,8 +429,8 @@ public class Rules {
 		case OSPARE:
 			if (testAttribute(feature.type, Att.CATPRA, CatPRA.PRA_WFRM)) {
 				Renderer.symbol(Areas.WindFarm);
-				Renderer.lineVector(new LineStyle(Color.black, 20, new float[] { 40, 40 }));
-				addName(15, new Font("Arial", Font.BOLD, 80), new Delta(Handle.TC, AffineTransform.getTranslateInstance(0, 10)));
+				Renderer.lineVector(new LineStyle(Color.black, 12, new float[] { 40, 40 }));
+				addName(15, new Font("Arial", Font.BOLD, 80), new Delta(Handle.TC, AffineTransform.getTranslateInstance(0, 120)));
 			}
 			break;
 		case RESARE:
@@ -953,8 +953,10 @@ public class Rules {
 
 	@SuppressWarnings("unchecked")
 	private static void landmarks() {
-		if (!hasAttribute(Obj.LNDMRK, Att.CATLMK) && (!hasAttribute(Obj.LNDMRK, Att.FUNCTN) || testAttribute(Obj.LNDMRK, Att.FUNCTN, FncFNC.FNC_LGHT)) && hasObject(Obj.LIGHTS))
+		if (!hasAttribute(Obj.LNDMRK, Att.CATLMK) && (!hasAttribute(Obj.LNDMRK, Att.FUNCTN) || testAttribute(Obj.LNDMRK, Att.FUNCTN, FncFNC.FNC_LGHT)) && hasObject(Obj.LIGHTS)) {
 			lights();
+			addName(15, new Font("Arial", Font.BOLD, 40), new Delta(Handle.BL, AffineTransform.getTranslateInstance(60, -50)));
+		}
 		else if (Renderer.zoom >= 12) {
 			switch (feature.type) {
 			case LNDMRK:
@@ -980,9 +982,8 @@ public class Rules {
 			default:
 				break;
 			}
-			if (Renderer.zoom >= 15)
-				addName(15, new Font("Arial", Font.BOLD, 40), new Delta(Handle.BL, AffineTransform.getTranslateInstance(60, -50)));
 			Signals.addSignals();
+            addName(15, new Font("Arial", Font.BOLD, 40), new Delta(Handle.BL, AffineTransform.getTranslateInstance(60, -50)));
 		}
 	}
 

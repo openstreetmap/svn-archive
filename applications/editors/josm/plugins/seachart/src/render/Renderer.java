@@ -601,9 +601,6 @@ public final class Renderer {
     }
 
     public static void lightSector(Color col1, Color col2, double radius, double s1, double s2, Double dir, String str) {
-        if ((zoom >= 16) && (radius > 0.2)) {
-            radius /= Math.pow(2, zoom-15);
-        }
         double mid = (((s1 + s2) / 2) + (s1 > s2 ? 180 : 0)) % 360;
         g2.setStroke(new BasicStroke((float) (3.0 * sScale), BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND, 1,
                 new float[] {20 * (float) sScale, 20 * (float) sScale}, 0));

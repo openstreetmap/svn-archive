@@ -729,10 +729,10 @@ public class SeaMark extends JPanel {
     }
 
     public enum Att {
-        COL, CHR, GRP, SEQ, PER, LIT, BEG, END, RAD, HGT, RNG, VIS, EXH, ORT, MLT, ALT
+        COL, CHR, GRP, SEQ, PER, LIT, BEG, END, HGT, RNG, VIS, EXH, ORT, MLT, ALT
     }
 
-    public Object[] sector = {Col.UNKCOL, "", "", "", "", Lit.UNKLIT, "", "",
+    public Object[] sector = {Col.UNKCOL, "", "", "", "", Lit.UNKLIT, "",
             "", "", "", Vis.UNKVIS, Exh.UNKEXH, "", "", Col.UNKCOL };
 
     private ArrayList<Object[]> sectors = new ArrayList<>();
@@ -769,12 +769,11 @@ public class SeaMark extends JPanel {
             case 4:
             case 8:
             case 9:
-            case 10:
                 sectors.get(i)[att] = validDecimal((String) obj);
                 break;
             case 6:
             case 7:
-            case 13:
+            case 12:
                 sectors.get(i)[att] = validDecimal((String) obj, 360);
                 break;
             default:
@@ -1839,9 +1838,6 @@ public class SeaMark extends JPanel {
             if (keys.containsKey("seamark:light" + secStr + ":sector_end")) {
                 setLightAtt(Att.END, i, keys.get("seamark:light" + secStr + ":sector_end"));
             }
-            if (keys.containsKey("seamark:light" + secStr + ":radius")) {
-                setLightAtt(Att.RAD, i, keys.get("seamark:light" + secStr + ":radius"));
-            }
             if (keys.containsKey("seamark:light" + secStr + ":height")) {
                 setLightAtt(Att.HGT, i, keys.get("seamark:light" + secStr + ":height"));
             }
@@ -2789,9 +2785,9 @@ public class SeaMark extends JPanel {
             for (int i = (sectors.size() > 1 ? 1 : 0); i < sectors.size(); i++) {
                 String secStr = (i == 0) ? "" : (":" + Integer.toString(i));
                 if (sectors.get(i)[0] != Col.UNKCOL)
-                    if ((sectors.get(i)[15] != Col.UNKCOL) && ((String) sectors.get(i)[1]).contains("Al")) {
+                    if ((sectors.get(i)[14] != Col.UNKCOL) && ((String) sectors.get(i)[1]).contains("Al")) {
                         undoRedo.add(new ChangePropertyCommand(node, "seamark:light" + secStr + ":colour",
-                                (ColSTR.get(sectors.get(i)[0])) + ";" + ColSTR.get(sectors.get(i)[15])));
+                                (ColSTR.get(sectors.get(i)[0])) + ";" + ColSTR.get(sectors.get(i)[14])));
                     } else {
                         undoRedo.add(new ChangePropertyCommand(node, "seamark:light" + secStr + ":colour",
                                 ColSTR.get(sectors.get(i)[0])));
@@ -2832,42 +2828,37 @@ public class SeaMark extends JPanel {
                             (String) sectors.get(i)[7]));
                 }
                 if (!((String) sectors.get(i)[8]).isEmpty()) {
-                    undoRedo.add(new ChangePropertyCommand(node, "seamark:light" + secStr + ":radius", (String) sectors.get(i)[8]));
+                    undoRedo.add(new ChangePropertyCommand(node, "seamark:light" + secStr + ":height", (String) sectors.get(i)[8]));
                 } else if (!((String) sectors.get(0)[8]).isEmpty()) {
-                    undoRedo.add(new ChangePropertyCommand(node, "seamark:light" + secStr + ":radius", (String) sectors.get(0)[8]));
+                    undoRedo.add(new ChangePropertyCommand(node, "seamark:light" + secStr + ":height", (String) sectors.get(0)[8]));
                 }
                 if (!((String) sectors.get(i)[9]).isEmpty()) {
-                    undoRedo.add(new ChangePropertyCommand(node, "seamark:light" + secStr + ":height", (String) sectors.get(i)[9]));
+                    undoRedo.add(new ChangePropertyCommand(node, "seamark:light" + secStr + ":range", (String) sectors.get(i)[9]));
                 } else if (!((String) sectors.get(0)[9]).isEmpty()) {
-                    undoRedo.add(new ChangePropertyCommand(node, "seamark:light" + secStr + ":height", (String) sectors.get(0)[9]));
+                    undoRedo.add(new ChangePropertyCommand(node, "seamark:light" + secStr + ":range", (String) sectors.get(0)[9]));
                 }
-                if (!((String) sectors.get(i)[10]).isEmpty()) {
-                    undoRedo.add(new ChangePropertyCommand(node, "seamark:light" + secStr + ":range", (String) sectors.get(i)[10]));
-                } else if (!((String) sectors.get(0)[10]).isEmpty()) {
-                    undoRedo.add(new ChangePropertyCommand(node, "seamark:light" + secStr + ":range", (String) sectors.get(0)[10]));
-                }
-                if (sectors.get(i)[11] != Vis.UNKVIS) {
+                if (sectors.get(i)[10] != Vis.UNKVIS) {
                     undoRedo.add(new ChangePropertyCommand(node, "seamark:light" + secStr + ":visibility",
-                            VisSTR.get(sectors.get(i)[11])));
-                } else if (sectors.get(0)[11] != Vis.UNKVIS) {
+                            VisSTR.get(sectors.get(i)[10])));
+                } else if (sectors.get(0)[10] != Vis.UNKVIS) {
                     undoRedo.add(new ChangePropertyCommand(node, "seamark:light" + secStr + ":visibility",
-                            VisSTR.get(sectors.get(0)[11])));
+                            VisSTR.get(sectors.get(0)[10])));
                 }
-                if (sectors.get(i)[12] != Exh.UNKEXH) {
+                if (sectors.get(i)[11] != Exh.UNKEXH) {
                     undoRedo.add(new ChangePropertyCommand(node, "seamark:light" + secStr + ":exhibition",
-                            ExhSTR.get(sectors.get(i)[12])));
-                } else if (sectors.get(0)[12] != Exh.UNKEXH) {
+                            ExhSTR.get(sectors.get(i)[11])));
+                } else if (sectors.get(0)[11] != Exh.UNKEXH) {
                     undoRedo.add(new ChangePropertyCommand(node, "seamark:light" + secStr + ":exhibition",
-                            ExhSTR.get(sectors.get(0)[12])));
+                            ExhSTR.get(sectors.get(0)[11])));
+                }
+                if (!((String) sectors.get(i)[12]).isEmpty()) {
+                    undoRedo.add(new ChangePropertyCommand(node, "seamark:light" + secStr + ":orientation",
+                            (String) sectors.get(i)[12]));
                 }
                 if (!((String) sectors.get(i)[13]).isEmpty()) {
-                    undoRedo.add(new ChangePropertyCommand(node, "seamark:light" + secStr + ":orientation",
-                            (String) sectors.get(i)[13]));
-                }
-                if (!((String) sectors.get(i)[14]).isEmpty()) {
-                    undoRedo.add(new ChangePropertyCommand(node, "seamark:light" + secStr + ":multiple", (String) sectors.get(i)[14]));
-                } else if (!((String) sectors.get(0)[14]).isEmpty()) {
-                    undoRedo.add(new ChangePropertyCommand(node, "seamark:light" + secStr + ":multiple", (String) sectors.get(0)[14]));
+                    undoRedo.add(new ChangePropertyCommand(node, "seamark:light" + secStr + ":multiple", (String) sectors.get(i)[13]));
+                } else if (!((String) sectors.get(0)[13]).isEmpty()) {
+                    undoRedo.add(new ChangePropertyCommand(node, "seamark:light" + secStr + ":multiple", (String) sectors.get(0)[13]));
                 }
             }
 

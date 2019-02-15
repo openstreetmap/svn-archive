@@ -35,7 +35,6 @@ import org.openstreetmap.josm.plugins.seamapeditor.seamarks.SeaMark.Vis;
 
 public class PanelSectors extends JFrame {
 
-    private SmedAction dlg;
     private JPanel panel;
     private TableModel model;
     private JTable table;
@@ -69,7 +68,6 @@ public class PanelSectors extends JFrame {
 
     public PanelSectors(SmedAction dia) {
         super(Messages.getString("SectorTable"));
-        dlg = dia;
         setLayout(null);
         setSize(900, 100);
         setAlwaysOnTop(true);

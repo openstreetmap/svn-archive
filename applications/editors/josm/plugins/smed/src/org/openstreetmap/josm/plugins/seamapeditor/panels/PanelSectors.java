@@ -110,7 +110,7 @@ public class PanelSectors extends JFrame {
         addColItem(new ImageIcon(getClass().getResource("/images/VioletButton.png")), Col.VIOLET);
         colColumn.setCellEditor(new DefaultCellEditor(colourBox));
 
-        TableColumn visColumn = table.getColumnModel().getColumn(12);
+        TableColumn visColumn = table.getColumnModel().getColumn(11);
         visibilityBox = new JComboBox<>();
         addVisibItem("", Vis.UNKVIS);
         addVisibItem(Messages.getString("Intensified"), Vis.INTEN);
@@ -118,7 +118,7 @@ public class PanelSectors extends JFrame {
         addVisibItem(Messages.getString("PartiallyObscured"), Vis.PARTOBS);
         visColumn.setCellEditor(new DefaultCellEditor(visibilityBox));
 
-        TableColumn exhColumn = table.getColumnModel().getColumn(13);
+        TableColumn exhColumn = table.getColumnModel().getColumn(12);
         exhibitionBox = new JComboBox<>();
         addExhibItem("", Exh.UNKEXH);
         addExhibItem(Messages.getString("24h"), Exh.H24);
@@ -132,7 +132,7 @@ public class PanelSectors extends JFrame {
 
         private String[] headings = {Messages.getString("Sector"), Messages.getString("Colour"), Messages.getString("Character"),
                 Messages.getString("Group"), Messages.getString("Sequence"), Messages.getString("Period"), Messages.getString("Directional"),
-                Messages.getString("Start"), Messages.getString("End"), Messages.getString("Radius"), Messages.getString("Height"),
+                Messages.getString("Start"), Messages.getString("End"), Messages.getString("Height"),
                 Messages.getString("Range"), Messages.getString("Visibility"), Messages.getString("Exhibition") };
 
         SectorTable() {
@@ -197,9 +197,9 @@ public class PanelSectors extends JFrame {
                     return SmedAction.panelMain.mark.getLightAtt(Att.ORT, row);
                 else
                     return SmedAction.panelMain.mark.getLightAtt(col - 1, row);
-            case 12:
+            case 11:
                 return visibilities.get(SmedAction.panelMain.mark.getLightAtt(Att.VIS, row));
-            case 13:
+            case 12:
                 return exhibitions.get(SmedAction.panelMain.mark.getLightAtt(Att.EXH, row));
             default:
                 return SmedAction.panelMain.mark.getLightAtt(col - 1, row);
@@ -228,7 +228,6 @@ public class PanelSectors extends JFrame {
             case 5:
             case 9:
             case 10:
-            case 11:
                 SmedAction.panelMain.mark.setLightAtt(col - 1, row, value);
                 break;
             case 6:
@@ -249,7 +248,7 @@ public class PanelSectors extends JFrame {
                     SmedAction.panelMain.mark.setLightAtt(col - 1, row, value);
                 }
                 break;
-            case 12:
+            case 11:
                 for (Vis vis : visibilities.keySet()) {
                     String str = visibilities.get(vis);
                     if (str.equals(value)) {
@@ -257,7 +256,7 @@ public class PanelSectors extends JFrame {
                     }
                 }
                 break;
-            case 13:
+            case 12:
                 for (Exh exh : exhibitions.keySet()) {
                     String str = exhibitions.get(exh);
                     if (str.equals(value)) {

@@ -2,6 +2,7 @@
 package org.openstreetmap.josm.plugins.customizepublictransportstop;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
+import static org.openstreetmap.josm.tools.I18n.trc;
 
 import java.awt.Frame;
 import java.awt.GridBagConstraints;
@@ -30,6 +31,8 @@ import org.openstreetmap.josm.gui.MainApplication;
 public class CustomizePublicTransportStopDialog implements ActionListener, ItemListener, KeyListener {
     private static final String CANCEL_COMMAND = "cancel";
     private static final String SAVE_COMMAND = "save";
+
+    private static final String PUBLIC_TRANSPORT_LANG_SECTION_NAME = "PublicTransport";
     private static final String CANCEL_BUTTON_CAPTION = "Cancel";
     private static final String SAVE_BUTTON_CAPTION = "Save";
     private static final String AREA_CAPTION = "Area";
@@ -345,7 +348,7 @@ public class CustomizePublicTransportStopDialog implements ActionListener, ItemL
         checkBoxIsBench.addKeyListener(this);
         contentPane.add(checkBoxIsBench);
 
-        checkBoxIsShelter = new JCheckBox(tr(SHELTER_CAPTION));
+        checkBoxIsShelter = new JCheckBox(trc(PUBLIC_TRANSPORT_LANG_SECTION_NAME, SHELTER_CAPTION));
         layoutCons.gridx = 1;
         layoutCons.gridy = 10;
         layoutCons.weightx = 0.5;

@@ -20,7 +20,7 @@ Tram
 Railway station
 Railway stop
 Assign transport type to platform
-Shelter
+PublicTransport\u0004Shelter
 Bench
 Cover
 Area

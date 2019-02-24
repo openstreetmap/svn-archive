@@ -1,6 +1,7 @@
 // License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.opendata.core.io.geographic;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -8,6 +9,7 @@ import static org.junit.Assert.assertTrue;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.util.Collection;
 
 import org.junit.Ignore;
 import org.junit.Rule;
@@ -15,6 +17,7 @@ import org.junit.Test;
 import org.openstreetmap.josm.TestUtils;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.Node;
+import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.plugins.opendata.core.io.NonRegFunctionalTests;
 import org.openstreetmap.josm.testutils.JOSMTestRules;
 
@@ -82,6 +85,22 @@ public class ShpReaderTest {
         File file = new File(TestUtils.getRegressionDataFile(8309, "new_ti_declarada.shp"));
         try (InputStream is = new FileInputStream(file)) {
             NonRegFunctionalTests.testGeneric("#8309", ShpReader.parseDataSet(is, file, null, null));
+        }
+    }
+
+    /**
+     * Non-regression test for ticket <a href="https://josm.openstreetmap.de/ticket/12843">#12843</a>
+     * @throws Exception if an error occurs during reading
+     */
+    @Test
+    public void testTicket12843() throws Exception {
+        File file = new File(TestUtils.getRegressionDataFile(12843, "test.shp"));
+        try (InputStream is = new FileInputStream(file)) {
+            Collection<Way> ways = ShpReader.parseDataSet(is, file, null, null).getWays();
+            assertFalse(ways.isEmpty());
+            for (Way way : ways) {
+                assertEquals("Test", way.get("name"));
+            }
         }
     }
 }

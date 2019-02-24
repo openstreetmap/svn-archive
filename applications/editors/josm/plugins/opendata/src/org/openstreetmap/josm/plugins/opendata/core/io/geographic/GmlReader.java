@@ -36,6 +36,9 @@ import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.Point;
 
+/**
+ * Reader of GML (Geography Markup Language) files.
+ */
 public class GmlReader extends GeographicReader {
 
     public static final String GML_FEATURE_MEMBER = "featureMember";

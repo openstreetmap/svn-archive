@@ -10,6 +10,7 @@ import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -68,6 +69,9 @@ import org.openstreetmap.josm.tools.Utils;
 import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.Point;
 
+/**
+ * Superclass of geographic format readers (currently GML and SHP).
+ */
 public abstract class GeographicReader extends AbstractReader {
 
     protected static CoordinateReferenceSystem wgs84;
@@ -185,7 +189,7 @@ public abstract class GeographicReader extends AbstractReader {
             }
             // Find possible duplicated ways
             if (tempWay.getNodesCount() > 0) {
-                List<Way> candidates = OsmPrimitive.getFilteredList(tempWay.firstNode().getReferrers(), Way.class);
+                Collection<Way> candidates = Utils.filteredCollection(tempWay.firstNode().getReferrers(), Way.class);
                 candidates.remove(tempWay);
                 List<LatLon> tempNodes = DuplicateWay.getOrderedNodes(tempWay);
                 for (Way candidate : candidates) {

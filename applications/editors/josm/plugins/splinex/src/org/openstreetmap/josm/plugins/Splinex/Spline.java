@@ -274,9 +274,10 @@ public class Spline {
             a = b;
             ca = a.add(sn.cnext);
         }
-        if (!cmds.isEmpty())
+        if (!cmds.isEmpty()) {
             cmds.add(new AddCommand(ds, w));
-        UndoRedoHandler.getInstance().add(new FinishSplineCommand(cmds));
+            UndoRedoHandler.getInstance().add(new FinishSplineCommand(cmds));
+        }
     }
 
     /**

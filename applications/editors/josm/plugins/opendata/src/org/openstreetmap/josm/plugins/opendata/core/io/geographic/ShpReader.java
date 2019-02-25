@@ -174,7 +174,9 @@ public class ShpReader extends GeographicReader {
                 } else {
                     Logging.error("unsupported geometry : "+g);
                 }
-                primitives.add(op);
+                if (op != null) {
+                    primitives.add(op);
+                }
             }
         }
         return primitives;

@@ -63,7 +63,7 @@ public class DrawBuildingAction extends MapMode implements MapViewPaintable, Dat
     private Point drawStartPos;
     private Point mousePos;
 
-    final Building building = new Building();
+    final transient Building building = new Building();
 
     public DrawBuildingAction() {
         super(tr("Draw buildings"), "building", tr("Draw buildings"),
@@ -211,10 +211,10 @@ public class DrawBuildingAction extends MapMode implements MapViewPaintable, Dat
             WaySegment ws = MainApplication.getMap().mapView.getNearestWaySegment(mousePos,
                     OsmPrimitive::isSelectable);
             if (ws != null && ws.way.get("building") != null) {
-                EastNorth p1 = ws.getFirstNode().getEastNorth();
-                EastNorth p2 = ws.getSecondNode().getEastNorth();
+                EastNorth p1 = latlon2eastNorth(ws.getFirstNode().getCoor());
+                EastNorth p2 = latlon2eastNorth(ws.getSecondNode().getCoor());
                 EastNorth enX = Geometry.closestPointToSegment(p1, p2,
-                        MainApplication.getMap().mapView.getEastNorth(mousePos.x, mousePos.y));
+                        latlon2eastNorth(MainApplication.getMap().mapView.getLatLon(mousePos.x, mousePos.y)));
                 if (enX != null) {
                     return enX;
                 }

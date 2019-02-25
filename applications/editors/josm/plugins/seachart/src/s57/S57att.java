@@ -28,7 +28,8 @@ public final class S57att { // S57 Attribute lookup tables & methods
         DIRIMP, DISBK1, DISBK2, DISIPU, DISIPD, ELEVA1, ELEVA2, FNCTNM, WTWDIS, BUNVES, BNKWTW, COMCTN, HORCLL, HORCLW, TRSHGD, UNLOCD, HIGWAT, HIGNAM, LOWWAT, LOWNAM,
         MEAWAT, MEANAM, OTHWAT, OTHNAM, REFLEV, SDRLEV, VCRLEV, SCHREF, USESHP, CURVHW, CURVLW, CURVMW, CURVOW, APTREF, SHPTYP, UPDMSG, ADDMRK, CATNMK, CATBRT, CATBUN,
         CATCCL, CATCOM, CATHBR, CATRFD, CATTML, CATGAG, CATVTR, CATTAB, CATEXS, LG_SPD, LG_SPR, LG_BME, LG_LGS, LG_DRT, LG_WDP, LG_WDU, LG_REL, LG_FNC, LG_DES, LG_PBR,
-        LC_CSI, LC_CSE, LC_ASI, LC_ASE, LC_CCI, LC_CCE, LC_BM1, LC_BM2, LC_LG1, LC_LG2, LC_DR1, LC_DR2, LC_SP1, LC_SP2, LC_WD1, LC_WD2, CATCVR, HUNITS
+        LC_CSI, LC_CSE, LC_ASI, LC_ASE, LC_CCI, LC_CCE, LC_BM1, LC_BM2, LC_LG1, LC_LG2, LC_DR1, LC_DR2, LC_SP1, LC_SP2, LC_WD1, LC_WD2, CATCVR, HUNITS, CATOPA, CATSCH,
+        CATVAN
     }
 
     private static final EnumMap<Att, Integer> AttS57 = new EnumMap<>(Att.class);
@@ -61,7 +62,7 @@ public final class S57att { // S57 Attribute lookup tables & methods
         AttS57.put(Att.VALMAG, 176); AttS57.put(Att.VALMXR, 177); AttS57.put(Att.VALNMR, 178); AttS57.put(Att.VALSOU, 179); AttS57.put(Att.VERACC, 180); AttS57.put(Att.VERCLR, 181);
         AttS57.put(Att.VERCCL, 182); AttS57.put(Att.VERCOP, 183); AttS57.put(Att.VERCSA, 184); AttS57.put(Att.VERDAT, 185); AttS57.put(Att.VERLEN, 186); AttS57.put(Att.WATLEV, 187);
         AttS57.put(Att.CAT_TS, 188); AttS57.put(Att.NINFOM, 300); AttS57.put(Att.NOBJNM, 301); AttS57.put(Att.NPLDST, 302); AttS57.put(Att.NTXTDS, 304); AttS57.put(Att.HORDAT, 400);
-        AttS57.put(Att.POSACC, 401); AttS57.put(Att.QUAPOS, 402);
+        AttS57.put(Att.POSACC, 401); AttS57.put(Att.QUAPOS, 402); AttS57.put(Att.CATOPA, 900); AttS57.put(Att.CATSCH, 901); AttS57.put(Att.CATVAN, 902);
     }
 
     private static final EnumMap<Att, Integer> AttIENC = new EnumMap<>(Att.class);
@@ -144,7 +145,7 @@ public final class S57att { // S57 Attribute lookup tables & methods
         AttStr.put(Att.CATTAB, "operation"); AttStr.put(Att.SCHREF, "schedule"); AttStr.put(Att.USESHP, "use"); AttStr.put(Att.CURVHW, "high_velocity");
         AttStr.put(Att.CURVLW, "low_velocity"); AttStr.put(Att.CURVMW, "mean_velocity"); AttStr.put(Att.CURVOW, "other_velocity"); AttStr.put(Att.APTREF, "passing_time");
         AttStr.put(Att.CATCOM, "category"); AttStr.put(Att.CATCVR, "category"); AttStr.put(Att.CATEXS, "category"); AttStr.put(Att.SHPTYP, "ship");
-        AttStr.put(Att.UPDMSG, "message");
+        AttStr.put(Att.UPDMSG, "message"); AttStr.put(Att.CATOPA, "category"); AttStr.put(Att.CATSCH, "category"); AttStr.put(Att.CATVAN, "category");
     }
 
     private static final EnumMap<Obj, Att> Accuracy = new EnumMap<>(Obj.class); static {
@@ -183,7 +184,7 @@ public final class S57att { // S57 Attribute lookup tables & methods
         Category.put(Obj.HRBFAC, Att.CATHAF); Category.put(Obj.HRBARE, Att.CATHBR); Category.put(Obj.HRBBSN, Att.CATHBR); Category.put(Obj.HULKES, Att.CATHLK); Category.put(Obj.ICEARE, Att.CATICE);
         Category.put(Obj.LNDRGN, Att.CATLND); Category.put(Obj.LNDMRK, Att.CATLMK); Category.put(Obj.LIGHTS, Att.CATLIT); Category.put(Obj.M_COVR, Att.CATCVR); Category.put(Obj.MARCUL, Att.CATMFA);
         Category.put(Obj.MIPARE, Att.CATMPA); Category.put(Obj.MORFAC, Att.CATMOR); Category.put(Obj.NAVLNE, Att.CATNAV); Category.put(Obj.NOTMRK, Att.CATNMK); Category.put(Obj.OBSTRN, Att.CATOBS);
-        Category.put(Obj.OFSPLF, Att.CATOFP); Category.put(Obj.OILBAR, Att.CATOLB); Category.put(Obj.OSPARE, Att.CATPRA); Category.put(Obj.PILPNT, Att.CATPLE); Category.put(Obj.PILBOP, Att.CATPIL);
+        Category.put(Obj.OFSPLF, Att.CATOFP); Category.put(Obj.OILBAR, Att.CATOLB); Category.put(Obj.OSPARE, Att.CATOPA); Category.put(Obj.PILPNT, Att.CATPLE); Category.put(Obj.PILBOP, Att.CATPIL);
         Category.put(Obj.PIPARE, Att.CATPIP); Category.put(Obj.PIPOHD, Att.CATPIP); Category.put(Obj.PIPSOL, Att.CATPIP); Category.put(Obj.PRDARE, Att.CATPRA); Category.put(Obj.PYLONS, Att.CATPYL);
         Category.put(Obj.RADSTA, Att.CATRAS); Category.put(Obj.RCRTCL, Att.CATTRK); Category.put(Obj.RCTLPT, Att.CATTRK); Category.put(Obj.RDOSTA, Att.CATROS); Category.put(Obj.RDOCAL, Att.CATCOM);
         Category.put(Obj.RECTRC, Att.CATTRK); Category.put(Obj.REFDMP, Att.CATRFD); Category.put(Obj.RESARE, Att.CATREA); Category.put(Obj.RSCSTA, Att.CATRSC);
@@ -192,7 +193,7 @@ public final class S57att { // S57 Attribute lookup tables & methods
         Category.put(Obj.SMCFAC, Att.CATSCF); Category.put(Obj.TERMNL, Att.CATTML); Category.put(Obj.TS_FEB, Att.CAT_TS); Category.put(Obj.TSELNE, Att.CATTSS); Category.put(Obj.TSEZNE, Att.CATTSS);
         Category.put(Obj.TSSBND, Att.CATTSS); Category.put(Obj.TSSCRS, Att.CATTSS); Category.put(Obj.TSSLPT, Att.CATTSS); Category.put(Obj.TSSRON, Att.CATTSS); Category.put(Obj.TWRTPT, Att.CATTRK);
         Category.put(Obj.VEGATN, Att.CATVEG); Category.put(Obj.VEHTRF, Att.CATVTR); Category.put(Obj.WATTUR, Att.CATWAT); Category.put(Obj.WEDKLP, Att.CATWED); Category.put(Obj.WRECKS, Att.CATWRK);
-        Category.put(Obj.WTWAXS, Att.CATCCL); Category.put(Obj.WTWARE, Att.CATCCL); Category.put(Obj.WTWGAG, Att.CATGAG); Category.put(Obj.BERTHS, Att.CATBRT);
+        Category.put(Obj.WTWAXS, Att.CATCCL); Category.put(Obj.WTWARE, Att.CATCCL); Category.put(Obj.WTWGAG, Att.CATGAG); Category.put(Obj.BERTHS, Att.CATBRT); Category.put(Obj.VAATON, Att.CATVAN);
     }
 
     private static final EnumMap<Obj, Att> Channel = new EnumMap<>(Obj.class); static {

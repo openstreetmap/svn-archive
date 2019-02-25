@@ -26,7 +26,7 @@ public final class S57obj { // S57 Object lookup tables & methods
         SOUNDG, SPRING, STSLNE, SUBTLN, SWPARE, TESARE, TS_PRH, TS_PNH, TS_PAD, TS_TIS, T_HMON, T_NHMN, T_TIMS, TIDEWY, TOPMAR, TSELNE,
         TSSBND, TSSCRS, TSSLPT, TSSRON, TSEZNE, TUNNEL, TWRTPT, UWTROC, UNSARE, VEGATN, WATTUR, WATFAL, WEDKLP, WRECKS, TS_FEB, NOTMRK,
         WTWAXS, WTWPRF, BUNSTA, COMARE, HRBBSN, LOKARE, LKBSPT, PRTARE, REFDMP, TERMNL, TRNBSN, WTWARE, WTWGAG, TISDGE, VEHTRF, EXCNST,
-        LG_SDM, LG_VSP, LITMIN, LITMAJ
+        LG_SDM, LG_VSP, LITMIN, LITMAJ, VAATON
     }
 
     private static final EnumMap<Obj, Integer> ObjS57 = new EnumMap<>(Obj.class);
@@ -64,6 +64,7 @@ public final class S57obj { // S57 Object lookup tables & methods
         ObjS57.put(Obj.TUNNEL, 151); ObjS57.put(Obj.TWRTPT, 152); ObjS57.put(Obj.UWTROC, 153); ObjS57.put(Obj.UNSARE, 154); ObjS57.put(Obj.VEGATN, 155);
         ObjS57.put(Obj.WATTUR, 156); ObjS57.put(Obj.WATFAL, 157); ObjS57.put(Obj.WEDKLP, 158); ObjS57.put(Obj.WRECKS, 159); ObjS57.put(Obj.TS_FEB, 160);
         ObjS57.put(Obj.MPAARE, 199); ObjS57.put(Obj.M_COVR, 302); ObjS57.put(Obj.M_NSYS, 306); ObjS57.put(Obj.LITMAJ, 74); ObjS57.put(Obj.LITMIN, 90);
+        ObjS57.put(Obj.VAATON, 900);
     }
 
     private static final EnumMap<Obj, Integer> ObjIENC = new EnumMap<>(Obj.class);
@@ -128,6 +129,7 @@ public final class S57obj { // S57 Object lookup tables & methods
         ObjStr.put(Obj.TERMNL, "terminal"); ObjStr.put(Obj.TRNBSN, "turning_basin"); ObjStr.put(Obj.WTWARE, "waterway_area"); ObjStr.put(Obj.WTWGAG, "waterway_gauge");
         ObjStr.put(Obj.TISDGE, "time_schedule"); ObjStr.put(Obj.VEHTRF, "vehicle_transfer"); ObjStr.put(Obj.EXCNST, "exceptional_structure"); ObjStr.put(Obj.MPAARE, "protected_area");
         ObjStr.put(Obj.LITMAJ, "light_major"); ObjStr.put(Obj.LITMIN, "light_minor"); ObjStr.put(Obj.M_COVR, "coverage"); ObjStr.put(Obj.M_NSYS, "system");
+        ObjStr.put(Obj.VAATON, "virtual_aton");
     }
 
     private static final HashMap<String, Obj> StrObj = new HashMap<>();

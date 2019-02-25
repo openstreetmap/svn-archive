@@ -248,7 +248,6 @@ public class Signals extends Rules {
 
 	@SuppressWarnings("unchecked")
 	public static void radioStations() {
-		boolean vais = false;
 		String bstr = "";
 		if (Renderer.zoom >= 11) {
 			ArrayList<CatROS> cats = (ArrayList<CatROS>) getAttList(Obj.RDOSTA, Att.CATROS);
@@ -301,65 +300,17 @@ public class Signals extends Rules {
 				case ROS_FACS:
 				case ROS_TIME:
 					break;
-				case ROS_PAIS:
-				case ROS_SAIS:
+                case ROS_AISB:
+                case ROS_PAIS:
 					bstr += " AIS";
-					break;
-				case ROS_VAIS:
-					vais = true;
-					break;
-				case ROS_VANC:
-					vais = true;
-					Renderer.symbol(Topmarks.TopNorth, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -25)));
-					break;
-				case ROS_VASC:
-					vais = true;
-					Renderer.symbol(Topmarks.TopSouth, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -25)));
-					break;
-				case ROS_VAEC:
-					vais = true;
-					Renderer.symbol(Topmarks.TopEast, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -25)));
-					break;
-				case ROS_VAWC:
-					vais = true;
-					Renderer.symbol(Topmarks.TopWest, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -25)));
-					break;
-				case ROS_VAPL:
-					vais = true;
-					Renderer.symbol(Topmarks.TopCan, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -25)));
-					break;
-				case ROS_VASL:
-					vais = true;
-					Renderer.symbol(Topmarks.TopCone, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -25)));
-					break;
-				case ROS_VAID:
-					vais = true;
-					Renderer.symbol(Topmarks.TopIsol, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -25)));
-					break;
-				case ROS_VASW:
-					vais = true;
-					Renderer.symbol(Topmarks.TopSphere, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -25)));
-					break;
-				case ROS_VASP:
-					vais = true;
-					Renderer.symbol(Topmarks.TopX, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -25)));
-					break;
-				case ROS_VAWK:
-					vais = true;
-					Renderer.symbol(Topmarks.TopCross, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -25)));
 					break;
 				default:
 					break;
 				}
 			}
-			if (!vais) {
-				Renderer.symbol(Beacons.RadarStation);
-			}
+			Renderer.symbol(Beacons.RadarStation);
 		}
 		if (Renderer.zoom >= 15) {
-			if (vais) {
-				Renderer.labelText("V-AIS", new Font("Arial", Font.PLAIN, 40), Symbols.Msymb, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, 70)));
-			}
 			if (!bstr.isEmpty()) {
 				Renderer.labelText(bstr, new Font("Arial", Font.PLAIN, 40), Symbols.Msymb, new Delta(Handle.TR, AffineTransform.getTranslateInstance(-30, -110)));
 			}

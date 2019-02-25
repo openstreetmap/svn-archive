@@ -165,7 +165,7 @@ public final class Beacons {
     static {
         RadarStation.add(new Instr(Form.STRK, new BasicStroke(2.5f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND)));
         RadarStation.add(new Instr(Form.FILL, new Color(0xd400d4)));
-        RadarStation.add(new Instr(Form.ELPS, new Ellipse2D.Double(-125, -125, 250, 250)));
+        RadarStation.add(new Instr(Form.ELPS, new Ellipse2D.Double(-150, -150, 300, 300)));
     }
 
     public static final Symbol Stake = new Symbol();

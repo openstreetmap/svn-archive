@@ -37,10 +37,11 @@ import s57.S57val.CatMOR;
 import s57.S57val.CatNMK;
 import s57.S57val.CatOBS;
 import s57.S57val.CatOFP;
+import s57.S57val.CatOPA;
 import s57.S57val.CatPIL;
-import s57.S57val.CatPRA;
 import s57.S57val.CatREA;
 import s57.S57val.CatROD;
+import s57.S57val.CatROS;
 import s57.S57val.CatSCF;
 import s57.S57val.CatSEA;
 import s57.S57val.CatSIL;
@@ -58,6 +59,7 @@ import s57.S57val.TopSHP;
 import s57.S57val.TrfTRF;
 import s57.S57val.UniHLU;
 import s57.S57val.WatLEV;
+import s57.S57val.CatVAN;
 import symbols.Areas;
 import symbols.Beacons;
 import symbols.Buoys;
@@ -347,7 +349,8 @@ public class Rules {
 				if (testObject(Obj.BCNCAR)) for (Feature f : objects) if (testFeature(f)) beacons();
 				if (testObject(Obj.BCNISD)) for (Feature f : objects) if (testFeature(f)) beacons();
 				if (testObject(Obj.BCNSAW)) for (Feature f : objects) if (testFeature(f)) beacons();
-				if (testObject(Obj.BCNSPP)) for (Feature f : objects) if (testFeature(f)) beacons();
+                if (testObject(Obj.BCNSPP)) for (Feature f : objects) if (testFeature(f)) beacons();
+                if (testObject(Obj.VAATON)) for (Feature f : objects) if (testFeature(f)) virtual();
 			}
 		} catch (ConcurrentModificationException e) {
 			return false;
@@ -385,15 +388,17 @@ public class Rules {
 			addName(12, new Font("Arial", Font.PLAIN, 100), new Delta(Handle.CC, new AffineTransform()));
 			break;
 		case FAIRWY:
-			if (feature.geom.area > 2.0) {
-				if (Renderer.zoom < 16)
-					Renderer.lineVector(new LineStyle(Symbols.Mline, 8, new float[] { 50, 50 }, new Color(0x40ffffff, true)));
-				else
-					Renderer.lineVector(new LineStyle(Symbols.Mline, 8, new float[] { 50, 50 }));
-			} else {
-				if (Renderer.zoom >= 14)
-					Renderer.lineVector(new LineStyle(new Color(0x40ffffff, true)));
-			}
+            if (Renderer.zoom >= 12) {
+                if (feature.geom.area > 1.0) {
+                    if (Renderer.zoom < 16)
+                        Renderer.lineVector(new LineStyle(new Color(0x20ffffff, true)));
+                    else
+                        Renderer.lineVector(new LineStyle(Symbols.Mline, 8, new float[] { 50, 50 }));
+                } else {
+                    if (Renderer.zoom >= 14)
+                        Renderer.lineVector(new LineStyle(new Color(0x20ffffff, true)));
+                }
+            }
 			break;
 		case LKBSPT:
 		case LOKBSN:
@@ -427,7 +432,7 @@ public class Rules {
 			}
 			break;
 		case OSPARE:
-			if (testAttribute(feature.type, Att.CATPRA, CatPRA.PRA_WFRM)) {
+			if (testAttribute(feature.type, Att.CATOPA, CatOPA.OPA_WIND)) {
 				Renderer.symbol(Areas.WindFarm);
 				Renderer.lineVector(new LineStyle(Color.black, 12, new float[] { 40, 40 }));
 				addName(15, new Font("Arial", Font.BOLD, 80), new Delta(Handle.TC, AffineTransform.getTranslateInstance(0, 120)));
@@ -472,17 +477,17 @@ public class Rules {
 						Renderer.lineVector(new LineStyle(new Color(0xc480ff), 4, new float[] { 25, 25 }));
 						if (name != null) {
 							Renderer.labelText(name, new Font("Arial", Font.ITALIC, 75), Color.black, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -40)));
-							Renderer.labelText("(Shoal)", new Font("Arial", Font.PLAIN, 60), Color.black, new Delta(Handle.BC));
+							Renderer.labelText("(Shoal)", new Font("Arial", Font.PLAIN, 60), Color.black, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, 20)));
 						}
 					} else if (feature.geom.prim == Pflag.LINE) {
 						if (name != null) {
 							Renderer.lineText(name, new Font("Arial", Font.ITALIC, 75), Color.black, -40);
-							Renderer.lineText("(Shoal)", new Font("Arial", Font.PLAIN, 60), Color.black, 0);
+							Renderer.lineText("(Shoal)", new Font("Arial", Font.PLAIN, 60), Color.black, 20);
 						}
 					} else {
 						if (name != null) {
 							Renderer.labelText(name, new Font("Arial", Font.ITALIC, 75), Color.black, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -40)));
-							Renderer.labelText("(Shoal)", new Font("Arial", Font.PLAIN, 60), Color.black, new Delta(Handle.BC));
+							Renderer.labelText("(Shoal)", new Font("Arial", Font.PLAIN, 60), Color.black, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, 20)));
 						}
 					}
 				}
@@ -873,25 +878,27 @@ public class Rules {
 				Renderer.labelText(name == null ? " " : name, new Font("Arial", Font.PLAIN, 40), Symbols.Msymb, LabelStyle.RRCT, Symbols.Mline, Color.white);
 			}
 			break;
-		case BUISGL:
-			if (Renderer.zoom >= 16) {
-				if (testAttribute(Obj.BUISGL, Att.STATUS, StsSTS.STS_ILLD)) {
-					Renderer.symbol(Beacons.Floodlight);
-				}
-				ArrayList<Symbol> symbols = new ArrayList<>();
-				ArrayList<FncFNC> fncs = (ArrayList<FncFNC>) getAttList(Obj.BUISGL, Att.FUNCTN);
-				for (FncFNC fnc : fncs) {
-					symbols.add(Landmarks.Funcs.get(fnc));
-				}
-				if (feature.objs.containsKey(Obj.SMCFAC)) {
-					ArrayList<CatSCF> scfs = (ArrayList<CatSCF>) getAttList(Obj.SMCFAC, Att.CATSCF);
-					for (CatSCF scf : scfs) {
-						symbols.add(Facilities.Cats.get(scf));
-					}
-				}
-				Renderer.cluster(symbols);
-			}
-			break;
+        case BUISGL:
+            if (Renderer.zoom >= 16) {
+                Renderer.lineVector(new LineStyle(Color.black, 8, new Color(0xffc0c0c0, true)));
+                if (testAttribute(Obj.BUISGL, Att.STATUS, StsSTS.STS_ILLD)) {
+                    Renderer.symbol(Beacons.Floodlight);
+                }
+                ArrayList<Symbol> symbols = new ArrayList<>();
+                ArrayList<FncFNC> fncs = (ArrayList<FncFNC>) getAttList(Obj.BUISGL, Att.FUNCTN);
+                for (FncFNC fnc : fncs) {
+                    symbols.add(Landmarks.Funcs.get(fnc));
+                }
+                if (feature.objs.containsKey(Obj.SMCFAC)) {
+                    ArrayList<CatSCF> scfs = (ArrayList<CatSCF>) getAttList(Obj.SMCFAC, Att.CATSCF);
+                    for (CatSCF scf : scfs) {
+                        symbols.add(Facilities.Cats.get(scf));
+                    }
+                }
+                Renderer.cluster(symbols);
+                Signals.addSignals();
+            }
+            break;
 		case HRBFAC:
 			if (Renderer.zoom >= 12) {
 				ArrayList<CatHAF> cathaf = (ArrayList<CatHAF>) getAttList(Obj.HRBFAC, Att.CATHAF);
@@ -1171,7 +1178,7 @@ public class Rules {
 			if (getAttEnum(feature.type, Att.CATOBS) == CatOBS.OBS_BOOM) {
 				Renderer.lineVector(new LineStyle(Color.black, 5, new float[] { 20, 20 }, null));
 				if (Renderer.zoom >= 15) {
-					Renderer.lineText("Boom", new Font("Arial", Font.PLAIN, 80), Color.black, -20);
+					Renderer.lineText("Boom", new Font("Arial", Font.PLAIN, 40), Color.black, -20);
 				}
 			}
 		}
@@ -1484,6 +1491,56 @@ public class Rules {
 		}
 	}
 
+    @SuppressWarnings("unchecked")
+    private static void virtual() {
+        if (Renderer.zoom >= 12) {
+            Renderer.symbol(Harbours.SignalStation, new Scheme(Symbols.Msymb));
+            Renderer.symbol(Beacons.RadarStation, new Scheme(Symbols.Msymb));
+           ArrayList<CatVAN> cats = (ArrayList<CatVAN>) getAttList(Obj.VAATON, Att.CATVAN);
+            for (CatVAN van : cats) {
+                switch (van) {
+                case VAN_NCAR:
+                    Renderer.symbol(Topmarks.TopNorth, new Scheme(Symbols.Msymb), new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -25)));
+                    break;
+                case VAN_SCAR:
+                    Renderer.symbol(Topmarks.TopSouth, new Scheme(Symbols.Msymb), new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -25)));
+                    break;
+                case VAN_ECAR:
+                    Renderer.symbol(Topmarks.TopEast, new Scheme(Symbols.Msymb), new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -25)));
+                    break;
+                case VAN_WCAR:
+                    Renderer.symbol(Topmarks.TopWest, new Scheme(Symbols.Msymb), new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -25)));
+                    break;
+                case VAN_PLAT:
+                case VAN_PCHS:
+                    Renderer.symbol(Topmarks.TopCan, new Scheme(Symbols.Msymb), new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -25)));
+                    break;
+                case VAN_SLAT:
+                case VAN_PCHP:
+                    Renderer.symbol(Topmarks.TopCone, new Scheme(Symbols.Msymb), new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -25)));
+                    break;
+                case VAN_IDGR:
+                    Renderer.symbol(Topmarks.TopIsol, new Scheme(Symbols.Msymb), new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -25)));
+                    break;
+                case VAN_SAFW:
+                    Renderer.symbol(Topmarks.TopSphere, new Scheme(Symbols.Msymb), new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -25)));
+                    break;
+                case VAN_SPPM:
+                    Renderer.symbol(Topmarks.TopX, new Scheme(Symbols.Msymb), new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -25)));
+                    break;
+                case VAN_WREK:
+                    Renderer.symbol(Topmarks.TopCross, new Scheme(Symbols.Msymb), new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -25)));
+                    break;
+                default:
+                    break;
+                }
+            }
+        }
+        if (Renderer.zoom >= 15) {
+                Renderer.labelText("V-AIS", new Font("Arial", Font.PLAIN, 40), Symbols.Msymb, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, 70)));
+        }
+    }
+        
 	private static void waterways() {
 		Renderer.lineVector(new LineStyle(Symbols.Bwater, 20, (feature.geom.prim == Pflag.AREA) ? Symbols.Bwater : null));
 	}

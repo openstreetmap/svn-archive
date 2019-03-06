@@ -43,6 +43,7 @@ import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
+import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.gui.util.GuiHelper;
@@ -161,8 +162,9 @@ public class ShpReader extends GeographicReader {
                             (handler != null && handler.preferMultipolygonToSimpleWay()))) {
                         r = createMultipolygon();
                     }
+                    Way w = createOrGetWay(p.getExteriorRing());
                     if (r != null) {
-                        addWayToMp(r, "outer", createOrGetWay(p.getExteriorRing()));
+                        addWayToMp(r, "outer", w);
                         for (int j = 0; j < p.getNumInteriorRing(); j++) {
                             addWayToMp(r, "inner", createOrGetWay(p.getInteriorRingN(j)));
                         }

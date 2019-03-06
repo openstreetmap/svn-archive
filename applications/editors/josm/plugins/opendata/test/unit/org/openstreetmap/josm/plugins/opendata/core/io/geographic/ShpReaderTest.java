@@ -89,12 +89,12 @@ public class ShpReaderTest {
     }
 
     /**
-     * Non-regression test for ticket <a href="https://josm.openstreetmap.de/ticket/12843">#12843</a>
+     * Non-regression test for ticket <a href="https://josm.openstreetmap.de/ticket/13843">#13843</a>
      * @throws Exception if an error occurs during reading
      */
     @Test
-    public void testTicket12843() throws Exception {
-        File file = new File(TestUtils.getRegressionDataFile(12843, "test.shp"));
+    public void testTicket13843() throws Exception {
+        File file = new File(TestUtils.getRegressionDataFile(13843, "test.shp"));
         try (InputStream is = new FileInputStream(file)) {
             Collection<Way> ways = ShpReader.parseDataSet(is, file, null, null).getWays();
             assertFalse(ways.isEmpty());

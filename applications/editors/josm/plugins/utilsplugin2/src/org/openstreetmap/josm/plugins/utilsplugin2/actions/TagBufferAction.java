@@ -26,16 +26,16 @@ import org.openstreetmap.josm.tools.SubclassFilteredCollection;
  * @author Zverik
  */
 public class TagBufferAction extends JosmAction {
-    private static final String TITLE = tr("Copy tags from previous selection");
+    private static final String TITLE = tr("Paste tags from previous selection");
     private static final TagCollection EmptyTags = new TagCollection();
-    private List<OsmPrimitive> selectionBuf = new ArrayList<>();
+    private transient List<OsmPrimitive> selectionBuf = new ArrayList<>();
     private TagCollection tagsToPaste = EmptyTags;
     /**
      * Constructs a new {@code TagBufferAction}.
      */
     public TagBufferAction() {
-        super(TITLE, "dumbutils/tagbuffer", tr("Pastes tags of previously selected object(s)"),
-                Shortcut.registerShortcut("tools:tagbuffer", tr("Tool: {0}", tr("Copy tags from previous selection")),
+        super(TITLE, "dumbutils/tagbuffer", tr("Paste tags from previous selection"),
+                Shortcut.registerShortcut("tools:tagbuffer", tr("Tool: {0}", tr("Paste tags from previous selection")),
                         KeyEvent.VK_R, Shortcut.SHIFT),
                 true, false);
         // The fields are not initialized while the super constructor is running, so we have to call this afterwards:
@@ -94,6 +94,6 @@ public class TagBufferAction extends JosmAction {
         if (selection.isEmpty())
             return EmptyTags;
         // Fix #8350 - only care about tagged objects
-        return TagCollection.commonToAllPrimitives(SubclassFilteredCollection.filter(selection, p -> p.isTagged()));
+        return TagCollection.commonToAllPrimitives(SubclassFilteredCollection.filter(selection, OsmPrimitive::isTagged));
     }
 }

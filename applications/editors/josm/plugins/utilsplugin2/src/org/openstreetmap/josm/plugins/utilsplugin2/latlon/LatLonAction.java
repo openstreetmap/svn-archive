@@ -82,8 +82,10 @@ public final class LatLonAction extends JosmAction {
             wnew.setNodes(nodes);
             cmds.add(new AddCommand(ds, wnew));
         }
-        UndoRedoHandler.getInstance().add(new SequenceCommand(tr("Lat Lon tool"), cmds));
-        MainApplication.getMap().mapView.repaint();
+        if (!cmds.isEmpty()) {
+            UndoRedoHandler.getInstance().add(new SequenceCommand(tr("Lat Lon tool"), cmds));
+            MainApplication.getMap().mapView.repaint();
+        }
     }
 
     @Override

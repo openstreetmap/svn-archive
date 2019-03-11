@@ -22,7 +22,7 @@ import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.tools.Logging;
 
 /**
- * Modified {@see org.openstreetmap.josm.data.osm.DataSetMerger} that
+ * Modified {@link org.openstreetmap.josm.data.osm.DataSetMerger} that
  * produces list of commands instead of directly merging layers.
  *
  */
@@ -39,6 +39,8 @@ final class DataSetCommandMerger {
 
     /**
      * constructor
+     * @param sourceDataSet the source Dataset for the merge
+     * @param targetDataSet the target Dataset for the merge
      */
     DataSetCommandMerger(DataSet sourceDataSet, DataSet targetDataSet) {
         this.sourceDataSet = sourceDataSet;
@@ -64,7 +66,7 @@ final class DataSetCommandMerger {
         return p;
     }
 
-    private void mergePrimitive(OsmPrimitive source, OsmPrimitive target, OsmPrimitive newTarget) {
+    private static void mergePrimitive(OsmPrimitive source, OsmPrimitive target, OsmPrimitive newTarget) {
         newTarget.mergeFrom(source);
         newTarget.setOsmId(target.getId(), target.getVersion());
         newTarget.setVisible(target.isVisible());

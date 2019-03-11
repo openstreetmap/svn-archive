@@ -10,12 +10,19 @@ import org.openstreetmap.josm.io.remotecontrol.RemoteControl;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
 
+/**
+ * The reverter plugin
+ */
 public class ReverterPlugin extends Plugin {
-    static boolean reverterUsed = false;
+    static boolean reverterUsed;
+
+    /**
+     * Constructs a new {@code ReverterPlugin}.
+     * @param info plugin information
+     */
     public ReverterPlugin(PluginInformation info) {
         super(info);
         JMenu historyMenu = MainApplication.getMenu().dataMenu;
-        //MainMenu.add(historyMenu, new ObjectsHistoryAction());
         MainMenu.add(historyMenu, new RevertChangesetAction());
         UploadAction.registerUploadHook(new ReverterUploadHook(this));
         new RemoteControl().addRequestHandler(RevertChangesetHandler.command, RevertChangesetHandler.class);

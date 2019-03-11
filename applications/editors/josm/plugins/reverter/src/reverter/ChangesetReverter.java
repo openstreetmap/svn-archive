@@ -23,6 +23,7 @@ import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.OsmPrimitiveType;
 import org.openstreetmap.josm.data.osm.PrimitiveId;
 import org.openstreetmap.josm.data.osm.Relation;
+import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.data.osm.RelationMemberData;
 import org.openstreetmap.josm.data.osm.SimplePrimitiveId;
 import org.openstreetmap.josm.data.osm.Way;
@@ -38,6 +39,7 @@ import org.openstreetmap.josm.io.MultiFetchServerObjectReader;
 import org.openstreetmap.josm.io.OsmApiException;
 import org.openstreetmap.josm.io.OsmTransferException;
 import org.openstreetmap.josm.tools.Logging;
+import org.openstreetmap.josm.tools.Utils;
 
 import reverter.corehacks.ChangesetDataSet;
 import reverter.corehacks.ChangesetDataSet.ChangesetDataSetEntry;
@@ -109,9 +111,9 @@ public class ChangesetReverter {
     }
 
     /**
-     * Checks if {@see ChangesetDataSetEntry} conforms to current RevertType
+     * Checks if {@link ChangesetDataSetEntry} conforms to current RevertType
      * @param entry entry to be checked
-     * @return <code>true</code> if {@see ChangesetDataSetEntry} conforms to current RevertType
+     * @return <code>true</code> if {@link ChangesetDataSetEntry} conforms to current RevertType
      */
     private boolean checkOsmChangeEntry(ChangesetDataSetEntry entry) {
         if (revertType == RevertType.FULL) return true;
@@ -127,6 +129,8 @@ public class ChangesetReverter {
     /**
      * creates a reverter for specific changeset and fetches initial data
      * @param changesetId changeset id
+     * @param revertType type of revert
+     * @param newLayer set to true if a new layer should be created
      * @param monitor progress monitor
      * @throws OsmTransferException if data transfer errors occur
      * @throws RevertRedactedChangesetException if a redacted changeset is requested
@@ -184,7 +188,7 @@ public class ChangesetReverter {
         addMissingHistoryIds(deleted);
     }
 
-    private void readObjectVersion(OsmServerMultiObjectReader rdr, PrimitiveId id, int version, ProgressMonitor progressMonitor)
+    private static void readObjectVersion(OsmServerMultiObjectReader rdr, PrimitiveId id, int version, ProgressMonitor progressMonitor)
             throws OsmTransferException {
         boolean readOK = false;
         while (!readOK && version >= 1) {
@@ -213,13 +217,12 @@ public class ChangesetReverter {
      * @param progressMonitor progress monitor
      * @throws OsmTransferException if data transfer errors occur
      */
-    @SuppressWarnings("unchecked")
     public void downloadObjectsHistory(ProgressMonitor progressMonitor) throws OsmTransferException {
         final OsmServerMultiObjectReader rdr = new OsmServerMultiObjectReader();
 
         progressMonitor.beginTask(tr("Downloading objects history"), updated.size()+deleted.size()+1);
         try {
-            for (HashSet<HistoryOsmPrimitive> collection : Arrays.asList(new HashSet[]{updated, deleted})) {
+            for (HashSet<HistoryOsmPrimitive> collection : Arrays.asList(updated, deleted)) {
                 for (HistoryOsmPrimitive entry : collection) {
                     PrimitiveId id = entry.getPrimitiveId();
                     readObjectVersion(rdr, id, cds.getEarliestVersion(id)-1, progressMonitor);
@@ -278,7 +281,7 @@ public class ChangesetReverter {
         missing.clear();
     }
 
-    private static Conflict<? extends OsmPrimitive> CreateConflict(OsmPrimitive p, boolean isMyDeleted) {
+    private static Conflict<? extends OsmPrimitive> createConflict(OsmPrimitive p, boolean isMyDeleted) {
         switch (p.getType()) {
         case NODE:
             return new Conflict<>((Node) p, new Node((Node) p), isMyDeleted);
@@ -336,6 +339,7 @@ public class ChangesetReverter {
 
     /**
      * Builds a list of commands that will revert the changeset
+     * @return list of commands
      *
      */
     public List<Command> getCommands() {
@@ -389,7 +393,7 @@ public class ChangesetReverter {
                     !hasEqualSemanticAttributes(dp, hp)
                     /* Don't create conflict if the object has to be deleted but has already been deleted */
                     && !(toDelete.contains(dp) && dp.isDeleted())) {
-                cmds.add(new ConflictAddCommand(layer.data, CreateConflict(dp,
+                cmds.add(new ConflictAddCommand(layer.data, createConflict(dp,
                         entry.getModificationType() == ChangesetModificationType.CREATED)));
                 conflicted.add(dp);
             }
@@ -411,7 +415,7 @@ public class ChangesetReverter {
                                * objects created in changeset to be reverted
                                */
                 if (!conflicted.contains(p)) {
-                    cmds.add(new ConflictAddCommand(layer.data, CreateConflict(p, true)));
+                    cmds.add(new ConflictAddCommand(layer.data, createConflict(p, true)));
                     conflicted.add(p);
                 }
                 it.remove();
@@ -420,13 +424,13 @@ public class ChangesetReverter {
         }
 
         // Create a Command to delete all marked objects
-        List<? extends OsmPrimitive> list;
-        list = OsmPrimitive.getFilteredList(toDelete, Relation.class);
-        if (!list.isEmpty()) cmds.add(new DeleteCommand(list));
-        list = OsmPrimitive.getFilteredList(toDelete, Way.class);
-        if (!list.isEmpty()) cmds.add(new DeleteCommand(list));
-        list = OsmPrimitive.getFilteredList(toDelete, Node.class);
-        if (!list.isEmpty()) cmds.add(new DeleteCommand(list));
+        Collection<? extends OsmPrimitive> collection;
+        collection = Utils.filteredCollection(toDelete, Relation.class);
+        if (!collection.isEmpty()) cmds.add(new DeleteCommand(collection));
+        collection = Utils.filteredCollection(toDelete, Way.class);
+        if (!collection.isEmpty()) cmds.add(new DeleteCommand(collection));
+        collection = Utils.filteredCollection(toDelete, Node.class);
+        if (!collection.isEmpty()) cmds.add(new DeleteCommand(collection));
         return cmds;
     }
 

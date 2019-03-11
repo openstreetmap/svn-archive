@@ -13,7 +13,6 @@ import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.io.IllegalDataException;
 import org.openstreetmap.josm.io.OsmServerReader;
 import org.openstreetmap.josm.io.OsmTransferException;
-import org.xml.sax.SAXException;
 
 public class OsmServerMultiObjectReader extends OsmServerReader {
     private final MultiOsmReader rdr = new MultiOsmReader();
@@ -23,7 +22,7 @@ public class OsmServerMultiObjectReader extends OsmServerReader {
     }
 
     public void readObject(long id, int version, OsmPrimitiveType type, ProgressMonitor progressMonitor) throws OsmTransferException {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         sb.append(type.getAPIName());
         sb.append("/");
         sb.append(id);
@@ -42,8 +41,7 @@ public class OsmServerMultiObjectReader extends OsmServerReader {
     /**
      * Method to parse downloaded objects
      * @return the data requested
-     * @throws SAXException in case of SAX error
-     * @throws IOException in case of I/O error
+     * @throws OsmTransferException in case of error
      */
     @Override
     public DataSet parseOsm(ProgressMonitor progressMonitor) throws OsmTransferException {

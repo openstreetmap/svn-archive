@@ -53,7 +53,7 @@ public class OsmServerChangesetReader extends OsmServerReader {
      * Queries a list
      * @param query  the query specification. Must not be null.
      * @param monitor a progress monitor. Set to {@link NullProgressMonitor#INSTANCE} if null
-     * @return the list of changesets read from the server
+     * @return the list of changesets read from the server or {@code null}
      * @throws IllegalArgumentException thrown if query is null
      * @throws OsmTransferException thrown if something goes wrong w
      */
@@ -64,7 +64,7 @@ public class OsmServerChangesetReader extends OsmServerReader {
         }
         try {
             monitor.beginTask(tr("Reading changesets..."));
-            StringBuffer sb = new StringBuffer();
+            StringBuilder sb = new StringBuilder();
             sb.append("changesets?").append(query.getQueryString());
             InputStream in = getInputStream(sb.toString(), monitor.createSubTaskMonitor(1, true));
             if (in == null)
@@ -97,7 +97,7 @@ public class OsmServerChangesetReader extends OsmServerReader {
         }
         try {
             monitor.beginTask(tr("Reading changeset {0} ...", id));
-            StringBuffer sb = new StringBuffer();
+            StringBuilder sb = new StringBuilder();
             sb.append("changeset/").append(id);
             InputStream in = getInputStream(sb.toString(), monitor.createSubTaskMonitor(1, true));
             if (in == null)
@@ -119,9 +119,9 @@ public class OsmServerChangesetReader extends OsmServerReader {
     /**
      * Reads the changeset with id <code>id</code> from the server
      *
-     * @param ids  the list of ids. Ignored if null. Only load changesets for ids &gt; 0.
+     * @param ids  the collection of ids. Ignored if null. Only load changesets for ids &gt; 0.
      * @param monitor the progress monitor. Set to {@link NullProgressMonitor#INSTANCE} if null
-     * @return the changeset read
+     * @return the list of changesets read or an empty list or null in case of errors
      * @throws OsmTransferException thrown if something goes wrong
      * @throws IllegalArgumentException if id &lt;= 0
      */
@@ -142,7 +142,7 @@ public class OsmServerChangesetReader extends OsmServerReader {
                     continue;
                 }
                 i++;
-                StringBuffer sb = new StringBuffer();
+                StringBuilder sb = new StringBuilder();
                 sb.append("changeset/").append(id);
                 InputStream in = getInputStream(sb.toString(), monitor.createSubTaskMonitor(1, true));
                 if (in == null)
@@ -174,7 +174,7 @@ public class OsmServerChangesetReader extends OsmServerReader {
      * @throws IllegalArgumentException thrown if id &lt;= 0
      * @throws OsmTransferException thrown if something went wrong
      */
-    public ChangesetDataSet downloadChangeset(int id, ProgressMonitor monitor) throws IllegalArgumentException, OsmTransferException {
+    public ChangesetDataSet downloadChangeset(int id, ProgressMonitor monitor) throws OsmTransferException {
         if (id <= 0)
             throw new IllegalArgumentException(
                     MessageFormat.format("Expected value of type integer > 0 for parameter ''{0}'', got {1}", "id", id));
@@ -183,18 +183,15 @@ public class OsmServerChangesetReader extends OsmServerReader {
         }
         try {
             monitor.beginTask(tr("Downloading changeset content"));
-            StringBuffer sb = new StringBuffer();
+            StringBuilder sb = new StringBuilder();
             sb.append("changeset/").append(id).append("/download");
             InputStream in = getInputStream(sb.toString(), monitor.createSubTaskMonitor(1, true));
             if (in == null)
                 return null;
             monitor.setCustomText(tr("Downloading content for changeset {0} ...", id));
             OsmChangesetContentParser parser = new OsmChangesetContentParser(in);
-            ChangesetDataSet ds = parser.parse(monitor.createSubTaskMonitor(1, true));
-            return ds;
-        } catch (UnsupportedEncodingException e) {
-            throw new OsmTransferException(e);
-        } catch (XmlParsingException e) {
+            return parser.parse(monitor.createSubTaskMonitor(1, true));
+        } catch (UnsupportedEncodingException | XmlParsingException e) {
             throw new OsmTransferException(e);
         } finally {
             monitor.finishTask();

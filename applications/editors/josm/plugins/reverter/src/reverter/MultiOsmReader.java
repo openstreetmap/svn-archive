@@ -13,7 +13,7 @@ import org.openstreetmap.josm.io.OsmReader;
 import org.openstreetmap.josm.io.UTFInputStreamReader;
 
 /**
- * Subclass of {@see org.openstreetmap.josm.io.OsmReader} that can handle multiple XML streams.
+ * Subclass of {@link org.openstreetmap.josm.io.OsmReader} that can handle multiple XML streams.
  *
  */
 public class MultiOsmReader extends OsmReader {

@@ -7,8 +7,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.EnumMap;
 
-import org.openstreetmap.josm.tools.Logging;
-
 import s57.S57map.Feature;
 import s57.S57map.Pflag;
 import s57.S57obj.Obj;
@@ -218,7 +216,8 @@ public final class S57dat { // S57 ENC file fields lookup tables & methods
                     else charset = "US-ASCII";
                     str = new String(buffer, offset, i, charset);
                 } catch (UnsupportedEncodingException e) {
-                    Logging.error(e);
+                    System.err.println(e.getMessage());
+                    System.exit(-1);
                 }
                 offset += i + 1;
             } else {

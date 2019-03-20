@@ -96,7 +96,7 @@ final class DataSetCommandMerger {
      * @throws IllegalStateException thrown if there isn't a target node for one of the nodes in the source way
      *
      */
-    private void mergeWay(Way source) throws IllegalStateException {
+    private void mergeWay(Way source) {
         if (source.isIncomplete()) return;
         if (!source.isVisible()) return;
         Way target = (Way) getMergeTarget(source);
@@ -142,7 +142,7 @@ final class DataSetCommandMerger {
      * @throws IllegalStateException thrown if there isn't a corresponding target object for one of the relation
      * members in source
      */
-    private void mergeRelation(Relation source) throws IllegalStateException {
+    private void mergeRelation(Relation source) {
         if (source.isIncomplete()) return;
         if (!source.isVisible()) return;
         Relation target = (Relation) getMergeTarget(source);
@@ -177,8 +177,17 @@ final class DataSetCommandMerger {
         for (Way way: sourceDataSet.getWays()) {
             mergeWay(way);
         }
+        // first handle those relations which don't refer to other relations
         for (Relation relation: sourceDataSet.getRelations()) {
-            mergeRelation(relation);
+            if (relation.getMemberPrimitives(Relation.class).isEmpty()) {
+                mergeRelation(relation);
+            }
+        }
+        // now the rest of the relations.
+        for (Relation relation: sourceDataSet.getRelations()) {
+            if (!relation.getMemberPrimitives(Relation.class).isEmpty()) {
+                mergeRelation(relation);
+            }
         }
     }
 

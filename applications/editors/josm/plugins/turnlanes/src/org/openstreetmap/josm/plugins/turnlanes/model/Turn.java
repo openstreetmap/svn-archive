@@ -23,7 +23,7 @@ public final class Turn {
     static Set<Turn> load(ModelContainer c, String role, OsmPrimitive primitive) {
         final Set<Turn> result = new HashSet<>();
 
-        for (Relation r : OsmPrimitive.getFilteredList(primitive.getReferrers(), Relation.class)) {
+        for (Relation r : org.openstreetmap.josm.tools.Utils.filteredCollection(primitive.getReferrers(), Relation.class)) {
             if (!r.isUsable() || !r.get("type").equals(Constants.TYPE_TURNS)) {
                 continue;
             }

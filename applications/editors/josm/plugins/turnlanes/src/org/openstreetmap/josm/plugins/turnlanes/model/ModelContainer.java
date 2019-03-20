@@ -60,7 +60,7 @@ public final class ModelContainer {
     private static boolean close(Set<Node> closedNodes, Set<Way> closedWays, Way w) {
         boolean closed = true;
 
-        for (Relation r : OsmPrimitive.getFilteredList(w.getReferrers(), Relation.class)) {
+        for (Relation r : org.openstreetmap.josm.tools.Utils.filteredCollection(w.getReferrers(), Relation.class)) {
             if (!r.get("type").equals(Constants.TYPE_TURNS)) {
                 continue;
             }

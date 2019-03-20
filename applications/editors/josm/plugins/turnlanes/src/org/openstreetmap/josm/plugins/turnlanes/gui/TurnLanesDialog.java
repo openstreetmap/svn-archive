@@ -8,9 +8,7 @@ import java.awt.CardLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import javax.swing.ButtonGroup;
@@ -177,9 +175,8 @@ public class TurnLanesDialog extends ToggleDialog implements ActiveLayerChangeLi
 
     void refresh() {
         if (isShowing && editing) {
-            final Collection<OsmPrimitive> s = Collections.unmodifiableCollection(selected);
-            final List<Node> nodes = OsmPrimitive.getFilteredList(s, Node.class);
-            final List<Way> ways = OsmPrimitive.getFilteredList(s, Way.class);
+            final Collection<Node> nodes = org.openstreetmap.josm.tools.Utils.filteredCollection(selected, Node.class);
+            final Collection<Way> ways = org.openstreetmap.josm.tools.Utils.filteredCollection(selected, Way.class);
 
             final ModelContainer mc = nodes.isEmpty() ? ModelContainer.empty() : ModelContainer
                     .createEmpty(nodes, ways);

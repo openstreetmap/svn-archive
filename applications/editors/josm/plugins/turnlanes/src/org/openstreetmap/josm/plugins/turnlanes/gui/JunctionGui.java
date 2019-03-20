@@ -386,8 +386,8 @@ class JunctionGui {
         final boolean wide = delta > PI;
         final double a = wide ? max(0, delta - (PI + 2 * MAX_ANGLE)) : delta;
 
-        final double cpf1 = cpf(a, container.getLaneWidth() / 2 + (wide ? right.roadGui.getWidth(right.roadEnd) : 0));
-        final double cpf2 = cpf(a, container.getLaneWidth() / 2 + (wide ? left.roadGui.getWidth(left.roadEnd) : 0));
+        final double cpf1 = cpf(a, container.getLaneWidth() / 5 + (wide ? right.roadGui.getWidth(right.roadEnd) : 0));
+        final double cpf2 = cpf(a, container.getLaneWidth() / 5 + (wide ? left.roadGui.getWidth(left.roadEnd) : 0));
 
         final Point2D c1 = relativePoint(rightCurb.getP1(), cpf1, right.angle + PI);
         final Point2D c2 = relativePoint(leftCurb.getP1(), cpf2, left.angle + PI);

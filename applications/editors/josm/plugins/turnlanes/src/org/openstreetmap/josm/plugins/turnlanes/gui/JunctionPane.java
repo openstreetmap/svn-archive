@@ -453,7 +453,7 @@ class JunctionPane extends JComponent {
 
         for (JunctionGui j : container.getJunctions()) {
             addAllInteractives(j.paint(g2d));
-            dot(g2d, new Point2D.Double(j.x, j.y), container.getLaneWidth() / 5);
+            dot(g2d, new Point2D.Double(j.x, j.y), container.getLaneWidth() / 10);
         }
     }
 

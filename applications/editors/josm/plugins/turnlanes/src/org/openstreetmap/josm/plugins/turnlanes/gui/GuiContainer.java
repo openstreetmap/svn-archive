@@ -61,11 +61,12 @@ class GuiContainer {
 
         this.mc = mc;
         this.translation = new Point2D.Double(-origin.getX(), -origin.getY());
-        this.mpp = 0.2;
+        this.mpp = 0.5;
         this.scale = mpsu / mpp;
-        this.laneWidth = 2 / mpp;
 
-        this.connectionStroke = new BasicStroke((float) (laneWidth / 4), BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
+        this.laneWidth = 1.0 / mpp;
+
+        this.connectionStroke = new BasicStroke((float) (laneWidth / 5), BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
 
         for (Junction j : mc.getPrimaryJunctions()) {
             getGui(j);

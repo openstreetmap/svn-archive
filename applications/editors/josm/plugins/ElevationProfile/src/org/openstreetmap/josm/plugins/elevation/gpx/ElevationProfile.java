@@ -1,6 +1,7 @@
 // License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.elevation.gpx;
-import java.util.ArrayList;
+
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -303,8 +304,7 @@ IGpxWaypointVisitor {
         WayPoint wp2 = getEndWayPoint();
 
         if (wp1 != null && wp2 != null) {
-            long diff = wp2.getDate().getTime() - wp1.getDate().getTime();
-            return diff;
+            return wp2.getDate().getTime() - wp1.getDate().getTime();
         }
 
         return 0L;
@@ -376,12 +376,17 @@ IGpxWaypointVisitor {
      */
     @Override
     public void visitWayPoint(WayPoint wp) {
-        if (wp.getDate().after(end)) {
-            setEnd(wp);
-        }
+        if (wp == null)
+            return;
 
-        if (wp.getDate().before(start)) {
-            setStart(wp);
+        if (wp.hasDate()) {
+            if (wp.getDate().after(end)) {
+                setEnd(wp);
+            }
+
+            if (wp.getDate().before(start)) {
+                setStart(wp);
+            }
         }
 
         // update boundaries

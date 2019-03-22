@@ -4,6 +4,7 @@ package reverter;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.net.HttpURLConnection;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -23,7 +24,6 @@ import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.OsmPrimitiveType;
 import org.openstreetmap.josm.data.osm.PrimitiveId;
 import org.openstreetmap.josm.data.osm.Relation;
-import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.data.osm.RelationMemberData;
 import org.openstreetmap.josm.data.osm.SimplePrimitiveId;
 import org.openstreetmap.josm.data.osm.Way;
@@ -91,21 +91,14 @@ public class ChangesetReverter {
     private void addMissingHistoryIds(Iterable<HistoryOsmPrimitive> primitives) {
         for (HistoryOsmPrimitive p : primitives) {
             addIfMissing(p.getPrimitiveId());
-            if (p.getType() == OsmPrimitiveType.WAY) {
-                for (long nd : ((HistoryWay) p).getNodes()) {
-                    addIfMissing(new SimplePrimitiveId(nd, OsmPrimitiveType.NODE));
-                }
-            }
         }
     }
 
-    private void addMissingIds(Iterable<OsmPrimitive> primitives) {
-        for (OsmPrimitive p : primitives) {
-            addIfMissing(p);
-            if (p.getType() == OsmPrimitiveType.WAY) {
-                for (Node nd : ((Way) p).getNodes()) {
-                    addIfMissing(nd);
-                }
+    private void addMissingId(OsmPrimitive p) {
+        addIfMissing(p);
+        if (p.getType() == OsmPrimitiveType.WAY) {
+            for (Node nd : ((Way) p).getNodes()) {
+                addIfMissing(nd);
             }
         }
     }
@@ -232,7 +225,7 @@ public class ChangesetReverter {
             nds = rdr.parseOsm(progressMonitor.createSubTaskMonitor(1, true));
             for (OsmPrimitive p : nds.allPrimitives()) {
                 if (!p.isIncomplete()) {
-                    addMissingIds(Collections.singleton(p));
+                    addMissingId(p);
                 } else {
                     if (ds.getPrimitiveById(p.getPrimitiveId()) == null) {
                         switch (p.getType()) {
@@ -343,12 +336,13 @@ public class ChangesetReverter {
      *
      */
     public List<Command> getCommands() {
-        if (this.nds == null) return null;
+        List<Command> cmds = new ArrayList<>();
+        if (this.nds == null) return cmds;
 
         //////////////////////////////////////////////////////////////////////////
         // Create commands to restore/update all affected objects
         DataSetCommandMerger merger = new DataSetCommandMerger(nds, ds);
-        List<Command> cmds = merger.getCommandList();
+        cmds.addAll(merger.getCommandList());
 
         //////////////////////////////////////////////////////////////////////////
         // Create a set of objects to be deleted
@@ -443,18 +437,21 @@ public class ChangesetReverter {
             if (!n.isDeleted() && n.getCoor() == null) {
                 PrimitiveId id = n.getPrimitiveId();
                 OsmPrimitive p = ds.getPrimitiveById(id);
-                if (p instanceof Node && p.getVersion() > 1) {
-                    LatLon coor = ((Node) p).getCoor();
-                    if (coor == null) {
+                if (p instanceof Node && !((Node) p).isLatLonKnown()) {
+                    int version = p.getVersion();
+                    while (version > 1) {
+                        // find the version that was in use when the current changeset was closed
+                        --version;
                         final OsmServerMultiObjectReader rdr = new OsmServerMultiObjectReader();
-                        readObjectVersion(rdr, id, p.getVersion()-1, progressMonitor);
-                        Collection<OsmPrimitive> result = rdr.parseOsm(progressMonitor.createSubTaskMonitor(1, true)).allPrimitives();
-                        if (!result.isEmpty()) {
-                            coor = ((Node) result.iterator().next()).getCoor();
+                        readObjectVersion(rdr, id, version, progressMonitor);
+                        DataSet history = rdr.parseOsm(progressMonitor.createSubTaskMonitor(1, true));
+                        if (!history.isEmpty()) {
+                            Node historyNode = (Node) history.allPrimitives().iterator().next();
+                            if (historyNode.isLatLonKnown() && changeset.getClosedAt().after(historyNode.getTimestamp())) {
+                                n.load(historyNode.save());
+                                break;
+                            }
                         }
-                    }
-                    if (coor != null) {
-                        n.setCoor(coor);
                     }
                 }
             }

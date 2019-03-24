@@ -57,7 +57,7 @@ public class UndoSelectionAction extends JosmAction {
                 // remove deleted entities from selection
                 newSel.clear();
                 newSel.addAll(histsel);
-                newSel.removeIf(p -> p == null || p.isDeleted());
+                newSel.removeIf(p -> p == null || p.isDeleted() || p.isDisabled());
                 k++;
                 if (!newSel.isEmpty()) {
                     Collection<OsmPrimitive> oldSel = ds.getSelected();

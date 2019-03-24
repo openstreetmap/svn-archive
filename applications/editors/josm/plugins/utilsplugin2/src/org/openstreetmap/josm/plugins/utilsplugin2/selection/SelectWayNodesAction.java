@@ -67,7 +67,7 @@ public class SelectWayNodesAction extends JosmAction {
             if (selectedNodes == null) {
                 selectedNodes = new ArrayList<>();
             }
-            selectedNodes.add(n);
+            if (!n.isDisabled()) selectedNodes.add(n);
         }
     }
 

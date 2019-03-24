@@ -64,7 +64,7 @@ public class SelectHighwayAction extends JosmAction {
             while (!nodeQueue.isEmpty()) {
                 Node node = nodeQueue.remove();
                 for (Way p : node.getParentWays()) {
-                    if (!newWays.contains(p) && p.hasKey(key) && p.get(key).equals(value)) {
+                    if (!p.isDisabled() && !newWays.contains(p) && p.hasKey(key) && p.get(key).equals(value)) {
                         newWays.add(p);
                         nodeQueue.add(p.firstNode().equals(node) ? p.lastNode() : p.firstNode());
                     }

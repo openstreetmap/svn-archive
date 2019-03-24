@@ -59,7 +59,8 @@ public class SelectModWaysAction extends JosmAction {
                     ways.clear();
                     for (OsmPrimitive p : pp) {
                         // find all affected ways
-                        if (p instanceof Way && !p.isDeleted()) ways.add((Way) p);
+                        if (p instanceof Way && !p.isDeleted() && !p.isDisabled())
+                            ways.add((Way) p);
                     }
                     if (!ways.isEmpty() && !ds.getSelectedWays().containsAll(ways)) {
                         ds.setSelected(ways);

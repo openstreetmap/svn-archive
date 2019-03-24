@@ -59,7 +59,8 @@ public class SelectModNodesAction extends JosmAction {
                     Collection<? extends OsmPrimitive> pp = cmd.getParticipatingPrimitives();
                     nodes.clear();
                     for (OsmPrimitive p : pp) {  // find all affected ways
-                        if (p instanceof Node && !p.isDeleted()) nodes.add((Node) p);
+                        if (p instanceof Node && !p.isDeleted() && !p.isDisabled())
+                            nodes.add((Node) p);
                     }
                     if (!nodes.isEmpty() && !ds.getSelectedNodes().containsAll(nodes)) {
                         ds.setSelected(nodes);

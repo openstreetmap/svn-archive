@@ -54,11 +54,11 @@ public class ChangesetIdsTextField extends AbstractIdTextField<ChangesetIdsTextF
 
         @Override
         public void validate() {
-            String help = tr("Please enter one or more integer values > 0 or full changeset URLs.");
             if (!isValid()) {
-                feedbackInvalid(tr("The current value is not a a list of valid changeset IDs. {0}", help));
+                feedbackInvalid(tr("The current input is not a list of valid changeset IDs. "
+                        + "Please enter one or more integer values > 0 or full changeset URLs."));
             } else {
-                feedbackValid(help);
+                feedbackValid(tr("Please enter one or more integer values > 0 or full changeset URLs."));
             }
         }
 

@@ -15,6 +15,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.LinkedList;
+import java.util.List;
 
 import javax.swing.JOptionPane;
 
@@ -163,7 +164,7 @@ class LakewalkerAction extends JosmAction implements MouseListener {
     private void processnodelist(Lakewalker lw, LatLon pos, LatLon topLeft, LatLon botRight, double epsilon, ProgressMonitor progressMonitor) {
         progressMonitor.beginTask(null, 3);
         try {
-            ArrayList<double[]> nodelist = new ArrayList<>();
+            List<double[]> nodelist = new ArrayList<>();
 
             try {
                 nodelist = lw.trace(pos.lat(), pos.lon(), topLeft.lon(), botRight.lon(), topLeft.lat(), botRight.lat(),
@@ -172,49 +173,32 @@ class LakewalkerAction extends JosmAction implements MouseListener {
                 Logging.error(e);
             }
 
-            System.out.println(nodelist.size()+" nodes generated");
-
-            /**
-            * Run the nodelist through a vertex reduction algorithm
-            */
+            // Run the nodelist through a vertex reduction algorithm
 
             progressMonitor.subTask(tr("Running vertex reduction..."));
 
             nodelist = lw.vertexReduce(nodelist, epsilon);
 
-            //System.out.println("After vertex reduction "+nodelist.size()+" nodes remain.");
-
-            /**
-            * And then through douglas-peucker approximation
-            */
+            // And then through douglas-peucker approximation
 
             progressMonitor.worked(1);
             progressMonitor.subTask(tr("Running Douglas-Peucker approximation..."));
 
             nodelist = lw.douglasPeucker(nodelist, epsilon, 0);
 
-            //System.out.println("After Douglas-Peucker approximation "+nodelist.size()+" nodes remain.");
-
-            /**
-            * And then through a duplicate node remover
-            */
+            // And then through a duplicate node remover
 
             progressMonitor.worked(1);
             progressMonitor.subTask(tr("Removing duplicate nodes..."));
 
             nodelist = lw.duplicateNodeRemove(nodelist);
 
-            //System.out.println("After removing duplicate nodes, "+nodelist.size()+" nodes remain.");
-
-
             // if for some reason (image loading failed, ...) nodelist is empty, no more processing required.
-            if (nodelist.size() == 0) {
+            if (nodelist.isEmpty()) {
                 return;
             }
 
-            /**
-            * Turn the arraylist into osm nodes
-            */
+            // Turn the arraylist into osm nodes
 
             Way way = new Way();
             Node n = null;

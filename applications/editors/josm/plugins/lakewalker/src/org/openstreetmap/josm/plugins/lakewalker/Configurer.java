@@ -1,6 +1,7 @@
 // License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.lakewalker;
 
+import java.awt.Component;
 import java.beans.PropertyChangeListener;
 
 /**
@@ -11,10 +12,8 @@ import java.beans.PropertyChangeListener;
  * interactively.
  * */
 public abstract class Configurer {
-// FIXME: maybe parameterize this so that value can have the right type
-// in subclasses?
+  // FIXME: maybe parameterize this so that value can have the right type in subclasses?
   public static final String NAME_PROPERTY = "Configurer.name";
-  //    public static final String VALUE_PROPERTY = "value";
 
   /** A String the uniquely identifies this property */
   protected String key;
@@ -43,6 +42,7 @@ public abstract class Configurer {
 
   /**
    * Unique identifier
+   * @return Unique identifier
    */
   public String getKey() {
     return key;
@@ -50,6 +50,7 @@ public abstract class Configurer {
 
   /**
    * Plain English description of the Object
+   * @return Plain English description of the Object
    */
   public String getName() {
     return name;
@@ -66,6 +67,7 @@ public abstract class Configurer {
   /**
    * The Object value
    * May be null if the Object has not been initialized
+   * @return The Object value
    */
   public Object getValue() {
     return value;
@@ -78,6 +80,7 @@ public abstract class Configurer {
 
   /**
    * Set the Object value
+   * @param o the Object value
    */
   public void setValue(Object o) {
     Object oldValue = getValue();
@@ -89,6 +92,7 @@ public abstract class Configurer {
 
   /**
    * If true, then don't fire PropertyChangeEvents when the value is reset
+   * @param val true to disable firing PropertyChangeEvents when the value is reset
    */
   public void setFrozen(boolean val) {
     frozen = val;
@@ -107,18 +111,21 @@ public abstract class Configurer {
 
   /**
    * Set the Object value from a String
+   * @param s Object value as String
    */
   public abstract void setValue(String s);
 
   /**
    * GUI interface for setting the option in an editing window
+   * @return GUI interface for setting the option in an editing window
    */
-  public abstract java.awt.Component getControls();
+  public abstract Component getControls();
 
   /**
    * Add a listener to be notified when the Object state changes
+   * @param l listener to add
    */
-  public void addPropertyChangeListener(java.beans.PropertyChangeListener l) {
+  public void addPropertyChangeListener(PropertyChangeListener l) {
     changeSupport.addPropertyChangeListener(l);
   }
 

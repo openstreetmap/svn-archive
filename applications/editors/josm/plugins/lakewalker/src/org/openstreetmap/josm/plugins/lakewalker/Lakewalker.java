@@ -34,14 +34,19 @@ public class Lakewalker {
     }
 
     /**
-     *  east = 0
-     *  northeast = 1
-     *  north = 2
-     *  northwest = 3
-     *  west = 4
-     *  southwest = 5
-     *  south = 6
-     *  southeast = 7
+     * Map direction to index.
+     * @param direction human direction: {@code (north|south)?(east|west)?}
+     * @return direction index as follows:
+     * <ul>
+     * <li>east = 0</li>
+     * <li>northeast = 1</li>
+     * <li>north = 2</li>
+     * <li>northwest = 3</li>
+     * <li>west = 4</li>
+     * <li>southwest = 5</li>
+     * <li>south = 6</li>
+     * <li>southeast = 7</li>
+     * </ul>
      */
     private int getDirectionIndex(String direction) throws ArrayIndexOutOfBoundsException {
         int i = 0;
@@ -69,8 +74,18 @@ public class Lakewalker {
 
     /**
      * Do a trace
+     *
+     * @param lat latitude
+     * @param lon longitude
+     * @param tl_lon top/left longitude
+     * @param br_lon bottom/right longitude
+     * @param tl_lat top/left latitude
+     * @param br_lat bottom/right latitude
+     * @param progressMonitor Progress monitor
+     * @return list of node coordinates
+     * @throws LakewalkerException if anything goes wrong
      */
-    public ArrayList<double[]> trace(double lat, double lon, double tl_lon, double br_lon, double tl_lat, double br_lat,
+    public List<double[]> trace(double lat, double lon, double tl_lon, double br_lon, double tl_lat, double br_lat,
             ProgressMonitor progressMonitor) throws LakewalkerException {
 
         progressMonitor.beginTask(null);
@@ -82,7 +97,7 @@ public class Lakewalker {
 
             Boolean detect_loop = false;
 
-            ArrayList<double[]> nodelist = new ArrayList<>();
+            List<double[]> nodelist = new ArrayList<>();
 
             int[] xy = geo_to_xy(lat, lon, this.resolution);
 
@@ -200,8 +215,10 @@ public class Lakewalker {
 
     /**
      * Remove duplicate nodes from the list
+     * @param nodes list of node coordinates
+     * @return filtered list without duplicate nodes
      */
-    public ArrayList<double[]> duplicateNodeRemove(ArrayList<double[]> nodes) {
+    public List<double[]> duplicateNodeRemove(List<double[]> nodes) {
 
         if (nodes.size() <= 1) {
             return nodes;
@@ -227,8 +244,11 @@ public class Lakewalker {
 
     /**
      * Reduce the number of vertices based on their proximity to each other
+     * @param nodes list of node coordinates
+     * @param proximity proximity
+     * @return reduced list
      */
-    public ArrayList<double[]> vertexReduce(ArrayList<double[]> nodes, double proximity) {
+    public List<double[]> vertexReduce(List<double[]> nodes, double proximity) {
 
         // Check if node list is empty
         if (nodes.size() <= 1) {
@@ -236,7 +256,7 @@ public class Lakewalker {
         }
 
         double[] test_v = nodes.get(0);
-        ArrayList<double[]> reducednodes = new ArrayList<>();
+        List<double[]> reducednodes = new ArrayList<>();
 
         double prox_sq = Math.pow(proximity, 2);
 
@@ -266,8 +286,8 @@ public class Lakewalker {
         }
     }
 
-        /*
-    public ArrayList<double[]> douglasPeuckerNR(ArrayList<double[]> nodes, double epsilon) {
+    /*
+    public List<double[]> douglasPeuckerNR(List<double[]> nodes, double epsilon) {
         command_stack = [(0, len(nodes) - 1)]
 
         Vector result_stack = new Vector();
@@ -331,7 +351,7 @@ public class Lakewalker {
     }
         */
 
-    public ArrayList<double[]> douglasPeucker(ArrayList<double[]> nodes, double epsilon, int depth) {
+    public List<double[]> douglasPeucker(List<double[]> nodes, double epsilon, int depth) {
 
         // Check if node list is empty
         if (nodes.size() <= 1 || depth > 500) {
@@ -343,7 +363,7 @@ public class Lakewalker {
         double[] first = nodes.get(0);
         double[] last = nodes.get(nodes.size()-1);
 
-        ArrayList<double[]> new_nodes = new ArrayList<>();
+        List<double[]> new_nodes = new ArrayList<>();
 
         double d = 0;
 
@@ -371,8 +391,8 @@ public class Lakewalker {
         return new_nodes;
     }
 
-    private ArrayList<double[]> sublist(ArrayList<double[]> l, int i, int f) throws ArrayIndexOutOfBoundsException {
-        ArrayList<double[]> sub = new ArrayList<>();
+    private List<double[]> sublist(List<double[]> l, int i, int f) throws ArrayIndexOutOfBoundsException {
+        List<double[]> sub = new ArrayList<>();
 
         if (f < i || i < 0 || f < 0 || f > l.size()) {
             throw new ArrayIndexOutOfBoundsException();

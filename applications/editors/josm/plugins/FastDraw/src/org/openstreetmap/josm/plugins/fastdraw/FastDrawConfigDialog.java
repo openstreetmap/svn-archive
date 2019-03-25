@@ -59,8 +59,10 @@ public class FastDrawConfigDialog extends ExtendedDialog {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String s = ClipboardUtils.getClipboardStringContent();
-                if (TextTagParser.getValidatedTagsFromText(s, TextTagPaster::warning) != null) {
-                    addTags.setText(s);
+                if (s != null) {
+                    if (TextTagParser.getValidatedTagsFromText(s, TextTagPaster::warning) != null) {
+                        addTags.setText(s);
+                    }
                 }
             }
         });

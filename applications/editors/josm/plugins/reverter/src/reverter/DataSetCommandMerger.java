@@ -183,8 +183,8 @@ final class DataSetCommandMerger {
             if (relation.getMemberPrimitives(Relation.class).isEmpty()) {
                 mergeRelation(relation);
             } else {
-            	// postpone
-            	withRelationsMembers.add(relation);
+                // postpone
+                withRelationsMembers.add(relation);
             }
         }
         withRelationsMembers.forEach(this::mergeRelation);

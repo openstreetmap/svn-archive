@@ -33,6 +33,9 @@ import org.openstreetmap.josm.tools.GBC;
 
 import reverter.ChangesetReverter.RevertType;
 
+/**
+ * Dialog to enter changeset IDs and options for the reverter.
+ */
 public class ChangesetIdQuery extends ExtendedDialog {
     private final JPanel panel = new JPanel(new GridBagLayout());
     private final ChangesetIdsTextField tcid = new ChangesetIdsTextField();

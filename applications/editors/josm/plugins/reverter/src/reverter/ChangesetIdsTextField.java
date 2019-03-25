@@ -41,6 +41,9 @@ public class ChangesetIdsTextField extends AbstractIdTextField<ChangesetIdsTextF
         return validator.ids;
     }
 
+    /**
+     * Validator for a list of changeset IDs entered in a {@link JTextComponent}.
+     */
     public static class OsmIdsValidator extends AbstractTextComponentValidator {
 
         private Collection<Integer> ids = new TreeSet<>(Collections.reverseOrder());

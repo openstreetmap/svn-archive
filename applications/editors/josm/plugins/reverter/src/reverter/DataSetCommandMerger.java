@@ -178,17 +178,16 @@ final class DataSetCommandMerger {
             mergeWay(way);
         }
         // first handle those relations which don't refer to other relations
+        List<Relation> withRelationsMembers = new ArrayList<>();
         for (Relation relation: sourceDataSet.getRelations()) {
             if (relation.getMemberPrimitives(Relation.class).isEmpty()) {
                 mergeRelation(relation);
+            } else {
+            	// postpone
+            	withRelationsMembers.add(relation);
             }
         }
-        // now the rest of the relations.
-        for (Relation relation: sourceDataSet.getRelations()) {
-            if (!relation.getMemberPrimitives(Relation.class).isEmpty()) {
-                mergeRelation(relation);
-            }
-        }
+        withRelationsMembers.forEach(this::mergeRelation);
     }
 
     public List<Command> getCommandList() {

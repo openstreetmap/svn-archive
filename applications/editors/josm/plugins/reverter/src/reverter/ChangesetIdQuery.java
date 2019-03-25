@@ -6,8 +6,8 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.KeyEvent;
+import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -33,7 +33,6 @@ import org.openstreetmap.josm.tools.GBC;
 
 import reverter.ChangesetReverter.RevertType;
 
-@SuppressWarnings("serial")
 public class ChangesetIdQuery extends ExtendedDialog {
     private final JPanel panel = new JPanel(new GridBagLayout());
     private final ChangesetIdsTextField tcid = new ChangesetIdsTextField();
@@ -101,7 +100,7 @@ public class ChangesetIdQuery extends ExtendedDialog {
     @Override
     public void setupDialog() {
         setContent(panel, false);
-        setButtonIcons(new String[] {"ok.png", "cancel.png" });
+        setButtonIcons("ok.png", "cancel.png");
         setDefaultButton(1);
 
         addWindowListener(new InternalWindowListener());
@@ -171,7 +170,7 @@ public class ChangesetIdQuery extends ExtendedDialog {
         Config.getPref().putList(getClass().getName() + ".changesetsHistory", cbHistory.getHistory());
     }
 
-    private class InternalWindowListener implements WindowListener {
+    private class InternalWindowListener extends WindowAdapter {
         @Override public void windowClosed(WindowEvent e) {
             if (e != null && e.getComponent() == ChangesetIdQuery.this && getValue() == 1) {
                 if (!tcid.readIds()) {
@@ -180,17 +179,5 @@ public class ChangesetIdQuery extends ExtendedDialog {
                 remindChangesetsHistory(cbId);
             }
         }
-
-        @Override public void windowOpened(WindowEvent e) {}
-
-        @Override public void windowClosing(WindowEvent e) {}
-
-        @Override public void windowIconified(WindowEvent e) {}
-
-        @Override public void windowDeiconified(WindowEvent e) {}
-
-        @Override public void windowActivated(WindowEvent e) {}
-
-        @Override public void windowDeactivated(WindowEvent e) {}
     }
 }

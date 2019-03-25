@@ -47,6 +47,7 @@ public class ChangesetIdsTextField extends AbstractIdTextField<ChangesetIdsTextF
 
         /**
          * Constructs a new {@link OsmIdsValidator}
+         * @param tc The text component to validate
          */
         public OsmIdsValidator(JTextComponent tc) {
             super(tc);

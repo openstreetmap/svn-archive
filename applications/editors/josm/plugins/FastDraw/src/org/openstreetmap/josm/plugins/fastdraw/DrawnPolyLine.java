@@ -254,7 +254,7 @@ public class DrawnPolyLine {
         int i = 0, idx = -1;
         while (it.hasNext()) {
             pp = it.next();
-            if (f && (fixed.contains(pp))) {
+            if (f && fixed.contains(pp)) {
                 // if end of line fragment reached
                 lastIdx = idx;
                 return;

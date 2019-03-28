@@ -48,6 +48,7 @@ public class JunctionCheckerMapMode extends MapMode implements ActiveLayerChange
         super.exitMode();
         MainApplication.getMap().mapView.removeMouseListener(this);
         MainApplication.getMap().mapView.removeMouseMotionListener(this);
+        MainApplication.getLayerManager().removeActiveLayerChangeListener(this);
     }
 
     @Override

@@ -2,6 +2,7 @@
 package reverter;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
+import static org.openstreetmap.josm.tools.I18n.trn;
 
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
@@ -60,8 +61,8 @@ public class ChangesetReverter {
     }
 
     public static final Collection<Long> MODERATOR_REDACTION_ACCOUNTS = Collections.unmodifiableCollection(Arrays.asList(
-            722137L, // OSMF Redaction Account
-            760215L  // pnorman redaction revert
+            722_137L, // OSMF Redaction Account
+            760_215L  // pnorman redaction revert
             ));
 
     public final int changesetId;
@@ -192,11 +193,8 @@ public class ChangesetReverter {
                 if (e.getResponseCode() != HttpURLConnection.HTTP_FORBIDDEN) {
                     throw e;
                 }
-                String message = "Version "+version+" of "+id+" is unauthorized";
-                if (version > 1) {
-                    message += ", requesting previous one";
-                }
-                Logging.info(message);
+                String message = "Version " + version + " of " + id + " is unauthorized";
+                Logging.info(version <= 1 ? message : message + ", requesting previous one");
                 version--;
             }
         }
@@ -213,7 +211,10 @@ public class ChangesetReverter {
     public void downloadObjectsHistory(ProgressMonitor progressMonitor) throws OsmTransferException {
         final OsmServerMultiObjectReader rdr = new OsmServerMultiObjectReader();
 
-        progressMonitor.beginTask(tr("Downloading objects history"), updated.size()+deleted.size()+1);
+        int num = updated.size() + deleted.size();
+        progressMonitor.beginTask(
+                addChangesetIdPrefix(
+                        trn("Downloading history for {0} object", "Downloading history for {0} objects", num, num)), num + 1);
         try {
             for (HashSet<HistoryOsmPrimitive> collection : Arrays.asList(updated, deleted)) {
                 for (HistoryOsmPrimitive entry : collection) {
@@ -376,9 +377,9 @@ public class ChangesetReverter {
             if (!checkOsmChangeEntry(entry)) continue;
             HistoryOsmPrimitive hp = entry.getPrimitive();
             OsmPrimitive dp = ds.getPrimitiveById(hp.getPrimitiveId());
-            if (dp == null || dp.isIncomplete())
-                throw new IllegalStateException(tr("Missing merge target for {0} with id {1}",
-                        hp.getType(), hp.getId()));
+            if (dp == null || dp.isIncomplete()) {
+                throw new IllegalStateException(addChangesetIdPrefix(tr("Missing merge target for {0}", hp.getPrimitiveId())));
+            }
 
             if (hp.getVersion() != dp.getVersion()
                     && (hp.isVisible() || dp.isVisible()) &&
@@ -433,28 +434,49 @@ public class ChangesetReverter {
     }
 
     public void fixNodesWithoutCoordinates(ProgressMonitor progressMonitor) throws OsmTransferException {
-        for (Node n : nds.getNodes()) {
-            if (!n.isDeleted() && n.getCoor() == null) {
-                PrimitiveId id = n.getPrimitiveId();
-                OsmPrimitive p = ds.getPrimitiveById(id);
-                if (p instanceof Node && !((Node) p).isLatLonKnown()) {
-                    int version = p.getVersion();
-                    while (version > 1) {
-                        // find the version that was in use when the current changeset was closed
-                        --version;
-                        final OsmServerMultiObjectReader rdr = new OsmServerMultiObjectReader();
-                        readObjectVersion(rdr, id, version, progressMonitor);
-                        DataSet history = rdr.parseOsm(progressMonitor.createSubTaskMonitor(1, true));
-                        if (!history.isEmpty()) {
-                            Node historyNode = (Node) history.allPrimitives().iterator().next();
-                            if (historyNode.isLatLonKnown() && changeset.getClosedAt().after(historyNode.getTimestamp())) {
-                                n.load(historyNode.save());
-                                break;
+        Collection<Node> nodes = nds.getNodes();
+        int num = nodes.size();
+        progressMonitor.beginTask(addChangesetIdPrefix(
+                trn("Checking coordinates of {0} node", "Checking coordinates of {0} nodes", num, num)), num);
+
+        try {
+            for (Node n : nodes) {
+                if (!n.isDeleted() && n.getCoor() == null) {
+                    PrimitiveId id = n.getPrimitiveId();
+                    OsmPrimitive p = ds.getPrimitiveById(id);
+                    if (p instanceof Node && !((Node) p).isLatLonKnown()) {
+                        int version = p.getVersion();
+                        while (version > 1) {
+                            // find the version that was in use when the current changeset was closed
+                            --version;
+                            final OsmServerMultiObjectReader rdr = new OsmServerMultiObjectReader();
+                            readObjectVersion(rdr, id, version, progressMonitor);
+                            DataSet history = rdr.parseOsm(progressMonitor.createSubTaskMonitor(1, true));
+                            if (!history.isEmpty()) {
+                                Node historyNode = (Node) history.allPrimitives().iterator().next();
+                                if (historyNode.isLatLonKnown() && changeset.getClosedAt().after(historyNode.getTimestamp())) {
+                                    n.load(historyNode.save());
+                                    break;
+                                }
                             }
                         }
                     }
                 }
+                if (progressMonitor.isCanceled())
+                    return;
+                progressMonitor.worked(1);
             }
+        } finally {
+            progressMonitor.finishTask();
         }
+    }
+
+    /**
+     * Add prefix with properly formatted changeset id to a message.
+     * @param msg the message string
+     * @return prefixed message
+     */
+    String addChangesetIdPrefix(String msg) {
+        return tr("Changeset {0}: {1}", Long.toString(changesetId), msg);
     }
 }

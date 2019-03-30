@@ -61,8 +61,7 @@ final class DataSetCommandMerger {
     private OsmPrimitive getMergeTarget(OsmPrimitive mergeSource) {
         OsmPrimitive p = targetDataSet.getPrimitiveById(mergeSource.getId(), mergeSource.getType());
         if (p == null)
-            throw new IllegalStateException(tr("Missing merge target of type {0} with id {1}",
-                    mergeSource.getType(), mergeSource.getUniqueId()));
+            throw new IllegalStateException(tr("Missing merge target for {0}", mergeSource.getPrimitiveId()));
         return p;
     }
 

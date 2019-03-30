@@ -21,7 +21,6 @@ import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.Notification;
 import org.openstreetmap.josm.gui.PleaseWaitRunnable;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
-import org.openstreetmap.josm.gui.progress.swing.PleaseWaitProgressMonitor;
 import org.openstreetmap.josm.gui.util.GuiHelper;
 import org.openstreetmap.josm.io.OsmTransferException;
 import org.openstreetmap.josm.tools.Logging;
@@ -73,14 +72,9 @@ public class RevertChangesetTask extends PleaseWaitRunnable {
             downloadConfirmed = selectedOption != null && selectedOption == JOptionPane.YES_OPTION;
             if (!downloadConfirmed) return false;
         }
-        final PleaseWaitProgressMonitor monitor =
-            new PleaseWaitProgressMonitor(tr("Fetching missing primitives"));
-        try {
-            rev.downloadMissingPrimitives(monitor);
-        } finally {
-            monitor.close();
-        }
-        return !monitor.isCanceled();
+        progressMonitor.setTicks(0);
+        rev.downloadMissingPrimitives(progressMonitor.createSubTaskMonitor(ProgressMonitor.ALL_TICKS, false));
+        return !progressMonitor.isCanceled();
     }
 
     @Override
@@ -108,7 +102,7 @@ public class RevertChangesetTask extends PleaseWaitRunnable {
             }
         }
         if (!allcmds.isEmpty()) {
-            Command cmd = allcmds.size() == 1 ? allcmds.get(0) : new SequenceCommand(tr("Revert changeset"), allcmds);
+            Command cmd = allcmds.size() == 1 ? allcmds.get(0) : new SequenceCommand(tr("Revert changesets"), allcmds);
             GuiHelper.runInEDT(() -> {
                 UndoRedoHandler.getInstance().add(cmd);
                 if (numberOfConflicts > 0) {
@@ -119,7 +113,7 @@ public class RevertChangesetTask extends PleaseWaitRunnable {
     }
 
     private RevertChangesetCommand revertChangeset(int changesetId) throws OsmTransferException, UserCancelException {
-        progressMonitor.indeterminateSubTask(tr("Downloading changeset"));
+        progressMonitor.indeterminateSubTask(tr("Reverting changeset {0}", Long.toString(changesetId)));
         try {
             rev = new ChangesetReverter(changesetId, revertType, newLayer, progressMonitor.createSubTaskMonitor(0, true));
         } catch (final RevertRedactedChangesetException e) {
@@ -145,17 +139,21 @@ public class RevertChangesetTask extends PleaseWaitRunnable {
         } else {
             // Don't ask user to download primitives going to be undeleted
             rev.checkMissingDeleted();
-            rev.downloadMissingPrimitives(progressMonitor.createSubTaskMonitor(0, false));
+            rev.downloadMissingPrimitives(progressMonitor.createSubTaskMonitor(ProgressMonitor.ALL_TICKS, false));
         }
 
         if (progressMonitor.isCanceled())
             throw new UserCancelException();
+        progressMonitor.setTicks(0);
         rev.downloadObjectsHistory(progressMonitor.createSubTaskMonitor(ProgressMonitor.ALL_TICKS, false));
         if (progressMonitor.isCanceled())
             throw new UserCancelException();
         if (!checkAndDownloadMissing())
             throw new UserCancelException();
-        rev.fixNodesWithoutCoordinates(progressMonitor);
+        progressMonitor.setTicks(0);
+        rev.fixNodesWithoutCoordinates(progressMonitor.createSubTaskMonitor(ProgressMonitor.ALL_TICKS, false));
+        if (progressMonitor.isCanceled())
+            throw new UserCancelException();
         List<Command> cmds = rev.getCommands();
         if (cmds.isEmpty()) {
             Logging.warn(MessageFormat.format("No revert commands found for changeset {0}", Long.toString(changesetId)));
@@ -166,18 +164,29 @@ public class RevertChangesetTask extends PleaseWaitRunnable {
                 numberOfConflicts++;
             }
         }
-        return new RevertChangesetCommand(tr(revertType == RevertType.FULL ? "Revert changeset #{0}" :
-                "Partially revert changeset #{0}", changesetId), cmds);
+        final String desc;
+        if (revertType == RevertType.FULL) {
+            desc = tr("Revert changeset {0}", String.valueOf(changesetId));
+        } else {
+            desc = tr("Partially revert changeset {0}", String.valueOf(changesetId));
+        }
+        return new RevertChangesetCommand(desc, cmds);
     }
 
     @Override
     protected void cancel() {
+        // nothing to do
     }
 
     @Override
     protected void finish() {
+        // nothing to do
+
     }
 
+    /**
+     * @return number of conflicts for this changeset
+     */
     public final int getNumberOfConflicts() {
         return numberOfConflicts;
     }

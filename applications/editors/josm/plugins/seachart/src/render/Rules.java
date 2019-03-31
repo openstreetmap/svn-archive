@@ -1057,9 +1057,11 @@ public class Rules {
 			switch ((CatMOR) getAttEnum(feature.type, Att.CATMOR)) {
 			case MOR_DLPN:
 				Renderer.symbol(Harbours.Dolphin);
+	            Signals.addSignals();
 				break;
 			case MOR_DDPN:
 				Renderer.symbol(Harbours.DeviationDolphin);
+	            Signals.addSignals();
 				break;
 			case MOR_BLRD:
 			case MOR_POST:
@@ -1078,7 +1080,6 @@ public class Rules {
 			default:
 				break;
 			}
-			Signals.addSignals();
 		}
 	}
 

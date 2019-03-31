@@ -1066,12 +1066,14 @@ public class Rules {
 				Renderer.symbol(Harbours.Bollard);
 				break;
 			case MOR_BUOY:
-				BoySHP shape = (BoySHP) getAttEnum(feature.type, Att.BOYSHP);
-				if (shape == BoySHP.BOY_UNKN) {
-					shape = BoySHP.BOY_SPHR;
-				}
-				Renderer.symbol(Buoys.Shapes.get(shape), getScheme(feature.type));
-				Renderer.symbol(Topmarks.TopMooring, Topmarks.BuoyDeltas.get(shape));
+			    if (Renderer.zoom >= 17) {
+			        BoySHP shape = (BoySHP) getAttEnum(feature.type, Att.BOYSHP);
+			        if (shape == BoySHP.BOY_UNKN) {
+			            shape = BoySHP.BOY_SPHR;
+			        }
+			        Renderer.symbol(Buoys.Shapes.get(shape), getScheme(feature.type));
+			        Renderer.symbol(Topmarks.TopMooring, Topmarks.BuoyDeltas.get(shape));
+			    }
 				break;
 			default:
 				break;

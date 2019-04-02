@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -19,6 +20,9 @@ import org.openstreetmap.josm.command.conflict.ConflictAddCommand;
 import org.openstreetmap.josm.data.conflict.Conflict;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.Changeset;
+import org.openstreetmap.josm.data.osm.ChangesetDataSet;
+import org.openstreetmap.josm.data.osm.ChangesetDataSet.ChangesetDataSetEntry;
+import org.openstreetmap.josm.data.osm.ChangesetDataSet.ChangesetModificationType;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
@@ -38,14 +42,10 @@ import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.gui.util.GuiHelper;
 import org.openstreetmap.josm.io.MultiFetchServerObjectReader;
 import org.openstreetmap.josm.io.OsmApiException;
+import org.openstreetmap.josm.io.OsmServerChangesetReader;
 import org.openstreetmap.josm.io.OsmTransferException;
 import org.openstreetmap.josm.tools.Logging;
 import org.openstreetmap.josm.tools.Utils;
-
-import reverter.corehacks.ChangesetDataSet;
-import reverter.corehacks.ChangesetDataSet.ChangesetDataSetEntry;
-import reverter.corehacks.ChangesetDataSet.ChangesetModificationType;
-import reverter.corehacks.OsmServerChangesetReader;
 
 /**
  * Fetches and stores data for reverting of specific changeset.
@@ -79,6 +79,7 @@ public class ChangesetReverter {
     private final HashSet<HistoryOsmPrimitive> created = new HashSet<>();
     private final HashSet<HistoryOsmPrimitive> updated = new HashSet<>();
     private final HashSet<HistoryOsmPrimitive> deleted = new HashSet<>();
+    private final HashMap<PrimitiveId, Integer> earliestVersions = new HashMap<>();
 
     //// Handling missing objects
     ////////////////////////////////////////
@@ -141,9 +142,9 @@ public class ChangesetReverter {
         }
         this.revertType = revertType;
 
-        OsmServerChangesetReader csr = new OsmServerChangesetReader();
+        OsmServerChangesetReader csr = new OsmServerChangesetReader(true);
         monitor.beginTask("", 2);
-        changeset = csr.readChangeset(changesetId, monitor.createSubTaskMonitor(1, false));
+        changeset = csr.readChangeset(changesetId, false, monitor.createSubTaskMonitor(1, false));
         if (MODERATOR_REDACTION_ACCOUNTS.contains(changeset.getUser().getId())) {
             throw new RevertRedactedChangesetException(tr("It is not allowed to revert changeset from {0}", changeset.getUser().getName()));
         }
@@ -157,16 +158,16 @@ public class ChangesetReverter {
         }
 
         // Build our own lists of created/updated/modified objects for better performance
-        for (Iterator<ChangesetDataSetEntry> it = cds.iterator(); it.hasNext();) {
-            ChangesetDataSetEntry entry = it.next();
-            if (!checkOsmChangeEntry(entry)) continue;
-            if (entry.getModificationType() == ChangesetModificationType.CREATED) {
-                created.add(entry.getPrimitive());
-            } else if (entry.getModificationType() == ChangesetModificationType.UPDATED) {
-                updated.add(entry.getPrimitive());
-            } else if (entry.getModificationType() == ChangesetModificationType.DELETED) {
-                deleted.add(entry.getPrimitive());
-            } else throw new AssertionError();
+        for (PrimitiveId id : cds.getIds()) {
+            ChangesetDataSetEntry first = cds.getFirstEntry(id);
+            ChangesetDataSetEntry last = cds.getLastEntry(id);
+            earliestVersions.put(id, (int) first.getPrimitive().getVersion());
+            if (first.getModificationType() == ChangesetModificationType.CREATED)
+                created.add(first.getPrimitive());
+            else if (last.getModificationType() == ChangesetModificationType.UPDATED)
+                updated.add(last.getPrimitive());
+            else if (last.getModificationType() == ChangesetModificationType.DELETED)
+                deleted.add(last.getPrimitive());
         }
     }
 
@@ -219,7 +220,10 @@ public class ChangesetReverter {
             for (HashSet<HistoryOsmPrimitive> collection : Arrays.asList(updated, deleted)) {
                 for (HistoryOsmPrimitive entry : collection) {
                     PrimitiveId id = entry.getPrimitiveId();
-                    readObjectVersion(rdr, id, cds.getEarliestVersion(id)-1, progressMonitor);
+                    Integer earliestVersion = earliestVersions.get(id);
+                    if (earliestVersion == null || earliestVersion <= 1)
+                        throw new OsmTransferException(tr("Unexpected data in changeset #{1}" , String.valueOf(changesetId)));
+                    readObjectVersion(rdr, id, earliestVersion - 1, progressMonitor);
                     if (progressMonitor.isCanceled()) return;
                 }
             }

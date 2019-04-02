@@ -222,7 +222,7 @@ public class ChangesetReverter {
                     PrimitiveId id = entry.getPrimitiveId();
                     Integer earliestVersion = earliestVersions.get(id);
                     if (earliestVersion == null || earliestVersion <= 1)
-                        throw new OsmTransferException(tr("Unexpected data in changeset #{1}" , String.valueOf(changesetId)));
+                        throw new OsmTransferException(tr("Unexpected data in changeset #{1}", String.valueOf(changesetId)));
                     readObjectVersion(rdr, id, earliestVersion - 1, progressMonitor);
                     if (progressMonitor.isCanceled()) return;
                 }

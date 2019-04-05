@@ -1,0 +1,863 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><osm generator="JOSM" version="0.6">
+  <node id="-187784" lat="50.6984594" lon="1.5625799" visible="true">
+    <tag k="seamark:light:colour" v="white"/>
+    
+    <tag k="seamark:light:range" v="23.0"/>
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187785" lat="51.0559804" lon="2.3465174" visible="true">
+    <tag k="seamark:light:colour" v="white"/>
+    
+    <tag k="seamark:light:sector_start" v="200.0"/>
+    <tag k="seamark:light:sector_end" v="80.0"/>
+    <tag k="seamark:light:range" v="15.0"/>
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187786" lat="51.0531667" lon="2.063" visible="true">
+    <tag k="seamark:light:colour" v="red"/>
+    
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187787" lat="50.4498297" lon="1.0006315" visible="true">
+    <tag k="seamark:light:colour" v="white"/>
+    
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187788" lat="51.0561627" lon="2.225738" visible="true">
+    <tag k="seamark:light:colour" v="green"/>
+    
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187789" lat="51.0440239" lon="2.1632331" visible="true">
+    <tag k="seamark:light:colour" v="white"/>
+    
+    <tag k="seamark:light:range" v="20.0"/>
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187790" lat="51.0549833" lon="2.3281667" visible="true">
+    <tag k="seamark:light:colour" v="white"/>
+    
+    <tag k="seamark:light:sector_start" v="269.0"/>
+    <tag k="seamark:light:sector_end" v="314.0"/>
+    <tag k="seamark:light:range" v="7.0"/>
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187791" lat="51.0377015" lon="2.1632343" visible="true">
+    <tag k="seamark:light:colour" v="green"/>
+    
+    <tag k="seamark:light:range" v="10.0"/>
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187792" lat="51.0299" lon="2.1730333" visible="true">
+    <tag k="seamark:light:colour" v="red"/>
+    
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187793" lat="50.722698" lon="1.5647399" visible="true">
+    <tag k="seamark:light:colour" v="red"/>
+    
+    <tag k="seamark:light:sector_start" v="188.0"/>
+    <tag k="seamark:light:sector_end" v="206.0"/>
+    <tag k="seamark:light:range" v="13.0"/>
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187794" lat="50.5559355" lon="1.572407" visible="true">
+    <tag k="seamark:light:colour" v="red"/>
+    
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187795" lat="51.0583333" lon="2.1733333" visible="true">
+    <tag k="seamark:light:colour" v="red"/>
+    
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187796" lat="50.99675" lon="2.18436" visible="true">
+    <tag k="seamark:light:colour" v="white"/>
+    
+    <tag k="seamark:light:sector_start" v="160.7"/>
+    <tag k="seamark:light:sector_end" v="168.7"/>
+    <tag k="seamark:light:range" v="17.0"/>
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187797" lat="51.0554678" lon="2.3571629" visible="true">
+    <tag k="seamark:light:colour" v="white"/>
+    
+    <tag k="seamark:light:range" v="9.0"/>
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187798" lat="51.0554833" lon="2.3261333" visible="true">
+    <tag k="seamark:light:colour" v="white"/>
+    
+    <tag k="seamark:light:sector_start" v="269.0"/>
+    <tag k="seamark:light:sector_end" v="314.0"/>
+    <tag k="seamark:light:range" v="7.0"/>
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187799" lat="50.7274516" lon="1.5777514" visible="true">
+    <tag k="seamark:light:colour" v="red"/>
+    
+    <tag k="seamark:light:range" v="6.0"/>
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187800" lat="51.0590676" lon="2.2792484" visible="true">
+    <tag k="seamark:light:colour" v="green"/>
+    
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187801" lat="51.0393167" lon="2.1816167" visible="true">
+    <tag k="seamark:light:colour" v="white"/>
+    
+    <tag k="seamark:light:range" v="8.0"/>
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187802" lat="50.97685" lon="1.8354167" visible="true">
+    <tag k="seamark:light:colour" v="yellow"/>
+    
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187803" lat="51.02301" lon="2.1747503" visible="true">
+    <tag k="seamark:light:colour" v="red"/>
+    
+    <tag k="seamark:light:range" v="6.0"/>
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187804" lat="51.3533336" lon="2.2890791" visible="true">
+    <tag k="seamark:light:colour" v="white"/>
+    
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187805" lat="51.2483333" lon="2.045" visible="true">
+    <tag k="seamark:light:colour" v="red"/>
+    
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187806" lat="50.5542193" lon="1.5856113" visible="true">
+    <tag k="seamark:light:colour" v="white"/>
+    
+    <tag k="seamark:light:range" v="3.0"/>
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187807" lat="51.0563333" lon="2.0893333" visible="true">
+    <tag k="seamark:light:colour" v="red"/>
+    
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187808" lat="51.0809626" lon="2.3545627" visible="true">
+    <tag k="seamark:light:colour" v="yellow"/>
+    
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187809" lat="51.15" lon="2.2483333" visible="true">
+    <tag k="seamark:light:colour" v="white"/>
+    
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187810" lat="51.0533333" lon="2.2016667" visible="true">
+    <tag k="seamark:light:colour" v="green"/>
+    
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187811" lat="50.9707414" lon="1.8400478" visible="true">
+    <tag k="seamark:light:colour" v="white"/>
+    
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187812" lat="51.0668598" lon="2.3051105" visible="true">
+    <tag k="seamark:light:colour" v="red"/>
+    
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187813" lat="51.074174" lon="2.3726618" visible="true">
+    <tag k="seamark:light:colour" v="yellow"/>
+    
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187814" lat="50.7244245" lon="1.3146402" visible="true">
+    <tag k="seamark:light:colour" v="white"/>
+    
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187815" lat="51.0465" lon="2.0921667" visible="true">
+    <tag k="seamark:light:colour" v="green"/>
+    
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187816" lat="50.9816469" lon="1.7513277" visible="true">
+    <tag k="seamark:light:colour" v="white"/>
+    
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187817" lat="51.0362633" lon="2.2587633" visible="true">
+    <tag k="seamark:light:colour" v="green"/>
+    
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187818" lat="50.3983296" lon="1.5607941" visible="true">
+    <tag k="seamark:light:colour" v="white"/>
+    
+    <tag k="seamark:light:range" v="23.0"/>
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187819" lat="51.0166667" lon="1.8088333" visible="true">
+    <tag k="seamark:light:colour" v="white"/>
+    
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187820" lat="51.0488824" lon="2.3644066" visible="true">
+    <tag k="seamark:light:colour" v="white"/>
+    
+    <tag k="seamark:light:range" v="26.0"/>
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187821" lat="51.061963" lon="2.3084366" visible="true">
+    <tag k="seamark:light:colour" v="green"/>
+    
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187822" lat="51.0306167" lon="2.1665333" visible="true">
+    <tag k="seamark:light:colour" v="green"/>
+    
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187823" lat="50.7256764" lon="1.6012685" visible="true">
+    <tag k="seamark:light:colour" v="red"/>
+    
+    <tag k="seamark:light:sector_start" v="113.0"/>
+    <tag k="seamark:light:sector_end" v="133.0"/>
+    <tag k="seamark:light:range" v="11.0"/>
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187824" lat="51.0386667" lon="1.8825" visible="true">
+    <tag k="seamark:light:colour" v="green"/>
+    
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187825" lat="50.5473022" lon="1.6048564" visible="true">
+    <tag k="seamark:light:colour" v="green"/>
+    
+    <tag k="seamark:light:sector_start" v="15.0"/>
+    <tag k="seamark:light:sector_end" v="90.0"/>
+    <tag k="seamark:light:range" v="7.0"/>
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187826" lat="51.0586667" lon="2.1436667" visible="true">
+    <tag k="seamark:light:colour" v="red"/>
+    
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187827" lat="51.0440239" lon="2.1632331" visible="true">
+    <tag k="seamark:light:colour" v="red"/>
+    
+    <tag k="seamark:light:sector_start" v="278.0"/>
+    <tag k="seamark:light:sector_end" v="243.0"/>
+    <tag k="seamark:light:range" v="10.0"/>
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187828" lat="51.0488333" lon="1.8626667" visible="true">
+    <tag k="seamark:light:colour" v="red"/>
+    
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187829" lat="51.0488969" lon="2.3686884" visible="true">
+    <tag k="seamark:light:colour" v="white"/>
+    
+    <tag k="seamark:light:sector_start" v="122.0"/>
+    <tag k="seamark:light:sector_end" v="152.0"/>
+    <tag k="seamark:light:range" v="11.0"/>
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187830" lat="50.7451904" lon="1.5697482" visible="true">
+    <tag k="seamark:light:colour" v="red"/>
+    
+    <tag k="seamark:light:range" v="7.0"/>
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187831" lat="51.0442495" lon="2.2634802" visible="true">
+    <tag k="seamark:light:colour" v="white"/>
+    
+    <tag k="seamark:light:sector_start" v="323.5"/>
+    <tag k="seamark:light:sector_end" v="8.5"/>
+    <tag k="seamark:light:range" v="6.0"/>
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187832" lat="50.7313333" lon="1.5789667" visible="true">
+    <tag k="seamark:light:colour" v="red"/>
+    
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187833" lat="51.0319333" lon="2.1762" visible="true">
+    <tag k="seamark:light:colour" v="red"/>
+    
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187834" lat="50.7283724" lon="1.5945754" visible="true">
+    <tag k="seamark:light:colour" v="green"/>
+    
+    <tag k="seamark:light:sector_start" v="33.0"/>
+    <tag k="seamark:light:sector_end" v="213.0"/>
+    <tag k="seamark:light:range" v="5.0"/>
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187835" lat="51.0601667" lon="2.19425" visible="true">
+    <tag k="seamark:light:colour" v="red"/>
+    
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187836" lat="51.0390833" lon="2.1951167" visible="true">
+    <tag k="seamark:light:colour" v="yellow"/>
+    
+    <tag k="seamark:light:sector_start" v="70.5"/>
+    <tag k="seamark:light:sector_end" v="79.5"/>
+    <tag k="seamark:light:range" v="10.0"/>
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187837" lat="51.0630837" lon="2.2273046" visible="true">
+    <tag k="seamark:light:colour" v="red"/>
+    
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187838" lat="51.0520348" lon="2.3517892" visible="true">
+    <tag k="seamark:light:colour" v="violet"/>
+    
+    <tag k="seamark:light:sector_start" v="183.0"/>
+    <tag k="seamark:light:sector_end" v="187.0"/>
+    <tag k="seamark:light:range" v="3.0"/>
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187839" lat="51.0430936" lon="2.140566" visible="true">
+    <tag k="seamark:light:colour" v="white"/>
+    
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187840" lat="51.0397167" lon="2.1819333" visible="true">
+    <tag k="seamark:light:colour" v="white"/>
+    
+    <tag k="seamark:light:range" v="8.0"/>
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187841" lat="50.7495772" lon="1.4536942" visible="true">
+    <tag k="seamark:light:colour" v="yellow"/>
+    
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187842" lat="51.01662" lon="2.09305" visible="true">
+    <tag k="seamark:light:colour" v="white"/>
+    
+    <tag k="seamark:light:range" v="1.0"/>
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187843" lat="51.0221078" lon="2.1695339" visible="true">
+    <tag k="seamark:light:colour" v="green"/>
+    
+    <tag k="seamark:light:range" v="6.0"/>
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187844" lat="51.0811344" lon="2.4513041" visible="true">
+    <tag k="seamark:light:colour" v="red"/>
+    
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187845" lat="51.3058167" lon="2.07865" visible="true">
+    <tag k="seamark:light:colour" v="white"/>
+    
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187846" lat="51.0428333" lon="1.95" visible="true">
+    <tag k="seamark:light:colour" v="white"/>
+    
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187847" lat="51.0593333" lon="2.1155" visible="true">
+    <tag k="seamark:light:colour" v="red"/>
+    
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187848" lat="51.0372333" lon="2.1914333" visible="true">
+    <tag k="seamark:light:colour" v="yellow"/>
+    
+    <tag k="seamark:light:range" v="3.0"/>
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187849" lat="51.1574833" lon="2.3236667" visible="true">
+    <tag k="seamark:light:colour" v="white"/>
+    
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187850" lat="50.8933333" lon="1.515" visible="true">
+    <tag k="seamark:light:colour" v="yellow"/>
+    
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187851" lat="50.9707414" lon="1.8400478" visible="true">
+    <tag k="seamark:light:colour" v="green"/>
+    
+    <tag k="seamark:light:range" v="9.0"/>
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187852" lat="51.1043167" lon="2.50675" visible="true">
+    <tag k="seamark:light:colour" v="red"/>
+    
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187853" lat="50.6608986" lon="1.3699313" visible="true">
+    <tag k="seamark:light:colour" v="white"/>
+    
+    <tag k="seamark:light:range" v="6.0"/>
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187854" lat="51.0251146" lon="2.2060938" visible="true">
+    <tag k="seamark:light:colour" v="white"/>
+    
+    <tag k="seamark:light:sector_start" v="116.0"/>
+    <tag k="seamark:light:sector_end" v="124.0"/>
+    <tag k="seamark:light:range" v="20.0"/>
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187855" lat="51.0375333" lon="2.1801" visible="true">
+    <tag k="seamark:light:colour" v="white"/>
+    
+    <tag k="seamark:light:range" v="8.0"/>
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187856" lat="51.0496667" lon="2.1183333" visible="true">
+    <tag k="seamark:light:colour" v="green"/>
+    
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187857" lat="51.035395" lon="2.25949" visible="true">
+    <tag k="seamark:light:colour" v="green"/>
+    
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187858" lat="50.9347558" lon="1.6263018" visible="true">
+    <tag k="seamark:light:colour" v="white"/>
+    
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187859" lat="51.060537" lon="2.3493836" visible="true">
+    <tag k="seamark:light:colour" v="green"/>
+    
+    <tag k="seamark:light:range" v="10.0"/>
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187860" lat="51.0213167" lon="2.1705333" visible="true">
+    <tag k="seamark:light:colour" v="green"/>
+    
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187861" lat="50.7406281" lon="1.5676043" visible="true">
+    <tag k="seamark:light:colour" v="white"/>
+    
+    <tag k="seamark:light:range" v="19.0"/>
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187862" lat="50.6189155" lon="1.297984" visible="true">
+    <tag k="seamark:light:colour" v="green"/>
+    
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187863" lat="50.5473022" lon="1.6048564" visible="true">
+    <tag k="seamark:light:colour" v="red"/>
+    
+    <tag k="seamark:light:sector_start" v="105.0"/>
+    <tag k="seamark:light:sector_end" v="141.0"/>
+    <tag k="seamark:light:range" v="7.0"/>
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187864" lat="50.8086654" lon="1.5505456" visible="true">
+    <tag k="seamark:light:colour" v="white"/>
+    
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187865" lat="51.05" lon="2.0368333" visible="true">
+    <tag k="seamark:light:colour" v="red"/>
+    
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187866" lat="51.0496512" lon="2.367588" visible="true">
+    <tag k="seamark:light:colour" v="white"/>
+    
+    <tag k="seamark:light:sector_start" v="122.0"/>
+    <tag k="seamark:light:sector_end" v="152.0"/>
+    <tag k="seamark:light:range" v="11.0"/>
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187867" lat="51.0540988" lon="2.3533839" visible="true">
+    <tag k="seamark:light:colour" v="white"/>
+    
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187868" lat="51.0466667" lon="2.3706667" visible="true">
+    <tag k="seamark:light:colour" v="red"/>
+    
+    <tag k="seamark:light:range" v="2.0"/>
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187869" lat="51.0721667" lon="1.764" visible="true">
+    <tag k="seamark:light:colour" v="green"/>
+    
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187870" lat="50.7316468" lon="1.5852676" visible="true">
+    <tag k="seamark:light:colour" v="green"/>
+    
+    <tag k="seamark:light:range" v="5.0"/>
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187871" lat="51.0387333" lon="2.1930667" visible="true">
+    <tag k="seamark:light:colour" v="yellow"/>
+    
+    <tag k="seamark:light:sector_start" v="70.5"/>
+    <tag k="seamark:light:sector_end" v="79.5"/>
+    <tag k="seamark:light:range" v="3.0"/>
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187872" lat="50.9532228" lon="1.7749529" visible="true">
+    <tag k="seamark:light:colour" v="green"/>
+    
+    <tag k="seamark:light:sector_start" v="152.0"/>
+    <tag k="seamark:light:sector_end" v="245.0"/>
+    <tag k="seamark:light:range" v="5.0"/>
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187873" lat="50.5775033" lon="1.2261702" visible="true">
+    <tag k="seamark:light:colour" v="green"/>
+    
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187874" lat="50.5473022" lon="1.6048564" visible="true">
+    <tag k="seamark:light:colour" v="white"/>
+    
+    <tag k="seamark:light:sector_start" v="90.0"/>
+    <tag k="seamark:light:sector_end" v="105.0"/>
+    <tag k="seamark:light:range" v="10.0"/>
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187875" lat="51.0642646" lon="2.253871" visible="true">
+    <tag k="seamark:light:colour" v="red"/>
+    
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187876" lat="51.052007" lon="2.3508995" visible="true">
+    <tag k="seamark:light:colour" v="violet"/>
+    
+    <tag k="seamark:light:sector_start" v="177.5"/>
+    <tag k="seamark:light:sector_end" v="181.5"/>
+    <tag k="seamark:light:range" v="3.0"/>
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187877" lat="51.0430936" lon="2.140566" visible="true">
+    <tag k="seamark:light:colour" v="orange"/>
+    
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187878" lat="51.00085" lon="2.11095" visible="true">
+    <tag k="seamark:light:colour" v="red"/>
+    
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187879" lat="51.0389333" lon="2.1812833" visible="true">
+    <tag k="seamark:light:colour" v="white"/>
+    
+    <tag k="seamark:light:range" v="8.0"/>
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187880" lat="51.08534" lon="2.4766383" visible="true">
+    <tag k="seamark:light:colour" v="red"/>
+    
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187881" lat="51.3981025" lon="2.1545696" visible="true">
+    <tag k="seamark:light:colour" v="white"/>
+    
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187882" lat="51.05" lon="2.1533333" visible="true">
+    <tag k="seamark:light:colour" v="white"/>
+    
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187883" lat="51.1153765" lon="1.8404933" visible="true">
+    <tag k="seamark:light:colour" v="white"/>
+    
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187884" lat="50.5236329" lon="1.5921528" visible="true">
+    <tag k="seamark:light:colour" v="white"/>
+    
+    <tag k="seamark:light:range" v="25.0"/>
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187885" lat="50.973" lon="1.8108333" visible="true">
+    <tag k="seamark:light:colour" v="red"/>
+    
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187886" lat="51.0390833" lon="2.1903833" visible="true">
+    <tag k="seamark:light:colour" v="yellow"/>
+    
+    <tag k="seamark:light:range" v="3.0"/>
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187887" lat="51.06125" lon="2.1631667" visible="true">
+    <tag k="seamark:light:colour" v="yellow"/>
+    
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187888" lat="51.1533541" lon="2.1486147" visible="true">
+    <tag k="seamark:light:colour" v="white"/>
+    
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187889" lat="50.9732429" lon="1.8409852" visible="true">
+    <tag k="seamark:light:colour" v="white"/>
+    
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187890" lat="51.11415" lon="2.51385" visible="true">
+    <tag k="seamark:light:colour" v="green"/>
+    
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187891" lat="50.813887" lon="1.2730725" visible="true">
+    <tag k="seamark:light:colour" v="white"/>
+    
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187892" lat="50.9613021" lon="1.8536423" visible="true">
+    <tag k="seamark:light:colour" v="white"/>
+    
+    <tag k="seamark:light:range" v="22.0"/>
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187893" lat="51.0713256" lon="2.3620031" visible="true">
+    <tag k="seamark:light:colour" v="white"/>
+    
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187894" lat="50.7308949" lon="1.5139548" visible="true">
+    <tag k="seamark:light:colour" v="green"/>
+    
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187895" lat="50.9771667" lon="1.832" visible="true">
+    <tag k="seamark:light:colour" v="red"/>
+    
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187896" lat="51.06415" lon="2.3371667" visible="true">
+    <tag k="seamark:light:colour" v="green"/>
+    
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187897" lat="50.9474785" lon="1.6853274" visible="true">
+    <tag k="seamark:light:colour" v="white"/>
+    
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187898" lat="51.0175667" lon="2.1702167" visible="true">
+    <tag k="seamark:light:colour" v="green"/>
+    
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187899" lat="51.1216667" lon="2.5" visible="true">
+    <tag k="seamark:light:colour" v="white"/>
+    
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187900" lat="51.0691667" lon="2.33725" visible="true">
+    <tag k="seamark:light:colour" v="red"/>
+    
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187901" lat="51.0347996" lon="2.1630424" visible="true">
+    <tag k="seamark:light:colour" v="green"/>
+    
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187902" lat="50.7553" lon="1.5173167" visible="true">
+    <tag k="seamark:light:colour" v="white"/>
+    
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187903" lat="50.9674504" lon="1.8470049" visible="true">
+    <tag k="seamark:light:colour" v="white"/>
+    
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187904" lat="51.0401667" lon="2.0398333" visible="true">
+    <tag k="seamark:light:colour" v="green"/>
+    
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187905" lat="51.0540988" lon="2.3533839" visible="true">
+    <tag k="seamark:light:colour" v="green"/>
+    
+    <tag k="seamark:light:range" v="6.0"/>
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187906" lat="51.0461333" lon="2.3715667" visible="true">
+    <tag k="seamark:light:colour" v="red"/>
+    
+    <tag k="seamark:light:range" v="2.0"/>
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187907" lat="50.9691468" lon="1.7613284" visible="true">
+    <tag k="seamark:light:colour" v="red"/>
+    
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187908" lat="50.7316468" lon="1.5852676" visible="true">
+    <tag k="seamark:light:colour" v="green"/>
+    
+    <tag k="seamark:light:range" v="5.0"/>
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187909" lat="50.9532228" lon="1.7749529" visible="true">
+    <tag k="seamark:light:colour" v="green"/>
+    
+    <tag k="seamark:light:sector_start" v="65.0"/>
+    <tag k="seamark:light:sector_end" v="89.0"/>
+    <tag k="seamark:light:range" v="5.0"/>
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187910" lat="50.7323" lon="1.5741667" visible="true">
+    <tag k="seamark:light:colour" v="green"/>
+    
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187911" lat="51.0155017" lon="2.0941083" visible="true">
+    <tag k="seamark:light:colour" v="red"/>
+    
+    <tag k="seamark:light:range" v="4.0"/>
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187912" lat="51.032" lon="2.2666667" visible="true">
+    <tag k="seamark:light:colour" v="green"/>
+    
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187913" lat="51.0439122" lon="2.2636147" visible="true">
+    <tag k="seamark:light:colour" v="white"/>
+    
+    <tag k="seamark:light:sector_start" v="323.5"/>
+    <tag k="seamark:light:sector_end" v="8.5"/>
+    <tag k="seamark:light:range" v="6.0"/>
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187914" lat="51.03435" lon="2.1836167" visible="true">
+    <tag k="seamark:light:colour" v="yellow"/>
+    
+    <tag k="seamark:light:range" v="3.0"/>
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187915" lat="51.0007667" lon="2.1107" visible="true">
+    <tag k="seamark:light:colour" v="green"/>
+    
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187916" lat="51.0381333" lon="2.1806167" visible="true">
+    <tag k="seamark:light:colour" v="white"/>
+    
+    <tag k="seamark:light:range" v="8.0"/>
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187917" lat="51.0935317" lon="2.4933583" visible="true">
+    <tag k="seamark:light:colour" v="green"/>
+    
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187918" lat="51.2424957" lon="2.2986629" visible="true">
+    <tag k="seamark:light:colour" v="white"/>
+    
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187919" lat="51.0677881" lon="2.3850524" visible="true">
+    <tag k="seamark:light:colour" v="green"/>
+    
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187920" lat="50.9732429" lon="1.8409852" visible="true">
+    <tag k="seamark:light:colour" v="red"/>
+    
+    <tag k="seamark:light:range" v="17.0"/>
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187921" lat="51.0192333" lon="2.17975" visible="true">
+    <tag k="seamark:light:colour" v="red"/>
+    
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187922" lat="50.5966667" lon="1.3283333" visible="true">
+    <tag k="seamark:light:colour" v="white"/>
+    
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187923" lat="51.1508221" lon="1.9553367" visible="true">
+    <tag k="seamark:light:colour" v="green"/>
+    
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187924" lat="51.0156" lon="2.0915633" visible="true">
+    <tag k="seamark:light:colour" v="white"/>
+    
+    <tag k="seamark:light:sector_start" v="85.0"/>
+    <tag k="seamark:light:sector_end" v="224.0"/>
+    <tag k="seamark:light:range" v="4.0"/>
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187925" lat="51.1908389" lon="2.3736161" visible="true">
+    <tag k="seamark:light:colour" v="white"/>
+    
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187926" lat="50.5428933" lon="1.5942571" visible="true">
+    <tag k="seamark:light:colour" v="red"/>
+    
+    <tag k="seamark:light:range" v="2.0"/>
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187927" lat="50.7268583" lon="1.566825" visible="true">
+    <tag k="seamark:light:colour" v="green"/>
+    
+    <tag k="seamark:light:sector_start" v="107.0"/>
+    <tag k="seamark:light:sector_end" v="287.0"/>
+    <tag k="seamark:light:range" v="8.0"/>
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187928" lat="51.059053" lon="2.2528163" visible="true">
+    <tag k="seamark:light:colour" v="green"/>
+    
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187929" lat="50.5153167" lon="1.5609167" visible="true">
+    <tag k="seamark:light:colour" v="white"/>
+    
+    <tag k="seamark:light:range" v="1.0"/>
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187930" lat="51.0277667" lon="2.1722333" visible="true">
+    <tag k="seamark:light:colour" v="red"/>
+    
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187931" lat="51.0942248" lon="2.0936208" visible="true">
+    <tag k="seamark:light:colour" v="white"/>
+    
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187932" lat="51.0719995" lon="2.3719755" visible="true">
+    <tag k="seamark:light:colour" v="red"/>
+    
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187933" lat="51.0516667" lon="2.173" visible="true">
+    <tag k="seamark:light:colour" v="green"/>
+    
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187934" lat="50.7281649" lon="1.5910098" visible="true">
+    <tag k="seamark:light:colour" v="green"/>
+    
+    <tag k="seamark:light:range" v="1.0"/>
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187935" lat="51.0471667" lon="2.0123333" visible="true">
+    <tag k="seamark:light:colour" v="red"/>
+    
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187936" lat="51.0559804" lon="2.3465174" visible="true">
+    <tag k="seamark:light:colour" v="green"/>
+    
+    <tag k="seamark:light:range" v="6.0"/>
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187937" lat="50.9574781" lon="1.3886692" visible="true">
+    <tag k="seamark:light:colour" v="white"/>
+    
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187938" lat="51.0473" lon="2.3701" visible="true">
+    <tag k="seamark:light:colour" v="red"/>
+    
+    <tag k="seamark:light:range" v="2.0"/>
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187939" lat="50.9608133" lon="1.7686622" visible="true">
+    <tag k="seamark:light:colour" v="green"/>
+    
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187940" lat="50.7318006" lon="1.5874123" visible="true">
+    <tag k="seamark:light:colour" v="red"/>
+    
+    <tag k="seamark:light:range" v="7.0"/>
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187941" lat="50.9928583" lon="2.1860433" visible="true">
+    <tag k="seamark:light:colour" v="white"/>
+    
+    <tag k="seamark:light:sector_start" v="160.7"/>
+    <tag k="seamark:light:sector_end" v="168.7"/>
+    <tag k="seamark:light:range" v="17.0"/>
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187942" lat="50.9532228" lon="1.7749529" visible="true">
+    <tag k="seamark:light:colour" v="white"/>
+    
+    <tag k="seamark:light:sector_start" v="89.0"/>
+    <tag k="seamark:light:sector_end" v="152.0"/>
+    <tag k="seamark:light:range" v="8.0"/>
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187943" lat="50.5509854" lon="1.5742738" visible="true">
+    <tag k="seamark:light:colour" v="green"/>
+    
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187944" lat="51.0299583" lon="2.26719" visible="true">
+    <tag k="seamark:light:colour" v="green"/>
+    
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187945" lat="51.0278276" lon="2.1987068" visible="true">
+    <tag k="seamark:light:colour" v="white"/>
+    
+    <tag k="seamark:light:sector_start" v="116.0"/>
+    <tag k="seamark:light:sector_end" v="124.0"/>
+    <tag k="seamark:light:range" v="20.0"/>
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187946" lat="51.0297333" lon="2.1366333" visible="true">
+    <tag k="seamark:light:colour" v="yellow"/>
+    
+    <tag k="seamark:light:range" v="3.0"/>
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187947" lat="51.3466667" lon="2.1833333" visible="true">
+    <tag k="seamark:light:colour" v="white"/>
+    
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187948" lat="50.7278567" lon="1.57504" visible="true">
+    <tag k="seamark:light:colour" v="green"/>
+    
+    <tag k="seamark:light:range" v="5.0"/>
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187949" lat="51.07525" lon="2.4086667" visible="true">
+    <tag k="seamark:light:colour" v="red"/>
+    
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187950" lat="51.0385333" lon="2.18095" visible="true">
+    <tag k="seamark:light:colour" v="white"/>
+    
+    <tag k="seamark:light:range" v="8.0"/>
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187951" lat="51.251663" lon="2.3236631" visible="true">
+    <tag k="seamark:light:colour" v="white"/>
+    
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187952" lat="51.0003167" lon="1.8796833" visible="true">
+    <tag k="seamark:light:colour" v="yellow"/>
+    
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187953" lat="51.0597971" lon="2.3533986" visible="true">
+    <tag k="seamark:light:colour" v="red"/>
+    
+    <tag k="seamark:light:range" v="10.0"/>
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187954" lat="51.2859321" lon="2.3103834" visible="true">
+    <tag k="seamark:light:colour" v="green"/>
+    
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187955" lat="51.0221667" lon="2.17445" visible="true">
+    <tag k="seamark:light:colour" v="red"/>
+    
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187956" lat="51.0365" lon="2.1880833" visible="true">
+    <tag k="seamark:light:colour" v="yellow"/>
+    
+    <tag k="seamark:light:range" v="3.0"/>
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187957" lat="51.0371667" lon="2.0136667" visible="true">
+    <tag k="seamark:light:colour" v="green"/>
+    
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187958" lat="51.0156" lon="2.0915633" visible="true">
+    <tag k="seamark:light:colour" v="green"/>
+    
+    <tag k="seamark:light:sector_start" v="224.0"/>
+    <tag k="seamark:light:sector_end" v="85.0"/>
+    <tag k="seamark:light:range" v="4.0"/>
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187959" lat="51.2190512" lon="2.1715028" visible="true">
+    <tag k="seamark:light:colour" v="white"/>
+    
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187960" lat="51.0433333" lon="2.066" visible="true">
+    <tag k="seamark:light:colour" v="green"/>
+    
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187961" lat="51.0166667" lon="1.764" visible="true">
+    <tag k="seamark:light:colour" v="white"/>
+    
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187962" lat="51.0383967" lon="2.258405" visible="true">
+    <tag k="seamark:light:colour" v="green"/>
+    
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187963" lat="50.8682" lon="1.58265" visible="true">
+    <tag k="seamark:light:colour" v="white"/>
+    
+    <tag k="seamark:light:range" v="29.0"/>
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187964" lat="51.0683333" lon="2.085" visible="true">
+    <tag k="seamark:light:colour" v="white"/>
+    
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187965" lat="51.0651201" lon="2.2788167" visible="true">
+    <tag k="seamark:light:colour" v="red"/>
+    
+  <tag k="seamark:type" v="light"/></node>
+  <node id="-187966" lat="51.045" lon="2.1483333" visible="true">
+    <tag k="seamark:light:colour" v="green"/>
+    
+  <tag k="seamark:type" v="light"/></node>
+</osm>

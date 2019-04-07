@@ -42,9 +42,16 @@ public class DownloadPolyTask extends DownloadOsmTask {
         return tr("Download Osmosis poly");
     }
 
+    /**
+     * Class to download and parse a poly file.  
+     */
     public static class ServerPolyReader extends OsmServerReader {
         private String url;
 
+        /**
+         * Create new {@link ServerPolyReader}
+         * @param url
+         */
         public ServerPolyReader(String url) {
             this.url = url;
         }
@@ -52,7 +59,7 @@ public class DownloadPolyTask extends DownloadOsmTask {
         @Override
         public DataSet parseOsm(ProgressMonitor progressMonitor) throws OsmTransferException {
             try {
-                progressMonitor.beginTask(tr("Contacting Server...", 10));
+                progressMonitor.beginTask(tr("Contacting Server..."));
                 return new PolyImporter().parseDataSet(url);
             } catch (Exception e) {
                 throw new OsmTransferException(e);

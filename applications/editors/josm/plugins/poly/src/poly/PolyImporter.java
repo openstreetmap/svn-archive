@@ -92,7 +92,7 @@ public class PolyImporter extends OsmImporter {
                 area = null;
                 parsingSection = false;
                 name = null;
-            } else if (line.equals("END")) {
+            } else if ("END".equals(line)) {
                 if (!parsingSection) {
                     area = null;
                 } else {
@@ -237,6 +237,10 @@ public class PolyImporter extends OsmImporter {
             }
         }
 
+        /**
+         * Store a coordinate
+         * @param node the coordinate
+         */
         public void addNode(LatLon node) {
             if (nodes.isEmpty() || !(nodes.get(nodes.size()-1).equals(node) || nodes.get(0).equals(node)))
                 nodes.add(node);
@@ -254,6 +258,11 @@ public class PolyImporter extends OsmImporter {
             return way;
         }
 
+        /**
+         * Convert a ring to an OSM way
+         * @param ds the dataset in which the way is stored
+         * @param isMultipolygon true means the way is part of a multipolygon relation
+         */
         public void constructWay(DataSet ds, boolean isMultipolygon) {
             way = new Way();
             for (LatLon coord : nodes) {

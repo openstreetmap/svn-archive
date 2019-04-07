@@ -2,11 +2,11 @@
 package org.openstreetmap.josm.plugins.buildings_tools;
 
 import static org.openstreetmap.josm.plugins.buildings_tools.BuildingsToolsPlugin.eastNorth2latlon;
-import static org.openstreetmap.josm.plugins.buildings_tools.BuildingsToolsPlugin.latlon2eastNorth;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.geom.Area;
 import java.awt.geom.GeneralPath;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -78,7 +78,7 @@ class Building {
 
     public boolean isRectDrawing() {
         return drawingAngle != null && ToolSettings.getWidth() == 0 && ToolSettings.getLenStep() == 0
-                && ToolSettings.Shape.RECTANGLE.equals(ToolSettings.getShape());
+                && ToolSettings.Shape.RECTANGLE == ToolSettings.getShape();
     }
 
     public Double getDrawingAngle() {
@@ -133,7 +133,7 @@ class Building {
             return;
         final EastNorth p1 = en[0];
         en[1] = new EastNorth(p1.east() + Math.sin(heading) * len * meter, p1.north() + Math.cos(heading) * len * meter);
-        if (ToolSettings.Shape.RECTANGLE.equals(ToolSettings.getShape())) {
+        if (ToolSettings.Shape.RECTANGLE == ToolSettings.getShape()) {
             en[2] = new EastNorth(p1.east() + Math.sin(heading) * len * meter + Math.cos(heading) * width * meter,
                     p1.north() + Math.cos(heading) * len * meter - Math.sin(heading) * width * meter);
             en[3] = new EastNorth(p1.east() + Math.cos(heading) * width * meter,
@@ -216,7 +216,7 @@ class Building {
         Point pp2 = mv.getPoint(eastNorth2latlon(en[1]));
         b.moveTo(pp1.x, pp1.y);
         b.lineTo(pp2.x, pp2.y);
-        if (ToolSettings.Shape.RECTANGLE.equals(ToolSettings.getShape())) {
+        if (ToolSettings.Shape.RECTANGLE == ToolSettings.getShape()) {
             Point pp3 = mv.getPoint(eastNorth2latlon(en[2]));
             Point pp4 = mv.getPoint(eastNorth2latlon(en[3]));
             b.lineTo(pp3.x, pp3.y);
@@ -237,30 +237,30 @@ class Building {
     /**
      * Returns a node with address tags under the building.
      *
+     * @param w
+     *            the building way
      * @return A node with address tags under the building.
      */
-    private Node getAddressNode() {
-        BBox bbox = new BBox(eastNorth2latlon(en[0]), eastNorth2latlon(en[1]));
-        if (ToolSettings.Shape.RECTANGLE.equals(ToolSettings.getShape())) {
-            bbox.add(eastNorth2latlon(en[2]));
-            bbox.add(eastNorth2latlon(en[3]));
-        }
+    private static Node getAddressNode(Way w) {
+        BBox bbox = w.getBBox();
         List<Node> nodes = new LinkedList<>();
-        nodesloop:
+        Area area = Geometry.getArea(w.getNodes());
         for (Node n : MainApplication.getLayerManager().getEditDataSet().searchNodes(bbox)) {
             if (n.isUsable() && findUsableTag(n)) {
-                double x = projection1(latlon2eastNorth(n.getCoor()));
-                double y = projection2(latlon2eastNorth(n.getCoor()));
-                if (Math.signum(x) != Math.signum(len) || Math.signum(y) != Math.signum(width))
-                    continue;
-                if (Math.abs(x) > Math.abs(len) || Math.abs(y) > Math.abs(width))
-                    continue;
-                for (OsmPrimitive p : n.getReferrers()) {
-                    // Don't use nodes if they're referenced by ways
-                    if (p.getType() == OsmPrimitiveType.WAY)
-                        continue nodesloop;
+                EastNorth enTest = n.getEastNorth();
+                if (area.contains(enTest.getX(), enTest.getY())) {
+                    boolean useNode = true;
+                    for (OsmPrimitive p : n.getReferrers()) {
+                        // Don't use nodes if they're referenced by ways
+                        if (p.getType() == OsmPrimitiveType.WAY) {
+                            useNode = false;
+                            break;
+                        }
+                    }
+                    if (useNode) {
+                        nodes.add(n);
+                    }
                 }
-                nodes.add(n);
             }
         }
         if (nodes.size() != 1)
@@ -296,7 +296,7 @@ class Building {
                 nodes[i] = n;
                 created[i] = false;
             }
-            if (nodes[i].getCoor().isOutSideWorld()) {
+            if (nodes[i].isOutSideWorld()) {
                 JOptionPane.showMessageDialog(MainApplication.getMainFrame(),
                         tr("Cannot place building outside of the world."));
                 return null;
@@ -324,6 +324,7 @@ class Building {
         // Nodes must be selected for create circle action
         ds.addSelected(w.getNodes());
 
+        int oldNumWays = ds.getWays().size();
         CreateCircleAction action = new CreateCircleAction();
         action.setEnabled(true);
         action.actionPerformed(null);
@@ -331,16 +332,23 @@ class Building {
         // restore selection
         ds.clearSelection();
         ds.addSelected(selectedPrimitives);
+        if (oldNumWays < ds.getWays().size()) {
+            // get the way with the smallest id with the assumption that it is
+            // newest way created by CreateCirclAction
+            List<Way> ways = new ArrayList<>(ds.getWays());
+            Collections.sort(ways);
+            w = ways.get(0);
 
-        // get the way with the smallest id with the assumption that it is
-        // newest way created by CreateCirclAction
-        List<Way> ways = new ArrayList<>(ds.getWays());
-        Collections.sort(ways);
-        w = ways.get(0);
+            addAddress(w, null);
 
-        addAddress(w, null);
-
-        return w;
+            return w;
+        } else {
+            // CreateCircleAction failed
+            if (!addNodesCmd.isEmpty()) {
+                UndoRedoHandler.getInstance().undo(1);
+            }
+            return null;
+        }
     }
 
     public Way createRectangle(boolean ctrl) {
@@ -361,7 +369,7 @@ class Building {
                 nodes[i] = n;
                 created[i] = false;
             }
-            if (nodes[i].getCoor().isOutSideWorld()) {
+            if (nodes[i].isOutSideWorld()) {
                 JOptionPane.showMessageDialog(MainApplication.getMainFrame(),
                         tr("Cannot place building outside of the world."));
                 return null;
@@ -457,9 +465,9 @@ class Building {
         }
     }
 
-    private void addAddress(Way w, Collection<Command> cmdList) {
+    private static void addAddress(Way w, Collection<Command> cmdList) {
         if (ToolSettings.PROP_USE_ADDR_NODE.get()) {
-            Node addrNode = getAddressNode();
+            Node addrNode = getAddressNode(w);
             if (addrNode != null) {
                 Collection<Command> addressCmds = cmdList != null ? cmdList : new LinkedList<>();
                 for (Entry<String, String> entry : addrNode.getKeys().entrySet()) {

@@ -80,7 +80,7 @@ public class DrawBuildingAction extends MapMode implements MapViewPaintable, Dat
 
     private static Cursor getCursor() {
         try {
-            if (ToolSettings.Shape.CIRCLE.equals(ToolSettings.getShape())) {
+            if (ToolSettings.Shape.CIRCLE == ToolSettings.getShape()) {
                 return ImageProvider.getCursor("crosshair", "silo");
             } else {
                 return ImageProvider.getCursor("crosshair", "building");
@@ -225,7 +225,7 @@ public class DrawBuildingAction extends MapMode implements MapViewPaintable, Dat
 
     private boolean isRectDrawing() {
         return building.isRectDrawing() && (!shift || ToolSettings.isBBMode())
-                && ToolSettings.Shape.RECTANGLE.equals(ToolSettings.getShape());
+                && ToolSettings.Shape.RECTANGLE == ToolSettings.getShape();
     }
 
     private Mode modeDrawing() {
@@ -233,7 +233,7 @@ public class DrawBuildingAction extends MapMode implements MapViewPaintable, Dat
         if (isRectDrawing()) {
             building.setPlaceRect(p);
             return shift ? Mode.DrawingAngFix : Mode.None;
-        } else if (ToolSettings.Shape.CIRCLE.equals(ToolSettings.getShape())) {
+        } else if (ToolSettings.Shape.CIRCLE == ToolSettings.getShape()) {
             if (ToolSettings.getWidth() != 0) {
                 building.setPlaceCircle(p, ToolSettings.getWidth(), shift);
             } else {
@@ -319,7 +319,7 @@ public class DrawBuildingAction extends MapMode implements MapViewPaintable, Dat
     private void drawingFinish() {
         if (building.getLength() != 0) {
             Way w;
-            if (ToolSettings.Shape.CIRCLE.equals(ToolSettings.getShape())) {
+            if (ToolSettings.Shape.CIRCLE == ToolSettings.getShape()) {
                 w = building.createCircle();
             } else {
                 w = building.createRectangle(ctrl);

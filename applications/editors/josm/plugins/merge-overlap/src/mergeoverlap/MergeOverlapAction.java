@@ -36,6 +36,7 @@ import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.tools.Pair;
 import org.openstreetmap.josm.tools.Shortcut;
 import org.openstreetmap.josm.tools.UserCancelException;
+import org.openstreetmap.josm.tools.Utils;
 
 import mergeoverlap.hack.MyCombinePrimitiveResolverDialog;
 
@@ -79,7 +80,7 @@ public class MergeOverlapAction extends JosmAction {
                 Way way = (Way) osm;
                 ways.add(way);
                 List<Relation> rels = new ArrayList<>();
-                for (Relation r : OsmPrimitive.getFilteredList(way.getReferrers(), Relation.class)) {
+                for (Relation r : Utils.filteredCollection(way.getReferrers(), Relation.class)) {
                     rels.add(r);
                 }
                 relations.put(way, rels);

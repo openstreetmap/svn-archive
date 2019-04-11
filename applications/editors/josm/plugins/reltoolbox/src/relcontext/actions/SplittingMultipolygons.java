@@ -30,6 +30,7 @@ import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.spi.preferences.Config;
 import org.openstreetmap.josm.tools.Geometry;
 import org.openstreetmap.josm.tools.Geometry.PolygonIntersection;
+import org.openstreetmap.josm.tools.Utils;
 
 /**
  *
@@ -252,8 +253,8 @@ public final class SplittingMultipolygons {
             return null;
 
         List<Way> ways = intersection(
-                OsmPrimitive.getFilteredList(segment.firstNode().getReferrers(), Way.class),
-                OsmPrimitive.getFilteredList(segment.lastNode().getReferrers(), Way.class));
+                Utils.filteredCollection(segment.firstNode().getReferrers(), Way.class),
+                Utils.filteredCollection(segment.lastNode().getReferrers(), Way.class));
         ways.remove(segment);
         for (Iterator<Way> iter = ways.iterator(); iter.hasNext();) {
             boolean save = false;

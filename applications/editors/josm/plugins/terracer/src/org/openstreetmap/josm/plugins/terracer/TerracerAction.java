@@ -46,6 +46,7 @@ import org.openstreetmap.josm.tools.Logging;
 import org.openstreetmap.josm.tools.Pair;
 import org.openstreetmap.josm.tools.Shortcut;
 import org.openstreetmap.josm.tools.UserCancelException;
+import org.openstreetmap.josm.tools.Utils;
 
 /**
  * Terraces a quadrilateral, closed way into a series of quadrilateral,
@@ -118,7 +119,7 @@ public final class TerracerAction extends JosmAction {
 
                 outline = (Way) prim;
             } else if (sel.size() > 1) {
-                List<Way> ways = OsmPrimitive.getFilteredList(sel, Way.class);
+                List<Way> ways = new ArrayList<>(Utils.filteredCollection(sel, Way.class));
                 Iterator<Way> wit = ways.iterator();
                 while (wit.hasNext()) {
                     Way way = wit.next();
@@ -142,7 +143,7 @@ public final class TerracerAction extends JosmAction {
                 if (outline == null)
                     throw new InvalidUserInputException("no outline way found");
 
-                List<Node> nodes = OsmPrimitive.getFilteredList(sel, Node.class);
+                List<Node> nodes = new ArrayList<>(Utils.filteredCollection(sel, Node.class));
                 Iterator<Node> nit = nodes.iterator();
                 // Actually this should test if the selected address nodes lie
                 // within the selected outline. Any ideas how to do this?

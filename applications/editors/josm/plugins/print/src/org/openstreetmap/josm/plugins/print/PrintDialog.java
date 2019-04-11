@@ -63,7 +63,7 @@ import org.openstreetmap.josm.gui.util.WindowGeometry;
 import org.openstreetmap.josm.spi.preferences.Config;
 import org.openstreetmap.josm.tools.GBC;
 import org.openstreetmap.josm.tools.Logging;
-import org.openstreetmap.josm.tools.Utils;
+import org.openstreetmap.josm.tools.ReflectionUtils;
 
 /**
  * A print dialog with preview
@@ -523,7 +523,7 @@ public class PrintDialog extends JDialog implements ActionListener {
             try {
                 Method getEnumValueTable = realClass.getDeclaredMethod("getEnumValueTable");
                 Constructor<? extends Attribute> constructor = realClass.getDeclaredConstructor(int.class);
-                Utils.setObjectsAccessible(getEnumValueTable, constructor);
+                ReflectionUtils.setObjectsAccessible(getEnumValueTable, constructor);
                 Attribute fakeInstance = constructor.newInstance(Integer.MAX_VALUE);
                 EnumSyntax[] enumTable = (EnumSyntax[]) getEnumValueTable.invoke(fakeInstance);
                 return (Attribute) enumTable[intValue];

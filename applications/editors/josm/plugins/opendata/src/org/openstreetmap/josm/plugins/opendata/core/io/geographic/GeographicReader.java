@@ -63,6 +63,7 @@ import org.openstreetmap.josm.tools.ImageOverlay;
 import org.openstreetmap.josm.tools.ImageProvider;
 import org.openstreetmap.josm.tools.ImageProvider.ImageSizes;
 import org.openstreetmap.josm.tools.Logging;
+import org.openstreetmap.josm.tools.ReflectionUtils;
 import org.openstreetmap.josm.tools.UserCancelException;
 import org.openstreetmap.josm.tools.Utils;
 
@@ -353,7 +354,7 @@ public abstract class GeographicReader extends AbstractReader {
                     if (epsgCode != null) {
                         try {
                             Field f = AbstractIdentifiedObject.class.getDeclaredField("identifiers");
-                            Utils.setObjectsAccessible(f);
+                            ReflectionUtils.setObjectsAccessible(f);
                             f.set(crs, Collections.singleton(new NamedIdentifier(Citations.fromName("EPSG"), epsgCode.toString())));
                         } catch (ReflectiveOperationException | SecurityException e) {
                             Logging.error(e);

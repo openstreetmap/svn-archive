@@ -39,6 +39,7 @@ import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.spi.preferences.Config;
 import org.openstreetmap.josm.tools.ImageProvider;
 import org.openstreetmap.josm.tools.Shortcut;
+import org.openstreetmap.josm.tools.Utils;
 
 public final class SimplifyAreaAction extends JosmAction {
 
@@ -107,7 +108,7 @@ public final class SimplifyAreaAction extends JosmAction {
                 }
             }
         }
-        final Collection<Way> ways = OsmPrimitive.getFilteredSet(selection, Way.class);
+        final Collection<Way> ways = Utils.filteredCollection(selection, Way.class);
         if (ways.isEmpty()) {
             alertSelectAtLeastOneWay();
             return;

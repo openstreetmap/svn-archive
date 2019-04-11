@@ -18,7 +18,7 @@ import org.geotools.data.shapefile.files.ShpFiles;
 import org.geotools.util.URLs;
 import org.openstreetmap.josm.tools.JosmRuntimeException;
 import org.openstreetmap.josm.tools.Logging;
-import org.openstreetmap.josm.tools.Utils;
+import org.openstreetmap.josm.tools.ReflectionUtils;
 
 /**
  * Extension of {@link ShpFiles} class modified to fit MapInfo TAB needs.
@@ -39,7 +39,7 @@ public class TabFiles extends ShpFiles {
 
         try {
             Field furls = ShpFiles.class.getDeclaredField("urls");
-            Utils.setObjectsAccessible(furls);
+            ReflectionUtils.setObjectsAccessible(furls);
             urls = (Map<ShpFileType, URL>) furls.get(this);
         } catch (ReflectiveOperationException e) {
             throw new JosmRuntimeException(e);

@@ -24,7 +24,7 @@ public class ReverterPlugin extends Plugin {
         super(info);
         JMenu historyMenu = MainApplication.getMenu().dataMenu;
         MainMenu.add(historyMenu, new RevertChangesetAction());
-        UploadAction.registerUploadHook(new ReverterUploadHook(this));
+        UploadAction.registerUploadHook(new ReverterUploadHook(info));
         new RemoteControl().addRequestHandler(RevertChangesetHandler.command, RevertChangesetHandler.class);
     }
 }

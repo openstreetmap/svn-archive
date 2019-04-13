@@ -16,6 +16,7 @@ import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import org.openstreetmap.josm.plugins.turnrestrictions.editor.TurnRestrictionLegRole;
 import org.openstreetmap.josm.plugins.turnrestrictions.editor.TurnRestrictionType;
 import org.openstreetmap.josm.tools.CheckParameterUtil;
+import org.openstreetmap.josm.tools.Utils;
 
 /**
  * TurnRestrictionBuilder creates a turn restriction and initializes it with
@@ -312,8 +313,8 @@ public class TurnRestrictionBuilder {
         if (primitives.size() != 2) return null;
 
         // we need exactly one node and one way in the selection ...
-        List<Node> nodes = OsmPrimitive.getFilteredList(primitives, Node.class);
-        List<Way> ways = OsmPrimitive.getFilteredList(primitives, Way.class);
+        List<Node> nodes = new ArrayList<>(Utils.filteredCollection(primitives, Node.class));
+        List<Way> ways = new ArrayList<>(Utils.filteredCollection(primitives, Way.class));
         if (nodes.size() != 1 || ways.size() != 1) return null;
 
         // .. and the node has to be the start or the node of the way
@@ -373,7 +374,7 @@ public class TurnRestrictionBuilder {
             // if we have exactly two selected primitives, we expect two ways.
             // See initNoUTurnRestriction() for the case where we have a selected way
             // and a selected node
-            List<Way> selWays = OsmPrimitive.getFilteredList(primitives, Way.class);
+            List<Way> selWays = new ArrayList<>(Utils.filteredCollection(primitives, Way.class));
             if (selWays.size() != 2) return null;
             w1 = selWays.get(0);
             w2 = selWays.get(1);
@@ -381,8 +382,8 @@ public class TurnRestrictionBuilder {
         } else if (primitives.size() == 3) {
             // if we have exactly three selected primitives, we need two ways and a
             // node, which should be an acceptable via node
-            List<Way> selWays = OsmPrimitive.getFilteredList(primitives, Way.class);
-            List<Node> selNodes = OsmPrimitive.getFilteredList(primitives, Node.class);
+            List<Way> selWays = new ArrayList<>(Utils.filteredCollection(primitives, Way.class));
+            List<Node> selNodes = new ArrayList<>(Utils.filteredCollection(primitives, Node.class));
             if (selWays.size() != 2) return null;
             if (selNodes.size() != 1) return null;
             w1 = selWays.get(0);
@@ -448,7 +449,7 @@ public class TurnRestrictionBuilder {
         // case 0 already handled
         case 1:
             tr = initEmptyTurnRestriction();
-            if (OsmPrimitive.getFilteredList(primitives, Way.class).size() == 1) {
+            if (Utils.filteredCollection(primitives, Way.class).size() == 1) {
                 // we have exactly one selected way? -> init the "from" leg
                 // of the turn restriction with it
                 tr.addMember(new RelationMember("from", primitives.get(0)));

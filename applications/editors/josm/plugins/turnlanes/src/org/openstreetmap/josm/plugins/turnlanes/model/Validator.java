@@ -16,11 +16,11 @@ import java.util.Set;
 
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
-import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.plugins.turnlanes.model.Issue.QuickFix;
+import org.openstreetmap.josm.tools.Utils;
 
 public class Validator {
     private static final class IncomingLanes {
@@ -108,7 +108,7 @@ public class Validator {
         final List<Relation> lenghts = new ArrayList<>();
         final List<Relation> turns = new ArrayList<>();
 
-        for (Relation r : OsmPrimitive.getFilteredList(dataSet.allPrimitives(), Relation.class)) {
+        for (Relation r : Utils.filteredCollection(dataSet.allPrimitives(), Relation.class)) {
             if (!r.isUsable()) {
                 continue;
             }
@@ -151,7 +151,7 @@ public class Validator {
         final List<Issue> issues = new ArrayList<>();
 
         try {
-            final Node end = Utils.getMemberNode(r, Constants.LENGTHS_ROLE_END);
+            final Node end = TurnlanesUtils.getMemberNode(r, Constants.LENGTHS_ROLE_END);
             final Route route = validateLengthsWays(r, end, issues);
 
             if (route == null) {
@@ -206,7 +206,7 @@ public class Validator {
     }
 
     private Route validateLengthsWays(Relation r, Node end, List<Issue> issues) {
-        final List<Way> ways = Utils.getMemberWays(r, Constants.LENGTHS_ROLE_WAYS);
+        final List<Way> ways = TurnlanesUtils.getMemberWays(r, Constants.LENGTHS_ROLE_WAYS);
 
         if (ways.isEmpty()) {
             issues.add(Issue.newError(r, "A lengths-relation requires at least one member-way with role \""
@@ -220,7 +220,7 @@ public class Validator {
                 return orderWays(r, ways, current, issues, "ways", "lengths");
             }
 
-            current = Utils.getOppositeEnd(w, current);
+            current = TurnlanesUtils.getOppositeEnd(w, current);
         }
 
         return Route.create(ways, end);
@@ -246,7 +246,7 @@ public class Validator {
                 if (w.isFirstLastNode(current)) {
                     it.remove();
                     ordered.add(w);
-                    current = Utils.getOppositeEnd(w, current);
+                    current = TurnlanesUtils.getOppositeEnd(w, current);
                     continue findNext;
                 }
             }
@@ -293,8 +293,8 @@ public class Validator {
         final List<Issue> issues = new ArrayList<>();
 
         try {
-            final Way from = Utils.getMemberWay(r, Constants.TURN_ROLE_FROM);
-            final Way to = Utils.getMemberWay(r, Constants.TURN_ROLE_TO);
+            final Way from = TurnlanesUtils.getMemberWay(r, Constants.TURN_ROLE_FROM);
+            final Way to = TurnlanesUtils.getMemberWay(r, Constants.TURN_ROLE_TO);
 
             if (from.firstNode().equals(from.lastNode())) {
                 issues.add(Issue.newError(r, from, "The from-way both starts as well as ends at the via-node."));
@@ -307,13 +307,13 @@ public class Validator {
             }
 
             final Node fromJunctionNode;
-            final List<RelationMember> viaMembers = Utils.getMembers(r, Constants.TURN_ROLE_VIA);
+            final List<RelationMember> viaMembers = TurnlanesUtils.getMembers(r, Constants.TURN_ROLE_VIA);
             if (viaMembers.isEmpty()) {
                 throw UnexpectedDataException.Kind.NO_MEMBER.chuck(Constants.TURN_ROLE_VIA);
             } else if (viaMembers.get(0).isWay()) {
-                final List<Way> vias = Utils.getMemberWays(r, Constants.TURN_ROLE_VIA);
+                final List<Way> vias = TurnlanesUtils.getMemberWays(r, Constants.TURN_ROLE_VIA);
 
-                fromJunctionNode = Utils.lineUp(from, vias.get(0));
+                fromJunctionNode = TurnlanesUtils.lineUp(from, vias.get(0));
                 Node current = fromJunctionNode;
                 for (Way via : vias) {
                     if (!via.isFirstLastNode(current)) {
@@ -321,10 +321,10 @@ public class Validator {
                         break;
                     }
 
-                    current = Utils.getOppositeEnd(via, current);
+                    current = TurnlanesUtils.getOppositeEnd(via, current);
                 }
             } else {
-                final Node via = Utils.getMemberNode(r, Constants.TURN_ROLE_VIA);
+                final Node via = TurnlanesUtils.getMemberNode(r, Constants.TURN_ROLE_VIA);
 
                 if (!from.isFirstLastNode(via)) {
                     issues.add(Issue.newError(r, from, "The from-way does not start or end at the via-node."));

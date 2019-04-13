@@ -68,7 +68,7 @@ public class Lane {
     }
 
     static int getRegularCount(Way w, Node end) {
-        final int count = Utils.parseIntTag(w, "lanes");
+        final int count = TurnlanesUtils.parseIntTag(w, "lanes");
         final boolean forward = w.lastNode().equals(end);
 
         if (w.hasDirectionKeys()) {
@@ -88,12 +88,12 @@ public class Lane {
 
     private static int getRegularCountTwoWay(Way w, boolean forward, final int count) {
         if (w.get("lanes:backward") != null) {
-            final int backwardCount = Utils.parseIntTag(w, "lanes:backward");
+            final int backwardCount = TurnlanesUtils.parseIntTag(w, "lanes:backward");
             return forward ? count - backwardCount : backwardCount;
         }
 
         if (w.get("lanes:forward") != null) {
-            final int forwardCount = Utils.parseIntTag(w, "lanes:forward");
+            final int forwardCount = TurnlanesUtils.parseIntTag(w, "lanes:forward");
             return forward ? forwardCount : count - forwardCount;
         }
 
@@ -204,7 +204,7 @@ public class Lane {
             if (via.isEmpty()) {
                 r.addMember(new RelationMember(Constants.TURN_ROLE_VIA, getOutgoingJunction().getNode()));
             } else {
-                for (Way w : Utils.flattenVia(getOutgoingJunction().getNode(), via, to.getJunction().getNode())) {
+                for (Way w : TurnlanesUtils.flattenVia(getOutgoingJunction().getNode(), via, to.getJunction().getNode())) {
                     r.addMember(new RelationMember(Constants.TURN_ROLE_VIA, w));
                 }
             }

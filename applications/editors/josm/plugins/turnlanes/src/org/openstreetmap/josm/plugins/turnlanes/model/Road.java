@@ -123,7 +123,7 @@ public class Road {
             final String lengthStr = toLengthString(length);
             final Relation target;
             if (rel == null) {
-                if (other == null || !Utils.getMemberNode(other, "end").equals(n)) {
+                if (other == null || !TurnlanesUtils.getMemberNode(other, "end").equals(n)) {
                     target = createLengthsRelation();
                 } else {
                     target = other;

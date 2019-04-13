@@ -19,6 +19,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -54,6 +55,7 @@ import org.openstreetmap.josm.plugins.turnrestrictions.dnd.PrimitiveIdTransferab
 import org.openstreetmap.josm.tools.CheckParameterUtil;
 import org.openstreetmap.josm.tools.ImageProvider;
 import org.openstreetmap.josm.tools.Shortcut;
+import org.openstreetmap.josm.tools.Utils;
 
 /**
  * This is an editor for one of the two legs of a turn restriction.
@@ -292,14 +294,14 @@ public class TurnRestrictionLegEditor extends JPanel implements Observer, Primit
 
          @Override
         public void actionPerformed(ActionEvent e) {
-             List<Way> selWays = OsmPrimitive.getFilteredList(model.getJosmSelectionListModel().getSelected(), Way.class);
+             List<Way> selWays = new ArrayList<>(Utils.filteredCollection(model.getJosmSelectionListModel().getSelected(), Way.class));
              if (selWays.size() != 1) return;
              Way w = selWays.get(0);
              model.setTurnRestrictionLeg(role, w);
          }
 
          public void updateEnabledState() {
-            setEnabled(OsmPrimitive.getFilteredList(model.getJosmSelectionListModel().getSelected(), Way.class).size() == 1);
+            setEnabled(Utils.filteredCollection(model.getJosmSelectionListModel().getSelected(), Way.class).size() == 1);
          }
 
         @Override

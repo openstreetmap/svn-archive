@@ -53,17 +53,17 @@ public final class Turn {
     }
 
     private static Set<Turn> loadWithViaWays(ModelContainer c, Relation r) {
-        final Way from = Utils.getMemberWay(r, Constants.TURN_ROLE_FROM);
-        final Way to = Utils.getMemberWay(r, Constants.TURN_ROLE_TO);
+        final Way from = TurnlanesUtils.getMemberWay(r, Constants.TURN_ROLE_FROM);
+        final Way to = TurnlanesUtils.getMemberWay(r, Constants.TURN_ROLE_TO);
 
         if (!c.hasRoad(from) || !c.hasRoad(to)) {
             return Collections.emptySet();
         }
 
-        final List<Way> tmp = Utils.getMemberWays(r, Constants.TURN_ROLE_VIA);
+        final List<Way> tmp = TurnlanesUtils.getMemberWays(r, Constants.TURN_ROLE_VIA);
         final LinkedList<Road> via = new LinkedList<>();
 
-        final Road.End fromRoadEnd = c.getJunction(Utils.lineUp(from, tmp.get(0))).getRoadEnd(from);
+        final Road.End fromRoadEnd = c.getJunction(TurnlanesUtils.lineUp(from, tmp.get(0))).getRoadEnd(from);
 
         Node n = fromRoadEnd.getJunction().getNode();
         final Iterator<Way> it = tmp.iterator();
@@ -75,7 +75,7 @@ public final class Turn {
 
             final Road v = c.getRoad(w);
             via.add(v);
-            n = Utils.getOppositeEnd(w, n);
+            n = TurnlanesUtils.getOppositeEnd(w, n);
 
             if (!v.isPrimary()) {
                 throw new IllegalStateException("The road is not part of the junction.");
@@ -87,7 +87,7 @@ public final class Turn {
 
             while (it2.hasNext()) {
                 final Way w2 = it2.next().getWay();
-                n = Utils.getOppositeEnd(w2, n);
+                n = TurnlanesUtils.getOppositeEnd(w2, n);
 
                 if (!it.hasNext() || !w2.equals(it.next())) {
                     throw new IllegalStateException("The via ways of the relation do not form a road.");
@@ -95,7 +95,7 @@ public final class Turn {
             }
         }
         final Road.End toRoadEnd = c.getJunction(n).getRoadEnd(to);
-        n = Utils.getOppositeEnd(to, n);
+        n = TurnlanesUtils.getOppositeEnd(to, n);
 
         final Set<Turn> result = new HashSet<>();
         for (int i : indices(r, Constants.TURN_KEY_LANES)) {
@@ -123,9 +123,9 @@ public final class Turn {
     }
 
     private static Set<Turn> loadWithViaNode(ModelContainer c, Relation r) {
-        final Way from = Utils.getMemberWay(r, Constants.TURN_ROLE_FROM);
-        final Node via = Utils.getMemberNode(r, Constants.TURN_ROLE_VIA);
-        final Way to = Utils.getMemberWay(r, Constants.TURN_ROLE_TO);
+        final Way from = TurnlanesUtils.getMemberWay(r, Constants.TURN_ROLE_FROM);
+        final Node via = TurnlanesUtils.getMemberNode(r, Constants.TURN_ROLE_VIA);
+        final Way to = TurnlanesUtils.getMemberWay(r, Constants.TURN_ROLE_TO);
 
         if (!c.hasRoad(from) || !c.hasJunction(via) || !c.hasRoad(to)) {
             return Collections.emptySet();

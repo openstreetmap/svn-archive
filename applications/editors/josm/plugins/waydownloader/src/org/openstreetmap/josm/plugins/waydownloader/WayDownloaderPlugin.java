@@ -37,6 +37,7 @@ import org.openstreetmap.josm.plugins.PluginInformation;
 import org.openstreetmap.josm.spi.preferences.Config;
 import org.openstreetmap.josm.tools.Logging;
 import org.openstreetmap.josm.tools.Shortcut;
+import org.openstreetmap.josm.tools.Utils;
 
 /**
  * Plugin class for the Way Downloader plugin
@@ -270,7 +271,7 @@ public class WayDownloaderPlugin extends Plugin {
      * @return the list of ways. May be empty, but null.
      */
     private List<Way> findConnectedWays(Node referenceNode) {
-        List<Way> referers = OsmPrimitive.getFilteredList(referenceNode.getReferrers(), Way.class);
+        List<Way> referers = new ArrayList<>(Utils.filteredCollection(referenceNode.getReferrers(), Way.class));
         ArrayList<Way> connectedWays = new ArrayList<>(referers.size());
 
         //loop through referers

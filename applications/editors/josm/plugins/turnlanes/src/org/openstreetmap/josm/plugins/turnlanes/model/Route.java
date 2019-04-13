@@ -97,8 +97,8 @@ public final class Route {
     }
 
     public static Route load(Relation r) {
-        final Node end = Utils.getMemberNode(r, Constants.LENGTHS_ROLE_END);
-        final List<Way> ws = Utils.getMemberWays(r, Constants.LENGTHS_ROLE_WAYS);
+        final Node end = TurnlanesUtils.getMemberNode(r, Constants.LENGTHS_ROLE_END);
+        final List<Way> ws = TurnlanesUtils.getMemberWays(r, Constants.LENGTHS_ROLE_WAYS);
 
         return create(ws, end);
     }
@@ -142,7 +142,7 @@ public final class Route {
                 throw new IllegalArgumentException("Ways must be ordered.");
             }
 
-            final Node start = Utils.getOppositeEnd(w, end);
+            final Node start = TurnlanesUtils.getOppositeEnd(w, end);
             segments.add(0, new Segment(start, w, end));
             end = start;
         }

@@ -44,7 +44,7 @@ public final class ModelContainer {
             closed = true;
 
             for (Node n : new ArrayList<>(closedNodes)) {
-                for (Way w : Utils.filterRoads(n.getReferrers())) {
+                for (Way w : TurnlanesUtils.filterRoads(n.getReferrers())) {
                     if (w.isFirstLastNode(n)) {
                         closed &= close(closedNodes, closedWays, w);
                     }
@@ -79,7 +79,7 @@ public final class ModelContainer {
         boolean closed = true;
 
         final List<Way> via = new ArrayList<>();
-        for (RelationMember m : Utils.getMembers(r, Constants.TURN_ROLE_VIA)) {
+        for (RelationMember m : TurnlanesUtils.getMembers(r, Constants.TURN_ROLE_VIA)) {
             if (m.isWay()) {
                 closed &= !closedWays.add(m.getWay());
                 via.add(m.getWay());
@@ -89,11 +89,11 @@ public final class ModelContainer {
         }
 
         if (!via.isEmpty()) {
-            final Way from = Utils.getMemberWay(r, Constants.TURN_ROLE_FROM);
-            final Way to = Utils.getMemberWay(r, Constants.TURN_ROLE_TO);
+            final Way from = TurnlanesUtils.getMemberWay(r, Constants.TURN_ROLE_FROM);
+            final Way to = TurnlanesUtils.getMemberWay(r, Constants.TURN_ROLE_TO);
 
-            closed &= !closedNodes.add(Utils.lineUp(from, via.get(0)));
-            closed &= !closedNodes.add(Utils.lineUp(via.get(via.size() - 1), to));
+            closed &= !closedNodes.add(TurnlanesUtils.lineUp(from, via.get(0)));
+            closed &= !closedNodes.add(TurnlanesUtils.lineUp(via.get(via.size() - 1), to));
         }
 
         return closed;
@@ -141,7 +141,7 @@ public final class ModelContainer {
                 }
             }
 
-            for (Route r : Utils.orderWays(this.primaryWays, this.primaryNodes)) {
+            for (Route r : TurnlanesUtils.orderWays(this.primaryWays, this.primaryNodes)) {
                 addRoad(new Road(this, r));
             }
 
@@ -158,7 +158,7 @@ public final class ModelContainer {
 
         for (Node n : primaryNodes) {
             final List<Way> ws = new ArrayList<>();
-            for (Way w : Utils.filterRoads(n.getReferrers())) {
+            for (Way w : TurnlanesUtils.filterRoads(n.getReferrers())) {
                 if (w.isFirstLastNode(n)) {
                     ws.add(w);
                 }

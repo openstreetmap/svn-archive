@@ -24,6 +24,7 @@ import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.plugins.tracer2.preferences.ServerParam;
 import org.openstreetmap.josm.tools.Pair;
+import org.openstreetmap.josm.tools.Utils;
 
 public final class ConnectWays {
 
@@ -69,7 +70,7 @@ public final class ConnectWays {
 
     private static List<Way> getWaysOfNode(Node node) {
         List<Way> ways;
-        ways = OsmPrimitive.getFilteredList(node.getReferrers(), Way.class);
+        ways = new LinkedList<>(Utils.filteredCollection(node.getReferrers(), Way.class));
         return ways;
     }
 

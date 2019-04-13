@@ -38,7 +38,7 @@ import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.plugins.turnlanes.model.Lane;
 import org.openstreetmap.josm.plugins.turnlanes.model.Road;
-import org.openstreetmap.josm.plugins.turnlanes.model.Utils;
+import org.openstreetmap.josm.plugins.turnlanes.model.TurnlanesUtils;
 
 class RoadGui {
     final class ViaConnector extends InteractiveElement {
@@ -628,7 +628,7 @@ class RoadGui {
 
         final Node n = end.getJunction().getNode();
         for (Way w : org.openstreetmap.josm.tools.Utils.filteredCollection(n.getReferrers(), Way.class)) {
-            if (w.getNodesCount() > 1 && !end.getWay().equals(w) && w.isFirstLastNode(n) && Utils.isRoad(w)) {
+            if (w.getNodesCount() > 1 && !end.getWay().equals(w) && w.isFirstLastNode(n) && TurnlanesUtils.isRoad(w)) {
                 final Node nextNode = w.firstNode().equals(n) ? w.getNode(1) : w.getNode(w.getNodesCount() - 2);
                 final Point2D nextNodeLoc = getContainer().translateAndScale(loc(nextNode));
                 result.add(new Extender(end, w, angle(a.getPoint(), nextNodeLoc)));

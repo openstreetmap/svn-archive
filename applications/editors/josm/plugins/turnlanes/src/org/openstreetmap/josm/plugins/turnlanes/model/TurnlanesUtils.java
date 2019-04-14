@@ -19,13 +19,13 @@ import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.plugins.turnlanes.CollectionUtils;
 
-public final class Utils {
+public final class TurnlanesUtils {
     private static final Set<String> ROAD_HIGHWAY_VALUES = Collections.unmodifiableSet(new HashSet<>(Arrays
             .asList("motorway", "motorway_link", "trunk", "trunk_link", "primary", "primary_link", "secondary",
                     "secondary_link", "tertiary", "tertiary_link", "residential", "unclassified", "road", "living_street", "service",
                     "track", "pedestrian", "raceway", "services")));
 
-    private Utils() {
+    private TurnlanesUtils() {
         // Hide default constructor for utilities classes
     }
 
@@ -37,7 +37,7 @@ public final class Utils {
         final List<Way> result = new ArrayList<>();
 
         for (OsmPrimitive p : of) {
-            if (p.getType() == OsmPrimitiveType.WAY && Utils.isRoad((Way) p)) {
+            if (p.getType() == OsmPrimitiveType.WAY && isRoad((Way) p)) {
                 result.add((Way) p);
             }
         }
@@ -218,7 +218,7 @@ public final class Utils {
 
             for (Route.Segment s : segments) {
                 result.add(s.getWay());
-                n = Utils.getOppositeEnd(s.getWay(), n);
+                n = getOppositeEnd(s.getWay(), n);
             }
         }
         if (!end.equals(n)) {

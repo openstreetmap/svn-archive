@@ -6,13 +6,15 @@ import static org.openstreetmap.josm.tools.I18n.trn;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
-import java.util.AbstractMap;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import javax.swing.JOptionPane;
 
@@ -55,13 +57,18 @@ public class MergeAddrPointsAction extends JosmAction {
         }
         List<Node> addrNodes = new LinkedList<>();
         List<Way> buildings = new LinkedList<>();
-        scanSelection:
         for (OsmPrimitive p : selection) {
             if (p.getType() == OsmPrimitiveType.NODE) {
+                boolean refsOK = true;
                 for (OsmPrimitive r : p.getReferrers()) {
-                    if (r.getType() == OsmPrimitiveType.WAY)
-                       continue scanSelection; // Don't use nodes if they're referenced by ways
+                    if (r.getType() == OsmPrimitiveType.WAY) {
+                        // Don't use nodes if they're referenced by ways
+                        refsOK = false;
+                        break;
+                    }
                 }
+                if (!refsOK)
+                    continue;
                 for (String key : p.getKeys().keySet()) {
                     if (key.startsWith("addr:")) {
                         addrNodes.add((Node) p); // Found address node
@@ -81,24 +88,45 @@ public class MergeAddrPointsAction extends JosmAction {
                     .setIcon(JOptionPane.ERROR_MESSAGE).show();
             return;
         }
+
+        // find nodes covered by more than one building, see #17625
+        Map<Node, Way> nodeToWayMap = new HashMap<>();
+        Set<Way> overlappingWays = new HashSet<>();
+        for (Way w : buildings) {
+            for (Node n : addrNodes) {
+                if (Geometry.nodeInsidePolygon(n, w.getNodes())) {
+                    Way old = nodeToWayMap.put(n, w);
+                    if (old != null) {
+                        overlappingWays.add(w);
+                        overlappingWays.add(old);
+                    }
+                }
+            }
+        }
+        buildings.removeAll(overlappingWays);
+
         List<Command> cmds = new LinkedList<>();
         int multi = 0;
         int conflicts = 0;
-        buildingsLoop: for (Way w : buildings) {
+
+        for (Way w : buildings) {
             Node mergeNode = null;
+            int oldMulti = multi;
             for (Node n : addrNodes) {
                 if (Geometry.nodeInsidePolygon(n, w.getNodes()))
                     if (mergeNode != null) {
                         multi++;
                         // Multiple address nodes inside one building --
                         // skipping
-                        continue buildingsLoop;
+                        break;
                     } else
                         mergeNode = n;
             }
+            if (oldMulti != multi)
+                continue;
             if (mergeNode != null) {
                 boolean hasConflicts = false;
-                AbstractMap<String, String> tags = new HashMap<>();
+                Map<String, String> tags = new HashMap<>();
                 for (Entry<String, String> entry : mergeNode.getKeys().entrySet()) {
                     String newValue = entry.getValue();
                     if (newValue == null)
@@ -140,7 +168,10 @@ public class MergeAddrPointsAction extends JosmAction {
             new Notification(trn("There is {0} building with address conflicts",
                             "There are {0} buildings with address conflicts", conflicts, conflicts))
                     .setIcon(JOptionPane.WARNING_MESSAGE).show();
-        if (cmds.isEmpty() && multi == 0 && conflicts == 0)
+        if (!overlappingWays.isEmpty())
+            new Notification(tr("There are {0} buildings covering the same address node", overlappingWays.size()))
+                    .setIcon(JOptionPane.WARNING_MESSAGE).show();
+        if (cmds.isEmpty() && multi == 0 && conflicts == 0 && overlappingWays.isEmpty())
             new Notification(tr("No address nodes inside buildings found"))
                     .setIcon(JOptionPane.INFORMATION_MESSAGE).show();
         if (!cmds.isEmpty())

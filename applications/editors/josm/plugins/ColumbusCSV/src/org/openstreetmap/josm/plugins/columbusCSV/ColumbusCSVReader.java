@@ -68,7 +68,6 @@ public class ColumbusCSVReader {
     private static final String HDOP_TAG = "hdop";
     private static final String PDOP_TAG = "pdop";
     private static final String ELEVATIONHEIGHT_TAG = "ele";
-    private static final String TIME_TAG = "time";
     private static final String COMMENT_TAG = "cmt";
     private static final String DESC_TAG = "desc";
     private static final String FIX_TAG = "fix";

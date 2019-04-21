@@ -15,7 +15,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -451,16 +450,9 @@ public class ColumbusCSVReader {
     
         // Extract date/time
         SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyMMdd/HHmmss");
-        Date d = null;
     
         try {
-            d = sdf.parse(csvLine[2] + "/" + csvLine[3]);
-            // format date according to GPX
-            SimpleDateFormat f = new SimpleDateFormat(
-                "yyyy-MM-dd'T'HH:mm:ss'Z'");
-    
-            wpt.attr.put(ColumbusCSVReader.TIME_TAG, f.format(d).toString());
-            wpt.setTime();
+            wpt.setTime(sdf.parse(csvLine[2] + "/" + csvLine[3]));
         } catch (ParseException ex) {
             dateConversionErrors++;
             Logging.error(ex);

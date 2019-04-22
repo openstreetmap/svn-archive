@@ -129,7 +129,7 @@ final class DataSetToCmd {
 
             newNodes.add(targetNode);
         }
-        cmds.add(new ChangeNodesCommand(MainApplication.getLayerManager().getEditDataSet(), target, newNodes));
+        cmds.add(new ChangeNodesCommand(target, newNodes));
     }
 
     /**

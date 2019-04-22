@@ -5,8 +5,6 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -17,9 +15,10 @@ import javax.swing.JPanel;
 import ext_tools.ExtTool;
 import ext_tools.ToolsInformation;
 import org.openstreetmap.josm.gui.MainApplication;
+import org.openstreetmap.josm.tools.Utils;
 
 public class MyToolsPanel extends JPanel {
-    ToolsInformation tools;
+	private final transient ToolsInformation tools;
 
     public MyToolsPanel(ToolsInformation tools) {
         super(new GridBagLayout());
@@ -48,33 +47,27 @@ public class MyToolsPanel extends JPanel {
             gbc.anchor = GridBagConstraints.EAST;
 
             final JButton bEdit = new JButton(tr("Edit"));
-            bEdit.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent arg0) {
-                    JDialog dlg = new EditToolDialog(tool);
-                    dlg.setVisible(true);
-                    dlg.dispose();
-                    refresh();
-                }
-            });
+            bEdit.addActionListener(e -> {
+			    JDialog dlg = new EditToolDialog(tool);
+			    dlg.setVisible(true);
+			    dlg.dispose();
+			    refresh();
+			});
             add(bEdit, gbc);
 
             gbc.gridx = 2;
             final JButton bDel = new JButton("X");
-            bDel.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent arg0) {
-                    if (JOptionPane.showConfirmDialog(MainApplication.getMainFrame(),
-                            tr("Delete tool \"{0}\"?", tool.name),
-                            tr("Are you sure?"),
-                            JOptionPane.YES_NO_OPTION,
-                            JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION)
-                    {
-                        tools.removeTool(tool);
-                        refresh();
-                    }
-                }
-            });
+            bDel.addActionListener(e -> {
+			    if (JOptionPane.showConfirmDialog(MainApplication.getMainFrame(),
+			            tr("Delete tool \"{0}\"?", tool.name),
+			            tr("Are you sure?"),
+			            JOptionPane.YES_NO_OPTION,
+			            JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION)
+			    {
+			        tools.removeTool(tool);
+			        refresh();
+			    }
+			});
             add(bDel, gbc);
 
             gbc.gridy++;
@@ -84,20 +77,17 @@ public class MyToolsPanel extends JPanel {
         gbc.anchor = GridBagConstraints.WEST;
 
         final JButton bNew = new JButton(tr("New tool..."));
-        bNew.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent arg0) {
-                ExtTool tool = new ExtTool();
-                JDialog dlg = new EditToolDialog(tool);
-                dlg.setVisible(true);
-                dlg.dispose();
-                if (tool.name != null && (!"".equals(tool.name))) {
-                    tools.addTool(tool);
-                    tool.setEnabled(true);
-                }
-                refresh();
-            }
-        });
+        bNew.addActionListener(e -> {
+		    ExtTool tool = new ExtTool();
+		    JDialog dlg = new EditToolDialog(tool);
+		    dlg.setVisible(true);
+		    dlg.dispose();
+		    if (!Utils.isStripEmpty(tool.name)) {
+		        tools.addTool(tool);
+		        tool.setEnabled(true);
+		    }
+		    refresh();
+		});
         add(bNew, gbc);
         gbc.gridy++;
 

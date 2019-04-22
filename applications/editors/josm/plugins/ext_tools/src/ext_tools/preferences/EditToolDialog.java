@@ -19,7 +19,7 @@ import ext_tools.ExtTool;
 import org.openstreetmap.josm.gui.MainApplication;
 
 public class EditToolDialog extends ExtendedDialog {
-    private ExtTool tool;
+    private final transient ExtTool tool;
 
     private JPanel panel = new JPanel(new GridBagLayout());
     private JTextField name = new JTextField();
@@ -47,7 +47,7 @@ public class EditToolDialog extends ExtendedDialog {
                 new String[] { tr("OK"), tr("Cancel") },
                 true);
         contentInsets = new Insets(15, 15, 5, 15);
-        setButtonIcons(new String[] { "ok.png", "cancel.png" });
+        setButtonIcons("ok.png", "cancel.png");
 
         this.tool = tool;
 

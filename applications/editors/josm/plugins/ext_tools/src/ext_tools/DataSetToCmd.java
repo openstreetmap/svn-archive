@@ -74,12 +74,8 @@ final class DataSetToCmd {
         cmds.add(new AddCommand(MainApplication.getLayerManager().getEditDataSet(), target));
     }
 
-    private OsmPrimitive getMergeTarget(OsmPrimitive mergeSource)
-            throws IllegalStateException {
-        OsmPrimitive target = mergedMap.get(mergeSource.getPrimitiveId());
-        if (target == null)
-            return null;
-        return target;
+    private OsmPrimitive getMergeTarget(OsmPrimitive mergeSource) {
+        return mergedMap.get(mergeSource.getPrimitiveId());
     }
 
     /**
@@ -102,34 +98,26 @@ final class DataSetToCmd {
      *            the source way
      * @throws IllegalStateException
      *             thrown if no target way can be found for the source way
-     * @throws IllegalStateException
-     *             thrown if there isn't a target node for one of the nodes in
+     *             or if there isn't a target node for one of the nodes in
      *             the source way
      *
      */
-    private void mergeNodeList(Way source) throws IllegalStateException {
+    private void mergeNodeList(Way source) {
         Way target = (Way) getMergeTarget(source);
-        if (target == null)
-            throw new IllegalStateException(tr(
-                    "Missing merge target for way with id {0}", source.getUniqueId()));
-        if (target.getDataSet() != null)
+        if (target == null || target.getDataSet() != null)
             throw new IllegalStateException(tr(
                     "Missing merge target for way with id {0}", source.getUniqueId()));
 
         List<Node> newNodes = new ArrayList<>(source.getNodesCount());
         for (Node sourceNode : source.getNodes()) {
             Node targetNode = (Node) getMergeTarget(sourceNode);
-            if (targetNode == null)
+            if (targetNode == null || targetNode.getDataSet() != null)
                 throw new IllegalStateException(tr(
                         "Missing merge target for node with id {0}", sourceNode
                                 .getUniqueId()));
-            if (targetNode.getDataSet() != null)
-                throw new IllegalStateException(tr(
-                        "Missing merge target for way with id {0}", source.getUniqueId()));
-
             newNodes.add(targetNode);
         }
-        cmds.add(new ChangeNodesCommand(target, newNodes));
+        cmds.add(new ChangeNodesCommand(MainApplication.getLayerManager().getEditDataSet(), target, newNodes));
     }
 
     /**

@@ -19,7 +19,7 @@ import ext_tools.ToolsInformation;
 
 public class ToolsRepositoryPanel extends JPanel {
 
-    ToolsInformation tools;
+    private final transient ToolsInformation tools;
 
     public ToolsRepositoryPanel(ToolsInformation tools) {
         super(new GridBagLayout());

@@ -39,11 +39,11 @@ public class PolyExporter extends OsmExporter {
     @Override
     public void exportData(File file, Layer layer) throws IOException {
         if (layer instanceof OsmDataLayer) {
-            if (((OsmDataLayer) layer).getDataSet().getWays().stream().anyMatch(w -> !w.isClosed())) {
+            DataSet ds = ((OsmDataLayer) layer).getDataSet();
+            if (ds.getWays().stream().anyMatch(w -> w.isUsable() && !w.isClosed())) {
                 throw new IOException(tr("Data contains unclosed ways."));
             }
             try (PrintWriter writer = new PrintWriter(Files.newBufferedWriter(file.toPath(), StandardCharsets.UTF_8))) {
-                DataSet ds = ((OsmDataLayer) layer).getDataSet();
                 HashSet<Way> written = new HashSet<>();
                 boolean firstFile = true;
                 String fileName = file.getName();
@@ -53,7 +53,7 @@ public class PolyExporter extends OsmExporter {
                 }
 
                 for (Relation rel : ds.getRelations()) {
-                    if (rel.isMultipolygon()) {
+                    if (rel.isUsable() && rel.isMultipolygon()) {
                         if (!firstFile) {
                             writer.println();
                         }
@@ -67,7 +67,7 @@ public class PolyExporter extends OsmExporter {
                 }
                 int counter = 1;
                 for (Way w : ds.getWays()) {
-                    if (!written.contains(w)) {
+                    if (w.isUsable() && !written.contains(w)) {
                         writeWay(writer, w, counter);
                     }
                 }

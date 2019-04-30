@@ -1467,7 +1467,7 @@ public class Rules {
 				break;
 			}
 			if ((Renderer.zoom >= 15) && !str.isEmpty()) {
-				Renderer.labelText(str, new Font("Arial", Font.PLAIN, 40), Color.black, new Delta(Handle.LC, AffineTransform.getTranslateInstance(40, 0)));
+				Renderer.labelText(str, new Font("Arial", Font.PLAIN, 40), Color.black, new Delta(Handle.CC, AffineTransform.getTranslateInstance(0, -50)));
 			}
 			Signals.addSignals();
 		}

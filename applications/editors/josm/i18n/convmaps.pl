@@ -41,6 +41,12 @@ for my $line (@lines)
     $val =~ s/"/\\"/g;
     print "tr(\"$val\"); /* $line */\n";
   }
+  elsif($line =~ /<description +lang=['"]en['"]><!\[CDATA\[(.*)\]\]><\/description>/)
+  {
+    my $val = $1;
+    $val =~ s/"/\\"/g;
+    print "tr(\"$val\"); /* $line */\n";
+  }
   elsif($line =~ /<description +lang=['"]en['"]>(.*)<\/description>/)
   {
     my $val = $1;

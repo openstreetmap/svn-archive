@@ -5,6 +5,7 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
+import java.awt.GridBagConstraints;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.util.Collection;
@@ -12,6 +13,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.swing.ButtonGroup;
+import javax.swing.JCheckBox;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JToggleButton;
 
@@ -131,6 +134,8 @@ public class TurnLanesDialog extends ToggleDialog implements ActiveLayerChangeLi
     private static final String CARD_VALIDATE = "VALIDATE";
 
     private final JPanel body = new JPanel();
+
+
     private final JunctionPane junctionPane = new JunctionPane(GuiContainer.empty());
 
     private final JToggleButton editButton = new JToggleButton(editAction);
@@ -140,6 +145,9 @@ public class TurnLanesDialog extends ToggleDialog implements ActiveLayerChangeLi
 
     private boolean editing = true;
     private boolean wasShowing = false;
+
+    private ModelContainer modelContainer;
+    private boolean leftDirection = ModelContainer.empty().isLeftDirection();
 
     public TurnLanesDialog() {
         super(tr("Turn Lanes"), "turnlanes.png", tr("Edit turn lanes"), null, 200);
@@ -151,6 +159,7 @@ public class TurnLanesDialog extends ToggleDialog implements ActiveLayerChangeLi
         final ButtonGroup group = new ButtonGroup();
         group.add(editButton);
         group.add(validateButton);
+        addTrafficDirectionCheckBox(buttonPanel);
         buttonPanel.add(editButton);
         buttonPanel.add(validateButton);
 
@@ -163,6 +172,36 @@ public class TurnLanesDialog extends ToggleDialog implements ActiveLayerChangeLi
         body.add(new ValidationPanel(), CARD_VALIDATE);
 
         editButton.doClick();
+    }
+
+    /**
+     * Add label and checkbox for traffic direction and change flag
+     * @param buttonPanel button panel
+     */
+    private void addTrafficDirectionCheckBox(JPanel buttonPanel) {
+        GridBagConstraints constraints = new GridBagConstraints();
+        JLabel aoiLabel = new JLabel(tr("Left-hand traffic direction:"));
+        constraints.gridx = 0;
+        constraints.gridwidth = 1; //next-to-last
+        constraints.fill = GridBagConstraints.NONE;      //reset to default
+        constraints.weightx = 0.0;
+        buttonPanel.add(aoiLabel, constraints);
+
+        constraints.gridx = 1;
+        constraints.gridwidth = GridBagConstraints.REMAINDER;     //end row
+        constraints.fill = GridBagConstraints.HORIZONTAL;
+        constraints.weightx = 1.0;
+        JCheckBox leftDirectionCheckbox = new JCheckBox();
+        leftDirectionCheckbox.setSelected(leftDirection);
+        buttonPanel.add(leftDirectionCheckbox, constraints);
+        leftDirectionCheckbox.addChangeListener(e -> {
+            if (modelContainer == null) {
+                return;
+            }
+            leftDirection = leftDirectionCheckbox.isSelected();
+            refresh();
+        });
+
     }
 
     @Override
@@ -178,10 +217,11 @@ public class TurnLanesDialog extends ToggleDialog implements ActiveLayerChangeLi
             final Collection<Node> nodes = org.openstreetmap.josm.tools.Utils.filteredCollection(selected, Node.class);
             final Collection<Way> ways = org.openstreetmap.josm.tools.Utils.filteredCollection(selected, Way.class);
 
-            final ModelContainer mc = nodes.isEmpty() ? ModelContainer.empty() : ModelContainer
+            modelContainer = nodes.isEmpty() ? ModelContainer.empty() : ModelContainer
                     .createEmpty(nodes, ways);
+            modelContainer.setLeftDirection(leftDirection);
 
-            junctionPane.setJunction(new GuiContainer(mc));
+            junctionPane.setJunction(new GuiContainer(modelContainer));
         }
     }
 

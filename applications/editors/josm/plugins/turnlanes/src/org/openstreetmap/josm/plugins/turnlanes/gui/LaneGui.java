@@ -311,7 +311,8 @@ final class LaneGui {
     public Path recalculate(Path inner, Path2D innerLine) {
         area.reset();
 
-        final double W = getContainer().getLaneWidth();
+        double W = road.getContainer().getModel().isLeftDirection() ? -getContainer().getLaneWidth() : getContainer().getLaneWidth();
+
         final double L = getLength();
 
         final double WW = 3 / getContainer().getMpp();

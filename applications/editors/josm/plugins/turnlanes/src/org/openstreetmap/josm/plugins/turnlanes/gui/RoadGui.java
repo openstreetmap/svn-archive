@@ -196,7 +196,7 @@ class RoadGui {
 
         @Override
         void paint(Graphics2D g2d, State state) {
-            if (!isVisible(state)) {
+            if (!isVisible()) {
                 return;
             }
 
@@ -213,13 +213,13 @@ class RoadGui {
             g2d.draw(h);
         }
 
-        private boolean isVisible(State state) {
+        private boolean isVisible() {
             return end.getJunction().isPrimary();
         }
 
         @Override
         boolean contains(Point2D p, State state) {
-            return isVisible(state) && background.contains(p);
+            return isVisible() && background.contains(p);
         }
 
         @Override
@@ -543,16 +543,29 @@ class RoadGui {
     }
 
     private Point2D getLeftCorner(Road.End end) {
-        return getCorner(end, true);
+        if (this.container.getModel().isLeftDirection()) {
+            return getCorner(end, false);
+        } else {
+            return getCorner(end, true);
+        }
     }
 
     private Point2D getRightCorner(Road.End end) {
-        return getCorner(end, false);
+        if (this.container.getModel().isLeftDirection()) {
+            return getCorner(end, true);
+        } else {
+            return getCorner(end, false);
+        }
     }
 
     private Point2D getCorner(Road.End end, boolean left) {
         final JunctionGui j = end.isFromEnd() ? a : b;
-        final double w = left ? getWidth(end, true) : getWidth(end, false);
+
+        double w = left ? getWidth(end, false) : getWidth(end, true);
+        if (!this.container.getModel().isLeftDirection()) {
+            w = left ? getWidth(end, true) : getWidth(end, false);
+        }
+
         final double s = (left ? 1 : -1);
         final double a = getAngle(end) + PI;
         final double t = left ? j.getLeftTrim(end) : j.getRightTrim(end);
@@ -597,7 +610,7 @@ class RoadGui {
 
         g2d.setColor(Color.RED);
         for (Segment s : segments) {
-            g2d.fill(new Ellipse2D.Double(s.from.getX() - 1, s.from.getY() - 1, 2, 2));
+            g2d.fill(new Ellipse2D.Double(s.from.getX() - 0.5, s.from.getY() - 0.5, 1, 1));
         }
 
         return result;
@@ -620,18 +633,16 @@ class RoadGui {
     }
 
     private List<Extender> extenders(Road.End end) {
-        if (!end.isExtendable()) {
-            return Collections.emptyList();
-        }
-
         final List<Extender> result = new ArrayList<>();
 
-        final Node n = end.getJunction().getNode();
-        for (Way w : org.openstreetmap.josm.tools.Utils.filteredCollection(n.getReferrers(), Way.class)) {
-            if (w.getNodesCount() > 1 && !end.getWay().equals(w) && w.isFirstLastNode(n) && TurnlanesUtils.isRoad(w)) {
-                final Node nextNode = w.firstNode().equals(n) ? w.getNode(1) : w.getNode(w.getNodesCount() - 2);
-                final Point2D nextNodeLoc = getContainer().translateAndScale(loc(nextNode));
-                result.add(new Extender(end, w, angle(a.getPoint(), nextNodeLoc)));
+        if (end.isExtendable()) {
+            final Node n = end.getJunction().getNode();
+            for (Way w : org.openstreetmap.josm.tools.Utils.filteredCollection(n.getReferrers(), Way.class)) {
+                if (w.getNodesCount() > 1 && !end.getWay().equals(w) && w.isFirstLastNode(n) && TurnlanesUtils.isRoad(w)) {
+                    final Node nextNode = w.firstNode().equals(n) ? w.getNode(1) : w.getNode(w.getNodesCount() - 2);
+                    final Point2D nextNodeLoc = getContainer().translateAndScale(loc(nextNode));
+                    result.add(new Extender(end, w, angle(a.getPoint(), nextNodeLoc)));
+                }
             }
         }
 
@@ -667,7 +678,11 @@ class RoadGui {
 
             middleArea = new Path2D.Double();
             middleArea.append(middleLines.getPathIterator(null), false);
-            middleArea.append(middlePath(backward).offset(outerMargin, -1, -1, outerMargin).getIterator(), true);
+            if (this.container.getModel().isLeftDirection()) {
+                middleArea.append(middlePath(backward).offset(-outerMargin, -1, -1, -outerMargin).getIterator(), true);
+            } else {
+                middleArea.append(middlePath(backward).offset(outerMargin, -1, -1, outerMargin).getIterator(), true);
+            }
             middleArea.closePath();
             g2d.setColor(Color.GRAY);
         } else {
@@ -706,7 +721,13 @@ class RoadGui {
 
         final Path middle = middlePath(forward);
 
-        Path innerPath = middle.offset(innerMargin, -1, -1, innerMargin);
+        Path innerPath;
+        if (this.container.getModel().isLeftDirection()) {
+            innerPath = middle.offset(-innerMargin, -1, -1, -innerMargin);
+        } else {
+            innerPath = middle.offset(innerMargin, -1, -1, innerMargin);
+        }
+
         final List<Path> linePaths = new ArrayList<>();
         linePaths.add(innerPath);
 
@@ -717,7 +738,11 @@ class RoadGui {
         }
 
         final Path2D area = new Path2D.Double();
-        area(area, middle, innerPath.offset(outerMargin, -1, -1, outerMargin));
+        if (this.container.getModel().isLeftDirection()) {
+            area(area, middle, innerPath.offset(-outerMargin, -1, -1, -outerMargin));
+        } else {
+            area(area, middle, innerPath.offset(outerMargin, -1, -1, outerMargin));
+        }
         g2d.setColor(Color.GRAY);
         g2d.fill(area);
 
@@ -785,8 +810,13 @@ class RoadGui {
 
     public Path getLaneMiddle(boolean forward) {
         final Path mid = middlePath(!forward);
-        final double w = getWidth(forward ? getModel().getFromEnd() : getModel().getToEnd(), true);
-        final double o = (w - outerMargin) / 2;
+
+        double w = getWidth(forward ? getModel().getFromEnd() : getModel().getToEnd(), true);
+        double o = (w + outerMargin) / 2;
+        if (this.container.getModel().isLeftDirection()) {
+            w = -getWidth(forward ? getModel().getFromEnd() : getModel().getToEnd(), false);
+            o = (w - outerMargin) / 2;
+        }
 
         return o > 0 ? mid.offset(-o, -1, -1, -o) : mid;
     }

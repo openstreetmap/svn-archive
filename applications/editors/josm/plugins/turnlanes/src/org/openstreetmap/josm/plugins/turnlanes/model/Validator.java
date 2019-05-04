@@ -6,7 +6,6 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.BitSet;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -362,19 +361,16 @@ public class Validator {
 
     private List<Integer> splitInts(Relation r, String key, List<Issue> issues) {
         final String ints = r.get(key);
-
-        if (ints == null) {
-            return Collections.emptyList();
-        }
-
         final List<Integer> result = new ArrayList<>();
 
-        for (String s : Constants.SPLIT_PATTERN.split(ints)) {
-            try {
-                int i = Integer.parseInt(s.trim());
-                result.add(Integer.valueOf(i));
-            } catch (NumberFormatException e) {
-                issues.add(Issue.newError(r, tr("Integer list \"{0}\" contains unexpected values.", key)));
+        if (ints != null) {
+            for (String s : Constants.SPLIT_PATTERN.split(ints)) {
+                try {
+                    int i = Integer.parseInt(s.trim());
+                    result.add(Integer.valueOf(i));
+                } catch (NumberFormatException e) {
+                    issues.add(Issue.newError(r, tr("Integer list \"{0}\" contains unexpected values.", key)));
+                }
             }
         }
 

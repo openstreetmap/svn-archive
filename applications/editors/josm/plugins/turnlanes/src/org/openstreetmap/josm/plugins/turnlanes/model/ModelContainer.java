@@ -20,17 +20,21 @@ import org.openstreetmap.josm.plugins.turnlanes.CollectionUtils;
 import org.openstreetmap.josm.tools.Pair;
 
 public final class ModelContainer {
+
+    //set default direction of traffic for connecting lanes
+    private static final boolean DEFAULT_LEFT_DIRECTION = false;
+
     private static final ModelContainer EMPTY = new ModelContainer(Collections.<Node>emptySet(),
-            Collections.<Way>emptySet(), false);
+            Collections.<Way>emptySet(), false, DEFAULT_LEFT_DIRECTION);
 
     public static ModelContainer create(Iterable<Node> primaryNodes, Iterable<Way> primaryWays) {
         return new ModelContainer(new HashSet<>(CollectionUtils.toList(primaryNodes)), new HashSet<>(
-                CollectionUtils.toList(primaryWays)), false);
+                CollectionUtils.toList(primaryWays)), false, DEFAULT_LEFT_DIRECTION);
     }
 
     public static ModelContainer createEmpty(Iterable<Node> primaryNodes, Iterable<Way> primaryWays) {
         return new ModelContainer(new HashSet<>(CollectionUtils.toList(primaryNodes)), new HashSet<>(
-                CollectionUtils.toList(primaryWays)), true);
+                CollectionUtils.toList(primaryWays)), true, DEFAULT_LEFT_DIRECTION);
     }
 
     public static ModelContainer empty() {
@@ -121,7 +125,9 @@ public final class ModelContainer {
 
     private final boolean empty;
 
-    private ModelContainer(Set<Node> primaryNodes, Set<Way> primaryWays, boolean empty) {
+    private boolean leftDirection;
+
+    private ModelContainer(Set<Node> primaryNodes, Set<Way> primaryWays, boolean empty, boolean leftDirection) {
         if (empty) {
             this.primaryNodes = Collections.unmodifiableSet(new HashSet<>(primaryNodes));
             this.primaryWays = Collections.unmodifiableSet(new HashSet<>(primaryWays));
@@ -151,6 +157,7 @@ public final class ModelContainer {
 
             this.empty = junctions.isEmpty();
         }
+        this.leftDirection = leftDirection;
     }
 
     private Set<Pair<Way, Junction>> createPrimaryJunctions() {
@@ -282,7 +289,7 @@ public final class ModelContainer {
     }
 
     public ModelContainer recalculate() {
-        return new ModelContainer(primaryNodes, primaryWays, false);
+        return new ModelContainer(primaryNodes, primaryWays, false, leftDirection);
     }
 
     public boolean isPrimary(Junction j) {
@@ -295,6 +302,14 @@ public final class ModelContainer {
 
     public boolean isEmpty() {
         return empty;
+    }
+
+    public boolean isLeftDirection() {
+        return leftDirection;
+    }
+
+    public void setLeftDirection(boolean leftDirection) {
+        this.leftDirection = leftDirection;
     }
 
     public boolean hasRoad(Way w) {

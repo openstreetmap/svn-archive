@@ -154,6 +154,7 @@ public class ShpReader extends GeographicReader {
                 OsmPrimitive op = null;
                 Geometry g = gc.getGeometryN(i);
                 if (g instanceof Polygon) {
+                    // TODO: Split this section between Polygon and MultiPolygon.
                     Relation r = (Relation) op;
                     Polygon p = (Polygon) g;
                     // Do not create relation if there's only one polygon without interior ring
@@ -169,6 +170,7 @@ public class ShpReader extends GeographicReader {
                             addWayToMp(r, "inner", createOrGetWay(p.getInteriorRingN(j)));
                         }
                     }
+                    op = r != null ? r : w;
                 } else if (g instanceof LineString) {
                     op = createOrGetWay((LineString) g);
                 } else if (g instanceof Point) {

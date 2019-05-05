@@ -103,4 +103,20 @@ public class ShpReaderTest {
             }
         }
     }
+
+    /**
+     * Non-regression test for ticket <a href="https://josm.openstreetmap.de/ticket/17529">#17529</a>
+     * @throws Exception if an error occurs during reading
+     */
+    @Test
+    public void testTicket17529() throws Exception {
+        // There is only 1 feature in this data set.
+        File file = new File(TestUtils.getRegressionDataFile(17529, "west_webmerc.shp"));
+        try (InputStream is = new FileInputStream(file)) {
+            Collection<Way> ways = ShpReader.parseDataSet(is, file, null, null).getWays();
+            assertFalse(ways.isEmpty());
+            Way way = ways.iterator().next();
+            assertEquals("Westminster city", way.get("NAMELSAD"));
+        }
+    }
 }

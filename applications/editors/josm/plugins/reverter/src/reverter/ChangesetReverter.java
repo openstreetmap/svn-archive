@@ -160,14 +160,18 @@ public class ChangesetReverter {
         // Build our own lists of created/updated/modified objects for better performance
         for (PrimitiveId id : cds.getIds()) {
             ChangesetDataSetEntry first = cds.getFirstEntry(id);
-            ChangesetDataSetEntry last = cds.getLastEntry(id);
             earliestVersions.put(id, (int) first.getPrimitive().getVersion());
-            if (first.getModificationType() == ChangesetModificationType.CREATED)
-                created.add(first.getPrimitive());
-            else if (last.getModificationType() == ChangesetModificationType.UPDATED)
-                updated.add(last.getPrimitive());
-            else if (last.getModificationType() == ChangesetModificationType.DELETED)
-                deleted.add(last.getPrimitive());
+            ChangesetDataSetEntry entry = first.getModificationType() == ChangesetModificationType.CREATED ? first
+                    : cds.getLastEntry(id);
+            if (checkOsmChangeEntry(entry)) {
+                if (entry.getModificationType() == ChangesetModificationType.CREATED) {
+                    created.add(entry.getPrimitive());
+                } else if (entry.getModificationType() == ChangesetModificationType.UPDATED) {
+                    updated.add(entry.getPrimitive());
+                } else if (entry.getModificationType() == ChangesetModificationType.DELETED) {
+                    deleted.add(entry.getPrimitive());
+                }
+            }
         }
     }
 

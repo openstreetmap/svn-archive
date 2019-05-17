@@ -102,7 +102,7 @@ public abstract class GenericPicTransformAction extends MapMode implements Mouse
     protected void updateDrawPoints(boolean value) {
         Layer active = MainApplication.getLayerManager().getActiveLayer();
         if (active instanceof PicLayerAbstract) {
-            ((PicLayerAbstract) active).setDrawPoints(value);
+            ((PicLayerAbstract) active).setDrawOriginPoints(value);
             active.invalidate();
         }
     }

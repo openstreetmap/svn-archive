@@ -3,6 +3,8 @@ package org.openstreetmap.josm.plugins.piclayer.layer;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
+
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -18,6 +20,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 import javax.swing.Action;
@@ -57,6 +61,7 @@ public abstract class PicLayerAbstract extends Layer {
     protected Image image = null;
     // Tiles of pin images
     private static Image pinTiledImage;
+    private static Image pinTiledImageOrange;
 
     // Initial position of the image in the real world
     // protected EastNorth initialImagePosition;
@@ -67,13 +72,40 @@ public abstract class PicLayerAbstract extends Layer {
     // The scale that was set on the map during image creation
     protected double initialImageScale = 1.0;
 
-    // Layer icon
+    // Layer icon / lines
     private Icon layerIcon = null;
 
-    private boolean drawMarkers = true;
+    private boolean drawOriginMarkers = true;
 
-    public void setDrawPoints(boolean value) {
-        drawMarkers = value;
+    private boolean drawRefMarkers = false;
+
+    private boolean drawFirstLine = false;
+
+    private boolean drawSecLine = false;
+
+    public void setDrawOriginPoints(boolean value) {
+        drawOriginMarkers = value;
+    }
+
+    private List<Point2D> refPointsBuffer = new ArrayList<>(3);	// only for buffering
+
+    public void setDrawReferencePoints(boolean value, Point2D pointToDraw) {
+        drawRefMarkers = value;
+        if(this.refPointsBuffer == null)	refPointsBuffer = new ArrayList<>(3);
+        if(pointToDraw != null)				this.refPointsBuffer.add(pointToDraw);
+    }
+
+    public void clearDrawReferencePoints() {
+    	drawRefMarkers = false;
+    	this.refPointsBuffer = null;
+    }
+
+    public void setDrawFirstLine(boolean value) {
+    	drawFirstLine = value;
+    }
+
+    public void setDrawSecLine(boolean value) {
+    	drawSecLine = value;
     }
 
     protected PictureTransform transformer;
@@ -125,6 +157,7 @@ public abstract class PicLayerAbstract extends Layer {
         if (pinTiledImage == null) {
             // allow system to load the image and use it in future
             pinTiledImage = new ImageIcon(Toolkit.getDefaultToolkit().createImage(getClass().getResource("/images/v6_64.png"))).getImage();
+            pinTiledImageOrange = new ImageIcon(Toolkit.getDefaultToolkit().createImage(getClass().getResource("/images/v6_64o.png"))).getImage();
         }
 
         projection = ProjectionRegistry.getProjection();
@@ -138,7 +171,7 @@ public abstract class PicLayerAbstract extends Layer {
     public void initialize() throws IOException {
         // First, we initialize the calibration, so that createImage() can rely on it
 
-        transformer = new PictureTransform();
+    	  if(transformer == null)		transformer = new PictureTransform();
 
         // If the map does not exist - we're screwed. We should not get into this situation in the first place!
         if (MainApplication.getMap() != null && MainApplication.getMap().mapView != null) {
@@ -180,6 +213,10 @@ public abstract class PicLayerAbstract extends Layer {
      * @return the user readable name of the layer
      */
     public abstract String getPicLayerName();
+
+    public Image getImage() {
+    	return this.image;
+    }
 
     @Override
     public Icon getIcon() {
@@ -269,7 +306,7 @@ public abstract class PicLayerAbstract extends Layer {
                     height
                 );
             }
-            if (drawMarkers) {
+            if (drawOriginMarkers) {
                 // draw markers for selection
                 Graphics2D gPoints = (Graphics2D) g2.create();
 
@@ -289,6 +326,45 @@ public abstract class PicLayerAbstract extends Layer {
                    gPoints.drawImage(pinTiledImage, dstx, dsty, dstx+pinWidth, dsty+pinHeight,
                            pinTileOffsetX[i], pinTileOffsetY[i], pinTileOffsetX[i]+pinWidth, pinTileOffsetY[i]+pinHeight, null);
                 }
+            }
+            if (drawRefMarkers) {
+                // draw markers for selection
+                Graphics2D gPoints = (Graphics2D) g2.create();
+
+                gPoints.translate(pic_offset_x, pic_offset_y);
+
+                gPoints.setColor(Color.RED); // red color for points output
+
+                AffineTransform tr = AffineTransform.getScaleInstance(scalex, scaley);
+                tr.concatenate(transformer.getTransform());
+
+                for (int i = 0; i < refPointsBuffer.size(); i++) {
+                   Point2D trP = tr.transform(refPointsBuffer.get(i), null);
+                   int x = (int) trP.getX(), y = (int) trP.getY();
+
+                   int dstx = x-pinAnchorX;
+                   int dsty = y-pinAnchorY;
+                   gPoints.drawImage(pinTiledImageOrange, dstx, dsty, dstx+pinWidth, dsty+pinHeight,
+                           pinTileOffsetX[i], pinTileOffsetY[i], pinTileOffsetX[i]+pinWidth, pinTileOffsetY[i]+pinHeight, null);
+                }
+            }
+            if (drawFirstLine) {
+            	// set line from point1 to point2
+            	List<Point2D> points = this.getTransformer().getOriginPoints();
+            	Point2D p1 = points.get(0);
+            	Point2D p2 = points.get(1);
+            	g.setColor(Color.green);
+            	g.setStroke(new BasicStroke(5));
+                g.drawLine((int)p1.getX(), (int)p1.getY(), (int)p2.getX(), (int)p2.getY());
+            }
+            if (drawSecLine) {
+            	// set line from point2 to point3
+            	List<Point2D> points = this.getTransformer().getOriginPoints();
+            	Point2D p2 = points.get(1);
+            	Point2D p3 = points.get(2);
+            	g.setColor(Color.green);
+            	g.setStroke(new BasicStroke(5));
+                g.drawLine((int)p2.getX(), (int)p2.getY(), (int)p3.getX(), (int)p3.getY());
             }
         } else {
             Logging.error("PicLayerAbstract::paint - general drawing error (image is null or Graphics not 2D");
@@ -522,7 +598,7 @@ public abstract class PicLayerAbstract extends Layer {
         values[5] = dy;
     }
 
-    public Point2D transformPoint(Point p) throws NoninvertibleTransformException {
+    public Point2D transformPoint(Point2D p) throws NoninvertibleTransformException {
         // Position image at the right graphical place
 
         EastNorth center = MainApplication.getMap().mapView.getCenter();

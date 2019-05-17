@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.openstreetmap.josm.data.coor.EastNorth;
+import org.openstreetmap.josm.plugins.piclayer.actions.transform.autocalibrate.helper.ObservableArrayList;
 
 public class PictureTransform {
 
@@ -28,6 +29,7 @@ public class PictureTransform {
     public PictureTransform() {
         cachedTransform = new AffineTransform();
         originPoints = new ArrayList<>(3);
+        latLonOriginPoints = new ObservableArrayList<>(3);
     }
 
     public AffineTransform getTransform() {
@@ -185,10 +187,47 @@ public class PictureTransform {
     }
 
     public void setOriginPoints(List<Point2D> list) {
-        this.originPoints = new ArrayList<>(list);
+    	if(originPoints == null)	originPoints = new ArrayList<>(list);
+    	else {
+    		originPoints.clear();
+    		originPoints.addAll(list);
+    	}
     }
 
     public void removeOriginPoint(Point2D selectedPoint) {
         originPoints.remove(selectedPoint);
+    }
+
+    public void clearOriginPoints() {
+    	originPoints.clear();
+    }
+
+    // similar to originPointList - points scaled in LatLon, list observable
+    private ObservableArrayList<Point2D> latLonOriginPoints = new ObservableArrayList<>(3);
+
+    public ObservableArrayList<Point2D> getLatLonOriginPoints() {
+    	return this.latLonOriginPoints;
+    }
+
+    public void addLatLonOriginPoint(Point2D p) {
+    	latLonOriginPoints.add(p);
+    }
+
+    public void removeLatLonOriginPoint(Point2D selectedPoint) {
+    	int index = originPoints.indexOf(selectedPoint);
+    	Point2D toDelete = this.latLonOriginPoints.get(index);
+    	this.latLonOriginPoints.remove(toDelete);
+    }
+
+    public void setLatLonOriginPoint(List<Point2D> list) {
+    	if(latLonOriginPoints == null)	latLonOriginPoints = new ObservableArrayList<>(list);
+    	else {
+    		latLonOriginPoints.clear();
+    		latLonOriginPoints.addAll(list);
+    	}
+    }
+
+    public void clearLatLonOriginPoints() {
+    	latLonOriginPoints.clear();
     }
 }

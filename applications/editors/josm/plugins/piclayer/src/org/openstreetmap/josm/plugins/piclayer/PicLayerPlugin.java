@@ -35,7 +35,6 @@ import org.openstreetmap.josm.plugins.piclayer.actions.transform.ShearPictureAct
 import org.openstreetmap.josm.plugins.piclayer.actions.transform.affine.MovePointAction;
 import org.openstreetmap.josm.plugins.piclayer.actions.transform.affine.RemovePointAction;
 import org.openstreetmap.josm.plugins.piclayer.actions.transform.affine.TransformPointAction;
-import org.openstreetmap.josm.plugins.piclayer.actions.transform.autocalibrate.AutoCalibratePictureAction;
 import org.openstreetmap.josm.plugins.piclayer.layer.PicLayerAbstract;
 
 /**
@@ -84,8 +83,6 @@ public class PicLayerPlugin extends Plugin implements LayerChangeListener, Activ
             ScaleXPictureAction scaleXPictureAction = new ScaleXPictureAction();
             ScaleYPictureAction scaleYPictureAction = new ScaleYPictureAction();
             ShearPictureAction shearPictureAction = new ShearPictureAction();
-            AutoCalibratePictureAction autoCalibratePictureAction = new AutoCalibratePictureAction();
-
             // Create plugin buttons and add them to the toolbar
 
             buttonList = new ArrayList<>(7);
@@ -98,7 +95,6 @@ public class PicLayerPlugin extends Plugin implements LayerChangeListener, Activ
             buttonList.add(picLayerActionButtonFactory(scaleXPictureAction));
             buttonList.add(picLayerActionButtonFactory(scaleYPictureAction));
             buttonList.add(picLayerActionButtonFactory(shearPictureAction));
-            buttonList.add(picLayerActionButtonFactory(autoCalibratePictureAction));
 
             for (IconToggleButton btn : buttonList) {
                 newFrame.addMapMode(btn);
@@ -123,11 +119,11 @@ public class PicLayerPlugin extends Plugin implements LayerChangeListener, Activ
         boolean newPic = newLayer instanceof PicLayerAbstract;
 
         if (oldPic) {
-            ((PicLayerAbstract) oldLayer).setDrawOriginPoints(false);
+            ((PicLayerAbstract) oldLayer).setDrawPoints(false);
         }
 
         if (newPic) {
-            ((PicLayerAbstract) newLayer).setDrawOriginPoints(true);
+            ((PicLayerAbstract) newLayer).setDrawPoints(true);
         }
     }
 

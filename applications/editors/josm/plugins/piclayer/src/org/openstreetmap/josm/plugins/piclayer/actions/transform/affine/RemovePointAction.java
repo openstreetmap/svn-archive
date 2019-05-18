@@ -24,7 +24,6 @@ public class RemovePointAction extends GenericPicTransformAction {
             return;
 
         if (selectedPoint != null) {
-          	currentLayer.getTransformer().removeLatLonOriginPoint(selectedPoint);
             currentLayer.getTransformer().removeOriginPoint(selectedPoint);
             selectedPoint = null;
         }

@@ -38,9 +38,20 @@
                 <archives>
                     <zips>
                         <fileset dir="${plugin.tools.dir}/jaxb-ri/lib">
-                            <include name="ja*.jar"/>
-                            <exclude name="jaxb-jxc.jar"/>
-                            <exclude name="jaxb-xjc.jar"/>
+                        	<exclude name="codemodel.jar"/>
+                        	<exclude name="dtd-parser.jar"/>
+                        	<include name="FastInfoset.jar"/>
+                        	<include name="istack-commons-runtime.jar"/>
+                        	<exclude name="istack-commons-tools.jar"/>
+                        	<include name="jakarta.activation-api.jar"/>
+                        	<include name="jakarta.xml.bind-api.jar"/>
+                        	<include name="jaxb-runtime.jar"/>
+                        	<exclude name="jaxb-xjc.jar"/>
+                        	<exclude name="relaxng-datatype.jar"/>
+                        	<exclude name="rngom.jar"/>
+                        	<include name="stax-ex.jar"/>
+                        	<include name="txw2.jar"/>
+                        	<exclude name="xsom.jar"/>
                             <exclude name="*-sources.jar"/>
                             <exclude name="*-javadoc.jar"/>
                         </fileset>

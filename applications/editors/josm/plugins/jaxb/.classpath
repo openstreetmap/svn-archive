@@ -3,9 +3,23 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/JOSM"/>
-	<classpathentry exported="true" kind="lib" path="../00_tools/jaxb-ri/lib/javax.activation.jar"/>
-	<classpathentry exported="true" kind="lib" path="../00_tools/jaxb-ri/lib/jaxb-api.jar"/>
-	<classpathentry exported="true" kind="lib" path="../00_tools/jaxb-ri/lib/jaxb-core.jar"/>
-	<classpathentry exported="true" kind="lib" path="../00_tools/jaxb-ri/lib/jaxb-impl.jar"/>
+	<classpathentry exported="true" kind="lib" path="../00_tools/jaxb-ri/lib/codemodel.jar"/>
+	<classpathentry exported="true" kind="lib" path="../00_tools/jaxb-ri/lib/dtd-parser.jar"/>
+	<classpathentry exported="true" kind="lib" path="../00_tools/jaxb-ri/lib/FastInfoset.jar"/>
+	<classpathentry exported="true" kind="lib" path="../00_tools/jaxb-ri/lib/istack-commons-runtime.jar"/>
+	<classpathentry exported="true" kind="lib" path="../00_tools/jaxb-ri/lib/istack-commons-tools.jar"/>
+	<classpathentry exported="true" kind="lib" path="../00_tools/jaxb-ri/lib/jakarta.activation-api.jar"/>
+	<classpathentry exported="true" kind="lib" path="../00_tools/jaxb-ri/lib/jakarta.xml.bind-api.jar" sourcepath="../00_tools/jaxb-ri/lib/jakarta.xml.bind-api-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="../00_tools/jaxb-ri/lib/jaxb-runtime.jar" sourcepath="../00_tools/jaxb-ri/lib/jaxb-runtime-sources.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:file:/../00_tools/jaxb-ri/lib/jaxb-runtime-javadoc.jar!/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry exported="true" kind="lib" path="../00_tools/jaxb-ri/lib/jaxb-xjc.jar"/>
+	<classpathentry exported="true" kind="lib" path="../00_tools/jaxb-ri/lib/relaxng-datatype.jar"/>
+	<classpathentry exported="true" kind="lib" path="../00_tools/jaxb-ri/lib/rngom.jar"/>
+	<classpathentry exported="true" kind="lib" path="../00_tools/jaxb-ri/lib/stax-ex.jar"/>
+	<classpathentry exported="true" kind="lib" path="../00_tools/jaxb-ri/lib/txw2.jar"/>
+	<classpathentry exported="true" kind="lib" path="../00_tools/jaxb-ri/lib/xsom.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

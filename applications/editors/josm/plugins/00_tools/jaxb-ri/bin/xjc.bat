@@ -65,7 +65,7 @@ set JAVA="%JAVA_HOME%\bin\java"
 goto LAUNCHXJC
 
 :LAUNCHXJC
-%JAVA% %XJC_OPTS% -cp "%JAXB_HOME%\lib\javax.activation.jar;%JAXB_HOME%\lib\jaxb-xjc.jar" com.sun.tools.xjc.XJCFacade %*
+%JAVA% %XJC_OPTS% -cp "%JAXB_HOME%\lib\*" com.sun.tools.xjc.XJCFacade %*
 
 :END
 %COMSPEC% /C exit %ERRORLEVEL%

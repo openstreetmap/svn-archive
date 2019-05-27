@@ -84,4 +84,4 @@ else
     JAVA=java
 fi
 
-exec "$JAVA" $XJC_OPTS -cp "$JAXB_HOME/lib/javax.activation.jar:$JAXB_HOME/lib/jaxb-xjc.jar" com.sun.tools.xjc.XJCFacade "$@"
+exec "$JAVA" $XJC_OPTS -cp "$JAXB_HOME/lib/*" com.sun.tools.xjc.XJCFacade "$@"

@@ -14,7 +14,7 @@ import javax.swing.event.ListSelectionListener;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.data.imagery.ImageryInfo;
 import org.openstreetmap.josm.gui.MainApplication;
-import org.openstreetmap.josm.gui.preferences.imagery.ImageryPreference.ImageryProvidersPanel.ImageryDefaultLayerTableModel;
+import org.openstreetmap.josm.gui.preferences.imagery.ImageryProvidersPanel.ImageryDefaultLayerTableModel;
 import org.openstreetmap.josm.gui.util.GuiHelper;
 import org.openstreetmap.josm.plugins.imageryxmlbounds.XmlBoundsConstants;
 import org.openstreetmap.josm.plugins.imageryxmlbounds.XmlBoundsLayer;

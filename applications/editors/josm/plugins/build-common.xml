@@ -81,6 +81,10 @@
 
     <fileset id="jaxb.jars" dir="${plugin.tools.dir}/jaxb-ri/lib" includes="**/*.jar"/>
 
+    <path id="jdk8.boot.classpath">
+        <pathelement location="${error_prone_javac.jar}"/>
+        <fileset refid="jaxb.jars"/>
+    </path>
     <path id="plugin.classpath">
         <pathelement location="${josm}"/>
         <fileset dir="${plugin.lib.dir}" erroronmissingdir="no">
@@ -123,7 +127,7 @@
         <echo message="compiling sources for ${plugin.jar} ..."/>
         <javac srcdir="${plugin.src.dir}" debug="true" destdir="${plugin.build.dir}" includeantruntime="false"
             encoding="UTF-8" target="${java.lang.version}" source="${java.lang.version}" fork="yes">
-            <compilerarg value="-J-Xbootclasspath/p:${error_prone_javac.jar}" unless:set="isJava9"/>
+            <compilerarg value="-J-Xbootclasspath/p:${toString:jdk8.boot.classpath}" unless:set="isJava9"/>
             <compilerarg line="-XDcompilePolicy=simple"/>
             <compilerarg value="-processorpath"/>
             <compilerarg pathref="processor.path"/>

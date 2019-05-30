@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
+import java.util.logging.Level;
 
 import org.openstreetmap.gui.jmapviewer.interfaces.TileJob;
 import org.openstreetmap.gui.jmapviewer.interfaces.TileLoader;
@@ -24,7 +25,18 @@ import org.openstreetmap.gui.jmapviewer.interfaces.TileLoaderListener;
  * @author Jan Peter Stotz
  */
 public class OsmTileLoader implements TileLoader {
-    private static final ThreadPoolExecutor jobDispatcher = (ThreadPoolExecutor) Executors.newFixedThreadPool(8);
+    /** Setting key for number of threads */
+    public static final String THREADS_SETTING = "jmapviewer.osm-tile-loader.threads";
+    private static final int DEFAULT_THREADS_NUMBER = 4;
+    private static int nThreads = DEFAULT_THREADS_NUMBER;
+    static {
+        try {
+            nThreads = FeatureAdapter.getIntSetting(THREADS_SETTING, DEFAULT_THREADS_NUMBER);
+        } catch (Exception e) {
+            FeatureAdapter.getLogger(OsmTileLoader.class.getName()).log(Level.SEVERE, e.getMessage(), e);
+        }
+    }
+    private static final ThreadPoolExecutor jobDispatcher = (ThreadPoolExecutor) Executors.newFixedThreadPool(nThreads);
 
     private final class OsmTileJob implements TileJob {
         private final Tile tile;

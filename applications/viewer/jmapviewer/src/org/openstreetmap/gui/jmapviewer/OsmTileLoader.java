@@ -31,7 +31,7 @@ public class OsmTileLoader implements TileLoader {
 
     /** Setting key for number of threads */
     public static final String THREADS_SETTING = "jmapviewer.osm-tile-loader.threads";
-    private static final int DEFAULT_THREADS_NUMBER = 4;
+    private static final int DEFAULT_THREADS_NUMBER = 8;
     private static int nThreads = DEFAULT_THREADS_NUMBER;
     static {
         try {
@@ -129,6 +129,7 @@ public class OsmTileLoader implements TileLoader {
 
     public OsmTileLoader(TileLoaderListener listener, Map<String, String> headers) {
         this.headers.put("Accept", "text/html, image/png, image/jpeg, image/gif, */*");
+        this.headers.put("User-Agent", "JMapViewer Java/"+System.getProperty("java.version"));
         if (headers != null) {
             this.headers.putAll(headers);
         }

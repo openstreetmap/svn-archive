@@ -14,6 +14,7 @@ import java.util.Map.Entry;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.openstreetmap.gui.jmapviewer.interfaces.TileJob;
 import org.openstreetmap.gui.jmapviewer.interfaces.TileLoader;
@@ -25,6 +26,9 @@ import org.openstreetmap.gui.jmapviewer.interfaces.TileLoaderListener;
  * @author Jan Peter Stotz
  */
 public class OsmTileLoader implements TileLoader {
+
+    private static final Logger LOG = FeatureAdapter.getLogger(OsmTileLoader.class);
+
     /** Setting key for number of threads */
     public static final String THREADS_SETTING = "jmapviewer.osm-tile-loader.threads";
     private static final int DEFAULT_THREADS_NUMBER = 4;
@@ -33,9 +37,10 @@ public class OsmTileLoader implements TileLoader {
         try {
             nThreads = FeatureAdapter.getIntSetting(THREADS_SETTING, DEFAULT_THREADS_NUMBER);
         } catch (Exception e) {
-            FeatureAdapter.getLogger(OsmTileLoader.class.getName()).log(Level.SEVERE, e.getMessage(), e);
+            LOG.log(Level.SEVERE, e.getMessage(), e);
         }
     }
+
     private static final ThreadPoolExecutor jobDispatcher = (ThreadPoolExecutor) Executors.newFixedThreadPool(nThreads);
 
     private final class OsmTileJob implements TileJob {
@@ -80,10 +85,10 @@ public class OsmTileLoader implements TileLoader {
                 listener.tileLoadingFinished(tile, false);
                 if (input == null) {
                     try {
-                        System.err.println("Failed loading " + tile.getUrl() +": "
+                        LOG.log(Level.SEVERE, "Failed loading " + tile.getUrl() +": "
                                 +e.getClass() + ": " + e.getMessage());
                     } catch (IOException ioe) {
-                        ioe.printStackTrace();
+                        LOG.log(Level.SEVERE, ioe.getMessage(), ioe);
                     }
                 }
             } finally {
@@ -114,6 +119,10 @@ public class OsmTileLoader implements TileLoader {
 
     protected TileLoaderListener listener;
 
+    /**
+     * Constructs a new {@code OsmTileLoader}.
+     * @param listener tile loader listener
+     */
     public OsmTileLoader(TileLoaderListener listener) {
         this(listener, null);
     }

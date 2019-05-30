@@ -14,6 +14,8 @@ import java.util.concurrent.Future;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -42,6 +44,8 @@ import org.xml.sax.SAXException;
  */
 public class BingAerialTileSource extends TMSTileSource {
 
+    private static final Logger LOG = FeatureAdapter.getLogger(BingAerialTileSource.class);
+
     /** Setting key for Bing metadata API URL. Must contain {@link #API_KEY_PLACEHOLDER} */
     public static final String METADATA_API_SETTING = "jmapviewer.bing.metadata-api-url";
     /** Setting key for Bing API key */
@@ -54,6 +58,7 @@ public class BingAerialTileSource extends TMSTileSource {
             "https://dev.virtualearth.net/REST/v1/Imagery/Metadata/Aerial?include=ImageryProviders&output=xml&key=" + API_KEY_PLACEHOLDER;
     /** Original Bing API key created by Potlatch2 developers in 2010 */
     private static final String API_KEY = "Arzdiw4nlOJzRwOz__qailc8NiR31Tt51dN2D7cm57NrnceZnCpgOkmJhNpGoppU";
+    
     private static volatile Future<List<Attribution>> attributions; // volatile is required for getAttribution(), see below.
     private static String imageUrlTemplate;
     private static Integer imageryZoomMax;
@@ -170,11 +175,8 @@ public class BingAerialTileSource extends TMSTileSource {
             }
 
             return attributionsList;
-        } catch (SAXException e) {
-            System.err.println("Could not parse Bing aerials attribution metadata.");
-            e.printStackTrace();
-        } catch (ParserConfigurationException | XPathExpressionException | NumberFormatException e) {
-            e.printStackTrace();
+        } catch (SAXException | ParserConfigurationException | XPathExpressionException | NumberFormatException e) {
+            LOG.log(Level.SEVERE, "Could not parse Bing aerials attribution metadata.", e);
         }
         return null;
     }
@@ -219,7 +221,7 @@ public class BingAerialTileSource extends TMSTileSource {
                 }
             }
         } catch (IOException e) {
-            System.err.println("Error while retrieving Bing logo: "+e.getMessage());
+            LOG.log(Level.SEVERE, "Error while retrieving Bing logo: "+e.getMessage());
         }
         return null;
     }
@@ -252,7 +254,7 @@ public class BingAerialTileSource extends TMSTileSource {
                         System.out.println("Successfully loaded Bing attribution data.");
                         return r;
                     } catch (IOException ex) {
-                        System.err.println("Could not connect to Bing API. Will retry in " + waitTimeSec + " seconds.");
+                        LOG.log(Level.SEVERE, "Could not connect to Bing API. Will retry in " + waitTimeSec + " seconds.");
                         Thread.sleep(TimeUnit.SECONDS.toMillis(waitTimeSec));
                         waitTimeSec *= 2;
                     }
@@ -275,11 +277,11 @@ public class BingAerialTileSource extends TMSTileSource {
         try {
             return attributions.get(0, TimeUnit.MILLISECONDS);
         } catch (TimeoutException ex) {
-            System.err.println("Bing: attribution data is not yet loaded.");
+            LOG.log(Level.WARNING, "Bing: attribution data is not yet loaded.");
         } catch (ExecutionException ex) {
             throw new RuntimeException(ex.getCause());
         } catch (InterruptedException ign) {
-            System.err.println("InterruptedException: " + ign.getMessage());
+            LOG.log(Level.SEVERE, "InterruptedException: " + ign.getMessage());
         }
         return null;
     }

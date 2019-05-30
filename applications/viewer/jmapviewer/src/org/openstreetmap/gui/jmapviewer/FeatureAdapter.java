@@ -11,6 +11,7 @@ import java.text.MessageFormat;
 import java.util.Map;
 import java.util.Objects;
 import java.util.TreeMap;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.imageio.ImageIO;
@@ -110,6 +111,10 @@ public final class FeatureAdapter {
         return loggingAdapter.getLogger(name);
     }
 
+    public static Logger getLogger(Class<?> klass) {
+        return loggingAdapter.getLogger(klass.getSimpleName());
+    }
+
     /**
      * Get settings value for a certain key and provide a default value.
      * @param key the identifier for the setting
@@ -154,7 +159,7 @@ public final class FeatureAdapter {
                     e.printStackTrace();
                 }
             } else {
-                System.err.println(tr("Opening link not supported on current platform (''{0}'')", url));
+                getLogger(FeatureAdapter.class).log(Level.SEVERE, tr("Opening link not supported on current platform (''{0}'')", url));
             }
         }
     }

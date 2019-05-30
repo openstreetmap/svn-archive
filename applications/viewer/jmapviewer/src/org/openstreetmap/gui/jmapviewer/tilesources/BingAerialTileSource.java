@@ -42,6 +42,17 @@ import org.xml.sax.SAXException;
  */
 public class BingAerialTileSource extends TMSTileSource {
 
+    /** Setting key for Bing metadata API URL. Must contain {@link #API_KEY_PLACEHOLDER} */
+    public static final String METADATA_API_SETTING = "jmapviewer.bing.metadata-api-url";
+    /** Setting key for Bing API key */
+    public static final String API_KEY_SETTING = "jmapviewer.bing.api-key";
+    /** Placeholder to specify Bing API key in metadata API URL*/
+    public static final String API_KEY_PLACEHOLDER = "{apiKey}";
+
+    /** Bing Metadata API URL */
+    private static final String METADATA_API_URL =
+            "https://dev.virtualearth.net/REST/v1/Imagery/Metadata/Aerial?include=ImageryProviders&output=xml&key=" + API_KEY_PLACEHOLDER;
+    /** Original Bing API key created by Potlatch2 developers in 2010 */
     private static final String API_KEY = "Arzdiw4nlOJzRwOz__qailc8NiR31Tt51dN2D7cm57NrnceZnCpgOkmJhNpGoppU";
     private static volatile Future<List<Attribution>> attributions; // volatile is required for getAttribution(), see below.
     private static String imageUrlTemplate;
@@ -94,8 +105,8 @@ public class BingAerialTileSource extends TMSTileSource {
     }
 
     protected URL getAttributionUrl() throws MalformedURLException {
-        return new URL("https://dev.virtualearth.net/REST/v1/Imagery/Metadata/Aerial?include=ImageryProviders&output=xml&key="
-                + API_KEY);
+        return new URL(FeatureAdapter.getSetting(METADATA_API_SETTING, METADATA_API_URL)
+                .replace(API_KEY_PLACEHOLDER, FeatureAdapter.getSetting(API_KEY_SETTING, API_KEY)));
     }
 
     protected List<Attribution> parseAttributionText(InputSource xml) throws IOException {

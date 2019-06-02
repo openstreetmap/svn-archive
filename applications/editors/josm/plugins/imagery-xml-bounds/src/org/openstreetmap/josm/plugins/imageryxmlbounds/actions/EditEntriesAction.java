@@ -64,7 +64,7 @@ public class EditEntriesAction extends JosmAction implements XmlBoundsConstants,
         if (!e.getValueIsAdjusting()) {
             entries.clear();
             for (int row : defaultTable.getSelectedRows()) {
-                ImageryInfo info = defaultModel.getRow(row);
+                ImageryInfo info = defaultModel.getRow(defaultTable.convertRowIndexToModel(row));
                 if (info != null && info.getBounds() != null) {
                     entries.add(info);
                 }

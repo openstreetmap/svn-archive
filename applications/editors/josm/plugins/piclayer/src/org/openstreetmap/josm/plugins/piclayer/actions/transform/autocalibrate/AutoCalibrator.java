@@ -12,6 +12,7 @@ import org.openstreetmap.josm.plugins.piclayer.PicLayerPlugin;
 import org.openstreetmap.josm.plugins.piclayer.actions.transform.autocalibrate.helper.GeoLine;
 import org.openstreetmap.josm.plugins.piclayer.gui.autocalibrate.CalibrationErrorView;
 import org.openstreetmap.josm.plugins.piclayer.layer.PicLayerAbstract;
+import org.openstreetmap.josm.tools.Logging;
 
 
 /**
@@ -180,7 +181,7 @@ public class AutoCalibrator {
 		try {
 			translatedPoint = currentLayer.transformPoint(new Point2D.Double(en.getInViewX(), en.getInViewY()));
 		} catch (NoninvertibleTransformException e) {
-			e.printStackTrace();
+			Logging.error(e);
 		}
 
 		return translatedPoint;

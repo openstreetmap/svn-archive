@@ -5,8 +5,6 @@ import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import javafx.beans.property.SimpleIntegerProperty;
-
 /**
  * Observable {@link ArrayList}
  * @author rebsc
@@ -14,74 +12,80 @@ import javafx.beans.property.SimpleIntegerProperty;
  */
 public class ObservableArrayList<E> extends ArrayList<E>{
 
-    private SimpleIntegerProperty sizeProperty;
-    protected PropertyChangeSupport propertyChangeSupport;
+	private PropertyChangeSupport changes = new PropertyChangeSupport(this);
 
 	public ObservableArrayList() {
 		super();
-		propertyChangeSupport = new PropertyChangeSupport(this);
-	    sizeProperty = new SimpleIntegerProperty(0);
 	}
 
-	public ObservableArrayList(int initialCapacity) {
-		super(initialCapacity);
-		propertyChangeSupport = new PropertyChangeSupport(this);
-	    sizeProperty = new SimpleIntegerProperty(0);
+	public ObservableArrayList(int cap) {
+		super(cap);
 	}
 
 	public ObservableArrayList(Collection<? extends E> c) {
 		super(c);
-		propertyChangeSupport = new PropertyChangeSupport(this);
-	    sizeProperty = new SimpleIntegerProperty(0);
 	}
 
 
 	@Override
 	public boolean add(E e) {
-		boolean returnValue = super.add(e);
-        sizeProperty.set(size());
-        propertyChangeSupport.firePropertyChange(sizeProperty.toString(), false, true);
-        return returnValue;
+		int oldSize = super.size();
+		if(super.add(e)) {
+			changes.firePropertyChange("size", oldSize, super.size());
+			return true;
+		};
+		return false;
 	}
 
+
     @Override
-    public void add(int index, E element) {
-        super.add(index, element);
-        sizeProperty.set(size());
-        propertyChangeSupport.firePropertyChange(sizeProperty.toString(), false, true);
+	public void add(int index, E element) {
+    	int oldSize = super.size();
+    	super.add(index, element);
+    	changes.firePropertyChange("size", oldSize, super.size());
     }
 
     @Override
-    public E remove(int index) {
-        E returnValue = super.remove(index);
-        sizeProperty.set(size());
-        propertyChangeSupport.firePropertyChange(sizeProperty.toString(), false, true);
-        return returnValue;
+	public boolean addAll(Collection<? extends E> c) {
+    	int oldSize = super.size();
+		if(super.addAll(c)) {
+			changes.firePropertyChange("size", oldSize, super.size());
+			return true;
+		};
+		return false;
     }
 
     @Override
+	public E remove(int index) {
+    	int oldSize = super.size();
+        E removed = super.remove(index);
+    	changes.firePropertyChange("size", oldSize, super.size());
+    	return removed;
+    }
+
+    @Override
+	public boolean remove(Object o) {
+    	int oldSize = super.size();
+    	if(super.remove(o)) {
+    		changes.firePropertyChange("size", oldSize, super.size());
+    		return true;
+    	}
+    	return false;
+    }
+
+	@Override
 	public void clear() {
+		int oldSize = super.size();
     	super.clear();
-    	sizeProperty.set(size());
-    	propertyChangeSupport.firePropertyChange(sizeProperty.toString(), false, true);
-    }
-
-    @Override
-    public boolean remove(Object o) {
-        boolean returnValue = super.remove(o);
-        if(returnValue){
-            sizeProperty.set(size());
-            propertyChangeSupport.firePropertyChange(sizeProperty.toString(), false, true);
-        }
-        return returnValue;
+    	changes.firePropertyChange("size", oldSize, super.size());
     }
 
 	public void addPropertyChangeListener(PropertyChangeListener listener) {
-        propertyChangeSupport.addPropertyChangeListener(listener);
+        changes.addPropertyChangeListener(listener);
     }
 
 	public void removePropertyChangeListener(PropertyChangeListener listener) {
-        propertyChangeSupport.removePropertyChangeListener(listener);
+        changes.removePropertyChangeListener(listener);
     }
 
 }

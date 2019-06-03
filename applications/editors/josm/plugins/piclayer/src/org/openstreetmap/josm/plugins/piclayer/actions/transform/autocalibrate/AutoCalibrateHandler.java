@@ -38,6 +38,7 @@ import org.openstreetmap.josm.plugins.piclayer.gui.autocalibrate.CalibrationWind
 import org.openstreetmap.josm.plugins.piclayer.gui.autocalibrate.ReferenceOptionView;
 import org.openstreetmap.josm.plugins.piclayer.gui.autocalibrate.ResultCheckView;
 import org.openstreetmap.josm.plugins.piclayer.layer.PicLayerAbstract;
+import org.openstreetmap.josm.tools.Logging;
 
 /**
  * Class providing functionality of GUIs and also handles connection between {@link AutoCalibratePictureAction}
@@ -114,7 +115,7 @@ public class AutoCalibrateHandler {
 	* @author rebsc
 	*
 	*/
-	private class HelpButtonListener implements ActionListener {
+	private static class HelpButtonListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			String topic = "Plugin/PicLayer";
@@ -175,10 +176,10 @@ public class AutoCalibrateHandler {
 	    public void actionPerformed(ActionEvent e) {
 			// calibrate
 			callCalibrator();
-			mainWindow.setVisible(false);
 			currentPicLayer.clearDrawReferencePoints();
 			currentPicLayer.invalidate();
 			MainApplication.getLayerManager().setActiveLayer(currentPicLayer);
+			mainWindow.setVisible(false);
 			// let user check calibration
 			ResultCheckView checkView = new ResultCheckView();
 			int selectedValue = checkView.showAndChoose();
@@ -232,8 +233,7 @@ public class AutoCalibrateHandler {
 	private class OriginSizePropertyListener implements PropertyChangeListener {
 	    @Override
 	    public void propertyChange(PropertyChangeEvent event) {
-	    	String propName = event.getPropertyName();
-	    	int size = Integer.parseInt(propName.replaceAll("\\D", ""));
+	    	int size = (int) event.getNewValue();
 	    	if(currentPicLayer.getTransformer().getLatLonOriginPoints() != null) {
 	    		originPointList.clear();
 	    		originPointList.addAll(currentPicLayer.getTransformer().getLatLonOriginPoints());
@@ -255,8 +255,7 @@ public class AutoCalibrateHandler {
 	private class RefSizePropertyListener implements PropertyChangeListener {
 	    @Override
 	    public void propertyChange(PropertyChangeEvent event) {
-	    	String propName = event.getPropertyName();
-	    	int size = Integer.parseInt(propName.replaceAll("\\D", ""));
+	    	int size = (int) event.getNewValue();
 	        mainWindow.setReferencePoints(referencePointList);
 
 	        if (size == 3) {
@@ -516,7 +515,7 @@ public class AutoCalibrateHandler {
 		try {
 			translatedPoint = currentPicLayer.transformPoint(new Point2D.Double(en.getInViewX(), en.getInViewY()));
 		} catch (NoninvertibleTransformException e) {
-			e.printStackTrace();
+			Logging.error(e);
 		}
 
 		return translatedPoint;

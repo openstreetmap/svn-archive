@@ -46,7 +46,7 @@ public class AutoCalibratePictureAction extends GenericPicTransformAction {
 
 		currentLayer = (PicLayerAbstract) MainApplication.getLayerManager().getActiveLayer();
 
-		if(currentLayer != null && currentLayer instanceof PicLayerAbstract) {
+		if(currentLayer != null) {
 			calibrationHandler.prepare(currentLayer);
 			calibrationWindow = calibrationHandler.getMainWindow();
 			calibrationWindow.setVisible(true);

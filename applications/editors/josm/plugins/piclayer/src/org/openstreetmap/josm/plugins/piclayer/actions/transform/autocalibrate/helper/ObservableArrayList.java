@@ -88,4 +88,10 @@ public class ObservableArrayList<E> extends ArrayList<E>{
         changes.removePropertyChangeListener(listener);
     }
 
+	public void removeAllListener() {
+		PropertyChangeListener[] listener = changes.getPropertyChangeListeners();
+		int size = listener.length;
+		for(int i=0; i<size; i++)	changes.removePropertyChangeListener(listener[i]);
+	}
+
 }

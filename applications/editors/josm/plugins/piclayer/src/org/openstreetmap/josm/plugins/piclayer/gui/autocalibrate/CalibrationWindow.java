@@ -58,6 +58,7 @@ public class CalibrationWindow extends JFrame {
 	 private JButton addEdgePointsButton;
 	 private JButton helpButton;
 	 private JButton openButton;
+	 private JButton selectLayerButton;
 	 private JButton runButton;
 	 private JButton cancelButton;
 
@@ -113,6 +114,7 @@ public class CalibrationWindow extends JFrame {
 	      addEdgePointsButton = new JButton();
 	      helpButton = new JButton();
 	      openButton = new JButton();
+	      selectLayerButton = new JButton();
 	      runButton = new JButton();
 	      cancelButton = new JButton();
 
@@ -167,6 +169,7 @@ public class CalibrationWindow extends JFrame {
 	      setRefFileHeader();
     	  setRefFileName();
 		  setOpenButton();
+		  setSelectLayerButton();
 	      setRefPointHeader();
 	      setRefPointNamesValues();
 	      dialogPane.add(contentPanel, BorderLayout.CENTER);
@@ -237,7 +240,7 @@ public class CalibrationWindow extends JFrame {
 		}
 		else {
 		    addEdgePointsButton = new JButton(tr("Add Points..."));
-			contentPanel.add(addEdgePointsButton, new GridBagConstraints(3, 1, 3, 1, 0.0, 0.0,
+			contentPanel.add(addEdgePointsButton, new GridBagConstraints(3, 1, GridBagConstraints.REMAINDER, 1, 0.0, 0.0,
 			          GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 			          new Insets(5, 50, 5, 5), 0, 0));
 		}
@@ -252,7 +255,7 @@ public class CalibrationWindow extends JFrame {
 
 	private void setDistance1Field() {
 		distance1Field.setText("Click here...");
-	    contentPanel.add(distance1Field, new GridBagConstraints(3, 3, 2, 1, 0.0, 0.0,
+	    contentPanel.add(distance1Field, new GridBagConstraints(3, 3, GridBagConstraints.REMAINDER, 1, 0.0, 0.0,
 	            GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 	            new Insets(5, 50, 5, 5), 0, 0));
 	}
@@ -266,7 +269,7 @@ public class CalibrationWindow extends JFrame {
 
 	private void setDistance2Field() {
 	    distance2Field.setText("Click here...");
-	    contentPanel.add(distance2Field, new GridBagConstraints(3, 4, 2, 1, 0.0, 0.0,
+	    contentPanel.add(distance2Field, new GridBagConstraints(3, 4, GridBagConstraints.REMAINDER, 1, 0.0, 0.0,
 	          GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 	          new Insets(5, 50, 5, 5), 0, 0));
 	}
@@ -279,15 +282,31 @@ public class CalibrationWindow extends JFrame {
 	}
 
 	private void setRefFileName() {
-		refFileName.setText(tr("<html>File Name:"
+		refFileName.setText(tr("<html>Reference Name:"
 		      + "<br>"
 		      + "<br>"
 		      + "<br>"
 		      + "</html>"));
 
-		contentPanel.add(refFileName, new GridBagConstraints(0, 6, 3, 1, 0.0, 0.0,
+		contentPanel.add(refFileName, new GridBagConstraints(0, 6, GridBagConstraints.REMAINDER, 1, 0.0, 0.0,
 				GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 				new Insets(5, 5, 5, 30), 0, 0));
+	}
+
+	private void setSelectLayerButton() {
+		String imageName = "layerlist.png";
+		Image image = null;
+		try {
+			image = ImageIO.read(getClass().getResource("/images/" + imageName));
+		} catch (Exception ex) {
+			System.out.println("Error: Could not load image " + imageName + "," + ex);
+	 	}
+
+		selectLayerButton.setToolTipText(tr("Select a layer as reference..."));
+	    selectLayerButton.setIcon(new ImageIcon(image));
+	    contentPanel.add(selectLayerButton, new GridBagConstraints(3, 6, 2, 1, 1.0, 0.0,
+	          GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+	          new Insets(5, 50, 5, 5), 0, 0));
 	}
 
 	private void setOpenButton() {
@@ -299,11 +318,11 @@ public class CalibrationWindow extends JFrame {
 			System.out.println("Error: Could not load image " + imageName + "," + ex);
 	 	}
 
-	    openButton = new JButton(tr("Open a File..."));
+		openButton.setToolTipText(tr("Open a file as reference..."));
 	    openButton.setIcon(new ImageIcon(image));
-	    contentPanel.add(openButton, new GridBagConstraints(3, 6, 2, 1, 0.0, 0.0,
+	    contentPanel.add(openButton, new GridBagConstraints(6, 6, GridBagConstraints.REMAINDER, 1, 1.0, 0.0,
 	          GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-	          new Insets(5, 50, 5, 5), 0, 0));
+	          new Insets(5, 5, 5, 5), 0, 0));
 	}
 
 	private void setRefPointHeader() {
@@ -340,13 +359,13 @@ public class CalibrationWindow extends JFrame {
 				+ rp3.getY() + ", " + rp3.getX() + "<br>"
 						+ "</html>"));
 
-			  contentPanel.add(refPointValues, new GridBagConstraints(3, 8, 3, 1, 0.0, 0.0,
+			  contentPanel.add(refPointValues, new GridBagConstraints(3, 8, GridBagConstraints.REMAINDER, 1, 0.0, 0.0,
 					  GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 				      new Insets(5, 5, 5, 30), 0, 0));
 		 }
 		 else {
 		      addRefPointsButton = new JButton(tr("Add Points..."));
-			  contentPanel.add(addRefPointsButton, new GridBagConstraints(3, 8, 3, 1, 0.0, 0.0,
+			  contentPanel.add(addRefPointsButton, new GridBagConstraints(3, 8, GridBagConstraints.REMAINDER, 1, 0.0, 0.0,
 			            GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 			            new Insets(5, 50, 5, 5), 0, 0));
 		 }
@@ -380,7 +399,7 @@ public class CalibrationWindow extends JFrame {
 		Point2D p1 = null;
 		Point2D p2 = null;
 		Point2D p3 = null;
-		DecimalFormat df = new DecimalFormat("###.###");
+		DecimalFormat df = new DecimalFormat("###,###.###");
 
 		if(this.originPoints.size() == 3) {
 			p1 = originPoints.get(0);
@@ -390,9 +409,9 @@ public class CalibrationWindow extends JFrame {
 		else return;
 
 		edgePointValues.setText(tr("<html>"
-			+ df.format(p1.getY()) + ", " + df.format(p1.getX()) + "<br>"
-			+ df.format(p2.getY()) + ", " + df.format(p2.getX()) + "<br>"
-			+ df.format(p3.getY()) + ", " + df.format(p3.getX()) + "<br>"
+			+ df.format(p1.getY()) + " , " + df.format(p1.getX()) + "<br>"
+			+ df.format(p2.getY()) + " , " + df.format(p2.getX()) + "<br>"
+			+ df.format(p3.getY()) + " , " + df.format(p3.getX()) + "<br>"
 					+ "</html>"));
 
 		contentPanel.remove(addEdgePointsButton);
@@ -433,8 +452,9 @@ public class CalibrationWindow extends JFrame {
 	}
 
 	private void refFileEntered() {
+		contentPanel.remove(selectLayerButton);
 		contentPanel.remove(openButton);
-		refFileName.setText(tr("<html>File Name:</html>"));
+		refFileName.setText(tr("<html>Reference Name:</html>"));
 		refFileNameValue.setText(referenceFileName);
 		contentPanel.add(refFileNameValue, new GridBagConstraints(3, 6, 2, 1, 0.0, 0.0,
 		           GridBagConstraints.CENTER, GridBagConstraints.BOTH,
@@ -450,7 +470,7 @@ public class CalibrationWindow extends JFrame {
 		Point2D p1 = null;
 		Point2D p2 = null;
 		Point2D p3 = null;
-		DecimalFormat df = new DecimalFormat("###.###");
+		DecimalFormat df = new DecimalFormat("###,###.###");
 
 		if(this.referencePoints.size() == 3) {
 			p1 = referencePoints.get(0);
@@ -460,9 +480,9 @@ public class CalibrationWindow extends JFrame {
 		else return;
 
 		refPointValues.setText(tr("<html>"
-				+ df.format(p1.getY()) + ", " + df.format(p1.getX()) + "<br>"
-				+ df.format(p2.getY()) + ", " + df.format(p2.getX()) + "<br>"
-				+ df.format(p3.getY()) + ", " + df.format(p3.getX()) + "<br>"
+				+ df.format(p1.getY()) + " , " + df.format(p1.getX()) + "<br>"
+				+ df.format(p2.getY()) + " , " + df.format(p2.getX()) + "<br>"
+				+ df.format(p3.getY()) + " , " + df.format(p3.getX()) + "<br>"
 						+ "</html>"));
 
 		contentPanel.remove(addRefPointsButton);
@@ -540,18 +560,6 @@ public class CalibrationWindow extends JFrame {
 	    updateState();
 	}
 
-	public void setOkButtonListener(ActionListener l) {
-	    this.runButton.addActionListener(l);
-	}
-
-	public void setCancelButtonListener(ActionListener l) {
-	    this.cancelButton.addActionListener(l);
-	}
-
-	public void setWindowListener(WindowListener l) {
-	    this.addWindowListener(l);
-	}
-
 	public void setReferenceFileName(String name) {
 		  this.referenceFileName = name;
 	}
@@ -579,8 +587,24 @@ public class CalibrationWindow extends JFrame {
 
 	// LISTENER
 
+	public void setOkButtonListener(ActionListener l) {
+	    this.runButton.addActionListener(l);
+	}
+
+	public void setCancelButtonListener(ActionListener l) {
+	    this.cancelButton.addActionListener(l);
+	}
+
+	public void setWindowListener(WindowListener l) {
+	    this.addWindowListener(l);
+	}
+
 	public void addOpenFileButtonListener(ActionListener l) {
 		this.openButton.addActionListener(l);
+	}
+
+	public void addSelectLayerButtonListener(ActionListener l) {
+		this.selectLayerButton.addActionListener(l);
 	}
 
 	public void addCancelButtonListener(ActionListener l) {
@@ -635,6 +659,7 @@ public class CalibrationWindow extends JFrame {
 			distance1Field.setEnabled(false);
 			distance2Field.setEnabled(false);
 			openButton.setEnabled(false);
+			selectLayerButton.setEnabled(false);
 			addRefPointsButton.setEnabled(false);
 			runButton.setEnabled(false);
 		}
@@ -643,7 +668,10 @@ public class CalibrationWindow extends JFrame {
 				distance1Field.setEnabled(true);
 				distance2Field.setEnabled(true);
 			}
-			if(dist1Value != null)			openButton.setEnabled(true);
+			if(dist1Value != null) {
+				openButton.setEnabled(true);
+				selectLayerButton.setEnabled(true);
+			}
 			if(referenceFileName != null)	addRefPointsButton.setEnabled(true);
 			if(!referencePoints.isEmpty())	runButton.setEnabled(true);
 		}

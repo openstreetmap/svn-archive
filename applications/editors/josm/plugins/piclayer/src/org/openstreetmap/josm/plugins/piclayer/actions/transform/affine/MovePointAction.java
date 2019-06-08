@@ -8,8 +8,6 @@ import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
 
 import org.openstreetmap.josm.data.coor.LatLon;
-import org.openstreetmap.josm.data.coor.conversion.CoordinateFormatManager;
-import org.openstreetmap.josm.data.coor.conversion.ICoordinateFormat;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.plugins.piclayer.actions.GenericPicTransformAction;
 import org.openstreetmap.josm.tools.ImageProvider;
@@ -76,9 +74,8 @@ public class MovePointAction extends GenericPicTransformAction {
      */
     private void setLatLonOriginPoints(Point2D point) {
     	LatLon latLonPoint = MainApplication.getMap().mapView.getLatLon(point.getX(), point.getY());
-        ICoordinateFormat mCoord = CoordinateFormatManager.getDefaultFormat();
-        double latY = Double.parseDouble(mCoord.latToString(latLonPoint));
-        double lonX = Double.parseDouble(mCoord.lonToString(latLonPoint));
+    	double latY = latLonPoint.getY();
+    	double lonX = latLonPoint.getX();
         currentLayer.getTransformer().addLatLonOriginPoint(new Point2D.Double(lonX, latY));
     }
 

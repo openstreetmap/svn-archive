@@ -24,19 +24,19 @@ import javax.swing.JFrame;
 
 import org.openstreetmap.josm.actions.OpenFileAction;
 import org.openstreetmap.josm.data.coor.LatLon;
-import org.openstreetmap.josm.data.coor.conversion.CoordinateFormatManager;
-import org.openstreetmap.josm.data.coor.conversion.ICoordinateFormat;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MapViewState.MapViewPoint;
 import org.openstreetmap.josm.gui.help.HelpBrowser;
+import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.plugins.piclayer.actions.transform.affine.MovePointAction;
 import org.openstreetmap.josm.plugins.piclayer.actions.transform.autocalibrate.helper.ObservableArrayList;
 import org.openstreetmap.josm.plugins.piclayer.gui.autocalibrate.CalibrationErrorView;
 import org.openstreetmap.josm.plugins.piclayer.gui.autocalibrate.CalibrationWindow;
 import org.openstreetmap.josm.plugins.piclayer.gui.autocalibrate.ReferenceOptionView;
 import org.openstreetmap.josm.plugins.piclayer.gui.autocalibrate.ResultCheckView;
+import org.openstreetmap.josm.plugins.piclayer.gui.autocalibrate.SelectLayerView;
 import org.openstreetmap.josm.plugins.piclayer.layer.PicLayerAbstract;
 import org.openstreetmap.josm.tools.Logging;
 
@@ -54,6 +54,7 @@ public class AutoCalibrateHandler {
 	private CalibrationErrorView errorView;
 	private ReferenceOptionView refOptionView;
 	private File referenceFile;
+	private Layer referenceLayer;
 	private AutoCalibrator calibrator;
 	private ObservableArrayList<Point2D> originPointList;		// points set on picture to calibrate, scaled in LatLon
 	private ObservableArrayList<Point2D> referencePointList;	// points of reference data, scaled in LatLon
@@ -68,6 +69,7 @@ public class AutoCalibrateHandler {
 		this.distance1To2 = 0.0;
 		this.distance2To3 = 0.0;
 		this.referenceFile = null;
+		this.referenceLayer = null;
 		this.currentPicLayer = null;
 		this.mainWindow = new CalibrationWindow();
 		addListenerToMainView();
@@ -103,6 +105,7 @@ public class AutoCalibrateHandler {
 			this.mainWindow.addDistance1FieldListener(new TextField1Listener());
 			this.mainWindow.addDistance2FieldListener(new TextField2Listener());
 			this.mainWindow.addOpenFileButtonListener(new OpenFileButtonListener());
+			this.mainWindow.addSelectLayerButtonListener(new SelectLayerButtonListener());
 			this.mainWindow.addReferencePointButtonListener(new RefPointsButtonListener());
 			this.mainWindow.addCancelButtonListener(new CancelButtonListener());
 			this.mainWindow.addRunButtonListener(new RunButtonListener());
@@ -155,6 +158,57 @@ public class AutoCalibrateHandler {
 	}
 
 	/**
+	 * Select layer button listener
+	 * @author rebsc
+	 *
+	 */
+	private class SelectLayerButtonListener implements ActionListener {
+		private SelectLayerView selector;
+
+		@Override
+		public void actionPerformed(ActionEvent event) {
+			mainWindow.setVisible(false);
+
+			selector = new SelectLayerView();
+			selector.setVisible(true);
+
+			selector.setOkButtonListener(new SelectorOkButtonListener());
+			selector.setCancelButtonListener(new SelectorCancelButtonListener());
+		}
+
+		private class SelectorCancelButtonListener implements ActionListener {
+			@Override
+		    public void actionPerformed(ActionEvent e) {
+				selector.getFrame().dispatchEvent(new WindowEvent(selector.getFrame(), WindowEvent.WINDOW_CLOSING));
+		    }
+		}
+
+		private class SelectorOkButtonListener implements ActionListener {
+			@Override
+		    public void actionPerformed(ActionEvent e) {
+				String filename = (String) selector.getList().getSelectedValue();
+
+				if(filename != null) {
+					for(Layer l : MainApplication.getLayerManager().getLayers()) {
+						if(l.getName().equals(filename)) {
+							referenceLayer = l;
+							MainApplication.getLayerManager().setActiveLayer(l);
+						}
+					}
+				}
+
+				if(referenceLayer != null) {
+					mainWindow.setReferenceFileNameValue(filename);
+				}
+				else	calibrator.showErrorView(CalibrationErrorView.SELECT_LAYER_ERROR);
+
+				selector.setVisible(false);
+				mainWindow.setVisible(true);
+		    }
+		}
+	}
+
+	/**
 	 * Cancel button listener
 	 * @author rebsc
 	 *
@@ -163,6 +217,7 @@ public class AutoCalibrateHandler {
 		@Override
 	    public void actionPerformed(ActionEvent e) {
 			reset();
+			removeListChangedListener();
 	    }
 	}
 
@@ -220,7 +275,9 @@ public class AutoCalibrateHandler {
 	    	@Override
 	    	public void windowClosing(WindowEvent wEvt) {
 	    		reset();
+	    		removeListChangedListener();
 	    	}
+
 		};
 		return adapter;
 	}
@@ -348,7 +405,7 @@ public class AutoCalibrateHandler {
 	private class RefManualPointsMouseListener implements MouseListener {
 		@Override
 		public void mouseClicked(MouseEvent e) {
-			if(referenceFile == null) {
+			if(referenceFile == null && referenceLayer == null) {
 				MainApplication.getMap().mapView.removeMouseListener(this);
 				return;
 			}
@@ -356,9 +413,8 @@ public class AutoCalibrateHandler {
 			if(referencePointList.size() < 3) {
 				// add point to reference list in lat/lon scale
 				LatLon latLonPoint = MainApplication.getMap().mapView.getLatLon(e.getPoint().getX(),e.getPoint().getY());
-				ICoordinateFormat mCoord = CoordinateFormatManager.getDefaultFormat();
-				double latY = Double.parseDouble(mCoord.latToString(latLonPoint));
-				double lonX = Double.parseDouble(mCoord.lonToString(latLonPoint));
+				double latY = latLonPoint.getY();
+				double lonX = latLonPoint.getX();
 				Point2D llPoint = new Point2D.Double(lonX, latY);
 				referencePointList.add(llPoint);
 				// draw point
@@ -396,7 +452,7 @@ public class AutoCalibrateHandler {
 	private class RefDefinedPointsMouseListener implements MouseListener {
 		@Override
 		public void mouseClicked(MouseEvent e) {
-			if(referenceFile == null) {
+			if(referenceFile == null && referenceLayer == null) {
 				MainApplication.getMap().mapView.removeMouseListener(this);
 				return;
 			}
@@ -404,9 +460,8 @@ public class AutoCalibrateHandler {
 			if(referencePointList.size() < 3) {
 				// get pressed point in lat/lon
 				LatLon latLonPoint = MainApplication.getMap().mapView.getLatLon(e.getPoint().getX(),e.getPoint().getY());
-				ICoordinateFormat mCoord = CoordinateFormatManager.getDefaultFormat();
-				double latY = Double.parseDouble(mCoord.latToString(latLonPoint));
-				double lonX = Double.parseDouble(mCoord.lonToString(latLonPoint));
+			  	double latY = latLonPoint.getY();
+		    	double lonX = latLonPoint.getX();
 				Point2D llPoint = new Point2D.Double(lonX, latY);
 
 				// get current data set and find closest point
@@ -470,12 +525,6 @@ public class AutoCalibrateHandler {
 
 	// HELPER
 
-	private void addFileInNewLayer(File file) {
-		List<File> files = new ArrayList<>();
-		files.add(file);
-		OpenFileAction.openFiles(files);
-	}
-
 	public void prepare(PicLayerAbstract layer) {
 		this.currentPicLayer = layer;
 		addListChangedListenerToPointLists();
@@ -490,11 +539,36 @@ public class AutoCalibrateHandler {
 		}
 	}
 
+	private void reset() {
+		originPointList = new ObservableArrayList<>(3);
+		referencePointList = new ObservableArrayList<>(3);
+		distance1To2 = 0.0;
+		distance2To3 = 0.0;
+		this.referenceFile = null;
+		this.referenceLayer = null;
+		resetLists();
+		currentPicLayer.clearDrawReferencePoints();
+		currentPicLayer.invalidate();
+		mainWindow.setVisible(false);
+		mainWindow = new CalibrationWindow();
+		addListenerToMainView();
+	}
+
+	private void resetLists() {
+		currentPicLayer.getTransformer().clearOriginPoints();
+		currentPicLayer.getTransformer().clearLatLonOriginPoints();
+	}
+
 	private void addListChangedListenerToPointLists() {
 		OriginSizePropertyListener originListener = new OriginSizePropertyListener();
 		currentPicLayer.getTransformer().getLatLonOriginPoints().addPropertyChangeListener(originListener);
 		RefSizePropertyListener refListener = new RefSizePropertyListener();
 		this.referencePointList.addPropertyChangeListener(refListener);
+	}
+
+	private void removeListChangedListener() {
+		currentPicLayer.getTransformer().getLatLonOriginPoints().removeAllListener();
+		referencePointList.removeAllListener();
 	}
 
 	/**
@@ -530,23 +604,9 @@ public class AutoCalibrateHandler {
 		}
 	}
 
-	private void reset() {
-		originPointList = new ObservableArrayList<>(3);
-		referencePointList = new ObservableArrayList<>(3);
-		distance1To2 = 0.0;
-		distance2To3 = 0.0;
-		this.referenceFile = null;
-		resetLists();
-		currentPicLayer.clearDrawReferencePoints();
-		currentPicLayer.invalidate();
-		mainWindow.setVisible(false);
-		mainWindow = new CalibrationWindow();
-		addListenerToMainView();
+	private void addFileInNewLayer(File file) {
+		List<File> files = new ArrayList<>();
+		files.add(file);
+		OpenFileAction.openFiles(files);
 	}
-
-	private void resetLists() {
-		currentPicLayer.getTransformer().clearOriginPoints();
-		currentPicLayer.getTransformer().clearLatLonOriginPoints();
-	}
-
 }

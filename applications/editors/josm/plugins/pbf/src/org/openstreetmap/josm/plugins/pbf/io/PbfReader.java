@@ -72,18 +72,20 @@ public class PbfReader extends AbstractReader {
                 }
             }
 
-            HeaderBBox bbox = header.getBbox();
-            if (bbox != null) {
-                double minlat = parseRawDegrees(bbox.getBottom());
-                double minlon = parseRawDegrees(bbox.getLeft());
-                double maxlat = parseRawDegrees(bbox.getTop());
-                double maxlon = parseRawDegrees(bbox.getRight());
-                Bounds b = new Bounds(minlat, minlon, maxlat, maxlon);
-                if (!b.isCollapsed() && areCoordinatesValid(minlat, minlon, maxlat, maxlon)) {
-                    ds.addDataSource(new DataSource(b, header.getSource()));
-                } else {
-                    Logging.error("Invalid Bounds: "+b);
-                }
+            if (header.hasBbox()) {
+            	HeaderBBox bbox = header.getBbox();
+            	if (bbox != null) {
+            		double minlat = parseRawDegrees(bbox.getBottom());
+            		double minlon = parseRawDegrees(bbox.getLeft());
+            		double maxlat = parseRawDegrees(bbox.getTop());
+            		double maxlon = parseRawDegrees(bbox.getRight());
+            		Bounds b = new Bounds(minlat, minlon, maxlat, maxlon);
+            		if (!b.isCollapsed() && areCoordinatesValid(minlat, minlon, maxlat, maxlon)) {
+            			ds.addDataSource(new DataSource(b, header.getSource()));
+            		} else {
+            			Logging.error("Invalid Bounds: "+b);
+            		}
+            	}
             }
         }
 

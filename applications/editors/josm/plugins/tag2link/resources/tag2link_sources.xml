@@ -151,9 +151,9 @@
     </src>
 
     <src name="IGN" country-code="FR">
-		<!-- 
-		http://geodesie.ign.fr/fiches/index.php?module=e&action=fichepdf&source=carte&sit_no=4509302&geo_cid=0&lambda=1.90024744&phi=48.03041621
-		 -->
+        <!-- 
+        http://geodesie.ign.fr/fiches/index.php?module=e&action=fichepdf&source=carte&sit_no=4509302&geo_cid=0&lambda=1.90024744&phi=48.03041621
+        -->
         <rule>
             <condition k="man_made" v="survey_point" />
             <condition k="source" v="©IGN .*" />
@@ -225,14 +225,14 @@
         </rule>
     </src>
 
-	<!-- RCE, Dutch heritage authority --> 
+    <!-- RCE, Dutch heritage authority --> 
 
-	<src name="rce" country-code="NL">
-	    <rule>
-	        <condition k="ref:rce" />
-	        <link name="RCE website" href="https://cultureelerfgoed.nl/monumenten/%v%" />
-	    </rule>
-	</src>
+    <src name="rce" country-code="NL">
+        <rule>
+            <condition k="ref:rce" />
+            <link name="RCE website" href="https://cultureelerfgoed.nl/monumenten/%v%" />
+        </rule>
+    </src>
 
     <!-- BAG - Buildings in The Netherlands --> 
 
@@ -243,4 +243,12 @@
         </rule>
     </src>
 
+    <!-- reference id number of the building in the RUIAN database of properties of the Czech Republic --> 
+
+    <src name="Czech RUIAN" country-code="CZ">
+        <rule>
+            <condition k="ref:ruian:building" v="[0-9]+" />
+            <link name="View %name% object detail" href="https://vdp.cuzk.cz/vdp/ruian/stavebniobjekty/%v%" />
+        </rule>
+    </src>
 </tag2link>

@@ -5,13 +5,20 @@
     <property name="plugin.main.version" value="14153"/>
     <property name="apidoc.dir" value="doc"/>
 
+    <property name="plugin.author" value="Beata Jancso"/>
+    <property name="plugin.class" value="org.openstreetmap.josm.plugins.mapdust.MapdustPlugin"/>
+    <property name="plugin.description" value="The MapDust Plug-In shows the MapDust bug reports on the map. You can create, close,invalidate, re-open and comment bug reports by using this plugin."/>
+    <property name="plugin.icon" value="images/dialogs/mapdust_icon25.png"/>
+    <property name="plugin.link" value="https://wiki.openstreetmap.org/wiki/JOSM/Plugins/MapDust"/>
+    <property name="plugin.requires" value="gson"/>
+
     <!--
     **********************************************************
     ** include targets that all plugins have in common
     **********************************************************
     -->
     <import file="../build-common.xml"/>
-  
+
     <fileset id="plugin.requires.jars" dir="${plugin.dist.dir}">
         <include name="gson.jar"/>
     </fileset>
@@ -22,36 +29,11 @@
         <delete file="${plugin.jar}"/>
     </target>
 
-    <!-- creates the .jar file of the plugin -->
-    <target name="dist" depends="compile,revision">
-        <echo message="creating ${ant.project.name}.jar ... "/>
+    <target name="setup-dist">
+        <antcall target="setup-dist-default" />
         <copy todir="${plugin.build.dir}">
             <fileset dir="conf"/>
         </copy>
-        <copy todir="${plugin.build.dir}/images">
-            <fileset dir="images"/>
-        </copy>
-        <copy todir="${plugin.build.dir}/data">
-            <fileset dir="data"/>
-        </copy>
-        <copy todir="${plugin.build.dir}">
-            <fileset dir=".">
-                <include name="README"/>
-                <include name="LICENSE"/>
-            </fileset>
-        </copy>
-        <jar destfile="${plugin.jar}" basedir="${plugin.build.dir}" manifestencoding="UTF-8">
-            <manifest>
-                <attribute name="Author" value="Beata Jancso"/>
-                <attribute name="Plugin-Class" value="org.openstreetmap.josm.plugins.mapdust.MapdustPlugin"/>
-                <attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
-                <attribute name="Plugin-Description" value="The MapDust Plug-In shows the MapDust bug reports on the map. You can create, close,invalidate, re-open and comment bug reports by using this plugin."/>
-                <attribute name="Plugin-Link" value="https://wiki.openstreetmap.org/wiki/JOSM/Plugins/MapDust"/>
-                <attribute name="Plugin-Mainversion" value="${plugin.main.version}"/>
-                <attribute name="Plugin-Requires" value="gson"/>
-                <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
-                <attribute name="Plugin-Icon" value="images/dialogs/mapdust_icon25.png"/>
-            </manifest>
-        </jar>
     </target>
+
 </project>

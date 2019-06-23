@@ -6,37 +6,13 @@
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
     <property name="plugin.main.version" value="14153"/>
 
+    <property name="plugin.author" value="Rodion Scherbakov"/>
+    <property name="plugin.class" value="org.openstreetmap.josm.plugins.customizepublictransportstop.CustomizePublicTransportStopPlugin"/>
+    <property name="plugin.description" value="Customization of public public transport stops."/>
+    <property name="plugin.icon" value="images/bus.png"/>
+    <property name="plugin.link" value="https://wiki.openstreetmap.org/wiki/JOSM/Plugins/CustomizePublicTransportStop"/>
+
     <!-- ** include targets that all plugins have in common ** -->
     <import file="../build-common.xml"/>
-
-    <!-- creates the .jar file of the plugin -->
-    <target name="dist" depends="compile,revision">
-        <echo message="creating ${ant.project.name}.jar ... "/>
-        <copy todir="${plugin.build.dir}/images">
-            <fileset dir="images"/>
-        </copy>
-        <copy todir="${plugin.build.dir}/data">
-            <fileset dir="data"/>
-        </copy>
-        <copy todir="${plugin.build.dir}">
-            <fileset dir=".">
-                <include name="GPL-v3.0.txt" />
-                <include name="GPL-v2.0.txt" />
-            </fileset>
-        </copy>
-        <jar destfile="${plugin.jar}" basedir="${plugin.build.dir}" manifestencoding="UTF-8">
-            <manifest>
-                <attribute name="Author" value="Rodion Scherbakov"/>
-                <attribute name="Plugin-Class" value="org.openstreetmap.josm.plugins.customizepublictransportstop.CustomizePublicTransportStopPlugin"/>
-                <attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
-                <attribute name="Plugin-Description" value="Customization of public public transport stops."/>
-                <attribute name="Plugin-Link" value="https://wiki.openstreetmap.org/wiki/JOSM/Plugins/CustomizePublicTransportStop"/>
-                <attribute name="Plugin-Mainversion" value="${plugin.main.version}"/>
-                <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
-                <attribute name="Plugin-Icon" value="images/bus.png"/>
-                <attribute name="ru_Plugin-Description" value="Настройка остановки общественного транспорта в соответствии со стандартом" />
-            </manifest>
-        </jar>
-    </target>
 
 </project>

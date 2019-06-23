@@ -6,6 +6,12 @@
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
     <property name="plugin.main.version" value="14153"/>
 
+    <property name="plugin.author" value="Frederik Ramm"/>
+    <property name="plugin.class" value="org.openstreetmap.hot.sds.SeparateDataStorePlugin"/>
+    <property name="plugin.description" value="Loads data from SDS"/>
+    <property name="plugin.icon" value="images/sds.png"/>
+    <!--<property name="plugin.link" value=""/>-->
+
     <!--
     **********************************************************
     ** include targets that all plugins have in common
@@ -13,24 +19,4 @@
     -->
     <import file="../build-common.xml"/>
 
-    <target name="dist" depends="compile,revision">
-        <copy todir="${plugin.build.dir}/images">
-            <fileset dir="images"/>
-        </copy>
-        <copy todir="${plugin.build.dir}/data">
-            <fileset dir="data"/>
-        </copy>
-        <jar destfile="${plugin.jar}" basedir="${plugin.build.dir}" manifestencoding="UTF-8">
-            <manifest>
-                <attribute name="Author" value="Frederik Ramm"/>
-                <attribute name="Plugin-Class" value="org.openstreetmap.hot.sds.SeparateDataStorePlugin"/>
-                <attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
-                <attribute name="Plugin-Description" value="Loads data from SDS" />
-                <attribute name="Plugin-Icon" value="images/sds.png"/>
-                <!--<attribute name="Plugin-Link" value=""/>-->
-                <attribute name="Plugin-Mainversion" value="${plugin.main.version}"/>
-                <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
-            </manifest>
-        </jar>
-    </target>
 </project>

@@ -6,6 +6,13 @@
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
     <property name="plugin.main.version" value="14153"/>
 
+    <property name="plugin.author" value="Jose Vidal &lt;vidalfree@gmail.com&gt;, Juangui Jordán &lt;juangui@gmail.com&gt;, Hassan S &lt;hassan.sabirin@gmail.com&gt;"/>
+    <property name="plugin.class" value="com.innovant.josm.plugin.routing.RoutingPlugin"/>
+    <property name="plugin.description" value="Provides routing capabilities."/>
+    <property name="plugin.icon" value="images/preferences/routing.png"/>
+    <property name="plugin.link" value="https://wiki.openstreetmap.org/index.php/JOSM/Plugins/Routing"/>
+    <property name="plugin.requires" value="log4j"/>
+
     <!--
     **********************************************************
     ** include targets that all plugins have in common
@@ -13,63 +20,16 @@
     -->
     <import file="../build-common.xml"/>
 
-    <!-- classpath -->
-    <path id="classpath">
-        <fileset dir="${plugin.lib.dir}" includes="**/*.jar"/>
-        <pathelement path="${josm}"/>
-        <fileset dir="../log4j/lib">
-            <include name="**/*.jar"/>
-        </fileset>
-    </path>
-    <!--
-    **********************************************************
-    ** compile - complies the source tree
-    ** Overrides the target from build-common.xml
-    **********************************************************
-    -->
-    <target name="compile" depends="init">
-        <echo message="compiling sources for ${plugin.jar} ..."/>
-        <javac srcdir="src" classpathref="classpath" debug="true" destdir="${plugin.build.dir}" includeantruntime="false">
-            <compilerarg value="-Xlint:deprecation"/>
-            <compilerarg value="-Xlint:unchecked"/>
-        </javac>
-    </target>
+    <fileset id="plugin.requires.jars" dir="${plugin.dist.dir}">
+        <include name="log4j.jar"/>
+    </fileset>
 
-    <!-- Generate distribution -->
-    <target name="dist" depends="compile,revision" description="Generate distribution">
-        <copy todir="${plugin.build.dir}/images">
-            <fileset dir="images"/>
-        </copy>
-        <copy todir="${plugin.build.dir}/data">
-            <fileset dir="data"/>
-        </copy>
-        <copy todir="${plugin.build.dir}/">
+    <target name="setup-dist">
+        <antcall target="setup-dist-default" />
+        <copy todir="${plugin.build.dir}">
             <fileset dir="resources">
                 <include name="*.xml"/>
             </fileset>
         </copy>
-        <jar destfile="${plugin.jar}" basedir="${plugin.build.dir}" manifestencoding="UTF-8">
-        <!--
-        ************************************************
-        ** configure these properties. Most of them will be copied to the plugins
-        ** manifest file. Property values will also show up in the list available
-        ** plugins: https://josm.openstreetmap.de/wiki/Plugins.
-        **
-        ************************************************
-        -->
-            <manifest>
-                <attribute name="Author" value="Jose Vidal &lt;vidalfree@gmail.com&gt;, Juangui Jordán &lt;juangui@gmail.com&gt;, Hassan S &lt;hassan.sabirin@gmail.com&gt;"/>
-                <attribute name="Plugin-Class" value="com.innovant.josm.plugin.routing.RoutingPlugin"/>
-                <attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
-                <attribute name="Plugin-Description" value="Provides routing capabilities."/>
-                <attribute name="Plugin-Icon" value="images/preferences/routing.png"/>
-                <attribute name="Plugin-Link" value="https://wiki.openstreetmap.org/index.php/JOSM/Plugins/Routing"/>
-                <attribute name="Plugin-Mainversion" value="${plugin.main.version}"/>
-                <attribute name="Plugin-Stage" value="50"/>
-                <attribute name="Plugin-Requires" value="log4j"/>
-                <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
-            </manifest>
-            <zipfileset src="${plugin.lib.dir}/jgrapht-jdk1.5.jar"/>
-        </jar>
     </target>
 </project>

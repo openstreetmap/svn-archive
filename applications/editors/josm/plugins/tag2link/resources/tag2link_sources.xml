@@ -20,25 +20,32 @@
 
     <!-- Global --> 
 
+    <src name="Search">
+        <rule>
+            <condition k="^(.+(:|_))?name((:|_).+)?$" />
+            <link name="Search on DuckDuckGo" href="https://duckduckgo.com/?q=%v%" />
+        </rule>
+    </src>
+
     <src name="Common">
         <rule>
-            <condition k="(contact:)?website" />
+            <condition k="^(.+(:|_))?website((:|_).+)?$" v="^(http:|https:|www\.).*" />
             <link name="View website" href="%v%" />
         </rule>
         <rule>
-            <condition k="(.*:url|.*_url|^url$)" />
+            <condition k="^(.+(:|_))?url((:|_).+)?$" v="^(http:|https:|www\.).*" />
             <link name="View URL" href="%v%" />
         </rule>
         <rule>
-            <condition k="(contact:)?email" v="[^@]+@[^@]+" />
+            <condition k="^(.+(:|_))?email((:|_).+)?$" v="[^@]+@[^@]+" />
             <link name="Send Email" href="mailto:%v%" />
         </rule>
         <rule>
-            <condition k="source" v="(http:|https:).*"/>
+            <condition k="^(.+(:|_))?source((:|_).+)?$" v="^(http:|https:|www\.).*"/>
             <link name="View website" href="%v%" />
         </rule>
         <rule>
-            <condition k="image" v="(http:|https:).*"/>
+            <condition k="image" v="^(http:|https:|www\.).*"/>
             <link name="View image" href="%v%" />
         </rule>
         <rule>
@@ -47,7 +54,7 @@
         </rule>
     </src>
     
-    <src name="Wikipedia">
+    <src name="Wikimedia">
         <rule>
             <condition k="wikipedia(?::(\p{Lower}{2,}))?" v="(?:(\p{Lower}{2,}):)?(.*)" />
             <link name="View %name% article" href="https://%k.1:v.1:en%.wikipedia.org/wiki/%v.2:v.1%" />
@@ -62,7 +69,7 @@
         </rule>
         <rule>
             <condition k="wikimedia_commons" v="File:.*"/>
-            <link name="View Commons image" href="https://commons.wikimedia.org/wiki/%v%" />
+            <link name="View Commons file" href="https://commons.wikimedia.org/wiki/%v%" />
         </rule>
         <rule>
             <condition k="wikimedia_commons" v="Category:.*"/>
@@ -238,8 +245,20 @@
 
     <src name="BAG" country-code="NL">
        <rule>
-            <condition k="ref:bag" />
+            <condition k="ref:bag" v="^[0-9]{16}$" />
+            <link name="Open in BAG Viewer" href="https://bagviewer.kadaster.nl/lvbag/bag-viewer/index.html#?searchQuery=%v%" />
+        </rule>
+        <rule>
+            <condition k="ref:bag" v="^[0-9]{15}$" />
             <link name="Open in BAG Viewer" href="https://bagviewer.kadaster.nl/lvbag/bag-viewer/index.html#?searchQuery=0%v%" />
+        </rule>
+        <rule>
+            <condition k="ref:bag" v="^[0-9]{14}$" />
+            <link name="Open in BAG Viewer" href="https://bagviewer.kadaster.nl/lvbag/bag-viewer/index.html#?searchQuery=00%v%" />
+        </rule>
+        <rule>
+            <condition k="ref:bag" v="^[0-9]{13}$" />
+            <link name="Open in BAG Viewer" href="https://bagviewer.kadaster.nl/lvbag/bag-viewer/index.html#?searchQuery=000%v%" />
         </rule>
     </src>
 

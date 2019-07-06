@@ -11,6 +11,7 @@ import java.awt.image.BufferedImage;
 import org.openstreetmap.josm.data.ProjectionBounds;
 import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.gui.MapView;
+import org.openstreetmap.josm.gui.layer.MainLayerManager;
 
 /**
  * Implements a fake MapView that we can pass to WMSLayer's .paint,
@@ -38,7 +39,7 @@ class FakeMapView extends MapView {
 
     FakeMapView(MapView parent, double scale) {
         // TODO: MapView constructor contains registering listeners and other code, that probably shouldn't be called in fake map view
-        super(null, null);
+        super(new MainLayerManager(), null);
         this.parent = parent;
         this.scale = scale;
 

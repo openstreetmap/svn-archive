@@ -303,12 +303,12 @@ public class MeasurementDialog extends ToggleDialog implements DataSelectionList
     }
 
     private boolean parentsContain(Way w) {
-        return w.getReferrers().stream()
+        return w.getReferrers(true).stream()
                 .anyMatch(ref -> ref instanceof Relation && relations != null && relations.contains(ref));
     }
 
     private boolean parentsContain(Node n) {
-        return n.getReferrers().stream()
+        return n.getReferrers(true).stream()
                 .anyMatch(ref
                         -> (ref instanceof Way && ((ways != null && ways.contains(ref)) || parentsContain((Way) ref)))
                         || (ref instanceof Relation && relations != null && relations.contains(ref)));

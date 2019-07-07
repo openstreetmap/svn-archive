@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<project name="http2" default="dist" basedir=".">
+    <!-- enter the SVN commit message -->
+    <property name="commit.message" value="Commit message"/>
+    <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
+    <property name="plugin.main.version" value="15229"/>
+    
+    <!-- Configure these properties (replace "..." accordingly).
+         See https://josm.openstreetmap.de/wiki/DevelopersGuide/DevelopingPlugins
+    -->
+    <property name="plugin.author" value="Don-vip"/>
+    <property name="plugin.class" value="org.openstreetmap.josm.plugins.http2.Http2Plugin"/>
+    <property name="plugin.description" value="Provides HTTP/2 support. Requires Java 11 or later."/>
+    <property name="plugin.minimum.java.version" value="11"/>
+    <property name="plugin.canloadatruntime" value="true"/>
+    <property name="plugin.early" value="true"/>
+    <property name="plugin.icon" value="images/http2.png"/>
+
+    <!-- ** include targets that all plugins have in common ** -->
+    <import file="../build-common.xml"/>
+
+    <!-- Disable build below java 11 -->
+    <condition property="skip-compile">
+        <not>
+            <isset property="isJava11"/>
+        </not>
+    </condition>
+    <condition property="skip-dist">
+        <not>
+            <isset property="isJava11"/>
+        </not>
+    </condition>
+    <condition property="skip-javadoc">
+        <not>
+            <isset property="isJava11"/>
+        </not>
+    </condition>
+
+</project>

@@ -1,0 +1,9 @@
+README 
+======
+
+Readme for HTTP/2 JOSM plugin
+
+    * Author: Don-vip
+    * License: GPL v3 (see GPL-3.0.txt)
+    
+This plugin provides HTTP/2 support for JOSM. Requires Java 11 or later.

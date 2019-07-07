@@ -277,7 +277,7 @@
             </and>
         </condition>
     </target>
-    <target name="javadoc">
+    <target name="javadoc" unless="skip-javadoc">
         <javadoc destdir="${plugin.doc.dir}"
                 executable="${javadoc.executable}"
                 encoding="UTF-8"

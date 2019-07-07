@@ -10,6 +10,7 @@ import java.awt.event.KeyEvent;
 import java.text.DecimalFormat;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Objects;
 
 import javax.swing.AbstractAction;
 import javax.swing.JLabel;
@@ -21,6 +22,7 @@ import org.openstreetmap.josm.data.osm.DataSelectionListener;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.data.osm.event.AbstractDatasetChangedEvent;
 import org.openstreetmap.josm.data.osm.event.DataChangedEvent;
@@ -36,7 +38,13 @@ import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.SideButton;
 import org.openstreetmap.josm.gui.dialogs.ToggleDialog;
 import org.openstreetmap.josm.gui.help.HelpUtil;
+import org.openstreetmap.josm.gui.layer.LayerManager.LayerAddEvent;
+import org.openstreetmap.josm.gui.layer.LayerManager.LayerChangeListener;
+import org.openstreetmap.josm.gui.layer.LayerManager.LayerOrderChangeEvent;
+import org.openstreetmap.josm.gui.layer.LayerManager.LayerRemoveEvent;
+import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import org.openstreetmap.josm.gui.util.GuiHelper;
+import org.openstreetmap.josm.tools.Geometry;
 import org.openstreetmap.josm.tools.ImageProvider;
 import org.openstreetmap.josm.tools.Shortcut;
 import org.openstreetmap.josm.tools.SubclassFilteredCollection;
@@ -46,7 +54,7 @@ import org.openstreetmap.josm.tools.SubclassFilteredCollection;
  *
  * @author ramack
  */
-public class MeasurementDialog extends ToggleDialog implements DataSelectionListener, DataSetListener, SoMChangeListener {
+public class MeasurementDialog extends ToggleDialog implements DataSelectionListener, DataSetListener, SoMChangeListener, LayerChangeListener {
     private static final long serialVersionUID = 4708541586297950021L;
 
     /**
@@ -81,6 +89,7 @@ public class MeasurementDialog extends ToggleDialog implements DataSelectionList
 
     private DataSet ds;
 
+    private Collection<Relation> relations;
     private Collection<Way> ways;
     private Collection<Node> nodes;
 
@@ -142,6 +151,7 @@ public class MeasurementDialog extends ToggleDialog implements DataSelectionList
                 resetButton
         }));
 
+        MainApplication.getLayerManager().addLayerChangeListener(this);
         SelectionEventManager.getInstance().addSelectionListener(this);
         SystemOfMeasurement.addSoMChangeListener(this);
     }
@@ -184,14 +194,23 @@ public class MeasurementDialog extends ToggleDialog implements DataSelectionList
         ways = new SubclassFilteredCollection<>(selection, Way.class::isInstance);
         if (ways.isEmpty()) {
             nodes = new SubclassFilteredCollection<>(selection, Node.class::isInstance);
-            for (Node n : nodes) {
-                if (n.getCoor() != null) {
-                    if (lastNode == null) {
-                        lastNode = n;
-                    } else {
-                        length += lastNode.getCoor().greatCircleDistance(n.getCoor());
-                        segAngle = MeasurementLayer.angleBetween(lastNode.getCoor(), n.getCoor());
-                        lastNode = n;
+            if (nodes.isEmpty()) {
+                relations = new SubclassFilteredCollection<>(selection, Relation.class::isInstance);
+                for (Relation r : relations) {
+                    if (r.isMultipolygon()) {
+                        area += Geometry.multipolygonArea(r);
+                    }
+                }
+            } else {
+                for (Node n : nodes) {
+                    if (n.getCoor() != null) {
+                        if (lastNode == null) {
+                            lastNode = n;
+                        } else {
+                            length += lastNode.getCoor().greatCircleDistance(n.getCoor());
+                            segAngle = MeasurementLayer.angleBetween(lastNode.getCoor(), n.getCoor());
+                            lastNode = n;
+                        }
                     }
                 }
             }
@@ -263,33 +282,55 @@ public class MeasurementDialog extends ToggleDialog implements DataSelectionList
         super.destroy();
         SystemOfMeasurement.removeSoMChangeListener(this);
         SelectionEventManager.getInstance().removeSelectionListener(this);
+        MainApplication.getLayerManager().removeLayerChangeListener(this);
+        clear();
+    }
+
+    private void clear() {
         if (ds != null) {
             ds.removeDataSetListener(this);
             ds = null;
         }
+        clear(relations);
+        clear(ways);
+        clear(nodes);
     }
 
-    private boolean waysContain(Node n) {
-        if (ways != null) {
-            for (Way w : ways) {
-                if (w.containsNode(n)) {
-                    return true;
-                }
-            }
+    private static void clear(Collection<?> collection) {
+        if (collection != null) {
+            collection.clear();
         }
-        return false;
+    }
+
+    private boolean parentsContain(Way w) {
+        return w.getReferrers().stream()
+                .anyMatch(ref -> ref instanceof Relation && relations != null && relations.contains(ref));
+    }
+
+    private boolean parentsContain(Node n) {
+        return n.getReferrers().stream()
+                .anyMatch(ref
+                        -> (ref instanceof Way && ((ways != null && ways.contains(ref)) || parentsContain((Way) ref)))
+                        || (ref instanceof Relation && relations != null && relations.contains(ref)));
     }
 
     @Override public void nodeMoved(NodeMovedEvent event) {
         Node n = event.getNode();
         // Refresh selection if a node belonging to a selected member has moved (example: scale action)
-        if ((nodes != null && nodes.contains(n)) || waysContain(n)) {
+        if ((nodes != null && nodes.contains(n)) || parentsContain(n)) {
             refresh(event.getDataset().getSelected());
         }
     }
 
     @Override public void wayNodesChanged(WayNodesChangedEvent event) {
-        if (ways.contains(event.getChangedWay())) {
+        Way w = event.getChangedWay();
+        if ((ways != null && ways.contains(w)) || parentsContain(w)) {
+            refresh(event.getDataset().getSelected());
+        }
+    }
+
+    @Override public void relationMembersChanged(RelationMembersChangedEvent event) {
+        if (relations != null && relations.contains(event.getRelation())) {
             refresh(event.getDataset().getSelected());
         }
     }
@@ -297,7 +338,6 @@ public class MeasurementDialog extends ToggleDialog implements DataSelectionList
     @Override public void primitivesAdded(PrimitivesAddedEvent event) {}
     @Override public void primitivesRemoved(PrimitivesRemovedEvent event) {}
     @Override public void tagsChanged(TagsChangedEvent event) {}
-    @Override public void relationMembersChanged(RelationMembersChangedEvent event) {}
     @Override public void otherDatasetChange(AbstractDatasetChangedEvent event) {}
     @Override public void dataChanged(DataChangedEvent event) {}
 
@@ -307,6 +347,16 @@ public class MeasurementDialog extends ToggleDialog implements DataSelectionList
         DataSet currentDs = MainApplication.getLayerManager().getEditDataSet();
         if (currentDs != null) {
             refresh(currentDs.getSelected());
+        }
+    }
+
+    @Override public void layerOrderChanged(LayerOrderChangeEvent e) {}
+    @Override public void layerAdded(LayerAddEvent e) {}
+
+    @Override
+    public void layerRemoving(LayerRemoveEvent e) {
+        if (e.getRemovedLayer() instanceof OsmDataLayer && Objects.equals(ds, ((OsmDataLayer) e.getRemovedLayer()).getDataSet())) {
+            clear();
         }
     }
 }

@@ -8,7 +8,7 @@
     <property name="plugin.author" value="Don-vip"/>
     <property name="plugin.class" value="org.openstreetmap.josm.plugins.ejml.EjmlPlugin"/>
     <property name="plugin.description" value="Provides the EJML library for other JOSM plugins. Not meant to be installed directly by users, but rather as a dependency for other plugins."/>
-    <property name="plugin.icon" value="images/logo.png"/>
+    <property name="plugin.icon" value="images/ejml.png"/>
     <property name="plugin.canloadatruntime" value="true"/>
     <property name="plugin.stage" value="15"/>
 

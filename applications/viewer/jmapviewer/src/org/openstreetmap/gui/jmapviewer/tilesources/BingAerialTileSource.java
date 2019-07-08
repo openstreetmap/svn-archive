@@ -275,9 +275,7 @@ public class BingAerialTileSource extends TMSTileSource {
             }
         }
         try {
-            return attributions.get(0, TimeUnit.MILLISECONDS);
-        } catch (TimeoutException ex) {
-            LOG.log(Level.WARNING, "Bing: attribution data is not yet loaded.");
+            return attributions.get();
         } catch (ExecutionException ex) {
             throw new RuntimeException(ex.getCause());
         } catch (InterruptedException ign) {

@@ -14,6 +14,7 @@ import java.net.http.HttpResponse;
 import java.net.http.HttpResponse.BodyHandlers;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoField;
 import java.util.List;
@@ -56,7 +57,7 @@ public final class Http2Client extends org.openstreetmap.josm.tools.HttpClient {
         }
         if (getIfModifiedSince() > 0) {
             requestBuilder.header("If-Modified-Since", DateTimeFormatter.RFC_1123_DATE_TIME.format(
-                    LocalDateTime.ofEpochSecond(getIfModifiedSince(), 0, null)));
+                    LocalDateTime.ofEpochSecond(getIfModifiedSince(), 0, ZoneOffset.UTC)));
         }
         if (!isUseCache()) {
             requestBuilder.header("Cache-Control", "no-cache");

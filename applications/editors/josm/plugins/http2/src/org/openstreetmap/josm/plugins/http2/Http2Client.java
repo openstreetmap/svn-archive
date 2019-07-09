@@ -178,7 +178,10 @@ public final class Http2Client extends org.openstreetmap.josm.tools.HttpClient {
 
         @Override
         public long getLastModified() {
-            return response.headers().firstValueAsLong("Last-Modified").orElse(0L);
+            return response.headers().firstValue("Last-Modified")
+                    .map(DateTimeFormatter.RFC_1123_DATE_TIME::parse)
+                    .map(t -> 1000L * t.getLong(ChronoField.INSTANT_SECONDS))
+                    .orElse(0L);
         }
 
         @Override

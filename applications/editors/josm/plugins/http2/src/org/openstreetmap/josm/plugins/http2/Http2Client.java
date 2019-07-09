@@ -13,8 +13,9 @@ import java.net.http.HttpRequest.BodyPublishers;
 import java.net.http.HttpResponse;
 import java.net.http.HttpResponse.BodyHandlers;
 import java.time.Duration;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoField;
 import java.util.List;
@@ -24,6 +25,7 @@ import java.util.Objects;
 import org.openstreetmap.josm.data.Version;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.tools.JosmRuntimeException;
+import org.openstreetmap.josm.tools.Logging;
 import org.openstreetmap.josm.tools.Utils;
 
 /**
@@ -41,30 +43,39 @@ public final class Http2Client extends org.openstreetmap.josm.tools.HttpClient {
 
     @Override
     protected void setupConnection(ProgressMonitor progressMonitor) throws IOException {
-        clientBuilder = HttpClient.newBuilder()
-                .connectTimeout(Duration.ofMillis(getConnectTimeout()))
-                .followRedirects(Redirect.NEVER); // we do that ourselves
+        clientBuilder = HttpClient.newBuilder().followRedirects(Redirect.NEVER); // we do that ourselves
+        int timeout = getConnectTimeout();
+        if (timeout > 0) {
+            clientBuilder.connectTimeout(Duration.ofMillis(timeout));
+        }
         try {
             requestBuilder = HttpRequest.newBuilder()
                       .uri(getURL().toURI())
                       .method(getRequestMethod(), hasRequestBody()
                               ? BodyPublishers.ofByteArray(getRequestBody())
                               : BodyPublishers.noBody())
-                      .header("User-Agent", Version.getInstance().getFullAgentString())
-                      .timeout(Duration.ofMillis(getReadTimeout()));
+                      .header("User-Agent", Version.getInstance().getFullAgentString());
         } catch (URISyntaxException e) {
             throw new IOException(e);
         }
+        timeout = getReadTimeout();
+        if (timeout > 0) {
+            requestBuilder.timeout(Duration.ofMillis(timeout));
+        }
         if (getIfModifiedSince() > 0) {
             requestBuilder.header("If-Modified-Since", DateTimeFormatter.RFC_1123_DATE_TIME.format(
-                    LocalDateTime.ofEpochSecond(getIfModifiedSince() / 1000, 0, ZoneOffset.UTC)));
+                    ZonedDateTime.ofInstant(Instant.ofEpochMilli(getIfModifiedSince()), ZoneId.systemDefault())));
         }
         if (!isUseCache()) {
             requestBuilder.header("Cache-Control", "no-cache");
         }
         for (Map.Entry<String, String> header : getHeaders().entrySet()) {
             if (header.getValue() != null) {
-                requestBuilder.header(header.getKey(), header.getValue());
+                try {
+                    requestBuilder.header(header.getKey(), header.getValue());
+                } catch (IllegalArgumentException e) {
+                    Logging.warn(e.getMessage());
+                }
             }
         }
 

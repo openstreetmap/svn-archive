@@ -90,7 +90,7 @@ public class JTSConverter {
         CoordinateSequence coordSeq = convertNodesToCoordinateSequence(way.getNodes());
 
         // TODO: need to check tags to determine whether area or not
-        if (way.isClosed()) {
+        if (way.isClosed() && coordSeq.size() >= 4) {
             LinearRing ring = new LinearRing(coordSeq, getGeometryFactory());
             return new Polygon(ring, null, getGeometryFactory());
         } else {

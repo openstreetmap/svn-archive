@@ -9,6 +9,7 @@ import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.gpx.WayPoint;
 import org.openstreetmap.josm.plugins.elevation.ElevationHelper;
 import org.openstreetmap.josm.plugins.elevation.IElevationProfile;
+import org.openstreetmap.josm.tools.Logging;
 
 
 /**
@@ -304,7 +305,13 @@ IGpxWaypointVisitor {
         WayPoint wp2 = getEndWayPoint();
 
         if (wp1 != null && wp2 != null) {
-            return wp2.getDate().getTime() - wp1.getDate().getTime();
+            Date wp1Date = wp1.getDate();
+            Date wp2Date = wp2.getDate();
+            if (wp1Date != null && wp2Date != null) {
+                return wp2Date.getTime() - wp1Date.getTime();
+            } else {
+                Logging.warn("Waypoints without date: " + wp1 + " / " + wp2);
+            }
         }
 
         return 0L;

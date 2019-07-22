@@ -229,9 +229,11 @@ public class MergeOverlapAction extends JosmAction {
         }
 
         // Commit
-        UndoRedoHandler.getInstance().add(new SequenceCommand(tr("Merge Overlap (combine)"), cmds));
-        getLayerManager().getEditDataSet().setSelected(sel);
-        MainApplication.getMap().repaint();
+        if (!cmds.isEmpty()) {
+            UndoRedoHandler.getInstance().add(new SequenceCommand(tr("Merge Overlap (combine)"), cmds));
+            getLayerManager().getEditDataSet().setSelected(sel);
+            MainApplication.getMap().repaint();
+        }
 
         relations.clear();
         newRelations.clear();

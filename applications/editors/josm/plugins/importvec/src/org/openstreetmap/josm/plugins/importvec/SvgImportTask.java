@@ -197,7 +197,9 @@ public class SvgImportTask extends PleaseWaitRunnable {
         for (Way w : ways) {
             cmds.add(new AddCommand(ds, w));
         }
-        UndoRedoHandler.getInstance().add(new SequenceCommand("Import primitives", cmds));
+        if (!cmds.isEmpty()) {
+            UndoRedoHandler.getInstance().add(new SequenceCommand("Import primitives", cmds));
+        }
     }
     
 }

@@ -47,7 +47,7 @@ public final class TagCatalog {
             return tagList;
         case DOOR_PUBLIC:
             tagList.add(new Tag("door", "yes"));
-            tagList.add(new Tag("access", "public"));
+            tagList.add(new Tag("access", "yes"));
             return tagList;
         case ELEVATOR:
             tagList.add(new Tag("highway", "elevator"));
@@ -62,7 +62,7 @@ public final class TagCatalog {
             tagList.add(new Tag("access", "private"));
             return tagList;
         case ACCESS_PUBLIC:
-            tagList.add(new Tag("access", "public"));
+            tagList.add(new Tag("access", "yes"));
             return tagList;
         case TOILET_FEMALE:
             tagList.add(new Tag("indoor", "room"));

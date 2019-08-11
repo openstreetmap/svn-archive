@@ -49,7 +49,7 @@ final class DataSetCommandMerger {
     }
 
     private void addChangeCommandIfNotEquals(OsmPrimitive target, OsmPrimitive newTarget, boolean nominal) {
-        if (!target.hasEqualSemanticAttributes(newTarget)) {
+        if (!target.hasEqualSemanticAttributes(newTarget) || target.isDeleted() != newTarget.isDeleted() || target.isVisible() != newTarget.isVisible()) {
             cmds.add(new ChangeCommand(target, newTarget));
             if (nominal) {
                 nominalRevertedPrimitives.add(target);
@@ -148,20 +148,25 @@ final class DataSetCommandMerger {
         LinkedList<RelationMember> newMembers = new LinkedList<>();
         for (RelationMember sourceMember : source.getMembers()) {
             OsmPrimitive targetMember = getMergeTarget(sourceMember.getMember());
-            if (targetMember.isDeleted() && sourceMember.getMember().isIncomplete()
-                    && !conflicts.hasConflictForMy(targetMember)) {
-                conflicts.add(new Conflict<>(targetMember, sourceMember.getMember(), true));
-                OsmPrimitive undeletedTargetMember;
-                switch(targetMember.getType()) {
-                case NODE: undeletedTargetMember = new Node((Node) targetMember); break;
-                case WAY: undeletedTargetMember = new Way((Way) targetMember); break;
-                case RELATION: undeletedTargetMember = new Relation((Relation) targetMember); break;
-                default: throw new AssertionError();
+            if (!targetMember.isDeleted() || nominalRevertedPrimitives.contains(targetMember)) {
+                newMembers.add(new RelationMember(sourceMember.getRole(), targetMember));
+            } else {
+                if (!sourceMember.getMember().isIncomplete() && !conflicts.hasConflictForMy(targetMember)) {
+                    conflicts.add(new Conflict<>(targetMember, sourceMember.getMember(), true));
+                    OsmPrimitive undeletedTargetMember;
+                    switch(targetMember.getType()) {
+                    case NODE: undeletedTargetMember = new Node((Node) sourceMember.getMember()); break;
+                    case WAY: undeletedTargetMember = new Way((Way) sourceMember.getMember()); break;
+                    case RELATION: undeletedTargetMember = new Relation((Relation) sourceMember.getMember()); break;
+                    default: throw new AssertionError();
+                    }
+                    undeletedTargetMember.setDeleted(false);
+                    addChangeCommandIfNotEquals(targetMember, undeletedTargetMember, false);
+                    newMembers.add(new RelationMember(sourceMember.getRole(), targetMember));
+                } else {
+                    Logging.info("Skipping target relation member "+targetMember+" for source member "+sourceMember.getMember()+" while reverting relation "+source);
                 }
-                undeletedTargetMember.setDeleted(false);
-                addChangeCommandIfNotEquals(targetMember, undeletedTargetMember, false);
             }
-            newMembers.add(new RelationMember(sourceMember.getRole(), targetMember));
         }
         Relation newRelation = new Relation(target);
         mergePrimitive(source, target, newRelation);

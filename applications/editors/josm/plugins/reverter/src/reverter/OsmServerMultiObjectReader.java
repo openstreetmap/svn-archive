@@ -89,7 +89,7 @@ public class OsmServerMultiObjectReader extends OsmServerReader {
             try (InputStream in = getInputStream(query, NullProgressMonitor.INSTANCE)) {
                 rdr.addData(in);
             } catch (IOException | IllegalDataException | OsmTransferException e) {
-                Logging.error(e);
+                Logging.warn(e);
             } finally {
                 rdr.callback = null;
             }

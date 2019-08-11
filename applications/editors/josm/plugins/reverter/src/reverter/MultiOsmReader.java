@@ -4,6 +4,11 @@ package reverter;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
+import javax.xml.stream.XMLStreamException;
+
+import org.openstreetmap.josm.data.osm.Node;
+import org.openstreetmap.josm.data.osm.Relation;
+import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.io.IllegalDataException;
 import org.openstreetmap.josm.io.OsmReader;
 import org.openstreetmap.josm.io.UTFInputStreamReader;
@@ -31,5 +36,32 @@ public class MultiOsmReader extends OsmReader {
 
     public void processData() throws IllegalDataException {
         prepareDataSet();
+    }
+
+    public ParseCallback callback;
+
+    @Override
+    protected Node parseNode() throws XMLStreamException  {
+        Node node = super.parseNode();
+        if (callback != null) {
+            callback.primitiveParsed(node.getPrimitiveId());
+        }
+        return node;
+    }
+    @Override
+    protected Way parseWay() throws XMLStreamException  {
+        Way way = super.parseWay();
+        if (callback != null) {
+            callback.primitiveParsed(way.getPrimitiveId());
+        }
+        return way;
+    }
+    @Override
+    protected Relation parseRelation() throws XMLStreamException  {
+        Relation relation = super.parseRelation();
+        if (callback != null) {
+            callback.primitiveParsed(relation.getPrimitiveId());
+        }
+        return relation;
     }
 }

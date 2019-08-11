@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map.Entry;
 
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.DeleteCommand;
@@ -221,16 +222,43 @@ public class ChangesetReverter {
                 addChangesetIdPrefix(
                         trn("Downloading history for {0} object", "Downloading history for {0} objects", num, num)), num + 1);
         try {
+            HashMap<Long,Integer> nodeList = new HashMap<>(),
+                    wayList = new HashMap<>(),
+                    relationList = new HashMap<>();
+
             for (HashSet<HistoryOsmPrimitive> collection : Arrays.asList(updated, deleted)) {
                 for (HistoryOsmPrimitive entry : collection) {
                     PrimitiveId id = entry.getPrimitiveId();
                     Integer earliestVersion = earliestVersions.get(id);
                     if (earliestVersion == null || earliestVersion <= 1)
                         throw new OsmTransferException(tr("Unexpected data in changeset #{1}", String.valueOf(changesetId)));
-                    readObjectVersion(rdr, id, earliestVersion - 1, progressMonitor);
-                    if (progressMonitor.isCanceled()) return;
+                    switch (id.getType()) {
+                    case NODE: nodeList.put(id.getUniqueId(), earliestVersion - 1); break;
+                    case WAY: wayList.put(id.getUniqueId(), earliestVersion - 1); break;
+                    case RELATION: relationList.put(id.getUniqueId(), earliestVersion - 1); break;
+                    default: throw new AssertionError();
+                    }
                 }
             }
+            Logging.info("New fetcher is started");
+            rdr.readMultiObjects(OsmPrimitiveType.NODE, nodeList, progressMonitor);
+            rdr.readMultiObjects(OsmPrimitiveType.WAY, wayList, progressMonitor);
+            rdr.readMultiObjects(OsmPrimitiveType.RELATION, relationList, progressMonitor);
+            if (progressMonitor.isCanceled()) return;
+            // If multi-read failed, retry with regular read
+            for (Entry<Long,Integer> entry : nodeList.entrySet()) {
+                if (progressMonitor.isCanceled()) return;
+                readObjectVersion(rdr, new SimplePrimitiveId(entry.getKey(),OsmPrimitiveType.NODE), entry.getValue(), progressMonitor);
+            }
+            for (Entry<Long,Integer> entry : wayList.entrySet()) {
+                if (progressMonitor.isCanceled()) return;
+                readObjectVersion(rdr, new SimplePrimitiveId(entry.getKey(),OsmPrimitiveType.WAY), entry.getValue(), progressMonitor);
+            }
+            for (Entry<Long,Integer> entry : relationList.entrySet()) {
+                if (progressMonitor.isCanceled()) return;
+                readObjectVersion(rdr, new SimplePrimitiveId(entry.getKey(),OsmPrimitiveType.RELATION), entry.getValue(), progressMonitor);
+            }
+            if (progressMonitor.isCanceled()) return;
             nds = rdr.parseOsm(progressMonitor.createSubTaskMonitor(1, true));
             for (OsmPrimitive p : nds.allPrimitives()) {
                 if (!p.isIncomplete()) {

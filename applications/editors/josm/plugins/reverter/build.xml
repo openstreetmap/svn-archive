@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <project name="reverter" default="dist" basedir=".">
     <!-- enter the SVN commit message -->
-    <property name="commit.message" value="Reverter: fix #josm16508 use mulit-fetch API for objects history"/>
+    <property name="commit.message" value="Reverter: fix possible NPE"/>
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
     <property name="plugin.main.version" value="14946"/>
 

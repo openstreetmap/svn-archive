@@ -43,24 +43,24 @@ public class MultiOsmReader extends OsmReader {
     @Override
     protected Node parseNode() throws XMLStreamException  {
         Node node = super.parseNode();
-        if (callback != null) {
-            callback.primitiveParsed(node.getPrimitiveId());
+        if (callback != null && node != null) {
+            callback.primitiveParsed(node);
         }
         return node;
     }
     @Override
     protected Way parseWay() throws XMLStreamException  {
         Way way = super.parseWay();
-        if (callback != null) {
-            callback.primitiveParsed(way.getPrimitiveId());
+        if (callback != null && way != null) {
+            callback.primitiveParsed(way);
         }
         return way;
     }
     @Override
     protected Relation parseRelation() throws XMLStreamException  {
         Relation relation = super.parseRelation();
-        if (callback != null) {
-            callback.primitiveParsed(relation.getPrimitiveId());
+        if (callback != null && relation != null) {
+            callback.primitiveParsed(relation);
         }
         return relation;
     }

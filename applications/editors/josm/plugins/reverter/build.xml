@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <project name="reverter" default="dist" basedir=".">
     <!-- enter the SVN commit message -->
-    <property name="commit.message" value="Reverter: Update MultiOsmReader to support null data after redaction"/>
+    <property name="commit.message" value="Reverter: fix #josm16508 use mulit-fetch API for objects history"/>
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
     <property name="plugin.main.version" value="14946"/>
 

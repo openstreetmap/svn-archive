@@ -240,7 +240,6 @@ public class ChangesetReverter {
                     }
                 }
             }
-            Logging.info("New fetcher is started");
             rdr.readMultiObjects(OsmPrimitiveType.NODE, nodeList, progressMonitor);
             rdr.readMultiObjects(OsmPrimitiveType.WAY, wayList, progressMonitor);
             rdr.readMultiObjects(OsmPrimitiveType.RELATION, relationList, progressMonitor);

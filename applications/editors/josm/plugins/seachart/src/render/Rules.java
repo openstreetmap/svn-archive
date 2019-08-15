@@ -1037,6 +1037,7 @@ public class Rules {
 				}
 			}
 			Signals.addSignals();
+            addName(15, new Font("Arial", Font.BOLD, 40), new Delta(Handle.BL, AffineTransform.getTranslateInstance(60, -50)));
 		}
 	}
 
@@ -1339,12 +1340,12 @@ public class Rules {
 					if (lev == WatLEV.LEV_CVRS) {
 						Renderer.lineVector(new LineStyle(Color.black, 10, new float[] { 40, 40 }, null));
 						if (Renderer.zoom >= 15)
-							Renderer.lineText("(covers)", new Font("Arial", Font.PLAIN, 60), Color.black, 80);
+							Renderer.lineText("(covers)", new Font("Arial", Font.PLAIN, 40), Color.black, 80);
 					} else {
 						Renderer.lineVector(new LineStyle(Color.black, 10, null, null));
 					}
 					if (Renderer.zoom >= 15)
-						Renderer.lineText("Training Wall", new Font("Arial", Font.PLAIN, 60), Color.black, -30);
+						Renderer.lineText("Training Wall", new Font("Arial", Font.PLAIN, 40), Color.black, -30);
 					break;
 				case SLC_SWAY:
 					Renderer.lineVector(new LineStyle(Color.black, 2, null, new Color(0xffe000)));

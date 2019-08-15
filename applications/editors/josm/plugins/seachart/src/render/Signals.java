@@ -207,29 +207,31 @@ public class Signals extends Rules {
 			String bstr = "";
 			CatRTB cat = (CatRTB) getAttEnum(Obj.RTPBCN, Att.CATRTB);
 			String wal = getAttStr(Obj.RTPBCN, Att.RADWAL);
-			switch (cat) {
-			case RTB_RAMK:
-				bstr += " Ramark";
-				break;
-			case RTB_RACN:
-				bstr += " Racon";
-				String astr = getAttStr(Obj.RTPBCN, Att.SIGGRP);
-				if (!astr.isEmpty()) {
-					bstr += "(" + astr + ")";
-				}
-				Double per = (Double) getAttVal(Obj.RTPBCN, Att.SIGPER);
-				Double mxr = (Double) getAttVal(Obj.RTPBCN, Att.VALMXR);
-				if ((per != null) || (mxr != null)) {
-					bstr += (astr.isEmpty() ? " " : "");
-					if (per != null)
-						bstr += (per != 0) ? per.toString() + "s" : "";
-					if (mxr != null)
-						bstr += (mxr != 0) ? mxr.toString() + "M" : "";
-				}
-				break;
-			default:
-				break;
-			}
+            if ((cat == CatRTB.RTB_RAMK) || (cat == CatRTB.RTB_RACN)) {
+                switch (cat) {
+                case RTB_RAMK:
+                    bstr += " Ramark";
+                    break;
+                case RTB_RACN:
+                    bstr += " Racon";
+                    break;
+                default:
+                    break;
+                }
+                String astr = getAttStr(Obj.RTPBCN, Att.SIGGRP);
+                if (!astr.isEmpty()) {
+                    bstr += "(" + astr + ")";
+                }
+                Double per = (Double) getAttVal(Obj.RTPBCN, Att.SIGPER);
+                Double mxr = (Double) getAttVal(Obj.RTPBCN, Att.VALMXR);
+                if ((per != null) || (mxr != null)) {
+                    bstr += (astr.isEmpty() ? " " : "");
+                    if (per != null)
+                        bstr += (per != 0) ? per.toString() + "s" : "";
+                    if (mxr != null)
+                        bstr += (mxr != 0) ? mxr.toString() + "M" : "";
+                }
+            }
 			if (!wal.isEmpty()) {
 				switch (wal) {
 				case "0.03-X":

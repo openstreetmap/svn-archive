@@ -6,12 +6,16 @@
     <tag k="seamark:topmark:colour" v="red" />
     <tag k="seamark:topmark:shape" v="cylinder" />
   </icon>
-  <icon width="100" height="100" scale="0.25" file="green_pillar" format="SVG" >
-    <tag k="seamark:type" v="buoy_lateral" />
-    <tag k="seamark:buoy_lateral:shape" v="pillar" />
-    <tag k="seamark:buoy_lateral:colour" v="green" />
-    <tag k="seamark:topmark:colour" v="green" />
-    <tag k="seamark:topmark:shape" v="cone, point up" />
+  <icon width="1000" height="200" scale="1.0" file="waverider" format="SVG" >
+    <tag k="seamark:type" v="buoy_special_purpose" />
+    <tag k="seamark:buoy_special_purpose:shape" v="spherical" />
+    <tag k="seamark:buoy_special_purpose:colour" v="yellow" />
+    <tag k="seamark:buoy_special_purpose:purpose" v="odas" />
+    <tag k="seamark:light:colour" v="yellow" />
+    <tag k="seamark:light:character" v="Fl" />
+    <tag k="seamark:light:group" v="5" />
+    <tag k="seamark:light:period" v="20" />
+    <tag k="seamark:name" v="Hornsea Waverider" />
   </icon>
   <icon width="200" height="200" scale="0.5" file="hib" format="PNG" >
     <tag k="seamark:type" v="beacon_special_purpose" />

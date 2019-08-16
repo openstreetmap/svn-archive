@@ -1037,7 +1037,7 @@ public class Rules {
 				}
 			}
 			Signals.addSignals();
-            addName(15, new Font("Arial", Font.BOLD, 40), new Delta(Handle.BL, AffineTransform.getTranslateInstance(60, -50)));
+            addName(15, new Font("Arial", Font.BOLD, 40), new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -50)));
 		}
 	}
 

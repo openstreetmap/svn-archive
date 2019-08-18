@@ -121,7 +121,7 @@
             <fileset dir="${i18n.build.dir}" includes="trans_tag2link.java"/>
         </gettext-extract>
     </target>
-    <target name="build" depends="pot">
+    <target name="build">
         <antcall target="buildcore"/>
         <antcall target="buildplugins"/>
     </target>
@@ -137,7 +137,7 @@
             <param name="path" value="${plugin}"/>
         </antcall>
     </target>
-    <target name="buildcore">
+    <target name="buildcore" depends="pot">
         <antcall target="coretrans"/>
         <antcall target="pluginlisttrans"/>
     </target>

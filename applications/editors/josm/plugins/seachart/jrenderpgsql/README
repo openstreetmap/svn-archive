@@ -1,0 +1,40 @@
+jrenderpgsql
+------------
+
+This is a modified version of "jrender".
+
+Instead of loading .osm files from a pre-defined directory structure
+like "jrender" does, this program issues an SQL query and fetches
+seamark data from PostGIS, where it is expected to have been imported
+with a standard osm2pgsql import using the "--hstore" flag.
+
+It then generates an XML document from the PostGIS data which is
+good enough to be processed by the S57 library routines as usual.
+
+
+BUILDING
+--------
+
+You might have to adapt some paths in the build.xml for the PostGIS
+and PostgreSQL JDBC drivers to be found.
+
+
+RUNNING
+-------
+
+java -jar jrenderpgsql.jar "jdbc:postgresql:///mydatabae?user=myuser&password=mypassword" 14 8663 5304 tile.png 
+
+Optional command line flags --debug (outputs the OSM XML), 
+and --tilesize and --scale (use --tilesize 512 --scale 2.0 
+for "retina" tiles)
+
+
+STATUS
+------
+
+Seems to work at least for z12 and larger, but has received little 
+testing.
+
+Author: Frederik Ramm. 
+License: GPL v2.0 or later
+

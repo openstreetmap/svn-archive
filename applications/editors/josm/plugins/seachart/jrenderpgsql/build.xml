@@ -1,0 +1,30 @@
+<project name="jrenderpgsql" default="dist" basedir=".">
+  <property name="src" location="src"/>
+  <property name="srcmain" location="../src"/>
+  <property name="build" location="build"/>
+  <property name="jarfile" location="./jrenderpgsql.jar"/>
+
+  <target name="init">
+    <mkdir dir="${build}"/>
+  </target>
+
+  <target name="compile" depends="init" description="compile the source " >
+    <javac classpath="/usr/share/java/postgis-jdbc-2.2.1.jar:/usr/share/java/postgresql.jar" includeantruntime="false" sourcepath="${srcmain}" srcdir="${src}" destdir="${build}" encoding="UTF-8" />
+  </target>
+
+  <target name="dist" depends="compile" description="generate the distribution" >
+    <jar jarfile="${jarfile}" basedir="${build}" manifestencoding="UTF-8">
+      <zipgroupfileset dir="/usr/share/java" includes="postgresql.jar" />
+      <zipgroupfileset dir="/usr/share/java" includes="postgis-jdbc-2.2.1.jar" />
+      <manifest>
+        <attribute name="Main-Class" value="jrenderpgsql.JrenderPgsql"/>
+        <attribute name="Class-Path" value="$jarfile"/>
+      </manifest>
+    </jar>
+  </target>
+
+  <target name="clean" description="clean up" >
+    <delete dir="${build}"/>
+    <delete file="${jarfile}"/>
+  </target>
+</project>

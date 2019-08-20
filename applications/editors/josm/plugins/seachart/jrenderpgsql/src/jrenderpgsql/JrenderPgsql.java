@@ -263,9 +263,9 @@ public final class JrenderPgsql {
         // calculate spherical mercator bounds of the requested tile.
 
         double west = (xtile) * MERCATOR_WIDTH / pow - MERCATOR_OFFSET;
-        double east = (xtile + 1) * MERCATOR_WIDTH / pow - MERCATOR_OFFSET;
+        double east = (xtile * 1.0 + tilesize / 256 / scale) * MERCATOR_WIDTH / pow - MERCATOR_OFFSET;
         double north = (pow - ytile) * MERCATOR_WIDTH / pow - MERCATOR_OFFSET;
-        double south = (pow - ytile - 1) * MERCATOR_WIDTH / pow - MERCATOR_OFFSET;
+        double south = (pow * 1.0 - ytile * 1.0 - tilesize / 256 / scale) * MERCATOR_WIDTH / pow - MERCATOR_OFFSET;
 
         // request data from PostGIS
         // -------------------------
@@ -385,16 +385,17 @@ public final class JrenderPgsql {
         // this ChartContext is mainly there for converting lat/lon to
         // tile x/y pixel coordinates.
 
+        final double mile = 330.0 * pow / 16384.0 * scale;
+
         ChartContext context = new ChartContext() {
             public Point2D getPoint(Snode coord) {
                 double x = border + (radlon2x(coord.lon) - west) * 256 * scale * pow / MERCATOR_WIDTH;
                 double y = tilesize + border - ((radlat2y(coord.lat) - south) * scale * 256 * pow / MERCATOR_WIDTH);
-                System.out.println("point convert from " + Math.toDegrees(coord.lat)+","+Math.toDegrees(coord.lon)+" to "+x+","+y);
                 return new Point2D.Double(x, y);
             }
 
             public double mile(Feature feature) {
-                return 21600 / 256 / pow / scale;
+                return mile;
             }
 
             public boolean clip() {

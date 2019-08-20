@@ -46,6 +46,7 @@
 /* relation type */ trc("Relation type", "restriction");
 /* relation type */ trc("Relation type", "route");
 /* relation type */ trc("Relation type", "route_master");
+/* relation type */ trc("Relation type", "superroute");
 /* relation type */ trc("Relation type", "site");
 /* relation type */ trc("Relation type", "street");
 /* relation type */ trc("Relation type", "tunnel");

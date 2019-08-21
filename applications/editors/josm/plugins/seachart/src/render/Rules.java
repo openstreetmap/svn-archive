@@ -1000,9 +1000,11 @@ public class Rules {
 		switch (feature.type) {
 		case LITMAJ:
 		case LNDMRK:
+            Renderer.symbol(Beacons.LightMajor);
 			if (Renderer.zoom >= 12) {
-				Renderer.symbol(Beacons.LightMajor);
 				ok = true;
+			} else {
+			    Signals.lights();
 			}
 			break;
 		case LITMIN:

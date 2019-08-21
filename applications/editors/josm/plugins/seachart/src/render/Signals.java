@@ -359,7 +359,7 @@ public class Signals extends Rules {
             Renderer.symbol(Beacons.LightFlare, new Scheme(LightColours.get(col)), new Delta(Handle.BC, AffineTransform.getRotateInstance(Math.toRadians(120))));
         }
         String str = "";
-        if (lights.get(1) != null) {
+        if ((lights.get(1) != null) && (Renderer.zoom >= 12)) {
             for (AttMap atts : lights.values()) {
                 Enum<ColCOL> col1 = null;
                 Enum<ColCOL> col2 = null;

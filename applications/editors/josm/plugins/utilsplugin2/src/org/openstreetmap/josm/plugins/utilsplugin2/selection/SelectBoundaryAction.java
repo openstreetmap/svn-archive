@@ -58,7 +58,9 @@ public class SelectBoundaryAction extends JosmAction {
                     }
                 } else {
                     Point p = MainApplication.getMap().mapView.getMousePosition();
-                    SelectByInternalPointAction.performSelection(MainApplication.getMap().mapView.getEastNorth(p.x, p.y), false, false);
+                    if (p != null) {
+                        SelectByInternalPointAction.performSelection(MainApplication.getMap().mapView.getEastNorth(p.x, p.y), false, false);
+                    }
                     return;
                 }
             } else if (selectedWays.size() == 1) {

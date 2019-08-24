@@ -51,6 +51,17 @@ public class CsvReaderTest {
     }
 
     /**
+     * Non-regression test for ticket <a href="https://josm.openstreetmap.de/ticket/18029">#18029</a>
+     * @throws Exception if an error occurs during reading
+     */
+    @Test
+    public void testTicket18029() throws Exception {
+        try (InputStream is = TestUtils.getRegressionDataStream(18029, "gtfs_stops.broken.csv")) {
+            NonRegFunctionalTests.testGeneric("#18029", CsvReader.parseDataSet(is, newHandler("EPSG:4326"), null));
+        }
+    }
+
+    /**
      * Non-regression test for ticket <a href="https://josm.openstreetmap.de/ticket/13508">#13508</a>
      * @throws Exception if an error occurs during reading
      */

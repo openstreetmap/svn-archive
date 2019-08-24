@@ -99,8 +99,8 @@ public abstract class OdConstants {
     /**
      * Coordinates fields
      */
-    public static final String X_STRING = "X|LON|LONGI|.*LONGITUDE.*|EASTING";
-    public static final String Y_STRING = "Y|LAT|LATI|.*LATITUDE.*|NORTHING";
+    public static final String X_STRING = "X|LON|.*_LON|LONGI|.*LONGITUDE.*|EASTING";
+    public static final String Y_STRING = "Y|LAT|.*_LAT|LATI|.*LATITUDE.*|NORTHING";
     public static final String XY_STRING = "POINT";
 
     // The list of all ProjectionPatterns (filled at each constructor call)

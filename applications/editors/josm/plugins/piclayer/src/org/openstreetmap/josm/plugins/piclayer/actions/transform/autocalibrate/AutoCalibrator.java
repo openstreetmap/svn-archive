@@ -17,7 +17,6 @@ import org.openstreetmap.josm.tools.Logging;
 
 /**
  * Class for image calibration.
- * The startPositions, endPositions representing points set on the image with using {@link PicLayerPlugin} actions.
  * Info at https://wiki.openstreetmap.org/wiki/User:Rebsc
  * @author rebsc
  *
@@ -60,8 +59,7 @@ public class AutoCalibrator {
 
 	/**
 	 * Calibrates Image with given data.
-	 * Corrects end points by passed real distances between points.
-	 * Sets star points to end points.
+	 * Sets start points to end points and corrects end points by passed distances between points.
 	 */
 	public void calibrate() {
 		// get start / end points
@@ -104,7 +102,7 @@ public class AutoCalibrator {
 	}
 
 	/**
-	 * Compare 3 side ratios of first list with 3 side ratios of compare list
+	 * Compare side ratios before/after calibration
 	 * @param list with ratios to compare to other list
 	 * @param compareList with ratios to compare to other list
 	 * @return true if ratios equals in range of (+-)0.5, else false
@@ -132,7 +130,7 @@ public class AutoCalibrator {
 
 
 	/**
-	 * Corrects points with given real distances. Calculates new points on lines
+	 * Corrects points with given distances. Calculates new points on lines
 	 * between given points at given distances.
 	 * @param points need to be corrected
 	 * @param distance12 distance between point 1 and point 2 in meter

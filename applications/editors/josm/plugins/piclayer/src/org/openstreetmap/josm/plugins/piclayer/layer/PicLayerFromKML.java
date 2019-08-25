@@ -25,6 +25,8 @@ public class PicLayerFromKML extends PicLayerAbstract {
 
         pictureName = calibration.getName();
 
+        super.imageFile = main;
+
         // Set the name of the layer as the base name of the file
         setName(picture.getName());
     }

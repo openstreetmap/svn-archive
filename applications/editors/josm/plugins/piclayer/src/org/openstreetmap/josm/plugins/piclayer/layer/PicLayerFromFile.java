@@ -39,6 +39,7 @@ public class PicLayerFromFile extends PicLayerAbstract {
     public PicLayerFromFile(File file) {
         // Remember the file
         m_file = file;
+        super.imageFile = m_file;
 
         if ("zip".equalsIgnoreCase(getFileExtension(file))) {
             isZip = true;
@@ -228,5 +229,4 @@ public class PicLayerFromFile extends PicLayerAbstract {
         if (dotIdx == -1) return "";
         return f.getName().substring(dotIdx+1);
     }
-
 }

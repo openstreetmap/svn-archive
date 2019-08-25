@@ -21,6 +21,8 @@ import org.openstreetmap.josm.gui.layer.LayerManager.LayerOrderChangeEvent;
 import org.openstreetmap.josm.gui.layer.LayerManager.LayerRemoveEvent;
 import org.openstreetmap.josm.gui.layer.MainLayerManager.ActiveLayerChangeEvent;
 import org.openstreetmap.josm.gui.layer.MainLayerManager.ActiveLayerChangeListener;
+import org.openstreetmap.josm.io.session.SessionReader;
+import org.openstreetmap.josm.io.session.SessionWriter;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
 import org.openstreetmap.josm.plugins.piclayer.actions.SavePictureCalibrationAction;
@@ -36,7 +38,12 @@ import org.openstreetmap.josm.plugins.piclayer.actions.transform.affine.MovePoin
 import org.openstreetmap.josm.plugins.piclayer.actions.transform.affine.RemovePointAction;
 import org.openstreetmap.josm.plugins.piclayer.actions.transform.affine.TransformPointAction;
 import org.openstreetmap.josm.plugins.piclayer.actions.transform.autocalibrate.AutoCalibratePictureAction;
+import org.openstreetmap.josm.plugins.piclayer.io.session.FileSessionExporter;
+import org.openstreetmap.josm.plugins.piclayer.io.session.KMLSessionExporter;
+import org.openstreetmap.josm.plugins.piclayer.io.session.PicLayerSessionImporter;
 import org.openstreetmap.josm.plugins.piclayer.layer.PicLayerAbstract;
+import org.openstreetmap.josm.plugins.piclayer.layer.PicLayerFromFile;
+import org.openstreetmap.josm.plugins.piclayer.layer.PicLayerFromKML;
 
 /**
  * Main Plugin class.
@@ -65,6 +72,13 @@ public class PicLayerPlugin extends Plugin implements LayerChangeListener, Activ
         // Listen to layers
         MainApplication.getLayerManager().addLayerChangeListener(this);
         MainApplication.getLayerManager().addActiveLayerChangeListener(this);
+
+        // Session IO
+        SessionWriter.registerSessionLayerExporter(PicLayerFromFile.class, FileSessionExporter.class);
+        SessionWriter.registerSessionLayerExporter(PicLayerFromKML.class, KMLSessionExporter.class);
+        // TODO IO for PicLayerFromClipboard
+        //SessionWriter.registerSessionLayerExporter(PicLayerFromClipboard.class, ClipboardSessionExporter.class);
+        SessionReader.registerSessionLayerImporter("piclayerImage", PicLayerSessionImporter.class);
     }
 
     /**

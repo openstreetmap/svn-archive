@@ -3,7 +3,6 @@ package org.openstreetmap.josm.plugins.piclayer.layer;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
-
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -15,6 +14,7 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -38,6 +38,7 @@ import org.openstreetmap.josm.data.projection.ProjectionRegistry;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.layer.Layer;
+import org.openstreetmap.josm.gui.layer.geoimage.ImageEntry;
 import org.openstreetmap.josm.plugins.piclayer.actions.LoadPictureCalibrationAction;
 import org.openstreetmap.josm.plugins.piclayer.actions.LoadPictureCalibrationFromWorldAction;
 import org.openstreetmap.josm.plugins.piclayer.actions.ResetCalibrationAction;
@@ -62,6 +63,9 @@ public abstract class PicLayerAbstract extends Layer {
     // Tiles of pin images
     private static Image pinTiledImage;
     private static Image pinTiledImageOrange;
+
+    // save file for IO Sessions
+    File imageFile;
 
     // Initial position of the image in the real world
     // protected EastNorth initialImagePosition;
@@ -247,6 +251,12 @@ public abstract class PicLayerAbstract extends Layer {
     @Override
     public String getToolTipText() {
         return getPicLayerName();
+    }
+
+    public List<ImageEntry> getImages(){
+    	List<ImageEntry> list = new ArrayList<>();
+    	list.add(new ImageEntry(imageFile));
+    	return list;
     }
 
     @Override

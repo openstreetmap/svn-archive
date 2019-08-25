@@ -24,6 +24,8 @@ import javax.swing.JFrame;
 
 import org.openstreetmap.josm.actions.OpenFileAction;
 import org.openstreetmap.josm.data.coor.LatLon;
+import org.openstreetmap.josm.data.coor.conversion.CoordinateFormatManager;
+import org.openstreetmap.josm.data.coor.conversion.ICoordinateFormat;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.gui.MainApplication;
@@ -41,8 +43,7 @@ import org.openstreetmap.josm.plugins.piclayer.layer.PicLayerAbstract;
 import org.openstreetmap.josm.tools.Logging;
 
 /**
- * Class providing functionality of GUIs and also handles connection between {@link AutoCalibratePictureAction}
- * and GUIs what means is basic class to provide the functionality of calibration.
+ * Class handling connection between {@link AutoCalibratePictureAction} and GUIs.
  * Info at https://wiki.openstreetmap.org/wiki/User:Rebsc
  * @author rebsc
  *
@@ -413,8 +414,9 @@ public class AutoCalibrateHandler {
 			if(referencePointList.size() < 3) {
 				// add point to reference list in lat/lon scale
 				LatLon latLonPoint = MainApplication.getMap().mapView.getLatLon(e.getPoint().getX(),e.getPoint().getY());
-				double latY = latLonPoint.getY();
-				double lonX = latLonPoint.getX();
+				ICoordinateFormat mCoord = CoordinateFormatManager.getDefaultFormat();
+				double latY = Double.parseDouble(mCoord.latToString(latLonPoint));
+				double lonX = Double.parseDouble(mCoord.lonToString(latLonPoint));
 				Point2D llPoint = new Point2D.Double(lonX, latY);
 				referencePointList.add(llPoint);
 				// draw point

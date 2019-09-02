@@ -1,6 +1,7 @@
 // License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.fr.cadastre.download;
 
+import static org.openstreetmap.josm.tools.I18n.marktr;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.Color;
@@ -17,6 +18,7 @@ import javax.swing.event.ChangeListener;
 
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.preferences.BooleanProperty;
+import org.openstreetmap.josm.data.preferences.NamedColorProperty;
 import org.openstreetmap.josm.gui.download.AbstractDownloadSourcePanel;
 import org.openstreetmap.josm.gui.download.DownloadDialog;
 import org.openstreetmap.josm.gui.download.DownloadSettings;
@@ -32,6 +34,11 @@ public class CadastreDownloadSourcePanel extends AbstractDownloadSourcePanel<Cad
      * The simple name for the {@link CadastreDownloadSourcePanel}
      */
     public static final String SIMPLE_NAME = "cadastredownloadpanel";
+
+    /**
+     * The color that is used for background painting.
+     */
+    public static final NamedColorProperty BG_COLOR = new NamedColorProperty(marktr("cadastre download panel"), new Color(255, 204, 51));
 
     private final JCheckBox cbDownloadBuilding;
     private final JCheckBox cbDownloadAddress;
@@ -56,6 +63,7 @@ public class CadastreDownloadSourcePanel extends AbstractDownloadSourcePanel<Cad
 
     private static JCheckBox createCheckBox(String text, BooleanProperty property, String tooltip) {
         JCheckBox cb = new JCheckBox(text, property.get());
+        cb.setOpaque(false);
         cb.setToolTipText(tooltip);
         return cb;
     }
@@ -66,6 +74,7 @@ public class CadastreDownloadSourcePanel extends AbstractDownloadSourcePanel<Cad
      */
     public CadastreDownloadSourcePanel(CadastreDownloadSource ds) {
         super(ds);
+        setBackground(BG_COLOR.get());
         setLayout(new GridBagLayout());
 
         // size check depends on selected data source

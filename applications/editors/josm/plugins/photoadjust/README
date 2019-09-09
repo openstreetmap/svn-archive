@@ -31,8 +31,8 @@ Resources:
       self made arrows (CC0)
     License: GPL v2 or later
   src/org/openstreetmap/josm/plugins/photoadjust/
-    self written code
-    License: CC0
+    different authors (see SVN log)
+    License: GPL v2 or later
   data:
     translations (*.lang):
       Author: many, see https://translations.launchpad.net/josm/trunk/

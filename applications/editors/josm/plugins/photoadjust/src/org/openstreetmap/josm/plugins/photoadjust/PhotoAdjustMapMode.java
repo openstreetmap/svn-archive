@@ -83,7 +83,7 @@ public class PhotoAdjustMapMode extends MapMode implements LayerChangeListener, 
     @Override
     public String getModeHelpText() {
         if (hasLayersToAdjust()) {
-            return tr("Click+drag photo, shift+click to position photo, control+click to set direction.");
+            return tr("Click+drag photo, control+alt+click to position photo, control+click to set direction.");
         } else {
             return tr("Please load some photos.");
         }

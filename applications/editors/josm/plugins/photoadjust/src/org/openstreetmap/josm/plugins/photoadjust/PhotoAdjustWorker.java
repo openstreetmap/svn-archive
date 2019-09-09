@@ -1,13 +1,13 @@
 // License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.photoadjust;
 
-import java.awt.event.InputEvent;
 import java.awt.event.MouseEvent;
-import java.awt.geom.Point2D;
 import java.util.List;
 
 import org.openstreetmap.josm.data.ImageData;
+import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.coor.LatLon;
+import org.openstreetmap.josm.data.projection.ProjectionRegistry;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.layer.geoimage.GeoImageLayer;
 import org.openstreetmap.josm.gui.layer.geoimage.ImageEntry;
@@ -23,7 +23,7 @@ public class PhotoAdjustWorker {
     // Offset between center of the photo and point where it is
     // clicked.  This must be in pixels to maintain the same offset if
     // the photo is moved very far.
-    private Point2D dragOffset;
+    private EastNorth dragOffset;
     private boolean centerViewIsDisabled = false;
     private boolean centerViewNeedsEnable = false;
 
@@ -33,7 +33,7 @@ public class PhotoAdjustWorker {
     public void reset() {
         dragPhoto = null;
         dragData = null;
-        dragOffset = null;
+        dragOffset = EastNorth.ZERO;
     }
 
     /**
@@ -65,9 +65,9 @@ public class PhotoAdjustWorker {
 
     /**
      * Mouse click handler.  Control+click changes the image direction if
-     * there is a photo selected on the map.  Shift+click positions the photo
-     * from the ImageViewerDialog.  Click without shift or control checks if
-     * there is a photo under the mouse.
+     * there is a photo selected on the map.  Control+alt+click positions the
+     * selected photo.  Click without shift or control checks if there is a
+     * photo under the mouse and uses it for dragging.
      *
      * @param evt Mouse event from MouseAdapter mousePressed().
      * @param imageLayers List of GeoImageLayers to be considered.
@@ -80,37 +80,41 @@ public class PhotoAdjustWorker {
                 && imageLayers != null && !imageLayers.isEmpty()) {
             // Check if modifier key is pressed and change to
             // image viewer photo if it is.
-            final boolean isShift = (evt.getModifiers() & InputEvent.SHIFT_MASK) != 0;
-            final boolean isCtrl = (evt.getModifiers() & InputEvent.CTRL_MASK) != 0;
-            if (isShift || isCtrl) {
+            final boolean isAlt = (evt.getModifiersEx() & MouseEvent.ALT_DOWN_MASK) == MouseEvent.ALT_DOWN_MASK;
+            final boolean isCtrl = (evt.getModifiersEx() & MouseEvent.CTRL_DOWN_MASK) == MouseEvent.CTRL_DOWN_MASK;
+            final boolean isShift = (evt.getModifiersEx() & MouseEvent.SHIFT_DOWN_MASK) == MouseEvent.SHIFT_DOWN_MASK;
+            // ignore key press with shift, to not conflict with selection
+            if (isShift) {
+                return;
+            }
+            if (isAlt || isCtrl) {
                 for (GeoImageLayer layer: imageLayers) {
                     if (layer.isVisible()) {
-                        final ImageEntry img = layer.getImageData().getSelectedImage();
-                        if (img != null) {
+                        final List<ImageEntry> entries = layer.getImageData().getSelectedImages();
+                        if (!entries.isEmpty()) {
                             // Change direction if control is pressed, position
-                            // otherwise.  Shift+control changes direction, similar to
-                            // rotate in select mode.
+                            // with control+alt.
                             //
                             // Combinations:
-                            // S ... shift pressed
+                            // A ... alt pressed
                             // C ... control pressed
                             // pos ... photo has a position set == is displayed on the map
                             // nopos ... photo has no position set
                             //
-                            // S + pos: position at mouse
-                            // S + nopos: position at mouse
+                            // C + A + pos: position at mouse
+                            // C + A + nopos: position at mouse
                             // C + pos: change orientation
                             // C + nopos: ignored
-                            // S + C + pos: change orientation
-                            // S + C + nopos: ignore
-                            if (isCtrl) {
-                                if (img.getPos() != null) {
-                                    changeDirection(img, layer.getImageData(), evt);
+                            for (ImageEntry img: entries) {
+                                if (isCtrl && !isAlt) {
+                                    if (img.getPos() != null) {
+                                        changeDirection(img, layer.getImageData(), evt);
+                                    }
+                                } else if (isCtrl && isAlt) {
+                                    movePhoto(img, layer.getImageData(), evt);
                                 }
-                            } else { // shift pressed
-                                movePhoto(img, layer.getImageData(), evt);
+                                dragPhoto = img;
                             }
-                            dragPhoto = img;
                             dragData = layer.getImageData();
                             break;
                         }
@@ -140,10 +144,6 @@ public class PhotoAdjustWorker {
      */
     public void doMouseReleased(MouseEvent evt) {
         restoreCenterView();
-        //if (dragLayer != null && dragPhoto != null) {
-        //    // Re-display the photo to update the OSD.
-        //    ImageViewerDialog.showImage(dragLayer, dragPhoto);
-        //}
     }
 
     /**
@@ -153,11 +153,28 @@ public class PhotoAdjustWorker {
      */
     public void doMouseDragged(MouseEvent evt) {
         if (dragData != null && dragPhoto != null) {
-            if ((evt.getModifiers() & InputEvent.CTRL_MASK) != 0) {
-                changeDirection(dragPhoto, dragData, evt);
+            if ((evt.getModifiersEx() & MouseEvent.CTRL_DOWN_MASK) == MouseEvent.CTRL_DOWN_MASK) {
+                if (dragData.isImageSelected(dragPhoto)) {
+                    for (ImageEntry photo: dragData.getSelectedImages()) {
+                        changeDirection(photo, dragData, evt);
+                    }
+                } else {
+                    changeDirection(dragPhoto, dragData, evt);
+                }
             } else {
                 disableCenterView();
-                movePhoto(dragPhoto, dragData, evt);
+                final EastNorth startEN = dragPhoto.getPos().getEastNorth(ProjectionRegistry.getProjection()).subtract(dragOffset);
+                final EastNorth currentEN = MainApplication.getMap().mapView.getEastNorth(evt.getX(), evt.getY());
+                final EastNorth translation = currentEN.subtract(startEN);
+
+                if (dragData.isImageSelected(dragPhoto)) {
+                    for (ImageEntry photo: dragData.getSelectedImages()) {
+                        translatePhoto(photo, translation);
+                    }
+                } else {
+                    translatePhoto(dragPhoto, translation);
+                }
+                dragData.notifyImageUpdate();
             }
         }
     }
@@ -169,9 +186,9 @@ public class PhotoAdjustWorker {
      * @param evt Mouse event from one of the mouse adapters.
      */
     private void setDragOffset(ImageEntry photo, MouseEvent evt) {
-        final Point2D centerPoint = MainApplication.getMap().mapView.getPoint2D(photo.getPos());
-        dragOffset = new Point2D.Double(centerPoint.getX() - evt.getX(),
-                                        centerPoint.getY() - evt.getY());
+        final EastNorth centerEN = photo.getPos().getEastNorth(ProjectionRegistry.getProjection());
+        final EastNorth offsetEN = MainApplication.getMap().mapView.getEastNorth(evt.getX(), evt.getY());
+        dragOffset = centerEN.subtract(offsetEN);
     }
 
     /**
@@ -181,20 +198,22 @@ public class PhotoAdjustWorker {
      * @param data ImageData of the photo.
      * @param evt Mouse event from one of the mouse adapters.
      */
-    private void movePhoto(ImageEntry photo, ImageData data,
-            MouseEvent evt) {
-        LatLon newPos;
-        if (dragOffset != null) {
-            newPos = MainApplication.getMap().mapView.getLatLon(
-                dragOffset.getX() + evt.getX(),
-                dragOffset.getY() + evt.getY());
-        } else {
-            newPos = MainApplication.getMap().mapView.getLatLon(evt.getX(), evt.getY());
-        }
+    private void movePhoto(ImageEntry photo, ImageData data, MouseEvent evt) {
+        LatLon newPos = MainApplication.getMap().mapView.getLatLon(evt.getX(), evt.getY());
         data.updateImagePosition(photo, newPos);
-        // Re-display the photo because the OSD data might change (new
-        // coordinates).  Or do that in doMouseReleased().
-        //ImageViewerDialog.showImage(layer, photo);
+    }
+
+    /**
+     * Apply the given translation to the photo
+     * @param photo The photo to move
+     * @param translation the translation to apply
+     */
+    private void translatePhoto(ImageEntry photo, EastNorth translation) {
+        final EastNorth startEN = photo.getPos().getEastNorth(ProjectionRegistry.getProjection());
+        final EastNorth newPosEN = startEN.add(translation);
+        final LatLon newPos = MainApplication.getMap().mapView.getProjection().eastNorth2latlon(newPosEN);
+        photo.setPos(newPos);
+        photo.flagNewGpsData();
     }
 
     /**

@@ -86,8 +86,8 @@ public class PhotoPropertyEditor {
 
         @Override
         public void actionPerformed(ActionEvent evt) {
-            final ImageData data = getLayerWithSelectedImage().get().getImageData();
-            final ImageEntry photo = data.getSelectedImage();
+            final ImageData data = getLayerWithOneSelectedImage().get().getImageData();
+            final ImageEntry photo = data.getSelectedImages().get(0);
 
             StringBuilder title =
                     new StringBuilder(tr("Edit Photo GPS Data"));
@@ -116,12 +116,12 @@ public class PhotoPropertyEditor {
          *         image shown, {@code false} otherwise.
          */
         private static boolean enabled() {
-            return getLayerWithSelectedImage().isPresent();
+            return getLayerWithOneSelectedImage().isPresent();
         }
 
-        private static Optional<GeoImageLayer> getLayerWithSelectedImage() {
+        private static Optional<GeoImageLayer> getLayerWithOneSelectedImage() {
             List<GeoImageLayer> list = MainApplication.getLayerManager().getLayersOfType(GeoImageLayer.class);
-            return list.stream().filter(l -> l.getImageData().getSelectedImage() != null).findFirst();
+            return list.stream().filter(l -> l.getImageData().getSelectedImages().size() == 1).findFirst();
         }
 
         @Override

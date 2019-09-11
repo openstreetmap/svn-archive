@@ -33,6 +33,7 @@ import org.postgis.Point;
 import org.postgis.Geometry;
 import org.postgis.LineString;
 import org.postgis.Polygon;
+import org.postgis.MultiPolygon;
 import org.postgis.LinearRing;
 import org.postgis.PGgeometry;
 
@@ -108,11 +109,28 @@ public final class JrenderPgsql {
         return nid;
     }
 
+    private static void addpoly(Polygon po, String table, String osmid) 
+    {
+        if (po.numRings() > 1)
+        {
+            System.err.println("warning: polygons with holes not supported (" + table + " id=" + osmid + ")");
+        }
+        LinearRing lr = (LinearRing) po.getRing(0);
+        waybuf.append("<way id=\"");
+        waybuf.append(++wid);
+        waybuf.append("\" version=\"1\" user=\"1\" uid=\"1\" changeset=\"1\" timestamp=\"1980-01-01T00:00:00Z\">\n");
+        for (int i=0; i < lr.numPoints(); i++)
+        {
+            int n = addnode ((Point) lr.getPoint(i), true);
+            waybuf.append("<nd ref=\"" + n + "\" />\n");
+        }
+    }
+
     /**
      *  helper for adding a PostGIS geometry to pseudo OSM XML
      *  @returns either the node or the way string buffer, depending on geom type
      */
-    private static StringBuilder decode_geom(PGgeometry geom)
+    private static StringBuilder decode_geom(PGgeometry geom, String table, String osmid)
     {
         if (geom.getGeoType() == Geometry.POINT) 
         {
@@ -134,19 +152,15 @@ public final class JrenderPgsql {
         }
         else if (geom.getGeoType() == Geometry.POLYGON)
         {
-            Polygon po = (Polygon) geom.getGeometry();
-            if (po.numRings() > 1)
+            addpoly((Polygon) geom.getGeometry(), table, osmid);
+            return waybuf;
+        }
+        else if (geom.getGeoType() == Geometry.MULTIPOLYGON)
+        {
+            MultiPolygon po = (MultiPolygon) geom.getGeometry();
+            for (Polygon p : po.getPolygons())
             {
-                System.err.println("warning: polygons with holes not supported");
-            }
-            LinearRing lr = (LinearRing) po.getRing(0);
-            waybuf.append("<way id=\"");
-            waybuf.append(++wid);
-            waybuf.append("\" version=\"1\" user=\"1\" uid=\"1\" changeset=\"1\" timestamp=\"1980-01-01T00:00:00Z\">\n");
-            for (int i=0; i < lr.numPoints(); i++)
-            {
-                int n = addnode ((Point) lr.getPoint(i), true);
-                waybuf.append("<nd ref=\"" + n + "\" />\n");
+                addpoly(p, table, osmid);
             }
             return waybuf;
         }
@@ -298,6 +312,7 @@ public final class JrenderPgsql {
             int ogeomcol = 0;
             int geomcol = 0;
             int tagscol = 0;
+            int idcol = 0;
             for (int i = 1; i<colCount; i++)
             {
                 String n = meta.getColumnName(i);
@@ -305,6 +320,8 @@ public final class JrenderPgsql {
                     ogeomcol = i;
                 } else if (n.equals("tags")) {
                     tagscol = i;
+                } else if (n.equals("osm_id")) {
+                    idcol = i;
                 } else if (n.equals("mygeom")) {
                     geomcol = i;
                 }
@@ -329,7 +346,8 @@ public final class JrenderPgsql {
             while (rs.next())
             {
                 PGgeometry geom = (PGgeometry) rs.getObject(geomcol);
-                StringBuilder currentbuf = decode_geom(geom);
+                String osmid = (idcol> 0) ? rs.getString(idcol) : "nil";
+                StringBuilder currentbuf = decode_geom(geom, table, osmid);
 
                 for (int i = 1; i<colCount; i++)
                 {

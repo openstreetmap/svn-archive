@@ -311,11 +311,11 @@ public class CalibrationWindow extends JFrame {
 	}
 
 	private void setRefFileName() {
-		refFileName.setText(tr("<html>Reference Name:"
+		refFileName.setText("<html>"+tr("Reference Name:")
 		      + "<br>"
 		      + "<br>"
 		      + "<br>"
-		      + "</html>"));
+		      + "</html>");
 
 		contentPanel.add(refFileName, new GridBagConstraints(0, 6, GridBagConstraints.REMAINDER, 1, 0.0, 0.0,
 				GridBagConstraints.CENTER, GridBagConstraints.BOTH,
@@ -464,7 +464,7 @@ public class CalibrationWindow extends JFrame {
 	private void refFileEntered() {
 		contentPanel.remove(selectLayerButton);
 		contentPanel.remove(openButton);
-		refFileName.setText(tr("<html>Reference Name:</html>"));
+		refFileName.setText("<html>"+tr("Reference Name:")+"</html>");
 		refFileNameValue.setText(referenceFileName);
 		contentPanel.add(refFileNameValue, new GridBagConstraints(3, 6, 2, 1, 0.0, 0.0,
 		           GridBagConstraints.CENTER, GridBagConstraints.BOTH,

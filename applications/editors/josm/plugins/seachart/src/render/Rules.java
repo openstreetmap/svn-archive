@@ -757,7 +757,7 @@ public class Rules {
 							break;
 						}
 					}
-					str += String.format("%1.0f", dist);
+					str += String.format("%3.1f", dist);
 					Renderer.labelText(str, new Font("Arial", Font.PLAIN, 40), Color.black, new Delta(Handle.CC, AffineTransform.getTranslateInstance(0, 45)));
 				}
 			}
@@ -1039,7 +1039,7 @@ public class Rules {
 				}
 			}
 			Signals.addSignals();
-            addName(15, new Font("Arial", Font.BOLD, 40), new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -50)));
+            addName(15, new Font("Arial", Font.BOLD, 40), new Delta(Handle.BL, AffineTransform.getTranslateInstance(0, -50)));
 		}
 	}
 

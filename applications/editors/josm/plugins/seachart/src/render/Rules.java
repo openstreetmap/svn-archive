@@ -962,9 +962,7 @@ public class Rules {
 	private static void landmarks() {
 		if (!hasAttribute(Obj.LNDMRK, Att.CATLMK) && (!hasAttribute(Obj.LNDMRK, Att.FUNCTN) || testAttribute(Obj.LNDMRK, Att.FUNCTN, FncFNC.FNC_LGHT)) && hasObject(Obj.LIGHTS)) {
 			lights();
-			addName(15, new Font("Arial", Font.BOLD, 40), new Delta(Handle.BL, AffineTransform.getTranslateInstance(60, -50)));
-		}
-		else if (Renderer.zoom >= 12) {
+		} else if (Renderer.zoom >= 12) {
 			switch (feature.type) {
 			case LNDMRK:
 				if (testAttribute(Obj.LNDMRK, Att.STATUS, StsSTS.STS_ILLD)) {

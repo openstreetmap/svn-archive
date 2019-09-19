@@ -17,6 +17,7 @@ import s57.S57val.CatFOG;
 import s57.S57val.CatLIT;
 import s57.S57val.CatROS;
 import s57.S57val.CatRTB;
+import s57.S57val.CatRAS;
 import s57.S57val.ColCOL;
 import s57.S57val.LitCHR;
 import symbols.Beacons;
@@ -107,7 +108,7 @@ public class Signals extends Rules {
 		if (feature.objs.containsKey(Obj.FOGSIG))
 			fogSignals();
 		if (feature.objs.containsKey(Obj.RTPBCN))
-			radarStations();
+			radarTransponders();
 		if (feature.objs.containsKey(Obj.RADSTA))
 			radarStations();
 		if (feature.objs.containsKey(Obj.RDOSTA))
@@ -200,13 +201,24 @@ public class Signals extends Rules {
 		}
 	}
 
-	public static void radarStations() {
-		if (Renderer.zoom >= 11)
-			Renderer.symbol(Beacons.RadarStation);
-		if (Renderer.zoom >= 15) {
-			String bstr = "";
-			CatRTB cat = (CatRTB) getAttEnum(Obj.RTPBCN, Att.CATRTB);
-			String wal = getAttStr(Obj.RTPBCN, Att.RADWAL);
+    public static void radarStations() {
+        if (Renderer.zoom >= 11)
+            Renderer.symbol(Beacons.RadarStation);
+        if (Renderer.zoom >= 15) {
+            CatRAS cat = (CatRAS) getAttEnum(Obj.RADSTA, Att.CATRAS);
+            if (cat == CatRAS.RAS_COST) {
+                Renderer.labelText("Ra", new Font("Arial", Font.PLAIN, 40), Symbols.Msymb, new Delta(Handle.TR, AffineTransform.getTranslateInstance(-60, -70)));
+            }
+        }
+    }
+
+    public static void radarTransponders() {
+        if (Renderer.zoom >= 11)
+            Renderer.symbol(Beacons.RadarStation);
+        if (Renderer.zoom >= 15) {
+            String bstr = "";
+            CatRTB cat = (CatRTB) getAttEnum(Obj.RTPBCN, Att.CATRTB);
+            String wal = getAttStr(Obj.RTPBCN, Att.RADWAL);
             if ((cat == CatRTB.RTB_RAMK) || (cat == CatRTB.RTB_RACN)) {
                 switch (cat) {
                 case RTB_RAMK:
@@ -232,21 +244,21 @@ public class Signals extends Rules {
                         bstr += (mxr != 0) ? mxr.toString() + "M" : "";
                 }
             }
-			if (!wal.isEmpty()) {
-				switch (wal) {
-				case "0.03-X":
-					bstr += "(3cm)";
-					break;
-				case "0.10-S":
-					bstr += "(10cm)";
-					break;
-				}
-			}
-			if (!bstr.isEmpty()) {
-				Renderer.labelText(bstr, new Font("Arial", Font.PLAIN, 40), Symbols.Msymb, new Delta(Handle.TR, AffineTransform.getTranslateInstance(-30, -70)));
-			}
-		}
-	}
+            if (!wal.isEmpty()) {
+                switch (wal) {
+                case "0.03-X":
+                    bstr += "(3cm)";
+                    break;
+                case "0.10-S":
+                    bstr += "(10cm)";
+                    break;
+                }
+            }
+            if (!bstr.isEmpty()) {
+                Renderer.labelText(bstr, new Font("Arial", Font.PLAIN, 40), Symbols.Msymb, new Delta(Handle.TR, AffineTransform.getTranslateInstance(-30, -70)));
+            }
+        }
+    }
 
 	@SuppressWarnings("unchecked")
 	public static void radioStations() {

@@ -1076,6 +1076,7 @@ public class Rules {
 			        }
 			        Renderer.symbol(Buoys.Shapes.get(shape), getScheme(feature.type));
 			        Renderer.symbol(Topmarks.TopMooring, Topmarks.BuoyDeltas.get(shape));
+		            Signals.addSignals();
 			    }
 				break;
 			default:

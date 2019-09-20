@@ -646,6 +646,7 @@ public class Rules {
 					Renderer.labelText(hstr, new Font("Arial", Font.PLAIN, 30), Color.black, LabelStyle.HCLR, Color.black, Color.white, new Delta(Handle.CC));
 				}
 			}
+            Signals.addSignals();
 		}
 	}
 

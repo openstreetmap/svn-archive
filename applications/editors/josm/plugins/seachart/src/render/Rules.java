@@ -1447,7 +1447,6 @@ public class Rules {
 			case RADSTA:
 				Renderer.symbol(Harbours.SignalStation);
 				Renderer.symbol(Beacons.RadarStation);
-				Renderer.labelText("Ra", new Font("Arial", Font.PLAIN, 40), Symbols.Msymb, new Delta(Handle.TR, AffineTransform.getTranslateInstance(-30, -70)));
 				break;
 			case PILBOP:
 				Renderer.symbol(Harbours.Pilot);

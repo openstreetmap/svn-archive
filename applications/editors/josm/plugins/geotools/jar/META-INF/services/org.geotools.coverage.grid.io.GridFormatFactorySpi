@@ -1,1 +1,2 @@
 org.geotools.gce.geotiff.GeoTiffFormatFactorySpi
+org.geotools.gce.imagemosaic.ImageMosaicFormatFactory

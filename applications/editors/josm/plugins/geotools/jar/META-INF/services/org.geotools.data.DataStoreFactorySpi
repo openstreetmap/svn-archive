@@ -1,2 +1,4 @@
+org.geotools.data.h2.H2DataStoreFactory
+org.geotools.data.h2.H2JNDIDataStoreFactory
 org.geotools.data.shapefile.ShapefileDataStoreFactory
 org.geotools.data.shapefile.ShapefileDirectoryFactory

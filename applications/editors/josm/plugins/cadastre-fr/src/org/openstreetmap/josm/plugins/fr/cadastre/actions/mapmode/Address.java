@@ -17,6 +17,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -277,8 +278,11 @@ public class Address extends MapMode {
     }
 
     private void addStreetNameOrRelation(OsmPrimitive osm, Collection<Command> cmds) {
+        DataSet ds = OsmDataManager.getInstance().getEditDataSet();
         if (Config.getPref().getBoolean("cadastrewms.addr.dontUseRelation", false)) {
-            cmds.add(new ChangePropertyCommand(osm, tagHouseStreet, inputStreet.getText()));
+            Map<String, String> tags = new HashMap<>();
+            tags.put(tagHouseStreet, inputStreet.getText());
+            cmds.add(new ChangePropertyCommand(ds, Arrays.asList(osm), tags));
         } else if (selectedWay != null) {
             Relation selectedRelation = findRelationAddr(selectedWay);
             // add the node to its relation
@@ -294,7 +298,7 @@ public class Address extends MapMode {
                 newRel.put(relationAddrName, selectedWay.get(tagHighwayName));
                 newRel.addMember(new RelationMember(relationAddrStreetRole, selectedWay));
                 newRel.addMember(new RelationMember(relationMemberHouse, osm));
-                cmds.add(new AddCommand(OsmDataManager.getInstance().getEditDataSet(), newRel));
+                cmds.add(new AddCommand(ds, newRel));
             }
         }
     }

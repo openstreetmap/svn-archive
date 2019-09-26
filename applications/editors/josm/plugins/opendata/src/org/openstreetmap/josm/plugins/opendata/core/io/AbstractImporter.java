@@ -43,6 +43,10 @@ public abstract class AbstractImporter extends OsmImporter {
         return null;
     }
 
+    public final void setFile(File file) {
+        this.file = file;
+    }
+
     @Override
     public void importData(File file, ProgressMonitor progressMonitor)
             throws IOException, IllegalDataException {

@@ -21,6 +21,8 @@ import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.gui.MenuScroller;
 import org.openstreetmap.josm.gui.preferences.PreferenceSetting;
 import org.openstreetmap.josm.gui.util.GuiHelper;
+import org.openstreetmap.josm.io.session.SessionReader;
+import org.openstreetmap.josm.io.session.SessionWriter;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
 import org.openstreetmap.josm.plugins.opendata.core.actions.DownloadDataAction;
@@ -38,9 +40,12 @@ import org.openstreetmap.josm.plugins.opendata.core.io.geographic.GmlImporter;
 import org.openstreetmap.josm.plugins.opendata.core.io.geographic.KmlKmzImporter;
 import org.openstreetmap.josm.plugins.opendata.core.io.geographic.MifTabImporter;
 import org.openstreetmap.josm.plugins.opendata.core.io.geographic.ShpImporter;
+import org.openstreetmap.josm.plugins.opendata.core.io.session.OpenDataSessionExporter;
+import org.openstreetmap.josm.plugins.opendata.core.io.session.OpenDataSessionImporter;
 import org.openstreetmap.josm.plugins.opendata.core.io.tabular.CsvImporter;
 import org.openstreetmap.josm.plugins.opendata.core.io.tabular.OdsImporter;
 import org.openstreetmap.josm.plugins.opendata.core.io.tabular.XlsImporter;
+import org.openstreetmap.josm.plugins.opendata.core.layers.OdDataLayer;
 import org.openstreetmap.josm.plugins.opendata.core.modules.Module;
 import org.openstreetmap.josm.plugins.opendata.core.modules.ModuleHandler;
 import org.openstreetmap.josm.plugins.opendata.core.modules.ModuleInformation;
@@ -58,6 +63,14 @@ public final class OdPlugin extends Plugin {
 
     private OdDialog dialog;
 
+    public final List<AbstractImporter> importers =  Arrays.asList(new AbstractImporter[]{
+            new CsvImporter(), new OdsImporter(), new XlsImporter(), // Tabular file formats
+            new KmlKmzImporter(), new ShpImporter(), new MifTabImporter(), new GmlImporter(), // Geographic file formats
+            new ZipImporter(), // Zip archive containing any of the others
+            new SevenZipImporter(), // 7Zip archive containing any of the others
+            xmlImporter // Generic importer for XML files (currently used for Neptune files)
+    });
+
     public OdPlugin(PluginInformation info) {
         super(info);
         ImageProvider.addAdditionalClassLoaders(ModuleHandler.getResourceClassLoaders());
@@ -67,15 +80,10 @@ public final class OdPlugin extends Plugin {
             throw new IllegalStateException("Cannot instantiate plugin twice !");
         }
         // Allow JOSM to import more files
-        for (AbstractImporter importer : Arrays.asList(new AbstractImporter[]{
-                new CsvImporter(), new OdsImporter(), new XlsImporter(), // Tabular file formats
-                new KmlKmzImporter(), new ShpImporter(), new MifTabImporter(), new GmlImporter(), // Geographic file formats
-                new ZipImporter(), // Zip archive containing any of the others
-                new SevenZipImporter(), // 7Zip archive containing any of the others
-                xmlImporter // Generic importer for XML files (currently used for Neptune files)
-        })) {
-            ExtensionFileFilter.addImporterFirst(importer);
-        }
+        importers.forEach(ExtensionFileFilter::addImporterFirst);
+        // Session support
+        SessionReader.registerSessionLayerImporter("open-data", OpenDataSessionImporter.class);
+        SessionWriter.registerSessionLayerExporter(OdDataLayer.class, OpenDataSessionExporter.class);
 
         menu = MainApplication.getMenu().dataMenu;
 

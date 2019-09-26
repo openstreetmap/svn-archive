@@ -44,17 +44,11 @@ public class Link implements Cloneable {
         return nameContainsParams() || urlContainsParams();
     }
 
-    /* (non-Javadoc)
-     * @see java.lang.Object#toString()
-     */
     @Override
     public String toString() {
         return "Link [name=" + name + ", url=" + url + "]";
     }
 
-    /* (non-Javadoc)
-     * @see java.lang.Object#clone()
-     */
     @Override
     public Link clone() throws CloneNotSupportedException {
         return new Link(this);

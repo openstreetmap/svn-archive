@@ -58,17 +58,11 @@ public class LinkPost extends Link {
         return containsParams(params);
     }
 
-    /* (non-Javadoc)
-     * @see org.openstreetmap.josm.plugins.tag2link.data.Link#containsParams()
-     */
     @Override
     public boolean containsParams() {
         return super.containsParams() || headersContainsParams() || paramsContainsParams();
     }
 
-    /* (non-Javadoc)
-     * @see org.openstreetmap.josm.plugins.tag2link.data.Link#clone()
-     */
     @Override
     public LinkPost clone() throws CloneNotSupportedException {
         return new LinkPost(this);

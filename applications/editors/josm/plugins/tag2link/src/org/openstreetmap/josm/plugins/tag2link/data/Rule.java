@@ -15,14 +15,18 @@
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package org.openstreetmap.josm.plugins.tag2link.data;
 
+import static java.util.Collections.singleton;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.regex.Matcher;
 
 import org.openstreetmap.josm.data.osm.IPrimitive;
 import org.openstreetmap.josm.data.osm.Tag;
+import org.openstreetmap.josm.data.osm.Tags;
 
 public class Rule {
     public final Collection<Condition> conditions = new ArrayList<>();
@@ -53,9 +57,6 @@ public class Rule {
                 params.put(prefix+"v", value);
             }
         }
-        /* (non-Javadoc)
-         * @see java.lang.Object#toString()
-         */
         @Override
         public String toString() {
             return "MatchingTag [" + (key != null ? "key=" + key + ", " : "")
@@ -74,58 +75,56 @@ public class Rule {
         public boolean matches() {
             return conditionsNumber > 0 && matchingTags.size() >= conditionsNumber;
         }
-        /* (non-Javadoc)
-         * @see java.lang.Object#toString()
-         */
         @Override
         public String toString() {
             return "EvalResult [conditionsNumber=" + conditionsNumber
                     + ", matchingTags=" + matchingTags + "]";
         }
     }
-    
-    public EvalResult evaluates(Map<String, String> tags) {
+
+    public EvalResult evaluates(Iterable<String> keys, Function<String, Iterable<String>> valuesFn) {
         EvalResult result = new EvalResult(conditions.size());
         for (Condition c : conditions) {
-            for (String key : tags.keySet()) {
+            for (String key : keys) {
                 Matcher keyMatcher = c.keyPattern.matcher(key);
                 if (keyMatcher.matches()) {
                     String idPrefix = c.id == null ? "" : c.id+".";
-                    MatchingTag tag = new MatchingTag(key, tags.get(key), idPrefix);
-                    tag.addParams(keyMatcher, "k");
-                    boolean matchingTag = true;
-                    if (c.valPattern != null) {
-                        Matcher valMatcher = c.valPattern.matcher(tag.value);
-                        if (valMatcher.matches()) {
-                            tag.addParams(valMatcher, "v");
-                        } else {
-                            matchingTag = false;
+                    for (String value : valuesFn.apply(key)) {
+                        MatchingTag tag = new MatchingTag(key, value, idPrefix);
+                        tag.addParams(keyMatcher, "k");
+                        boolean matchingTag = true;
+                        if (c.valPattern != null) {
+                            Matcher valMatcher = c.valPattern.matcher(tag.value);
+                            if (valMatcher.matches()) {
+                                tag.addParams(valMatcher, "v");
+                            } else {
+                                matchingTag = false;
+                            }
                         }
-                    }
-                    if (matchingTag) {
-                        result.matchingTags.add(tag);
+                        if (matchingTag) {
+                            result.matchingTags.add(tag);
+                        }
                     }
                 }
             }
         }
         return result;
     }
-    
+
     public EvalResult evaluates(IPrimitive p) {
-        return evaluates(p.getKeys());
+        return evaluates(p.keySet(), key -> singleton(p.get(key)));
     }
 
     public EvalResult evaluates(Tag tag) {
-        Map<String, String> map = new HashMap<>();
-        map.put(tag.getKey(), tag.getValue());
-        return evaluates(map);
+        return evaluates(singleton(tag.getKey()), x -> singleton(tag.getValue()));
     }
 
-    /* (non-Javadoc)
-     * @see java.lang.Object#toString()
-     */
+    public EvalResult evaluates(Tags tags) {
+        return evaluates(singleton(tags.getKey()), x -> tags.getValues());
+    }
+
     @Override
     public String toString() {
-        return "Rule [conditions=" + conditions + ", links=" + links + "]";
+        return "Rule [conditions=" + conditions + ", links=" + links + ']';
     }
 }

@@ -18,7 +18,7 @@ package org.openstreetmap.josm.plugins.tag2link.listeners;
 import javax.swing.JPopupMenu;
 import javax.swing.event.PopupMenuEvent;
 
-import org.openstreetmap.josm.data.osm.Tag;
+import org.openstreetmap.josm.data.osm.Tags;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.plugins.tag2link.Tag2LinkRuleChecker;
 import org.openstreetmap.josm.plugins.tag2link.data.Link;
@@ -31,10 +31,10 @@ public class PropertyPopupListener extends AbstractPopupListener {
 
     @Override
     public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
-        Tag tag = frame.propertiesDialog.getSelectedProperty();
-        if (tag != null) {
+        Tags tags = frame.propertiesDialog.getSelectedProperties();
+        if (tags != null) {
             JPopupMenu popup = (JPopupMenu) e.getSource();
-            for (Link link : Tag2LinkRuleChecker.getLinks(tag)) {
+            for (Link link : Tag2LinkRuleChecker.getLinks(tags)) {
                 addLink(popup, link);
             }
         }

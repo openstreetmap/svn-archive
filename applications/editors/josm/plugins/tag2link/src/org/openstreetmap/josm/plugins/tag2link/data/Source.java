@@ -42,9 +42,6 @@ public class Source {
         this.name = name;
     }
 
-    /* (non-Javadoc)
-     * @see java.lang.Object#toString()
-     */
     @Override
     public String toString() {
         return "Source [name=" + name + ", rules=" + rules + "]";

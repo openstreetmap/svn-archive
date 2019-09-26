@@ -22,11 +22,13 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
+import java.util.function.BiFunction;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.openstreetmap.josm.data.osm.IPrimitive;
 import org.openstreetmap.josm.data.osm.Tag;
+import org.openstreetmap.josm.data.osm.Tags;
 import org.openstreetmap.josm.plugins.tag2link.data.Link;
 import org.openstreetmap.josm.plugins.tag2link.data.LinkPost;
 import org.openstreetmap.josm.plugins.tag2link.data.Rule;
@@ -47,7 +49,10 @@ public class Tag2LinkRuleChecker implements Tag2LinkConstants {
     private static Collection<Source> sources = new ArrayList<>();
     
     private static boolean initialized = false;
-    
+
+    private static final Pattern PLACEHOLDERS = Pattern.compile("%([^%]*)%");
+    private static final Pattern LANG = Pattern.compile(".*lang(?:\\((\\p{Lower}{2,})(?:,(\\p{Lower}{2,}))*\\))?.*");
+
     /**
      * Initializes the matching rules mechanism.
      */
@@ -66,10 +71,10 @@ public class Tag2LinkRuleChecker implements Tag2LinkConstants {
         }
         return null;
     }
-    
+
     private static String replaceParams(String s, EvalResult eval) {
         String result = s;
-        Matcher m = Pattern.compile("%([^%]*)%").matcher(s);
+        Matcher m = PLACEHOLDERS.matcher(s);
         while (m.find()) {
             String arg = m.group(1);
             
@@ -78,7 +83,7 @@ public class Tag2LinkRuleChecker implements Tag2LinkConstants {
             
             // No standard value found: test lang() function
             if (val == null) {
-                Matcher lm = Pattern.compile(".*lang(?:\\((\\p{Lower}{2,})(?:,(\\p{Lower}{2,}))*\\))?.*").matcher(arg);
+                Matcher lm = LANG.matcher(arg);
                 if (lm.matches()) {
                     String josmLang = Config.getPref().get("language");
                     String jvmLang = (josmLang.isEmpty() ? Locale.getDefault().getLanguage() : josmLang).split("_")[0];
@@ -106,14 +111,14 @@ public class Tag2LinkRuleChecker implements Tag2LinkConstants {
                 }
             }
             
-            // Has a value been found ?
+            // Has a value been found?
             if (val != null) {
                 try {
                     // Special hack for Wikipedia that prevents spaces being replaced by "+" characters, but by "_"
                     if (s.contains("wikipedia.") || s.contains(".wikimedia.org")) {
                         val = val.replaceAll(" ", "_");
                     }
-                    // Encode param to be included in the URL, except if it is the URL itself !
+                    // Encode param to be included in the URL, except if it is the URL itself!
                     if (!m.group().equals(s)) {
                         val = URLEncoder.encode(val, UTF8_ENCODING);
                     }
@@ -123,7 +128,7 @@ public class Tag2LinkRuleChecker implements Tag2LinkConstants {
                     Logging.error(e);
                 }
             } else {
-                System.err.println("Invalid argument: "+arg);
+                Logging.error("Invalid argument: " + arg);
             }
         }
         return result;
@@ -163,26 +168,30 @@ public class Tag2LinkRuleChecker implements Tag2LinkConstants {
                     }
                     result.add(copy);
                 } catch (CloneNotSupportedException e) {
-                    System.err.println(e);
+                    Logging.error(e);
                 }
             }
         }
         return result;
     }
-    
+
+    private static <T> Collection<Link> doGetLinks(BiFunction<Rule, T, EvalResult> evaluator, T obj) {
+        Collection<Link> result = new ArrayList<>();
+        for (Source source : sources) {
+            for (Rule rule : source.rules) {
+                result.addAll(processEval(evaluator.apply(rule, obj), rule, source));
+            }
+        }
+        return result;
+    }
+
     /**
      * Replies the links relevant to the given OSM primitive.
      * @param p The OSM primitive
      * @return the links relevant to the {@code p}.
      */
     public static Collection<Link> getLinks(IPrimitive p) {
-        Collection<Link> result = new ArrayList<>();
-        for (Source source : sources) {
-            for (Rule rule : source.rules) {
-                result.addAll(processEval(rule.evaluates(p), rule, source));
-            }
-        }
-        return result;
+        return doGetLinks(Rule::evaluates, p);
     }
 
     /**
@@ -191,12 +200,15 @@ public class Tag2LinkRuleChecker implements Tag2LinkConstants {
      * @return the links relevant to the {@code tag}.
      */
     public static Collection<Link> getLinks(Tag tag) {
-        Collection<Link> result = new ArrayList<>();
-        for (Source source : sources) {
-            for (Rule rule : source.rules) {
-                result.addAll(processEval(rule.evaluates(tag), rule, source));
-            }
-        }
-        return result;
+        return doGetLinks(Rule::evaluates, tag);
+    }
+
+    /**
+     * Replies the links relevant to the given OSM tags.
+     * @param tags The OSM tags
+     * @return the links relevant to the {@code tags}.
+     */
+    public static Collection<Link> getLinks(Tags tags) {
+        return doGetLinks(Rule::evaluates, tags);
     }
 }

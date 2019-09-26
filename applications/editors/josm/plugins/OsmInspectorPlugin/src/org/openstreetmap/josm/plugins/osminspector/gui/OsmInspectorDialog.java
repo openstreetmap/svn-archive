@@ -31,8 +31,8 @@ import org.openstreetmap.josm.plugins.osminspector.OsmInspectorLayer;
 import org.openstreetmap.josm.plugins.osminspector.OsmInspectorLayer.BugInfo;
 import org.openstreetmap.josm.tools.Shortcut;
 
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.Point;
+import org.locationtech.jts.geom.Geometry;
+import org.locationtech.jts.geom.Point;
 
 public class OsmInspectorDialog extends ToggleDialog implements LayerChangeListener, ActiveLayerChangeListener {
 
@@ -232,7 +232,7 @@ public class OsmInspectorDialog extends ToggleDialog implements LayerChangeListe
 
 	@Override
 	public void layerAdded(LayerAddEvent e) {
-		if (layer instanceof OsmInspectorLayer) {
+		if (layer != null) {
 			refreshModel();
 			refreshBugList();
 		}
@@ -240,7 +240,7 @@ public class OsmInspectorDialog extends ToggleDialog implements LayerChangeListe
 
 	@Override
 	public void layerRemoving(LayerRemoveEvent e) {
-		if (layer instanceof OsmInspectorLayer) {
+		if (layer != null) {
 			bugsList.clearSelection();
 			model.clear();
 		}

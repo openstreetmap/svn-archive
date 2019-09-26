@@ -18,7 +18,7 @@ import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.tools.Logging;
 import org.openstreetmap.josm.tools.Shortcut;
 
-import com.vividsolutions.jts.io.ParseException;
+import org.locationtech.jts.io.ParseException;
 
 public class ImportOsmInspectorBugsAction extends JosmAction {
 	OsmInspectorPlugin plugin;

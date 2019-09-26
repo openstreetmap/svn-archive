@@ -11,7 +11,6 @@ import org.geotools.data.DataStore;
 import org.geotools.data.DataStoreFinder;
 import org.geotools.data.FeatureSource;
 import org.geotools.factory.CommonFactoryFinder;
-import org.geotools.factory.GeoTools;
 import org.geotools.feature.FeatureCollection;
 import org.geotools.geometry.jts.ReferencedEnvelope;
 import org.geotools.referencing.CRS;
@@ -79,8 +78,7 @@ public class GeoFabrikWFSClient {
 		//
 		// Ask WFS service for typeName data constrained by bboxRef
 		//
-		FilterFactory2 ff = CommonFactoryFinder.getFilterFactory2(GeoTools
-				.getDefaultHints());
+		FilterFactory2 ff = CommonFactoryFinder.getFilterFactory2();
 		Filter filterBB = ff.bbox(ff.property(geomName), bboxRef);
 		FeatureCollection<SimpleFeatureType, SimpleFeature> features = source
 				.getFeatures(filterBB);

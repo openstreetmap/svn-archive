@@ -7,42 +7,37 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/JOSM-GeoTools"/>
 	<classpathentry kind="lib" path="lib/commons-collections-3.2.2.jar"/>
 	<classpathentry kind="lib" path="lib/commons-jxpath-1.3.jar"/>
-	<classpathentry kind="lib" path="lib/gt-app-schema-resolver-19.0.jar">
+	<classpathentry kind="lib" path="lib/gt-app-schema-resolver-22.0.jar">
 		<attributes>
 			<attribute name="javadoc_location" value="http://docs.geotools.org/stable/javadocs/"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="lib/gt-cql-19.0.jar">
+	<classpathentry kind="lib" path="lib/gt-cql-22.0.jar">
 		<attributes>
 			<attribute name="javadoc_location" value="http://docs.geotools.org/stable/javadocs/"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="lib/gt-render-19.0.jar">
+	<classpathentry kind="lib" path="lib/gt-render-22.0.jar">
 		<attributes>
 			<attribute name="javadoc_location" value="http://docs.geotools.org/stable/javadocs/"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="lib/gt-referencing3D-19.0.jar">
+	<classpathentry kind="lib" path="lib/gt-wfs-ng-22.0.jar">
 		<attributes>
 			<attribute name="javadoc_location" value="http://docs.geotools.org/stable/javadocs/"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="lib/gt-wfs-ng-19.0.jar">
+	<classpathentry kind="lib" path="lib/gt-xml-22.0.jar">
 		<attributes>
 			<attribute name="javadoc_location" value="http://docs.geotools.org/stable/javadocs/"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="lib/gt-xml-19.0.jar">
+	<classpathentry kind="lib" path="lib/gt-xsd-core-22.0.jar">
 		<attributes>
 			<attribute name="javadoc_location" value="http://docs.geotools.org/stable/javadocs/"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="lib/gt-xsd-core-19.0.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="http://docs.geotools.org/stable/javadocs/"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="lib/gt-xsd-wfs-19.0.jar">
+	<classpathentry kind="lib" path="lib/gt-xsd-wfs-22.0.jar">
 		<attributes>
 			<attribute name="javadoc_location" value="http://docs.geotools.org/stable/javadocs/"/>
 		</attributes>

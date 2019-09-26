@@ -24,7 +24,6 @@ import javax.json.spi.JsonProvider;
 import javax.swing.Icon;
 import javax.swing.JOptionPane;
 
-import org.geotools.factory.Hints;
 import org.geotools.geometry.jts.JTS;
 import org.geotools.metadata.iso.citation.Citations;
 import org.geotools.referencing.AbstractIdentifiedObject;
@@ -33,6 +32,9 @@ import org.geotools.referencing.NamedIdentifier;
 import org.geotools.referencing.crs.AbstractCRS;
 import org.geotools.referencing.crs.AbstractDerivedCRS;
 import org.geotools.referencing.crs.AbstractSingleCRS;
+import org.geotools.util.factory.Hints;
+import org.locationtech.jts.geom.LineString;
+import org.locationtech.jts.geom.Point;
 import org.opengis.geometry.MismatchedDimensionException;
 import org.opengis.referencing.FactoryException;
 import org.opengis.referencing.IdentifiedObject;
@@ -66,9 +68,6 @@ import org.openstreetmap.josm.tools.Logging;
 import org.openstreetmap.josm.tools.ReflectionUtils;
 import org.openstreetmap.josm.tools.UserCancelException;
 import org.openstreetmap.josm.tools.Utils;
-
-import com.vividsolutions.jts.geom.LineString;
-import com.vividsolutions.jts.geom.Point;
 
 /**
  * Superclass of geographic format readers (currently GML and SHP).

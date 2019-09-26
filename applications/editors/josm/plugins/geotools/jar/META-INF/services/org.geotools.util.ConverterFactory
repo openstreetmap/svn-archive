@@ -1,4 +1,3 @@
-org.geotools.data.h2.H2ClobConverterFactory
 org.geotools.data.util.CommonsConverterFactory
 org.geotools.data.util.NumericConverterFactory
 org.geotools.data.util.PercentageConverterFactory

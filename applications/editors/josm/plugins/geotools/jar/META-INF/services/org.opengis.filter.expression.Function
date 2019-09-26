@@ -198,4 +198,5 @@ org.geotools.filter.function.color.GrayscaleFunction
 org.geotools.filter.function.color.ConstrastFunction
 org.geotools.filter.function.BoundedByFunction
 org.geotools.filter.function.DateDifferenceFunction
-org.geotools.filter.function.JsonPointerFunction
+# Disabled for JOSM as it requires com.fasterxml.jackson.core.JsonFactory
+#org.geotools.filter.function.JsonPointerFunction

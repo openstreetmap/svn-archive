@@ -19,9 +19,9 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.function.BiFunction;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -133,11 +133,11 @@ public class Tag2LinkRuleChecker implements Tag2LinkConstants {
         }
         return result;
     }
-    
+
     private static void replaceMapParams(Map<String, String> map, EvalResult eval) {
-        for (Iterator<String> it = map.keySet().iterator(); it.hasNext(); ) {
-            String key = it.next();
-            String value = map.get(key);
+        for (Entry<String, String> e : map.entrySet()) {
+            String key = e.getKey();
+            String value = e.getValue();
             String key2 = replaceParams(key, eval);
             String value2 = replaceParams(value, eval);
             if (key.equals(key2) && value.equals(value2)) {
@@ -152,7 +152,7 @@ public class Tag2LinkRuleChecker implements Tag2LinkConstants {
             }
         }
     }
-    
+
     private static Collection<Link> processEval(EvalResult eval, Rule rule, Source source) {
         Collection<Link> result = new ArrayList<>();
         if (eval.matches()) {

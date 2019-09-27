@@ -15,6 +15,9 @@
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package org.openstreetmap.josm.plugins.tag2link.data;
 
+/**
+ * A link that should be opened using a GET HTTP request.
+ */
 public class Link implements Cloneable {
     public String name;
     public String url;

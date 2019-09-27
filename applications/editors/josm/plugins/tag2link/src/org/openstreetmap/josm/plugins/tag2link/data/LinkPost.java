@@ -18,6 +18,9 @@ package org.openstreetmap.josm.plugins.tag2link.data;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * A link that should be opened using a POST HTTP request.
+ */
 public class LinkPost extends Link {
 
     public final Map<String, String> headers;

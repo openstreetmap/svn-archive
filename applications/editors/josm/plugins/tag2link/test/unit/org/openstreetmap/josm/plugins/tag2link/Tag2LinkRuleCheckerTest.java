@@ -18,9 +18,12 @@ public class Tag2LinkRuleCheckerTest {
 
     @Test
     public void testImageCommons() {
-        final Collection<Link> links = Tag2LinkRuleChecker.getLinks(new Tag("image", "File:Witten Brücke Gasstraße.jpg"));
+        Collection<Link> links = Tag2LinkRuleChecker.getLinks(new Tag("image", "File:Witten Brücke Gasstraße.jpg"));
         assertEquals(1, links.size());
         assertEquals("https://commons.wikimedia.org/wiki/File%3AWitten_Br%C3%BCcke_Gasstra%C3%9Fe.jpg", links.iterator().next().url);
+        links = Tag2LinkRuleChecker.getLinks(new Tag("image", "category:JOSM"));
+        assertEquals(1, links.size());
+        assertEquals("https://commons.wikimedia.org/wiki/category%3AJOSM", links.iterator().next().url);
     }
 
     @Test

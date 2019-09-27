@@ -49,7 +49,7 @@
             <link name="View image" href="%v%" />
         </rule>
         <rule>
-            <condition k="image" v="File:.*"/>
+            <condition k="image" v="(?i:File|Category):.*"/>
             <link name="View image" href="https://commons.wikimedia.org/wiki/%v%" />
         </rule>
     </src>
@@ -68,11 +68,11 @@
             <link name="View Wikispecies page" href="https://species.wikimedia.org/wiki/%v%" />
         </rule>
         <rule>
-            <condition k="wikimedia_commons" v="(File|Category):.*"/>
+            <condition k="wikimedia_commons" v="(?i:File):.*"/>
             <link name="View Commons file" href="https://commons.wikimedia.org/wiki/%v%" />
         </rule>
         <rule>
-            <condition k="wikimedia_commons" v="Category:.*"/>
+            <condition k="wikimedia_commons" v="(?i:Category):.*"/>
             <link name="View Commons category" href="https://commons.wikimedia.org/wiki/%v%" />
         </rule>
     </src>

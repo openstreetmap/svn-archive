@@ -29,4 +29,11 @@ public class Tag2LinkRuleCheckerTest {
         assertEquals(1, links.size());
         assertEquals("https://www.wikidata.org/wiki/Q259340", links.iterator().next().url);
     }
+
+    @Test
+    public void testArchipelagoWikidata() {
+        final Collection<Link> links = Tag2LinkRuleChecker.getLinks(new Tag("archipelago:wikidata", "Q756987"));
+        assertEquals(1, links.size());
+        assertEquals("https://www.wikidata.org/wiki/Q756987", links.iterator().next().url);
+    }
 }

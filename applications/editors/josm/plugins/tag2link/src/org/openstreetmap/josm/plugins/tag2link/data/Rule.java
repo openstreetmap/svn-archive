@@ -31,7 +31,7 @@ import org.openstreetmap.josm.data.osm.Tags;
 public class Rule {
     public final Collection<Condition> conditions = new ArrayList<>();
     public final Collection<Link> links = new ArrayList<>();
-    
+
     public static class MatchingTag {
         public String key;
         public String value;
@@ -45,7 +45,7 @@ public class Rule {
             addKeyValueParams();
         }
         public void addParams(Matcher m, String paramName) {
-            for (int i = 1; i<=m.groupCount(); i++) {
+            for (int i = 1; i <= m.groupCount(); i++) {
                 params.put(prefix+paramName+"."+i, m.group(i));
             }
         }
@@ -61,11 +61,11 @@ public class Rule {
         public String toString() {
             return "MatchingTag [" + (key != null ? "key=" + key + ", " : "")
                     + (value != null ? "value=" + value + ", " : "")
-                    + (params != null ? "params=" + params + ", " : "")
-                    + (prefix != null ? "prefix=" + prefix : "") + "]";
+                    + "params=" + params + ", "
+                    + (prefix != null ? "prefix=" + prefix : "") + ']';
         }
     }
-    
+
     public static class EvalResult {
         private final int conditionsNumber;
         public EvalResult(int conditionsNumber) {
@@ -78,7 +78,7 @@ public class Rule {
         @Override
         public String toString() {
             return "EvalResult [conditionsNumber=" + conditionsNumber
-                    + ", matchingTags=" + matchingTags + "]";
+                    + ", matchingTags=" + matchingTags + ']';
         }
     }
 

@@ -15,10 +15,15 @@
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package org.openstreetmap.josm.plugins.tag2link.listeners;
 
+import java.util.Optional;
+
 import javax.swing.JPopupMenu;
 import javax.swing.event.PopupMenuEvent;
 
+import org.openstreetmap.josm.data.osm.BBox;
+import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Tags;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.plugins.tag2link.Tag2LinkRuleChecker;
 import org.openstreetmap.josm.plugins.tag2link.data.Link;
@@ -34,7 +39,9 @@ public class PropertyPopupListener extends AbstractPopupListener {
         Tags tags = frame.propertiesDialog.getSelectedProperties();
         if (tags != null) {
             JPopupMenu popup = (JPopupMenu) e.getSource();
-            for (Link link : Tag2LinkRuleChecker.getLinks(tags)) {
+            Optional<BBox> bbox = MainApplication.getLayerManager().getEditDataSet().getSelected()
+                .stream().filter(x -> x.hasTag(tags.getKey(), tags.getValues())).map(OsmPrimitive::getBBox).findAny();
+            for (Link link : Tag2LinkRuleChecker.getLinks(tags, bbox.isPresent() ? bbox.get().getCenter() : null)) {
                 addLink(popup, link);
             }
         }

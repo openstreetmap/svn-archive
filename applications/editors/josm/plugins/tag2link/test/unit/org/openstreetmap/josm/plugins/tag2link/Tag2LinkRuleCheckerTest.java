@@ -18,24 +18,24 @@ public class Tag2LinkRuleCheckerTest {
 
     @Test
     public void testImageCommons() {
-        Collection<Link> links = Tag2LinkRuleChecker.getLinks(new Tag("image", "File:Witten Brücke Gasstraße.jpg"));
+        Collection<Link> links = Tag2LinkRuleChecker.getLinks(new Tag("image", "File:Witten Brücke Gasstraße.jpg"), null);
         assertEquals(1, links.size());
         assertEquals("https://commons.wikimedia.org/wiki/File%3AWitten_Br%C3%BCcke_Gasstra%C3%9Fe.jpg", links.iterator().next().url);
-        links = Tag2LinkRuleChecker.getLinks(new Tag("image", "category:JOSM"));
+        links = Tag2LinkRuleChecker.getLinks(new Tag("image", "category:JOSM"), null);
         assertEquals(1, links.size());
         assertEquals("https://commons.wikimedia.org/wiki/category%3AJOSM", links.iterator().next().url);
     }
 
     @Test
     public void testBrandWikidata() {
-        final Collection<Link> links = Tag2LinkRuleChecker.getLinks(new Tag("brand:wikidata", "Q259340"));
+        final Collection<Link> links = Tag2LinkRuleChecker.getLinks(new Tag("brand:wikidata", "Q259340"), null);
         assertEquals(1, links.size());
         assertEquals("https://www.wikidata.org/wiki/Q259340", links.iterator().next().url);
     }
 
     @Test
     public void testArchipelagoWikidata() {
-        final Collection<Link> links = Tag2LinkRuleChecker.getLinks(new Tag("archipelago:wikidata", "Q756987"));
+        final Collection<Link> links = Tag2LinkRuleChecker.getLinks(new Tag("archipelago:wikidata", "Q756987"), null);
         assertEquals(1, links.size());
         assertEquals("https://www.wikidata.org/wiki/Q756987", links.iterator().next().url);
     }

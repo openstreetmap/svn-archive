@@ -200,14 +200,10 @@
             <condition k="ref:FR:NAF" v="[A-Z0-9-]{5}" />
             <link name="View INSEE explanation of %name% code" href="http://recherche-naf.insee.fr/SIRENET_ClassesNaf/%v%.htm" />
         </rule>
+        <!--  lat/lon of selected object works, but this website does not. Kept as an example
         <rule>
             <condition k="ref:FR:NAF" v="[A-Z0-9-]{5}" />
-            <link name="View a map of %name% items" href="https://sidjy.github.io/ape.html?ape=%v%" />
-        </rule>
-        <!--  TODO map lat/lon of selected object
-        <rule>
-            <condition k="ref:FR:NAF" v="[A-Z0-9-]{5}" />
-            <link name="View a map of %name% items" href="https://sidjy.github.io/ape.html?ape=%v%#%zoom%/%lat%/%lon%" />
+            <link name="View a map of %name% items" href="https://sidjy.github.io/ape.html?ape=%v%#15/%lat%/%lon%" />
         </rule> -->
     </src>
 

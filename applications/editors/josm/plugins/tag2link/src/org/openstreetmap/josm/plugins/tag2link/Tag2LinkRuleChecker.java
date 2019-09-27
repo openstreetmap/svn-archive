@@ -26,6 +26,7 @@ import java.util.function.BiFunction;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.IPrimitive;
 import org.openstreetmap.josm.data.osm.Tag;
 import org.openstreetmap.josm.data.osm.Tags;
@@ -72,38 +73,30 @@ public class Tag2LinkRuleChecker implements Tag2LinkConstants {
         return null;
     }
 
-    private static String replaceParams(String s, EvalResult eval) {
+    private static String replaceParams(String s, Collection<MatchingTag> matchingTags, LatLon latLon) {
         String result = s;
         Matcher m = PLACEHOLDERS.matcher(s);
         while (m.find()) {
             String arg = m.group(1);
             
             // Search for a standard value
-            String val = findValue(arg, eval.matchingTags);
+            String val = findValue(arg, matchingTags);
             
             // No standard value found: test lang() function
             if (val == null) {
-                Matcher lm = LANG.matcher(arg);
-                if (lm.matches()) {
-                    String josmLang = Config.getPref().get("language");
-                    String jvmLang = (josmLang.isEmpty() ? Locale.getDefault().getLanguage() : josmLang).split("_")[0];
-                    if (lm.groupCount() == 0) {
-                        val = jvmLang;
-                    } else {
-                        for (int i = 1; i<=lm.groupCount() && val == null; i++) {
-                            if (jvmLang.equals(lm.group(i))) {
-                                val = jvmLang;
-                            }
-                        }
-                    }
-                }
+                val = replaceLang(arg);
             }
-            
+
+            // No standard value found: test lat/lon
+            if (val == null && latLon != null) {
+                val = replaceLatLon(arg, latLon);
+            }
+
             // Find a default value if set after ":"
             if (val == null && arg.contains(":")) {
                 String[] vars = arg.split(":");
                 for (int i = 0; val == null && i < vars.length-1; i++) {
-                    val = findValue(vars[i], eval.matchingTags);
+                    val = findValue(vars[i], matchingTags);
                 }
                 if (val == null) {
                     // Default value
@@ -134,12 +127,38 @@ public class Tag2LinkRuleChecker implements Tag2LinkConstants {
         return result;
     }
 
-    private static void replaceMapParams(Map<String, String> map, EvalResult eval) {
+    private static String replaceLang(String arg) {
+        Matcher lm = LANG.matcher(arg);
+        if (lm.matches()) {
+            String josmLang = Config.getPref().get("language");
+            String jvmLang = (josmLang.isEmpty() ? Locale.getDefault().getLanguage() : josmLang).split("_")[0];
+            if (lm.groupCount() == 0) {
+                return jvmLang;
+            } else {
+                for (int i = 1; i <= lm.groupCount(); i++) {
+                    if (jvmLang.equals(lm.group(i))) {
+                        return jvmLang;
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+    private static String replaceLatLon(String arg, LatLon ll) {
+        switch (arg) {
+            case "lat": return Double.toString(ll.lat());
+            case "lon": return Double.toString(ll.lon());
+            default: return null;
+        }
+    }
+
+    private static void replaceMapParams(Map<String, String> map, Collection<MatchingTag> matchingTags, LatLon latLon) {
         for (Entry<String, String> e : map.entrySet()) {
             String key = e.getKey();
             String value = e.getValue();
-            String key2 = replaceParams(key, eval);
-            String value2 = replaceParams(value, eval);
+            String key2 = replaceParams(key, matchingTags, latLon);
+            String value2 = replaceParams(value, matchingTags, latLon);
             if (key.equals(key2) && value.equals(value2)) {
                 // Nothing to do
             } else if (key.equals(key2)) {
@@ -153,18 +172,18 @@ public class Tag2LinkRuleChecker implements Tag2LinkConstants {
         }
     }
 
-    private static Collection<Link> processEval(EvalResult eval, Rule rule, Source source) {
+    private static Collection<Link> processEval(EvalResult eval, Rule rule, Source source, LatLon latLon) {
         Collection<Link> result = new ArrayList<>();
         if (eval.matches()) {
             for (Link link : rule.links) {
                 try {
                     Link copy = (Link) link.clone();
                     copy.name = copy.name.replaceAll("%name%", source.name);
-                    copy.url = replaceParams(copy.url, eval);
+                    copy.url = replaceParams(copy.url, eval.matchingTags, latLon);
                     if (copy instanceof LinkPost) {
                         LinkPost lp = (LinkPost) copy;
-                        replaceMapParams(lp.headers, eval);
-                        replaceMapParams(lp.params, eval);
+                        replaceMapParams(lp.headers, eval.matchingTags, latLon);
+                        replaceMapParams(lp.params, eval.matchingTags, latLon);
                     }
                     result.add(copy);
                 } catch (CloneNotSupportedException e) {
@@ -175,11 +194,11 @@ public class Tag2LinkRuleChecker implements Tag2LinkConstants {
         return result;
     }
 
-    private static <T> Collection<Link> doGetLinks(BiFunction<Rule, T, EvalResult> evaluator, T obj) {
+    private static <T> Collection<Link> doGetLinks(BiFunction<Rule, T, EvalResult> evaluator, T obj, LatLon latLon) {
         Collection<Link> result = new ArrayList<>();
         for (Source source : sources) {
             for (Rule rule : source.rules) {
-                result.addAll(processEval(evaluator.apply(rule, obj), rule, source));
+                result.addAll(processEval(evaluator.apply(rule, obj), rule, source, latLon));
             }
         }
         return result;
@@ -191,24 +210,26 @@ public class Tag2LinkRuleChecker implements Tag2LinkConstants {
      * @return the links relevant to the {@code p}.
      */
     public static Collection<Link> getLinks(IPrimitive p) {
-        return doGetLinks(Rule::evaluates, p);
+        return doGetLinks(Rule::evaluates, p, p.getBBox().getCenter());
     }
 
     /**
      * Replies the links relevant to the given OSM tag.
      * @param tag The OSM tag
+     * @param tags The latlon center, or null
      * @return the links relevant to the {@code tag}.
      */
-    public static Collection<Link> getLinks(Tag tag) {
-        return doGetLinks(Rule::evaluates, tag);
+    public static Collection<Link> getLinks(Tag tag, LatLon latLon) {
+        return doGetLinks(Rule::evaluates, tag, latLon);
     }
 
     /**
      * Replies the links relevant to the given OSM tags.
      * @param tags The OSM tags
+     * @param tags The latlon center, or null
      * @return the links relevant to the {@code tags}.
      */
-    public static Collection<Link> getLinks(Tags tags) {
-        return doGetLinks(Rule::evaluates, tags);
+    public static Collection<Link> getLinks(Tags tags, LatLon latLon) {
+        return doGetLinks(Rule::evaluates, tags, latLon);
     }
 }

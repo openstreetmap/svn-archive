@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
+	<classpathentry excluding="src/|test/unit/" including="data/*|images/*|resources/*" kind="src" path=""/>
 	<classpathentry kind="src" output="bintest" path="test/unit">
 		<attributes>
 			<attribute name="test" value="true"/>

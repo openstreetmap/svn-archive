@@ -91,8 +91,51 @@
         </rule>
     </src>
 
+    <src name="MMSI">
+	    <!-- https://en.wikipedia.org/wiki/Maritime_Mobile_Service_Identity --> 
+        <rule>
+            <condition k="seamark:(virtual_aton|radio_station):mmsi" v="[0-9]+" />
+            <link name="View %name% on MarineTraffic" href="https://www.marinetraffic.com/en/ais/details/ships/shipid:/mmsi:%v%" />
+        </rule>
+    </src>
+
     <!-- Only for France --> 
-    
+
+    <src name="MMSI" country-code="FR">
+        <rule>
+            <condition
+              k="seamark:(virtual_aton|radio_station):mmsi"
+              v="(?=^\d{9}$)(111|00|99)(226|227|228|329|347|349|361|501|540|546|578|607|618|635|660|745)(\d+)"
+            />
+			<!--
+					MMSI = PREFIX / MID / NUMBER
+
+					PREFIX
+					00	Coast station
+					111	SAR aircraft
+					99	AtoNs
+					MID
+					226	Métropole
+					227	Métropole
+					228	Métropole
+					329	Guadeloupe
+					347	Martinique
+					349	???
+					361	Saint-Pierre-et-Miquelon
+					501	Terre Adélie
+					540	Nouvelle-Calédonie
+					546	Polynésie française
+					578	Wallis-et-Futuna
+					607	Îles Saint-Paul et Amsterdam
+					618	Archipel Crozet et TAAF
+					635	Îles Kerguelen
+					660	Réunion ; Mayotte
+					745	Guyane
+			--> 
+            <link name="View %name% on ANFR" href="https://maritime-eadministration.anfr.fr/internet-search-navire?mmsiStation=%v%" />
+        </rule>
+    </src>
+
     <src name="SANDRE" country-code="FR">
         <rule>
             <condition k="ref:(FR:)?sandre" v="[A-Z0-9-]{8}" />

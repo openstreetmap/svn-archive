@@ -216,7 +216,7 @@ public class Tag2LinkRuleChecker implements Tag2LinkConstants {
     /**
      * Replies the links relevant to the given OSM tag.
      * @param tag The OSM tag
-     * @param tags The latlon center, or null
+     * @param latLon The latlon center, or null
      * @return the links relevant to the {@code tag}.
      */
     public static Collection<Link> getLinks(Tag tag, LatLon latLon) {
@@ -226,7 +226,7 @@ public class Tag2LinkRuleChecker implements Tag2LinkConstants {
     /**
      * Replies the links relevant to the given OSM tags.
      * @param tags The OSM tags
-     * @param tags The latlon center, or null
+     * @param latLon The latlon center, or null
      * @return the links relevant to the {@code tags}.
      */
     public static Collection<Link> getLinks(Tags tags, LatLon latLon) {

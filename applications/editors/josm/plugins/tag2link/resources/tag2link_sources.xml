@@ -68,7 +68,7 @@
             <link name="View Wikispecies page" href="https://species.wikimedia.org/wiki/%v%" />
         </rule>
         <rule>
-            <condition k="wikimedia_commons" v="File:.*"/>
+            <condition k="wikimedia_commons" v="(File|Category):.*"/>
             <link name="View Commons file" href="https://commons.wikimedia.org/wiki/%v%" />
         </rule>
         <rule>

@@ -10,7 +10,7 @@
     <property name="plugin.description" value="Provides parts of the GeoTools library for other JOSM plugins. Not meant to be installed directly by users, but rather as a dependency for other plugins."/>
     <property name="plugin.icon" value="images/compass.png"/>
     <property name="plugin.canloadatruntime" value="true"/>
-    <property name="plugin.requires" value="jts;ejml"/>
+    <property name="plugin.requires" value="jts;ejml;apache-commons"/>
     <property name="plugin.stage" value="20"/>
 
     <!-- ** include targets that all plugins have in common ** -->
@@ -19,6 +19,7 @@
 	<fileset id="plugin.requires.jars" dir="${plugin.dist.dir}">
         <include name="jts.jar"/>
         <include name="ejml.jar"/>
+        <include name="apache-commons.jar"/>
     </fileset>
 
     <target name="merge-geotools-services">

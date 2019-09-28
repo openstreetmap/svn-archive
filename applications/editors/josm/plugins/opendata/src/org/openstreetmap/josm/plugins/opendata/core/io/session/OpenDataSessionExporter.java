@@ -15,6 +15,6 @@ public class OpenDataSessionExporter extends GenericSessionExporter<OdDataLayer>
 
     @Override
     protected void addDataFile(OutputStream out) throws IOException {
-        OsmDataSessionExporter.export(layer.data, out);
+        OsmDataSessionExporter.exportData(layer.data, out);
     }
 }

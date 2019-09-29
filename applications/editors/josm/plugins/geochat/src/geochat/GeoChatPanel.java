@@ -234,12 +234,7 @@ public class GeoChatPanel extends ToggleDialog implements ChatServerConnectionLi
         if (comment != null)
             title = title + " (" + comment + ")";
         final String alarm = (alarmLevel <= 0 ? "" : alarmLevel == 1 ? "* " : "!!! ") + title;
-        GuiHelper.runInEDT(new Runnable() {
-            @Override
-            public void run() {
-                setTitle(alarm);
-            }
-        });
+        GuiHelper.runInEDT(() -> setTitle(alarm));
     }
 
     /**
@@ -258,13 +253,10 @@ public class GeoChatPanel extends ToggleDialog implements ChatServerConnectionLi
     public void loggedIn(String userName) {
         Config.getPref().put("geochat.username", userName);
         if (gcPanel.getComponentCount() == 1) {
-            GuiHelper.runInEDTAndWait(new Runnable() {
-                @Override
-                public void run() {
-                    gcPanel.remove(0);
-                    gcPanel.add(tabs, BorderLayout.CENTER);
-                    gcPanel.add(input, BorderLayout.SOUTH);
-                }
+            GuiHelper.runInEDTAndWait(() -> {
+                gcPanel.remove(0);
+                gcPanel.add(tabs, BorderLayout.CENTER);
+                gcPanel.add(input, BorderLayout.SOUTH);
             });
         }
         updateTitleAlarm();
@@ -273,12 +265,7 @@ public class GeoChatPanel extends ToggleDialog implements ChatServerConnectionLi
     @Override
     public void notLoggedIn(final String reason) {
         if (reason != null) {
-            GuiHelper.runInEDT(new Runnable() {
-                @Override
-                public void run() {
-                    new Notification(tr("Failed to log in to GeoChat:") + "\n" + reason).show();
-                }
-            });
+            GuiHelper.runInEDT(() -> new Notification(tr("Failed to log in to GeoChat:") + '\n' + reason).show());
         } else {
             // regular logout
             if (gcPanel.getComponentCount() > 1) {
@@ -291,12 +278,7 @@ public class GeoChatPanel extends ToggleDialog implements ChatServerConnectionLi
 
     @Override
     public void messageSendFailed(final String reason) {
-        GuiHelper.runInEDT(new Runnable() {
-            @Override
-            public void run() {
-                new Notification(tr("Failed to send message:") + "\n" + reason).show();
-            }
-        });
+        GuiHelper.runInEDT(() -> new Notification(tr("Failed to send message:") + '\n' + reason).show());
     }
 
     @Override

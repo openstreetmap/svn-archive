@@ -89,12 +89,7 @@ public final class JsonQueryUtil implements Runnable {
     @Override
     public void run() {
         if (EventQueue.isDispatchThread()) {
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    doRealRun();
-                }
-            }).start();
+            new Thread(this::doRealRun).start();
         } else {
             doRealRun();
         }

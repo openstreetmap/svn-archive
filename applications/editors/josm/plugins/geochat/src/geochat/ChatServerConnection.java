@@ -115,19 +115,16 @@ final class ChatServerConnection {
             checkLogin();
             return;
         }
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    int cnt = 10;
-                    while (getPosition() == null && cnt-- > 0) {
-                        Thread.sleep(200);
-                    }
-                } catch (InterruptedException e) {
-                    Logging.warn(e);
+        new Thread(() -> {
+            try {
+                int cnt = 10;
+                while (getPosition() == null && cnt-- > 0) {
+                    Thread.sleep(200);
                 }
-                autoLogin(userName);
+            } catch (InterruptedException e) {
+                Logging.warn(e);
             }
+            autoLogin(userName);
         }).start();
     }
 

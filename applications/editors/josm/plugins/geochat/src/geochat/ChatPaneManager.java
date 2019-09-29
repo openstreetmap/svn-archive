@@ -101,25 +101,22 @@ class ChatPaneManager {
             createChatPane(userName);
         final String nline = line.startsWith("\n") ? line : "\n" + line;
         final JTextPane thepane = chatPanes.get(userName).pane;
-        GuiHelper.runInEDT(new Runnable() {
-            @Override
-            public void run() {
-                Document doc = thepane.getDocument();
-                try {
-                    SimpleAttributeSet attrs = null;
-                    if (messageType != MESSAGE_TYPE_DEFAULT) {
-                        attrs = new SimpleAttributeSet();
-                        if (messageType == MESSAGE_TYPE_INFORMATION)
-                            StyleConstants.setItalic(attrs, true);
-                        else if (messageType == MESSAGE_TYPE_ATTENTION)
-                            StyleConstants.setForeground(attrs, COLOR_ATTENTION);
-                    }
-                    doc.insertString(doc.getLength(), nline, attrs);
-                } catch (BadLocationException ex) {
-                    Logging.warn(ex);
+        GuiHelper.runInEDT(() -> {
+            Document doc = thepane.getDocument();
+            try {
+                SimpleAttributeSet attrs = null;
+                if (messageType != MESSAGE_TYPE_DEFAULT) {
+                    attrs = new SimpleAttributeSet();
+                    if (messageType == MESSAGE_TYPE_INFORMATION)
+                        StyleConstants.setItalic(attrs, true);
+                    else if (messageType == MESSAGE_TYPE_ATTENTION)
+                        StyleConstants.setForeground(attrs, COLOR_ATTENTION);
                 }
-                thepane.setCaretPosition(doc.getLength());
+                doc.insertString(doc.getLength(), nline, attrs);
+            } catch (BadLocationException ex) {
+                Logging.warn(ex);
             }
+            thepane.setCaretPosition(doc.getLength());
         });
     }
 

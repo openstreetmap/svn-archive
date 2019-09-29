@@ -8,6 +8,7 @@ import javax.json.JsonObject;
  *
  * @author zverik
  */
+@FunctionalInterface
 public interface JsonQueryCallback {
 
     /**

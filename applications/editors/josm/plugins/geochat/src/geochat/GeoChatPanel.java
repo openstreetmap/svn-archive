@@ -16,8 +16,6 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Point;
 import java.awt.RenderingHints;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -122,21 +120,11 @@ public class GeoChatPanel extends ToggleDialog implements ChatServerConnectionLi
         nameField.setText(defaultUserName);
 
         JButton loginButton = new JButton(tr("Login"));
-        loginButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                connection.login(nameField.getText());
-            }
-        });
+        loginButton.addActionListener(e -> connection.login(nameField.getText()));
         nameField.setPreferredSize(new Dimension(nameField.getPreferredSize().width, loginButton.getPreferredSize().height));
 
         final JCheckBox autoLoginBox = new JCheckBox(tr("Enable autologin"), Config.getPref().getBoolean("geochat.autologin", true));
-        autoLoginBox.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                Config.getPref().putBoolean("geochat.autologin", autoLoginBox.isSelected());
-            }
-        });
+        autoLoginBox.addActionListener(e -> Config.getPref().putBoolean("geochat.autologin", autoLoginBox.isSelected()));
 
         JPanel panel = new JPanel(new GridBagLayout());
         panel.add(nameField, GBC.std().fill(GridBagConstraints.HORIZONTAL).insets(15, 0, 5, 0));

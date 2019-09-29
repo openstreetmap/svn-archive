@@ -94,14 +94,11 @@ final class ChatServerConnection {
                 login(userName);
         } else {
             String query = "whoami&uid=" + uid;
-            JsonQueryUtil.queryAsync(query, new JsonQueryCallback() {
-                @Override
-                public void processJson(JsonObject json) {
-                    if (json != null && json.get("name") != null)
-                        login(uid, json.getString("name"));
-                    else if (userName != null && userName.length() > 1)
-                        login(userName);
-                }
+            JsonQueryUtil.queryAsync(query, json -> {
+                if (json != null && json.get("name") != null)
+                    login(uid, json.getString("name"));
+                else if (userName != null && userName.length() > 1)
+                    login(userName);
             });
         }
     }
@@ -111,7 +108,7 @@ final class ChatServerConnection {
      * If two seconds have passed, stops the waiting. Doesn't wait if userName is empty.
      */
     public void autoLoginWithDelay(final String userName) {
-        if (userName == null || userName.length() == 0) {
+        if (userName == null || userName.isEmpty()) {
             checkLogin();
             return;
         }
@@ -147,19 +144,16 @@ final class ChatServerConnection {
             String query = "register&lat=" + DecimalDegreesCoordinateFormat.INSTANCE.latToString(pos)
             + "&lon=" + DecimalDegreesCoordinateFormat.INSTANCE.lonToString(pos)
             + nameAttr;
-            JsonQueryUtil.queryAsync(query, new JsonQueryCallback() {
-                @Override
-                public void processJson(JsonObject json) {
-                    if (json == null)
-                        fireLoginFailed(tr("Could not get server response, check logs"));
-                    else if (json.get("error") != null)
-                        fireLoginFailed(tr("Failed to login as {0}:", userName) + "\n" + json.getString("error"));
-                    else if (json.get("uid") == null)
-                        fireLoginFailed(tr("The server did not return user ID"));
-                    else {
-                        String name = json.get("name") != null ? json.getString("name") : userName;
-                        login(json.getInt("uid"), name);
-                    }
+            JsonQueryUtil.queryAsync(query, json -> {
+                if (json == null)
+                    fireLoginFailed(tr("Could not get server response, check logs"));
+                else if (json.get("error") != null)
+                    fireLoginFailed(tr("Failed to login as {0}:", userName) + "\n" + json.getString("error"));
+                else if (json.get("uid") == null)
+                    fireLoginFailed(tr("The server did not return user ID"));
+                else {
+                    String name = json.get("name") != null ? json.getString("name") : userName;
+                    login(json.getInt("uid"), name);
                 }
             });
         } catch (UnsupportedEncodingException e) {
@@ -198,12 +192,9 @@ final class ChatServerConnection {
         if (!isLoggedIn())
             return;
         String query = "logout&uid=" + userId;
-        JsonQueryUtil.queryAsync(query, new JsonQueryCallback() {
-            @Override
-            public void processJson(JsonObject json) {
-                if (json != null && json.get("message") != null) {
-                    logoutIntl();
-                }
+        JsonQueryUtil.queryAsync(query, json -> {
+            if (json != null && json.get("message") != null) {
+                logoutIntl();
             }
         });
     }
@@ -255,14 +246,11 @@ final class ChatServerConnection {
             + "&message=" + URLEncoder.encode(message, "UTF8");
             if (targetUser != null && targetUser.length() > 0)
                 query += "&to=" + URLEncoder.encode(targetUser, "UTF8");
-            JsonQueryUtil.queryAsync(query, new JsonQueryCallback() {
-                @Override
-                public void processJson(JsonObject json) {
-                    if (json == null)
-                        fireMessageFailed(tr("Could not get server response, check logs"));
-                    else if (json.get("error") != null)
-                        fireMessageFailed(json.getString("error"));
-                }
+            JsonQueryUtil.queryAsync(query, json -> {
+                if (json == null)
+                    fireMessageFailed(tr("Could not get server response, check logs"));
+                else if (json.get("error") != null)
+                    fireMessageFailed(json.getString("error"));
             });
         } catch (UnsupportedEncodingException e) {
             Logging.error(e);

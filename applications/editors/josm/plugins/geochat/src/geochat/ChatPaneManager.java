@@ -15,8 +15,6 @@ import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextPane;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.SimpleAttributeSet;
@@ -44,12 +42,7 @@ class ChatPaneManager {
         this.collapsed = panel.isDialogInCollapsedView();
         chatPanes = new HashMap<>();
         createChatPane(null);
-        tabs.addChangeListener(new ChangeListener() {
-            @Override
-            public void stateChanged(ChangeEvent e) {
-                updateActiveTabStatus();
-            }
-        });
+        tabs.addChangeListener(e -> updateActiveTabStatus());
     }
 
     public void setCollapsed(boolean collapsed) {
@@ -89,13 +82,13 @@ class ChatPaneManager {
             ((ChatTabTitleComponent) tabs.getTabComponentAt(idx)).updateAlarm();
     }
 
-    public static int MESSAGE_TYPE_DEFAULT = 0;
-    public static int MESSAGE_TYPE_INFORMATION = 1;
-    public static int MESSAGE_TYPE_ATTENTION = 2;
-    private static Color COLOR_ATTENTION = new Color(0, 0, 192);
+    public static final int MESSAGE_TYPE_DEFAULT = 0;
+    public static final int MESSAGE_TYPE_INFORMATION = 1;
+    public static final int MESSAGE_TYPE_ATTENTION = 2;
+    private static final Color COLOR_ATTENTION = new Color(0, 0, 192);
 
     private void addLineToChatPane(String userName, String line, final int messageType) {
-        if (line.length() == 0)
+        if (line.isEmpty())
             return;
         if (!chatPanes.containsKey(userName))
             createChatPane(userName);
@@ -260,6 +253,5 @@ class ChatPaneManager {
         public JTextPane pane;
         public JScrollPane component;
         public int notify;
-
     }
 }

@@ -1,22 +1,16 @@
 // License: WTFPL. For details, see LICENSE file.
 package geochat;
 
-import static org.openstreetmap.josm.tools.I18n.tr;
-
 import java.awt.KeyboardFocusManager;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.util.HashSet;
 
 import javax.swing.JComponent;
-import javax.swing.JMenuItem;
-import javax.swing.JPopupMenu;
-import javax.swing.JTextField;
 import javax.swing.KeyStroke;
-import javax.swing.text.DefaultEditorKit;
 
 import org.openstreetmap.josm.gui.MainApplication;
-import org.openstreetmap.josm.gui.widgets.PopupMenuLauncher;
+import org.openstreetmap.josm.gui.widgets.DisableShortcutsOnFocusGainedTextField;
 
 /**
  * JTextField tweaked to work in a JOSM panel. It prevents unwanted keystrokes
@@ -24,28 +18,11 @@ import org.openstreetmap.josm.gui.widgets.PopupMenuLauncher;
  *
  * @author zverik
  */
-public class JPanelTextField extends JTextField {
+public class JPanelTextField extends DisableShortcutsOnFocusGainedTextField {
 
     public JPanelTextField() {
         setFocusTraversalKeys(KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS, new HashSet<KeyStroke>());
-        PopupMenuLauncher launcher = new PopupMenuLauncher(createEditMenu());
-        addMouseListener(launcher);
         standardKeys = getInputMap(JComponent.WHEN_FOCUSED).allKeys();
-    }
-
-    private JPopupMenu createEditMenu() {
-        JPopupMenu menu = new JPopupMenu();
-        menu.add(createMenuItem(DefaultEditorKit.cutAction, tr("Cut")));
-        menu.add(createMenuItem(DefaultEditorKit.copyAction, tr("Copy")));
-        menu.add(createMenuItem(DefaultEditorKit.pasteAction, tr("Paste")));
-        menu.add(createMenuItem(DefaultEditorKit.selectAllAction, tr("Select All")));
-        return menu;
-    }
-
-    private JMenuItem createMenuItem(String action, String label) {
-        JMenuItem item = new JMenuItem(getActionMap().get(action));
-        item.setText(label);
-        return item;
     }
 
     // list of "standard" OS keys for JTextFiels = cursor moving, selection, copy/paste

@@ -79,7 +79,7 @@ class ChatPaneManager {
         entry.notify = alarmLevel;
         int idx = tabs.indexOfComponent(entry.component);
         if (idx >= 0)
-            ((ChatTabTitleComponent) tabs.getTabComponentAt(idx)).updateAlarm();
+            GuiHelper.runInEDT(() -> ((ChatTabTitleComponent) tabs.getTabComponentAt(idx)).updateAlarm());
     }
 
     public static final int MESSAGE_TYPE_DEFAULT = 0;
@@ -170,6 +170,7 @@ class ChatPaneManager {
     /**
      * Returns key in chatPanes hash map for the currently active
      * chat pane, or null in case of an error.
+     * @return key in chatPanes hash map for the currently active chat pane
      */
     public String getActiveChatPane() {
         Component c = tabs.getSelectedComponent();

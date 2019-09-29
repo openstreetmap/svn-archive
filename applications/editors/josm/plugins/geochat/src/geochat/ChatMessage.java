@@ -10,7 +10,7 @@ import org.openstreetmap.josm.data.coor.LatLon;
  *
  * @author zverik
  */
-public class ChatMessage implements Comparable<ChatMessage> {
+public final class ChatMessage implements Comparable<ChatMessage> {
     private LatLon pos;
     private Date time;
     private String author;
@@ -45,6 +45,7 @@ public class ChatMessage implements Comparable<ChatMessage> {
 
     /**
      * Is only set when the message is not incoming, that is, author is the current user.
+     * @return recipient
      */
     public String getRecipient() {
         return recipient;

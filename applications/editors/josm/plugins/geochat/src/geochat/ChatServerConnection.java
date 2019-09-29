@@ -86,6 +86,7 @@ final class ChatServerConnection {
     /**
      * Test that userId is still active, if not, tries to login with given user name.
      * Does not autologin, if userName is null, obviously.
+     * @param userName user name
      */
     public void autoLogin(final String userName) {
         final int uid = Config.getPref().getInt("geochat.lastuid", 0);
@@ -106,6 +107,7 @@ final class ChatServerConnection {
     /**
      * Waits until {@link #getPosition()} is not null, then calls {@link #autoLogin(java.lang.String)}.
      * If two seconds have passed, stops the waiting. Doesn't wait if userName is empty.
+     * @param userName user name
      */
     public void autoLoginWithDelay(final String userName) {
         if (userName == null || userName.isEmpty()) {
@@ -202,6 +204,7 @@ final class ChatServerConnection {
     /**
      * Unregister the current user and do not call listeners.
      * Makes synchronous request to the server.
+     * @throws IOException There was a problem connecting to the server or parsing JSON.
      */
     public void bruteLogout() throws IOException {
         if (isLoggedIn())
@@ -259,6 +262,7 @@ final class ChatServerConnection {
 
     /**
      * Returns current coordinates or null if there is no map, or zoom is too low.
+     * @return current coordinates or null
      */
     private static LatLon getPosition() {
         if (!MainApplication.isDisplayingMapView())
@@ -359,7 +363,7 @@ final class ChatServerConnection {
             + "&uid=" + userId + "&last=" + lastId;
             JsonObject json;
             try {
-                json = JsonQueryUtil.query(query);
+                json = JsonQueryUtil.query(query, true);
             } catch (IOException ex) {
                 json = null; // ?
             }

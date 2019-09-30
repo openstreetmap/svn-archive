@@ -25,6 +25,7 @@ import org.openstreetmap.josm.plugins.elevation.ElevationHelper;
 import org.openstreetmap.josm.plugins.elevation.IElevationProfile;
 import org.openstreetmap.josm.plugins.elevation.gpx.ElevationWayPointKind;
 import org.openstreetmap.josm.tools.CheckParameterUtil;
+import org.openstreetmap.josm.tools.Logging;
 
 /**
  * Provides default rendering for elevation profile layer.
@@ -64,8 +65,7 @@ IElevationProfileRenderer {
             ElevationWayPointKind kind) {
 
         if (wpt == null || profile == null) {
-            System.err.println(String.format(
-                    "Cannot determine color: prof=%s, wpt=%s", profile, wpt));
+            Logging.error(String.format("Cannot determine color: prof=%s, wpt=%s", profile, wpt));
             return null;
         }
 
@@ -112,8 +112,7 @@ IElevationProfileRenderer {
         CheckParameterUtil.ensureParameterNotNull(mv, "map view");
 
         if (wpt == null) {
-            System.err.println(String.format(
-                    "Cannot paint: mv=%s, prof=%s, wpt=%s", mv, profile, wpt));
+            Logging.error(String.format("Cannot paint: mv=%s, prof=%s, wpt=%s", mv, profile, wpt));
             return;
         }
 
@@ -141,8 +140,7 @@ IElevationProfileRenderer {
         CheckParameterUtil.ensureParameterNotNull(mv, "map view");
 
         if (wpt1 == null || wpt2 == null) {
-            System.err.println(String.format(
-                    "Cannot paint line: mv=%s, prof=%s, kind = %s", mv, profile, kind));
+            Logging.error(String.format("Cannot paint line: mv=%s, prof=%s, kind = %s", mv, profile, kind));
             return;
         }
 

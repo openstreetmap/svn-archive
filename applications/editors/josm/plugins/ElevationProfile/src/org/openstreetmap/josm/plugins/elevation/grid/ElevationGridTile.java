@@ -14,7 +14,6 @@ import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.LinkedBlockingDeque;
 
 import org.openstreetmap.gui.jmapviewer.Tile;
-import org.openstreetmap.gui.jmapviewer.interfaces.TileCache;
 import org.openstreetmap.gui.jmapviewer.interfaces.TileSource;
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.coor.LatLon;
@@ -40,22 +39,6 @@ public class ElevationGridTile extends Tile {
     public ElevationGridTile(TileSource source, int xtile, int ytile, int zoom,
             BufferedImage image) {
         super(source, xtile, ytile, zoom, image);
-
-
-    }
-
-    @Override
-    public void loadPlaceholderFromCache(TileCache cache) {
-        // TODO Auto-generated method stub
-        super.loadPlaceholderFromCache(cache);
-
-        //System.out.println("loadPlaceholderFromCache");
-    }
-
-    @Override
-    public String getUrl() throws IOException {
-        // TODO Auto-generated method stub
-        return super.getUrl();
     }
 
     /**
@@ -66,7 +49,6 @@ public class ElevationGridTile extends Tile {
     public void paint(Graphics g, int x, int y) {
         super.paint(g, x, y);
 
-        //g.drawString(String.format("EGT %d/%d ", getXtile(), getYtile()), x, y);
         g.drawString(getStatus(), x, y);
     }
 

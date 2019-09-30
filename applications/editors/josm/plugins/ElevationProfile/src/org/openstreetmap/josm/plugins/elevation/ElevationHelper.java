@@ -5,12 +5,13 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
-import java.util.Locale;
 
 import org.openstreetmap.josm.data.Bounds;
+import org.openstreetmap.josm.data.SystemOfMeasurement;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.gpx.WayPoint;
 import org.openstreetmap.josm.plugins.elevation.gpx.GeoidCorrectionKind;
+import org.openstreetmap.josm.tools.Logging;
 
 /**
  * Provides methods to access way point attributes and some utility methods regarding elevation stuff (
@@ -23,32 +24,18 @@ public final class ElevationHelper {
         // Hide default constructor for utilities classes
     }
 
-    public static double METER_TO_FEET = 3.280948;
-
-    /* Countries which use the imperial system instead of the metric system. */
-    private static String[] IMPERIAL_SYSTEM_COUNTRIES = {
-            "en_US",     /* USA */
-            "en_CA",    /* Canada */
-            "en_AU",    /* Australia */
-            "en_NZ",    /* New Zealand */
-            //        "de_DE",    /* for testing only */
-            "en_ZA"    /* South Africa */
-    };
-
     /** The 'no elevation' data magic. */
-    public static double NO_ELEVATION = Double.NaN;
+    public static final double NO_ELEVATION = Double.NaN;
 
     /**
      * The name of the elevation height of a way point.
      */
     public static final String HEIGHT_ATTRIBUTE = "ele";
 
-    private static UnitMode unitMode = UnitMode.NotSelected;
-
     private static GeoidCorrectionKind geoidKind = GeoidCorrectionKind.None;
 
     /** The HGT reader instance. */
-    private static HgtReader hgt = new HgtReader();
+    private static final HgtReader hgt = new HgtReader();
 
     /**
      * Gets the current mode of GEOID correction.
@@ -59,47 +46,6 @@ public final class ElevationHelper {
 
     public static void setGeoidKind(GeoidCorrectionKind geoidKind) {
         ElevationHelper.geoidKind = geoidKind;
-    }
-
-    /**
-     * Gets the current unit mode (metric or imperial).
-     */
-    public static UnitMode getUnitMode() {
-        //TODO: Use this until /JOSM/src/org/openstreetmap/josm/gui/NavigatableComponent.java
-        // has a an appropriate method
-
-        // unit mode already determined?
-        if (unitMode != UnitMode.NotSelected) {
-            return unitMode;
-        }
-
-        // Set default
-        unitMode = UnitMode.Metric;
-
-        // Check if user could prefer imperial system
-        Locale l = Locale.getDefault();
-        for (int i = 0; i < IMPERIAL_SYSTEM_COUNTRIES.length; i++) {
-            String ctry = l.toString();
-            if (IMPERIAL_SYSTEM_COUNTRIES[i].equals(ctry)) {
-                unitMode = UnitMode.Imperial;
-            }
-        }
-
-        return unitMode;
-    }
-
-    /**
-     * Gets the unit string for elevation ("m" or "ft").
-     */
-    public static String getUnit() {
-        switch (getUnitMode()) {
-        case Metric:
-            return "m";
-        case Imperial:
-            return "ft";
-        default:
-            throw new RuntimeException("Invalid or unsupported unit mode: " + unitMode);
-        }
     }
 
     /**
@@ -127,7 +73,7 @@ public final class ElevationHelper {
         // try to get elevation from HGT file
         double eleInt = getSrtmElevation(wpt.getCoor());
         if (isValidElevation(eleInt)) {
-            return convert(eleInt);
+            return eleInt;
         }
 
         // no HGT, check for elevation data in GPX
@@ -139,40 +85,15 @@ public final class ElevationHelper {
         // Parse elevation from GPX data
         String height = wpt.getString(ElevationHelper.HEIGHT_ATTRIBUTE);
         try {
-            double z = Double.parseDouble(height);
-
-            return convert(z);
+            return Double.parseDouble(height);
         } catch (NumberFormatException e) {
-            System.err.println(String.format(
-                    "Cannot parse double from '%s': %s", height, e
-                    .getMessage()));
+            Logging.error(String.format("Cannot parse double from '%s': %s", height, e.getMessage()));
             return NO_ELEVATION;
         }
     }
 
     private static double getElevation(LatLon ll) {
-        double ele = getSrtmElevation(ll);
-        //System.out.println("Get elevation " + ll + " => " + ele);
-        return convert(ele);
-    }
-
-    /**
-     * Converts the value to feet, if required.
-     *
-     * @param ele the elevation to convert
-     * @return the double
-     */
-    private static double convert(double ele) {
-        if (isValidElevation(ele)) {
-            if (getUnitMode() == UnitMode.Imperial) {
-                // translate to feet
-                return meter2Feet(ele);
-            } else {
-                // keep 'as is'
-                return ele;
-            }
-        }
-        return NO_ELEVATION;
+        return getSrtmElevation(ll);
     }
 
     /**
@@ -188,9 +109,9 @@ public final class ElevationHelper {
         if (w1.equals(w2)) return 0;
 
         // get distance in meters and divide it by 100 in advance
-        double distInMeter = convert(w1.greatCircleDistance(w2) / 100.0);
+        double distInMeter = w1.greatCircleDistance(w2) / 100.0;
 
-        // get elevation (difference) - is converted automatically to feet
+        // get elevation (difference)
         int ele1 = (int) ElevationHelper.getElevation(w1);
         int ele2 = (int) ElevationHelper.getElevation(w2);
         int dH = ele2 - ele1;
@@ -200,27 +121,17 @@ public final class ElevationHelper {
     }
 
     /**
-     * Converts meter into feet
-     *
-     * @param meter the meter
-     * @return the double
-     */
-    public static double meter2Feet(double meter) {
-        return meter * METER_TO_FEET;
-    }
-
-    /**
      * Gets the elevation string for a given elevation, e. g "300m" or "800ft".
      */
     public static String getElevationText(int elevation) {
-        return String.format("%d %s", elevation, getUnit());
+        return SystemOfMeasurement.getSystemOfMeasurement().getDistText(elevation);
     }
 
     /**
      * Gets the elevation string for a given elevation, e. g "300m" or "800ft".
      */
     public static String getElevationText(double elevation) {
-        return String.format("%d %s", (int) Math.round(elevation), getUnit());
+        return SystemOfMeasurement.getSystemOfMeasurement().getDistText((int) Math.round(elevation));
     }
 
     /**
@@ -232,8 +143,7 @@ public final class ElevationHelper {
     public static String getElevationText(WayPoint wpt) {
         if (wpt == null) return "-";
 
-        int elevation = (int) Math.round(ElevationHelper.getElevation(wpt));
-        return String.format("%d %s", elevation, getUnit());
+        return getElevationText(ElevationHelper.getElevation(wpt));
     }
 
     /**
@@ -261,7 +171,6 @@ public final class ElevationHelper {
             // TODO: Option to switch this off
             double eleHgt = hgt.getElevationFromHgt(ll);
 
-            //System.out.println("Get elevation from HGT " + ll + " => " + eleHgt);
             if (isValidElevation(eleHgt)) {
                 return eleHgt;
             }

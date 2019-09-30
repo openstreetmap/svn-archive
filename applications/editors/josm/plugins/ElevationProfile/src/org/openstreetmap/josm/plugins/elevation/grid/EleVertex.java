@@ -58,34 +58,20 @@ public class EleVertex {
 
             for (int j = i + 1; j < points.length; j++) {
                 EleCoordinate c2 = points[j];
-
                 edges[k++] = new TriangleEdge(i, j, c1.greatCircleDistance(c2));
             }
         }
-
-        /*
-    for (int i = 0; i < edges.length; i++) {
-        TriangleEdge triangleEdge = edges[i];
-        System.out.println("#" + i + ": " +triangleEdge);
-    }*/
 
         // sort by distance
         Arrays.sort(edges);
         // pick the longest edge
         TriangleEdge longest = edges[0];
 
-
-        //System.out.println("Longest " + longest);
         EleCoordinate pI = points[longest.getI()];
         EleCoordinate pJ = points[longest.getJ()];
         EleCoordinate pK = points[longest.getK()];
         EleCoordinate newP = getMid(pI, pJ);
-        /*
-    System.out.println(pI);
-    System.out.println(pJ);
-    System.out.println(pK);
-    System.out.println(newP);
-         */
+
         List<EleVertex> res = new ArrayList<>();
         res.add(new EleVertex(pI, pK, newP));
         res.add(new EleVertex(pJ, pK, newP));

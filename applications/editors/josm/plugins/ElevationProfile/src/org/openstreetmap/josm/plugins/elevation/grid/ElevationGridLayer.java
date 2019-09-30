@@ -63,7 +63,6 @@ public class ElevationGridLayer extends Layer implements TileLoaderListener {
         if (needsNewTileSet) {
             tileSet = new TileSet(box.getMin(), box.getMax(), ELE_ZOOM_LEVEL); // we use a vector format with constant zoom level
             lastBounds = box;
-            System.out.println("paint " + tileSet);
         }
 
         if (tileSet.insane()) {

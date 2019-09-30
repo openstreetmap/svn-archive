@@ -13,6 +13,7 @@ import java.util.HashMap;
 import org.openstreetmap.josm.data.Preferences;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.tools.CheckParameterUtil;
+import org.openstreetmap.josm.tools.Logging;
 
 /**
  *  Class HgtReader reads data from SRTM HGT files. Currently this class is restricted to a resolution of 3 arc seconds.
@@ -59,12 +60,12 @@ public class HgtReader {
             // read elevation value
             return readElevation(coor);
         } catch (FileNotFoundException e) {
-            System.err.println("Get elevation from HGT " + coor + " failed: => " + e.getMessage());
+            Logging.error("Get elevation from HGT " + coor + " failed: => " + e.getMessage());
             // no problem... file not there
             return ElevationHelper.NO_ELEVATION;
         } catch (Exception ioe) {
             // oops...
-            ioe.printStackTrace(System.err);
+            Logging.error(ioe);
             // fallback
             return ElevationHelper.NO_ELEVATION;
         }
@@ -85,7 +86,6 @@ public class HgtReader {
             while (bb.remaining() > 0) fc.read(bb);
 
             bb.flip();
-            //sb = bb.order(ByteOrder.LITTLE_ENDIAN).asShortBuffer();
             sb = bb.order(ByteOrder.BIG_ENDIAN).asShortBuffer();
         } finally {
             if (fc != null) fc.close();
@@ -121,12 +121,9 @@ public class HgtReader {
         row = HGT_ROW_LENGTH - row;
         int cell = (HGT_ROW_LENGTH * (row - 1)) + col;
 
-        //System.out.println("Read SRTM elevation data from row/col/cell " + row + "," + col + ", " + cell + ", " + sb.limit());
-
         // valid position in buffer?
         if (cell < sb.limit()) {
             short ele = sb.get(cell);
-            //System.out.println("==> Read SRTM elevation data from row/col/cell " + row + "," + col + ", " + cell + " = " + ele);
             // check for data voids
             if (ele == HGT_VOID) {
                 return ElevationHelper.NO_ELEVATION;

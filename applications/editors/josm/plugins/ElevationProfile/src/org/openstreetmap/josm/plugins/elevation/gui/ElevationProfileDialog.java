@@ -25,6 +25,7 @@ import javax.swing.JPanel;
 import javax.swing.event.ListDataListener;
 
 import org.openstreetmap.josm.data.SystemOfMeasurement;
+import org.openstreetmap.josm.data.SystemOfMeasurement.SoMChangeListener;
 import org.openstreetmap.josm.data.gpx.GpxData;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.dialogs.ToggleDialog;
@@ -48,7 +49,8 @@ import org.openstreetmap.josm.tools.Shortcut;
  * Implements a JOSM ToggleDialog to show the elevation profile. It monitors the
  * connection between layer and elevation profile.
  */
-public class ElevationProfileDialog extends ToggleDialog implements LayerChangeListener, ActiveLayerChangeListener, ComponentListener {
+public class ElevationProfileDialog extends ToggleDialog
+implements LayerChangeListener, ActiveLayerChangeListener, ComponentListener, SoMChangeListener {
 
     private static final String EMPTY_DATA_STRING = "-";
     private static final long serialVersionUID = -868463893732535577L;
@@ -197,6 +199,7 @@ public class ElevationProfileDialog extends ToggleDialog implements LayerChangeL
 
     @Override
     public void showNotify() {
+        SystemOfMeasurement.addSoMChangeListener(this);
         MainApplication.getLayerManager().addLayerChangeListener(this);
         MainApplication.getLayerManager().addActiveLayerChangeListener(this);
         if (MainApplication.isDisplayingMapView()) {
@@ -211,6 +214,7 @@ public class ElevationProfileDialog extends ToggleDialog implements LayerChangeL
     public void hideNotify() {
         MainApplication.getLayerManager().removeActiveLayerChangeListener(this);
         MainApplication.getLayerManager().removeLayerChangeListener(this);
+        SystemOfMeasurement.removeSoMChangeListener(this);
     }
 
     /**
@@ -467,5 +471,10 @@ public class ElevationProfileDialog extends ToggleDialog implements LayerChangeL
                 repaint();
             }
         }
+    }
+
+    @Override
+    public void systemOfMeasurementChanged(String oldSoM, String newSoM) {
+        updateView();
     }
 }

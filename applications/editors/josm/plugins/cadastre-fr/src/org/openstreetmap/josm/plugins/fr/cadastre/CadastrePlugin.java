@@ -168,9 +168,10 @@ import org.openstreetmap.josm.tools.Logging;
  * <br>2.8 21-Jul-2016 - switch to Java 8 + bugfixes
  * <br>2.9 23-Aug-2017 - use new HTTPS links from French cadastre - requires JOSM 12623+ to load Certigna certificate
  * <br>3.0 30-Sep-2017 - add support for direct access to Cadastre vectorial data (Edigeo files)
+ * <br>3.1 01-Oct-2019 - Support new building layer name of cadastre WMS (trac #18192)
  */
 public class CadastrePlugin extends Plugin {
-    static String VERSION = "3.0";
+    static final String VERSION = "3.1";
 
     static JMenu cadastreJMenu;
 
@@ -198,24 +199,24 @@ public class CadastrePlugin extends Plugin {
 
     private static boolean menuEnabled = false;
 
-    private static String LAYER_BULDINGS = "CDIF:LS2";
-    private static String STYLE_BUILDING = "LS2_90";
-    private static String LAYER_WATER = "CDIF:LS3";
-    private static String STYLE_WATER = "LS3_90";
-    private static String LAYER_SYMBOL = "CDIF:LS1";
-    private static String STYLE_SYMBOL = "LS1_90";
-    private static String LAYER_PARCELS = "CDIF:PARCELLE";
-    private static String STYLE_PARCELS = "PARCELLE_90";
-    private static String LAYER_NUMERO = "CDIF:NUMERO";
-    private static String STYLE_NUMERO = "NUMERO_90";
-    private static String LAYER_LABEL = "CDIF:PT3,CDIF:PT2,CDIF:PT1";
-    private static String STYLE_LABEL = "PT3_90,PT2_90,PT1_90";
-    private static String LAYER_LIEUDIT = "CDIF:LIEUDIT";
-    private static String STYLE_LIEUDIT = "LIEUDIT_90";
-    private static String LAYER_SECTION = "CDIF:SUBSECTION,CDIF:SECTION";
-    private static String STYLE_SECTION = "SUBSECTION_90,SECTION_90";
-    private static String LAYER_COMMUNE = "CDIF:COMMUNE";
-    private static String STYLE_COMMUNE = "COMMUNE_90";
+    private static final String LAYER_BULDINGS = "CDIF:BATIMENT,CDIF:LS2";
+    private static final String STYLE_BUILDING = "BATIMENT_90,LS2_90";
+    private static final String LAYER_WATER = "CDIF:LS3";
+    private static final String STYLE_WATER = "LS3_90";
+    private static final String LAYER_SYMBOL = "CDIF:LS1";
+    private static final String STYLE_SYMBOL = "LS1_90";
+    private static final String LAYER_PARCELS = "CDIF:PARCELLE";
+    private static final String STYLE_PARCELS = "PARCELLE_90";
+    private static final String LAYER_NUMERO = "CDIF:NUMERO";
+    private static final String STYLE_NUMERO = "NUMERO_90";
+    private static final String LAYER_LABEL = "CDIF:PT3,CDIF:PT2,CDIF:PT1";
+    private static final String STYLE_LABEL = "PT3_90,PT2_90,PT1_90";
+    private static final String LAYER_LIEUDIT = "CDIF:LIEUDIT";
+    private static final String STYLE_LIEUDIT = "LIEUDIT_90";
+    private static final String LAYER_SECTION = "CDIF:SUBSECTION,CDIF:SECTION";
+    private static final String STYLE_SECTION = "SUBSECTION_90,SECTION_90";
+    private static final String LAYER_COMMUNE = "CDIF:COMMUNE";
+    private static final String STYLE_COMMUNE = "COMMUNE_90";
 
     /**
      * Creates the plugin and setup the default settings if necessary.

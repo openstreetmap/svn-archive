@@ -126,4 +126,12 @@ public final class ToolSettings {
     public static void setAutoSelect(boolean _autoSelect) {
         autoSelect = _autoSelect;
     }
+
+    public static boolean isNoClickAndDrag() {
+        return Config.getPref().getBoolean("buildings_tools.noclickdrag", false);
+    }
+
+    public static void setNoClickAndDrag(boolean noClickDrag) {
+        Config.getPref().putBoolean("buildings_tools.noclickdrag", noClickDrag);
+    }
 }

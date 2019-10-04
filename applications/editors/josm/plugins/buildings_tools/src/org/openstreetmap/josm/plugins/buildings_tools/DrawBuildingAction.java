@@ -368,9 +368,13 @@ public class DrawBuildingAction extends MapMode implements MapViewPaintable, Dat
         if (!MainApplication.getMap().mapView.isActiveLayerDrawable())
             return;
         boolean dragged = true;
-        if (drawStartPos != null)
+        if (drawStartPos != null) {
             dragged = e.getPoint().distance(drawStartPos) > 10;
-        drawStartPos = null;
+            drawStartPos = null;
+            if (ToolSettings.isNoClickAndDrag()) {
+                return;
+            }
+        }
 
         if (mode == Mode.Drawing && !dragged)
             return;

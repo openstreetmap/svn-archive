@@ -18,6 +18,7 @@ public class AdvancedSettingsDialog extends MyDialog {
 
     private final JCheckBox cBigMode = new JCheckBox(tr("Big buildings mode"));
     private final JCheckBox cSoftCur = new JCheckBox(tr("Rotate crosshair"));
+    private final JCheckBox cNoClickDrag = new JCheckBox(tr("Disable click+drag"));
 
     public AdvancedSettingsDialog() {
         super(tr("Advanced settings"));
@@ -31,9 +32,11 @@ public class AdvancedSettingsDialog extends MyDialog {
 
         panel.add(cBigMode, GBC.eol().fill(GBC.HORIZONTAL));
         panel.add(cSoftCur, GBC.eol().fill(GBC.HORIZONTAL));
+        panel.add(cNoClickDrag, GBC.eol().fill(GBC.HORIZONTAL));
 
         cBigMode.setSelected(ToolSettings.isBBMode());
         cSoftCur.setSelected(ToolSettings.isSoftCursor());
+        cNoClickDrag.setSelected(ToolSettings.isNoClickAndDrag());
 
         setupDialog();
         showDialog();
@@ -43,5 +46,6 @@ public class AdvancedSettingsDialog extends MyDialog {
         ToolSettings.saveTags(tagsModel.getTags());
         ToolSettings.setBBMode(cBigMode.isSelected());
         ToolSettings.setSoftCursor(cSoftCur.isSelected());
+        ToolSettings.setNoClickAndDrag(cNoClickDrag.isSelected());
     }
 }

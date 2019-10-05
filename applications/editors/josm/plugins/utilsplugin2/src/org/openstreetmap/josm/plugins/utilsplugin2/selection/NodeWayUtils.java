@@ -40,7 +40,7 @@ public final class NodeWayUtils {
     }
 
     private static <T extends OsmPrimitive> void filteredAdd(Collection<T> collection, T element) {
-        if (!element.isDisabled()) {
+        if (!element.isDisabled() && element.isUsable()) {
             collection.add(element);
         }
     }
@@ -146,8 +146,7 @@ public final class NodeWayUtils {
     }
 
     static int addWaysIntersectingWay(Collection<Way> ways, Way w, Set<Way> newWays) {
-        Set<Way> excludeWays = new HashSet<Way>();
-        return addWaysIntersectingWay(ways, w, newWays, excludeWays);
+        return addWaysIntersectingWay(ways, w, newWays, new HashSet<>());
     }
 
     /**

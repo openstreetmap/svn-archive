@@ -6,8 +6,9 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.data.osm.Node;
@@ -19,8 +20,6 @@ import org.openstreetmap.josm.tools.Shortcut;
  * Select all nodes of a selected way.
  */
 public class SelectWayNodesAction extends JosmAction {
-
-    private ArrayList<Node> selectedNodes;
 
     /**
      * Create a new SelectWayNodesAction
@@ -35,40 +34,28 @@ public class SelectWayNodesAction extends JosmAction {
     /**
      * Called when the action is executed.
      *
-     * This method does some checking on the selection and calls the matching selectWayNodes method.
+     * This method does some checking on the selection.
      */
     @Override
     public void actionPerformed(ActionEvent e) {
-        Collection<OsmPrimitive> selection = getLayerManager().getEditDataSet().getSelected();
+        Set<Node> selectedNodes = new HashSet<>();
 
-        for (OsmPrimitive p : selection) {
+        for (OsmPrimitive p : getLayerManager().getEditDataSet().getSelected()) {
             if (p instanceof Way) {
                 Way w = (Way) p;
-                if (!w.isUsable() || w.getNodesCount() < 1) {
-                    continue;
+                if (w.isUsable() && w.getNodesCount() > 1) {
+                    for (Node n : w.getNodes()) {
+                        if (!n.isDisabled()) {
+                            selectedNodes.add(n);
+                        }
+                    }
                 }
-                selectWayNodes(w);
             } else if (p instanceof Node) {
-                Node n = (Node) p;
-                if (selectedNodes == null) {
-                    selectedNodes = new ArrayList<>();
-                }
-                selectedNodes.add(n);
+                selectedNodes.add((Node) p);
             }
         }
 
         getLayerManager().getEditDataSet().setSelected(selectedNodes);
-        selectedNodes = null;
-    }
-
-    private void selectWayNodes(Way w) {
-
-        for (Node n : w.getNodes()) {
-            if (selectedNodes == null) {
-                selectedNodes = new ArrayList<>();
-            }
-            if (!n.isDisabled()) selectedNodes.add(n);
-        }
     }
 
     @Override
@@ -81,4 +68,3 @@ public class SelectWayNodesAction extends JosmAction {
         setEnabled(selection != null && !selection.isEmpty());
     }
 }
-

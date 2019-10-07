@@ -77,22 +77,7 @@
     ** compile - compiles the source tree
     **********************************************************
     -->
-    <target name="compile" depends="init, compile_poi, compile_jopendoc, compile_neptune, compile_j7zip">
-        <echo message="compiling sources for ${plugin.jar} ... "/>
-        <javac srcdir="src" debug="true" destdir="${plugin.build.dir}" includeAntRuntime="false" encoding="UTF-8">
-            <classpath>
-                <pathelement path="${plugin.build.dir}"/>
-                <pathelement location="${josm}"/>
-                <pathelement location="${apache-commons}"/>
-                <pathelement location="${jts}"/>
-                <pathelement location="${ejml}"/>
-                <pathelement location="${geotools}"/>
-                <fileset refid="jaxb.jars"/>
-            </classpath>
-            <compilerarg value="-Xlint:deprecation"/>
-            <compilerarg value="-Xlint:unchecked"/>
-        </javac>
-    </target>
+    <target name="pre-compile" depends="init, compile_poi, compile_jopendoc, compile_neptune, compile_j7zip"/>
     
     <target name="xjc_neptune" depends="init, -jaxb_linux, -jaxb_windows" unless="jaxb.notRequired">
         <exec executable="${xjc}" failonerror="true">

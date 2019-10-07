@@ -309,16 +309,15 @@ sub checkstring
   return pack("n",length($tr)).$tr;
 }
 
-sub createlang($@)
+sub createlang($$@)
 {
-  my ($data, @files) = @_;
+  my ($data, $maxcount, @files) = @_;
   my $maxlen = 0;
   foreach my $file (@files)
   {
     my $len = length($file);
     $maxlen = $len if $len > $maxlen;
   }
-  my $maxcount = keys(%{$data});
   foreach my $file (@files)
   {
     my $la;
@@ -446,7 +445,8 @@ sub main
       else { die "unknown file extension."; }
     }
   }
-  my %data = loadfiles(\%lang,$potfile ? loadpot($potfile) : undef, @po);
+  my $use = $potfile ? loadpot($potfile) : undef;
+  my %data = loadfiles(\%lang, $use, @po);
 
   my @clang;
   foreach my $la (sort keys %lang)
@@ -457,5 +457,5 @@ sub main
   push(@clang, "${basename}en.lang");
   die "There have been warning. No output.\n" if $waswarn;
 
-  createlang(\%data, @clang);
+  createlang(\%data, ($use ? keys %{$use} : keys %data), @clang);
 }

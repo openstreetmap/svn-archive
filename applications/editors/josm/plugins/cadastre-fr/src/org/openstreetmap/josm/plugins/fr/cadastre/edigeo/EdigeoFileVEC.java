@@ -322,7 +322,7 @@ public class EdigeoFileVEC extends EdigeoLotFile<VecBlock<?>> {
         }
 
         boolean isClosed() {
-            return nPoints >= 4 && points.get(0).equals(points.get(nPoints - 1));
+            return nPoints >= 3 && points.get(0).equals(points.get(nPoints - 1));
         }
     }
 

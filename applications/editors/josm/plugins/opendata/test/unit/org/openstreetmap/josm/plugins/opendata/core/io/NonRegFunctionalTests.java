@@ -42,7 +42,7 @@ public abstract class NonRegFunctionalTests {
             LatLon latlon = n.getCoor();
             assertTrue("Node without coordinate found for "+context, latlon != null);
             assertTrue("Node with invalid coordinate ("+latlon+") found for "+context, latlon.isValid());
-            assertFalse("Node with outside world coordinate ("+latlon+") found for "+context, latlon.isOutSideWorld());
+            assertFalse("Node with outside world coordinate ("+latlon+") found for "+context, n.isOutSideWorld());
         }
         // and no empty ways
         for (Way w : ds.getWays()) {

@@ -58,7 +58,7 @@ public class ShpReaderTest {
             for (Node n : ShpReader.parseDataSet(is, file, null, null).getNodes()) {
                 assertNotNull(n.toString(), n.getCoor());
                 assertFalse(n.toString(), LatLon.ZERO.equals(n.getCoor()));
-                assertFalse(n.toString(), n.getCoor().isOutSideWorld());
+                assertFalse(n.toString(), n.isOutSideWorld());
                 assertTrue(n.toString(), n.getCoor().isValid());
             }
         }

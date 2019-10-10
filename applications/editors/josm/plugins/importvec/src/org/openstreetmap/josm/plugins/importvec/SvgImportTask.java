@@ -74,7 +74,7 @@ public class SvgImportTask extends PleaseWaitRunnable {
             throw new IOException("Shape is started incorectly");
         }
         Node nd = new Node(projection.eastNorth2latlon(center.add(x * scale, -y * scale)));
-        if (nd.getCoor().isOutSideWorld()) {
+        if (nd.isOutSideWorld()) {
             throw new IOException("Shape goes outside the world");
         }
         currentway.addNode(nd);

@@ -494,7 +494,7 @@ public class EdigeoFileTHF extends EdigeoFile {
             lot.fill(ds, data);
         }
         ds.getWays().forEach(w -> {
-            SequenceCommand command = SimplifyWayAction.simplifyWay(w, 0.25);
+            SequenceCommand command = SimplifyWayAction.createSimplifyCommand(w, 0.25);
             if (command != null) {
                 command.executeCommand();
             }

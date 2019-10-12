@@ -42,15 +42,17 @@ public class CadastreDownloadTask extends DownloadOsmTask {
      * Constructs a new {@code CadastreDownloadTask} with default behaviour.
      */
     public CadastreDownloadTask() {
-        this(new CadastreDownloadData(true, true, true, true, true, true, true, true, true));
+        this(new CadastreDownloadData(true, true, true, true, true, true, true, true, true), true);
     }
 
     /**
      * Constructs a new {@code CadastreDownloadTask} with parameterizable behaviour.
      * @param data defines which data has to be downloaded
+     * @param zoomToData if true, the map view will zoom to download area after download
      */
-    public CadastreDownloadTask(CadastreDownloadData data) {
+    public CadastreDownloadTask(CadastreDownloadData data, boolean zoomToData) {
         this.data = Objects.requireNonNull(data);
+        setZoomAfterDownload(zoomToData);
     }
 
     @Override
@@ -59,7 +61,7 @@ public class CadastreDownloadTask extends DownloadOsmTask {
         try {
             for (String id : CadastreAPI.getSheets(downloadArea)) {
                 String url = String.join("/", CADASTRE_URL, id.substring(0, 2), id.substring(0, 5), "edigeo-"+id+".tar.bz2");
-                tasks.add(MainApplication.worker.submit(new InternalDownloadTask(settings, url, progressMonitor)));
+                tasks.add(MainApplication.worker.submit(new InternalDownloadTask(settings, url, progressMonitor, zoomAfterDownload)));
             }
         } catch (IOException e) {
             Logging.error(e);
@@ -79,7 +81,7 @@ public class CadastreDownloadTask extends DownloadOsmTask {
 
     @Override
     public Future<?> loadUrl(DownloadParams settings, String url, ProgressMonitor progressMonitor) {
-        downloadTask = new InternalDownloadTask(settings, url, progressMonitor);
+        downloadTask = new InternalDownloadTask(settings, url, progressMonitor, zoomAfterDownload);
         currentBounds = null;
         return MainApplication.worker.submit(downloadTask);
     }
@@ -105,8 +107,8 @@ public class CadastreDownloadTask extends DownloadOsmTask {
 
         private final String url;
 
-        InternalDownloadTask(DownloadParams settings, String url, ProgressMonitor progressMonitor) {
-            super(settings, new CadastreServerReader(url, data), progressMonitor);
+        InternalDownloadTask(DownloadParams settings, String url, ProgressMonitor progressMonitor, boolean zoom) {
+            super(settings, new CadastreServerReader(url, data), progressMonitor, zoom);
             this.url = url;
         }
 

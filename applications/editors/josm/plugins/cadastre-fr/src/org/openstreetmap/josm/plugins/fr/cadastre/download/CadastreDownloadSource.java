@@ -23,7 +23,7 @@ public class CadastreDownloadSource implements DownloadSource<CadastreDownloadDa
     @Override
     public void doDownload(CadastreDownloadData data, DownloadSettings settings) {
         if (settings.getDownloadBounds().isPresent()) {
-            new CadastreDownloadTask(data).download(
+            new CadastreDownloadTask(data, settings.zoomToData()).download(
                     new DownloadParams().withUploadPolicy(UploadPolicy.BLOCKED).withNewLayer(settings.asNewLayer()),
                     settings.getDownloadBounds().get(), null);
         }

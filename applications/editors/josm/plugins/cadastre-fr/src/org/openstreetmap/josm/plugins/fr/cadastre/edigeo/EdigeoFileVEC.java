@@ -573,7 +573,7 @@ public class EdigeoFileVEC extends EdigeoLotFile<VecBlock<?>> {
                             if (e.filter.test(data, p)) {
                                 purged = toPurge.add(p);
                                 if (p instanceof Relation) {
-                                    toPurge.addAll(((Relation) p).getMemberPrimitivesList());
+									toPurge.addAll(((Relation) p).getMemberPrimitivesList());
                                 }
                             } else {
                                 e.consumer.accept(obj, p);
@@ -586,6 +586,7 @@ public class EdigeoFileVEC extends EdigeoLotFile<VecBlock<?>> {
                 }
             }
         }
+        toPurge.removeIf(x -> x.getDataSet() == null);
         if (!toPurge.isEmpty()) {
             PurgeCommand.build(toPurge, null).executeCommand();
         }

@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.openstreetmap.gui.jmapviewer.JMapViewer;
 import org.openstreetmap.gui.jmapviewer.OsmMercator;
 import org.openstreetmap.gui.jmapviewer.Tile;
 import org.openstreetmap.gui.jmapviewer.TileXY;
@@ -72,12 +73,12 @@ public abstract class AbstractTMSTileSource extends AbstractTileSource {
 
     @Override
     public int getMaxZoom() {
-        return 21;
+        return JMapViewer.MAX_ZOOM;
     }
 
     @Override
     public int getMinZoom() {
-        return 0;
+        return JMapViewer.MIN_ZOOM;
     }
 
     /**

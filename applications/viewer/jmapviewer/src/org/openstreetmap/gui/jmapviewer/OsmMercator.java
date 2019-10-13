@@ -28,8 +28,8 @@ public class OsmMercator {
      */
     public static final OsmMercator MERCATOR_256 = new OsmMercator();
 
-    /** tile size of the displayed tiles */
-    private int tileSize = DEFAUL_TILE_SIZE;
+    /** tile size of the displayed tiles. Use long so all calculations will be in 64bit to properly handle zooms above 22 for 256 tile size */
+    private long tileSize = DEFAUL_TILE_SIZE;
 
     /**
      * Creates instance with default tile size of 256
@@ -56,15 +56,15 @@ public class OsmMercator {
      * @param aZoomlevel zoom level to request pixel data
      * @return number of pixels
      */
-    public int getMaxPixels(int aZoomlevel) {
+    public long getMaxPixels(int aZoomlevel) {
         return tileSize * (1 << aZoomlevel);
     }
 
-    public int falseEasting(int aZoomlevel) {
+    public long falseEasting(int aZoomlevel) {
         return getMaxPixels(aZoomlevel) / 2;
     }
 
-    public int falseNorthing(int aZoomlevel) {
+    public long falseNorthing(int aZoomlevel) {
         return -1 * getMaxPixels(aZoomlevel) / 2;
     }
 
@@ -79,7 +79,7 @@ public class OsmMercator {
      * @param zoomLevel the zoom level
      * @return the distance
      */
-    public double getDistance(int x1, int y1, int x2, int y2, int zoomLevel) {
+    public double getDistance(long x1, long y1, long x2, long y2, int zoomLevel) {
         double la1 = yToLat(y1, zoomLevel);
         double lo1 = xToLon(x1, zoomLevel);
         double la2 = yToLat(y2, zoomLevel);
@@ -129,7 +129,7 @@ public class OsmMercator {
      * @return [0..2^Zoomlevel*TILE_SIZE[
      */
     public double lonToX(double aLongitude, int aZoomlevel) {
-        int mp = getMaxPixels(aZoomlevel);
+        long mp = getMaxPixels(aZoomlevel);
         double x = (mp * (aLongitude + 180L)) / 360L;
         return Math.min(x, mp);
     }
@@ -159,7 +159,7 @@ public class OsmMercator {
             aLat = MAX_LAT;
         double sinLat = Math.sin(Math.toRadians(aLat));
         double log = Math.log((1.0 + sinLat) / (1.0 - sinLat));
-        int mp = getMaxPixels(aZoomlevel);
+        long mp = getMaxPixels(aZoomlevel);
         double y = mp * (0.5 - (log / (4.0 * Math.PI)));
         return Math.min(y, mp - 1);
     }
@@ -182,7 +182,7 @@ public class OsmMercator {
      * @param aZoomlevel zoom level
      * @return ]-180..180[
      */
-    public double xToLon(int aX, int aZoomlevel) {
+    public double xToLon(long aX, int aZoomlevel) {
         return ((360d * aX) / getMaxPixels(aZoomlevel)) - 180.0;
     }
 
@@ -194,9 +194,8 @@ public class OsmMercator {
      * @param aZoomlevel zoom level
      * @return [MIN_LAT..MAX_LAT] is about [-85..85]
      */
-    public double yToLat(int aY, int aZoomlevel) {
-        aY += falseNorthing(aZoomlevel);
-        double latitude = (Math.PI / 2) - (2 * Math.atan(Math.exp(-1.0 * aY / radius(aZoomlevel))));
+    public double yToLat(long aY, int aZoomlevel) {
+        double latitude = (Math.PI / 2) - (2 * Math.atan(Math.exp(-1.0 * (aY + falseNorthing(aZoomlevel)) / radius(aZoomlevel))));
         return -1 * Math.toDegrees(latitude);
     }
 

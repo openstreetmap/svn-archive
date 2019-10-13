@@ -55,7 +55,7 @@ public class JMapViewer extends JPanel implements TileLoaderListener {
     private static final Point[] move = {new Point(1, 0), new Point(0, 1), new Point(-1, 0), new Point(0, -1)};
 
     /** Maximum zoom level */
-    public static final int MAX_ZOOM = 22;
+    public static final int MAX_ZOOM = 24;
     /** Minimum zoom level */
     public static final int MIN_ZOOM = 0;
 

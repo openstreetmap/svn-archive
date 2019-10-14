@@ -54,6 +54,9 @@ public class EdigeoPciImporter extends OsmImporter {
     @Override
     protected DataSet parseDataSet(InputStream in, ProgressMonitor instance) throws IllegalDataException {
         try {
+            if (data == null) {
+                data = new CadastreDownloadData(true, true, true, true, true, true, true, true, true);
+            }
             return EdigeoPciReader.parseDataSet(in, file, data, instance);
         } catch (IOException e) {
             throw new IllegalDataException(e);

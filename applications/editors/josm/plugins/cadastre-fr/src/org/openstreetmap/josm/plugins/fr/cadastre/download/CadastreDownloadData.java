@@ -27,7 +27,7 @@ public class CadastreDownloadData {
      * @param downloadSection whether to download section layer
      * @param downloadCommune whether to download communal layer
      */
-    CadastreDownloadData(boolean downloadWater, boolean downloadBuilding, boolean downloadSymbol,
+    public CadastreDownloadData(boolean downloadWater, boolean downloadBuilding, boolean downloadSymbol,
             boolean downloadParcel, boolean downloadParcelNumber, boolean downloadAddress, boolean downloadLocality,
             boolean downloadSection, boolean downloadCommune) {
         this.downloadWater = downloadWater;

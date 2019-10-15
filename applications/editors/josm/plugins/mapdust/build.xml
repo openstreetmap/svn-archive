@@ -5,7 +5,7 @@
     <property name="plugin.main.version" value="14153"/>
     <property name="apidoc.dir" value="doc"/>
 
-    <property name="plugin.author" value="Beata Jancso"/>
+    <property name="plugin.author" value="skobbler"/>
     <property name="plugin.class" value="org.openstreetmap.josm.plugins.mapdust.MapdustPlugin"/>
     <property name="plugin.description" value="The MapDust Plug-In shows the MapDust bug reports on the map. You can create, close,invalidate, re-open and comment bug reports by using this plugin."/>
     <property name="plugin.icon" value="images/dialogs/mapdust_icon25.png"/>

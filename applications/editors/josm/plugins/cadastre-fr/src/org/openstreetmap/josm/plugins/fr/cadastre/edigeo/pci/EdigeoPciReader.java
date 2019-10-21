@@ -245,7 +245,9 @@ public class EdigeoPciReader extends AbstractReader {
             if (name.length() > 2 && StringUtils.isAllUpperCase(name.replaceAll(" ", "").replaceAll("'", "").replaceAll("-", ""))) {
                 name = WordUtils.capitalizeFully(name);
             }
-            p.put("name", name);
+            if (!name.equals(p.get("addr:housenumber"))) {
+                p.put("name", name);
+            }
         }
     }
 

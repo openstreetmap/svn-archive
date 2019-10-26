@@ -178,7 +178,7 @@ public class FindRelationAction extends JosmAction {
                         } else {
                             for (String key : r.keySet()) {
                                 if (key.contains(keywords[i]) || r.get(key).toLowerCase().contains(keywords[i])
-                                        || tr(r.get(key)).toLowerCase().contains(keywords[i])) {
+                                        || safetr(r.get(key)).toLowerCase().contains(keywords[i])) {
                                     ok = true;
                                     break;
                                 }
@@ -197,6 +197,15 @@ public class FindRelationAction extends JosmAction {
 
         Collections.sort(relations, DefaultNameFormatter.getInstance().getRelationComparator());
         data.setRelations(relations);
+    }
+
+    private static String safetr(String s) {
+        try {
+            return tr(s);
+        } catch (IllegalArgumentException e) {
+            Logging.trace(e);
+            return s;
+        }
     }
 
     /**

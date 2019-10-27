@@ -176,9 +176,12 @@ public class SvgImportTask extends PleaseWaitRunnable {
                     return;
                 }
                 SVGDiagram diagram = universe.getDiagram(f.toURI());
+                if (diagram == null) {
+                    throw new IOException("Can't read SVG diagram: " + f.toURI());
+                }
                 ShapeElement root = diagram.getRoot();
                 if (root == null) {
-                    throw new IOException("Can't find root SVG element");
+                    throw new IOException("Can't find root SVG element: " + diagram);
                 }
                 Rectangle2D bbox = root.getBoundingBox();
                 this.center = this.center.add(-bbox.getCenterX() * scale, bbox.getCenterY() * scale);

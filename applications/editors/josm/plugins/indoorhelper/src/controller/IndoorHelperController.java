@@ -42,6 +42,7 @@ import org.openstreetmap.josm.actions.ValidateAction;
 import org.openstreetmap.josm.actions.mapmode.DrawAction;
 import org.openstreetmap.josm.actions.mapmode.SelectAction;
 import org.openstreetmap.josm.data.Preferences;
+import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.OsmDataManager;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Tag;
@@ -570,22 +571,25 @@ public class IndoorHelperController {
     */
    public void unsetSpecificKeyFilter(String key) {
 
-     Collection<OsmPrimitive> p = OsmDataManager.getInstance().getEditDataSet().allPrimitives();
-     int level = Integer.parseInt(levelValue);
+     DataSet editDataSet = OsmDataManager.getInstance().getEditDataSet();
+     if (editDataSet != null) {
+         Collection<OsmPrimitive> p = editDataSet.allPrimitives();
+         int level = Integer.parseInt(levelValue);
 
-     //Find all primitives with the specific tag and check if value is part of the current
-     //workinglevel. After that unset the disabled status.
-     for (OsmPrimitive osm: p) {
-         if ((osm.isDisabledAndHidden() || osm.isDisabled()) && osm.hasKey(key)) {
-             for (Map.Entry<String, String> e: osm.getInterestingTags().entrySet()) {
-                if (e.getKey().equals(key)) {
-                    //Compare values to current working level
-                    if (IndoorLevel.isPartOfWorkingLevel(e.getValue(), level)) {
-                        osm.unsetDisabledState();
-                    } else {
-                        osm.setDisabledState(true);
+         //Find all primitives with the specific tag and check if value is part of the current
+         //workinglevel. After that unset the disabled status.
+         for (OsmPrimitive osm: p) {
+             if ((osm.isDisabledAndHidden() || osm.isDisabled()) && osm.hasKey(key)) {
+                 for (Map.Entry<String, String> e: osm.getInterestingTags().entrySet()) {
+                    if (e.getKey().equals(key)) {
+                        //Compare values to current working level
+                        if (IndoorLevel.isPartOfWorkingLevel(e.getValue(), level)) {
+                            osm.unsetDisabledState();
+                        } else {
+                            osm.setDisabledState(true);
+                        }
                     }
-                }
+                 }
              }
          }
      }

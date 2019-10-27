@@ -353,7 +353,7 @@ public class Validator {
             }
 
             return issues;
-        } catch (UnexpectedDataException e) {
+        } catch (UnexpectedDataException | IllegalArgumentException e) {
             issues.add(Issue.newError(r, e.getMessage()));
             return issues;
         }

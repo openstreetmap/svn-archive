@@ -534,12 +534,14 @@ public final class StreetsideMainDialog extends ToggleDialog implements
 	@Override
 	public void selectedImageChanged(StreetsideAbstractImage oldImage, StreetsideAbstractImage newImage) {
 		setImage(newImage);
-		if (newImage.getSequence() != null && newImage.next()!=null) {
-      nextButton.setEnabled(true);
-    }
-    if (newImage.getSequence() != null && newImage.previous()!=null) {
-      previousButton.setEnabled(true);
-    }
+		if (newImage != null && newImage.getSequence() != null) {
+	        if (newImage.next() != null) {
+	            nextButton.setEnabled(true);
+	        }
+	        if (newImage.previous() != null) {
+	            previousButton.setEnabled(true);
+	        }
+        }
 		updateImage();
 	}
 

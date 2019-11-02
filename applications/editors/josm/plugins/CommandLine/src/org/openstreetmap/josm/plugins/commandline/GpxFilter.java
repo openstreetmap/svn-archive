@@ -7,8 +7,7 @@ import java.util.Collections;
 
 import org.openstreetmap.josm.data.gpx.GpxData;
 import org.openstreetmap.josm.data.gpx.GpxTrack;
-import org.openstreetmap.josm.data.gpx.GpxTrackSegment;
-import org.openstreetmap.josm.data.gpx.ImmutableGpxTrack;
+import org.openstreetmap.josm.data.gpx.IGpxTrackSegment;
 import org.openstreetmap.josm.data.gpx.WayPoint;
 import org.openstreetmap.josm.data.osm.BBox;
 
@@ -30,7 +29,7 @@ public class GpxFilter {
         Collection<WayPoint> currentSegment;
         for (GpxTrack track : data.tracks) {
             currentTrack = new ArrayList<>();
-            for (GpxTrackSegment segment : track.getSegments()) {
+            for (IGpxTrackSegment segment : track.getSegments()) {
                 currentSegment = new ArrayList<>();
                 for (WayPoint wp : segment.getWayPoints()) {
                     if (bbox.bounds(wp.getCoor())) {
@@ -47,7 +46,7 @@ public class GpxFilter {
                     currentSegment = new ArrayList<>();
                 }
             }
-            this.data.tracks.add(new ImmutableGpxTrack(currentTrack, Collections.<String, Object>emptyMap()));
+            this.data.tracks.add(new GpxTrack(currentTrack, Collections.<String, Object>emptyMap()));
         }
     }
 

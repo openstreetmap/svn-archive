@@ -20,7 +20,7 @@ import javax.swing.JPanel;
 
 import org.openstreetmap.josm.data.SystemOfMeasurement;
 import org.openstreetmap.josm.data.gpx.GpxTrack;
-import org.openstreetmap.josm.data.gpx.GpxTrackSegment;
+import org.openstreetmap.josm.data.gpx.IGpxTrackSegment;
 import org.openstreetmap.josm.data.gpx.WayPoint;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.tools.GBC;
@@ -75,7 +75,7 @@ class InfoPanel extends JPanel {
             Set<GpxTrack> toRemove = new HashSet<>();
 
             double tm = -1;
-            for (GpxTrackSegment seg : trk.getSegments()) {
+            for (IGpxTrackSegment seg : trk.getSegments()) {
                     for (WayPoint S : seg.getWayPoints()) {
                         if (S.getTime() > tm) {
                             tm = S.getTime();
@@ -85,7 +85,7 @@ class InfoPanel extends JPanel {
 
             for (GpxTrack track : tracks) {
                 boolean f = true;
-                sg: for (GpxTrackSegment seg : track.getSegments()) {
+                sg: for (IGpxTrackSegment seg : track.getSegments()) {
                     for (WayPoint S : seg.getWayPoints()) {
                         if (S.getTime() > tm) {
                             f = false;

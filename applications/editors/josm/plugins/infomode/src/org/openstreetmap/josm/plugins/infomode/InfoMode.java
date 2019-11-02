@@ -26,7 +26,7 @@ import org.openstreetmap.josm.actions.mapmode.MapMode;
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.gpx.GpxTrack;
-import org.openstreetmap.josm.data.gpx.GpxTrackSegment;
+import org.openstreetmap.josm.data.gpx.IGpxTrackSegment;
 import org.openstreetmap.josm.data.gpx.WayPoint;
 import org.openstreetmap.josm.data.projection.ProjectionRegistry;
 import org.openstreetmap.josm.gui.MainApplication;
@@ -221,7 +221,7 @@ class InfoMode extends MapMode implements MapViewPaintable, AWTEventListener {
             Set<GpxTrack> toRemove = new HashSet<>();
             for (GpxTrack track : gpxL.data.tracks) {
                 boolean f = true;
-                sg: for (GpxTrackSegment seg : track.getSegments()) {
+                sg: for (IGpxTrackSegment seg : track.getSegments()) {
                     for (WayPoint S : seg.getWayPoints()) {
                         if (S.hasDate()) {
                             f = false;
@@ -243,7 +243,7 @@ class InfoMode extends MapMode implements MapViewPaintable, AWTEventListener {
             GpxTrack trk = null;
             double maxD = mv.getDist100Pixel()/3;
             for (GpxTrack track : gpxL.data.tracks) {
-                for (GpxTrackSegment seg : track.getSegments()) {
+                for (IGpxTrackSegment seg : track.getSegments()) {
                     oldWp = null; // next segment will have new previous point
                     for (WayPoint S : seg.getWayPoints()) {
                         d = S.getEastNorth(ProjectionRegistry.getProjection()).distance(pos);
@@ -267,8 +267,8 @@ class InfoMode extends MapMode implements MapViewPaintable, AWTEventListener {
                     g.setColor(new Color(255, 30, 0, 128));
                     Stroke oldStroke = g.getStroke();
                     g.setStroke(new BasicStroke(10));
-                    for (GpxTrackSegment seg : trk.getSegments()) {
-                    Point oldP = null, curP = null; // next segment will have new previous point
+                    for (IGpxTrackSegment seg : trk.getSegments()) {
+                        Point oldP = null, curP = null; // next segment will have new previous point
                         for (WayPoint S : seg.getWayPoints()) {
                             curP = mv.getPoint(S.getEastNorth(ProjectionRegistry.getProjection()));
                             if (oldP != null) g.drawLine(oldP.x, oldP.y, curP.x, curP.y);

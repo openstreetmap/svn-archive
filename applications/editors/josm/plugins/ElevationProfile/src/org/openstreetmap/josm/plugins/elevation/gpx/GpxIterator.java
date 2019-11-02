@@ -6,7 +6,7 @@ import java.util.Collection;
 import org.openstreetmap.josm.data.gpx.GpxData;
 import org.openstreetmap.josm.data.gpx.GpxRoute;
 import org.openstreetmap.josm.data.gpx.GpxTrack;
-import org.openstreetmap.josm.data.gpx.GpxTrackSegment;
+import org.openstreetmap.josm.data.gpx.IGpxTrackSegment;
 import org.openstreetmap.josm.data.gpx.WayPoint;
 
 /**
@@ -77,12 +77,12 @@ public final class GpxIterator {
         if (trk == null) return;
         if (visitor == null) return;
 
-        Collection<GpxTrackSegment> segments = trk.getSegments();
+        Collection<IGpxTrackSegment> segments = trk.getSegments();
 
         if (segments != null) {
             visitor.beginTrack(trk);
             // visit all segments
-            for (GpxTrackSegment segment : segments) {
+            for (IGpxTrackSegment segment : segments) {
                 Collection<WayPoint> waypts = segment.getWayPoints();
                 // no visitor here...
                 if (waypts == null)

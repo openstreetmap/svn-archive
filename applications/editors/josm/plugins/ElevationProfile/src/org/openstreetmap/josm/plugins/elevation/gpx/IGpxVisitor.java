@@ -3,7 +3,7 @@ package org.openstreetmap.josm.plugins.elevation.gpx;
 
 import org.openstreetmap.josm.data.gpx.GpxRoute;
 import org.openstreetmap.josm.data.gpx.GpxTrack;
-import org.openstreetmap.josm.data.gpx.GpxTrackSegment;
+import org.openstreetmap.josm.data.gpx.IGpxTrackSegment;
 import org.openstreetmap.josm.data.gpx.WayPoint;
 
 /**
@@ -45,12 +45,12 @@ public interface IGpxVisitor extends IGpxWaypointVisitor {
     /**
      * Starts a segment within a GPX track.
      */
-    void beginTrackSegment(GpxTrack track, GpxTrackSegment segment);
+    void beginTrackSegment(GpxTrack track, IGpxTrackSegment segment);
 
     /**
      * Ends a segment within a GPX track.
      */
-    void endTrackSegment(GpxTrack track, GpxTrackSegment segment);
+    void endTrackSegment(GpxTrack track, IGpxTrackSegment segment);
 
     /**
      * Visits a way point within a GPX route.
@@ -66,7 +66,7 @@ public interface IGpxVisitor extends IGpxWaypointVisitor {
      * @param track the track containing the way point.
      * @param segment the track segment
      */
-    void visitTrackPoint(WayPoint wp, GpxTrack track, GpxTrackSegment segment);
+    void visitTrackPoint(WayPoint wp, GpxTrack track, IGpxTrackSegment segment);
 
     /**
      * Visits a way point within a GPX route.

@@ -7,7 +7,7 @@ import java.util.List;
 import org.openstreetmap.josm.data.gpx.GpxData;
 import org.openstreetmap.josm.data.gpx.GpxRoute;
 import org.openstreetmap.josm.data.gpx.GpxTrack;
-import org.openstreetmap.josm.data.gpx.GpxTrackSegment;
+import org.openstreetmap.josm.data.gpx.IGpxTrackSegment;
 import org.openstreetmap.josm.data.gpx.IWithAttributes;
 import org.openstreetmap.josm.data.gpx.WayPoint;
 import org.openstreetmap.josm.plugins.elevation.IElevationModel;
@@ -159,19 +159,17 @@ public class ElevationModel implements IGpxVisitor, IElevationModel {
     }
 
     @Override
-    public void beginTrackSegment(GpxTrack track, GpxTrackSegment segment) {
+    public void beginTrackSegment(GpxTrack track, IGpxTrackSegment segment) {
         // Nothing to do here for now
     }
 
     @Override
-    public void endTrackSegment(GpxTrack track, GpxTrackSegment segment) {
+    public void endTrackSegment(GpxTrack track, IGpxTrackSegment segment) {
         // Nothing to do here for now
     }
 
     @Override
-    public void visitTrackPoint(WayPoint wp, GpxTrack track,
-            GpxTrackSegment segment) {
-
+    public void visitTrackPoint(WayPoint wp, GpxTrack track, IGpxTrackSegment segment) {
         processWayPoint(wp);
     }
 

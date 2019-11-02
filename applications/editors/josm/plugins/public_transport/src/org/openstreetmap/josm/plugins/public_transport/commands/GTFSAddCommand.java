@@ -20,12 +20,9 @@ public class GTFSAddCommand extends Command {
 
     private GTFSStopTableModel gtfsStopTM = null;
 
-    private String type = null;
-
     public GTFSAddCommand(GTFSImporterAction controller) {
         super(MainApplication.getLayerManager().getEditDataSet());
         gtfsStopTM = controller.getGTFSStopTableModel();
-        type = controller.getDialog().getStoptype();
         workingLines = new Vector<>();
         typesForUndo = new Vector<>();
 

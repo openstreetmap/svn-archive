@@ -18,6 +18,7 @@ import org.openstreetmap.josm.plugins.public_transport.TransText;
 
 /**
  * Abstract superclass of {@link GTFSImporterDialog} and {@link StopImporterDialog}.
+ * @param <T> type of action
  */
 public abstract class AbstractImporterDialog<T extends JosmAction> {
 

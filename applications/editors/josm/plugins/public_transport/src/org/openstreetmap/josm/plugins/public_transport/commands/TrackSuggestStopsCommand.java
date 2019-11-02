@@ -9,7 +9,7 @@ import java.util.Vector;
 
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.data.coor.LatLon;
-import org.openstreetmap.josm.data.gpx.GpxTrackSegment;
+import org.openstreetmap.josm.data.gpx.IGpxTrackSegment;
 import org.openstreetmap.josm.data.gpx.WayPoint;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
@@ -34,7 +34,7 @@ public class TrackSuggestStopsCommand extends Command {
 
     private double threshold;
 
-    private Collection<GpxTrackSegment> segments = null;
+    private Collection<IGpxTrackSegment> segments = null;
 
     private Vector<Vector<Object>> tableDataModel = null;
 
@@ -75,7 +75,7 @@ public class TrackSuggestStopsCommand extends Command {
         stoplistTM.clear();
 
         Vector<WayPoint> wayPoints = new Vector<>();
-        Iterator<GpxTrackSegment> siter = segments.iterator();
+        Iterator<IGpxTrackSegment> siter = segments.iterator();
         while (siter.hasNext()) {
             Iterator<WayPoint> witer = siter.next().getWayPoints().iterator();
             while (witer.hasNext()) {

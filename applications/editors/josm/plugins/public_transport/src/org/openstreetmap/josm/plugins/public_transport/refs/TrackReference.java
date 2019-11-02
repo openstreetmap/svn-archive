@@ -14,7 +14,7 @@ import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.data.UndoRedoHandler;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.gpx.GpxTrack;
-import org.openstreetmap.josm.data.gpx.GpxTrackSegment;
+import org.openstreetmap.josm.data.gpx.IGpxTrackSegment;
 import org.openstreetmap.josm.data.gpx.WayPoint;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.plugins.public_transport.actions.StopImporterAction;
@@ -37,8 +37,6 @@ public class TrackReference implements Comparable<TrackReference>, TableModelLis
 
     public double threshold;
 
-    private StopImporterAction controller = null;
-
     public boolean inEvent = false;
 
     public TrackReference(GpxTrack track, StopImporterAction controller) {
@@ -47,9 +45,8 @@ public class TrackReference implements Comparable<TrackReference>, TableModelLis
         this.stopwatchStart = "00:00:00";
         this.gpsStartTime = null;
         this.gpsSyncTime = null;
-        this.controller = controller;
         if (track != null) {
-            Iterator<GpxTrackSegment> siter = track.getSegments().iterator();
+            Iterator<IGpxTrackSegment> siter = track.getSegments().iterator();
             while (siter.hasNext() && this.gpsSyncTime == null) {
                 Iterator<WayPoint> witer = siter.next().getWayPoints().iterator();
                 if (witer.hasNext()) {
@@ -130,7 +127,7 @@ public class TrackReference implements Comparable<TrackReference>, TableModelLis
         WayPoint lastWayPoint = null;
         double wayPointTime = 0;
         double lastWayPointTime = 0;
-        Iterator<GpxTrackSegment> siter = track.getSegments().iterator();
+        Iterator<IGpxTrackSegment> siter = track.getSegments().iterator();
         while (siter.hasNext()) {
             Iterator<WayPoint> witer = siter.next().getWayPoints().iterator();
             while (witer.hasNext()) {

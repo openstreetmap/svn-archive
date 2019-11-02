@@ -11,8 +11,7 @@ import java.util.NoSuchElementException;
 import java.util.TimeZone;
 
 import org.openstreetmap.josm.data.gpx.GpxTrack;
-import org.openstreetmap.josm.data.gpx.GpxTrackSegment;
-import org.openstreetmap.josm.data.gpx.ImmutableGpxTrack;
+import org.openstreetmap.josm.data.gpx.IGpxTrackSegment;
 import org.openstreetmap.josm.data.gpx.WayPoint;
 
 public class EditGpxTrack {
@@ -23,7 +22,7 @@ public class EditGpxTrack {
 
     public EditGpxTrack(GpxTrack track) {
         attributes.putAll(track.getAttributes());
-        for (GpxTrackSegment segment: track.getSegments()) {
+        for (IGpxTrackSegment segment: track.getSegments()) {
             segments.add(new EditGpxTrackSegment(segment));
         }
     }
@@ -69,7 +68,7 @@ public class EditGpxTrack {
             }
         }
 
-        return new ImmutableGpxTrack(wayPoints, attributes);
+        return new GpxTrack(wayPoints, attributes);
     }
 
     public void setDeleted(boolean isDeleted) {

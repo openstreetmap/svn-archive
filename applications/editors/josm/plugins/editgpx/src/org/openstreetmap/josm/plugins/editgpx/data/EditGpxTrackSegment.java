@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.openstreetmap.josm.data.gpx.GpxTrackSegment;
+import org.openstreetmap.josm.data.gpx.IGpxTrackSegment;
 import org.openstreetmap.josm.data.gpx.WayPoint;
 
 public class EditGpxTrackSegment {
@@ -12,7 +12,7 @@ public class EditGpxTrackSegment {
     private final List<EditGpxWayPoint> wayPoints = new ArrayList<>();
     private boolean deleted;
 
-    public EditGpxTrackSegment(GpxTrackSegment segment) {
+    public EditGpxTrackSegment(IGpxTrackSegment segment) {
         for (WayPoint wayPoint: segment.getWayPoints()) {
             wayPoints.add(new EditGpxWayPoint(wayPoint));
         }

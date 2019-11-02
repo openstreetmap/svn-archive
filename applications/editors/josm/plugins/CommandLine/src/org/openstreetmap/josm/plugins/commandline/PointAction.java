@@ -71,7 +71,8 @@ public class PointAction extends MapMode implements AWTEventListener {
         }
     }
 
-    @Override public void mousePressed(MouseEvent e) {
+    @Override
+    public void mousePressed(MouseEvent e) {
         if (e.getButton() == MouseEvent.BUTTON1) {
             if (isCtrlDown) {
                 if (pointList.size() > 0) {
@@ -79,15 +80,14 @@ public class PointAction extends MapMode implements AWTEventListener {
                     updateTextEdit();
                 }
             } else {
-                LatLon coor;
-                if (nearestNode == null)
-                    coor = MainApplication.getMap().mapView.getLatLon(e.getX(), e.getY());
-                else
-                    coor = nearestNode.getCoor();
-                if (coor.isOutSideWorld()) {
+                Node node = nearestNode;
+                if (node == null)
+                    node = new Node(MainApplication.getMap().mapView.getEastNorth(e.getX(), e.getY()));
+                if (node.isOutSideWorld()) {
                     JOptionPane.showMessageDialog(MainApplication.getMainFrame(), tr("Can not draw outside of the world."));
                     return;
                 }
+                LatLon coor = node.getCoor();
                 String point = String.valueOf(coor.getX()) + "," + String.valueOf(coor.getY());
                 int maxInstances = parentPlugin.currentCommand.parameters.get(parentPlugin.currentCommand.currentParameterNum).maxInstances;
                 if (maxInstances == 1) {

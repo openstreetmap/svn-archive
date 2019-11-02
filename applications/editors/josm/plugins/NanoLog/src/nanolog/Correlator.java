@@ -12,7 +12,7 @@ import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.gpx.GpxData;
 import org.openstreetmap.josm.data.gpx.GpxTrack;
-import org.openstreetmap.josm.data.gpx.GpxTrackSegment;
+import org.openstreetmap.josm.data.gpx.IGpxTrackSegment;
 import org.openstreetmap.josm.data.gpx.WayPoint;
 import org.openstreetmap.josm.data.projection.ProjectionRegistry;
 import org.openstreetmap.josm.gui.MainApplication;
@@ -42,7 +42,7 @@ public final class Correlator {
         long firstGPXDate = -1;
         outer:
         for (GpxTrack trk : data.tracks) {
-            for (GpxTrackSegment segment : trk.getSegments()) {
+            for (IGpxTrackSegment segment : trk.getSegments()) {
                 for (WayPoint curWp : segment.getWayPoints()) {
                     String curDateWpStr = (String) curWp.attr.get("time");
                     if (curDateWpStr == null) {
@@ -84,7 +84,7 @@ public final class Correlator {
         //int ret = 0;
         Collections.sort(sortedEntries);
         for (GpxTrack track : data.tracks) {
-            for (GpxTrackSegment segment : track.getSegments()) {
+            for (IGpxTrackSegment segment : track.getSegments()) {
                 long prevWpTime = 0;
                 WayPoint prevWp = null;
 
@@ -220,7 +220,7 @@ public final class Correlator {
     public static long getGpxDate(GpxData data, LatLon pos) {
         EastNorth en = ProjectionRegistry.getProjection().latlon2eastNorth(pos);
         for (GpxTrack track : data.tracks) {
-            for (GpxTrackSegment segment : track.getSegments()) {
+            for (IGpxTrackSegment segment : track.getSegments()) {
                 long prevWpTime = 0;
                 WayPoint prevWp = null;
                 for (WayPoint curWp : segment.getWayPoints()) {

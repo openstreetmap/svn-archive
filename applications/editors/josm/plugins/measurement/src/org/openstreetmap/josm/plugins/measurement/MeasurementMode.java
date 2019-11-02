@@ -9,7 +9,7 @@ import java.awt.event.MouseEvent;
 import javax.swing.JOptionPane;
 
 import org.openstreetmap.josm.actions.mapmode.MapMode;
-import org.openstreetmap.josm.data.coor.LatLon;
+import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.gui.MainApplication;
 
 public class MeasurementMode extends MapMode {
@@ -42,10 +42,10 @@ public class MeasurementMode extends MapMode {
      */
     @Override
     public void mouseClicked(MouseEvent e) {
-        if (e.getButton() == MouseEvent.BUTTON3){
+        if (e.getButton() == MouseEvent.BUTTON3) {
             MeasurementPlugin.getCurrentLayer().removeLastPoint();
-        } else if (e.getButton() == MouseEvent.BUTTON1){
-            LatLon coor = MainApplication.getMap().mapView.getLatLon(e.getX(), e.getY());
+        } else if (e.getButton() == MouseEvent.BUTTON1) {
+            Node coor = new Node(MainApplication.getMap().mapView.getEastNorth(e.getX(), e.getY()));
             if (coor.isOutSideWorld()) {
                 JOptionPane.showMessageDialog(MainApplication.getMainFrame(),tr("Can not draw outside of the world."));
                 return;

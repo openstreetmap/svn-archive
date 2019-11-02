@@ -94,7 +94,7 @@ public final class Correlator {
                     if (curWpTimeStr != null) {
                         try {
                             long curWpTime = DateUtils.fromString(curWpTimeStr).getTime() + offset;
-                            /*ret +=*/ matchPoints(sortedEntries, prevWp, prevWpTime, curWp, curWpTime, offset);
+                            /*ret +=*/ matchPoints(sortedEntries, prevWp, prevWpTime, curWp, curWpTime);
 
                             prevWp = curWp;
                             prevWpTime = curWpTime;
@@ -115,7 +115,7 @@ public final class Correlator {
     }
 
     private static int matchPoints(List<NanoLogEntry> entries, WayPoint prevWp, long prevWpTime,
-            WayPoint curWp, long curWpTime, long offset) {
+            WayPoint curWp, long curWpTime) {
         // Time between the track point and the previous one, 5 sec if first point, i.e. photos take
         // 5 sec before the first track point can be assumed to be take at the starting position
         long interval = prevWpTime > 0 ? Math.abs(curWpTime - prevWpTime) : 5 * 1000;

@@ -15,7 +15,7 @@ import org.openstreetmap.josm.data.conflict.ConflictCollection;
 import org.openstreetmap.josm.data.conflict.IConflictListener;
 import org.openstreetmap.josm.data.gpx.GpxData;
 import org.openstreetmap.josm.data.gpx.GpxData.GpxDataChangeListener;
-import org.openstreetmap.josm.data.gpx.GpxTrack.GpxTrackChangeListener;
+import org.openstreetmap.josm.data.gpx.IGpxTrack.GpxTrackChangeListener;
 import org.openstreetmap.josm.data.osm.ChangesetCache;
 import org.openstreetmap.josm.data.osm.ChangesetCacheListener;
 import org.openstreetmap.josm.data.osm.DataSelectionListener;

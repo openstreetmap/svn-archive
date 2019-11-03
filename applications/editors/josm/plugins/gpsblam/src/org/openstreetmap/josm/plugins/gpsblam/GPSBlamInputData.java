@@ -9,7 +9,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 
 import org.openstreetmap.josm.data.coor.CachedLatLon;
-import org.openstreetmap.josm.data.gpx.GpxTrack;
+import org.openstreetmap.josm.data.gpx.IGpxTrack;
 import org.openstreetmap.josm.data.gpx.IGpxTrackSegment;
 import org.openstreetmap.josm.data.gpx.WayPoint;
 import org.openstreetmap.josm.data.projection.Projection;
@@ -32,7 +32,7 @@ class GPSBlamInputData extends LinkedList<CachedLatLon> {
         Projection projection = ProjectionRegistry.getProjection();
         for (Layer l : layers) {
             if (l.isVisible() && l instanceof GpxLayer) {
-                for (GpxTrack track : ((GpxLayer) l).data.tracks) {
+                for (IGpxTrack track : ((GpxLayer) l).data.tracks) {
                     for (IGpxTrackSegment segment: track.getSegments()) {
                         for (WayPoint wayPoint : segment.getWayPoints()) {
                             if (p2.equals(p1)) {

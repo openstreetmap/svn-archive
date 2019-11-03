@@ -25,7 +25,7 @@ import javax.swing.PopupFactory;
 import org.openstreetmap.josm.actions.mapmode.MapMode;
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.coor.EastNorth;
-import org.openstreetmap.josm.data.gpx.GpxTrack;
+import org.openstreetmap.josm.data.gpx.IGpxTrack;
 import org.openstreetmap.josm.data.gpx.IGpxTrackSegment;
 import org.openstreetmap.josm.data.gpx.WayPoint;
 import org.openstreetmap.josm.data.projection.ProjectionRegistry;
@@ -218,8 +218,8 @@ class InfoMode extends MapMode implements MapViewPaintable, AWTEventListener {
 
         if (l instanceof GpxLayer && pos != null) {
             GpxLayer gpxL = (GpxLayer) l;
-            Set<GpxTrack> toRemove = new HashSet<>();
-            for (GpxTrack track : gpxL.data.tracks) {
+            Set<IGpxTrack> toRemove = new HashSet<>();
+            for (IGpxTrack track : gpxL.data.tracks) {
                 boolean f = true;
                 sg: for (IGpxTrackSegment seg : track.getSegments()) {
                     for (WayPoint S : seg.getWayPoints()) {
@@ -240,9 +240,9 @@ class InfoMode extends MapMode implements MapViewPaintable, AWTEventListener {
 
             double minDist = 1e9, d;
             WayPoint wp = null, oldWp = null, prevWp = null;
-            GpxTrack trk = null;
+            IGpxTrack trk = null;
             double maxD = mv.getDist100Pixel()/3;
-            for (GpxTrack track : gpxL.data.tracks) {
+            for (IGpxTrack track : gpxL.data.tracks) {
                 for (IGpxTrackSegment seg : track.getSegments()) {
                     oldWp = null; // next segment will have new previous point
                     for (WayPoint S : seg.getWayPoints()) {

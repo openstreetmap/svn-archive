@@ -7,6 +7,7 @@ import java.util.NoSuchElementException;
 import org.openstreetmap.josm.data.gpx.GpxData;
 import org.openstreetmap.josm.data.gpx.GpxRoute;
 import org.openstreetmap.josm.data.gpx.GpxTrack;
+import org.openstreetmap.josm.data.gpx.IGpxTrack;
 import org.openstreetmap.josm.data.gpx.WayPoint;
 
 public class EditGpxData {
@@ -17,7 +18,7 @@ public class EditGpxData {
     private final List<WayPoint> waypoints = new ArrayList<>();
 
     public void load(GpxData data) {
-        for (GpxTrack track: data.tracks) {
+        for (IGpxTrack track: data.tracks) {
             tracks.add(new EditGpxTrack(track));
         }
         routes.clear();

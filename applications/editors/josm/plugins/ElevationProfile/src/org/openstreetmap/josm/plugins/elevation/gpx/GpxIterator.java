@@ -5,7 +5,7 @@ import java.util.Collection;
 
 import org.openstreetmap.josm.data.gpx.GpxData;
 import org.openstreetmap.josm.data.gpx.GpxRoute;
-import org.openstreetmap.josm.data.gpx.GpxTrack;
+import org.openstreetmap.josm.data.gpx.IGpxTrack;
 import org.openstreetmap.josm.data.gpx.IGpxTrackSegment;
 import org.openstreetmap.josm.data.gpx.WayPoint;
 
@@ -46,7 +46,7 @@ public final class GpxIterator {
         }
 
         // tracks
-        for (GpxTrack trk : data.tracks) {
+        for (IGpxTrack trk : data.tracks) {
             visitTrack(visitor, trk);
         }
     }
@@ -57,7 +57,7 @@ public final class GpxIterator {
      * @param visitor
      *            The visitor which inspects all GPX entities.
      */
-    public static void visit(GpxTrack track, IGpxVisitor visitor) {
+    public static void visit(IGpxTrack track, IGpxVisitor visitor) {
         visitTrack(visitor, track);
     }
 
@@ -73,7 +73,7 @@ public final class GpxIterator {
 
     // ---------------------- Helper methods ----------------
 
-    private static void visitTrack(IGpxVisitor visitor, GpxTrack trk) {
+    private static void visitTrack(IGpxVisitor visitor, IGpxTrack trk) {
         if (trk == null) return;
         if (visitor == null) return;
 

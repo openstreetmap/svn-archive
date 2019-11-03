@@ -19,7 +19,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import org.openstreetmap.josm.data.SystemOfMeasurement;
-import org.openstreetmap.josm.data.gpx.GpxTrack;
+import org.openstreetmap.josm.data.gpx.IGpxTrack;
 import org.openstreetmap.josm.data.gpx.IGpxTrackSegment;
 import org.openstreetmap.josm.data.gpx.WayPoint;
 import org.openstreetmap.josm.gui.MainApplication;
@@ -30,8 +30,8 @@ import org.openstreetmap.josm.tools.date.DateUtils;
 
 class InfoPanel extends JPanel {
 
-    private Collection<GpxTrack> tracks;
-    private GpxTrack trk;
+    private Collection<IGpxTrack> tracks;
+    private IGpxTrack trk;
 
     private JLabel label1 = new JLabel();
     private JLabel label2 = new JLabel();
@@ -72,7 +72,7 @@ class InfoPanel extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
             if (tracks == null) return;
-            Set<GpxTrack> toRemove = new HashSet<>();
+            Set<IGpxTrack> toRemove = new HashSet<>();
 
             double tm = -1;
             for (IGpxTrackSegment seg : trk.getSegments()) {
@@ -83,7 +83,7 @@ class InfoPanel extends JPanel {
                     }
                 }
 
-            for (GpxTrack track : tracks) {
+            for (IGpxTrack track : tracks) {
                 boolean f = true;
                 sg: for (IGpxTrackSegment seg : track.getSegments()) {
                     for (WayPoint S : seg.getWayPoints()) {
@@ -101,7 +101,7 @@ class InfoPanel extends JPanel {
         });
     }
 
-    void setData(WayPoint wp, GpxTrack trk, double vel, Collection<GpxTrack> tracks) {
+    void setData(WayPoint wp, IGpxTrack trk, double vel, Collection<IGpxTrack> tracks) {
         this.tracks = tracks;
         this.trk = trk;
         if (!wp.hasDate()) {

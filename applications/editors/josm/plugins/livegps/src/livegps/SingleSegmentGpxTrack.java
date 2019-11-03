@@ -6,15 +6,15 @@ import java.util.Collections;
 import java.util.Map;
 
 import org.openstreetmap.josm.data.Bounds;
-import org.openstreetmap.josm.data.gpx.GpxTrack;
-import org.openstreetmap.josm.data.gpx.GpxTrackSegment;
+import org.openstreetmap.josm.data.gpx.IGpxTrack;
+import org.openstreetmap.josm.data.gpx.IGpxTrackSegment;
 import org.openstreetmap.josm.data.gpx.WithAttributes;
 
-public class SingleSegmentGpxTrack extends WithAttributes implements GpxTrack {
+public class SingleSegmentGpxTrack extends WithAttributes implements IGpxTrack {
 
-    private final GpxTrackSegment trackSegment;
+    private final IGpxTrackSegment trackSegment;
 
-    public SingleSegmentGpxTrack(GpxTrackSegment trackSegment, Map<String, Object> attributes) {
+    public SingleSegmentGpxTrack(IGpxTrackSegment trackSegment, Map<String, Object> attributes) {
         this.attr = Collections.unmodifiableMap(attributes);
         this.trackSegment = trackSegment;
     }
@@ -30,7 +30,7 @@ public class SingleSegmentGpxTrack extends WithAttributes implements GpxTrack {
     }
 
     @Override
-    public Collection<GpxTrackSegment> getSegments() {
+    public Collection<IGpxTrackSegment> getSegments() {
         return Collections.singleton(trackSegment);
     }
 

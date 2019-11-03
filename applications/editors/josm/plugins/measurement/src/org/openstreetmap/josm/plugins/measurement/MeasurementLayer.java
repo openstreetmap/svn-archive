@@ -28,7 +28,7 @@ import javax.swing.JOptionPane;
 
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.coor.LatLon;
-import org.openstreetmap.josm.data.gpx.GpxTrack;
+import org.openstreetmap.josm.data.gpx.IGpxTrack;
 import org.openstreetmap.josm.data.gpx.IGpxTrackSegment;
 import org.openstreetmap.josm.data.gpx.WayPoint;
 import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
@@ -284,7 +284,7 @@ public class MeasurementLayer extends Layer {
                     points = new ArrayList<>(32);
                 }
 
-                for (GpxTrack trk : gpx.data.tracks) {
+                for (IGpxTrack trk : gpx.data.tracks) {
                     for (IGpxTrackSegment trkseg : trk.getSegments()) {
                         for(WayPoint p: trkseg.getWayPoints()){
                             points.add(p);

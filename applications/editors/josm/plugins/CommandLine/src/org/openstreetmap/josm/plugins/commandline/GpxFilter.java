@@ -7,6 +7,7 @@ import java.util.Collections;
 
 import org.openstreetmap.josm.data.gpx.GpxData;
 import org.openstreetmap.josm.data.gpx.GpxTrack;
+import org.openstreetmap.josm.data.gpx.IGpxTrack;
 import org.openstreetmap.josm.data.gpx.IGpxTrackSegment;
 import org.openstreetmap.josm.data.gpx.WayPoint;
 import org.openstreetmap.josm.data.osm.BBox;
@@ -27,7 +28,7 @@ public class GpxFilter {
     public void addGpxData(GpxData data) {
         Collection<Collection<WayPoint>> currentTrack;
         Collection<WayPoint> currentSegment;
-        for (GpxTrack track : data.tracks) {
+        for (IGpxTrack track : data.tracks) {
             currentTrack = new ArrayList<>();
             for (IGpxTrackSegment segment : track.getSegments()) {
                 currentSegment = new ArrayList<>();

@@ -6,7 +6,7 @@ import java.util.List;
 
 import org.openstreetmap.josm.data.gpx.GpxData;
 import org.openstreetmap.josm.data.gpx.GpxRoute;
-import org.openstreetmap.josm.data.gpx.GpxTrack;
+import org.openstreetmap.josm.data.gpx.IGpxTrack;
 import org.openstreetmap.josm.data.gpx.IGpxTrackSegment;
 import org.openstreetmap.josm.data.gpx.IWithAttributes;
 import org.openstreetmap.josm.data.gpx.WayPoint;
@@ -146,12 +146,12 @@ public class ElevationModel implements IGpxVisitor, IElevationModel {
     }
 
     @Override
-    public void beginTrack(GpxTrack track) {
+    public void beginTrack(IGpxTrack track) {
         createProfile(track);
     }
 
     @Override
-    public void endTrack(GpxTrack track) {
+    public void endTrack(IGpxTrack track) {
         if (curProfile == null) throw new RuntimeException("Internal error: No elevation profile");
 
         curProfile.setDistance(track.length());
@@ -159,17 +159,17 @@ public class ElevationModel implements IGpxVisitor, IElevationModel {
     }
 
     @Override
-    public void beginTrackSegment(GpxTrack track, IGpxTrackSegment segment) {
+    public void beginTrackSegment(IGpxTrack track, IGpxTrackSegment segment) {
         // Nothing to do here for now
     }
 
     @Override
-    public void endTrackSegment(GpxTrack track, IGpxTrackSegment segment) {
+    public void endTrackSegment(IGpxTrack track, IGpxTrackSegment segment) {
         // Nothing to do here for now
     }
 
     @Override
-    public void visitTrackPoint(WayPoint wp, GpxTrack track, IGpxTrackSegment segment) {
+    public void visitTrackPoint(WayPoint wp, IGpxTrack track, IGpxTrackSegment segment) {
         processWayPoint(wp);
     }
 

@@ -11,7 +11,7 @@ import javax.swing.JOptionPane;
 import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.gpx.GpxData;
-import org.openstreetmap.josm.data.gpx.GpxTrack;
+import org.openstreetmap.josm.data.gpx.IGpxTrack;
 import org.openstreetmap.josm.data.gpx.IGpxTrackSegment;
 import org.openstreetmap.josm.data.gpx.WayPoint;
 import org.openstreetmap.josm.data.projection.ProjectionRegistry;
@@ -41,7 +41,7 @@ public final class Correlator {
         long firstExifDate = sortedEntries.get(0).getTime().getTime();
         long firstGPXDate = -1;
         outer:
-        for (GpxTrack trk : data.tracks) {
+        for (IGpxTrack trk : data.tracks) {
             for (IGpxTrackSegment segment : trk.getSegments()) {
                 for (WayPoint curWp : segment.getWayPoints()) {
                     String curDateWpStr = (String) curWp.attr.get("time");
@@ -83,7 +83,7 @@ public final class Correlator {
         List<NanoLogEntry> sortedEntries = new ArrayList<>(entries);
         //int ret = 0;
         Collections.sort(sortedEntries);
-        for (GpxTrack track : data.tracks) {
+        for (IGpxTrack track : data.tracks) {
             for (IGpxTrackSegment segment : track.getSegments()) {
                 long prevWpTime = 0;
                 WayPoint prevWp = null;
@@ -219,7 +219,7 @@ public final class Correlator {
      */
     public static long getGpxDate(GpxData data, LatLon pos) {
         EastNorth en = ProjectionRegistry.getProjection().latlon2eastNorth(pos);
-        for (GpxTrack track : data.tracks) {
+        for (IGpxTrack track : data.tracks) {
             for (IGpxTrackSegment segment : track.getSegments()) {
                 long prevWpTime = 0;
                 WayPoint prevWp = null;

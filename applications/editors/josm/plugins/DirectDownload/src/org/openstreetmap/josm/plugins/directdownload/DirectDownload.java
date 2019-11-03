@@ -11,7 +11,7 @@ import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.data.gpx.GpxConstants;
 import org.openstreetmap.josm.data.gpx.GpxData;
 import org.openstreetmap.josm.data.gpx.GpxTrack;
-import org.openstreetmap.josm.data.gpx.ImmutableGpxTrack;
+import org.openstreetmap.josm.data.gpx.IGpxTrack;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MainMenu;
 import org.openstreetmap.josm.gui.layer.GpxLayer;
@@ -61,7 +61,7 @@ public class DirectDownload extends Plugin {
                 }
                 GpxData dataNew = new GpxData();
 
-                for (GpxTrack trk : data.getTracks()) {
+                for (IGpxTrack trk : data.getTracks()) {
                     HashMap<String, Object> attrib = new HashMap<>(trk.getAttributes());
                     if (!trk.getAttributes().containsKey(GpxConstants.GPX_NAME)) {
                         attrib.put(GpxConstants.GPX_NAME, track.filename);
@@ -70,7 +70,7 @@ public class DirectDownload extends Plugin {
                         attrib.put(GpxConstants.GPX_DESC, track.description);
                     }
                     // replace the existing trace in the unmodifiable tracks
-                    dataNew.addTrack(new ImmutableGpxTrack(new ArrayList<>(trk.getSegments()), attrib));
+                    dataNew.addTrack(new GpxTrack(new ArrayList<>(trk.getSegments()), attrib));
                 }
 
                 data = dataNew;

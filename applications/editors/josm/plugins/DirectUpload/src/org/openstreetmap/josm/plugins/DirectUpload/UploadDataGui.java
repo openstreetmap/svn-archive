@@ -24,6 +24,7 @@ import javax.swing.JPanel;
 import org.openstreetmap.josm.data.gpx.GpxConstants;
 import org.openstreetmap.josm.data.gpx.GpxData;
 import org.openstreetmap.josm.data.gpx.GpxTrack;
+import org.openstreetmap.josm.data.gpx.IGpxTrack;
 import org.openstreetmap.josm.gui.ExtendedDialog;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.PleaseWaitRunnable;
@@ -177,7 +178,7 @@ public class UploadDataGui extends ExtendedDialog {
       String description = "", title = " ", tags = "";
       // non-breaking space in title fixes #10275
       if (gpxData != null) {
-          GpxTrack firstTrack = gpxData.tracks.isEmpty() ? null : gpxData.tracks.iterator().next();
+          IGpxTrack firstTrack = gpxData.tracks.isEmpty() ? null : gpxData.tracks.iterator().next();
           Object meta_desc = gpxData.attr.get(GpxConstants.META_DESC);
           if (meta_desc != null) {
               description = meta_desc.toString();

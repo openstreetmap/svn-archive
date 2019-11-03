@@ -4,15 +4,16 @@ package livegps;
 import java.util.Collection;
 
 import org.openstreetmap.josm.data.Bounds;
-import org.openstreetmap.josm.data.gpx.GpxTrackSegment;
+import org.openstreetmap.josm.data.gpx.IGpxTrackSegment;
 import org.openstreetmap.josm.data.gpx.WayPoint;
+import org.openstreetmap.josm.data.gpx.WithAttributes;
 import org.openstreetmap.josm.tools.CopyList;
 
 /**
  * Thread safe implementation of GpxTrackSegement
  *
  */
-public class AppendableGpxTrackSegment implements GpxTrackSegment {
+public class AppendableGpxTrackSegment extends WithAttributes implements IGpxTrackSegment {
 
     private WayPoint[] wayPoints = new WayPoint[16];
     private int size;

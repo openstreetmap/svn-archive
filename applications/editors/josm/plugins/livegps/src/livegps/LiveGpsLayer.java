@@ -14,7 +14,7 @@ import java.util.Map;
 
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.gpx.GpxData;
-import org.openstreetmap.josm.data.gpx.GpxTrack;
+import org.openstreetmap.josm.data.gpx.IGpxTrack;
 import org.openstreetmap.josm.data.gpx.WayPoint;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.layer.GpxLayer;
@@ -50,7 +50,7 @@ public class LiveGpsLayer extends GpxLayer implements PropertyChangeListener {
         Map<String, Object> attr = new HashMap<>();
         attr.put("desc", "josm live gps");
 
-        GpxTrack trackBeingWritten = new SingleSegmentGpxTrack(trackSegment, attr);
+        IGpxTrack trackBeingWritten = new SingleSegmentGpxTrack(trackSegment, attr);
         data.tracks.add(trackBeingWritten);
 
         initIntervals();

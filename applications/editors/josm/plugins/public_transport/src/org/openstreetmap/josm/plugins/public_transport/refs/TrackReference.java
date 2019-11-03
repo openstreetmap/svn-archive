@@ -13,7 +13,7 @@ import org.openstreetmap.josm.command.ChangeCommand;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.data.UndoRedoHandler;
 import org.openstreetmap.josm.data.coor.LatLon;
-import org.openstreetmap.josm.data.gpx.GpxTrack;
+import org.openstreetmap.josm.data.gpx.IGpxTrack;
 import org.openstreetmap.josm.data.gpx.IGpxTrackSegment;
 import org.openstreetmap.josm.data.gpx.WayPoint;
 import org.openstreetmap.josm.data.osm.Node;
@@ -23,7 +23,7 @@ import org.openstreetmap.josm.plugins.public_transport.dialogs.StopImporterDialo
 import org.openstreetmap.josm.plugins.public_transport.models.TrackStoplistTableModel;
 
 public class TrackReference implements Comparable<TrackReference>, TableModelListener {
-    public GpxTrack track;
+    public IGpxTrack track;
 
     public TrackStoplistTableModel stoplistTM;
 
@@ -39,7 +39,7 @@ public class TrackReference implements Comparable<TrackReference>, TableModelLis
 
     public boolean inEvent = false;
 
-    public TrackReference(GpxTrack track, StopImporterAction controller) {
+    public TrackReference(IGpxTrack track, StopImporterAction controller) {
         this.track = track;
         this.stoplistTM = new TrackStoplistTableModel(this);
         this.stopwatchStart = "00:00:00";
@@ -70,7 +70,7 @@ public class TrackReference implements Comparable<TrackReference>, TableModelLis
         this.threshold = 20;
     }
 
-    public GpxTrack getGpxTrack() {
+    public IGpxTrack getGpxTrack() {
         return track;
     }
 

@@ -27,7 +27,7 @@ import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.data.UndoRedoHandler;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.gpx.GpxData;
-import org.openstreetmap.josm.data.gpx.GpxTrack;
+import org.openstreetmap.josm.data.gpx.IGpxTrack;
 import org.openstreetmap.josm.data.gpx.WayPoint;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
@@ -209,9 +209,9 @@ public class StopImporterAction extends JosmAction {
         tracksListModel.clear();
         if (data != null) {
             Vector<TrackReference> trackRefs = new Vector<>();
-            Iterator<GpxTrack> trackIter = data.tracks.iterator();
+            Iterator<IGpxTrack> trackIter = data.tracks.iterator();
             while (trackIter.hasNext()) {
-                GpxTrack track = trackIter.next();
+                IGpxTrack track = trackIter.next();
                 trackRefs.add(new TrackReference(track, this));
             }
 

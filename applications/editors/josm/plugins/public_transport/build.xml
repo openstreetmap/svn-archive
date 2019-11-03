@@ -4,7 +4,7 @@
     <!-- enter the SVN commit message -->
     <property name="commit.message" value="Commit message"/>
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
-    <property name="plugin.main.version" value="15496"/>
+    <property name="plugin.main.version" value="15502"/>
 
     <property name="plugin.author" value="Roland M. Olbricht"/>
     <property name="plugin.class" value="org.openstreetmap.josm.plugins.public_transport.PublicTransportPlugin"/>

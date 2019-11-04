@@ -297,7 +297,14 @@ public class JMapViewer extends JPanel implements TileLoaderListener {
         int yMin = Integer.MAX_VALUE;
         int xMax = Integer.MIN_VALUE;
         int yMax = Integer.MIN_VALUE;
-        int mapZoomMax = tileController.getTileSource().getMaxZoom();
+        /*
+         *  Cap mapZoomMax at highest level that prevents overflowing int in X and Y coordinates. As int is from -2^31..2^31.
+         *  Log_2(TileSize) is how many bits are used due to tile size. Math.log(TileSize) / Math.log(2) gives Log_2(TileSize)
+         *  So 31 - tileSizeBits gives maximum zoom that can be handled without overflowing.
+         *  It means 23 for 256 tile size or 22 for 512 tile size
+         */
+        int tileSizeBits = (int) (Math.log(tileController.getTileSource().getDefaultTileSize()) / Math.log(2));
+        int mapZoomMax =  Math.min(31 - tileSizeBits, tileController.getTileSource().getMaxZoom());
 
         if (markers && mapMarkerList != null) {
             synchronized (this) {

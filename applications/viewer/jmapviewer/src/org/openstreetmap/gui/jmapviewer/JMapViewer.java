@@ -304,7 +304,7 @@ public class JMapViewer extends JPanel implements TileLoaderListener {
          *  It means 23 for 256 tile size or 22 for 512 tile size
          */
         int tileSizeBits = (int) (Math.log(tileController.getTileSource().getDefaultTileSize()) / Math.log(2));
-        int mapZoomMax =  Math.min(31 - tileSizeBits, tileController.getTileSource().getMaxZoom());
+        int mapZoomMax = Math.min(31 - tileSizeBits, tileController.getTileSource().getMaxZoom());
 
         if (markers && mapMarkerList != null) {
             synchronized (this) {

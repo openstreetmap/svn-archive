@@ -120,22 +120,23 @@ public class IndoorHelperModel {
      * @param object the object which defines the tag-set you want to add
      */
     public void addTagsToOSM(IndoorObject object) {
+        DataSet editDataSet = MainApplication.getLayerManager().getEditDataSet();
+        if (editDataSet != null) {
+            Collection<OsmPrimitive> selection = OsmDataManager.getInstance().getInProgressSelection();
+            if (!editDataSet.selectionEmpty() && !selection.isEmpty()) {
+                List<Tag> tags = this.getObjectTags(object);
 
-        if (!MainApplication.getLayerManager().getEditDataSet().selectionEmpty() &&
-                !OsmDataManager.getInstance().getInProgressSelection().isEmpty()) {
-            List<Tag> tags = this.getObjectTags(object);
+                //Increment the counter for the presets
+                this.counter.count(object);
 
-            //Increment the counter for the presets
-            this.counter.count(object);
-
-            //Add the tags to the current selection
-            for (Tag t : tags) {
-                UndoRedoHandler.getInstance().add(new ChangePropertyCommand(
-                        OsmDataManager.getInstance().getInProgressSelection(), t.getKey(), t.getValue()));
+                //Add the tags to the current selection
+                for (Tag t : tags) {
+                    UndoRedoHandler.getInstance().add(new ChangePropertyCommand(selection, t.getKey(), t.getValue()));
+                }
+            //If the selected dataset ist empty
+            } else if (editDataSet.selectionEmpty()) {
+                JOptionPane.showMessageDialog(null, tr("No data selected."), tr("Error"), JOptionPane.ERROR_MESSAGE);
             }
-        //If the selected dataset ist empty
-        } else if (MainApplication.getLayerManager().getEditDataSet().selectionEmpty()) {
-            JOptionPane.showMessageDialog(null, tr("No data selected."), tr("Error"), JOptionPane.ERROR_MESSAGE);
         }
     }
 

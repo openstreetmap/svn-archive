@@ -283,7 +283,7 @@ public class MultiTagDialog extends ExtendedDialog implements DataSelectionListe
         @Override
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
             Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-            if (c instanceof JLabel) {
+            if (c instanceof JLabel && value instanceof OsmPrimitiveType) {
                 ((JLabel) c).setIcon(ImageProvider.get((OsmPrimitiveType) value));
                 ((JLabel) c).setText("");
             }

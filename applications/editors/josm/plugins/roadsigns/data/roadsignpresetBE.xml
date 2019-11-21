@@ -457,7 +457,7 @@
   <sign ref="BE:C24b"
     name="Hazardous explosive cargo prohibited"
     nl.name="Verboden toegang voor bestuurders van voertuigen die gevaarlijke ontvlambare of ontplofbare stoffen vervoeren">
-    <tag key=" 	access:explosives" value="no" ident="mode"/>
+    <tag key="access:explosives" value="no" ident="mode"/>
     <supplementary id="BE:Type_Ia"/> <!--Coming up in x m"-->
     <supplementary id="BE:ZONE"/>
   </sign>
@@ -560,7 +560,7 @@
     name="End of overtaking prohibition"
     nl.name="Einde verbod op voorbijsteken"
     wiki="Key:overtaking"
-	help="No specific tags needed, as overtaking=yes is assumed default ">
+	help="No specific tags needed, as overtaking=yes is assumed default.">
     <supplementary id="BE:ZONE"/>
   </sign>
   <sign ref="BE:C39"
@@ -577,7 +577,7 @@
     name="End of overtaking prohibition for trucks"
     nl.name="Einde verbod op voorbijsteken voor vrachtwagens +3.5t"
     wiki="Key:overtaking"
-	help="No specific tags needed, as overtaking=yes is assumed default ">
+	help="No specific tags needed, as overtaking=yes is assumed default.">
    <supplementary id="BE:ZONE"/>
   </sign>
   <sign ref="BE:C43"
@@ -1423,7 +1423,7 @@
   <sign ref="BE:M4"
     name="Not oneway for bicycles"
     nl.name="Fietsers toegelaten in beide richtingen"
-    help="Check ONEWAY tags and way direction!!! Placed under sign F19: when cyclists are allowed to ride in both directions on a one-way road "
+    help="Check ONEWAY tags and way direction!!! Placed under sign F19: when cyclists are allowed to ride in both directions on a one-way road."
     supplementary="yes">
     <tag key="oneway:bicycle" value="no"/>
   </sign>

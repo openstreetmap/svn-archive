@@ -64,14 +64,22 @@ public class UntaggedGeoImageLayerAction
     }
 
     /**
-     * Check if there is any image without coordinates.
+     * Determine if the action should be enabled. That is the case if there is
+     * any image without coordinates and any image with coordinates.
      * @param layer geo image layer
      * @return {@code true} if there is any image without coordinates
      */
     private static boolean enabled(GeoImageLayer layer) {
         if (layer != null) {
+            boolean hasNoPos = false;
+            boolean hasPos = false;
             for (ImageEntry img: layer.getImages()) {
                 if (img.getPos() == null) {
+                    hasNoPos = true;
+                } else {
+                    hasPos = true;
+                }
+                if (hasNoPos && hasPos) {
                     return true;
                 }
             }

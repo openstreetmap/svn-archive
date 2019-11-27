@@ -62,6 +62,10 @@ public class LatLonDialog extends ExtendedDialog {
     private static final String MIN = "\u2032";
     private static final String SEC = "\u2033";
 
+    // typographical quotes - see #18361
+    private static final String MIN_TYPO = "\u2019";
+    private static final String SEC_TYPO = "\u201D";
+
     private static final char N_TR = LatLonParser.NORTH.charAt(0);
     private static final char S_TR = LatLonParser.SOUTH.charAt(0);
     private static final char E_TR = LatLonParser.EAST.charAt(0);
@@ -71,8 +75,8 @@ public class LatLonDialog extends ExtendedDialog {
             "([+|-]?\\d+[.,]\\d+)|"             // (1)
             + "([+|-]?\\d+)|"                   // (2)
             + "("+DEG+"|o|deg)|"                // (3)
-            + "('|"+MIN+"|min)|"                // (4)
-            + "(\"|"+SEC+"|sec)|"               // (5)
+            + "('|"+MIN+'|'+MIN_TYPO+"|min)|"   // (4)
+            + "(\"|"+SEC+'|'+SEC_TYPO+"|sec)|"  // (5)
             + "(,|;)|"                          // (6)
             + "([NSEW"+N_TR+S_TR+E_TR+W_TR+"])|"// (7)
             + "\\s+|"

@@ -18,6 +18,9 @@
 
 package model;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import org.openstreetmap.josm.data.osm.Tag;
 
 /**
@@ -29,6 +32,8 @@ import org.openstreetmap.josm.data.osm.Tag;
  */
 
 public class IndoorLevel {
+
+    private static final Pattern RANGE = Pattern.compile("(-?[0-9]+)-(-?[0-9]+)");
 
     private Tag levelNumberTag;
     private Tag nameTag;
@@ -118,14 +123,12 @@ public class IndoorLevel {
     public static boolean isPartOfWorkingLevel(String vals, int level) {
         for (String val : vals.split(";")) {
             int firstVal, secVal;
+            Matcher m = RANGE.matcher(val);
 
             //Extract values
-            if (val.indexOf("-") == 0) {
-                firstVal = Integer.parseInt(val.split("-", 2)[1].split("-", 2)[0])*-1;
-                secVal = Integer.parseInt(val.split("-", 2)[1].split("-", 2)[1]);
-            } else if (val.contains("-")) {
-                firstVal = Integer.parseInt(val.split("-")[0]);
-                secVal = Integer.parseInt(val.split("-")[1]);
+            if (m.matches()) {
+                firstVal = Integer.parseInt(m.group(1));
+                secVal = Integer.parseInt(m.group(2));
             } else {
                 firstVal = Integer.parseInt(val);
                 secVal = firstVal;

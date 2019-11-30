@@ -16,6 +16,15 @@ public class IndoorLevelTest {
      */
     @Test
     public void testIsPartOfWorkingLevel() {
+        assertTrue(IndoorLevel.isPartOfWorkingLevel("-3--1", -3));
+        assertTrue(IndoorLevel.isPartOfWorkingLevel("-3--1", -2));
+        assertTrue(IndoorLevel.isPartOfWorkingLevel("-3--1", -1));
+        assertFalse(IndoorLevel.isPartOfWorkingLevel("-3--1", 0));
+
+        assertTrue(IndoorLevel.isPartOfWorkingLevel("-1;0;1", -1));
+        assertTrue(IndoorLevel.isPartOfWorkingLevel("-1;0;1", 0));
+        assertTrue(IndoorLevel.isPartOfWorkingLevel("-1;0;1", 1));
+
         assertFalse(IndoorLevel.isPartOfWorkingLevel("1;2", 0));
         assertTrue(IndoorLevel.isPartOfWorkingLevel("1;2", 1));
         assertTrue(IndoorLevel.isPartOfWorkingLevel("1;2", 2));

@@ -66,7 +66,6 @@ public class OhePlugin extends Plugin {
             {"collection_times:local", ".*", "collection_times:local"},
             {"shop", ".*", "opening_hours"},
             {"amenity", "post_box", "collection_times"},
-            {"amenity", "recycling", "collection_times"},
             {"amenity", ".*", "opening_hours"},
             {"lit", ".*", "lit"},
             {"highway", ".*", "lit"} };

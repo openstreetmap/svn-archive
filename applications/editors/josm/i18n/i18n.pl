@@ -276,6 +276,11 @@ sub checkstring
     warn "JAVA translation issue for language $la: CDATA in string:\nTranslated text: ".decode("utf8",$tr)."\nOriginal text: ".decode("utf8",$en)."\n";
     $error = 1;
   }
+  if($tr =~ /\\r/)
+  {
+    warn "JAVA translation issue for language $la: \\r in string:\nTranslated text: ".decode("utf8",$tr)."\nOriginal text: ".decode("utf8",$en)."\n";
+    $error = 1;
+  }
   # Test two - check if there are {..} which should not be
   my @fmt = ();
   my $fmt;

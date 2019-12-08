@@ -10,15 +10,15 @@ fr.datagouvfr.jar;https://svn.openstreetmap.org/applications/editors/josm/plugin
 	Module-Date: 2018-03-24T17:17:57.572233Z
 	Module-Link: https://wiki.openstreetmap.org/wiki/WikiProject_France/data.gouv.fr
 fr.paris.jar;https://svn.openstreetmap.org/applications/editors/josm/plugins/opendata/dist/fr.paris.jar
-	Ant-Version: Apache Ant 1.10.3
+	Ant-Version: Apache Ant 1.10.5
 	Module-Class: org.openstreetmap.josm.plugins.opendata.modules.fr.paris.ParisModule
 	Module-Description: Paris
 	Author: Don-vip
 	Module-Icon: images/data.fr.paris_24.png
-	Module-Version: 34095
-	Created-By: 1.8.0_181-b13 (Oracle Corporation)
+	Module-Version: 35244
+	Created-By: 1.8.0_212-b03 ()
 	Manifest-Version: 1.0
-	Module-Date: 2018-03-24T17:17:57.572233Z
+	Module-Date: 2019-12-08T15:04:09.283577Z
 fr.toulouse.jar;https://svn.openstreetmap.org/applications/editors/josm/plugins/opendata/dist/fr.toulouse.jar
 	Ant-Version: Apache Ant 1.10.3
 	Module-Class: org.openstreetmap.josm.plugins.opendata.modules.fr.toulouse.ToulouseModule

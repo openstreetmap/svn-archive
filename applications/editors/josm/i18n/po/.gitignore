@@ -4,3 +4,7 @@
 /plugins.pot
 /*.po
 /*~
+/core+maplist+presets.pot
+/maplist.pot
+/pluginlist.pot
+/presets.pot

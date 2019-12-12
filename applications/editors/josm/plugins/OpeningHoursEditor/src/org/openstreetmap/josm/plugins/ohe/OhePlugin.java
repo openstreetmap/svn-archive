@@ -62,8 +62,10 @@ public class OhePlugin extends Plugin {
      */
     private final String[][] TAG_EDIT_STRINGS = new String[][] {
             {"opening_hours", ".*", "opening_hours"},
+            {"opening_hours:kitchen", ".*", "opening_hours:kitchen"},
             {"collection_times", ".*", "collection_times"},
             {"collection_times:local", ".*", "collection_times:local"},
+            {"service_times", ".*", "service_times"},
             {"shop", ".*", "opening_hours"},
             {"amenity", "post_box", "collection_times"},
             {"amenity", ".*", "opening_hours"},
@@ -197,7 +199,7 @@ public class OhePlugin extends Plugin {
             sp.setViewportView(propertyTable);
 
             final JComboBox<String> newTagField = new JComboBox<>(new String[]{
-                    "opening_hours", "collection_times", "collection_times:local", "service_times", "lit"});
+                    "opening_hours", "opening_hours:kitchen", "collection_times", "collection_times:local", "service_times", "lit"});
 
             JRadioButton editButton = new JRadioButton(new AbstractAction(tr("edit existing tag")) {
                 @Override

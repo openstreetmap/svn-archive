@@ -37,8 +37,8 @@ public class WaypointDialog {
         optionPane.addPropertyChangeListener(e -> {
             String prop = e.getPropertyName();
 
-            if (dialog.isVisible() && (e.getSource() == optionPane)
-                            && (prop.equals(JOptionPane.VALUE_PROPERTY))) {
+            if (dialog.isVisible() && e.getSource() == optionPane
+                            && prop.equals(JOptionPane.VALUE_PROPERTY)) {
                 // If you were going to check something
                 // before closing the window, you'd do it here.
                 dialog.setVisible(false);

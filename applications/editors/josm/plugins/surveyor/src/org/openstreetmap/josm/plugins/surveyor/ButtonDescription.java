@@ -174,7 +174,7 @@ public class ButtonDescription {
 
         String actionName = tr(getLabel()) + " (" + hotkey + ")";
 
-        Icon icon = ImageProvider.getIfAvailable(null, iconName);
+        Icon icon = ImageProvider.getIfAvailable(iconName);
         if (icon == null)
             icon = ImageProvider.getIfAvailable("markers", iconName);
         if (icon == null)

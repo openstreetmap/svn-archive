@@ -355,7 +355,7 @@ class FastDrawingMode extends MapMode implements MapViewPaintable, KeyPressRelea
         }
 
         if (!drawing) {
-            if (dragNode >= 0) {
+            if (dragNode >= 0 && dragNode < line.getPointCount()) {
                 line.moveNode(dragNode, getLatLon(e));
                 repaint();
                 return;
@@ -563,7 +563,7 @@ class FastDrawingMode extends MapMode implements MapViewPaintable, KeyPressRelea
                     cmds.add(new AddCommand(ds, nd));
                 }
             }
-            if (nd.getCoor().isOutSideWorld()) {
+            if (nd.isOutSideWorld()) {
                 JOptionPane.showMessageDialog(MainApplication.getMainFrame(),
                         tr("Cannot place node outside of the world."));
                 return;

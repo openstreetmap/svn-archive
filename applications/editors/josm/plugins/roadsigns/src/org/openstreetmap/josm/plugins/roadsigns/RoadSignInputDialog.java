@@ -10,7 +10,6 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.beans.XMLDecoder;
@@ -58,7 +57,6 @@ import javax.swing.border.EtchedBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.HyperlinkEvent;
-import javax.swing.event.HyperlinkListener;
 import javax.swing.table.AbstractTableModel;
 
 import org.openstreetmap.josm.command.ChangePropertyCommand;
@@ -118,7 +116,7 @@ class RoadSignInputDialog extends ExtendedDialog {
 
         this.signs = RoadSignsPlugin.signs;
         sel = new SignSelection();
-        setButtonIcons(new String[] {"ok.png", "cancel.png"});
+        setButtonIcons("ok.png", "cancel.png");
         final JTabbedPane tabs = new JTabbedPane();
         tabs.add(tr("signs"), buildSignsPanel());
         Action updateAction = new AbstractAction() {
@@ -246,14 +244,11 @@ class RoadSignInputDialog extends ExtendedDialog {
         info.setContentType("text/html");
         info.setText(" ");
         info.setBackground(this.getBackground());
-        info.addHyperlinkListener(new HyperlinkListener() {
-            @Override
-            public void hyperlinkUpdate(HyperlinkEvent e) {
-                if (e == null || e.getURL() == null)
-                    return;
-                if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
-                    OpenBrowser.displayUrl(e.getURL().toString());
-                }
+        info.addHyperlinkListener(e -> {
+            if (e == null || e.getURL() == null)
+                return;
+            if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
+                OpenBrowser.displayUrl(e.getURL().toString());
             }
         });
 
@@ -593,12 +588,7 @@ class RoadSignInputDialog extends ExtendedDialog {
 
         addTrafficSignTag = new JCheckBox(tr("{0} tag", "traffic_sign"));
         addTrafficSignTag.setSelected(Config.getPref().getBoolean("plugin.roadsigns.addTrafficSignTag"));
-        addTrafficSignTag.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                previewModel.update();
-            }
-        });
+        addTrafficSignTag.addActionListener(e -> previewModel.update());
 
         previewPanel.add(scroll, GBC.eol().fill());
         previewPanel.add(addTrafficSignTag, GBC.eol());
@@ -719,7 +709,7 @@ class RoadSignInputDialog extends ExtendedDialog {
                             if (t.append_value != null) {
                                 TagEvaluater te = tags.get(t.tag_ref);
                                 if (te == null) {
-                                    System.err.println(String.format("warning: referenced tag with ident '%s' not found for appending tag %s.",
+                                    Logging.warn(String.format("referenced tag with ident '%s' not found for appending tag %s.",
                                             t.tag_ref, t.toString()));
                                 } else {
                                     te.append_value(t.append_value.evaluate(env));
@@ -727,13 +717,13 @@ class RoadSignInputDialog extends ExtendedDialog {
                             } else if (t.condition != null) {
                                 TagEvaluater te = tags.get(t.tag_ref);
                                 if (te == null) {
-                                    System.err.println(String.format("warning: referenced tag with ident '%s' not found for condition tag %s.",
+                                    Logging.warn(String.format("referenced tag with ident '%s' not found for condition tag %s.",
                                             t.tag_ref, t.toString()));
                                 } else {
                                     te.condition(t.condition.evaluate(env));
                                 }
                             } else {
-                                System.err.println(String.format("warning: found tag_ref but neither append_value nor condition for tag %s.",
+                                Logging.warn(String.format("found tag_ref but neither append_value nor condition for tag %s.",
                                         t.toString()));
                             }
                         } else if (t.ident != null) {
@@ -741,7 +731,7 @@ class RoadSignInputDialog extends ExtendedDialog {
                             env.put(t.ident+"_value", t.value.evaluate(env));
 
                             if (tags.get(t.ident) != null) {
-                                System.err.println(String.format("warning: tag identifier %s for %s already in use. ", t.ident, t.toString()));
+                                Logging.warn(String.format("tag identifier %s for %s already in use. ", t.ident, t.toString()));
                             }
                             tags.put(t.ident, new TagEvaluater(t));
                         } else {
@@ -792,12 +782,7 @@ class RoadSignInputDialog extends ExtendedDialog {
         public void mouseClicked(MouseEvent e) {
             info.setText(longText());
             /* scroll up again */
-            SwingUtilities.invokeLater(new Runnable() {
-                @Override
-                public void run() {
-                    scrollInfo.getVerticalScrollBar().setValue(0);
-                }
-            });
+            SwingUtilities.invokeLater(() -> scrollInfo.getVerticalScrollBar().setValue(0));
             sel.add(sign);
         }
 

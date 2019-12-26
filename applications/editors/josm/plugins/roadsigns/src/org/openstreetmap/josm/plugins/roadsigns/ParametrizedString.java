@@ -8,6 +8,7 @@ import java.util.Map;
 import org.openstreetmap.josm.plugins.roadsigns.javacc.ParamStringScanner;
 import org.openstreetmap.josm.plugins.roadsigns.javacc.ParseException;
 import org.openstreetmap.josm.plugins.roadsigns.javacc.TokenMgrError;
+import org.openstreetmap.josm.tools.Logging;
 
 /**
  * A parametrized string is a string that contains identifiers that can
@@ -75,12 +76,12 @@ public class ParametrizedString {
     protected void scan(String input) throws ParseException, TokenMgrError {
         List<StringOrParameter> tmp = null;
         tmp = ParamStringScanner.parseIt(input);
-        StringBuffer curString = new StringBuffer();
+        StringBuilder curString = new StringBuilder();
         for (StringOrParameter sp : tmp) {
             if (sp instanceof Prm) {
                 if (curString.length() > 0) {
                     token.add(new Str(curString.toString()));
-                    curString = new StringBuffer();
+                    curString = new StringBuilder();
                 }
                 token.add(sp);
             } else if (sp instanceof Str) {
@@ -104,7 +105,7 @@ public class ParametrizedString {
             } else if (t instanceof Prm) {
                 String val = env.get(((Prm) t).ident);
                 if (val == null) {
-                    System.err.println("Warning: Parameter not in environment: "+((Prm) t).ident+" ("+this.toString()+")");
+                    Logging.warn("Parameter not in environment: "+((Prm) t).ident+" ("+this.toString()+")");
                     Thread.dumpStack();
                     val = "<?>";
                 }

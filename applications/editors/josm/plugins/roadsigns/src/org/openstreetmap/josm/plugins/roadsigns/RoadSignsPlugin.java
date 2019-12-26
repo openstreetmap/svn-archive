@@ -34,6 +34,7 @@ import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
 import org.openstreetmap.josm.plugins.roadsigns.RoadSignInputDialog.SettingsPanel;
 import org.openstreetmap.josm.spi.preferences.Config;
+import org.openstreetmap.josm.tools.Logging;
 import org.openstreetmap.josm.tools.Shortcut;
 import org.openstreetmap.josm.tools.Utils;
 import org.xml.sax.SAXException;
@@ -47,6 +48,8 @@ public class RoadSignsPlugin extends Plugin {
 
     public static final PresetMetaData PRESET_BE = new PresetMetaData(
             "BE", tr("Belgium"), "resource://data/roadsignpresetBE.xml", "resource://images/BE/");
+    public static final PresetMetaData PRESET_CZ = new PresetMetaData(
+            "CZ", tr("Czech Republic"), "resource://data/roadsignpresetCZ.xml", "resource://images/CZ/");
     public static final PresetMetaData PRESET_ES = new PresetMetaData(
             "ES", tr("Spain"), "resource://data/roadsignpresetES.xml", "resource://images/ES/");
     public static final PresetMetaData PRESET_DE = new PresetMetaData(
@@ -55,7 +58,8 @@ public class RoadSignsPlugin extends Plugin {
             "PL", tr("Poland"), "resource://data/roadsignpresetPL.xml", "resource://images/PL/");
     public static final PresetMetaData PRESET_SK = new PresetMetaData(
             "SK", tr("Slovakia"), "resource://data/roadsignpresetSK.xml", "resource://images/SK/");
-    public static final Collection<PresetMetaData> DEFAULT_PRESETS = Arrays.asList(PRESET_BE, PRESET_ES, PRESET_DE, PRESET_PL, PRESET_SK);
+    public static final Collection<PresetMetaData> DEFAULT_PRESETS = Arrays.asList(
+            PRESET_BE, PRESET_CZ, PRESET_ES, PRESET_DE, PRESET_PL, PRESET_SK);
 
     public RoadSignsPlugin(PluginInformation info) {
         super(info);
@@ -92,8 +96,8 @@ public class RoadSignsPlugin extends Plugin {
         public void actionPerformed(ActionEvent e) {
             String code = Config.getPref().get("plugin.roadsigns.preset.selection", null);
             if (code == null) {
-                ExtendedDialog ed = new ExtendedDialog(MainApplication.getMainFrame(), tr("Settings"), new String[] {tr("Ok"), tr("Cancel")});
-                ed.setButtonIcons(new String[] {"ok", "cancel"});
+                ExtendedDialog ed = new ExtendedDialog(MainApplication.getMainFrame(), tr("Settings"), tr("Ok"), tr("Cancel"));
+                ed.setButtonIcons("ok", "cancel");
                 SettingsPanel settings = new SettingsPanel(true, null);
                 ed.setContent(settings);
                 ed.showDialog();
@@ -194,8 +198,7 @@ public class RoadSignsPlugin extends Plugin {
             if (Config.getPref().getBoolean("plugin.roadsigns.use_default_icon_source", true)) {
                 customIconDirs.add("resource://images/");
             }
-            PresetMetaData custom = new PresetMetaData("custom", tr("custom"), customFile, Utils.join(",", customIconDirs));
-            presetsData.add(custom);
+            presetsData.add(new PresetMetaData("custom", tr("custom"), customFile, Utils.join(",", customIconDirs)));
         } else {
             Config.getPref().put("plugin.roadsigns.sources.last", null);
         }
@@ -229,7 +232,7 @@ public class RoadSignsPlugin extends Plugin {
             signs = reader.parse();
 
         } catch (IOException ex) {
-            ex.printStackTrace();
+            Logging.error(ex);
             JOptionPane.showMessageDialog(
                     MainApplication.getMainFrame(),
                     tr("Could not read tagging preset source: ''{0}''", source),
@@ -238,7 +241,7 @@ public class RoadSignsPlugin extends Plugin {
             );
             throw ex;
         } catch (SAXException ex) {
-            ex.printStackTrace();
+            Logging.error(ex);
             JOptionPane.showMessageDialog(
                     MainApplication.getMainFrame(),
                     tr("Error parsing tagging preset from ''{0}'':\n", source)+ex.getMessage(),

@@ -33,9 +33,11 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import org.openstreetmap.josm.gui.tagging.presets.TaggingPreset;
+import org.openstreetmap.josm.gui.tagging.presets.TaggingPresetListener;
 import org.openstreetmap.josm.gui.tagging.presets.TaggingPresets;
+import org.openstreetmap.josm.tools.Destroyable;
 
-public class TabularPresetSelector extends JPanel {
+public class TabularPresetSelector extends JPanel implements TaggingPresetListener, Destroyable {
 
     private PresetsTable presetsTable = null;
     private JTextField tfFilter = null;
@@ -187,6 +189,7 @@ public class TabularPresetSelector extends JPanel {
         // load the set of presets and bind them to the preset table
         //
         bindTo(TaggingPresets.getTaggingPresets());
+        TaggingPresets.addListener(this);
         presetsTable.getSelectionModel().clearSelection();
         btnApply.setEnabled(false);
     }
@@ -263,5 +266,15 @@ public class TabularPresetSelector extends JPanel {
         getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
                 (KeyStroke) a.getValue(AbstractAction.ACCELERATOR_KEY), a.getValue(AbstractAction.NAME));
         getActionMap().put(a.getValue(AbstractAction.NAME), a);
+    }
+
+    @Override
+    public void destroy() {
+        TaggingPresets.removeListener(this);
+    }
+
+    @Override
+    public void taggingPresetsModified() {
+        bindTo(TaggingPresets.getTaggingPresets());
     }
 }

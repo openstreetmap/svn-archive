@@ -3,7 +3,6 @@ package org.openstreetmap.josm.plugins.surveyor.action;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
@@ -14,8 +13,8 @@ import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
 import org.openstreetmap.josm.gui.MainApplication;
+import org.openstreetmap.josm.io.CachedFile;
 import org.openstreetmap.josm.plugins.surveyor.GpsActionEvent;
-import org.openstreetmap.josm.plugins.surveyor.util.ResourceLoader;
 import org.openstreetmap.josm.tools.Logging;
 
 /**
@@ -31,12 +30,11 @@ public class PlayAudioAction extends AbstractSurveyorAction {
     public void actionPerformed(GpsActionEvent event) {
         // run as a separate thread
         MainApplication.worker.execute(() -> {
-            try {
-                if (audioSource == null) {
-                    audioSource = getParameters().get(0);
-                }
-                InputStream in = new BufferedInputStream(ResourceLoader.getInputStream(audioSource));
-                AudioInputStream stream = AudioSystem.getAudioInputStream(in);
+            if (audioSource == null) {
+                audioSource = getParameters().get(0);
+            }
+            try (CachedFile cf = new CachedFile(audioSource)) {
+                AudioInputStream stream = AudioSystem.getAudioInputStream(new BufferedInputStream(cf.getInputStream()));
 
                 // At present, ALAW and ULAW encodings must be converted
                 // to PCM_SIGNED before it can be played

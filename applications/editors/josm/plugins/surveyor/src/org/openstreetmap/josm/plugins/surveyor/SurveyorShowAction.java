@@ -22,7 +22,7 @@ import javax.swing.KeyStroke;
 
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.gui.MainApplication;
-import org.openstreetmap.josm.plugins.surveyor.util.ResourceLoader;
+import org.openstreetmap.josm.io.CachedFile;
 import org.openstreetmap.josm.spi.preferences.Config;
 import org.openstreetmap.josm.tools.Logging;
 import org.openstreetmap.josm.tools.Shortcut;
@@ -106,16 +106,13 @@ public class SurveyorShowAction extends JosmAction {
 
     }
 
-    public SurveyorComponent createComponent() {
+    public static SurveyorComponent createComponent() {
         String source = Config.getPref().get("surveyor.source");
-        if (source == null || source.length() == 0) {
+        if (source == null || source.isEmpty()) {
             source = DEFAULT_SOURCE;
             Config.getPref().put("surveyor.source", DEFAULT_SOURCE);
-            // <FIXXME date="04.05.2007" author="cdaller">
-            // TODO copy xml file to .josm directory if it does not exist!
-            // </FIXXME>
         }
-        try (InputStream in = ResourceLoader.getInputStream(source)) {
+        try (CachedFile cf = new CachedFile(source); InputStream in = cf.getInputStream()) {
             return createComponent(in);
         } catch (IOException e) {
             Logging.error(e);
@@ -133,7 +130,7 @@ public class SurveyorShowAction extends JosmAction {
      * @return the component.
      * @throws SAXException if the xml could not be read.
      */
-    public SurveyorComponent createComponent(InputStream in) throws SAXException {
+    public static SurveyorComponent createComponent(InputStream in) throws SAXException {
         XmlObjectParser parser = new XmlObjectParser();
         parser.mapOnStart("surveyor", SurveyorComponent.class);
         parser.map("button", ButtonDescription.class);
@@ -145,15 +142,12 @@ public class SurveyorShowAction extends JosmAction {
         while (parser.hasNext()) {
             Object object = parser.next();
             if (object instanceof SurveyorComponent) {
-                //System.out.println("SurveyorComponent " + object);
                 surveyorComponent = (SurveyorComponent) object;
             } else if (object instanceof ButtonDescription) {
-                //System.out.println("ButtonDescription " + object);
                 ((ButtonDescription) object).setActions(actions);
                 surveyorComponent.addButton(((ButtonDescription) object));
                 actions = new ArrayList<>();
             } else if (object instanceof SurveyorActionDescription) {
-                //System.out.println("SurveyorActionDescription " + object);
                 actions.add((SurveyorActionDescription) object);
             } else {
                 Logging.error("surveyor: unknown xml element: " + object);

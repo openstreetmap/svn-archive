@@ -63,7 +63,6 @@ public class SurveyorComponent extends JComponent implements PropertyChangeListe
      * @param columnsString the column string.
      */
     public void setColumns(String columnsString) {
-        System.out.println("setting columns to " +columnsString);
         columns = Integer.parseInt(columnsString);
         buttonPanel.setLayout(new GridLayout(rows, columns));
     }

@@ -174,13 +174,16 @@ public class ButtonDescription {
 
         String actionName = tr(getLabel()) + " (" + hotkey + ")";
 
-        Icon icon = ImageProvider.getIfAvailable(iconName);
-        if (icon == null)
-            icon = ImageProvider.getIfAvailable("markers", iconName);
-        if (icon == null)
-            icon = ImageProvider.getIfAvailable("symbols", iconName);
-        if (icon == null)
-            icon = ImageProvider.getIfAvailable("nodes", iconName);
+        Icon icon = null;
+        if (iconName != null) {
+            icon = ImageProvider.getIfAvailable(iconName);
+            if (icon == null)
+                icon = ImageProvider.getIfAvailable("markers", iconName);
+            if (icon == null)
+                icon = ImageProvider.getIfAvailable("symbols", iconName);
+            if (icon == null)
+                icon = ImageProvider.getIfAvailable("nodes", iconName);
+        }
 
         MetaAction action = new MetaAction(actionName, icon);
         action.setActions(actions);

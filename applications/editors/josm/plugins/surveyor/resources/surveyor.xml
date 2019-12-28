@@ -3,7 +3,7 @@
   <!-- icons can either be absolute paths or relative paths to the .josm directory -->
   <!-- action class: either fully qualified classnames or if not found,
        package at.dallermassl.josm.plugin.surveyor.action is assumed -->
-  <button label="Tunnel Start" hotkey="T" icon="styles/standard/vehicle/tunnel.png">
+  <button label="Tunnel Start" hotkey="T" icon="presets/transport/passage/tunnel.svg">
     <action class="PlayAudioAction" params="resource://audio/KDE_Window_Iconify.wav"/>
     <action class="SetWaypointAction" params="tunnel start"/>
     <!--action class="ConsolePrinterAction" params="tunnel start,tunnel"/-->
@@ -13,7 +13,7 @@
     <action class="PlayAudioAction" params="resource://audio/KDE_Window_Iconify.wav"/>
     <action class="SetWaypointAction" params="bridge"/>
   </button>
-  <button label="Village/City" hotkey="V" icon="styles/standard/place.png">
+  <button label="Village/City" hotkey="V" icon="presets/place/village.svg">
     <action class="PlayAudioAction" params="resource://audio/KDE_Window_Iconify.wav"/>
     <action class="SetWaypointAction" params="village"/>
     <!--
@@ -21,43 +21,39 @@
     <action class="AnnotationPresetAction" params="Places"/>
     -->
   </button>
-  <button label="Parking" hotkey="P" icon="styles/standard/vehicle/parking.png">
+  <button label="Parking" hotkey="P" icon="presets/vehicle/parking/parking.svg">
     <!--action class="SetNodeAction" params="amenity=parking"/-->
     <action class="PlayAudioAction" params="resource://audio/KDE_Window_Iconify.wav"/>
     <action class="SetWaypointAction" params="Parking"/>
   </button>
-  <button label="One Way" hotkey="O" icon="presets/oneway.png">
-    <action class="PlayAudioAction" params="resource://audio/KDE_Window_Iconify.wav"/>
-    <action class="SetWaypointAction" params="oneway=yes"/>
-  </button>
-  <button label="Church" hotkey="C" icon="styles/standard/religion/church.png">
+  <button label="Church" hotkey="C" icon="presets/religion/church.svg">
     <action class="PlayAudioAction" params="resource://audio/KDE_Window_Iconify.wav"/>
     <action class="SetNodeAction" params="amenity=place_of_worship,denomination=christian"/>
     <action class="SetWaypointAction" params="Church"/>
   </button>
-  <button label="Fuel Station" hotkey="F" icon="styles/standard/vehicle/fuel.png">
+  <button label="Fuel Station" hotkey="F" icon="presets/vehicle/fuel.svg">
     <!--action class="SetNodeAction" params="amenity=fuel"/-->
     <action class="PlayAudioAction" params="resource://audio/KDE_Window_Iconify.wav"/>
     <action class="SetWaypointAction" params="Fuel"/>
   </button>
-  <button label="Hotel" hotkey="H" icon="styles/standard/accommodation/hotel.png">
+  <button label="Hotel" hotkey="H" icon="presets/accommodation/hotel.svg">
     <action class="PlayAudioAction" params="resource://audio/KDE_Window_Iconify.wav"/>
     <action class="SetWaypointAction" params="Hotel"/>
   </button>
-  <button label="Restaurant" hotkey="R" icon="styles/standard/food/restaurant.png">
+  <button label="Restaurant" hotkey="R" icon="presets/food/restaurant.svg">
     <action class="PlayAudioAction" params="resource://audio/KDE_Window_Iconify.wav"/>
     <action class="SetNodeAction" params="amenity=restaurant"/>
     <action class="SetWaypointAction" params="Restaurant"/>
   </button>
-  <button label="Shopping" hotkey="S" icon="styles/standard/shop.png">
+  <button label="Shopping" hotkey="S" icon="presets/shop/mall.svg">
     <action class="PlayAudioAction" params="resource://audio/KDE_Window_Iconify.wav"/>
     <action class="SetWaypointAction" params="Info"/>
   </button>
-  <button label="WC" hotkey="W" icon="styles/standard/vehicle/parking/restarea_toilets.png">
+  <button label="WC" hotkey="W" icon="presets/service/toilets.svg">
     <action class="PlayAudioAction" params="resource://audio/KDE_Window_Iconify.wav"/>
     <action class="SetWaypointAction" params="Info"/>
   </button>
-  <button label="Camping" hotkey="Z" icon="styles/standard/accommodation/camping/caravan.png">
+  <button label="Camping" hotkey="Z" icon="presets/accommodation/caravan.svg">
     <action class="PlayAudioAction" params="resource://audio/KDE_Window_Iconify.wav"/>
     <action class="SetWaypointAction" params="Camping"/>
   </button>

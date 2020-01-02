@@ -2702,7 +2702,7 @@ public class SeaMark extends JPanel {
 
             UndoRedoHandler undoRedo = UndoRedoHandler.getInstance();
             for (String str : node.getKeys().keySet()) {
-                if (str.trim().matches("^seamark:\\S+")) {
+                if ((str.trim().matches("^seamark:\\S+")) || (str.trim().matches("^seamark$"))) {
                     undoRedo.add(new ChangePropertyCommand(node, str, null));
                 }
             }

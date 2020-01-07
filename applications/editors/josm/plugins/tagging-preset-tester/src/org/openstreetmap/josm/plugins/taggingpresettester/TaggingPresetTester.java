@@ -5,8 +5,6 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridBagLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -16,8 +14,6 @@ import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.DataSet;
@@ -79,24 +75,18 @@ public class TaggingPresetTester extends JFrame {
 
         panel.add(taggingPresets, GBC.std(0,0).fill(GBC.BOTH).weight(0.5, 1.0));
         panel.add(taggingPresetPanel, GBC.std(1,0).fill(GBC.BOTH).weight(0.5, 1.0));
-        taggingPresets.addSelectionListener(new ListSelectionListener(){
-            @Override
-            public void valueChanged(ListSelectionEvent e) {
-                if (!e.getValueIsAdjusting() && taggingPresets.getSelectedPreset() != null) {
-                    reselect();
-                }
+        taggingPresets.addSelectionListener(e -> {
+            if (!e.getValueIsAdjusting() && taggingPresets.getSelectedPreset() != null) {
+                reselect();
             }
         });
         reselect();
 
         JButton b = new JButton(tr("Reload"));
-        b.addActionListener(new ActionListener(){
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                TaggingPreset p = taggingPresets.getSelectedPreset();
-                reload();
-                if (p!=null)taggingPresets.setSelectedPreset(p);
-            }
+        b.addActionListener(e -> {
+            TaggingPreset p = taggingPresets.getSelectedPreset();
+            reload();
+            if (p!=null) taggingPresets.setSelectedPreset(p);
         });
         panel.add(b, GBC.std(0,1).span(2,1).fill(GBC.HORIZONTAL));
 
@@ -112,11 +102,9 @@ public class TaggingPresetTester extends JFrame {
                 return;
             args = new String[]{c.getSelectedFile().getPath()};
         }
-        if (args!=null) {
-            JFrame f = new TaggingPresetTester(args);
-            f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            f.setVisible(true);
-        }
+        JFrame f = new TaggingPresetTester(args);
+        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        f.setVisible(true);
     }
 
     private Collection<OsmPrimitive> makeFakeSuitablePrimitive(TaggingPreset preset) {

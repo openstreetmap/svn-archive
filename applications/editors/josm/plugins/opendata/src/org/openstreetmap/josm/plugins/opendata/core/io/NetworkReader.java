@@ -13,6 +13,7 @@ import java.util.regex.Pattern;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.io.AbstractReader;
+import org.openstreetmap.josm.io.GeoJSONReader;
 import org.openstreetmap.josm.io.OsmServerReader;
 import org.openstreetmap.josm.io.OsmTransferException;
 import org.openstreetmap.josm.plugins.opendata.core.OdConstants;
@@ -56,6 +57,8 @@ public class NetworkReader extends OsmServerReader {
         FILE_READERS.put(OdConstants.SHP_EXT, ShpReader.class);
         FILE_READERS.put(OdConstants.MIF_EXT, MifReader.class);
         FILE_READERS.put(OdConstants.TAB_EXT, TabReader.class);
+        FILE_READERS.put(OdConstants.JSON_EXT, GeoJSONReader.class);
+        FILE_READERS.put(OdConstants.GEOJSON_EXT, GeoJSONReader.class);
     }
 
     public static final Map<String, Class<? extends AbstractReader>> FILE_AND_ARCHIVE_READERS = new HashMap<>(FILE_READERS);
@@ -100,6 +103,8 @@ public class NetworkReader extends OsmServerReader {
             return SevenZipReader.class;
         } else if (contentType.startsWith("application/vnd.ms-excel")) {
             return XlsReader.class;
+        } else if (contentType.startsWith("application/geo+json") || contentType.startsWith("application/json")) {
+            return GeoJSONReader.class;
         } else if (contentType.startsWith("application/octet-stream")) {
             //return OdsReader.class;//FIXME, can be anything
         } else if (contentType.startsWith("text/csv")) {
@@ -158,6 +163,8 @@ public class NetworkReader extends OsmServerReader {
                 return KmlReader.parseDataSet(in, instance);
             } else if (readerClass.equals(KmzReader.class)) {
                 return KmzReader.parseDataSet(in, instance);
+            } else if (readerClass.equals(GeoJSONReader.class)) {
+                return GeoJSONReader.parseDataSet(in, instance);
             } else if (readerClass.equals(MifReader.class)) {
                 return MifReader.parseDataSet(in, null, handler, instance);
             } else if (readerClass.equals(ShpReader.class)) {

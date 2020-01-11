@@ -89,6 +89,8 @@ public abstract class OdConstants {
     public static final String SEVENZIP_EXT = "7z";
     public static final String JAR_EXT = "jar";
     public static final String XML_EXT = "xml";
+    public static final String JSON_EXT = "json";
+    public static final String GEOJSON_EXT = "geojson";
 
     /**
      * Protocols

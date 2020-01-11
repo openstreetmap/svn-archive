@@ -21,22 +21,22 @@ public class VoirieHandler extends ToulouseDataSetHandler {
     private String streetField;
 
     public VoirieHandler() {
-        this(12693, "lib_off", "highway");
+        this("filaire-de-voirie", "lib_off", "highway");
         setName("Filaire de voirie");
         setCategory(CAT_URBANISME);
         setMenuIcon("presets/transport/way/way_secondary.svg");
     }
 
-    protected VoirieHandler(int portalId, String streetField, String relevantTag) {
+    protected VoirieHandler(String portalId, String streetField, String relevantTag) {
         super(portalId, relevantTag);
         this.streetField = streetField;
-        map.put("motorway", Arrays.asList(new String[] {"A6", "AUTOROUTE "}));
-        map.put("trunk", Arrays.asList(new String[] {"ROCADE "}));
-        map.put("secondary", Arrays.asList(new String[] {"AV ", "BD ", "ALL ", "PONT ", "RTE ", "PORT ", "BOULINGRIN"}));
-        map.put("residential", Arrays.asList(new String[] {"RUE ", "GRANDE-RUE ", "PROM ", "CHE", "CAMINOT ", "IMP ", "COURS ",
-                "LOT ", "ANC", "VIEUX ", "PL ", "CLOS ", "CITE ", "RESIDENCE ", "SENTIER ", "QU ", "SQ ", "VOIE ", "ESP "}));
-        map.put("unclassified", Arrays.asList(new String[] {"ZONE "}));
-        map.put("road", Arrays.asList(new String[] {"VA "}));
+        map.put("motorway", Arrays.asList("A6", "AUTOROUTE "));
+        map.put("trunk", Arrays.asList("ROCADE "));
+        map.put("secondary", Arrays.asList("AV ", "BD ", "ALL ", "PONT ", "RTE ", "PORT ", "BOULINGRIN"));
+        map.put("residential", Arrays.asList("RUE ", "GRANDE-RUE ", "PROM ", "CHE", "CAMINOT ", "IMP ", "COURS ",
+                "LOT ", "ANC", "VIEUX ", "PL ", "CLOS ", "CITE ", "RESIDENCE ", "SENTIER ", "QU ", "SQ ", "VOIE ", "ESP "));
+        map.put("unclassified", Arrays.asList("ZONE "));
+        map.put("road", Arrays.asList("VA "));
     }
 
     @Override

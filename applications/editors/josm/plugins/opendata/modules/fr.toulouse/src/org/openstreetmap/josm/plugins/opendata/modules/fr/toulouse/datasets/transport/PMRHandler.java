@@ -8,7 +8,7 @@ import org.openstreetmap.josm.plugins.opendata.modules.fr.toulouse.datasets.Toul
 public class PMRHandler extends ToulouseDataSetHandler {
 
     public PMRHandler() {
-        super(12538, "amenity=parking_space");
+        super("pmr", "amenity=parking_space");
         setWikiPage("PMR");
         setCategory(CAT_TRANSPORT);
         setMenuIcon("presets/vehicle/parking/handicapped.svg");

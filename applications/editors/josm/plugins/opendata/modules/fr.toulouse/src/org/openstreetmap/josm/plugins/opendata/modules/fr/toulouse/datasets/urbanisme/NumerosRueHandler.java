@@ -14,7 +14,7 @@ import org.openstreetmap.josm.plugins.opendata.modules.fr.toulouse.datasets.Toul
 public class NumerosRueHandler extends ToulouseDataSetHandler {
 
     public NumerosRueHandler() {
-        super(12673, "addr:housenumber");
+        super("numero-de-rue", "addr:housenumber");
         setWikiPage("Numéros de rue");
         setCategory(CAT_URBANISME);
     }
@@ -27,7 +27,7 @@ public class NumerosRueHandler extends ToulouseDataSetHandler {
     @Override
     public void updateDataSet(DataSet ds) {
         Map<String, Relation> associatedStreets = new HashMap<>();
-        
+
         for (Node n : ds.getNodes()) {
             replace(n, "no", "addr:housenumber");
             n.remove("numero");

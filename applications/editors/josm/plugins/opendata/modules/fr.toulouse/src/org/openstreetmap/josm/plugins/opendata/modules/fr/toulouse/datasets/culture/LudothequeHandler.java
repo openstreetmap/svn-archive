@@ -8,11 +8,11 @@ import org.openstreetmap.josm.plugins.opendata.modules.fr.toulouse.datasets.Toul
 public class LudothequeHandler extends ToulouseDataSetHandler {
 
     public LudothequeHandler() {
-        super(12420, "amenity=toy_library");
+        super("ludotheques", "amenity=toy_library");
         setWikiPage("Ludothèques");
         setCategory(CAT_CULTURE);
     }
-    
+
     @Override
     public boolean acceptsFilename(String filename) {
         return acceptsCsvKmzTabFilename(filename, "Ludotheques");

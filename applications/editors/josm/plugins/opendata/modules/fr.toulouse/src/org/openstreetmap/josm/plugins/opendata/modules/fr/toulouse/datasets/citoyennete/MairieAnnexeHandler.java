@@ -5,9 +5,9 @@ import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 
 public class MairieAnnexeHandler extends MairieHandler {
-    
+
     public MairieAnnexeHandler() {
-        super(12560, "Mairies annexes");
+        super("mairies-annexes", "Mairies de quartier");
         setCategory(CAT_CITOYENNETE);
     }
 

@@ -8,7 +8,7 @@ import org.openstreetmap.josm.plugins.opendata.modules.fr.toulouse.datasets.urba
 public class AiresPietonnesHandler extends VoirieHandler {
 
     public AiresPietonnesHandler() {
-        super(19687, "Street", "highway=pedestrian");
+        super("aires-pietonnes", "Street", "highway=pedestrian");
         setName("Aires piétonnes");
         setCategory(CAT_TRANSPORT);
     }
@@ -21,7 +21,7 @@ public class AiresPietonnesHandler extends VoirieHandler {
     @Override
     public void updateDataSet(DataSet ds) {
         super.updateDataSet(ds);
-        
+
         for (Way w : ds.getWays()) {
             w.put("highway", "pedestrian");
             w.remove("Id_Seg_Ges");
@@ -38,7 +38,7 @@ public class AiresPietonnesHandler extends VoirieHandler {
             replace(w, "ref_arrete", "bylaw");
         }
     }
-    
+
     @Override
     protected String getStreetId(Way w) {
         return w.get("Nrivoli");

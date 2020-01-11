@@ -8,8 +8,8 @@ import org.openstreetmap.josm.plugins.opendata.modules.fr.toulouse.datasets.Toul
 public class QuartiersHandler extends ToulouseDataSetHandler {
 
     public QuartiersHandler() {
-        super(12574, "admin_level=11");
-        setWikiPage("Quartiers de proximité");
+        super("quartiers-de-democratie-locale0", "admin_level=11");
+        setWikiPage("Quartiers de démocratie locale");
         setCategory(CAT_CITOYENNETE);
         setMenuIcon("presets/misc/boundaries.svg");
     }

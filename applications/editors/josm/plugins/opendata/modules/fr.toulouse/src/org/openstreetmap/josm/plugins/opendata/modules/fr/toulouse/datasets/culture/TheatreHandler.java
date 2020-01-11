@@ -8,8 +8,8 @@ import org.openstreetmap.josm.plugins.opendata.modules.fr.toulouse.datasets.Toul
 public class TheatreHandler extends ToulouseDataSetHandler {
 
     public TheatreHandler() {
-        super(12448, "amenity=theatre");
-        setWikiPage("Théâtres");
+        super("theatres-et-salles-de-spectacles", "amenity=theatre");
+        setWikiPage("Théâtres et salles de spectacles");
         setCategory(CAT_CULTURE);
     }
 

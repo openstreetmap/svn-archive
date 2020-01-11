@@ -10,13 +10,14 @@ import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.plugins.opendata.core.OdConstants;
 import org.openstreetmap.josm.plugins.opendata.core.io.NeptuneReader;
 import org.openstreetmap.josm.plugins.opendata.modules.fr.toulouse.datasets.ToulouseDataSetHandler;
+import org.openstreetmap.josm.tools.Logging;
 
 public class ReseauTisseoHandler extends ToulouseDataSetHandler {
 
     private static final URL neptuneSchemaUrl = ReseauTisseoHandler.class.getResource(TOULOUSE_NEPTUNE_XSD);
-    
+
     public ReseauTisseoHandler() {
-        super(14022, "network=fr_tisseo");
+        super("tisseo-offre-de-transport-neptune", "network=fr_tisseo");
         NeptuneReader.registerSchema(neptuneSchemaUrl);
         setName("Réseau Tisséo (Métro, Bus, Tram)");
         setCategory(CAT_TRANSPORT);
@@ -27,10 +28,10 @@ public class ReseauTisseoHandler extends ToulouseDataSetHandler {
     public boolean acceptsFilename(String filename) {
         return acceptsZipFilename(filename, "14022-reseau-tisseo-metro-bus-tram-") || filename.toLowerCase().endsWith(OdConstants.XML_EXT);
     }
-    
+
     @Override
     public boolean acceptsFile(File file) {
-        return acceptsFilename(file.getName()) 
+        return acceptsFilename(file.getName())
                 && (file.getName().toLowerCase().endsWith(OdConstants.ZIP_EXT) || NeptuneReader.acceptsXmlNeptuneFile(file, neptuneSchemaUrl));
     }
 
@@ -44,7 +45,7 @@ public class ReseauTisseoHandler extends ToulouseDataSetHandler {
         try {
             return new URL("https://wiki.openstreetmap.org/wiki/Toulouse/Transports_en_commun#Réseau_Tisséo");
         } catch (MalformedURLException e) {
-            e.printStackTrace();
+            Logging.error(e);
         }
         return null;
     }

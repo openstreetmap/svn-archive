@@ -8,7 +8,7 @@ import org.openstreetmap.josm.plugins.opendata.modules.fr.toulouse.datasets.Toul
 public class BureauxVoteDecoupageHandler extends ToulouseDataSetHandler {
 
     public BureauxVoteDecoupageHandler() {
-        super(14401, "boundary=polling_station");
+        super("elections-2019-decoupage-des-bureaux-de-vote", "boundary=polling_station");
         setWikiPage("Découpage des bureaux de vote");
         setCategory(CAT_CITOYENNETE);
     }

@@ -9,7 +9,7 @@ import org.openstreetmap.josm.plugins.opendata.modules.fr.toulouse.datasets.Toul
 public class MuseeHandler extends ToulouseDataSetHandler {
 
     public MuseeHandler() {
-        super(12426, "tourism=museum");
+        super("musees", "tourism=museum");
         setWikiPage("Musées");
         setCategory(CAT_CULTURE);
     }

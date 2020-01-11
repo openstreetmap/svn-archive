@@ -8,7 +8,7 @@ import org.openstreetmap.josm.plugins.opendata.modules.fr.toulouse.datasets.Toul
 public class PointsLumineuxHandler extends ToulouseDataSetHandler {
 
     public PointsLumineuxHandler() {
-        super(25051, "highway=street_lamp");
+        super("points-lumineux", "highway=street_lamp");
         setName("Points lumineux");
         setCategory(CAT_SERVICES);
     }

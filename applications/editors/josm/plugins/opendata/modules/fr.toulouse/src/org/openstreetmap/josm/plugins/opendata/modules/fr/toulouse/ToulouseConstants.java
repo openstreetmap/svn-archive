@@ -4,7 +4,7 @@ package org.openstreetmap.josm.plugins.opendata.modules.fr.toulouse;
 import org.openstreetmap.josm.plugins.opendata.core.datasets.fr.FrenchConstants;
 
 public interface ToulouseConstants extends FrenchConstants {
-    
+
     /**
      * Sources and Refs
      */
@@ -12,7 +12,7 @@ public interface ToulouseConstants extends FrenchConstants {
     public static final String SOURCE_TOULOUSE_METROPOLE = "ToulouseMetropole";
     public static final String SOURCE_TISSEO = "Tisséo SMTC";
     public static final String REF_TOULOUSE_METROPOLE = "ref:FR:ToulouseMetropole";
-    
+
     /**
      * Wiki
      */
@@ -21,7 +21,7 @@ public interface ToulouseConstants extends FrenchConstants {
     /**
      * Portal
      */
-    public static final String PORTAL = "http://data.toulouse-metropole.fr";
+    public static final String PORTAL = "https://data.toulouse-metropole.fr";
 
     /**
      * Icons

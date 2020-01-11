@@ -6,9 +6,9 @@ import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.plugins.opendata.modules.fr.toulouse.datasets.urbanisme.VoirieHandler;
 
 public class Zone30Handler extends VoirieHandler {
-    
+
     public Zone30Handler() {
-        super(12548, "Street", "maxspeed=30");
+        super("zones-30", "Street", "maxspeed=30");
         setWikiPage("Zones 30");
         setCategory(CAT_TRANSPORT);
     }
@@ -17,11 +17,11 @@ public class Zone30Handler extends VoirieHandler {
     public boolean acceptsFilename(String filename) {
         return acceptsKmzTabFilename(filename, "Zone30");
     }
-    
+
     @Override
     public void updateDataSet(DataSet ds) {
         super.updateDataSet(ds);
-        
+
         for (Way w : ds.getWays()) {
             w.put("zone:maxspeed", "FR:30");
             w.put("maxspeed", "30");

@@ -9,8 +9,8 @@ import org.openstreetmap.josm.plugins.opendata.modules.fr.toulouse.datasets.Toul
 public class MarchesPleinVentHandler extends ToulouseDataSetHandler {
 
     public MarchesPleinVentHandler() {
-        super(19640, "amenity=marketplace");
-        setName("Marchés de plein vent");
+        super("marches-couverts-et-de-plein-vent", "amenity=marketplace");
+        setName("Marchés couverts et de plein-vent");
         setCategory(CAT_SERVICES);
         setSingleProjection(wgs84);
     }

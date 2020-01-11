@@ -8,7 +8,7 @@ import org.openstreetmap.josm.plugins.opendata.modules.fr.toulouse.datasets.Toul
 public class Parcelles1680Handler extends ToulouseDataSetHandler {
 
     public Parcelles1680Handler() {
-        super(12514);
+        super("parcellaire-de-1680");
         setName("Parcellaire de 1680");
         setCategory(CAT_PATRIMOINE);
     }

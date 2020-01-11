@@ -8,7 +8,7 @@ import org.openstreetmap.josm.plugins.opendata.modules.fr.toulouse.datasets.Toul
 public class TramwayStationHandler extends ToulouseDataSetHandler {
 
     public TramwayStationHandler() {
-        super(12611, "tram=yes");
+        super("stations-de-tramway", "tram=yes");
         setName("Stations de tramway");
         setCategory(CAT_TRANSPORT);
         setMenuIcon("presets/transport/railway_station.svg");

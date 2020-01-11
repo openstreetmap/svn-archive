@@ -8,7 +8,7 @@ import org.openstreetmap.josm.plugins.opendata.modules.fr.toulouse.datasets.Toul
 public class BibliothequesHandler extends ToulouseDataSetHandler {
 
     public BibliothequesHandler() {
-        super(12402, "amenity=library");
+        super("mediatheques-bibliotheques-et-bibliobus", "amenity=library");
         setWikiPage("Médiathèques, bibliothèques et bibliobus");
         setCategory(CAT_CULTURE);
     }

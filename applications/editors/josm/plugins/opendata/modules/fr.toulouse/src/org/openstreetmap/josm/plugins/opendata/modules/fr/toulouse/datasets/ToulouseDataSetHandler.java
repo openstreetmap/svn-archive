@@ -41,7 +41,6 @@ public abstract class ToulouseDataSetHandler extends FrenchDataSetHandler implem
     /**
      * Categories
      */
-    public static final DataSetCategory CAT_ASSOCIATIONS = new DataSetCategory("Associations", "people.png");
     public static final DataSetCategory CAT_CITOYENNETE = new DataSetCategory("Citoyenneté", "presets/service/townhall.svg");
     public static final DataSetCategory CAT_CULTURE = new DataSetCategory("Culture", "presets/sightseeing/arts_centre.svg");
     public static final DataSetCategory CAT_ENFANCE = new DataSetCategory("Enfance", "presets/education/kindergarten.svg");
@@ -54,36 +53,36 @@ public abstract class ToulouseDataSetHandler extends FrenchDataSetHandler implem
     public static final DataSetCategory CAT_TRANSPORT = new DataSetCategory("Transport", "presets/transport/bus.svg");
     public static final DataSetCategory CAT_URBANISME = new DataSetCategory("Urbanisme", "presets/place/city.svg");
 
-    public ToulouseDataSetHandler(int portalId) {
+    public ToulouseDataSetHandler(String portalId) {
         init(portalId);
     }
 
-    public ToulouseDataSetHandler(int portalId, String relevantTag) {
+    public ToulouseDataSetHandler(String portalId, String relevantTag) {
         super(relevantTag);
         init(portalId);
     }
 
-    public ToulouseDataSetHandler(int portalId, boolean relevantUnion, String... relevantTags) {
+    public ToulouseDataSetHandler(String portalId, boolean relevantUnion, String... relevantTags) {
         super(relevantUnion, relevantTags);
         init(portalId);
     }
 
-    public ToulouseDataSetHandler(int portalId, String... relevantTags) {
+    public ToulouseDataSetHandler(String portalId, String... relevantTags) {
         this(portalId, false, relevantTags);
     }
 
-    public ToulouseDataSetHandler(int portalId, boolean relevantUnion, Tag... relevantTags) {
+    public ToulouseDataSetHandler(String portalId, boolean relevantUnion, Tag... relevantTags) {
         super(relevantUnion, relevantTags);
         init(portalId);
     }
 
-    private void init(int portalId) {
+    private void init(String portalId) {
         try {
             setLicense(new ToulouseLicense());
-            if (portalId > 0) {
-                String url = PORTAL + "/les-donnees/-/opendata/card/" + portalId + "--";
-                setLocalPortalURL(url);
-                setDataURL(url+"/resource/document");
+            if (portalId != null) {
+                String url = PORTAL + "/explore/dataset/" + portalId;
+                setLocalPortalURL(url + "/information/");
+                setDataURL(url + "/download/?format=geojson&timezone=Europe/Paris");
             }
             addTool(new SplitByMunicipality());
             addTool(new SplitBySector());

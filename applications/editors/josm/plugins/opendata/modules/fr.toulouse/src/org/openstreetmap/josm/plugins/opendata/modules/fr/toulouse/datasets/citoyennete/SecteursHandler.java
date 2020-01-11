@@ -8,7 +8,7 @@ import org.openstreetmap.josm.plugins.opendata.modules.fr.toulouse.datasets.Toul
 public class SecteursHandler extends ToulouseDataSetHandler {
 
     public SecteursHandler() {
-        super(12580, "admin_level=10");
+        super("secteurs-de-democratie-locale", "admin_level=10");
         setWikiPage("Secteurs de proximité");
         setCategory(CAT_CITOYENNETE);
         setMenuIcon("presets/misc/boundaries.svg");

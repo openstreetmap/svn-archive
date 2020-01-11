@@ -8,11 +8,12 @@ import org.apache.commons.text.WordUtils;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.plugins.opendata.modules.fr.toulouse.datasets.ToulouseDataSetHandler;
+import org.openstreetmap.josm.tools.Logging;
 
 public class HorodateurHandler extends ToulouseDataSetHandler {
 
     public HorodateurHandler() {
-        super(12540, "vending=parking_tickets");
+        super("horodateurs", "vending=parking_tickets");
         setWikiPage("Horodateurs");
         setCategory(CAT_TRANSPORT);
         setMenuIcon("presets/transport/ticket-machine.svg");
@@ -39,7 +40,7 @@ public class HorodateurHandler extends ToulouseDataSetHandler {
         final Matcher m = p.matcher(horaire);
         String opening_hours = "";
         if (m.matches()) {
-            for (int i = 1; i<=m.groupCount(); i++) {
+            for (int i = 1; i <= m.groupCount(); i++) {
                 if (m.group(i) != null) {
                     if (!opening_hours.isEmpty()) {
                         opening_hours += "; ";
@@ -49,12 +50,12 @@ public class HorodateurHandler extends ToulouseDataSetHandler {
                     if (m2.matches()) {
                         opening_hours += parseHour(m2.group(1)) + "-" + parseHour(m2.group(2));
                     } else {
-                        System.err.println(m.group(i)+" does not match "+p2);
+                        Logging.error(m.group(i)+" does not match "+p2);
                     }
                 }
             }
         } else {
-            System.err.println(horaire+" does not match "+p);
+            Logging.error(horaire+" does not match "+p);
         }
         return opening_hours;
     }
@@ -71,33 +72,13 @@ public class HorodateurHandler extends ToulouseDataSetHandler {
             n.remove("No");
             n.remove("Reglementation");
             n.remove("color");
-            replace(n, "commune", "operator", new ValueReplacer() {
-                @Override
-                public String replace(String value) {
-                    return "Mairie de "+WordUtils.capitalizeFully(value);
-                }
-            });
-            replace(n, "horaire", "opening_hours", new ValueReplacer() {
-                @Override
-                public String replace(String value) {
-                    return parseOpeningHours(value);
-                }
-            });
-            replace(n, "maj_date", "source:date", new ValueReplacer() {
-                @Override
-                public String replace(String value) {
-                    return value.substring(0, 4)+"-"+value.substring(4, 6)+"-"+value.substring(6, 8);
-                }
-            });
+            replace(n, "commune", "operator", value -> "Mairie de "+WordUtils.capitalizeFully(value));
+            replace(n, "horaire", "opening_hours", this::parseOpeningHours);
+            replace(n, "maj_date", "source:date", value -> value.substring(0, 4)+"-"+value.substring(4, 6)+"-"+value.substring(6, 8));
             replace(n, "observations", "note");
-            replace(n, "quartier_residant", "parking:ticket:zone", new ValueReplacer() {
-                @Override
-                public String replace(String value) {
-                    return WordUtils.capitalizeFully(value.trim())
-                            .replace(" Iv", " IV").replace("Sebastopol", "Sébastopol")
-                            .replace("St ", "Saint-").replace("Peri", "Péri");
-                }
-            });
+            replace(n, "quartier_residant", "parking:ticket:zone", value -> WordUtils.capitalizeFully(value.trim())
+                    .replace(" Iv", " IV").replace("Sebastopol", "Sébastopol")
+                    .replace("St ", "Saint-").replace("Peri", "Péri"));
         }
     }
 }

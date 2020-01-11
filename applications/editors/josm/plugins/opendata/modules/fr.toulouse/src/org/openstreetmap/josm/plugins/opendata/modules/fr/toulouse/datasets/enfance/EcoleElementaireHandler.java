@@ -9,7 +9,7 @@ import org.openstreetmap.josm.plugins.opendata.modules.fr.toulouse.datasets.Toul
 public class EcoleElementaireHandler extends ToulouseDataSetHandler {
 
     public EcoleElementaireHandler() {
-        super(12474, "amenity=school");
+        super("ecoles-elementaires-publiques", "amenity=school");
         setWikiPage("Écoles élémentaires publiques");
         setCategory(CAT_ENFANCE);
         for (String forbidden : new String[]{"maternelle", "primaire", "collège", "lycée", "secondaire"}) {

@@ -8,7 +8,7 @@ import org.openstreetmap.josm.plugins.opendata.modules.fr.toulouse.datasets.Toul
 public class MetroStationHandler extends ToulouseDataSetHandler {
 
     public MetroStationHandler() {
-        super(12542, "subway=yes");
+        super("stations-de-metro", "subway=yes");
         setName("Stations de métro");
         setCategory(CAT_TRANSPORT);
         setMenuIcon("presets/transport/railway_station.svg");

@@ -8,7 +8,7 @@ import org.openstreetmap.josm.plugins.opendata.modules.fr.toulouse.datasets.Toul
 public class CommuneHandler extends ToulouseDataSetHandler {
 
     public CommuneHandler() {
-        super(12582, "admin_level=8");
+        super("communes", "admin_level=8");
         setName("Communes");
         setCategory(CAT_URBANISME);
         setMenuIcon("presets/misc/boundaries.svg");

@@ -8,12 +8,12 @@ import org.openstreetmap.josm.plugins.opendata.modules.fr.toulouse.datasets.Toul
 public abstract class ChantiersHandler extends ToulouseDataSetHandler {
 
     public ChantiersHandler(int portalId, String name) {
-        super(portalId, "highway=construction");
+        super("chantiers-en-cours", "highway=construction");
         setWikiPage("Chantiers en cours");
         setName(name);
         setCategory(CAT_TRANSPORT);
     }
-    
+
     @Override
     public void updateDataSet(DataSet ds) {
         for (OsmPrimitive p : ds.allPrimitives()) {

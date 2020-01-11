@@ -6,9 +6,9 @@ import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.plugins.opendata.modules.fr.toulouse.datasets.ToulouseDataSetHandler;
 
 public class AltimetrieVoieHandler extends ToulouseDataSetHandler  {
-    
+
     public AltimetrieVoieHandler() {
-        super(12660, "ele");
+        super("altimetrie-des-voies", "ele");
         setName("Altimétrie des voies");
         setCategory(CAT_TOPOGRAPHIE);
     }

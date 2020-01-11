@@ -8,7 +8,7 @@ import org.openstreetmap.josm.plugins.opendata.modules.fr.toulouse.datasets.Toul
 public class RecupEmballageHandler extends ToulouseDataSetHandler {
 
     public RecupEmballageHandler() {
-        super(12494, "amenity=recycling");
+        super("recup-emballage", "amenity=recycling");
         setWikiPage("Récup' Emballage");
         setCategory(CAT_ENVIRONNEMENT);
     }

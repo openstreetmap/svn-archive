@@ -1,5 +1,5 @@
 // License: GPL. For details, see LICENSE file.
-package org.openstreetmap.josm.plugins.opendata.modules.fr.toulouse.datasets.associations;
+package org.openstreetmap.josm.plugins.opendata.modules.fr.toulouse.datasets.citoyennete;
 
 import org.apache.commons.text.WordUtils;
 import org.openstreetmap.josm.data.osm.DataSet;
@@ -9,9 +9,9 @@ import org.openstreetmap.josm.plugins.opendata.modules.fr.toulouse.datasets.Toul
 public class Club3eAgeHandler extends ToulouseDataSetHandler {
 
     public Club3eAgeHandler() {
-        super(12587, "social_facility=outreach", "social_facility:for=senior");
+        super("clubs-du-3eme-age", "social_facility=outreach", "social_facility:for=senior");
         setWikiPage("Clubs du 3ème âge");
-        setCategory(CAT_ASSOCIATIONS);
+        setCategory(CAT_CITOYENNETE);
     }
 
     @Override

@@ -8,11 +8,11 @@ import org.openstreetmap.josm.plugins.opendata.modules.fr.toulouse.datasets.Toul
 public class MairieHandler extends ToulouseDataSetHandler {
 
     public MairieHandler() {
-        this(12554, "Mairies");
+        this("mairies", "Mairies");
         setCategory(CAT_CITOYENNETE);
     }
-    
-    protected MairieHandler(int portalId, String wikiPage) {
+
+    protected MairieHandler(String portalId, String wikiPage) {
         super(portalId, "amenity=townhall");
         setWikiPage(wikiPage);
     }

@@ -9,7 +9,7 @@ import org.openstreetmap.josm.plugins.opendata.modules.fr.toulouse.datasets.Toul
 public class CrechesHandler extends ToulouseDataSetHandler {
 
     public CrechesHandler() {
-        super(12462, "amenity=kindergarten");
+        super("creches1", "amenity=kindergarten");
         setWikiPage("Crèches");
         setCategory(CAT_ENFANCE);
     }

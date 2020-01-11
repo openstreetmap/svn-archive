@@ -8,8 +8,8 @@ import org.openstreetmap.josm.plugins.opendata.modules.fr.toulouse.datasets.Toul
 public class PolesTerritoriauxHandler extends ToulouseDataSetHandler {
 
     public PolesTerritoriauxHandler() {
-        super(12568);
-        setName("Pôles territoriaux ");
+        super("poles-territoriaux");
+        setName("Pôles territoriaux");
         setCategory(CAT_CITOYENNETE);
     }
 

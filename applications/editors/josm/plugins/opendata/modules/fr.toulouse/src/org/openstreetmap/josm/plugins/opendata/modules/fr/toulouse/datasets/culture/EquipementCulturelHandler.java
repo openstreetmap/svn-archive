@@ -5,10 +5,10 @@ import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.plugins.opendata.modules.fr.toulouse.datasets.ToulouseDataSetHandler;
 
-public class EquipementCulturelBalmaHandler extends ToulouseDataSetHandler {
+public class EquipementCulturelHandler extends ToulouseDataSetHandler {
 
-    public EquipementCulturelBalmaHandler() {
-        super(13997);
+    public EquipementCulturelHandler() {
+        super("equipements-culturels1");
         setWikiPage("Équipements Culturels");
         setCategory(CAT_CULTURE);
     }

@@ -8,7 +8,7 @@ import org.openstreetmap.josm.plugins.opendata.modules.fr.toulouse.datasets.Toul
 public class RecupVerreHandler extends ToulouseDataSetHandler {
 
     public RecupVerreHandler() {
-        super(12496, "amenity=recycling");
+        super("recup-verre", "amenity=recycling");
         setWikiPage("Récup' Verre");
         setCategory(CAT_ENVIRONNEMENT);
     }

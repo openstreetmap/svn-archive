@@ -51,6 +51,7 @@ import org.openstreetmap.josm.tools.CheckParameterUtil;
 import org.openstreetmap.josm.tools.I18n;
 import org.openstreetmap.josm.tools.ImageProvider;
 import org.openstreetmap.josm.tools.Logging;
+import org.openstreetmap.josm.tools.ResourceProvider;
 
 /**
  * ModuleHandler is basically a collection of static utility functions used to bootstrap
@@ -288,7 +289,7 @@ public final class ModuleHandler {
 
             ClassLoader moduleClassLoader = createClassLoader(toLoad);
             sources.add(0, moduleClassLoader);
-            ImageProvider.addAdditionalClassLoader(moduleClassLoader);
+            ResourceProvider.addAdditionalClassLoader(moduleClassLoader);
             monitor.setTicksCount(toLoad.size());
             for (ModuleInformation info : toLoad) {
                 monitor.setExtraText(tr("Loading module ''{0}''...", info.name));

@@ -11,7 +11,7 @@ public class CommuneHandler extends ToulouseDataSetHandler {
         super(12582, "admin_level=8");
         setName("Communes");
         setCategory(CAT_URBANISME);
-        setMenuIcon("presets/boundaries.png");
+        setMenuIcon("presets/misc/boundaries.svg");
     }
 
     @Override

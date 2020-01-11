@@ -17,16 +17,16 @@ import org.openstreetmap.josm.plugins.opendata.modules.fr.toulouse.datasets.Toul
 public class VoirieHandler extends ToulouseDataSetHandler {
 
     protected final Map<String, Collection<String>> map = new HashMap<>();
-    
+
     private String streetField;
-    
+
     public VoirieHandler() {
         this(12693, "lib_off", "highway");
         setName("Filaire de voirie");
         setCategory(CAT_URBANISME);
-        setMenuIcon("styles/standard/transport/way/way_secondary.svg");
+        setMenuIcon("presets/transport/way/way_secondary.svg");
     }
-    
+
     protected VoirieHandler(int portalId, String streetField, String relevantTag) {
         super(portalId, relevantTag);
         this.streetField = streetField;
@@ -38,7 +38,7 @@ public class VoirieHandler extends ToulouseDataSetHandler {
         map.put("unclassified", Arrays.asList(new String[] {"ZONE "}));
         map.put("road", Arrays.asList(new String[] {"VA "}));
     }
-    
+
     @Override
     public boolean acceptsFilename(String filename) {
         return acceptsKmzTabFilename(filename, "Voies");
@@ -57,15 +57,15 @@ public class VoirieHandler extends ToulouseDataSetHandler {
         }
         return null;
     }
-    
+
     protected String getStreetId(Way w) {
         return w.get("sti");
     }
-    
+
     @Override
     public void updateDataSet(DataSet ds) {
         Map<String, Relation> associatedStreets = new HashMap<>();
-        
+
         for (Way w : ds.getWays()) {
             String name = w.get(streetField);
             if (name != null) {
@@ -74,27 +74,27 @@ public class VoirieHandler extends ToulouseDataSetHandler {
                 w.remove("color");
                 w.remove("rivoli");
                 w.remove("nrivoli");
-                
+
                 if (applyHighwayTag(name, w) == null) {
                     w.put("highway", "road");
                 }
-                
+
                 if (name.startsWith("RPT ") || name.startsWith("GIRATOIRE ")) {
                     // TODO: find correct highway
                     w.put("junction", "roundabout");
                 } else if (name.matches("RTE D[0-9]+")) {
                     w.put("ref", name.split(" ")[1]);
                 }
-                
+
                 w.put("name", name);
-                
+
                 if (name.matches("D[0-9]+.*")) {
                     w.put("highway", "secondary");
                     replace(w, "name", "ref");
                 } else if (!name.startsWith("VA ")) { // Unknown labels
                     name = NamesFrUtils.checkStreetName(w, "name");
                 }
-                
+
                 if (!name.startsWith("VA ")) { // Unknown labels
                     Relation street = associatedStreets.get(getStreetId(w));
                     if (street == null) {

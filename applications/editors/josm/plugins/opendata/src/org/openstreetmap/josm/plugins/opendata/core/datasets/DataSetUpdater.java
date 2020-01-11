@@ -22,6 +22,9 @@ import org.openstreetmap.josm.io.OsmApi;
 import org.openstreetmap.josm.plugins.opendata.core.OdConstants;
 import org.openstreetmap.josm.spi.preferences.Config;
 
+/**
+ * Data set updater.
+ */
 public abstract class DataSetUpdater {
 
     public static final void updateDataSet(DataSet dataSet, AbstractDataSetHandler handler, File associatedFile) {
@@ -42,7 +45,7 @@ public abstract class DataSetUpdater {
             }
             // Simplify ways geometries
             for (Way w : dataSet.getWays()) {
-                SequenceCommand command = SimplifyWayAction.simplifyWay(w, 0.25);
+                SequenceCommand command = SimplifyWayAction.createSimplifyCommand(w, 0.25);
                 if (command != null) {
                     command.executeCommand();
                 }

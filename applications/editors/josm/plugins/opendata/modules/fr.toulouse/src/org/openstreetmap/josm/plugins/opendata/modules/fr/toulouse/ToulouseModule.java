@@ -2,7 +2,6 @@
 package org.openstreetmap.josm.plugins.opendata.modules.fr.toulouse;
 
 import java.util.Collection;
-import java.util.Comparator;
 import java.util.TreeSet;
 
 import org.openstreetmap.josm.data.osm.DataSet;
@@ -58,7 +57,11 @@ import org.openstreetmap.josm.plugins.opendata.modules.fr.toulouse.datasets.urba
 import org.openstreetmap.josm.plugins.opendata.modules.fr.toulouse.datasets.urbanisme.NumerosRueHandler;
 import org.openstreetmap.josm.plugins.opendata.modules.fr.toulouse.datasets.urbanisme.SanisetteHandler;
 import org.openstreetmap.josm.plugins.opendata.modules.fr.toulouse.datasets.urbanisme.VoirieHandler;
+import org.openstreetmap.josm.tools.Logging;
 
+/**
+ * Open data module for Toulouse portal.
+ */
 public class ToulouseModule extends AbstractModule {
 
     public ToulouseModule(ModuleInformation info) {
@@ -111,22 +114,19 @@ public class ToulouseModule extends AbstractModule {
 
     public static final DataSet data = new DataSet();
 
-    private static final Collection<Relation> getBoundaries(int admin_level) {
-        Collection<Relation> result = new TreeSet<>(new Comparator<Relation>() {
-            @Override
-            public int compare(Relation o1, Relation o2) {
-                if (o1.hasKey("name") && o2.hasKey("name")) {
-                    return o1.get("name").compareTo(o2.get("name"));
-                } else if (o1.hasKey("ref") && o2.hasKey("ref")) {
-                    return o1.get("ref").compareTo(o2.get("ref"));
-                } else {
-                    return o1.get("description").compareTo(o2.get("description"));
-                }
+    private static Collection<Relation> getBoundaries(int adminLevel) {
+        Collection<Relation> result = new TreeSet<>((o1, o2) -> {
+            if (o1.hasKey("name") && o2.hasKey("name")) {
+                return o1.get("name").compareTo(o2.get("name"));
+            } else if (o1.hasKey("ref") && o2.hasKey("ref")) {
+                return o1.get("ref").compareTo(o2.get("ref"));
+            } else {
+                return o1.get("description").compareTo(o2.get("description"));
             }
         });
         synchronized (data) {
             for (Relation r : data.getRelations()) {
-                if (r.hasTag("admin_level", Integer.toString(admin_level)) &&
+                if (r.hasTag("admin_level", Integer.toString(adminLevel)) &&
                         (r.hasKey("name") || r.hasKey("ref") || r.hasKey("description"))) {
                     result.add(r);
                 }
@@ -140,19 +140,16 @@ public class ToulouseModule extends AbstractModule {
             if (data.allPrimitives().isEmpty()) {
                 for (final ToulouseDataSetHandler handler : new ToulouseDataSetHandler[]{
                         new CommuneHandler(), new SecteursHandler(), new QuartiersHandler()}) {
-                    MainApplication.worker.submit(new Runnable() {
-                        @Override
-                        public void run() {
-                            try {
-                                DataSet ds = new NetworkReader(handler.getDataURL().toString(), handler, false).
-                                        parseOsm(NullProgressMonitor.INSTANCE);
-                                handler.updateDataSet(ds);
-                                synchronized (data) {
-                                    data.mergeFrom(ds);
-                                }
-                            } catch (OsmTransferException e) {
-                                e.printStackTrace();
+                    MainApplication.worker.submit(() -> {
+                        try {
+                            DataSet ds = new NetworkReader(handler.getDataURL().toString(), handler, false).
+                                    parseOsm(NullProgressMonitor.INSTANCE);
+                            handler.updateDataSet(ds);
+                            synchronized (data) {
+                                data.mergeFrom(ds);
                             }
+                        } catch (OsmTransferException e) {
+                            Logging.error(e);
                         }
                     });
                 }

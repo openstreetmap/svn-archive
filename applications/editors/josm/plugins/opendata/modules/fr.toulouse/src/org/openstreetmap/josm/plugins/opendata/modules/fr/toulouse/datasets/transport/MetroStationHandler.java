@@ -11,7 +11,7 @@ public class MetroStationHandler extends ToulouseDataSetHandler {
         super(12542, "subway=yes");
         setName("Stations de métro");
         setCategory(CAT_TRANSPORT);
-        setMenuIcon("styles/standard/transport/railway_station.png");
+        setMenuIcon("presets/transport/railway_station.svg");
     }
 
     @Override

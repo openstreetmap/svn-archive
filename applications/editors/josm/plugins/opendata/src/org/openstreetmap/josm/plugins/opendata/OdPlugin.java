@@ -50,9 +50,12 @@ import org.openstreetmap.josm.plugins.opendata.core.modules.Module;
 import org.openstreetmap.josm.plugins.opendata.core.modules.ModuleHandler;
 import org.openstreetmap.josm.plugins.opendata.core.modules.ModuleInformation;
 import org.openstreetmap.josm.plugins.opendata.core.util.OdUtils;
-import org.openstreetmap.josm.tools.ImageProvider;
 import org.openstreetmap.josm.tools.Pair;
+import org.openstreetmap.josm.tools.ResourceProvider;
 
+/**
+ * Open data plugin.
+ */
 public final class OdPlugin extends Plugin {
 
     private static OdPlugin instance;
@@ -63,7 +66,7 @@ public final class OdPlugin extends Plugin {
 
     private OdDialog dialog;
 
-    public final List<AbstractImporter> importers =  Arrays.asList(new AbstractImporter[]{
+    public final List<AbstractImporter> importers = Arrays.asList(new AbstractImporter[] {
             new CsvImporter(), new OdsImporter(), new XlsImporter(), // Tabular file formats
             new KmlKmzImporter(), new ShpImporter(), new MifTabImporter(), new GmlImporter(), // Geographic file formats
             new ZipImporter(), // Zip archive containing any of the others
@@ -73,7 +76,7 @@ public final class OdPlugin extends Plugin {
 
     public OdPlugin(PluginInformation info) {
         super(info);
-        ImageProvider.addAdditionalClassLoaders(ModuleHandler.getResourceClassLoaders());
+        ResourceProvider.addAdditionalClassLoaders(ModuleHandler.getResourceClassLoaders());
         if (instance == null) {
             instance = this;
         } else {

@@ -34,24 +34,25 @@ import org.openstreetmap.josm.plugins.opendata.modules.fr.toulouse.ToulouseConst
 import org.openstreetmap.josm.plugins.opendata.modules.fr.toulouse.ToulouseLicense;
 import org.openstreetmap.josm.plugins.opendata.modules.fr.toulouse.ToulouseModule;
 import org.openstreetmap.josm.plugins.utilsplugin2.selection.NodeWayUtils;
+import org.openstreetmap.josm.tools.Logging;
 
 public abstract class ToulouseDataSetHandler extends FrenchDataSetHandler implements ToulouseConstants {
 
     /**
      * Categories
      */
-    public static final DataSetCategory CAT_ASSOCIATIONS = new DataSetCategory("Associations", "styles/standard/people.png");
-    public static final DataSetCategory CAT_CITOYENNETE = new DataSetCategory("Citoyenneté", "presets/townhall.png");
-    public static final DataSetCategory CAT_CULTURE = new DataSetCategory("Culture", "presets/arts_centre.png");
-    public static final DataSetCategory CAT_ENFANCE = new DataSetCategory("Enfance", "presets/kindergarten.png");
+    public static final DataSetCategory CAT_ASSOCIATIONS = new DataSetCategory("Associations", "people.png");
+    public static final DataSetCategory CAT_CITOYENNETE = new DataSetCategory("Citoyenneté", "presets/service/townhall.svg");
+    public static final DataSetCategory CAT_CULTURE = new DataSetCategory("Culture", "presets/sightseeing/arts_centre.svg");
+    public static final DataSetCategory CAT_ENFANCE = new DataSetCategory("Enfance", "presets/education/kindergarten.svg");
     public static final DataSetCategory CAT_ENVIRONNEMENT = new DataSetCategory("Environnement",
-            "styles/standard/service/recycling/recycling_container.svg");
-    public static final DataSetCategory CAT_PATRIMOINE = new DataSetCategory("Patrimoine", "presets/ruins.png");
-    public static final DataSetCategory CAT_SERVICES = new DataSetCategory("Services", "styles/standard/vehicle/services.png");
-    public static final DataSetCategory CAT_SPORT = new DataSetCategory("Sport", "styles/standard/sport/soccer.png");
-    public static final DataSetCategory CAT_TOPOGRAPHIE = new DataSetCategory("Topographie", "presets/peak.svg");
-    public static final DataSetCategory CAT_TRANSPORT = new DataSetCategory("Transport", "presets/bus.png");
-    public static final DataSetCategory CAT_URBANISME = new DataSetCategory("Urbanisme", "styles/standard/place/settlement/city.png");
+            "presets/service/recycling/recycling_container.svg");
+    public static final DataSetCategory CAT_PATRIMOINE = new DataSetCategory("Patrimoine", "presets/sightseeing/ruins.svg");
+    public static final DataSetCategory CAT_SERVICES = new DataSetCategory("Services", "presets/vehicle/services.svg");
+    public static final DataSetCategory CAT_SPORT = new DataSetCategory("Sport", "presets/sport/soccer.svg");
+    public static final DataSetCategory CAT_TOPOGRAPHIE = new DataSetCategory("Topographie", "presets/landmark/peak.svg");
+    public static final DataSetCategory CAT_TRANSPORT = new DataSetCategory("Transport", "presets/transport/bus.svg");
+    public static final DataSetCategory CAT_URBANISME = new DataSetCategory("Urbanisme", "presets/place/city.svg");
 
     public ToulouseDataSetHandler(int portalId) {
         init(portalId);
@@ -62,28 +63,19 @@ public abstract class ToulouseDataSetHandler extends FrenchDataSetHandler implem
         init(portalId);
     }
 
-    public ToulouseDataSetHandler(int portalId, boolean relevantUnion, String ... relevantTags) {
+    public ToulouseDataSetHandler(int portalId, boolean relevantUnion, String... relevantTags) {
         super(relevantUnion, relevantTags);
         init(portalId);
     }
 
-    public ToulouseDataSetHandler(int portalId, String ... relevantTags) {
+    public ToulouseDataSetHandler(int portalId, String... relevantTags) {
         this(portalId, false, relevantTags);
     }
 
-    /*public ToulouseDataSetHandler(int portalId, Tag relevantTag) {
-        super(relevantTag);
-        init(portalId);
-    }*/
-
-    public ToulouseDataSetHandler(int portalId, boolean relevantUnion, Tag ... relevantTags) {
+    public ToulouseDataSetHandler(int portalId, boolean relevantUnion, Tag... relevantTags) {
         super(relevantUnion, relevantTags);
         init(portalId);
     }
-
-    /*public ToulouseDataSetHandler(int portalId, Tag ... relevantTags) {
-        this(portalId, false, relevantTags);
-    }*/
 
     private void init(int portalId) {
         try {
@@ -91,14 +83,13 @@ public abstract class ToulouseDataSetHandler extends FrenchDataSetHandler implem
             if (portalId > 0) {
                 String url = PORTAL + "/les-donnees/-/opendata/card/" + portalId + "--";
                 setLocalPortalURL(url);
-                //setLicenseURL(url+"/license");
                 setDataURL(url+"/resource/document");
             }
             addTool(new SplitByMunicipality());
             addTool(new SplitBySector());
             addTool(new SplitByNeighbourhood());
         } catch (MalformedURLException e) {
-            e.printStackTrace();
+            Logging.error(e);
         }
     }
 
@@ -123,7 +114,7 @@ public abstract class ToulouseDataSetHandler extends FrenchDataSetHandler implem
             try {
                 setWikiURL(WIKI + "/" + wikiPage.replace(" ", "_"));
             } catch (MalformedURLException e) {
-                e.printStackTrace();
+                Logging.error(e);
             }
         }
     }

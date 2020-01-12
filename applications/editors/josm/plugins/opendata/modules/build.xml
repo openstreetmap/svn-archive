@@ -16,6 +16,9 @@
     <target name="clean">
         <run_target target="clean"/>
     </target>
+    <target name="test">
+        <run_target target="test"/>
+    </target>
     <target name="install" depends="dist">
         <run_target target="install"/>
     </target>

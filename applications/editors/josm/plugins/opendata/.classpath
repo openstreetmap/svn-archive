@@ -15,6 +15,11 @@
 			<attribute name="test" value="true"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="src" output="bintest" path="modules/fr.toulouse/test/unit">
+		<attributes>
+			<attribute name="test" value="true"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry combineaccessrules="false" kind="src" path="/JOSM"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/JOSM-utilsplugin2"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/JOSM-GeoTools"/>

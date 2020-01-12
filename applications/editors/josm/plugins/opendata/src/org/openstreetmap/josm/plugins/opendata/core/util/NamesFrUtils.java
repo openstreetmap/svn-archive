@@ -52,39 +52,49 @@ public abstract class NamesFrUtils {
     public static final String getStreetLabel(String label) {
         if (label == null) {
             return label;
-        } else if (label.equals("All")) {
+        } else if (label.startsWith("All")) {
             return "Allée";
         } else if (label.equals("Autoroute")) {
             return label;
-        } else if (label.startsWith("Anc")) { // Anc, Ancien
+        } else if (label.startsWith("Anc")) {
             return "Ancien";
-        } else if (label.equals("Av")) {
+        } else if (label.startsWith("Av")) {
             return "Avenue";
-        } else if (label.equals("Bd")) {
+        } else if (label.startsWith("Barr")) {
+            return "Barrière";
+        } else if (label.equals("Bd") || label.equals("Boulevard")) {
             return "Boulevard";
+        } else if (label.startsWith("Bret")) {
+            return "Bretelle";
         } else if (label.equals("Bre")) {
             return "Bré";
         } else if (label.equals("Caminot")) {
             return label;
         } else if (label.equals("Carrefour")) {
             return label;
-        } else if (label.startsWith("Che")) { // Che, Chem
+        } else if (label.equals("Carré")) {
+            return label;
+        } else if (label.startsWith("Chemine")) {
+            return "Cheminement";
+        } else if (label.startsWith("Che")) {
             return "Chemin";
-        } else if (label.equals("Cite")) {
+        } else if (label.startsWith("Cit")) {
             return "Cité";
         } else if (label.equals("Clos")) {
             return label;
-        } else if (label.equals("Cote")) {
+        } else if (label.equals("Cote") || label.equals("Côte")) {
             return "Côte";
         } else if (label.equals("Cours")) {
             return label;
-        } else if (label.equals("Dom")) {
+        } else if (label.startsWith("Dep") || label.startsWith("Dép")) {
+            return "Départementale";
+        } else if (label.startsWith("Dom")) {
             return "Domaine";
-        } else if (label.equals("Dsc")) {
+        } else if (label.equals("Dsc") || label.startsWith("Desc")) {
             return "Descente";
-        } else if (label.equals("Esp")) {
+        } else if (label.equals("Esp") || label.startsWith("Espl")) {
             return "Esplanade";
-        } else if (label.equals("Espa")) {
+        } else if (label.startsWith("Espa")) {
             return "Espace";
         } else if (label.equals("Giratoire")) {
             return label;
@@ -92,68 +102,72 @@ public abstract class NamesFrUtils {
             return label;
         } else if (label.equals("Hameau")) {
             return label;
-        } else if (label.equals("Imp")) {
+        } else if (label.startsWith("Imp") || label.equals("Ipasse")) {
             return "Impasse";
-        } else if (label.equals("Itineraire")) {
+        } else if (label.startsWith("Itin")) {
             return "Itinéraire";
         } else if (label.equals("Jardin")) {
             return label;
         } else if (label.startsWith("L'") || label.equals("La") || label.equals("Le") || label.equals("Les") ||
                 label.equals("Saint")) { // Lieux-dits
             return label;
-        } else if (label.equals("Lot")) {
+        } else if (label.startsWith("Lot")) {
             return "Lotissement";
         } else if (label.equals("Mail")) {
             return label;
         } else if (label.equals("Mas")) {
             return label;
+        } else if (label.startsWith("Nat")) {
+            return "Nationale";
         } else if (label.equals("Parc")) {
             return label;
-        } else if (label.equals("Pas")) {
-            return "Passage";
         } else if (label.equals("Passerelle")) {
             return label;
-        } else if (label.equals("Pch")) {
-            return "Petit Chemin";
-        } else if (label.equals("Petit")) {
+        } else if (label.startsWith("Pas")) {
+            return "Passage";
+        } else if (label.equals("Pch") || label.startsWith("Petit-chem")) {
+            return "Petit-chemin";
+        } else if (label.equals("Petit") || label.equals("Petite")) {
             return label;
         } else if (label.equals("Petite-allée")) {
             return label;
         } else if (label.equals("Petite-rue")) {
             return label;
-        } else if (label.equals("Pl")) {
-            return "Place";
         } else if (label.equals("Plan")) {
             return label;
+        } else if (label.startsWith("Pl")) {
+            return "Place";
         } else if (label.equals("Pont")) {
             return label;
         } else if (label.equals("Port")) {
             return label;
         } else if (label.equals("Porte")) {
             return label;
-        } else if (label.equals("Prom")) {
+        } else if (label.startsWith("Prom")) {
             return "Promenade";
-        } else if (label.equals("Prv")) {
+        } else if (label.equals("Prv") || label.startsWith("Parv")) {
             return "Parvis";
-        } else if (label.equals("Qu")) {
+        } else if (label.startsWith("Qu")) {
             return "Quai";
         } else if (label.equals("Rampe")) {
             return label;
-        } else if (label.equals("Residence")) {
+        } else if (label.startsWith("Res") || label.startsWith("Rés")) {
             return "Résidence";
         } else if (label.equals("Rocade")) {
             return label;
-        } else if (label.equals("Rpt")) {
+        } else if (label.equals("Rpt") || label.startsWith("Ron")) {
             return "Rond-Point";
-        } else if (label.equals("Rte")) {
+        } else if (label.equals("Rte") || label.equals("Route")) {
             return "Route";
-        } else if (label.equals("Rue")) {
-            return label;
+        } else if (label.equals("Rue") || label.equals("Rued")) {
+            return "Rue";
         } else if (label.equals("Sentier")) {
             return label;
-        } else if (label.equals("Sq")) {
+        } else if (label.startsWith("Sq")) {
             return "Square";
-        } else if (label.equals("Tra")) {
+        } else if (label.equals("Théâtre")) {
+            return "Théâtre";
+        } else if (label.startsWith("Tra")) {
             return "Traverse";
         } else if (label.equals("Vieux")) {
             return label;

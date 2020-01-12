@@ -21,7 +21,7 @@ public class VoirieHandler extends ToulouseDataSetHandler {
     private String streetField;
 
     public VoirieHandler() {
-        this("filaire-de-voirie", "lib_off", "highway");
+        this("filaire-de-voirie", "libelle", "highway");
         setName("Filaire de voirie");
         setCategory(CAT_URBANISME);
         setMenuIcon("presets/transport/way/way_secondary.svg");
@@ -32,9 +32,12 @@ public class VoirieHandler extends ToulouseDataSetHandler {
         this.streetField = streetField;
         map.put("motorway", Arrays.asList("A6", "AUTOROUTE "));
         map.put("trunk", Arrays.asList("ROCADE "));
-        map.put("secondary", Arrays.asList("AV ", "BD ", "ALL ", "PONT ", "RTE ", "PORT ", "BOULINGRIN"));
-        map.put("residential", Arrays.asList("RUE ", "GRANDE-RUE ", "PROM ", "CHE", "CAMINOT ", "IMP ", "COURS ",
-                "LOT ", "ANC", "VIEUX ", "PL ", "CLOS ", "CITE ", "RESIDENCE ", "SENTIER ", "QU ", "SQ ", "VOIE ", "ESP "));
+        map.put("primary", Arrays.asList("NATIONALE ", "RN "));
+        map.put("secondary", Arrays.asList("AV ", "AVENUE ", "BD ", "BOULEVARD ", "ALL ", "ALLEE ", "ALLEES ", "PONT ", "RTE ", "ROUTE ",
+                "PORT ", "BOULINGRIN", "DEPARTEMENTALE ", "RD "));
+        map.put("residential", Arrays.asList("RUE ", "GRANDE-RUE ", "PASSAGE ", "PROM ", "PROMENADE ", "CHE", "CAMINOT ", "IMP ", "IMPASSE ",
+                "COURS ", "LOT ", "LOTISSEMENT ", "ANC", "VIEUX ", "PL ", "PLACE ", "CLOS ", "CITE ", "RESIDENCE ", "SENTIER ", "QU ", "QUAI ",
+                "SQ ", "SQUARE ", "VOIE ", "ESP ", "ESPACE ", "ESPLANADE ", "TRAVERSE "));
         map.put("unclassified", Arrays.asList("ZONE "));
         map.put("road", Arrays.asList("VA "));
     }
@@ -71,7 +74,10 @@ public class VoirieHandler extends ToulouseDataSetHandler {
             if (name != null) {
                 w.remove(streetField);
                 w.remove("mot_directeur");
+                w.remove("code_insee");
                 w.remove("color");
+                w.remove("commune");
+                w.remove("id_troncon");
                 w.remove("rivoli");
                 w.remove("nrivoli");
 
@@ -79,14 +85,18 @@ public class VoirieHandler extends ToulouseDataSetHandler {
                     w.put("highway", "road");
                 }
 
-                if (name.startsWith("RPT ") || name.startsWith("GIRATOIRE ")) {
+                if (name.startsWith("RPT ") || name.startsWith("RON") || name.startsWith("GIRAT")) {
                     // TODO: find correct highway
                     w.put("junction", "roundabout");
                 } else if (name.matches("RTE D[0-9]+")) {
                     w.put("ref", name.split(" ")[1]);
                 }
 
-                w.put("name", name);
+                if (w.hasKey("libelle_complet")) {
+                    replace(w, "libelle_complet", "name");
+                } else {
+                    w.put("name", name);
+                }
 
                 if (name.matches("D[0-9]+.*")) {
                     w.put("highway", "secondary");
@@ -100,7 +110,7 @@ public class VoirieHandler extends ToulouseDataSetHandler {
                     if (street == null) {
                         associatedStreets.put(getStreetId(w), street = new Relation());
                         street.put("type", "associatedStreet");
-                        street.put("name", name);
+                        street.put("name", w.get("name"));
                         ds.addPrimitive(street);
                     }
                     street.addMember(new RelationMember("street", w));

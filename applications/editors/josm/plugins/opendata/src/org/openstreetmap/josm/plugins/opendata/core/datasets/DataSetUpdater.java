@@ -82,6 +82,12 @@ public abstract class DataSetUpdater {
                     }
                 }
             }
+            // Remove geographic attributes
+            for (OsmPrimitive p : dataSet.allPrimitives()) {
+                if (p.isTagged()) {
+                    p.remove("geo_point_2d");
+                }
+            }
         }
     }
 }

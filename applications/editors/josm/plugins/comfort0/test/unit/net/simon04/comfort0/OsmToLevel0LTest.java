@@ -39,7 +39,7 @@ public class OsmToLevel0LTest {
         converter.visit(node);
         assertThat(converter.toString(), is(""
                 + "node 1234: 123.45, 67.89 #Comfort0 \u200E(123.45, 67.89)\n"
-                + "  name = Comfort0"));
+                + "  name = Comfort0\n"));
     }
 
     @Test
@@ -56,9 +56,9 @@ public class OsmToLevel0LTest {
                     "way 26659127 #\u200EPastower Straße\u200E (3 nodes)\n" +
                     "  highway = unclassified\n" +
                     "  name = Pastower Straße\n" +
-                    "  n292403538 #incomplete\n" +
-                    "  n298884289 #incomplete\n" +
-                    "  n261728686 #261728686 \u200E(54.0906309, 12.2441924)\n" +
+                    "  nd 292403538 #incomplete\n" +
+                    "  nd 298884289 #incomplete\n" +
+                    "  nd 261728686 #261728686 \u200E(54.0906309, 12.2441924)\n" +
                     "\n" +
                     "relation 56688 #route (\"Küstenbus Linie 123\", 4 members, incomplete)\n" +
                     "  name = Küstenbus Linie 123\n" +
@@ -90,7 +90,7 @@ public class OsmToLevel0LTest {
                     "\n" +
                     "node 1831881213: 54.0900666, 12.2539381 #Neu Broderstorf \u200E(54.0900666, 12.2539381)\n" +
                     "  name = Neu Broderstorf\n" +
-                    "  traffic_sign = city_limit"));
+                    "  traffic_sign = city_limit\n"));
         }
     }
 }

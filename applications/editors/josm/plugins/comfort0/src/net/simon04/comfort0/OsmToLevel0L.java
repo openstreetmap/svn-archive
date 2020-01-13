@@ -21,10 +21,16 @@ public class OsmToLevel0L implements OsmPrimitiveVisitor, KeyValueVisitor {
 
     private final StringBuilder sb = new StringBuilder();
 
-    public void visit(Collection<OsmPrimitive> primitives) {
+    /**
+     * Visits a collection of primitives
+     * @param primitives The collection of primitives
+     * @return {@code this}
+     */
+    public OsmToLevel0L visit(Collection<OsmPrimitive> primitives) {
         primitives.stream()
                 .sorted(OsmPrimitiveComparator.orderingWaysRelationsNodes().thenComparing(OsmPrimitiveComparator.comparingUniqueId()))
                 .forEachOrdered(p -> p.accept(this));
+        return this;
     }
 
     @Override
@@ -36,8 +42,7 @@ public class OsmToLevel0L implements OsmPrimitiveVisitor, KeyValueVisitor {
     public void visit(Way w) {
         appendCommon(w);
         for (Node node : w.getNodes()) {
-            sb.append("  n").append(node.getUniqueId());
-            appendDisplayName(node);
+            appendRef(node, "");
         }
     }
 
@@ -45,24 +50,28 @@ public class OsmToLevel0L implements OsmPrimitiveVisitor, KeyValueVisitor {
     public void visit(Relation r) {
         appendCommon(r);
         for (RelationMember member : r.getMembers()) {
-            sb.append("  ");
-            switch (member.getType()) {
-                case NODE:
-                    sb.append("nd ");
-                    break;
-                case WAY:
-                    sb.append("wy ");
-                    break;
-                case RELATION:
-                    sb.append("rel ");
-                    break;
-                default:
-                    break;
-            }
-            sb.append(member.getUniqueId()).append(" ");
-            sb.append(member.getRole());
-            appendDisplayName(member.getMember());
+            appendRef(member.getMember(), " " + member.getRole());
         }
+    }
+
+    private void appendRef(OsmPrimitive primitive, String mixin) {
+        sb.append("  ");
+        switch (primitive.getType()) {
+            case NODE:
+                sb.append("nd ");
+                break;
+            case WAY:
+                sb.append("wy ");
+                break;
+            case RELATION:
+                sb.append("rel ");
+                break;
+            default:
+                break;
+        }
+        sb.append(primitive.getUniqueId());
+        sb.append(mixin);
+        appendDisplayName(primitive);
     }
 
     void appendCommon(OsmPrimitive p) {
@@ -92,6 +101,6 @@ public class OsmToLevel0L implements OsmPrimitiveVisitor, KeyValueVisitor {
 
     @Override
     public String toString() {
-        return sb.toString().trim();
+        return sb.toString().replaceFirst("^\\n", "");
     }
 }

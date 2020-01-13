@@ -16,7 +16,7 @@ SKIP: { " " }
 
 <DEFAULT> //HEADER
 TOKEN: {
-    <H_EOL: ("\n" | "\r" | "\r\n") >
+    <H_EOL: ("\n" | "\r" | "\r\n") > : DATA
     | <H_ID: (["0"-"9"])+ >
     | <NODE: "node" >
     | <WAY: "way" >
@@ -38,12 +38,19 @@ TOKEN: {
 <DATA>
 TOKEN: {
     <D_EOL: ("\n" | "\r" | "\r\n") >
+    | <D_SPACE: " " >
     | <D_ID: (["0"-"9"])+ >
     | <WY: "wy" >
     | <ND: "nd" >
     | <REL: "rel" >
-    | <EQ: "=" >
+    | <EQ: "=" > : VALUE
     | <IDENT: ["a"-"z", "A"-"Z", "_"] (["a"-"z", "A"-"Z", "_", "-", "0"-"9"])* >
+}
+
+<VALUE>
+TOKEN: {
+    <V_EOL: ("\n" | "\r" | "\r\n") > : DATA
+    | <TEXT: (~["\n", "\r"])+ >
 }
 
 NodeData node():
@@ -62,5 +69,26 @@ NodeData node():
     lon=<FLOAT>
     { r.setCoor(new LatLon(Double.parseDouble(lat.image), Double.parseDouble(lon.image))); }
     (<COMMENT_START> | <H_EOL>)
+    tags(r)
     { return r; }
+}
+
+void tags(PrimitiveData r):
+{}
+{
+    ( tag(r) )*
+}
+
+void tag(PrimitiveData r):
+{
+    Token k, v;
+}
+{
+    <D_SPACE> <D_SPACE>
+    k=<IDENT>
+    ( <D_SPACE> ) *
+    <EQ>
+    v=<TEXT>
+    <V_EOL>
+    { r.put(k.image.trim(), v.image.trim()); }
 }

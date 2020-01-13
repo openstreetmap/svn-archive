@@ -7,6 +7,8 @@ PARSER_BEGIN(Level0LParser)
 package net.simon04.comfort0.level0l.parsergen;
 import org.openstreetmap.josm.data.osm.*;
 import org.openstreetmap.josm.data.coor.*;
+import java.util.ArrayList;
+import java.util.List;
 public class Level0LParser {
 }
 PARSER_END(Level0LParser)
@@ -52,6 +54,20 @@ TOKEN: {
 TOKEN: {
     <V_EOL: ("\n" | "\r" | "\r\n") > : DATA
     | <TEXT: (~["\n", "\r"])+ >
+}
+
+List<PrimitiveData> primitives():
+{
+    List<PrimitiveData> primitives = new ArrayList<PrimitiveData>();
+    PrimitiveData p;
+}
+{
+    (
+        ( p = node() | p = way() | p = relation() )
+        { primitives.add(p); }
+    )*
+    <EOF>
+    { return primitives; }
 }
 
 NodeData node():

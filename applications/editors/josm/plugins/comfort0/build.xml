@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project name="comfort0" default="dist" basedir=".">
+
+    <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
+    <property name="plugin.main.version" value="9229"/>
+    <property name="plugin.canloadatruntime" value="true"/>
+
+    <property name="plugin.author" value="simon04"/>
+    <property name="plugin.class" value="org.wikipedia.WikipediaPlugin"/> <!--TODO-->
+    <property name="plugin.description" value="Allows editing data in Level0L format"/>
+    <property name="plugin.icon" value="images/thetha.svg"/>
+    <property name="plugin.link" value="http://josm.openstreetmap.de/wiki/Help/Plugin/Comfort0"/>
+
+    <!-- ** include targets that all plugins have in common ** -->
+    <import file="../build-common.xml"/>
+
+</project>

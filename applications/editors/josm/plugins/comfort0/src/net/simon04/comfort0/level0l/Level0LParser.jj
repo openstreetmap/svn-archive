@@ -1,6 +1,5 @@
 options {
   STATIC = false;
-  OUTPUT_DIRECTORY = "parsergen";
 }
 
 PARSER_BEGIN(Level0LParser)
@@ -14,18 +13,21 @@ public class Level0LParser {
 PARSER_END(Level0LParser)
 
 <DEFAULT> //HEADER
-SKIP: { " " }
-
-<DEFAULT> //HEADER
 TOKEN: {
-    <H_EOL: ("\n" | "\r" | "\r\n") > : DATA
-    | <H_ID: (["0"-"9"])+ >
+    <EOL: ("\n" | "\r" | "\r\n") >
+    | <ID: (["0"-"9"])+ >
     | <NODE: "node" >
     | <WAY: "way" >
     | <RELATION: "relation" >
+    | <WY: "wy" >
+    | <ND: "nd" >
+    | <REL: "rel" >
+    | <EQ: "=" > : VALUE
+    | <IDENT: ["a"-"z", "A"-"Z", "_"] (["a"-"z", "A"-"Z", "_", ":", "-", "0"-"9"])* >
     | <FLOAT: ("+" | "-")? (["0"-"9"])+ ("." (["0"-"9"])+)? >
     | <COLON: ":" >
     | <COMMA: "," >
+    | <WHITESPACE: ([" ", "\t"])+ >
     | <COMMENT_START: "#"> : COMMENT
 }
 
@@ -34,25 +36,12 @@ SKIP: { < ~["\n", "\r"] > }
 
 <COMMENT>
 TOKEN: {
-    <C_EOL: ("\n" | "\r" | "\r\n") > : DATA
-}
-
-<DATA>
-TOKEN: {
-    <D_EOL: ("\n" | "\r" | "\r\n") >
-    | <D_SPACE: " " >
-    | <D_ID: (["0"-"9"])+ >
-    | <WY: "wy" >
-    | <ND: "nd" >
-    | <REL: "rel" >
-    | <EQ: "=" > : VALUE
-    | <IDENT: ["a"-"z", "A"-"Z", "_"] (["a"-"z", "A"-"Z", "_", "-", "0"-"9"])* >
-    | <D_COMMENT_START: "#"> : COMMENT
+    <C_EOL: ("\n" | "\r" | "\r\n") > : DEFAULT
 }
 
 <VALUE>
 TOKEN: {
-    <V_EOL: ("\n" | "\r" | "\r\n") > : DATA
+    <V_EOL: ("\n" | "\r" | "\r\n") > : DEFAULT
     | <TEXT: (~["\n", "\r"])+ >
 }
 
@@ -63,8 +52,16 @@ List<PrimitiveData> primitives():
 }
 {
     (
-        ( p = node() | p = way() | p = relation() )
+        p = node()
         { primitives.add(p); }
+    |
+        p = way()
+        { primitives.add(p); }
+    |
+        p = relation()
+        { primitives.add(p); }
+    |
+        <COMMENT_START> <C_EOL> | <EOL>
     )*
     <EOF>
     { return primitives; }
@@ -78,15 +75,21 @@ NodeData node():
 {
     <NODE>
     { r = new NodeData(); }
-    id=<H_ID>
+    ( <WHITESPACE> )+
+    id=<ID>
     { r.setId(Long.parseLong(id.image)); }
+    ( <WHITESPACE> )*
     <COLON>
+    ( <WHITESPACE> )*
     lat=<FLOAT>
+    ( <WHITESPACE> )*
     <COMMA>
+    ( <WHITESPACE> )*
     lon=<FLOAT>
     { r.setCoor(new LatLon(Double.parseDouble(lat.image), Double.parseDouble(lon.image))); }
-    ( <COMMENT_START> <C_EOL> | <H_EOL> )
-    ( <D_SPACE> <D_SPACE> tag(r) )*
+    ( <WHITESPACE> )*
+    ( <COMMENT_START> <C_EOL> | <EOL> )
+    ( tag(r) )*
     { return r; }
 }
 
@@ -97,10 +100,12 @@ WayData way():
 }
 {
     <WAY>
+    ( <WHITESPACE> )+
     { r = new WayData(); }
-    id=<H_ID>
+    id=<ID>
     { r.setId(Long.parseLong(id.image)); }
-    ( <COMMENT_START> <C_EOL> | <H_EOL> )
+    ( <WHITESPACE> )*
+    ( <COMMENT_START> <C_EOL> | <EOL> )
     way_data(r)
     { return r; }
 }
@@ -112,10 +117,12 @@ RelationData relation():
 }
 {
     <RELATION>
+    ( <WHITESPACE> )+
     { r = new RelationData(); }
-    id=<H_ID>
+    id=<ID>
     { r.setId(Long.parseLong(id.image)); }
-    ( <COMMENT_START> <C_EOL> | <H_EOL> )
+    ( <WHITESPACE> )*
+    ( <COMMENT_START> <C_EOL> | <EOL> )
     relation_data(r)
     { return r; }
 }
@@ -123,10 +130,7 @@ RelationData relation():
 void way_data(WayData r):
 {}
 {
-    (
-        <D_SPACE> <D_SPACE>
-        ( way_node(r) | tag(r) )
-    )*
+    ( LOOKAHEAD(3) way_node(r) | tag(r) )*
 }
 
 void way_node(WayData r):
@@ -134,21 +138,19 @@ void way_node(WayData r):
     Token id;
 }
 {
+    ( <WHITESPACE> )+
     <ND>
-    ( <D_SPACE> )+
-    id=<D_ID>
+    ( <WHITESPACE> )+
+    id=<ID>
     { r.getNodeIds().add(Long.parseLong(id.image)); }
-    ( <D_SPACE> )*
-    ( <D_COMMENT_START> <C_EOL> | <D_EOL> )
+    ( <WHITESPACE> )*
+    ( <COMMENT_START> <C_EOL> | <EOL> )
 }
 
 void relation_data(RelationData r):
 {}
 {
-    (
-        <D_SPACE> <D_SPACE>
-        ( relation_member(r) | tag(r) )
-    )*
+    ( LOOKAHEAD(3) relation_member(r) | tag(r) )*
 }
 
 void relation_member(RelationData r):
@@ -158,6 +160,7 @@ void relation_member(RelationData r):
     Token role = null;
 }
 {
+    ( <WHITESPACE> )+
     (
         <ND> { type = OsmPrimitiveType.NODE; }
     |
@@ -165,18 +168,16 @@ void relation_member(RelationData r):
     |
         <REL> { type = OsmPrimitiveType.RELATION; }
     )
-    <D_SPACE>
-    id=<D_ID>
+    ( <WHITESPACE> )+
+    id=<ID>
     (
-        <D_SPACE>
-        (
-            role=<IDENT> ( <D_SPACE> )*
-        |
-            ( <D_SPACE> )*
-        )
+        LOOKAHEAD(2)
+        ( <WHITESPACE> )+
+        role=<IDENT>
     )?
     { r.getMembers().add(new RelationMemberData(role != null ? role.image : "", type, Long.parseLong(id.image))); }
-    ( <D_COMMENT_START> <C_EOL> | <D_EOL> )
+    ( <WHITESPACE> )*
+    ( <COMMENT_START> <C_EOL> | <EOL> )
 }
 
 void tag(PrimitiveData r):
@@ -184,9 +185,11 @@ void tag(PrimitiveData r):
     Token k, v;
 }
 {
+    ( <WHITESPACE> )+
     k=<IDENT>
-    ( <D_SPACE> ) *
+    ( <WHITESPACE> )*
     <EQ>
+    ( <WHITESPACE> )*
     v=<TEXT>
     <V_EOL>
     { r.put(k.image.trim(), v.image.trim()); }

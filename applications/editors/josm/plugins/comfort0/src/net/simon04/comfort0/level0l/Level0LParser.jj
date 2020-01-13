@@ -70,7 +70,7 @@ NodeData node():
     lon=<FLOAT>
     { r.setCoor(new LatLon(Double.parseDouble(lat.image), Double.parseDouble(lon.image))); }
     ( <COMMENT_START> | <H_EOL> )
-    ( tag(r) )*
+    ( <D_SPACE> <D_SPACE> tag(r) )*
     { return r; }
 }
 
@@ -92,10 +92,10 @@ WayData way():
 void way_data(WayData r):
 {}
 {
-    LOOKAHEAD(3)
-    ( way_node(r) way_data(r) ) // TODO avoid recursive call to way_data
-    |
-    ( tag(r) )*
+    (
+        <D_SPACE> <D_SPACE>
+        ( way_node(r) | tag(r) )
+    )*
 }
 
 void way_node(WayData r):
@@ -103,7 +103,6 @@ void way_node(WayData r):
     Token id;
 }
 {
-    <D_SPACE> <D_SPACE>
     <ND>
     ( <D_SPACE> )+
     id=<D_ID>
@@ -117,7 +116,6 @@ void tag(PrimitiveData r):
     Token k, v;
 }
 {
-    <D_SPACE> <D_SPACE>
     k=<IDENT>
     ( <D_SPACE> ) *
     <EQ>

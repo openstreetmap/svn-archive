@@ -89,6 +89,21 @@ WayData way():
     { return r; }
 }
 
+RelationData relation():
+{
+    RelationData r;
+    Token id;
+}
+{
+    <RELATION>
+    { r = new RelationData(); }
+    id=<H_ID>
+    { r.setId(Long.parseLong(id.image)); }
+    ( <COMMENT_START> <C_EOL> | <H_EOL> )
+    relation_data(r)
+    { return r; }
+}
+
 void way_data(WayData r):
 {}
 {
@@ -108,6 +123,43 @@ void way_node(WayData r):
     id=<D_ID>
     { r.getNodeIds().add(Long.parseLong(id.image)); }
     ( <D_SPACE> )*
+    ( <D_COMMENT_START> <C_EOL> | <D_EOL> )
+}
+
+void relation_data(RelationData r):
+{}
+{
+    (
+        <D_SPACE> <D_SPACE>
+        ( relation_member(r) | tag(r) )
+    )*
+}
+
+void relation_member(RelationData r):
+{
+    OsmPrimitiveType type;
+    Token id;
+    Token role = null;
+}
+{
+    (
+        <ND> { type = OsmPrimitiveType.NODE; }
+    |
+        <WY> { type = OsmPrimitiveType.WAY; }
+    |
+        <REL> { type = OsmPrimitiveType.RELATION; }
+    )
+    <D_SPACE>
+    id=<D_ID>
+    (
+        <D_SPACE>
+        (
+            role=<IDENT> ( <D_SPACE> )*
+        |
+            ( <D_SPACE> )*
+        )
+    )?
+    { r.getMembers().add(new RelationMemberData(role != null ? role.image : "", type, Long.parseLong(id.image))); }
     ( <D_COMMENT_START> <C_EOL> | <D_EOL> )
 }
 

@@ -58,7 +58,7 @@ public class EditLevel0LAction extends JosmAction {
     private void editLevel0() throws IOException {
         final DataSet dataSet = MainApplication.getLayerManager().getEditDataSet();
         final Path path = writeLevel0(dataSet);
-        final Process editor = new ProcessBuilder("kate", path.toString()).start();
+        final Process editor = new EditorLauncher(path).launch();
         Logging.info("Comfort0: Launching editor on file {0}", path);
         new Thread(() -> awaitEditing(dataSet, path, editor), path.getFileName().toString()).start();
     }
@@ -69,7 +69,7 @@ public class EditLevel0LAction extends JosmAction {
                 .replace("\u200E", "")
                 .replace("\u200F", "")
                 .getBytes(CHARSET);
-        final Path path = Files.createTempFile("level0", ".txt");
+        final Path path = Files.createTempFile("josm_level0_", ".txt");
         Files.write(path, level0);
         return path;
     }

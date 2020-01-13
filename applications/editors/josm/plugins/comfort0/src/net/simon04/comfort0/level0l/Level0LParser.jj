@@ -28,7 +28,7 @@ TOKEN: {
 }
 
 <COMMENT>
-SKIP: { < ~[] > }
+SKIP: { < ~["\n", "\r"] > }
 
 <COMMENT>
 TOKEN: {
@@ -69,7 +69,7 @@ NodeData node():
     <COMMA>
     lon=<FLOAT>
     { r.setCoor(new LatLon(Double.parseDouble(lat.image), Double.parseDouble(lon.image))); }
-    ( <COMMENT_START> | <H_EOL> )
+    ( <COMMENT_START> <C_EOL> | <H_EOL> )
     ( <D_SPACE> <D_SPACE> tag(r) )*
     { return r; }
 }
@@ -84,7 +84,7 @@ WayData way():
     { r = new WayData(); }
     id=<H_ID>
     { r.setId(Long.parseLong(id.image)); }
-    ( <COMMENT_START> | <H_EOL> )
+    ( <COMMENT_START> <C_EOL> | <H_EOL> )
     way_data(r)
     { return r; }
 }
@@ -108,7 +108,7 @@ void way_node(WayData r):
     id=<D_ID>
     { r.getNodeIds().add(Long.parseLong(id.image)); }
     ( <D_SPACE> )*
-    ( <D_COMMENT_START> | <D_EOL> )
+    ( <D_COMMENT_START> <C_EOL> | <D_EOL> )
 }
 
 void tag(PrimitiveData r):

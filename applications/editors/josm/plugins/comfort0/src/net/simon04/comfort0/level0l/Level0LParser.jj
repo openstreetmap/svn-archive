@@ -45,6 +45,7 @@ TOKEN: {
     | <REL: "rel" >
     | <EQ: "=" > : VALUE
     | <IDENT: ["a"-"z", "A"-"Z", "_"] (["a"-"z", "A"-"Z", "_", "-", "0"-"9"])* >
+    | <D_COMMENT_START: "#"> : COMMENT
 }
 
 <VALUE>
@@ -68,15 +69,47 @@ NodeData node():
     <COMMA>
     lon=<FLOAT>
     { r.setCoor(new LatLon(Double.parseDouble(lat.image), Double.parseDouble(lon.image))); }
-    (<COMMENT_START> | <H_EOL>)
-    tags(r)
+    ( <COMMENT_START> | <H_EOL> )
+    ( tag(r) )*
     { return r; }
 }
 
-void tags(PrimitiveData r):
+WayData way():
+{
+    WayData r;
+    Token id;
+}
+{
+    <WAY>
+    { r = new WayData(); }
+    id=<H_ID>
+    { r.setId(Long.parseLong(id.image)); }
+    ( <COMMENT_START> | <H_EOL> )
+    way_data(r)
+    { return r; }
+}
+
+void way_data(WayData r):
 {}
 {
+    LOOKAHEAD(3)
+    ( way_node(r) way_data(r) ) // TODO avoid recursive call to way_data
+    |
     ( tag(r) )*
+}
+
+void way_node(WayData r):
+{
+    Token id;
+}
+{
+    <D_SPACE> <D_SPACE>
+    <ND>
+    ( <D_SPACE> )+
+    id=<D_ID>
+    { r.getNodeIds().add(Long.parseLong(id.image)); }
+    ( <D_SPACE> )*
+    ( <D_COMMENT_START> | <D_EOL> )
 }
 
 void tag(PrimitiveData r):

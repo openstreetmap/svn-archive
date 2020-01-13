@@ -35,7 +35,7 @@ public class PointAction extends MapMode implements AWTEventListener {
     private boolean isCtrlDown;
 
     public PointAction(CommandLine parentPlugin) {
-        super(null, "addsegment.png", null, ImageProvider.getCursor("crosshair", null));
+        super(null, "addsegment", null, ImageProvider.getCursor("crosshair", null));
         this.parentPlugin = parentPlugin;
         cursorCrosshair = ImageProvider.getCursor("crosshair", null);
         cursorJoinNode = ImageProvider.getCursor("crosshair", "joinnode");

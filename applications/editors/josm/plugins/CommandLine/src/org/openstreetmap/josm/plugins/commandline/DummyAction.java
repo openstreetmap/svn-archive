@@ -14,7 +14,7 @@ public class DummyAction extends MapMode implements AWTEventListener {
     private final CommandLine parentPlugin;
 
     public DummyAction(CommandLine parentPlugin) {
-            super(null, "addsegment.png", null, ImageProvider.getCursor("normal", null));
+            super(null, "addsegment", null, ImageProvider.getCursor("normal", null));
             this.parentPlugin = parentPlugin;
     }
 

@@ -28,7 +28,7 @@ public abstract class AbstractOsmAction<T extends OsmPrimitive> extends MapMode 
     private boolean isCtrlDown;
 
     protected AbstractOsmAction(CommandLine parentPlugin, String activeCursorIcon) {
-        super(null, "addsegment.png", null, ImageProvider.getCursor("normal", "selection"));
+        super(null, "addsegment", null, ImageProvider.getCursor("normal", "selection"));
         this.parentPlugin = parentPlugin;
         cursorNormal = ImageProvider.getCursor("normal", "selection");
         cursorActive = ImageProvider.getCursor("normal", activeCursorIcon);

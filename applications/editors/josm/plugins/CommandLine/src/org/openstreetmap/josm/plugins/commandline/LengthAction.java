@@ -47,7 +47,7 @@ public class LengthAction extends MapMode implements MapViewPaintable, AWTEventL
     private boolean drawing;
 
     public LengthAction(CommandLine parentPlugin) {
-        super(null, "addsegment.png", null, ImageProvider.getCursor("crosshair", null));
+        super(null, "addsegment", null, ImageProvider.getCursor("crosshair", null));
         this.parentPlugin = parentPlugin;
         selectedColor = new NamedColorProperty(marktr("selected"), Color.red).get();
         cursorCrosshair = ImageProvider.getCursor("crosshair", null);

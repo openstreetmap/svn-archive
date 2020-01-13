@@ -1,0 +1,66 @@
+options {
+  STATIC = false;
+  OUTPUT_DIRECTORY = "parsergen";
+}
+
+PARSER_BEGIN(Level0LParser)
+package net.simon04.comfort0.level0l.parsergen;
+import org.openstreetmap.josm.data.osm.*;
+import org.openstreetmap.josm.data.coor.*;
+public class Level0LParser {
+}
+PARSER_END(Level0LParser)
+
+<DEFAULT> //HEADER
+SKIP: { " " }
+
+<DEFAULT> //HEADER
+TOKEN: {
+    <H_EOL: ("\n" | "\r" | "\r\n") >
+    | <H_ID: (["0"-"9"])+ >
+    | <NODE: "node" >
+    | <WAY: "way" >
+    | <RELATION: "relation" >
+    | <FLOAT: ("+" | "-")? (["0"-"9"])+ ("." (["0"-"9"])+)? >
+    | <COLON: ":" >
+    | <COMMA: "," >
+    | <COMMENT_START: "#"> : COMMENT
+}
+
+<COMMENT>
+SKIP: { < ~[] > }
+
+<COMMENT>
+TOKEN: {
+    <C_EOL: ("\n" | "\r" | "\r\n") > : DATA
+}
+
+<DATA>
+TOKEN: {
+    <D_EOL: ("\n" | "\r" | "\r\n") >
+    | <D_ID: (["0"-"9"])+ >
+    | <WY: "wy" >
+    | <ND: "nd" >
+    | <REL: "rel" >
+    | <EQ: "=" >
+    | <IDENT: ["a"-"z", "A"-"Z", "_"] (["a"-"z", "A"-"Z", "_", "-", "0"-"9"])* >
+}
+
+NodeData node():
+{
+    NodeData r;
+    Token id, lat, lon;
+}
+{
+    <NODE>
+    { r = new NodeData(); }
+    id=<H_ID>
+    { r.setId(Long.parseLong(id.image)); }
+    <COLON>
+    lat=<FLOAT>
+    <COMMA>
+    lon=<FLOAT>
+    { r.setCoor(new LatLon(Double.parseDouble(lat.image), Double.parseDouble(lon.image))); }
+    (<COMMENT_START> | <H_EOL>)
+    { return r; }
+}

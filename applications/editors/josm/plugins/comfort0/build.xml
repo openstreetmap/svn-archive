@@ -14,4 +14,21 @@
     <!-- ** include targets that all plugins have in common ** -->
     <import file="../build-common.xml"/>
 
+    <property name="javacc.home" location="../../core/tools"/>
+    <property name="parser.dir" location="src/net/simon04/comfort0/level0l"/>
+    <target name="javacc" depends="init" unless="javacc.notRequired">
+        <mkdir dir="${parser.dir}/parsergen"/>
+        <exec append="false" executable="java" failifexecutionfails="true">
+            <arg value="-cp"/>
+            <arg value="${javacc.home}/javacc.jar"/>
+            <arg value="javacc"/>
+            <arg value="-DEBUG_PARSER=false"/>
+            <arg value="-DEBUG_TOKEN_MANAGER=false"/>
+            <arg value="-JDK_VERSION=1.7"/>
+            <arg value="-GRAMMAR_ENCODING=UTF-8"/>
+            <arg value="-OUTPUT_DIRECTORY=${parser.dir}/parsergen"/>
+            <arg value="${parser.dir}/Level0LParser.jj"/>
+        </exec>
+    </target>
+
 </project>

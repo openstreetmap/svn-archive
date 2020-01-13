@@ -16,6 +16,7 @@
 
     <property name="javacc.home" location="../../core/tools"/>
     <property name="parser.dir" location="src/net/simon04/comfort0/level0l"/>
+    <target name="pre-compile" depends="javacc"/>
     <target name="javacc" depends="init" unless="javacc.notRequired">
         <mkdir dir="${parser.dir}/parsergen"/>
         <exec append="false" executable="java" failifexecutionfails="true">

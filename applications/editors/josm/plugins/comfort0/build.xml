@@ -8,7 +8,7 @@
     <property name="plugin.author" value="simon04"/>
     <property name="plugin.class" value="net.simon04.comfort0.Comfort0Plugin"/>
     <property name="plugin.description" value="Allows editing data in Level0L format"/>
-    <property name="plugin.icon" value="images/thetha.svg"/>
+    <property name="plugin.icon" value="images/theta.svg"/>
     <property name="plugin.link" value="http://josm.openstreetmap.de/wiki/Help/Plugin/Comfort0"/>
 
     <!-- ** include targets that all plugins have in common ** -->

@@ -14,7 +14,7 @@
     <!-- ** include targets that all plugins have in common ** -->
     <import file="../build-common.xml"/>
 
-    <property name="javacc.home" location="../../core/tools"/>
+    <property name="javacc.home" location="../00_core_tools"/>
     <property name="parser.dir" location="src/net/simon04/comfort0/level0l"/>
     <target name="pre-compile" depends="javacc"/>
     <target name="javacc" depends="init" unless="javacc.notRequired">

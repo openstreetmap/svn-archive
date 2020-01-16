@@ -51,7 +51,7 @@ public class EditLevel0LAction extends JosmAction {
         try {
             editLevel0();
         } catch (Exception ex) {
-            ex.printStackTrace();
+            Logging.error(ex);
         }
     }
 
@@ -81,7 +81,7 @@ public class EditLevel0LAction extends JosmAction {
             readLevel0(path, dataSet);
             Files.delete(path);
         } catch (Exception ex) {
-            ex.printStackTrace();
+            Logging.error(ex);
         }
     }
 

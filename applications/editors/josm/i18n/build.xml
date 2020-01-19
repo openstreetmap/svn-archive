@@ -7,7 +7,6 @@
     <property name="maps.srcfile" value="https://josm.openstreetmap.de/maps"/>
     <property name="wiki.srcfile" value="https://josm.openstreetmap.de/josmfile?mode=en"/>
     <property name="surveyor.srcfile" value="${plugin.dir}/surveyor/resources/surveyor.xml"/>
-    <property name="tag2link.srcfile" value="${plugin.dir}/tag2link/resources/tag2link_sources.xml"/>
     <property name="i18n.build.dir" value="build"/>
     <property name="i18n.install.dir" value="${josm.build.dir}/data"/>
     <property name="pluginlist.install.dir" value="${josm.build.dir}/data_nodist/trans"/>
@@ -34,9 +33,6 @@
         </exec>
         <exec executable="perl" failonerror="true" logError="true" output="${i18n.build.dir}/trans_surveyor.java">
             <arg line="convsurveyor.pl ${surveyor.srcfile}"/>
-        </exec>
-        <exec executable="perl" failonerror="true" logError="true" output="${i18n.build.dir}/trans_tag2link.java">
-            <arg line="convtag2link.pl ${tag2link.srcfile}"/>
         </exec>
         <exec executable="perl" failonerror="true" logError="true" output="${i18n.build.dir}/trans_plugins.java">
             <arg line="convplugins.pl ${plugin.dir}/*/build.xml"/>
@@ -82,7 +78,6 @@
             <!-- plugins.pot -->
             <fileset dir="${plugin.dir}" includesfile="${po.build.dir}/pluginSrc.txt"/>
             <fileset dir="${i18n.build.dir}" includes="trans_surveyor.java"/>
-            <fileset dir="${i18n.build.dir}" includes="trans_tag2link.java"/>
         </gettext-extract>
     </target>
     <target name="po/core+maplist+presets.pot" depends="po/core.pot,po/maplist.pot,po/presets.pot">
@@ -118,7 +113,6 @@
         <gettext-extract keysFile="plugins.pot" poDirectory="po" keywords="${gettext.keywords} --exclude-file=excludes.pot --exclude-file=po/core.pot --exclude-file=po/presets.pot">
             <fileset dir="${plugin.dir}" includesfile="${po.build.dir}/pluginSrc.txt"/>
             <fileset dir="${i18n.build.dir}" includes="trans_surveyor.java"/>
-            <fileset dir="${i18n.build.dir}" includes="trans_tag2link.java"/>
         </gettext-extract>
     </target>
     <target name="build">

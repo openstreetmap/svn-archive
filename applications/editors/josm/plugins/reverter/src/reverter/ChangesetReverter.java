@@ -73,6 +73,8 @@ public class ChangesetReverter {
     private final OsmDataLayer layer; // data layer associated with reverter
     private final DataSet ds; // DataSet associated with reverter
     private final ChangesetDataSet cds; // Current changeset data
+    /** original DataSet, used if a new layer is requested */
+    private final DataSet ods;
     private DataSet nds; // Dataset that contains new objects downloaded by reverter
 
     private final HashSet<PrimitiveId> missing = new HashSet<>();
@@ -117,7 +119,9 @@ public class ChangesetReverter {
                 entry.getModificationType() == ChangesetModificationType.DELETED) {
             return true;
         }
-        OsmPrimitive p = ds.getPrimitiveById(entry.getPrimitive().getPrimitiveId());
+        if (ods == null)
+            return false; // should not happen
+        OsmPrimitive p = ods.getPrimitiveById(entry.getPrimitive().getPrimitiveId());
         if (p == null) return false;
         return p.isSelected();
     }
@@ -127,21 +131,29 @@ public class ChangesetReverter {
      * @param changesetId changeset id
      * @param revertType type of revert
      * @param newLayer set to true if a new layer should be created
+     * @param ods original dataset to search for selected primitives, can be null
      * @param monitor progress monitor
      * @throws OsmTransferException if data transfer errors occur
      * @throws RevertRedactedChangesetException if a redacted changeset is requested
      */
-    public ChangesetReverter(int changesetId, RevertType revertType, boolean newLayer, ProgressMonitor monitor)
+    public ChangesetReverter(int changesetId, RevertType revertType, boolean newLayer, DataSet ods, ProgressMonitor monitor)
             throws OsmTransferException, RevertRedactedChangesetException {
         this.changesetId = changesetId;
+        OsmDataLayer editLayer = MainApplication.getLayerManager().getEditLayer();
         if (newLayer) {
             this.ds = new DataSet();
             this.layer = new OsmDataLayer(this.ds, tr("Reverted changeset") + tr(" [id: {0}]", String.valueOf(changesetId)), null);
+            this.ods = ods;
         } else {
-            this.layer = MainApplication.getLayerManager().getEditLayer();
-            this.ds = layer.data;
+            this.layer = editLayer;
+            this.ds = editLayer.data;
+            this.ods = ods;
         }
         this.revertType = revertType;
+        if ((revertType == RevertType.SELECTION || revertType == RevertType.SELECTION_WITH_UNDELETE)
+                && (ods == null || ods.getAllSelected().isEmpty())) {
+            throw new IllegalArgumentException("No selected elements with revert type " + revertType);
+        }
 
         OsmServerChangesetReader csr = new OsmServerChangesetReader(true);
         monitor.beginTask("", 2);

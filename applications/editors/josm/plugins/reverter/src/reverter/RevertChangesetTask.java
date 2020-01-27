@@ -17,9 +17,11 @@ import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.SequenceCommand;
 import org.openstreetmap.josm.command.conflict.ConflictAddCommand;
 import org.openstreetmap.josm.data.UndoRedoHandler;
+import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.Notification;
 import org.openstreetmap.josm.gui.PleaseWaitRunnable;
+import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.gui.util.GuiHelper;
 import org.openstreetmap.josm.io.OsmTransferException;
@@ -32,6 +34,7 @@ public class RevertChangesetTask extends PleaseWaitRunnable {
     private final Collection<Integer> changesetIds;
     private final RevertType revertType;
     private boolean newLayer;
+    private final DataSet oldDataSet;
 
     private ChangesetReverter rev;
     private boolean downloadConfirmed;
@@ -55,6 +58,8 @@ public class RevertChangesetTask extends PleaseWaitRunnable {
         this.revertType = revertType;
         this.downloadConfirmed = autoConfirmDownload;
         this.newLayer = newLayer;
+        OsmDataLayer editLayer = MainApplication.getLayerManager().getEditLayer();
+        this.oldDataSet = editLayer == null ? null : editLayer.data;
     }
 
     private boolean checkAndDownloadMissing() throws OsmTransferException {
@@ -115,7 +120,7 @@ public class RevertChangesetTask extends PleaseWaitRunnable {
     private RevertChangesetCommand revertChangeset(int changesetId) throws OsmTransferException, UserCancelException {
         progressMonitor.indeterminateSubTask(tr("Reverting changeset {0}", Long.toString(changesetId)));
         try {
-            rev = new ChangesetReverter(changesetId, revertType, newLayer, progressMonitor.createSubTaskMonitor(0, true));
+            rev = new ChangesetReverter(changesetId, revertType, newLayer, oldDataSet, progressMonitor.createSubTaskMonitor(0, true));
         } catch (final RevertRedactedChangesetException e) {
             GuiHelper.runInEDT(() -> new Notification(
                     e.getMessage()+"<br>"+

@@ -65,6 +65,8 @@ public class CadastrePreferenceSetting extends DefaultTabPreferenceSetting {
 
     private JCheckBox dontUseRelation = new JCheckBox(tr("Don''t use relation for addresses (but \"addr:street\" on elements)."));
 
+    private JCheckBox mergeDataLayers = new JCheckBox(tr("Merge downloaded cadastre data layers together."));
+
     private JRadioButton grabMultiplier1 = new JRadioButton("", true);
 
     private JRadioButton grabMultiplier2 = new JRadioButton("", true);
@@ -374,6 +376,14 @@ public class CadastrePreferenceSetting extends DefaultTabPreferenceSetting {
         dontUseRelation.setToolTipText(tr("Enable this to use the tag \"add:street\" on nodes."));
         cadastrewms.add(dontUseRelation, GBC.eop().insets(0, 0, 0, 0));
 
+        // separator
+        cadastrewms.add(new JSeparator(SwingConstants.HORIZONTAL), GBC.eol().fill(GBC.HORIZONTAL));
+
+        // option to merge downloaded data layers
+        mergeDataLayers.setSelected(Config.getPref().getBoolean("cadastrewms.merge.data.layers", false));
+        mergeDataLayers.setToolTipText(tr("Merge automatically all cadastre data layers in a single final layer."));
+        cadastrewms.add(mergeDataLayers, GBC.eop().insets(0, 0, 0, 0));
+
         // end of dialog, scroll bar
         cadastrewms.add(Box.createVerticalGlue(), GBC.eol().fill(GBC.VERTICAL));
         JScrollPane scrollpane = new JScrollPane(cadastrewms);
@@ -453,6 +463,7 @@ public class CadastrePreferenceSetting extends DefaultTabPreferenceSetting {
         Config.getPref().putBoolean("cadastrewms.autoFirstLayer", autoFirstLayer.isSelected());
         CacheControl.cacheEnabled = enableCache.isSelected();
         Config.getPref().putBoolean("cadastrewms.addr.dontUseRelation", dontUseRelation.isSelected());
+        Config.getPref().putBoolean("cadastrewms.merge.data.layers", mergeDataLayers.isSelected());
         CadastrePlugin.refreshConfiguration();
         CadastrePlugin.refreshMenu();
 

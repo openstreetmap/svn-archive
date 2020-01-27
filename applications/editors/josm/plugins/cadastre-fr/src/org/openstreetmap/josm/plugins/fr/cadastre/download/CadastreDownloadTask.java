@@ -25,7 +25,9 @@ import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.Notification;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
+import org.openstreetmap.josm.gui.util.GuiHelper;
 import org.openstreetmap.josm.plugins.fr.cadastre.api.CadastreAPI;
+import org.openstreetmap.josm.spi.preferences.Config;
 import org.openstreetmap.josm.tools.Logging;
 import org.openstreetmap.josm.tools.Utils;
 
@@ -75,6 +77,10 @@ public class CadastreDownloadTask extends DownloadOsmTask {
                 } catch (InterruptedException | ExecutionException e) {
                     Logging.error(e);
                 }
+            }
+            List<CadastreDataLayer> layers = MainApplication.getLayerManager().getLayersOfType(CadastreDataLayer.class);
+            if (layers.size() > 1 && Config.getPref().getBoolean("cadastrewms.merge.data.layers")) {
+                GuiHelper.runInEDT(() -> MainApplication.getMenu().merge.merge(layers));
             }
         });
     }

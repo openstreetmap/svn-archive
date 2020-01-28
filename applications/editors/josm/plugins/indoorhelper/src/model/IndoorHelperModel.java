@@ -1,22 +1,4 @@
-/*
- * Indoorhelper is a JOSM plug-in to support users when creating their own indoor maps.
- *  Copyright (C) 2016  Erik Gruschka
- *  Copyright (C) 2018  Rebecca Schmidt
- *
- *  This program is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
-
+// License: GPL. For details, see LICENSE file.
 package model;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -205,7 +187,7 @@ public class IndoorHelperModel {
             for (OsmPrimitive osm : innerRelation) {
                  newMember = new RelationMember(role == null ? "" : role, osm);
                  relation.addMember(newMember);
-            };
+            }
 
         //Check if dataset is not empty or if {@link innerRelation} has no value
         } else if (MainApplication.getLayerManager().getEditDataSet().selectionEmpty() || innerRelation.isEmpty()) {

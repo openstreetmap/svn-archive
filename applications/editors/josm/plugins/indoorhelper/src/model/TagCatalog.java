@@ -1,22 +1,4 @@
-/*
- * Indoorhelper is a JOSM plug-in to support users when creating their own indoor maps.
- *  Copyright (C) 2016  Erik Gruschka
- *  Copyright (C) 2018  Rebecca Schmidt
- *
- *  This program is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
-
+// License: GPL. For details, see LICENSE file.
 package model;
 
 import java.util.ArrayList;
@@ -99,7 +81,6 @@ public final class TagCatalog {
             tagList = null;
             return tagList;
         }
-        
     }
 
     /**
@@ -109,7 +90,7 @@ public final class TagCatalog {
      * @author rebsc
      */
     public enum IndoorObject {
-		        CONCRETE_WALL, GLASS_WALL, ROOM, TOILET_MALE, TOILET_FEMALE, ELEVATOR, DOOR_PRIVATE, DOOR_PUBLIC, ENTRANCE,
-		        ENTRANCE_EXIT_ONLY, ACCESS_PRIVATE, ACCESS_PUBLIC, STEPS, CORRIDOR, BENCH, AREA, NONE;
+        CONCRETE_WALL, GLASS_WALL, ROOM, TOILET_MALE, TOILET_FEMALE, ELEVATOR, DOOR_PRIVATE, DOOR_PUBLIC, ENTRANCE,
+        ENTRANCE_EXIT_ONLY, ACCESS_PRIVATE, ACCESS_PUBLIC, STEPS, CORRIDOR, BENCH, AREA, NONE;
     }
 }

@@ -9,7 +9,7 @@
     <property name="plugin.class" value="net.simon04.comfort0.Comfort0Plugin"/>
     <property name="plugin.description" value="Allows editing data in Level0L format"/>
     <property name="plugin.icon" value="images/theta.svg"/>
-    <property name="plugin.link" value="http://josm.openstreetmap.de/wiki/Help/Plugin/Comfort0"/>
+    <property name="plugin.link" value="https://josm.openstreetmap.de/wiki/Help/Plugin/Comfort0"/>
 
     <!-- ** include targets that all plugins have in common ** -->
     <import file="../build-common.xml"/>

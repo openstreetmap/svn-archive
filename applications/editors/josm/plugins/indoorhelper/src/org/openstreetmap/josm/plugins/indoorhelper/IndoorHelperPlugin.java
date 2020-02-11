@@ -102,7 +102,7 @@ public class IndoorHelperPlugin extends Plugin implements PaintableInvalidationL
 
         if (currentAutoFilter != null) {
             if (controller != null) {
-                String currentFilterValue = currentAutoFilter.getFilter().text.split("=")[1];
+                String currentFilterValue = currentAutoFilter.getLabel();
 
                 controller.setIndoorLevel(currentFilterValue);
                 controller.getIndoorLevel(currentFilterValue);

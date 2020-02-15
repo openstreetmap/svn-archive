@@ -51,6 +51,13 @@ public class TemplatedTMSTileSource extends TMSTileSource implements TemplatedTi
     private static final Pattern PATTERN_HEADER  = Pattern.compile("\\{header\\(([^,]+),([^}]+)\\)\\}");
     private static final Pattern PATTERN_API_KEY = Pattern.compile("\\{apiKey\\}");
     private static final Pattern PATTERN_PARAM  = Pattern.compile("\\{((?:\\d+-)?z(?:oom)?(:?[+-]\\d+)?|x|y|!y|-y|switch:([^}]+))\\}");
+
+    /**
+     * Pattern used only for compatibility with older JOSM clients. To remove end of 2020, with an update of JOSM wiki
+     * @deprecated to remove end of 2020
+     */
+    @Deprecated
+    private static final Pattern PATTERN_API_KEY_COMPATIBILITY = Pattern.compile("_apiKey_");
     // CHECKSTYLE.ON: SingleSpaceSeparator
 
     private static final Pattern[] ALL_PATTERNS = {
@@ -70,14 +77,16 @@ public class TemplatedTMSTileSource extends TMSTileSource implements TemplatedTi
         handleTemplate(info.getId());
     }
 
-    private void replacePattern(Pattern p, BiConsumer<Matcher, StringBuffer> replaceAction) {
-        StringBuffer output = new StringBuffer();
-        Matcher m = p.matcher(baseUrl);
-        while (m.find()) {
-            replaceAction.accept(m, output);
+    private void replacePattern(BiConsumer<Matcher, StringBuffer> replaceAction, Pattern... patterns) {
+        for (Pattern p : patterns) {
+            StringBuffer output = new StringBuffer();
+            Matcher m = p.matcher(baseUrl);
+            while (m.find()) {
+                replaceAction.accept(m, output);
+            }
+            m.appendTail(output);
+            baseUrl = output.toString();
         }
-        m.appendTail(output);
-        baseUrl = output.toString();
     }
 
     private void handleTemplate(String imageryId) {
@@ -88,18 +97,20 @@ public class TemplatedTMSTileSource extends TMSTileSource implements TemplatedTi
             randomParts = m.group(1).split(",");
         }
         // Capturing group pattern on header values
-        replacePattern(PATTERN_HEADER, (matcher, output) -> {
+        replacePattern((matcher, output) -> {
             headers.put(matcher.group(1), matcher.group(2));
             matcher.appendReplacement(output, "");
-        });
+        }, PATTERN_HEADER);
         // Capturing group pattern on API key values
-        replacePattern(PATTERN_API_KEY, (matcher, output) -> {
-            try {
-                matcher.appendReplacement(output, FeatureAdapter.retrieveApiKey(imageryId));
-            } catch (IOException e) {
-                throw new IllegalArgumentException(e);
-            }
-        });
+        if (imageryId != null) {
+            replacePattern((matcher, output) -> {
+                try {
+                    matcher.appendReplacement(output, FeatureAdapter.retrieveApiKey(imageryId));
+                } catch (IOException e) {
+                    throw new IllegalArgumentException(e);
+                }
+            }, PATTERN_API_KEY, PATTERN_API_KEY_COMPATIBILITY);
+        }
         // Capturing group pattern on zoom values
         m = PATTERN_ZOOM.matcher(baseUrl);
         if (m.find()) {

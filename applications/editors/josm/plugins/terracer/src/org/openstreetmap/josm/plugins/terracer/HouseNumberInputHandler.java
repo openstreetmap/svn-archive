@@ -321,7 +321,7 @@ public class HouseNumberInputHandler extends JosmAction implements ActionListene
      * @return the stepSize (1 for all, 2 for odd /even)
      */
     public Integer stepSize() {
-        return (dialog.interpolation.getSelectedItem().equals(tr("All"))) ? 1 : 2;
+        return dialog.interpolation.getSelectedItem().equals(tr("All")) ? 1 : 2;
     }
 
     /**

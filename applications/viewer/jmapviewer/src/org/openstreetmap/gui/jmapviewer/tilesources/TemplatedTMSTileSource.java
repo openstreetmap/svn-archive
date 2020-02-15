@@ -1,6 +1,7 @@
 // License: GPL. For details, see Readme.txt file.
 package org.openstreetmap.gui.jmapviewer.tilesources;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -92,9 +93,13 @@ public class TemplatedTMSTileSource extends TMSTileSource implements TemplatedTi
             matcher.appendReplacement(output, "");
         });
         // Capturing group pattern on API key values
-        replacePattern(PATTERN_API_KEY, (matcher, output) ->
-            matcher.appendReplacement(output, FeatureAdapter.retrieveApiKey(imageryId))
-        );
+        replacePattern(PATTERN_API_KEY, (matcher, output) -> {
+            try {
+                matcher.appendReplacement(output, FeatureAdapter.retrieveApiKey(imageryId));
+            } catch (IOException e) {
+                throw new IllegalArgumentException(e);
+            }
+        });
         // Capturing group pattern on zoom values
         m = PATTERN_ZOOM.matcher(baseUrl);
         if (m.find()) {

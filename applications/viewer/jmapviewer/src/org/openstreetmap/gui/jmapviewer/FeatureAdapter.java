@@ -41,8 +41,9 @@ public final class FeatureAdapter {
          * Retrieves the API key for the given imagery id.
          * @param imageryId imagery id
          * @return the API key for the given imagery id
+         * @throws IOException in case of I/O error
          */
-        String retrieveApiKey(String imageryId);
+        String retrieveApiKey(String imageryId) throws IOException;
     }
 
     /**
@@ -190,8 +191,9 @@ public final class FeatureAdapter {
      * Retrieves the API key for the given imagery id using the current {@link ApiKeyAdapter}.
      * @param imageryId imagery id
      * @return the API key for the given imagery id
+     * @throws IOException in case of I/O error
      */
-    public static String retrieveApiKey(String imageryId) {
+    public static String retrieveApiKey(String imageryId) throws IOException {
         return apiKeyAdapter.retrieveApiKey(imageryId);
     }
 

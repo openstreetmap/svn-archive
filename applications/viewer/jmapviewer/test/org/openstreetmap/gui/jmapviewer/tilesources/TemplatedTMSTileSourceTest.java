@@ -1,4 +1,4 @@
-// License: GPL. For details, see LICENSE file.
+// License: GPL. For details, see Readme.txt file.
 package org.openstreetmap.gui.jmapviewer.tilesources;
 
 import static org.junit.Assert.assertEquals;
@@ -12,14 +12,12 @@ import java.util.stream.Stream;
 
 import org.junit.Test;
 
-
 /**
- *
  * Tests for TemplaedTMSTileSource
  */
 public class TemplatedTMSTileSourceTest {
 
-    private final static Collection<String> TMS_IMAGERIES = Arrays.asList(new String[]{
+    private static final Collection<String> TMS_IMAGERIES = Arrays.asList(new String[]{
             "http://imagico.de/map/osmim_tiles.php?layer=S2A_R136_N41_20150831T093006&z={zoom}&x={x}&y={-y}",
             /*
              *  generate for example with:
@@ -35,15 +33,15 @@ public class TemplatedTMSTileSourceTest {
      *  * expected tile url for zoom=1, x=2, y=3
      *  * expected tile url for zoom=3, x=2, y=1
      */
-    @SuppressWarnings("unchecked")
     private Collection<String[]> TEST_DATA = Arrays.asList(new String[][] {
         /*
          * generate with main method below once TMS_IMAGERIES is filled in
          */
-            new String[]{"http://imagico.de/map/osmim_tiles.php?layer=S2A_R136_N41_20150831T093006&z={zoom}&x={x}&y={-y}", 
-                    "http://imagico.de/map/osmim_tiles.php?layer=S2A_R136_N41_20150831T093006&z=1&x=2&y=-2", 
-                    "http://imagico.de/map/osmim_tiles.php?layer=S2A_R136_N41_20150831T093006&z=3&x=2&y=6"
-                    }
+        new String[] {
+                "http://imagico.de/map/osmim_tiles.php?layer=S2A_R136_N41_20150831T093006&z={zoom}&x={x}&y={-y}", 
+                "http://imagico.de/map/osmim_tiles.php?layer=S2A_R136_N41_20150831T093006&z=1&x=2&y=-2", 
+                "http://imagico.de/map/osmim_tiles.php?layer=S2A_R136_N41_20150831T093006&z=3&x=2&y=6"
+                }
     });
 
     /**
@@ -57,7 +55,6 @@ public class TemplatedTMSTileSourceTest {
                 "http://localhost/3/1/2"
                 );
     }
-
 
     /**
      * Check template with positive zoom index
@@ -105,6 +102,17 @@ public class TemplatedTMSTileSourceTest {
                 "http://localhost/4/2/3",
                 "http://localhost/2/1/2"
                 );
+    }
+
+    /**
+     * Test template with switch
+     */
+    @Test
+    public void testGetTileUrl_apiKey() {
+        System.setProperty("id1.api-key", "wololo");
+        TileSourceInfo testImageryTMS = new TileSourceInfo("test imagery", "http://localhost/{zoom}/{x}/{y}?token={apiKey}&foo=bar", "id1");
+        TemplatedTMSTileSource ts = new TemplatedTMSTileSource(testImageryTMS);
+        assertEquals("http://localhost/1/2/3?token=wololo&foo=bar", ts.getTileUrl(1, 2, 3));
     }
 
     /**
@@ -175,12 +183,13 @@ public class TemplatedTMSTileSourceTest {
         assertEquals(expected123, ts.getTileUrl(1, 2, 3));
         assertEquals(expected312, ts.getTileUrl(3, 1, 2));
     }
+
     /**
      * Tests all entries in TEST_DATA. This test will fail if {switch:...} template is used
      */
     @Test
     public void testAllUrls() {
-        for(String[] test: TEST_DATA) {
+        for (String[] test: TEST_DATA) {
             TileSourceInfo testImageryTMS = new TileSourceInfo("test imagery", test[0], "id1");
             TemplatedTMSTileSource ts = new TemplatedTMSTileSource(testImageryTMS);
             assertEquals(test[1], ts.getTileUrl(1, 2, 3));
@@ -189,11 +198,11 @@ public class TemplatedTMSTileSourceTest {
     }
 
     public static void main(String[] args) {
-        for(String url: TMS_IMAGERIES) {
+        for (String url: TMS_IMAGERIES) {
             TileSourceInfo testImageryTMS = new TileSourceInfo("test imagery", url, "id1");
             TemplatedTMSTileSource ts = new TemplatedTMSTileSource(testImageryTMS);
-            System.out.println(MessageFormat.format("new String[]{\"{0}\", \"{1}\", \"{2}\"},", url, ts.getTileUrl(1, 2, 3), ts.getTileUrl(3, 2, 1)));
+            System.out.println(MessageFormat.format("new String[]{\"{0}\", \"{1}\", \"{2}\"},",
+                    url, ts.getTileUrl(1, 2, 3), ts.getTileUrl(3, 2, 1)));
         }
     }
-
 }

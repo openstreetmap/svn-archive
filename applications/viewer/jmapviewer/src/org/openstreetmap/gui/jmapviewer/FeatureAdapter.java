@@ -21,6 +21,7 @@ import javax.imageio.ImageIO;
  */
 public final class FeatureAdapter {
 
+    private static ApiKeyAdapter apiKeyAdapter = new DefaultApiKeyAdapter();
     private static BrowserAdapter browserAdapter = new DefaultBrowserAdapter();
     private static ImageAdapter imageAdapter = new DefaultImageAdapter();
     private static TranslationAdapter translationAdapter = new DefaultTranslationAdapter();
@@ -31,20 +32,86 @@ public final class FeatureAdapter {
         // private constructor for utility classes
     }
 
+    /**
+     * Provider of confidential API keys.
+     */
+    @FunctionalInterface
+    public interface ApiKeyAdapter {
+        /**
+         * Retrieves the API key for the given imagery id.
+         * @param imageryId imagery id
+         * @return the API key for the given imagery id
+         */
+        String retrieveApiKey(String imageryId);
+    }
+
+    /**
+     * Link browser.
+     */
+    @FunctionalInterface
     public interface BrowserAdapter {
+        /**
+         * Browses to a given link.
+         * @param url link
+         */
         void openLink(String url);
     }
 
+    /**
+     * Translation support.
+     */
     public interface TranslationAdapter {
+        /**
+         * Translates some text for the current locale.
+         * <br>
+         * For example, <code>tr("JMapViewer''s default value is ''{0}''.", val)</code>.
+         * <br>
+         * @param text the text to translate.
+         * Must be a string literal. (No constants or local vars.)
+         * Can be broken over multiple lines.
+         * An apostrophe ' must be quoted by another apostrophe.
+         * @param objects the parameters for the string.
+         * Mark occurrences in {@code text} with <code>{0}</code>, <code>{1}</code>, ...
+         * @return the translated string.
+         */
         String tr(String text, Object... objects);
         // TODO: more i18n functions
     }
 
+    /**
+     * Logging support.
+     */
+    @FunctionalInterface
     public interface LoggingAdapter {
+        /**
+         * Retrieves a logger for the given name.
+         * @param name logger name
+         * @return logger for the given name
+         */
         Logger getLogger(String name);
     }
 
+    /**
+     * Image provider.
+     */
+    @FunctionalInterface
     public interface ImageAdapter {
+        /**
+         * Returns a <code>BufferedImage</code> as the result of decoding a supplied <code>URL</code>.
+         *
+         * @param input a <code>URL</code> to read from.
+         * @param readMetadata if {@code true}, makes sure to read image metadata to detect transparency color for non translucent images,
+         * if any.
+         * Always considered {@code true} if {@code enforceTransparency} is also {@code true}
+         * @param enforceTransparency if {@code true}, makes sure to read image metadata and, if the image does not
+         * provide an alpha channel but defines a {@code TransparentColor} metadata node, that the resulting image
+         * has a transparency set to {@code TRANSLUCENT} and uses the correct transparent color.
+         *
+         * @return a <code>BufferedImage</code> containing the decoded contents of the input, or <code>null</code>.
+         *
+         * @throws IllegalArgumentException if <code>input</code> is <code>null</code>.
+         * @throws IOException if an error occurs during reading.
+         */
         BufferedImage read(URL input, boolean readMetadata, boolean enforceTransparency) throws IOException;
     }
 
@@ -70,18 +137,42 @@ public final class FeatureAdapter {
         boolean put(String key, String value);
     }
 
+    /**
+     * Registers API key adapter.
+     * @param apiKeyAdapter API key adapter
+     */
+    public static void registerApiKeyAdapter(ApiKeyAdapter apiKeyAdapter) {
+        FeatureAdapter.apiKeyAdapter = Objects.requireNonNull(apiKeyAdapter);
+    }
+
+    /**
+     * Registers browser adapter.
+     * @param browserAdapter browser adapter
+     */
     public static void registerBrowserAdapter(BrowserAdapter browserAdapter) {
         FeatureAdapter.browserAdapter = Objects.requireNonNull(browserAdapter);
     }
 
+    /**
+     * Registers image adapter.
+     * @param imageAdapter image adapter
+     */
     public static void registerImageAdapter(ImageAdapter imageAdapter) {
         FeatureAdapter.imageAdapter = Objects.requireNonNull(imageAdapter);
     }
 
+    /**
+     * Registers translation adapter.
+     * @param translationAdapter translation adapter
+     */
     public static void registerTranslationAdapter(TranslationAdapter translationAdapter) {
         FeatureAdapter.translationAdapter = Objects.requireNonNull(translationAdapter);
     }
 
+    /**
+     * Registers logging adapter.
+     * @param loggingAdapter logging adapter
+     */
     public static void registerLoggingAdapter(LoggingAdapter loggingAdapter) {
         FeatureAdapter.loggingAdapter = Objects.requireNonNull(loggingAdapter);
     }
@@ -95,22 +186,61 @@ public final class FeatureAdapter {
         FeatureAdapter.settingsAdapter = Objects.requireNonNull(settingsAdapter);
     }
 
+    /**
+     * Retrieves the API key for the given imagery id using the current {@link ApiKeyAdapter}.
+     * @param imageryId imagery id
+     * @return the API key for the given imagery id
+     */
+    public static String retrieveApiKey(String imageryId) {
+        return apiKeyAdapter.retrieveApiKey(imageryId);
+    }
+
+    /**
+     * Opens a link using the current {@link BrowserAdapter}.
+     * @param url link to open
+     */
     public static void openLink(String url) {
         browserAdapter.openLink(url);
     }
 
+    /**
+     * Reads an image using the current {@link ImageAdapter}.
+     * @param url image URL to read
+     * @return a <code>BufferedImage</code> containing the decoded contents of the input, or <code>null</code>.
+     * @throws IOException if an error occurs during reading.
+     */
     public static BufferedImage readImage(URL url) throws IOException {
         return imageAdapter.read(url, false, false);
     }
 
+    /**
+     * Translates a text using the current {@link TranslationAdapter}.
+     * @param text the text to translate.
+     * Must be a string literal. (No constants or local vars.)
+     * Can be broken over multiple lines.
+     * An apostrophe ' must be quoted by another apostrophe.
+     * @param objects the parameters for the string.
+     * Mark occurrences in {@code text} with <code>{0}</code>, <code>{1}</code>, ...
+     * @return the translated string.
+     */
     public static String tr(String text, Object... objects) {
         return translationAdapter.tr(text, objects);
     }
 
+    /**
+     * Returns a logger for the given name using the current {@link LoggingAdapter}.
+     * @param name logger name
+     * @return logger for the given name
+     */
     public static Logger getLogger(String name) {
         return loggingAdapter.getLogger(name);
     }
 
+    /**
+     * Returns a logger for the given class using the current {@link LoggingAdapter}.
+     * @param klass logger class
+     * @return logger for the given class
+     */
     public static Logger getLogger(Class<?> klass) {
         return loggingAdapter.getLogger(klass.getSimpleName());
     }
@@ -147,6 +277,19 @@ public final class FeatureAdapter {
         return settingsAdapter.put(key, value);
     }
 
+    /**
+     * Default API key support that relies on system property named {@code <imageryId>.api-key}.
+     */
+    public static class DefaultApiKeyAdapter implements ApiKeyAdapter {
+        @Override
+        public String retrieveApiKey(String imageryId) {
+            return System.getProperty(imageryId + ".api-key");
+        }
+    }
+
+    /**
+     * Default browser support that relies on Java Desktop API.
+     */
     public static class DefaultBrowserAdapter implements BrowserAdapter {
         @Override
         public void openLink(String url) {
@@ -164,6 +307,9 @@ public final class FeatureAdapter {
         }
     }
 
+    /**
+     * Default image support that relies on Java Image IO API.
+     */
     public static class DefaultImageAdapter implements ImageAdapter {
         @Override
         public BufferedImage read(URL input, boolean readMetadata, boolean enforceTransparency) throws IOException {
@@ -171,6 +317,9 @@ public final class FeatureAdapter {
         }
     }
 
+    /**
+     * Default "translation" support that do not really translates strings, but only takes care of formatting arguments.
+     */
     public static class DefaultTranslationAdapter implements TranslationAdapter {
         @Override
         public String tr(String text, Object... objects) {
@@ -178,6 +327,9 @@ public final class FeatureAdapter {
         }
     }
 
+    /**
+     * Default logging support that relies on Java Logging API.
+     */
     public static class DefaultLoggingAdapter implements LoggingAdapter {
         @Override
         public Logger getLogger(String name) {

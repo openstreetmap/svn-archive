@@ -4,9 +4,11 @@ package org.openstreetmap.gui.jmapviewer.tilesources;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
+import java.util.function.BiConsumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.openstreetmap.gui.jmapviewer.FeatureAdapter;
 import org.openstreetmap.gui.jmapviewer.interfaces.TemplatedTileSource;
 
 /**
@@ -24,6 +26,7 @@ import org.openstreetmap.gui.jmapviewer.interfaces.TemplatedTileSource;
  * {y} - substituted with Y tile number
  * {!y} - substituted with Yahoo Y tile number
  * {-y} - substituted with reversed Y tile number
+ * {apiKey} - substituted with API key retrieved for the imagery id
  * {switch:VAL_A,VAL_B,VAL_C,...} - substituted with one of VAL_A, VAL_B, VAL_C. Usually
  *                                  used to specify many tile servers
  * {header:(HEADER_NAME,HEADER_VALUE)} - sets the headers to be sent to tile server
@@ -45,11 +48,12 @@ public class TemplatedTMSTileSource extends TMSTileSource implements TemplatedTi
     private static final Pattern PATTERN_NEG_Y   = Pattern.compile("\\{-y\\}");
     private static final Pattern PATTERN_SWITCH  = Pattern.compile("\\{switch:([^}]+)\\}");
     private static final Pattern PATTERN_HEADER  = Pattern.compile("\\{header\\(([^,]+),([^}]+)\\)\\}");
+    private static final Pattern PATTERN_API_KEY = Pattern.compile("\\{apiKey\\}");
     private static final Pattern PATTERN_PARAM  = Pattern.compile("\\{((?:\\d+-)?z(?:oom)?(:?[+-]\\d+)?|x|y|!y|-y|switch:([^}]+))\\}");
     // CHECKSTYLE.ON: SingleSpaceSeparator
 
     private static final Pattern[] ALL_PATTERNS = {
-        PATTERN_HEADER, PATTERN_ZOOM, PATTERN_X, PATTERN_Y, PATTERN_Y_YAHOO, PATTERN_NEG_Y, PATTERN_SWITCH
+        PATTERN_HEADER, PATTERN_ZOOM, PATTERN_X, PATTERN_Y, PATTERN_Y_YAHOO, PATTERN_NEG_Y, PATTERN_SWITCH, PATTERN_API_KEY
     };
 
     /**
@@ -62,25 +66,37 @@ public class TemplatedTMSTileSource extends TMSTileSource implements TemplatedTi
         if (cookies != null && !cookies.isEmpty()) {
             headers.put(COOKIE_HEADER, cookies);
         }
-        handleTemplate();
+        handleTemplate(info.getId());
     }
 
-    private void handleTemplate() {
+    private void replacePattern(Pattern p, BiConsumer<Matcher, StringBuffer> replaceAction) {
+        StringBuffer output = new StringBuffer();
+        Matcher m = p.matcher(baseUrl);
+        while (m.find()) {
+            replaceAction.accept(m, output);
+        }
+        m.appendTail(output);
+        baseUrl = output.toString();
+    }
+
+    private void handleTemplate(String imageryId) {
         // Capturing group pattern on switch values
         Matcher m = PATTERN_SWITCH.matcher(baseUrl);
         if (m.find()) {
             rand = new Random();
             randomParts = m.group(1).split(",");
         }
-        StringBuffer output = new StringBuffer();
-        Matcher matcher = PATTERN_HEADER.matcher(baseUrl);
-        while (matcher.find()) {
+        // Capturing group pattern on header values
+        replacePattern(PATTERN_HEADER, (matcher, output) -> {
             headers.put(matcher.group(1), matcher.group(2));
             matcher.appendReplacement(output, "");
-        }
-        matcher.appendTail(output);
-        baseUrl = output.toString();
-        m = PATTERN_ZOOM.matcher(this.baseUrl);
+        });
+        // Capturing group pattern on API key values
+        replacePattern(PATTERN_API_KEY, (matcher, output) ->
+            matcher.appendReplacement(output, FeatureAdapter.retrieveApiKey(imageryId))
+        );
+        // Capturing group pattern on zoom values
+        m = PATTERN_ZOOM.matcher(baseUrl);
         if (m.find()) {
             if (m.group(1) != null) {
                 inverse_zoom = true;
@@ -93,7 +109,6 @@ public class TemplatedTMSTileSource extends TMSTileSource implements TemplatedTi
                 zoom_offset += Integer.parseInt(ofs);
             }
         }
-
     }
 
     @Override

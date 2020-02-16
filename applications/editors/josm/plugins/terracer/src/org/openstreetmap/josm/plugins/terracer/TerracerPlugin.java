@@ -42,7 +42,7 @@ public class TerracerPlugin extends Plugin implements Destroyable {
                 .collect(Collectors.toMap(JMenuItem::getAction, component -> component));
 
         for (final Entry<Action, Component> action : actionsMap.entrySet()) {
-            if (actionsMap.containsKey(action.getKey())) {
+            if (actions.contains(action.getKey())) {
                 moreToolsMenu.remove(action.getValue());
             }
         }

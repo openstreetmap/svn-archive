@@ -50,7 +50,7 @@ public class BingAerialTileSource extends TMSTileSource {
     /** Setting key for Bing API key */
     public static final String API_KEY_SETTING = "jmapviewer.bing.api-key";
     /** Placeholder to specify Bing API key in metadata API URL*/
-    public static final String API_KEY_PLACEHOLDER = "{apiKey}";
+    public static final String API_KEY_PLACEHOLDER = "{apikey}";
 
     /** Bing Metadata API URL */
     private static final String METADATA_API_URL =

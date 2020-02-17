@@ -110,7 +110,7 @@ public class TemplatedTMSTileSourceTest {
     @Test
     public void testGetTileUrl_apiKey() {
         System.setProperty("id1.api-key", "wololo");
-        TileSourceInfo testImageryTMS = new TileSourceInfo("test imagery", "http://localhost/{zoom}/{x}/{y}?token={apiKey}&foo=bar", "id1");
+        TileSourceInfo testImageryTMS = new TileSourceInfo("test imagery", "http://localhost/{zoom}/{x}/{y}?token={apikey}&foo=bar", "id1");
         TemplatedTMSTileSource ts = new TemplatedTMSTileSource(testImageryTMS);
         assertEquals("http://localhost/1/2/3?token=wololo&foo=bar", ts.getTileUrl(1, 2, 3));
     }

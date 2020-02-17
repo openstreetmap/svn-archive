@@ -27,7 +27,7 @@ import org.openstreetmap.gui.jmapviewer.interfaces.TemplatedTileSource;
  * {y} - substituted with Y tile number
  * {!y} - substituted with Yahoo Y tile number
  * {-y} - substituted with reversed Y tile number
- * {apiKey} - substituted with API key retrieved for the imagery id
+ * {apikey} - substituted with API key retrieved for the imagery id
  * {switch:VAL_A,VAL_B,VAL_C,...} - substituted with one of VAL_A, VAL_B, VAL_C. Usually
  *                                  used to specify many tile servers
  * {header:(HEADER_NAME,HEADER_VALUE)} - sets the headers to be sent to tile server
@@ -49,7 +49,7 @@ public class TemplatedTMSTileSource extends TMSTileSource implements TemplatedTi
     private static final Pattern PATTERN_NEG_Y   = Pattern.compile("\\{-y\\}");
     private static final Pattern PATTERN_SWITCH  = Pattern.compile("\\{switch:([^}]+)\\}");
     private static final Pattern PATTERN_HEADER  = Pattern.compile("\\{header\\(([^,]+),([^}]+)\\)\\}");
-    private static final Pattern PATTERN_API_KEY = Pattern.compile("\\{apiKey\\}");
+    private static final Pattern PATTERN_API_KEY = Pattern.compile("\\{apikey\\}");
     private static final Pattern PATTERN_PARAM  = Pattern.compile("\\{((?:\\d+-)?z(?:oom)?(:?[+-]\\d+)?|x|y|!y|-y|switch:([^}]+))\\}");
 
     /**

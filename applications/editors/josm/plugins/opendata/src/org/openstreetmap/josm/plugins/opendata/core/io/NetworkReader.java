@@ -13,6 +13,7 @@ import java.util.regex.Pattern;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.io.AbstractReader;
+import org.openstreetmap.josm.io.Compression;
 import org.openstreetmap.josm.io.GeoJSONReader;
 import org.openstreetmap.josm.io.OsmServerReader;
 import org.openstreetmap.josm.io.OsmTransferException;
@@ -127,6 +128,14 @@ public class NetworkReader extends OsmServerReader {
             }
         }
         return null;
+    }
+
+    @Override
+    public DataSet parseOsm(ProgressMonitor progressMonitor, Compression compression) throws OsmTransferException {
+        if (compression != Compression.NONE) {
+            Logging.warn("FIXME: unhandled compression"); // FIXME
+        }
+        return parseOsm(progressMonitor);
     }
 
     @Override

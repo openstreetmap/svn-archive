@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -94,9 +95,9 @@ public final class NodeWayUtils {
         int s = ways.size();
         List<Node> nodes = w.getNodes();
         boolean flag = ways.contains(w);
-        for (Node n: nodes) {
-            filteredAddAll(ways, n.getParentWays());
-        }
+        Set<Way> parents = new LinkedHashSet<>();
+        nodes.forEach(n -> parents.addAll(n.getParentWays()));
+        filteredAddAll(ways, parents);
         if (!flag) ways.remove(w);
         return ways.size() - s;
     }

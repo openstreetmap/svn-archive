@@ -287,6 +287,7 @@ public class IndoorHelperController {
 
         toolboxView = new ToolBoxView();
 
+        // set preference if no value ist set already
         setPluginPreferences(true);
 
         // Ui elements
@@ -472,9 +473,10 @@ public class IndoorHelperController {
     }
 
     /**
-     * Enables or disables the preferences for the mapcss-style.
+     * Enables or disables the preferences for the mapcss-style if no preference is set already.
+     * Else uses set preference.
      *
-     * @param enabled Activates or disables the settings.
+     * @param enabled Activates or disables the settings (if no preference set).
      */
     private static void setPluginPreferences(boolean enabled) {
         Map<String, Setting<?>> settings = Preferences.main().getAllSettings();
@@ -487,15 +489,20 @@ public class IndoorHelperController {
         }
 
         List<Map<String, String>> styleMapsNew = new ArrayList<>();
+
         if (!styleMaps.isEmpty()) {
             styleMapsNew.addAll(styleMaps);
         }
+
         for (Map<String, String> map : styleMapsNew) {
             if (map.containsValue(tr("Indoor"))) {
+                // find saved preference value
+            	enabled = map.containsValue(tr("true"));
                 styleMapsNew.remove(map);
                 break;
             }
         }
+
         Map<String, String> indoorMapPaint = new HashMap<>();
         indoorMapPaint.put("title", tr("Indoor"));
         indoorMapPaint.put("active", Boolean.toString(enabled));

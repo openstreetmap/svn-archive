@@ -133,7 +133,7 @@ public class ToolBoxView extends ToggleDialog {
                new Insets(0, 0, 5, 30), 0, 0));
 
        //---- helpButton ----
-       helpButton.setText(tr("<html><b>?</strong></b>"));
+       helpButton.setText(tr("help"));
        helpButton.setToolTipText(tr("Show Help-Browser."));
        helpButton.setBackground(Color.LIGHT_GRAY);
        helpButton.setEnabled(false);

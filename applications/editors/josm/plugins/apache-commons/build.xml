@@ -40,6 +40,7 @@
         <echo message="compiling sources for ${plugin.jar} ... "/>
         <javac srcdir="src" debug="true" destdir="${plugin.build.dir}" includeAntRuntime="false" encoding="UTF-8">
             <exclude name="**/org/apache/commons/lang3/**" />
+            <exclude name="**/org/apache/commons/collections4/bloomfilter/hasher/function/Murmur*.java" />
             <classpath>
                 <pathelement path="${plugin.build.dir}"/>
             	<path refid="plugin.classpath"/>

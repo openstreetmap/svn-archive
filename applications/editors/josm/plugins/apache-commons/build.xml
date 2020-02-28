@@ -48,4 +48,8 @@
         </javac>
     </target>
 
+	<target name="pre-javadoc">
+        <delete><fileset dir="src" includes="**/org/apache/commons/collections4/bloomfilter/hasher/function/Murmur*.java"/></delete>
+    </target>
+
 </project>

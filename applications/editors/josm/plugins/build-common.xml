@@ -277,7 +277,10 @@
             </and>
         </condition>
     </target>
-    <target name="javadoc" unless="skip-javadoc">
+    <target name="pre-javadoc">
+        <!-- to be overidden by plugins that need to perform additional tasks before generating javadoc -->
+    </target>
+    <target name="javadoc" depends="pre-javadoc" unless="skip-javadoc">
         <javadoc destdir="${plugin.doc.dir}"
                 executable="${javadoc.executable}"
                 encoding="UTF-8"

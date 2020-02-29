@@ -17,6 +17,7 @@
     <property name="jmockit.jar"            location="../00_core_test_lib/jmockit.jar"/>
     <property name="error_prone_core.jar"   location="../00_core_tools/error_prone_core.jar"/>
     <property name="error_prone_javac.jar"  location="../00_core_tools/error_prone_javac.jar"/>
+    <property name="auto-value-annotations.jar" location="../00_core_tools/auto-value-annotations.jar"/>
     <property name="dataflow.jar"           location="../00_core_tools/dataflow.jar"/>
     <property name="javacutil.jar"          location="../00_core_tools/javacutil.jar"/>
     <property name="failureaccess.jar"      location="../00_core_tools/failureaccess.jar"/>
@@ -105,6 +106,7 @@
         <pathelement location="${failureaccess.jar}"/>
         <pathelement location="${guava.jar}"/>
         <pathelement location="${jformatstring.jar}"/>
+        <pathelement location="${auto-value-annotations.jar}"/>
     </path>
 
     <!--

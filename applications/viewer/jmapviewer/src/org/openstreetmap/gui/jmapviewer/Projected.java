@@ -5,6 +5,7 @@ import java.awt.geom.Point2D;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.Objects;
 
 import org.openstreetmap.gui.jmapviewer.interfaces.IProjected;
@@ -12,7 +13,8 @@ import org.openstreetmap.gui.jmapviewer.interfaces.IProjected;
 /**
  * Projected coordinates represented by an encapsulates a Point2D.Double value.
  */
-public class Projected implements IProjected {
+public class Projected implements IProjected, Serializable {
+    private static final long serialVersionUID = 1L;
     private transient Point2D.Double data;
 
     /**
@@ -59,7 +61,7 @@ public class Projected implements IProjected {
     public boolean equals(Object obj) {
         if (this == obj)
             return true;
-        if (obj == null || !(obj instanceof Projected))
+        if (!(obj instanceof Projected))
             return false;
         final Projected other = (Projected) obj;
         return Objects.equals(data, other.data);

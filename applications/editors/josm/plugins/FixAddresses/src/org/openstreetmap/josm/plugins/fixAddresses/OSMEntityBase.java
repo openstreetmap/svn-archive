@@ -25,7 +25,7 @@ import org.openstreetmap.josm.tools.CheckParameterUtil;
  * <li>Tag handling
  * </ol>
  */
-public class OSMEntityBase implements IOSMEntity, Comparable<IOSMEntity> {
+public class OSMEntityBase implements IOSMEntity {
     public static final String ANONYMOUS = tr("No name");
     private static List<IAddressEditContainerListener> containerListeners = new ArrayList<>();
     private List<ICommandListener> cmdListeners = new ArrayList<>();

@@ -419,8 +419,7 @@ public class OSMAddress extends OSMEntityBase {
     if (this.equals(other))
         return 0;
 
-    int cc = 0;
-    cc = this.getCountry().compareTo(other.getCountry());
+    int cc = this.getCountry().compareTo(other.getCountry());
     if (cc == 0) {
         cc = this.getState().compareTo(other.getState());
         if (cc == 0) {

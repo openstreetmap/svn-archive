@@ -183,9 +183,8 @@ implements OsmPrimitiveVisitor, DataSetListener, IAddressEditContainerListener, 
             return;
         }
 
-        OSMAddress aNode = null;
         // Address nodes are recycled in order to keep instance variables like guessed names
-        aNode = OsmFactory.createNode(n);
+        OSMAddress aNode = OsmFactory.createNode(n);
 
         if (aNode != null) {
             addAndClassifyAddress(aNode);

@@ -18,7 +18,7 @@
     <property name="error_prone_core.jar"   location="../00_core_tools/error_prone_core.jar"/>
     <property name="error_prone_javac.jar"  location="../00_core_tools/error_prone_javac.jar"/>
     <property name="auto-value-annotations.jar" location="../00_core_tools/auto-value-annotations.jar"/>
-    <property name="dataflow.jar"           location="../00_core_tools/dataflow.jar"/>
+    <property name="dataflow.jar"           location="../00_core_tools/dataflow-shaded.jar"/>
     <property name="javacutil.jar"          location="../00_core_tools/javacutil.jar"/>
     <property name="failureaccess.jar"      location="../00_core_tools/failureaccess.jar"/>
     <property name="guava.jar"              location="../00_core_tools/guava.jar"/>

@@ -33,7 +33,7 @@ foreach my $name (glob "$dir/*")
   {
     system "mv \"$name\" \"$name.orig\"";
     my ($path, $xmlname) = ($1, $2);
-    my $res = `xmllint --format --schema ../core/data/tagging-preset.xsd \"$name.orig\" --encode utf-8 --output \"$name\" 2>&1`;
+    my $res = `xmllint --format --schema ../core/resources/data/tagging-preset.xsd \"$name.orig\" --encode utf-8 --output \"$name\" 2>&1`;
     print $res if $res !~ /\.orig validates/;
     system "perl convpreset.pl \"$name\" >\"${path}trans_$xmlname\"";
     unlink "$name.orig";

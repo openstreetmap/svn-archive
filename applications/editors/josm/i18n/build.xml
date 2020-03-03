@@ -2,13 +2,14 @@
 <project name="JOSM i18n" default="build" basedir=".">
     <!-- compilation properties -->
     <property name="josm.build.dir" value="../core"/>
-    <property name="josm.presets" value="${josm.build.dir}/resources/data/defaultpresets.xml"/>
+    <property name="josm.resources.dir" value="${josm.build.dir}/resources"/>
+    <property name="josm.presets" value="${josm.resources.dir}/data/defaultpresets.xml"/>
     <property name="plugin.dir" value="../plugins"/>
     <property name="maps.srcfile" value="https://josm.openstreetmap.de/maps"/>
     <property name="wiki.srcfile" value="https://josm.openstreetmap.de/josmfile?mode=en"/>
     <property name="surveyor.srcfile" value="${plugin.dir}/surveyor/resources/surveyor.xml"/>
     <property name="i18n.build.dir" value="build"/>
-    <property name="i18n.install.dir" value="${josm.build.dir}/resources/data"/>
+    <property name="i18n.install.dir" value="${josm.resources.dir}/data"/>
     <property name="pluginlist.install.dir" value="${josm.build.dir}/nodist/data/trans"/>
     <property name="po.build.dir" value="${i18n.build.dir}"/>
     <property name="ant.build.javac.target" value="1.5"/>
@@ -38,6 +39,7 @@
             <arg line="convplugins.pl ${plugin.dir}/*/build.xml"/>
         </exec>
         <exec executable="perl" failonerror="true">
+            <env key="TAGGING_PRESET_XSD" value="${josm.resources.dir}/data/tagging-preset.xsd"/>
             <arg line="convwiki.pl ${wiki.srcfile} ${i18n.build.dir}/josmfiles ${i18n.build.dir}/josmfiles.zip"/>
         </exec>
         <copy file="specialmessages.java" todir="${i18n.build.dir}"/>
@@ -69,8 +71,8 @@
             <fileset dir="${josm.build.dir}/src" includes="**/*.java"/>
             <fileset dir="${i18n.build.dir}" includes="specialmessages.java"/>
             <fileset dir="${i18n.build.dir}" includes="trans_presets.java"/>
-            <fileset dir="${josm.build.dir}/resources/data/validator" includes="*.mapcss"/>
-            <fileset dir="${josm.build.dir}/resources/styles/standard" includes="*.mapcss"/>
+            <fileset dir="${josm.resources.dir}/data/validator" includes="*.mapcss"/>
+            <fileset dir="${josm.resources.dir}/styles/standard" includes="*.mapcss"/>
             <fileset dir="${i18n.build.dir}" includes="trans_maps.java"/>
             <!-- data.pot -->
             <fileset dir="${i18n.build.dir}" includes="trans_plugins.java"/>
@@ -89,8 +91,8 @@
         <gettext-extract keysFile="core.pot" poDirectory="po" keywords="${gettext.keywords} --exclude-file=excludes.pot">
             <fileset dir="${josm.build.dir}/src" includes="**/*.java"/>
             <fileset dir="${i18n.build.dir}" includes="specialmessages.java"/>
-            <fileset dir="${josm.build.dir}/resources/data/validator" includes="*.mapcss"/>
-            <fileset dir="${josm.build.dir}/resources/styles/standard" includes="*.mapcss"/>
+            <fileset dir="${josm.resources.dir}/data/validator" includes="*.mapcss"/>
+            <fileset dir="${josm.resources.dir}/styles/standard" includes="*.mapcss"/>
         </gettext-extract>
     </target>
     <target name="po/maplist.pot" description="Extracts message keys from plugin descriptions" depends="trans_.java,init">

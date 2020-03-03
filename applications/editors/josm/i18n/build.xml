@@ -2,14 +2,14 @@
 <project name="JOSM i18n" default="build" basedir=".">
     <!-- compilation properties -->
     <property name="josm.build.dir" value="../core"/>
-    <property name="josm.presets" value="${josm.build.dir}/data/defaultpresets.xml"/>
+    <property name="josm.presets" value="${josm.build.dir}/resources/data/defaultpresets.xml"/>
     <property name="plugin.dir" value="../plugins"/>
     <property name="maps.srcfile" value="https://josm.openstreetmap.de/maps"/>
     <property name="wiki.srcfile" value="https://josm.openstreetmap.de/josmfile?mode=en"/>
     <property name="surveyor.srcfile" value="${plugin.dir}/surveyor/resources/surveyor.xml"/>
     <property name="i18n.build.dir" value="build"/>
-    <property name="i18n.install.dir" value="${josm.build.dir}/data"/>
-    <property name="pluginlist.install.dir" value="${josm.build.dir}/data_nodist/trans"/>
+    <property name="i18n.install.dir" value="${josm.build.dir}/resources/data"/>
+    <property name="pluginlist.install.dir" value="${josm.build.dir}/nodist/data/trans"/>
     <property name="po.build.dir" value="${i18n.build.dir}"/>
     <property name="ant.build.javac.target" value="1.5"/>
     <property name="gettext.keywords" value="-k -ktrc:1c,2 -kmarktrc:1c,2 -ktr -kmarktr -ktrn:1,2 -ktrnc:1c,2,3"/>
@@ -69,8 +69,8 @@
             <fileset dir="${josm.build.dir}/src" includes="**/*.java"/>
             <fileset dir="${i18n.build.dir}" includes="specialmessages.java"/>
             <fileset dir="${i18n.build.dir}" includes="trans_presets.java"/>
-            <fileset dir="${josm.build.dir}/data/validator" includes="*.mapcss"/>
-            <fileset dir="${josm.build.dir}/styles/standard" includes="*.mapcss"/>
+            <fileset dir="${josm.build.dir}/resources/data/validator" includes="*.mapcss"/>
+            <fileset dir="${josm.build.dir}/resources/styles/standard" includes="*.mapcss"/>
             <fileset dir="${i18n.build.dir}" includes="trans_maps.java"/>
             <!-- data.pot -->
             <fileset dir="${i18n.build.dir}" includes="trans_plugins.java"/>
@@ -89,8 +89,8 @@
         <gettext-extract keysFile="core.pot" poDirectory="po" keywords="${gettext.keywords} --exclude-file=excludes.pot">
             <fileset dir="${josm.build.dir}/src" includes="**/*.java"/>
             <fileset dir="${i18n.build.dir}" includes="specialmessages.java"/>
-            <fileset dir="${josm.build.dir}/data/validator" includes="*.mapcss"/>
-            <fileset dir="${josm.build.dir}/styles/standard" includes="*.mapcss"/>
+            <fileset dir="${josm.build.dir}/resources/data/validator" includes="*.mapcss"/>
+            <fileset dir="${josm.build.dir}/resources/styles/standard" includes="*.mapcss"/>
         </gettext-extract>
     </target>
     <target name="po/maplist.pot" description="Extracts message keys from plugin descriptions" depends="trans_.java,init">

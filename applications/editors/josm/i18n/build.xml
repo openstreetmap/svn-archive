@@ -9,7 +9,7 @@
     <property name="wiki.srcfile" value="https://josm.openstreetmap.de/josmfile?mode=en"/>
     <property name="surveyor.srcfile" value="${plugin.dir}/surveyor/resources/surveyor.xml"/>
     <property name="i18n.build.dir" value="build"/>
-    <property name="i18n.install.dir" value="${josm.resources.dir}/data"/>
+    <property name="i18n.install.dir" value="${josm.resources.dir}/data/trans"/>
     <property name="pluginlist.install.dir" value="${josm.build.dir}/nodist/data/trans"/>
     <property name="po.build.dir" value="${i18n.build.dir}"/>
     <property name="ant.build.javac.target" value="1.5"/>

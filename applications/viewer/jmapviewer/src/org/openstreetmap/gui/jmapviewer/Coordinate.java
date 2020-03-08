@@ -1,7 +1,6 @@
 // License: GPL. For details, see Readme.txt file.
 package org.openstreetmap.gui.jmapviewer;
 
-import java.awt.geom.Point2D;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -19,7 +18,8 @@ import org.openstreetmap.gui.jmapviewer.interfaces.ICoordinate;
  */
 public class Coordinate implements ICoordinate, Serializable {
     private static final long serialVersionUID = 1L;
-    private transient Point2D.Double data;
+    private double x;
+    private double y;
 
     /**
      * Constructs a new {@code Coordinate}.
@@ -27,57 +27,55 @@ public class Coordinate implements ICoordinate, Serializable {
      * @param lon longitude in degrees
      */
     public Coordinate(double lat, double lon) {
-        data = new Point2D.Double(lon, lat);
+        setLat(lat);
+        setLon(lon);
     }
 
     @Override
     public double getLat() {
-        return data.y;
+        return y;
     }
 
     @Override
     public void setLat(double lat) {
-        data.y = lat;
+        y = lat;
     }
 
     @Override
     public double getLon() {
-        return data.x;
+        return x;
     }
 
     @Override
     public void setLon(double lon) {
-        data.x = lon;
+        x = lon;
     }
 
     private void writeObject(ObjectOutputStream out) throws IOException {
-        out.writeObject(data.x);
-        out.writeObject(data.y);
+        out.writeObject(x);
+        out.writeObject(y);
     }
 
     private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
-        data = new Point2D.Double();
-        data.x = (Double) in.readObject();
-        data.y = (Double) in.readObject();
+        x = (Double) in.readObject();
+        y = (Double) in.readObject();
     }
 
     @Override
     public String toString() {
-        return "Coordinate[" + data.y + ", " + data.x + ']';
+        return "Coordinate[" + y + ", " + x + ']';
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(data);
+        return Objects.hash(x, y);
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (!(obj instanceof Coordinate))
-            return false;
-        final Coordinate other = (Coordinate) obj;
-        return Objects.equals(data, other.data);
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Coordinate that = (Coordinate) o;
+        return Double.compare(that.x, x) == 0 && Double.compare(that.y, y) == 0;
     }
 }

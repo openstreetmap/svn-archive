@@ -1,0 +1,13 @@
+README
+======
+
+This plugin uses the Saudi National Address database to get any building address
+in the Kingdom.
+
+    * Original Author: Thomas Konrad
+    * maintainer: Mouath Ibrahim <JOSM-sna@mouath.com>
+
+    * License: GPL v2
+
+    * API key required can be obtained using: https://api.address.gov.sa
+      You need to be a citizen with a valid national identification number.

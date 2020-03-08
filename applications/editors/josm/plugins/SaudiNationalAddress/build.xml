@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project name="SaudiNationalAddress" default="dist" basedir=".">
+
+    <!-- enter the SVN commit message -->
+    <property name="commit.message" value="Initial version."/>
+    <property name="plugin.main.version" value="10580"/>
+    <property name="plugin.author" value="Mouath Ibrahim"/>
+    <property name="plugin.class"
+              value="org.openstreetmap.josm.plugins.saudinationaladdress.SaudiNationalAddressPlugin"/>
+    <property name="plugin.description"
+              value="This tool will query the Saudi National address API using coordinate and return building number, An API key is required. can be obtained from https://api.address.gov.sa/"/>
+    <property name="ar_plugin.description"
+              value="هذه الأداة تقوم بجلب العنوان الوطني لأي مبنى في المملكة العربية السعودية، يلزم تسجيل حساب لدى موقع https://api.address.gov.sa/"/>
+    <property name="plugin.icon" value="images/icon.png"/>
+    <property name="plugin.link" value="https://wiki.openstreetmap.org/wiki/JOSM/Plugins/SaudiNationalAddress"/>
+    <!--<property name="plugin.early" value="..."/>-->
+    <!--<property name="plugin.requires" value="..."/>-->
+    <!--<property name="plugin.stage" value="..."/>-->
+
+    <!-- ** include targets that all plugins have in common ** -->
+    <import file="../build-common.xml"/>
+
+</project>

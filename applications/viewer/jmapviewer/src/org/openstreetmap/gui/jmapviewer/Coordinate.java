@@ -10,8 +10,7 @@ import java.util.Objects;
 import org.openstreetmap.gui.jmapviewer.interfaces.ICoordinate;
 
 /**
- * This class encapsulates a Point2D.Double and provide access
- * via <code>lat</code> and <code>lon</code>.
+ * A geographical coordinate consisting of latitude and longitude.
  *
  * @author Jan Peter Stotz
  *

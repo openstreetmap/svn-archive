@@ -21,6 +21,7 @@ import java.time.temporal.ChronoField;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.openstreetmap.josm.data.Version;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
@@ -33,8 +34,8 @@ import org.openstreetmap.josm.tools.Utils;
  */
 public final class Http2Client extends org.openstreetmap.josm.tools.HttpClient {
 
-    private HttpClient.Builder clientBuilder;
-    private HttpRequest.Builder requestBuilder;
+    private static final Map<Duration, HttpClient> clientForConnectTimeout = new ConcurrentHashMap<>();
+    private HttpRequest request;
     private HttpResponse<InputStream> response;
 
     Http2Client(URL url, String requestMethod) {
@@ -43,11 +44,7 @@ public final class Http2Client extends org.openstreetmap.josm.tools.HttpClient {
 
     @Override
     protected void setupConnection(ProgressMonitor progressMonitor) throws IOException {
-        clientBuilder = HttpClient.newBuilder().followRedirects(Redirect.NEVER); // we do that ourselves
-        int timeout = getConnectTimeout();
-        if (timeout > 0) {
-            clientBuilder.connectTimeout(Duration.ofMillis(timeout));
-        }
+        HttpRequest.Builder requestBuilder;
         try {
             requestBuilder = HttpRequest.newBuilder()
                       .uri(getURL().toURI())
@@ -58,7 +55,7 @@ public final class Http2Client extends org.openstreetmap.josm.tools.HttpClient {
         } catch (URISyntaxException e) {
             throw new IOException(e);
         }
-        timeout = getReadTimeout();
+        int timeout = getReadTimeout();
         if (timeout > 0) {
             requestBuilder.timeout(Duration.ofMillis(timeout));
         }
@@ -78,6 +75,7 @@ public final class Http2Client extends org.openstreetmap.josm.tools.HttpClient {
                 }
             }
         }
+        request = requestBuilder.build();
 
         notifyConnect(progressMonitor);
         
@@ -88,8 +86,14 @@ public final class Http2Client extends org.openstreetmap.josm.tools.HttpClient {
 
     @Override
     protected ConnectionResponse performConnection() throws IOException {
+        // reuse HttpClient
+        HttpClient client = clientForConnectTimeout.computeIfAbsent(Duration.ofMillis(getConnectTimeout()), timeout ->
+                HttpClient.newBuilder()
+                        .followRedirects(Redirect.NEVER) // we do that ourselves
+                        .connectTimeout(timeout)
+                        .build());
         try {
-            response = clientBuilder.build().send(requestBuilder.build(), BodyHandlers.ofInputStream());
+            response = client.send(request, BodyHandlers.ofInputStream());
             return new ConnectionResponse() {
                 @Override
                 public String getResponseVersion() {

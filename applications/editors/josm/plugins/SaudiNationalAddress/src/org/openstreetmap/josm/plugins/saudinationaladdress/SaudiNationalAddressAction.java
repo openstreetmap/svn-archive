@@ -43,7 +43,6 @@ import static org.openstreetmap.josm.tools.I18n.trn;
  * Mouath Ibrahim 05/03/20
  */
 public class SaudiNationalAddressAction extends JosmAction {
-    public static final String PLUGIN_TITLE = "Saudi National Address";
     static final String baseUrl = "https://apina.address.gov.sa/NationalAddress/v3.1/Address/address-geocode";
 
     public SaudiNationalAddressAction() {
@@ -74,7 +73,7 @@ public class SaudiNationalAddressAction extends JosmAction {
 
             JsonObject json = null;
             try (BufferedReader in = HttpClient.create(url)
-                    .setReasonForRequest("JOSM Plugin " + PLUGIN_TITLE)
+                    .setReasonForRequest("JOSM Plugin Saudi National Address")
                     .setHeader("api_key", API_KEY)
                     .connect()
                     .getContentReader();
@@ -166,7 +165,7 @@ public class SaudiNationalAddressAction extends JosmAction {
     }
 
     private static void notification(String message, int messageType) {
-        new Notification("<strong>" + tr(PLUGIN_TITLE + "</strong><br>" + message))
+        new Notification("<strong>" + tr("Saudi National Address" + "</strong><br>" + message))
                 .setIcon(messageType)
                 .setDuration(3000)
                 .show();

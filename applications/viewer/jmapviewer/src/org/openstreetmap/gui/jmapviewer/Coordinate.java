@@ -73,7 +73,7 @@ public class Coordinate implements ICoordinate, Serializable {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof Coordinate)) return false;
         Coordinate that = (Coordinate) o;
         return Double.compare(that.x, x) == 0 && Double.compare(that.y, y) == 0;
     }

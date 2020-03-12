@@ -165,7 +165,7 @@ public class SaudiNationalAddressAction extends JosmAction {
     }
 
     private static void notification(String message, int messageType) {
-        new Notification("<strong>" + tr("Saudi National Address" + "</strong><br>" + message))
+        new Notification("<strong>" + tr("Saudi National Address") + "</strong><br>" + message)
                 .setIcon(messageType)
                 .setDuration(3000)
                 .show();

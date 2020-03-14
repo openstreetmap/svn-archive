@@ -3,6 +3,7 @@
 	<name>JOSM-apache-commons</name>
 	<comment></comment>
 	<projects>
+		<project>JOSM</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
@@ -24,5 +25,6 @@
 	<natures>
 		<nature>org.eclipse.jdt.core.javanature</nature>
 		<nature>net.sf.eclipsecs.core.CheckstyleNature</nature>
+		<nature>org.apache.ivyde.eclipse.ivynature</nature>
 	</natures>
 </projectDescription>

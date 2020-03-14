@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- License: GPL. For details, see LICENSE file. -->
+<ivy-module version="2.0">
+    <info organisation="org.openstreetmap" module="josm"/>
+    <configurations>
+        <conf name="ivy" description="Apache Ivy configuration for self-update"/>
+        <!--  configuration that should be used when specifying dependencies -->
+        <conf name="implementation" description="All libs JOSM uses that plugins should not use"/>
+        <conf name="api" description="All libs that JOSM uses and are available for plugins"/>
+        <conf name="runtimeOnly" description="The libs shipped with JOSM that we do not need during compilation"/>
+        <conf name="provided" description="The libs we need during compilation but not on application start"/>
+        <!--  Meta configuration used in build scripts -->
+        <conf name="runtime" description="Libraries only needed at runtime" extends="implementation,api,runtimeOnly"/>
+        <conf name="compile" description="Libraries needed only for compilation" extends="implementation,api,provided"/>
+        <conf name="test" description="Libraries only needed for testing" extends="compile,runtime"/>
+    </configurations>
+    <dependencies>
+        <dependency org="com.github.luben" name="zstd-jni" rev="1.4.4-7" conf="api->default"/>
+        <dependency org="org.apache.commons" name="commons-collections4" rev="4.4" conf="api->default"/>
+        <dependency org="org.apache.commons" name="commons-compress" rev="1.20" conf="api->default"/>
+        <dependency org="org.apache.commons" name="commons-imaging" rev="1.0-alpha1" conf="api->default"/>
+        <!-- Apache Commons IO does not use the standard org name -->
+        <dependency org="commons-io" name="commons-io" rev="2.6" conf="api->default"/>
+        <dependency org="org.apache.commons" name="commons-lang3" rev="3.9" conf="api->default"/>
+        <dependency org="org.apache.commons" name="commons-math3" rev="3.6.1" conf="api->default"/>
+        <dependency org="org.apache.commons" name="commons-text" rev="1.8" conf="api->default"/>
+        <dependency org="org.brotli" name="dec" rev="0.1.2" conf="api->default"/>
+        <dependency org="org.tukaani" name="xz" rev="1.8" conf="api->default"/>
+    </dependencies>
+</ivy-module>

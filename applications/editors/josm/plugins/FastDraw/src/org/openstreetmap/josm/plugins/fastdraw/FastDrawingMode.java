@@ -46,6 +46,9 @@ import org.openstreetmap.josm.tools.ImageProvider;
 import org.openstreetmap.josm.tools.Shortcut;
 import org.openstreetmap.josm.tools.TextTagParser;
 
+/**
+ * Fast Drawing map mode.
+ */
 class FastDrawingMode extends MapMode implements MapViewPaintable, KeyPressReleaseListener, ModifierExListener {
     // CHECKSTYLE.OFF: LineLength
     private static final String SIMPLIFYMODE_MESSAGE =
@@ -536,6 +539,7 @@ class FastDrawingMode extends MapMode implements MapViewPaintable, KeyPressRelea
         if (line.isClosed() && n == 3) pts.remove(2); // two-point way can not be closed
 
         DataSet ds = getLayerManager().getEditDataSet();
+        if (ds == null) return;
         Collection<Command> cmds = new LinkedList<>();
         int i = 0;
 

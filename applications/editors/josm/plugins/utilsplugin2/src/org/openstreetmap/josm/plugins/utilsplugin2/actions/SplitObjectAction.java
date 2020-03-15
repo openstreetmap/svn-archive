@@ -74,6 +74,7 @@ public class SplitObjectAction extends JosmAction {
             for (Way selWay : selectedWays) {       // we assume not more 2 ways in the list
                 if (selWay != null &&               // If one of selected ways is not closed we have it to get split points
                         selWay.isUsable() &&
+                        selWay.getNodesCount() > 0 &&
                         !selWay.isClosed() &&
                         selWay.getKeys().isEmpty()) {
                     selectedNodes.add(selWay.firstNode());

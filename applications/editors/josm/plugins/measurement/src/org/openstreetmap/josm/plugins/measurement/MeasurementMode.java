@@ -17,7 +17,8 @@ public class MeasurementMode extends MapMode {
     private static final long serialVersionUID = 3853830673475744263L;
 
     public MeasurementMode(String name, String desc) {
-        super(name, "measurement.png", desc, Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
+        super(name, "measurement", desc, Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
+        putValue("toolbar", "measurement");
     }
 
     @Override

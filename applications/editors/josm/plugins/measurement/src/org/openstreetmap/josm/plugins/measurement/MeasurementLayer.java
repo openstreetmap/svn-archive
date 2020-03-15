@@ -134,7 +134,6 @@ public class MeasurementLayer extends Layer {
         double pathLength = 0.0, segLength = 0.0; // in meters
         WayPoint last = null;
 
-        pathLength = 0.0;
         for(WayPoint p : points){
             if(last != null){
                 segLength = calcDistance(last, p);

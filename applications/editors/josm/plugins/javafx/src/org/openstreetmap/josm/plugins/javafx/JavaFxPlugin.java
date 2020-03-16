@@ -1,5 +1,6 @@
 // License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.javafx;
+import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.io.File;
 import java.io.IOException;
@@ -14,6 +15,7 @@ import java.nio.file.SimpleFileVisitor;
 import java.nio.file.StandardCopyOption;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.security.CodeSource;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Objects;
@@ -21,15 +23,19 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 import org.openstreetmap.josm.data.Preferences;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.io.audio.AudioPlayer;
 import org.openstreetmap.josm.plugins.DynamicURLClassLoader;
 import org.openstreetmap.josm.plugins.Plugin;
+import org.openstreetmap.josm.plugins.PluginHandler;
 import org.openstreetmap.josm.plugins.PluginInformation;
 import org.openstreetmap.josm.plugins.javafx.io.audio.JavaFxMediaPlayer;
 import org.openstreetmap.josm.tools.Logging;
+import org.openstreetmap.josm.tools.PlatformManager;
+import org.openstreetmap.josm.tools.Utils;
 
 /**
- * OpenJFX plugin brings OpenJFX (JavaFX) to other plugins.
+ * JavaFX plugin brings OpenJFX (JavaFX) to other plugins.
  */
 abstract class JavaFxPlugin extends Plugin {
 
@@ -37,13 +43,29 @@ abstract class JavaFxPlugin extends Plugin {
      * Constructs a new {@code OpenJfxPlugin}.
      * @param info plugin info
      * @param ext native libraries extension
-     * @param orderedNativeLibraries native librarires that must be loaded in this order
+     * @param orderedNativeLibraries native libraries that must be loaded in this order
      */
     protected JavaFxPlugin(PluginInformation info, String ext, List<String> orderedNativeLibraries) {
         super(info);
+        boolean isJavaFx = Utils.getSystemProperty("javafx.runtime.version") != null || ("Oracle Corporation".equals(Utils.getSystemProperty("java.vendor")) && Utils.getJavaVersion() < 11);
+        if (!isJavaFx && Utils.getJavaVersion() >= 10) {
+            extractNativeLibs(ext);
+            loadNativeLibs(ext, orderedNativeLibraries);
+        } else if (!isJavaFx) {
+            Logging.error("JavaFX is not available");
+            StringBuilder message = new StringBuilder(tr("JavaFX is not available."));
+            PlatformManager.getPlatform();
+            if (PlatformManager.isPlatformUnixoid()) {
+                message.append(tr(" Please install OpenJFX through your package manager."));
+            } else {
+                message.append(tr(" Please update to Java 11+."));
+            }
+            if (PluginHandler.confirmDisablePlugin(MainApplication.getMainFrame(), message.toString(), info.getName())) {
+                PluginHandler.removePlugins(Collections.singletonList(info));
+            }
+            return;
+        }
         AudioPlayer.setSoundPlayerClass(JavaFxMediaPlayer.class);
-        extractNativeLibs(ext);
-        loadNativeLibs(ext, orderedNativeLibraries);
     }
 
     private static void extractNativeLibs(String ext) {

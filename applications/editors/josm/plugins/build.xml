@@ -1,16 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<project name="josm-plugins" default="dist" basedir=".">
+<project name="josm-plugins" default="dist" basedir="." xmlns:if="ant:if" xmlns:unless="ant:unless">
     <target name="compile_josm" unless="skip-josm">
         <ant dir="../core" target="dist"/>
     </target>
     <target name="compile_josm_test" unless="skip-josm">
         <ant dir="../core" target="test-compile"/>
     </target>
+    <!-- For Java specific stuff by version -->
+    <condition property="isJava11"><matches string="${ant.java.version}" pattern="1[1-9]" /></condition>
+    <!-- Specific plugins -->
     <property name="ordered_plugins" value="jaxb/build.xml
                                             jna/build.xml
                                             jts/build.xml
                                             gson/build.xml
-                                            javafx/build.xml
                                             ejml/build.xml
                                             geotools/build.xml
                                             utilsplugin2/build.xml
@@ -18,12 +20,17 @@
                                             apache-commons/build.xml
                                             apache-http/build.xml
 											austriaaddresshelper/build.xml"/>
+    <property name="javafx_plugins" value="javafx/build.xml
+											Mapillary/build.xml
+											MicrosoftStreetside/build.xml"/>
     <macrodef name="iterate">
         <attribute name="target"/>
         <sequential>
             <subant target="@{target}" inheritall="true">
                 <filelist dir="." files="${ordered_plugins}"/>
-                <fileset  dir="." includes="*/build.xml" excludes="00_*/build.xml *.wip/build.xml ${ordered_plugins}"/>
+                <!-- Build JavaFX plugins only with Java 11+ -->
+                <filelist dir="." files="${javafx_plugins}" if:set="isJava11"/>
+                <fileset  dir="." includes="*/build.xml" excludes="00_*/build.xml *.wip/build.xml ${javafx_plugins} ${ordered_plugins}"/>
             </subant>
         </sequential>
     </macrodef>

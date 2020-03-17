@@ -21,7 +21,6 @@
     <property name="dataflow.jar"           location="../00_core_tools/dataflow-shaded.jar"/>
     <property name="javacutil.jar"          location="../00_core_tools/javacutil.jar"/>
     <property name="failureaccess.jar"      location="../00_core_tools/failureaccess.jar"/>
-    <property name="guava.jar"              location="../00_core_tools/guava.jar"/>
     <property name="checkstyle-build.dir"   location="../00_core_tools/checkstyle/build"/>
     <property name="jformatstring.jar"      location="../00_core_tools/spotbugs/jFormatString-3.0.0.jar"/>
     <property name="annotations.jar"        location="../00_core_tools/spotbugs/spotbugs-annotations.jar"/>
@@ -104,7 +103,6 @@
         <pathelement location="${dataflow.jar}"/>
         <pathelement location="${javacutil.jar}"/>
         <pathelement location="${failureaccess.jar}"/>
-        <pathelement location="${guava.jar}"/>
         <pathelement location="${jformatstring.jar}"/>
         <pathelement location="${auto-value-annotations.jar}"/>
     </path>
@@ -555,7 +553,6 @@
         <pathelement path="${josm}"/>
         <pathelement path="${plugin.jar}"/>
         <pathelement path="${annotations.jar}"/>
-        <pathelement path="${guava.jar}"/>
     </path>
     <macrodef name="init-test-preferences">
         <sequential>

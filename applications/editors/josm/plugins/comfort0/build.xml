@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<project name="comfort0" default="dist" basedir=".">
+<project name="comfort0" default="dist" basedir="." xmlns:ivy="antlib:org.apache.ivy.ant">
 
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
     <property name="plugin.main.version" value="9229"/>
@@ -14,22 +14,20 @@
     <!-- ** include targets that all plugins have in common ** -->
     <import file="../build-common.xml"/>
 
-    <property name="javacc.home" location="../00_core_tools"/>
     <property name="parser.dir" location="src/net/simon04/comfort0/level0l"/>
     <target name="pre-compile" depends="javacc"/>
     <target name="javacc" depends="init" unless="javacc.notRequired">
+        <ivy:cachepath file="${core.tools.ivy}" pathid="javacc.classpath" conf="javacc"/>
         <mkdir dir="${parser.dir}/parsergen"/>
-        <exec append="false" executable="java" failifexecutionfails="true">
-            <arg value="-cp"/>
-            <arg value="${javacc.home}/javacc.jar"/>
-            <arg value="javacc"/>
+        <java classname="javacc" fork="true" failonerror="true">
+            <classpath refid="javacc.classpath"/>
             <arg value="-DEBUG_PARSER=false"/>
             <arg value="-DEBUG_TOKEN_MANAGER=false"/>
             <arg value="-JDK_VERSION=1.7"/>
             <arg value="-GRAMMAR_ENCODING=UTF-8"/>
             <arg value="-OUTPUT_DIRECTORY=${parser.dir}/parsergen"/>
             <arg value="${parser.dir}/Level0LParser.jj"/>
-        </exec>
+        </java>
     </target>
 
 </project>

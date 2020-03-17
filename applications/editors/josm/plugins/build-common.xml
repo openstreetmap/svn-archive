@@ -26,6 +26,7 @@
     <property name="checkstyle-build.dir"   location="../00_core_tools/checkstyle/build"/>
     <property name="jformatstring.jar"      location="../00_core_tools/spotbugs/jFormatString-3.0.0.jar"/>
     <property name="annotations.jar"        location="../00_core_tools/spotbugs/spotbugs-annotations.jar"/>
+    <property name="core.tools.ivy"         location="../00_core_tools/ivy.xml"/>
     <property name="plugin.tools.dir"       location="../00_tools"/>
     <property name="plugin.build.dir"       location="build"/>
     <property name="plugin.test.dir"        location="test"/>
@@ -662,7 +663,7 @@
     </target>
 
     <target name="spotbugs" depends="compile">
-        <ivy:cachepath file="../00_core_tools/ivy.xml" pathid="spotbugs.classpath" conf="spotbugs"/>
+        <ivy:cachepath file="${core.tools.ivy}" pathid="spotbugs.classpath" conf="spotbugs"/>
         <taskdef name="spotbugs" classname="edu.umd.cs.findbugs.anttask.FindBugsTask" classpath="${toString:spotbugs.classpath}"/>
         <spotbugs output="xml"
                 outputFile="spotbugs-josm-${ant.project.name}.xml"

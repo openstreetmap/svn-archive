@@ -5,49 +5,49 @@
 	</configurations>
 	<dependencies>
         <dependency org="org.testfx" name="openjfx-monocle" rev="jdk-11+26"/>
-        <dependency org="org.openjfx" name="javafx-swing" rev="11.0.1">
+        <dependency org="org.openjfx" name="javafx-swing" rev="14">
             <artifact name="javafx-swing" type="jar" m:classifier="linux"/>
             <artifact name="javafx-swing" type="jar" m:classifier="mac"/>
             <artifact name="javafx-swing" type="jar" m:classifier="win"/>
             <artifact name="javafx-swing" type="jar" m:classifier="sources"/>
             <artifact name="javafx-swing" type="jar" m:classifier="javadoc"/>
         </dependency>
-        <dependency org="org.openjfx" name="javafx-fxml" rev="11.0.1">
+        <dependency org="org.openjfx" name="javafx-fxml" rev="14">
             <artifact name="javafx-fxml" type="jar" m:classifier="linux"/>
             <artifact name="javafx-fxml" type="jar" m:classifier="mac"/>
             <artifact name="javafx-fxml" type="jar" m:classifier="win"/>
             <artifact name="javafx-fxml" type="jar" m:classifier="sources"/>
             <artifact name="javafx-fxml" type="jar" m:classifier="javadoc"/>
         </dependency>
-        <dependency org="org.openjfx" name="javafx-web" rev="11.0.1">
+        <dependency org="org.openjfx" name="javafx-web" rev="14">
             <artifact name="javafx-web" type="jar" m:classifier="linux"/>
             <artifact name="javafx-web" type="jar" m:classifier="mac"/>
             <artifact name="javafx-web" type="jar" m:classifier="win"/>
             <artifact name="javafx-web" type="jar" m:classifier="sources"/>
             <artifact name="javafx-web" type="jar" m:classifier="javadoc"/>
         </dependency>
-        <dependency org="org.openjfx" name="javafx-media" rev="11.0.1">
+        <dependency org="org.openjfx" name="javafx-media" rev="14">
             <artifact name="javafx-media" type="jar" m:classifier="linux"/>
             <artifact name="javafx-media" type="jar" m:classifier="mac"/>
             <artifact name="javafx-media" type="jar" m:classifier="win"/>
             <artifact name="javafx-media" type="jar" m:classifier="sources"/>
             <artifact name="javafx-media" type="jar" m:classifier="javadoc"/>
         </dependency>
-        <dependency org="org.openjfx" name="javafx-controls" rev="11.0.1">
+        <dependency org="org.openjfx" name="javafx-controls" rev="14">
             <artifact name="javafx-controls" type="jar" m:classifier="linux"/>
             <artifact name="javafx-controls" type="jar" m:classifier="mac"/>
             <artifact name="javafx-controls" type="jar" m:classifier="win"/>
             <artifact name="javafx-controls" type="jar" m:classifier="sources"/>
             <artifact name="javafx-controls" type="jar" m:classifier="javadoc"/>
         </dependency>
-        <dependency org="org.openjfx" name="javafx-base" rev="11.0.1">
+        <dependency org="org.openjfx" name="javafx-base" rev="14">
             <artifact name="javafx-base" type="jar" m:classifier="linux"/>
             <artifact name="javafx-base" type="jar" m:classifier="mac"/>
             <artifact name="javafx-base" type="jar" m:classifier="win"/>
             <artifact name="javafx-base" type="jar" m:classifier="sources"/>
             <artifact name="javafx-base" type="jar" m:classifier="javadoc"/>
         </dependency>
-        <dependency org="org.openjfx" name="javafx-graphics" rev="11.0.1">
+        <dependency org="org.openjfx" name="javafx-graphics" rev="14">
             <artifact name="javafx-graphics" type="jar" m:classifier="linux"/>
             <artifact name="javafx-graphics" type="jar" m:classifier="mac"/>
             <artifact name="javafx-graphics" type="jar" m:classifier="win"/>

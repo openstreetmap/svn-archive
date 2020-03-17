@@ -22,7 +22,6 @@
     <property name="javacutil.jar"          location="../00_core_tools/javacutil.jar"/>
     <property name="failureaccess.jar"      location="../00_core_tools/failureaccess.jar"/>
     <property name="guava.jar"              location="../00_core_tools/guava.jar"/>
-    <property name="checkstyle.jar"         location="../00_core_tools/checkstyle/checkstyle-all.jar"/>
     <property name="checkstyle-build.dir"   location="../00_core_tools/checkstyle/build"/>
     <property name="jformatstring.jar"      location="../00_core_tools/spotbugs/jFormatString-3.0.0.jar"/>
     <property name="annotations.jar"        location="../00_core_tools/spotbugs/spotbugs-annotations.jar"/>
@@ -631,15 +630,19 @@
     </target>
 
     <target name="checkstyle-compile">
+        <ivy:cachepath file="${core.tools.ivy}" pathid="checkstyle.classpath" conf="checkstyle"/>
         <mkdir dir="${checkstyle-build.dir}"/>
         <javac sourcepath="" srcdir="../00_core_tools/checkstyle/src" failonerror="true"
             destdir="${checkstyle-build.dir}" target="${java.lang.version}" source="${java.lang.version}" debug="on"
             includeantruntime="false" createMissingPackageInfoClass="false"
-            encoding="UTF-8" classpath="${checkstyle.jar}">
+            encoding="UTF-8" classpathref="checkstyle.classpath">
         </javac>
     </target>
     <target name="checkstyle" depends="checkstyle-compile">
-        <taskdef resource="com/puppycrawl/tools/checkstyle/ant/checkstyle-ant-task.properties" classpath="${checkstyle.jar}:${checkstyle-build.dir}"/>
+        <taskdef resource="com/puppycrawl/tools/checkstyle/ant/checkstyle-ant-task.properties">
+            <classpath refid="checkstyle.classpath"/>
+            <classpath path="${checkstyle-build.dir}"/>
+        </taskdef>
         <checkstyle config="${basedir}/../checkstyle-config.xml">
             <fileset dir="${basedir}/src" includes="**/*.java" excludes="boofcv/**/*.java,
                                                                          com/google/**/*.java,

@@ -25,7 +25,6 @@
     <property name="checkstyle.jar"         location="../00_core_tools/checkstyle/checkstyle-all.jar"/>
     <property name="checkstyle-build.dir"   location="../00_core_tools/checkstyle/build"/>
     <property name="jformatstring.jar"      location="../00_core_tools/spotbugs/jFormatString-3.0.0.jar"/>
-    <property name="spotbugs-ant.jar"       location="../00_core_tools/spotbugs/spotbugs-ant.jar"/>
     <property name="annotations.jar"        location="../00_core_tools/spotbugs/spotbugs-annotations.jar"/>
     <property name="plugin.tools.dir"       location="../00_tools"/>
     <property name="plugin.build.dir"       location="build"/>
@@ -663,16 +662,11 @@
     </target>
 
     <target name="spotbugs" depends="compile">
-        <taskdef name="spotbugs" classname="edu.umd.cs.findbugs.anttask.FindBugsTask" classpath="${spotbugs-ant.jar}"/>
-        <path id="spotbugs-classpath">
-            <fileset dir="../00_core_tools/spotbugs/">
-                <include name="*.jar"/>
-            </fileset>
-        </path>
-        <property name="spotbugs-classpath" refid="spotbugs-classpath"/>
+        <ivy:cachepath file="../00_core_tools/ivy.xml" pathid="spotbugs.classpath" conf="spotbugs"/>
+        <taskdef name="spotbugs" classname="edu.umd.cs.findbugs.anttask.FindBugsTask" classpath="${toString:spotbugs.classpath}"/>
         <spotbugs output="xml"
                 outputFile="spotbugs-josm-${ant.project.name}.xml"
-                classpath="${spotbugs-classpath}"
+                classpath="${toString:spotbugs.classpath}"
                 pluginList=""
                 excludeFilter="../spotbugs-filter.xml"
                 effort="less"

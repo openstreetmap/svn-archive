@@ -5,14 +5,17 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import org.openstreetmap.josm.command.ChangeCommand;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.data.conflict.Conflict;
 import org.openstreetmap.josm.data.conflict.ConflictCollection;
+import org.openstreetmap.josm.data.osm.AbstractPrimitive;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
@@ -49,13 +52,24 @@ final class DataSetCommandMerger {
     }
 
     private void addChangeCommandIfNotEquals(OsmPrimitive target, OsmPrimitive newTarget, boolean nominal) {
-        if (!target.hasEqualSemanticAttributes(newTarget) || target.isDeleted() != newTarget.isDeleted() || target.isVisible() != newTarget.isVisible()) {
-            cmds.add(new ChangeCommand(target, newTarget));
-            if (nominal) {
-                nominalRevertedPrimitives.add(target);
-            }
-            Logging.debug("Reverting "+target+" to "+newTarget);
+		if (target.isIncomplete() != newTarget.isIncomplete() || target.isDeleted() != newTarget.isDeleted()
+				|| target.isVisible() != newTarget.isVisible()
+				|| !getNonDiscardableTags(target).equals(getNonDiscardableTags(newTarget))) {
+			cmds.add(new ChangeCommand(target, newTarget));
+			if (nominal) {
+				nominalRevertedPrimitives.add(target);
+			}
+			Logging.debug("Reverting " + target + " to " + newTarget);
+		}
+    }
+
+    private static Map<String, String> getNonDiscardableTags(OsmPrimitive p) {
+        Map<String, String> result = new HashMap<>();
+        for (Map.Entry<String, String> e : p.getKeys().entrySet()) {
+        	if (!AbstractPrimitive.getDiscardableKeys().contains(e.getKey()))
+        		result.put(e.getKey(), e.getValue());
         }
+        return result;
     }
 
     private OsmPrimitive getMergeTarget(OsmPrimitive mergeSource) {

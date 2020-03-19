@@ -13,7 +13,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map.Entry;
+import java.util.Map;
 
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.DeleteCommand;
@@ -257,15 +257,15 @@ public class ChangesetReverter {
             rdr.readMultiObjects(OsmPrimitiveType.RELATION, relationList, progressMonitor);
             if (progressMonitor.isCanceled()) return;
             // If multi-read failed, retry with regular read
-            for (Entry<Long,Integer> entry : nodeList.entrySet()) {
+            for (Map.Entry<Long,Integer> entry : nodeList.entrySet()) {
                 if (progressMonitor.isCanceled()) return;
                 readObjectVersion(rdr, new SimplePrimitiveId(entry.getKey(),OsmPrimitiveType.NODE), entry.getValue(), progressMonitor);
             }
-            for (Entry<Long,Integer> entry : wayList.entrySet()) {
+            for (Map.Entry<Long,Integer> entry : wayList.entrySet()) {
                 if (progressMonitor.isCanceled()) return;
                 readObjectVersion(rdr, new SimplePrimitiveId(entry.getKey(),OsmPrimitiveType.WAY), entry.getValue(), progressMonitor);
             }
-            for (Entry<Long,Integer> entry : relationList.entrySet()) {
+            for (Map.Entry<Long,Integer> entry : relationList.entrySet()) {
                 if (progressMonitor.isCanceled()) return;
                 readObjectVersion(rdr, new SimplePrimitiveId(entry.getKey(),OsmPrimitiveType.RELATION), entry.getValue(), progressMonitor);
             }

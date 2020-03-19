@@ -8,7 +8,6 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.OsmPrimitiveType;
@@ -47,7 +46,7 @@ public class OsmServerMultiObjectReader extends OsmServerReader {
         List<String> result = new ArrayList<>((list.size()+maxQueryIds-1)/maxQueryIds);
         StringBuilder sb = new StringBuilder();
         int cnt=0;
-        for (Entry<Long,Integer> entry : list.entrySet()) {
+        for (Map.Entry<Long,Integer> entry : list.entrySet()) {
             if (cnt == 0) {
                 sb.append(type.getAPIName());
                 sb.append("s?");

@@ -175,7 +175,7 @@
     Module-Version    : ${version.entry.commit.revision}
     ***** / Properties of published ${module.jar} *****                    
                         
-    Now commiting ${module.jar} ...
+    Now committing ${module.jar} ...
     </echo>
         <exec append="true" output="svn.log" executable="svn" failifexecutionfails="false">
             <env key="LANG" value="C"/>

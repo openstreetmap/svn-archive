@@ -495,7 +495,7 @@
     Plugin-Version    : ${version.entry.commit.revision}
     ***** / Properties of published ${plugin.jar} *****
 
-    Now commiting ${plugin.jar} ...
+    Now committing ${plugin.jar} ...
     </echo>
         <exec append="true" output="svn.log" executable="svn" failifexecutionfails="false">
             <env key="LANG" value="C"/>

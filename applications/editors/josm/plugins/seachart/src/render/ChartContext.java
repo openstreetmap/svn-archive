@@ -19,6 +19,8 @@ public interface ChartContext {
     double mile(Feature feature);
 
     boolean clip();
+    
+    int grid();
 
     Color background(S57map map);
 

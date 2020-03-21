@@ -881,8 +881,13 @@ public class Rules {
 			}
 			break;
         case BUISGL:
-            if (Renderer.zoom >= 16) {
+            if (Renderer.zoom >= 15) {
                 Renderer.lineVector(new LineStyle(Color.black, 8, new Color(0xffc0c0c0, true)));
+                if (testAttribute(Obj.BUISGL, Att.FUNCTN, FncFNC.FNC_LOOK)) {
+                    Renderer.labelText("Lookout", new Font("Arial", Font.PLAIN, 40), Color.black, new Delta(Handle.CC, AffineTransform.getTranslateInstance(0, 50)));
+                    addName(15, new Font("Arial", Font.BOLD, 40), new Delta(Handle.CC, AffineTransform.getTranslateInstance(0, -50)));
+                }
+            } else if (Renderer.zoom >= 16) {
                 if (testAttribute(Obj.BUISGL, Att.STATUS, StsSTS.STS_ILLD)) {
                     Renderer.symbol(Beacons.Floodlight);
                 }

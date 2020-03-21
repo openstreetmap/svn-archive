@@ -118,6 +118,11 @@ public class ChartImage extends ImageryLayer implements ZoomChangeListener, Char
     }
 
     @Override
+    public int grid() {
+        return 0;
+    }
+
+    @Override
     public Color background(S57map map) {
         if (map.features.containsKey(Obj.COALNE)) {
             for (Feature feature : map.features.get(Obj.COALNE)) {

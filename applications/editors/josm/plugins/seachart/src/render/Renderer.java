@@ -78,6 +78,7 @@ public final class Renderer {
             g2.setStroke(new BasicStroke(0, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER));
             do {} while (!Rules.rules());
         }
+        grid();
     }
 
     public static void symbol(Symbol symbol) {
@@ -320,6 +321,94 @@ public final class Renderer {
                 g2.setStroke(new BasicStroke((float) (style.width * sScale), BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND, 1, dash, 0));
             } else {
                 g2.setStroke(new BasicStroke((float) (style.width * sScale), BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
+            }
+            g2.setPaint(style.line);
+            g2.draw(p);
+        }
+    }
+    
+    public static void grid() {
+        if (context.grid() > 0) {
+            LineStyle style = new LineStyle(Color.black, (float)2.0);
+            double nspan = 60 * Math.toDegrees(map.bounds.maxlon - map.bounds.minlon) / 5.0;
+            double mult = 1.0;
+            if (nspan < 1.0) {
+                do {
+                    nspan *= 10.0;
+                    mult *= 10.0;
+                } while (nspan < 1.0);
+             } else if (nspan > 10.0){
+                do {
+                    nspan /= 10.0;
+                    mult /= 10.0;
+                } while (nspan > 10.0);
+            }
+            if (nspan < 2.0) nspan = 1.0;
+            else if (nspan < 5.0) nspan = 2.0;
+            else nspan = 5.0;
+            nspan = nspan / mult / 60.0;
+            double left = Math.toDegrees(map.bounds.minlon) + 180.0;
+            left = Math.ceil(left / nspan);
+            left = Math.toRadians((left * nspan) - 180.0);
+            g2.setStroke(new BasicStroke((float) (style.width * sScale), BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND));
+            Path2D.Double p = new Path2D.Double();
+            for (double lon = left; lon < map.bounds.maxlon; lon += Math.toRadians(nspan)) {
+                Point2D point = context.getPoint(new Snode(map.bounds.maxlat, lon));
+                p.moveTo(point.getX(), point.getY());
+                point = context.getPoint(new Snode(map.bounds.minlat, lon));
+                p.lineTo(point.getX(), point.getY());
+                double deg = Math.toDegrees(lon);
+                String ew = (deg < 0) ? "W" : "E";
+                deg = Math.abs(deg);
+                String dstr = String.format("%03d°", (int)Math.floor(deg));
+                double min = (deg - Math.floor(deg)) * 60.0;
+                String mstr = String.format("%05.2f'%s", min, ew);
+                Symbol label = new Symbol();
+                if (point.getX() > 500.0) {
+                    label.add(new Instr(Form.TEXT, new Caption(dstr, new Font("Arial", Font.PLAIN, 40), Color.black, new Delta(Handle.BR, AffineTransform.getTranslateInstance(-10, -20)))));
+                    label.add(new Instr(Form.TEXT, new Caption(mstr, new Font("Arial", Font.PLAIN, 40), Color.black, new Delta(Handle.BL, AffineTransform.getTranslateInstance(20, 0)))));
+                    Symbols.drawSymbol(g2, label, sScale, point.getX(), point.getY(), null, null);
+                }
+            }
+            g2.setPaint(style.line);
+            g2.draw(p);
+            double tspan = 60 * Math.toDegrees(map.bounds.maxlat - map.bounds.minlat) / 5.0;
+            mult = 1.0;
+            if (tspan < 1.0) {
+                do {
+                    tspan *= 10.0;
+                    mult *= 10.0;
+                } while (tspan < 1.0);
+             } else if (tspan > 10.0){
+                do {
+                    tspan /= 10.0;
+                    mult /= 10.0;
+                } while (tspan > 10.0);
+            }
+            if (tspan < 2.0) tspan = 1.0;
+            else if (tspan < 5.0) tspan = 2.0;
+            else tspan = 5.0;
+            tspan = tspan / mult / 60.0;
+            double bottom = Math.toDegrees(map.bounds.minlat) + 90.0;
+            bottom = Math.ceil(bottom / tspan);
+            bottom = Math.toRadians((bottom * tspan) - 90.0);
+            g2.setStroke(new BasicStroke((float) (style.width * sScale), BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND));
+            p = new Path2D.Double();
+            for (double lat = bottom; lat < map.bounds.maxlat; lat += Math.toRadians(tspan)) {
+                Point2D point = context.getPoint(new Snode(lat, map.bounds.maxlon));
+                p.moveTo(point.getX(), point.getY());
+                point = context.getPoint(new Snode(lat, map.bounds.minlon));
+                p.lineTo(point.getX(), point.getY());
+                double deg = Math.toDegrees(lat);
+                String ns = (deg < 0) ? "S" : "N";
+                deg = Math.abs(deg);
+                String dstr = String.format("%02d°%s", (int)Math.floor(deg), ns);
+                double min = (deg - Math.floor(deg)) * 60.0;
+                String mstr = String.format("%05.2f'", min);
+                Symbol label = new Symbol();
+                label.add(new Instr(Form.TEXT, new Caption(dstr, new Font("Arial", Font.PLAIN, 40), Color.black, new Delta(Handle.BL, AffineTransform.getTranslateInstance(10, -10)))));
+                label.add(new Instr(Form.TEXT, new Caption(mstr, new Font("Arial", Font.PLAIN, 40), Color.black, new Delta(Handle.BL, AffineTransform.getTranslateInstance(0, 50)))));
+                Symbols.drawSymbol(g2, label, sScale, point.getX(), point.getY(), null, null);
             }
             g2.setPaint(style.line);
             g2.draw(p);

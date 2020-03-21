@@ -8,13 +8,11 @@ import java.awt.Rectangle;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
 import java.io.Writer;
 
 import javax.imageio.ImageIO;
@@ -85,6 +83,11 @@ public final class Jchart {
         }
 
         @Override
+        public int grid() {
+            return 5;
+        }
+
+        @Override
         public Color background(S57map map) {
             if (map.features.containsKey(Obj.COALNE)) {
                 for (Feature feature : map.features.get(Obj.COALNE)) {
@@ -130,7 +133,7 @@ public final class Jchart {
         }
         BufferedReader in = new BufferedReader(new FileReader(args[0]));
         zoom = Integer.parseInt(args[1]);
-        map = new S57map(true);
+        map = new S57map(false);
         S57osm.OSMmap(in, map, false);
         in.close();
         context = new Context();

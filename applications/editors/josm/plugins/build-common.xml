@@ -626,8 +626,7 @@
         </sequential>
     </target>
 
-    <target name="checkstyle-compile">
-        <ivy:cachepath file="${core.tools.ivy}" pathid="checkstyle.classpath" conf="checkstyle"/>
+    <target name="checkstyle-compile" depends="resolve-tools">
         <mkdir dir="${checkstyle-build.dir}"/>
         <javac sourcepath="" srcdir="../00_core_tools/checkstyle/src" failonerror="true"
             destdir="${checkstyle-build.dir}" target="${java.lang.version}" source="${java.lang.version}" debug="on"
@@ -662,8 +661,7 @@
         </checkstyle>
     </target>
 
-    <target name="spotbugs" depends="compile">
-        <ivy:cachepath file="${core.tools.ivy}" pathid="spotbugs.classpath" conf="spotbugs"/>
+    <target name="spotbugs" depends="compile,resolve-tools">
         <taskdef name="spotbugs" classname="edu.umd.cs.findbugs.anttask.FindBugsTask" classpath="${toString:spotbugs.classpath}"/>
         <spotbugs output="xml"
                 outputFile="spotbugs-josm-${ant.project.name}.xml"
@@ -722,6 +720,11 @@
             <fileset dir="${ivy.jar.dir}" includes="*.jar"/>
         </path>
         <taskdef resource="org/apache/ivy/ant/antlib.xml" uri="antlib:org.apache.ivy.ant" classpathref="ivy.lib.path"/>
+    </target>
+    <target name="resolve-tools" depends="init-ivy" description="Resolves tools using Apache Ivy">
+        <ivy:resolve file="${core.tools.ivy}"/>
+        <ivy:cachepath file="${core.tools.ivy}" pathid="checkstyle.classpath" conf="checkstyle"/>
+        <ivy:cachepath file="${core.tools.ivy}" pathid="spotbugs.classpath" conf="spotbugs"/>
     </target>
     <target name="clean_ivy">
         <delete failonerror="false">

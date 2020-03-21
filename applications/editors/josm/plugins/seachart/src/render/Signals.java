@@ -468,7 +468,7 @@ public class Signals extends Rules {
                 if (atts.containsKey(Att.SIGPER)) {
                     str += "." + df.format(atts.get(Att.SIGPER).val) + "s";
                 }
-                if ((s1 <= 360) && (s2 <= 360) && (s1 != s2))
+                if ((s1 < 360) && (s2 < 360) && (s1 != s2))
                     Renderer.lightSector(LightColours.get(col1), LightColours.get(col2), radius, s1, s2, dir, (Renderer.zoom >= 15) ? str : "");
             }
             if (Renderer.zoom >= 15) {

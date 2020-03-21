@@ -660,7 +660,7 @@ public final class S57val { // S57 Attribute values lookup tables & methods
     public enum CatSPM { SPM_UNKN, SPM_FDGA, SPM_TRGT, SPM_MSHP, SPM_DGRG, SPM_BARG, SPM_CABL, SPM_SPLG, SPM_OFAL, SPM_ODAS, SPM_RCDG, SPM_SPLA, SPM_RCZN, SPM_PRVT, SPM_MOOR, SPM_LNBY, SPM_LDNG, SPM_MDST,
         SPM_NOTC, SPM_TSS, SPM_NANC, SPM_NBRT, SPM_NOTK, SPM_NTWT, SPM_RWAK, SPM_SPDL, SPM_STOP, SPM_WRNG, SPM_SSSN, SPM_RVCL, SPM_MVDT, SPM_RHCL, SPM_SCNT, SPM_BRTH, SPM_OHPC, SPM_CHEG, SPM_TELE, SPM_FCRS,
         SPM_MTRL, SPM_PLIN, SPM_ANCH, SPM_CLRG, SPM_CTRL, SPM_DIVG, SPM_RBCN, SPM_FGND, SPM_YCHT, SPM_HPRT, SPM_GPS, SPM_SLDG, SPM_NENT, SPM_WRKP, SPM_UKPP, SPM_WELH, SPM_CHSP, SPM_MFRM, SPM_AREF,
-        SPM_ICE, SPM_NATR, SPM_FAD, SPM_WREK, SPM_CUST, SPM_CSWY, SPM_WAVR, }
+        SPM_ICE, SPM_NATR, SPM_FAD, SPM_WREK, SPM_CUST, SPM_CSWY, SPM_WAVR, SPM_NJET }
 
     private static final EnumMap<CatSPM, S57enum> Catspm = new EnumMap<>(CatSPM.class); static {
         Catspm.put(CatSPM.SPM_UNKN, new S57enum(0, ""));
@@ -685,7 +685,7 @@ public final class S57val { // S57 Attribute values lookup tables & methods
         Catspm.put(CatSPM.SPM_WELH, new S57enum(53, "wellhead")); Catspm.put(CatSPM.SPM_CHSP, new S57enum(54, "channel_separation")); Catspm.put(CatSPM.SPM_MFRM, new S57enum(55, "marine_farm"));
         Catspm.put(CatSPM.SPM_AREF, new S57enum(56, "artificial_reef")); Catspm.put(CatSPM.SPM_ICE, new S57enum(57, "ice")); Catspm.put(CatSPM.SPM_NATR, new S57enum(58, "nature_reserve"));
         Catspm.put(CatSPM.SPM_FAD, new S57enum(59, "fish_aggregator")); Catspm.put(CatSPM.SPM_WREK, new S57enum(60, "wreck")); Catspm.put(CatSPM.SPM_CUST, new S57enum(61, "customs"));
-        Catspm.put(CatSPM.SPM_CSWY, new S57enum(62, "causeway")); Catspm.put(CatSPM.SPM_WAVR, new S57enum(63, "wave_recorder"));
+        Catspm.put(CatSPM.SPM_CSWY, new S57enum(62, "causeway")); Catspm.put(CatSPM.SPM_WAVR, new S57enum(63, "wave_recorder")); Catspm.put(CatSPM.SPM_NJET, new S57enum(64, "no_jetski"));
     }
 
     public enum CatTRK { TRK_UNKN, TRK_FIXM, TRK_NFXM }

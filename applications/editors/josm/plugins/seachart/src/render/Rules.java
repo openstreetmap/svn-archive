@@ -355,6 +355,7 @@ public class Rules {
 		} catch (ConcurrentModificationException e) {
 			return false;
 		} catch (Exception e) {
+		    e.printStackTrace();
 			return true;
 		}
 		return true;
@@ -978,8 +979,7 @@ public class Rules {
 				if (cats.get(0) == CatLMK.LMK_RADR)
 					fncSym = Landmarks.RadioTV;
 				Renderer.symbol(catSym);
-				if (catSym != Landmarks.Spire)
-					Renderer.symbol(fncSym);
+				Renderer.symbol(fncSym);
 				break;
 			case SILTNK:
 				if (testAttribute(feature.type, Att.CATSIL, CatSIL.SIL_WTRT))
@@ -1048,7 +1048,8 @@ public class Rules {
 			ArrayList<Symbol> symbols = new ArrayList<>();
 			ArrayList<CatSCF> scfs = (ArrayList<CatSCF>) getAttList(Obj.SMCFAC, Att.CATSCF);
 			for (CatSCF scf : scfs) {
-				symbols.add(Facilities.Cats.get(scf));
+			    Symbol sym = Facilities.Cats.get(scf);
+			    if (sym != null) symbols.add(sym);
 			}
 			Renderer.cluster(symbols);
 		}
@@ -1058,7 +1059,11 @@ public class Rules {
 		if (Renderer.zoom >= 14) {
 			switch ((CatMOR) getAttEnum(feature.type, Att.CATMOR)) {
 			case MOR_DLPN:
-				Renderer.symbol(Harbours.Dolphin);
+			    if (feature.geom.prim == Pflag.AREA) {
+			        Renderer.lineVector(new LineStyle(Color.black, 4, Symbols.Yland));
+			    } else {
+			        Renderer.symbol(Harbours.Dolphin);
+			    }
 	            Signals.addSignals();
 				break;
 			case MOR_DDPN:
@@ -1078,6 +1083,7 @@ public class Rules {
 			        Renderer.symbol(Buoys.Shapes.get(shape), getScheme(feature.type));
 			        Renderer.symbol(Topmarks.TopMooring, Topmarks.BuoyDeltas.get(shape));
 		            Signals.addSignals();
+		            addName(15, new Font("Arial", Font.BOLD, 40), new Delta(Handle.BL, AffineTransform.getTranslateInstance(60, -50)));
 			    }
 				break;
 			default:
@@ -1541,6 +1547,7 @@ public class Rules {
                 }
             }
         }
+        addName(15, new Font("Arial", Font.BOLD, 40), new Delta(Handle.BL, AffineTransform.getTranslateInstance(50, 0)));
         if (Renderer.zoom >= 15) {
                 Renderer.labelText("V-AIS", new Font("Arial", Font.PLAIN, 40), Symbols.Msymb, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, 70)));
         }

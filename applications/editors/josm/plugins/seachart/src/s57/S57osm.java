@@ -111,19 +111,19 @@ public final class S57osm { // OSM to S57 Object/Attribute and Object/Primitive 
                 if (ln.contains("<bounds") && !bb) {
                     for (String token : ln.split("[ ]+")) {
                         if (token.matches("^minlat=.+")) {
-                            map.bounds.minlat = Math.toRadians(Double.parseDouble(token.split("[\"\']")[1]));
+                            map.bounds.minlat = Math.toRadians(Double.parseDouble(token.split("[\"]")[1]));
                             map.nodes.get(2L).lat = map.bounds.minlat;
                             map.nodes.get(3L).lat = map.bounds.minlat;
                         } else if (token.matches("^minlon=.+")) {
-                            map.bounds.minlon = Math.toRadians(Double.parseDouble(token.split("[\"\']")[1]));
+                            map.bounds.minlon = Math.toRadians(Double.parseDouble(token.split("[\"]")[1]));
                             map.nodes.get(1L).lon = map.bounds.minlon;
                             map.nodes.get(2L).lon = map.bounds.minlon;
                         } else if (token.matches("^maxlat=.+")) {
-                            map.bounds.maxlat = Math.toRadians(Double.parseDouble(token.split("[\"\']")[1]));
+                            map.bounds.maxlat = Math.toRadians(Double.parseDouble(token.split("[\"]")[1]));
                             map.nodes.get(1L).lat = map.bounds.maxlat;
                             map.nodes.get(4L).lat = map.bounds.maxlat;
                         } else if (token.matches("^maxlon=.+")) {
-                            map.bounds.maxlon = Math.toRadians(Double.parseDouble(token.split("[\"\']")[1]));
+                            map.bounds.maxlon = Math.toRadians(Double.parseDouble(token.split("[\"]")[1]));
                             map.nodes.get(3L).lon = map.bounds.maxlon;
                             map.nodes.get(4L).lon = map.bounds.maxlon;
                         }
@@ -132,9 +132,9 @@ public final class S57osm { // OSM to S57 Object/Attribute and Object/Primitive 
                     if ((inNode || inWay || inRel) && ln.contains("<tag")) {
                         k = v = "";
                         String[] token = ln.split("k=");
-                        k = token[1].split("[\"\']")[1];
+                        k = token[1].split("[\"]")[1];
                         token = token[1].split("v=");
-                        v = token[1].split("[\"\']")[1];
+                        v = token[1].split("[\"]")[1];
                         if (!k.isEmpty() && !v.isEmpty()) {
                             map.addTag(k, v);
                         }
@@ -147,11 +147,11 @@ public final class S57osm { // OSM to S57 Object/Attribute and Object/Primitive 
                     } else if (ln.contains("<node")) {
                         for (String token : ln.split("[ ]+")) {
                             if (token.matches("^id=.+")) {
-                                id = Long.parseLong(token.split("[\"\']")[1]);
+                                id = Long.parseLong(token.split("[\"]")[1]);
                             } else if (token.matches("^lat=.+")) {
-                                lat = Double.parseDouble(token.split("[\"\']")[1]);
+                                lat = Double.parseDouble(token.split("[\"]")[1]);
                             } else if (token.matches("^lon=.+")) {
-                                lon = Double.parseDouble(token.split("[\"\']")[1]);
+                                lon = Double.parseDouble(token.split("[\"]")[1]);
                             }
                         }
                         map.addNode(id, lat, lon);
@@ -165,7 +165,7 @@ public final class S57osm { // OSM to S57 Object/Attribute and Object/Primitive 
                             long ref = 0;
                             for (String token : ln.split("[ ]+")) {
                                 if (token.matches("^ref=.+")) {
-                                    ref = Long.parseLong(token.split("[\"\']")[1]);
+                                    ref = Long.parseLong(token.split("[\"]")[1]);
                                 }
                             }
                             try {
@@ -181,7 +181,7 @@ public final class S57osm { // OSM to S57 Object/Attribute and Object/Primitive 
                     } else if (ln.contains("<way")) {
                         for (String token : ln.split("[ ]+")) {
                             if (token.matches("^id=.+")) {
-                                id = Long.parseLong(token.split("[\"\']")[1]);
+                                id = Long.parseLong(token.split("[\"]")[1]);
                             }
                         }
                         map.addEdge(id);
@@ -201,13 +201,13 @@ public final class S57osm { // OSM to S57 Object/Attribute and Object/Primitive 
                             long ref = 0;
                             for (String token : ln.split("[ ]+")) {
                                 if (token.matches("^ref=.+")) {
-                                    ref = Long.parseLong(token.split("[\"\']")[1]);
+                                    ref = Long.parseLong(token.split("[\"]")[1]);
                                 } else if (token.matches("^type=.+")) {
-                                    type = token.split("[\"\']")[1];
+                                    type = token.split("[\"]")[1];
                                 } else if (token.matches("^role=.+")) {
-                                    String[] str = token.split("[\"\']");
+                                    String[] str = token.split("[\"]");
                                     if (str.length > 1) {
-                                        role = token.split("[\"\']")[1];
+                                        role = token.split("[\"]")[1];
                                     }
                                 }
                             }
@@ -221,7 +221,7 @@ public final class S57osm { // OSM to S57 Object/Attribute and Object/Primitive 
                     } else if (ln.contains("<relation")) {
                         for (String token : ln.split("[ ]+")) {
                             if (token.matches("^id=.+")) {
-                                id = Long.parseLong(token.split("[\"\']")[1]);
+                                id = Long.parseLong(token.split("[\"]")[1]);
                             }
                         }
                         map.addArea(id);

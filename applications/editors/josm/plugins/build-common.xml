@@ -121,7 +121,7 @@
     **********************************************************
     -->
     <target name="pre-compile">
-        <!-- to be overidden by plugins that need to perform additional tasks before compiling -->
+        <!-- to be overridden by plugins that need to perform additional tasks before compiling -->
     </target>
     <target name="compile" depends="init, pre-compile" unless="skip-compile">
         <echo message="compiling sources for ${plugin.jar} ..."/>
@@ -254,7 +254,7 @@
         </jar>
     </target>
     <target name="post-dist">
-        <!-- to be overidden by plugins that need to perform additional tasks on resulting jar -->
+        <!-- to be overridden by plugins that need to perform additional tasks on resulting jar -->
     </target>
     <target name="add-manifest-attribute" depends="check-manifest-attribute" if="have-${property.name}">
         <manifest file="${manifest}" mode="update">
@@ -278,7 +278,7 @@
         </condition>
     </target>
     <target name="pre-javadoc">
-        <!-- to be overidden by plugins that need to perform additional tasks before generating javadoc -->
+        <!-- to be overridden by plugins that need to perform additional tasks before generating javadoc -->
     </target>
     <target name="javadoc" depends="pre-javadoc" unless="skip-javadoc">
         <javadoc destdir="${plugin.doc.dir}"
@@ -699,7 +699,7 @@
         <echo>
     You can use following targets:
     * dist        This default target builds the plugin jar file
-    * clean       Cleanup automatical created files
+    * clean       Cleanup automatically created files
     * test        Run unit tests (if any)
     * publish     Checkin source code, build jar and checkin plugin jar
                   (requires proper entry for SVN commit message!)

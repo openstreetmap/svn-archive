@@ -20,7 +20,6 @@ import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.gui.Notification;
-import org.openstreetmap.josm.spi.preferences.Config;
 import org.openstreetmap.josm.tools.Shortcut;
 
 // TODO: investigate splines
@@ -32,24 +31,11 @@ public class CurveAction extends JosmAction {
 
     private static final long serialVersionUID = 1L;
 
-    private int angleSeparation = -1;
-
     public CurveAction() {
         super(tr("Circle arc"), "circlearc", tr("Create a circle arc"),
                 Shortcut.registerShortcut("tools:createcurve", tr("Tool: {0}", tr("Create a circle arc")), KeyEvent.VK_C,
                         Shortcut.SHIFT), true);
         putValue("help", ht("/Action/CreateCircleArc"));
-        updatePreferences();
-    }
-
-    private void updatePreferences() {
-        // @formatter:off
-        angleSeparation = Config.getPref().getInt(prefKey("circlearc.angle-separation"), 20);
-        // @formatter:on
-    }
-
-    private String prefKey(String subKey) {
-        return "curves." + subKey;
     }
 
     @Override
@@ -57,15 +43,12 @@ public class CurveAction extends JosmAction {
         if (!isEnabled())
             return;
 
-        updatePreferences();
-
         List<Node> selectedNodes = new ArrayList<>(getLayerManager().getEditDataSet().getSelectedNodes());
         List<Way> selectedWays = new ArrayList<>(getLayerManager().getEditDataSet().getSelectedWays());
 
-        Collection<Command> cmds = CircleArcMaker.doCircleArc(selectedNodes, selectedWays, angleSeparation);
+        Collection<Command> cmds = CircleArcMaker.doCircleArc(selectedNodes, selectedWays);
         if (cmds == null || cmds.isEmpty()) {
             new Notification(tr("Could not use selection to create a curve")).setIcon(JOptionPane.WARNING_MESSAGE).show();
-
         } else {
             UndoRedoHandler.getInstance().add(new SequenceCommand("Create a curve", cmds));
         }

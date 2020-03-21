@@ -5,22 +5,27 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 
 import org.openstreetmap.josm.command.AddCommand;
 import org.openstreetmap.josm.command.ChangeCommand;
 import org.openstreetmap.josm.command.Command;
+import org.openstreetmap.josm.command.MoveCommand;
+import org.openstreetmap.josm.command.SequenceCommand;
+import org.openstreetmap.josm.data.UndoRedoHandler;
 import org.openstreetmap.josm.data.coor.EastNorth;
+import org.openstreetmap.josm.data.coor.LatLon;
+import org.openstreetmap.josm.data.coor.PolarCoor;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.data.projection.ProjectionRegistry;
 import org.openstreetmap.josm.gui.MainApplication;
+import org.openstreetmap.josm.tools.Geometry;
 
 /**
  * Create a circle arc
@@ -31,8 +36,8 @@ public final class CircleArcMaker {
         // Hide default constructor for utilities classes
     }
 
-    public static Collection<Command> doCircleArc(List<Node> selectedNodes, List<Way> selectedWays, int angleSeparation) {
-        Collection<Command> cmds = new LinkedList<>();
+    public static Collection<Command> doCircleArc(List<Node> selectedNodes, List<Way> selectedWays) {
+        List<Command> cmds = new LinkedList<>();
 
         //// Decides which nodes to use as anchors based on selection
         /*
@@ -42,22 +47,19 @@ public final class CircleArcMaker {
          *
          * When existing ways are reused for the arc, all ways overlapping these are transformed too.
          *
-         * 1. Exactly 3 nodes selected:
-         *      Use these nodes.
+         * Exactly 3 nodes have to be selected.
          *      - No way selected: create a new way.
-         * 2. Exactly 1 node selected, node part of exactly 1 way with 3 or more nodes:
-         *      Node selected used as first node, consequent nodes in the way's direction used as the rest.
-         *      - Reversed if not enough nodes in forward direction
-         *      - Selected node used as middle node its the middle node in a 3 node way
-         *      - Parent way used
          */
 
         //// Anchor nodes
         Node n1 = null, n2 = null, n3 = null;
 
-        Set<Way> targetWays = new HashSet<>();
         DataSet ds = MainApplication.getLayerManager().getEditDataSet();
 
+        if (selectedWays.size() > 1)
+             return cmds;
+
+        Way w = null;
         boolean nodesHaveBeenChoosen = false;
         if (selectedNodes.size() == 3) {
             Iterator<Node> nodeIter = selectedNodes.iterator();
@@ -65,54 +67,24 @@ public final class CircleArcMaker {
             n2 = nodeIter.next();
             n3 = nodeIter.next();
             nodesHaveBeenChoosen = true;
-            if (selectedWays.isEmpty()) { // Create a brand new way
-                Way newWay = new Way();
-                targetWays.add(newWay);
-                cmds.add(new AddCommand(ds, newWay));
-                newWay.addNode(n1);
-                newWay.addNode(n2);
-                newWay.addNode(n3);
-            }
         }
         if (!selectedWays.isEmpty()) {
-            // TODO: use only two nodes inferring the orientation from the parent way.
-
+            w = selectedWays.iterator().next();
             if (!nodesHaveBeenChoosen) {
                 // Use the three last nodes in the way as anchors. This is intended to be used with the
                 // built in draw mode
-                Way w = selectedWays.iterator().next(); //TODO: select last selected way instead
                 int nodeCount = w.getNodesCount();
                 if (nodeCount < 3)
-                    return null;
+                    return cmds;
                 n3 = w.getNode(nodeCount - 1);
                 n2 = w.getNode(nodeCount - 2);
                 n1 = w.getNode(nodeCount - 3);
                 nodesHaveBeenChoosen = true;
             }
-            // Fix #7341. Find the first way having all nodes in common to sort them in its nodes order
-            List<Node> consideredNodes = Arrays.asList(n1, n2, n3);
-            for (Way w : selectedWays) {
-                final List<Node> nodes = w.getNodes();
-                if (nodes.containsAll(consideredNodes)) {
-                    Collections.sort(consideredNodes, new Comparator<Node>() {
-                        @Override
-                        public int compare(Node a, Node b) {
-                            return nodes.indexOf(a) - nodes.indexOf(b);
-                        }
-                    });
-                    n1 = consideredNodes.get(0);
-                    n2 = consideredNodes.get(1);
-                    n3 = consideredNodes.get(2);
-                    break;
-                }
-            }
-
-            for (Node n : consideredNodes) {
-                targetWays.addAll(n.getParentWays());
-            }
         }
-        if (!nodesHaveBeenChoosen) {
-            return null;
+        List<Node> anchorNodes = Arrays.asList(n1, n2, n3);
+        if (!nodesHaveBeenChoosen || (w != null && !w.getNodes().containsAll(anchorNodes))) {
+            return cmds;
         }
 
         EastNorth p1 = n1.getEastNorth();
@@ -121,244 +93,145 @@ public final class CircleArcMaker {
 
         // make sure that points are different
         if (p1.equals(p2) || p1.equals(p3) || p2.equals(p3)) {
-            return null;
+            return cmds;
         }
 
-        // // Calculate the new points in the arc
-        ReturnValue<Integer> p2Index = new ReturnValue<>();
-        List<EastNorth> points = circleArcPoints(p1, p2, p3, angleSeparation, false, p2Index);
+        EastNorth center = Geometry.getCenter(anchorNodes);
+        if (center == null)
+            return cmds;
+        double radius = center.distance(p1);
 
-        //// Create the new arc nodes. Insert anchor nodes at correct positions.
-        List<Node> arcNodes = new ArrayList<>(points.size());
-        arcNodes.add(n1);
-        int i = 1;
-        for (EastNorth p : slice(points, 1, -2)) {
-            if (p2Index.value != null && i == p2Index.value) {
-                Node n2new = new Node(n2);
-                n2new.setEastNorth(p);
-                arcNodes.add(n2); // add the original n2, or else we can't find it in the target ways
-                cmds.add(new ChangeCommand(n2, n2new));
-            } else {
-                Node n = new Node(p);
-                arcNodes.add(n);
-                cmds.add(new AddCommand(ds, n));
-            }
-            i++;
+        // see #10777: calculate reasonable number of nodes for full circle (copy from CreateCircleAction)
+        LatLon ll1 = ProjectionRegistry.getProjection().eastNorth2latlon(p1);
+        LatLon ll2 = ProjectionRegistry.getProjection().eastNorth2latlon(center);
+
+        double radiusInMeters = ll1.greatCircleDistance(ll2);
+
+        int numberOfNodesInCircle = (int) Math.ceil(6.0 * Math.pow(radiusInMeters, 0.5));
+        // an odd number of nodes makes the distribution uneven
+        if (numberOfNodesInCircle < 6) {
+            numberOfNodesInCircle = 6;
+        } else if ((numberOfNodesInCircle % 2) != 0) {
+            // add 1 to make it even
+            numberOfNodesInCircle++;
         }
-        arcNodes.add(n3);
+        double maxAngle = 360.0 / numberOfNodesInCircle;
 
-        Node[] anchorNodes = {n1, n2, n3};
-        //// "Fuse" the arc with all target ways
-        fuseArc(ds, anchorNodes, arcNodes, targetWays, cmds);
+        if (w == null) {
+            w = new Way();
+            w.setNodes(anchorNodes);
+            cmds.add(new AddCommand(ds, w));
+        }
+        final List<Node> nodes = new ArrayList<>(w.getNodes());
 
+        if (!selectedWays.isEmpty()) {
+            // Fix #7341. sort nodes in ways nodes order
+            List<Node> consideredNodes = Arrays.asList(n1, n2, n3);
+            Collections.sort(consideredNodes, (o1, o2) -> nodes.indexOf(o1) - nodes.indexOf(o2));
+            n1 = consideredNodes.get(0);
+            n3 = consideredNodes.get(2);
+        }
+
+        Set<Node> fixNodes = new HashSet<>(anchorNodes);
+        if (!selectedWays.isEmpty()) {
+            nodes.stream().filter(n -> n.getParentWays().size() > 1).forEach(fixNodes::add);
+        }
+        boolean needsUndo = false;
+        if (!cmds.isEmpty()) {
+            UndoRedoHandler.getInstance().add(new SequenceCommand("add nodes", cmds));
+            needsUndo = true;
+        }
+
+        int pos1 = nodes.indexOf(n1);
+        int pos3 = nodes.indexOf(n3);
+        List<Node> toModify = new ArrayList<>(nodes.subList(pos1, pos3 + 1));
+        cmds.addAll(worker(toModify, fixNodes, center, radius, maxAngle));
+        if (toModify.size() > pos3 + 1 - pos1) {
+            List<Node> changed = new ArrayList<>();
+            changed.addAll(nodes.subList(0, pos1));
+            changed.addAll(toModify);
+            changed.addAll(nodes.subList(pos3 + 1, nodes.size()));
+            Way wNew = new Way(w);
+            wNew.setNodes(changed);
+            cmds.add(new ChangeCommand(w, wNew));
+        }
+        if (needsUndo) {
+            // make sure we don't add the new nodes twice
+            UndoRedoHandler.getInstance().undo(1);
+        }
         return cmds;
     }
 
-    private static void fuseArc(DataSet ds, Node[] anchorNodes, List<Node> arcNodes, Set<Way> targetWays, Collection<Command> cmds) {
+    // code partly taken from AlignInCircleAction
+    private static List<Command> worker(List<Node> nodes, Set<Node> fixNodes, EastNorth center, double radius, double maxAngle) {
+        List<Command> cmds = new LinkedList<>();
 
-        for (Way originalTw : targetWays) {
-            Way tw = new Way(originalTw);
-            boolean didChangeTw = false;
-            /// Do one segment at the time (so ways only sharing one segment is fused too)
-            for (int a = 0; a < 2; a++) {
-                int anchorBi = arcNodes.indexOf(anchorNodes[a]); // TODO: optimize away
-                int anchorEi = arcNodes.indexOf(anchorNodes[a + 1]);
-                /// Find the anchor node indices in current target way
-                int bi = -1, ei = -1;
-                int i = -1;
-                // Caution: nodes might appear multiple times. For now only handle simple closed ways
-                for (Node n : tw.getNodes()) {
-                    i++;
-                    // We look for the first anchor node. The next should be directly to the left or right.
-                    // Exception when the way is closed
-                    if (Objects.equals(n, anchorNodes[a])) {
-                        bi = i;
-                        Node otherAnchor = anchorNodes[a + 1];
-                        if (i > 0 && Objects.equals(tw.getNode(i - 1), otherAnchor)) {
-                            ei = i - 1;
-                        } else if (i < (tw.getNodesCount() - 1) && Objects.equals(tw.getNode(i + 1), otherAnchor)) {
-                            ei = i + 1;
-                        } else {
-                            continue; // this can happen with closed ways. Continue searching for the correct index
-                        }
-                        break;
-                    }
-                }
-                if (bi == -1 || ei == -1) {
-                    continue; // this segment is not part of the target way
-                }
-                didChangeTw = true;
+        // Move each node to that distance from the center.
+        // Nodes that are not "fix" will be adjust making regular arcs.
+        int nodeCount = nodes.size();
 
-                /// Insert the nodes of this segment
-                // Direction of target way relative to the arc node order
-                int twDirection = ei > bi ? 1 : 0;
-                int anchorI = anchorBi + 1; // don't insert the anchor nodes again
-                int twI = bi + (twDirection == 1 ? 1 : 0); // TODO: explain
-                while (anchorI < anchorEi) {
-                    tw.addNode(twI, arcNodes.get(anchorI));
-                    anchorI++;
-                    twI += twDirection;
-                }
+        List<Node> cwTest = new ArrayList<>(nodes);
+        if (cwTest.get(0) != cwTest.get(cwTest.size() - 1)) {
+            cwTest.add(cwTest.get(0));
+        }
+        boolean clockWise = Geometry.isClockwise(cwTest);
+        double maxStep = Math.PI * 2 / (360.0 / maxAngle);
+
+        // Search first fixed node
+        int startPosition;
+        for (startPosition = 0; startPosition < nodeCount; startPosition++) {
+            if (fixNodes.contains(nodes.get(startPosition)))
+                break;
+        }
+        int i = startPosition; // Start position for current arc
+        int j; // End position for current arc
+        while (i < nodeCount) {
+            for (j = i + 1; j < nodeCount; j++) {
+                if (fixNodes.contains(nodes.get(j)))
+                    break;
             }
-            if (didChangeTw)
-                cmds.add(new ChangeCommand(ds, originalTw, tw));
-        }
-    }
+            Node first = nodes.get(i);
 
-    /**
-     * Return a list of coordinates lying an the circle arc determined by n1, n2 and n3.
-     * The order of the list and which of the 3 possible arcs to construct are given by the order of n1, n2, n3
-     * @param p1 n1
-     * @param p2 n2
-     * @param p3 n3
-     * @param angleSeparation maximum angle separation between the arc points
-     * @param includeAnchors include the anchor points in the list. The original objects will be used, not copies.
-     *                       If {@code false}, p2 will be replaced by the closest arcpoint.
-     * @param anchor2Index if non-null, it's value will be set to p2's index in the returned list.
-     * @return list of coordinates lying an the circle arc determined by n1, n2 and n3
-     */
-    private static List<EastNorth> circleArcPoints(EastNorth p1, EastNorth p2, EastNorth p3,
-            int angleSeparation, boolean includeAnchors, ReturnValue<Integer> anchor2Index) {
-
-        // triangle: three single nodes needed or a way with three nodes
-
-        // let's get some shorter names
-        double x1 = p1.east();
-        double y1 = p1.north();
-        double x2 = p2.east();
-        double y2 = p2.north();
-        double x3 = p3.east();
-        double y3 = p3.north();
-
-        // calculate the center (xc,yc)
-        double s = 0.5 * ((x2 - x3) * (x1 - x3) - (y2 - y3) * (y3 - y1));
-        double sUnder = (x1 - x2) * (y3 - y1) - (y2 - y1) * (x1 - x3);
-
-        assert (sUnder != 0);
-
-        s /= sUnder;
-
-        double xc = 0.5 * (x1 + x2) + s * (y2 - y1);
-        double yc = 0.5 * (y1 + y2) + s * (x1 - x2);
-
-        // calculate the radius (r)
-        double r = Math.sqrt(Math.pow(xc - x1, 2) + Math.pow(yc - y1, 2));
-
-        // The angles of the anchor points relative to the center
-        double realA1 = calcang(xc, yc, x1, y1);
-        double realA2 = calcang(xc, yc, x2, y2);
-        double realA3 = calcang(xc, yc, x3, y3);
-
-        double startAngle = realA1;
-        // Transform the angles to get a consistent starting point
-        double a2 = normalizeAngle(realA2 - startAngle);
-        double a3 = normalizeAngle(realA3 - startAngle);
-        int direction = a3 > a2 ? 1 : -1;
-
-        double radialLength = 0;
-        if (direction == 1) { // counter clockwise
-            radialLength = a3;
-        } else { // clockwise
-            radialLength = Math.PI * 2 - a3;
-            // make the angles consistent with the direction.
-            a2 = (Math.PI * 2 - a2);
-        }
-        int numberOfNodesInArc = Math.max((int) Math.ceil((radialLength / Math.PI) * 180 / angleSeparation)+1,
-                3);
-        List<EastNorth> points = new ArrayList<>(numberOfNodesInArc);
-
-        // Calculate the circle points in order
-        double stepLength = radialLength / (numberOfNodesInArc-1);
-        // Determine closest index to p2
-
-        int indexJustBeforeP2 = (int) Math.floor(a2 / stepLength);
-        int closestIndexToP2 = indexJustBeforeP2;
-        if ((a2 - indexJustBeforeP2 * stepLength) > ((indexJustBeforeP2 + 1) * stepLength - a2)) {
-            closestIndexToP2 = indexJustBeforeP2 + 1;
-        }
-        // can't merge with end node
-        if (closestIndexToP2 == numberOfNodesInArc - 1) {
-            closestIndexToP2--;
-        } else if (closestIndexToP2 == 0) {
-            closestIndexToP2++;
-        }
-        assert (closestIndexToP2 != 0);
-
-        double a = direction * stepLength;
-        points.add(p1);
-        if (indexJustBeforeP2 == 0 && includeAnchors) {
-            points.add(p2);
-        }
-        // i is ahead of the real index by one, since we need to be ahead in the angle calculation
-        for (int i = 2; i < numberOfNodesInArc; i++) {
-            double nextA = direction * (i * stepLength);
-            double realAngle = a + startAngle;
-            double x = xc + r * Math.cos(realAngle);
-            double y = yc + r * Math.sin(realAngle);
-
-            points.add(new EastNorth(x, y));
-            if (i - 1 == indexJustBeforeP2 && includeAnchors) {
-                points.add(p2);
+            PolarCoor pcFirst = new PolarCoor(radius, PolarCoor.computeAngle(first.getEastNorth(), center), center);
+            addMoveCommandIfNeeded(first, pcFirst, cmds);
+            if (j < nodeCount) {
+                double delta;
+                PolarCoor pcLast = new PolarCoor(nodes.get(j).getEastNorth(), center);
+                delta = pcLast.angle - pcFirst.angle;
+                if (!clockWise && delta < 0) {
+                    delta += 2 * Math.PI;
+                } else if (clockWise && delta > 0) {
+                    delta -= 2 * Math.PI;
+                }
+                // do we have enough nodes to produce a nice circle?
+                int numToAdd = Math.max((int) Math.ceil(Math.abs(delta / maxStep)), j - i) - (j-i);
+                double step = delta / (numToAdd + j - i);
+                for (int k = i + 1; k < j; k++) {
+                    PolarCoor p = new PolarCoor(radius, pcFirst.angle + (k - i) * step, center);
+                    addMoveCommandIfNeeded(nodes.get(k), p, cmds);
+                }
+                // add needed nodes
+                for (int k = j; k < j + numToAdd; k++) {
+                    PolarCoor p = new PolarCoor(radius, pcFirst.angle + (k - i) * step, center);
+                    Node nNew = new Node(p.toEastNorth());
+                    nodes.add(k, nNew);
+                    cmds.add(new AddCommand(nodes.get(0).getDataSet(), nNew));
+                }
+                j += numToAdd;
+                nodeCount += numToAdd;
             }
-            a = nextA;
+            i = j; // Update start point for next iteration
         }
-        points.add(p3);
-        if (anchor2Index != null) {
-            anchor2Index.value = closestIndexToP2;
-        }
-        return points;
+        return cmds;
     }
 
-    // gah... why can't java support "reverse indices"?
-    private static <T> List<T> slice(List<T> list, int from, int to) {
-        if (to < 0)
-            to += list.size() + 1;
-        return list.subList(from, to);
+    private static void addMoveCommandIfNeeded(Node n, PolarCoor coor, Collection<Command> cmds) {
+        EastNorth en = coor.toEastNorth();
+        double deltaEast = en.east() - n.getEastNorth().east();
+        double deltaNorth = en.north() - n.getEastNorth().north();
+        if (Math.abs(deltaEast) > 1e-7 || Math.abs(deltaNorth) > 1e-7) {
+            cmds.add(new MoveCommand(n, deltaEast, deltaNorth));
+        }
     }
 
-    /**
-     * Normalizes {@code angle} so it is between 0 and 2 PI
-     * @param angle the angle
-     * @return the normalized angle
-     */
-    private static double normalizeAngle(double angle) {
-        double PI2 = Math.PI * 2;
-        if (angle < 0) {
-            angle = angle + (Math.floor(-angle / PI2) + 1) * PI2;
-        } else if (angle >= PI2) {
-            angle = angle - Math.floor(angle / PI2) * PI2;
-        }
-        return angle;
-    }
-
-    private static double calcang(double xc, double yc, double x, double y) {
-        // calculate the angle from xc|yc to x|y
-        if (xc == x && yc == y)
-            return 0; // actually invalid, but we won't have this case in this context
-        double yd = Math.abs(y - yc);
-        if (yd == 0 && xc < x)
-            return 0;
-        if (yd == 0 && xc > x)
-            return Math.PI;
-        double xd = Math.abs(x - xc);
-        double a = Math.atan2(xd, yd);
-        if (y > yc) {
-            a = Math.PI - a;
-        }
-        if (x < xc) {
-            a = -a;
-        }
-        a = 1.5 * Math.PI + a;
-        if (a < 0) {
-            a += 2 * Math.PI;
-        }
-        if (a >= 2 * Math.PI) {
-            a -= 2 * Math.PI;
-        }
-        return a;
-    }
-
-    public static class ReturnValue<T> {
-        public T value;
-    }
 }

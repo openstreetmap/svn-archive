@@ -50,7 +50,7 @@
     <property name="ivy.home"               location="${user.home}/.ant"/>
     <property name="ivy.jar.dir"            location="${ivy.home}/lib"/>
     <property name="ivy.jar.file"           location="${ivy.jar.dir}/ivy.jar"/>
-    <property name="ivy.version"            value="2.5.0-rc1"/>
+    <property name="ivy.version"            value="2.5.0"/>
 
     <!-- For platform-specific stuff -->
     <condition property="isWindows"><os family="Windows"/></condition>
@@ -713,7 +713,9 @@
     -->
     <target name="download-ivy">
         <mkdir dir="${ivy.jar.dir}"/>
-        <get src="https://jcenter.bintray.com/org/apache/ivy/ivy/${ivy.version}/ivy-${ivy.version}.jar" dest="${ivy.jar.file}" usetimestamp="true"/>
+        <get src="https://josm.openstreetmap.de/nexus/content/repositories/public/org/apache/ivy/ivy/${ivy.version}/ivy-${ivy.version}.jar"
+             dest="${ivy.jar.file}"
+             usetimestamp="true"/>
     </target>
     <target name="init-ivy" depends="download-ivy">
         <path id="ivy.lib.path">

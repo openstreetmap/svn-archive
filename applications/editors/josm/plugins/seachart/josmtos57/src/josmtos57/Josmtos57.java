@@ -5,7 +5,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.FileReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -61,7 +61,7 @@ public final class Josmtos57 {
             // CHECKSTYLE.ON: LineLength
     };
 
-    static BufferedReader in;
+    static File in;
     static FileOutputStream out;
     static S57map map;
     static byte[] buf;
@@ -92,17 +92,11 @@ public final class Josmtos57 {
             System.err.println("Meta data file: " + e.getMessage());
             System.exit(-1);
         }
+        in = new File(args[0]);
         try {
-            in = new BufferedReader(new FileReader(new File(args[0])));
-            try {
-                S57osm.OSMmap(in, map, false);
-            } catch (Exception e) {
-                System.err.println("Input data error");
-                System.exit(-1);
-            }
-            in.close();
-        } catch (IOException e) {
-            System.err.println("Input file: " + e.getMessage());
+            S57osm.OSMmap(in, map, false);
+        } catch (Exception e) {
+            System.err.println("Input data error");
             System.exit(-1);
         }
 

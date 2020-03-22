@@ -75,6 +75,11 @@ public final class Jrender {
         }
 
         @Override
+        public int grid() {
+            return 0;
+        }
+
+        @Override
         public Color background(S57map map) {
             return new Color(0, true);
         }
@@ -155,10 +160,9 @@ public final class Jrender {
         ytile = Integer.parseInt(args[4]);
         send = new ArrayList<>();
         deletes = new HashMap<>();
-        BufferedReader in = new BufferedReader(new FileReader(srcdir + xtile + "-" + ytile + "-" + zoom + ".osm"));
+        File in = new File(srcdir + xtile + "-" + ytile + "-" + zoom + ".osm");
         map = new S57map(true);
         S57osm.OSMmap(in, map, false);
-        in.close();
         context = new Context();
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         ImageIO.write(new BufferedImage(256, 256, BufferedImage.TYPE_INT_ARGB), "png", bos);

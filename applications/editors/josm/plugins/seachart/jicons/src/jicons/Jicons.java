@@ -206,6 +206,11 @@ public final class Jicons {
         }
 
         @Override
+        public int grid() {
+            return 0;
+        }
+
+        @Override
         public Color background(S57map map) {
             return new Color(0, true);
         }

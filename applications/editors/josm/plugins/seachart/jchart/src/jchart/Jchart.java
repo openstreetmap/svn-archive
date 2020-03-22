@@ -7,10 +7,8 @@ import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
@@ -131,11 +129,11 @@ public final class Jchart {
             System.err.println("Usage: java -jar jrender.jar <osm data file> <zoom> <scale> <output image file>");
             System.exit(-1);
         }
-        BufferedReader in = new BufferedReader(new FileReader(args[0]));
+        File in = new File(args[0]);
         zoom = Integer.parseInt(args[1]);
         map = new S57map(false);
         S57osm.OSMmap(in, map, false);
-        in.close();
+//        in.close();
         context = new Context();
         Point2D size = context.getPoint(new Snode(map.bounds.minlat, map.bounds.maxlon));
         BufferedImage img = new BufferedImage((int)size.getX(), (int)size.getY(), BufferedImage.TYPE_INT_ARGB);

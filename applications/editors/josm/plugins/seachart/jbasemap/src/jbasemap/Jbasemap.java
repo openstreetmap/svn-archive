@@ -5,7 +5,7 @@ import java.awt.Color;
 import java.awt.Rectangle;
 import java.awt.geom.Point2D;
 import java.io.BufferedReader;
-import java.io.FileReader;
+import java.io.File;
 import java.io.IOException;
 
 import org.apache.batik.dom.GenericDOMImplementation;
@@ -62,6 +62,11 @@ public final class Jbasemap {
         }
 
         @Override
+        public int grid() {
+            return 0;
+        }
+
+        @Override
         public boolean clip() {
             return true;
         }
@@ -115,18 +120,12 @@ public final class Jbasemap {
         zoom = Integer.parseInt(args[2]);
         z2 = Math.pow(2, zoom);
         double scale = 0.1;
+        File in = new File(src);
+        map = new S57map(false);
         try {
-            BufferedReader in = new BufferedReader(new FileReader(src));
-            map = new S57map(false);
-            try {
-                S57osm.OSMmap(in, map, true);
-            } catch (Exception e) {
-                System.err.println("Input data error");
-                System.exit(-1);
-            }
-            in.close();
-        } catch (IOException e) {
-            System.err.println("Input file: " + e.getMessage());
+            S57osm.OSMmap(in, map, true);
+        } catch (Exception e) {
+            System.err.println("Input data error");
             System.exit(-1);
         }
         map.bounds.maxlat = Math.atan(Math.sinh(Math.PI * (1 - 2 * Double.parseDouble(args[4]) / z2)));

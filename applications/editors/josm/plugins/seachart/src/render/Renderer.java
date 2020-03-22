@@ -24,6 +24,7 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 import s57.S57map;
+import s57.S57map.Feature;
 import s57.S57map.GeomIterator;
 import s57.S57map.Pflag;
 import s57.S57map.Snode;
@@ -330,7 +331,7 @@ public final class Renderer {
     public static void grid() {
         if (context.grid() > 0) {
             LineStyle style = new LineStyle(Color.black, (float)2.0);
-            double nspan = 60 * Math.toDegrees(map.bounds.maxlon - map.bounds.minlon) / 5.0;
+            double nspan = 60 * Math.toDegrees(map.bounds.maxlon - map.bounds.minlon) / context.grid();
             double mult = 1.0;
             if (nspan < 1.0) {
                 do {
@@ -372,7 +373,7 @@ public final class Renderer {
             }
             g2.setPaint(style.line);
             g2.draw(p);
-            double tspan = 60 * Math.toDegrees(map.bounds.maxlat - map.bounds.minlat) / 5.0;
+            double tspan = 60 * Math.toDegrees(map.bounds.maxlat - map.bounds.minlat) / context.grid();
             mult = 1.0;
             if (tspan < 1.0) {
                 do {
@@ -412,7 +413,21 @@ public final class Renderer {
             }
             g2.setPaint(style.line);
             g2.draw(p);
-        }
+/*            Symbol legend = new Symbol();
+            legend.add(new Instr(Form.BBOX, new Rectangle2D.Double(0, 0, 900, 300)));
+            Path2D.Double path = new Path2D.Double(); path.moveTo(0, 0); path.lineTo(900, 0); path.lineTo(900, 300); path.lineTo(0, 300); path.closePath();
+            legend.add(new Instr(Form.FILL, Color.white));
+            legend.add(new Instr(Form.PGON, path));
+            legend.add(new Instr(Form.TEXT, new Caption("© OpenStreetMap contributors", new Font("Arial", Font.PLAIN, 25), Color.black, new Delta(Handle.BC, AffineTransform.getTranslateInstance(450, 300)))));
+            legend.add(new Instr(Form.TEXT, new Caption("Mercator projection", new Font("Arial", Font.PLAIN, 30), Color.black, new Delta(Handle.BC, AffineTransform.getTranslateInstance(450, 250)))));
+            Point2D point = context.getPoint(new Snode(map.bounds.minlat, map.bounds.minlon));
+            Symbols.drawSymbol(g2, legend, sScale, point.getX(), point.getY(), null, new Delta(Handle.BL, AffineTransform.getTranslateInstance(0, 0)));
+            legend = new Symbol();
+            legend.add(new Instr(Form.BBOX, new Rectangle2D.Double(0, 0, 900, 300)));
+            legend.add(new Instr(Form.TEXT, new Caption("Mercator projection", new Font("Arial", Font.PLAIN, 30), Color.black, new Delta(Handle.BC, AffineTransform.getTranslateInstance(450, 250)))));
+            point = context.getPoint(new Snode(map.bounds.minlat, map.bounds.minlon));
+            Symbols.drawSymbol(g2, legend, sScale, point.getX(), point.getY(), null, new Delta(Handle.BL, AffineTransform.getTranslateInstance(0, 0)));
+*/        }
     }
 
     public static void lineCircle(LineStyle style, double radius, UniHLU units) {

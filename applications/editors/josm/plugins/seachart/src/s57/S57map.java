@@ -214,7 +214,7 @@ public class S57map { // S57/OSM map generation methods
         public RelTab rels;        // Related objects
         public ObjMap objs;        // Slave object attributes
 
-        Feature() {
+        public Feature() {
             id = 0;
             reln = Rflag.UNKN;
             geom = new Geom(Pflag.NOSP);

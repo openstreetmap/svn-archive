@@ -1,9 +1,17 @@
 // License: GPL. For details, see LICENSE file.
 package s57;
 
-import java.io.BufferedReader;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.DocumentBuilder;
+import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
+import org.w3c.dom.Node;
+import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
 
 import s57.S57att.Att;
 import s57.S57map.Snode;
@@ -88,154 +96,131 @@ public final class S57osm { // OSM to S57 Object/Attribute and Object/Primitive 
         return;
     }
 
-    public static void OSMmap(BufferedReader in, S57map map, boolean bb) throws Exception {
+    public static void OSMmap(File in, S57map map, boolean bb) throws Exception {
         String k = "";
         String v = "";
 
         double lat = 0;
         double lon = 0;
         long id = 0;
+        long ref = 0;
+        String type = "";
+        String role = "";
 
-        boolean inOsm = false;
-        boolean inNode = false;
-        boolean inWay = false;
-        boolean inRel = false;
         map.nodes.put(1L, new Snode());
         map.nodes.put(2L, new Snode());
         map.nodes.put(3L, new Snode());
         map.nodes.put(4L, new Snode());
 
-        String ln;
-        while ((ln = in.readLine()) != null) {
-            if (inOsm) {
-                if (ln.contains("<bounds") && !bb) {
-                    for (String token : ln.split("[ ]+")) {
-                        if (token.matches("^minlat=.+")) {
-                            map.bounds.minlat = Math.toRadians(Double.parseDouble(token.split("[\"]")[1]));
-                            map.nodes.get(2L).lat = map.bounds.minlat;
-                            map.nodes.get(3L).lat = map.bounds.minlat;
-                        } else if (token.matches("^minlon=.+")) {
-                            map.bounds.minlon = Math.toRadians(Double.parseDouble(token.split("[\"]")[1]));
-                            map.nodes.get(1L).lon = map.bounds.minlon;
-                            map.nodes.get(2L).lon = map.bounds.minlon;
-                        } else if (token.matches("^maxlat=.+")) {
-                            map.bounds.maxlat = Math.toRadians(Double.parseDouble(token.split("[\"]")[1]));
-                            map.nodes.get(1L).lat = map.bounds.maxlat;
-                            map.nodes.get(4L).lat = map.bounds.maxlat;
-                        } else if (token.matches("^maxlon=.+")) {
-                            map.bounds.maxlon = Math.toRadians(Double.parseDouble(token.split("[\"]")[1]));
-                            map.nodes.get(3L).lon = map.bounds.maxlon;
-                            map.nodes.get(4L).lon = map.bounds.maxlon;
-                        }
-                    }
-                } else {
-                    if ((inNode || inWay || inRel) && ln.contains("<tag")) {
-                        k = v = "";
-                        String[] token = ln.split("k=");
-                        k = token[1].split("[\"]")[1];
-                        token = token[1].split("v=");
-                        v = token[1].split("[\"]")[1];
-                        if (!k.isEmpty() && !v.isEmpty()) {
-                            map.addTag(k, v);
-                        }
-                    }
-                    if (inNode) {
-                        if (ln.contains("</node")) {
-                            inNode = false;
-                            map.tagsDone(id);
-                        }
-                    } else if (ln.contains("<node")) {
-                        for (String token : ln.split("[ ]+")) {
-                            if (token.matches("^id=.+")) {
-                                id = Long.parseLong(token.split("[\"]")[1]);
-                            } else if (token.matches("^lat=.+")) {
-                                lat = Double.parseDouble(token.split("[\"]")[1]);
-                            } else if (token.matches("^lon=.+")) {
-                                lon = Double.parseDouble(token.split("[\"]")[1]);
-                            }
-                        }
-                        map.addNode(id, lat, lon);
-                        if (ln.contains("/>")) {
-                            map.tagsDone(id);
-                        } else {
-                            inNode = true;
-                        }
-                    } else if (inWay) {
-                        if (ln.contains("<nd")) {
-                            long ref = 0;
-                            for (String token : ln.split("[ ]+")) {
-                                if (token.matches("^ref=.+")) {
-                                    ref = Long.parseLong(token.split("[\"]")[1]);
-                                }
-                            }
-                            try {
-                                map.addToEdge(ref);
-                            } catch (Exception e) {
-                                inWay = false;
-                            }
-                        }
-                        if (ln.contains("</way")) {
-                            inWay = false;
-                            map.tagsDone(id);
-                        }
-                    } else if (ln.contains("<way")) {
-                        for (String token : ln.split("[ ]+")) {
-                            if (token.matches("^id=.+")) {
-                                id = Long.parseLong(token.split("[\"]")[1]);
-                            }
-                        }
-                        map.addEdge(id);
-                        if (ln.contains("/>")) {
-                            map.tagsDone(0);
-                        } else {
-                            inWay = true;
-                        }
-                    } else if (ln.contains("</osm")) {
-                        map.mapDone();
-                        inOsm = false;
-                        break;
-                    } else if (inRel) {
-                        if (ln.contains("<member")) {
-                            String type = "";
-                            String role = "";
-                            long ref = 0;
-                            for (String token : ln.split("[ ]+")) {
-                                if (token.matches("^ref=.+")) {
-                                    ref = Long.parseLong(token.split("[\"]")[1]);
-                                } else if (token.matches("^type=.+")) {
-                                    type = token.split("[\"]")[1];
-                                } else if (token.matches("^role=.+")) {
-                                    String[] str = token.split("[\"]");
-                                    if (str.length > 1) {
-                                        role = token.split("[\"]")[1];
-                                    }
-                                }
-                            }
-                            if ((role.equals("outer") || role.equals("inner")) && type.equals("way"))
-                                map.addToArea(ref, role.equals("outer"));
-                        }
-                        if (ln.contains("</relation")) {
-                            inRel = false;
-                            map.tagsDone(id);
-                        }
-                    } else if (ln.contains("<relation")) {
-                        for (String token : ln.split("[ ]+")) {
-                            if (token.matches("^id=.+")) {
-                                id = Long.parseLong(token.split("[\"]")[1]);
-                            }
-                        }
-                        map.addArea(id);
-                        if (ln.contains("/>")) {
-                            map.tagsDone(id);
-                        } else {
-                            inRel = true;
-                        }
+        DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+        Document doc = dBuilder.parse(in);
+        doc.getDocumentElement().normalize();
+        if (!doc.getDocumentElement().getNodeName().equals("osm")) {
+            System.err.println("OSM file format error");
+            System.exit(-1);
+        }
+        NodeList nList = doc.getElementsByTagName("bounds");
+        NamedNodeMap nnmap = nList.item(0).getAttributes();
+        map.bounds.minlat = Math.toRadians(Double.parseDouble(nnmap.getNamedItem("minlat").getNodeValue()));
+        map.nodes.get(2L).lat = map.bounds.minlat;
+        map.nodes.get(3L).lat = map.bounds.minlat;
+        map.bounds.minlon = Math.toRadians(Double.parseDouble(nnmap.getNamedItem("minlon").getNodeValue()));
+        map.nodes.get(1L).lon = map.bounds.minlon;
+        map.nodes.get(2L).lon = map.bounds.minlon;
+        map.bounds.maxlat = Math.toRadians(Double.parseDouble(nnmap.getNamedItem("maxlat").getNodeValue()));
+        map.nodes.get(1L).lat = map.bounds.maxlat;
+        map.nodes.get(4L).lat = map.bounds.maxlat;
+        map.bounds.maxlon = Math.toRadians(Double.parseDouble(nnmap.getNamedItem("maxlon").getNodeValue()));
+        map.nodes.get(3L).lon = map.bounds.maxlon;
+        map.nodes.get(4L).lon = map.bounds.maxlon;
+
+        nList = doc.getElementsByTagName("node");
+        int nLen = nList.getLength();
+        for (int i = 0; i < nLen; i++) {
+            Node nNode = nList.item(i);
+            if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+                nnmap = nNode.getAttributes();
+                id = Long.parseLong(nnmap.getNamedItem("id").getNodeValue());
+                lat = Double.parseDouble(nnmap.getNamedItem("lat").getNodeValue());
+                lon = Double.parseDouble(nnmap.getNamedItem("lon").getNodeValue());
+                map.addNode(id, lat, lon);
+                NodeList tList = ((Element)nNode).getElementsByTagName("tag");
+                for (int j = 0; j < tList.getLength(); j++) {
+                    NamedNodeMap ntmap = tList.item(j).getAttributes();
+                    k = ntmap.getNamedItem("k").getNodeValue();
+                    v = ntmap.getNamedItem("v").getNodeValue();
+                    if (!k.isEmpty() && !v.isEmpty()) {
+                        map.addTag(k, v);
                     }
                 }
-            } else if (ln.contains("<osm")) {
-                inOsm = true;
+                map.tagsDone(id);
             }
         }
+
+        nList = doc.getElementsByTagName("way");
+        nLen = nList.getLength();
+        for (int i = 0; i < nLen; i++) {
+            Node nNode = nList.item(i);
+            if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+                nnmap = nNode.getAttributes();
+                id = Long.parseLong(nnmap.getNamedItem("id").getNodeValue());
+                map.addEdge(id);
+                NodeList rList = ((Element)nNode).getElementsByTagName("nd");
+                for (int j = 0; j < rList.getLength(); j++) {
+                    NamedNodeMap nrmap = rList.item(j).getAttributes();
+                    ref = Long.parseLong(nrmap.getNamedItem("ref").getNodeValue());
+                    try {
+                        map.addToEdge(ref);
+                    } catch (Exception e) {
+                        System.err.println("Unknown node in way");
+                        System.exit(-1);
+                    }
+                }
+                NodeList tList = ((Element)nNode).getElementsByTagName("tag");
+                for (int j = 0; j < tList.getLength(); j++) {
+                    NamedNodeMap ntmap = tList.item(j).getAttributes();
+                    k = ntmap.getNamedItem("k").getNodeValue();
+                    v = ntmap.getNamedItem("v").getNodeValue();
+                    if (!k.isEmpty() && !v.isEmpty()) {
+                        map.addTag(k, v);
+                    }
+                }
+                map.tagsDone(id);
+            }
+        }
+
+        nList = doc.getElementsByTagName("relation");
+        nLen = nList.getLength();
+        for (int i = 0; i < nLen; i++) {
+            Node nNode = nList.item(i);
+            if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+                nnmap = nNode.getAttributes();
+                id = Long.parseLong(nnmap.getNamedItem("id").getNodeValue());
+                map.addArea(id);
+                NodeList rList = ((Element)nNode).getElementsByTagName("member");
+                for (int j = 0; j < rList.getLength(); j++) {
+                    NamedNodeMap nrmap = rList.item(j).getAttributes();
+                    type = nrmap.getNamedItem("type").getNodeValue();
+                    ref = Long.parseLong(nrmap.getNamedItem("ref").getNodeValue());
+                    role = nrmap.getNamedItem("role").getNodeValue();
+                    if ((role.equals("outer") || role.equals("inner")) && type.equals("way"))
+                        map.addToArea(ref, role.equals("outer"));
+                }
+                NodeList tList = ((Element)nNode).getElementsByTagName("tag");
+                for (int j = 0; j < tList.getLength(); j++) {
+                    NamedNodeMap ntmap = tList.item(j).getAttributes();
+                    k = ntmap.getNamedItem("k").getNodeValue();
+                    v = ntmap.getNamedItem("v").getNodeValue();
+                    if (!k.isEmpty() && !v.isEmpty()) {
+                        map.addTag(k, v);
+                    }
+                }
+                map.tagsDone(id);
+            }
+        }
+
+        map.mapDone();
         return;
     }
 

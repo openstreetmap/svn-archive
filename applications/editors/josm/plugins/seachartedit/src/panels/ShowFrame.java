@@ -87,6 +87,12 @@ public class ShowFrame extends JFrame {
             // TODO Auto-generated method stub
             return null;
         }
+
+        @Override
+        public int grid() {
+            // TODO Auto-generated method stub
+            return 0;
+        }
     }
 
     public ShowFrame(String title) {

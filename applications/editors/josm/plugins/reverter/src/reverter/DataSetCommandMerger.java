@@ -52,22 +52,22 @@ final class DataSetCommandMerger {
     }
 
     private void addChangeCommandIfNotEquals(OsmPrimitive target, OsmPrimitive newTarget, boolean nominal) {
-		if (target.isIncomplete() != newTarget.isIncomplete() || target.isDeleted() != newTarget.isDeleted()
-				|| target.isVisible() != newTarget.isVisible()
-				|| !getNonDiscardableTags(target).equals(getNonDiscardableTags(newTarget))) {
-			cmds.add(new ChangeCommand(target, newTarget));
-			if (nominal) {
-				nominalRevertedPrimitives.add(target);
-			}
-			Logging.debug("Reverting " + target + " to " + newTarget);
-		}
+        if (target.isIncomplete() != newTarget.isIncomplete() || target.isDeleted() != newTarget.isDeleted()
+                || target.isVisible() != newTarget.isVisible()
+                || !getNonDiscardableTags(target).equals(getNonDiscardableTags(newTarget))) {
+            cmds.add(new ChangeCommand(target, newTarget));
+            if (nominal) {
+                nominalRevertedPrimitives.add(target);
+            }
+            Logging.debug("Reverting " + target + " to " + newTarget);
+        }
     }
 
     private static Map<String, String> getNonDiscardableTags(OsmPrimitive p) {
         Map<String, String> result = new HashMap<>();
         for (Map.Entry<String, String> e : p.getKeys().entrySet()) {
-        	if (!AbstractPrimitive.getDiscardableKeys().contains(e.getKey()))
-        		result.put(e.getKey(), e.getValue());
+            if (!AbstractPrimitive.getDiscardableKeys().contains(e.getKey()))
+                result.put(e.getKey(), e.getValue());
         }
         return result;
     }

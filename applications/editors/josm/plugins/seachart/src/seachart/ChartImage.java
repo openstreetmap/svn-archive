@@ -119,7 +119,7 @@ public class ChartImage extends ImageryLayer implements ZoomChangeListener, Char
 
     @Override
     public int grid() {
-        return 0;
+        return 5;
     }
 
     @Override

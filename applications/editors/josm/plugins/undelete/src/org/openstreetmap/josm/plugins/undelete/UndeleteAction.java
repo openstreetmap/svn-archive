@@ -82,7 +82,6 @@ public class UndeleteAction extends JosmAction {
                         }
 
                         HistoryOsmPrimitive hPrimitive1 = h.getLatest();
-                        HistoryOsmPrimitive hPrimitive2 = null;
 
                         boolean visible = hPrimitive1.isVisible();
 
@@ -102,15 +101,20 @@ public class UndeleteAction extends JosmAction {
                             }
                             restored.add(primitive);
                         } else {
-                            // We search n-1 version with redaction robustness
+                            // We search latest visible version < n with redaction robustness
                             long idx = 1;
                             long n = hPrimitive1.getVersion();
-                            while (hPrimitive2 == null && idx < n) {
+                            HistoryOsmPrimitive hPrimitive2 = null;
+                            while (idx < n) {
                                 hPrimitive2 = h.getByVersion(n - idx++);
+                                if (hPrimitive2 != null && hPrimitive2.isVisible()) {
+                                    // don't restore an invisible object
+                                    break;
+                                }
                             }
                             if (type == OsmPrimitiveType.NODE) {
                                 // We get version and user from the latest version,
-                                // coordinates and tags from n-1 version
+                                // coordinates and tags from latest visible version < n
                                 Node node = new Node(id, (int) hPrimitive1.getVersion());
 
                                 HistoryNode hNode = (HistoryNode) hPrimitive2;
@@ -121,7 +125,7 @@ public class UndeleteAction extends JosmAction {
                                 primitive = node;
                             } else if (type == OsmPrimitiveType.WAY) {
                                 // We get version and user from the latest version,
-                                // nodes and tags from n-1 version
+                                // nodes and tags from latest visible version < n
                                 hPrimitive1 = h.getLatest();
 
                                 Way way = new Way(id, (int) hPrimitive1.getVersion());

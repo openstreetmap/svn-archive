@@ -2,6 +2,7 @@
 package org.openstreetmap.josm.plugins.undelete;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
+import static org.openstreetmap.josm.tools.I18n.trn;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
@@ -34,9 +35,9 @@ import org.openstreetmap.josm.data.osm.history.HistoryOsmPrimitive;
 import org.openstreetmap.josm.data.osm.history.HistoryRelation;
 import org.openstreetmap.josm.data.osm.history.HistoryWay;
 import org.openstreetmap.josm.gui.MainApplication;
-import org.openstreetmap.josm.gui.Notification;
 import org.openstreetmap.josm.gui.history.HistoryLoadTask;
 import org.openstreetmap.josm.gui.io.DownloadPrimitivesTask;
+import org.openstreetmap.josm.gui.io.DownloadPrimitivesWithReferrersTask;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import org.openstreetmap.josm.gui.util.GuiHelper;
 import org.openstreetmap.josm.spi.preferences.Config;
@@ -57,17 +58,25 @@ public class UndeleteAction extends JosmAction {
 
         private Set<OsmPrimitive> restored;
 
-        private Worker(OsmPrimitive parent, OsmDataLayer layer, List<PrimitiveId> ids, Set<OsmPrimitive> restored) {
-            this.parent = parent;
-            this.layer = layer;
-            this.ids = ids;
-            this.restored = restored != null ? restored : new LinkedHashSet<>();
-        }
+		private Set<PrimitiveId> missingPrimitives;
+
+		private Worker(OsmPrimitive parent, OsmDataLayer layer, List<PrimitiveId> ids, Set<OsmPrimitive> restored,
+				HistoryLoadTask task) {
+			this.parent = parent;
+			this.layer = layer;
+			this.ids = ids;
+			this.restored = restored;
+			this.missingPrimitives = task.getMissingPrimitives();
+		}
 
         @Override
         public void run() {
             List<Node> nodes = new ArrayList<>();
             for (PrimitiveId pid : ids) {
+				if (missingPrimitives == null || missingPrimitives.contains(pid)) {
+					continue;
+				}
+
                 OsmPrimitive primitive = layer.data.getPrimitiveById(pid);
                 if (primitive == null) {
                     try {
@@ -76,10 +85,10 @@ public class UndeleteAction extends JosmAction {
 
                         History h = HistoryDataSet.getInstance().getHistory(id, type);
 
-                        if (h == null) {
-                            Logging.warn("Cannot find history for " + type + " " + id);
-                            return;
-                        }
+						if (h == null) {
+							Logging.warn("Cannot find history for " + type + " " + id);
+							return;
+						}
 
                         HistoryOsmPrimitive hPrimitive1 = h.getLatest();
 
@@ -185,16 +194,6 @@ public class UndeleteAction extends JosmAction {
 
                                 layer.data.addPrimitive(primitive);
                                 restored.add(primitive);
-                            } else {
-                              final String msg = OsmPrimitiveType.NODE == type
-                                  ? tr("Unable to undelete node {0}. Object has likely been redacted", id)
-                                  : OsmPrimitiveType.WAY == type
-                                  ? tr("Unable to undelete way {0}. Object has likely been redacted", id)
-                                  : OsmPrimitiveType.RELATION == type
-                                  ? tr("Unable to undelete relation {0}. Object has likely been redacted", id)
-                                  : null;
-                                GuiHelper.runInEDT(() -> new Notification(msg).setIcon(JOptionPane.WARNING_MESSAGE).show());
-                                Logging.warn(msg);
                             }
                         }
                     } catch (Exception e) {
@@ -214,7 +213,22 @@ public class UndeleteAction extends JosmAction {
                     AutoScaleAction.autoScale(AutoScaleMode.SELECTION);
                 });
             }
+            if (missingPrimitives != null && !missingPrimitives.isEmpty()) {
+                GuiHelper.runInEDTAndWait(() -> DownloadPrimitivesWithReferrersTask.reportProblemDialog(missingPrimitives,
+                        trn("Object could not be undeleted", "Some objects could not be undeleted", missingPrimitives.size()),
+                        trn("One object could not be undeleted.<br>",
+                                "{0} objects could not be undeleted.<br>",
+                                missingPrimitives.size(),
+                                missingPrimitives.size())
+                                + tr("The server replied with response code 404.<br>"
+                                     + "This usually means, the server does not know an object with the requested id. Maybe it was redacted."),
+                        tr("missing objects:"),
+                        JOptionPane.ERROR_MESSAGE
+                        ).showDialog());
+
+            }
         }
+
     }
 
     /**
@@ -254,11 +268,12 @@ public class UndeleteAction extends JosmAction {
 
         HistoryLoadTask task = new HistoryLoadTask();
         task.setChangesetDataNeeded(false);
+        task.setCollectMissing(true);
         for (PrimitiveId id : ids) {
             task.add(id);
         }
 
         MainApplication.worker.execute(task);
-        MainApplication.worker.submit(new Worker(parent, layer, ids, restored));
+        MainApplication.worker.submit(new Worker(parent, layer, ids, restored, task));
     }
 }

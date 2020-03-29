@@ -114,7 +114,7 @@ public final class S57att { // S57 Attribute lookup tables & methods
         AttStr.put(Att.FUNCTN, "function"); AttStr.put(Att.HEIGHT, "height"); AttStr.put(Att.HUNITS, "units"); AttStr.put(Att.HORACC, "accuracy");
         AttStr.put(Att.HORCLR, "clearance_width"); AttStr.put(Att.HORLEN, "length"); AttStr.put(Att.HORWID, "width"); AttStr.put(Att.ICEFAC, "factor");
         AttStr.put(Att.INFORM, "information"); AttStr.put(Att.JRSDTN, "jurisdiction"); AttStr.put(Att.LIFCAP, "maximum_load"); AttStr.put(Att.LITCHR, "character");
-        AttStr.put(Att.LITVIS, "visibility"); AttStr.put(Att.MARSYS, "system"); AttStr.put(Att.MLTYLT, "multiple"); AttStr.put(Att.NATION, "nationality");
+        AttStr.put(Att.LITVIS, "visibility"); AttStr.put(Att.MARSYS, "system"); AttStr.put(Att.MLTYLT, "multiple"); AttStr.put(Att.NATION, "nation");
         AttStr.put(Att.NATCON, "construction"); AttStr.put(Att.NATSUR, "surface"); AttStr.put(Att.NATQUA, "surface_qualification"); AttStr.put(Att.NMDATE, "nm_date");
         AttStr.put(Att.OBJNAM, "name"); AttStr.put(Att.ORIENT, "orientation"); AttStr.put(Att.PEREND, "period_end"); AttStr.put(Att.PERSTA, "period_start");
         AttStr.put(Att.PICREP, "picture"); AttStr.put(Att.PILDST, "pilot_district"); AttStr.put(Att.PRCTRY, "producing_country"); AttStr.put(Att.PRODCT, "product");

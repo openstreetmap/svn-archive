@@ -58,6 +58,7 @@ public final class S57osm { // OSM to S57 Object/Attribute and Object/Primitive 
         OSMtags.put("man_made=pier", new KeyVal<>(Obj.SLCONS, Att.UNKATT, null, null)); OSMtags.put("man_made=jetty", new KeyVal<>(Obj.SLCONS, Att.UNKATT, null, null));
         OSMtags.put("landuse=industrial", new KeyVal<>(Obj.BUAARE, Att.UNKATT, null, null)); OSMtags.put("landuse=commercial", new KeyVal<>(Obj.BUAARE, Att.UNKATT, null, null));
         OSMtags.put("landuse=retail", new KeyVal<>(Obj.BUAARE, Att.UNKATT, null, null)); OSMtags.put("landuse=residential", new KeyVal<>(Obj.BUAARE, Att.UNKATT, null, null));
+        OSMtags.put("boundary_type=territorial_waters", new KeyVal<>(Obj.TESARE, Att.UNKATT, null, null));
     }
 
     public static void OSMtag(ArrayList<KeyVal<?>> osm, String key, String val) {
@@ -97,13 +98,12 @@ public final class S57osm { // OSM to S57 Object/Attribute and Object/Primitive 
     }
 
     public static void OSMmap(File in, S57map map, boolean bb) throws Exception {
-        String k = "";
-        String v = "";
-
         double lat = 0;
         double lon = 0;
         long id = 0;
         long ref = 0;
+        String k = "";
+        String v = "";
         String type = "";
         String role = "";
 
@@ -120,27 +120,30 @@ public final class S57osm { // OSM to S57 Object/Attribute and Object/Primitive 
             System.err.println("OSM file format error");
             System.exit(-1);
         }
-        NodeList nList = doc.getElementsByTagName("bounds");
-        NamedNodeMap nnmap = nList.item(0).getAttributes();
-        map.bounds.minlat = Math.toRadians(Double.parseDouble(nnmap.getNamedItem("minlat").getNodeValue()));
-        map.nodes.get(2L).lat = map.bounds.minlat;
-        map.nodes.get(3L).lat = map.bounds.minlat;
-        map.bounds.minlon = Math.toRadians(Double.parseDouble(nnmap.getNamedItem("minlon").getNodeValue()));
-        map.nodes.get(1L).lon = map.bounds.minlon;
-        map.nodes.get(2L).lon = map.bounds.minlon;
-        map.bounds.maxlat = Math.toRadians(Double.parseDouble(nnmap.getNamedItem("maxlat").getNodeValue()));
-        map.nodes.get(1L).lat = map.bounds.maxlat;
-        map.nodes.get(4L).lat = map.bounds.maxlat;
-        map.bounds.maxlon = Math.toRadians(Double.parseDouble(nnmap.getNamedItem("maxlon").getNodeValue()));
-        map.nodes.get(3L).lon = map.bounds.maxlon;
-        map.nodes.get(4L).lon = map.bounds.maxlon;
+		NodeList nList = doc.getElementsByTagName("bounds");
+		NamedNodeMap nnmap;
+		if (nList.getLength() != 0) {
+			nnmap = nList.item(0).getAttributes();
+			map.bounds.minlat = Math.toRadians(Double.parseDouble(nnmap.getNamedItem("minlat").getNodeValue()));
+			map.nodes.get(2L).lat = map.bounds.minlat;
+			map.nodes.get(3L).lat = map.bounds.minlat;
+			map.bounds.minlon = Math.toRadians(Double.parseDouble(nnmap.getNamedItem("minlon").getNodeValue()));
+			map.nodes.get(1L).lon = map.bounds.minlon;
+			map.nodes.get(2L).lon = map.bounds.minlon;
+			map.bounds.maxlat = Math.toRadians(Double.parseDouble(nnmap.getNamedItem("maxlat").getNodeValue()));
+			map.nodes.get(1L).lat = map.bounds.maxlat;
+			map.nodes.get(4L).lat = map.bounds.maxlat;
+			map.bounds.maxlon = Math.toRadians(Double.parseDouble(nnmap.getNamedItem("maxlon").getNodeValue()));
+			map.nodes.get(3L).lon = map.bounds.maxlon;
+			map.nodes.get(4L).lon = map.bounds.maxlon;
+		}
 
         nList = doc.getElementsByTagName("node");
         int nLen = nList.getLength();
         for (int i = 0; i < nLen; i++) {
             Node nNode = nList.item(i);
             if (nNode.getNodeType() == Node.ELEMENT_NODE) {
-                nnmap = nNode.getAttributes();
+            	nnmap = nNode.getAttributes();
                 id = Long.parseLong(nnmap.getNamedItem("id").getNodeValue());
                 lat = Double.parseDouble(nnmap.getNamedItem("lat").getNodeValue());
                 lon = Double.parseDouble(nnmap.getNamedItem("lon").getNodeValue());

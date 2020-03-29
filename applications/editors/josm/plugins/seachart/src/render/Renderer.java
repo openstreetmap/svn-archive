@@ -24,7 +24,6 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 import s57.S57map;
-import s57.S57map.Feature;
 import s57.S57map.GeomIterator;
 import s57.S57map.Pflag;
 import s57.S57map.Snode;
@@ -329,9 +328,11 @@ public final class Renderer {
     }
     
     public static void grid() {
-        if (context.grid() > 0) {
+        if ((context.grid() > 0) && (map != null)) {
             LineStyle style = new LineStyle(Color.black, (float)2.0);
-            double nspan = 60 * Math.toDegrees(map.bounds.maxlon - map.bounds.minlon) / context.grid();
+            Point2D point = context.getPoint(new Snode(map.bounds.minlat, map.bounds.maxlon));
+            double ratio = point.getX() / point.getY();
+            double nspan = 60 * Math.toDegrees(map.bounds.maxlon - map.bounds.minlon) / (context.grid() * (ratio > 1.0 ? ratio : 1.0));
             double mult = 1.0;
             if (nspan < 1.0) {
                 do {
@@ -354,18 +355,18 @@ public final class Renderer {
             g2.setStroke(new BasicStroke((float) (style.width * sScale), BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND));
             Path2D.Double p = new Path2D.Double();
             for (double lon = left; lon < map.bounds.maxlon; lon += Math.toRadians(nspan)) {
-                Point2D point = context.getPoint(new Snode(map.bounds.maxlat, lon));
+                point = context.getPoint(new Snode(map.bounds.maxlat, lon));
                 p.moveTo(point.getX(), point.getY());
                 point = context.getPoint(new Snode(map.bounds.minlat, lon));
                 p.lineTo(point.getX(), point.getY());
                 double deg = Math.toDegrees(lon);
-                String ew = (deg < 0) ? "W" : "E";
+                String ew = (deg < -0.001) ? "W" : (deg > 0.001) ? "E" : "";
                 deg = Math.abs(deg);
                 String dstr = String.format("%03d°", (int)Math.floor(deg));
                 double min = (deg - Math.floor(deg)) * 60.0;
                 String mstr = String.format("%05.2f'%s", min, ew);
                 Symbol label = new Symbol();
-                if (point.getX() > 500.0) {
+                if (point.getX() > 600.0) {
                     label.add(new Instr(Form.TEXT, new Caption(dstr, new Font("Arial", Font.PLAIN, 40), Color.black, new Delta(Handle.BR, AffineTransform.getTranslateInstance(-10, -20)))));
                     label.add(new Instr(Form.TEXT, new Caption(mstr, new Font("Arial", Font.PLAIN, 40), Color.black, new Delta(Handle.BL, AffineTransform.getTranslateInstance(20, 0)))));
                     Symbols.drawSymbol(g2, label, sScale, point.getX(), point.getY(), null, null);
@@ -373,7 +374,7 @@ public final class Renderer {
             }
             g2.setPaint(style.line);
             g2.draw(p);
-            double tspan = 60 * Math.toDegrees(map.bounds.maxlat - map.bounds.minlat) / context.grid();
+            double tspan = 60 * Math.toDegrees(map.bounds.maxlat - map.bounds.minlat) / (context.grid() / (ratio < 1.0 ? ratio : 1.0));
             mult = 1.0;
             if (tspan < 1.0) {
                 do {
@@ -396,38 +397,39 @@ public final class Renderer {
             g2.setStroke(new BasicStroke((float) (style.width * sScale), BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND));
             p = new Path2D.Double();
             for (double lat = bottom; lat < map.bounds.maxlat; lat += Math.toRadians(tspan)) {
-                Point2D point = context.getPoint(new Snode(lat, map.bounds.maxlon));
+                point = context.getPoint(new Snode(lat, map.bounds.maxlon));
                 p.moveTo(point.getX(), point.getY());
                 point = context.getPoint(new Snode(lat, map.bounds.minlon));
                 p.lineTo(point.getX(), point.getY());
                 double deg = Math.toDegrees(lat);
-                String ns = (deg < 0) ? "S" : "N";
+                String ns = (deg < -0.001) ? "S" : (deg > 0.001) ? "N" : "";
                 deg = Math.abs(deg);
                 String dstr = String.format("%02d°%s", (int)Math.floor(deg), ns);
                 double min = (deg - Math.floor(deg)) * 60.0;
                 String mstr = String.format("%05.2f'", min);
                 Symbol label = new Symbol();
-                label.add(new Instr(Form.TEXT, new Caption(dstr, new Font("Arial", Font.PLAIN, 40), Color.black, new Delta(Handle.BL, AffineTransform.getTranslateInstance(10, -10)))));
-                label.add(new Instr(Form.TEXT, new Caption(mstr, new Font("Arial", Font.PLAIN, 40), Color.black, new Delta(Handle.BL, AffineTransform.getTranslateInstance(0, 50)))));
-                Symbols.drawSymbol(g2, label, sScale, point.getX(), point.getY(), null, null);
+                if (point.getY() < (context.getPoint(new Snode(map.bounds.minlat, map.bounds.minlon)).getY() - 200.0)) {
+                	label.add(new Instr(Form.TEXT, new Caption(dstr, new Font("Arial", Font.PLAIN, 40), Color.black, new Delta(Handle.BL, AffineTransform.getTranslateInstance(10, -10)))));
+                	label.add(new Instr(Form.TEXT, new Caption(mstr, new Font("Arial", Font.PLAIN, 40), Color.black, new Delta(Handle.BL, AffineTransform.getTranslateInstance(0, 50)))));
+                	Symbols.drawSymbol(g2, label, sScale, point.getX(), point.getY(), null, null);
+                }
             }
             g2.setPaint(style.line);
             g2.draw(p);
-/*            Symbol legend = new Symbol();
-            legend.add(new Instr(Form.BBOX, new Rectangle2D.Double(0, 0, 900, 300)));
-            Path2D.Double path = new Path2D.Double(); path.moveTo(0, 0); path.lineTo(900, 0); path.lineTo(900, 300); path.lineTo(0, 300); path.closePath();
+            Symbol legend = new Symbol();
+            legend.add(new Instr(Form.BBOX, new Rectangle2D.Double(0, 0, 500, 100)));
+            Path2D.Double path = new Path2D.Double(); path.moveTo(0, 0); path.lineTo(500, 0); path.lineTo(500, 100); path.lineTo(0, 100); path.closePath();
             legend.add(new Instr(Form.FILL, Color.white));
             legend.add(new Instr(Form.PGON, path));
-            legend.add(new Instr(Form.TEXT, new Caption("© OpenStreetMap contributors", new Font("Arial", Font.PLAIN, 25), Color.black, new Delta(Handle.BC, AffineTransform.getTranslateInstance(450, 300)))));
-            legend.add(new Instr(Form.TEXT, new Caption("Mercator projection", new Font("Arial", Font.PLAIN, 30), Color.black, new Delta(Handle.BC, AffineTransform.getTranslateInstance(450, 250)))));
-            Point2D point = context.getPoint(new Snode(map.bounds.minlat, map.bounds.minlon));
-            Symbols.drawSymbol(g2, legend, sScale, point.getX(), point.getY(), null, new Delta(Handle.BL, AffineTransform.getTranslateInstance(0, 0)));
-            legend = new Symbol();
-            legend.add(new Instr(Form.BBOX, new Rectangle2D.Double(0, 0, 900, 300)));
-            legend.add(new Instr(Form.TEXT, new Caption("Mercator projection", new Font("Arial", Font.PLAIN, 30), Color.black, new Delta(Handle.BC, AffineTransform.getTranslateInstance(450, 250)))));
+            legend.add(new Instr(Form.TEXT, new Caption("Mercator Projection", new Font("Arial", Font.PLAIN, 50), Color.black, new Delta(Handle.BC, AffineTransform.getTranslateInstance(250, 60)))));
             point = context.getPoint(new Snode(map.bounds.minlat, map.bounds.minlon));
             Symbols.drawSymbol(g2, legend, sScale, point.getX(), point.getY(), null, new Delta(Handle.BL, AffineTransform.getTranslateInstance(0, 0)));
-*/        }
+            legend = new Symbol();
+            legend.add(new Instr(Form.BBOX, new Rectangle2D.Double(0, 0, 500, 100)));
+            legend.add(new Instr(Form.TEXT, new Caption("© OpenStreetMap contributors", new Font("Arial", Font.PLAIN, 30), Color.black, new Delta(Handle.BC, AffineTransform.getTranslateInstance(250, 100)))));
+            point = context.getPoint(new Snode(map.bounds.minlat, map.bounds.minlon));
+            Symbols.drawSymbol(g2, legend, sScale, point.getX(), point.getY(), null, new Delta(Handle.BL, AffineTransform.getTranslateInstance(0, 0)));
+        }
     }
 
     public static void lineCircle(LineStyle style, double radius, UniHLU units) {
@@ -759,5 +761,22 @@ public final class Renderer {
                 labelText(str, font, Color.black, hand ? new Delta(Handle.BR, at) : new Delta(Handle.BL, at));
             }
         }
+    }
+    
+    public static void rasterPixel(double size, Color col) {
+    	double s = Rules.feature.geom.centre.lat - (size / 2.0);
+    	double w = Rules.feature.geom.centre.lon - (size / 2.0);
+    	double n = Rules.feature.geom.centre.lat + (size / 2.0);
+    	double e = Rules.feature.geom.centre.lon + (size / 2.0);
+    	Point2D sw = context.getPoint(new Snode(s, w)); 
+    	Point2D nw = context.getPoint(new Snode(n, w)); 
+    	Point2D ne = context.getPoint(new Snode(n, e)); 
+    	Point2D se = context.getPoint(new Snode(s, e)); 
+        Symbol pixel = new Symbol();
+        Path2D.Double path = new Path2D.Double(); path.moveTo(sw.getX(), sw.getY()); path.lineTo(nw.getX(), nw.getY());
+        path.lineTo(ne.getX(), ne.getY()); path.lineTo(se.getX(), se.getY()); path.closePath();
+        pixel.add(new Instr(Form.FILL, col));
+        pixel.add(new Instr(Form.PGON, path));
+        Symbols.drawSymbol(g2, pixel, 1.0, 0, 0, null, null);
     }
 }

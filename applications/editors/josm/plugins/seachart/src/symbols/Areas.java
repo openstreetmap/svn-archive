@@ -34,6 +34,23 @@ public final class Areas {
         Plane.add(new Instr(Form.PGON, p));
     }
 
+    public static final Symbol LimitDash = new Symbol();
+    static {
+        LimitDash.add(new Instr(Form.BBOX, new Rectangle2D.Double(-30, -30, 60, 60)));
+        LimitDash.add(new Instr(Form.STRK, new BasicStroke(4, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND)));
+        LimitDash.add(new Instr(Form.LINE, new Line2D.Double(0, -30, 0, 30)));
+    }
+
+    public static final Symbol LimitCC = new Symbol();
+    static {
+        LimitCC.add(new Instr(Form.BBOX, new Rectangle2D.Double(-30, -240, 60, 240)));
+        LimitCC.add(new Instr(Form.STRK, new BasicStroke(4, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND)));
+        LimitCC.add(new Instr(Form.LINE, new Line2D.Double(0, -200, 0, -160)));
+        LimitCC.add(new Instr(Form.LINE, new Line2D.Double(-20, -180, 20, -180)));
+        LimitCC.add(new Instr(Form.LINE, new Line2D.Double(0, -80, 0, -120)));
+        LimitCC.add(new Instr(Form.LINE, new Line2D.Double(-20, -100, 20, -100)));
+    }
+
     public static final Symbol Cable = new Symbol();
     static {
         Cable.add(new Instr(Form.BBOX, new Rectangle2D.Double(-30, -60, 60, 60)));

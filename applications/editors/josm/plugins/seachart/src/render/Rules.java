@@ -55,6 +55,7 @@ import s57.S57val.ColPAT;
 import s57.S57val.FncFNC;
 import s57.S57val.MarSYS;
 import s57.S57val.StsSTS;
+import s57.S57val.TecSOU;
 import s57.S57val.TopSHP;
 import s57.S57val.TrfTRF;
 import s57.S57val.UniHLU;
@@ -258,6 +259,9 @@ public class Rules {
 		try {
 			if ((Renderer.context.ruleset() == RuleSet.ALL) || (Renderer.context.ruleset() == RuleSet.BASE)) {
 				if (testObject(Obj.LNDARE)) for (Feature f : objects) if (testFeature(f)) areas();
+				if (testObject(Obj.SOUNDG)) for (Feature f : objects) if (testFeature(f)) depths();
+				if (testObject(Obj.DEPCNT)) for (Feature f : objects) if (testFeature(f)) depths();
+				if (testObject(Obj.TESARE)) for (Feature f : objects) if (testFeature(f)) areas();
 				if (testObject(Obj.BUAARE)) for (Feature f : objects) if (testFeature(f)) areas();
 				if (testObject(Obj.HRBFAC)) for (Feature f : objects) if (testFeature(f)) areas();
 				if (testObject(Obj.HRBBSN)) for (Feature f : objects) if (testFeature(f)) areas();
@@ -270,10 +274,6 @@ public class Rules {
 				if (testObject(Obj.COALNE)) for (Feature f : objects) if (testFeature(f)) areas();
 				if (testObject(Obj.ROADWY)) for (Feature f : objects) if (testFeature(f)) highways();
 				if (testObject(Obj.RAILWY)) for (Feature f : objects) if (testFeature(f)) highways();
-			}
-			if (Renderer.context.ruleset() == RuleSet.ALL) {
-				if (testObject(Obj.SOUNDG)) for (Feature f : objects) if (testFeature(f)) depths();
-				if (testObject(Obj.DEPCNT)) for (Feature f : objects) if (testFeature(f)) depths();
 			}
 			if (testObject(Obj.SLCONS)) for (Feature f : objects) if (testFeature(f)) shoreline();
 			if ((Renderer.context.ruleset() == RuleSet.ALL) || (Renderer.context.ruleset() == RuleSet.SEAMARK)) {
@@ -364,6 +364,9 @@ public class Rules {
 	private static void areas() {
 		String name = getName();
 		switch (feature.type) {
+		case TESARE:
+			Renderer.lineSymbols(Areas.LimitDash, 0.0, Areas.LimitCC, null, 30, Symbols.Mline);
+			break;
 		case BUAARE:
 			Renderer.lineVector(new LineStyle(new Color(0x20000000, true)));
 			break;
@@ -695,7 +698,15 @@ public class Rules {
 	private static void depths() {
 		switch (feature.type) {
 		case SOUNDG:
-			if ((Renderer.zoom >= 14) && hasAttribute(Obj.SOUNDG, Att.VALSOU)) {
+			if (testAttribute(Obj.SOUNDG, Att.TECSOU, TecSOU.SOU_COMP) && hasAttribute(Obj.SOUNDG, Att.VALSOU)) {
+				double depth = (double) getAttVal(Obj.SOUNDG, Att.VALSOU);
+				Color col = new Color(0x00ffffff, true);
+				if (depth > 0.0) col = Symbols.Bwater;
+				if (depth > 5.0) col = new Color(0xcde2f1);
+				if (depth > 20.0) col = new Color(0xe6eff8);
+				if (depth > 50.0) col = new Color(0xf3f8fc);
+				Renderer.rasterPixel(Math.toRadians(1.0/60.0/16.0), col);
+			} else if ((Renderer.zoom >= 14) && hasAttribute(Obj.SOUNDG, Att.VALSOU)) {
 				double depth = (double) getAttVal(Obj.SOUNDG, Att.VALSOU);
 				String dstr = df.format(depth);
 				String[] tok = dstr.split("[-.]");
@@ -717,6 +728,7 @@ public class Rules {
 			}
 			break;
 		case DEPCNT:
+			Renderer.lineVector(new LineStyle(Color.blue, 2));
 			break;
 		default:
 			break;

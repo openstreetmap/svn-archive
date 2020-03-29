@@ -102,7 +102,7 @@ public final class Jchart {
                                 continue;
                             if ((node.lat >= map.bounds.minlat) && (node.lat <= map.bounds.maxlat)
                                     && (node.lon >= map.bounds.minlon) && (node.lon <= map.bounds.maxlon)) {
-                                return Symbols.Bwater;
+                                return Symbols.Gdries;
                             }
                         }
                     }
@@ -113,7 +113,7 @@ public final class Jchart {
                         || map.features.containsKey(Obj.LAKARE) || map.features.containsKey(Obj.RIVERS) || map.features.containsKey(Obj.CANALS)) {
                     return Symbols.Yland;
                 } else {
-                    return Symbols.Bwater;
+                    return Symbols.Gdries;
                 }
             }
         }
@@ -126,14 +126,24 @@ public final class Jchart {
 
     public static void main(String[] args) throws Exception {
         if (args.length < 4) {
-            System.err.println("Usage: java -jar jrender.jar <osm data file> <zoom> <scale> <output image file>");
+            System.err.println("Usage: java -jar jrender.jar <osm data file> <zoom> <scale> <output image file> [<bounds (S W N E)>]");
             System.exit(-1);
         }
         File in = new File(args[0]);
         zoom = Integer.parseInt(args[1]);
         map = new S57map(false);
         S57osm.OSMmap(in, map, false);
-//        in.close();
+        if (args.length >= 8) {
+            map.bounds.minlat = Math.toRadians(Double.parseDouble(args[4]));
+            map.bounds.minlon = Math.toRadians(Double.parseDouble(args[5]));
+            map.bounds.maxlat = Math.toRadians(Double.parseDouble(args[6]));
+            map.bounds.maxlon = Math.toRadians(Double.parseDouble(args[7]));
+        }
+        if ((map.bounds.minlat == Math.toRadians(90)) || (map.bounds.minlon == Math.toRadians(180)) ||
+            (map.bounds.maxlat == Math.toRadians(-90)) || (map.bounds.maxlon == Math.toRadians(-180))) {
+            System.err.println("Invalid map bounds");
+            System.exit(-1);
+        }
         context = new Context();
         Point2D size = context.getPoint(new Snode(map.bounds.minlat, map.bounds.maxlon));
         BufferedImage img = new BufferedImage((int)size.getX(), (int)size.getY(), BufferedImage.TYPE_INT_ARGB);

@@ -18,12 +18,11 @@ public class RevertChangesetCommand extends SequenceCommand {
     /**
      * Create the command by specifying the list of commands to execute.
      * @param name The description text
-     * @param sequenz The sequence that was already executed.
+     * @param sequenz The sequence that should be executed.
      */
     public RevertChangesetCommand(String name, Collection<Command> sequenz) {
         super(name, sequenz);
         ReverterPlugin.reverterUsed = true;
-        setSequenceComplete(true);
     }
 
     @Override
@@ -34,16 +33,6 @@ public class RevertChangesetCommand extends SequenceCommand {
     @Override
     public Icon getDescriptionIcon() {
         return ImageProvider.get("revert-changeset");
-    }
-
-    @Override
-    public void undoCommand() {
-        getAffectedDataSet().update(super::undoCommand);
-    }
-
-    @Override
-    public boolean executeCommand() {
-        return getAffectedDataSet().update(super::executeCommand);
     }
 
 }

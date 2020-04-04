@@ -14,6 +14,7 @@ import java.util.stream.Collectors;
 import javax.swing.JOptionPane;
 
 import org.openstreetmap.josm.command.Command;
+import org.openstreetmap.josm.command.SequenceCommand;
 import org.openstreetmap.josm.command.conflict.ConflictAddCommand;
 import org.openstreetmap.josm.data.UndoRedoHandler;
 import org.openstreetmap.josm.data.osm.DataSet;
@@ -97,24 +98,18 @@ public class RevertChangesetTask extends PleaseWaitRunnable {
                 Logging.info("Reverted changeset {0}", Long.toString(changesetId));
                 newLayer = false; // reuse layer for subsequent reverts
             } catch (OsmTransferException e) {
-				if (!allcmds.isEmpty()) {
-					GuiHelper.runInEDT(() -> UndoRedoHandler.getInstance().undo(allcmds.size()));
-				}
-				Logging.error(e);
+                Logging.error(e);
                 throw e;
             } catch (UserCancelException e) {
-				if (!allcmds.isEmpty()) {
-					GuiHelper.runInEDT(() -> UndoRedoHandler.getInstance().undo(allcmds.size()));
-				}
                 Logging.warn("Revert canceled");
                 Logging.trace(e);
                 return;
             }
         }
         if (!allcmds.isEmpty()) {
-            Command cmd = allcmds.size() == 1 ? allcmds.get(0) : new RevertChangesetCommand(tr("Revert changesets"), allcmds);
+            Command cmd = allcmds.size() == 1 ? allcmds.get(0) : new SequenceCommand(tr("Revert changesets"), allcmds);
             GuiHelper.runInEDT(() -> {
-                UndoRedoHandler.getInstance().add(cmd, false);
+                UndoRedoHandler.getInstance().add(cmd);
                 if (numberOfConflicts > 0) {
                     MainApplication.getMap().conflictDialog.warnNumNewConflicts(numberOfConflicts);
                 }
@@ -173,7 +168,6 @@ public class RevertChangesetTask extends PleaseWaitRunnable {
             if (c instanceof ConflictAddCommand) {
                 numberOfConflicts++;
             }
-            c.executeCommand();
         }
         final String desc;
         if (revertType == RevertType.FULL) {

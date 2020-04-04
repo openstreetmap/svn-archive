@@ -52,9 +52,9 @@ final class DataSetCommandMerger {
     }
 
     private void addChangeCommandIfNotEquals(OsmPrimitive target, OsmPrimitive newTarget, boolean nominal) {
-        if (target.isIncomplete() != newTarget.isIncomplete() || target.isDeleted() != newTarget.isDeleted()
-                || target.isVisible() != newTarget.isVisible()
-                || !getNonDiscardableTags(target).equals(getNonDiscardableTags(newTarget))) {
+		if (!target.hasEqualSemanticAttributes(newTarget) || target.isDeleted() != newTarget.isDeleted()
+				|| target.isVisible() != newTarget.isVisible()
+				|| !getNonDiscardableTags(target).equals(getNonDiscardableTags(newTarget))) {
             cmds.add(new ChangeCommand(target, newTarget));
             if (nominal) {
                 nominalRevertedPrimitives.add(target);

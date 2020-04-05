@@ -13,6 +13,7 @@
 <project name="plugin_common" basedir="." xmlns:jacoco="antlib:org.jacoco.ant" xmlns:if="ant:if" xmlns:unless="ant:unless" xmlns:ivy="antlib:org.apache.ivy.ant">
 
     <property name="josm"                   location="../../core/dist/josm-custom.jar"/>
+    <property name="josm.ivy"               location="../../core/ivy.xml"/>
     <property name="josm.test.build.dir"    location="../../core/test/build"/>
     <property name="jmockit.jar"            location="../00_core_test_lib/jmockit.jar"/>
     <property name="error_prone_core.jar"   location="../00_core_tools/error_prone_core.jar"/>
@@ -530,30 +531,6 @@
     <target name="publish" depends="ensure-svn-present,core-info,commit-current,update-current,clean,dist,commit-dist">
     </target>
 
-    <path id="test.classpath">
-        <!-- JMockit must be included before JUnit in the classpath -->
-        <pathelement path="${jmockit.jar}"/>
-        <fileset dir="../00_core_test_lib">
-            <include name="**/*.jar"/>
-            <exclude name="**/jmockit*.jar"/>
-        </fileset>
-        <fileset dir="${plugin.test.dir}/lib" erroronmissingdir="no">
-            <include name="**/*.jar"/>
-            <exclude name="**/*-sources.jar"/>
-            <exclude name="**/*-javadoc.jar"/>
-        </fileset>
-        <fileset dir="lib" erroronmissingdir="no">
-            <include name="**/*.jar"/>
-            <exclude name="**/*-sources.jar"/>
-            <exclude name="**/*-javadoc.jar"/>
-        </fileset>
-        <pathelement path="${plugin.resources.dir}"/>
-        <pathelement path="${plugin.test.dir}/data"/>
-        <pathelement path="${josm.test.build.dir}/unit"/>
-        <pathelement path="${josm}"/>
-        <pathelement path="${plugin.jar}"/>
-        <pathelement path="${annotations.jar}"/>
-    </path>
     <macrodef name="init-test-preferences">
         <sequential>
             <copy file="../00_core_test_config/preferences.template.xml" tofile="../00_core_test_config/unit-josm.home/preferences.xml"/>
@@ -569,6 +546,31 @@
         <mkdir dir="${plugin.test.dir}/build/unit"/>
         <mkdir dir="${plugin.test.dir}/report"/>
         <init-test-preferences/>
+        <ivy:retrieve pattern="../00_core_test_lib/[artifact].[ext]" conf="test"/>
+        <path id="test.classpath">
+            <!-- JMockit must be included before JUnit in the classpath -->
+            <pathelement path="${jmockit.jar}"/>
+            <fileset dir="../00_core_test_lib">
+                <include name="**/*.jar"/>
+                <exclude name="**/jmockit*.jar"/>
+            </fileset>
+            <fileset dir="${plugin.test.dir}/lib" erroronmissingdir="no">
+                <include name="**/*.jar"/>
+                <exclude name="**/*-sources.jar"/>
+                <exclude name="**/*-javadoc.jar"/>
+            </fileset>
+            <fileset dir="lib" erroronmissingdir="no">
+                <include name="**/*.jar"/>
+                <exclude name="**/*-sources.jar"/>
+                <exclude name="**/*-javadoc.jar"/>
+            </fileset>
+            <pathelement path="${plugin.resources.dir}"/>
+            <pathelement path="${plugin.test.dir}/data"/>
+            <pathelement path="${josm.test.build.dir}/unit"/>
+            <pathelement path="${josm}"/>
+            <pathelement path="${plugin.jar}"/>
+            <pathelement path="${annotations.jar}"/>
+        </path>
     </target>
     <target name="test-clean">
         <delete dir="${plugin.test.dir}/build"/>
@@ -592,6 +594,7 @@
     </target>
     <target name="test" depends="dist, test-clean, test-compile" if="test.present"
         description="Run unit tests. OSM API (TEST) account shall be set with -Dosm.username and -Dosm.password">
+        <ivy:retrieve file="${josm.ivy}" pattern="../00_core_tools/[conf].[ext]" conf="jacocoant"/>
         <taskdef uri="antlib:org.jacoco.ant" resource="org/jacoco/ant/antlib.xml" classpath="../00_core_tools/jacocoant.jar" />
         <sequential>
             <echo message="Running unit tests with JUnit"/>

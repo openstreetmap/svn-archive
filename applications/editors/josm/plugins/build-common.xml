@@ -546,7 +546,7 @@
         <mkdir dir="${plugin.test.dir}/build/unit"/>
         <mkdir dir="${plugin.test.dir}/report"/>
         <init-test-preferences/>
-        <ivy:retrieve pattern="../00_core_test_lib/[artifact].[ext]" conf="test"/>
+        <ivy:retrieve file="${josm.ivy}" pattern="../00_core_test_lib/[artifact].[ext]" conf="test"/>
         <path id="test.classpath">
             <!-- JMockit must be included before JUnit in the classpath -->
             <pathelement path="${jmockit.jar}"/>

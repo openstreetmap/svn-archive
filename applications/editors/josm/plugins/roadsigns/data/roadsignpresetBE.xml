@@ -350,8 +350,8 @@
     <supplementary id="BE:M12_fr"/> <!--except_for_bicycles_moped_a_and_moped_p_fr-->
 	<supplementary id="BE:Type_IV_local_traffic_nl"/>
 	<supplementary id="BE:Type_IV_local_traffic_fr"/>    
-	<supplementary id="BE:Type_IV_inhabitant_nl" />
-	<supplementary id="BE:Type_IV_inhabitant_exceptions_nl" />
+	<supplementary id="BE:Type_IV_residents_nl" />
+	<supplementary id="BE:Type_IV_residents_exceptions_nl" />
 	<supplementary id="BE:ZONE"/>
   </sign>
   <sign ref="BE:C5"
@@ -360,8 +360,8 @@
     wiki="Key:motorcar">
     <tag key="motor_vehicle" value="no"/>
 	<tag key="motorcycle" value="yes"/>
-	<tag key="moped_a" value="yes"/>
-	<tag key="moped_b" value="yes"/>
+	<tag key="mofa" value="yes"/>
+	<tag key="moped" value="yes"/>
 	<tag key="moped_p" value="yes"/>
     <supplementary id="BE:ZONE"/>
   </sign>
@@ -380,8 +380,8 @@
   <sign ref="BE:C9"
     name="Mopeds prohibited"
     nl.name="Verboden voor motorfietsen">
-    <tag key="moped_a" value="no"/>
-	<tag key="moped_b" value="no"/>
+    <tag key="mofa" value="no"/>
+	<tag key="moped" value="no"/>
 	<tag key="moped_p" value="no"/>
   </sign>
   <sign ref="BE:C11"
@@ -457,7 +457,7 @@
   <sign ref="BE:C24b"
     name="Hazardous explosive cargo prohibited"
     nl.name="Verboden toegang voor bestuurders van voertuigen die gevaarlijke ontvlambare of ontplofbare stoffen vervoeren">
-    <tag key="access:explosives" value="no" ident="mode"/>
+    <tag key=" 	access:explosives" value="no" ident="mode"/>
     <supplementary id="BE:Type_Ia"/> <!--Coming up in x m"-->
     <supplementary id="BE:ZONE"/>
   </sign>
@@ -560,7 +560,7 @@
     name="End of overtaking prohibition"
     nl.name="Einde verbod op voorbijsteken"
     wiki="Key:overtaking"
-	help="No specific tags needed, as overtaking=yes is assumed default.">
+	help="No specific tags needed, as overtaking=yes is assumed default ">
     <supplementary id="BE:ZONE"/>
   </sign>
   <sign ref="BE:C39"
@@ -577,7 +577,7 @@
     name="End of overtaking prohibition for trucks"
     nl.name="Einde verbod op voorbijsteken voor vrachtwagens +3.5t"
     wiki="Key:overtaking"
-	help="No specific tags needed, as overtaking=yes is assumed default.">
+	help="No specific tags needed, as overtaking=yes is assumed default ">
    <supplementary id="BE:ZONE"/>
   </sign>
   <sign ref="BE:C43"
@@ -588,13 +588,10 @@
     <tag key="maxspeed" value="$val_speed" ident="weight_speed"/>
       <parameter
         ident="val_speed"
-        type="int"
         input="combo"
-        editable="yes"
         text="Speed limit"
         nl.text="Maximaal toegelaten snelheid"
         suffix="km/h"
-        values="5, 10, 15, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120"
         default="50"
         field_width="3"
       />
@@ -609,13 +606,10 @@
     <tag key="maxspeed" value="$val"/>
       <parameter
         ident="val"
-        type="int"
         input="combo"
-        editable="yes"
         text="speed-limit"
         nl.text="Maximaal toegelaten snelheid"
         suffix="km/h"
-        values="5, 10, 15, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120"
         default="50"
         field_width="3"
       />
@@ -655,8 +649,8 @@
     name="Motorcars and motorcycles prohibited"
     nl.name="Verboden voor gemotoriseerde voertuigen">
     <tag key="motor_vehicle" value="no"/>
-	<tag key="moped_a" value="yes"/>
-	<tag key="moped_b" value="yes"/>
+	<tag key="mofa" value="yes"/>
+	<tag key="moped" value="yes"/>
 	<tag key="moped_p" value="yes"/>
     <supplementary id="BE:ZONE"/>
   </sign>
@@ -670,8 +664,8 @@
     name="Bicycles. speedelecs and mopeds class A and B prohibited"
     nl.name="Verboden voor (motor)fietsen">
     <tag key="bicycle" value="no"/>
-	<tag key="moped_a" value="no"/>
-	<tag key="moped_b" value="no"/>
+	<tag key="mofa" value="no"/>
+	<tag key="moped" value="no"/>
 	<tag key="moped_p" value="no"/>
     <supplementary id="BE:ZONE"/>
   </sign>
@@ -1062,144 +1056,165 @@
     wiki="Key:parking">
   </sign>
 
-  <sign ref="BE:F1"
-    name="Built-up area / City Limits"
-    nl.name="Bebouwde kom"
+  
+  
+  
+  <sign ref="BE:F1a"
+    name="Start of built-up area / City Limits"
+    nl.name="Start van de bebouwde kom"
     fr.name="Agglomération">
     <tag key="maxspeed" value="50"/>
-    <tag key="zone:traffic" value="BE:urban"/>
-    <supplementary id="BE:E11"/>
-  </sign>
+    <tag key="maxspeed:type" value="BE:urban"/>
+	</sign>
   <sign ref="BE:F1bh"
-    name="Built-up area / City Limits"
-    nl.name="Bebouwde kom"
+    name="Start of built-up area / City Limits"
+    nl.name="Start van de bebouwde kom"
     fr.name="Agglomération">
     <tag key="maxspeed" value="50"/>
-    <tag key="zone:traffic" value="BE:urban"/>
-    <supplementary id="BE:E11"/>
-  </sign>
+    <tag key="maxspeed:type" value="BE:urban"/>
+	</sign>
   <sign ref="BE:F1bv"
-    name="Built-up area / City Limits"
-    nl.name="Bebouwde kom"
+    name="Start of built-up area / City Limits"
+    nl.name="Start van de bebouwde kom"
     fr.name="Agglomération">
     <tag key="maxspeed" value="50"/>
-    <tag key="zone:traffic" value="BE:urban"/>
-    <supplementary id="BE:E11"/>
-  </sign>
-  <sign ref="BE:F3"
-    name="End of Built-up area / City Limits"
+    <tag key="maxspeed:type" value="BE:urban"/>
+	</sign>
+  <sign ref="BE:F3a"
+    name="End of built-up area / City Limits"
     nl.name="Einde bebouwde kom"
-    fr.name="Fin d'agglomération">
-    <tag key="zone:traffic" value="BE:rural"/>
+	fr.name="Fin d'agglomération"
+    help="Unless another sign applies: Outside built-up area in Flanders maxspeed=70, maxspeed:type=BE-VLG:rural. Outside built-up area in Wallonia maxspeed=90, maxspeed:type=BE-WAL:rural. Outside built-up area in Brussels maxspeed=90.">
+    <tag key="maxspeed" value="$val_speed"/>
+      <parameter
+        ident="val_speed"
+        input="combo"
+        text="Speed limit"
+        nl.text="Maximaal toegelaten snelheid"
+        suffix="km/h"
+        default="50"
+        field_width="3"/>
+    <tag key="maxspeed:type" value=" "/>
   </sign>
   <sign ref="BE:F3bh"
-    name="End of Built-up area / City Limits"
+    name="End of built-up area / City Limits"
     nl.name="Einde bebouwde kom"
-    fr.name="Fin d'agglomération">
-    <tag key="zone:traffic" value="BE:rural"/>
+	fr.name="Fin d'agglomération"
+    help="Unless another sign applies: Outside built-up area in Flanders maxspeed=70, maxspeed:type=BE-VLG:rural. Outside built-up area in Wallonia maxspeed=90, maxspeed:type=BE-WAL:rural. Outside built-up area in Brussels maxspeed=90.">
+    <tag key="maxspeed" value="$val_speed"/>
+      <parameter
+        ident="val_speed"
+        input="combo"
+        text="Speed limit"
+        nl.text="Maximaal toegelaten snelheid"
+        suffix="km/h"
+        default="50"
+        field_width="3"/>
+    <tag key="maxspeed:type" value=" "/>
   </sign>
   <sign ref="BE:F3bv"
-    name="End of Built-up area / City Limits"
+    name="End of built-up area / City Limits"
     nl.name="Einde bebouwde kom"
-    fr.name="Fin d'agglomération">
-    <tag key="zone:traffic" value="BE:rural"/>
+	fr.name="Fin d'agglomération"
+    help="Unless another sign applies: Outside built-up area in Flanders maxspeed=70, maxspeed:type=BE-VLG:rural. Outside built-up area in Wallonia maxspeed=90, maxspeed:type=BE-WAL:rural. Outside built-up area in Brussels maxspeed=90.">
+    <tag key="maxspeed" value="$val_speed"/>
+      <parameter
+        ident="val_speed"
+        input="combo"
+        text="Speed limit"
+        nl.text="Maximaal toegelaten snelheid"
+        suffix="km/h"
+        default="50"
+        field_width="3"/>
+    <tag key="maxspeed:type" value=" "/>
   </sign>
   <sign ref="BE:F4a"
-    name="Speed limit zone"
-    nl.name="Maximumsnelheid geldig in hele zone"
-    help="Choose from: 20, 30, 50, 70">
-    <tag key="maxspeed" value="$val"/>
-    <tag key="zone:maxspeed" value="BE:$val"/>
-      <parameter
-        ident="val"
-        type="int"
-        input="combo" editable="yes" text="speed-limit" nl.text="Maximumsnelheid"
-        suffix="km/h" values="20, 30, 50, 70"
-        default="30"
-        field_width="2"/>
+    name="Start of zone with speed limit 30km/h">
+    <tag key="maxspeed" value="30"/>
   </sign>
   <sign ref="BE:F4b"
-    name="End of speed limit zone"
-    nl.name="Einde zone met snelheidsbeperking"
-    fr.name="Fin de zone avec vitesse limitée"
-    help="If the zone wasn't inside city limits, change zone:traffic and new maxspeed accordingly. The following tags could be applied more intelligently. These 2 only apply when coming out of most zone30.">
-    <tag key="zone:traffic" value="BE:urban"/>
-    <tag key="maxspeed" value="50"/>
+    name="End of zone with speed limit 30 km/h"
+    nl.name="Einde zone 30 km/h"
+    fr.name="Fin de zone avec vitesse limitée 30 km/h"
+	help="Unless another sign applies: Outside built-up area in Flanders maxspeed=70, maxspeed:type=BE-VLG:rural. Outside built-up area in Wallonia maxspeed=90, maxspeed:type=BE-WAL:rural. Outside built-up area in Brussels maxspeed=90.">
+    <tag key="maxspeed" value="$val_speed"/>
+      <parameter
+        ident="val_speed"
+        input="combo"
+        text="Speed limit"
+        nl.text="Maximaal toegelaten snelheid"
+        suffix="km/h"
+        default="50"
+        field_width="3"/>
+    <tag key="maxspeed:type" value=" "/>
   </sign>
   <sign ref="BE:F5"
-    name="Motorway"
-    nl.name="Autosnelweg"
+    name="Start of Motorway"
+    nl.name="Begin van autosnelweg"
     help="Choose from: motorway, motorway_link">
     <tag key="highway" value="$val"/>
       <parameter
         ident="val"
-        type="string"
-        input="combo" editable="no" text="link or highway" nl.text="op-/afrit of snelweg"
-        values="motorway, motorway_link"
-        default="motorway_link"
+        input="combo"
+		text="link or highway"
+		nl.text="oprit of snelweg"
+        default="motorway"
         field_width="13"/>
-    <tag key="motorway" value="yes"/>
     <tag key="maxspeed" value="120"/>
+	<tag key="minspeed" value="70"/>
+	<tag key="parking:lane:both" value="no_stopping"/>
   </sign>
   <sign ref="BE:F7"
     name="End motorway"
-    nl.name="Einde autosnelweg"
-    help="Choose from: motorway, motorway_link">
-    <tag key="highway" value="$val"/>
-      <parameter
-        ident="val"
-        type="string"
-        input="combo" editable="no" text="link or highway" nl.text="op-/afrit of snelweg"
-        values="motorway, motorway_link"
-        default="motorway_link"
-        field_width="13"/>
+    nl.name="Einde autosnelweg">
   </sign>
   <sign ref="BE:F8"
     name="Tunnel"
     nl.name="Tunnel"
     wiki="Key:tunnel">
     <tag key="tunnel" value="yes"/>
+	<tag key="layer" value="-1"/>
     <supplementary id="BE:Type_Ia"/> <!--Coming up in x m"-->
     <supplementary id="BE:Type_II"/> <!--Over the following x m"-->
   </sign>
   <sign ref="BE:F9"
-    name="Trunk road"
-    nl.name="Expressweg"
-    help="Choose from: trunk, trunk_link">
-    <tag key="highway" value="$val"/>
-      <parameter
-        ident="val"
-        type="string"
-        input="combo" editable="no" text="link or highway" nl.text="op-/afrit of snelweg"
-        values="trunk, trunk_link"
-        default="trunk_link"
-        field_width="10"/>
+    name="Motorroad"
+    nl.name="Autoweg"
+	fr.name="Route pour automobiles"
+	wiki="Key:motorroad"
+    help="No other tags needed, as the access tags defined on the wiki page should automatically apply. ">
     <tag key="motorroad" value="yes"/>
-    <tag key="maxspeed" value="100"/>
   </sign>
   <sign ref="BE:F11"
-    name="End trunk road"
-    nl.name="Einde expressweg">
-    <tag key="highway" value="$val"/>
-      <parameter
-        ident="val"
-        type="string"
-        input="combo" editable="no" text="link or highway" nl.text="op-/afrit of snelweg"
-        values="trunk, trunk_link"
-        default="trunk_link"
-        field_width="10"/>
+    name="End motorroad"
+    nl.name="Einde autoweg">
   </sign>
   <sign ref="BE:F12a"
     name="Living street"
     nl.name="Begin woonerf"
     wiki="Tag:highway%3Dliving_street">
     <tag key="highway" value="living_street"/>
+	<tag key="foot" value="designated"/>	
     <tag key="maxspeed" value="20"/>
+	<tag key="maxspeed:type" value="BE:living_street"/>
   </sign>
   <sign ref="BE:F12b"
     name="End of Living street"
     nl.name="Einde woonerf"
-    wiki="Tag:highway%3Dliving_street">
+    wiki="Tag:highway%3Dliving_street"
+	help="Unless another sign applies: Outside built-up area in Flanders maxspeed=70, maxspeed:type=BE-VLG:rural. Outside built-up area in Wallonia maxspeed=90, maxspeed:type=BE-WAL:rural. Outside built-up area in Brussels maxspeed=90.">
+  </sign>
+  <sign ref="BE:F13"
+    name="Indicates choice of direction for different lanes at intersection"
+	help="If the way is oneway (for example split up in both directions), the you can add lanes=* and turn:lanes=*">
+  </sign>
+  <sign ref="BE:F14"
+	name="Advanced stop line"
+	nl.name="Opstelvak voor fietsers">
+	<tag key="cycleway" value="asl"/>
+  </sign>
+  <sign ref="BE:F15"
+	  name="Indicating the direction you're heading to if you follow the lanes below the arrows">
   </sign>
   <sign ref="BE:F17"
     name="Bus lane"
@@ -1225,36 +1240,45 @@
     name="One-way street"
     nl.name="Eénrichtingsverkeer"
     fr.name="Sens unique"
-    wiki="Key:oneway">
+    wiki="Key:oneway"
+	help="When the direction of the way is the same as the driving direction: oneway=yes. If the oneway restriction is in the opposite direction to the drawn way, the fix in most cases is to turn the way around ('reverse way' tool in the map editors) and apply oneway=yes. If in a (very) rare case, the direction of the way cannot be changed, you can instead tag it as oneway=-1. Also try to always tag oneway:bicycle=no and oneway:mofa=no, depending on the possible exception sign.">
     <tag key="oneway" value="yes"/>
-    <supplementary id="BE:M5"/> <!--not_oneway_for_bicycles-->
-    <supplementary id="BE:M6"/> <!--not_oneway_for_bicycles_and_mofas-->
+    <supplementary id="BE:M4"/> <!--not_oneway_for_bicycles-->
+    <supplementary id="BE:M5"/> <!--not_oneway_for_bicycles_and_mofas-->
   </sign>
   <sign ref="BE:F21"
-    name="Go around"
-    nl.name="Kiezen of delen">
+    name="Allowed to pass the sign left or right ">
   </sign>
-  <sign ref="BE:F43"
-    name="Municipality boundary"
-    nl.name="Gemeentegrens">
-  </sign>
+  <sign ref="BE:F23a"
+    name="N-road number"
+	help="When the motorway has no E-number: ref=N3. When the motorway has an E-number: nat_ref=N3">
+  </sign> 
+  <sign ref="BE:F23b"
+	name="A-road number (A-road motorway)"
+	help="When the motorway has no E-number: ref=A54. When the motorway has an E-number: nat_ref=A54">
+  </sign> 
+  <sign ref="BE:F23c"
+	name="E-road number (european motorway)">
+	<tag key="ref" value="E40"/>
+	<tag key="int_ref" value="E40"/>
+  </sign> 
+  <sign ref="BE:F23d"
+	name="R-road number (ring road)"
+	help="When the motorway has no E-number: ref=R0. When the motorway has an E-number: nat_ref=R0">
+  </sign> 
   <sign ref="BE:F45"
     name="No exit"
     nl.name="Doodlopende straat"
     fr.name="Cul-de-sac"
-    help="If you add a no_exit tag, it should be added to the final node and not to the way. This is not really necessary."
-    wiki="Key:no_exit">
-    <tag key="no_exit" value="yes"/>
+	help="Nothing! DO NOT use noexit=yes (see tag description)">
+    />
   </sign>
   <sign ref="BE:F45b"
     useful="no"
     name="No exit, except for bicycle"
     nl.name="Doodlopende straat, behalve voor fietsers"
     fr.name="Cul-de-sac, sauf pour cyclistes"
-    help="If you add a no_exit tag, it should be added to the final node and not to the way. This is not really necessary."
-    wiki="Key:no_exit">
-    <tag key="no_exit" value="yes"/>
-    <tag key="no_exit:bicycle" value="no"/>
+	help="Nothing! DO NOT use noexit=yes (see tag description). You can add the correct access tags or highway type on the part of the road where pedestrians and bicycles can pass.">
   </sign>
   <sign ref="BE:F47"
     useful="no"
@@ -1263,67 +1287,84 @@
   </sign>
   <sign ref="BE:F49"
     name="Pedestrian crossing"
-    nl.name="Oversteekplaats voor voetgangers">
+    nl.name="Oversteekplaats voor voetgangers"
+	help="Add a node on the highway (it should be a part of the highway!) and tag it.">
     <tag key="highway" value="crossing"/>
+	<tag key="crossing_ref" value="zebra"/>
   </sign>
   <sign ref="BE:F50"
     name="Bicycle crossing"
     nl.name="Oversteekplaats voor fietsers">
-    <tag key="highway" value="crossing"/>
-    <tag key="bicycle" value="yes"/>
   </sign>
   <sign ref="BE:F50bis"
     name="Bicycle crossing behind corner"
     nl.name="Oversteekplaats voor fietsers om de hoek">
-    <tag key="highway" value="crossing"/>
-    <tag key="bicycle" value="yes"/>
-  </sign>
-  <sign ref="BE:F51"
-    name="Pedestrian crossing underground"
-    nl.name="Ondergrondse oversteekplaats voor voetgangers">
-    <tag key="layer" value="-1"/>
   </sign>
   <sign ref="BE:F51a"
     name="Pedestrian crossing underground"
     nl.name="Ondergrondse oversteekplaats voor voetgangers">
-    <tag key="layer" value="-1"/>
+    <tag key="highway" value="steps"/>
+	<tag key="bridge" value="yes"/>
+  </sign>
+  <sign ref="BE:F51b"
+	name="Elevated crossing underground">
+    <tag key="highway" value="steps"/>
+	<tag key="bridge" value="yes"/>
   </sign>
   <sign ref="BE:F52"
     name="Emergency exit out of tunnel"
-    nl.name="Nooduitgang uit tunnel">
-    <tag key="layer" value="-1"/>
+    nl.name="Nooduitgang uit tunnel"
+	help="Choose either entrance or exit tag. If necessary, also add the layer= tag">
     <tag key="entrance" value="emergency"/>
+	<tag key="exit" value="emergency"/>
   </sign>
   <sign id="BE:F52bis"
     ref="BE:F52bis[$val]"
     name="Distance and direction toward emergency exit out of tunnel"
-    nl.name="Afstand en richingaanwijzer naar nooduitgang uit tunnel">
-    <tag key="layer" value="-1"/>
+    nl.name="Afstand en richingaanwijzer naar nooduitgang uit tunnel"
+	help="Choose either entrance or exit tag. If necessary, also add the layer= tag">
     <tag key="entrance" value="emergency"/>
-      <parameter
+    <tag key="exit" value="emergency"/>
+	<parameter
         ident="val"
         type="int"
-        input="combo" editable="yes" text="Distance" nl.text="Afstand"
-        suffix="m" values="50, 100, 150, 200"
-        default="50"
+        input="combo"
+		text="Distance"
+		nl.text="Afstand"
+        suffix="m"
+		default="50"
         field_width="3"/>
   </sign>
   <sign ref="BE:F59"
     name="Parking lot"
-    nl.name="Parkeerterrein/garage">
+    wiki="Tag:amenity=parking"
+	nl.name="Parkeerterrein/garage"
+	help="Add a node or area on the place of the parking and tag it">
     <tag key="amenity" value="parking"/>
   </sign>
   <sign ref="BE:F60"
     name="Indoor parking lot"
-    nl.name="Overdekte parking">
+    nl.name="Overdekte parking"
+	wiki="Tag:amenity=parking"
+	help="Add a node or area on the place of the parking and tag it. Choose either multi-storey or underground">
     <tag key="amenity" value="parking"/>
-    <tag key="covered" value="yes"/>
+	<tag key="parking" value="$val"/>
+	<parameter
+        ident="val"
+        type="string"
+        input="combo"
+		default="underground"/>
   </sign>
   <sign ref="BE:F87"
     name="Speed bump"
     nl.name="Verhoogde inrichting(en), verkeersdrempel"
-    wiki="Key:traffic_calming">
-    <tag key="traffic_calming" value="bump"/>
+    wiki="Key:traffic_calming"
+	help="Choose hump / bump / cushion / table. See wiki for more information on the different types of speed bumps.">
+    <tag key="traffic_calming" value="$val"/>
+		<parameter
+        ident="val"
+		input="combo"
+		default="bump"/>
   </sign>
   <sign ref="BE:F95"
     name="Runaway truck ramp"
@@ -1331,44 +1372,77 @@
     wiki="Tag:highway%3Descape">
     <tag key="highway" value="escape"/>
   </sign>
-  <sign ref="BE:F99c"
-    name="Access only for pedestrians, cyclists, horses and agricultural"
-    nl.name="Enkel voetgangers, fietsers, ruiters en landbouwvoertuigen">
+  <sign ref="BE:F99a"
+    name="Access only for pedestrians, speed pedelecs, cyclists and horses"
+    nl.name="Enkel voetgangers, fietsers, ruiters en landbouwvoertuigen"
+	help="Variations of this sign exist. Remove the tags that do not appear on the sign">
     <tag key="access" value="destination"/>
     <tag key="foot" value="yes"/>
+	<tag key="speed_pedelec" value="yes"/>
+	<tag key="bicycle" value="yes"/>
     <tag key="horse" value="yes"/>
-    <tag key="bicycle" value="yes"/>
-    <tag key="agricultural" value="yes"/>
+    <tag key="emergency" value="yes"/>
+    <tag key="maxspeed" value="30"/>
   </sign>
-  <sign ref="BE:F101c"
-    name="End of access only for pedestrians, cyclists, horses and agricultural"
-    nl.name="Einde enkel voetgangers, fietsers, ruiters en landbouwvoertuigen">
+  <sign ref="BE:F99b"
+    name="Road reserved for pedestrians and bicycles."
+    help="Variations of this sign exist. Remove the tags that do not appear on the sign">
     <tag key="access" value="destination"/>
     <tag key="foot" value="yes"/>
-    <tag key="horse" value="yes"/>
+	<tag key="bicycle" value="yes"/>
+    <tag key="emergency" value="yes"/>
+    <tag key="segregated" value="yes"/>
+	<tag key="maxspeed" value="30"/>
+  </sign>
+  <sign ref="BE:F99c"
+    name="Access only for agricultural vehicles, speed pedelecs, pedestrians, horses and cyclists"
+	help="Variations of this sign exist. Remove the tags that do not appear on the sign">	
+    <tag key="motor_vehicle" value="destination"/>
+	<tag key="agricultural" value="yes"/>
+    <tag key="speed_pedelec" value="yes"/>
+	<tag key="foot" value="yes"/>
+	<tag key="horse" value="yes"/>
     <tag key="bicycle" value="yes"/>
-    <tag key="agricultural" value="yes"/>
+    <tag key="emergency" value="yes"/>
+    <tag key="maxspeed" value="30"/>
   </sign>
   <sign ref="BE:F103"
     name="Pedestrian zone"
-    nl.name="Winkelwandelstraat"
+    nl.name="voetgangerszone"
     wiki="Tag:highway%3Dpedestrian">
     <tag key="highway" value="pedestrian"/>
-    <tag key="access" value="" ident="mode"/>
-    <supplementary id="BE:M2_nl"/> <!--except_for_bicycles_nl-->
-    <supplementary id="BE:M2_fr"/> <!--except_for_bicycles_fr-->
-    <supplementary id="BE:M3_nl"/> <!--except_for_bicycles_and_mofas_nl-->
-    <supplementary id="BE:M3_fr"/> <!--except_for_bicycles_and_mofas_fr-->
+	<tag key="vehicle" value="no"/>
+	<tag key="foot" value="designated"/>
+	<tag key="bicycle" value="yes"/>
+	<tag key="emergency" value="yes"/>
+	<tag key="bus" value="yes"/>
   </sign>
   <sign ref="BE:F111"
     name="Bicycle road"
+	wiki="Key:cyclestreet"
     nl.name="Fietsstraat">
-    <tag key="bicycle_road" value="yes"/>
-    <tag key="bicycle" value="official"/>
-    <tag key="vehicle" value="no" ident="mode"/>
+    <tag key="bicycle" value="designated"/>
     <tag key="maxspeed" value="30"/>
-    <tag key="source:maxspeed" value="BE:bicycle_road"/>
+    <tag key="cyclestreet" value="yes"/>
+	<tag key="overtaking:motor_vehicle" value="no"/>
   </sign>
+  <sign ref="BE:F113"
+    name="End of Bicycle road"
+    nl.name="Einde fietsstraat"
+	wiki=""
+	help="Unless another sign applies: Within built-up area: maxspeed=50, maxspeed:type=BE:urban. Outside built-up area in Flanders maxspeed=70, maxspeed:type=BE-VLG:rural. Outside built-up area in Wallonia maxspeed=90, maxspeed:type=BE-WAL:rural. Outside built-up area in Brussels maxspeed=90.">
+  </sign>
+  <sign ref="BE:F117"
+    name="Start of a Low Emission Zone (LEZ)."
+	wiki="Tag:boundary%3Dlow_emission_zone"
+	help="A Low emission zone is defined in OSM by the tag boundary=low_emission_zone. Currently, the ones in Brussels and Antwerp are already tagged. Please see the wiki page before adding any new.">
+  </sign>
+  <sign ref="BE:F118"
+    name="End of a Low Emission Zone (LEZ)."
+	wiki="Tag:boundary%3Dlow_emission_zone"
+	help="A Low emission zone is defined in OSM by the tag boundary=low_emission_zone. Currently, the ones in Brussels and Antwerp are already tagged. Please see the wiki page before adding any new.">
+  </sign>
+
   
   <sign ref="BE:M1"
     name="Only for bicycles"
@@ -1401,29 +1475,29 @@
   <sign ref="BE:M3_nl"
     name="Except for bicycles and mopeds class A"
     nl.name="Uitgezonderd fietsers en bromfietsers klasse A"
-    help="Read these instructions carefully!!! Only keep oneway:bicycle=no oneway:moped_a=no if used for sign C1, in all other cases remove these two tags.
-	bicycle=yes and moped_a=yes is only necessary when the sign is used on a highway=footway, highway=bridleway or highway=pedestrian."
+    help="Read these instructions carefully!!! Only keep oneway:bicycle=no oneway:mofa=no if used for sign C1, in all other cases remove these two tags.
+	bicycle=yes and mofa=yes is only necessary when the sign is used on a highway=footway, highway=bridleway or highway=pedestrian."
     supplementary="yes">
     <tag key="bicycle" value="yes"/>
-    <tag key="moped_a" value="yes"/>
+    <tag key="mofa" value="yes"/>
 	<tag key="oneway:bicycle" value="no"/>
-    <tag key="oneway:moped_a" value="no"/>
+    <tag key="oneway:mofa" value="no"/>
   </sign>
   <sign ref="BE:M3_fr"
     name="Except for bicycles and mopeds class A"
     nl.name="Uitgezonderd fietsers en bromfietsers klasse A"
-	help="Read these instructions carefully!!! Only keep oneway:bicycle=no oneway:moped_a=no if used for sign C1, in all other cases remove these two tags.
-	bicycle=yes and moped_a=yes is only necessary when the sign is used on a highway=footway, highway=bridleway or highway=pedestrian."
+	help="Read these instructions carefully!!! Only keep oneway:bicycle=no oneway:mofa=no if used for sign C1, in all other cases remove these two tags.
+	bicycle=yes and mofa=yes is only necessary when the sign is used on a highway=footway, highway=bridleway or highway=pedestrian."
     supplementary="yes">
     <tag key="bicycle" value="yes"/>
-    <tag key="moped_a" value="yes"/>
+    <tag key="mofa" value="yes"/>
     <tag key="oneway:bicycle" value="no"/>
-    <tag key="oneway:moped_a" value="no"/>
+    <tag key="oneway:mofa" value="no"/>
   </sign>
   <sign ref="BE:M4"
     name="Not oneway for bicycles"
     nl.name="Fietsers toegelaten in beide richtingen"
-    help="Check ONEWAY tags and way direction!!! Placed under sign F19: when cyclists are allowed to ride in both directions on a one-way road."
+    help="Check ONEWAY tags and way direction!!! Placed under sign F19: when cyclists are allowed to ride in both directions on a one-way road "
     supplementary="yes">
     <tag key="oneway:bicycle" value="no"/>
   </sign>
@@ -1482,35 +1556,43 @@
   <sign ref="BE:M12_nl"
     name="Except for bicycles, mopeds class A and speedelecs"
     nl.name="Uitgezonderd fietsers, bromfietsers klasse A en speedelecs"
-    help="Read these instructions carefully!!! Only keep oneway:bicycle=no oneway:moped_a=no oneway:moped_p=no if used for sign C1, in all other cases remove these three tags.
-	bicycle=yes, moped_a and moped_p=yes is only necessary when the sign is used on a highway=footway, highway=bridleway or highway=pedestrian."
+    help="Read these instructions carefully!!! Only keep oneway:bicycle=no oneway:mofa=no oneway:moped_p=no if used for sign C1, in all other cases remove these three tags.
+	bicycle=yes, mofa and moped_p=yes is only necessary when the sign is used on a highway=footway, highway=bridleway or highway=pedestrian."
     supplementary="yes">
     <tag key="bicycle" value="yes"/>
-    <tag key="moped_a" value="yes"/>
+    <tag key="mofa" value="yes"/>
 	<tag key="moped_p" value="yes"/>
 	<tag key="oneway:bicycle" value="no"/>
-    <tag key="oneway:moped_a" value="no"/>
+    <tag key="oneway:mofa" value="no"/>
 	<tag key="oneway:moped_p" value="no"/>
   </sign>
   <sign ref="BE:M12_fr"
     name="Except for bicycles, mopeds class A and speedelecs"
     nl.name="Uitgezonderd fietsers, bromfietsers klasse A en speedelecs"
-    help="Read these instructions carefully!!! Only keep oneway:bicycle=no oneway:moped_a=no oneway:moped_p=no if used for sign C1, in all other cases remove these three tags.
-	bicycle=yes, moped_a and moped_p=yes is only necessary when the sign is used on a highway=footway, highway=bridleway or highway=pedestrian."
+    help="Read these instructions carefully!!! Only keep oneway:bicycle=no oneway:mofa=no oneway:moped_p=no if used for sign C1, in all other cases remove these three tags.
+	bicycle=yes, mofa and moped_p=yes is only necessary when the sign is used on a highway=footway, highway=bridleway or highway=pedestrian."
     supplementary="yes">
     <tag key="bicycle" value="yes"/>
-    <tag key="moped_a" value="yes"/>
+    <tag key="mofa" value="yes"/>
 	<tag key="moped_p" value="yes"/>
     <tag key="oneway:bicycle" value="no"/>
-	<tag key="oneway:moped_a" value="no"/>
+	<tag key="oneway:mofa" value="no"/>
     <tag key="oneway:moped_p" value="no"/>
   </sign>
+    
+  <sign ref="BE:GXI"
+    name="Only applies to link road"
+    nl.name="Geldt enkel voor afrit"
+    supplementary="yes">
+  </sign>
+  
   <sign ref="BE:ZONE"
     supplementary="yes"
     name="Limitation or parking rules apply to ZONE, don't use instead of F4a"
     name.nl="Beperking of parkeermodaliteiten geldig in gehele ZONE, voor zone30 e.d. gebruik F4a"
     wiki="Key:ZONE">
   </sign>
+  
   <sign id="BE:Type_Ia"
      ref="BE:Type_Ia[$val]"
     supplementary="yes"
@@ -1591,15 +1673,15 @@
 	<tag key="emergency" value="yes"/>
   </sign>
 
-  <sign ref="BE:Type_IV_inhabitant_nl"
-	name="Except for people owning or renting property along the road"
+  <sign ref="BE:Type_IV_residents_nl"
+	name="Except for residents, people owning or renting property along the road"
     name.nl="Uitgezonderd aangelanden"
 	supplementary="yes">
 	<tag key="horse" value="no"/>
 	<tag key="vehicle" value="destination"/>
 	</sign>
-  <sign ref="BE:Type_IV_inhabitant_exceptions_nl"
-	name="Except for people owning or renting property along the road, permit holder and bicycles"
+  <sign ref="BE:Type_IV_residents_exceptions_nl"
+	name="Except for residents, people owning or renting property along the road, permit holder and bicycles"
     name.nl="Uitgezonderd aangelanden, toelatingen WZ en rijwielen"
 	supplementary="yes">
 	<tag key="vehicle" value="destination"/>

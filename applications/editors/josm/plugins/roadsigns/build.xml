@@ -7,7 +7,7 @@
 
     <property name="plugin.author" value="Paul Hartmann"/>
     <property name="plugin.class" value="org.openstreetmap.josm.plugins.roadsigns.RoadSignsPlugin"/>
-    <property name="plugin.description" value="Plugin for tagging of objects based on a selection of road signs. The dialog can be opened by clicking a small icon in the upper right corner of the properties window. Available country presets: Belgium, Germany, Poland, Slovakia, Spain."/>
+    <property name="plugin.description" value="Plugin for tagging of objects based on a selection of road signs. The dialog can be opened by clicking a small icon in the upper right corner of the properties window. Available country presets: Belgium, Czech Republic, Germany, Poland, Slovakia, Spain."/>
     <property name="plugin.icon" value="images/pref/roadsigns.png"/>
     <property name="plugin.link" value="https://wiki.openstreetmap.org/wiki/JOSM/Plugins/RoadSigns"/>
     <property name="plugin.canloadatruntime" value="true"/>

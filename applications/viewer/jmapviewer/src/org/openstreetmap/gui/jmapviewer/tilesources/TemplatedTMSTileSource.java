@@ -137,7 +137,7 @@ public class TemplatedTMSTileSource extends TMSTileSource implements TemplatedTi
         StringBuffer url = new StringBuffer(baseUrl.length());
         Matcher matcher = PATTERN_PARAM.matcher(baseUrl);
         while (matcher.find()) {
-            String replacement = "replace";
+            final String replacement;
             switch (matcher.group(1)) {
             case "z": // PATTERN_ZOOM
             case "zoom":

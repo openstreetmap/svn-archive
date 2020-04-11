@@ -156,14 +156,14 @@ public class TemplatedTMSTileSource extends TMSTileSource implements TemplatedTi
                 replacement = Integer.toString((int) Math.pow(2, zoom)-1-tiley);
                 break;
             case "switch:":
-                replacement = randomParts[rand.nextInt(randomParts.length)];
+                replacement = getRandomPart(randomParts);
                 break;
             default:
                 // handle switch/zoom here, as group will contain parameters and switch will not work
                 if (PATTERN_ZOOM.matcher("{" + matcher.group(1) + "}").matches()) {
                     replacement = Integer.toString((inverse_zoom ? -1 * zoom : zoom) + zoom_offset);
                 } else if (PATTERN_SWITCH.matcher("{" + matcher.group(1) + "}").matches()) {
-                    replacement = randomParts[rand.nextInt(randomParts.length)];
+                    replacement = getRandomPart(randomParts);
                 } else {
                     replacement = '{' + matcher.group(1) + '}';
                 }
@@ -172,6 +172,10 @@ public class TemplatedTMSTileSource extends TMSTileSource implements TemplatedTi
         }
         matcher.appendTail(url);
         return url.toString().replace(" ", "%20");
+    }
+
+    protected String getRandomPart(final String[] parts) {
+        return parts[rand.nextInt(parts.length)];
     }
 
     /**

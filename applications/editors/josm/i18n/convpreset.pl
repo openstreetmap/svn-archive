@@ -132,16 +132,16 @@ while(my $line = <>)
       print infoblock("role $n") . "tr($n);\n";
     }
   }
-  elsif($line =~ /<optional.*\s+text=(".*?")/)
+  elsif($line =~ /<(optional|preset_link).*\s+text=(".*?")/)
   {
-    my $n = fix($1);
+    my ($type,$n) = ($1,fix($2));
     if($line =~ /text_context=(".*?")/)
     {
-      print infoblock("optional $n") . "trc($1,$n);\n";
+      print infoblock("$type $n") . "trc($1,$n);\n";
     }
     else
     {
-      print infoblock("optional $n") . "tr($n);\n";
+      print infoblock("$type $n") . "tr($n);\n";
     }
   }
   elsif($line =~ /<(combo|multiselect).*\s+text=(".*?")/)

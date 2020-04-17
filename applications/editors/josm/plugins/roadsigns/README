@@ -15,8 +15,9 @@ Acknowledgements:
     Basically, this plugin is a port to Java and the JOSM (plugin) framework.
     [1] http://osmtools.de/traffic_signs/
 
-    Pics for the German preset have been derived from
-        http://de.wikipedia.org/wiki/Bildtafel_der_Verkehrszeichen_in_Deutschland (german street sign SVGs)
+    German street sign SVGs have been derived from
+    https://de.wikipedia.org/wiki/Bildtafel_der_Verkehrszeichen_in_der_Bundesrepublik_Deutschland_seit_2017,
+    resized to a height of 50px and cleaned with svg cleaner.
 
 
 JavaCC usage:

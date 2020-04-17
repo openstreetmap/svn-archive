@@ -24,11 +24,11 @@ Positive Werte stehen für einen Anstieg in Richtung des ways und negative Werte
         <tag key="junction" value="roundabout"/>
     </sign>
 
-    <sign id="oneway" ref="DE:220&amp;DE:267" traffic_sign_tag="" icon="DE_220;DE_267" name="One-way road" de.name="Einbahnstraße"
+    <sign id="oneway" ref="DE:220" traffic_sign_tag="" icon="DE_220" name="One-way road" de.name="Einbahnstraße"
             wiki="Key:oneway"
             de.wiki="DE:Key:oneway">
         <tag key="oneway" value="yes"/>
-<!--        <supplementary id="DE:1022-10;DE:1000-33"/>-->
+<!--        <supplementary id="DE:1022-10"/>-->
 <!--        FIXME: lane->-->
     </sign>
 
@@ -147,8 +147,8 @@ Positive Werte stehen für einen Anstieg in Richtung des ways und negative Werte
     </sign>
 
     <sign ref="DE:253" name="Heavy goods vehicles prohibited" de.name="Verbot für LKW"
-            long_name="Vehicles with a permitted gross weight over 3.5 t including their trailers prohibited, except passenger cars and busses prohibited"
-            de.long_name="Verbot für Kraftfahrzeuge mit einem zulässigen Gesamtgewicht über 3,5 t, einschließlich ihrer Anhänger und Zugmaschinen, ausgenommen Personenkraftwagen und Kraftomnibusse"
+            long_name="Vehicles with a permitted gross mass over 3.5 t including their trailers prohibited, except passenger cars and busses prohibited"
+            de.long_name="Verbot für Kraftfahrzeuge mit einer zulässigen Gesamtmasse über 3,5 t, einschließlich ihrer Anhänger und Zugmaschinen, ausgenommen Personenkraftwagen und Kraftomnibusse"
             wiki="Key:hgv"
             de.wiki="DE:Key:access">
         <tag key="hgv" value="no" ident="mode"/>
@@ -176,13 +176,13 @@ Positive Werte stehen für einen Anstieg in Richtung des ways und negative Werte
         <supplementary id="DE:1026-35"/> <!-- Lieferverkehr frei -->
     </sign>
 
-    <sign ref="DE:256" deprecated="yes" name="Mopeds prohibited" de.name="Verbot für Mofas">
+    <sign ref="DE:257-50" deprecated="yes" name="Mopeds prohibited" de.name="Verbot für Mofas">
         <tag key="mofa" value="no" ident="mode"/>
         <supplementary id="DE:1020-30"/> <!-- Anlieger frei -->
         <supplementary id="DE:1026-35"/> <!-- Lieferverkehr frei -->
     </sign>
 
-    <sign ref="DE:258" deprecated="yes" name="Horses prohibited" de.name="Verbot für Reiter">
+    <sign ref="DE:257-51" deprecated="yes" name="Horses prohibited" de.name="Verbot für Reiter">
         <tag key="horse" value="no" ident="mode"/>
         <supplementary id="DE:1020-30"/> <!-- Anlieger frei -->
         <supplementary id="DE:1026-35"/> <!-- Lieferverkehr frei -->
@@ -216,7 +216,7 @@ Positive Werte stehen für einen Anstieg in Richtung des ways und negative Werte
         <tag key="hazmat" value="no" ident="mode"/>
     </sign>
 
-    <sign ref="DE:262[$val]" icon="DE_262" name="Weight limit" de.name="Tatsächliches Gewicht"
+    <sign ref="DE:262[$val]" icon="DE_262" name="Mass limit" de.name="Tatsächliche Masse"
             wiki="Key:maxweight">
         <tag key="maxweight" value="$val"/>
         <parameter ident="val" input="textfield" default="5.5" suffix="t" field_width="3"/>
@@ -258,8 +258,8 @@ Positive Werte stehen für einen Anstieg in Richtung des ways und negative Werte
             de.wiki="DE:Key:maxspeed">
         <tag key="maxspeed" value="$val" ident="restriction"/>
         <parameter ident="val" type="int" input="combo" editable="yes" text="speed-limit" de.text="Höchstgeschwindigkeit" suffix="km/h" values="5,10,20,30,40,50,60,70,80,90,100,110,120,130" default="60" field_width="3"/>
-        <supplementary id="DE:1052-36"/> <!-- Bei nasser Fahrbahn -->
-        <supplementary id="DE:1048-12"/> <!-- nur LKW -->
+        <supplementary id="DE:1053-35"/> <!-- Bei nasser Fahrbahn -->
+        <supplementary id="DE:1010-51"/> <!-- nur LKW -->
     </sign>
 
     <sign ref="DE:274.1[$val]" icon="DE_274_1" name="Speed limit zone" de.name="Zone mit zulässiger Höchstgeschwindigkeit">
@@ -319,8 +319,8 @@ Positive Werte stehen für einen Anstieg in Richtung des ways und negative Werte
 <!--    </sign>-->
 
     <sign ref="DE:1024-12" supplementary="yes" name="Heavy goods vehicles allowed" de.name="LKW frei"
-        long_name="Vehicles with a permitted gross weight over 3.5 t including their trailers, except passenger cars and busses, allowed"
-        de.long_name="Kraftfahrzeuge mit einem zulässigen Gesamtgewicht über 3,5 t, einschließlich ihrer Anhänger und Zugmaschinen, ausgenommen Personenkraftwagen und Kraftomnibusse frei">
+        long_name="Vehicles with a permitted gross mass over 3.5 t including their trailers, except passenger cars and busses, allowed"
+        de.long_name="Kraftfahrzeuge mit einer zulässigen Gesamtmasse über 3,5 t, einschließlich ihrer Anhänger und Zugmaschinen, ausgenommen Personenkraftwagen und Kraftomnibusse frei">
         <tag key="hgv" value="yes"/>
     </sign>
 
@@ -359,17 +359,17 @@ Positive Werte stehen für einen Anstieg in Richtung des ways und negative Werte
         <tag tag_ref="mode" append_value="delivery"/>
     </sign>
 
-    <sign ref="DE:1048-12" supplementary="yes" name="Heavy goods vehicles only" de.name="nur LKW"
-            long_name="Vehicles with a permitted gross weight over 3.5 t including their trailers prohibited, except passenger cars and busses, only"
-            de.long_name="Nur Kraftfahrzeuge mit einem zulässigen Gesamtgewicht über 3,5 t, einschl. ihrer Anhänger, und Zugmaschinen, ausgenommen Personenkraftwagen und Kraftomnibusse">
+    <sign ref="DE:1010-51" supplementary="yes" name="Heavy goods vehicles only" de.name="nur LKW"
+            long_name="Vehicles with a permitted gross mass over 3.5 t including their trailers prohibited, except passenger cars and busses, only"
+            de.long_name="Nur Kraftfahrzeuge mit einer zulässigen Gesamtmasse über 3,5 t, einschl. ihrer Anhänger, und Zugmaschinen, ausgenommen Personenkraftwagen und Kraftomnibusse">
         <tag tag_ref="restriction" condition="hgv"/>
     </sign>
 
-    <sign ref="DE:1052-36" supplementary="yes" name="When the road is wet" de.name="Bei nasser Fahrbahn">
+    <sign ref="DE:1053-35" supplementary="yes" name="When the road is wet" de.name="Bei nasser Fahrbahn">
         <tag tag_ref="restriction" condition="wet"/>
     </sign>
 
-    <sign ref="DE:Kraftfahrzeuge-frei" supplementary="yes" name="Motor vehicles allowed" de.name="Kraftfahrzeuge frei">
+    <sign ref="DE:Kraftfahrzeuge-frei" supplementary="yes" name="Motor vehicles allowed" de.name="Kraftfahrzeuge frei"> <!-- Kein offizielles Zeichen aber in Verwendung, siehe https://de.wikipedia.org/wiki/Bildtafel_der_Verkehrszeichen_in_der_Bundesrepublik_Deutschland_von_2013_bis_2017#cite_note-KFZ_frei-7 -->
         <tag key="motor_vehicle" value="yes"/>
     </sign>
 </roadsignpreset>

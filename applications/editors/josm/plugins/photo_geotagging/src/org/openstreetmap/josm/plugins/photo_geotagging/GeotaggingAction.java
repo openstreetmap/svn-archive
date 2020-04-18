@@ -45,6 +45,7 @@ import org.openstreetmap.josm.tools.GBC;
 import org.openstreetmap.josm.tools.ImageProvider;
 import org.openstreetmap.josm.tools.JosmRuntimeException;
 import org.openstreetmap.josm.tools.Logging;
+import org.openstreetmap.josm.tools.Utils;
 
 /**
  * The action to ask the user for confirmation and then do the tagging.
@@ -278,18 +279,11 @@ class GeotaggingAction extends AbstractAction implements LayerAction {
                 }
                 progressMonitor.worked(1);
 
-               	float millisecsPerFile = ((float)(System.currentTimeMillis()-startTime))/((currentIndex+1)); // currentIndex starts at 0
-               	int filesLeft = images.size()-currentIndex-1;
-               	int secsLeft = (int)Math.ceil((millisecsPerFile*filesLeft/1000));
-               	String timeLeft;
-               	if (secsLeft < 60) {
-               		timeLeft = secsLeft + "s";
-               	} else if (secsLeft < 3600) {
-               		timeLeft = secsLeft/60 + "min " + secsLeft%60 + "s";
-               	} else {
-               		timeLeft = secsLeft/3600 + "h " + ((secsLeft)/60)%60 + "min " + secsLeft%60 + "s";
-               	}
-				progressMonitor.subTask(tr("Writing position information to image files... Estimated time left: {0}", timeLeft));
+                float millisecondsPerFile = (float) (System.currentTimeMillis() - startTime)
+                        / (currentIndex + 1); // currentIndex starts at 0
+                int filesLeft = images.size() - currentIndex - 1;
+                String timeLeft = Utils.getDurationString((long) Math.ceil(millisecondsPerFile * filesLeft));
+                progressMonitor.subTask(tr("Writing position information to image files... Estimated time left: {0}", timeLeft));
 
                 if (debug) {
                     System.err.println("finished " + e.getFile());

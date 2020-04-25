@@ -12,6 +12,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpRequest.BodyPublishers;
 import java.net.http.HttpResponse;
 import java.net.http.HttpResponse.BodyHandlers;
+import java.time.DateTimeException;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.ZoneId;
@@ -174,18 +175,23 @@ public final class Http2Client extends org.openstreetmap.josm.tools.HttpClient {
 
         @Override
         public long getExpiration() {
-            return response.headers().firstValue("Expires")
-                    .map(DateTimeFormatter.RFC_1123_DATE_TIME::parse)
-                    .map(t -> 1000L * t.getLong(ChronoField.INSTANT_SECONDS))
-                    .orElse(0L);
+            return parseDate(response.headers().firstValue("Expires").orElse(null));
         }
 
         @Override
         public long getLastModified() {
-            return response.headers().firstValue("Last-Modified")
-                    .map(DateTimeFormatter.RFC_1123_DATE_TIME::parse)
-                    .map(t -> 1000L * t.getLong(ChronoField.INSTANT_SECONDS))
-                    .orElse(0L);
+            return parseDate(response.headers().firstValue("Last-Modified").orElse(null));
+        }
+
+        static long parseDate(String string) {
+            if (string != null) {
+                try {
+                    return DateTimeFormatter.RFC_1123_DATE_TIME.parse(string).getLong(ChronoField.INSTANT_SECONDS) * 1000L;
+                } catch (DateTimeException e) {
+                    Logging.debug(e);
+                }
+            }
+            return 0L;
         }
 
         @Override

@@ -460,19 +460,19 @@ public class Rules {
 		case SEAARE:
 			switch ((CatSEA) getAttEnum(feature.type, Att.CATSEA)) {
 			case SEA_RECH:
-				if ((Renderer.zoom >= 10) && (name != null))
+				if ((Renderer.zoom >= 15) && (name != null))
 					if (feature.geom.prim == Pflag.LINE) {
-						Renderer.lineText(name, new Font("Arial", Font.PLAIN, 150), Color.black, -40);
+						Renderer.lineText(name, new Font("Arial", Font.PLAIN, 60), Color.black, -40);
 					} else {
-						Renderer.labelText(name, new Font("Arial", Font.PLAIN, 150), Color.black, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -40)));
+						Renderer.labelText(name, new Font("Arial", Font.PLAIN, 60), Color.black, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, 0)));
 					}
 				break;
 			case SEA_BAY:
-				if ((Renderer.zoom >= 12) && (name != null))
+				if ((Renderer.zoom >= 15) && (name != null))
 					if (feature.geom.prim == Pflag.LINE) {
-						Renderer.lineText(name, new Font("Arial", Font.PLAIN, 150), Color.black, -40);
+						Renderer.lineText(name, new Font("Arial", Font.PLAIN, 60), Color.black, -40);
 					} else {
-						Renderer.labelText(name, new Font("Arial", Font.PLAIN, 150), Color.black, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -40)));
+						Renderer.labelText(name, new Font("Arial", Font.PLAIN, 60), Color.black, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, 0)));
 					}
 				break;
 			case SEA_SHOL:
@@ -899,23 +899,24 @@ public class Rules {
                     Renderer.labelText("Lookout", new Font("Arial", Font.PLAIN, 40), Color.black, new Delta(Handle.CC, AffineTransform.getTranslateInstance(0, 50)));
                     addName(15, new Font("Arial", Font.BOLD, 40), new Delta(Handle.CC, AffineTransform.getTranslateInstance(0, -50)));
                 }
-            } else if (Renderer.zoom >= 16) {
-                if (testAttribute(Obj.BUISGL, Att.STATUS, StsSTS.STS_ILLD)) {
-                    Renderer.symbol(Beacons.Floodlight);
+                if (Renderer.zoom >= 16) {
+                	if (testAttribute(Obj.BUISGL, Att.STATUS, StsSTS.STS_ILLD)) {
+                		Renderer.symbol(Beacons.Floodlight);
+                	}
+                	ArrayList<Symbol> symbols = new ArrayList<>();
+                	ArrayList<FncFNC> fncs = (ArrayList<FncFNC>) getAttList(Obj.BUISGL, Att.FUNCTN);
+                	for (FncFNC fnc : fncs) {
+                		symbols.add(Landmarks.Funcs.get(fnc));
+                	}
+                	if (feature.objs.containsKey(Obj.SMCFAC)) {
+                		ArrayList<CatSCF> scfs = (ArrayList<CatSCF>) getAttList(Obj.SMCFAC, Att.CATSCF);
+                		for (CatSCF scf : scfs) {
+                			symbols.add(Facilities.Cats.get(scf));
+                		}
+                	}
+                	Renderer.cluster(symbols);
+                	Signals.addSignals();
                 }
-                ArrayList<Symbol> symbols = new ArrayList<>();
-                ArrayList<FncFNC> fncs = (ArrayList<FncFNC>) getAttList(Obj.BUISGL, Att.FUNCTN);
-                for (FncFNC fnc : fncs) {
-                    symbols.add(Landmarks.Funcs.get(fnc));
-                }
-                if (feature.objs.containsKey(Obj.SMCFAC)) {
-                    ArrayList<CatSCF> scfs = (ArrayList<CatSCF>) getAttList(Obj.SMCFAC, Att.CATSCF);
-                    for (CatSCF scf : scfs) {
-                        symbols.add(Facilities.Cats.get(scf));
-                    }
-                }
-                Renderer.cluster(symbols);
-                Signals.addSignals();
             }
             break;
 		case HRBFAC:
@@ -939,6 +940,7 @@ public class Rules {
 				} else {
 					Renderer.symbol(Harbours.Harbour);
 				}
+                addName(15, new Font("Arial", Font.BOLD, 40), new Delta(Handle.CC, AffineTransform.getTranslateInstance(0, -80)));
 			}
 			break;
 		default:

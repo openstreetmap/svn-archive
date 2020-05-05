@@ -48,7 +48,6 @@ public class PicLayerSessionImporter implements SessionLayerImporter{
 
         List<ImageEntry> entries = new ArrayList<>();
         NodeList imgNodes = elem.getChildNodes();
-        boolean useThumbs = false;
         for (int i = 0; i < imgNodes.getLength(); ++i) {
             Node imgNode = imgNodes.item(i);
             if (imgNode.getNodeType() == Node.ELEMENT_NODE) {
@@ -63,8 +62,6 @@ public class PicLayerSessionImporter implements SessionLayerImporter{
                         }
                     }
                     entries.add(entry);
-                } else if ("show-thumbnails".equals(imgElem.getTagName())) {
-                    useThumbs = Boolean.parseBoolean(imgElem.getTextContent());
                 }
             }
         }

@@ -50,7 +50,7 @@ public class DownloadPolyTask extends DownloadOsmTask {
 
         /**
          * Create new {@link ServerPolyReader}
-         * @param url
+         * @param url the URL
          */
         public ServerPolyReader(String url) {
             this.url = url;

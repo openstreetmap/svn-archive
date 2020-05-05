@@ -107,7 +107,7 @@ public class PrintPlugin extends Plugin {
      * Saves the existing value for later restorePref.
      *
      * @param key the preference key
-     * @param the temporary new int value
+     * @param value the temporary new int value
      */
     protected static void adjustPref(String key, int value) {
         if (!Config.getPref().get(key).isEmpty()) {
@@ -122,7 +122,7 @@ public class PrintPlugin extends Plugin {
      * Saves the existing value for later restorePref.
      *
      * @param key the preference key
-     * @param the temporary new boolean value
+     * @param value the temporary new boolean value
      */
     protected static void adjustPref(String key, boolean value) {
         if (!Config.getPref().get(key).isEmpty()) {
@@ -137,7 +137,7 @@ public class PrintPlugin extends Plugin {
      * Saves the existing value for later restorePref.
      *
      * @param key the preference key
-     * @param the temporary new String value
+     * @param value the temporary new String value
      */
     protected static void adjustPref(String key, String value) {
         if (!Config.getPref().get(key).isEmpty()) {

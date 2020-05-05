@@ -91,6 +91,7 @@ public class PrintableMapView extends MapView implements Printable {
 
     /**
      * Get the map scale that will be used for rendering
+     * @return the map scale that will be used for rendering
      */
     public int getMapScale() {
         if (fixedMapScale > 0 || g2dFactor == 0.0) {
@@ -106,7 +107,7 @@ public class PrintableMapView extends MapView implements Printable {
      * Initialize the PrintableMapView for a particular combination of
      * main MapView, PageFormat and target resolution
      *
-     * @param pageformat the size and orientation of the page being drawn
+     * @param pageFormat the size and orientation of the page being drawn
      */
     public void initialize(PageFormat pageFormat) {
         int resolution = Config.getPref().getInt("print.resolution.dpi", PrintPlugin.DEF_RESOLUTION_DPI);
@@ -161,7 +162,7 @@ public class PrintableMapView extends MapView implements Printable {
      * @param pageFormat the size and orientation of the page being drawn
      * @param page the zero based index of the page to be drawn
      *
-     * @return PAGE_EXISTS for page==0 or NO_SUCH_PAGE for page>0
+     * @return {@code PAGE_EXISTS} for {@code page=0} or {@code NO_SUCH_PAGE} for {@code page>0}
      *
      * @throws PrinterException thrown when the print job is terminated
      *

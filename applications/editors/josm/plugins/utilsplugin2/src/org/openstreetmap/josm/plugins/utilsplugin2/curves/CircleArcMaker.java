@@ -134,7 +134,7 @@ public final class CircleArcMaker {
 
         Set<Node> fixNodes = new HashSet<>(anchorNodes);
         if (!selectedWays.isEmpty()) {
-            nodes.stream().filter(n -> n.getParentWays().size() > 1).forEach(fixNodes::add);
+            nodes.stream().filter(n -> n.getParentWays().size() > 1 || n.isTagged()).forEach(fixNodes::add);
         }
         boolean needsUndo = false;
         if (!cmds.isEmpty()) {

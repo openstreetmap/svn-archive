@@ -134,11 +134,11 @@ public final class CircleArcMaker {
         }
 
         Set<Node> fixNodes = new HashSet<>(anchorNodes);
-		if (!selectedWays.isEmpty()) {
-			nodes.stream().filter(
-					n -> n.isTagged() || n.getParentWays().size() > 1 || n.referrers(Relation.class).count() > 0)
-					.forEach(fixNodes::add);
-		}
+        if (!selectedWays.isEmpty()) {
+            nodes.stream().filter(
+                    n -> n.isTagged() || n.getParentWays().size() > 1 || n.referrers(Relation.class).count() > 0)
+                    .forEach(fixNodes::add);
+        }
         boolean needsUndo = false;
         if (!cmds.isEmpty()) {
             UndoRedoHandler.getInstance().add(new SequenceCommand("add nodes", cmds));

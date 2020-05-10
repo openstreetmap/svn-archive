@@ -1,6 +1,6 @@
 package org.openstreetmap.josm.plugins.imagery_cachexport;
 
-import org.apache.commons.jcs.access.CacheAccess;
+import org.apache.commons.jcs3.access.CacheAccess;
 import org.openstreetmap.josm.data.cache.BufferedImageCacheEntry;
 import org.openstreetmap.josm.gui.layer.WMSLayer;
 

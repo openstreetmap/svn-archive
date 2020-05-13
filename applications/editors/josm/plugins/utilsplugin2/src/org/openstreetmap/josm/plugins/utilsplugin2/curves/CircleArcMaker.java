@@ -22,7 +22,6 @@ import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.coor.PolarCoor;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
-import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.data.projection.ProjectionRegistry;
 import org.openstreetmap.josm.gui.MainApplication;
@@ -135,9 +134,7 @@ public final class CircleArcMaker {
 
         Set<Node> fixNodes = new HashSet<>(anchorNodes);
         if (!selectedWays.isEmpty()) {
-            nodes.stream().filter(
-                    n -> n.isTagged() || n.getParentWays().size() > 1 || n.referrers(Relation.class).count() > 0)
-                    .forEach(fixNodes::add);
+            nodes.stream().filter(n -> n.getParentWays().size() > 1 || n.isTagged()).forEach(fixNodes::add);
         }
         boolean needsUndo = false;
         if (!cmds.isEmpty()) {

@@ -1,6 +1,8 @@
 // License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.utilsplugin2.curves;
 
+import static org.openstreetmap.josm.tools.I18n.tr;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -10,6 +12,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.openstreetmap.josm.command.AddCommand;
 import org.openstreetmap.josm.command.ChangeCommand;
@@ -22,10 +25,12 @@ import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.coor.PolarCoor;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
+import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.data.projection.ProjectionRegistry;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.tools.Geometry;
+import org.openstreetmap.josm.tools.JosmRuntimeException;
 
 /**
  * Create a circle arc
@@ -106,6 +111,8 @@ public final class CircleArcMaker {
         LatLon ll2 = ProjectionRegistry.getProjection().eastNorth2latlon(center);
 
         double radiusInMeters = ll1.greatCircleDistance(ll2);
+        if (radiusInMeters < 0.01)
+            throw new JosmRuntimeException(tr("Radius too small"));
 
         int numberOfNodesInCircle = (int) Math.ceil(6.0 * Math.pow(radiusInMeters, 0.5));
         // an odd number of nodes makes the distribution uneven
@@ -125,17 +132,27 @@ public final class CircleArcMaker {
         final List<Node> nodes = new ArrayList<>(w.getNodes());
 
         if (!selectedWays.isEmpty()) {
+            if (w.isClosed()) {
+                // see #19188
+                nodes.clear();
+                nodes.addAll(findShortestPart(w, anchorNodes));
+            }
             // Fix #7341. sort nodes in ways nodes order
             List<Node> consideredNodes = Arrays.asList(n1, n2, n3);
-            Collections.sort(consideredNodes, (o1, o2) -> nodes.indexOf(o1) - nodes.indexOf(o2));
+            consideredNodes.sort((o1, o2) -> nodes.indexOf(o1) - nodes.indexOf(o2));
             n1 = consideredNodes.get(0);
+            n2 = consideredNodes.get(1);
             n3 = consideredNodes.get(2);
+            anchorNodes = Arrays.asList(n1, n2, n3);
         }
 
-        Set<Node> fixNodes = new HashSet<>(anchorNodes);
-        if (!selectedWays.isEmpty()) {
-            nodes.stream().filter(n -> n.getParentWays().size() > 1 || n.isTagged()).forEach(fixNodes::add);
+
+        List<Node> cwTest = new ArrayList<>(Arrays.asList(n1, n2, n3));
+        if (cwTest.get(0) != cwTest.get(cwTest.size() - 1)) {
+            cwTest.add(cwTest.get(0));
         }
+        boolean clockwise = Geometry.isClockwise(cwTest);
+
         boolean needsUndo = false;
         if (!cmds.isEmpty()) {
             UndoRedoHandler.getInstance().add(new SequenceCommand("add nodes", cmds));
@@ -144,84 +161,177 @@ public final class CircleArcMaker {
 
         int pos1 = nodes.indexOf(n1);
         int pos3 = nodes.indexOf(n3);
-        List<Node> toModify = new ArrayList<>(nodes.subList(pos1, pos3 + 1));
-        cmds.addAll(worker(toModify, fixNodes, center, radius, maxAngle));
-        if (toModify.size() > pos3 + 1 - pos1) {
-            List<Node> changed = new ArrayList<>();
-            changed.addAll(nodes.subList(0, pos1));
-            changed.addAll(toModify);
-            changed.addAll(nodes.subList(pos3 + 1, nodes.size()));
-            Way wNew = new Way(w);
-            wNew.setNodes(changed);
-            cmds.add(new ChangeCommand(w, wNew));
+        Set<Node> fixNodes = new HashSet<>(anchorNodes);
+        if (!selectedWays.isEmpty()) {
+            for (int i = pos1 + 1; i < pos3; i++) {
+                Node n = nodes.get(i);
+                if (n.isTagged() || n.isReferredByWays(2) || n.referrers(Relation.class).count() > 0) {
+                    fixNodes.add(n);
+                }
+            }
         }
-        if (needsUndo) {
-            // make sure we don't add the new nodes twice
-            UndoRedoHandler.getInstance().undo(1);
+
+        List<Node> orig = nodes.subList(pos1, pos3 + 1);
+        List<Node> arcNodes = new ArrayList<>(orig);
+
+        Set<Way> targetWays = new HashSet<>();
+        if (!selectedWays.isEmpty()) {
+            orig.forEach(n -> targetWays.addAll(n.getParentWays()));
+        } else {
+            targetWays.add(w);
+        }
+        try {
+            List<Command> modCmds = worker(arcNodes, fixNodes, center, radius, maxAngle, clockwise);
+            cmds.addAll(modCmds);
+            if (!arcNodes.equals(orig)) {
+                fuseArc(ds, arcNodes, targetWays, cmds);
+            }
+        } finally {
+            if (needsUndo) {
+                // make sure we don't add the new nodes twice
+                UndoRedoHandler.getInstance().undo(1);
+            }
+        }
+        if (cmds.isEmpty()) {
+            throw new JosmRuntimeException(tr("Nothing to do"));
         }
         return cmds;
     }
 
-    // code partly taken from AlignInCircleAction
-    private static List<Command> worker(List<Node> nodes, Set<Node> fixNodes, EastNorth center, double radius, double maxAngle) {
-        List<Command> cmds = new LinkedList<>();
-
-        // Move each node to that distance from the center.
-        // Nodes that are not "fix" will be adjust making regular arcs.
-        int nodeCount = nodes.size();
-
-        List<Node> cwTest = new ArrayList<>(nodes);
-        if (cwTest.get(0) != cwTest.get(cwTest.size() - 1)) {
-            cwTest.add(cwTest.get(0));
-        }
-        boolean clockWise = Geometry.isClockwise(cwTest);
-        double maxStep = Math.PI * 2 / (360.0 / maxAngle);
-
-        // Search first fixed node
-        int startPosition;
-        for (startPosition = 0; startPosition < nodeCount; startPosition++) {
-            if (fixNodes.contains(nodes.get(startPosition)))
-                break;
-        }
-        int i = startPosition; // Start position for current arc
-        int j; // End position for current arc
-        while (i < nodeCount) {
-            for (j = i + 1; j < nodeCount; j++) {
-                if (fixNodes.contains(nodes.get(j)))
-                    break;
+    /**
+     * Try to find out which nodes should be moved when a closed way is modified. The positions of the anchor
+     * nodes might not give the right order. Rotate the nodes so that each of the selected nodes is first
+     * and check which variant produces the shortest part of the way.
+     * @param w the closed way to modify
+     * @param anchorNodes the (selected) anchor nodes
+     * @return the way nodes, possibly rotated
+     * @throws JosmRuntimeException if no usable rotation was found
+     */
+    private static List<Node> findShortestPart(Way w, List<Node> anchorNodes) {
+        int bestRotate = 0;
+        double shortest = Double.MAX_VALUE;
+        final double wayLength = w.getLength();
+        for (int i = 0; i < w.getNodesCount() - 1; i++) {
+            List<Node> nodes = rotate(w, i);
+            List<Integer> positions = anchorNodes.stream().map(nodes::indexOf).sorted().collect(Collectors.toList());
+            double lenghth = getLength(nodes, positions.get(0), positions.get(2));
+            if (lenghth < shortest) {
+                bestRotate = i;
+                shortest = lenghth;
             }
-            Node first = nodes.get(i);
+        }
+        if (shortest >= wayLength / 2)
+            throw new JosmRuntimeException(tr("Could not detect which part of the closed way should be changed"));
+        return rotate(w, bestRotate);
+    }
 
+    private static List<Node> rotate(Way w, int distance) {
+        List<Node> nodes = new ArrayList<>(w.getNodes());
+        nodes.remove(nodes.size() - 1); // remove closing node
+        Collections.rotate(nodes, distance);
+        nodes.add(nodes.get(0));
+        return nodes;
+    }
+
+    private static double getLength(List<Node> nodes, int pos1, int pos3) {
+        Way tmp = new Way();
+        tmp.setNodes(nodes.subList(pos1, pos3+1));
+        return tmp.getLength();
+    }
+
+    // code partly taken from AlignInCircleAction
+    private static List<Command> worker(List<Node> origNodes, Set<Node> origFixNodes, EastNorth center, double radius,
+            double maxAngle, boolean clockwise) {
+        List<Command> cmds = new LinkedList<>();
+        // Move each node to that distance from the center.
+        // Nodes that are not "fix" will be adjusted making regular arcs.
+        List<Node> nodes = new ArrayList<>(origNodes);
+        Set<Node> fixNodes = new HashSet<>(origFixNodes);
+        double maxStep = Math.PI * 2 / (360.0 / maxAngle);
+        double sumAbsDelta = 0;
+        int i = 0; // Start position for current arc
+        int j; // End position for current arc
+        while (i < nodes.size()) {
+            Node first = nodes.get(i);
             PolarCoor pcFirst = new PolarCoor(radius, PolarCoor.computeAngle(first.getEastNorth(), center), center);
-            addMoveCommandIfNeeded(first, pcFirst, cmds);
-            if (j < nodeCount) {
-                double delta;
-                PolarCoor pcLast = new PolarCoor(nodes.get(j).getEastNorth(), center);
-                delta = pcLast.angle - pcFirst.angle;
-                if (!clockWise && delta < 0) {
+            for (j = i + 1; j < nodes.size(); j++) {
+                Node test = nodes.get(j);
+                if (fixNodes.contains(test)) {
+                    break;
+                }
+            }
+
+            if (j < nodes.size()) {
+                Node last = nodes.get(j);
+                PolarCoor pcLast = new PolarCoor(last.getEastNorth(), center);
+                double delta = pcLast.angle - pcFirst.angle;
+                if ((!clockwise && delta < 0 || clockwise && delta > 0)
+                        && Math.signum(pcFirst.angle) == Math.signum(pcLast.angle)) {
+                    // cannot project node onto circle arc, ignore that it is fixed
+                    if (!last.isSelected() && fixNodes.remove(last)) {
+                        continue;
+                    }
+                    if (!first.isSelected() && fixNodes.remove(first)) {
+                        // try again with fewer fixed nodes
+                        return worker(origNodes, fixNodes, center, radius, maxAngle, clockwise);
+                    }
+                }
+                if (!clockwise && delta < 0) {
                     delta += 2 * Math.PI;
-                } else if (clockWise && delta > 0) {
+                } else if (clockwise && delta > 0) {
                     delta -= 2 * Math.PI;
                 }
+                sumAbsDelta += Math.abs(delta);
+                if (sumAbsDelta > 2 * Math.PI) {
+                    // something went really wrong, we would add more than a full circle
+                    throw new JosmRuntimeException("Would create a loop");
+                }
+
                 // do we have enough nodes to produce a nice circle?
-                int numToAdd = Math.max((int) Math.ceil(Math.abs(delta / maxStep)), j - i) - (j-i);
+                int numToAdd = Math.max((int) Math.ceil(Math.abs(delta / maxStep)), j - i) - (j - i);
+                int added = 0;
                 double step = delta / (numToAdd + j - i);
-                for (int k = i + 1; k < j; k++) {
-                    PolarCoor p = new PolarCoor(radius, pcFirst.angle + (k - i) * step, center);
-                    addMoveCommandIfNeeded(nodes.get(k), p, cmds);
+
+                // move existing nodes or add new nodes
+                List<Node> oldNodes = new ArrayList<>(nodes.subList(i, j));
+                PolarCoor ref = pcFirst;
+                for (int k = i; k < j + numToAdd; k++) {
+                    PolarCoor pc1 = new PolarCoor(radius, pcFirst.angle + (k - i) * step, center);
+                    if (!oldNodes.isEmpty()) {
+                        PolarCoor pc2 = new PolarCoor(oldNodes.get(0).getEastNorth(), center);
+                        if (pc2.angle < ref.angle && ref.angle < 0 && step > 0
+                                || pc2.angle > ref.angle && ref.angle > 0 && step < 0) {
+                            // projected node would produce a loop
+                            pc2 = ref; //
+                        }
+
+                        double delta2 = ref.angle - pc2.angle;
+                        if (ref.angle < 0 && pc2.angle > 0) {
+                            delta2 += 2 * Math.PI;
+                        } else if (ref.angle > 0 && pc2.angle < 0) {
+                            delta2 -= 2 * Math.PI;
+                        }
+                        if (added >= numToAdd || Math.abs(delta2) < Math.abs(step * 1.5)) {
+                            // existing node is close enough
+                            addMoveCommandIfNeeded(oldNodes.remove(0), pc1, cmds);
+                            ref = pc1;
+                        }
+                    }
+                    if (ref != pc1) {
+                        ref = pc1;
+                        Node nNew = new Node(pc1.toEastNorth());
+                        nodes.add(k, nNew);
+                        cmds.add(new AddCommand(nodes.get(0).getDataSet(), nNew));
+                        ++added;
+                    }
                 }
-                // add needed nodes
-                for (int k = j; k < j + numToAdd; k++) {
-                    PolarCoor p = new PolarCoor(radius, pcFirst.angle + (k - i) * step, center);
-                    Node nNew = new Node(p.toEastNorth());
-                    nodes.add(k, nNew);
-                    cmds.add(new AddCommand(nodes.get(0).getDataSet(), nNew));
-                }
-                j += numToAdd;
-                nodeCount += numToAdd;
+
+                j += added;
             }
             i = j; // Update start point for next iteration
         }
+        origNodes.clear();
+        origNodes.addAll(nodes);
         return cmds;
     }
 
@@ -234,4 +344,53 @@ public final class CircleArcMaker {
         }
     }
 
+    private static void fuseArc(DataSet ds, List<Node> arcNodes, Set<Way> targetWays, Collection<Command> cmds) {
+        // replace each segment of the target ways with the corresponding nodes of the new arc
+        for (Way originalTw : targetWays) {
+            Way tw = new Way(originalTw);
+            boolean twWasChanged = false;
+            for (int i = 0; i < arcNodes.size(); i++) {
+                Node arcNode1 = arcNodes.get(i);
+                // we don't want to match nodes which where added by worker
+                if (arcNode1.getDataSet() != ds || !arcNode1.getParentWays().contains(originalTw))
+                    continue;
+
+                boolean changed = false;
+                for (int j = i + 1; j < arcNodes.size() && !changed; j++) {
+                    Node arcNode2 = arcNodes.get(j);
+                    if (arcNode2.getDataSet() != ds || !arcNode2.getParentWays().contains(originalTw))
+                        continue;
+                    changed = tryAddArc(tw, i, j, arcNodes);
+                    twWasChanged |= changed;
+                }
+            }
+            if (twWasChanged) {
+                cmds.add(new ChangeCommand(ds, originalTw, tw));
+            }
+        }
+    }
+
+    private static boolean tryAddArc(Way tw, int i, int j, List<Node> arcNodes) {
+        int pos1 = tw.getNodes().indexOf(arcNodes.get(i));
+        int pos2 = tw.getNodes().indexOf(arcNodes.get(j));
+        if (tw.isClosed()) {
+            if (pos1 - pos2 > 1 && pos2 == 0) {
+                pos2 = tw.getNodesCount() - 1;
+            } else if (pos2 - pos1 > 1 && pos1 == 0) {
+                pos1 = tw.getNodesCount() - 1;
+            }
+        }
+        if (pos2 + 1 == pos1) {
+            for (int k = i + 1; k < j; k++) {
+                tw.addNode(pos1, arcNodes.get(k));
+            }
+            return true;
+        } else if (pos2 - 1 == pos1) {
+            for (int k = j - 1; k > i; k--) {
+                tw.addNode(pos2, arcNodes.get(k));
+            }
+            return true;
+        }
+        return false;
+    }
 }

@@ -20,6 +20,7 @@ import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.gui.Notification;
+import org.openstreetmap.josm.tools.JosmRuntimeException;
 import org.openstreetmap.josm.tools.Shortcut;
 
 // TODO: investigate splines
@@ -46,11 +47,19 @@ public class CurveAction extends JosmAction {
         List<Node> selectedNodes = new ArrayList<>(getLayerManager().getEditDataSet().getSelectedNodes());
         List<Way> selectedWays = new ArrayList<>(getLayerManager().getEditDataSet().getSelectedWays());
 
-        Collection<Command> cmds = CircleArcMaker.doCircleArc(selectedNodes, selectedWays);
-        if (cmds == null || cmds.isEmpty()) {
-            new Notification(tr("Could not use selection to create a curve")).setIcon(JOptionPane.WARNING_MESSAGE).show();
-        } else {
-            UndoRedoHandler.getInstance().add(new SequenceCommand("Create a curve", cmds));
+        String msg = null;
+        try {
+            Collection<Command> cmds = CircleArcMaker.doCircleArc(selectedNodes, selectedWays);
+            if (cmds == null || cmds.isEmpty()) {
+                msg = tr("Could not use selection to create a curve");
+            } else {
+                UndoRedoHandler.getInstance().add(new SequenceCommand("Create a curve", cmds));
+            }
+        } catch (JosmRuntimeException ex) {
+            msg = tr("Could not use selection to create a curve: {0}", ex.getMessage());
+        }
+        if (msg != null) {
+            new Notification(msg).setIcon(JOptionPane.WARNING_MESSAGE).show();
         }
     }
 

@@ -120,8 +120,8 @@ IGpxWaypointVisitor {
         if (n == 0)
             return;
 
-        start = new Date();
-        end = new Date(0L);
+        start = new Date(0L);
+        end = new Date();
         this.minHeight = Integer.MAX_VALUE;
         this.maxHeight = Integer.MIN_VALUE;
         sumEle = 0;
@@ -195,7 +195,8 @@ IGpxWaypointVisitor {
      */
     protected void setStart(WayPoint wp) {
         importantWayPoints[WAYPOINT_START] = wp;
-        this.start = wp.getDate();
+        if(wp.getDate() != null)
+        	this.start = wp.getDate();
     }
 
     /**
@@ -203,7 +204,8 @@ IGpxWaypointVisitor {
      */
     protected void setEnd(WayPoint wp) {
         importantWayPoints[WAYPOINT_END] = wp;
-        this.end = wp.getDate();
+        if(wp.getDate() != null)
+        	this.end = wp.getDate();
     }
 
     public void setParent(IElevationProfile parent) {

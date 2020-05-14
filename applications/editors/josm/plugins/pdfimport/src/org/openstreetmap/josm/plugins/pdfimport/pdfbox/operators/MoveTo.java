@@ -20,13 +20,12 @@ import java.awt.geom.Point2D;
 import java.io.IOException;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.pdfbox.cos.COSBase;
 import org.apache.pdfbox.cos.COSNumber;
 import org.apache.pdfbox.util.PDFOperator;
 import org.apache.pdfbox.util.operator.OperatorProcessor;
 import org.openstreetmap.josm.plugins.pdfimport.pdfbox.PageDrawer;
+import org.openstreetmap.josm.tools.Logging;
 
 /**
  * Implementation of content stream operator for page drawer.
@@ -36,11 +35,6 @@ import org.openstreetmap.josm.plugins.pdfimport.pdfbox.PageDrawer;
  */
 public class MoveTo extends OperatorProcessor
 {
-
-    /**
-     * Log instance.
-     */
-    private static final Log log = LogFactory.getLog(MoveTo.class);
 
     /**
      * process : m : Begin new subpath.
@@ -61,7 +55,7 @@ public class MoveTo extends OperatorProcessor
         }
         catch (Exception exception)
         {
-            log.warn( exception, exception);
+            Logging.warn(exception);
         }
     }
 }

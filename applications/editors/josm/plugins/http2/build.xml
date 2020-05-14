@@ -35,5 +35,10 @@
             <isset property="isJava11"/>
         </not>
     </condition>
+    <condition property="skip-test">
+        <not>
+            <isset property="isJava11"/>
+        </not>
+    </condition>
 
 </project>

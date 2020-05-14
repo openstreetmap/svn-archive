@@ -542,7 +542,7 @@
     <target name="check-test">
         <available file="${plugin.test.dir}" type="dir" property="test.present"/>
     </target>
-    <target name="test-init" depends="check-test" if="test.present">
+    <target name="test-init" depends="check-test" if="test.present" unless="skip-test">
         <mkdir dir="${plugin.test.dir}/build"/>
         <mkdir dir="${plugin.test.dir}/build/unit"/>
         <mkdir dir="${plugin.test.dir}/report"/>
@@ -581,7 +581,7 @@
         <delete file="../00_core_test_config/unit-josm.home/preferences.xml" />
         <delete dir="../00_core_test_config/unit-josm.home/cache" failonerror="false"/>
     </target>
-    <target name="test-compile" depends="test-init,dist" if="test.present">
+    <target name="test-compile" depends="test-init,dist" if="test.present" unless="skip-test">
         <sequential>
             <javac debug="on" includeantruntime="false" srcdir="${plugin.test.dir}/unit" destdir="${plugin.test.dir}/build/unit" encoding="UTF-8"
                 target="${java.lang.version}" source="${java.lang.version}">
@@ -594,7 +594,7 @@
             </javac>
         </sequential>
     </target>
-    <target name="test" depends="dist, test-clean, test-compile" if="test.present"
+    <target name="test" depends="dist, test-clean, test-compile" if="test.present" unless="skip-test"
         description="Run unit tests. OSM API (TEST) account shall be set with -Dosm.username and -Dosm.password">
         <ivy:retrieve file="${josm.ivy}" pattern="../00_core_tools/[conf].[ext]" conf="jacocoant"/>
         <taskdef uri="antlib:org.jacoco.ant" resource="org/jacoco/ant/antlib.xml" classpath="../00_core_tools/jacocoant.jar" />

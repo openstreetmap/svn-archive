@@ -39,13 +39,12 @@ public class SelectModWaysAction extends JosmAction {
             ds.clearSelection(ds.getSelectedNodes());
             Command cmd;
 
-            if (UndoRedoHandler.getInstance().commands == null) return;
-            int num = UndoRedoHandler.getInstance().commands.size();
+            int num = UndoRedoHandler.getInstance().getUndoCommands().size();
             if (num == 0) return;
             int k = 0, idx;
             // check if executed again, we cycle through all available commands
             if (lastCmd != null && !ds.getSelectedWays().isEmpty()) {
-                idx = UndoRedoHandler.getInstance().commands.lastIndexOf(lastCmd);
+                idx = UndoRedoHandler.getInstance().getUndoCommands().lastIndexOf(lastCmd);
             } else {
                 idx = num;
             }
@@ -53,7 +52,7 @@ public class SelectModWaysAction extends JosmAction {
             Set<Way> ways = new HashSet<>(10);
             do {  //  select next history element
                 if (idx > 0) idx--; else idx = num-1;
-                cmd = UndoRedoHandler.getInstance().commands.get(idx);
+                cmd = UndoRedoHandler.getInstance().getUndoCommands().get(idx);
                 if (cmd.getAffectedDataSet() == ds) {
                     Collection<? extends OsmPrimitive> pp = cmd.getParticipatingPrimitives();
                     ways.clear();

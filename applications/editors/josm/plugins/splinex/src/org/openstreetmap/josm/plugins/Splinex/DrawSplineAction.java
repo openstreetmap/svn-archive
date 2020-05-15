@@ -186,8 +186,8 @@ public class DrawSplineAction extends MapMode implements MapViewPaintable, KeyPr
                         && Math.abs(ph.sn.cprev.east() + ph.sn.cnext.east()) < EPSILON && Math.abs(ph.sn.cprev.north()
                         + ph.sn.cnext.north()) < EPSILON);
             }
-            if (ph.point == SplinePoint.ENDPOINT && !UndoRedoHandler.getInstance().commands.isEmpty()) {
-                Command cmd = UndoRedoHandler.getInstance().commands.getLast();
+            if (ph.point == SplinePoint.ENDPOINT && UndoRedoHandler.getInstance().hasUndoCommands()) {
+                Command cmd = UndoRedoHandler.getInstance().getLastCommand();
                 if (cmd instanceof MoveCommand) {
                     mc = (MoveCommand) cmd;
                     Collection<Node> pp = mc.getParticipatingPrimitives();
@@ -197,8 +197,8 @@ public class DrawSplineAction extends MapMode implements MapViewPaintable, KeyPr
                         mc.changeStartPoint(ph.sn.node.getEastNorth());
                 }
             }
-            if (ph.point != SplinePoint.ENDPOINT && !UndoRedoHandler.getInstance().commands.isEmpty()) {
-                Command cmd = UndoRedoHandler.getInstance().commands.getLast();
+            if (ph.point != SplinePoint.ENDPOINT && UndoRedoHandler.getInstance().hasUndoCommands()) {
+                Command cmd = UndoRedoHandler.getInstance().getLastCommand();
                 if (!(cmd instanceof Spline.EditSplineCommand && ((Spline.EditSplineCommand) cmd).sn == ph.sn))
                     dragControl = true;
             }
@@ -209,11 +209,13 @@ public class DrawSplineAction extends MapMode implements MapViewPaintable, KeyPr
             return;
         }
         if (spl.isClosed()) return;
-        if (direction == 0)
-            if (spl.nodeCount() < 2)
+        if (direction == 0) {
+            if (spl.nodeCount() < 2) {
                 direction = 1;
-            else
+            } else {
                 return;
+            }
+        }
         Node n = null;
         boolean existing = false;
         if (!ctrl) {

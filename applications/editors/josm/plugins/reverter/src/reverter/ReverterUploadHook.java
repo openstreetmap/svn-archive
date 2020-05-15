@@ -27,7 +27,7 @@ public class ReverterUploadHook implements UploadHook {
     @Override
     public boolean checkUpload(APIDataSet apiDataSet) {
         if (ReverterPlugin.reverterUsed) {
-            for (Command cmd : UndoRedoHandler.getInstance().commands) {
+            for (Command cmd : UndoRedoHandler.getInstance().getUndoCommands()) {
                 if (isReverterCmd(cmd)) {
                     MainApplication.getLayerManager().getEditDataSet().addChangeSetTag("created_by", pluginString);
                     break;

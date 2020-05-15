@@ -44,33 +44,30 @@ public class AlignWaysAction extends JosmAction {
         if (ds == null)
             return;
 
-        Collection<Node> affectableNodes = AlignWaysSegmentMgr.getInstance(
-                MainApplication.getMap().mapView).getSelectedNodes();
+        Collection<Node> affectableNodes = AlignWaysSegmentMgr.getInstance(MainApplication.getMap().mapView)
+        		.getSelectedNodes();
 
         // c is the last command launched, if any
-        Command c = !UndoRedoHandler.getInstance().commands.isEmpty() ? UndoRedoHandler.getInstance().commands
-                .getLast() : null;
+        Command c = UndoRedoHandler.getInstance().getLastCommand();
 
-                // Potentially add my type of command only if last command wasn't my type
-                // or, if it was, the rotated nodes were not the same as now
-                if (!(c instanceof AlignWaysCmdKeepLength && affectableNodes
-                        .equals(((AlignWaysCmdKeepLength) c).getPrevAffectedNodes()))) {
+        // Potentially add my type of command only if last command wasn't my type
+        // or, if it was, the rotated nodes were not the same as now
+        if (!(c instanceof AlignWaysCmdKeepLength
+                && affectableNodes.equals(((AlignWaysCmdKeepLength) c).getPrevAffectedNodes()))) {
 
-                    AlignWaysCmdKeepLength cmdAW;
-                    if (AlignWaysPlugin.getAwDialog().getAwOpt() == AligningModeOption.ALGN_OPT_KEEP_ANGLE) {
-                        cmdAW = new AlignWaysCmdKeepAngles(ds);
-                    } else {
-                        cmdAW = new AlignWaysCmdKeepLength(ds);
-                    }
+            AlignWaysCmdKeepLength cmdAW;
+            if (AlignWaysPlugin.getAwDialog().getAwOpt() == AligningModeOption.ALGN_OPT_KEEP_ANGLE) {
+                cmdAW = new AlignWaysCmdKeepAngles(ds);
+            } else {
+                cmdAW = new AlignWaysCmdKeepLength(ds);
+            }
 
-                    if (cmdAW.executable()) {
-                        // This will also trigger AlignWaysCmdKeepLength.executeCommand()
-                        UndoRedoHandler.getInstance().add(cmdAW);
-                    }
-                }
+            if (cmdAW.executable()) {
+                // This will also trigger AlignWaysCmdKeepLength.executeCommand()
+                UndoRedoHandler.getInstance().add(cmdAW);
+            }
+        }
 
-                MainApplication.getMap().mapView.repaint();
-
-                return;
+        MainApplication.getMap().mapView.repaint();
     }
 }

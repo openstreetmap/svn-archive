@@ -2,6 +2,7 @@
 package org.openstreetmap.gui.jmapviewer.tilesources;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -186,13 +187,7 @@ public class TemplatedTMSTileSource extends TMSTileSource implements TemplatedTi
         assert url != null && !"".equals(url) : "URL cannot be null or empty";
         Matcher m = Pattern.compile("\\{[^}]*\\}").matcher(url);
         while (m.find()) {
-            boolean isSupportedPattern = false;
-            for (Pattern pattern : ALL_PATTERNS) {
-                if (pattern.matcher(m.group()).matches()) {
-                    isSupportedPattern = true;
-                    break;
-                }
-            }
+            boolean isSupportedPattern = Arrays.stream(ALL_PATTERNS).anyMatch(pattern -> pattern.matcher(m.group()).matches());
             if (!isSupportedPattern) {
                 throw new IllegalArgumentException(
                         m.group() + " is not a valid TMS argument. Please check this server URL:\n" + url);

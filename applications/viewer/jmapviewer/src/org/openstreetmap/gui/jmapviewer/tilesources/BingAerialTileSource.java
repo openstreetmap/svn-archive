@@ -16,6 +16,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -289,17 +290,12 @@ public class BingAerialTileSource extends TMSTileSource {
             final List<Attribution> data = getAttribution();
             if (data == null)
                 return "Error loading Bing attribution data";
-            StringBuilder a = new StringBuilder();
-            for (Attribution attr : data) {
-                if (zoom <= attr.maxZoom && zoom >= attr.minZoom) {
-                    if (topLeft.getLon() < attr.max.getLon() && botRight.getLon() > attr.min.getLon()
-                            && topLeft.getLat() > attr.min.getLat() && botRight.getLat() < attr.max.getLat()) {
-                        a.append(attr.attributionText);
-                        a.append(' ');
-                    }
-                }
-            }
-            return a.toString();
+            return data.stream()
+                    .filter(attr -> zoom <= attr.maxZoom && zoom >= attr.minZoom)
+                    .filter(attr -> topLeft.getLon() < attr.max.getLon() && botRight.getLon() > attr.min.getLon())
+                    .filter(attr -> topLeft.getLat() > attr.min.getLat() && botRight.getLat() < attr.max.getLat())
+                    .map(attr -> attr.attributionText)
+                    .collect(Collectors.joining(" "));
         } catch (RuntimeException e) {
             e.printStackTrace();
         }

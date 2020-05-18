@@ -128,7 +128,6 @@ public final class Areas {
     static {
         Pipeline.add(new Instr(Form.BBOX, new Rectangle2D.Double(-15, -60, 30, 60)));
         Pipeline.add(new Instr(Form.STRK, new BasicStroke(8, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND)));
-        Pipeline.add(new Instr(Form.FILL, new Color(0xc480ff)));
         Pipeline.add(new Instr(Form.LINE, new Line2D.Double(0, 0, 0, -50)));
         Pipeline.add(new Instr(Form.RSHP, new Ellipse2D.Double(-10, -60, 20, 20)));
     }

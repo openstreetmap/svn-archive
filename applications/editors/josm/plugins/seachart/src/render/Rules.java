@@ -39,6 +39,7 @@ import s57.S57val.CatOBS;
 import s57.S57val.CatOFP;
 import s57.S57val.CatOPA;
 import s57.S57val.CatPIL;
+import s57.S57val.CatPIP;
 import s57.S57val.CatREA;
 import s57.S57val.CatROD;
 import s57.S57val.CatROS;
@@ -1230,7 +1231,15 @@ public class Rules {
 	private static void pipelines() {
 		if ((Renderer.zoom >= 16) && (feature.geom.length < 2)) {
 			if (feature.type == Obj.PIPSOL) {
-				Renderer.lineSymbols(Areas.Pipeline, 0.33, null, null, 0, Symbols.Mline);
+				switch ((CatPIP) getAttEnum(feature.type, Att.CATPIP)) {
+				case PIP_ITAK:
+				case PIP_OFAL:
+				case PIP_SEWR:
+					Renderer.lineSymbols(Areas.Pipeline, 0.33, null, null, 0, Color.black);
+					break;
+				default:
+					Renderer.lineSymbols(Areas.Pipeline, 0.33, null, null, 0, Symbols.Mline);
+				}
 			} else if (feature.type == Obj.PIPOHD) {
 				Renderer.lineVector(new LineStyle(Color.black, 8));
 				AttMap atts = feature.atts;

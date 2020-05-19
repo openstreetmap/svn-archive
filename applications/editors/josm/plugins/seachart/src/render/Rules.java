@@ -1238,7 +1238,7 @@ public class Rules {
 					Renderer.lineSymbols(Areas.Pipeline, 0.33, null, null, 0, Color.black);
 					break;
 				default:
-					Renderer.lineSymbols(Areas.Pipeline, 0.33, null, null, 0, Symbols.Mline);
+					Renderer.lineSymbols(Areas.Pipeline, 0.33, null, null, 0, Symbols.Msymb);
 				}
 			} else if (feature.type == Obj.PIPOHD) {
 				Renderer.lineVector(new LineStyle(Color.black, 8));

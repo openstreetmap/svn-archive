@@ -548,7 +548,10 @@
         <mkdir dir="${plugin.test.dir}/report"/>
         <init-test-preferences/>
         <ivy:settings file="${josm.ivysettings}" id="ivy.core.settings"/>
-        <ivy:retrieve file="${josm.ivy}" settingsRef="ivy.core.settings" pattern="../00_core_test_lib/[artifact].[ext]" conf="test"/>
+        <ivy:resolve settingsRef="ivy.core.settings" file="${josm.ivy}" conf="test,jacocoant"/>
+        <ivy:retrieve settingsRef="ivy.core.settings" pattern="../00_core_test_lib/[artifact].[ext]" conf="test"/>
+        <ivy:retrieve settingsRef="ivy.core.settings" pattern="../00_core_tools/[conf].[ext]" conf="jacocoant"/>
+        <taskdef uri="antlib:org.jacoco.ant" resource="org/jacoco/ant/antlib.xml" classpath="../00_core_tools/jacocoant.jar"/>
         <path id="test.classpath">
             <!-- JMockit must be included before JUnit in the classpath -->
             <pathelement path="${jmockit.jar}"/>
@@ -596,8 +599,6 @@
     </target>
     <target name="test" depends="dist, test-clean, test-compile" if="test.present" unless="skip-test"
         description="Run unit tests. OSM API (TEST) account shall be set with -Dosm.username and -Dosm.password">
-        <ivy:retrieve file="${josm.ivy}" pattern="../00_core_tools/[conf].[ext]" conf="jacocoant"/>
-        <taskdef uri="antlib:org.jacoco.ant" resource="org/jacoco/ant/antlib.xml" classpath="../00_core_tools/jacocoant.jar" />
         <sequential>
             <echo message="Running unit tests with JUnit"/>
             <jacoco:coverage destfile="${plugin.test.dir}/jacoco.exec" enabled="${coverageByDefault}">
@@ -744,6 +745,7 @@
     <target name="fetch_dependencies" depends="clean_ivy, init-ivy">
         <echo>fetching dependencies with ivy</echo>
         <ivy:settings file="ivy_settings.xml" />
+        <ivy:resolve />
         <ivy:retrieve pattern="${plugin.lib.dir}/[artifact]-[revision](-[classifier]).[ext]" conf="default" />
     </target>
 </project>

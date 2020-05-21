@@ -196,7 +196,7 @@ IGpxWaypointVisitor {
     protected void setStart(WayPoint wp) {
         importantWayPoints[WAYPOINT_START] = wp;
         if(wp.getDate() != null)
-        	this.start = wp.getDate();
+            this.start = wp.getDate();
     }
 
     /**
@@ -205,7 +205,7 @@ IGpxWaypointVisitor {
     protected void setEnd(WayPoint wp) {
         importantWayPoints[WAYPOINT_END] = wp;
         if(wp.getDate() != null)
-        	this.end = wp.getDate();
+            this.end = wp.getDate();
     }
 
     public void setParent(IElevationProfile parent) {

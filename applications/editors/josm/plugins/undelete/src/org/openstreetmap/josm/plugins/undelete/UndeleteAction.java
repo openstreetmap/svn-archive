@@ -58,24 +58,24 @@ public class UndeleteAction extends JosmAction {
 
         private Set<OsmPrimitive> restored;
 
-		private Set<PrimitiveId> missingPrimitives;
+        private Set<PrimitiveId> missingPrimitives;
 
-		private Worker(OsmPrimitive parent, OsmDataLayer layer, List<PrimitiveId> ids, Set<OsmPrimitive> restored,
-				HistoryLoadTask task) {
-			this.parent = parent;
-			this.layer = layer;
-			this.ids = ids;
-			this.restored = restored;
-			this.missingPrimitives = task.getMissingPrimitives();
-		}
+        private Worker(OsmPrimitive parent, OsmDataLayer layer, List<PrimitiveId> ids, Set<OsmPrimitive> restored,
+                HistoryLoadTask task) {
+            this.parent = parent;
+            this.layer = layer;
+            this.ids = ids;
+            this.restored = restored;
+            this.missingPrimitives = task.getMissingPrimitives();
+        }
 
         @Override
         public void run() {
             List<Node> nodes = new ArrayList<>();
             for (PrimitiveId pid : ids) {
-				if (missingPrimitives == null || missingPrimitives.contains(pid)) {
-					continue;
-				}
+                if (missingPrimitives == null || missingPrimitives.contains(pid)) {
+                    continue;
+                }
 
                 OsmPrimitive primitive = layer.data.getPrimitiveById(pid);
                 if (primitive == null) {
@@ -85,10 +85,10 @@ public class UndeleteAction extends JosmAction {
 
                         History h = HistoryDataSet.getInstance().getHistory(id, type);
 
-						if (h == null) {
-							Logging.warn("Cannot find history for " + type + " " + id);
-							return;
-						}
+                        if (h == null) {
+                            Logging.warn("Cannot find history for " + type + " " + id);
+                            return;
+                        }
 
                         HistoryOsmPrimitive hPrimitive1 = h.getLatest();
 

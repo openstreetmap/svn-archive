@@ -9,7 +9,7 @@
     -->
     <property name="plugin.author" value="Oliver Raupach"/>
     <property name="plugin.class" value="org.openstreetmap.josm.plugins.housenumbertool.HouseNumberTaggingToolPlugin"/>
-    <property name="plugin.description" value="Simple tool to tag house numbers."/>
+    <property name="plugin.description" value="Simple tool to tag house numbers and addresses."/>
     <property name="plugin.icon" value="images/home-icon32.png"/>
     <property name="plugin.link" value="https://josm.openstreetmap.de/wiki/Help/Plugin/HouseNumberTaggingTool"/>
 

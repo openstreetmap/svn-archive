@@ -97,15 +97,15 @@ public class RevertChangesetTask extends PleaseWaitRunnable {
                 Logging.info("Reverted changeset {0}", Long.toString(changesetId));
                 newLayer = false; // reuse layer for subsequent reverts
             } catch (OsmTransferException e) {
-				if (!allcmds.isEmpty()) {
-					GuiHelper.runInEDT(() -> UndoRedoHandler.getInstance().undo(allcmds.size()));
-				}
-				Logging.error(e);
+                if (!allcmds.isEmpty()) {
+                    GuiHelper.runInEDT(() -> UndoRedoHandler.getInstance().undo(allcmds.size()));
+                }
+                Logging.error(e);
                 throw e;
             } catch (UserCancelException e) {
-				if (!allcmds.isEmpty()) {
-					GuiHelper.runInEDT(() -> UndoRedoHandler.getInstance().undo(allcmds.size()));
-				}
+                if (!allcmds.isEmpty()) {
+                    GuiHelper.runInEDT(() -> UndoRedoHandler.getInstance().undo(allcmds.size()));
+                }
                 Logging.warn("Revert canceled");
                 Logging.trace(e);
                 return;

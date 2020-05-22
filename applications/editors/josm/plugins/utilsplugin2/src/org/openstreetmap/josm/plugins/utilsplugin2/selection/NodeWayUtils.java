@@ -270,22 +270,24 @@ public final class NodeWayUtils {
                 }
                 if (w.isClosed()) {
                     if ((i2-i1)*2 <= n) { // i1 ... i2
-                        for (int i = i1+1; i != i2; i++) {
+                        for (int i = i1; i != i2; i++) {
                             filteredAdd(newNodes, nodes.get(i));
                         }
+                        filteredAdd(newNodes, nodes.get(i2));
                     } else { // i2 ... n-1 0 1 ... i1
-                        for (int i = i2+1; i != i1; i = (i+1) % n) {
+                        for (int i = i2; i != i1; i = (i+1) % n) {
                             filteredAdd(newNodes, nodes.get(i));
                         }
+                        filteredAdd(newNodes, nodes.get(i1));
                     }
                 } else {
-                    for (int i = i1+1; i < i2; i++) {
+                    for (int i = i1; i <= i2; i++) {
                         filteredAdd(newNodes, nodes.get(i));
                     }
                 }
             }
         }
-        if (newNodes.isEmpty()) {
+        if (newNodes.size() <= 2) {
             new Notification(
                     tr("Please select two nodes connected by way!")
                     ).setIcon(JOptionPane.WARNING_MESSAGE).show();

@@ -7,7 +7,7 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.util.Collection;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 import org.openstreetmap.josm.actions.JosmAction;
@@ -38,7 +38,7 @@ public class SelectWayNodesAction extends JosmAction {
      */
     @Override
     public void actionPerformed(ActionEvent e) {
-        Set<Node> selectedNodes = new HashSet<>();
+        Set<Node> selectedNodes = new LinkedHashSet<>();
 
         for (OsmPrimitive p : getLayerManager().getEditDataSet().getSelected()) {
             if (p instanceof Way) {

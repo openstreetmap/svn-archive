@@ -8,6 +8,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 import javax.swing.JOptionPane;
@@ -43,12 +44,12 @@ public class MiddleNodesAction extends JosmAction {
             return;
         }
 
-        Set<Node> newNodes = new HashSet<>();
-        NodeWayUtils.addMiddle(selectedNodes, newNodes);
+        Set<Node> newSelectedNodes = new LinkedHashSet<>();
+        NodeWayUtils.addMiddle(selectedNodes, newSelectedNodes);
 
-        // select only newly found nodes
-        newNodes.removeAll(selectedNodes);
-        getLayerManager().getEditDataSet().addSelected(newNodes);
+        // make sure that selected nodes are in the wanted order (see #josm17258)
+        getLayerManager().getEditDataSet().clearSelection(newSelectedNodes);
+        getLayerManager().getEditDataSet().addSelected(newSelectedNodes);
     }
 
     @Override

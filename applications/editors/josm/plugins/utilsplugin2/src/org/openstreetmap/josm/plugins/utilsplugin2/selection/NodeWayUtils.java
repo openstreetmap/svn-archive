@@ -257,6 +257,10 @@ public final class NodeWayUtils {
         Node n2 = it.next();
         Set<Way> ways = new HashSet<>();
         ways.addAll(n1.getParentWays());
+        if (ways.stream().anyMatch(Way::isSelected)) {
+            // see #josm18735: use only selected ways
+            ways.removeIf(w -> !w.isSelected());
+        }
         for (Way w: ways) {
 
             if (w.isUsable() && w.containsNode(n2) && w.containsNode(n1)) {

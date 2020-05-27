@@ -108,6 +108,11 @@ public final class OpenPageAction extends JosmAction {
     }
 
     @Override
+    protected boolean listenToSelectionChange() {
+        return false;
+    }
+
+    @Override
     protected void updateEnabledState() {
         setEnabled(getLayerManager().getEditDataSet() != null);
     }

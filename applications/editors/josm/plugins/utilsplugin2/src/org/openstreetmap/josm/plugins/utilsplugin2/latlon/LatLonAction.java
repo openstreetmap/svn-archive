@@ -89,6 +89,11 @@ public final class LatLonAction extends JosmAction {
     }
 
     @Override
+    protected boolean listenToSelectionChange() {
+        return false;
+    }
+
+    @Override
     protected void updateEnabledState() {
         setEnabled(getLayerManager().getEditLayer() != null);
     }

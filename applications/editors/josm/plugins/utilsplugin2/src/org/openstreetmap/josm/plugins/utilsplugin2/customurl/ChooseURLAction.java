@@ -37,6 +37,11 @@ public class ChooseURLAction extends JosmAction {
     }
 
     @Override
+    protected boolean listenToSelectionChange() {
+        return false;
+    }
+
+    @Override
     protected void updateEnabledState() {
         setEnabled(getLayerManager().getEditDataSet() != null);
     }

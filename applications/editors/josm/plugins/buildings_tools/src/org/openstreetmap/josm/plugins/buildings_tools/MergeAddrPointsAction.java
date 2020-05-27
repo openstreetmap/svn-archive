@@ -113,14 +113,16 @@ public class MergeAddrPointsAction extends JosmAction {
             Node mergeNode = null;
             int oldMulti = multi;
             for (Node n : addrNodes) {
-                if (Geometry.nodeInsidePolygon(n, w.getNodes()))
+                if (Geometry.nodeInsidePolygon(n, w.getNodes())) {
                     if (mergeNode != null) {
                         multi++;
                         // Multiple address nodes inside one building --
                         // skipping
                         break;
-                    } else
+                    } else {
                         mergeNode = n;
+                    }
+                }
             }
             if (oldMulti != multi)
                 continue;
@@ -176,6 +178,11 @@ public class MergeAddrPointsAction extends JosmAction {
                     .setIcon(JOptionPane.INFORMATION_MESSAGE).show();
         if (!cmds.isEmpty())
             UndoRedoHandler.getInstance().add(new SequenceCommand("Merge addresses", cmds));
+    }
+
+    @Override
+    protected boolean listenToSelectionChange() {
+        return false;
     }
 
     @Override

@@ -16,7 +16,7 @@ public class BuildingRectangleAction extends JosmAction {
                 Shortcut.registerShortcut("buildings_tools:rectangle",
                         tr("Data: {0}", tr("Set buildings shape to rectangle")),
                         KeyEvent.VK_R, Shortcut.ALT),
-                true);
+                true, false);
     }
 
     @Override

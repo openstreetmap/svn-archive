@@ -32,7 +32,7 @@ public class AlignWaysAction extends JosmAction {
                         + "around a chosen pivot."),
                 Shortcut.registerShortcut("tools:alignways", tr("Tool: {0}", tr("Align Ways")),
                                 KeyEvent.VK_SPACE, Shortcut.SHIFT),
-                true);
+                true, false);
         setEnabled(false);
     }
 

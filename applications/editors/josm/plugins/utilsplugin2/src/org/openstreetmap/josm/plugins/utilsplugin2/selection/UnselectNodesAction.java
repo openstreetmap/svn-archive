@@ -30,7 +30,7 @@ public class UnselectNodesAction extends JosmAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        getLayerManager().getEditDataSet().clearSelection(getLayerManager().getEditDataSet().getSelectedNodes());
+        getLayerManager().getActiveDataSet().clearSelection(getLayerManager().getActiveDataSet().getSelectedNodes());
     }
 
     @Override

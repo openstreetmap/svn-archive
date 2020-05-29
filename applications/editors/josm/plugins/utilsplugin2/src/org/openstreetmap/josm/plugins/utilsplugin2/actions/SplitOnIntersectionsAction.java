@@ -11,7 +11,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import javax.swing.JOptionPane;
 
@@ -91,7 +90,7 @@ public class SplitOnIntersectionsAction extends JosmAction {
             return;
         }
 
-        for (Entry<Way, List<Node>> entry : splitWays.entrySet()) {
+        for (Map.Entry<Way, List<Node>> entry : splitWays.entrySet()) {
             SplitWayCommand split = SplitWayCommand.split(entry.getKey(), entry.getValue(), selectedWays);
             if (split != null) {
                 // execute, we need the result, see also #16006

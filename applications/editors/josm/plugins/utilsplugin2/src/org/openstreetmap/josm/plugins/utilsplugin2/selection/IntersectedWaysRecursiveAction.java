@@ -34,7 +34,7 @@ public class IntersectedWaysRecursiveAction extends JosmAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        DataSet ds = getLayerManager().getEditDataSet();
+        DataSet ds = getLayerManager().getActiveDataSet();
         Collection<Way> selectedWays = ds.getSelectedWays();
 
         if (!selectedWays.isEmpty()) {

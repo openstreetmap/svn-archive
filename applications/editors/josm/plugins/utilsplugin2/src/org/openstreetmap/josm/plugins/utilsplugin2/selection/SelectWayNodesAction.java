@@ -40,7 +40,7 @@ public class SelectWayNodesAction extends JosmAction {
     public void actionPerformed(ActionEvent e) {
         Set<Node> selectedNodes = new LinkedHashSet<>();
 
-        for (OsmPrimitive p : getLayerManager().getEditDataSet().getSelected()) {
+        for (OsmPrimitive p : getLayerManager().getActiveDataSet().getSelected()) {
             if (p instanceof Way) {
                 Way w = (Way) p;
                 if (w.isUsable() && w.getNodesCount() > 1) {
@@ -55,7 +55,7 @@ public class SelectWayNodesAction extends JosmAction {
             }
         }
 
-        getLayerManager().getEditDataSet().setSelected(selectedNodes);
+        getLayerManager().getActiveDataSet().setSelected(selectedNodes);
     }
 
     @Override

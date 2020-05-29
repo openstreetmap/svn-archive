@@ -43,7 +43,7 @@ public class ChooseURLAction extends JosmAction {
 
     @Override
     protected void updateEnabledState() {
-        setEnabled(getLayerManager().getEditDataSet() != null);
+        setEnabled(getLayerManager().getActiveDataSet() != null);
     }
 
     public static int showConfigDialog(final boolean fast) {

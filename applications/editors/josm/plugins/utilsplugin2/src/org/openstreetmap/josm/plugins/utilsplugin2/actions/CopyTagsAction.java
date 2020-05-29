@@ -7,9 +7,9 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.util.Collection;
-import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 import javax.swing.JOptionPane;
 
@@ -20,7 +20,6 @@ import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.datatransfer.ClipboardUtils;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import org.openstreetmap.josm.tools.Shortcut;
-import org.openstreetmap.josm.tools.Utils;
 
 /**
  * Copy OSM primitives to clipboard in order to paste them, or their tags, somewhere else.
@@ -45,7 +44,7 @@ public final class CopyTagsAction extends JosmAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (isEmptySelection()) return;
-        Collection<OsmPrimitive> selection = getLayerManager().getEditDataSet().getSelected();
+        Collection<OsmPrimitive> selection = getLayerManager().getActiveDataSet().getSelected();
         copy(getLayerManager().getEditLayer(), selection);
     }
 
@@ -58,12 +57,11 @@ public final class CopyTagsAction extends JosmAction {
     public static void copy(OsmDataLayer source, Collection<OsmPrimitive> primitives) {
         Set<String> values = new TreeSet<>();
         for (OsmPrimitive p : primitives) {
-            for (Entry<String, String> kv : p.getKeys().entrySet()) {
-                values.add(new Tag(kv.getKey(), kv.getValue()).toString());
-            }
+            p.getKeys().entrySet().forEach(kv -> values.add(new Tag(kv.getKey(), kv.getValue()).toString()));
         }
-        if (!values.isEmpty())
-            ClipboardUtils.copyString(Utils.join("\n", values));
+        if (!values.isEmpty()) {
+            ClipboardUtils.copyString(values.stream().collect(Collectors.joining("\n")));
+        }
     }
 
     @Override
@@ -77,7 +75,7 @@ public final class CopyTagsAction extends JosmAction {
     }
 
     private boolean isEmptySelection() {
-        Collection<OsmPrimitive> sel = getLayerManager().getEditDataSet().getSelected();
+        Collection<OsmPrimitive> sel = getLayerManager().getActiveDataSet().getSelected();
         if (sel.isEmpty()) {
             JOptionPane.showMessageDialog(
                     MainApplication.getMainFrame(),

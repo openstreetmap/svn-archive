@@ -31,7 +31,7 @@ public class SelectAllInsideAction extends JosmAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        DataSet ds = getLayerManager().getEditDataSet();
+        DataSet ds = getLayerManager().getActiveDataSet();
         Collection<OsmPrimitive> insideSelected = NodeWayUtils.selectAllInside(ds.getSelected(), ds, true);
 
         if (!insideSelected.isEmpty()) {

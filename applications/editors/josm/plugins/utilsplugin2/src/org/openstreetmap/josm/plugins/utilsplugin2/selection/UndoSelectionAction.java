@@ -29,12 +29,12 @@ public class UndoSelectionAction extends JosmAction {
         putValue("help", ht("/Action/UndoSelection"));
     }
 
-    private Collection<OsmPrimitive> lastSel;
+    private transient Collection<OsmPrimitive> lastSel;
     private int index;
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        DataSet ds = getLayerManager().getEditDataSet();
+        DataSet ds = getLayerManager().getActiveDataSet();
         if (ds != null) {
             LinkedList<Collection<? extends OsmPrimitive>> history = ds.getSelectionHistory();
             if (history == null || history.isEmpty()) return; // empty history
@@ -77,9 +77,13 @@ public class UndoSelectionAction extends JosmAction {
 
     @Override
     protected void updateEnabledState() {
-        DataSet ds = getLayerManager().getEditDataSet();
         lastSel = null;
         index = -1;
-        setEnabled(ds != null && ds.getSelectionHistory().isEmpty());
+        setEnabled(getLayerManager().getActiveDataSet() != null);
+    }
+
+    @Override
+    protected void updateEnabledState(Collection<? extends OsmPrimitive> selection) {
+        setEnabled(getLayerManager().getActiveDataSet() != null);
     }
 }

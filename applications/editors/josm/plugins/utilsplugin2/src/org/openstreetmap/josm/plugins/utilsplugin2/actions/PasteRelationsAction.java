@@ -13,7 +13,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.command.ChangeCommand;
@@ -79,7 +78,7 @@ public class PasteRelationsAction extends JosmAction {
         }
 
         List<Command> commands = new ArrayList<>();
-        for (Entry<Relation, String> entry : relations.entrySet()) {
+        for (Map.Entry<Relation, String> entry : relations.entrySet()) {
             Relation rel = entry.getKey();
             Relation r = new Relation(rel);
             boolean changed = false;

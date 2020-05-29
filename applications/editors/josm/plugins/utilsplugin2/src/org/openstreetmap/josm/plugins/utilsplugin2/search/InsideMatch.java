@@ -28,20 +28,20 @@ public class InsideMatch extends SearchCompiler.UnaryMatch {
     private void init() {
         Collection<OsmPrimitive> matchedAreas = new HashSet<>();
         // find all ways that match the expression
-        Collection<Way> ways = MainApplication.getLayerManager().getEditDataSet().getWays();
+        Collection<Way> ways = MainApplication.getLayerManager().getActiveDataSet().getWays();
         for (Way way : ways) {
             if (match.match(way)) {
                 matchedAreas.add(way);
             }
         }
         // find all relations that match the expression
-        Collection<Relation> rels = MainApplication.getLayerManager().getEditDataSet().getRelations();
+        Collection<Relation> rels = MainApplication.getLayerManager().getActiveDataSet().getRelations();
         for (Relation rel : rels) {
             if (match.match(rel)) {
                 matchedAreas.add(rel);
             }
         }
-        inside = NodeWayUtils.selectAllInside(matchedAreas, MainApplication.getLayerManager().getEditDataSet(), false);
+        inside = NodeWayUtils.selectAllInside(matchedAreas, MainApplication.getLayerManager().getActiveDataSet(), false);
     }
 
     @Override

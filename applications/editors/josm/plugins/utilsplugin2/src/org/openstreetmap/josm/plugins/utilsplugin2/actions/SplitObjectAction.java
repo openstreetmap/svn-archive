@@ -14,7 +14,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import javax.swing.JOptionPane;
 
@@ -120,7 +119,7 @@ public class SplitObjectAction extends JosmAction {
                 return;
             }
 
-            for (Entry<Way, Integer> entry : wayOccurenceCounter.entrySet()) {
+            for (Map.Entry<Way, Integer> entry : wayOccurenceCounter.entrySet()) {
                 if (entry.getValue().equals(selectedNodes.size())) {
                     if (selectedWay != null) {
                         showWarningNotification(

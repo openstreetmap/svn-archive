@@ -40,7 +40,7 @@ public class SelectHighwayAction extends JosmAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        DataSet ds = getLayerManager().getEditDataSet();
+        DataSet ds = getLayerManager().getActiveDataSet();
         List<Way> selectedWays = new ArrayList<>(ds.getSelectedWays());
 
         if (selectedWays.size() == 1) {
@@ -54,7 +54,7 @@ public class SelectHighwayAction extends JosmAction {
         }
     }
 
-    private Set<Way> selectNamedRoad(Way firstWay) {
+    private static Set<Way> selectNamedRoad(Way firstWay) {
         Set<Way> newWays = new HashSet<>();
         String key = firstWay.hasKey("name") ? "name" : "ref";
         if (firstWay.hasKey(key)) {
@@ -74,7 +74,7 @@ public class SelectHighwayAction extends JosmAction {
         return newWays;
     }
 
-    private Set<Way> selectHighwayBetween(Way firstWay, Way lastWay) {
+    private static Set<Way> selectHighwayBetween(Way firstWay, Way lastWay) {
         int minRank = Math.min(getHighwayRank(firstWay), getHighwayRank(lastWay));
         HighwayTree firstTree = new HighwayTree(firstWay, minRank);
         HighwayTree secondTree = new HighwayTree(lastWay, minRank);
@@ -94,19 +94,19 @@ public class SelectHighwayAction extends JosmAction {
         if (!way.hasKey("highway"))
             return 0;
         String highway = way.get("highway");
-        if (highway.equals("path") || highway.equals("footway") || highway.equals("cycleway"))
+        if ("path".equals(highway) || "footway".equals(highway) || "cycleway".equals(highway))
             return 1;
-        else if (highway.equals("track") || highway.equals("service"))
+        else if ("track".equals(highway) || "service".equals(highway))
             return 2;
-        else if (highway.equals("unclassified") || highway.equals("residential"))
+        else if ("unclassified".equals(highway) || "residential".equals(highway))
             return 3;
-        else if (highway.equals("tertiary") || highway.equals("tertiary_link"))
+        else if ("tertiary".equals(highway) || "tertiary_link".equals(highway))
             return 4;
-        else if (highway.equals("secondary") || highway.equals("secondary_link"))
+        else if ("secondary".equals(highway) || "secondary_link".equals(highway))
             return 5;
-        else if (highway.equals("primary") || highway.equals("primary_link"))
+        else if ("primary".equals(highway) || "primary_link".equals(highway))
             return 6;
-        else if (highway.equals("trunk") || highway.equals("trunk_link") || highway.equals("motorway") || highway.equals("motorway_link"))
+        else if ("trunk".equals(highway) || "trunk_link".equals(highway) || "motorway".equals(highway) || "motorway_link".equals(highway))
             return 7;
         return 0;
     }

@@ -34,7 +34,7 @@ public class AdjacentWaysAction extends JosmAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        DataSet ds = getLayerManager().getEditDataSet();
+        DataSet ds = getLayerManager().getActiveDataSet();
         Collection<Node> selectedNodes = ds.getSelectedNodes();
         Collection<Way> selectedWays = ds.getSelectedWays();
 

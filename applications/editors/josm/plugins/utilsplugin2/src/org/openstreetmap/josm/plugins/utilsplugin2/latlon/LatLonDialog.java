@@ -26,8 +26,6 @@ import javax.swing.JSeparator;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.UIManager;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
@@ -49,7 +47,6 @@ public class LatLonDialog extends ExtendedDialog {
 
     public JTabbedPane tabs;
     private JTextArea taLatLon;
-    private JScrollPane spScroll;
     private JRadioButton rbNodes;
     private JRadioButton rbWay;
     private JRadioButton rbClosedWay;
@@ -90,7 +87,7 @@ public class LatLonDialog extends ExtendedDialog {
 
         taLatLon = new JTextArea(5, 24);
         taLatLon.getDocument().addDocumentListener(new CoordinateListener());
-        spScroll = new JScrollPane(taLatLon);
+        JScrollPane spScroll = new JScrollPane(taLatLon);
         pnl.add(spScroll, GBC.eol().insets(0, 10, 0, 0).fill().weight(2.0, 2.0));
 
         //Radio button setup
@@ -160,21 +157,19 @@ public class LatLonDialog extends ExtendedDialog {
     protected void build() {
         tabs = new JTabbedPane();
         tabs.addTab(tr("Lat/Lon"), buildLatLon());
-        tabs.getModel().addChangeListener(new ChangeListener() {
-            @Override
-            public void stateChanged(ChangeEvent e) {
-                switch (tabs.getModel().getSelectedIndex()) {
-                case 0: parseLatLonUserInput(); break;
-                default: throw new AssertionError();
-                }
+        tabs.getModel().addChangeListener(e -> {
+            if (tabs.getModel().getSelectedIndex() == 0) {
+                parseLatLonUserInput();
+            } else {
+                throw new AssertionError();
             }
         });
         setContent(tabs, false);
     }
 
     public LatLonDialog(Component parent, String title, String help) {
-        super(MainApplication.getMainFrame(), tr("Add Node..."), new String[] {tr("Ok"), tr("Cancel")});
-        setButtonIcons(new String[] {"ok", "cancel"});
+        super(MainApplication.getMainFrame(), tr("Add Node..."), tr("Ok"), tr("Cancel"));
+        setButtonIcons("ok", "cancel");
         configureContextsensitiveHelp("/Action/AddNode", true);
 
         build();
@@ -229,9 +224,8 @@ public class LatLonDialog extends ExtendedDialog {
         // try to parse using the current locale
         //
         NumberFormat f = NumberFormat.getNumberInstance();
-        Number n = null;
         ParsePosition pp = new ParsePosition(0);
-        n = f.parse(input, pp);
+        Number n = f.parse(input, pp);
         if (pp.getErrorIndex() >= 0 || pp.getIndex() < input.length()) {
             // fall back - try to parse with the english locale
             //
@@ -248,7 +242,7 @@ public class LatLonDialog extends ExtendedDialog {
         LatLon[] latLons;
         try {
             latLons = parseLatLons(taLatLon.getText());
-            Boolean working = true;
+            boolean working = true;
             int i = 0;
             while (working && i < latLons.length) {
                 if (!LatLon.isValidLat(latLons[i].lat()) || !LatLon.isValidLon(latLons[i].lon())) {
@@ -272,7 +266,7 @@ public class LatLonDialog extends ExtendedDialog {
     }
 
     private void setOkEnabled(boolean b) {
-        if (buttons != null && buttons.size() > 0) {
+        if (buttons != null && !buttons.isEmpty()) {
             buttons.get(0).setEnabled(b);
         }
     }
@@ -353,7 +347,7 @@ public class LatLonDialog extends ExtendedDialog {
             } else if (m.group(7) != null) {
                 sb.append("x");     // cardinal direction
                 String c = m.group(7).toUpperCase();
-                if (c.equals("N") || c.equals("S") || c.equals("E") || c.equals("W")) {
+                if ("N".equals(c) || "S".equals(c) || "E".equals(c) || "W".equals(c)) {
                     list.add(c);
                 } else {
                     list.add(c.replace(N_TR, 'N').replace(S_TR, 'S')
@@ -440,8 +434,8 @@ public class LatLonDialog extends ExtendedDialog {
         }
 
         double coord = (coordDeg < 0 ? -1 : 1) * (Math.abs(coordDeg) + coordMin / 60 + coordSec / 3600);
-        coord = card.equals("N") || card.equals("E") ? coord : -coord;
-        if (card.equals("N") || card.equals("S")) {
+        coord = "N".equals(card) || "E".equals(card) ? coord : -coord;
+        if ("N".equals(card) || "S".equals(card)) {
             latLon.lat = coord;
         } else {
             latLon.lon = coord;

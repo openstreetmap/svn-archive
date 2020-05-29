@@ -34,7 +34,7 @@ public class MiddleNodesAction extends JosmAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        Set<Node> selectedNodes = new HashSet<>(getLayerManager().getEditDataSet().getSelectedNodes());
+        Set<Node> selectedNodes = new HashSet<>(getLayerManager().getActiveDataSet().getSelectedNodes());
 
         // if no 2 nodes and no ways are selected, do nothing
         if (selectedNodes.size() != 2) {
@@ -48,8 +48,8 @@ public class MiddleNodesAction extends JosmAction {
         NodeWayUtils.addMiddle(selectedNodes, newSelectedNodes);
 
         // make sure that selected nodes are in the wanted order (see #josm17258)
-        getLayerManager().getEditDataSet().clearSelection(newSelectedNodes);
-        getLayerManager().getEditDataSet().addSelected(newSelectedNodes);
+        getLayerManager().getActiveDataSet().clearSelection(newSelectedNodes);
+        getLayerManager().getActiveDataSet().addSelected(newSelectedNodes);
     }
 
     @Override

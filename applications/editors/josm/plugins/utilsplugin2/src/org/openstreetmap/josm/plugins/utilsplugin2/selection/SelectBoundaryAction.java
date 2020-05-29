@@ -40,7 +40,7 @@ public class SelectBoundaryAction extends JosmAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        DataSet ds = getLayerManager().getEditDataSet();
+        DataSet ds = getLayerManager().getActiveDataSet();
         if (ds != null) {
             Collection<Way> selectedWays = ds.getSelectedWays();
             Collection<Node> selectedNodes = ds.getSelectedNodes();
@@ -96,7 +96,7 @@ public class SelectBoundaryAction extends JosmAction {
 
     @Override
     protected void updateEnabledState() {
-        setEnabled(getLayerManager().getEditDataSet() != null);
+        setEnabled(getLayerManager().getActiveDataSet() != null);
     }
 
     @Override

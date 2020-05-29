@@ -9,7 +9,6 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
@@ -96,11 +95,7 @@ public class MultiTagDialog extends ExtendedDialog implements DataSelectionListe
         pnl.add(new JButton(new FindMatchingAction()), GBC.std());
         final JToggleButton jt = new JToggleButton("", ImageProvider.get("restart"), true);
         jt.setToolTipText(tr("Sync with JOSM selection"));
-        jt.addActionListener(new ActionListener() {
-            @Override public void actionPerformed(ActionEvent e) {
-                tableModel.setWatchSelection(jt.isSelected());
-            }
-        });
+        jt.addActionListener(e -> tableModel.setWatchSelection(jt.isSelected()));
         pnl.add(jt, GBC.eol());
 
         pnl.add(createTypeFilterPanel(), GBC.eol().fill(GBC.HORIZONTAL));
@@ -135,12 +130,12 @@ public class MultiTagDialog extends ExtendedDialog implements DataSelectionListe
         p.setLayout(new BoxLayout(p, BoxLayout.X_AXIS));
         for (final OsmPrimitiveType type: OsmPrimitiveType.values()) {
             final JToggleButton jt = new JToggleButton("", ImageProvider.get(type), true);
-            jt.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    if (jt.isSelected()) tableModel.shownTypes.add(type); else tableModel.shownTypes.remove(type);
-                    tableModel.updateData(MainApplication.getLayerManager().getEditDataSet().getSelected());
-                }
+            jt.addActionListener(e -> {
+                if (jt.isSelected())
+                    tableModel.shownTypes.add(type);
+                else
+                    tableModel.shownTypes.remove(type);
+                tableModel.updateData(MainApplication.getLayerManager().getEditDataSet().getSelected());
             });
             ImageProvider.get(type);
             p.add(jt);
@@ -192,6 +187,7 @@ public class MultiTagDialog extends ExtendedDialog implements DataSelectionListe
         }
 
     };
+
     private final ListSelectionListener selectionListener = new ListSelectionListener() {
         @Override
         public void valueChanged(ListSelectionEvent e) {

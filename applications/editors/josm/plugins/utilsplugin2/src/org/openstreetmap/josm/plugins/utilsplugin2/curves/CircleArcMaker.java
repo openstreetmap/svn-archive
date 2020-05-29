@@ -265,7 +265,7 @@ public final class CircleArcMaker {
                 Node last = nodes.get(j);
                 PolarCoor pcLast = new PolarCoor(last.getEastNorth(), center);
                 double delta = pcLast.angle - pcFirst.angle;
-                if ((!clockwise && delta < 0 || clockwise && delta > 0)
+                if (((!clockwise && delta < 0) || (clockwise && delta > 0))
                         && Math.signum(pcFirst.angle) == Math.signum(pcLast.angle)) {
                     // cannot project node onto circle arc, ignore that it is fixed
                     if (!last.isSelected() && fixNodes.remove(last)) {
@@ -299,8 +299,8 @@ public final class CircleArcMaker {
                     PolarCoor pc1 = new PolarCoor(radius, pcFirst.angle + (k - i) * step, center);
                     if (!oldNodes.isEmpty()) {
                         PolarCoor pc2 = new PolarCoor(oldNodes.get(0).getEastNorth(), center);
-                        if (pc2.angle < ref.angle && ref.angle < 0 && step > 0
-                                || pc2.angle > ref.angle && ref.angle > 0 && step < 0) {
+                        if ((pc2.angle < ref.angle && ref.angle < 0 && step > 0)
+                                || (pc2.angle > ref.angle && ref.angle > 0 && step < 0)) {
                             // projected node would produce a loop
                             pc2 = ref; //
                         }

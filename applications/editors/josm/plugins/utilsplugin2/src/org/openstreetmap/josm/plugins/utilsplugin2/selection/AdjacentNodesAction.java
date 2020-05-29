@@ -36,7 +36,7 @@ public class AdjacentNodesAction extends JosmAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        DataSet ds = getLayerManager().getEditDataSet();
+        DataSet ds = getLayerManager().getActiveDataSet();
         Collection<Node> selectedNodes = ds.getSelectedNodes();
         Set<Way> selectedWays = new LinkedHashSet<>(ds.getSelectedWays());
 

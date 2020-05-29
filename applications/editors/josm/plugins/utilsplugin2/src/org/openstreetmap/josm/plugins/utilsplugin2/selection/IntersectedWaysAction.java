@@ -33,7 +33,7 @@ public class IntersectedWaysAction extends JosmAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        DataSet ds = getLayerManager().getEditDataSet();
+        DataSet ds = getLayerManager().getActiveDataSet();
         Collection<Way> selectedWays = ds.getSelectedWays();
 
         // select ways attached to already selected ways
@@ -43,7 +43,6 @@ public class IntersectedWaysAction extends JosmAction {
                     ds.getWays(),
                     selectedWays, newWays);
             ds.addSelected(newWays);
-            return;
         } else {
             new Notification(
                     tr("Please select some ways to find connected and intersecting ways!")

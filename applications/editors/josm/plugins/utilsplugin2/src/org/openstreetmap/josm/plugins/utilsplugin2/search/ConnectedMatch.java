@@ -31,14 +31,14 @@ public class ConnectedMatch extends SearchCompiler.UnaryMatch {
         Collection<Way> matchedWays = new HashSet<>();
         Set<Node> matchedNodes = new HashSet<>();
         // find all ways that match the expression
-        Collection<Way> allWays = MainApplication.getLayerManager().getEditDataSet().getWays();
+        Collection<Way> allWays = MainApplication.getLayerManager().getActiveDataSet().getWays();
         for (Way way : allWays) {
             if (match.match(way)) {
                 matchedWays.add(way);
             }
         }
         // find all nodes that match the expression
-        Collection<Node> allNodes = MainApplication.getLayerManager().getEditDataSet().getNodes();
+        Collection<Node> allNodes = MainApplication.getLayerManager().getActiveDataSet().getNodes();
         for (Node node : allNodes) {
             if (match.match(node)) {
                 matchedNodes.add(node);

@@ -42,9 +42,9 @@ public final class OpenPageAction extends JosmAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        Collection<OsmPrimitive> sel = getLayerManager().getEditDataSet().getSelected();
+        Collection<OsmPrimitive> sel = getLayerManager().getActiveDataSet().getSelected();
         OsmPrimitive p = null;
-        if (sel.size() >= 1) {
+        if (!sel.isEmpty()) {
             p = sel.iterator().next();
         }
 
@@ -64,20 +64,20 @@ public final class OpenPageAction extends JosmAction {
         try {
             while (m.find()) {
                 key = m.group(1); val = null;
-                if (key.equals("#id")) {
+                if ("#id".equals(key)) {
                     if (p != null) {
                         val = Long.toString(p.getId());
                     } else {
                         // id without anything selected does not make any sense, do nothing
                         return;
                     }
-                } else if (key.equals("#type")) {
+                } else if ("#type".equals(key)) {
                     if (p != null) val = OsmPrimitiveType.from(p).getAPIName();
-                } else if (key.equals("#lat")) {
+                } else if ("#lat".equals(key)) {
                     val = Double.toString(center.lat());
-                } else if (key.equals("#lon")) {
+                } else if ("#lon".equals(key)) {
                     val = Double.toString(center.lon());
-                } else if (key.equals("#zoom")) {
+                } else if ("#zoom".equals(key)) {
                     val = Integer.toString(OsmUrlToBounds.getZoom(MainApplication.getMap().mapView.getRealBounds()));
                 } else {
                     if (p != null) {
@@ -114,6 +114,6 @@ public final class OpenPageAction extends JosmAction {
 
     @Override
     protected void updateEnabledState() {
-        setEnabled(getLayerManager().getEditDataSet() != null);
+        setEnabled(getLayerManager().getActiveDataSet() != null);
     }
 }

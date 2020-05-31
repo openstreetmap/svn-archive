@@ -72,6 +72,10 @@ public final class Topmarks {
         Symbol colours = new Symbol();
         Path2D.Double p = new Path2D.Double(); p.moveTo(-29, -1); p.lineTo(-29, -59); p.lineTo(29, -59); p.lineTo(29, -1); p.closePath();
         colours.add(new Instr(Form.P1, p));
+        p = new Path2D.Double(); p.moveTo(0, -1); p.lineTo(0, -59); p.lineTo(29, -59); p.lineTo(29, -1); p.closePath();
+        colours.add(new Instr(Form.V2, p));
+        p = new Path2D.Double(); p.moveTo(-10, -1); p.lineTo(-10, -59); p.lineTo(10, -59); p.lineTo(10, -1); p.closePath();
+        colours.add(new Instr(Form.V3, p));
         p = new Path2D.Double(); p.setWindingRule(GeneralPath.WIND_EVEN_ODD);
         p.moveTo(-29, -1); p.lineTo(-29, -59); p.lineTo(29, -59); p.lineTo(29, -1); p.closePath();
         p.moveTo(-19, -10); p.lineTo(-19, -49); p.lineTo(19, -49); p.lineTo(19, -10); p.closePath();

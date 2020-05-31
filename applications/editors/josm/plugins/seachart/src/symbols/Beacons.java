@@ -204,6 +204,8 @@ public final class Beacons {
         colours.add(new Instr(Form.H5, p));
         p = new Path2D.Double(); p.moveTo(0.0, -70.0); p.lineTo(20.0, -70.0); p.lineTo(25.0, 0.0); p.lineTo(10.0, 0.0); p.quadTo(10.0, -10.0, 0.0, -10.0); p.closePath();
         colours.add(new Instr(Form.V2, p));
+        p = new Path2D.Double(); p.moveTo(-10, 0.0); p.lineTo(-6.7, -70.0); p.lineTo(6.7, -70.0); p.lineTo(10.0, 0.0); p.curveTo(10.0, -13.3, -10.0, -13.3, -10.0, 0.0); p.closePath();
+        colours.add(new Instr(Form.V3, p));
         Tower.add(new Instr(Form.COLR, colours));
         Tower.add(new Instr(Form.STRK, new BasicStroke(4, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND)));
         Tower.add(new Instr(Form.FILL, Color.black));

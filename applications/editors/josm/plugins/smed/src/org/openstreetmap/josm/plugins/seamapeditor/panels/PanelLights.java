@@ -315,7 +315,6 @@ public class PanelLights extends JPanel {
         landCatBox.addActionListener(alLandCatBox);
         addLCItem("", Cat.NOCAT);
         addLCItem(Messages.getString("Tower"), Cat.LMK_TOWR);
-        addLCItem(Messages.getString("WaterTower"), Cat.LMK_WTRT);
         addLCItem(Messages.getString("Chimney"), Cat.LMK_CHMY);
         addLCItem(Messages.getString("Mast"), Cat.LMK_MAST);
         addLCItem(Messages.getString("Column"), Cat.LMK_CLMN);

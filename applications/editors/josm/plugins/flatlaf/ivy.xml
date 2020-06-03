@@ -1,0 +1,6 @@
+<ivy-module version="2.0">
+  <info organisation="org.openstreetmap.josm.plugins" module="wikipedia"/>
+  <dependencies>
+    <dependency conf="default->default" org="com.formdev" name="flatlaf" rev="0.35"/>
+  </dependencies>
+</ivy-module>

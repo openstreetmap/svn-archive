@@ -101,6 +101,14 @@ public final class Renderer {
         Symbols.drawSymbol(g2, symbol, sScale, point.getX(), point.getY(), scheme, delta);
     }
 
+    public static void colLetters(ArrayList<?> cols) {
+        	String str = "";
+        	for (int i = 0; (i < cols.size()) && (i < 4); i++) {
+        		str = str.concat(Rules.colourLetters.get(cols.get(i)));
+        	}
+        	labelText(str, new Font("Arial", Font.PLAIN, 40), Color.black, new Delta(Handle.TC, AffineTransform.getTranslateInstance(0, 40)));
+    }
+
     public static void cluster(ArrayList<Symbol> symbols) {
         Rectangle2D.Double bbox = null;
         if (symbols.size() > 4) {

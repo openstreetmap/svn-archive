@@ -103,6 +103,24 @@ public class Rules {
 		bodyColours.put(ColCOL.COL_PNK, Color.pink);
 	}
 
+	static final EnumMap<ColCOL, String> colourLetters = new EnumMap<>(ColCOL.class);
+	static {
+		colourLetters.put(ColCOL.COL_UNK, "");
+		colourLetters.put(ColCOL.COL_WHT, "W");
+		colourLetters.put(ColCOL.COL_BLK, "B");
+		colourLetters.put(ColCOL.COL_RED, "R");
+		colourLetters.put(ColCOL.COL_GRN, "G");
+		colourLetters.put(ColCOL.COL_BLU, "Bu");
+		colourLetters.put(ColCOL.COL_YEL, "Y");
+		colourLetters.put(ColCOL.COL_GRY, "Gr");
+		colourLetters.put(ColCOL.COL_BRN, "Bn");
+		colourLetters.put(ColCOL.COL_AMB, "Am");
+		colourLetters.put(ColCOL.COL_VIO, "Vi");
+		colourLetters.put(ColCOL.COL_ORG, "Or");
+		colourLetters.put(ColCOL.COL_MAG, "Mg");
+		colourLetters.put(ColCOL.COL_PNK, "Pk");
+	}
+
 	static final EnumMap<ColPAT, Patt> pattMap = new EnumMap<>(ColPAT.class);
 	static {
 		pattMap.put(ColPAT.PAT_UNKN, Patt.Z);
@@ -1007,6 +1025,9 @@ public class Rules {
 				break;
 			default:
 				break;
+			}
+			if (Renderer.zoom >= 15) {
+				Renderer.colLetters(getAttList(feature.type, Att.COLOUR));
 			}
 			Signals.addSignals();
             addName(15, new Font("Arial", Font.BOLD, 40), new Delta(Handle.BL, AffineTransform.getTranslateInstance(60, -50)));

@@ -608,7 +608,7 @@ public class Signals extends Rules {
                 if (atts.containsKey(Att.CATLIT)) {
                     cats = (ArrayList<CatLIT>) atts.get(Att.CATLIT).val;
                 }
-                str = cats.contains(CatLIT.LIT_DIR) ? "Dir" : "";
+                str = (cats.contains(CatLIT.LIT_AIR) || cats.contains(CatLIT.LIT_AERO)) ? "Aero" : cats.contains(CatLIT.LIT_DIR) ? "Dir" : "";
                 str += atts.containsKey(Att.MLTYLT) ? atts.get(Att.MLTYLT).val : "";
                 if (atts.containsKey(Att.LITCHR)) {
                     LitCHR chr = ((ArrayList<LitCHR>) atts.get(Att.LITCHR).val).get(0);

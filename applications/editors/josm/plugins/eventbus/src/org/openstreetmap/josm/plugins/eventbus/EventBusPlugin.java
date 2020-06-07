@@ -64,7 +64,7 @@ import org.openstreetmap.josm.gui.layer.OsmDataLayer.LayerStateChangeListener;
 import org.openstreetmap.josm.gui.layer.imagery.ImageryFilterSettings.FilterChangeListener;
 import org.openstreetmap.josm.gui.layer.imagery.TileSourceDisplaySettings.DisplaySettingsChangeListener;
 import org.openstreetmap.josm.gui.mappaint.MapPaintStyles;
-import org.openstreetmap.josm.gui.mappaint.MapPaintStyles.MapPaintSylesUpdateListener;
+import org.openstreetmap.josm.gui.mappaint.MapPaintStyles.MapPaintStylesUpdateListener;
 import org.openstreetmap.josm.gui.preferences.imagery.AddImageryPanel.ContentValidationListener;
 import org.openstreetmap.josm.gui.preferences.server.ProxyPreference;
 import org.openstreetmap.josm.gui.preferences.server.ProxyPreferenceListener;
@@ -331,7 +331,7 @@ public class EventBusPlugin extends Plugin {
     private final CancelListener cancelListener = () -> post(new OperationCancelledEvent(this));
     private final TaggingPresetListener taggingPresetListener = () -> post(new TaggingPresetModifiedEvent(this));
 
-    private final MapPaintSylesUpdateListener mapPaintSylesUpdateListener = new MapPaintSylesUpdateListener() {
+    private final MapPaintStylesUpdateListener mapPaintStylesUpdateListener = new MapPaintStylesUpdateListener() {
         @Override
         public void mapPaintStylesUpdated() {
             post(new MapPaintStylesUpdatedEvent(this));
@@ -390,7 +390,7 @@ public class EventBusPlugin extends Plugin {
         ExpertToggleAction.addExpertModeChangeListener(expertModeChangeListener);
         HistoryDataSet.getInstance().addHistoryDataSetListener(historyDataSetListener);
         SystemOfMeasurement.addSoMChangeListener(soMChangeListener);
-        MapPaintStyles.addMapPaintSylesUpdateListener(mapPaintSylesUpdateListener);
+        MapPaintStyles.addMapPaintStylesUpdateListener(mapPaintStylesUpdateListener);
         ProxyPreference.addProxyPreferenceListener(proxyPreferenceListener);
         MapFrame.addMapModeChangeListener(mapModeChangeListener);
         NavigatableComponent.addZoomChangeListener(zoomChangeListener);
@@ -412,7 +412,7 @@ public class EventBusPlugin extends Plugin {
         ExpertToggleAction.removeExpertModeChangeListener(expertModeChangeListener);
         HistoryDataSet.getInstance().removeHistoryDataSetListener(historyDataSetListener);
         SystemOfMeasurement.removeSoMChangeListener(soMChangeListener);
-        MapPaintStyles.removeMapPaintSylesUpdateListener(mapPaintSylesUpdateListener);
+        MapPaintStyles.removeMapPaintStylesUpdateListener(mapPaintStylesUpdateListener);
         ProxyPreference.removeProxyPreferenceListener(proxyPreferenceListener);
         MapFrame.removeMapModeChangeListener(mapModeChangeListener);
         NavigatableComponent.removeZoomChangeListener(zoomChangeListener);

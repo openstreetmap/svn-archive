@@ -17,14 +17,7 @@
     <property name="josm.ivysettings"       location="../../core/ivysettings.xml"/>
     <property name="josm.test.build.dir"    location="../../core/test/build"/>
     <property name="jmockit.jar"            location="../00_core_test_lib/jmockit.jar"/>
-    <property name="error_prone_core.jar"   location="../00_core_tools/error_prone_core.jar"/>
-    <property name="error_prone_javac.jar"  location="../00_core_tools/error_prone_javac.jar"/>
-    <property name="auto-value-annotations.jar" location="../00_core_tools/auto-value-annotations.jar"/>
-    <property name="dataflow.jar"           location="../00_core_tools/dataflow-shaded.jar"/>
-    <property name="javacutil.jar"          location="../00_core_tools/javacutil.jar"/>
-    <property name="failureaccess.jar"      location="../00_core_tools/failureaccess.jar"/>
     <property name="checkstyle-build.dir"   location="../00_core_tools/checkstyle/build"/>
-    <property name="jformatstring.jar"      location="../00_core_tools/spotbugs/jFormatString-3.0.0.jar"/>
     <property name="annotations.jar"        location="../00_core_tools/spotbugs/spotbugs-annotations.jar"/>
     <property name="core.tools.ivy"         location="../00_core_tools/ivy.xml"/>
     <property name="plugin.tools.dir"       location="../00_tools"/>
@@ -83,10 +76,6 @@
 
     <fileset id="jaxb.jars" dir="${plugin.tools.dir}/jaxb-ri/lib" includes="**/*.jar"/>
 
-    <path id="jdk8.boot.classpath">
-        <pathelement location="${error_prone_javac.jar}"/>
-        <fileset refid="jaxb.jars"/>
-    </path>
     <path id="plugin.classpath">
         <pathelement location="${josm}"/>
         <fileset dir="${plugin.lib.dir}" erroronmissingdir="no">
@@ -99,14 +88,6 @@
         </fileset>
         <fileset refid="plugin.requires.jars"/>
         <fileset refid="jaxb.jars"/>
-    </path>
-    <path id="processor.path">
-        <pathelement location="${error_prone_core.jar}"/>
-        <pathelement location="${dataflow.jar}"/>
-        <pathelement location="${javacutil.jar}"/>
-        <pathelement location="${failureaccess.jar}"/>
-        <pathelement location="${jformatstring.jar}"/>
-        <pathelement location="${auto-value-annotations.jar}"/>
     </path>
 
     <!--
@@ -125,14 +106,18 @@
     <target name="pre-compile">
         <!-- to be overridden by plugins that need to perform additional tasks before compiling -->
     </target>
-    <target name="compile" depends="init, pre-compile" unless="skip-compile">
+    <target name="compile" depends="init, pre-compile, resolve-tools" unless="skip-compile">
         <echo message="compiling sources for ${plugin.jar} ..."/>
+        <path id="jdk8.boot.classpath">
+            <path refid="errorprone_javac.classpath"/>
+            <fileset refid="jaxb.jars"/>
+        </path>
         <javac srcdir="${plugin.src.dir}" debug="true" destdir="${plugin.build.dir}" includeantruntime="false"
             encoding="UTF-8" target="${java.lang.version}" source="${java.lang.version}" fork="yes">
             <compilerarg value="-J-Xbootclasspath/p:${toString:jdk8.boot.classpath}" unless:set="isJava9"/>
             <compilerarg line="-XDcompilePolicy=simple"/>
             <compilerarg value="-processorpath"/>
-            <compilerarg pathref="processor.path"/>
+            <compilerarg pathref="errorprone.classpath"/>
             <compilerarg value="-Xlint:deprecation"/>
             <compilerarg value="-Xlint:unchecked"/>
             <compilerarg value="-Xplugin:ErrorProne -Xep:StringSplitter:OFF -Xep:ReferenceEquality:OFF -Xep:InsecureCryptoUsage:OFF -Xep:FutureReturnValueIgnored:OFF -Xep:JdkObsolete:OFF -Xep:EqualsHashCode:OFF"/>
@@ -731,6 +716,8 @@
     </target>
     <target name="resolve-tools" depends="init-ivy" description="Resolves tools using Apache Ivy">
         <ivy:resolve file="${core.tools.ivy}"/>
+        <ivy:cachepath file="${core.tools.ivy}" pathid="errorprone.classpath" conf="errorprone"/>
+        <ivy:cachepath file="${core.tools.ivy}" pathid="errorprone_javac.classpath" conf="errorprone_javac"/>
         <ivy:cachepath file="${core.tools.ivy}" pathid="checkstyle.classpath" conf="checkstyle"/>
         <ivy:cachepath file="${core.tools.ivy}" pathid="spotbugs.classpath" conf="spotbugs"/>
     </target>

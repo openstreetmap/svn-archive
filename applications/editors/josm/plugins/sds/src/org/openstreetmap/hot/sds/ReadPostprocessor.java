@@ -61,7 +61,13 @@ public class ReadPostprocessor implements OsmServerReadPostprocessor {
         };
 
         for (OsmPrimitive p : ds.allPrimitives()) {
-            p.accept(adder);
+            if (!p.isNew()) {
+                p.accept(adder);
+            }
+        }
+
+        if (nodeList.isEmpty() && wayList.isEmpty() && relationList.isEmpty()) {
+            return;
         }
 
         SdsApi api = SdsApi.getSdsApi();

@@ -17,4 +17,5 @@
     
     <!-- ** include targets that all plugins have in common ** -->
     <import file="../build-common.xml"/>
+    <target name="pre-compile" depends="fetch_dependencies"/>
 </project>

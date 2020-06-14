@@ -1,7 +1,8 @@
 // License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.javafx.gui;
-
 import java.awt.Dimension;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.FutureTask;
 
 import org.openstreetmap.josm.tools.Logging;
 
@@ -23,6 +24,28 @@ public class JavaFxWrapper<T extends Node> extends JFXPanel {
     transient T node;
 
     /**
+     * Catch exceptions in the JavaFX thread (only instantiated with the JavaFxWrapper).
+     * Since most exceptions should be seen through the `future.get()` method in initialize, this is (mostly) safe.
+     */
+    private static class UncaughtExceptionHandler implements Thread.UncaughtExceptionHandler {
+        private final Thread.UncaughtExceptionHandler currentHandler;
+        public UncaughtExceptionHandler() {
+            currentHandler = Thread.currentThread().getUncaughtExceptionHandler();
+            Thread.currentThread().setUncaughtExceptionHandler(this);
+        }
+        @Override
+        public void uncaughtException(Thread t, Throwable e) {
+            if (currentHandler != null && !(e instanceof NoClassDefFoundError)) {
+                currentHandler.uncaughtException(t, e);
+            } else {
+                Logging.error(e);
+            }
+        }
+    }
+
+    private static UncaughtExceptionHandler handler;
+
+    /**
      * <p>
      * <b>Implementation note</b>: when the first {@code JFXPanel} object is
      * created, it implicitly initializes the JavaFX runtime. This is the preferred
@@ -31,8 +54,9 @@ public class JavaFxWrapper<T extends Node> extends JFXPanel {
      *
      * @param node The JavaFX node that will be returned later with
      *             {@link JavaFxWrapper#getNode}.
+     * @throws ExecutionException If something happened during execution. If this happens, fall back to something else!
      */
-    public JavaFxWrapper(Class<T> node) {
+    public JavaFxWrapper(Class<T> node) throws ExecutionException {
         try {
             initialize(node.getConstructor().newInstance());
         } catch (ReflectiveOperationException | IllegalArgumentException | SecurityException e) {
@@ -49,8 +73,9 @@ public class JavaFxWrapper<T extends Node> extends JFXPanel {
      *
      * @param node The JavaFX node that will be returned later with
      *             {@link JavaFxWrapper#getNode}.
+     * @throws ExecutionException If something happened during execution. If this happens, fall back to something else!
      */
-    public JavaFxWrapper(T node) {
+    public JavaFxWrapper(T node) throws ExecutionException {
         initialize(node);
     }
 
@@ -58,17 +83,35 @@ public class JavaFxWrapper<T extends Node> extends JFXPanel {
      * This holds common initialization code
      *
      * @param node The node that should be set to this.node
+     * @throws ExecutionException If something happened during execution. If this happens, fall back to something else!
      */
-    private void initialize(T node) {
+    private void initialize(T node) throws ExecutionException {
         this.node = node;
-        Platform.runLater(this::initFX);
+        FutureTask<Scene> task = new FutureTask<>(this::initFX);
+        Platform.runLater(task);
         Platform.setImplicitExit(false);
         this.setFocusTraversalKeysEnabled(node.isFocusTraversable());
+        try {
+            task.get();
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            Logging.error(e);
+        }
     }
 
-    private void initFX() {
+    /**
+     * @return The scene to be used for initializing JavaFX
+     */
+    protected Scene initFX() {
+        initializeExceptionHandler();
         Scene scene = createScene();
         setScene(scene);
+        return scene;
+    }
+
+    private static void initializeExceptionHandler() {
+        if (handler == null)
+            handler = new UncaughtExceptionHandler();
     }
 
     private Scene createScene() {

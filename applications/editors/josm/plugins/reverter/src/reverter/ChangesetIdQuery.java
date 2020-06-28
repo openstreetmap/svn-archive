@@ -103,7 +103,7 @@ public class ChangesetIdQuery extends ExtendedDialog {
     @Override
     public void setupDialog() {
         setContent(panel, false);
-        setButtonIcons("ok.png", "cancel.png");
+        setButtonIcons("ok.png", "cancel.svg");
         setDefaultButton(1);
 
         addWindowListener(new InternalWindowListener());

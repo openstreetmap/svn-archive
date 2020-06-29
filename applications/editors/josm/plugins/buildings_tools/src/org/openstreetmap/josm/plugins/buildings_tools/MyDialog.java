@@ -16,7 +16,7 @@ import org.openstreetmap.josm.tools.GBC;
 
 public abstract class MyDialog extends ExtendedDialog {
     private static final String[] BUTTON_TEXTS = new String[] {tr("OK"), tr("Cancel")};
-    private static final String[] BUTTON_ICONS = new String[] {"ok.png", "cancel.png"};
+    private static final String[] BUTTON_ICONS = new String[] {"ok", "cancel"};
 
     protected final JPanel panel = new JPanel(new GridBagLayout());
 

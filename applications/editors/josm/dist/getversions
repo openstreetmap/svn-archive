@@ -13,6 +13,7 @@ foreach my $plugin (@names)
 system "svn -q export -r BASE . getrev" if !$oldsvn;
 foreach my $plugin (@names)
 {
+  next if $plugin =~ /-(javadoc|sources)\.jar$/;
   my $date = "";
   my $version = "";
   my $mversion = "";

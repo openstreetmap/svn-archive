@@ -116,7 +116,7 @@ class RoadSignInputDialog extends ExtendedDialog {
 
         this.signs = RoadSignsPlugin.signs;
         sel = new SignSelection();
-        setButtonIcons("ok.png", "cancel.png");
+        setButtonIcons("ok", "cancel");
         final JTabbedPane tabs = new JTabbedPane();
         tabs.add(tr("signs"), buildSignsPanel());
         Action updateAction = new AbstractAction() {

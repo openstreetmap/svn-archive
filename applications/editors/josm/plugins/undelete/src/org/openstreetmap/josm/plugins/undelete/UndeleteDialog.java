@@ -55,7 +55,7 @@ public class UndeleteDialog extends ExtendedDialog {
         layer.setSelected(Config.getPref().getBoolean("undelete.newlayer"));
         all.add(layer, gc);
         setContent(all, false);
-        setButtonIcons("undelete.png", "cancel.png");
+        setButtonIcons("undelete", "cancel");
         setToolTipTexts(tr("Start undeleting"), tr("Close dialog and cancel"));
         setDefaultButton(1);
     }

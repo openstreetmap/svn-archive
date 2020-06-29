@@ -66,7 +66,7 @@ public abstract class SdsDiskAccessAction extends DiskAccessAction {
                         new String[] {tr("Overwrite"), tr("Cancel")}
                 );
                 dialog.setContent(tr("File exists. Overwrite?"));
-                dialog.setButtonIcons(new String[] {"save_as.png", "cancel.png"});
+                dialog.setButtonIcons(new String[] {"save_as", "cancel"});
                 dialog.showDialog();
                 if (dialog.getValue() != 1)
                     return null;
@@ -125,7 +125,7 @@ public abstract class SdsDiskAccessAction extends DiskAccessAction {
                     new String[] {tr("Overwrite"), tr("Cancel")}
             );
             dialog.setContent(tr("File exists. Overwrite?"));
-            dialog.setButtonIcons(new String[] {"save_as.png", "cancel.png"});
+            dialog.setButtonIcons(new String[] {"save_as", "cancel"});
             dialog.showDialog();
             return (dialog.getValue() == 1);
         }

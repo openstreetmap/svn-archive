@@ -106,7 +106,7 @@ public class FastDrawConfigDialog extends ExtendedDialog {
         combo1.setSelectedIndex(settings.simplifyMode);
 
         setContent(all, false);
-        setButtonIcons(new String[] {"ok.png", "cancel.png"});
+        setButtonIcons(new String[] {"ok", "cancel"});
         setToolTipTexts(new String[] {
                 tr("Save settings"),
                 tr("Cancel")

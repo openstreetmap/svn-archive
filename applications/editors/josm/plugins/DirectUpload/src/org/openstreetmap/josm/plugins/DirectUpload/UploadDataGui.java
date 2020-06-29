@@ -110,7 +110,7 @@ public class UploadDataGui extends ExtendedDialog {
         GpxData gpxData = UploadOsmConnection.getInstance().autoSelectTrace();
         initTitleAndDescriptionFromGpxData(gpxData);    // this is changing some dialog elements, so it (probably) must be before the following
         setContent(content);
-        setButtonIcons(new String[] { "uploadtrace.png", "cancel.png" });
+        setButtonIcons(new String[] { "uploadtrace", "cancel" });
         setupDialog();
 
         buttons.get(0).setEnabled(gpxData != null);

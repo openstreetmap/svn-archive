@@ -134,7 +134,7 @@ class GeotaggingAction extends AbstractAction implements LayerAction {
                 MainApplication.getMainFrame(),
                 tr("Photo Geotagging Plugin"),
                 new String[] {tr("OK"), tr("Cancel")})
-            .setButtonIcons(new String[] {"ok.png", "cancel.png"})
+            .setButtonIcons(new String[] {"ok", "cancel"})
             .setContent(cont)
             .setCancelButton(2)
             .setDefaultButton(1)
@@ -360,7 +360,7 @@ class GeotaggingAction extends AbstractAction implements LayerAction {
                             progressMonitor.getWindowParent(),
                             tr("Override old backup files?"),
                             new String[] {tr("Cancel"), tr("Keep old backups and continue"), tr("Override")})
-                        .setButtonIcons(new String[] {"cancel.png", "ok.png", "dialogs/delete.png"})
+                        .setButtonIcons(new String[] {"cancel", "ok", "dialogs/delete"})
                         .setContent(l)
                         .setCancelButton(1)
                         .setDefaultButton(2)

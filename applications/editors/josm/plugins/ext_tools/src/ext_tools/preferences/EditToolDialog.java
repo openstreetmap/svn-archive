@@ -47,7 +47,7 @@ public class EditToolDialog extends ExtendedDialog {
                 new String[] { tr("OK"), tr("Cancel") },
                 true);
         contentInsets = new Insets(15, 15, 5, 15);
-        setButtonIcons("ok.png", "cancel.png");
+        setButtonIcons("ok", "cancel");
 
         this.tool = tool;
 

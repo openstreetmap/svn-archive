@@ -120,7 +120,7 @@ public class ServerParamDialog extends ExtendedDialog {
         }
 
         contentInsets = new Insets(15, 15, 5, 15);
-        setButtonIcons(new String[] {"ok.png", "cancel.png"});
+        setButtonIcons(new String[] {"ok", "cancel"});
 
         m_oTileSize = new JComboBox<>(m_astrTileSize);
         m_oResolution = new JComboBox<>(m_astrResolution);

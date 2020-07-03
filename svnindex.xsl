@@ -44,7 +44,7 @@
       </head>
       <body>
         <div class="svnnotice">
-          NOTICE: Please note that this OpenStreetMap svn repo is deprecated and many items have now moved to repositories under the <a href="https://github.com/OpenStreetMap">github.com/OpenStreetMap</a> project.
+          DANGER: This OpenStreetMap svn repo is being shutdown during August 2020. Please re-home you code projects. Many projects have now moved to <a href="https://github.com/OpenStreetMap">github.com/OpenStreetMap</a> and <a href="https://github.com/osmlab">github.com/osmlab</a>.
         </div>
         <div class="svn">
           <xsl:apply-templates/>

@@ -37,6 +37,15 @@ a {
     color: white;
     margin-bottom: 15px;
     font-size: 120%;
+    animation:blinkingText 1.2s infinite;
+}
+
+@keyframes blinkingText {
+    0%{     color: #fff;    }
+    49%{    color: #fff; }
+    60%{    color: transparent; }
+    99%{    color:transparent;  }
+    100%{   color: #fff;    }
 }
 
 .footer {

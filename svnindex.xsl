@@ -44,7 +44,7 @@
       </head>
       <body>
         <div class="svnnotice">
-          DANGER: This OpenStreetMap svn repo is being shutdown during August 2020. Please re-home you code projects. Many projects have now moved to <a href="https://github.com/OpenStreetMap">github.com/OpenStreetMap</a> and <a href="https://github.com/osmlab">github.com/osmlab</a>.
+          DANGER: This OpenStreetMap svn repo is being shutdown during August 2020. Please re-home code projects. Many projects have now moved to <a href="https://github.com/OpenStreetMap">github.com/OpenStreetMap</a> and <a href="https://github.com/osmlab">github.com/osmlab</a>.
         </div>
         <div class="svn">
           <xsl:apply-templates/>

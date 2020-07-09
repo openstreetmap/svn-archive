@@ -70,8 +70,8 @@ public class TagDialog extends ExtendedDialog {
         "university", "public", "bridge", "bunker", "cabin", "construction", "farm_auxiliary", "garage", "garages", 
         "greenhouse", "hangar", "hut", "roof", "shed", "stable"};
 
-    private static final int FPS_MIN = -2;
-    private static final int FPS_MAX =  2;
+    private static final int FPS_MIN = -10;
+    private static final int FPS_MAX =  10;
 
     private static final Logger LOGGER = Logger.getLogger(TagDialog.class.getName());
 
@@ -97,7 +97,6 @@ public class TagDialog extends ExtendedDialog {
     private JSlider housenumberChangeSequence;
     private JComboBox<String> building;
     private JRadioButton streetRadio;
-    private JRadioButton placeRadio;
 
     /**
      * Constructs a new {@code TagDialog}.
@@ -110,6 +109,9 @@ public class TagDialog extends ExtendedDialog {
         this.selection = selection;
 
         JPanel editPanel = createContentPane();
+
+        setPreferredSize(new Dimension(700, 300));
+        setMinimumSize(new Dimension(700, 300));
 
         setContent(editPanel);
         setButtonIcons("ok", "cancel");
@@ -276,7 +278,7 @@ public class TagDialog extends ExtendedDialog {
         c.gridwidth = 1;
         editPanel.add(streetRadio, c);
 
-        placeRadio = new JRadioButton("addr:place");
+        JRadioButton placeRadio = new JRadioButton("addr:place");
         placeRadio.setToolTipText(TAG_STREET_OR_PLACE);
         placeRadio.setSelected(!dto.isTagStreet());
         placeRadio.addItemListener(new RadioChangeListener());
@@ -289,7 +291,7 @@ public class TagDialog extends ExtendedDialog {
 
         ButtonGroup g = new ButtonGroup();
         g.add( streetRadio );
-        g.add( placeRadio );
+        g.add(placeRadio);
 
         street = new AutoCompletingComboBox();
         if (dto.isTagStreet()) {
@@ -363,7 +365,7 @@ public class TagDialog extends ExtendedDialog {
                 Matcher m = Pattern.compile("([^\\pN]+)?(\\pN+)([^\\pN]+)?").matcher(number);
                 if (m.matches()) {
                     String prefix = m.group(1) != null ? m.group(1) : "";
-                    int n = Integer.valueOf(m.group(2)) + increment;
+                    int n = Integer.parseInt(m.group(2)) + increment;
                     String suffix = m.group(3) != null ? m.group(3) : "";
                     return prefix + n + suffix;
                 }

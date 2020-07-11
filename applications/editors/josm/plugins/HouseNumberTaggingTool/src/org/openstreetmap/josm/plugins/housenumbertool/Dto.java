@@ -8,12 +8,14 @@ import java.io.Serializable;
  */
 public class Dto implements Serializable {
 
-    private static final long serialVersionUID = 5226513739078369787L;
+    private static final long serialVersionUID = 7719940860196679722L;
 
     private boolean saveBuilding = true;
+    private boolean saveSource = true;
     private boolean saveCountry = true;
     private boolean saveState = true;
     private boolean saveCity = true;
+    private boolean saveSuburb = true;
     private boolean savePostcode = true;
     private boolean saveStreet = true;
     private boolean saveHousenumber = true;
@@ -21,9 +23,11 @@ public class Dto implements Serializable {
     private boolean tagStreet = true; // use tag addr:street or addr:place
    
     private String building = "yes";
+    private String source;
     private String country;
     private String state;
     private String city;
+    private String suburb;
     private String postcode;
     private String street;
     private String place;
@@ -164,5 +168,37 @@ public class Dto implements Serializable {
 
     public void setPlace(String place) {
         this.place = place;
+    }
+
+    public boolean isSaveSuburb() {
+        return saveSuburb;
+    }
+
+    public void setSaveSuburb(boolean saveSuburb) {
+        this.saveSuburb = saveSuburb;
+    }
+
+    public String getSuburb() {
+        return suburb;
+    }
+
+    public void setSuburb(String suburb) {
+        this.suburb = suburb;
+    }
+
+    public boolean isSaveSource() {
+        return saveSource;
+    }
+
+    public void setSaveSource(boolean saveSource) {
+        this.saveSource = saveSource;
+    }
+
+    public String getSource() {
+        return source;
+    }
+
+    public void setSource(String source) {
+        this.source = source;
     }
 }

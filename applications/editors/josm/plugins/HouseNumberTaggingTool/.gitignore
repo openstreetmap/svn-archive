@@ -5,3 +5,5 @@
 /findbugs-josm-HouseNumberTaggingTool.xml
 /spotbugs-josm-HouseNumberTaggingTool.xml
 /javadoc
+/.idea
+/JOSM-HouseNumberTaggingTool.iml

@@ -64,6 +64,7 @@ Positive Werte stehen für einen Anstieg in Richtung des ways und negative Werte
         <tag key="highway" value="path"/>
         <tag key="foot" value="designated"/>
         <tag key="bicycle" value="designated"/>
+        <tag key="segregated" value="no"/>
         <tag key="access" value="" ident="mode"/>
         <supplementary id="DE:1020-13"/> <!-- Inlineskaten frei -->
         <supplementary id="DE:1022-11"/> <!-- Mofas frei -->
@@ -333,8 +334,8 @@ Positive Werte stehen für einen Anstieg in Richtung des ways und negative Werte
     </sign>
 
     <sign ref="DE:1026-32" supplementary="yes" name="Public service vehicles allowed" de.name="Linienverkehr frei"
-            wiki="Key:psv">
-        <tag key="psv" value="yes"/>
+            wiki="Key:bus">
+        <tag key="bus" value="yes"/>
     </sign>
 
     <sign ref="DE:1026-35" supplementary="yes" name="Delivery vehicles allowed" de.name="Lieferverkehr frei">

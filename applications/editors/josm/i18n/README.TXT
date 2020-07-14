@@ -33,6 +33,7 @@ After some time a mail is sent with a URL. With this URL step (3) can be done.
 
 7) Build a single plugin:
 Call "ant -Dplugin=name singleplugintrans"
+To get a pot file for a single plugin call "ant -Dplugin=name singlepluginpot"
 
 NOTE:
 a) Your repositories should not have any local modifications which modify string elements!

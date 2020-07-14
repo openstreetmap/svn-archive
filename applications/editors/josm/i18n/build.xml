@@ -128,6 +128,11 @@
             </path>
         </foreach>
     </target>
+    <target name="singlepluginpot" depends="init">
+        <gettext-extract keysFile="josm.pot" poDirectory="po" keywords="${gettext.keywords}">
+            <fileset dir="${plugin.dir}/${plugin}"/>
+        </gettext-extract>
+    </target>
     <target name="singleplugintrans" depends="init">
         <antcall target="plugintrans">
             <param name="path" value="${plugin}"/>

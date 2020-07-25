@@ -166,7 +166,7 @@ public class RelationMemberTable extends JTable {
             putValue(NAME, tr("Move down"));
             putValue(SHORT_DESCRIPTION, tr("Move the selected relation members down by one position"));
             putValue(ACCELERATOR_KEY, keyStroke);
-            new ImageProvider("dialogs", "movedown").getResource().attachImageIcon(this);
+            new ImageProvider("dialogs", "down").getResource().attachImageIcon(this);
             updateEnabledState();
         }
 
@@ -196,7 +196,7 @@ public class RelationMemberTable extends JTable {
             putValue(NAME, tr("Move up"));
             putValue(SHORT_DESCRIPTION, tr("Move the selected relation members up by one position"));
             putValue(ACCELERATOR_KEY, keyStroke);
-            new ImageProvider("dialogs", "moveup").getResource().attachImageIcon(this);
+            new ImageProvider("dialogs", "up").getResource().attachImageIcon(this);
             updateEnabledState();
         }
 

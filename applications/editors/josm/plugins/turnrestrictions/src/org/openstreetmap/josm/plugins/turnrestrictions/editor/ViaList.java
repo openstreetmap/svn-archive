@@ -181,7 +181,7 @@ public class ViaList extends JList<OsmPrimitive> {
             putValue(NAME, tr("Move down"));
             putValue(SHORT_DESCRIPTION, tr("Move the selected vias down by one position"));
             putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, KeyEvent.ALT_DOWN_MASK));
-            new ImageProvider("dialogs", "movedown").getResource().attachImageIcon(this);
+            new ImageProvider("dialogs", "down").getResource().attachImageIcon(this);
             updateEnabledState();
         }
 
@@ -209,7 +209,7 @@ public class ViaList extends JList<OsmPrimitive> {
             putValue(NAME, tr("Move up"));
             putValue(SHORT_DESCRIPTION, tr("Move the selected vias up by one position"));
             putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_UP, KeyEvent.ALT_DOWN_MASK));
-            new ImageProvider("dialogs", "moveup").getResource().attachImageIcon(this);
+            new ImageProvider("dialogs", "up").getResource().attachImageIcon(this);
             updateEnabledState();
         }
 

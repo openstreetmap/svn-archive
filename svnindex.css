@@ -37,7 +37,6 @@ a {
     color: white;
     margin-bottom: 15px;
     font-size: 120%;
-    animation:blinkingText 1.2s infinite;
 }
 
 @keyframes blinkingText {

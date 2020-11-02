@@ -39,14 +39,6 @@ a {
     font-size: 120%;
 }
 
-@keyframes blinkingText {
-    0%{     color: #fff;    }
-    49%{    color: #fff; }
-    60%{    color: transparent; }
-    99%{    color:transparent;  }
-    100%{   color: #fff;    }
-}
-
 .footer {
   margin-top: 8em;
   padding: 0.5em 1em 0.5em;

@@ -1,8 +1,0 @@
-The rails code that drives the OpenStreetMap web site is now hosted
-in git. You can clone it from:
-
-  git://git.openstreetmap.org/rails.git
-
-or browse it on the web at:
-
-  http://git.openstreetmap.org/?p=rails.git;a=summary

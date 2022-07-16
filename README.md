@@ -1,6 +1,8 @@
 # svn.openstreetmap.org archive
 
-`svn.openstreetmap.org` was the historical subversion code repository for the [OpenStreetMap.org](https://openstreetmap.org/) project. The `svn.openstreetmap.org` code respository was gradually replaced by individual project specific git code repositories from around 2010 onward. The `svn.openstreetmap.org` code repository was closed for new contributions in 2020. Most projects had already moved to hosting their code elsewhere by then.
+`svn.openstreetmap.org` was the historical subversion code repository for the [OpenStreetMap.org](https://openstreetmap.org/) project.
+
+The `svn.openstreetmap.org` code respository was started in 2004 and gradually replaced by individual project specific git code repositories from around 2010 onward. The `svn.openstreetmap.org` code repository was closed for new contributions in 2020. Most projects had already moved to hosting their code elsewhere by then.
 
 [Steve Coast](https://en.wikipedia.org/wiki/Steve_Coast)'s [initial code](https://github.com/openstreetmap/svn-archive/commit/65a14b94b52d46386db01e62c0ad39e311609146) was the first code added to `svn.openstreetmap.org` back in August 2004, [4 days before the first blog post](https://blog.openstreetmap.org/2004/08/16/website-up/). Over the next 16 years 340+ developers would contribute to multiple OpenStreetMap related projects hosted on `svn.openstreetmap.org`
 
